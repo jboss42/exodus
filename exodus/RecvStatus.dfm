@@ -1,23 +1,23 @@
 object fRecvStatus: TfRecvStatus
   Left = 0
   Top = 0
-  Width = 486
-  Height = 43
+  Width = 495
+  Height = 90
   TabOrder = 0
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 155
-    Height = 43
-    Align = alLeft
+    Width = 495
+    Height = 45
+    Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 0
     object lblFile: TTntLabel
       Left = 2
-      Top = 15
-      Width = 151
-      Height = 26
+      Top = 20
+      Width = 491
+      Height = 18
       Align = alClient
       Caption = 'lblFile'
       Transparent = False
@@ -25,19 +25,35 @@ object fRecvStatus: TfRecvStatus
     end
     object lblFrom: TTntLabel
       Left = 2
-      Top = 2
-      Width = 151
+      Top = 7
+      Width = 491
       Height = 13
       Align = alTop
       Caption = 'lblFrom'
       Transparent = False
     end
+    object Bevel3: TBevel
+      Left = 2
+      Top = 38
+      Width = 491
+      Height = 5
+      Align = alBottom
+      Shape = bsBottomLine
+    end
+    object Bevel2: TBevel
+      Left = 2
+      Top = 2
+      Width = 491
+      Height = 5
+      Align = alTop
+      Shape = bsTopLine
+    end
   end
   object Panel2: TPanel
-    Left = 155
-    Top = 0
-    Width = 162
-    Height = 43
+    Left = 0
+    Top = 45
+    Width = 326
+    Height = 45
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 7
@@ -45,7 +61,7 @@ object fRecvStatus: TfRecvStatus
     object lblStatus: TTntLabel
       Left = 7
       Top = 7
-      Width = 148
+      Width = 312
       Height = 13
       Align = alTop
       Caption = 'Status...'
@@ -53,17 +69,17 @@ object fRecvStatus: TfRecvStatus
     object Bar1: TProgressBar
       Left = 7
       Top = 20
-      Width = 148
+      Width = 312
       Height = 17
       Align = alTop
       TabOrder = 0
     end
   end
   object Panel1: TPanel
-    Left = 317
-    Top = 0
+    Left = 326
+    Top = 45
     Width = 169
-    Height = 43
+    Height = 45
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2

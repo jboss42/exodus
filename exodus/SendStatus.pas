@@ -63,6 +63,8 @@ type
         tcpClient: TIdTCPClient;
         SocksHandler: TIdIOHandlerSocket;
         IdSocksInfo1: TIdSocksInfo;
+    Bevel1: TBevel;
+    Bevel2: TBevel;
     private
         { Private declarations }
         _thread: TFileSendThread;
@@ -797,8 +799,13 @@ begin
         sh := tag.QUeryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
+
             if (i = -1) then begin
-                // xxx: we got a response back from something
+                // check the 'from' attribute of the packet
+                i := shosts.indexOf(tag.getAttribute('from'));
+            end;
+
+            if (i = -1) then begin
                 // we didn't ask for!
                 p := THostPortPair.Create();
                 p.jid := sh[j].GetAttribute('jid');
