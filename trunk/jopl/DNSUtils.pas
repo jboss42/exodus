@@ -26,8 +26,45 @@ uses
   IdBaseComponent, IdComponent, IdUDPBase, IdUDPClient,
   IdDNSResolver;
 
-type
+    {
+        Stuff for IpHlp.dll, which is 98+ from Iphlpapi.h
+        FIXED_INFO contains all the bits we need,
+        including a linked list *sigh* of the DNS servers.
 
+        for more docs, see:
+        http://msdn.microsoft.com/library/default.asp?url=/library/en-us/iphlp/iphlp/fixed_info.asp
+    }
+const
+    MAX_HOSTNAME_LEN = 128;
+    MAX_SCOPE_ID_LEN = 256;
+
+type
+    TIP_ADDRESS_STRING = array[0..15] of char;
+
+    PTIP_ADDRESS_STRING = ^TIP_ADDRESS_STRING;
+    PTIP_ADDR_STRING = ^TIP_ADDR_STRING;
+    PTFixedInfo = ^TFixedInfo;
+
+    TIP_ADDR_STRING = packed record
+        next: PTIP_ADDR_STRING;         // next record in the list
+        ipAddress: TIP_ADDRESS_STRING;  // the ip addr
+        ipMask: TIP_ADDRESS_STRING;     // the ip mask
+        context: DWORD;                 // use this for AddIPAddress or DeleteIPAddress
+    end;
+
+    TFixedInfo = packed record
+        hostName: array[1..MAX_HOSTNAME_LEN + 4] of char;
+        domainName: array[1..MAX_HOSTNAME_LEN + 4] of char;
+        currentDNSServer: PTIP_ADDR_STRING;
+        dnsServerList: TIP_ADDR_STRING;
+        nodeType: word;
+        scopeID: array[1..MAX_SCOPE_ID_LEN + 4] of char;
+        enableRouting: word;
+        enableProxy: word;
+        enableDNS: word;
+    end;
+
+    // Real stuff for actually doing DNS lookups.
     TDNSResolverThread = class(TThread)
     protected
         _resolver: TIdDNSResolver;
@@ -51,6 +88,9 @@ implementation
 
 uses
     XMLTag, Registry, IdException;
+
+const
+    IpHlpDLL = 'IPHLPAPI.DLL'; // DO NOT TRANSLATE
 
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
@@ -95,67 +135,59 @@ end;
 {---------------------------------------}
 function GetNameServers(): string;
 var
-    r: TRegistry;
     OSVersionInfo32: OSVERSIONINFO;
-    key: string;
-    vals: string;
+    iphlp: THandle;
+    info: PTFixedInfo;
+    info_size: longint;
+    next_server: PTIP_ADDR_STRING;
+    res: integer;
+    GetNetworkParams: function(FixedInfo: PTFixedInfo; pOutPutLen: PULONG): DWORD; stdcall;
 begin
 
     // Look in different places depending on OS.
+    Result := '';
     OSVersionInfo32.dwOSVersionInfoSize := SizeOf(OSVersionInfo32);
     GetVersionEx(OSVersionInfo32);
-    case OSVersionInfo32.dwPlatformId of
-    VER_PLATFORM_WIN32_WINDOWS: begin
-        with OSVersionInfo32 do begin
-            { If minor version is zero, we are running on Win 95.
-              Otherwise we are running on Win 98 }
-            if (dwMinorVersion = 0) then begin
-                { Windows 95 }
-                Result := '';
+    if ((OSVersionInfo32.dwPlatformID = VER_PLATFORM_WIN32_WINDOWS) and
+        (OSVersionInfo32.dwMinorVersion = 0)) then begin
+        // WIN 95
+        exit;
+    end
+    else begin
+        // Everything else can use GetNetworkParams
+        info_size := 0;
+        iphlp := LoadLibrary(IpHlpDLL);
+        if (iphlp = 0) then exit;
+
+        try
+            GetNetworkParams := GetProcAddress(iphlp, 'GetNetworkParams');
+            if (@GetNetworkParams = nil) then exit;
+
+            // find out how much mem we need
+            res := GetNetworkParams(nil, @info_size);
+            if (res <> ERROR_BUFFER_OVERFLOW) then exit;
+
+            // allocate it.
+            GetMem(info, info_size);
+            res := GetNetworkParams(info, @info_size);
+            if (res <> ERROR_SUCCESS) then begin
+                FreeMem(info);
                 exit;
-            end
-            else if (dwMinorVersion < 90) then begin
-                { Windows 98 }
-                key := '\SYSTEM\CurrentControlSet\Services\VxD\MSTCP';
-            end
-            else if (dwMinorVersion >= 90) then begin
-                { Windows ME }
-                key := '\SYSTEM\CurrentControlSet\Services\VxD\MSTCP';
             end;
+
+            // walk the list and build up space delimited list.
+            Result := info^.dnsServerList.ipAddress;
+            next_server := info^.dnsServerList.next;
+            while (next_server <> nil) do begin
+                if (Result <> '') then Result := Result + ' ';
+                Result := Result + next_server^.ipAddress;
+                next_server := next_server.next;
+            end;
+            FreeMem(info);
+        finally
+            FreeLibrary(iphlp);
         end;
     end;
-    VER_PLATFORM_WIN32_NT: begin
-        with OSVersionInfo32 do begin
-            if (dwMajorVersion <= 4) then begin
-                { Windows NT 3.5/4.0 }
-                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
-            end
-            else if (dwMinorVersion > 0) then begin
-                { Windows XP }
-                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
-            end
-            else begin
-                { Windows 2000 }
-                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
-            end;
-        end;
-    end;
-    end;
-
-    try
-        r := TRegistry.Create();
-        r.RootKey := HKEY_LOCAL_MACHINE;
-        r.OpenKeyReadOnly(key);
-        vals := r.ReadString('Nameserver');
-        if (vals = '') then
-            vals := r.ReadString('DhcpNameServer');
-
-        Result := vals;
-        r.Free();
-    except
-        Result := '';
-    end;
-
 end;
 
 {---------------------------------------}
