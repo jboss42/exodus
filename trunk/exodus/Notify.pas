@@ -51,16 +51,19 @@ uses
     Roster,
     Session;
 
+{---------------------------------------}
 constructor TNotifyController.Create;
 begin
     inherited Create;
 end;
 
+{---------------------------------------}
 destructor TNotifyController.Destroy;
 begin
     inherited Destroy;
 end;
 
+{---------------------------------------}
 procedure TNotifyController.SetSession(js: TObject);
 begin
     // Store a reference to the session object
@@ -71,12 +74,14 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TNotifyController.PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
 begin
     // getting a pres event
     Callback(event, tag);
 end;
 
+{---------------------------------------}
 procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
     sess: TJabberSession;
@@ -112,19 +117,9 @@ begin
         // Show toast
         ShowRiserWindow(msg, 1);
 
-    if ((n and notify_event) > 0) then begin
-        // display an event
-        e := CreateJabberEvent(tag);
-        frmJabber.RenderEvent(e);
-        end;
-
-    if ((n and notify_flash) > 0) then begin
+    if ((n and notify_flash) > 0) then
         // flash the main window
-        frmJabber.timFlasher.Enabled := true;
-        end;
-
+        FlashWindow(frmJabber.Handle, true);
 end;
-
-
 
 end.

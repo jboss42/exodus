@@ -41,10 +41,8 @@ uses
   JabberMsg in '..\jopl\JabberMsg.pas',
   LibXmlComps in '..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\jopl\LibXmlParser.pas',
-  Notify in '..\jopl\Notify.pas',
   PrefController in '..\jopl\PrefController.pas',
   presence in '..\jopl\Presence.pas',
-  Register in '..\jopl\Register.pas',
   Responder in '..\jopl\Responder.pas',
   Roster in '..\jopl\Roster.pas',
   s10n in '..\jopl\S10n.pas',
@@ -61,7 +59,9 @@ uses
   XMLUtils in '..\jopl\XMLUtils.pas',
   GUIFactory in 'GUIFactory.pas',
   Bookmark in 'Bookmark.pas' {frmBookmark},
-  CustomPres in 'CustomPres.pas' {frmCustomPres};
+  CustomPres in 'CustomPres.pas' {frmCustomPres},
+  Register in 'Register.pas',
+  Notify in 'Notify.pas';
 
 {$R *.RES}
 

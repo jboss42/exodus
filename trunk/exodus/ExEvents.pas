@@ -87,8 +87,6 @@ begin
     inherited Destroy;
 end;
 
-
-
 {---------------------------------------}
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var

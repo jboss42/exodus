@@ -411,11 +411,10 @@ begin
     _guibuilder.SetSession(MainSession);
 
     _regController := TRegController.Create();
-    _regController.SetSession(Self);
+    _regController.SetSession(MainSession);
 
-    Notify := TNotifyController.Create;
-    Notify.SetSession(Self);
-
+    _Notify := TNotifyController.Create;
+    _Notify.SetSession(MainSession);
 
     with MainSession.Prefs do begin
         RestorePosition(Self);
@@ -717,61 +716,70 @@ end;
 {---------------------------------------}
 procedure TfrmJabber.RenderEvent(e: TJabberEvent);
 var
-    n_flag: integer;
+    toast, msg: string;
+    img_idx, n_flag: integer;
     item: TListItem;
 begin
     // create a listview item for this event
     case e.eType of
+    evt_Message: n_flag := MainSession.Prefs.getInt('notify_normalmsg');
+    evt_Invite: n_flag := MainSession.Prefs.getInt('notify_invite');
+    end;
+
+    case e.etype of
+    evt_Presence: begin
+        if  (e.data_type = 'subscribe') or
+            (e.data_type = 'subscribed') or
+            (e.data_type = 'unsubscribe') or
+            (e.data_type = 'unsubscribed') then
+            img_idx := 16
+        else if (e.data_type = 'available') then
+            img_idx := 1
+        else if (e.data_type = 'unavailable') then
+            img_idx := 0
+        else if (e.data_type = 'away') then
+            img_idx := 2
+        else if (e.data_type = 'dnd') then
+            img_idx := 3
+        else if (e.data_type = 'chat') then
+            img_idx := 4
+        else if (e.data_type = 'xa') then
+            img_idx := 10;
+        msg := e.Data[0];
+        end;
+
     evt_Message: begin
-        n_flag := MainSession.Prefs.getInt('notify_normalmsg');
-        if (n_flag and notify_toast) > 0 then
-            ShowRiserWindow('Msg from ' + e.from, 18);
+        img_idx := 18;
+        msg := e.data_type;
+        toast := 'Msg from ' + e.from;
+        end;
+
+    evt_Invite: begin
+        img_idx := 21;
+        msg := e.data_type;
+        toast := 'Invite from ' + e.from;
+        end
+
+    else begin
+        img_idx := 12;
+        msg := e.data_type;
+        toast := msg;
         end;
     end;
+
+
+    if (n_flag and notify_toast) > 0 then
+        ShowRiserWindow(toast, img_idx);
+
+    if (n_flag and notify_flash) > 0 then
+        FlashWindow(Self.Handle, true);
 
     if MainSession.Prefs.getBool('expanded') then begin
         item := lstEvents.Items.Add;
         item.Caption := e.from;
         item.Data := e;
-
-        case e.etype of
-        evt_Presence: begin
-            if  (e.data_type = 'subscribe') or
-                (e.data_type = 'subscribed') or
-                (e.data_type = 'unsubscribe') or
-                (e.data_type = 'unsubscribed') then
-                item.ImageIndex := 16
-            else if (e.data_type = 'available') then
-                item.ImageIndex := 1
-            else if (e.data_type = 'unavailable') then
-                item.ImageIndex := 0
-            else if (e.data_type = 'away') then
-                item.ImageIndex := 2
-            else if (e.data_type = 'dnd') then
-                item.ImageIndex := 3
-            else if (e.data_type = 'chat') then
-                item.ImageIndex := 4
-            else if (e.data_type = 'xa') then
-                item.ImageIndex := 10;
-            item.SubItems.Add(e.data[0]);
-            end;
-
-        evt_Message: begin
-            item.ImageIndex := 18;
-            item.SubItems.Add(e.data_type);
-            end;
-
-        evt_Invite: begin
-            item.ImageIndex := 21;
-            item.SubItems.Add(e.data_type);
-            end
-
-        else begin
-            item.ImageIndex := 12;
-            item.SubItems.Add(e.data_type);
-            end;
-        end;
-
+        item.ImageIndex := img_idx;
+        item.SubItems.Add(msg);
         end
     else begin
         // we are collapsed, just display in regular windows
@@ -801,6 +809,11 @@ begin
         frmDebug.Free;
         frmRosterWindow.Free;
         ChatWin.CloseAllChats();
+
+        _notify.Free();
+        _guiBuilder.Free();
+        _regController.Free();
+
         MainSession.Free;
         MainSession := nil;
         end;

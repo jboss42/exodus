@@ -121,18 +121,12 @@ implementation
 {$R *.DFM}
 
 uses
-    PrefController, 
-    Transfer,
-    RosterAdd,
-    Profile,
-    ExUtils,
-    XMLUtils, 
-    ShellAPI,
-    Roster,
-    Session,
-    Jabber1,
-    MsgDisplay,
-    JabberMsg;
+    PrefController,
+    Transfer, RosterAdd, RiserWindow, 
+    Jabber1, Profile, ExUtils, MsgDisplay,
+    JabberMsg, Roster, Session, XMLUtils,
+    ShellAPI;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -338,9 +332,12 @@ begin
     cn := MainSession.Prefs.getInt('notify_chatactivity');
 
     if (not Application.Active) then begin
+        // Pop toast
         if (cn and notify_toast) > 0 then begin
-            
+            ShowRiserWindow('Chat Activity: ' + OtherNick, 20);
             end;
+
+        // Flash Window
         if (cn and notify_flash) > 0 then begin
             if (Self.Docked) then
                 FlashWindow(frmJabber.Handle, true)

@@ -88,7 +88,6 @@ type
     chkNotify: TCheckListBox;
     optNotify: TGroupBox;
     chkFlash: TCheckBox;
-    chkEvent: TCheckBox;
     chkToast: TCheckBox;
     StaticText6: TStaticText;
     imgNotify: TImage;
@@ -154,6 +153,8 @@ type
     chkSnap: TCheckBox;
     txtSnap: TEdit;
     spnSnap: TUpDown;
+    Label16: TLabel;
+    cboRosterBG: TColorBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -258,6 +259,7 @@ begin
             optDblClick.ItemIndex := 0
         else
             optDblClick.ItemIndex := 1;
+        cboRosterBG.Selected := TColor(getInt('roster_bg'));
 
         // s10n prefs
         optIncomingS10n.ItemIndex := getInt('s10n_auto_accept');
@@ -347,7 +349,6 @@ begin
             chkNotify.Checked[i] := (_notify[i] > 0);
         optNotify.Enabled;
         chkToast.Checked := false;
-        chkEvent.Checked := false;
         chkFlash.Checked := false;
         chkSound.Checked := false;
 
@@ -384,6 +385,7 @@ begin
         setBool('inline_status', chkInlineStatus.Checked);
         setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
+        setInt('roster_bg', integer(cboRosterBG.Selected));
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
@@ -579,13 +581,11 @@ begin
     optNotify.Enabled := chkNotify.Checked[i];
     if optNotify.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
-        chkEvent.Checked := ((_notify[i] and notify_event) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
         chkSound.Checked := ((_notify[i] and notify_sound) > 0);
         end
     else begin
         chkToast.Checked := false;
-        chkEvent.Checked := false;
         chkFlash.Checked := false;
         chkSound.Checked := false;
         _notify[i] := 0;
@@ -605,7 +605,6 @@ begin
 
     _notify[i] := 0;
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
-    if (chkEvent.Checked) then _notify[i] := _notify[i] + notify_event;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
 end;
 

@@ -22,9 +22,7 @@ unit RiserWindow;
 interface
 
 uses
-    {$ifdef Delphi6}
     Variants,
-    {$endif}
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     Dialogs, ExtCtrls, StdCtrls;
 

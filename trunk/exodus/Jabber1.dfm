@@ -139,21 +139,21 @@ object frmJabber: TfrmJabber
         ImageIndex = 6
         OnClick = btnOnlineRosterClick
       end
-      object btnDelContact: TToolButton
-        Left = 47
-        Top = 0
-        Hint = 'Remove Contact'
-        Caption = 'btnDelContact'
-        ImageIndex = 4
-        OnClick = btnDelPersonClick
-      end
       object btnAddContact: TToolButton
-        Left = 71
+        Left = 47
         Top = 0
         Hint = 'Add Contact'
         Caption = 'btnAddContact'
         ImageIndex = 2
         OnClick = btnAddContactClick
+      end
+      object btnDelContact: TToolButton
+        Left = 71
+        Top = 0
+        Hint = 'Remove Contact'
+        Caption = 'btnDelContact'
+        ImageIndex = 4
+        OnClick = btnDelPersonClick
       end
       object btnExpanded: TToolButton
         Left = 95

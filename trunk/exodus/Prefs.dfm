@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 236
-  Top = 150
+  Left = 270
+  Top = 126
   Width = 410
   Height = 407
   Caption = 'Exodus Preferences'
@@ -1399,13 +1399,20 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 313
     Height = 336
-    ActivePage = tbsCustomPres
+    ActivePage = tbsRoster
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 9
+    TabIndex = 0
     TabOrder = 2
     object tbsRoster: TTabSheet
       Caption = 'Roster'
+      object Label16: TLabel
+        Left = 8
+        Top = 248
+        Width = 95
+        Height = 13
+        Caption = 'Roster Background:'
+      end
       object chkOnlineOnly: TCheckBox
         Left = 8
         Top = 24
@@ -1480,6 +1487,18 @@ object frmPrefs: TfrmPrefs
         DropDownCount = 12
         ItemHeight = 16
         TabOrder = 6
+      end
+      object cboRosterBG: TColorBox
+        Left = 31
+        Top = 264
+        Width = 146
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 7
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1680,7 +1699,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1790,7 +1809,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1973,25 +1992,16 @@ object frmPrefs: TfrmPrefs
         Left = 8
         Top = 152
         Width = 257
-        Height = 129
+        Height = 137
         Caption = 'Notify Options'
         TabOrder = 1
         object chkFlash: TCheckBox
           Left = 8
-          Top = 72
+          Top = 48
           Width = 209
           Height = 17
           Caption = 'Flash Taskbar button'
           TabOrder = 0
-          OnClick = chkToastClick
-        end
-        object chkEvent: TCheckBox
-          Left = 8
-          Top = 48
-          Width = 209
-          Height = 17
-          Caption = 'Show an event in the Messenger Tab'
-          TabOrder = 1
           OnClick = chkToastClick
         end
         object chkToast: TCheckBox
@@ -2000,16 +2010,16 @@ object frmPrefs: TfrmPrefs
           Width = 153
           Height = 17
           Caption = 'Show a "Toast" popup'
-          TabOrder = 2
+          TabOrder = 1
           OnClick = chkToastClick
         end
         object chkSound: TCheckBox
           Left = 8
-          Top = 96
+          Top = 72
           Width = 97
           Height = 17
           Caption = 'Play a Sound'
-          TabOrder = 3
+          TabOrder = 2
         end
       end
       object StaticText6: TStaticText
@@ -2073,7 +2083,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2151,7 +2161,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 256
+        Width = 305
         Height = 26
         Align = alTop
         Caption = 
@@ -2162,7 +2172,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter

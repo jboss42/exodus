@@ -199,13 +199,13 @@ begin
     _rostercb := MainSession.RegisterCallback(RosterCallback);
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
-    ImageList1.GetBitmap(0, imgStatus.Picture.Bitmap);
+    ImageList1.Draw(imgStatus.Canvas, 0, 0, 0);
     _pos.Left := (Screen.Width div 2) - 150;
     _pos.Right := _pos.Left + 200;
     _pos.Top := (Screen.Height div 3);
     _pos.Bottom := _pos.Top + 280;
 
-    SessionCallback('prefs', nil);
+    SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
     _bookmark := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
@@ -416,6 +416,7 @@ begin
     _FullRoster := true;
     _bookmark := nil;
     ClearNodes;
+    treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
     treeRoster.Items.BeginUpdate;
 
     // re-render each item
@@ -743,29 +744,28 @@ begin
     // display this show type
     if show = 'chat' then begin
         pnlStatus.Caption := 'Want to Chat';
-        ImageList1.GetBitmap(ico_Chat, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_Chat);
         end
     else if show = 'away' then begin
         pnlStatus.Caption := 'Away';
-        ImageList1.GetBitmap(ico_Away, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_Away);
         end
     else if show = 'xa' then begin
         pnlStatus.Caption := 'Ext. Away';
-        ImageList1.GetBitmap(ico_XA, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_XA);
         end
     else if show = 'dnd' then begin
         pnlStatus.Caption := 'Do Not Disturb';
-        ImageList1.GetBitmap(ico_DND, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_DND);
         end
     else if show = 'offline' then begin
         pnlStatus.Caption := 'Offline';
-        ImageList1.GetBitmap(ico_Offline, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 0, 0, ico_Offline);
         end
     else begin
         pnlStatus.Caption := 'Available';
-        ImageList1.GetBitmap(ico_Online, imgStatus.Picture.Bitmap);
+        ImageList1.Draw(imgStatus.Canvas, 0, 0, ico_Online);
         end;
-    imgStatus.Refresh;
 end;
 
 {---------------------------------------}
@@ -1156,7 +1156,6 @@ var
     xRect: TRect;
     nRect: TRect;
     p: TJabberPres;
-    bm: TBitmap;
 begin
     // Try drawing the roster custom..
     DefaultDraw := true;
@@ -1207,9 +1206,8 @@ begin
                         end;
 
                     // draw the image
-                    bm := TBitmap.Create();
-                    ImageList1.GetBitmap(Node.ImageIndex, bm);
-                    Draw(nRect.Left + treeRoster.Indent, nRect.Top, bm);
+                    ImageList1.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+                        nRect.Top, Node.ImageIndex);
 
                     // draw the text
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
