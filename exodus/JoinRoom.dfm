@@ -134,5 +134,6 @@ object frmJoinRoom: TfrmJoinRoom
     ItemHeight = 13
     Sorted = True
     TabOrder = 7
+    OnDblClick = lstRoomsDblClick
   end
 end
