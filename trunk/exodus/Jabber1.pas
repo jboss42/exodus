@@ -233,6 +233,7 @@ type
     procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
     procedure mnuMessageClick(Sender: TObject);
+    procedure Test1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -260,6 +261,7 @@ type
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
     _lpHookRec: PHookRec;
+    _richedit: THandle;
 
     _version: TVersionResponder;
     _time: TTimeResponder;
@@ -272,6 +274,7 @@ type
     _shutdown: boolean;
     _close_min: boolean;
     _appclosing: boolean;
+    _testaa: boolean;
 
     _sessioncb: integer;
     _msgcb: integer;
@@ -493,6 +496,7 @@ begin
     minimized := false;
     invisible := false;
     show_help := false;
+    _testaa := false;
     jid := nil;
     priority := -1;
 
@@ -503,6 +507,9 @@ begin
         GetWindowLong(Application.Handle, GWL_EXSTYLE)
         and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
     ShowWindow(Application.Handle, SW_SHOW);
+
+    // Initialize the Riched20.dll stuff
+    _richedit := LoadLibrary('Riched20.dll');
 
     _tray_icon := TIcon.Create();
     _appclosing := false;
@@ -913,7 +920,7 @@ begin
         if (MainSession.IsPaused) then begin
             // If the session is paused, and we're changing back
             // to available, or chat, then make sure we play the session
-            if (MainSession.Show <> 'xa') and (MainSession.show <> 'xa') and
+            if (MainSession.Show <> 'away') and (MainSession.show <> 'xa') and
                (MainSession.Show <> 'dnd') then
                 MainSession.Play();
             end;
@@ -1212,6 +1219,9 @@ begin
         dec(_lpHookRec^.InstanceCount);
         _StopHooks();
         end;
+
+    if (_richedit <> 0) then
+        FreeLibrary(_richedit);
 
     MainSession.Prefs.SavePosition(Self);
     if (frmMsgQueue <> nil) then begin
@@ -1609,19 +1619,22 @@ begin
 
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
-            if (_windows_ver < cWIN_2000) then begin
-                if (_lpHookRec <> nil) then
-                    last_tick := _lpHookRec^.LastTick
-                else
-                    exit;
-                end
-            else begin
-                // use GetLastInputInfo
-                last_info.cbSize := sizeof(last_info);
-                if (GetLastInputInfo(last_info)) then
-                    last_tick := last_info.dwTime
-                else
-                    exit;
+
+            if (not _testaa) then begin
+                if (_windows_ver < cWIN_2000) then begin
+                    if (_lpHookRec <> nil) then
+                        last_tick := _lpHookRec^.LastTick
+                    else
+                        exit;
+                    end
+                else begin
+                    // use GetLastInputInfo
+                    last_info.cbSize := sizeof(last_info);
+                    if (GetLastInputInfo(last_info)) then
+                        last_tick := last_info.dwTime
+                    else
+                        exit;
+                    end;
                 end;
             cur_idle := (GetTickCount() - last_tick) div 1000;
             mins := cur_idle div 60;
@@ -2083,6 +2096,18 @@ begin
 
     if InputQuery('Send a Message', 'Enter Jabber ID:', jid) then
         StartMsg(jid);
+end;
+
+procedure TfrmExodus.Test1Click(Sender: TObject);
+begin
+    // Test something..
+    _testaa := not _testaa;
+    if (_testaa) then begin
+        last_tick := GetTickCount() - 100000;
+        Self.SetAutoAway();
+        end
+    else
+        Self.SetAutoAvailable();
 end;
 
 end.

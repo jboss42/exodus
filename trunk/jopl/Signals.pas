@@ -83,6 +83,8 @@ type
         callback: TMethod;
         event: string;
         tag: TXMLTag;
+        constructor Create;
+        destructor Destroy; override;
     end;
 
     {---------------------------------------}
@@ -152,6 +154,24 @@ uses
 
 var
     _lid: longint = 0;
+
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+constructor TQueuedEvent.Create;
+begin
+    inherited Create;
+
+    event := '';
+    tag := nil;
+end;
+
+{---------------------------------------}
+destructor TQueuedEvent.Destroy;
+begin
+    if (tag <> nil) then tag.Free();
+
+    inherited Destroy;
+end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
