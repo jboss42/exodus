@@ -38,13 +38,9 @@ type
     popVersion: TMenuItem;
     popTime: TMenuItem;
     popLast: TMenuItem;
-    popSendPres: TMenuItem;
-    popSendSubscribe: TMenuItem;
     ImageList2: TImageList;
     popActions: TTntPopupMenu;
     imgStatus: TPaintBox;
-    N2: TMenuItem;
-    popSendInvisible: TMenuItem;
     popGroup: TTntPopupMenu;
     pnlConnect: TPanel;
     pnlAnimation: TPanel;
@@ -108,6 +104,10 @@ type
     N6: TTntMenuItem;
     popTransLogon: TTntMenuItem;
     popTransLogoff: TTntMenuItem;
+    popSendSubscribe: TTntMenuItem;
+    N2: TTntMenuItem;
+    popSendInvisible: TTntMenuItem;
+    popSendPres: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

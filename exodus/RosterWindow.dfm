@@ -348,18 +348,18 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popPresence: TTntMenuItem
       Caption = 'Presence'
-      object popSendPres: TMenuItem
-        Caption = 'Send Available'
+      object popSendPres: TTntMenuItem
+        Caption = 'Send Visible'
         OnClick = popSendPresClick
       end
-      object popSendInvisible: TMenuItem
+      object popSendInvisible: TTntMenuItem
         Caption = 'Send Invisible'
         OnClick = popSendPresClick
       end
-      object N2: TMenuItem
+      object N2: TTntMenuItem
         Caption = '-'
       end
-      object popSendSubscribe: TMenuItem
+      object popSendSubscribe: TTntMenuItem
         Caption = 'Subscribe Again'
         OnClick = popSendSubscribeClick
       end
@@ -603,7 +603,7 @@ object frmRosterWindow: TfrmRosterWindow
     object popGrpPresence: TTntMenuItem
       Caption = 'Send Presence'
       object popGrpAvailable: TTntMenuItem
-        Caption = 'Available'
+        Caption = 'Visible'
         OnClick = popSendPresClick
       end
       object popGrpInvisible: TTntMenuItem
