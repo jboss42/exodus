@@ -3,47 +3,61 @@ unit fResults;
 interface
 
 uses
-    XMLTag, Unicode, 
+    XMLTag, Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, TntComCtrls;
 
 type
   TframeResults = class(TFrame)
     lstResults: TTntListView;
+    procedure lstResultsData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
     _cols: TWidestringlist;
-    
+    _tags: TXMLTagList;
+    _x: TXMLTag;
+
   public
     { Public declarations }
     procedure parse(x: TXMLTag);
   end;
 
-implementation
+procedure buildXDataResults(x: TXMLTag; o: TWinControl);
 
+implementation
 {$R *.dfm}
+
+procedure buildXDataResults(x: TXMLTag; o: TWinControl);
+var
+    f: TframeResults;
+begin
+    f := TframeResults.Create(o);
+    f.parent := o;
+    f.parse(x);
+    f.Visible := true;
+    f.Align := alClient;
+end;
 
 procedure TframeResults.parse(x: TXMLTag);
 var
     i: integer;
     tmps: Widestring;
     tags: TXMLTagList;
-    r, f, item: TXMLTag;
+    r, f: TXMLTag;
     col: TTntListColumn;
-    cols: TWidestringlist;
-    new_itm: TTntListItem;
 begin
     //
     _cols := nil;
+    lstResults.Columns.Clear();
     r := x.GetFirstTag('reported');
     if (r <> nil) then begin
         // setup the columns.
-        cols := TWidestringlist.Create();
+        _cols := TWidestringlist.Create();
 
         tags := r.QueryTags('field');
         for i := 0 to tags.count - 1 do begin
             f := tags[i];
-            cols.AddObject(f.getAttribute('var'), Pointer(i));
+            _cols.Add(f.getAttribute('var'));
             col := lstResults.Columns.Add();
             tmps := f.getAttribute('label');
             if (tmps = '') then tmps := f.GetAttribute('var');
@@ -51,18 +65,38 @@ begin
         end;
     end;
 
-    tags := x.QueryTags('item');
-    for i := 0 to tags.count - 1 do begin
-        new_itm := lstResults.Items.Add();
-        if (cols <> nil) then begin
-            // walk all of the columns
-        end
-        else begin
-            // walk all of the children..
-        end;
-    end;
+    // we're owner data.. so just setup the list.
+    _x := x;
+    _tags := x.QueryTags('item');
+    lstResults.Items.Count := _tags.Count;
+end;
 
-    
+procedure TframeResults.lstResultsData(Sender: TObject; Item: TListItem);
+var
+    idx: integer;
+    xi: TXMLTag;
+    i: integer;
+    f: TXMLTag;
+    tmps: Widestring;
+begin
+    // populate this item
+    idx := Item.Index;
+    if (idx >= _tags.Count) then exit;
+    xi := _tags[idx];
+
+    // get all of the columns from this tag.
+    for i := 0 to _cols.count - 1 do begin
+        f := xi.QueryXPTag('/item/field[@var="' + _cols[i] + '"]');
+        if (f <> nil) then
+            tmps := f.GetFirstTag('value').data
+        else
+            tmps := '';
+
+        if (i = 0) then
+            Item.Caption := tmps
+        else
+            Item.SubItems.Add(tmps);
+    end;
 end;
 
 end.

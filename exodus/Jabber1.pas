@@ -2669,6 +2669,10 @@ var
 var
     hex: string;
 }
+var
+    r: TXMLTag;
+    x: Widestring;
+    p: TXMLTagParser;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2712,7 +2716,25 @@ begin
 
     //hex := MD5File('d:\temp\64ptn_en.pdf');
     //ShowMessage(hex);
-    StartCommandWizard('');
+
+    x := '<iq type="result" from="responder@domain" to="requester@domain" id="exec1" xml:lang="en-us">';
+    x := x + '<command xmlns="http://jabber.org/protocol/commands" sessionid="list:20020923T213616Z-700" node="list" status="completed">';
+    x := x + '<x xmlns="jabber:x:data" type="result"> <title>Available Services</title> <reported> <field var="service" label="Service"/> <field var="runlevel-1" label="Single-User mode"/> ';
+    x := x + '<field var="runlevel-2" label="Non-Networked Multi-User mode"/> <field var="runlevel-3" label="Full Mult-User mode"/> <field var="runlevel-5" label="X-Windows mode"/> </reported>';
+    x := x + '<item> <field var="service"><value>httpd</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field> ';
+    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
+    x := x + '<item> <field var="service"><value>postgresql</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field>';
+    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
+    x := x + '<item> <field var="service"><value>jabberd</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field>';
+    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
+    x := x + '</x>';
+    x := x + '</command></iq>';
+
+    p := TXMLTagParser.Create();
+    p.ParseString(x, '');
+    r := p.popTag();
+
+    StartCommandWizard('', r);
 
     // Cause an AV
     // PInteger(nil)^ := 0;

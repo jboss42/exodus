@@ -1,6 +1,7 @@
 inherited frmCommandWizard: TfrmCommandWizard
   Left = 185
   Top = 119
+  BorderStyle = bsSizeable
   Caption = 'frmCommandWizard'
   OldCreateOrder = True
   OnClose = FormClose
@@ -30,7 +31,6 @@ inherited frmCommandWizard: TfrmCommandWizard
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = tbsExecute
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -109,7 +109,7 @@ inherited frmCommandWizard: TfrmCommandWizard
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 63
         Height = 13
         Align = alTop
         Caption = 'Please wait...'
