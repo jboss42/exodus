@@ -41,7 +41,8 @@ const
     FEAT_PROXY          = 'proxy';
     FEAT_BYTESTREAMS    = 'bytestreams';
 
-    WALK_LIMIT          = 20;
+    WALK_LIMIT          = 20;   // max # of items to do disco#info on
+    WALK_MAX_TIMEOUT    = 30;   // max # of seconds for iq timeouts.
 
 type
 
@@ -145,6 +146,7 @@ begin
     _has_info := false;
     _has_items := false;
     _items := TWidestringlist.Create();
+    _timeout := 10;
 
     Tag := -1;
     Data := nil;
@@ -727,8 +729,8 @@ begin
         // BAH! agents didn't work either.. this thing sucks,
         // if our event is a timeout, let's retry the whole mess, with a longer
         // timeout.
-        if ((event = 'timeout') and (_timeout < 60)) then begin
-            _timeout := _timeout * 2;
+        if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then begin
+            _timeout := _timeout * 3;
             _discoInfo(js, WalkCallback);
         end;
         exit;
