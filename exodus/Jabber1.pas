@@ -425,7 +425,7 @@ resourcestring
 
     sCommError = 'There was an error during communication with the Jabber Server';
     sDisconnected = 'You have been disconnected.';
-    sAuthError = 'There was an error trying to authenticate you. Please try again, or create a new account';
+    sAuthError = 'There was an error trying to authenticate you.'#13#10'Either you used the wrong password, or this account is already in use by someone else.';
     sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
     sCancelReconnect = 'Click to Cancel Reconnect';
