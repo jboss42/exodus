@@ -51,7 +51,7 @@ object frmJoinRoom: TfrmJoinRoom
     Top = 70
     Width = 139
     Height = 21
-    TabOrder = 1
+    TabOrder = 2
   end
   inline frameButtons1: TframeButtons
     Left = 0
@@ -60,7 +60,7 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 2
+    TabOrder = 3
     inherited Bevel1: TBevel
       Width = 241
     end
@@ -81,7 +81,7 @@ object frmJoinRoom: TfrmJoinRoom
     Width = 140
     Height = 21
     ItemHeight = 13
-    TabOrder = 3
+    TabOrder = 1
     Text = 'txtServer'
   end
 end

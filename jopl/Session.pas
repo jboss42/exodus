@@ -182,6 +182,10 @@ uses
     Unicode, XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
     iq;
 
+var
+    _auth_iq: TJabberIQ;
+
+
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: string);
 begin
@@ -192,6 +196,7 @@ begin
     _id := 1;
     _cb_id := 1;
     _profile := nil;
+    _auth_iq := nil;
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
@@ -601,29 +606,28 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.AuthGet;
-var
-    iqAuth: TJabberIQ;
 begin
     // find out the potential auth kinds for this user
-    // iqAuth := TJabberIQ.Create(Self, generateID, Self.AuthGetCallback);
-    iqAuth := TJabberIQ.Create(Self, generateID, AuthGetCallback, 180);
-    with iqAuth do begin
+    if (_auth_iq <> nil) then _auth_iq.Free();
+
+    _auth_iq := TJabberIQ.Create(Self, generateID, AuthGetCallback, 180);
+    with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'get';
         with qTag do
             AddBasicTag('username', Username);
         end;
-    iqAuth.Send;
+    _auth_iq.Send;
 end;
 
 {---------------------------------------}
 procedure TJabberSession.SendRegistration;
-var
-    iqReg: TJabberIQ;
 begin
     // send an iq register
-    iqReg := TJabberIQ.Create(Self, generateID, RegistrationCallback, 180);
-    with iqReg do begin
+    if (_auth_iq <> nil) then _auth_iq.Free();
+
+    _auth_iq := TJabberIQ.Create(Self, generateID, RegistrationCallback, 180);
+    with _auth_iq do begin
         Namespace := XMLNS_REGISTER;
         iqType := 'set';
         with qTag do begin
@@ -631,13 +635,14 @@ begin
             AddBasicTag('password', Password);
             end;
         end;
-    iqReg.Send;
+    _auth_iq.Send;
 end;
 
 {---------------------------------------}
 procedure TJabberSession.RegistrationCallback(event: string; xml: TXMLTag);
 begin
     // callback from our registration request
+    _auth_iq := nil;
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
         Disconnect();
         _dispatcher.DispatchSignal('/session/regerror', xml);
@@ -655,9 +660,9 @@ var
     etag, tok, seq, dig, qtag: TXMLTag;
     authDigest, authHash, authToken, hashA, key: WideString;
     i, authSeq: integer;
-    auth: TJabberIQ;
 begin
     // auth get result or error
+    _auth_iq := nil;
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
         if (xml <> nil) then begin
             // check for non-existant account
@@ -681,8 +686,8 @@ begin
     dig := qtag.GetFirstTag('digest');
 
     // setup the iq-set
-    Auth := TJabberIQ.Create(Self, generateID, AuthCallback, 180);
-    with Auth do begin
+    _auth_iq := TJabberIQ.Create(Self, generateID, AuthCallback, 180);
+    with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'set';
         qTag.AddBasicTag('username', Username);
@@ -700,22 +705,22 @@ begin
         for i := 1 to authSeq do
             key := Sha1Hash(key);
         authHash := key;
-        Auth.qTag.AddBasicTag('hash', authHash);
+        _auth_iq.qTag.AddBasicTag('hash', authHash);
         end
 
     else if dig <> nil then begin
         // Digest (basic Sha1)
         _AuthType := jatDigest;
         authDigest := Sha1Hash(Trim(_stream_id + Password));
-        Auth.qTag.AddBasicTag('digest', authDigest);
+        _auth_iq.qTag.AddBasicTag('digest', authDigest);
         end
 
     else begin
         // Plaintext
         _AuthType := jatPlainText;
-        Auth.qTag.AddBasicTag('password', Password);
+        _auth_iq.qTag.AddBasicTag('password', Password);
         end;
-    Auth.Send;
+    _auth_iq.Send;
 end;
 
 {---------------------------------------}
@@ -724,6 +729,7 @@ var
     cur_agents: TAgents;
 begin
     // check the result of the authentication
+    _auth_iq := nil;
     if ((tag = nil) or (tag.getAttribute('type') = 'error')) then begin
         // timeout
         Disconnect();
