@@ -1080,8 +1080,18 @@ begin
     if (ritem.jid.jid = MainSession.BareJid) then begin
         // this is another one of my own resources
         is_me := true;
-        if (p <> nil) then
-            tmp_grps.Add(sMyResources);
+        if (p <> nil) then begin
+            // check unavail resources, and we're not showing only online
+            if (p.PresType = 'unavailable') then begin
+                RemoveItemNode(ritem, p);
+                // check for empty "My Resources" node
+                if ((_myres <> nil) and (_myres.Count <= 0)) then
+                    FreeAndNil(_myres);
+                exit;
+            end
+            else
+                tmp_grps.Add(sMyResources);
+        end;
     end
     else if (((p = nil) or (p.PresType = 'unavailble')) and (_offline_grp)
         and (is_transport = false)) then
@@ -1117,10 +1127,6 @@ begin
             node_list.Delete(i);
         end;
     end;
-
-    // check for empty "My Resources" node
-    if ((_myres <> nil) and (_myres.Count <= 0)) then
-        FreeAndNil(_myres);
 
     // determine the caption for the node
     if ((is_me) and (p <> nil)) then
