@@ -6,20 +6,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-11 17:42\n"
-"PO-Revision-Date: 2003-11-11 17:42\n"
+"POT-Creation-Date: 2003-11-14 08:44\n"
+"PO-Revision-Date: 2003-11-14 08:44\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: dxgettext 1.4\n"
 
 #. frmAbout..Caption
-#: About.dfm:7
+#: About.dfm:8
 msgid "About Exodus"
 msgstr ""
 
 #. frmAbout..Font.Name
-#: About.dfm:12
+#: About.dfm:13
 #. frmAutoUpdateStatus..Font.Name
 #: AutoUpdateStatus.dfm:14
 #. frmAutoUpdateStatus..TntLabel1..Font.Name
@@ -110,6 +110,8 @@ msgstr ""
 #: PathSelector.dfm:31
 #. frmPrefs..Font.Name
 #: Prefs.dfm:12
+#. frmPrefs..Scroller..Font.Name
+#: Prefs.dfm:32
 #. frmProfile..Font.Name
 #: Profile.dfm:12
 #. frmRemove..Font.Name
@@ -182,7 +184,7 @@ msgid "MS Sans Serif"
 msgstr ""
 
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: About.dfm:1423
+#: About.dfm:1425
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:41
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
@@ -191,7 +193,7 @@ msgstr ""
 #: RosterRecv.dfm:48
 #. Programmer's name for it: sBtnClose
 #: MsgRecv.pas:163
-#: RecvStatus.pas:375
+#: RecvStatus.pas:376
 #: SendStatus.pas:837
 #. our thread completed.
 #: SendStatus.pas:957
@@ -203,14 +205,14 @@ msgid "Close"
 msgstr ""
 
 #. frmAbout..pnlVersion..Caption
-#: About.dfm:1436
+#: About.dfm:1438
 #. Programmer's name for it: sMsgVerVersion
 #: ExEvents.pas:91
 msgid "Version: "
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1450
+#: About.dfm:1453
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:51
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -233,7 +235,7 @@ msgid "e-mail"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1456
+#: About.dfm:1459
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:57
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -256,7 +258,7 @@ msgid "http"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1462
+#: About.dfm:1465
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:63
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -279,7 +281,7 @@ msgid "file"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1468
+#: About.dfm:1471
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:69
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -302,7 +304,7 @@ msgid "mailto"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1474
+#: About.dfm:1477
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:75
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -325,7 +327,7 @@ msgid "ftp"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1480
+#: About.dfm:1483
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:81
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -348,7 +350,7 @@ msgid "https"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1486
+#: About.dfm:1489
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:87
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -371,7 +373,7 @@ msgid "gopher"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1492
+#: About.dfm:1495
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:93
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -394,7 +396,7 @@ msgid "nntp"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1498
+#: About.dfm:1501
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:99
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -417,7 +419,7 @@ msgid "prospero"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1504
+#: About.dfm:1507
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:105
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -440,7 +442,7 @@ msgid "telnet"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1510
+#: About.dfm:1513
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:111
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -463,7 +465,7 @@ msgid "news"
 msgstr ""
 
 #. frmAbout..InfoBox......Name
-#: About.dfm:1516
+#: About.dfm:1519
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:117
 #. frmBaseChat..pnlInput..MsgOut......Name
@@ -486,7 +488,7 @@ msgid "wais"
 msgstr ""
 
 #. frmAbout..InfoBox....AllowInPlace
-#: About.dfm:1555
+#: About.dfm:1559
 msgid "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 "
 "MS Sans Serif;}}\n"
 "\\viewkind4\\uc1\\pard\\f0\\fs16 Exodus is the creation of Peter Millard  "
@@ -619,7 +621,7 @@ msgstr ""
 #. frmBaseChat..popOut..emot_sep..Caption
 #: BaseChat.dfm:321
 #. frmBrowse..popContext..N1..Caption
-#: Browser.dfm:3159
+#: Browser.dfm:3817
 #. frmChat..popContact..N5..Caption
 #: ChatWin.dfm:104
 #. frmChat..popContact..N4..Caption
@@ -787,9 +789,9 @@ msgstr ""
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Font.Name
 #: MsgRecv.dfm:420
 #. frmPrefs..PageControl1..tbsKeywords..TntPanel1..Font.Name
-#: Prefs.dfm:3141
+#: Prefs.dfm:3103
 #. frmPrefs..PageControl1..tbsBlockList..StaticText4..Font.Name
-#: Prefs.dfm:3188
+#: Prefs.dfm:3150
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
 #: RegForm.dfm:38
 #. frmRegister..Tabs..TabSheet1..lblIns..Font.Name
@@ -811,7 +813,7 @@ msgstr ""
 #. frmPrefAway..StaticText4..Font.Name
 #: prefs/PrefAway.dfm:126
 #. frmPrefDialogs..StaticText4..Font.Name
-#: prefs/PrefDialogs.dfm:206
+#: prefs/PrefDialogs.dfm:208
 #. frmPrefFont..StaticText4..Font.Name
 #: prefs/PrefFont.dfm:230
 #. frmPrefGroups..StaticText4..Font.Name
@@ -938,27 +940,27 @@ msgid "Re-Browse this object"
 msgstr ""
 
 #. frmBrowse..popViewStyle..Details1..Caption
-#: Browser.dfm:3126
+#: Browser.dfm:3784
 msgid "Details"
 msgstr ""
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
-#: Browser.dfm:3130
+#: Browser.dfm:3788
 msgid "Large Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..SmallIcons1..Caption
-#: Browser.dfm:3134
+#: Browser.dfm:3792
 msgid "Small Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..List1..Caption
-#: Browser.dfm:3138
+#: Browser.dfm:3796
 msgid "List"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#: Browser.dfm:3147
+#: Browser.dfm:3805
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #: ConnDetails.dfm:286
 #. Programmer's name for it: sBrowse
@@ -975,31 +977,31 @@ msgid "Browse"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowseNew..Caption
-#: Browser.dfm:3151
+#: Browser.dfm:3809
 msgid "Browse in New Window"
 msgstr ""
 
 #. frmBrowse..popContext..mBookmark..Caption
-#: Browser.dfm:3155
+#: Browser.dfm:3813
 msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#: Browser.dfm:3162
+#: Browser.dfm:3820
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Jabber1.dfm:438
 msgid "vCard"
 msgstr ""
 
 #. frmBrowse..popContext..mVersion..Caption
-#: Browser.dfm:3166
+#: Browser.dfm:3824
 #. Programmer's name for it: sVersion
 #: ExResponders.pas:123
 msgid "Version"
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#: Browser.dfm:3170
+#: Browser.dfm:3828
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Jabber1.dfm:434
 #. Programmer's name for it: sTime
@@ -1008,24 +1010,24 @@ msgid "Time"
 msgstr ""
 
 #. frmBrowse..popContext..mLast..Caption
-#: Browser.dfm:3174
+#: Browser.dfm:3832
 msgid "Last Time/Activity"
 msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
-#: Browser.dfm:3178
+#: Browser.dfm:3836
 #. Programmer's name for it: sJUDSearch
 #: jud.pas:110
 msgid "Search"
 msgstr ""
 
 #. frmBrowse..popContext..mRegister..Caption
-#: Browser.dfm:3182
+#: Browser.dfm:3840
 msgid "Register"
 msgstr ""
 
 #. frmBrowse..popContext..mJoinConf..Caption
-#: Browser.dfm:3186
+#: Browser.dfm:3844
 msgid "Join Conference"
 msgstr ""
 
@@ -1034,7 +1036,7 @@ msgstr ""
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
 #: ExceptTracer.dfm:36
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
-#: Prefs.dfm:3226
+#: Prefs.dfm:3188
 #. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: SSLWarn.dfm:182
 msgid "OK"
@@ -1045,7 +1047,7 @@ msgstr ""
 #. frmDockWizard..TntPanel1..btnCancel..Caption
 #: DockWizard.dfm:55
 #. frmPrefs..Panel1..Panel3..btnCancel..Caption
-#: Prefs.dfm:3236
+#: Prefs.dfm:3198
 #. fRecvStatus..Panel1..btnCancel..Caption
 #: RecvStatus.dfm:100
 #. fSendStatus..Panel1..btnCancel..Caption
@@ -1691,7 +1693,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..Caption
 #: Jabber1.dfm:2644
 #. frmPrefs..Scroller..lblCustomPres..Caption
-#: Prefs.dfm:1970
+#: Prefs.dfm:1946
 #. frmRosterWindow..popRoster..popPresence..Caption
 #: RosterWindow.dfm:349
 msgid "Presence"
@@ -2609,30 +2611,13 @@ msgid "Exodus Preferences"
 msgstr ""
 
 #. frmPrefs..Scroller..lblDialog..Caption
-#: Prefs.dfm:240
+#: Prefs.dfm:246
 msgid "Windows"
 msgstr ""
 
 #. frmPrefs..Scroller..lblFonts..Caption
-#: Prefs.dfm:435
+#: Prefs.dfm:441
 msgid "Fonts, Colors"
-msgstr ""
-
-#. frmPrefs..Scroller..lblFonts..Font.Name
-#: Prefs.dfm:439
-#. frmPrefs..Scroller..lblS10n..Font.Name
-#: Prefs.dfm:642
-#. frmPrefs..Scroller..lblRoster..Font.Name
-#: Prefs.dfm:845
-#. frmPrefs..Scroller..lblSystem..Font.Name
-#: Prefs.dfm:1048
-#. frmPrefs..Scroller..lblGroups..Font.Name
-#: Prefs.dfm:2893
-#. frmPrefs..Scroller..lblLayouts..Font.Name
-#: Prefs.dfm:3068
-#. frmSSLWarn..lblHeader..Font.Name
-#: SSLWarn.dfm:148
-msgid "Arial Unicode MS"
 msgstr ""
 
 #. frmPrefs..Scroller..lblS10n..Caption
@@ -2641,54 +2626,54 @@ msgid "Subscriptions"
 msgstr ""
 
 #. frmPrefs..Scroller..lblRoster..Caption
-#: Prefs.dfm:840
+#: Prefs.dfm:832
 msgid "Roster"
 msgstr ""
 
 #. frmPrefs..Scroller..lblSystem..Caption
-#: Prefs.dfm:1043
+#: Prefs.dfm:1027
 msgid "System"
 msgstr ""
 
 #. frmPrefs..Scroller..lblNotify..Caption
-#: Prefs.dfm:1190
+#: Prefs.dfm:1166
 msgid "Notification"
 msgstr ""
 
 #. frmPrefs..Scroller..lblAway..Caption
-#: Prefs.dfm:1385
+#: Prefs.dfm:1361
 msgid "Auto-Away"
 msgstr ""
 
 #. frmPrefs..Scroller..lblKeywords..Caption
-#: Prefs.dfm:1580
+#: Prefs.dfm:1556
 #. frmPrefs..PageControl1..tbsKeywords..Caption
-#: Prefs.dfm:3090
+#: Prefs.dfm:3052
 msgid "Keywords"
 msgstr ""
 
 #. frmPrefs..Scroller..lblBlockList..Caption
-#: Prefs.dfm:1775
+#: Prefs.dfm:1751
 msgid "Block List"
 msgstr ""
 
 #. frmPrefs..Scroller..lblMessages..Caption
-#: Prefs.dfm:2165
+#: Prefs.dfm:2141
 msgid "Messages"
 msgstr ""
 
 #. frmPrefs..Scroller..lblPlugins..Caption
-#: Prefs.dfm:2304
+#: Prefs.dfm:2280
 msgid "Plugins"
 msgstr ""
 
 #. frmPrefs..Scroller..lblNetwork..Caption
-#: Prefs.dfm:2499
+#: Prefs.dfm:2475
 msgid "Network"
 msgstr ""
 
 #. frmPrefs..Scroller..lblTransfer..Caption
-#: Prefs.dfm:2693
+#: Prefs.dfm:2669
 #. frmXferManager..Panel1..pnlCaption..Caption
 #: XferManager.dfm:53
 #. frmPrefNotify..chkNotify....Items.WideStrings
@@ -2699,64 +2684,64 @@ msgid "File Transfers"
 msgstr ""
 
 #. frmPrefs..Scroller..lblGroups..Caption
-#: Prefs.dfm:2888
+#: Prefs.dfm:2864
 #. frmProfile..PageControl1..TabSheet2..Caption
 #: Profile.dfm:222
 msgid "Groups"
 msgstr ""
 
 #. frmPrefs..Scroller..lblLayouts..Caption
-#: Prefs.dfm:3064
+#: Prefs.dfm:3032
 msgid "Layouts"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
-#: Prefs.dfm:3117
+#: Prefs.dfm:3079
 msgid "Exodus can notify you when a keyword appears in chat room. Enter in "
 "the keywords that you want Exodus to look for in "
 "messages."
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
-#: Prefs.dfm:3125
+#: Prefs.dfm:3087
 msgid "Use Regular Expressions for Keyword "
 "matches"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..TntPanel1..Caption
-#: Prefs.dfm:3136
+#: Prefs.dfm:3098
 msgid "Notification Keywords"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
-#: Prefs.dfm:3149
+#: Prefs.dfm:3111
 msgid "BlockList"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
-#: Prefs.dfm:3169
+#: Prefs.dfm:3131
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
 "sending "
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:3170
+#: Prefs.dfm:3132
 msgid "you "
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:3171
+#: Prefs.dfm:3133
 msgid "messages. All messages from these contacts will be "
 "blocked."
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..StaticText4..Caption
-#: Prefs.dfm:3183
+#: Prefs.dfm:3145
 msgid "Blocked Contacts"
 msgstr ""
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
-#: Prefs.dfm:3245
+#: Prefs.dfm:3207
 msgid "Apply"
 msgstr ""
 
@@ -6279,6 +6264,11 @@ msgstr ""
 msgid "SSL Security Warning"
 msgstr ""
 
+#. frmSSLWarn..lblHeader..Font.Name
+#: SSLWarn.dfm:148
+msgid "Arial Unicode MS"
+msgstr ""
+
 #. frmSSLWarn..optDisconnect..Caption
 #: SSLWarn.dfm:193
 msgid "Reject SSL certificate. Disconnect jabber "
@@ -6384,52 +6374,52 @@ msgid "File Transfer Manager"
 msgstr ""
 
 #. Programmer's name for it: sService
-#: Browser.pas:169
+#: Browser.pas:157
 msgid "Service"
 msgstr ""
 
 #. Programmer's name for it: sConference
-#: Browser.pas:170
+#: Browser.pas:158
 msgid "Conference"
 msgstr ""
 
 #. Programmer's name for it: sUser
-#: Browser.pas:171
+#: Browser.pas:159
 msgid "Jabber User"
 msgstr ""
 
 #. Programmer's name for it: sApplication
-#: Browser.pas:172
+#: Browser.pas:160
 msgid "Application"
 msgstr ""
 
 #. Programmer's name for it: sHeadline
-#: Browser.pas:173
+#: Browser.pas:161
 msgid "Headline Svc."
 msgstr ""
 
 #. Programmer's name for it: sRender
-#: Browser.pas:174
+#: Browser.pas:162
 msgid "Rendering Svc."
 msgstr ""
 
 #. Programmer's name for it: sKeyword
-#: Browser.pas:175
+#: Browser.pas:163
 msgid "Keyword Lookup"
 msgstr ""
 
 #. Programmer's name for it: sValidate
-#: Browser.pas:176
+#: Browser.pas:164
 msgid "Validator"
 msgstr ""
 
 #. Programmer's name for it: sItem
-#: Browser.pas:177
+#: Browser.pas:165
 msgid "Jabber Object"
 msgstr ""
 
 #. Programmer's name for it: sObjects
-#: Browser.pas:178
+#: Browser.pas:166
 msgid "Objects"
 msgstr ""
 
@@ -6739,80 +6729,80 @@ msgid "Winsock2 is required for this application. Please obtain the winsock2 "
 msgstr ""
 
 #. Programmer's name for it: sDownloading
-#: ExUtils.pas:117
+#: ExUtils.pas:114
 msgid "Downloading..."
 msgstr ""
 
 #. Programmer's name for it: sDownloadComplete
-#: ExUtils.pas:118
+#: ExUtils.pas:115
 msgid "Download Complete"
 msgstr ""
 
 #. Programmer's name for it: sInitializing
-#: ExUtils.pas:119
+#: ExUtils.pas:116
 msgid "Initializing..."
 msgstr ""
 
 #. Programmer's name for it: sInstalling
-#: ExUtils.pas:120
+#: ExUtils.pas:117
 msgid "Installing..."
 msgstr ""
 
 #. Programmer's name for it: sError
-#: ExUtils.pas:121
+#: ExUtils.pas:118
 msgid "Error: %s"
 msgstr ""
 
 #. Programmer's name for it: sTurnOnBlocking
-#: ExUtils.pas:151
+#: ExUtils.pas:148
 msgid "You currently have logging turned off. Turn Logging On? (Warning: "
 "Logs are not encrypted)"
 msgstr ""
 
 #. Programmer's name for it: sNoHistory
-#: ExUtils.pas:152
+#: ExUtils.pas:149
 msgid "There is no history file for this contact."
 msgstr ""
 
 #. Programmer's name for it: sBadLogDir
-#: ExUtils.pas:153
+#: ExUtils.pas:150
 msgid "The log directory you specified is invalid. Either turn off logging, "
 "or specify a valid path."
 msgstr ""
 
 #. Programmer's name for it: sHistoryDeleted
-#: ExUtils.pas:154
+#: ExUtils.pas:151
 msgid "History deleted."
 msgstr ""
 
 #. Programmer's name for it: sHistoryError
-#: ExUtils.pas:155
+#: ExUtils.pas:152
 msgid "Could not delete history file."
 msgstr ""
 
 #. Programmer's name for it: sHistoryNone
-#: ExUtils.pas:156
+#: ExUtils.pas:153
 msgid "No history file for this user."
 msgstr ""
 
 #. Programmer's name for it: sConfirmClearLog
-#: ExUtils.pas:157
+#: ExUtils.pas:154
 msgid "Do you really want to clear the log for "
 "%s?"
 msgstr ""
 
 #. Programmer's name for it: sConfirmClearAllLogs
-#: ExUtils.pas:158
+#: ExUtils.pas:155
 msgid "Are you sure you want to delete all of your message and room "
 "logs?"
 msgstr ""
 
 #. Programmer's name for it: sFilesDeleted
-#: ExUtils.pas:159
+#: ExUtils.pas:156
 msgid "%d log files deleted."
 msgstr ""
 
-#: ExUtils.pas:455
+#: ExUtils.pas:452
 msgid "Could not open log file: "
 msgstr ""
 
@@ -7192,33 +7182,33 @@ msgstr ""
 msgid "Chat with "
 msgstr ""
 
-#: RecvStatus.pas:374
+#: RecvStatus.pas:375
 msgid "Receive request timed out."
 msgstr ""
 
-#: RecvStatus.pas:401
+#: RecvStatus.pas:402
 msgid "No acceptable stream hosts were sent. Have the sender check their "
 "settings."
 msgstr ""
 
 #. send SI accept
-#: RecvStatus.pas:504
+#: RecvStatus.pas:505
 msgid "Negotiating with sender..."
 msgstr ""
 
 #. we ran out of streamhosts to try. bummer :(
-#: RecvStatus.pas:681
+#: RecvStatus.pas:682
 msgid "Exodus was unable to connect to any file transfer proxies or the "
 "sender."
 msgstr ""
 
 #. immediately turn around and refuse.
-#: RecvStatus.pas:712
+#: RecvStatus.pas:713
 msgid "Waiting to cancel transfer..."
 msgstr ""
 
 #. the sender went offline
-#: RecvStatus.pas:734
+#: RecvStatus.pas:735
 msgid "The sender of a file transfer (%s) went "
 "offline."
 msgstr ""
@@ -8034,18 +8024,18 @@ msgid "Make the main window snap to screen "
 msgstr ""
 
 #. frmPrefDialogs..chkBusy..Caption
-#: prefs/PrefDialogs.dfm:165
+#: prefs/PrefDialogs.dfm:166
 msgid "Warn when trying to close busy chat "
 "windows."
 msgstr ""
 
 #. frmPrefDialogs..StaticText4..Caption
-#: prefs/PrefDialogs.dfm:201
+#: prefs/PrefDialogs.dfm:203
 msgid "Window Options"
 msgstr ""
 
 #. frmPrefDialogs..chkEscClose..Caption
-#: prefs/PrefDialogs.dfm:227
+#: prefs/PrefDialogs.dfm:229
 msgid "Use ESC key to close chat windows."
 msgstr ""
 
