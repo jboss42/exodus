@@ -45,6 +45,7 @@ print "$::RTYPE build (version $::VTYPE)...\n";
 chdir "exodus" or die;
 
 my $oldrev;
+#my $version = "0.9.0.37";
 my $version = `perl version.pl $::VTYPE`;
 $? and exit(1);
 chomp $version;

@@ -39,6 +39,7 @@ type
         _js: TJabberSession;
         _Callback: TPacketEvent;
         _cbIndex: integer;
+        _cbSession: integer;
         _timer: TTimer;
         _ticks: longint;
         _timeout: longint;
@@ -118,6 +119,8 @@ begin
     _timer.Free;
     if (_cbIndex >= 0) then
         _js.UnRegisterCallback(_cbIndex);
+    if (_cbSession >= 0) then
+        _js.UnRegisterCallback(_cbSession);
     inherited Destroy;
 end;
 
@@ -151,6 +154,7 @@ begin
     if (_js.xmlLang <> '') then
         self.setAttribute('xml:lang', _js.xmlLang);
 
+    _cbSession := _js.RegisterCallback(iqCallback, '/session/disconnected');
     _cbIndex := _js.RegisterCallback(iqCallback, '/packet/iq[@id="' + _id + '"]');
     _js.Stream.Send(Self.xml);
 
@@ -164,10 +168,14 @@ begin
     // this is our singleton
     _timer.Enabled := false;
     _js.UnRegisterCallback(_cbIndex);
-    xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
-    if (Assigned(_callback)) then
-        _callback('xml', xml);
+    _js.UnRegisterCallback(_cbSession);
+    if (event = 'xml') then begin
+        xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
+        if (Assigned(_callback)) then
+            _callback('xml', xml);
+    end;
     _cbIndex := -1;
+    _cbSession := -1;
     Self.Free;
 end;
 
