@@ -8,12 +8,16 @@ $::ROOT = '/var/projects/exodus';
 
 $::SCP = 'scp -C';
 $::SSH = 'ssh';
-$::CVS = 'cvs';
-
+$::SVN = 'svn';
 $::RTYPE = "daily";
 $::VTYPE = "build";
+$::PREFIX = "svn+putty";
+$::SVNROOT = "/var/projects/exodus/svn";
+$::GENLOG = "/var/projects/exodus/bin/genlog";
 
 do "dopts.pl";
+
+$::SVNPATH = "$::PREFIX://$::USER\@$::SERVER$::SVNROOT";
 
 my $userhost = $::USER ? "$::USER\@$::SERVER" : $::SERVER;
 
@@ -37,40 +41,41 @@ EOF
   }
 }
 
-
 print "$::RTYPE build (version $::VTYPE)...\n";
 chdir "exodus" or die;
 
+my $oldrev;
 my $version = `perl version.pl $::VTYPE`;
 $? and exit(1);
 chomp $version;
-
 print "$version\n";
 chdir ".." or die;
 
 my $urtype = uc($::RTYPE);
-my $cl = "ChangeLog-$urtype.txt";
 e("perl build.pl $::RTYPE");
-e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
+e("$::SVN ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::SVN;
 
-e("perl cvs2cl.pl --delta $urtype:HEAD -f exodus/$cl");
-e("$::CVS ci -m \"$::RTYPE build\" exodus/$cl");
-e("$::CVS tag -F $urtype") if $::CVS;
+# Remove the old branch, and create a new one.
+e("$::SVN del $::SVNPATH/tags/$urtype -m \"new $::RTYPE build.\"") if $::SVN;
+e("$::SVN update") if $::SVN;
+e("$::SVN cp . $::SVNPATH/tags/$urtype -m \"new $::RTYPE build.\"") if $::SVN;
+e("$::SVN update") if $::SVN;
 
 chdir "exodus" or die;
 if ($::RTYPE eq "daily") {
-  e("$::SCP $cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
-  e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 664 *; mv setup.exe $cl ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
+  ### DAILY BUILDS
+  e("$::SCP setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
+  e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 664 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\; $::GENLOG daily\"");
 } else {
+  ### RELEASE BUILDS
   my $uver;
   ($uver = $version) =~ s/\./_/g;
-  e("$::CVS tag -F v_$uver") if $::CVS;
+  e("$::SVN cp . $::SVNPATH/tags/v_$uver -m \"new $::RTYPE build.\"") if $::SVN;
   e("$::SCP setup.exe $userhost:$::ROOT/files/exodus_$version.exe");
   e("$::SCP setup-standalone.exe $userhost:$::ROOT/files/exodus_standalone_$version.exe");
   e("$::SCP exodus.zip $userhost:$::ROOT/files/exodus_$version.zip");
   e("$::SCP plugins/*.zip $userhost:$::ROOT/www/plugins");
-  e("$::SCP ../$cl $userhost:$::ROOT/www");
-  e("$::SSH $userhost \"chmod 664 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip $::ROOT/www/$cl\"");
+  e("$::SSH $userhost \"chmod 664 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip ; $::GENLOG release\"");
 }
 
 print "\n\nSUCCESS!\n";
