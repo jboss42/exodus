@@ -273,8 +273,11 @@ begin
                 Result.Add(opts_vals[i]);
             end;
         end
-    else if (c is TCombobox) then
-        Result.Add(opts_vals[TCombobox(c).ItemIndex])
+    else if (c is TCombobox) then begin
+        i := TCombobox(c).ItemIndex;
+        if (i <> -1) then
+            Result.Add(opts_vals[i]);
+        end
     else if (c is TCheckbox) then begin
         if (TCheckbox(c).checked) then
             Result.Add('1')
