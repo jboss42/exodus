@@ -27,9 +27,9 @@ uses
     XMLStream,
     LibXMLParser,
     {$ifdef linux}
-    QForms, QExtCtrls,
+    QExtCtrls,
     {$else}
-    Forms, Messages, Windows, StdVcl, ExtCtrls,
+    ExtCtrls,
     {$endif}
     SysUtils, IdThread, IdException, IdSSLOpenSSL,
     IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
