@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 357
+    Height = 360
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1569,13 +1569,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 357
-    ActivePage = tbsNotify
+    Height = 360
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1958,7 +1958,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 183
+        Top = 202
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1966,7 +1966,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1983,7 +1983,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 160
+        Top = 179
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
@@ -2023,14 +2023,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtXFerPath: TEdit
         Left = 29
-        Top = 201
+        Top = 220
         Width = 188
         Height = 21
         TabOrder = 7
       end
       object btnTransferBrowse: TButton
         Left = 222
-        Top = 199
+        Top = 218
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -2063,12 +2063,20 @@ object frmPrefs: TfrmPrefs
       end
       object btnUpdateCheck: TButton
         Left = 222
-        Top = 156
+        Top = 175
         Width = 75
         Height = 25
         Caption = 'Check Now'
         TabOrder = 11
         OnClick = btnUpdateCheckClick
+      end
+      object chkSingleInstance: TCheckBox
+        Left = 8
+        Top = 160
+        Width = 209
+        Height = 17
+        Caption = 'Only allow a single instance of Exodus'
+        TabOrder = 12
       end
     end
     object tbsDialog: TTabSheet
@@ -3015,7 +3023,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 357
+    Top = 360
     Width = 460
     Height = 37
     Align = alBottom
