@@ -327,7 +327,7 @@ begin
                     // _old_hint := imgStatus.Hint;
 
                     _cur_img := _pres_img;
-                    imgStatus.Hint := OtherNick + ' is typing';
+                    imgStatus.Hint := OtherNick + ' is replying';
                     timFlashTimer(Self);
                     timFlash.Enabled := true;
 
