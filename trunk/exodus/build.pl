@@ -53,7 +53,6 @@ e('zip locale ' . join(' ', glob("locale/*/LC_MESSAGES/default.mo")));
 chdir "plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
-grep unlink, glob("*/ExodusCOM_TLB.*");
   
 open OFF,">plugin-off.nsi" or die $!;
 open SEC,">plugin-sections.nsi" or die $!;
@@ -97,6 +96,7 @@ sub plug {
   unless ($dpr) { chdir ".."; return };
   unless (-e("README.txt")) { chdir ".."; return };
 
+  grep unlink, glob("ExodusCOM_TLB.*");
   e("copy ..\\..\\ExodusCOM_TLB.pas");
 
   my $thisopts = $plugopts;
