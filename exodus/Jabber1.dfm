@@ -1,6 +1,6 @@
 object frmExodus: TfrmExodus
-  Left = 286
-  Top = 192
+  Left = 287
+  Top = 193
   Width = 219
   Height = 384
   AlphaBlendValue = 240
@@ -30,14 +30,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 31
-    Height = 303
+    Height = 300
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
     Width = 151
-    Height = 303
+    Height = 300
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -68,7 +68,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 274
+        Height = 271
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -76,7 +76,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 274
+        Height = 271
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -89,7 +89,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 35
-        Height = 274
+        Height = 271
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -208,7 +208,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 303
+    Height = 300
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
