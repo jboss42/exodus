@@ -444,6 +444,8 @@ begin
                     try
                         sig(event, tag);
                     except
+                        on e: Exception do
+                            Dispatcher.handleException(Self, e, l, tag);
                     end;
                 end;
             end

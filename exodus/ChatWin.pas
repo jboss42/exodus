@@ -273,8 +273,10 @@ begin
             Position := poDefaultPosOnly;
 
         ShowDefault();
-        if ((show_window) and (Application.Active)) then
+        if ((show_window) and (Application.Active)) then begin
             Show();
+            TfrmChat(chat.window).SetFocus();
+        end;
 
         PlayQueue();
 
@@ -285,8 +287,6 @@ begin
 
     if (new_chat) then
         ExCOMController.fireNewChat(sjid, TExodusChat(chat.ComController));
-
-
 
     Result := TfrmChat(chat.window);
 end;
