@@ -168,7 +168,13 @@ type
 
     _change_node: TTreeNode;        // the current node being changed
     _bookmark: TTreeNode;           // the Bookmarks container node
-    _offline: TTreeNode;            // the Offline container node
+
+    _online: TTreeNode;             // Special groups
+    _away: TTreeNode;
+    _xa: TTreeNode;
+    _dnd: TTreeNode;
+    _offline: TTreeNode;
+
     _myres: TTreeNode;              // The My Resources node
     _hint_text : WideString;        // the hint text for the current node
 
@@ -186,9 +192,10 @@ type
     _collapse_all: boolean;         // Collapse all groups by default?
     _group_counts: boolean;
 
-    _show_online: boolean;          // Cached prefs so we don't query for them
-    _show_offgrp: boolean;          // all of the time through each render node
-    _show_pending: boolean;         // call.
+    _show_pending: boolean;
+    _show_visible: integer;
+    _sort_roster: boolean;
+    _offline_grp: boolean;
 
     _drop_copy: boolean;            // is the drag operation trying to copy?
 
@@ -307,6 +314,10 @@ begin
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
     _bookmark := nil;
+    _online := nil;
+    _away := nil;
+    _xa := nil;
+    _dnd := nil;
     _offline := nil;
     _myres := nil;
     _change_node := nil;
@@ -514,9 +525,10 @@ begin
             end;
         end;
 
-        _show_online := MainSession.Prefs.getBool('roster_only_online');
-        _show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
+        _show_visible := MainSession.Prefs.getInt('roster_visible');
+        _sort_roster := MainSession.Prefs.getBool('roster_sort');
         _show_pending := MainSession.Prefs.getBool('roster_show_pending');
+        _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
@@ -780,9 +792,7 @@ var
     p: TJabberPres;
 begin
     // Make sure we have current settings
-    _show_online := MainSession.Prefs.getBool('roster_only_online');
-    _show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
-    _show_pending := MainSession.Prefs.getBool('roster_show_pending');
+    // SessionCallback('/session/prefs', nil);
 
     // loop through all roster items and draw them
     _FullRoster := true;
@@ -972,6 +982,7 @@ var
     resort: boolean;
     grp_rect, node_rect: TRect;
     my_res: TJabberMyResource;
+    plevel: integer;
 begin
     // Render a specific roster item, with the given presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1010,20 +1021,28 @@ begin
         is_transport := true;
     end
 
-    else if (((_show_online) and (not _show_offgrp)) and
-        ((p = nil) or (p.PresType = 'unavailable'))) then begin
-        // Only show online, and don't use the offline grp
-        // This person is not online, remove all nodes and bail
-        if (ritem.jid.jid = MainSession.BareJid) then begin
-            RemoveItemNode(ritem, p);
-        end
-        else
-            RemoveItemNodes(ritem);
-        exit;
-    end
-
     else if (ritem.jid.user = '') then begin
         // maybe a transport? let them pass
+    end
+
+    else if (_show_visible > show_offline) then begin
+        // we are filtering visible contacts
+
+        if (p = nil) then plevel := show_offline
+        else if (p.show = 'dnd') then plevel := show_dnd
+        else if (p.show = 'xa') then plevel := show_xa
+        else if (p.show = 'away') then plevel := show_away
+        else plevel := show_available;
+
+        if (plevel < _show_visible) then begin
+            // we shouldn't show this ritem
+            if ((plevel = show_offline) and (not _offline_grp) and
+                (ritem.jid.jid = MainSession.BareJid)) then
+                RemoveItemNode(ritem, p)
+            else
+                RemoveItemNodes(ritem);
+            exit;
+        end;
     end
 
     else if ((ritem.subscription = 'none') or
@@ -1057,10 +1076,21 @@ begin
         if (p <> nil) then
             tmp_grps.Add(sMyResources);
     end
-    else if (((p = nil) or (p.PresType = 'unavailble')) and (_show_offgrp)
+    else if (((p = nil) or (p.PresType = 'unavailble')) and (_offline_grp)
         and (is_transport = false)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)
+
+    // other special groups
+    else if ((_sort_roster) and (not is_transport)) then begin
+        if (p = nil) then tmp_grps.Add(sGrpOffline)
+        else if (p.Show = 'away') then tmp_grps.Add(sGrpAway)
+        else if (p.Show = 'xa') then tmp_grps.Add(sGrpXA)
+        else if (p.Show = 'dnd') then tmp_grps.Add(sGrpDND)
+        else tmp_grps.Add(sGrpOnline);
+    end
+
+    // otherwise... use normal grps
     else
         // otherwise, assign the grps from the roster item
         tmp_grps.Assign(ritem.Groups);
@@ -2009,20 +2039,25 @@ begin
         treeRoster.Canvas.Font.Style := [fsBold];
 
         if (not Node.isVisible) then exit;
+        if (not _group_counts) then exit;
 
-        if ((_group_counts) and
-            (Node <> _offline) and
-            (Node <> _bookmark) and
-            (Node <> _myres) and
-            (Node.Text <> _transports)) then begin
+        if ((Node = _offline) or
+            (Node = _bookmark) or
+            (Node = _myres) or
+            (Node.Text = _transports) or
+            (_sort_roster)) then begin
+            c1 := Node.Text + ' ';
+            c2 := '(' + IntToStr(Node.Count) + ')';
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else begin
             total := MainSession.roster.getGroupCount(Node.Text, false);
             online := MainSession.roster.getGroupCount(Node.Text, true);
             c1 := Node.Text + ' ';
             c2 := '(' + IntToStr(online) + '/' + IntToStr(total) + ')';
             DrawNodeText(Node, State, c1, c2);
-            DefaultDraw := false;
         end;
-
+        DefaultDraw := false;
     end
     else begin
         // we are drawing some kind of node

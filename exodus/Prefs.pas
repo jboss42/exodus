@@ -25,7 +25,7 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork,      
+    PrefNetwork, PrefGroups,      
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -82,6 +82,8 @@ type
     imgTransfer: TImage;
     lblTransfer: TLabel;
     Bevel1: TBevel;
+    imgGroups: TImage;
+    lblGroups: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -92,6 +94,7 @@ type
     _cur_panel: TfrmPrefPanel;
     _system: TfrmPrefSystem;
     _roster: TfrmPrefRoster;
+    _groups: TfrmPrefGroups;
     _subscription: TfrmPrefSubscription;
     _font: TfrmPrefFont;
     _dialogs: TfrmPrefDialogs;
@@ -163,6 +166,9 @@ begin
         if (_roster <> nil) then
             _roster.SavePrefs();
 
+        if (_groups <> nil) then
+            _groups.SavePrefs();
+
         if (_system <> nil) then
             _system.SavePrefs();
 
@@ -228,6 +234,7 @@ begin
 
     // Init all the other panels
     _roster := nil;
+    _groups := nil;
     _subscription := nil;
     _font := nil;
     _dialogs := nil;
@@ -289,6 +296,16 @@ begin
         else begin
             _roster := TfrmPrefRoster.Create(Self);
             f := _roster;
+        end;
+    end
+    else if ((Sender = imgGroups) or (Sender = lblGroups)) then begin
+        // PageControl1.ActivePage := tbsRoster;
+        toggleSelector(lblGroups);
+        if (_groups <> nil) then
+            f := _groups
+        else begin
+            _groups := TfrmPrefGroups.Create(Self);
+            f := _groups;
         end;
     end
     else if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
@@ -426,6 +443,7 @@ begin
     // destroy all panels we have..
     _system.Free();
     _roster.Free();
+    _groups.Free();
     _subscription.Free();
     _font.Free();
     _dialogs.Free();

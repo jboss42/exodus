@@ -68,6 +68,13 @@ const
     invite_popup = 1;
     invite_accept = 2;
 
+    // roster visible levels
+    show_offline = 0;
+    show_dnd = 1;
+    show_xa = 2;
+    show_away = 3;
+    show_available = 4;
+
     P_EXPANDED = 'expanded';
     P_SHOWONLINE = 'roster_only_online';
     P_SHOWUNSUB = 'roster_show_unsub';
