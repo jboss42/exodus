@@ -412,10 +412,11 @@ end;
 {$ifdef INDY9}
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
 var
-    res: TSSLVerifyError;
-    sl : TStringList;
-    i  : integer;
-    n  : TDateTime;
+    res : TSSLVerifyError;
+    sl  : TStringList;
+    i   : integer;
+    n   : TDateTime;
+    tmps: string;
 begin
     _ssl_err := '';
     sl := TStringList.Create();
@@ -423,9 +424,10 @@ begin
     sl.QuoteChar := #0;
     sl.DelimitedText := Certificate.Subject.OneLine;
 
+    tmps := Lowercase(_profile.server);
     res := SVE_NONE;
     for i := 0 to sl.Count - 1 do begin
-        if (sl[i] = ('CN=' + _profile.Server)) then begin
+        if (Lowercase(sl[i]) = ('CN=' + tmps)) then begin
             _ssl_ok := true;
             break;
         end;
