@@ -695,6 +695,9 @@ var
 begin
     // get a single properly formatted widestring from an input
     // RichEdit control
+    Result := '';
+    if (Input.WideLines.Count = 0) then exit;
+
     Result := Input.WideText;
     for i := Length(Result) downto 1 do begin
         if (Result[i] = Chr(10)) then

@@ -57,7 +57,7 @@ type
     tbsRoster: TTabSheet;
     pnlRoster: TPanel;
     MainMenu1: TMainMenu;
-    WInJab1: TMenuItem;
+    Exodus1: TMenuItem;
     Connect2: TMenuItem;
     Preferences1: TMenuItem;
     N7: TMenuItem;
@@ -103,7 +103,7 @@ type
     N14: TMenuItem;
     NewGroup2: TMenuItem;
     Test1: TMenuItem;
-    PGPTools1: TMenuItem;
+    Tools1: TMenuItem;
     mnuBrowser: TMenuItem;
     mnuServer: TMenuItem;
     mnuVersion: TMenuItem;
@@ -555,6 +555,7 @@ uses
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
+    GnuGetText, 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
@@ -776,6 +777,7 @@ var
     menu_list: TWideStringList;
     i : integer;
     mi: TMenuItem;
+    tmp_locale: Widestring;
 begin
     // initialize vars
 
@@ -808,6 +810,9 @@ begin
 
     // Initialize the Riched20.dll stuff
     _richedit := LoadLibrary('Riched20.dll');
+
+    // Do translation magic
+    TranslateProperties(Self);
 
     _tray_icon := TIcon.Create();
     _appclosing := false;
@@ -890,6 +895,16 @@ begin
         // Create our main Session object
         MainSession := TJabberSession.Create(config);
         auth := TStandardAuth.Create(MainSession);
+
+        // Get our locale...
+        tmp_locale := MainSession.Prefs.getString('locale');
+        if (tmp_locale <> '') then begin
+            UseLanguage(tmp_locale);
+            // xxx: is it ok to call TranslateProps twice??
+            TranslateProperties(Self);
+        end;
+
+        // Set our session to use the normal auth agent
         MainSession.setAuthAgent(auth);
 
         // Check for a single instance

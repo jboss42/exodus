@@ -215,7 +215,7 @@ object frmExodus: TfrmExodus
     Images = ImageList2
     Left = 52
     Top = 74
-    object WInJab1: TMenuItem
+    object Exodus1: TMenuItem
       Caption = 'Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
@@ -293,7 +293,7 @@ object frmExodus: TfrmExodus
         OnClick = Exit2Click
       end
     end
-    object PGPTools1: TMenuItem
+    object Tools1: TMenuItem
       Caption = 'Tools'
       object mnuContacts: TMenuItem
         Caption = 'Contacts'

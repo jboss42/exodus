@@ -43,7 +43,6 @@ object frmConnDetails: TfrmConnDetails
     Height = 199
     ActivePage = tbsProfile
     Align = alClient
-    MultiLine = True
     TabOrder = 1
     object tbsProfile: TTabSheet
       Caption = 'Profile'

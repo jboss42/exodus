@@ -2,8 +2,9 @@ object frmLogin: TfrmLogin
   Left = 258
   Top = 268
   Width = 376
-  Height = 121
+  Height = 145
   BorderIcons = [biSystemMenu, biMinimize]
+  BorderWidth = 1
   Caption = 'Login'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -17,8 +18,8 @@ object frmLogin: TfrmLogin
   OnClose = FormClose
   OnCreate = FormCreate
   DesignSize = (
-    368
-    92)
+    366
+    114)
   PixelsPerInch = 96
   TextHeight = 16
   object Label5: TLabel
@@ -36,27 +37,44 @@ object frmLogin: TfrmLogin
     ParentFont = False
     OnClick = Label5Click
   end
+  object lblJID: TTntLabel
+    Left = 66
+    Top = 32
+    Width = 125
+    Height = 16
+    Caption = 'foo@bar.com/resource'
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Top = 75
+    Width = 366
+    Height = 2
+    Align = alBottom
+    Shape = bsTopLine
+  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 55
-    Width = 368
+    Top = 77
+    Width = 366
     Height = 37
     Align = alBottom
     AutoScroll = False
     TabOrder = 3
     inherited Bevel1: TBevel
-      Width = 368
+      Width = 366
+      Height = 7
     end
     inherited Panel1: TPanel
-      Left = 206
+      Left = 204
+      Top = 7
       Width = 162
-      Height = 32
+      Height = 30
     end
   end
   object cboProfiles: TTntComboBox
     Left = 66
     Top = 4
-    Width = 213
+    Width = 211
     Height = 24
     Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
@@ -69,15 +87,15 @@ object frmLogin: TfrmLogin
   end
   object chkInvisible: TCheckBox
     Left = 66
-    Top = 32
+    Top = 56
     Width = 97
     Height = 15
     Caption = 'In&visible'
     TabOrder = 1
   end
   object btnDetails: TButton
-    Left = 287
-    Top = 3
+    Left = 285
+    Top = 4
     Width = 75
     Height = 23
     Anchors = [akTop, akRight]

@@ -24,7 +24,7 @@ interface
 uses
     Session,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ComCtrls, Menus, TntStdCtrls;
+    StdCtrls, buttonFrame, ComCtrls, Menus, TntStdCtrls, ExtCtrls;
 
 type
   TfrmLogin = class(TForm)
@@ -36,6 +36,8 @@ type
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
+    lblJID: TTntLabel;
+    Bevel1: TBevel;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -122,8 +124,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmLogin.cboProfilesChange(Sender: TObject);
+var
+    p: TJabberProfile;
 begin
     chkInvisible.Checked := false;
+    p := TJabberProfile(MainSession.Prefs.Profiles.Objects[cboProfiles.ItemIndex]);
+    lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
 end;
 
 {---------------------------------------}

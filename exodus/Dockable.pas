@@ -75,7 +75,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, ChatWin, Debug, ExUtils, Session, Jabber1;
+    XMLUtils, ChatWin, Debug, ExUtils, GnuGetText, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -83,6 +83,9 @@ begin
     _docked := false;
     _noMoveCheck := true;
     _top := false;
+
+    // do translation magic
+    TranslateProperties(Self);
 
     if (Self is TfrmChat) then
         // do nothing
