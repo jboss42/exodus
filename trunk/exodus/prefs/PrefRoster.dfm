@@ -10,9 +10,9 @@ inherited frmPrefRoster: TfrmPrefRoster
   object lblDblClick: TTntLabel [0]
     Left = 0
     Top = 139
-    Width = 164
+    Width = 143
     Height = 13
-    Caption = 'When I double click a contact, do:'
+    Caption = 'When I double click a contact'
   end
   object TntLabel1: TTntLabel [1]
     Left = 24
@@ -79,7 +79,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Top = 190
     Width = 241
     Height = 17
-    Caption = 'Show status in the roster: Joe <Meeting>'
+    Caption = 'Show contact status in the roster'
     TabOrder = 6
     OnClick = chkInlineStatusClick
   end

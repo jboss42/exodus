@@ -78,6 +78,8 @@ type
     cboNode: TTntComboBox;
     mAddContact: TTntMenuItem;
     mRunCommand: TTntMenuItem;
+    TntLabel1: TTntLabel;
+    TntLabel2: TTntLabel;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);

@@ -300,8 +300,16 @@ object frmBrowse: TfrmBrowse
       Height = 29
       Align = alLeft
       BevelOuter = bvNone
-      Caption = 'Jabber Address:   '
       TabOrder = 0
+      object TntLabel1: TTntLabel
+        Left = 0
+        Top = 0
+        Width = 88
+        Height = 29
+        Align = alClient
+        Caption = 'Jabber Address'
+        Layout = tlCenter
+      end
     end
     object cboJID: TTntComboBox
       Left = 91
@@ -334,8 +342,16 @@ object frmBrowse: TfrmBrowse
       Align = alLeft
       Alignment = taLeftJustify
       BevelOuter = bvNone
-      Caption = 'Node Identifier:'
       TabOrder = 0
+      object TntLabel2: TTntLabel
+        Left = 0
+        Top = 0
+        Width = 88
+        Height = 29
+        Align = alClient
+        Caption = 'Node Identifier'
+        Layout = tlCenter
+      end
     end
     object cboNode: TTntComboBox
       Left = 92
