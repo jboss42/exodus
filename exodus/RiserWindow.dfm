@@ -15,6 +15,7 @@ object frmRiser: TfrmRiser
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
+  OnClick = Panel2Click
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -28,6 +29,7 @@ object frmRiser: TfrmRiser
     Brush.Style = bsClear
     Pen.Color = clBackground
     Pen.Width = 3
+    OnMouseDown = Shape1MouseDown
   end
   object Image1: TImage
     Left = 4
