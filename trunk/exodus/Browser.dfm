@@ -65,6 +65,7 @@ object frmBrowse: TfrmBrowse
       TabOrder = 0
       OnChange = vwBrowseChange
       OnClick = vwBrowseClick
+      OnColumnClick = vwBrowseColumnClick
       OnData = vwBrowseData
       OnResize = vwBrowseResize
     end
@@ -1091,7 +1092,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnBackClick
         end
         object btnFwd: TToolButton
-          Left = 38
+          Left = 36
           Top = 0
           Hint = 'Next JID'
           Caption = 'btnFwd'
@@ -1099,7 +1100,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnFwdClick
         end
         object ToolButton2: TToolButton
-          Left = 61
+          Left = 59
           Top = 0
           Width = 20
           Caption = 'ToolButton2'
@@ -1107,7 +1108,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsSeparator
         end
         object btnHome: TToolButton
-          Left = 81
+          Left = 79
           Top = 0
           Hint = 'Home'
           Caption = 'btnHome'
@@ -1115,7 +1116,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnHomeClick
         end
         object ToolButton1: TToolButton
-          Left = 104
+          Left = 102
           Top = 0
           Hint = 'Change Views'
           Caption = 'ToolButton1'
@@ -1124,7 +1125,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsDropDown
         end
         object btnBookmark: TToolButton
-          Left = 142
+          Left = 138
           Top = 0
           Hint = 'Add a Bookmark'
           Caption = 'btnBookmark'

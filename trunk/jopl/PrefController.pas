@@ -206,7 +206,7 @@ function ReplaceEnvPaths(value: string): string;
 implementation
 uses
     {$ifdef Win32}
-    Graphics, ShellAPI,
+    ComCtrls, Graphics, ShellAPI,
     {$else}
     QGraphics,
     {$endif}
@@ -493,6 +493,8 @@ begin
         result := IntToStr(Screen.IconFont.Size)
     else if pkey = 'roster_font_color' then
         result := IntToStr(Integer(Screen.IconFont.Color))
+    else if pkey = 'browse_view' then
+        result := IntToStr(integer(vsIcon))
     {$else}
     else if pkey = 'roster_font_name' then
         result := Application.Font.Name

@@ -116,6 +116,7 @@ type
     procedure vwBrowseData(Sender: TObject; Item: TListItem);
     procedure btnCloseClick(Sender: TObject);
     procedure vwBrowseResize(Sender: TObject);
+    procedure vwBrowseColumnClick(Sender: TObject; Column: TListColumn);
   private
     { Private declarations }
     _cur: integer;
@@ -157,6 +158,8 @@ uses
 
 var
     browseCache: TStringList;
+    cur_sort: integer;
+    cur_dir: boolean;
 
 resourceString
     sService = 'Service';
@@ -467,6 +470,8 @@ begin
     _History := TStringList.Create;
     _blist := TObjectList.Create();
     _iq := nil;
+    vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
+
 end;
 
 {---------------------------------------}
@@ -530,10 +535,21 @@ end;
 procedure TfrmBrowse.Details1Click(Sender: TObject);
 begin
     // Change the View
-    if Sender = Details1 then vwBrowse.ViewStyle := vsReport;
-    if Sender = LargeIcons1 then vwBrowse.ViewStyle := vsIcon;
-    if Sender = SmallIcons1 then vwBrowse.ViewStyle := vsSmallIcon;
-    if Sender = List1 then vwBrowse.ViewStyle := vsList;
+    if Sender = Details1 then begin
+        vwBrowse.ViewStyle := vsReport;
+        end
+    else if Sender = LargeIcons1 then begin
+        vwBrowse.ViewStyle := vsIcon;
+        end
+    else if Sender = SmallIcons1 then begin
+        vwBrowse.ViewStyle := vsSmallIcon;
+        end
+    else if Sender = List1 then begin
+        vwBrowse.ViewStyle := vsList;
+        end;
+
+    MainSession.Prefs.setInt('browse_view', integer(vwBrowse.ViewStyle));
+
 end;
 
 {---------------------------------------}
@@ -792,6 +808,66 @@ procedure TfrmBrowse.vwBrowseResize(Sender: TObject);
 begin
   inherited;
     vwBrowse.Invalidate();
+end;
+
+function ItemCompare(Item1, Item2: Pointer): integer;
+var
+    j1, j2: TBrowseItem;
+    s1, s2: string;
+begin
+    // compare 2 items..
+    if (cur_sort = -1) then begin
+        Result := 0;
+        exit;
+        end;
+
+    j1 := TBrowseItem(Item1);
+    j2 := TBrowseItem(Item2);
+
+    case (cur_sort) of
+    0: begin
+        s1 := j1.name;
+        s2 := j2.name;
+        end;
+    1: begin
+        s1 := j1.jid;
+        s2 := j2.jid;
+        end;
+    2: begin
+        s1 := j1.stype;
+        s2 := j2.stype;
+        end
+    else begin
+        Result := 0;
+        exit;
+        end;
+    end;
+
+    if (cur_dir) then
+        Result := StrComp(PChar(LowerCase(s1)),
+                          PChar(LowerCase(s2)))
+    else
+        Result := StrComp(PChar(LowerCase(s2)),
+                          PChar(LowerCase(s1)));
+
+end;
+
+procedure TfrmBrowse.vwBrowseColumnClick(Sender: TObject;
+  Column: TListColumn);
+begin
+  inherited;
+  if (Column.Index = cur_sort) then
+    cur_dir := not cur_dir
+  else
+    cur_dir := true;
+
+  cur_sort := Column.Index;
+
+  // lstContacts.SortType := stText;
+  // lstContacts.AlphaSort();
+
+  _blist.Sort(ItemCompare);
+  vwBrowse.Refresh;
 end;
 
 initialization
