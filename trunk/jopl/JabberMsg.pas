@@ -28,16 +28,17 @@ type
 
     TJabberMessage = class
     private
-        _toJID : string;
-        _fromJID: string;
-        _subject : string;
-        _thread : string;
-        _body : string;
+        _toJID    : string;
+        _fromJID  : string;
+        _subject  : string;
+        _thread   : string;
+        _body     : string;
         _msg_type : string;
-        _id      : string;
-        _action: boolean;
-        _nick: string;
-        _isme: boolean;
+        _id       : string;
+        _action   : boolean;
+        _nick     : string;
+        _isme     : boolean;
+        _time     : TDateTime;
 
         procedure SetSubject(const Value: string);
         procedure SetBody(const Value: string);
@@ -66,6 +67,7 @@ type
         property Action: boolean read _action;
         property Nick: string read _nick write _nick;
         property isMe: boolean read _isme write _isme;
+        property Time: TDateTime read _time;
   end;
 
 {---------------------------------------}
@@ -73,6 +75,9 @@ type
 {---------------------------------------}
 implementation
 
+uses
+    ExUtils;
+    
 { TJabberMessage }
 
 constructor TJabberMessage.Create;
@@ -89,6 +94,7 @@ begin
     _action := false;
     _nick := '';
     _isme := false;
+    _time := Now();
 end;
 
 {---------------------------------------}
@@ -120,6 +126,14 @@ begin
 
         t := GetFirstTag('thread');
         if t <> nil then _thread := t.Data;
+
+        t := QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
+        if (t = nil) then
+            _time := Now()
+        else begin
+            // we have a delay tag
+            _time := JabberToDateTime(t.getAttribute('stamp'));
+            end
         end;
 end;
 
@@ -133,6 +147,7 @@ begin
     _thread := '';
     _nick := '';
     _action := false;
+    _time := Now();
     setSubject(cSubject);
     setBody(cBody);
     setMsgType(cMsgType);
