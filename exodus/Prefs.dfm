@@ -46,12 +46,10 @@ object frmPrefs: TfrmPrefs
       Height = 55
       Brush.Color = clInactiveCaptionText
       Pen.Color = clActiveCaption
-      Pen.Width = 2
-      Shape = stRoundRect
     end
     object imgDialog: TImage
       Left = 0
-      Top = 318
+      Top = 315
       Width = 68
       Height = 40
       Align = alTop
@@ -232,7 +230,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TTntLabel
       Left = 0
-      Top = 358
+      Top = 355
       Width = 68
       Height = 13
       Align = alTop
@@ -245,7 +243,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 212
+      Top = 209
       Width = 68
       Height = 40
       Align = alTop
@@ -426,7 +424,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TTntLabel
       Left = 0
-      Top = 252
+      Top = 249
       Width = 68
       Height = 13
       Align = alTop
@@ -439,7 +437,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 159
+      Top = 156
       Width = 68
       Height = 40
       Align = alTop
@@ -621,7 +619,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TTntLabel
       Left = 0
-      Top = 199
+      Top = 196
       Width = 68
       Height = 13
       Align = alTop
@@ -638,7 +636,7 @@ object frmPrefs: TfrmPrefs
       Left = 0
       Top = 53
       Width = 68
-      Height = 40
+      Height = 37
       Align = alTop
       Center = True
       Picture.Data = {
@@ -817,7 +815,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TTntLabel
       Left = 0
-      Top = 93
+      Top = 90
       Width = 68
       Height = 13
       Align = alTop
@@ -1040,7 +1038,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 371
+      Top = 368
       Width = 68
       Height = 40
       Align = alTop
@@ -1165,7 +1163,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TTntLabel
       Left = 0
-      Top = 411
+      Top = 408
       Width = 68
       Height = 13
       Align = alTop
@@ -1178,7 +1176,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 530
+      Top = 527
       Width = 68
       Height = 40
       Align = alTop
@@ -1359,7 +1357,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TTntLabel
       Left = 0
-      Top = 570
+      Top = 567
       Width = 68
       Height = 13
       Align = alTop
@@ -1372,7 +1370,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 583
+      Top = 580
       Width = 68
       Height = 40
       Align = alTop
@@ -1553,7 +1551,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TTntLabel
       Left = 0
-      Top = 623
+      Top = 620
       Width = 68
       Height = 13
       Align = alTop
@@ -1566,7 +1564,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 636
+      Top = 633
       Width = 68
       Height = 40
       Align = alTop
@@ -1747,7 +1745,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TTntLabel
       Left = 0
-      Top = 676
+      Top = 673
       Width = 68
       Height = 13
       Align = alTop
@@ -1760,7 +1758,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 689
+      Top = 686
       Width = 68
       Height = 40
       Align = alTop
@@ -1941,7 +1939,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TTntLabel
       Left = 0
-      Top = 729
+      Top = 726
       Width = 68
       Height = 13
       Align = alTop
@@ -1954,7 +1952,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 424
+      Top = 421
       Width = 68
       Height = 40
       Align = alTop
@@ -2135,7 +2133,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TTntLabel
       Left = 0
-      Top = 464
+      Top = 461
       Width = 68
       Height = 13
       Align = alTop
@@ -2148,7 +2146,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 795
+      Top = 792
       Width = 68
       Height = 40
       Align = alTop
@@ -2273,7 +2271,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TTntLabel
       Left = 0
-      Top = 835
+      Top = 832
       Width = 68
       Height = 13
       Align = alTop
@@ -2286,7 +2284,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNetwork: TImage
       Left = 0
-      Top = 742
+      Top = 739
       Width = 68
       Height = 40
       Align = alTop
@@ -2467,7 +2465,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNetwork: TTntLabel
       Left = 0
-      Top = 782
+      Top = 779
       Width = 68
       Height = 13
       Align = alTop
@@ -2479,7 +2477,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgTransfer: TImage
       Left = 0
-      Top = 477
+      Top = 474
       Width = 68
       Height = 40
       Align = alTop
@@ -2660,7 +2658,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblTransfer: TTntLabel
       Left = 0
-      Top = 517
+      Top = 514
       Width = 68
       Height = 13
       Align = alTop
@@ -2673,7 +2671,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgGroups: TImage
       Left = 0
-      Top = 106
+      Top = 103
       Width = 68
       Height = 40
       Align = alTop
@@ -2854,7 +2852,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblGroups: TTntLabel
       Left = 0
-      Top = 146
+      Top = 143
       Width = 68
       Height = 13
       Align = alTop
@@ -2875,7 +2873,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgLayouts: TImage
       Left = 0
-      Top = 265
+      Top = 262
       Width = 68
       Height = 40
       Align = alTop
@@ -3028,7 +3026,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblLayouts: TTntLabel
       Left = 0
-      Top = 305
+      Top = 302
       Width = 68
       Height = 13
       Align = alTop

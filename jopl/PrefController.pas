@@ -540,7 +540,13 @@ begin
 
     fs := TStringList.Create;
     fs.Text := UTF8Encode(_pref_node.xml);
-    fs.SaveToFile(_pref_filename);
+
+    try
+        fs.SaveToFile(_pref_filename);
+    except
+        MainSession.FireEvent('/session/gui/prefs-write-error', nil);
+    end;
+    
     fs.Free();
 end;
 
