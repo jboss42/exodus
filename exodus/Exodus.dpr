@@ -73,7 +73,6 @@ begin
   Application.Title := 'Exodus';
   Application.CreateForm(TfrmJabber, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
-  Application.CreateForm(TfrmDebug, frmDebug);
   Application.CreateForm(TfrmCustomPres, frmCustomPres);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
