@@ -23,7 +23,7 @@ unit Jabber1;
 interface
 
 uses
-    GUIFactory, Register, Notify, S10n,
+    BaseChat, GUIFactory, Register, Notify, S10n,
     ExodusController, ExResponders, ExEvents,
     RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
@@ -240,6 +240,7 @@ type
     procedure ShowEventsWindow1Click(Sender: TObject);
     procedure presToggleClick(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
+    procedure ApplicationEvents1Deactivate(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -353,6 +354,8 @@ type
     procedure xDataCallback(event: string; tag: TXMLTag);
 
   public
+    ActiveChat: TfrmBaseChat;
+
     function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
@@ -689,6 +692,7 @@ begin
     show_help := false;
     _testaa := false;
     jid := nil;
+    ActiveChat := nil;
     _cli_priority := -1;
     _cli_status := sAvailable;
     _cli_show := '';
@@ -2667,6 +2671,14 @@ begin
     //
     if (MainSession.Prefs.getBool('window_ontop')) then
         SetWindowPos(frmExodus.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.ApplicationEvents1Deactivate(Sender: TObject);
+begin
+    // app was deactivated..
+    if (Self.ActiveChat <> nil) then
+        Self.ActiveChat.HideEmoticons();
 end;
 
 initialization

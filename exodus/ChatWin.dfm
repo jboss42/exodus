@@ -36,6 +36,7 @@ inherited frmChat: TfrmChat
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      Visible = False
       OnClick = btnCloseClick
     end
     object pnlJID: TPanel

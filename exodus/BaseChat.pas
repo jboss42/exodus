@@ -68,6 +68,7 @@ type
 
     procedure SetEmoticon(msn: boolean; imgIndex: integer);
     procedure SendMsg(); virtual;
+    procedure HideEmoticons();
   end;
 
 var
@@ -149,6 +150,7 @@ end;
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
     inherited;
+    frmExodus.ActiveChat := Self;
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
     if (Self.Visible) and (pnlInput.Visible) then
@@ -269,6 +271,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
+    frmExodus.ActiveChat := nil;
     _msgHistory.Free();
     inherited;
 end;
@@ -330,6 +333,13 @@ procedure TfrmBaseChat.FormResize(Sender: TObject);
 begin
   inherited;
     MsgList.Repaint();
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.HideEmoticons();
+begin
+    if frmEmoticons.Visible then
+        frmEmoticons.Hide();
 end;
 
 end.
