@@ -71,6 +71,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -260,6 +261,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmChat.SetupPrefs();
 begin
     AssignDefaultFont(Self.Font);
@@ -348,7 +350,6 @@ begin
         i := MainSession.ChatList.IndexOfObject(chat_object);
         if i >= 0 then
             MainSession.ChatList.Delete(i);
-        TExodusChat(chat_object.ComController).ObjRelease();
         chat_object.Free;
         end;
 
@@ -894,6 +895,14 @@ procedure TfrmChat.popClearHistoryClick(Sender: TObject);
 begin
     inherited;
     ClearLog(Self._jid.jid)
+end;
+
+{---------------------------------------}
+procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  inherited;
+    if (chat_object <> nil) then
+        TExodusChat(chat_object.ComController).fireClose();
 end;
 
 end.

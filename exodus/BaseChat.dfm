@@ -148,19 +148,102 @@ object frmBaseChat: TfrmBaseChat
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
-    object MsgOut: TTntMemo
+    object MsgOut: TExRichEdit
       Left = 2
       Top = 2
       Width = 376
       Height = 24
       Align = alClient
-      PopupMenu = popOut
+      AutoURLDetect = adNone
+      CustomURLs = <
+        item
+          Name = 'e-mail'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'http'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'file'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'mailto'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'ftp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'https'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'gopher'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'nntp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'prospero'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'telnet'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'news'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'wais'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end>
+      LangOptions = [loAutoFont]
+      Language = 1033
+      ScrollBars = ssVertical
+      ShowSelectionBar = False
       TabOrder = 0
-      WantReturns = False
-      WantTabs = True
+      URLColor = clBlue
+      URLCursor = crHandPoint
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
+      InputFormat = ifUnicode
+      OutputFormat = ofUnicode
+      SelectedInOut = False
+      PlainRTF = False
+      UndoLimit = 0
+      AllowInPlace = False
     end
   end
   object Panel1: TPanel

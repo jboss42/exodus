@@ -11,8 +11,8 @@ unit ExodusWordSpeller_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 12/12/2002 7:28:18 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/12/2002 12:19:37 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
@@ -20,10 +20,9 @@ unit ExodusWordSpeller_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v1.0 ExodusPlugins, (D:\src\exodus\exodus\plugins\ExodusPlugin.tlb)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
-//   (4) v1.0 ExodusCOM, (D:\src\exodus\exodus\exodus.exe)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
+//   (3) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -31,9 +30,8 @@ unit ExodusWordSpeller_TLB;
 
 interface
 
-uses Windows, ActiveX, Classes, ExodusCOM_TLB, ExodusPlugins_TLB, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
   
-
 
 // *********************************************************************//
 // GUIDS declared in the TypeLibrary. Following prefixes are used:        
@@ -76,7 +74,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {402309A8-0C58-423F-B261-0694F7D8328D}
 // *********************************************************************//
-  IWordSpeller = interface(IExodusPlugin)
+  IWordSpeller = interface(IDispatch)
     ['{402309A8-0C58-423F-B261-0694F7D8328D}']
   end;
 
@@ -87,11 +85,6 @@ type
 // *********************************************************************//
   IWordSpellerDisp = dispinterface
     ['{402309A8-0C58-423F-B261-0694F7D8328D}']
-    procedure Startup(Exodus: OleVariant); dispid 1;
-    procedure Shutdown; dispid 2;
-    procedure Process(const xml: WideString); dispid 3;
-    procedure NewChat(const JID: WideString; Chat: OleVariant); dispid 4;
-    procedure NewRoom(const JID: WideString; Chat: OleVariant); dispid 5;
   end;
 
 // *********************************************************************//
@@ -99,7 +92,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {A3485E71-8423-4FFF-8FA6-B3273B406A78}
 // *********************************************************************//
-  IChatSpeller = interface(IExodusChatPlugin)
+  IChatSpeller = interface(IDispatch)
     ['{A3485E71-8423-4FFF-8FA6-B3273B406A78}']
   end;
 
@@ -110,11 +103,6 @@ type
 // *********************************************************************//
   IChatSpellerDisp = dispinterface
     ['{A3485E71-8423-4FFF-8FA6-B3273B406A78}']
-    procedure onBeforeMessage(var Body: WideString); dispid 1;
-    function onAfterMessage(var Body: WideString): WideString; dispid 2;
-    procedure onKeyPress(const Key: WideString); dispid 3;
-    procedure onContextMenu(const ID: WideString); dispid 4;
-    procedure onMsg(const Body: WideString; const xml: WideString); dispid 5;
   end;
 
 // *********************************************************************//

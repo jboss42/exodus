@@ -51,7 +51,7 @@ Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
-RunParams=-d -c poll.xml
+RunParams=-d -c d:\src\exodus\exodus\plugins\MSWordSpeller\plugin.xml
 HostApplication=
 Launcher=
 UseLauncher=0
@@ -114,7 +114,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=7
+Build=12
 Debug=0
 PreRelease=0
 Special=0
@@ -125,7 +125,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.7
+FileVersion=0.8.0.12
 InternalName=
 LegalCopyright=Peter Millard, 2002
 LegalTrademarks=

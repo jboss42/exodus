@@ -5,18 +5,17 @@ unit WordSpeller;
 interface
 
 uses
-    ExodusCOM_TLB, Word2000,
-    ChatSpeller, 
-    ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
+    ExodusCOM_TLB, Word2000, ChatSpeller,
+    Classes, ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
 
 type
-  TWordSpeller = class(TAutoObject, IWordSpeller)
+  TWordSpeller = class(TAutoObject, IWordSpeller, IExodusPlugin)
   protected
-    procedure NewChat(const JID: WideString; Chat: OleVariant); safecall;
-    procedure NewRoom(const JID: WideString; Chat: OleVariant); safecall;
-    procedure Process(const xml: WideString); safecall;
+    procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
-    procedure Startup(Exodus: OleVariant); safecall;
+    procedure Process(const xml: WideString); safecall;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -27,10 +26,10 @@ implementation
 
 uses ComServ;
 
-procedure TWordSpeller.Startup(Exodus: OleVariant);
+procedure TWordSpeller.Startup(const ExodusController: IExodusController);
 begin
     // exodus is starting up...
-    _exodus := IUnknown(Exodus) as IExodusController;
+    _exodus := ExodusController;
 
     // init the word instance for the plugin
     _word := TWordApplication.Create(nil);
@@ -42,16 +41,21 @@ begin
     // exodus is shutting down... do cleanup
 end;
 
-procedure TWordSpeller.NewChat(const JID: WideString; Chat: OleVariant);
+procedure TWordSpeller.NewChat(const JID: WideString; Const Chat: IExodusChat);
 var
+    cp: TChatSpeller;
     chat_com: IExodusChat;
+    e: ExodusChatPlugin;
 begin
     // a new chat window is firing up
     chat_com := IUnknown(Chat) as IExodusChat;
-    TChatSpeller.Create(_word, chat_com);
+    cp := TChatSpeller.Create(_word, chat_com);
+    cp.ObjAddRef();
+    cp.ObjAddRef();
+    cp.reg_id := chat_com.RegisterPlugin(e);
 end;
 
-procedure TWordSpeller.NewRoom(const JID: WideString; Chat: OleVariant);
+procedure TWordSpeller.NewRoom(const JID: WideString; Const Room: IExodusChat);
 begin
     // a new TC Room is firing up
 end;
