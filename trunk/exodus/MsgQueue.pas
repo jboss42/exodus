@@ -31,7 +31,6 @@ type
     lstEvents: TListView;
     Splitter1: TSplitter;
     txtMsg: TRichEdit;
-    StatusBar1: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -62,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, XMLParser, XMLTag,
+    Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
 {---------------------------------------}
@@ -78,11 +77,23 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
 var
+    tmp_jid: TJabberID;
+    ritem: TJabberRosterItem;
     item: TListItem;
 begin
     // display this item
     item := lstEvents.Items.Add;
-    item.Caption := e.from;
+
+    tmp_jid := TJabberID.Create(e.from);
+    ritem := MainSession.roster.Find(tmp_jid.jid);
+    if (ritem = nil) then
+        ritem := MainSession.roster.Find(tmp_jid.full);
+    tmp_jid.Free();
+
+    if (ritem <> nil) then
+        item.Caption := ritem.nickname
+    else
+        item.Caption := e.from;
     item.Data := e;
     item.ImageIndex := img_idx;
     item.SubItems.Add(DateTimeToStr(e.edate));

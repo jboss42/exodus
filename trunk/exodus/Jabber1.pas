@@ -1060,6 +1060,17 @@ begin
             use_emoticons := getBool('emoticons');
             end;
 
+        // setup the Exodus window..
+        if (MainSession.Prefs.getBool('window_ontop')) then
+            Self.FormStyle := fsStayOnTop
+        else
+            Self.FormStyle := fsNormal;
+
+        if (MainSession.Prefs.getBool('window_toolbox')) then
+            Self.BorderStyle := bsToolWindow
+        else
+            Self.BorderStyle := bsSizeable;
+
         // do other stuff
         restoreMenus(MainSession.Active);
         restoreToolbar();
@@ -1229,8 +1240,13 @@ begin
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
     if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
-        if MainSession.IsPaused then
+        if MainSession.IsPaused then begin
+            with tag.AddTag('x') do begin
+                PutAttribute('xmlns', 'jabber:x:delay');
+                PutAttribute('stamp', DateTimeToJabber(Now));
+                end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
+            end
         else begin
             e := CreateJabberEvent(tag);
             RenderEvent(e);
@@ -1425,8 +1441,13 @@ begin
         mnuOnline.Checked := e;
         end;
 
-    if MainSession.Active then
+    if MainSession.Active then begin
         frmRosterWindow.Redraw;
+
+        if ((MainSession.Prefs.getBool('expanded')) and
+            (Tabs.ActivePage <> tbsRoster)) then
+            Tabs.ActivePage := tbsRoster;
+        end;
 end;
 
 {---------------------------------------}

@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsNotify
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1775,7 +1775,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 175
+        Top = 223
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1783,7 +1783,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1800,7 +1800,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 152
+        Top = 200
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
@@ -1833,7 +1833,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkCloseMin: TCheckBox
         Left = 8
-        Top = 128
+        Top = 176
         Width = 241
         Height = 17
         Caption = 'Close button minimizes to the tray'
@@ -1841,14 +1841,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtXFerPath: TEdit
         Left = 29
-        Top = 193
+        Top = 241
         Width = 188
         Height = 21
         TabOrder = 7
       end
       object btnTransferBrowse: TButton
         Left = 222
-        Top = 191
+        Top = 239
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -1862,6 +1862,22 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Run Exodus when windows starts'
         TabOrder = 2
+      end
+      object chkOnTop: TCheckBox
+        Left = 8
+        Top = 128
+        Width = 169
+        Height = 17
+        Caption = 'Exodus is always on top'
+        TabOrder = 9
+      end
+      object chkToolbox: TCheckBox
+        Left = 8
+        Top = 152
+        Width = 217
+        Height = 17
+        Caption = 'Small Titlebar for Exodus window'
+        TabOrder = 10
       end
     end
     object tbsDialog: TTabSheet
@@ -2064,7 +2080,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter

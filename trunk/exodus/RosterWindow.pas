@@ -748,8 +748,10 @@ begin
     else
         tmps := ritem.jid.Full;
 
+    {
     if (ritem.ask = 'subscribe') then
         tmps := tmps + sRosterPending;
+    }
 
     if (_show_status) then begin
         if (p <> nil) then begin
@@ -818,7 +820,9 @@ begin
         cur_node.Data := ritem;
 
         // setup the image
-        if p = nil then
+        if (ritem.ask = 'subscribe') then
+            cur_node.ImageIndex := ico_Unknown
+        else if p = nil then
             cur_node.ImageIndex := ico_Offline
         else begin
             if p.Show = 'away' then

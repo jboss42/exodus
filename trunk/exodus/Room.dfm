@@ -1,5 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Top = 423
+  Left = 460
+  Top = 394
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -112,6 +113,10 @@ inherited frmRoom: TfrmRoom
     end
     object N1: TMenuItem
       Caption = '-'
+    end
+    object mnuOnTop: TMenuItem
+      Caption = 'Always on Top'
+      OnClick = mnuOnTopClick
     end
     object popClose: TMenuItem
       Caption = 'Close Room'

@@ -179,6 +179,8 @@ type
     Label20: TLabel;
     chkNotifyActive: TCheckBox;
     chkMsgQueue: TCheckBox;
+    chkOnTop: TCheckBox;
+    chkToolbox: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -346,6 +348,8 @@ begin
         chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
         chkAutoLogin.Checked := getBool('autologin');
+        chkOnTop.Checked := getBool('window_ontop');
+        chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
         txtXFerPath.Text := getString('xfer_path');
 
@@ -473,6 +477,8 @@ begin
         setBool('auto_updates', chkAutoUpdate.Checked);
         setBool('auto_start', chkAutoStart.Checked);
         setBool('debug', chkDebug.Checked);
+        setBool('window_ontop', chkOnTop.Checked);
+        setBool('window_toolbox', chkToolbox.Checked);
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setString('xfer_path', txtXFerPath.Text);
