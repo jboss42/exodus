@@ -23,8 +23,8 @@ interface
 
 uses
     ExodusCOM_TLB, 
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls;
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, StdCtrls, ComCtrls;
 
 type
   TfrmImport = class(TForm)
@@ -207,6 +207,7 @@ procedure TfrmImport.addItems();
 var
     li: TListItem;
     i: integer;
+    r: IExodusRoster;
 begin
     // Add each item to the roster.
     for i := 0 to ListView1.Items.Count - 1 do begin
@@ -216,7 +217,8 @@ begin
         if (i = 0) then
             exodus.monitorImplicitRegJID(li.SubItems[1], false);
 
-        exodus.AddRosterItem(li.SubItems[1], li.SubItems[0], li.Caption);
+        r := exodus.Roster;
+        r.AddItem(li.SubItems[1], li.SubItems[0], li.Caption, true);
     end;
 end;
 
