@@ -35,7 +35,7 @@ uses
 
 type
   TfrmPrefs = class(TForm)
-    ScrollBox1: TScrollBox;
+    Scroller: TScrollBox;
     imgDialog: TImage;
     lblDialog: TTntLabel;
     imgFonts: TImage;
@@ -234,6 +234,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.FormCreate(Sender: TObject);
+var
+    i: integer;
+    c: TControl;
+    l: TTntLabel;
 begin
     TranslateComponent(Self);
 
@@ -269,8 +273,18 @@ begin
     _xfer := nil;
     _network := nil;
 
-    AssignUnicodeFont(memKeywords.Font);
-    AssignUnicodeFont(memBlocks.Font);
+
+    // Setup some fonts
+    AssignUnicodeFont(memKeywords.Font, 10);
+    AssignUnicodeFont(memBlocks.Font, 10);
+    AssignUnicodeFont(Scroller.Font, 8);
+
+    for i := 0 to Scroller.ControlCount - 1 do begin
+        c := Scroller.Controls[i];
+        if (c is TTntLabel) then
+            TTntLabel(c).Height := 20;
+    end;
+
     MainSession.Prefs.RestorePosition(Self);
 
     with Shape1 do begin
@@ -294,13 +308,14 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
         i: integer;
         c: TControl;
     begin
-        for i := 0 to ScrollBox1.ControlCount - 1 do begin
-            c := ScrollBox1.Controls[i];
+        for i := 0 to Scroller.ControlCount - 1 do begin
+            c := Scroller.Controls[i];
             if (c is TTntLabel) then begin
                 if (c = lbl) then begin
                     // left, top, width, height
-                    Shape1.SetBounds(1, c.Top - 39,
-                        ScrollBox1.ClientWidth - 2, c.Height + 41);
+                    Shape1.SetBounds(1, c.Top - imgSystem.Height - 2,
+                        Scroller.ClientWidth - 2,
+                        c.Height + imgSystem.Height);
                     TTntLabel(c).Font.Color := clMenuText;
                     _cur_label := TTntLabel(c);
                 end
@@ -309,7 +324,7 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
                 end;
             end;
         end;
-        Self.ScrollBox1.Repaint();
+        Self.Scroller.Repaint();
     end;
 
 
