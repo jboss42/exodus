@@ -31,12 +31,12 @@ type
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
-    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
     function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
     procedure Configure; safecall;
+    procedure Process(const xpath, event, xml: WideString); safecall;
     { Protected declarations }
 
   private
@@ -102,8 +102,7 @@ begin
 end;
 
 {-----------------------------------------}
-procedure TICQImportPlugin.Process(const xpath: WideString;
-    const event: WideString; const xml: WideString);
+procedure TICQImportPlugin.Process(const xpath, event, xml: WideString);
 var
     a: TXMLTag;
 begin
@@ -144,7 +143,6 @@ procedure TICQImportPlugin.Configure;
 begin
     //
 end;
-
 
 initialization
   TAutoObjectFactory.Create(ComServer, TICQImportPlugin, Class_ICQImportPlugin,
