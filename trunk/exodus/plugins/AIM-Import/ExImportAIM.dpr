@@ -2,7 +2,6 @@ library ExImportAIM;
 
 uses
   ComServ,
-  E_TLB in 'E_TLB.pas',
   AIMPlugin in 'AIMPlugin.pas' {AIMImportPlugin: CoClass},
   Importer in 'Importer.pas' {frmImport},
   Unicode in '..\..\..\jopl\Unicode.pas',
@@ -15,7 +14,8 @@ uses
   XMLUtils in '..\..\..\jopl\XMLUtils.pas',
   LibXmlComps in '..\..\..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\..\..\jopl\LibXmlParser.pas',
-  SecHash in '..\..\..\jopl\SecHash.pas';
+  SecHash in '..\..\..\jopl\SecHash.pas',
+  ExImportAIM_TLB in 'ExImportAIM_TLB.pas';
 
 exports
   DllGetClassObject,

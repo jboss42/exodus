@@ -57,6 +57,9 @@ type
 type
     TRegProc = function: HResult; stdcall;
 
+resourcestring
+    sRegPluginError = 'The plugin could not be registered with windows.';
+
 var
   frmPrefPlugins: TfrmPrefPlugins;
 
@@ -124,6 +127,10 @@ var
     i: integer;
     item: TTntListItem;
     sl: TWidestringlist;
+
+    // stuff for reg
+    LibHandle: THandle;
+    RegProc: TRegProc;
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();
@@ -133,6 +140,32 @@ begin
         if (item.Checked) then begin
             // save the Classname
             sl.Add(item.Caption);
+
+            // try to register it??
+            // From the TRegSvr example.
+            LibHandle := LoadLibrary(PChar(String(item.SubItems[1])));
+            if LibHandle = 0 then begin
+                MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                continue;
+            end;
+
+
+            try
+                @RegProc := GetProcAddress(LibHandle, 'DllRegisterServer');
+                if @RegProc = Nil then begin
+                    MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                    continue;
+                end;
+
+                if RegProc <> 0 then begin
+                    MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                    continue;
+                end;
+
+            finally
+                FreeLibrary(LibHandle);
+            end;
+
         end;
     end;
 
@@ -167,33 +200,10 @@ var
     tattr, iattr: PTypeAttr;
     r: cardinal;
     libname, obname, doc: WideString;
-
-    // stuff for reg
-    dll_inst: THandle;
-    dll_reg: TRegProc;
 begin
     // load the .dll.  This SHOULD register the bloody thing if it's not, but that
     // doesn't seem to work for me.
     OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
-
-    // try to register it??
-    // OleCheck(RegisterTypeLib(lib, PWideChar(dll), nil));
-    {
-    // From the TRegSvr example.
-    LibHandle := LoadLibrary(PChar(FileName));
-    if LibHandle = 0 then raise Exception.CreateFmt(SLoadFail, [FileName]);
-    try
-    @RegProc := GetProcAddress(LibHandle, ProcName[RegAction]);
-    if @RegProc = Nil then
-      raise Exception.CreateFmt(SCantFindProc, [ProcName[RegAction],
-        FileName]);
-    if RegProc <> 0 then
-      raise Exception.CreateFmt(SRegFail, [ProcName[RegAction], FileName]);
-    OutputStr(Format(SRegSuccessful, [ProcName[RegAction]]))
-    finally
-    FreeLibrary(LibHandle);
-    end;
-    }
 
     // get the project name
     OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));

@@ -12,10 +12,10 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/1/2003 3:41:20 PM from Type Library described below.
+// File generated on 3/4/2003 7:16:11 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
+// Type Lib: D:\src\exodus\runner\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
@@ -318,8 +318,6 @@ type
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     procedure AddMsgOut(const Value: WideString); safecall;
-    function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
-    procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -339,8 +337,6 @@ type
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
     procedure RemoveContextMenu(const ID: WideString); dispid 7;
     procedure AddMsgOut(const Value: WideString); dispid 201;
-    function AddMsgOutMenu(const Caption: WideString): WideString; dispid 202;
-    procedure RemoveMsgOutMenu(const MenuID: WideString); dispid 203;
   end;
 
 // *********************************************************************//
@@ -361,7 +357,6 @@ type
     procedure MenuClick(const ID: WideString); safecall;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); safecall;
-    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
   end;
 
 // *********************************************************************//
@@ -382,7 +377,6 @@ type
     procedure MenuClick(const ID: WideString); dispid 201;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); dispid 202;
-    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//
