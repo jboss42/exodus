@@ -146,7 +146,8 @@ uses
   FileServer in 'FileServer.pas',
   gnugettext in 'gnugettext.pas',
   PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer},
-  buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame};
+  buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
+  ExSession in 'ExSession.pas';
 
 {$R *.TLB}
 
@@ -155,14 +156,22 @@ uses
 {$R manifest.res}
 {$R xtra.res}
 
+var
+    continue: boolean;
+
 begin
   Application.Initialize;
   //Application.Title := '';
 
   Application.ShowMainForm := false;
+
+  // Main startup stuff
+  {
+  continue := SetupSession();
+  if (!continue) then exit;
+  }
+
   Application.CreateForm(TfrmExodus, frmExodus);
-  if (frmExodus = nil) then
-    Halt;
 
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
