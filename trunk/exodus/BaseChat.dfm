@@ -18,7 +18,7 @@ object frmBaseChat: TfrmBaseChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 248
+    Top = 253
     Width = 380
     Height = 3
     Cursor = crVSplit
@@ -31,7 +31,7 @@ object frmBaseChat: TfrmBaseChat
     Left = 0
     Top = 22
     Width = 380
-    Height = 226
+    Height = 231
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -41,7 +41,7 @@ object frmBaseChat: TfrmBaseChat
       Left = 4
       Top = 4
       Width = 372
-      Height = 218
+      Height = 223
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -116,6 +116,18 @@ object frmBaseChat: TfrmBaseChat
           Color = clWindowText
           Cursor = crDefault
           Underline = True
+        end
+        item
+          Name = 'xmpp'
+          Color = clBlack
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'jabber'
+          Color = clBlack
+          Cursor = crDefault
+          Underline = True
         end>
       LangOptions = [loAutoFont]
       Language = 1033
@@ -140,7 +152,7 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 251
+    Top = 256
     Width = 380
     Height = 28
     Align = alBottom

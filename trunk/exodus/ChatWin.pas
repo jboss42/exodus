@@ -51,6 +51,7 @@ type
     popClearHistory: TMenuItem;
     lblNick: TTntLabel;
     timMemory: TTimer;
+    mnuWordwrap: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -76,6 +77,7 @@ type
     procedure timMemoryTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure mnuWordwrapClick(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -313,8 +315,11 @@ begin
     MsgOut.Font.Assign(MsgList.Font);
 
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
+    _wrap_input := MainSession.Prefs.getBool('wrap_input');
     mnuReturns.Checked := _embed_returns;
+    mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
+    MsgOut.WordWrap := _wrap_input;
     timMemory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
 end;
 
@@ -739,6 +744,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmChat.mnuWordwrapClick(Sender: TObject);
+begin
+    inherited;
+    mnuWordwrap.Checked := not mnuWordWrap.Checked;
+    _wrap_input := mnuWordwrap.Checked;
+    MsgOut.WordWrap := _wrap_input;
+    MainSession.Prefs.setBool('wrap_input', _wrap_input);
+
+    if (_wrap_input) then begin
+        MessageDlg(sWordWrapWarning, mtWarning, [mbOK], 0);
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmChat.mnuSendFileClick(Sender: TObject);
 begin
   inherited;
@@ -1022,7 +1041,6 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  inherited;
     if (timMemory.Interval > 0) then begin
         CanClose := false;
         timMemory.Enabled := true;
@@ -1040,8 +1058,9 @@ begin
             _redock := true;
             // LockWindowUpdate(0);
         end;
-    end
+    end;
 
+    inherited;
 end;
 
 {---------------------------------------}

@@ -1577,12 +1577,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 389
-    ActivePage = tbsPlugins
+    ActivePage = tbsDialog
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 11
+    TabIndex = 4
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2002,7 +2002,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2136,7 +2136,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter

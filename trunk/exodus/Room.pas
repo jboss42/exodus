@@ -77,6 +77,7 @@ type
     N5: TMenuItem;
     popOwner: TMenuItem;
     popOwnerList: TMenuItem;
+    mnuWordwrap: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -107,6 +108,7 @@ type
     procedure popVoiceListClick(Sender: TObject);
     procedure popDestroyClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure mnuWordwrapClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -898,6 +900,10 @@ begin
         kw_list.Free();
     end;
     MyNick := '';
+
+    _wrap_input := MainSession.Prefs.getBool('wrap_input');
+    MsgOut.WordWrap := _wrap_input;
+    mnuWordwrap.Checked := _wrap_input;
 end;
 
 {---------------------------------------}
@@ -1567,6 +1573,19 @@ begin
         room_list.Delete(i);
 
     inherited;
+end;
+
+procedure TfrmRoom.mnuWordwrapClick(Sender: TObject);
+begin
+    inherited;
+    mnuWordwrap.Checked := not mnuWordWrap.Checked;
+    _wrap_input := mnuWordwrap.Checked;
+    MsgOut.WordWrap := _wrap_input;
+    MainSession.Prefs.setBool('wrap_input', _wrap_input);
+
+    if (_wrap_input) then begin
+        MessageDlg(sWordWrapWarning, mtWarning, [mbOK], 0);
+    end;
 end;
 
 initialization

@@ -1,8 +1,8 @@
 object frmProfile: TfrmProfile
-  Left = 259
-  Top = 184
-  Width = 459
-  Height = 361
+  Left = 260
+  Top = 185
+  Width = 457
+  Height = 352
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   Color = clBtnFace
@@ -21,14 +21,14 @@ object frmProfile: TfrmProfile
     Left = 121
     Top = 0
     Width = 3
-    Height = 298
+    Height = 289
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 317
-    Height = 298
+    Height = 289
     ActivePage = TabSheet1
     Align = alLeft
     Style = tsFlatButtons
@@ -248,12 +248,12 @@ object frmProfile: TfrmProfile
       ImageIndex = 1
       DesignSize = (
         309
-        267)
+        258)
       object GrpListBox: TCheckListBox
         Left = 8
         Top = 8
         Width = 299
-        Height = 213
+        Height = 209
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
@@ -261,7 +261,7 @@ object frmProfile: TfrmProfile
       end
       object btnAddGroup: TButton
         Left = 224
-        Top = 229
+        Top = 225
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
@@ -271,7 +271,7 @@ object frmProfile: TfrmProfile
       end
       object txtNewGrp: TTntEdit
         Left = 8
-        Top = 231
+        Top = 227
         Width = 211
         Height = 21
         Anchors = [akLeft, akRight, akBottom]
@@ -1164,17 +1164,17 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 298
-    Width = 451
+    Top = 289
+    Width = 449
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 451
+      Width = 449
     end
     inherited Panel1: TPanel
-      Left = 291
+      Left = 289
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -1188,7 +1188,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 298
+    Height = 289
     Align = alLeft
     Indent = 19
     ReadOnly = True

@@ -53,7 +53,7 @@ type
 
 type
   TfrmExodus = class(TForm)
-    Tabs: TTntPageControl;
+    Tabs: TPageControl;
     tbsRoster: TTabSheet;
     pnlRoster: TPanel;
     MainMenu1: TMainMenu;
@@ -374,7 +374,6 @@ type
 
   public
     ActiveChat: TfrmBaseChat;
-    ChatHiding: boolean;
 
     function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
@@ -550,7 +549,7 @@ uses
 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
-    Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite, 
+    Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
@@ -768,7 +767,6 @@ begin
     show_help := false;
     jid := nil;
     ActiveChat := nil;
-    ChatHiding := false;
 
     _testaa := false;
     _cli_priority := -1;
@@ -2745,7 +2743,6 @@ procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-
     if (Client is TfrmDockable) then begin
         TfrmDockable(Client).Docked := false;
     end;
@@ -2957,11 +2954,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.TabsChange(Sender: TObject);
+var
+    msg: string;
 begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
-    OutputDebugString('frmExodus.TabsChange');
+
+    msg := 'frmExodus.TabsChange, ' + Sender.ClassName + ', ' + Tabs.ActivePage.Caption;
+    OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}

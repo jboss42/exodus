@@ -23,12 +23,14 @@ package ExComponents;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Exodus custom controls'}
-{$IMPLICITBUILD OFF}
+{$IMPLICITBUILD ON}
 
 requires
   rtl,
   vcl,
-  designide;
+  designide,
+  vclx,
+  TntUnicodeVcl_R60;
 
 contains
   ExRichEdit in 'ExRichEdit.pas',
@@ -37,6 +39,7 @@ contains
   RTFProperty in 'RTFProperty.pas',
   RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
   WStrList in 'WStrList.pas',
-  Langs in 'Langs.pas';
+  Langs in 'Langs.pas',
+  ExPageControl in 'ExPageControl.pas';
 
 end.
