@@ -257,8 +257,8 @@ end;
 {---------------------------------------}
 procedure TfRTFMsgList.populate(history: Widestring);
 begin
+    MsgList.Clear();
     MsgList.SelStart := 0;
-    MsgList.SelLength := length(MsgList.Lines.Text);
     MsgList.RTFSelText := history;
     MsgList.Lines.Delete(MsgList.Lines.Count - 1);
 end;
