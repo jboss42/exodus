@@ -26,7 +26,9 @@ uses
 
 type
 
+    // turn on M+ so we can do RTTI stuff on the signals + dispatcher at runtime
     {M+}
+
     {---------------------------------------}
     // Base callback method for TSignal listeners
     TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
