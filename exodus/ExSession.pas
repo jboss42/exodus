@@ -167,6 +167,7 @@ begin
         exit;
     end;
     FreeLibrary(ws2);
+    Randomize();
 
     // Make sure we ignore some stuff from translations
     TP_GlobalIgnoreClassProperty(TAction, 'Category');
