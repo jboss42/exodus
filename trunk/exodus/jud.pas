@@ -201,8 +201,8 @@ begin
         cboGroup.ItemIndex := 0;
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
-    AssignDefaultFont(pnlFields.Font);
-    pnlFields.Font.Size := pnlFields.Font.Size - 1;
+    AssignDefaultFont(pnlLeft.Font);
+    pnlLeft.Font.Size := pnlLeft.Font.Size - 1;
 end;
 
 {---------------------------------------}
@@ -354,6 +354,8 @@ begin
                     Align := alTop;
                     TabOrder := 0;
                     end;
+                AssignDefaultFont(cur_gen.Font);
+                cur_gen.Font.Size := cur_gen.Font.size - 1;
                 end;
             pnlFields.Visible := true;
             fields.Free();
