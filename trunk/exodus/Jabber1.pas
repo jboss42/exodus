@@ -248,6 +248,8 @@ type
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
+
+    procedure setTrayInfo(tip: string);
   protected
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
@@ -480,6 +482,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmJabber.setTrayInfo(tip: string);
+begin
+    StrPCopy(@_tray.szTip, tip);
+    Shell_NotifyIcon(NIM_MODIFY, @_tray);
+end;
+
+{---------------------------------------}
 procedure TfrmJabber.SessionCallback(event: string; tag: TXMLTag);
 var
     p: TJabberPres;
@@ -488,6 +497,7 @@ begin
     if event = '/session/connected' then begin
         btnConnect.Down := true;
         Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
+        setTrayInfo(Self.Caption);
         end;
 
     if event = '/session/autherror' then begin
@@ -519,7 +529,10 @@ begin
         if _event <> next_none then
             nextTimer.Enabled := true;
         lstEvents.Items.Clear;
+
         Self.Caption := 'Exodus';
+        setTrayInfo(Self.Caption);
+
         btnConnect.Down := false;
         restoreMenus(false);
         end;
