@@ -801,7 +801,7 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       Caption = 'Roster'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
@@ -1988,7 +1988,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2108,7 +2108,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
