@@ -43,6 +43,8 @@ type
         destructor Destroy; override;
 
         function xml: string;
+        function IsOnline: boolean;
+
         procedure parse(tag: TXMLTag);
         procedure remove;
         procedure update;
@@ -81,6 +83,8 @@ type
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
         procedure checkGroup(grp: string);
+
+        function getItem(index: integer): TJabberRosterItem;
     public
         GrpList: TStringList;
         Bookmarks: TStringList;
@@ -97,7 +101,9 @@ type
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
         procedure AddBookmark(sjid: string; bm: TJabberBookmark);
         procedure RemoveBookmark(sjid: string);
+
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
+        property Items[index: integer]: TJabberRosterItem read getItem;
     end;
 
     TRosterAddItem = class
@@ -259,6 +265,12 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberRosterItem.IsOnline: boolean;
+begin
+    Result := (MainSession.ppdb.FindPres(Self.jid.jid, '') <> nil);
+end;
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TJabberRoster.Create;
@@ -288,6 +300,16 @@ begin
         Delete(Count - 1);
         end;
     GrpList.Clear;
+end;
+
+{---------------------------------------}
+function TJabberRoster.getItem(index: integer): TJabberRosterItem;
+begin
+    // return a specific TJabberRosterItem from the Objects list
+    if ((index < 0) or (index >= Self.Count)) then
+        Result := nil
+    else
+        Result := TJabberRosterItem(Self.Objects[index]);
 end;
 
 {---------------------------------------}
@@ -580,7 +602,8 @@ begin
     if (tag <> nil) then begin
         iq_type := tag.getAttribute('type');
         if (((iq_type = 'set') or (iq_type = 'result')) and (do_subscribe)) then
-            SendSubscribe(jid, MainSession);
+            SendSubscribe(jid, MainSession
+            );
         end;
 
     Self.Free();
