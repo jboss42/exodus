@@ -118,7 +118,7 @@ begin
             if (ri <> nil) then begin
                 if (ri.Subscription = 'to') or (ri.Subscription = 'both') then begin
                     DebugMsg('Roster item already in roster: ' + jid);
-                    break;
+                    continue;
                 end;
             end;
 
