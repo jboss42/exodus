@@ -836,84 +836,103 @@ library ExodusCOM
     id(0x0000000C)
     ]
     /**
-    @ingroup gui
+    Start a new chat window with the specified jid. Resource and nickname can both be blank. Only specify a nickname if you want to NOT use the nickname stored in the roster, or if you want to specify a nickname because this JID is NOT in the roster. (This is useful for chat rooms, where the nick would be the user's nick).
+    
+    @param jid The bare jid (user\@host) of the entity to start chatting with.
+    @param resource The resource of the entity to chat with. May be left blank.
+    @param nickname The nickname to use for this entity. May be left blank.
     **/
     HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR nickname );
     [
     id(0x00000028)
     ]
     /**
-    @ingroup gui
+    Find an existing chat window for this JID (and resource) combination.
+    @param JabberID The bare jid (user\@host) of the entity to look for. 
+    @param resource The resource part of the jid of the entity.
+    @return The HWND of the window. 0 is returned if no windows are found for this user.
     **/
     HRESULT _stdcall findChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
     [
     id(0x00000029)
     ]
     /**
-    @ingroup gui
+    Start a search window using the specified JID as the search agent.
+    @param SearchJID The jid of the agent to use for searching.
     **/
     HRESULT _stdcall startSearch([in] BSTR SearchJID );
     [
     id(0x0000002A)
     ]
     /**
-    @ingroup gui
+    Start a new chat room.
+    @param RoomJID The room\@server jid of the room.
+    @param nickname The nickname to use when joining the room.
+    @param Password The password which is required to join the room. Should be left blank if no password is required.
     **/
     HRESULT _stdcall startRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
     [
     id(0x0000002B)
     ]
     /**
-    @ingroup gui
+    Start a new IM window (not a chat window).
+    @param JabberID The jid of the entity to send a message to.
     **/
     HRESULT _stdcall startInstantMsg([in] BSTR JabberID );
     [
     id(0x0000002C)
     ]
     /**
-    @ingroup gui
+    Start a new browser window, using the specified jid.
+    @param BrowseJID The jid of the entity to browse.
     **/
     HRESULT _stdcall startBrowser([in] BSTR BrowseJID );
     [
     id(0x0000002D)
     ]
     /**
-    @ingroup gui
+    Show the Join Room UI.
+    @param RoomJID The room\@service jid to use to pre-populate the window.
+    @param nickname The nickname used to pre-populate the window.
+    @param Password The password used to pre-populate the window.
     **/
     HRESULT _stdcall showJoinRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
     [
     id(0x0000002E)
     ]
     /**
-    @ingroup gui
+    Show the preferences window.
     **/
     HRESULT _stdcall showPrefs( void );
     [
     id(0x0000002F)
     ]
     /**
-    @ingroup gui
+    Show the custom presence window.
     **/
     HRESULT _stdcall showCustomPresDialog( void );
     [
     id(0x00000030)
     ]
     /**
-    @ingroup gui
+    Make sure the debug XML window is showing.
     **/
     HRESULT _stdcall showDebug( void );
     [
     id(0x00000031)
     ]
     /**
-    @ingroup gui
+    Show the login window. Note that you SHOULD check the connected property before just calling this method.
     **/
     HRESULT _stdcall showLogin( void );
     [
     id(0x00000032)
     ]
     /**
-    @ingroup gui
+    Show a popup toast window.
+    @param Message The text message to display in the toast window.
+    @param wndHandle The HWND of a window to "link" to the toast window. If the toast is clicked, the HWND specified will be brought to the top.
+    @param imageIndex The index of the image to show in the toast window.
     **/
     HRESULT _stdcall showToast([in] BSTR Message, [in] long wndHandle, [in] long imageIndex );
     
