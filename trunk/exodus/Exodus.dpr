@@ -109,7 +109,9 @@ uses
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   Exodus_TLB in 'Exodus_TLB.pas',
   ExodusController in 'ExodusController.pas' {ExodusController: CoClass},
-  ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas';
+  ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas',
+  xdata in 'xdata.pas' {frmXData},
+  fGeneric in 'fGeneric.pas' {frameGeneric: TFrame};
 
 {$R *.TLB}
 
@@ -125,6 +127,7 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmConnDetails, frmConnDetails);
   Application.CreateForm(TfrmInputPass, frmInputPass);
+  Application.CreateForm(TfrmXData, frmXData);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

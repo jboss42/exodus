@@ -72,6 +72,8 @@ function GetPresenceString(a: ATOM): string;
 function ColorToHTML( Color: TColor): string;
 function getMemoText(memo: TMemo): WideString;
 
+function trimNewLines(value: WideString): WideString;
+
 var
     _GetLastInputInfo: Pointer;
 
@@ -524,7 +526,31 @@ begin
     len := Length(memo.Text) + 1;
     txt := StrAllocW(len);
     GetWindowTextW(memo.Handle, txt, len);
-    Result := WideString(txt);    
+    Result := WideString(txt);
+end;
+
+{---------------------------------------}
+function trimNewLines(value: WideString): WideString;
+var
+    ins_list: TStringList;
+    tmps: WideString;
+    i: integer;
+begin
+    // Remove bogus whitespace, and use word-wrapping built
+    // into the label control
+    if (value = '') then
+        Result := ''
+    else begin
+        tmps := AnsiReplaceText(value, ''#13, '');
+        // TODO: This needs to be a WideStringList to support unicode!
+        ins_list := TStringList.Create();
+        ins_list.Delimiter := #10;
+        ins_list.DelimitedText := tmps;
+        tmps := '';
+        for i := 0 to ins_list.Count - 1 do
+            tmps := tmps + Trim(ins_list[i]) + ' ';
+        Result := tmps;
+        end;
 end;
 
 

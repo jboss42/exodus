@@ -60,7 +60,9 @@ type
     constructor Create(tagname, CDATA: WideString); reintroduce; overload; virtual;
     destructor Destroy; override;
 
-    function AddTag(tagname: WideString): TXMLTag;
+    function AddTag(tagname: WideString): TXMLTag; overload;
+    function AddTag(child_tag: TXMLTag): TXMLTag; overload;
+
     function AddBasicTag(tagname, cdata: WideString): TXMLTag;
     function AddCData(content: WideString): TXMLCData;
 
@@ -72,6 +74,7 @@ type
     function QueryXPTag(path: WideString): TXMLTag;
     function QueryXPData(path: WideString): WideString;
     function QueryTags(key: WideString): TXMLTagList;
+    function QueryRecursiveTags(key: WideString; first: boolean = false): TXMLTagList;
     function GetFirstTag(key: WideString): TXMLTag;
     function GetBasicText(key: WideString): WideString;
     function TagExists(key: WideString): boolean;
@@ -96,6 +99,7 @@ type
   public
     tag_name: WideString;
     get_cdata: boolean;
+    recursive: boolean;
     constructor Create;
     destructor Destroy; override;
     procedure Parse(xps: WideString);
@@ -112,7 +116,7 @@ type
     attr: WideString;
     value: WideString;
     function GetString: WideString;
-    function checkTags(Tag: TXMLTag; match_idx: integer): TXMLTagList;
+    function checkTags(Tag: TXMLTag; match_idx: integer; first: boolean = false): TXMLTagList;
     function doCompare(tag: TXMLTag; start: integer): boolean;
   public
     Constructor Create;
@@ -120,7 +124,7 @@ type
     procedure Parse(xps: Widestring);
     function Compare(Tag: TXMLTag): boolean;
     function Query(Tag: TXMLTag): WideString;
-    function GetTags(tag: TXMLTag): TXMLTagList;
+    function GetTags(tag: TXMLTag; first: boolean = false): TXMLTagList;
 
     property AsString: Widestring read GetString;
     property XPMatchList: TWideStringList read Matches;
@@ -203,6 +207,13 @@ begin
     t.pTag := Self;
     _Children.Add(t);
     Result := t;
+end;
+
+{---------------------------------------}
+function TXMLTag.AddTag(child_tag: TXMLTag): TXMLTag;
+begin
+    _Children.Add(child_tag);
+    Result := child_tag;
 end;
 
 {---------------------------------------}
@@ -309,15 +320,21 @@ end;
 {---------------------------------------}
 function TXMLTag.QueryXPTag(path: WideString): TXMLTag;
 var
-    tags: TXMLTagList;
+    tl: TXMLTagList;
+    xp: TXPLite;
 begin
     // Return a tag based on the xpath stuff
-    tags := QueryXPTags(path);
-    if (tags.count <= 0) then
+    xp := TXPLite.Create();
+    xp.Parse(path);
+    tl := xp.GetTags(Self, true);
+    xp.Free;
+
+    if (tl.Count <= 0) then
         Result := nil
     else
-        Result := tags[0];
-    tags.Free;
+        Result := tl[0];
+
+    tl.Free();
 end;
 
 {---------------------------------------}
@@ -393,6 +410,33 @@ begin
             t.Add(TXMLTag(n));
         end;
 
+    Result := t;
+end;
+
+{---------------------------------------}
+function TXMLTag.QueryRecursiveTags(key: WideString;
+    first: boolean): TXMLTagList;
+var
+    c, s, t: TXMLTagList;
+    j, i: integer;
+begin
+    // look recursively for all tags named key
+    t := Self.QueryTags(key);
+
+    if (t.Count = 0) or (not first) then begin
+        c := Self.ChildTags();
+
+        for i := 0 to c.Count - 1 do begin
+            if (t.IndexOf(c[i]) = -1) then begin
+                s := c[i].QueryRecursiveTags(key, first);
+                for j := 0 to s.count - 1 do begin
+                    t.Add(s[j]);
+                    if (first) then break;
+                    end;
+                end;
+            end;
+        end;
+    
     Result := t;
 end;
 
@@ -533,6 +577,7 @@ begin
     _AttrList := TAttrList.Create();
     tag_name := '';
     get_cdata := false;
+    recursive := false;
 end;
 
 {---------------------------------------}
@@ -579,11 +624,18 @@ begin
     // this should be a single "block"
     // parse the /foo[@a="b"][@c="d"] stuff
     // could be: /foo@a also to just get the attribute
+    // could also be: //foo[@a="b"]
     i := 2;
     xp := Trim(xps);
     l := Length(xp);
     state := 0;
     cur := '';
+
+    if ((l > 2) and (xp[1] = '/') and (xp[2] = '/')) then begin
+        recursive := true;
+        i := 3;
+        end;
+
     while (i <= l) do begin
         c := xp[i];
         if (c = '[') then begin
@@ -664,11 +716,13 @@ begin
     Could also be:
     /foo/bar/cdata
     /foo/bar@xmlns
+    //x[@xmlns="jabber:x:data"]
     }
     matches.Clear;
     s := 1;
     i := 2;
     l := Length(xps);
+    if ((l >2 ) and (xps[2] = '/')) then i := 3;
     cur := '';
     c := '';
     m := nil;
@@ -686,11 +740,15 @@ begin
 
         if ((c = '/') or (i = l)) then begin
             // we've reached a seperator
-            if c = '/' then
-                cur := Copy(xps, s, (i-s))
-            else
+            if (c = '/') then begin
+                cur := Copy(xps, s, (i-s));
+                s := i;
+                if (xps[i+1] = '/') then inc(i);
+                end
+            else begin
                 cur := Copy(xps, s, (i - s) + 1);
-            s := i;
+                s := i;
+                end;
 
             if ((Lowercase(cur) = 'cdata') and (m <> nil)) then
                 m.get_cdata := true
@@ -712,7 +770,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXPLite.checkTags(Tag: TXMLTag; match_idx: integer): TXMLTagList;
+function TXPLite.checkTags(Tag: TXMLTag; match_idx: integer; first: boolean): TXMLTagList;
 var
     cm: TXPMatch;
     ca: TAttr;
@@ -728,17 +786,17 @@ begin
     cm := TXPMatch(Matches.Objects[match_idx]);
 
     // check tag names
-    if (match_idx = 0) then begin
+    if (cm.recursive) then
+        tl := Tag.QueryRecursiveTags(cm.tag_name, first)
+    else if (match_idx = 0) then begin
         tl := TXMLTagList.Create();
         tl.Add(Tag);
         end
-    else begin
-        // check to see if we have a wildcard tag name..
-        if (cm.tag_name = '*') then
-            tl := Tag.ChildTags()
-        else
-            tl := Tag.QueryTags(cm.tag_name);
-        end;
+    // check to see if we have a wildcard tag name..
+    else if (cm.tag_name = '*') then
+        tl := Tag.ChildTags()
+    else
+        tl := Tag.QueryTags(cm.tag_name);
 
     // Check all the tags in the taglist
     for i := 0 to tl.Count - 1 do begin
@@ -776,7 +834,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXPLite.GetTags(tag: TXMLTag): TXMLTagList;
+function TXPLite.GetTags(tag: TXMLTag; first: boolean): TXMLTagList;
 var
     t: TXMLTag;
     c, i, m: integer;
@@ -797,7 +855,7 @@ begin
     ctags.Add(t);
     repeat
         for c := 0 to ctags.Count - 1 do begin
-            mtags := checkTags(ctags[c], m);
+            mtags := checkTags(ctags[c], m, first);
             if (m = Matches.Count - 1) then begin
                 ntags.Clear;
                 for i := 0 to mtags.Count - 1 do
@@ -812,6 +870,7 @@ begin
         inc(m);
         ctags.Assign(ntags);
         ntags.Clear;
+        if ((first) and (r.Count > 0)) then break;
     until (m >= Matches.Count) or (ntags.Count < 0);
     ntags.Free;
     ctags.Free;
