@@ -46,6 +46,7 @@ type
     published
         procedure Timeout(Sender: TObject);
         procedure iqCallback(event: string; xml: TXMLTag);
+        procedure disCallback(event: string; xml: TXMLTag);
     public
         Namespace: string;
         iqType: string;
@@ -154,7 +155,7 @@ begin
     if (_js.xmlLang <> '') then
         self.setAttribute('xml:lang', _js.xmlLang);
 
-    _cbSession := _js.RegisterCallback(iqCallback, '/session/disconnected');
+    _cbSession := _js.RegisterCallback(disCallback, '/session/disconnected');
     _cbIndex := _js.RegisterCallback(iqCallback, '/packet/iq[@id="' + _id + '"]');
     _js.Stream.Send(Self.xml);
 
@@ -169,15 +170,26 @@ begin
     _timer.Enabled := false;
     _js.UnRegisterCallback(_cbIndex);
     _js.UnRegisterCallback(_cbSession);
-    if (event = 'xml') then begin
-        xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
-        if (Assigned(_callback)) then
-            _callback('xml', xml);
-    end;
     _cbIndex := -1;
     _cbSession := -1;
+    xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
+    if (Assigned(_callback)) then _callback('xml', xml);
     Self.Free;
 end;
+
+procedure TJabberIQ.disCallback(event: string; xml: TXMLTag);
+begin
+    // we got disconnected
+    _timer.Enabled := false;
+    _js.UnRegisterCallback(_cbIndex);
+    _js.UnRegisterCallback(_cbSession);
+    _cbIndex := -1;
+    _cbSession := -1;
+    if (Assigned(_callback)) then
+        _callback(event, nil);
+    Self.Free();
+end;
+
 
 
 end.

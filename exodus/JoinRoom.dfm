@@ -36,6 +36,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   end
   inherited Tabs: TPageControl
     Height = 254
+    ActivePage = TabSheet2
     TabOrder = 0
     inherited TabSheet1: TTabSheet
       object Label2: TTntLabel
@@ -151,7 +152,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Left = 0
         Top = 49
         Width = 402
-        Height = 175
+        Height = 174
         Align = alClient
         Columns = <
           item
@@ -201,7 +202,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Width = 262
           Height = 21
           Hint = 'Select the room server to use.'
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0

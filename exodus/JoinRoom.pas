@@ -22,7 +22,7 @@ unit JoinRoom;
 interface
 
 uses
-    JabberID, XMLTag, Unicode,
+    JabberID, XMLTag, Unicode, Entity, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
     TntExtCtrls;
@@ -79,7 +79,7 @@ type
     _cur_sort: integer;
     _asc: boolean;
 
-    procedure _addRoomJid(tmp: TJabberID);
+    procedure _addRoomJid(ce: TJabberEntity);
     procedure _processFilter();
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
@@ -100,7 +100,7 @@ procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overlo
 implementation
 {$R *.DFM}
 uses
-    Entity, EntityCache, JabberUtils, ExUtils,  GnuGetText, Jabber1, Session, Room;
+    EntityCache, JabberUtils, ExUtils,  GnuGetText, Jabber1, Session, Room;
 
 const
     sInvalidNick = 'You must enter a nickname';
@@ -160,15 +160,16 @@ begin
     tmp := TJabberID.Create('');
     for i := 0 to l.Count - 1 do begin
         tmp.ParseJID(l[i]);
-        if (tmp.user <> '') then
-            _addRoomJid(tmp)
+        if (tmp.user <> '') then begin
+            ce := jEntityCache.getByJid(tmp.full);
+            if (ce <> nil) then
+                _addRoomJid(ce);
+        end
         else begin
             txtServer.Items.Add(l[i]);
             txtServerFilter.Items.Add(l[i]);
             ce := jEntityCache.getByJid(l[i]);
-            if (not ce.hasItems) then begin
-                ce.walk(MainSession);
-            end;
+            ce.getItems(MainSession);
         end;
     end;
     tmp.Free();
@@ -195,7 +196,7 @@ begin
     _cur_sort := 0;
     _asc := true;
 
-    _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
+    _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 
     if (MainSession.Prefs.getBool('tc_browse')) then
@@ -281,21 +282,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmJoinRoom._addRoomJid(tmp: TJabberID);
-var
-    ce: TJabberEntity;
-    tmps, n: Widestring;
+procedure TfrmJoinRoom._addRoomJid(ce: TJabberEntity);
 begin
-    n := tmp.User;
-    tmps := tmp.Domain;
-    ce := jEntityCache.getByJid(tmp.full);
-    if (ce = nil) then exit;
-
     // make sure to not add dupes.
-    if (_all.IndexOf(ce) = -1) then begin
-        _all.Add(ce);
-        _processFilter();
-    end;
+    if (_all.IndexOf(ce) = -1) then _all.Add(ce);
 end;
 
 {---------------------------------------}
@@ -340,29 +330,37 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.EntityCallback(event: string; tag: TXMLTag);
 var
+    i: integer;
     tmp: TJabberID;
-    ce: TJabberEntity;
+    c, ce: TJabberEntity;
+    msg: string;
 begin
     tmp := TJabberID.Create(tag.getAttribute('from'));
-    ce := jEntityCache.getByJid(tmp.full);
-    if (ce = nil) then begin
-        tmp.Free();
-        exit;
-    end;
 
-    if (not ce.hasFeature(FEAT_GROUPCHAT)) then begin
-        tmp.Free();
-        exit;
-    end;
+    msg := 'XXX: EntityCallback ' + event + ' ' + tmp.full;
+    OutputDebugString(PChar(msg));
 
-    if (tmp.user = '') then begin
-        if (txtServer.Items.IndexOf(tmp.domain) = -1) then begin
-            txtServer.Items.Add(tmp.domain);
-            txtServerFilter.Items.Add(tmp.domain);
+    // if this is /session/entity/items, AND, this jid supports MUC,
+    // assume it's children are rooms.
+    if (event = '/session/entity/items') then begin
+        ce := jEntityCache.getByJid(tmp.full);
+        if (ce = nil) then begin
+            tmp.Free();
+            exit;
         end;
+
+        for i := 0 to ce.ItemCount - 1 do begin
+            c := ce.Items[i];
+            if (c.Jid.user <> '') then
+                _addRoomJid(c);
+        end;
+
+        _processFilter();
     end
-    else
-        _addRoomJid(tmp);
+    else begin
+        // if this is #info, then just flesh out this item..
+    end;
+
     tmp.Free();
 end;
 
