@@ -305,11 +305,13 @@ procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 var
     i: integer;
 begin
-    if (_callback > 0) then begin
+    if (_callback >= 0) then begin
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_callback);
-        MainSession.UnRegisterCallback(_scallback);
         end;
+
+    if (_scallback >= 0) then
+        MainSession.UnRegisterCallback(_scallback);
 
     if chat_object <> nil then begin
         i := MainSession.ChatList.IndexOfObject(chat_object);

@@ -27,12 +27,16 @@ uses
 type
 
     {---------------------------------------}
+    // Base callback method for TSignal listeners
     TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
 
     TSignal = class;
     TSignalListener = class;
 
     {---------------------------------------}
+    // This is a class to store info in the x-ref table
+    // inside the dispatcher. This allows us to lookup a LID,
+    // and get the associated signal and a pointer to the TSignalListener
     TListenerInfo = class
     public
         lid: longint;
@@ -41,6 +45,9 @@ type
     end;
 
     {---------------------------------------}
+    {
+    This is the main signal dispatcher...
+    }
     TSignalDispatcher = class(TStringList)
     private
         _id: longint;
