@@ -216,9 +216,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmDockContainer, frmDockContainer);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
-  frmCustomPres := TfrmCustomPres.Create(Application);
 
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;

@@ -653,7 +653,7 @@ begin
         end;
 
         setAttribute('type', 'result');
-        q := AddTag('query');
+        q := r.AddTag('query');
 
         if (node = '') or (node = vsharp) then begin
             with q do begin
