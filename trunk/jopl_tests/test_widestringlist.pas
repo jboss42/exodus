@@ -8,8 +8,8 @@ uses
 type
     TWideStringListTest = class(TTestCase)
     private
-        // sl: TWidestringList;
-        sl: TStringList;
+        sl: TWidestringList;
+        //sl: TStringList;
         procedure Cleanup;
     protected
         procedure Setup; override;
@@ -31,8 +31,8 @@ uses
 procedure TWideStringListTest.Setup;
 begin
     //
-    // sl := TWideStringList.Create();
-    sl := TStringList.Create();
+    sl := TWideStringList.Create();
+    // sl := TStringList.Create();
 end;
 
 procedure TWideStringListTest.Cleanup;
