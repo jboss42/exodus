@@ -38,7 +38,7 @@ uses
     // iniFiles,
     Math, QForms,
     {$endif}
-    Classes, SysUtils;
+    Classes, SysUtils, PrefFile;
 
 const
     s10n_ask = 0;
@@ -156,7 +156,7 @@ type
         Poll: integer;
         NumPollKeys: integer;
 
-        constructor Create(prof_name: string);
+        constructor Create(prof_name: string; prefs: TPrefController);
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -171,14 +171,12 @@ end;
     private
         _js: TObject;
         _pref_filename: Widestring;
-        _pref_node: TXMLTag;
-        _server_node: TXMLTag;
+        _pref_file: TPrefFile;
+        _server_file: TPrefFile;
+
         _profiles: TStringList;
-        _parser: TXMLTagParser;
-        _server_dirty: boolean;
         _updating: boolean;
 
-        function findPresenceTag(pkey: Widestring): TXMLTag;
         procedure Save;
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
@@ -198,7 +196,6 @@ end;
         function getAllPresence(): TWidestringList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
-        function getDefaultPresence(): TList;
 
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
@@ -235,21 +232,15 @@ end;
         procedure BeginUpdate();
         procedure EndUpdate();
 
-        function getXMLTag(name: Widestring): TXMLTag;
+//        function getXMLTag(name: Widestring): TXMLTag;
 
         property Profiles: TStringlist read _profiles write _profiles;
         property Filename: WideString read _pref_filename;
 end;
 
-procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings); overload;
-{$ifdef Exodus}
-procedure fillDefaultStringlist(pkey: Widestring; sl: TTntStrings); overload;
-{$endif}
-function getDefault(pkey: Widestring): Widestring;
-
 var
-    s_brand_node: TXMLTag;
-    s_default_node: TXmlTag;
+    s_brand_file: TPrefFile;
+    s_default_file: TPrefFile;
 
 const
     sIdleAway = 'Away as a result of idle.';
@@ -273,7 +264,7 @@ uses
     {$else}
     QGraphics,
     {$endif}
-    JabberConst, StrUtils,
+    JabberConst, StrUtils, GnuGetText,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
 
@@ -282,6 +273,16 @@ var
     dtop_count: integer;
     task_rect: TRect;
     task_dir: integer;
+
+
+function getState(pkey: WideString): TPrefState;
+begin
+    Result :=  s_brand_file.getState(pkey);
+    if (Result = psUnknown) then
+        Result := s_default_file.getState(pkey);
+    if (Result = psUnknown) then
+        Result := psReadWrite;
+end;
 
 {$ifdef Win32}
 {---------------------------------------}
@@ -490,11 +491,13 @@ end;
 
 {---------------------------------------}
 constructor TPrefController.Create(filename: Widestring);
-{$ifdef Win32}
 var
-    reg: TRegistry;
-    p: WideString;
+{$ifdef Win32}
+    reg  : TRegistry;
 {$endif}
+    p    : WideString;
+    allp : TWideStringList;
+    i    : integer;
 begin
     inherited Create();
 
@@ -507,32 +510,31 @@ begin
         _pref_filename := p + '\' + _pref_filename;
     end;
 
-    _parser := TXMLTagParser.Create;
-    _parser.ParseFile(_pref_filename);
-    if (_parser.Count > 0) then begin
-        // we have something to read.. hopefully it's correct :)
-        _pref_node := _parser.popTag();
-        _parser.Clear();
-    end
-    else
-        // create some default node
-        _pref_node := TXMLTag.Create('exodus');
+    _pref_file := TPrefFile.Create(_pref_filename);
+    if (_pref_file.NeedDefaultPresence) then begin
+        allp := s_default_file.getAllPresence();
 
+        for i := 0 to allp.Count - 1 do begin
+            _pref_file.setPresence(TJabberCustomPres(allp.Objects[i]));
+        end;
+        
+        ClearStringListObjects(allp);
+        allp.free();
+    end;
 
-    _server_node := nil;
-    _server_dirty := false;
+    _server_file := nil;
     _profiles := TStringList.Create;
     _updating := false;
 
     getDefaultPos();
 
-    {$ifdef Win32}
+    {$ifdef EXODUS}
     // Write out the current prefs file..
     // this is so the un-installer can remove the prefs
     // when it does it's thing.
 
     // Note: Joe doesn't get all *his* prefs files removed.  Probably
-    // only the one for the instance that ran last.
+    // only the one for the instance that started last.
 
     reg := TRegistry.Create();
     try
@@ -551,11 +553,11 @@ end;
 destructor TPrefController.Destroy;
 begin
     // Kill our cache'd nodes, etc.
-    if (_pref_node <> nil) then
-        _pref_node.Free();
-    if (_server_node <> nil) then
-        _server_node.Free();
-    _parser.Free();
+    if (_pref_file <> nil) then
+        _pref_file.Free();
+    if (_server_file <> nil) then
+        _server_file.Free();
+
     ClearStringListObjects(_profiles);
 
     _profiles.Free();
@@ -566,45 +568,81 @@ end;
 
 {---------------------------------------}
 procedure TPrefController.Save;
-var
-    fs: TStringList;
 begin
     if (_updating) then exit;
 
-    fs := TStringList.Create;
-    fs.Text := UTF8Encode(_pref_node.xml);
-
-    try
-        fs.SaveToFile(_pref_filename);
-    except
-        MainSession.FireEvent('/session/gui/prefs-write-error', nil);
-    end;
-
-    fs.Free();
+    _pref_file.save();
+    // TODO: save server prefs
 end;
 
 {---------------------------------------}
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
-    t: TXMLTag;
+    uf: TPrefFile;
+    bv, uv: Widestring;
+    s: TPrefState;
 begin
-    t := nil;
+    Result := '';
+    
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
 
-    // find string value
-    case server_side of
-        pkClient:  t := _pref_node.GetFirstTag(pkey);
-        pkServer:  t := _server_node.GetFirstTag(pkey);
+    bv := s_brand_file.getString(pkey);
+    s := getState(pkey);
+    if ((s = psReadOnly) or (s = psInvisible)) then begin
+        if (bv <> '') then
+            Result := bv
+        else
+            Result := s_default_file.getString(pkey);
+        exit;
     end;
 
-    if (t = nil) then
-        Result := getDefault(pkey)
+    uv := uf.getString(pkey);
+    if (uv <> '') then
+        Result := uv
+    else if (bv <> '') then
+        Result := bv
     else
-        Result := t.Data;
+        Result := s_default_file.getString(pkey);
+
+    if (Result <> '') then exit;
+
+    // set the defaults for the pref controller
+    if pkey = 'away_status' then
+        result := _(sIdleAway)
+    else if pkey = 'xa_status' then
+        result := _(sIdleXA)
+    else if pkey = 'log_path' then
+        result := getMyDocs() + 'Exodus-Logs'
+    else if pkey = 'xfer_path' then
+        result := getMyDocs() + 'Exodus-Downloads'
+    else if pkey = 'spool_path' then
+        result := getUserDir() + 'spool.xml'
+
+    {$ifdef Win32}
+    else if pkey = 'roster_font_name' then
+        result := Screen.IconFont.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Screen.IconFont.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Screen.IconFont.Color))
+    {$else}
+    else if pkey = 'roster_font_name' then
+        result := Application.Font.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Application.Font.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Application.Font.Color))
+    {$endif}
+
 end;
 
 {---------------------------------------}
-function TPrefController.getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
-begin
+function TPrefController.getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;begin
     // find int value
     Result := SafeInt(getString(pkey, server_side));
 end;
@@ -644,50 +682,38 @@ end;
 {---------------------------------------}
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 var
-    p: TXMLTag;
-    s: TXMLTagList;
-    i: integer;
+    uf: TPrefFile;
 begin
-    case server_side of
-    pkClient:   p := _pref_node.GetFirstTag(pkey);
-    pkServer:   p := _server_node.GetFirstTag(pkey);
-    else p:= nil;
-    end;
-
-    if (p <> nil) then begin
-        sl.Clear();
-        s := p.QueryTags('s');
-        for i := 0 to s.Count - 1 do
-            sl.Add(s.Tags[i].Data);
-        s.Free;
-    end
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
     else
-        fillDefaultStringList(pkey, sl);
+        uf := _server_file;
+
+    if (not uf.fillStringlist(pkey, sl)) then begin
+        if (not s_brand_file.fillStringlist(pkey, sl)) then
+            s_default_file.fillStringlist(pkey, sl);
+    end;
 end;
 
 {---------------------------------------}
 {$ifdef Exodus}
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
 var
-    p: TXMLTag;
-    s: TXMLTagList;
-    i: integer;
+    uf: TPrefFile;
 begin
-    case server_side of
-    pkClient:   p := _pref_node.GetFirstTag(pkey);
-    pkServer:   p := _server_node.GetFirstTag(pkey);
-    else        p:= nil;
-    end;
-
-    if (p <> nil) then begin
-        sl.Clear();
-        s := p.QueryTags('s');
-        for i := 0 to s.Count - 1 do
-            sl.Add(s.Tags[i].Data);
-        s.Free;
-    end
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
     else
-        fillDefaultStringList(pkey, sl);
+        uf := _server_file;
+
+    if (not uf.fillStringlist(pkey, sl)) then begin
+        if (not s_brand_file.fillStringlist(pkey, sl)) then
+            s_default_file.fillStringlist(pkey, sl);
+    end;
 end;
 {$endif}
 
@@ -713,25 +739,16 @@ end;
 {---------------------------------------}
 procedure TPrefController.setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
 var
-    n, t: TXMLTag;
+    uf: TPrefFile;
 begin
-    if (server_side = pkServer) then begin
-        n := _server_node;
-        _server_dirty := true;
-    end
+    // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
     else
-        n := _pref_node;
+        uf := _server_file;
 
-    t := n.GetFirstTag(pkey);
-    if (t <> nil) then begin
-        t.ClearCData;
-        t.AddCData(pvalue);
-    end
-    else
-        n.AddBasicTag(pkey, pvalue);
-
-    // do we really want to ALWAYS save here?
-    if (server_side = pkClient) then Self.Save();
+    uf.setString(pkey, pvalue);
+    Save();
 end;
 
 {---------------------------------------}
@@ -743,225 +760,80 @@ end;
 {---------------------------------------}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
 var
-    i: integer;
-    n, p: TXMLTag;
+    uf: TPrefFile;
 begin
-    // setup the stringlist in it's own parent..
-    // with multiple <s> tags for each value.
-    if (Server_side = pkServer) then begin
-        n := _server_node;
-        _server_dirty := true;
-    end
+    // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
     else
-        n := _pref_node;
+        uf := _server_file;
 
-    if (n = nil) then
-        p := nil
-    else
-        p := n.GetFirstTag(pkey);
-
-    if (p = nil) then
-        p := n.AddTag(pkey)
-    else
-        p.ClearTags();
-
-    // plug in all the values
-    for i := 0 to pvalue.Count - 1 do begin
-        if (pvalue[i] <> '') then
-            p.AddBasicTag('s', pvalue[i]);
-    end;
-
-    if (server_side = pkClient) then
-        Self.Save();
+    uf.setStringList(pkey, pvalue);
+    Save();
 end;
 
 {---------------------------------------}
 {$ifdef Exodus}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
 var
-    i: integer;
-    n, p: TXMLTag;
+    uf: TPrefFile;
 begin
-    // setup the stringlist in it's own parent..
-    // with multiple <s> tags for each value.
-    if (Server_side = pkServer) then begin
-        n := _server_node;
-        _server_dirty := true;
-    end
+   // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
     else
-        n := _pref_node;
+        uf := _server_file;
 
-    if (n = nil) then
-        p := nil
-    else
-        p := n.GetFirstTag(pkey);
-
-    if (p = nil) then
-        p := n.AddTag(pkey)
-    else
-        p.ClearTags();
-
-    // plug in all the values
-    for i := 0 to pvalue.Count - 1 do begin
-        if (pvalue[i] <> '') then
-            p.AddBasicTag('s', pvalue[i]);
-    end;
-
-    if (server_side = pkClient) then
-        Self.Save();
+    uf.setStringList(pkey, pvalue);
+    Save();
 end;
 {$endif}
 
 {---------------------------------------}
-function TPrefController.findPresenceTag(pkey: Widestring): TXMLTag;
-var
-    i: integer;
-    ptags: TXMLTagList;
-begin
-    // get some custom pres from the list
-    Result := nil;
-
-    ptags := _pref_node.QueryTags('presence');
-    for i := 0 to ptags.count - 1 do begin
-        if (ptags[i].GetAttribute('name') = pkey) then begin
-            Result := ptags[i];
-            break;
-        end;
-    end;
-    ptags.Free;
-end;
-
-{---------------------------------------}
 procedure TPrefController.removePresence(pvalue: TJabberCustomPres);
-var
-    tag: TXMLTag;
 begin
-    // remove this specific presence
-    tag := _pref_node.QueryXPTag('/exodus/presence@name="' + pvalue.title + '"');
-
-    if (tag <> nil) then
-        _pref_node.RemoveTag(tag);
+    _pref_file.removePresence(pvalue.title);
 end;
 
 {---------------------------------------}
 procedure TPrefController.removeAllPresence();
-var
-    i: integer;
-    ptags: TXMLTagList;
 begin
-    // remove all custom pres from the list
-    ptags := _pref_node.QueryTags('presence');
-    for i := 0 to ptags.count - 1 do
-        _pref_node.RemoveTag(ptags.Tags[i]);
-    ptags.Free;
+    _pref_file.removeAllPresence();
 end;
 
 {---------------------------------------}
 function TPrefController.getAllPresence(): TWidestringlist;
-var
-    i: integer;
-    ctag: TXMLTag;
-    ptags: TXMLTagList;
-    cp: TJabberCustompres;
-    dlist: TList;
 begin
-    Result := TWidestringlist.Create();
-    ptags := _pref_node.QueryTags('presence');
-
-    for i := 0 to ptags.Count - 1 do begin
-        cp := TJabberCustompres.Create();
-        cp.Parse(ptags[i]);
-        Result.AddObject(cp.title, cp);
-    end;
-
-    ctag := _pref_node.GetFirstTag('custom_pres');
-    if ((ctag = nil) or (Result.Count = 0)) then begin
-        dlist := getDefaultPresence();
-        for i := 0 to dlist.Count - 1 do begin
-            cp := TJabberCustomPres(dlist[i]);
-            Result.AddObject(cp.title, cp);
-            Self.setPresence(cp);
-        end;
-        _pref_node.AddTag('custom_pres');
-        Self.Save();
-        dlist.Free();
-    end;
-    Result.Sort();
-    ptags.Free();
+    Result := _pref_file.getAllPresence();
 end;
-
-{---------------------------------------}
-function TPrefController.getDefaultPresence(): TList;
-var
-    i: integer;
-    ptags: TXMLTagList;
-    cp: TJabberCustompres;
-begin
-    Result := Tlist.Create();
-    ptags := s_default_node.QueryTags('presence');
-
-    for i := 0 to ptags.Count - 1 do begin
-        cp := TJabberCustompres.Create();
-        cp.Parse(ptags[i]);
-        Result.Add(cp);
-    end;
-    ptags.Free();
-end;
-
 
 {---------------------------------------}
 function TPrefController.getPresence(pkey: Widestring): TJabberCustomPres;
-var
-    p: TXMLTag;
 begin
     // get some custom pres from the list
-    Result := nil;
-    p := Self.findPresenceTag(pkey);
-    if (p <> nil) then begin
-        Result := TJabberCustomPres.Create();
-        Result.Parse(p);
-    end;
+    Result := _pref_file.getPresence(pkey);
 end;
 
 {---------------------------------------}
 function TPrefController.getPresIndex(idx: integer): TJabberCustomPres;
-var
-    ptags: TXMLTagList;
 begin
-    Result := nil;
-    ptags := _pref_node.QueryTags('presence');
-    if ((idx >= 0) and (idx < ptags.Count)) then
-        Result := getPresence(ptags[idx].GetAttribute('name'));
-    ptags.Free();
+    Result := _pref_file.getPresIndex(idx);
 end;
 
 {---------------------------------------}
 procedure TPrefController.setPresence(pvalue: TJabberCustomPres);
-var
-    c, p: TXMLTag;
 begin
-    // set some custom pres into the list
-    p := Self.findPresenceTag(pvalue.title);
-    if (p = nil) then
-        p := _pref_node.AddTag('presence');
-    pvalue.FillTag(p);
-
-    // this is a marker for the 'new' custom-pres stuff
-    // if not present, then defaults are also loaded @ runtime.
-    c := _pref_node.GetFirstTag('custom_pres');
-    if (c = nil) then
-        _pref_node.AddTag('custom_pres');
-
-    Self.Save();
-
+    _pref_file.setPresence(pvalue);
+    Save();
 end;
 
-{---------------------------------------}
+{---------------------------------------
 function TPrefController.getXMLTag(name: Widestring): TXMLTag;
 begin
     // find a specific tag in _pref_node and return
     Result := _pref_node.GetFirstTag(name);
 end;
+}
 
 {---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm);
@@ -975,23 +847,17 @@ end;
 {---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm; key: Widestring);
 var
-    p, f: TXMLTag;
+    f: TXMLTag;
 begin
     // save the positions for this form
-    p := _pref_node.GetFirstTag('positions');
-    if (p = nil) then
-        p := _pref_node.AddTag('positions');
-
-    f := p.GetFirstTag(key);
-    if (f = nil) then
-        f := p.AddTag(key);
+    f := _pref_file.getPositionTag(key, true);
 
     f.setAttribute('top', IntToStr(Form.top));
     f.setAttribute('left', IntToStr(Form.left));
     f.setAttribute('width', IntToStr(Form.width));
     f.setAttribute('height', IntToStr(Form.height));
 
-    Self.Save();
+    _pref_file.Save();
 end;
 
 {---------------------------------------}
@@ -1035,7 +901,7 @@ var
     f: TXMLTag;
     t,l,w,h: integer;
 begin
-    f := _pref_node.QueryXPTag('/exodus/positions/' + key);
+    f := _pref_file.getPositionTag(key);
     if (f <> nil) then begin
         t := SafeInt(f.getAttribute('top'));
         l := SafeInt(f.getAttribute('left'));
@@ -1061,7 +927,7 @@ begin
     // set the bounds based on the position info
     fkey := MungeName(form.Classname);
 
-    f := _pref_node.QueryXPTag('/exodus/positions/' + fkey);
+    f := _pref_file.getPositionTag(fkey);
     if (f <> nil) then begin
         t := SafeInt(f.getAttribute('top'));
         l := SafeInt(f.getAttribute('left'));
@@ -1178,7 +1044,7 @@ end;
 {---------------------------------------}
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
-    Result := TJabberProfile.Create(name);
+    Result := TJabberProfile.Create(name, self);
     _profiles.AddObject(name, Result);
 end;
 
@@ -1202,11 +1068,11 @@ var
 begin
     _profiles.Clear;
 
-    ptags := _pref_node.QueryTags('profile');
+    ptags := _pref_file.Profiles.QueryTags('profile');
     pcount := ptags.Count;
 
     for i := 0 to pcount - 1 do begin
-        cur_profile := TJabberProfile.Create('');
+        cur_profile := TJabberProfile.Create('', self);
         cur_profile.Load(ptags[i]);
         _profiles.AddObject(cur_profile.name, cur_profile);
     end;
@@ -1221,23 +1087,23 @@ var
     ptags: TXMLTagList;
     i: integer;
     cur_profile: TJabberProfile;
+    prof_node: TXMLTag;
 begin
+    prof_node := _pref_file.Profiles;
+    ptags := prof_node.QueryTags('profile');
 
-    ptags := _pref_node.QueryTags('profile');
-
-    for i := 0 to ptags.count - 1 do
-        _pref_node.RemoveTag(ptags[i]);
+    _pref_file.ClearProfiles();
 
     for i := 0 to _profiles.Count - 1 do begin
         cur_profile := TJabberProfile(_profiles.Objects[i]);
         // don't save temp profiles.
         if (not cur_profile.temp) then begin
-            ptag := _pref_node.AddTag('profile');
+            ptag := prof_node.AddTag('profile');
             cur_profile.Save(ptag);
         end;
     end;
 
-    Self.Save();
+    Save();
     ptags.Free;
 end;
 
@@ -1269,10 +1135,14 @@ end;
 
 {---------------------------------------}
 procedure TPrefController.SaveServerPrefs();
-var
+{var
     js: TJabberSession;
     stag, iq: TXMLTag;
+    }
 begin
+ // TODO: figure out server prefs
+
+{
     // Save the prefs to the server
     if (_server_node = nil) then exit;
     if (_js = nil) then exit;
@@ -1293,15 +1163,19 @@ begin
     end;
     js.SendTag(iq);
     _server_dirty := false;
+    }
 end;
 
 {---------------------------------------}
 procedure TPrefController.ServerPrefsCallback(event: string; tag: TXMLTag);
+var
+    node : TXMLTag;
 begin
     // Cache the prefs node
     if (tag = nil) then exit;
-    _server_node := TXMLTag.Create(tag.QueryXPTag('/iq/query/storage'));
-    TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
+    node := tag.QueryXPTag('/iq/query/storage');
+    _server_file := TPrefFile.Create(node);
+    TJabberSession(_js).FireEvent('/session/server_prefs', node);
 end;
 
 {---------------------------------------}
@@ -1320,37 +1194,39 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TJabberProfile.Create(prof_name : string);
+constructor TJabberProfile.Create(prof_name : string; prefs: TPrefController);
 begin
     inherited Create;
 
     Name       := prof_name;
 
-    Username   := getDefault('brand_profile_username');
-    password   := getDefault('brand_profile_password');
-    Server     := getDefault('brand_profile_server');
-    Resource   := getDefault('brand_profile_resource');
-    Priority   := SafeInt(getDefault('brand_profile_priority'));
-    SavePasswd := SafeBool(getDefault('brand_profile_save_password'));
-    ConnectionType := SafeInt(getDefault('brand_profile_conn_type'));
-    temp       := false;
+    with prefs do begin
+        Username   := getString('brand_profile_username');
+        password   := getString('brand_profile_password');
+        Server     := getString('brand_profile_server');
+        Resource   := getString('brand_profile_resource');
+        Priority   := getInt('brand_profile_priority');
+        SavePasswd := getBool('brand_profile_save_password');
+        ConnectionType := getInt('brand_profile_conn_type');
+        temp       := false;
 
-    // Socket connection
-    Host          := getDefault('brand_profile_host');
-    Port          := SafeInt(getDefault('brand_profile_port'));
-    srv           := SafeBool(getDefault('brand_profile_srv'));
-    ssl           := SafeInt(getDefault('brand_profile_ssl'));
-    SocksType     := SafeInt(getDefault('brand_profile_socks_type'));
-    SocksHost     := getDefault('brand_profile_socks_host');
-    SocksPort     := SafeInt(getDefault('brand_profile_socks_port'));
-    SocksAuth     := SafeBool(getDefault('brand_profile_socks_auth'));
-    SocksUsername := getDefault('brand_profile_socks_user');
-    SocksPassword := getDefault('brand_profile_socks_password');
+        // Socket connection
+        Host          := getString('brand_profile_host');
+        Port          := getInt('brand_profile_port');
+        srv           := getBool('brand_profile_srv');
+        ssl           := getInt('brand_profile_ssl');
+        SocksType     := getInt('brand_profile_socks_type');
+        SocksHost     := getString('brand_profile_socks_host');
+        SocksPort     := getInt('brand_profile_socks_port');
+        SocksAuth     := getBool('brand_profile_socks_auth');
+        SocksUsername := getString('brand_profile_socks_user');
+        SocksPassword := getString('brand_profile_socks_password');
 
-    // HTTP Connection
-    URL           := getDefault('brand_profile_http_url');
-    Poll          := SafeInt(getDefault('brand_profile_http_poll'));
-    NumPollKeys   := SafeInt(getDefault('brand_profile_num_poll_keys'));
+        // HTTP Connection
+        URL           := getString('brand_profile_http_url');
+        Poll          := getInt('brand_profile_http_poll');
+        NumPollKeys   := getInt('brand_profile_num_poll_keys');
+    end;
 
 end;
 
@@ -1491,145 +1367,12 @@ begin
     else result := true;
 end;
 
-{---------------------------------------}
-procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings);
-var
-    t: TXMLTag;
-    s: TXMLTagList;
-    i: integer;
-begin
-    sl.Clear();
-    t := s_brand_node.GetFirstTag(pkey);
-    if (t = nil) then
-        t := s_default_node.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    s := t.QueryTags('s');
-    for i := 0 to s.Count - 1 do
-        sl.Add(s.Tags[i].Data);
-    s.Free;
-end;
-
-{---------------------------------------}
-{$ifdef Exodus}
-procedure fillDefaultStringlist(pkey: Widestring; sl: TTntStrings);
-var
-    t: TXMLTag;
-    s: TXMLTagList;
-    i: integer;
-begin
-    sl.Clear();
-    t := s_brand_node.GetFirstTag(pkey);
-    if (t = nil) then
-        t := s_default_node.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    s := t.QueryTags('s');
-    for i := 0 to s.Count - 1 do
-        sl.Add(s.Tags[i].Data);
-    s.Free;
-end;
-{$endif}
-
-{---------------------------------------}
-function getDefault(pkey: Widestring): Widestring;
-var
-    t: TXMLTag;
-begin
-    t := s_brand_node.GetFirstTag(pkey);
-    if (t <> nil) then begin
-        result := t.Data;
-        exit;
-    end;
-
-    t := s_default_node.GetFirstTag(pkey);
-    if (t <> nil) then begin
-        result := t.Data;
-        exit;
-    end;
-
-    // set the defaults for the pref controller
-    if pkey = 'away_status' then
-        result := sIdleAway
-    else if pkey = 'xa_status' then
-        result := sIdleXA
-    else if pkey = 'log_path' then
-        result := getMyDocs() + 'Exodus-Logs'
-    else if pkey = 'xfer_path' then
-        result := getMyDocs() + 'Exodus-Downloads'
-    else if pkey = 'spool_path' then
-        result := getUserDir() + 'spool.xml'
-
-    {$ifdef Win32}
-    else if pkey = 'roster_font_name' then
-        result := Screen.IconFont.Name
-    else if pkey = 'roster_font_size' then
-        result := IntToStr(Screen.IconFont.Size)
-    else if pkey = 'roster_font_color' then
-        result := IntToStr(Integer(Screen.IconFont.Color))
-    {$else}
-    else if pkey = 'roster_font_name' then
-        result := Application.Font.Name
-    else if pkey = 'roster_font_size' then
-        result := IntToStr(Application.Font.Size)
-    else if pkey = 'roster_font_color' then
-        result := IntToStr(Integer(Application.Font.Color))
-    {$endif}
-    else
-        result := '';
-end;
-
-{---------------------------------------}
-procedure init();
-var
-    fn: string;
-    res: TResourceStream;
-    sl: TStringList;
-    parser: TXMLTagParser;
-begin
-    parser := TXMLTagParser.Create;
-
-    try
-        res := TResourceStream.Create(HInstance, 'defaults', 'XML');
-        sl := TStringList.Create();
-        sl.LoadFromStream(res);
-        res.Free();
-        parser.ParseString(sl.Text, '');
-        sl.Free();
-        if (parser.Count > 0) then begin
-            s_default_node := parser.popTag();
-            parser.Clear();
-        end
-        else
-            s_default_node := TXmlTag.Create('brand');
-    except
-        s_default_node := TXMLTag.Create('brand');
-    end;
-
-    s_brand_node := nil;
-    fn := ExtractFilePath(Application.EXEName) + 'branding.xml';
-    if (fileExists(fn)) then begin
-        parser.ParseFile(fn);
-        if (parser.Count > 0) then begin
-            // we have something to read.. hopefully it's correct :)
-            s_brand_node := parser.popTag();
-            parser.Clear();
-        end
-    end;
-
-    if (s_brand_node = nil) then
-        // create some default node
-        s_brand_node := TXMLTag.Create('brand');
-
-    parser.Free();
-
-end;
-
 initialization
-    init();
+    s_default_file := TPrefFile.Create('defaults', 'XML');
+    s_brand_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'branding.xml');
 
 finalization
-    s_default_node.Free();
-    s_brand_node.Free();
+    s_default_file.Free();
+    s_brand_file.Free();
 end.
 

@@ -166,7 +166,8 @@ uses
   EntityCache in '..\jopl\EntityCache.pas',
   SASLAuth in '..\jopl\SASLAuth.pas',
   ExGettextUtils in 'ExGettextUtils.pas',
-  JoinRoom in 'JoinRoom.pas';
+  JoinRoom in 'JoinRoom.pas',
+  PrefFile in '..\jopl\PrefFile.pas';
 
 {$R *.TLB}
 

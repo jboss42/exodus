@@ -1,12 +1,1 @@
-<brand>
-<!-- any prefs set here will be the new defaults -->
-<!--
-  <brand_icon></brand_icon>
-  <brand_caption></brand_caption>
-  <brand_ad></brand_ad>
-  <brand_ad_url></brand_ad_url>
--->
-  <branding_url>http://exodus.jabberstudio.org/daily/branding.xml</branding_url>
-  <auto_update_url>http://exodus.jabberstudio.org/daily/setup.exe</auto_update_url>
-  <auto_update_changelog_url>http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt</auto_update_changelog_url>
-</brand>
+<exodus version="0.9"><branding_url value="http://exodus.jabberstudio.org/daily/branding.xml"/><auto_update_url value="http://exodus.jabberstudio.org/daily/setup.exe"/><auto_update_changelog_url value="http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt"/><presii/><positions/><profiles/></exodus>

@@ -257,11 +257,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.btnDefaultsClick(Sender: TObject);
+{
 var
     i: integer;
     dlist: TList;
+    }
 begin
   inherited;
+
+  // XXX: PGM: Fix getDefaultPresence
+  {
     // Recreate all of the "canned" custom presence
     dlist := MainSession.Prefs.getDefaultPresence();
     for i := 0 to dlist.count - 1 do begin
@@ -269,6 +274,7 @@ begin
         lstCustomPres.Items.Add(TJabberCustomPres(dlist[i]).title);
     end;
     dlist.Free();
+    }
 end;
 
 end.

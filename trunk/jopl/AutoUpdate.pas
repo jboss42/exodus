@@ -50,6 +50,7 @@ type
 
 function InitAutoUpdate(background : boolean = true) : boolean;
 procedure InitUpdateBranding();
+procedure FireAutoUpdate(URL: string);
 
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
@@ -60,7 +61,7 @@ const
 implementation
 
 uses
-    AutoUpdateStatus, Controls, ExUtils, IQ, Dialogs,
+    Controls, IQ, Dialogs,
     Forms, Registry, Session, ShellAPI, SysUtils,
     Windows, XMLUtils, PrefController;
 
@@ -96,7 +97,7 @@ begin
     t.PKey := 'last_update';
     t.URL := url;
     t.Background := background;
-    t.OnNewUrl := @ShowAutoUpdateStatus;
+    t.OnNewUrl := @FireAutoUpdate;
     if (background) then begin
         t.FreeOnTerminate := true;
         t.Resume();
@@ -214,6 +215,15 @@ end;
 procedure TAutoUpdateThread.checkDoUpdate();
 begin
     _onNew(_url);
+end;
+
+procedure FireAutoUpdate(URL: string);
+var
+    t: TXMLTag;
+begin
+    t := TXMLTag.Create('update');
+    t.setAttribute('url', URL);
+    MainSession.FireEvent('/session/gui/autoupdate', t);
 end;
 
 end.

@@ -45,7 +45,7 @@ type
 implementation
 
 uses
-    Dialogs, GnuGetText,
+    Dialogs, GnuGetText, AutoUpdateStatus,
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
 
@@ -135,6 +135,10 @@ begin
     else if (event = '/session/unblock') then begin
         i := _blockers.IndexOf(tag.getAttribute('jid'));
         if (i >= 0) then _blockers.Delete(i);
+    end
+
+    else if (event = '/session/gui/autoupdate') then begin
+        ShowAutoUpdateStatus(tag.GetAttribute('url'));
     end
 
     else if (event = '/session/gui/subscribe') then begin
