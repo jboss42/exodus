@@ -438,7 +438,6 @@ begin
             else begin
                 p := THostPortPair(shosts.Objects[i]);
                 if ((p.host <> '') and (p.Port > 0)) then
-                    // _state := send_offer_hosts;
                     _state := send_ft_offer;
             end;
 
@@ -457,7 +456,6 @@ begin
     send_get_addr: begin
         // get the addresses for each host..
         if (not getNextHostAddr()) then begin
-            // _state := send_offer_hosts;
             _state := send_ft_offer;
             DoState();
         end;
@@ -896,7 +894,6 @@ begin
     end;
 
     if (not getNextHostAddr()) then begin
-        //_state := send_offer_hosts;
         _state := send_ft_offer;
         DoState();
     end;
@@ -961,6 +958,7 @@ begin
         Self.Free();
     end
     else begin
+        _state := send_done;
         btnCancel.Caption := _('Close');
     end;
 end;
@@ -1007,9 +1005,8 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.btnCancelClick(Sender: TObject);
 begin
-    if ((_state = send_cancel) or
-        (_state = send_do_oob) or
-        (_state = send_do_dav)) then
+    if ((_state = send_done) or (_state = send_cancel) or
+        (_state = send_do_oob) or (_state = send_do_dav)) then
         getXferManager().killFrame(Self);
 end;
 
