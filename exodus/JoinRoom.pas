@@ -22,7 +22,7 @@ unit JoinRoom;
 interface
 
 uses
-    JabberID, XMLTag, Unicode, 
+    JabberID, XMLTag, Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
     TntExtCtrls;
@@ -164,6 +164,7 @@ begin
     tmp.Free();
     l.Free();
     txtServerFilter.ItemIndex := 0;
+    _processFilter();
 end;
 
 {---------------------------------------}

@@ -85,7 +85,7 @@ uses
 function _entityCompare(cur_sort: integer; ascending: boolean; Item1, Item2: Pointer): integer;
 var
     j1, j2: TJabberEntity;
-    s1, s2: Widestring;
+    s1, s2, s3, s4: Widestring;
 begin
     // compare 2 items..
     if (cur_sort = -1) then begin
@@ -95,6 +95,8 @@ begin
 
     j1 := TJabberEntity(Item1);
     j2 := TJabberEntity(Item2);
+    s3 := '';
+    s4 := '';
 
     case (cur_sort) of
     0: begin
@@ -112,6 +114,8 @@ begin
     3: begin
         s1 := j1.jid.domain;
         s2 := j2.jid.domain;
+        s3 := j1.jid.user;
+        s4 := j2.jid.user;
         end
     else begin
         Result := 0;
@@ -123,6 +127,13 @@ begin
         Result := AnsiCompareText(s1, s2)
     else
         Result := AnsiCompareText(s2, s1);
+
+    if ((Result = 0) and (s3 <> '') and (s4 <> '')) then begin
+        if (ascending) then
+            Result := AnsiCompareText(s3, s4)
+        else
+            Result := AnsiCompareText(s4, s3);
+    end;
 
 end;
 
@@ -265,7 +276,7 @@ begin
         else
             // Re-walk since we don't have all the info.
             e.walk(js, items_limit);
-            
+
         exit;
     end;
 
