@@ -1014,14 +1014,23 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.configCallback(event: string; Tag: TXMLTag);
-//var
-//    x: TXMLTag;
+var
+    iq: TJabberIQ;
+    x: TXMLTag;
 begin
     // We are configuring the room
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
-        //x := tag.QueryXPTag('//x[xmlns="jabber:x:data"]');
-        //if (x = nil) then exit;
-        ShowXData(tag);
+        if (ShowXDataEx(tag) = false) then begin
+            // there are no fields... submit a blank form.
+            iq := TJabberIQ.Create(MainSession, MainSession.generateID());
+            iq.toJid := Self.Jid;
+            iq.Namespace := XMLNS_MUCOWNER;
+            iq.iqType := 'set';
+            x := iq.qTag.AddTag('x');
+            x.setAttribute('xmlns', 'jabber:x:data');
+            x.setAttribute('type', 'submit');
+            iq.Send();
+        end;
     end;
 end;
 

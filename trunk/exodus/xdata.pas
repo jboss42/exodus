@@ -60,8 +60,8 @@ type
 var
   frmXData: TfrmXData;
 
+function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
-
 
 implementation
 
@@ -79,7 +79,7 @@ const
 {---------------------------------------}
 {---------------------------------------}
 
-procedure showXData(tag: TXMLTag);
+function _showXData(tag: TXMLTag): boolean;
 var
     f: TfrmXData;
 begin
@@ -88,9 +88,24 @@ begin
     if (f.isValid) then begin
         f.Show();
         f.BringToFront();
+        Result := true;
     end
-    else
+    else begin
         f.Close();
+        Result := false;
+    end;
+end;
+
+{---------------------------------------}
+procedure showXData(tag: TXMLTag);
+begin
+    _showXData(tag);
+end;
+
+{---------------------------------------}
+function showXDataEx(tag: TXMLTag): boolean;
+begin
+    Result := _showXData(tag);
 end;
 
 {---------------------------------------}
