@@ -75,7 +75,6 @@ type
     imgPlugins: TImage;
     lblPlugins: TTntLabel;
     imgNetwork: TImage;
-    lblNetwork: TTntLabel;
     imgTransfer: TImage;
     lblTransfer: TTntLabel;
     Bevel1: TBevel;
@@ -88,6 +87,7 @@ type
     pnlKeyword: TTntPanel;
     Shape1: TShape;
     Shape2: TShape;
+    lblNetwork: TTntLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -97,6 +97,7 @@ type
       Y: Integer);
     procedure OffBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     _cur_panel: TfrmPrefPanel;
@@ -234,21 +235,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.FormCreate(Sender: TObject);
-var
-    i: integer;
-    c: TControl;
 begin
     // Setup some fonts
+    AssignUnicodeFont(Self);
     AssignUnicodeFont(memKeywords.Font, 10);
     AssignUnicodeFont(memBlocks.Font, 10);
-    AssignUnicodeFont(Scroller.Font, 8);
-    AssignUnicodeFont(Panel1.Font, 8);
-    AssignUnicodeFont(PageControl1.Font, 8);
+    //AssignUnicodeFont(Scroller.Font, 8);
+    //AssignUnicodeFont(Panel1.Font, 8);
+    //AssignUnicodeFont(PageControl1.Font, 8);
 
     // Our panels..
     AssignUnicodeHighlight(pnlKeyword.Font, 10);
     AssignUnicodeHighlight(pnlBlocked.Font, 10);
-
 
     TranslateComponent(Self);
 
@@ -282,12 +280,6 @@ begin
     _xfer := nil;
     _network := nil;
 
-    for i := 0 to Scroller.ControlCount - 1 do begin
-        c := Scroller.Controls[i];
-        if (c is TTntLabel) then
-            TTntLabel(c).Height := 20;
-    end;
-
     MainSession.Prefs.RestorePosition(Self);
 
     with Shape1 do begin
@@ -300,9 +292,6 @@ begin
         Width := Shape1.Width;
         Visible := false;
     end;
-
-    TabSelect(lblSystem);
-    _cur_label := lblSystem;
 
 end;
 
@@ -519,6 +508,7 @@ begin
     _network.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.imgSystemMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
@@ -612,10 +602,36 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.OffBoxMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
     Shape2.Visible := false;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.FormShow(Sender: TObject);
+var
+    i: integer;
+    c: TControl;
+    cap: Widestring;
+begin
+    for i := 0 to Scroller.ControlCount - 1 do begin
+        c := Scroller.Controls[i];
+        if (c is TTntLabel) then with TTntLabel(c) do begin
+            AutoSize := false;
+            Height := 20;
+            cap := Caption;
+            Caption := WideTrim(cap);
+            AutoSize := true;
+            AutoSize := false;
+            Height := Height + 4;
+        end;
+    end;
+
+    TabSelect(lblSystem);
+    _cur_label := lblSystem;
+
 end;
 
 end.

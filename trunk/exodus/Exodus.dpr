@@ -33,6 +33,11 @@ uses
   Forms,
   Controls,
   Windows,
+  
+  {$ifdef LEAKCHECK}
+  MemCheck in '..\MemCheck.pas',
+  {$endif}
+
   About in 'About.pas' {frmAbout},
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
@@ -164,8 +169,7 @@ uses
   IdDNSResolver in '..\jopl\IdDNSResolver.pas',
   Entity in '..\jopl\Entity.pas',
   EntityCache in '..\jopl\EntityCache.pas',
-  SASLAuth in '..\jopl\SASLAuth.pas',
-  MemCheck in '..\MemCheck.pas';
+  SASLAuth in '..\jopl\SASLAuth.pas';
 
 {$R *.TLB}
 
