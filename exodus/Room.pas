@@ -28,7 +28,6 @@ uses
 
 type
   TMemberNode = TTntListItem;
-
   TRoomMember = class
   public
     Nick: Widestring;
@@ -38,6 +37,7 @@ type
     show: Widestring;
     blockShow: Widestring;
     role: WideString;
+    real_jid: WideString;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -61,6 +61,15 @@ type
     popShowHistory: TMenuItem;
     lstRoster: TTntListView;
     lblSubject: TTntLabel;
+    popAdmin: TMenuItem;
+    popBanList: TMenuItem;
+    popMemberList: TMenuItem;
+    popVoiceList: TMenuItem;
+    N2: TMenuItem;
+    popKick: TMenuItem;
+    popBan: TMenuItem;
+    popVoice: TMenuItem;
+    popConfigure: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -87,6 +96,11 @@ type
     procedure lstRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure lstRosterInfoTip(Sender: TObject; Item: TListItem;
       var InfoTip: String);
+    procedure popConfigureClick(Sender: TObject);
+    procedure popKickClick(Sender: TObject);
+    procedure popBanClick(Sender: TObject);
+    procedure popVoiceClick(Sender: TObject);
+    procedure popVoiceListClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -104,17 +118,24 @@ type
 
     function  AddMember(member: TRoomMember): TMemberNode;
     function  checkCommand(txt: Widestring): boolean;
-    function  GetCurrentMember(): TRoomMember;
+    function  GetCurrentMember(Node: TMemberNode = nil): TRoomMember;
 
     procedure SetJID(sjid: Widestring);
     procedure ShowMsg(tag: TXMLTag);
     procedure RemoveMember(member: TRoomMember);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: Widestring);
+    procedure configRoom();
+    procedure addMemberItems(tag: TXMLTag; reason: WideString = '';
+        NewRole: WideString = '');
+    procedure showStatusCode(t: TXMLTag);
+
+    function newRoomMessage(body: Widestring): TXMLTag;
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure ConfigCallback(event: string; Tag: TXMLTag);
   public
     { Public declarations }
     mynick: Widestring;
@@ -145,8 +166,30 @@ resourcestring
     sUnblock = 'UnBlock';
     sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
 
+    sKickReason = 'Kick Reason';
+    sBanReason = 'Ban Reason';
+    sKickDefault = 'You have been kicked.';
+    sBanDefault = 'You have been banned.';
 
-function StartRoom(rjid, rnick: Widestring): TfrmRoom;
+    sGrantVoice = 'You have been granted voice.';
+    sRevokeVoice = 'Your voice has been revoked.';
+
+    sNewUser = '%s has entered the room.';
+    sUserLeave = '%s has left the room.';
+    sNewRole = '%s has a new role of %s.';
+
+    sStatus_100 = 'This room is not anonymous';
+    sStatus_301 = '%s has been banned from this room. %s';
+    sStatus_302 = 'This room has been destroyed.';
+    sStatus_303 = '%s is now known as %s.';
+    sStatus_307 = '%s has been kicked from this room. %s';
+
+    sStatus_403 = 'You are on the ban list for this room.';
+    sStatus_405 = 'You are not allowed to create rooms.';
+    sStatus_407 = 'You are not on the member list.';
+    sStatus_409 = 'Your nickname is already being used.';
+
+function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 
@@ -155,10 +198,11 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
+    IQ, xData, JoinRoom, 
     Unicode, ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
     Session, StrUtils, JabberID, MsgDisplay, Notify,
-    PrefController, JabberMsg, Jabber1;
+    PrefController, JabberMsg, Jabber1, XMLNode;
 
 const
     NS_MUC = 'http://jabber.org/protocol/muc';
@@ -168,14 +212,16 @@ const
 
     MUC_OWNER = 'owner';
     MUC_ADMIN = 'admin';
-    MUC_MOD = 'moderator';
+    MUC_PART = 'participant';
+    MUC_VISITOR = 'visitor';
     MUC_MEMBER = 'member';
-    MUC_USER = 'user';
+    MUC_OUTCAST = 'outcast';
+    MUC_NONE = 'none';
 
 {$R *.DFM}
 
 {---------------------------------------}
-function StartRoom(rjid, rnick: Widestring): TfrmRoom;
+function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
 var
     f: TfrmRoom;
     p: TJabberPres;
@@ -192,11 +238,13 @@ begin
         f.SetJID(rjid);
         f.MyNick := rnick;
         tmp_jid := TJabberID.Create(rjid);
-
         p := TJabberPres.Create;
         p.toJID := TJabberID.Create(rjid + '/' + rnick);
-        with p.AddTag('x') do
+        with p.AddTag('x') do begin
             PutAttribute('xmlns', NS_MUC);
+            if (password <> '') then
+                AddBasicTag('password', password);
+            end;
 
         MainSession.SendTag(p);
         if MainSession.Prefs.getBool('expanded') then
@@ -215,9 +263,9 @@ begin
             lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
             if (lstRoster.Font.Charset = 0) then
                 lstRoster.Font.Charset := 1;
-                
             Caption := tmp_jid.user + ' ' + sRoom;
             end;
+
         tmp_jid.Free();
         room_list.AddObject(rjid, f);
         end;
@@ -414,64 +462,205 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmRoom.newRoomMessage(body: Widestring): TXMLTag;
+begin
+    Result := TXMLTag.Create('message');
+    Result.PutAttribute('from', jid);
+    Result.PutAttribute('type', 'groupchat');
+    Result.AddBasicTag('body', body);
+end;
+
+{---------------------------------------}
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
     ptype, from: Widestring;
     _jid: TJabberID;
     i: integer;
     member: TRoomMember;
-    t, xtag, etag: TXMLTag;
+    mtag, t, itag, xtag, etag: TXMLTag;
+    scode, tmp1, tmp2: Widestring;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
     _jid := TJabberID.Create(from);
     i := _roster.indexOf(from);
-    xtag := tag.QueryXPTag('/x[@xmlns="' + NS_USER + '"]');
+    xtag := tag.QueryXPTag('/presence/x[@xmlns="' + NS_USER + '"]');
 
     if ((ptype = 'error') and (_jid.resource = mynick)) then begin
         // check for 409, conflicts.
         etag := tag.GetFirstTag('error');
-        if ((etag <> nil) and (etag.GetAttribute('code') = '409')) then begin
-            MessageDlg('Your selected Nickname is already in use. Please select another.',
-                mtError, [mbOK], 0);
-            Self.Close();
+        if (etag <> nil) then begin
+            if (etag.GetAttribute('code') = '409') then begin
+                MessageDlg('Your selected Nickname is already in use. Please select another.',
+                    mtError, [mbOK], 0);
+                Self.Close();
+                end
+            else if (etag.GetAttribute('code') = '401') then begin
+                MessageDlg('You supplied an invalid password to enter this room.',
+                    mtError, [mbOK], 0);
+                Self.Close();
+                StartJoinRoom();
+                end
             end;
         end
 
     else if ptype = 'unavailable' then begin
-        if (i >= 0) then begin
+        t := tag.QueryXPTag('//x[@xmlns="' + NS_USER + '"]/status');
+        if ((i = -1) and (from = jid)) then begin
+            if (t <> nil) then
+                ShowStatusCode(t);
+            Self.Close();
+            end
+        else if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
-            // ShowPresence(member.Nick, ' has left the room.');
+
+            if (t <> nil) then begin
+                scode := t.GetAttribute('code');
+                if (scode = '303') then begin
+                    // this user has changed their nick..
+                    itag := tag.QueryXPTag('//x[@xmlns="' + NS_USER + '"]/item');
+                    if (itag <> nil) then begin
+                        tmp1 := member.Nick;
+                        tmp2 := itag.GetAttribute('nick');
+                        mtag := newRoomMessage(Format(sStatus_303,
+                            [tmp1, tmp2]));
+                        ShowMsg(mtag);
+                        end;
+                    end
+                else if ((scode = '301') or (scode = '307')) then begin
+                    itag := tag.QueryXPTag('//x[@xmlns="' + NS_USER + '"]/reason');
+                    if (itag <> nil) then tmp1 := itag.Data else tmp1 := '';
+                    if (scode = '301') then tmp2 := sStatus_301
+                    else if (scode = '307') then tmp2 := sStatus_307;
+                    mtag := newRoomMessage(Format(tmp2, [member.Nick, tmp1]));
+                    ShowMsg(mtag);
+                    end;
+                end
+            else if (member.role <> '') then begin
+                mtag := newRoomMessage(Format(sUserLeave, [member.Nick]));
+                ShowMsg(mtag);
+                end;
+
             RemoveMember(member);
             member.Free;
             _roster.Delete(i);
             end;
         end
     else begin
+        // SOME KIND OF AVAIL
+
         if i < 0 then begin
+            // this is a new member
             member := TRoomMember.Create;
             member.JID := from;
             member.Nick := _jid.resource;
 
             // get extended stuff for MUC
             if (xtag <> nil) then begin
-                t := xtag.GetFirstTag('profile');
-                if (t <> nil) then
-                    member.role := t.GetAttribute('level');
+                t := xtag.GetFirstTag('item');
+                if (t <> nil) then begin
+                    member.role := t.GetAttribute('role');
+                    member.real_jid := t.GetAttribute('jid');
+                    end;
+
+                mtag := newRoomMessage(Format(sNewUser, [member.Nick]));
+                showMsg(mtag);
                 end;
+
+            t := tag.GetFirstTag('created');
+            if (t <> nil) then
+                // we are the owner... config the room
+                configRoom();
 
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
             end
-        else
+        else begin
             member := TRoomMember(_roster.Objects[i]);
 
-        if _isGC then
-            member.nick := _jid.resource;
+            tmp1 := '';
+            itag := tag.QueryXPTag('//x[@xmlns="' + NS_USER + '"]/item');
+            if (itag <> nil) then
+                tmp1 := itag.getAttribute('role');
+
+            if ((tmp1 <> '') and (member.nick = myNick)) then begin
+                // someone maybe changed my role
+                if ((member.role = MUC_VISITOR) and (tmp1 = MUC_PART)) then
+                    mtag := newRoomMessage(sGrantVoice)
+                else if ((member.role = MUC_PART) and (tmp1 = MUC_VISITOR)) then
+                    mtag := newRoomMessage(sRevokeVoice)
+                else
+                    mtag := newRoomMessage(Format(sNewRole, [member.nick, tmp1]));
+                showMsg(mtag);
+                end;
+            end;
+
+        // for all protocols, our nick is our resource
+        member.nick := _jid.resource;
+
+        if (member.Nick = myNick) then begin
+            // check to see what my role is
+            popConfigure.Enabled := (member.Role = MUC_OWNER);
+            popAdmin.Enabled := (member.Role = MUC_ADMIN) or
+                                (member.Role = MUC_OWNER);
+
+            popKick.Enabled := popAdmin.Enabled;
+            popBan.Enabled := popAdmin.Enabled;
+            popVoice.Enabled := popAdmin.Enabled;
+            end;
 
         RenderMember(member, tag);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.showStatusCode(t: TXMLTag);
+var
+    msg, fmt: string;
+    scode: WideString;
+begin
+    scode := t.getAttribute('code');
+
+    fmt := '';
+
+    if (scode = '301') then fmt := sStatus_301
+    else if (scode = '302') then fmt := sStatus_302
+    else if (scode = '303') then fmt := sStatus_303
+    else if (scode = '307') then fmt := sStatus_307
+    else if (scode = '403') then msg := sStatus_403
+    else if (scode = '405') then msg := sStatus_405
+    else if (scode = '407') then msg := sStatus_407
+    else if (scode = '409') then msg := sStatus_409;
+
+    if (fmt <> '') then
+        msg := Format(fmt, [MyNick, '']);
+
+    MessageDlg(msg, mtInformation, [mbOK], 0);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.configRoom();
+var
+    iq: TJabberIQ;
+begin
+    //
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+        configCallback, 10);
+    with iq do begin
+        toJid := Self.jid;
+        Namespace := NS_OWNER;
+        iqType := 'get';
+        end;
+    iq.Send();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.configCallback(event: string; Tag: TXMLTag);
+begin
+    // We are configuring the room
+    if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then
+        ShowXData(tag);
 end;
 
 {---------------------------------------}
@@ -480,6 +669,7 @@ begin
     // add a node
     Result := lstRoster.Items.Add();
     Result.Caption := member.Nick;
+    Result.Data := member;
     RenderMember(member, nil);
     lstRoster.AlphaSort();
 end;
@@ -922,15 +1112,15 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.GetCurrentMember(): TRoomMember;
+function TfrmRoom.GetCurrentMember(Node: TMemberNode = nil): TRoomMember;
 var
     i: integer;
     rm: TRoomMember;
-    node: TMemberNode;
     sel_nick: Widestring;
 begin
     result := nil;
-    node := lstRoster.Items[lstRoster.ItemIndex];
+    if (node = nil) then
+        node := lstRoster.Items[lstRoster.ItemIndex];
     if node = nil then exit;
 
     sel_nick := node.Caption;
@@ -1068,6 +1258,145 @@ begin
         if (m.status <> '') then
             InfoTip := InfoTip + ': ' + m.status;
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popConfigureClick(Sender: TObject);
+begin
+  inherited;
+    configRoom();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popKickClick(Sender: TObject);
+var
+    reason: string;
+    iq, q: TXMLTag;
+begin
+  inherited;
+    // Kick the selected participant
+    if (lstRoster.SelCount = 0) then exit;
+
+    reason := sKickDefault;
+    if (not InputQuery(sKickReason, sKickReason, reason)) then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.PutAttribute('type', 'set');
+    iq.PutAttribute('id', MainSession.generateID());
+    iq.PutAttribute('to', jid);
+    q := iq.AddTag('kick');
+    q.PutAttribute('xmlns', NS_ADMIN);
+    AddMemberItems(q, reason);
+    MainSession.SendTag(iq);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.AddMemberItems(tag: TXMLTag; reason: WideString = '';
+    NewRole: WideString = '');
+var
+    i: integer;
+begin
+    for i := 0 to lstRoster.Items.Count - 1 do begin
+        if lstRoster.Items[i].Selected then begin
+            with tag.AddTag('item') do begin
+                PutAttribute('nick', lstRoster.Items[i].Caption);
+                if (NewRole <> '') then
+                    PutAttribute('role', NewRole);
+                if (Reason <> '') then
+                    AddBasicTag('reason', reason);
+                end;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popBanClick(Sender: TObject);
+var
+    reason: string;
+    iq, q: TXMLTag;
+begin
+  inherited;
+    // ban the selected participant
+    if (lstRoster.SelCount = 0) then exit;
+
+    reason := sBanDefault;
+    if (not InputQuery(sBanReason, sBanReason, reason)) then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.PutAttribute('type', 'set');
+    iq.PutAttribute('id', MainSession.generateID());
+    iq.PutAttribute('to', jid);
+    q := iq.AddTag('query');
+    q.PutAttribute('xmlns', NS_ADMIN);
+    AddMemberItems(q, reason, MUC_OUTCAST);
+    MainSession.SendTag(iq);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popVoiceClick(Sender: TObject);
+var
+    iq, q: TXMLTag;
+    i: integer;
+    cur_member: TRoomMember;
+    new_role: WideString;
+begin
+  inherited;
+    // Toggle Voice
+    if (lstRoster.SelCount = 0) then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.PutAttribute('type', 'set');
+    iq.PutAttribute('id', MainSession.generateID());
+    iq.PutAttribute('to', jid);
+    q := iq.AddTag('query');
+    q.PutAttribute('xmlns', NS_ADMIN);
+
+    // Iterate over all selected items, and toggle
+    // voice by changing roles
+    for i := 0 to lstRoster.Items.Count - 1 do begin
+        if (lstRoster.Items[i].Selected) then begin
+            cur_member := TRoomMember(lstRoster.Items[i].Data);
+            new_role := '';
+            if (cur_member.role = MUC_PART) then
+                new_role := MUC_VISITOR
+            else if (cur_member.role = MUC_VISITOR) then
+                new_role := MUC_PART;
+            if (new_role <> '') then begin
+                with q.AddTag('item') do begin
+                    PutAttribute('nick', cur_member.Nick);
+                    PutAttribute('role', new_role);
+                    end;
+                end;
+            end;
+        end;
+
+    MainSession.SendTag(iq);
+end;
+
+procedure TfrmRoom.popVoiceListClick(Sender: TObject);
+var
+    iq: TJabberIQ;
+    item: TXMLTag;
+begin
+  inherited;
+    // edit a list
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+        configCallback, 10);
+    with iq do begin
+        toJid := Self.jid;
+        Namespace := NS_OWNER;
+        iqType := 'get';
+        end;
+
+    item := iq.qTag.AddTag('item');
+    if (Sender = popVoiceList) then
+        item.PutAttribute('role', MUC_PART)
+    else if (Sender = popBanList) then
+        item.PutAttribute('role', MUC_OUTCAST)
+    else if (Sender = popMemberList) then
+        item.PutAttribute('role', MUC_MEMBER);
+
+    iq.Send();
 end;
 
 initialization

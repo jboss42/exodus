@@ -90,12 +90,21 @@ object frmInvite: TfrmInvite
       TabOrder = 1
       object btnRemove: TButton
         Left = 4
-        Top = 2
+        Top = 34
         Width = 60
         Height = 25
         Caption = 'Remove'
         TabOrder = 0
         OnClick = btnRemoveClick
+      end
+      object btnAdd: TButton
+        Left = 4
+        Top = 6
+        Width = 60
+        Height = 25
+        Caption = 'Add'
+        TabOrder = 1
+        OnClick = btnAddClick
       end
     end
     object Panel2: TPanel

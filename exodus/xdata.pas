@@ -45,6 +45,7 @@ type
     _thread: WideString;
     _title: WideString;
 
+    procedure getResponseTag(var m, x: TXMLTag);
   public
     { Public declarations }
     procedure render(tag: TXMLTag);
@@ -179,30 +180,11 @@ var
     i: integer;
     c: TControl;
     f: TframeGeneric;
-    fx, m, x, body: TXMLTag;
+    fx, m, x: TXMLTag;
     valid: boolean;
-    iq : TJabberIQ;
 begin
     // do something
-    m := nil;
-    x := nil;
-    body := nil;
-    iq := nil;
-
-    if (packet = 'message') then begin
-        m := TXMLTag.Create('message');
-        m.PutAttribute('to', to_jid);
-        if (_thread <> '') then
-            m.AddBasicTag('thread', _thread);
-        x := m.AddTag('x');
-        body := m.AddTag('body');
-        end
-    else if (packet = 'iq') then begin
-        iq.toJid := to_jid;
-        iq.iqType := 'set';
-        iq.Namespace := ns;
-        x := iq.qTag.AddTag('x');
-        end;
+    getResponseTag(m, x);
 
     x.PutAttribute('xmlns', XMLNS_DATA);
     x.PutAttribute('type', 'submit');
@@ -216,36 +198,59 @@ begin
             f := TframeGeneric(c);
 
             if (not f.isValid()) then
-               valid := false;
+                valid := false;
             if (x <> nil) then begin
                 fx := f.getXML();
-                if (fx <> nil) then begin
-                    x.AddTag(fx);
-                    if (body <> nil) then
-                       body.AddCData(fx.GetAttribute('var') + ': ' +
-                                     fx.GetBasicText('value') + ''#13#10);
-                    end;
+                if (fx <> nil) then x.AddTag(fx);
                 end;
             end;
         end;
 
         if (not valid) then begin
-          if (m <> nil) then m.Free();
-          MessageDlg(sAllRequired, mtError, [mbOK], 0);
-          exit;
-          end;
+            if (m <> nil) then m.Free();
+            MessageDlg(sAllRequired, mtError, [mbOK], 0);
+            exit;
+            end;
 
-    if (m <> nil) then
-        MainSession.SendTag(m)
-    else if (iq <> nil) then
-        iq.Send();
-
+    MainSession.SendTag(m);
     Self.Close();
 end;
 
 {---------------------------------------}
-procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
+procedure TfrmXData.getResponseTag(var m, x: TXMLTag);
+var
+    q: TXMLTag;
 begin
+    // Get a properly formatted result or cancel packet
+    m := TXMLTag.Create(packet);
+    m.PutAttribute('to', to_jid);
+
+    if (packet = 'message') then begin
+        if (_thread <> '') then
+            m.AddBasicTag('thread', _thread);
+        m.AddTag('body');
+        x := m.AddTag('x');
+        end
+    else if (packet = 'iq') then begin
+        m.putAttribute('type', 'set');
+        m.putAttribute('id', MainSession.generateID());
+
+        q := m.AddTag('query');
+        q.PutAttribute('xmlns', ns);
+        x := q.AddTag('x');
+        end;
+
+    x.PutAttribute('xmlns', XMLNS_DATA);
+end;
+
+{---------------------------------------}
+procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
+var
+    m, x: TXMLTag;
+begin
+    getResponseTag(m, x);
+    x.PutAttribute('type', 'cancel');
+    MainSession.SendTag(m);
     Self.Close;
 end;
 

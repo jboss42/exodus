@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 248
-  Top = 170
+  Left = 227
+  Top = 159
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -49,6 +49,7 @@ inherited frmRoom: TfrmRoom
           end>
         IconOptions.Arrangement = iaLeft
         IconOptions.WrapText = False
+        MultiSelect = True
         ParentShowHint = False
         PopupMenu = popRoomRoster
         ShowColumnHeaders = False
@@ -155,6 +156,26 @@ inherited frmRoom: TfrmRoom
       Caption = 'Change Nickname'
       OnClick = popNickClick
     end
+    object popAdmin: TMenuItem
+      Caption = 'Admin'
+      Enabled = False
+      object popVoiceList: TMenuItem
+        Caption = 'Edit Voice List'
+        OnClick = popVoiceListClick
+      end
+      object popBanList: TMenuItem
+        Caption = 'Edit Ban List'
+        OnClick = popVoiceListClick
+      end
+      object popMemberList: TMenuItem
+        Caption = 'Edit Member List'
+        OnClick = popVoiceListClick
+      end
+      object popConfigure: TMenuItem
+        Caption = 'Configure Room'
+        OnClick = popConfigureClick
+      end
+    end
     object N1: TMenuItem
       Caption = '-'
     end
@@ -178,6 +199,24 @@ inherited frmRoom: TfrmRoom
     object popRosterBlock: TMenuItem
       Caption = 'Block'
       OnClick = popRosterBlockClick
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object popKick: TMenuItem
+      Caption = 'Kick'
+      Enabled = False
+      OnClick = popKickClick
+    end
+    object popBan: TMenuItem
+      Caption = 'Ban'
+      Enabled = False
+      OnClick = popBanClick
+    end
+    object popVoice: TMenuItem
+      Caption = 'Toggle Voice'
+      Enabled = False
+      OnClick = popVoiceClick
     end
   end
 end

@@ -35,7 +35,7 @@ uses
 type
     TJabberIQ = class(TXMLTag)
     private
-        _id: string;
+        _id: Widestring;
         _js: TJabberSession;
         _Callback: TPacketEvent;
         _cbIndex: integer;
@@ -52,7 +52,7 @@ type
         qTag: TXMLTag;
 
         constructor Create(session: TJabberSession;
-            id: string;
+            id: Widestring;
             cb: TPacketEvent;
             seconds: longint = 15
             ); reintroduce; overload;
@@ -69,7 +69,7 @@ type
 implementation
 
 {---------------------------------------}
-constructor TJabberIQ.Create(session: TJabberSession; id: string; cb: TPacketEvent; seconds: longint);
+constructor TJabberIQ.Create(session: TJabberSession; id: Widestring; cb: TPacketEvent; seconds: longint);
 begin
     inherited Create();
 
