@@ -182,6 +182,7 @@ type
     imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
     imgMSNEmoticons: TImageList;
+    RegisterwithaService1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -226,6 +227,7 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure RegisterwithaService1Click(Sender: TObject);
     procedure TabsUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
     procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
@@ -368,7 +370,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
+    RegForm, MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
     iq, JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
     RiserWindow, RemoveContact,
@@ -757,7 +759,7 @@ end;
 {---------------------------------------}
 procedure TExodus.setupAutoAwayTimer();
 begin
-    DebugMsg('Trying to setup the Auto Away timer.'#13#10);
+    DebugMsg('Trying to setup the Auto Away timer.');
     if (_windows_ver < cWIN_2000) then begin
         // Use the DLL
         @_GetHookPointer := nil;
@@ -784,9 +786,9 @@ begin
         // Use the GetLastInputInfo API call
         // do nothing here..
         if (_GetLastInputInfo <> nil) then
-            DebugMsg('Using Win32 API for Autoaway checks!!'#13#10)
+            DebugMsg('Using Win32 API for Autoaway checks!!')
         else
-            DebugMsg('ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!'#13#10);
+            DebugMsg('ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!');
         end;
 end;
 
@@ -1636,7 +1638,7 @@ end;
 procedure TExodus.SetAutoAway;
 begin
     // set us to away
-    DebugMsg('Setting AutoAway '#13#10);
+    DebugMsg('Setting AutoAway');
     Application.ProcessMessages;
 
     MainSession.Pause();
@@ -1660,7 +1662,7 @@ end;
 procedure TExodus.SetAutoXA;
 begin
     // set us to xa
-    DebugMsg('Setting AutoXA '#13#10);
+    DebugMsg('Setting AutoXA');
     _is_autoaway := false;
     _is_autoxa := true;
 
@@ -1672,7 +1674,7 @@ end;
 procedure TExodus.SetAutoAvailable;
 begin
     // reset our status to available
-    DebugMsg('Setting Auto Available'#13#10);
+    DebugMsg('Setting Auto Available');
     timAutoAway.Enabled := false;
     timAutoAway.Interval := 10000;
     _is_autoaway := false;
@@ -1878,7 +1880,7 @@ procedure TExodus.ResetLastTick(value: longint);
 begin
     if (_windows_ver >= cWIN_2000) then exit;
 
-    DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()) + ''#13#10);
+    DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()));
     _lpHookRec^.LastTick := value;
 end;
 
@@ -1911,6 +1913,7 @@ begin
     iq.Send;
 end;
 
+{---------------------------------------}
 procedure TExodus.mnuPasswordClick(Sender: TObject);
 var
     iq: TJabberIQ;
@@ -1939,16 +1942,18 @@ begin
         end;
 
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback);
-    iq.iqType := 'set';
-    iq.toJid := MainSession.Server;
-    iq.Namespace := XMLNS_REGISTER;
-    iq.qTag.AddBasicTag('username', MainSession.Username);
-    iq.qTag.AddBasicTag('password', f.txtNewPassword.Text);
+    with iq do begin
+        iqType := 'set';
+        toJid := MainSession.Server;
+        Namespace := XMLNS_REGISTER;
+        qTag.AddBasicTag('username', MainSession.Username);
+        qTag.AddBasicTag('password', f.txtNewPassword.Text);
+        end;
     f.Free();
-
     iq.Send();
 end;
 
+{---------------------------------------}
 procedure TExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
 begin
     if (event <> 'xml') then
@@ -1960,7 +1965,6 @@ begin
             MessageDlg('Error changing password.', mtError, [mbOK], 0);
         end;
 end;
-
 
 {---------------------------------------}
 procedure TExodus.AcceptFiles( var msg : TWMDropFiles );
@@ -1983,14 +1987,12 @@ begin
     p := ClientToScreen(p);
     p := frmRosterWindow.treeRoster.ScreenToClient(p);
     Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
-    if ((Node = nil) or (Node.HasChildren)) then exit;
+    if ((Node = nil) or (Node.Level = 0)) then exit;
 
     // get the roster item attached to this node.
     if (Node.Data = nil) then exit;
     if (TObject(Node.Data) is TJabberBookmark) then exit;
-
     ri := TJabberRosterItem(Node.Data);
-    if ri = nil then exit;
 
     // find out how many files we're accepting
     nCount := DragQueryFile( msg.Drop,
@@ -2002,19 +2004,36 @@ begin
     for i := 0 to nCount-1 do begin
         DragQueryFile( msg.Drop, i,
                        acFileName, cnMaxFileNameLen );
-
         FileSend(ri.jid.full, acFileName);
-    end;
+        end;
 
     // let Windows know that we're done
     DragFinish( msg.Drop );
 end;
 
+{---------------------------------------}
 procedure TExodus.FormDestroy(Sender: TObject);
 begin
     DragAcceptFiles(Handle, False);
 end;
 
+{---------------------------------------}
+procedure TExodus.RegisterwithaService1Click(Sender: TObject);
+var
+    tmps: string;
+    f: TfrmRegister;
+begin
+    // kick off a registration..
+    tmps := '';
+    if (InputQuery('Register with Service', 'Enter Jabber ID of service:', tmps) = false) then
+        exit;
+
+    f := TfrmRegister.Create(Application);
+    f.jid := tmps;
+    f.Start();
+end;
+
+{---------------------------------------}
 procedure TExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
 begin
@@ -2024,6 +2043,7 @@ begin
         TfrmDockable(Client).Docked := false;
 end;
 
+{---------------------------------------}
 procedure TExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
   Y: Integer);
 begin

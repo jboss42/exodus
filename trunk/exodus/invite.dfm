@@ -1,10 +1,10 @@
 object frmInvite: TfrmInvite
-  Left = 249
-  Top = 148
+  Left = 233
+  Top = 153
   AutoScroll = False
   Caption = 'Invite to Conference'
   ClientHeight = 268
-  ClientWidth = 449
+  ClientWidth = 510
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object frmInvite: TfrmInvite
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter2: TSplitter
-    Left = 272
+    Left = 317
     Top = 0
     Width = 3
     Height = 234
@@ -26,16 +26,16 @@ object frmInvite: TfrmInvite
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 234
-    Width = 449
+    Width = 510
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Bevel1: TBevel
-      Width = 449
+      Width = 510
     end
     inherited Panel1: TPanel
-      Left = 285
+      Left = 346
       Width = 164
       Height = 29
       inherited btnOK: TButton
@@ -49,7 +49,7 @@ object frmInvite: TfrmInvite
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 272
+    Width = 317
     Height = 234
     Align = alLeft
     BevelOuter = bvNone
@@ -57,60 +57,17 @@ object frmInvite: TfrmInvite
     TabOrder = 1
     object Splitter1: TSplitter
       Left = 3
-      Top = 109
-      Width = 266
+      Top = 122
+      Width = 311
       Height = 3
       Cursor = crVSplit
       Align = alTop
     end
-    object Label1: TLabel
-      Left = 3
-      Top = 3
-      Width = 266
-      Height = 13
-      Align = alTop
-      Caption = 'Invite the following contacts to:'
-    end
-    object Label2: TLabel
-      Left = 3
-      Top = 47
-      Width = 266
-      Height = 13
-      Align = alTop
-      Caption = 'Reason:'
-    end
-    object pnl1: TPanel
-      Left = 3
-      Top = 16
-      Width = 266
-      Height = 31
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 0
-      object cboRoom: TComboBox
-        Left = 3
-        Top = 4
-        Width = 214
-        Height = 21
-        ItemHeight = 13
-        TabOrder = 0
-      end
-    end
-    object memReason: TMemo
-      Left = 3
-      Top = 60
-      Width = 266
-      Height = 49
-      Align = alTop
-      Lines.Strings = (
-        'Please join us in this conference room.')
-      TabOrder = 1
-    end
     object lstJIDS: TListView
       Left = 3
-      Top = 112
-      Width = 266
-      Height = 88
+      Top = 125
+      Width = 247
+      Height = 106
       Align = alClient
       Columns = <
         item
@@ -122,44 +79,98 @@ object frmInvite: TfrmInvite
           Width = 150
         end>
       MultiSelect = True
+      RowSelect = True
       SortType = stBoth
-      TabOrder = 2
+      TabOrder = 0
       ViewStyle = vsReport
       OnDragDrop = lstJIDSDragDrop
       OnDragOver = lstJIDSDragOver
     end
     object Panel1: TPanel
-      Left = 3
-      Top = 200
-      Width = 266
-      Height = 31
-      Align = alBottom
+      Left = 250
+      Top = 125
+      Width = 64
+      Height = 106
+      Align = alRight
       BevelOuter = bvNone
-      TabOrder = 3
+      TabOrder = 1
       object btnRemove: TButton
-        Left = 80
-        Top = 4
-        Width = 75
+        Left = 4
+        Top = 34
+        Width = 60
         Height = 25
         Caption = 'Remove'
         TabOrder = 0
         OnClick = btnRemoveClick
       end
       object btnAdd: TButton
-        Left = 0
+        Left = 4
         Top = 4
-        Width = 75
+        Width = 60
         Height = 25
-        Caption = 'Add '
+        Caption = 'More >>'
         TabOrder = 1
         OnClick = btnAddClick
       end
     end
+    object Panel2: TPanel
+      Left = 3
+      Top = 3
+      Width = 311
+      Height = 119
+      Align = alTop
+      BevelOuter = bvNone
+      Caption = 'Panel2'
+      TabOrder = 2
+      object Label2: TLabel
+        Left = 0
+        Top = 44
+        Width = 311
+        Height = 13
+        Align = alTop
+        Caption = 'Reason:'
+      end
+      object Label1: TLabel
+        Left = 0
+        Top = 0
+        Width = 311
+        Height = 13
+        Align = alTop
+        Caption = 'Invite the following contacts to:'
+      end
+      object memReason: TMemo
+        Left = 0
+        Top = 57
+        Width = 311
+        Height = 62
+        Align = alClient
+        Lines.Strings = (
+          'Please join us in this conference room.')
+        TabOrder = 0
+      end
+      object pnl1: TPanel
+        Left = 0
+        Top = 13
+        Width = 311
+        Height = 31
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 1
+        object cboRoom: TComboBox
+          Left = 3
+          Top = 4
+          Width = 214
+          Height = 21
+          ItemHeight = 13
+          TabOrder = 0
+        end
+      end
+    end
   end
   object pnlRight: TPanel
-    Left = 275
+    Left = 320
     Top = 0
-    Width = 174
+    Width = 190
     Height = 234
     Align = alClient
     BevelOuter = bvNone
@@ -170,7 +181,7 @@ object frmInvite: TfrmInvite
     object Label3: TLabel
       Left = 3
       Top = 3
-      Width = 168
+      Width = 184
       Height = 52
       Align = alTop
       Caption = 
@@ -182,7 +193,7 @@ object frmInvite: TfrmInvite
     object sgContacts: TStringGrid
       Left = 3
       Top = 55
-      Width = 168
+      Width = 184
       Height = 176
       Align = alClient
       ColCount = 2

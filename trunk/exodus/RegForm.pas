@@ -1,9 +1,28 @@
 unit RegForm;
+{
+    Copyright 2001, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
 uses
-    XMLTag, IQ, Agents, Presence,  
+    XMLTag, IQ, Agents, Presence,
     fLeftLabel,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ComCtrls, ExtCtrls;
@@ -30,6 +49,8 @@ type
     lblOK: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     cur_iq: TJabberIQ;
@@ -95,6 +116,7 @@ begin
     Tabs.ActivePage := tabWelcome;
     cur_iq := nil;
     cur_key := '';
+    pres_cb := -1;
     agent := TAgentItem.Create();
 end;
 
@@ -122,11 +144,15 @@ var
     f, ag_tag: TXMLTag;
     flds: TXMLTagList;
 begin
-    // we got back a response..
+    // we got back a response to the iq-get, on the register namespace
     cur_iq := nil;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'error') then begin
             // error packet
+            MessageDlg('The agent you are trying to register with returned an error.',
+                mtError, [mbOK], 0);
+            Self.Close();
+            exit;
             end
         else begin
             // normal result
@@ -149,6 +175,10 @@ begin
         end
     else begin
         // todo: timeout on agent query
+        MessageDlg('The agent you are trying to register with can not be reached.',
+            mtError, [mbOK], 0);
+        Self.Close();
+        exit;
         end;
 end;
 
@@ -157,7 +187,7 @@ function TfrmRegister.doField(fld: string): TfrmField;
 var
     frm: TfrmField;
 begin
-    // create a new panel
+    // create a new panel and input area for a field
     frm := TfrmField.Create(tabAgent);
     with frm do begin
         Parent := tabAgent;
@@ -219,7 +249,7 @@ begin
     // getting some pres packet
     if (pres.fromJID.jid = self.jid) then begin
         MainSession.UnRegisterCallback(pres_cb);
-        pres_cb := 0;
+        pres_cb := -1;
         if (pres.PresType = 'error') then begin
             // some kind of error
             end
@@ -229,7 +259,7 @@ begin
             end
 
         else begin
-            // ok registration, check all pendings and re-sub
+            // ok registration, check all pendings and re-subscribe to them
             MainSession.roster.AddItem(pres.fromJID.full, agent.name, 'Transports', false);
             with MainSession do begin
                 for i := 0 to roster.Count - 1 do begin
@@ -246,10 +276,11 @@ end;
 {---------------------------------------}
 procedure TfrmRegister.RegCallback(event: string; tag: TXMLTag);
 begin
+    // We are getting a result from our iq-set
+    cur_iq := nil;
     Tabs.ActivePage := tabResult;
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         // normal result
-        // resubscribe to all pending items for this gateway
         lblOK.Visible := true;
         lblBad.Visible := false;
         btnPrev.Enabled := false;
@@ -286,6 +317,25 @@ begin
     else if (Tabs.ActivePage = tabResult) then begin
         Self.Close();
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.btnCancelClick(Sender: TObject);
+begin
+    Self.Close();
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    if (cur_iq <> nil) then
+        cur_iq.Free;
+
+    if ((pres_cb <> -1) and (MainSession <> nil)) then
+        MainSession.UnRegisterCallback(pres_cb);
+
+    Action := caFree;
 end;
 
 end.

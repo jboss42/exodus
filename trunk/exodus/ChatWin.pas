@@ -493,6 +493,7 @@ procedure TfrmChat.showPres(tag: TXMLTag);
 var
     txt: string;
     s, User  : String;
+    p: TJabberPres;
 begin
     // Get the user
     user := tag.GetAttribute('from');
@@ -501,8 +502,14 @@ begin
     if pos(jid, user) = 0 then Exit;
     txt := '';
 
-    s := tag.GetBasicText('show');
-    ChangePresImage(s);
+    // make sure the user is still connected
+    p := MainSession.ppdb.FindPres(jid, '');
+    if (p = nil) then
+        ChangePresImage('offline')
+    else begin
+        s := tag.GetBasicText('show');
+        ChangePresImage(s);
+        end;
 
     txt := tag.GetBasicText('status');
 
