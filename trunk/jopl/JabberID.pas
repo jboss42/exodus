@@ -182,7 +182,7 @@ begin
     _domain := pname;
 
     if (_resource <> '') then begin
-        pres := xmpp_nodeprep(_resource);
+        pres := xmpp_resourceprep(_resource);
         if (pres = '') then begin
             _valid := false;
             exit;
