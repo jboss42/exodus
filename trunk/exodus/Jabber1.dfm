@@ -6877,4 +6877,11 @@ object frmExodus: TfrmExodus
       FFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000000
       0000}
   end
+  object timReconnect: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = timReconnectTimer
+    Left = 16
+    Top = 168
+  end
 end

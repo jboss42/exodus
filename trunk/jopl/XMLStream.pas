@@ -170,7 +170,7 @@ begin
     doMessage(WM_SOCKET);
 
     if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
-        doMessage(WM_DROPPED)
+        doMessage(WM_COMMERROR)
     else begin
         handleBuffer(buff);
         end;

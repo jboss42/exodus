@@ -38,6 +38,7 @@ const
     WM_PREFS = WM_USER + 5272;
     WM_SHOWLOGIN = WM_USER + 5273;
     WM_CLOSEAPP = WM_USER + 5274;
+    WM_RECONNECT = WM_USER + 5300;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
@@ -184,6 +185,7 @@ type
     RegisterwithaService1: TMenuItem;
     btnExpanded: TToolButton;
     trayMessage: TMenuItem;
+    timReconnect: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -237,6 +239,7 @@ type
     procedure Test1Click(Sender: TObject);
     procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
+    procedure timReconnectTimer(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -275,6 +278,7 @@ type
     _tray: NOTIFYICONDATA;
     _tray_icon: TIcon;
     _hidden: boolean;
+    _logoff: boolean;
     _shutdown: boolean;
     _close_min: boolean;
     _appclosing: boolean;
@@ -315,6 +319,7 @@ type
     procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
     procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
+    procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -576,6 +581,13 @@ procedure TfrmExodus.WMCloseApp(var msg: TMessage);
 begin
     // Close the main form
     Self.Close();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.WMReconnect(var msg: TMessage);
+begin
+    // Enable the reconnect timer
+    timReconnect.Enabled := true;
 end;
 
 {---------------------------------------}
@@ -995,6 +1007,7 @@ var
 begin
     // session events
     if event = '/session/connected' then begin
+        _logoff := false;
         btnConnect.Down := true;
         Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
@@ -1047,7 +1060,13 @@ begin
         restoreMenus(false);
 
         if (_appclosing) then
-            PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0);
+            PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
+        else if (not _logoff) then with timReconnect do begin
+            Randomize();
+            Interval := Trunc(Random(10)) * 1000;
+            DebugMsg('Setting reconnect timer to: ' + IntToStr(Interval));
+            PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
+            end;
         end
 
     else if event = '/session/commerror' then begin
@@ -1364,8 +1383,10 @@ end;
 procedure TfrmExodus.btnConnectClick(Sender: TObject);
 begin
     // connect to the server
-    if MainSession.Active then
-        MainSession.Disconnect
+    if MainSession.Active then begin
+        _logoff := true;
+        MainSession.Disconnect();
+        end
     else
         ShowLogin;
 end;
@@ -1379,6 +1400,7 @@ begin
     // we'll close the form properly (xref _appclosing)
     if ((MainSession.Active) and (not _appclosing))then begin
         _appclosing := true;
+        _logoff := true;
         MainSession.Stream.Disconnect();
         CanClose := false;
         exit;
@@ -2386,6 +2408,14 @@ procedure TfrmExodus.mnuBrowserClick(Sender: TObject);
 begin
     // Show a jabber browser.
     ShowBrowser();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.timReconnectTimer(Sender: TObject);
+begin
+    // try to reconnect...
+    timReconnect.Enabled := false;
+    DoConnect();
 end;
 
 initialization
