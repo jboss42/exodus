@@ -335,6 +335,60 @@ type
 var
     frmExodus: TfrmExodus;
 
+resourcestring
+    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
+    sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
+    sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
+    sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
+    sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
+    sCmdExpanded =  ' -x [yes|no] '#9' : Expanded Mode'#13#10;
+    sCmdJID =       ' -j [jid] '#9#9' : Jid'#13#10;
+    sCmdPassword =  ' -p [pass] '#9' : Password'#13#10;
+    sCmdResource =  ' -r [res] '#9' : Resource'#13#10;
+    sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
+    sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
+    sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+
+    sExodus = 'Exodus';
+    sDefaultProfile = 'Default Profile';
+    sDefaultGroup = 'Untitled Group';
+
+    sCommError = 'There was an error during communication with the Jabber Server';
+    sAuthError = 'There was an error trying to authenticate you. Please try again, or create a new account';
+    sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
+
+
+    sSetAutoAvailable = 'Setting Auto Available';
+    sSetAutoAway = 'Setting AutoAway';
+    sSetAutoXA = 'Setting AutoXA';
+    sSetupAutoAway = 'Trying to setup the Auto Away timer.';
+    sAutoAwayFail = 'AutoAway Setup FAILED!';
+    sAutoAwayWin32 = 'Using Win32 API for Autoaway checks!!';
+    sAutoAwayFailWin32 = 'ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!';
+
+    sMsgPing = 'Ping Time: %s seconds.';
+    sMsgMessage = 'Msg from ';
+    sMsgInvite = 'Invite from ';
+    sMsgContacts = 'Contacts from ';
+
+    sNewGroup = 'New Roster Group';
+    sNewGroupPrompt = 'Enter new group name: ';
+    sNewGroupExists = 'This group already exists!';
+
+    sLookupProfile = 'Lookup Profile';
+    sSendMessage = 'Send a Message';
+    sStartChat = 'Start Chat';
+    sRegService = 'Register with Service';
+
+    sEnterJID = 'Enter Jabber ID: ';
+    sEnterSvcJID = 'Enter Jabber ID of Service: ';
+
+    sPasswordError = 'Error changing password.';
+    sPasswordChanged = 'Password changed.';
+    sPasswordOldError = 'Old password is incorrect.';
+    sPasswordNewError = 'New password does not match.';
+
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -573,18 +627,18 @@ begin
 
         if (show_help) then begin
             // show the help message
-            help_msg := 'The following command line parameters are available in Exodus: '#13#10#13#10;
-            help_msg := help_msg + ' -d '#9#9' : Debug mode on'#13#10;
-            help_msg := help_msg + ' -m '#9#9' : Start minimized'#13#10;
-            help_msg := help_msg + ' -v '#9#9' : invisible mode'#13#10;
-            help_msg := help_msg + ' -? '#9#9' : Show Help'#13#10;
-            help_msg := help_msg + ' -x [yes|no] '#9' : Expanded Mode'#13#10;
-            help_msg := help_msg + ' -j [jid] '#9#9' : Jid'#13#10;
-            help_msg := help_msg + ' -p [pass] '#9' : Password'#13#10;
-            help_msg := help_msg + ' -r [res] '#9' : Resource'#13#10;
-            help_msg := help_msg + ' -i [pri] '#9#9' : Priority'#13#10;
-            help_msg := help_msg + ' -f [prof] '#9' : Profile name'#13#10;
-            help_msg := help_msg + ' -c [file] '#9' : Config path name'#13#10;
+            help_msg := sCommandLine;
+            help_msg := help_msg + sCmdDebug;
+            help_msg := help_msg + sCmdMinimized;
+            help_msg := help_msg + sCmdInvisible;
+            help_msg := help_msg + sCmdHelp;
+            help_msg := help_msg + sCmdExpanded;
+            help_msg := help_msg + sCmdJID;
+            help_msg := help_msg + sCmdPassword;
+            help_msg := help_msg + sCmdResource;
+            help_msg := help_msg + sCmdPriority;
+            help_msg := help_msg + sCmdProfile;
+            help_msg := help_msg + sCmdConfig;
             MessageDlg(help_msg, mtInformation, [mbOK], 0);
             Halt;
             end;
@@ -619,7 +673,7 @@ begin
                 if (jid <> nil) then
                     profile_name := jid.jid
                 else if (Profiles.Count = 0) then
-                    profile_name := 'Default Profile';
+                    profile_name := sDefaultProfile;
                 end;
 
             // if a profile was specified, use it, or create it if it doesn't exist.
@@ -733,12 +787,12 @@ begin
         uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
         uCallbackMessage := WM_TRAY;
         hIcon := picon.Handle;
-        szTip := 'Exodus';
+        strPCopy(szTip, sExodus);
         cbSize := SizeOf(_tray);
         end;
     Shell_NotifyIcon(NIM_ADD, @_tray);
     picon.Free();
-    
+
     _hidden := false;
     _shutdown := false;
     _close_min := MainSession.prefs.getBool('close_min');
@@ -782,7 +836,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.setupAutoAwayTimer();
 begin
-    DebugMsg('Trying to setup the Auto Away timer.');
+    DebugMsg(sSetupAutoAway);
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
         @_GetHookPointer := nil;
@@ -802,16 +856,16 @@ begin
             _lpHookRec^.LastTick := GetTickCount();
             end
         else
-            DebugMsg('AutoAway Setup FAILED!');
+            DebugMsg(sAutoAwayFail);
         last_tick := GetTickCount();
         end
     else begin
         // Use the GetLastInputInfo API call
         // do nothing here..
         if (_GetLastInputInfo <> nil) then
-            DebugMsg('Using Win32 API for Autoaway checks!!')
+            DebugMsg(sAutoAwayWin32)
         else
-            DebugMsg('ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!');
+            DebugMsg(sAutoAwayFailWin32);
         end;
 end;
 
@@ -844,15 +898,13 @@ begin
         end
 
     else if event = '/session/autherror' then begin
-        MessageDlg('There was an error trying to authenticate you. Please try again, or create a new account',
-                   mtError, [mbOK], 0);
+        MessageDlg(sAuthError, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
         end
 
     else if event = '/session/noaccount' then begin
-        if (MessageDlg('This account does not exist on this server. Create a new account?',
-                       mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+        if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
             // Just disconnect, they don't want an account
             MainSession.Disconnect()
         else
@@ -883,7 +935,7 @@ begin
         if (frmMsgQueue <> nil) then
             frmMsgQueue.lstEvents.Items.Clear;
 
-        Self.Caption := 'Exodus';
+        Self.Caption := sExodus;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
@@ -895,8 +947,7 @@ begin
         end
 
     else if event = '/session/commerror' then begin
-        MessageDlg('There was an error during communication with the Jabber Server',
-            mtError, [mbOK], 0);
+        MessageDlg(sCommError,  mtError, [mbOK], 0);
         end
 
     else if event = '/session/prefs' then begin
@@ -931,14 +982,6 @@ begin
             SetTrayIcon(4)
         else if (MainSession.Show = 'xa') then
             SetTrayIcon(10);
-
-        if (MainSession.IsPaused) then begin
-            // If the session is paused, and we're changing back
-            // to available, or chat, then make sure we play the session
-            if (MainSession.Show <> 'away') and (MainSession.show <> 'xa') and
-               (MainSession.Show <> 'dnd') then
-                MainSession.Play();
-            end;
         end;
 end;
 
@@ -1147,25 +1190,25 @@ begin
     evt_Time: begin
         img_idx := 12;
         msg := e.data_type;
-        e.Data.Add('Ping Time: ' + IntToStr(e.elapsed_time) + ' seconds.');
+        e.Data.Add(Format(sMsgPing, [IntToStr(e.elapsed_time)]));
         end;
 
     evt_Message: begin
         img_idx := 18;
         msg := e.data_type;
-        toast := 'Msg from ' + TJabberID.Create(e.from).jid;
+        toast := sMsgMessage + TJabberID.Create(e.from).jid;
         end;
 
     evt_Invite: begin
         img_idx := 21;
         msg := e.data_type;
-        toast := 'Invite from ' + TJabberID.Create(e.from).jid;
+        toast := sMsgInvite + TJabberID.Create(e.from).jid;
         end;
 
     evt_RosterItems: begin
         img_idx := 26;
         msg := e.data_type;
-        toast := 'Contacts from ' + TJabberID.Create(e.from).jid;
+        toast := sMsgContacts + TJabberID.Create(e.from).jid;
         end
 
     else begin
@@ -1598,16 +1641,14 @@ var
     gl: TStringList;
 begin
     // Add a roster grp.
-    new_grp := 'Untitled Group';
-    if InputQuery('New Roster Group',
-        'Enter new group name: ', new_grp) = false then exit;
+    new_grp := sDefaultGroup;
+    if InputQuery(sNewGroup, sNewGroupPrompt, new_grp) = false then exit;
 
     // add the new grp.
     gl := MainSession.Roster.GrpList;
     if (gl.IndexOf(new_grp) >= 0) then begin
         // this grp already exists
-        MessageDlg('This group already exists!',
-            mtError, [mbOK], 0);
+        MessageDlg(sNewGroupExists, mtError, [mbOK], 0);
         end
     else begin
         // add the new grp.
@@ -1681,7 +1722,7 @@ end;
 procedure TfrmExodus.SetAutoAway;
 begin
     // set us to away
-    DebugMsg('Setting AutoAway');
+    DebugMsg(sSetAutoAway);
     Application.ProcessMessages;
 
     MainSession.Pause();
@@ -1705,7 +1746,7 @@ end;
 procedure TfrmExodus.SetAutoXA;
 begin
     // set us to xa
-    DebugMsg('Setting AutoXA');
+    DebugMsg(sSetAutoXA);
     _is_autoaway := false;
     _is_autoxa := true;
 
@@ -1717,7 +1758,7 @@ end;
 procedure TfrmExodus.SetAutoAvailable;
 begin
     // reset our status to available
-    DebugMsg('Setting Auto Available');
+    DebugMsg(sSetAutoAvailable);
     timAutoAway.Enabled := false;
     timAutoAway.Interval := 10000;
     _is_autoaway := false;
@@ -1746,7 +1787,7 @@ var
     jid: string;
 begin
     // lookup some arbitrary vcard..
-    if InputQuery('Lookup Profile', 'Enter Jabber ID:', jid) then
+    if InputQuery(sLookupProfile, sEnterJID, jid) then
         ShowProfile(jid);
 end;
 
@@ -1854,7 +1895,7 @@ begin
             jid := ritem.jid.jid
         end;
 
-    if InputQuery('Start Chat', 'Enter Jabber ID:', jid) then
+    if InputQuery(sStartChat, sEnterJID, jid) then
         StartChat(jid, '', true);
 end;
 
@@ -1923,7 +1964,7 @@ procedure TfrmExodus.ResetLastTick(value: longint);
 begin
     if (_windows_ver >= cWIN_2000) then exit;
 
-    DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()));
+    // DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()));
     _lpHookRec^.LastTick := value;
 end;
 
@@ -1976,11 +2017,11 @@ begin
         exit;
 
     if (f.txtOldPassword.Text <> MainSession.Password) then begin
-        MessageDlg('Old password is incorrect.', mtError, [mbOK], 0);
+        MessageDlg(sPasswordOldError, mtError, [mbOK], 0);
         exit;
         end;
     if (f.txtNewPassword.Text <> f.txtConfirmPassword.Text) then begin
-        MessageDlg('New password does not match.', mtError, [mbOK], 0);
+        MessageDlg(sPasswordNewError, mtError, [mbOK], 0);
         exit;
         end;
 
@@ -2000,12 +2041,12 @@ end;
 procedure TfrmExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
 begin
     if (event <> 'xml') then
-        MessageDlg('Error changing password.', mtError, [mbOK], 0)
+        MessageDlg(sPasswordError, mtError, [mbOK], 0)
     else begin
         if (tag.GetAttribute('type') = 'result') then
-            MessageDlg('Password changed.', mtInformation, [mbOK], 0)
+            MessageDlg(sPasswordChanged, mtInformation, [mbOK], 0)
         else
-            MessageDlg('Error changing password.', mtError, [mbOK], 0);
+            MessageDlg(sPasswordError, mtError, [mbOK], 0);
         end;
 end;
 
@@ -2068,7 +2109,7 @@ var
 begin
     // kick off a registration..
     tmps := '';
-    if (InputQuery('Register with Service', 'Enter Jabber ID of service:', tmps) = false) then
+    if (InputQuery(sRegService, sEnterSvcJID, tmps) = false) then
         exit;
 
     f := TfrmRegister.Create(Application);
@@ -2109,7 +2150,7 @@ begin
             jid := ritem.jid.jid
         end;
 
-    if InputQuery('Send a Message', 'Enter Jabber ID:', jid) then
+    if InputQuery(sSendMessage, sEnterJID, jid) then
         StartMsg(jid);
 end;
 
