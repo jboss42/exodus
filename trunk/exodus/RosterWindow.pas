@@ -848,6 +848,7 @@ var
     show_pending: boolean;
     exp_grpnode: boolean;
     resort: boolean;
+    node_rect: TRect;
 begin
     // Render a specific roster item, with the given presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1042,6 +1043,10 @@ begin
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
         if (exp_grpnode) then grp_node.Expand(true);
+        node_rect := cur_node.DisplayRect(false);
+
+        // invalidate just the rect which contains our node
+        InvalidateRect(treeRoster.Handle, @node_rect, false);
     end;
 
     tmp_grps.Free();
