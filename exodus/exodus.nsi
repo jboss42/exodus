@@ -102,6 +102,9 @@ Section "!Exodus (Required)"
 	DetailPrint "Richedit verion ok."
 
   lbl_HiVersion:
+	; delete any leftover richupd.exe file.  This should not error
+	; if the file doesn't exist.
+	Delete $INSTDIR\richupd.exe
 
 	; Write the installation path into the registry
   	WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
