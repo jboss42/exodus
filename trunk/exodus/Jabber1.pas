@@ -762,17 +762,6 @@ begin
             Help1.Insert(i, mi);
         end;
         menu_list.Free();
-
-        // If we are supposed to be hidden, make it so.
-        if (ExStartup.minimized) then begin
-            _hidden := true;
-            self.WindowState := wsMinimized;
-            ShowWindow(Handle, SW_HIDE);
-            PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-        end;
-
-        // Show the debug form, if they've asked for it.
-        if (ExStartup.debug) then ShowDebugForm();
     end;
 
     // Setup callbacks
@@ -809,6 +798,18 @@ begin
 
     Self.setupTrayIcon();
     ConfigEmoticons();
+
+    // If we are supposed to be hidden, make it so.
+    if (ExStartup.minimized) then begin
+        _hidden := true;
+        Self.WindowState := wsMinimized;
+        ShowWindow(Handle, SW_HIDE);
+        SendMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+    end;
+
+    // Show the debug form, if they've asked for it.
+    if (ExStartup.debug) then ShowDebugForm();
+
 
     MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
 
