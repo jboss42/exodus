@@ -1,6 +1,6 @@
 object frmBrowse: TfrmBrowse
-  Left = 232
-  Top = 286
+  Left = 169
+  Top = 290
   Width = 427
   Height = 428
   Caption = 'Jabber Browser'
@@ -30,9 +30,9 @@ object frmBrowse: TfrmBrowse
     BorderWidth = 3
     TabOrder = 0
     object vwBrowse: TTntListView
-      Left = 199
+      Left = 145
       Top = 3
-      Width = 217
+      Width = 271
       Height = 322
       Align = alClient
       Columns = <
@@ -66,7 +66,7 @@ object frmBrowse: TfrmBrowse
     object pnlInfo: TTntPanel
       Left = 3
       Top = 3
-      Width = 196
+      Width = 142
       Height = 322
       Align = alLeft
       BevelOuter = bvNone
@@ -78,7 +78,7 @@ object frmBrowse: TfrmBrowse
       object lblError: TTntLabel
         Left = 4
         Top = 4
-        Width = 184
+        Width = 130
         Height = 19
         Align = alTop
         Caption = 'Error: '
