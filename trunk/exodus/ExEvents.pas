@@ -394,6 +394,7 @@ var
     url_tags: TXMLTagList;
     cjid: TJabberID;
     c: TChatController;
+    ins: Widestring;
 begin
     // create the event from a xml tag
     assert(_tag = nil);
@@ -413,13 +414,14 @@ begin
             tmp_tag := tag.GetFirstTag('error');
             if (tmp_tag <> nil) then begin
                 str_content := _('ERROR: ') + tmp_tag.Data();
-                _data_list.Insert(0, _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
-                    tmp_tag.getAttribute('code'));
+                ins :=  _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
+                    tmp_tag.getAttribute('code');
             end
             else
                 str_content := _('Unknown Error');
             error := true;
-            _data_list.Insert(1, _('Original Message was:'));
+            ins := ins + _('Original Message was:');
+            _data_list.Insert(0, ins);
         end;
 
         // Check for delay'd msgs
