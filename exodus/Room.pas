@@ -341,6 +341,9 @@ begin
             if (MainSession.Invisible) then
                 MainSession.addAvailJid(rjid);
 
+            p.Show := MainSession.Show;
+            p.Status := MainSession.Status;
+
             MainSession.SendTag(p);
         end;
 
