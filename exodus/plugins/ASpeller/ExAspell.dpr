@@ -4,7 +4,8 @@ uses
   ComServ,
   ExASpell_TLB in 'ExASpell_TLB.pas',
   SpellPlugin in 'SpellPlugin.pas' {SpellPlugin: CoClass},
-  ChatSpeller in 'ChatSpeller.pas' {ChatSpeller: CoClass};
+  ChatSpeller in 'ChatSpeller.pas' {ChatSpeller: CoClass},
+  AspellHeadersDyn in 'AspellHeadersDyn.pas';
 
 exports
   DllGetClassObject,
