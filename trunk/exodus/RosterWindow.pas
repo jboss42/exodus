@@ -80,6 +80,7 @@ type
     popSendContacts: TMenuItem;
     N4: TMenuItem;
     NewGroup1: TMenuItem;
+    InvitetoConference1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -117,6 +118,8 @@ type
     procedure popGrpRenameClick(Sender: TObject);
     procedure popGrpRemoveClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure InvitetoConference1Click(Sender: TObject);
+    procedure popGrpInviteClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -182,6 +185,7 @@ const
 
 implementation
 uses
+    Invite, 
     Bookmark,
     S10n,
     Transfer,
@@ -1535,6 +1539,37 @@ begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_prescb);
         end;
+end;
+
+procedure TfrmRosterWindow.InvitetoConference1Click(Sender: TObject);
+var
+    jids: TStringList;
+begin
+    //Show the invite window w/ this JID
+    if (_cur_ritem = nil) then exit;
+
+    jids := TStringlist.Create();
+    jids.Add(_cur_ritem.jid.jid);
+
+    ShowInvite('', jids);
+end;
+
+procedure TfrmRosterWindow.popGrpInviteClick(Sender: TObject);
+var
+    i: integer;
+    r, g: TTreeNode;
+    jids: TStringlist;
+begin
+    // Invite the whole group to the conference.
+    g := treeRoster.Selected;
+    jids := TStringlist.Create();
+    for i := 0 to g.Count - 1 do begin
+        r := g.Item[i];
+        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+            jids.Add(TJabberRosterItem(r.Data).jid.jid);
+        end;
+
+    ShowInvite('', jids);
 end;
 
 end.

@@ -136,7 +136,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 231
+    Top = 226
     Width = 242
     Height = 37
     Align = alBottom

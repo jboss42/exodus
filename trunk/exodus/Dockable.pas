@@ -125,6 +125,7 @@ procedure TfrmDockable.FormCloseQuery(Sender: TObject;
 begin
     if (not _docked) then
         MainSession.Prefs.SavePosition(Self);
+    CanClose := true;
 end;
 
 {---------------------------------------}

@@ -260,6 +260,7 @@ type
     _browse: TBrowseResponder;
 
     _tray: NOTIFYICONDATA;
+    _tray_icon: TIcon;
     _hidden: boolean;
     _shutdown: boolean;
     _close_min: boolean;
@@ -368,7 +369,7 @@ uses
     MsgRecv, Prefs, Dockable,
     RiserWindow, RemoveContact,
     Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
-    Transfer, Profile,
+    Transfer, Profile, CommCtrl, 
     VCard, PrefController, Roster, Password;
 
 {$R *.DFM}
@@ -496,6 +497,7 @@ begin
         and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
     ShowWindow(Application.Handle, SW_SHOW);
 
+    _tray_icon := TIcon.Create();
     _appclosing := false;
     _event := next_none;
     _noMoveCheck := true;
@@ -790,14 +792,10 @@ end;
 
 {---------------------------------------}
 procedure TExodus.setTrayIcon(iconNum: integer);
-var
-    picon : TIcon;
 begin
-    picon := TIcon.Create();
-    ImageList2.GetIcon(iconNum, picon);
-    _tray.hIcon := picon.Handle;
+    ImageList2.GetIcon(iconNum, _tray_icon);
+    _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
-    picon.Free();
 end;
 
 {---------------------------------------}
@@ -1219,6 +1217,8 @@ begin
         MainSession.Free();
         MainSession := nil;
         end;
+
+    _tray_icon.Free();
 end;
 
 {---------------------------------------}
@@ -1356,13 +1356,13 @@ begin
                 end;
 
             // make sure the debug window is docked
-            activeTab := Tabs.ActivePageIndex;
+            activeTab := Tabs.ActivePage.PageIndex;
             if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
                 frmDebug.DockForm;
                 frmDebug.Show;
                 end;
 
-            Tabs.ActivePageIndex := activeTab;
+            Tabs.ActivePage := Tabs.Pages[activeTab];
             end
         else begin
             w := pnlRight.Width;
@@ -1710,13 +1710,39 @@ end;
 procedure TExodus.TabsMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
-    tab: integer;
+    v, i, tab: integer;
+    R: TRect;
+    cp: TTabSheet;
 begin
     // select a tab automatically if we have a right click.
     if Button = mbRight then begin
-        tab := Tabs.IndexOfTabAt(X,Y);
-        if (tab <> Tabs.ActivePageIndex) then
-            Tabs.ActivePageIndex := tab;
+
+        {
+        EEK! this is really gross because the pagecontrol sucks.
+        Make sure the tab is visible before fetching it's bounding rect,
+        and checking the hit test.
+
+        BUT, the pageindex we need is the "raw" tabindex. Apparently,
+        the pagecontrol just makes tabs invisible when something gets
+        undocked.
+        }
+        tab := -1;
+        v := 0;
+        for i := 0 to Tabs.PageCount - 1 do begin
+            if (Tabs.Pages[i].TabVisible) then begin
+                SendMessage(Tabs.Handle, TCM_GETITEMRECT, v, lParam(@R));
+                if PtInRect(R, Point(x, y)) then begin
+                    tab := i;
+                    break;
+                    end;
+                inc(v);
+                end;
+            end;
+
+        if (tab = -1) then exit;
+        cp := Tabs.Pages[tab];
+        if (cp <> Tabs.ActivePage) then
+            Tabs.ActivePage := cp;
         end;
 end;
 
@@ -1739,7 +1765,7 @@ var
     f: TForm;
 begin
     // Close the window docked to this tab..
-    if Tabs.ActivePageIndex = 0 then exit;
+    if Tabs.TabIndex = 0 then exit;
     t := Tabs.ActivePage;
     f := getTabForm(t);
     if (f <> nil) then
@@ -1753,7 +1779,7 @@ var
     f: TForm;
 begin
     // Undock this window
-    if Tabs.ActivePageIndex = 0 then exit;
+    if Tabs.TabIndex = 0 then exit;
 
     t := Tabs.ActivePage;
     f := getTabForm(t);

@@ -1,5 +1,5 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 766
+  Left = 762
   Top = 389
   Width = 390
   Height = 315
@@ -15,7 +15,7 @@ object frmBaseChat: TfrmBaseChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 255
+    Top = 250
     Width = 382
     Height = 3
     Cursor = crVSplit
@@ -27,7 +27,7 @@ object frmBaseChat: TfrmBaseChat
     Left = 0
     Top = 22
     Width = 382
-    Height = 233
+    Height = 228
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -37,7 +37,7 @@ object frmBaseChat: TfrmBaseChat
       Left = 4
       Top = 4
       Width = 374
-      Height = 225
+      Height = 220
       Align = alClient
       ReadOnly = True
       ScrollBars = ssBoth
@@ -47,7 +47,7 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 258
+    Top = 253
     Width = 382
     Height = 28
     Align = alBottom

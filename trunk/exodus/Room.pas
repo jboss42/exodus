@@ -60,6 +60,7 @@ type
     procedure popNickClick(Sender: TObject);
     procedure popCloseClick(Sender: TObject);
     procedure popBookmarkClick(Sender: TObject);
+    procedure popInviteClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;                // jid of the conf. room
@@ -95,6 +96,7 @@ type
 
 var
   frmRoom: TfrmRoom;
+  room_list: TStringList;
 
 function StartRoom(rjid, rnick: string): TfrmRoom;
 
@@ -105,8 +107,8 @@ implementation
 uses
     ExUtils,
     RiserWindow,
-    ShellAPI, 
-    RichEdit, 
+    ShellAPI,
+    RichEdit,
     Invite,
     ChatWin,
     RosterWindow,
@@ -154,7 +156,7 @@ begin
         frmJabber.Tabs.ActivePage := f.TabSheet;
 
     tmp_jid.Free();
-
+    room_list.Add(rjid);
     Result := f;
 end;
 
@@ -555,6 +557,7 @@ end;
 procedure TfrmRoom.FormClose(Sender: TObject; var Action: TCloseAction);
 var
     p: TJabberPres;
+    i: integer;
 begin
     if (_callback >= 0) then begin
         p := TJabberPres.Create();
@@ -566,7 +569,11 @@ begin
         MainSession.UnRegisterCallback(_scallback);
         end;
     _keywords.Free;
+    i := room_list.IndexOf(jid);
+    if (i >= 0) then
+        room_list.Delete(i);
     Action := caFree;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -629,9 +636,9 @@ end;
 procedure TfrmRoom.treeRosterDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
-    n: TTreeNode;
+    r, n: TTreeNode;
     ritem: TJabberRosterItem;
-    i: integer;
+    i,j: integer;
     jids: TStringList;
 begin
     if (Source = frmRosterWindow.treeRoster) then begin
@@ -640,9 +647,16 @@ begin
         with frmRosterWindow.treeRoster do begin
             for i := 0 to SelectionCount - 1 do begin
                 n := Selections[i];
-                if (n.Data <> nil) then begin
+                if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
                     ritem := TJabberRosterItem(n.Data);
                     jids.Add(ritem.jid.jid);
+                    end
+                else if (n.Level = 0) then begin
+                    for j := 0 to n.Count - 1 do begin
+                        r := n.Item[j];
+                        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+                            jids.Add(TJabberRosterItem(r.Data).jid.jid);
+                        end;
                     end;
                 end;
             end;
@@ -698,5 +712,18 @@ begin
         MainSession.roster.AddBookmark(bm.jid.full, bm);
         end;
 end;
+
+{---------------------------------------}
+procedure TfrmRoom.popInviteClick(Sender: TObject);
+begin
+  inherited;
+    ShowInvite(Self.jid, nil);
+end;
+
+initialization
+    room_list := TStringlist.Create();
+
+finalization
+    room_list.Free();
 
 end.

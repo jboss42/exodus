@@ -138,6 +138,7 @@ object Exodus: TExodus
       object btnRoom: TToolButton
         Left = 73
         Top = 0
+        Hint = 'Join a conference'
         Caption = 'btnRoom'
         ImageIndex = 10
         OnClick = mnuConferenceClick
@@ -221,7 +222,7 @@ object Exodus: TExodus
         OnClick = mnuChatClick
       end
       object mnuConference: TMenuItem
-        Caption = 'Join a Group'
+        Caption = 'Join a Conference'
         ShortCut = 118
         OnClick = mnuConferenceClick
       end

@@ -103,6 +103,7 @@ inherited frmRoom: TfrmRoom
     end
     object popInvite: TMenuItem
       Caption = 'Invite Contacts'
+      OnClick = popInviteClick
     end
     object popNick: TMenuItem
       Caption = 'Change Nickname'
