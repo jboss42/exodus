@@ -139,7 +139,7 @@ object frmRosterWindow: TfrmRosterWindow
       ShowHint = True
       OnPaint = imgStatusPaint
     end
-    object pnlStatus: TPanel
+    object pnlStatus: TTntPanel
       Left = 25
       Top = 2
       Width = 160
@@ -149,22 +149,17 @@ object frmRosterWindow: TfrmRosterWindow
       Alignment = taLeftJustify
       AutoSize = True
       BevelOuter = bvNone
-      BorderWidth = 2
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
+      BevelWidth = 0
       TabOrder = 0
-      object lblStatusLink: TLabel
-        Left = 2
-        Top = 2
+      object lblStatusLink: TTntLabel
+        Left = 0
+        Top = 0
         Width = 30
-        Height = 16
+        Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
+        Transparent = False
         OnClick = pnlStatusClick
       end
     end
@@ -182,7 +177,7 @@ object frmRosterWindow: TfrmRosterWindow
     ParentBackground = False
     ParentCtl3D = False
     TabOrder = 3
-    object lblStatus: TLabel
+    object lblStatus: TTntLabel
       Left = 5
       Top = 62
       Width = 177
@@ -191,29 +186,17 @@ object frmRosterWindow: TfrmRosterWindow
       Alignment = taCenter
       AutoSize = False
       Caption = 'Disconnected.'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
       Transparent = False
     end
-    object lblLogin: TLabel
+    object lblLogin: TTntLabel
       Left = 5
       Top = 122
       Width = 177
-      Height = 15
+      Height = 13
       Cursor = crHandPoint
       Align = alTop
       Alignment = taCenter
-      Caption = 'Click Here to Sign On'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlue
-      Font.Height = -12
-      Font.Name = 'Arial'
-      Font.Style = [fsUnderline]
-      ParentFont = False
+      Caption = 'Click to Login'
       Transparent = False
       OnClick = lblLoginClick
     end

@@ -24,7 +24,8 @@ interface
 uses
     DropTarget, Unicode, XMLTag, Presence, Roster,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls;
+    ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
+  TntExtCtrls;
 
 type
 
@@ -39,7 +40,6 @@ type
     StatBar: TStatusBar;
     popStatus: TPopupMenu;
     pnlShow: TPanel;
-    pnlStatus: TPanel;
     presChat: TMenuItem;
     presAvailable: TMenuItem;
     presAway: TMenuItem;
@@ -78,8 +78,6 @@ type
     popGroupBlock: TMenuItem;
     BroadcastMessage1: TMenuItem;
     pnlConnect: TPanel;
-    lblStatus: TLabel;
-    lblLogin: TLabel;
     pnlAnimation: TPanel;
     aniWait: TAnimate;
     popBookmark: TPopupMenu;
@@ -93,10 +91,13 @@ type
     N6: TMenuItem;
     popTransUnRegister: TMenuItem;
     popTransProperties: TMenuItem;
-    lblStatusLink: TLabel;
     imgAd: TImage;
     popRename: TMenuItem;
     N7: TMenuItem;
+    lblStatus: TTntLabel;
+    lblLogin: TTntLabel;
+    pnlStatus: TTntPanel;
+    lblStatusLink: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -288,6 +289,14 @@ procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
     s : widestring;
 begin
+    // Deal with fonts & stuff
+    AssignUnicodeFont(Self, 9);
+
+    lblLogin.Font.Color := clBlue;
+    lblLogin.Font.Style := [fsUnderline];
+    lblStatusLink.Font.Assign(lblLogin.Font);
+    StatBar.Font.Size := 8;
+
     TranslateProperties(Self);
 
     // register the callback
