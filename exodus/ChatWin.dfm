@@ -12,9 +12,9 @@ inherited frmChat: TfrmChat
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 24
-    Height = 229
+    Height = 224
     inherited MsgList: TExRichEdit
-      Height = 221
+      Height = 216
       PlainRTF = True
     end
   end
@@ -86,6 +86,10 @@ inherited frmChat: TfrmChat
   object popContact: TPopupMenu [5]
     Left = 16
     Top = 152
+    object mnuSave: TMenuItem
+      Caption = 'Save Conversation'
+      OnClick = mnuSaveClick
+    end
     object mnuHistory: TMenuItem
       Caption = 'Show History ...'
       OnClick = doHistory
@@ -94,12 +98,32 @@ inherited frmChat: TfrmChat
       Caption = 'Clear History'
       OnClick = popClearHistoryClick
     end
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object popResources: TMenuItem
+      AutoHotkeys = maManual
+      Caption = 'Resources'
+      object TMenuItem
+      end
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object mnuSendFile: TMenuItem
+      Caption = 'Send File ...'
+      OnClick = mnuSendFileClick
+    end
+    object popAddContact: TMenuItem
+      Caption = 'Add to roster ...'
+      OnClick = doAddToRoster
+    end
     object mnuProfile: TMenuItem
       Caption = 'Show Profile ...'
       OnClick = doProfile
     end
     object C1: TMenuItem
-      Caption = 'Client Info'
+      Caption = 'Contact Info'
       object mnuVersionRequest: TMenuItem
         Caption = 'Version Request'
         OnClick = CTCPClick
@@ -113,21 +137,9 @@ inherited frmChat: TfrmChat
         OnClick = CTCPClick
       end
     end
-    object popAddContact: TMenuItem
-      Caption = 'Add to roster ...'
-      OnClick = doAddToRoster
-    end
     object mnuBlock: TMenuItem
       Caption = 'Block Contact'
       OnClick = mnuBlockClick
-    end
-    object mnuSendFile: TMenuItem
-      Caption = 'Send File ...'
-      OnClick = mnuSendFileClick
-    end
-    object mnuSave: TMenuItem
-      Caption = 'Save Conversation'
-      OnClick = mnuSaveClick
     end
     object N1: TMenuItem
       Caption = '-'
