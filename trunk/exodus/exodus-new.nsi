@@ -817,7 +817,6 @@ Modern install component descriptions
 */
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
-    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Locale} $(DESC_Locale)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
