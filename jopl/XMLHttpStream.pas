@@ -63,7 +63,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    StrUtils, IdGlobal;
+    StrUtils, IdGlobal, Registry;
 
 {---------------------------------------}
 constructor TXMLHttpStream.Create(root: string);
@@ -159,6 +159,10 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
+var
+    reg: TRegistry;
+    srv: string;
+    colon: integer;
 begin
     inherited Create(strm, root);
 
@@ -175,9 +179,23 @@ begin
     _response := TStringstream.Create('');
 
     if (_profile.ProxyApproach = http_proxy_ie) then begin
-        //TODO: get IE settings from registry
-        end;
-    if (_profile.ProxyApproach = http_proxy_custom) then begin
+        // get IE settings from registry
+        reg := TRegistry.Create();
+
+        try
+            reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
+            if (reg.ValueExists('ProxyEnable') and
+                (reg.ReadInteger('ProxyEnable') <> 0)) then with _http.Request do begin
+                srv := reg.ReadString('ProxyServer');
+                colon := pos(':', srv);
+                ProxyServer := Copy(srv, 1, colon-1);
+                ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                end;
+        finally
+            reg.Free();
+            end;
+        end
+    else if (_profile.ProxyApproach = http_proxy_custom) then begin
         with _http.Request do begin
             ProxyServer := _profile.ProxyHost;
             ProxyPort := _profile.ProxyPort;
