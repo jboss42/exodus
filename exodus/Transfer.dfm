@@ -1,6 +1,6 @@
 object frmTransfer: TfrmTransfer
-  Left = 241
-  Top = 279
+  Left = 979
+  Top = 396
   Width = 267
   Height = 207
   Caption = 'File Transfer'
@@ -63,7 +63,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 22
     Width = 259
-    Height = 92
+    Height = 97
     Align = alClient
     AutoURLDetect = adNone
     CustomURLs = <
@@ -156,7 +156,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 139
+    Top = 144
     Width = 259
     Height = 34
     Align = alBottom
@@ -179,7 +179,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 114
+    Top = 119
     Width = 259
     Height = 25
     Align = alBottom

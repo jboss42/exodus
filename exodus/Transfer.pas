@@ -60,7 +60,6 @@ type
     procedure httpServerConnect(AThread: TIdPeerThread);
   private
     { Private declarations }
-    totBytes: longint;
     fstream: TFileStream;
   protected
     procedure WMXFer(var msg: TMessage); message WM_XFER;
@@ -209,7 +208,6 @@ var
 begin
     if Self.Mode = 0 then begin
         // receive mode
-        totBytes := 0;
         filename := URLToFilename(Self.url);
 
         // use the save as dialog
@@ -255,8 +253,7 @@ procedure TfrmTransfer.httpClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
     // Update the progress meter
-    totBytes := totBytes + AWorkCount;
-    bar1.Position := totBytes;
+    bar1.Position := AWorkCount;
 end;
 
 {---------------------------------------}

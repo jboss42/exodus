@@ -22,26 +22,18 @@ type
 
   TAutoUpdate = class
   private
-    procedure IQCallback(event: string; tag: TXMLTag);
     procedure MsgCallback(event: string; tag: TXMLTag);
   public
     initialized: boolean;
-    procedure GetNewVersion(event: string; tag: TXMLTag);
   end;
 
 procedure InitAutoUpdate();
 
-const
-    JID_AUTOUPDATE  = '1016321811@update.jabber.org';
-    XMLNS_AUTOUPDATE = 'jabber:iq:autoupdate';
-    EXODUS_REG = '\Software\Jabber\Exodus';
-
-resourcestring
-    sUpdateConfirm = 'A new version of Exodus is available.  Would you like to install it?';
 
 implementation
 
 uses
+    AutoUpdateStatus,
     Controls,
     ExUtils,
     IdHttp,
@@ -69,7 +61,6 @@ begin
     if (not MainSession.Prefs.getBool('auto_updates')) then exit;
 
     if (not au.initialized) then begin
-        MainSession.RegisterCallback(au.GetNewVersion, '/session/getnewversion');
         MainSession.RegisterCallback(au.MsgCallback,
             '/packet/message/x[@xmlns="jabber:x:autoupdate"]');
         end;
@@ -117,7 +108,6 @@ var
 begin
     http := nil;
     try
-
         http := TIdHTTP.Create(nil);
         http.Head(_url);
         if (http.ResponseCode <> 200) then begin
@@ -136,95 +126,15 @@ end;
 
 procedure TAutoUpdateThread.checkDoUpdate();
 begin
-    if (MessageDlg(sUpdateConfirm,
-                   mtConfirmation, [mbOK,mbCancel], 0) = mrOK) then begin
-        MainSession.FireEvent('/session/getnewversion', TXMLTag.Create('url', _url));
-        end;
+    ShowAutoUpdateStatus(_url);
 end;
 
 procedure TAutoUpdate.MsgCallback(event: string; tag: TXMLTag);
-var
-    iq: TJabberIQ;
 begin
     // we are getting a message tag telling us we have an update available
-    if (MessageDlg(sUpdateConfirm,
-                   mtConfirmation, [mbOK,mbCancel], 0) = mrOK) then begin
-        iq := TJabberIQ.Create(MainSession, MainSession.generateID(), Self.IQCallback);
-        iq.toJid := JID_AUTOUPDATE;
-        iq.iqType := 'get';
-        iq.Namespace := XMLNS_AUTOUPDATE;
-        iq.Send();
-        end;
+    ShowAutoUpdateStatus(tag);
 end;
 
-procedure TAutoUpdate.IQCallback(event: string; tag: TXMLTag);
-var
-    url: string;
-    c: TXMLTagList;
-begin
-    // parse this mess.. NB: We don't care if we have <beta> or <release>
-    {
-        <iq type="result" from="winjab@update.denmark" id="1001">
-          <query xmlns="jabber:iq:autoupdate">
-            <release priority="optional">
-              <ver>0.9.1.1</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_setup.exe</url>
-            </release>
-            <beta priority="optional">
-              <ver>0.9.2.16</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_beta.exe</url>
-            </beta>
-          </query>
-        </iq>
-    }
-    if (event = 'xml') then begin
-        c := tag.GetFirstTag('query').ChildTags;
-        url := c[0].GetFirstTag('url').Data;
-        MainSession.FireEvent('/session/getnewversion', TXMLTag.Create('url', url));
-        end;
-end;
-
-procedure TAutoUpdate.GetNewVersion(event: string; tag: TXMLTag);
-var
-    tmp: string;
-    fstream: TFileStream;
-    http: TIdHttp;
-    url: string;
-    reg : TRegistry;
-begin
-    url := tag.Data;
-    if (url = '') then exit;
-    reg := nil;
-    http := nil;
-
-    try
-        // ok, there's a new one.
-        SetLength(tmp, 256);
-        SetLength(tmp, GetTempPath(255, PChar(tmp)));
-
-        tmp := tmp + ExtractFileName(URLToFilename(url));
-
-        http := TIdHTTP.Create(nil);
-        fstream := TFileStream.Create(tmp, fmCreate);
-        http.Get(url, fstream);
-        fstream.Free();
-
-        if (http.ResponseCode <> 200) then exit;
-
-        reg := TRegistry.Create();
-        reg.RootKey := HKEY_LOCAL_MACHINE;
-        reg.OpenKey(EXODUS_REG, true);
-        reg.WriteDateTime('Last_Update', http.Response.LastModified);
-        reg.CloseKey();
-    finally
-        if (reg <> nil) then reg.Free();
-        if (http <> nil) then http.Free();
-        end;
-
-    ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
-end;
 
 initialization
     au := TAutoUpdate.Create();
