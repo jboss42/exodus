@@ -270,6 +270,8 @@ begin
     treeRoster.Visible := false;
     pnlStatus.Visible := true;
 
+    treeRoster.Canvas.Pen.Width := 1;
+
     Application.ShowHint := true;
     Application.OnShowHint := DoShowHint;
 end;
@@ -1647,7 +1649,7 @@ begin
                     else begin
                         Font.Color := clWindowText;
                         Brush.Color := treeRoster.Color;
-                        // Brush.Style := bsSolid;
+                        Brush.Style := bsSolid;
                         FillRect(xRect);
                         end;
 
