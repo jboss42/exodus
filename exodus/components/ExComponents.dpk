@@ -39,6 +39,9 @@ contains
   RTFProperty in 'RTFProperty.pas',
   RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
   WStrList in 'WStrList.pas',
-  Langs in 'Langs.pas';
+  Langs in 'Langs.pas',
+  ExodusLabel in 'ExodusLabel.pas',
+  Unicode in '..\..\jopl\Unicode.pas',
+  RegExpr in '..\..\jopl\RegExpr.pas';
 
 end.

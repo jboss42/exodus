@@ -1,8 +1,8 @@
 object frameGeneric: TframeGeneric
   Left = 0
   Top = 0
-  Width = 160
-  Height = 23
+  Width = 141
+  Height = 15
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -13,16 +13,12 @@ object frameGeneric: TframeGeneric
   ShowHint = True
   TabOrder = 0
   OnResize = FrameResize
-  object lblLabel: TTntLabel
+  object elCaption: TExodusLabel
     Left = 0
     Top = 0
     Width = 81
-    Height = 23
+    Height = 15
     Align = alLeft
-    AutoSize = False
-    Caption = 'lblLabel'
-    ParentShowHint = False
-    ShowHint = True
-    WordWrap = True
+    Caption = 'Label'
   end
 end

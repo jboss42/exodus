@@ -24,23 +24,13 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs;
+    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs, ExodusLabel;
 
 type
 
-  TURLRect = class
-    url: string;
-    rect: TRect;
-  end;
-
   TframeGeneric = class(TFrame)
-    lblLabel: TTnTLabel;
+    elCaption: TExodusLabel;
     procedure FrameResize(Sender: TObject);
-    procedure PaintBox1Paint(Sender: TObject);
-    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     value: Widestring;
@@ -50,16 +40,12 @@ type
     req: boolean;
     c: TControl;
     opts_vals: TStringList;
-    urls: TObjectList;
     dot : TButton;
 
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
   public
     { Public declarations }
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy(); override;
-    
     procedure render(tag: TXMLTag);
     function isValid: boolean;
     function getXML: TXMLTag;
@@ -85,22 +71,6 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TframeGeneric.Create(AOwner: TComponent);
-begin
-    inherited;
-    
-    urls := TObjectList.Create();
-    urls.OwnsObjects := true;
-end;
-
-{---------------------------------------}
-destructor TframeGeneric.Destroy();
-begin
-    urls.Free();
-    inherited;
-end;
-
-{---------------------------------------}
 procedure TframeGeneric.render(tag: TXMLTag);
 var
     v, l, t: Widestring;
@@ -125,34 +95,33 @@ begin
           Self.Hint := Self.Hint + ''#13#10 + _(sRequired);
    end;
 
-    lblLabel.Caption := tag.GetAttribute('label');
-    if (lblLabel.Caption = '') then
-        lblLabel.Caption := tag.GetAttribute('var');
+    elCaption.Caption := tag.GetAttribute('label');
+    if (elCaption.Caption = '') then
+        elCaption.Caption := tag.GetAttribute('var');
 
-    if (lblLabel.Caption = '') then
-        lblLabel.Width := 0
+    if (elCaption.Caption = '') then
+        elCaption.Width := 0
     else begin
-        lblLabel.Caption := lblLabel.Caption + ':';
+        elCaption.Caption := elCaption.Caption + ':';
         if (req) then
-           lblLabel.Caption := '* ' + lblLabel.Caption;
+           elCaption.Caption := '* ' + elCaption.Caption;
     end;
 
     if ((t = 'text-multi') or (t = 'jid-multi')) then begin
-        lblLabel.Layout := tlTop;
         c := TTntMemo.Create(Self);
         c.Parent := Self;
         opts := tag.QueryTags('value');
         with TTntMemo(c) do begin
+            Align := alClient;
+            ScrollBars := ssBoth;
             Lines.Clear();
             for i := 0 to opts.Count - 1 do
                 Lines.Add(opts[i].Data);
-            Align := alClient;
         end;
         Self.Height := Self.Height * 3;
     end
 
     else if (t = 'list-multi') then begin
-        lblLabel.Layout := tlTop;
         c := TTntCheckListbox.Create(self);
         c.Parent := Self;
         opts_vals := TStringList.Create();
@@ -186,7 +155,6 @@ begin
         TTntCheckListbox(c).Repaint();
     end
     else if (t = 'list-single') then begin
-        lblLabel.Layout := tlTop;
         c := TTntCombobox.Create(self);
         c.Parent := Self;
         opts_vals := TStringList.Create();
@@ -210,7 +178,7 @@ begin
 
     else if (t = 'boolean') then begin
         //Self.AutoSize := true;
-        lblLabel.Layout := tlTop;
+//        elCaption.Layout := tlTop;
         c := TTntCheckbox.Create(Self);
         with TTntCheckbox(c) do begin
             //Align := alClient;
@@ -219,19 +187,18 @@ begin
         end;
     end
     else if (t = 'fixed') then begin
-        lblLabel.Visible := false;
-        c := TPaintbox.Create(Self);
-        with TPaintbox(c) do begin
+        elCaption.Visible := false;
+        c := TExodusLabel.Create(Self);
+        with TExodusLabel(c) do begin
             Parent := Self;
-            Align := alClient;
-            onPaint := PaintBox1Paint;
-            onMouseMove := PaintBox1MouseMove;
-            onMouseUp := PaintBox1MouseUp;
+            Align := alTop;
+            Caption := value;
         end;
     end
 
     else if ((t = 'hidden') and (frm_type <> 'submit')) then begin
         Self.Height := 0;
+        elCaption.Height := 0;
         c := nil;
     end
 
@@ -241,12 +208,13 @@ begin
             Text := value;
             // Anchors := [akLeft, akTop, akBottom, akRight];
             Parent := Self;
-            //Align := alClient;
+            Align := alNone;
+            Top := 1;
         end;
 
         dot := TButton.Create(Self);
         with TButton(dot) do begin
-            Caption := '...';
+            Caption := _('...');
             OnClick := JidFieldDotClick;
             Top := 1;
             Parent := Self;
@@ -255,23 +223,23 @@ begin
             Align := alRight;
         end;
 
-        c.Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
+        c.Width := Self.ClientWidth - elCaption.Width - dot.Width - 10;
     end
     else begin  // 'text-single', 'text-private', or unknown
-        lblLabel.Layout := tlCenter;
         c := TTntEdit.Create(Self);
         with TTntEdit(c) do begin
             Text := value;
-            //Align := alClient;
+            Align := alNone;
             if (t = 'text-private') then
                 PasswordChar := '*';
+            Top := 1;
         end;
     end;
 
     if (c <> nil) then begin
         c.Parent := Self;
         c.Visible := true;
-        c.Left := lblLabel.Width + 5;
+        c.Left := elCaption.Width + 5;
         c.Top := 1;
         //Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
     end;
@@ -291,9 +259,9 @@ begin
         Result := isValidJID(TTntEdit(c).Text);
 
     if (Result) then
-       lblLabel.Font.Color := clWindowText
+       elCaption.Font.Color := clWindowText
     else
-       lblLabel.Font.Color := clRed;
+       elCaption.Font.Color := clRed;
 end;
 
 {---------------------------------------}
@@ -327,7 +295,7 @@ var
     i: integer;
 begin
     Result := TWideStringlist.Create();
-    if (c = lblLabel) then exit;
+    if (c = elCaption) then exit;
 
     if (c is TTntEdit) then begin
         tmps := Trim(TTntEdit(c).Text);
@@ -384,9 +352,17 @@ procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
     if (c is TTntEdit) then begin
         if (dot <> nil) then
-            c.width := Self.ClientWidth - lblLabel.Width - dot.Width - 6 - 2
-        else
-            c.Width := Self.ClientWidth - lblLabel.Width - 6;
+            c.width := Self.ClientWidth - elCaption.Width - dot.Width - 6 - 2
+        else begin
+            c.Width := Self.ClientWidth - elCaption.Width;
+        end;
+        Self.Height := max(max(c.Height + 4, Self.Height), elCaption.Height);
+    end
+    else if (c <> nil) then begin
+        if (c.Height+2 > Self.Height) then
+            self.Height := c.Height + 4;
+        if elCaption.Height > Self.Height then
+            self.Height := elCaption.Height;
     end;
 end;
 
@@ -395,193 +371,36 @@ function TframeGeneric.getLabelWidth: integer;
 var
     p : TForm;
 begin
-    if ((lblLabel = nil) or (lblLabel.Width = 0) or (lblLabel = c)) then
+    if ((elCaption = nil) or (elCaption.Width = 0) or (elCaption = c)) then
         result := 0
     else begin
         p := TForm(Self.Owner);
-        result := p.Canvas.TextWidth(lblLabel.Caption);
+        result := p.Canvas.TextWidth(elCaption.Caption);
     end;
 end;
 
 {---------------------------------------}
 procedure TframeGeneric.setLabelWidth(val: integer);
-var
-    h: integer;
-    r: TRect;
-    txt: Widestring;
+//var
+//    h: integer;
+//    r: TRect;
+//    txt: Widestring;
 begin
-    if ((lblLabel.Width <> 0) and (lblLabel <> c)) then begin
-        txt := lblLabel.Caption;
-        lblLabel.Width := val;
+    if ((elCaption.Width <> 0) and (elCaption <> c)) then begin
+        elCaption.Width := val;
+        (*
+        txt := elCaption.Caption;
         r.Top := 0;
         r.Left := 0;
         r.Right := val;
         r.bottom := 1;
-        h := DrawTextExW(Self.lblLabel.Canvas.Handle, PWideChar(txt), Length(txt), r,
+        h := DrawTextExW(Self.elCaption.Canvas.Handle, PWideChar(txt), Length(txt), r,
             DT_WORDBREAK or DT_CALCRECT, nil);
         Self.Height := max(h + 21, self.height);
-
-        if ((c <> nil) and (not (c is TPaintbox))) then
+*)
+        if ((c <> nil) and (not (c is TExodusLabel))) then
             c.Left := val;
     end;
-end;
-
-
-procedure TframeGeneric.PaintBox1Paint(Sender: TObject);
-var
-    pb: TPaintBox;
-    w: TRect;
-    word, txt, txt2: Widestring;
-    p1, i, x, y, l, ws: integer;
-    words: TWidestringlist;
-    p2: double;
-    wonkus: boolean;
-    ur: TUrlRect;
-begin
-    // paint a fixed label, doing m4dd w0rd wr4pp1ng.
-    pb := TPaintBox(c);
-
-    x := 0;
-    y := 0;
-
-    // cache the width of a space.
-    txt := ' ';
-    w.Left := 0;
-    w.Right := 0;
-    w.Top := 0;
-    w.Bottom := 0;
-    DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
-            DT_SINGLELINE or DT_CALCRECT, nil);
-    ws := w.Right;
-
-    words := TWidestringlist.Create();
-    WordSplit(value, words);
-
-    urls.Clear();
-    wonkus := false;
-    i := 0;
-    while (i < words.count) do begin
-        word := words[i];
-        txt := words[i];
-        if (x > 0) then txt := ' ' + txt;
-        w.top := y;
-        w.Left := x;
-        w.right := x + 1;
-        w.Bottom := y + 1;
-
-        DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
-            DT_SINGLELINE or DT_CALCRECT, nil);
-
-        l := w.Right - w.Left;
-
-        if (w.Right > pb.Width) then begin
-            // we need to wrap, since this word would put us over the edge
-            if (l > pb.Width) then begin
-                // we can't fit in our rect..
-                // chop the string and hope for the best :)
-                p2 := (pb.Width - x)/l;
-                p1 := Floor(p2 * length(txt)) - 1;
-                txt := Copy(words[i], 0, p1);
-                if (x > 0) then txt := ' ' + txt;
-                txt2 := Copy(words[i], p1+1, length(words[i]) - p1);
-                words[i] := txt2;
-                i := i - 1;
-                wonkus := true;
-            end
-            else begin
-                txt := word;
-
-                // re-measure, without the space
-                x := 0;
-                w.Right := 0;
-                w.Top := w.Bottom + 1;
-                DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
-                            DT_SINGLELINE or DT_CALCRECT, nil);
-                l := w.Right - w.Left;
-                y := w.Top;
-                wonkus := false;
-            end;
-        end;
-
-        if (REGEX_URL.Exec(word)) then begin
-            if txt[1] = ' ' then begin
-                // can't reassign to word, since we may be wonkus,
-                // in which case we want the truncated word.
-                txt := Copy(txt, 2, length(txt) - 1);
-                
-                // don't draw the space, but move over for it.  This
-                // way the space won't be underlined, and it won't be
-                // hit-test.
-                x := x + ws;
-                l := l - ws;
-            end;
-            pb.Canvas.Font.Style := [fsUnderline];
-            SetTextColor(pb.Canvas.Handle, clBlue);
-            ur := TURLRect.Create();
-            ur.rect.Left := x;
-            ur.rect.Right := x + l;
-            ur.rect.Top := y;
-            ur.rect.Bottom := w.bottom;
-            ur.url := word;
-            urls.Add(ur);
-        end
-        else begin
-            pb.Canvas.Font.Style := [];
-            SetTextColor(pb.Canvas.Handle, clBlack);
-        end;
-
-        TextOutW(pb.canvas.Handle, x, y, PWideChar(txt), length(txt));
-        if (wonkus) then begin
-            x := 0;
-            y := w.bottom + 2;
-            wonkus := false;
-        end
-        else
-            x := x + l + 1;
-        inc(i);
-    end;
-
-    Self.Height := w.Bottom + 2;
-end;
-
-procedure TframeGeneric.PaintBox1MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-var
-    p: TPoint;
-    i: integer;
-begin
-    // check for URL's
-    p.x := x;
-    p.y := y;
-
-    for i := 0 to urls.Count - 1 do begin
-        if PtInRect(TURLRect(urls[i]).rect, p) then begin
-            SetCursor(LoadCursor(0, IDC_HAND));
-            exit;
-        end;
-    end;
-    SetCursor(LoadCursor(0, IDC_ARROW));
-end;
-
-procedure TframeGeneric.PaintBox1MouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-    p: TPoint;
-    i: integer;
-    ur: TURLRect;
-begin
-    // check for URL's
-    p.X := x;
-    p.y := y;
-
-    for i := 0 to urls.Count - 1 do begin
-        ur := TURLRect(urls[i]);
-        if PtInRect(ur.rect, p) then begin
-            ShellExecute(Application.Handle, 'open', PChar(ur.url), nil, nil, SW_SHOWNORMAL);
-            exit;
-        end;
-    end;
-
 end;
 
 end.

@@ -180,6 +180,7 @@ inherited frmPrefFont: TfrmPrefFont
     LangOptions = [loAutoFont]
     Language = 1033
     ReadOnly = True
+    ScrollBars = ssBoth
     ShowSelectionBar = False
     TabOrder = 1
     URLColor = clBlue
