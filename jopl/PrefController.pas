@@ -1000,7 +1000,7 @@ begin
 
     // HTTP Connection
     node.AddBasicTag('url', URL);
-    node.AddBasicTag('poll', IntToStr(Poll));
+    node.AddBasicTag('poll', FloatToStr(Poll));
     node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
     node.AddBasicTag('proxy_host', ProxyHost);
     node.AddBasicTag('proxy_port', IntToStr(ProxyPort));

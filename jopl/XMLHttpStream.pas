@@ -40,6 +40,7 @@ type
     private
         _profile : TJabberProfile;
         _poll_id: string;
+        _poll_time: integer;
         _http: TIdHttp;
         _request: TStringlist;
         _response: TStringStream;
@@ -63,7 +64,11 @@ type
 {---------------------------------------}
 implementation
 uses
-    StrUtils, IdGlobal, Registry;
+    StrUtils, IdGlobal, Registry, ExUtils;
+
+const
+    MIN_TIME : integer = 250;
+    INCREASE_FACTOR : single = 1.5;
 
 {---------------------------------------}
 constructor TXMLHttpStream.Create(root: string);
@@ -168,6 +173,7 @@ begin
 
     _profile := profile;
     _poll_id := '0';
+    _poll_time := MIN_TIME;
     _http := TIdHTTP.Create(nil);
     _cookie_list := TStringList.Create();
     _cookie_list.Delimiter := ';';
@@ -261,7 +267,6 @@ begin
 
     Self.DoPost();
 
-
     // parse the response stream
     if (_http.ResponseCode <> 200) then begin
         // HTTP error!
@@ -295,10 +300,17 @@ begin
         end;
 
     r := _response.DataString;
-    if (r <> '') then
+    if (r <> '') then begin
         Push(r);
+        _poll_time := MIN_TIME;
+        end
+    else if (_poll_time <> _profile.Poll) then begin
+        _poll_time := Trunc(_poll_time * INCREASE_FACTOR);
+        if (_poll_time >= _profile.Poll) then
+            _poll_time := _profile.Poll;
+        end;
 
-    _event.WaitFor(_profile.Poll * 1000);
+    _event.WaitFor(_poll_time);
 end;
 
 {---------------------------------------}
