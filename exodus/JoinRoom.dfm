@@ -67,7 +67,7 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 3
+    TabOrder = 4
     inherited Bevel1: TBevel
       Width = 241
     end
@@ -97,6 +97,6 @@ object frmJoinRoom: TfrmJoinRoom
     Width = 139
     Height = 21
     PasswordChar = '*'
-    TabOrder = 4
+    TabOrder = 3
   end
 end
