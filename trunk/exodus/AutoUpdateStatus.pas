@@ -100,6 +100,7 @@ type
     _url: string;
     _downloading : boolean;
     _fstream: TFileStream;
+    _cancel: boolean;
     procedure getFile();
   public
     { Public declarations }
@@ -137,6 +138,7 @@ begin
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
     _downloading := false;
     _url := '';
+    _cancel := false;
     MainSession.Prefs.setProxy(HttpClient);
 end;
 
@@ -152,8 +154,10 @@ end;
 procedure TfrmAutoUpdateStatus.frameButtons1btnCancelClick(
   Sender: TObject);
 begin
-    if (_downloading) then
-        HttpClient.DisconnectSocket()
+    if (_downloading) then begin
+        _cancel := true;
+        HttpClient.DisconnectSocket();
+    end
     else
         Self.Close();
 end;
@@ -208,7 +212,7 @@ begin
             _fstream.Free();
             _fstream := nil;
 
-            if (httpClient.ResponseCode = 200) then begin
+            if ((_cancel = false) and (httpClient.ResponseCode = 200)) then begin
                 label1.Caption := sDownloadComplete;
                 label1.Refresh();
                 Application.ProcessMessages();
@@ -223,7 +227,7 @@ begin
                 ShellExecute(Application.Handle, 'open', PChar(tmp), '/S', nil,
                     SW_SHOWNORMAL);
             end
-            else begin
+            else if (_cancel = false) then begin
                 label1.Caption := Format(sError, [httpClient.ResponseText]);
                 Application.ProcessMessages();
             end;
@@ -238,6 +242,9 @@ begin
         if (_fstream <> nil) then _fstream.Free();
         _downloading := false;
     end;
+
+    if (_cancel) then Self.Close();
+
 end;
 
 end.
