@@ -139,7 +139,7 @@ var
     ritem: TJabberRosterItem;
 begin
     // either show an existing chat or start one.
-    lt := frmExodus.last_tick;
+    lt := frmExodus.getLastTick();
 
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     if chat = nil then begin

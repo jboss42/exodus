@@ -159,19 +159,21 @@ begin
     _session.sendTag(r);
 end;
 
+{---------------------------------------}
 constructor TLastResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_LAST);
 end;
 
+{---------------------------------------}
 procedure TLastResponder.iqCallback(event: string; tag: TXMLTag);
 var
     idle: dword;
     r: TXMLTag;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-    
-    // Respond to time queries
+
+    // Respond to last queries
     r := TXMLTag.Create('iq');
     with r do begin
         PutAttribute('to', tag.getAttribute('from'));
@@ -180,7 +182,7 @@ begin
 
         with AddTag('query') do begin
             PutAttribute('xmlns', XMLNS_LAST);
-            idle := (GetTickCount() - frmExodus.last_tick) div 1000;
+            idle := (GetTickCount() - frmExodus.getLastTick()) div 1000;
             PutAttribute('seconds', IntToStr(idle));
             end;
         end;
@@ -188,11 +190,13 @@ begin
     _session.sendTag(r);
 end;
 
+{---------------------------------------}
 constructor TBrowseResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_BROWSE);
 end;
 
+{---------------------------------------}
 procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
 var
     r: TXMLTag;
@@ -224,10 +228,5 @@ begin
         end;
     _session.SendTag(r);
 end;
-
-
-
-
-
 
 end.
