@@ -642,7 +642,8 @@ begin
     if recips.count <= 0 then exit;
     p := MainSession.ppdb.FindPres(recips[0], '');
     if (p = nil) then begin
-        // xxx: can't send to offline contacts
+        // can't send to offline contacts
+        exit;
     end;
 
     FileSend(p.fromJID.full);

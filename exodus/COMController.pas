@@ -482,7 +482,7 @@ end;
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
-    // xxx: cleanup these menu items???
+    // should we cleanup these menu items???
     _menu_items.Free();
     _roster_menus.Free();
     _msg_menus.Free();
