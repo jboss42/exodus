@@ -178,6 +178,9 @@ resourcestring
     sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
     sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
 
+var
+    plugs: TStringList;
+
 implementation
 
 uses
@@ -189,7 +192,6 @@ uses
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
-    plugs: TStringList;
     proxies: TStringList;
 
 {---------------------------------------}
@@ -385,11 +387,11 @@ begin
     try
         plugin := IUnknown(com) as IExodusPlugin;
         if (tag = nil) then
-            xml = ''
+            xml := ''
         else
-            xml = tag.xml;
-            
-        plugin.Process(_xpath, event, tag.xml);
+            xml := tag.xml;
+
+        plugin.Process(_xpath, event, xml);
     except
     end;
 end;

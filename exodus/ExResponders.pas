@@ -132,6 +132,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
+    COMController, ExSession, 
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, Roster;
 
@@ -244,6 +245,14 @@ begin
     e_data.Insert(0, 'Exodus ver: ' + GetAppVersion());
     e_data.Insert(0, ver);
 
+    // Dump current plugins
+    e_data.Add('Plugins:');
+    e_data.Add('------------------------------');
+    for s := 0 to plugs.Count - 1 do begin
+        e_data.Add(plugs[s]);
+    end;
+    e_data.Add('');
+
     // Dump current dispatcher table:
     e_data.Add('Dispatcher Dump');
     with MainSession.Dispatcher do begin
@@ -261,6 +270,7 @@ begin
             end;
         end;
     end;
+
 
     e_data.SaveToFile(fname);
     e_data.Free();
