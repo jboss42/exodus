@@ -105,6 +105,20 @@ var
   frmRoom: TfrmRoom;
   room_list: TStringList;
 
+resourcestring
+    sRoom = 'Room';
+    sNotifyKeyword = 'Keyword in ';
+    sNotifyActivity = 'Activity in ';
+    sRoomSubjChange = '/me has changed the subject to: ';
+    sRoomSubjPrompt = 'Change room subject';
+    sRoomNewSubj = 'New subject';
+    sRoomNewNick = 'New nickname';
+    sRoomBMPrompt = 'Bookmark Room';
+    sRoomNewBookmark = 'Enter bookmark name:';
+
+    
+
+
 function StartRoom(rjid, rnick: string): TfrmRoom;
 function IsRoom(rjid: string): boolean;
 
@@ -164,7 +178,7 @@ begin
             MsgOut.Font.Assign(MsgList.Font);
             treeRoster.Color := MsgList.Color;
             //treeRoster.Font.Assign(MsgList.Font);
-            Caption := tmp_jid.user + ' Room';
+            Caption := tmp_jid.user + ' ' + sRoom;
             end;
         tmp_jid.Free();
         room_list.AddObject(rjid, f);
@@ -231,12 +245,12 @@ begin
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
             DoNotify(Self,
                      'notify_keyword',
-                     'Keyword in ' + Self.Caption + ': ' + _keywords.Match[1],
+                     sNotifyKeyword + Self.Caption + ': ' + _keywords.Match[1],
                      21)
         else
             DoNotify(Self,
                      'notify_roomactivity',
-                     'Activity in ' + Self.Caption,
+                     sNotifyActivity + Self.Caption,
                      21);
         end;
 end;
@@ -316,7 +330,7 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         pnlInput.Visible := false;
-        DisplayPresence('You have been disconnected', MsgList);
+        DisplayPresence(sDisconnected, MsgList);
 
         MainSession.UnRegisterCallback(_callback);
         MainSession.UnRegisterCallback(_pcallback);
@@ -658,7 +672,7 @@ begin
     // send the msg out
     msg := TJabberMessage.Create(jid,
                                  'groupchat',
-                                 '/me changed the subject to: ' + subj,
+                                 sRoomSubjChange + subj,
                                  subj);
     MainSession.SendTag(msg.Tag);
     msg.Free;
@@ -671,7 +685,7 @@ var
 begin
     // Change the subject
     s := lblSubject.Caption;
-    if InputQuery('Change Room Subject', 'New Subject', s) then begin
+    if InputQuery(sRoomSubjPrompt, sRoomNewSubj, s) then begin
         changeSubject(s);
         end;
 end;
@@ -729,7 +743,7 @@ var
 begin
   inherited;
     new_nick := myNick;
-    if (InputQuery('Nickname', 'New Nickname', new_nick)) then begin
+    if (InputQuery(sRoomNewNick, sRoomNewNick, new_nick)) then begin
         if (new_nick = myNick) then exit;
         p := TJabberPres.Create;
         p.toJID := TJabberID.Create(jid + '/' + new_nick);
@@ -754,7 +768,7 @@ begin
     // bookmark this room..
     bm_name := Self.jid;
 
-    if (inputQuery('Bookmark Room', 'Enter Bookmark Name: ', bm_name)) then begin
+    if (inputQuery(sRoomBMPrompt, sRoomNewBookmark, bm_name)) then begin
         bm := TJabberBookmark.Create(nil);
         bm.jid := TJabberID.Create(Self.jid);
         bm.bmType := 'conference';
@@ -809,6 +823,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function IsRoom(rjid: string): boolean;
 begin
     result := (room_list.IndexOf(rjid) >= 0);

@@ -45,6 +45,11 @@ type
 
 procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
 
+resourcestring
+    sNotifyOnline = 'is now online.';
+    sNotifyOffline = 'is now offline.';
+    sNotifyChat = 'Chat with';
+
 implementation
 uses
     ExUtils,
@@ -119,15 +124,15 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + #10#13' is now online.', 1)
+        DoNotify(nil, 'notify_online', nick + ''#10#13 + sNotifyOnline, 1)
 
     // someone is going offline
     else if (event = '/presence/unavailable') then
-        DoNotify(nil, 'notify_offline', nick + #10#13' is now offline.', 0)
+        DoNotify(nil, 'notify_offline', nick + ''#10#13 + sNotifyOffline, 0)
 
     // Someone started a chat session w/ us
     else if (event = '/session/gui/chat') then
-        DoNotify(nil, 'notify_newchat', 'Chat with '#10#13 + nick, 20)
+        DoNotify(nil, 'notify_newchat', sNotifyChat + ''#10#13 + nick, 20)
 
     // unkown.
     else
@@ -148,7 +153,7 @@ begin
         w := win;
 
     notify := MainSession.Prefs.getInt(pref_name);
-    
+
     if ((notify and notify_toast) > 0) then
         ShowRiserWindow(w, msg, icon);
 

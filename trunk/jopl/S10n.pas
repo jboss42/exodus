@@ -49,6 +49,10 @@ type
 var
     SubController: TSubController;
 
+resourcestring
+    sS10nDeny = 'The contact: %s did not grant your subscription request.'#13#10'This user may not exist.';
+
+
 procedure SendSubscribe(sjid: string; Session: TJabberSession);
 procedure SendSubscribed(sjid: string; Session: TJabberSession);
 procedure SendUnSubscribe(sjid: string; Session: TJabberSession);
@@ -130,7 +134,6 @@ end;
 {---------------------------------------}
 procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
 var
-    msg: string;
     from: TJabberID;
     ritem: TJabberRosterItem;
 begin
@@ -139,9 +142,7 @@ begin
     ritem := MainSession.roster.Find(from.jid);
     if ((ritem <> nil) and (ritem.ask = 'subscribe')) then begin
         // we are got denied by this person
-        msg := 'The contact: ' + from.jid + ' did not grant your subscription request.';
-        msg := msg + #13#10 + 'This user may not exist.';
-        MessageDlg(msg, mtInformation, [mbOK], 0);
+        MessageDlg(Format(sS10nDeny, [from.jid]), mtInformation, [mbOK], 0);
         ritem.remove();
         end;
 end;

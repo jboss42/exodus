@@ -57,6 +57,7 @@ type
     public
         GivenName: string;
         FamilyName: string;
+        nick: string;
         email: string;
         bday: string;
         url: string;
@@ -184,6 +185,7 @@ begin
 
     GivenName := '';
     FamilyName := '';
+    nick := '';
     email := '';
     bday := '';
     url := '';
@@ -238,6 +240,10 @@ begin
         t2 := t1.GetFirstTag('FAMILY');
         if t2 <> nil then FamilyName := t2.Data;
         end;
+
+    // Get Nick
+    t1 := vtag.GetFirstTag('NICK');
+    if t1 <> nil then nick := t1.Data;
 
     // get primary email addy
     t1 := vtag.GetFirstTag('EMAIL');
@@ -305,6 +311,7 @@ begin
     t1.AddBasicTag('GIVEN', GivenName);
     t1.AddBasicTag('FAMILY', FamilyName);
 
+    vtag.AddBasicTag('NICK', nick);
     vtag.AddBasicTag('EMAIL', email);
     vtag.AddBasicTag('URL', url);
     vtag.AddBasicTag('ROLE', role);

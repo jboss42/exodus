@@ -219,6 +219,12 @@ type
 var
   frmPrefs: TfrmPrefs;
 
+resourcestring
+    sPrefsDfltPres = 'Untitled Presence';
+    sPrefsClearPres = 'Clear all custom presence entries?';
+    sPrefsLogDir = 'Select log directory';
+    sPrefsXFerDir = 'Select download directory';
+
 procedure StartPrefs;
 
 {---------------------------------------}
@@ -841,7 +847,7 @@ var
 begin
     // add a new custom pres
     cp := TJabberCustomPres.Create();
-    cp.title := 'Untitled Presence';
+    cp.title := sPrefsDfltPres;
     cp.show := '';
     cp.Status := '';
     cp.priority := 0;
@@ -869,8 +875,7 @@ end;
 procedure TfrmPrefs.btnCustomPresClearClick(Sender: TObject);
 begin
     // clear all entries
-    if MessageDlg('Clear all custom presence entries',
-        mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+    if MessageDlg(sPrefsClearPres, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
     lstCustomPres.Items.Clear;
     _pres_list.Clear;
     lstCustompresClick(Self);
@@ -883,7 +888,7 @@ var
     tmps: string;
 begin
     tmps := txtLogPath.Text;
-    if SelectDirectory('Select Log Directory', '', tmps) then
+    if SelectDirectory(sPrefsLogDir, '', tmps) then
         txtLogPath.Text := tmps;
 end;
 
@@ -893,7 +898,7 @@ var
     tmps: string;
 begin
     tmps := txtXFerPath.Text;
-    if SelectDirectory('Select Transfer Path', '', tmps) then
+    if SelectDirectory(sPrefsXFerDir, '', tmps) then
         txtXFerPath.Text := tmps;
 end;
 

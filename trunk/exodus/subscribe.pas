@@ -50,15 +50,19 @@ type
 var
   frmSubscribe: TfrmSubscribe;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
-    JabberID, 
+    JabberID,
     Session,
-    Profile, 
+    Profile,
     Presence;
 
 {$R *.DFM}
 
+{---------------------------------------}
 procedure TfrmSubscribe.frameButtons1btnOKClick(Sender: TObject);
 var
     sjid, snick, sgrp: string;
@@ -80,6 +84,7 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.frameButtons1btnCancelClick(Sender: TObject);
 var
     p: TJabberPres;
@@ -94,12 +99,14 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.lblJIDClick(Sender: TObject);
 begin
     // muh.  not exactly right, but at least it isn't *wrong*.

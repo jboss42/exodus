@@ -48,6 +48,7 @@ type
       Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure MsgListKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -142,6 +143,7 @@ begin
         MsgOut.SetFocus;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
     cur_buff: string;
@@ -171,7 +173,7 @@ begin
 
             dec(i);
             end;
-            
+
         if (i >= 0) then with MsgOut do begin
             SelStart := i;
             SelLength := (e - i);
@@ -183,6 +185,7 @@ begin
         inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
                                    var Key: Word;
                                    Shift: TShiftState);
@@ -218,6 +221,7 @@ begin
         inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.SendMsg();
 begin
     _msgHistory.Add(MsgOut.Text);
@@ -227,6 +231,7 @@ begin
     MsgOut.SetFocus;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 begin
     _msgHistory := TStringList.Create();
@@ -234,10 +239,22 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
     _msgHistory.Free();
     inherited;
+end;
+
+procedure TfrmBaseChat.MsgListKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+    // If typing starts on the MsgList, then bump it to the outgoing
+    // text box.
+    if (not Self.Visible) then exit;
+
+    MsgOut.SetFocus();
+    MsgOut.SelText := Key;
 end;
 
 end.
