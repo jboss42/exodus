@@ -41,7 +41,7 @@ object frmRiser: TfrmRiser
     Transparent = True
     OnClick = Panel2Click
   end
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 35
     Top = 6
     Width = 127
