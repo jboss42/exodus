@@ -216,6 +216,7 @@ var
     p: TfrmPrefs;
 begin
     p := TfrmPrefs.Create(nil);
+    p.Logger := Self;
     p.txtLogPath.Text := _path;
     p.chkLogRooms.Checked := _rooms;
     p.chkLogRoster.Checked := _roster;
@@ -446,15 +447,14 @@ var
     cmd, fn: string;
 begin
     if (MessageDlgW(sConfirmClearAllLogs,
-                   mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
-        exit;
+        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then exit;
 
     fn := _path;
     if (AnsiRightStr(fn, 1) <> '\') then
         fn := fn + '\';
 
-    // bleh.  FindClose is both a SysUtils thing and a Win32 thing.
-    cmd := 'del ' + fn + '*.html';
+    // just shell exec a delete command.. easiest way to handle this
+    cmd := 'del "' + fn + '*.html"';
     ShellExecute(0, PChar(cmd), nil, nil, nil, SW_HIDE);
 
     MessageDlgW(sFilesDeleted, mtInformation, [mbOK], 0);
