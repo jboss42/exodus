@@ -84,7 +84,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,  Unicode, 
+    Jabber1,  Unicode, InputPassword, 
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -201,12 +201,12 @@ end;
 {---------------------------------------}
 procedure TfrmLogin.CreateNew1Click(Sender: TObject);
 var
-    pname: string;
+    pname: WideString;
     i: integer;
 begin
     // Create a new profile
     pname := sProfileNew;
-    if InputQuery(sProfileCreate, sProfileNamePrompt, pname) then begin
+    if InputQueryW(sProfileCreate, sProfileNamePrompt, pname) then begin
         MainSession.Prefs.CreateProfile(pname);
         cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
         i := cboProfiles.Items.Indexof(pname);

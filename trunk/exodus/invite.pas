@@ -73,7 +73,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    JabberConst,
+    JabberConst, InputPassword,
     ExEvents, Jabber1, JabberID, PrefController,
     Session, Room, RosterWindow, Roster;
 
@@ -282,10 +282,10 @@ end;
 {---------------------------------------}
 procedure TfrmInvite.btnAddClick(Sender: TObject);
 var
-    jid: String;
+    jid: WideString;
 begin
     // Add a JID
-    if InputQuery(sEnterJID, sJID, jid) then begin
+    if InputQueryW(sEnterJID, sJID, jid) then begin
         if (not IsValidJID(jid)) then begin
             MessageDlg(sInvalidJID, mtError, [mbOK], 0);
             exit;

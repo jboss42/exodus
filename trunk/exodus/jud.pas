@@ -126,7 +126,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    Unicode, 
+    Unicode, InputPassword,
     JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
 
@@ -700,12 +700,12 @@ end;
 {---------------------------------------}
 procedure TfrmJUD.lblAddGrpClick(Sender: TObject);
 var
-    ngrp: String;
+    ngrp: WideString;
 begin
   inherited;
     // Add a new group to the list...
     ngrp := sDefaultGroup;
-    if InputQuery(sNewGroup, sNewGroupPrompt, ngrp) then begin
+    if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
         end;

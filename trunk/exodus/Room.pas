@@ -232,7 +232,7 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    JabberConst,
+    JabberConst, InputPassword,
     IQ, xData, JoinRoom, RoomAdminList,
     ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
@@ -1052,11 +1052,11 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.lblSubjectURLClick(Sender: TObject);
 var
-    s: String;
+    s: WideString;
 begin
     // Change the subject
     s := lblSubject.Caption;
-    if InputQuery(sRoomSubjPrompt, sRoomNewSubj, s) then begin
+    if InputQueryW(sRoomSubjPrompt, sRoomNewSubj, s) then begin
         changeSubject(s);
         end;
 end;
@@ -1071,12 +1071,12 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popNickClick(Sender: TObject);
 var
-    new_nick: string;
+    new_nick: WideString;
     p: TJabberPres;
 begin
   inherited;
     new_nick := myNick;
-    if (InputQuery(sRoomNewNick, sRoomNewNick, new_nick)) then begin
+    if (InputQueryW(sRoomNewNick, sRoomNewNick, new_nick)) then begin
         if (new_nick = myNick) then exit;
         myNick := new_nick;
         p := TJabberPres.Create;
@@ -1096,13 +1096,13 @@ end;
 procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
     bm: TJabberBookmark;
-    bm_name: string;
+    bm_name: WideString;
 begin
   inherited;
     // bookmark this room..
     bm_name := Self.jid;
 
-    if (inputQuery(sRoomBMPrompt, sRoomNewBookmark, bm_name)) then begin
+    if (inputQueryW(sRoomBMPrompt, sRoomNewBookmark, bm_name)) then begin
         bm := TJabberBookmark.Create(nil);
         bm.jid := TJabberID.Create(Self.jid);
         bm.bmType := 'conference';
@@ -1385,7 +1385,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popKickClick(Sender: TObject);
 var
-    reason: string;
+    reason: WideString;
     iq, q: TXMLTag;
 begin
   inherited;
@@ -1394,11 +1394,11 @@ begin
 
     if (Sender = popKick) then begin
         reason := sKickDefault;
-        if (not InputQuery(sKickReason, sKickReason, reason)) then exit;
+        if (not InputQueryW(sKickReason, sKickReason, reason)) then exit;
         end
     else if (Sender = popBan) then begin
         reason := sBanDefault;
-        if (not InputQuery(sBanReason, sBanReason, reason)) then exit;
+        if (not InputQueryW(sBanReason, sBanReason, reason)) then exit;
         end;
 
     iq := TXMLTag.Create('iq');
@@ -1500,7 +1500,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popDestroyClick(Sender: TObject);
 var
-    reason: string;
+    reason: WideString;
     iq, d: TXMLTag;
 begin
   inherited;
@@ -1508,7 +1508,7 @@ begin
     if (MessageDlg(sDestroyRoom, mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
         exit;
     reason := sDestroyDefault;
-    if InputQuery('Destroy Room', 'Destroy Reason: ', reason) = false then exit;
+    if InputQueryW('Destroy Room', 'Destroy Reason: ', reason) = false then exit;
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');

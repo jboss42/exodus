@@ -22,12 +22,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls;
+  Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 
 type
   TfrmInputPass = class(TForm)
     Label1: TLabel;
-    txtPassword: TEdit;
+    txtPassword: TTntEdit;
     frameButtons1: TframeButtons;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -36,12 +36,33 @@ type
     { Public declarations }
   end;
 
-var
-  frmInputPass: TfrmInputPass;
+function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
 
 implementation
 
+uses
+    ExUtils;
 {$R *.dfm}
+
+function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
+var
+    pf: TfrmInputPass;
+begin
+    result := false;
+    pf := TfrmInputPass.Create(Application);
+    pf.Caption := ACaption;
+    pf.Label1.Caption := APrompt;
+    pf.txtPassword.Text := Value;
+    AssignDefaultFont(pf.Font);
+    if (not password) then
+        pf.txtPassword.PasswordChar := #0;
+        
+    if (pf.ShowModal) = mrOK then begin
+        Value := pf.txtPassword.Text;
+        result := true;
+        end;
+    pf.Close();
+end;
 
 procedure TfrmInputPass.FormClose(Sender: TObject;
   var Action: TCloseAction);
