@@ -146,6 +146,7 @@ begin
     // Start a new search
     // create a new room
     f := TfrmJUD.Create(Application);
+    f.Caption := sJUDSearch;
     if MainSession.Prefs.getBool('expanded') then
         f.DockForm;
 
@@ -159,7 +160,6 @@ begin
             end;
         end;
 
-    f.Caption := sJUDSearch;
     f.Show;
 
     if f.TabSheet <> nil then
