@@ -135,6 +135,7 @@ type
     procedure popRosterSubscribeClick(Sender: TObject);
     procedure popRosterVCardClick(Sender: TObject);
     procedure popRosterBrowseClick(Sender: TObject);
+
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -420,10 +421,11 @@ begin
     end;
 
     f.Show;
+    f.SetUnread(0);
     
     if (f.TabSheet <> nil) then begin
         frmExodus.Tabs.ActivePage := f.TabSheet;
-        f.TabSheet.ImageIndex := ico_conf;
+        //f.TabSheet.ImageIndex := ico_conf;
     end;
     
     Result := f;
@@ -532,6 +534,9 @@ begin
         end;
     end
     else if (Msg.Body <> '') then begin
+        if not Self.IsActive() then
+            Self.IncrUnread();
+
         DisplayMsg(Msg, MsgList);
 
         // log if we have logs for TC turned on.
@@ -1375,6 +1380,7 @@ begin
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
     _subject := '';
+    ImageIndex := ico_conf;
 
     if (_notify[1] <> 0) then
         setupKeywords();
@@ -1836,8 +1842,10 @@ begin
     if (target = nil) then exit;
 
     inherited;
+    {
     if (Docked and (Self.TabSheet <> nil)) then
         Self.TabSheet.ImageIndex := ico_conf;
+    }
 
     btnClose.Visible := Docked;
 

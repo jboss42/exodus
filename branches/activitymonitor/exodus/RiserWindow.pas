@@ -298,18 +298,10 @@ begin
         ShowWindow(_clickForm.Handle, SW_SHOWNORMAL);
 
     // ok, try and raise the window
-    if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
-        if Docked then begin
-            frmExodus.Tabs.ActivePage := TabSheet;
-            if (frmExodus.isMinimized()) then
-                frmExodus.trayShowClick(nil);
-            frmExodus.Show();
-            exit;
-        end;
-    end
-    else begin
+    if (_clickForm is TfrmDockable) then
+         TfrmDockable(_clickForm).ShowFront()
+    else
         SetForegroundWindow(_clickHandle);
-    end;
 
     if (_clickForm <> nil) then
         _clickForm.Show();

@@ -56,6 +56,7 @@ type
     procedure DecrUnread(count: integer = 1);
     procedure SetUnread(count: integer);
     function IsActive(): boolean;
+    function GetID(): string;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
     property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
@@ -64,11 +65,13 @@ type
     { Public declarations }
     TabSheet: TTntTabSheet;
     ImageIndex: integer;
-    
+
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
     procedure gotActivate; virtual;
+    procedure ClearUnread();
+    procedure ShowFront(); virtual;
 
     property Docked: boolean read _docked write _docked;
   end;
@@ -81,7 +84,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, XMLTag, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
+    ActivityNode, XMLUtils, XMLTag, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -173,6 +176,7 @@ begin
         frmExodus.CloseDocked(Self);
 
     SetUnread(-1);
+    ActivityNode.RemoveActivityNode(GetID());
     CanClose := true;
 end;
 
@@ -224,25 +228,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
-var
-    m: String;
 begin
     if ((not _top) and
         ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
-        // we are getting clicked..
-        m := 'frmDockable.WMActivate ' + Self.Caption;
-        OutputDebugString(PChar(m));
-
-        _top := true;
-        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-            Self.Width, Self.Height, HWND_TOP);
-        _top := false;
-
-        StopTrayAlert();
         gotActivate();
     end;
 
-    SetUnread(0);
     inherited;
 end;
 
@@ -259,6 +250,14 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.gotActivate();
 begin
+    _top := true;
+    SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+        Self.Width, Self.Height, HWND_TOP);
+    _top := false;
+
+    StopTrayAlert();
+    ClearUnread();
+
     // implement this in sub-classes.
 end;
 
@@ -291,18 +290,30 @@ begin
     SetUnread(_unread - count);
 end;
 
+procedure TfrmDockable.ClearUnread();
+begin
+    if ActivityNode.IsActivity(GetID()) then
+        SetUnread(0);
+end;
+
 {---------------------------------------}
 procedure TfrmDockable.SetUnread(count: integer);
 var
+    id: string;
     tag: TXMLTag;
+    an: TActivityNode;
 begin
     _unread := count;
 
+    id := GetID();
+    an := ActivityNode.GetActivityNode(id);
+    an.Caption := self.Caption;
+    an.Count := _unread;
+    an.Image := ImageIndex; 
+    an.Form := Self;
+
     tag := TXMLTag.Create('activity');
-    tag.setAttribute('count', IntToStr(_unread));
-    tag.setAttribute('handle', IntToStr(integer(Pointer(Self))));
-    tag.setAttribute('caption', self.Caption);
-    OutputDebugString(PChar(string(tag.xml)));
+    tag.setAttribute('handle', id);
     MainSession.FireEvent('/roster/activity', tag);
 end;
 
@@ -318,6 +329,25 @@ begin
                 ((TabSheet = nil) and (active_win <> self.Handle)) or // undocked
                 ((TabSheet <> nil) and (frmExodus.Tabs.ActivePage <> TabSheet)); // docked
     result := not inactive;
+end;
+
+{---------------------------------------}
+function TfrmDockable.GetID(): string;
+begin
+    result := IntToStr(integer(Pointer(Self)));
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.ShowFront();
+begin
+    if Docked then begin
+        frmExodus.Tabs.ActivePage := TabSheet;
+        if (frmExodus.isMinimized()) then
+            frmExodus.trayShowClick(nil);
+        frmExodus.Show();
+    end
+    else
+        Show();
 end;
 
 end.

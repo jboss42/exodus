@@ -21,32 +21,34 @@ unit ActivityNode;
 
 interface
 uses
-    NodeItem, JabberID, Unicode, XMLTag, SysUtils, Classes;
+    Dockable, NodeItem, JabberID, Unicode, XMLTag, SysUtils, Classes, Windows;
 
 type
     TActivityNode = class(TJabberNodeItem)
     public
         Count: integer;
+        Image: integer;
         Caption: WideString;
         Data: TObject;
+        Form: TFrmDockable;
 
-        constructor Create(name: Widestring);
+        constructor Create();
         function getText(): WideString; override;
     end;
 
 function GetTotalUnread(): integer;
-function GetActivityNode(hwnd: string; caption: WideString): TActivityNode;
+function IsActivity(hwnd: string): boolean;
+function GetActivityNode(hwnd: string): TActivityNode;
 procedure RemoveActivityNode(hwnd: string);
 procedure ClearActivityNodes();
 
 var
     _wins : TStringList;
-    
+
 implementation
 
-constructor TActivityNode.Create(name: WideString);
+constructor TActivityNode.Create();
 begin
-    Caption := name;
 end;
 
 function TActivityNode.getText(): WideString;
@@ -65,14 +67,19 @@ begin
     result := c;
 end;
 
-function GetActivityNode(hwnd: string; caption: WideString): TActivityNode;
+function IsActivity(hwnd: string): boolean;
+begin
+    result := (_wins.IndexOf(hwnd) <> -1);
+end;
+
+function GetActivityNode(hwnd: string): TActivityNode;
 var
     i: integer;
     n: TActivityNode;
 begin
     i := _wins.IndexOf(hwnd);
     if (i = -1) then begin
-        n := TActivityNode.Create(caption);
+        n := TActivityNode.Create();
         _wins.AddObject(hwnd, n);
     end
     else

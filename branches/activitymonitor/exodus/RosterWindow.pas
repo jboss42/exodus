@@ -667,8 +667,7 @@ begin
         treeRoster.AlphaSort();
     end
     else if event ='/roster/activity' then begin
-        an := ActivityNode.GetActivityNode(tag.GetAttribute('handle'), tag.GetAttribute('caption'));
-        an.Count := StrToInt(tag.GetAttribute('count'));
+        an := ActivityNode.GetActivityNode(tag.GetAttribute('handle'));
         RenderActivity(an);
     end
     else if event = '/roster/bookmark' then begin
@@ -709,21 +708,36 @@ begin
             _activity.Data := agrp;
             agrp.Data := _activity;
         end
-        else
+        else begin
             _activity := TTreeNode(agrp.Data);
+            //_activity.Text := _('Activity');
+        end;
         treeRoster.AlphaSort();
     end;
 
     if (an.Data = nil) then begin
+        if (an.Count = -1) then exit;
+        
         a_node := treeRoster.Items.AddChild(_activity, an.Caption);
         an.Data := a_node;
-        a_node.ImageIndex := ico_Offline; // TODO: use right presence icon, and change on presence changes
+        a_node.ImageIndex := an.Image;
         a_node.SelectedIndex := a_node.ImageIndex;
         a_node.Data := an;
     end
     else begin
         a_node := TTreeNode(an.Data);
         assert(a_node <> nil);
+        if (an.Count = -1) then begin
+            treeRoster.Items.Delete(a_node);
+            if not _activity.HasChildren then begin
+                MainSession.roster.removeGroup(_activity.Data);
+                treeRoster.Items.Delete(_activity);
+                _activity := nil;
+            end;
+            exit;
+        end;
+        a_node.ImageIndex := an.Image;
+        //a_node.Text := an.Caption;
         grp_rect := a_node.DisplayRect(false);
         InvalidateRect(treeRoster.Handle, @grp_rect, false);
     end;
@@ -1594,6 +1608,9 @@ begin
     // Chat with this person
     _change_node := nil;
     case getNodeType() of
+    node_activity: begin
+        _cur_activity.Form.ShowFront();
+    end;
     node_ritem: begin
         // chat or msg this person
         r := MainSession.Prefs.getInt(P_CHAT);
@@ -2410,6 +2427,7 @@ var
     c1, c2: WideString;
     p: TJabberPres;
     ntype: integer;
+    count: integer;
     go: TJabberGroup;
     o: TObject;
     a: TAvatar;
@@ -2428,7 +2446,9 @@ begin
 
         if (Node = _activity) then begin
             c1 := go.getText();
-            c2 := '(' + IntToStr(ActivityNode.GetTotalUnread()) + ')';
+            count := ActivityNode.GetTotalUnread();
+            //if count > 0 then
+                c2 := '(' + IntToStr(count) + ')';
             DrawNodeText(Node, State, c1, c2);
         end
         else if ((Node = _offline) or
@@ -2475,7 +2495,9 @@ begin
         c2 := '';
         if (ntype = node_activity) then begin
             c1 := _cur_activity.Caption;
-            c2 := '(' + IntToStr(_cur_activity.Count) + ')';
+            //if _cur_activity.Count > 0 then
+                c2 := '(' + IntToStr(_cur_activity.Count) + ')';
+            OutputDebugString(PChar('c2: ' + string(c2)));
             DrawNodeText(Node, State, c1, c2);
         end
         else if (ntype = node_bm) then begin
