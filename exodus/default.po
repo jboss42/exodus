@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-11 08:40\n"
-"PO-Revision-Date: 2003-12-11 08:40\n"
+"POT-Creation-Date: 2003-12-15 11:23\n"
+"PO-Revision-Date: 2003-12-15 11:23\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1129,7 +1129,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
 #: ConnDetails.dfm:331
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
-#: prefs/PrefNetwork.dfm:108
+#: prefs/PrefNetwork.dfm:110
 #. frmPrefTransfer..grpWebDav..Label7..Caption
 #: prefs/PrefTransfer.dfm:78
 msgid "Username:"
@@ -1142,7 +1142,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
 #: JoinRoom.dfm:61
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
-#: prefs/PrefNetwork.dfm:117
+#: prefs/PrefNetwork.dfm:119
 #. frmPrefTransfer..grpWebDav..Label8..Caption
 #: prefs/PrefTransfer.dfm:85
 msgid "Password:"
@@ -1198,7 +1198,7 @@ msgstr ""
 #. frmPassword..txtConfirmPassword..PasswordChar
 #: Password.dfm:79
 #. frmPrefNetwork..GroupBox2..txtProxyPassword..PasswordChar
-#: prefs/PrefNetwork.dfm:169
+#: prefs/PrefNetwork.dfm:171
 #. frmPrefTransfer..grpWebDav..txtDavPassword..PasswordChar
 #: prefs/PrefTransfer.dfm:127
 msgid "*"
@@ -1254,7 +1254,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
 #: ConnDetails.dfm:305
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
-#: prefs/PrefNetwork.dfm:90
+#: prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr ""
 
@@ -1263,7 +1263,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
 #: ConnDetails.dfm:314
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
-#: prefs/PrefNetwork.dfm:99
+#: prefs/PrefNetwork.dfm:101
 #. frmPrefTransfer..grpWebDav..Label4..Caption
 #: prefs/PrefTransfer.dfm:57
 msgid "Port:"
@@ -1303,7 +1303,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #: ConnDetails.dfm:349
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
-#: prefs/PrefNetwork.dfm:150
+#: prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr ""
 
@@ -8242,13 +8242,28 @@ msgid "Time is in seconds. Use 0 for a random time "
 msgstr ""
 
 #. frmPrefNetwork..GroupBox2..Caption
-#: prefs/PrefNetwork.dfm:83
+#: prefs/PrefNetwork.dfm:85
 msgid "HTTP Proxy"
 msgstr ""
 
 #. frmPrefNetwork..GroupBox2..Label28..Caption
-#: prefs/PrefNetwork.dfm:126
+#: prefs/PrefNetwork.dfm:128
 msgid "Approach:"
+msgstr ""
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:184
+msgid "Use IE Settings"
+msgstr ""
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:185
+msgid "No HTTP Proxy"
+msgstr ""
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:186
+msgid "Custom HTTP Proxy"
 msgstr ""
 
 #. frmPrefNotify..Caption
