@@ -50,6 +50,9 @@ begin
         w := GetText(w);
         rg.Items[i] := w;
     end;
+    w := rg.Caption;
+    w := GetText(w);
+    rg.Caption := w;
 end;
 
 procedure TTNTTranslator.TranslateCombobox(obj: TObject);
