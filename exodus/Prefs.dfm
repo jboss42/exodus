@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsCustomPres
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 10
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2313,6 +2313,15 @@ object frmPrefs: TfrmPrefs
           'Use default message handling'
           'Treat all messages as chats'
           'Put messages into existing chats')
+      end
+      object btnLogClearAll: TButton
+        Left = 243
+        Top = 165
+        Width = 75
+        Height = 25
+        Caption = 'Clear All Logs'
+        TabOrder = 10
+        OnClick = btnLogClearAllClick
       end
     end
     object tbsNotify: TTabSheet
