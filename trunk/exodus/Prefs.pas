@@ -247,6 +247,8 @@ uses
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
+    NUM_NOTIFIES = 9;
+
 {---------------------------------------}
 procedure StartPrefs;
 var
@@ -292,6 +294,7 @@ begin
         chkInlineStatus.Checked := getBool('inline_status');
         cboInlineStatus.Selected := TColor(getInt('inline_color'));
         cboInlineStatus.Enabled := chkInlineStatus.Checked;
+
         if (getBool('roster_chat')) then
             optDblClick.ItemIndex := 0
         else
@@ -384,7 +387,8 @@ begin
 
 
         // Notify Options
-        SetLength(_notify, 9);
+        SetLength(_notify, NUM_NOTIFIES);
+
         chkSound.Checked := getBool('notify_sounds');
         chkNotifyActive.Checked := getBool('notify_active');
         _notify[0] := getInt('notify_online');
@@ -397,8 +401,9 @@ begin
         _notify[7] := getInt('notify_chatactivity');
         _notify[8] := getInt('notify_roomactivity');
 
-        for i := 0 to High(_notify) do
+        for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
+
         optNotify.Enabled;
         chkToast.Checked := false;
         chkFlash.Checked := false;
