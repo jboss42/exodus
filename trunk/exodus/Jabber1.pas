@@ -1004,6 +1004,7 @@ begin
     // Start Exception tracking
     JclStartExceptionTracking;
     JclAddExceptNotifier(ExceptionTracker);
+    Test1.Visible := true;
     {$endif}
 
 end;
