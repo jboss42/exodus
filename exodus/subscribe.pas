@@ -49,6 +49,7 @@ type
     procedure mnuProfileClick(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
   public
@@ -58,12 +59,17 @@ type
 var
   frmSubscribe: TfrmSubscribe;
 
+procedure CloseSubscribeWindows();
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
     ChatWin, GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
+
+var
+    _subscribe_windows: TList;
 
 {$R *.DFM}
 
@@ -143,6 +149,36 @@ end;
 procedure TfrmSubscribe.FormCreate(Sender: TObject);
 begin
     TranslateProperties(Self);
+
+    _subscribe_windows.Add(Self);
 end;
+
+{---------------------------------------}
+procedure TfrmSubscribe.FormDestroy(Sender: TObject);
+var
+    idx: integer;
+begin
+    idx := _subscribe_windows.IndexOf(Self);
+    if (idx > -1) then
+        _subscribe_windows.Delete(idx);
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure CloseSubscribeWindows();
+var
+    i: integer;
+begin
+    for i := 0 to _subscribe_windows.Count - 1 do
+        TfrmSubscribe(_subscribe_windows[i]).Close();
+end;
+
+initialization
+    _subscribe_windows := TList.Create();
+
+finalization
+    _subscribe_windows.Free();
 
 end.
