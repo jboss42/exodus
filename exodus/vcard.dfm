@@ -1,6 +1,6 @@
 object frmVCard: TfrmVCard
-  Left = 333
-  Top = 241
+  Left = 280
+  Top = 415
   Width = 450
   Height = 360
   Caption = 'My Profile'
@@ -20,19 +20,16 @@ object frmVCard: TfrmVCard
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Width = 3
     Height = 297
-    Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 318
     Height = 297
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -183,9 +180,9 @@ object frmVCard: TfrmVCard
       object Label28: TLabel
         Left = 92
         Top = 56
-        Width = 106
+        Width = 143
         Height = 13
-        Caption = 'Format: YYYY-MM-DD'
+        Caption = 'Typical Format: YYYY-MM-DD'
       end
       object Label8: TLabel
         Left = 1
@@ -1135,17 +1132,21 @@ object frmVCard: TfrmVCard
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 442
-    end
-    inherited Panel1: TPanel
-      Left = 282
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 442
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 282
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

@@ -27,7 +27,7 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 330
     Height = 293
-    ActivePage = TabSheet3
+    ActivePage = TabSheet7
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -1185,17 +1185,21 @@ object frmProfile: TfrmProfile
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 454
-    end
-    inherited Panel1: TPanel
-      Left = 294
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 454
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 294
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

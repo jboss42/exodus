@@ -20,7 +20,7 @@ object frmBaseChat: TfrmBaseChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 251
+    Top = 253
     Width = 380
     Height = 3
     Cursor = crVSplit
@@ -33,7 +33,7 @@ object frmBaseChat: TfrmBaseChat
     Left = 0
     Top = 22
     Width = 380
-    Height = 229
+    Height = 231
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -43,7 +43,7 @@ object frmBaseChat: TfrmBaseChat
       Left = 4
       Top = 4
       Width = 372
-      Height = 221
+      Height = 223
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -154,7 +154,7 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 254
+    Top = 256
     Width = 380
     Height = 28
     Align = alBottom
@@ -168,6 +168,7 @@ object frmBaseChat: TfrmBaseChat
       Height = 24
       Align = alClient
       AutoURLDetect = adNone
+      Ctl3D = True
       CustomURLs = <
         item
           Name = 'e-mail'
@@ -243,6 +244,7 @@ object frmBaseChat: TfrmBaseChat
         end>
       LangOptions = [loAutoFont]
       Language = 1033
+      ParentCtl3D = False
       PopupMenu = popOut
       ScrollBars = ssVertical
       ShowSelectionBar = False
