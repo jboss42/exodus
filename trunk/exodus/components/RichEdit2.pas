@@ -4225,6 +4225,10 @@ end;
 procedure TCustomRichEdit98.SetWideSelText(Value: WideString);
 begin
   FWide:= True;
+
+  // pgm 5/8/02 - Fix range-check error for empty strings.
+  if (Length(Value) = 0) then exit;
+
   Perform(EM_REPLACESEL, 1, Integer(@Value[1]));
   FWide:= False;
 end;

@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 460
-  Top = 394
+  Left = 512
+  Top = 468
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
