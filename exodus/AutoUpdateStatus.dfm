@@ -6,7 +6,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   BorderWidth = 5
   Caption = 'Auto Update'
   ClientHeight = 108
-  ClientWidth = 217
+  ClientWidth = 291
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -38,7 +38,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object TntLabel1: TTntLabel
     Left = 40
-    Top = 37
+    Top = 31
     Width = 64
     Height = 13
     Cursor = crHandPoint
@@ -51,41 +51,71 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     ParentFont = False
     OnClick = TntLabel1Click
   end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 76
-    Width = 217
-    Height = 32
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 0
-    inherited Panel2: TPanel
-      Width = 217
-      Height = 32
-      inherited Bevel1: TBevel
-        Width = 217
-      end
-      inherited Panel1: TPanel
-        Left = 57
-        Height = 27
-        inherited btnOK: TTntButton
-          OnClick = frameButtons1btnOKClick
-        end
-        inherited btnCancel: TTntButton
-          OnClick = frameButtons1btnCancelClick
-        end
-      end
-    end
-  end
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 59
-    Width = 217
+    Top = 54
+    Width = 291
     Height = 17
     Align = alBottom
     Max = 1
-    TabOrder = 1
+    TabOrder = 0
     Visible = False
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 71
+    Width = 291
+    Height = 37
+    Align = alBottom
+    BevelOuter = bvNone
+    BorderWidth = 1
+    TabOrder = 1
+    object Bevel1: TBevel
+      Left = 1
+      Top = 1
+      Width = 289
+      Height = 4
+      Align = alTop
+      Shape = bsBottomLine
+    end
+    object Panel2: TPanel
+      Left = 40
+      Top = 5
+      Width = 250
+      Height = 31
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object btnOK: TTntButton
+        Left = 10
+        Top = 5
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = frameButtons1btnOKClick
+      end
+      object btnSkip: TTntButton
+        Left = 90
+        Top = 5
+        Width = 75
+        Height = 25
+        Caption = 'Skip'
+        TabOrder = 1
+        OnClick = btnSkipClick
+      end
+      object btnCancel: TTntButton
+        Left = 170
+        Top = 5
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Cancel'
+        TabOrder = 2
+        OnClick = frameButtons1btnCancelClick
+      end
+    end
   end
   object HttpClient: TIdHTTP
     MaxLineAction = maException
@@ -104,6 +134,6 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
     HTTPOptions = [hoForceEncodeParams]
     Left = 6
-    Top = 73
+    Top = 41
   end
 end

@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-09 08:42\n"
-"PO-Revision-Date: 2003-12-09 08:42\n"
+"POT-Creation-Date: 2003-12-10 06:53\n"
+"PO-Revision-Date: 2003-12-10 06:53\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -100,7 +100,7 @@ msgstr ""
 #. frmRemove..Font.Name
 #: RemoveContact.dfm:14
 #. frmRemove..lblJID..Font.Name
-#: RemoveContact.dfm:107
+#: RemoveContact.dfm:105
 #. frmRiser..Font.Name
 #: RiserWindow.dfm:13
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
@@ -140,7 +140,7 @@ msgstr ""
 #. frmXData..frameButtons1..Font.Name
 #: xdata.dfm:49
 #. frmPrefFont..FontDialog1..Font.Name
-#: prefs/PrefFont.dfm:209
+#: prefs/PrefFont.dfm:205
 #. frmPrefPanel..Font.Name
 #: prefs/PrefPanel.dfm:13
 msgid "MS Sans Serif"
@@ -168,7 +168,7 @@ msgstr ""
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1436
 #: About.pas:81
-#: ExEvents.pas:285
+#: ExEvents.pas:284
 msgid "Version: "
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:107
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:112
+#: prefs/PrefFont.dfm:95
 msgid "e-mail"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:113
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:118
+#: prefs/PrefFont.dfm:101
 msgid "http"
 msgstr ""
 
@@ -237,7 +237,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:119
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:124
+#: prefs/PrefFont.dfm:107
 msgid "file"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:125
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:130
+#: prefs/PrefFont.dfm:113
 msgid "mailto"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:131
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:136
+#: prefs/PrefFont.dfm:119
 msgid "ftp"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:137
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:142
+#: prefs/PrefFont.dfm:125
 msgid "https"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:143
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:148
+#: prefs/PrefFont.dfm:131
 msgid "gopher"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:149
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:154
+#: prefs/PrefFont.dfm:137
 msgid "nntp"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:155
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:160
+#: prefs/PrefFont.dfm:143
 msgid "prospero"
 msgstr ""
 
@@ -398,7 +398,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:161
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:166
+#: prefs/PrefFont.dfm:149
 msgid "telnet"
 msgstr ""
 
@@ -421,7 +421,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:167
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:172
+#: prefs/PrefFont.dfm:155
 msgid "news"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:173
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:178
+#: prefs/PrefFont.dfm:161
 msgid "wais"
 msgstr ""
 
@@ -599,7 +599,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:211
+#: Jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:518
 #. frmMsgRecv..popContact..N2..Caption
@@ -692,7 +692,7 @@ msgstr ""
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:44
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:77
+#: invite.dfm:75
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:88
 #. frmRosterRecv..lvContacts......Caption
@@ -1058,7 +1058,7 @@ msgstr ""
 #: Profile.dfm:206
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: RosterWindow.dfm:344
-#: ExEvents.pas:487
+#: ExEvents.pas:486
 msgid "Last Activity"
 msgstr ""
 
@@ -1740,22 +1740,22 @@ msgid "Remove Contacts"
 msgstr ""
 
 #. frmGrpRemove..optMove..Caption
-#: GrpRemove.dfm:50
+#: GrpRemove.dfm:48
 msgid "Move contacts to another group:"
 msgstr ""
 
 #. frmGrpRemove..optNuke..Caption
-#: GrpRemove.dfm:70
+#: GrpRemove.dfm:68
 msgid "Remove all contacts in this group:"
 msgstr ""
 
 #. frmGrpRemove..chkUnsub..Caption
-#: GrpRemove.dfm:78
+#: GrpRemove.dfm:76
 msgid "Remove these contacts from my roster."
 msgstr ""
 
 #. frmGrpRemove..chkUnsubed..Caption
-#: GrpRemove.dfm:88
+#: GrpRemove.dfm:86
 msgid "Force the contacts to remove me from their "
 "roster"
 msgstr ""
@@ -1780,7 +1780,7 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: InvalidRoster.dfm:36
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
-#: invite.dfm:101
+#: invite.dfm:99
 #. frmRosterWindow..popRoster..popRemove..Caption
 #: RosterWindow.dfm:382
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
@@ -1826,7 +1826,7 @@ msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:73
+#: invite.dfm:71
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:200
 #. frmRosterWindow..pnlFind..radNick..Caption
@@ -1835,7 +1835,7 @@ msgid "Nickname"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
-#: invite.dfm:110
+#: invite.dfm:108
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:148
 #. frmPrefPlugins..btnAddPlugin..Caption
@@ -1846,17 +1846,17 @@ msgid "Add"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label2..Caption
-#: invite.dfm:129
+#: invite.dfm:127
 msgid "Reason:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label1..Caption
-#: invite.dfm:137
+#: invite.dfm:135
 msgid "Invite the following contacts to:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
-#: invite.dfm:146
+#: invite.dfm:144
 msgid "Please join us in this conference room."
 msgstr ""
 
@@ -1895,7 +1895,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:203
+#: Jud.dfm:203
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2204,7 +2204,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:218
+#: Jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2287,7 +2287,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:77
+#: Jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:78
 msgid "TabSheet2"
@@ -2321,74 +2321,74 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:42
+#: Jud.dfm:42
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:63
+#: Jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:85
+#: Jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:99
+#: Jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:113
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:107
+#: Jud.dfm:107
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:123
+#: Jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:133
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:139
+#: Jud.dfm:139
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:147
+#: Jud.dfm:147
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:167
+#: Jud.dfm:167
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
-#: jud.pas:641
-#: jud.pas:643
+#: Jud.pas:641
+#: Jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:207
+#: Jud.dfm:207
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:214
+#: Jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #: Jabber1.pas:2271
@@ -2464,7 +2464,7 @@ msgid "Subject"
 msgstr ""
 
 #. frmMsgQueue..PopupMenu1..D1..Caption
-#: MsgQueue.dfm:161
+#: MsgQueue.dfm:162
 msgid "Delete"
 msgstr ""
 
@@ -5787,28 +5787,28 @@ msgid "Your Registration to this service has Failed! Press Previous to go "
 msgstr ""
 
 #. frmRemove..optMove..Caption
-#: RemoveContact.dfm:61
+#: RemoveContact.dfm:59
 msgid "Remove this contact from this group"
 msgstr ""
 
 #. frmRemove..optRemove..Caption
-#: RemoveContact.dfm:70
+#: RemoveContact.dfm:68
 msgid "Remove this contact from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove1..Caption
-#: RemoveContact.dfm:81
+#: RemoveContact.dfm:79
 msgid "Remove this person from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove2..Caption
-#: RemoveContact.dfm:91
+#: RemoveContact.dfm:89
 msgid "Force this person to remove me from their "
 "roster"
 msgstr ""
 
 #. frmRemove..lblJID..Caption
-#: RemoveContact.dfm:102
+#: RemoveContact.dfm:100
 #. frmRosterWindow..StatBar......Text
 #: RosterWindow.dfm:182
 msgid "foo@jabber.org"
@@ -6026,27 +6026,27 @@ msgid "Gateway Server:"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:128
+#: RosterAdd.dfm:126
 msgid "Jabber"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:129
+#: RosterAdd.dfm:127
 msgid "MSN"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:130
+#: RosterAdd.dfm:128
 msgid "Yahoo"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:131
+#: RosterAdd.dfm:129
 msgid "AIM"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:132
+#: RosterAdd.dfm:130
 msgid "ICQ"
 msgstr ""
 
@@ -6392,27 +6392,27 @@ msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version "
 "<alex@niiomr.belpak.minsk.by>"
 msgstr ""
 
-#: AutoUpdateStatus.pas:187
+#: AutoUpdateStatus.pas:134
 #: WebGet.pas:120
 msgid "Downloading..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:210
+#: AutoUpdateStatus.pas:157
 #: WebGet.pas:74
 msgid "Initializing..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:226
+#: AutoUpdateStatus.pas:173
 #: WebGet.pas:82
 msgid "Download Complete"
 msgstr ""
 
-#: AutoUpdateStatus.pas:237
+#: AutoUpdateStatus.pas:184
 msgid "Installing..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:245
-#: AutoUpdateStatus.pas:252
+#: AutoUpdateStatus.pas:192
+#: AutoUpdateStatus.pas:199
 #: WebGet.pas:94
 msgid "Error: %s"
 msgstr ""
@@ -6552,68 +6552,66 @@ msgstr ""
 msgid "Disconnected"
 msgstr ""
 
-#. create a listview item for this event
-#: ExEvents.pas:138
-#: ExEvents.pas:265
-msgid "Ping Time: %s seconds."
-msgstr ""
-
-#: ExEvents.pas:145
+#: ExEvents.pas:144
 msgid "Msg from "
 msgstr ""
 
-#: ExEvents.pas:180
+#: ExEvents.pas:179
 msgid "Invite from "
 msgstr ""
 
-#: ExEvents.pas:259
-#: ExEvents.pas:475
+#: ExEvents.pas:258
+#: ExEvents.pas:474
 msgid "Time Response"
 msgstr ""
 
-#: ExEvents.pas:262
+#: ExEvents.pas:261
 msgid "Local Time: "
 msgstr ""
 
-#: ExEvents.pas:281
-#: ExEvents.pas:481
+#: ExEvents.pas:264
+msgid "Ping Time: %s seconds."
+msgstr ""
+
+#: ExEvents.pas:280
+#: ExEvents.pas:480
 msgid "Version Response"
 msgstr ""
 
-#: ExEvents.pas:281
+#: ExEvents.pas:280
 msgid "Description: "
 msgstr ""
 
-#: ExEvents.pas:289
+#: ExEvents.pas:288
 msgid "OS: "
 msgstr ""
 
-#: ExEvents.pas:303
+#: ExEvents.pas:302
 msgid "Idle for "
 msgstr ""
 
 #. check for x:oob URL's
-#: ExEvents.pas:429
+#: ExEvents.pas:428
 msgid "This message contains a URL: "
 msgstr ""
 
 #. check for errors..
+#: ExEvents.pas:446
 #: ExEvents.pas:447
-#: ExEvents.pas:448
 #: Room.pas:449
 #: Room.pas:451
 msgid "ERROR: "
 msgstr ""
 
-#: ExEvents.pas:448
+#: ExEvents.pas:447
 msgid ", Code="
 msgstr ""
 
-#: ExEvents.pas:452
+#: ExEvents.pas:451
 msgid "Unknown Error"
 msgstr ""
 
-#: ExEvents.pas:454
+#: ExEvents.pas:453
 msgid "Original Message was:"
 msgstr ""
 
@@ -7063,18 +7061,18 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:317
+#: Jud.pas:317
 #. we got an iq-error back
-#: jud.pas:323
+#: Jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:426
+#: Jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:455
+#: Jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
@@ -7971,12 +7969,12 @@ msgid "Element Name"
 msgstr ""
 
 #. frmPrefFont..btnFont..Caption
-#: prefs/PrefFont.dfm:100
+#: prefs/PrefFont.dfm:83
 msgid "Change Font"
 msgstr ""
 
 #. frmPrefFont..pnlHeader..Caption
-#: prefs/PrefFont.dfm:202
+#: prefs/PrefFont.dfm:185
 msgid "Fonts and Colors"
 msgstr ""
 
@@ -8726,12 +8724,40 @@ msgstr ""
 msgid "Jabber Address of File Transfer Server:"
 msgstr ""
 
-#: prefs/PrefFont.pas:112
+#: prefs/PrefFont.pas:88
+msgid "Sample Group"
+msgstr ""
+
+#: prefs/PrefFont.pas:89
+msgid "Peter M."
+msgstr ""
+
+#: prefs/PrefFont.pas:90
+msgid "Cowboy Neal"
+msgstr ""
+
+#: prefs/PrefFont.pas:118
 #. Select the chat window
-#: prefs/PrefFont.pas:201
+#: prefs/PrefFont.pas:207
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefFont.pas:258
+#: prefs/PrefFont.pas:264
 msgid "Roster Font and Background"
+msgstr ""
+
+#: prefs/PrefFont.pas:181
+msgid "Some text from me"
+msgstr ""
+
+#: prefs/PrefFont.pas:183
+msgid "Your nick"
+msgstr ""
+
+#: prefs/PrefFont.pas:187
+msgid "Some reply text"
+msgstr ""
+
+#: prefs/PrefFont.pas:189
+msgid "Other nick"
 msgstr ""
 
 #: prefs/PrefGroups.pas:113

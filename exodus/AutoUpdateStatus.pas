@@ -28,12 +28,17 @@ uses
 
 type
   TfrmAutoUpdateStatus = class(TForm)
-    frameButtons1: TframeButtons;
     Label1: TTntLabel;
     ProgressBar1: TProgressBar;
     Image1: TImage;
     HttpClient: TIdHTTP;
     TntLabel1: TTntLabel;
+    Panel1: TPanel;
+    Bevel1: TBevel;
+    Panel2: TPanel;
+    btnOK: TTntButton;
+    btnSkip: TTntButton;
+    btnCancel: TTntButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -43,6 +48,7 @@ type
       const AWorkCountMax: Integer);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure TntLabel1Click(Sender: TObject);
+    procedure btnSkipClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -214,6 +220,13 @@ var
 begin
     url := MainSession.Prefs.getString('auto_update_changelog_url');
     ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TfrmAutoUpdateStatus.btnSkipClick(Sender: TObject);
+begin
+    // update the last update date/time in the prefs to Now()
+    MainSession.Prefs.setDateTime('last_update', Now());
+    Self.Close;
 end;
 
 end.

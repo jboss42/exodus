@@ -141,6 +141,7 @@ object frmMsgQueue: TfrmMsgQueue
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    ReadOnly = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 1
