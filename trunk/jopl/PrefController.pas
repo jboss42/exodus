@@ -884,6 +884,10 @@ begin
     mon := Screen.MonitorFromWindow(form.Handle, mdNearest);
     dtop := mon.WorkareaRect;
 
+    // Make it slightly bigger to acccomodate PtInRect
+    dtop.Bottom := dtop.Bottom + 1;
+    dtop.Right := dtop.Right + 1;
+
     ok := PtInRect(dtop, tmp.TopLeft) and
           PtInRect(dtop, tmp.BottomRight);
 
