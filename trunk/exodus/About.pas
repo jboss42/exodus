@@ -32,8 +32,10 @@ type
     Label1: TLabel;
     frameButtons1: TframeButtons;
     Memo1: TMemo;
+    pnlVersion: TPanel;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -47,6 +49,9 @@ implementation
 
 {$R *.dfm}
 
+uses
+    ExUtils;
+
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
@@ -55,6 +60,11 @@ end;
 procedure TfrmAbout.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmAbout.FormCreate(Sender: TObject);
+begin
+    pnlVersion.Caption := 'Version: ' + GetAppVersion();
 end;
 
 end.

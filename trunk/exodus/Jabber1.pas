@@ -172,6 +172,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure popCloseTabClick(Sender: TObject);
     procedure popFloatTabClick(Sender: TObject);
+    procedure mnuChatClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -1132,6 +1133,24 @@ begin
     f := getTabForm(t);
     if ((f <> nil) and (f is TfrmDockable)) then
         TfrmDockable(f).FloatForm();
+end;
+
+procedure TfrmJabber.mnuChatClick(Sender: TObject);
+var
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    jid: string;
+begin
+    // Start a chat w/ a specific JID
+    n := frmRosterWindow.treeRoster.Selected;
+    ritem := TJabberRosterItem(n.Data);
+    if ritem <> nil then
+        jid := ritem.jid.jid
+    else
+        jid := '';
+
+    if InputQuery('Start Chat', 'Enter Jabber ID:', jid) then
+        StartChat(jid, '', true);
 end;
 
 end.

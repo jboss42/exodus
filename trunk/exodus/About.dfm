@@ -2,7 +2,7 @@ object frmAbout: TfrmAbout
   Left = 284
   Top = 227
   Width = 262
-  Height = 362
+  Height = 390
   BorderWidth = 4
   Caption = 'About Exodus'
   Color = clBtnFace
@@ -14,6 +14,7 @@ object frmAbout: TfrmAbout
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -562,7 +563,7 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 289
+    Top = 314
     Width = 246
     Height = 34
     Align = alBottom
@@ -584,7 +585,7 @@ object frmAbout: TfrmAbout
   end
   object Memo1: TMemo
     Left = 0
-    Top = 231
+    Top = 251
     Width = 246
     Height = 48
     Align = alTop
@@ -597,5 +598,15 @@ object frmAbout: TfrmAbout
       'information on the GPL.')
     ScrollBars = ssVertical
     TabOrder = 2
+  end
+  object pnlVersion: TPanel
+    Left = 0
+    Top = 231
+    Width = 246
+    Height = 20
+    Align = alTop
+    BevelOuter = bvNone
+    Caption = 'Version: '
+    TabOrder = 3
   end
 end
