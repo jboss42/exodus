@@ -365,7 +365,7 @@ end;
 {---------------------------------------}
 procedure TXMLVCard.fillTag(tag: TXMLTag);
 var
-    e, vtag, t1: TXMLTag;
+    e, vtag, t1, t2: TXMLTag;
 begin
     //
     vtag := tag.AddTag('vCard');
@@ -408,8 +408,18 @@ begin
     // Serialize the photo
     if ((Picture <> nil) and (Picture.Valid)) then begin
         t1 := vtag.AddTag('PHOTO');
+        // This is the "old iChat way"
+        {
         t1.setAttribute('mime-type', Picture.MimeType);
         t1.AddCData(Picture.Data);
+        }
+
+        // this is the "new iChat way"
+        t2 := t1.AddTag('TYPE');
+        t2.AddCData(Picture.MimeType);
+
+        t2 := t1.AddTag('BINVAL');
+        t2.AddCData(Picture.Data)
     end;
 
 end;
