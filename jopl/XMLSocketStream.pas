@@ -23,6 +23,7 @@ interface
 uses
     XMLTag,
     XMLStream,
+    PrefController,
     {$ifdef linux}
     QExtCtrls,
     {$else}
@@ -53,7 +54,7 @@ type
         constructor Create(root: String); override;
         destructor Destroy; override;
 
-        procedure Connect(server: string; port: integer; use_ssl: boolean = false); override;
+        procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: string); override;
         procedure Disconnect; override;
     end;
@@ -80,6 +81,9 @@ type
     end;
 implementation
 
+uses
+    IdSocks;
+    
 {---------------------------------------}
 {      TSocketThread Class                }
 {---------------------------------------}
@@ -344,7 +348,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLSocketStream.Connect(server: string; port: integer; use_ssl: boolean = false);
+procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
     // connect to this server
     _socket := TIdTCPClient.Create(nil);
@@ -352,11 +356,30 @@ begin
     _socket.InterceptEnabled := false;
     _socket.RecvBufferSize := 4096;
 
-    _server := Server;
-    _port := port;
-    _socket.Host := Server;
-    _socket.Port := port;
-    _Socket.InterceptEnabled := use_ssl;
+    _server := profile.Server;
+    if (profile.Host = '') then
+        _socket.Host := profile.Server
+    else
+        _socket.Host := profile.Host;
+
+    _socket.Port := profile.port;
+    _socket.InterceptEnabled := profile.ssl;
+
+    if (profile.SocksType <> 0) then begin
+        with _socket.SocksInfo do begin
+            case profile.SocksType of
+            1: Version := svSocks4;
+            2: Version := svSocks4a;
+            3: Version := svSocks5;
+            end;
+            Host := profile.Host;
+            Port := profile.Port;
+            if (profile.SocksAuth) then begin
+                UserID := profile.SocksUsername;
+                Password := profile.SocksPassword;
+                end;
+            end;
+        end;
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.

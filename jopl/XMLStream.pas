@@ -26,7 +26,7 @@ uses
     XMLUtils,
     XMLParser,
     LibXMLParser,
-    Messages,
+    Messages, PrefController,
     SysUtils, IdThread, IdException,
     SyncObjs, Classes;
 
@@ -81,7 +81,7 @@ type
         constructor Create(root: String); virtual;
         destructor Destroy(); override;
 
-        procedure Connect(server: string; port: integer; use_ssl: boolean = false); virtual; abstract;
+        procedure Connect(profile : TJabberProfile); virtual; abstract;
         procedure Send(xml: string); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
         procedure SendTag(tag: TXMLTag);
         procedure Disconnect; virtual; abstract;

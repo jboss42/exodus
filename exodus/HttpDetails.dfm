@@ -1,6 +1,6 @@
 object frmHttpDetails: TfrmHttpDetails
-  Left = 680
-  Top = 201
+  Left = 798
+  Top = 185
   Width = 218
   Height = 300
   Caption = 'HTTP Details'
@@ -15,17 +15,17 @@ object frmHttpDetails: TfrmHttpDetails
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 35
+    Left = 41
     Top = 10
-    Width = 31
+    Width = 25
     Height = 13
     Alignment = taRightJustify
     Caption = 'URL:'
   end
   object Label2: TLabel
-    Left = 14
+    Left = 20
     Top = 37
-    Width = 52
+    Width = 46
     Height = 13
     Alignment = taRightJustify
     Caption = 'Poll Time:'
