@@ -192,18 +192,23 @@ end;
 
 {---------------------------------------}
 procedure TFileRecvThread.Execute();
+var
+    tmps: string;
 begin
     try
         try
             if (_method = 'si') then begin
                 try
                     _client.Connect();
-                    //_client.CheckForDisconnect(true);
                 except
                     SendMessage(_form.Handle, WM_RECV_SIDISCONN, 0, 0);
                     exit;
                 end;
-                _client.ReadStream(_stream,_size, false);
+                // This is BS, but we're getting a NULL in the first
+                // byte of the stream, so just suck it off the socket,
+                // and move on. *sigh* I have no idea where it's coming from.
+                tmps := _client.ReadString(1);
+                _client.ReadStream(_stream, _size, false);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
@@ -434,6 +439,7 @@ begin
 
     _pkg.packet := TXMLTag.Create(tag);
     _stream := fStream;
+    _stream.Seek(0, soFromBeginning);
 
     attemptSIConnection();
 end;

@@ -207,6 +207,8 @@ end;
 
 {---------------------------------------}
 procedure TFileSendThread.Execute();
+var
+    buff: array[1..1] of char;
 begin
     try
         try
@@ -218,7 +220,6 @@ begin
                     SendMessage(_form.Handle, WM_SEND_BAD, 0, 0);
                     exit;
                 end;
-                //_client.WriteStream(_stream, true, false, 0);
                 _client.WriteStream(_stream, true, false, _size);
             end
             else if (_method = 'get') then
