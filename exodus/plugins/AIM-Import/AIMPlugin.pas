@@ -87,7 +87,7 @@ procedure TAIMImportPlugin.Startup(
   const ExodusController: IExodusController);
 begin
     _controller := ExodusController;
-    _menu_id := _controller.addPluginMenu('Import AIM Roster');
+    _menu_id := _controller.addPluginMenu('Import AIM Buddy List');
 end;
 
 initialization
