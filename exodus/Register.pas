@@ -22,59 +22,42 @@ unit Register;
 interface
 uses
     XMLTag,
-    IQ,
-    Presence, 
-    Signals,
     SysUtils, Classes;
 
 type
-    TRegister = class
+    TRegController = class
     private
-        cur_iq: TJabberIQ;
-        procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
+        _s: TObject;
+        _cb: integer;
+        procedure callback(event: string; tag: TXMLTag);
     public
-        rjid: string;
-        constructor Create(remote_system: string);
-        destructor Destroy; override;
+        procedure SetSession(s: TObject);
     end;
-
-var
-    _cb: integer;
-
-function RegistrationFactory(rjid: string): TRegister;
-procedure RegistrationCallback(event: string; tag: TXMLTag);
 
 implementation
 uses
+    RegForm,
     Session;
 
-function RegistrationFactory(rjid: string): TRegister;
+procedure TRegController.SetSession(s: TObject);
+var
+    js: TJabberSession;
 begin
     // Create a new registration object
-    Result := TRegister.Create(rjid);
-    //_cb := MainSession.RegisterCallback('/session/register', RegistrationCallback)
+    _s := s;
+    js := TJabberSession(_s);
+    _cb := js.RegisterCallback(Callback, '/session/register');
 end;
 
-procedure RegistrationCallback(event: string; tag: TXMLTag);
+procedure TRegController.Callback(event: string; tag: TXMLTag);
+var
+    f: TfrmRegister;
 begin
-    //
+    // Create a new registration form and kick the process off
+    f := TfrmRegister.Create(nil);
+    f.jid := tag.getAttribute('jid');
+    f.Start();
 end;
-
-constructor TRegister.Create(remote_system: string);
-begin
-    //
-end;
-
-destructor TRegister.Destroy;
-begin
-    //
-end;
-
-procedure TRegister.PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
-begin
-    //
-end;
-
 
 
 end.

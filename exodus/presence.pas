@@ -212,6 +212,7 @@ var
     p, curp: TJabberPres;
     pi: integer;
     s: TJabberSession;
+    t: TXMLTag;
 begin
     // we are getting a new pres packet
     curp := TJabberPres.Create;
@@ -230,7 +231,10 @@ begin
     else if curp.PresType = 'error' then begin
         // some kind of error presence
         if (curp.error_code = '407') then begin
-            
+            t := TXMLTag.Create('register');
+            t.PutAttribute('jid', curp.fromJID.domain);
+            s.FireEvent('/session/register', t);
+            t.Free;
             end
         else
             s.FireEvent('/presence/error', tag, curp);

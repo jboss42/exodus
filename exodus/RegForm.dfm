@@ -1,6 +1,6 @@
 object frmRegister: TfrmRegister
-  Left = 249
-  Top = 238
+  Left = 334
+  Top = 167
   Width = 312
   Height = 327
   Caption = 'Service Registration'
@@ -11,18 +11,19 @@ object frmRegister: TfrmRegister
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object PageControl1: TPageControl
+  object Tabs: TPageControl
     Left = 0
     Top = 0
     Width = 304
     Height = 258
-    ActivePage = tabWelcome
+    ActivePage = tabAgent
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'
@@ -194,6 +195,7 @@ object frmRegister: TfrmRegister
         Caption = 'Next >'
         Enabled = False
         TabOrder = 1
+        OnClick = btnNextClick
       end
       object btnCancel: TButton
         Left = 168

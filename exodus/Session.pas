@@ -24,7 +24,7 @@ interface
 uses
     Signals,
     XMLStream, XMLTag,
-    Agents, Chat, Presence, Roster,
+    Register, Agents, Chat, Presence, Roster,
     PrefController, Notify,
     Windows, Forms, Classes, SysUtils, StdVcl;
 
@@ -55,6 +55,7 @@ type
 
         _id: longint;
         _cb_id: longint;
+        _regcontroller: TRegController;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -174,6 +175,8 @@ begin
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
+    _regController := TRegController.Create();
+    _regController.SetSession(Self);
 
     // Create all the things which might register w/ the session
     ppdb := TJabberPPDB.Create;
