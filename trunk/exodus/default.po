@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-03-25 09:04\n"
-"PO-Revision-Date: 2005-03-25 09:04\n"
+"POT-Creation-Date: 2005-03-31 23:12\n"
+"PO-Revision-Date: 2005-03-31 23:12\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -139,6 +139,10 @@ msgstr ""
 #: Wizard.dfm:13
 #. frmWizard..Panel1..lblWizardTitle..Font.Name
 #: Wizard.dfm:98
+#. frmXDataOld..Font.Name
+#: xdata_old.dfm:13
+#. frmXDataOld..frameButtons1..Font.Name
+#: xdata_old.dfm:47
 #. frmPrefFont..FontDialog1..Font.Name
 #: prefs/PrefFont.dfm:205
 #. frmPrefPanel..Font.Name
@@ -163,6 +167,7 @@ msgstr ""
 #: RecvStatus.pas:646
 #: SendStatus.pas:803
 #: SendStatus.pas:929
+#: xdata_old.pas:270
 msgid "Close"
 msgstr ""
 
@@ -1541,8 +1546,9 @@ msgstr ""
 #: CustomPres.dfm:77
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: Room.dfm:265
-#: ChatWin.pas:508
-#: ChatWin.pas:530
+#. This person is in our roster
+#: ChatWin.pas:507
+#: ChatWin.pas:531
 msgid "Chat"
 msgstr ""
 
@@ -1556,7 +1562,7 @@ msgstr ""
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:193
-#: Jabber1.pas:2986
+#: Jabber1.pas:2984
 #: RosterWindow.pas:361
 #: RosterWindow.pas:385
 #: RosterWindow.pas:1689
@@ -1578,7 +1584,7 @@ msgstr ""
 #: Jabber1.dfm:2669
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2984
+#: Jabber1.pas:2982
 #: RosterWindow.pas:363
 #: RosterWindow.pas:386
 #: RosterWindow.pas:1673
@@ -1908,7 +1914,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:990
+#: Jabber1.pas:989
 msgid "Exodus Password"
 msgstr ""
 
@@ -2011,7 +2017,7 @@ msgstr ""
 #: ConnDetails.pas:386
 #. do this.
 #: ExSession.pas:490
-#: Jabber1.pas:1320
+#: Jabber1.pas:1319
 #: Login.pas:113
 #: Login.pas:189
 #: /src/exodus/jopl/JabberUtils.pas:212
@@ -2556,7 +2562,7 @@ msgstr ""
 #: jud.dfm:231
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2478
+#: Jabber1.pas:2477
 msgid "Start Chat"
 msgstr ""
 
@@ -6615,6 +6621,16 @@ msgstr ""
 msgid "Jabber Form"
 msgstr ""
 
+#. frmXDataOld..Caption
+#: xdata_old.dfm:7
+msgid "x:data Form"
+msgstr ""
+
+#. frmXDataOld..lblIns..Caption
+#: xdata_old.dfm:35
+msgid "lblIns"
+msgstr ""
+
 #. frmXferManager..Caption
 #: XferManager.dfm:5
 msgid "File Transfer Manager"
@@ -6709,70 +6725,70 @@ msgid " Objects"
 msgstr ""
 
 #. Display the error info..
-#: ChatWin.pas:683
+#: ChatWin.pas:688
 msgid "The last message bounced!. "
 msgstr ""
 
-#: ChatWin.pas:689
+#: ChatWin.pas:694
 msgid "Error Code: "
 msgstr ""
 
-#: ChatWin.pas:722
+#: ChatWin.pas:727
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:843
+#: ChatWin.pas:848
 #. post a msg to the window and disable the text input box.
 #: Room.pas:884
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:863
+#: ChatWin.pas:868
 msgid "This user is now blocked."
 msgstr ""
 
-#: ChatWin.pas:890
+#: ChatWin.pas:895
 #. make sure the user is still connected
-#: ChatWin.pas:939
-#: ChatWin.pas:940
+#: ChatWin.pas:944
+#: ChatWin.pas:945
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:892
+#: ChatWin.pas:897
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:894
+#: ChatWin.pas:899
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:896
+#: ChatWin.pas:901
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:898
+#: ChatWin.pas:903
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:900
+#: ChatWin.pas:905
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:954
+#: ChatWin.pas:959
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:961
+#: ChatWin.pas:966
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:987
+#: ChatWin.pas:992
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1290
+#: ChatWin.pas:1295
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -6804,7 +6820,8 @@ msgstr ""
 #: CommandWizard.pas:285
 #. like submit, but finish it now
 #: CommandWizard.pas:491
-#: xdata.pas:655
+#: xdata.pas:665
+#: xdata_old.pas:322
 msgid "All required fields must be filled out."
 msgstr ""
 
@@ -6875,8 +6892,8 @@ msgstr ""
 msgid "The resource you entered is not allowed."
 msgstr ""
 
-#: Debug.pas:184
-#: Debug.pas:384
+#: Debug.pas:186
+#: Debug.pas:386
 msgid "Disconnected"
 msgstr ""
 
@@ -7204,7 +7221,7 @@ msgstr ""
 #: fGeneric.pas:94
 #: fGeneric.pas:96
 #. put stars on required fields
-#: xdata.pas:327
+#: xdata.pas:328
 msgid "(Required)"
 msgstr ""
 
@@ -7282,112 +7299,112 @@ msgid "Conference Room:"
 msgstr ""
 
 #. enable a logging plugin now.
-#: Jabber1.pas:943
+#: Jabber1.pas:942
 msgid "Message logging is now performed by plugins. Please enable a logging "
 "plugin to regain this functionality."
 msgstr ""
 
-#: Jabber1.pas:990
+#: Jabber1.pas:989
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1090
+#: Jabber1.pas:1089
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1112
+#: Jabber1.pas:1111
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. depending on that API call.
-#: Jabber1.pas:1125
+#: Jabber1.pas:1124
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1130
+#: Jabber1.pas:1129
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1193
+#: Jabber1.pas:1192
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1200
+#: Jabber1.pas:1199
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1236
+#: Jabber1.pas:1235
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1251
+#: Jabber1.pas:1250
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1301
+#: Jabber1.pas:1300
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2274
+#: Jabber1.pas:2273
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2310
+#: Jabber1.pas:2309
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2327
+#: Jabber1.pas:2326
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2362
+#: Jabber1.pas:2361
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2362
-#: Jabber1.pas:2478
-#: Jabber1.pas:2757
+#: Jabber1.pas:2361
+#: Jabber1.pas:2477
+#: Jabber1.pas:2756
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2579
+#: Jabber1.pas:2578
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2583
+#: Jabber1.pas:2582
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2604
-#: Jabber1.pas:2612
+#: Jabber1.pas:2603
+#: Jabber1.pas:2611
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2607
+#: Jabber1.pas:2606
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2697
+#: Jabber1.pas:2696
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2697
+#: Jabber1.pas:2696
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2757
+#: Jabber1.pas:2756
 msgid "Send a Message"
 msgstr ""
 
@@ -8091,10 +8108,27 @@ msgid "Your avatar is larger than the recommended size. "
 msgstr ""
 
 #. do something
-#: xdata.pas:639
-#: xdata.pas:682
+#: xdata.pas:649
+#: xdata.pas:692
+#. do something
+#: xdata_old.pas:293
+#: xdata_old.pas:384
 msgid "You are currently disconnected. Please reconnect before responding to "
 "this form."
+msgstr ""
+
+#. this is a cancel notice
+#: xdata_old.pas:235
+msgid "Cancelled"
+msgstr ""
+
+#: xdata_old.pas:236
+msgid "%s cancelled your form."
+msgstr ""
+
+#. Get instructions and title
+#: xdata_old.pas:248
+msgid "Form from %s"
 msgstr ""
 
 #. Make sure the contact is online
