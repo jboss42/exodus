@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 249
-  Top = 270
+  Left = 846
+  Top = 203
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -23,6 +23,8 @@ inherited frmChat: TfrmChat
       Width = 20
       Height = 18
       Align = alLeft
+      ParentShowHint = False
+      ShowHint = True
       OnPaint = imgStatusPaint
     end
     object lblJID: TStaticText
