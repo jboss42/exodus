@@ -236,6 +236,7 @@ type
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
     procedure trayMessageClick(Sender: TObject);
+    procedure mnuBrowserClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -461,7 +462,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    InputPassword, 
+    InputPassword, Browser,  
     RegForm, MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
     iq, JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
@@ -2323,6 +2324,11 @@ begin
         end
     else
         inherited;
+end;
+
+procedure TfrmExodus.mnuBrowserClick(Sender: TObject);
+begin
+    ShowBrowser();
 end;
 
 initialization
