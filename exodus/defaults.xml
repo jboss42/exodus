@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.39 2004/04/06 13:19:29 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.40 2004/04/13 13:24:15 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -106,6 +106,8 @@
     <roster_font_color value="0"/>
     <roster_font_size value="10"/>
     <roster_font_charset value="1"/>
+    <msglist_type value="0" control="cboMsgList"/>
+    <ie_css value="" control="cboIEStylesheet"/>
     
     <!-- Layouts -->
     <expanded value="0"/>
@@ -117,7 +119,6 @@
       <control name="lblTimestampFmt"/>
     </timestamp_format>
     <msg_queue value="0" control="chkMsgQueue"/>
-    <emoticons value="1" control="chkEmoticons"/>
     <block_nonroster value="0" control="chkBlockNonRoster"/>
     <log value="1" control="chkLog"/>
     <log_rooms value="0" control="chkLogRooms"/>
@@ -134,6 +135,9 @@
     </msg_treatment>
     <queue_offline value="1" control="chkQueueOffline"/>
     <queue_dnd_chats value="0" control="chkQueueDNDChats"/>  
+    
+    <!-- Emoticon Options -->
+    <emoticons value="1" control="chkEmoticons"/>        
     
     <!-- Network Options -->
     <recon_tries value="25" control="spnAttempts">

@@ -1,6 +1,6 @@
 inherited frmPrefPresence: TfrmPrefPresence
-  Left = 280
-  Top = 148
+  Left = 367
+  Top = 167
   Caption = 'frmPrefPresence'
   ClientHeight = 433
   ClientWidth = 349

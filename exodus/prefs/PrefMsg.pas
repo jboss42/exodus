@@ -31,7 +31,6 @@ type
     lblMsgOptions: TTntLabel;
     lblSpoolPath: TTntLabel;
     lblInviteOptions: TTntLabel;
-    chkEmoticons: TTntCheckBox;
     chkTimestamp: TTntCheckBox;
     chkLog: TTntCheckBox;
     txtLogPath: TTntEdit;

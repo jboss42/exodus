@@ -160,7 +160,6 @@ begin
     // Setup some Emoticon
     m := -1;
 
-
     if (emoticon_list.Count = 0) then
         ConfigEmoticons();
 

@@ -25,7 +25,7 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork, PrefGroups, PrefLayouts,       
+    PrefNetwork, PrefGroups, PrefLayouts, PrefEmote,        
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -88,6 +88,8 @@ type
     Shape1: TShape;
     Shape2: TShape;
     lblNetwork: TTntLabel;
+    imgEmote: TImage;
+    lblEmote: TTntLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -109,6 +111,7 @@ type
     _font: TfrmPrefFont;
     _dialogs: TfrmPrefDialogs;
     _message: TfrmPrefMsg;
+    _emote: TfrmPrefEmote;
     _notify: TfrmPrefNotify;
     _away: TfrmPrefAway;
     _pres: TfrmPrefPresence;
@@ -198,6 +201,9 @@ begin
         if (_message <> nil) then
             _message.SavePrefs();
 
+        if (_emote <> nil) then
+            _emote.SavePrefs();
+
         if (_notify <> nil) then
             _notify.SavePrefs();
 
@@ -270,6 +276,7 @@ begin
     _dialogs := nil;
     _layouts := nil;
     _message := nil;
+    _emote := nil;
     _notify := nil;
     _away := nil;
     _pres := nil;
@@ -397,6 +404,15 @@ begin
             f := _message;
         end;
     end
+    else if ((Sender = imgEmote) or (Sender = lblEmote)) then begin
+        toggleSelector(lblEmote);
+        if (_emote <> nil) then
+            f := _emote
+        else begin
+            _emote := TfrmPrefEmote.Create(Self);
+            f := _emote;
+        end;
+    end
     else if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
         toggleSelector(lblNotify);
         if (_notify <> nil) then
@@ -497,6 +513,7 @@ begin
     _font.Free();
     _dialogs.Free();
     _message.Free();
+    _emote.Free();
     _notify.Free();
     _away.Free();
     _pres.Free();
