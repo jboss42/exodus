@@ -1,47 +1,21 @@
-2004-03-04 08:13  pgmillard
+2004-03-05 08:34  pgmillard
 
-	* exodus/: version.h, default.po, version.nsi: daily build
+	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-03-04 07:13  pgmillard
+2004-03-05 07:05  pgmillard
 
-	* exodus/: Room.pas, xdata.pas: Fixup x-data handling.. Make sure
-	  forms get set TO valid.
+	* exodus/: BaseChat.dfm, Debug.dfm, Dockable.dfm, Jabber1.dfm,
+	  Profile.dfm, Room.dfm, RosterWindow.pas, fRosterTree.pas,
+	  xdata.dfm: Bug #3453 - Don't set TopItem property on roster when
+	  there are no items.
 
-2004-03-03 21:53  pgmillard
+2004-03-05 06:58  pgmillard
 
-	* exodus/: Debug.pas, MsgDisplay.pas: Fix algorithm for determining
-	  if the scroll bars for chat windows and debug window are
-	  'at-bottom' or not
+	* exodus/Profile.dfm, exodus/Profile.pas, jopl/NodeItem.pas: Bug
+	  #3451 - Fixup group changes and case sensitivity issues.
 
-2004-03-03 21:22  pgmillard
+2004-03-04 11:19  llong
 
-	* exodus/ExUtils.pas: Further fixes for NetMeeting co-existance
-
-2004-03-03 21:15  pgmillard
-
-	* exodus/: Login.dfm, Login.pas: Fix the 'craig' bug where you can
-	  open multiple login windows.
-
-2004-03-03 21:01  pgmillard
-
-	* exodus/Browser.dfm, jopl/Entity.pas: Fixup up entity cache so it
-	  works properly with multiple items with the same JID but
-	  different NODE id's
-
-2004-03-03 20:36  pgmillard
-
-	* exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas, exodus/Room.pas,
-	  exodus/xdata.pas, jopl/Session.pas: Bug #3444, #3445 - Weird dupe
-	  stream:stream issue, and take into account empty x-data packets
-	  for muc configs.
-
-2004-03-03 19:55  pgmillard
-
-	* exodus/Room.pas: Bug #3436 - Use full jid whenver sending
-	  presence updates to rooms.
-
-2004-03-03 19:49  pgmillard
-
-	* exodus/Room.pas: Bug #3435 - Send unavail presence to
-	  room@service/nick when leaving rooms.
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.100 of the main default.po
 
