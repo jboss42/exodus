@@ -844,7 +844,7 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         MsgOut.Visible := false;
-        MsgList.DisplayPresence(_('You have been disconnected.'));
+        MsgList.DisplayPresence(_('You have been disconnected.'), '');
 
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
@@ -870,7 +870,7 @@ begin
         // previously disconnected
         if (_mcallback = -1) then begin
             MsgOut.Visible := true;
-            MsgList.DisplayPresence(sReconnected);
+            MsgList.DisplayPresence(sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin

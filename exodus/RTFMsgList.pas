@@ -50,7 +50,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(txt: string); override;
+    procedure DisplayPresence(txt: string; timestamp: string); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -205,7 +205,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfRTFMsgList.DisplayPresence(txt: string);
+procedure TfRTFMsgList.DisplayPresence(txt: string; timestamp: string);
 var
     pt : integer;
     at_bottom: boolean;
@@ -225,7 +225,7 @@ begin
         SelLength := 0;
 
         SelAttributes.Color := clGray;
-        WideSelText := txt + #13#10;
+        WideSelText := '[' + timestamp + '] ' + txt + #13#10;
     end;
 
     if (at_bottom) then MsgList.ScrollToBottom();
