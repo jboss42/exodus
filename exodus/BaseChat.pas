@@ -302,7 +302,7 @@ begin
     _esc := false;
 
     // XXX: Put IE MsgList frame creation here
-//    _msgframe := TfRTFMsgList.Create(Self);
+    // _msgframe := TfRTFMsgList.Create(Self);
     _msgframe := TfIEMsgList.Create(Self);
 
     with MsgList do begin

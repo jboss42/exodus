@@ -27,6 +27,8 @@
 {$DEFINE D3}
 {$ENDIF}
 
+{$WARN SYMBOL_PLATFORM OFF}
+
 //SinkUnitName//
 unit MSHTMLEvents;
 
