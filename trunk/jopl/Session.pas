@@ -126,7 +126,7 @@ const
     XMLNS_SEARCH    = 'jabber:iq:search';
     XMLNS_PRIVATE   = 'jabber:iq:private';
     XMLNS_BM        = 'storage:bookmarks';
-    
+
 
 var
     MainSession: TJabberSession;
@@ -189,7 +189,7 @@ begin
     {$else}
     Prefs := TPrefController.Create('\Software\Jabber\Exodus');
     {$endif}
-    
+
     Prefs.LoadProfiles;
     Agents := TStringList.Create();
 end;
@@ -272,7 +272,7 @@ begin
                 SendRegistration()
             else
                 AuthGet();
-                
+
             end
         else
             _dispatcher.DispatchSignal('/packet', tag);
