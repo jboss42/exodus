@@ -49,6 +49,8 @@ function GetAppVersion: string;
 procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
 
+function XPLiteEscape(value: widestring): widestring;
+
 {$ifdef VER150}
     {$define INDY9}
 {$endif}
@@ -71,8 +73,53 @@ uses
     {$else}
     IdCoder3To4,
     {$endif}
-    sechash;
+    SecHash;
 
+
+function XPLiteEscape(value: widestring): widestring;
+var
+    r: WideString;
+    c: PWideChar;
+    d: PWideChar;
+    e: PWideChar;
+    i: integer;
+begin
+    // Escape " to ""
+    i := 0;
+    c := @value[1];
+    repeat
+        c := StrScanW(c, WideChar(Chr(34)));
+        if (c <> nil) then begin
+            inc(i);
+            inc(c);
+        end;
+    until (c = nil);
+
+    // alloc enough
+    SetLength(r, Length(value) + i);
+    d := @value[1];
+    e := @value[Length(value)];
+    c := StrScanW(d, WideChar(Chr(34)));
+    i := 1;
+    while (c <> nil) do begin
+        StrLCopyW(@r[i], d, c - d + 1);
+        i := i + c - d + 1;
+        r[i] := '"';
+        inc(i);
+        if (c <> e) then begin
+            d := c + 1;
+            c := StrScanW(d, WideChar(Chr(34)));
+            end
+        else begin
+            d := nil;
+            break;
+            end;
+    end;
+
+    if (d <> nil) then
+        StrLCopyW(@r[i], d, e - d + 1);
+    Result := r;
+end;
 
 {---------------------------------------}
 function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
@@ -439,6 +486,7 @@ begin
     keylist.Free;
     vallist.Free;
 end;
+
 {$else}
 function GetAppVersion: string;
 begin

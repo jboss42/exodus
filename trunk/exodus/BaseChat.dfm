@@ -236,6 +236,7 @@ object frmBaseChat: TfrmBaseChat
       URLColor = clBlue
       URLCursor = crHandPoint
       WantTabs = True
+      WordWrap = False
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp

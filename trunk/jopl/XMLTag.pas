@@ -645,7 +645,7 @@ end;
 {---------------------------------------}
 procedure TXPMatch.Parse(xps: Widestring);
 var
-    l, i, s, s2: integer;
+    l, i, s: integer;
     state: integer;
     xp, q, name, val, c, cur: Widestring;
 begin
@@ -678,12 +678,22 @@ begin
             name := Copy(xp, s, (i-s));
 
             inc(i); // point to "
-            s2 := i;
+            // s2 := i;
             q := xp[i];
             inc(i); // point to first letter
-            while ((i <= l) and (xp[i] <> q)) do
+
+            // XXX: Please optimize me!
+            val := '';
+            while (i <= l) do begin
+                if (xp[i] = '"') then begin
+                    if ((i = l) or (xp[i+1] <> '"')) then
+                        break
+                    else
+                        inc(i);
+                end;
+                val := val + xp[i];
                 inc(i);
-            val := TrimQuotes(Copy(xp, s2, (i-s2) + 1));
+            end;
             setAttribute(name, val);
             state := 1;
             inc(i);
@@ -761,8 +771,21 @@ begin
         if ((c = '"') or (c = Chr(39))) then begin
             // we are in a quote sequence, find the matching quote
             f := i + 1;
-            while ((f <= l) and (xps[f] <> c)) do
+            while (f <= l) do begin
+                if (xps[f] = '"') then begin
+                    if ((f = l) or (xps[f+1] <> '"')) then
+                        break
+                    else
+                        inc(f);
+                end;
                 inc(f);
+            end;
+
+            {
+            while ((f <= l) and (xps[f] <> c)) do begin
+                inc(f);
+            }
+
             if (f <= l) then
                 i := f;
         end;
