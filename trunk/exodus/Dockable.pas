@@ -216,7 +216,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 begin
-    if ((not _top) and (Msg.WParamLo = WA_CLICKACTIVE)) then begin
+    if ((not _top) and (Application.Active  or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
         // we are getting clicked..
         _top := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
