@@ -300,7 +300,7 @@ begin
         p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             DeletePres(p);
-            s.FireEvent('/presence/unavailable', tag, curp);
+            s.FireEvent('/presence/offline', tag, curp);
         end;
         curp.Free();
     end

@@ -183,6 +183,7 @@ type
     _transports: Widestring;    // current group name for special transports grp
     _roster_unicode: boolean;   // Use unicode chars in the roster?
     _collapse_all: boolean;     // Collapse all groups by default?
+    _group_counts: boolean;
 
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes();
@@ -195,6 +196,7 @@ type
     procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
+    procedure DrawNodeText(Node: TTreeNode; c1, c2: Widestring);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -296,6 +298,7 @@ begin
     _transports := MainSession.Prefs.getString('roster_transport_grp');
     _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
     _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
+    _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -461,6 +464,7 @@ begin
         _transports := MainSession.Prefs.getString('roster_transport_grp');
         _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
         _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
+        _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
@@ -787,7 +791,7 @@ begin
 
     if (event = '/presence/error') then
         // ignore
-    else if (event = '/presence/unavailable') then begin
+    else if (event = '/presence/offline') then begin
         // remove the node
         p := MainSession.PPDB.FindPres(jid, '');
         if ritem <> nil then
@@ -1789,17 +1793,24 @@ procedure TfrmRosterWindow.treeRosterCustomDrawItem(
   Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
   var DefaultDraw: Boolean);
 var
-    tw: integer;
     c1, c2: WideString;
-    xRect: TRect;
-    nRect: TRect;
     p: TJabberPres;
-    main_color, stat_color: TColor;
+    online, total: integer;
 begin
     // Try drawing the roster custom..
     DefaultDraw := true;
-    if (Node.Level = 0) then
-        treeRoster.Canvas.Font.Style := [fsBold]
+    if (Node.Level = 0) then begin
+        treeRoster.Canvas.Font.Style := [fsBold];
+
+        if (_group_counts) then begin
+            total := MainSession.roster.getGroupCount(Node.Text, false);
+            online := MainSession.roster.getGroupCount(Node.Text, true);
+            c1 := Node.Text + ' (' + IntToStr(online) + '/' + IntToStr(total) + ')';
+            DrawNodeText(Node, c1, '');
+            DefaultDraw := false;
+        end;
+
+    end
     else begin
         // we are drawing some kind of node
         treeRoster.Canvas.Font.Style := [];
@@ -1830,60 +1841,75 @@ begin
                 if (p.Status <> '') then
                     c2 := '(' + p.Status + ')';
             end;
-
-            with treeRoster.Canvas do begin
-                TextFlags := ETO_OPAQUE;
-                tw := CanvasTextWidthW(treeRoster.Canvas, c1);
-                xRect := Node.DisplayRect(true);
-                xRect.Right := xRect.Left + tw + 2 +
-                    CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
-                nRect := xRect;
-                nRect.Left := nRect.Left - (2 * treeRoster.Indent);
-
-                if (cdsSelected in State) then begin
-                    Font.Color := clHighlightText;
-                    Brush.Color := clHighlight;
-                    FillRect(xRect);
-                end
-                else begin
-                    Font.Color := clWindowText;
-                    Brush.Color := treeRoster.Color;
-                    Brush.Style := bsSolid;
-                    FillRect(xRect);
-                end;
-
-                // draw the image
-                frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
-                    nRect.Top, Node.ImageIndex);
-
-                // draw the text
-                if (cdsSelected in State) then begin
-                    main_color := clHighlightText;
-                    stat_color := main_color;
-                end
-                else begin
-                    main_color := treeRoster.Font.Color;
-                    stat_color := _status_color;
-                end;
-
-                SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
-                CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
-                    xRect.Top + 1, c1);
-                if (c2 <> '') then begin
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
-                    CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
-                        xRect.Top + 1, c2);
-                end;
-
-                if (cdsSelected in State) then
-                    // Draw the focus box.
-                    treeRoster.Canvas.DrawFocusRect(xRect);
-            end;
-
+            DrawNodeText(Node, c1, c2);
             DefaultDraw := false;
         end;
     end;
 
+    end;
+end;
+
+procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; c1, c2: Widestring);
+var
+    tw: integer;
+    xRect: TRect;
+    nRect: TRect;
+    main_color, stat_color: TColor;
+begin
+    with treeRoster.Canvas do begin
+        TextFlags := ETO_OPAQUE;
+        tw := CanvasTextWidthW(treeRoster.Canvas, c1);
+        xRect := Node.DisplayRect(true);
+        xRect.Right := xRect.Left + tw + 2 +
+            CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
+        nRect := xRect;
+        nRect.Left := nRect.Left - (2 * treeRoster.Indent);
+
+        if (cdsSelected in State) then begin
+            Font.Color := clHighlightText;
+            Brush.Color := clHighlight;
+            FillRect(xRect);
+        end
+        else begin
+            Font.Color := clWindowText;
+            Brush.Color := treeRoster.Color;
+            Brush.Style := bsSolid;
+            FillRect(xRect);
+        end;
+
+        // draw the image
+        if (Node.Level > 1) then begin
+            frmExodus.ImageList2.Draw(treeRoster.Canvas,
+                nRect.Left + treeRoster.Indent,
+                nRect.Top, Node.ImageIndex);
+        end;
+        {
+        else begin
+            frmExodus.ImageList2.Draw(treeRoster.Canvas, );
+        }
+
+        // draw the text
+        if (cdsSelected in State) then begin
+            main_color := clHighlightText;
+            stat_color := main_color;
+        end
+        else begin
+            main_color := treeRoster.Font.Color;
+            stat_color := _status_color;
+        end;
+
+        SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
+        CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
+            xRect.Top + 1, c1);
+        if (c2 <> '') then begin
+            SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
+            CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
+                xRect.Top + 1, c2);
+        end;
+
+        if (cdsSelected in State) then
+            // Draw the focus box.
+            treeRoster.Canvas.DrawFocusRect(xRect);
     end;
 end;
 
