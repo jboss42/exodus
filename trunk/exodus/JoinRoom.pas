@@ -48,6 +48,7 @@ type
     chkDefaultConfig: TTntCheckBox;
     TntLabel1: TTntLabel;
     Bevel3: TBevel;
+    aniWait: TAnimate;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -75,10 +76,11 @@ type
     _all: TList;
     _filter: TList;
     _cur: TList;
-
     _cur_sort: integer;
     _asc: boolean;
+    _wait: TWidestringlist;
 
+    procedure _fetch(jid: Widestring);
     procedure _addRoomJid(ce: TJabberEntity);
     procedure _processFilter();
   published
@@ -168,8 +170,10 @@ begin
         else begin
             txtServer.Items.Add(l[i]);
             txtServerFilter.Items.Add(l[i]);
+            {
             ce := jEntityCache.getByJid(l[i]);
             ce.getItems(MainSession);
+            }
         end;
     end;
     tmp.Free();
@@ -195,6 +199,7 @@ begin
     _cur := _all;
     _cur_sort := 0;
     _asc := true;
+    _wait := TWidestringlist.Create();
 
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
@@ -214,6 +219,8 @@ begin
         MainSession.Prefs.SavePosition(Self);
         MainSession.UnRegisterCallback(_cb);
     end;
+
+    _wait.Free();
 end;
 
 {---------------------------------------}
@@ -226,6 +233,7 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.btnNextClick(Sender: TObject);
 var
+    i: integer;
     dconfig: boolean;
     pass: Widestring;
     rjid: Widestring;
@@ -236,6 +244,10 @@ begin
         Tabs.ActivePage := tabSheet2;
         btnBack.Enabled := true;
         btnNext.Caption := _('Finish');
+
+        // browse each server
+        for i := 0 to txtServer.Items.Count - 1 do
+            _fetch(txtServer.Items[i]);
         exit;
     end;
 
@@ -277,8 +289,8 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.btnFetchClick(Sender: TObject);
 begin
-    jEntityCache.fetch(txtServerFilter.Text, MainSession, false);
-    _processFilter();
+    _fetch(txtServerFilter.Text);
+    //_processFilter();
 end;
 
 {---------------------------------------}
@@ -286,6 +298,21 @@ procedure TfrmJoinRoom._addRoomJid(ce: TJabberEntity);
 begin
     // make sure to not add dupes.
     if (_all.IndexOf(ce) = -1) then _all.Add(ce);
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom._fetch(jid: Widestring);
+begin
+    if (_wait.IndexOf(jid) >= 0) then exit;
+
+    _wait.Append(jid);
+
+    txtServerFilter.Enabled := false;
+    btnFetch.Visible := false;
+    aniWait.Visible := true;
+    aniWait.Active := true;
+
+    jEntityCache.fetch(jid, MainSession, true);
 end;
 
 {---------------------------------------}
@@ -330,12 +357,15 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.EntityCallback(event: string; tag: TXMLTag);
 var
-    i: integer;
+    idx, i: integer;
     tmp: TJabberID;
     c, ce: TJabberEntity;
     msg: string;
 begin
     tmp := TJabberID.Create(tag.getAttribute('from'));
+
+    idx := _wait.IndexOf(tmp.full);
+    if (idx < 0) then exit;
 
     msg := 'XXX: EntityCallback ' + event + ' ' + tmp.full;
     OutputDebugString(PChar(msg));
@@ -343,19 +373,23 @@ begin
     // if this is /session/entity/items, AND, this jid supports MUC,
     // assume it's children are rooms.
     if (event = '/session/entity/items') then begin
+        _wait.Delete(idx);
         ce := jEntityCache.getByJid(tmp.full);
-        if (ce = nil) then begin
-            tmp.Free();
-            exit;
-        end;
+        if (ce <> nil) then begin
+            for i := 0 to ce.ItemCount - 1 do begin
+                c := ce.Items[i];
+                if (c.Jid.user <> '') then
+                    _addRoomJid(c);
+            end;
 
-        for i := 0 to ce.ItemCount - 1 do begin
-            c := ce.Items[i];
-            if (c.Jid.user <> '') then
-                _addRoomJid(c);
+            if (_wait.Count = 0) then begin
+                aniWait.Active := false;
+                aniWait.Visible := false;
+                btnFetch.Visible := true;
+                txtServerFilter.Enabled := true;
+                _processFilter();
+            end;
         end;
-
-        _processFilter();
     end
     else begin
         // if this is #info, then just flesh out this item..
