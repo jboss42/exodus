@@ -87,7 +87,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText,
+    Controls, GnuGetText, ConnDetails,
     ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
     PrefNotify,
     ExResponders, MsgDisplay,
@@ -315,16 +315,8 @@ begin
         if (profile_name <> '') then begin
             prof_index := Profiles.IndexOf(profile_name);
 
-            if (prof_index = -1) then begin
-                // We don't have a profile with this name
-                if (jid = nil) or (pass = '') then begin
-                    MessageDlg('You must specify a JID and password to create a new profile',
-                        mtError, [mbOK], 0);
-                    Result := false;
-                    exit;
-                end;
-                profile := CreateProfile(profile_name);
-            end
+            if (prof_index = -1) then
+                profile := CreateProfile(profile_name)
             else
                 profile := TJabberProfile(Profiles.Objects[prof_index]);
 
@@ -386,6 +378,12 @@ begin
                 if (profile.IsValid()) then begin
                     setInt('profile_active', prof_index);
                     ExStartup.auto_login := true;
+                end
+                else begin
+                    if (not IsPositiveResult(ShowConnDetails(profile))) then begin
+                        result := false;
+                        exit;
+                    end;
                 end;
             end;
         end
