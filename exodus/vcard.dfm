@@ -21,14 +21,14 @@ object frmVCard: TfrmVCard
     Left = 121
     Top = 0
     Width = 3
-    Height = 292
+    Height = 297
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 318
-    Height = 292
+    Height = 297
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
@@ -1129,7 +1129,7 @@ object frmVCard: TfrmVCard
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 292
+    Top = 297
     Width = 442
     Height = 34
     Align = alBottom
@@ -1153,7 +1153,7 @@ object frmVCard: TfrmVCard
     Left = 0
     Top = 0
     Width = 121
-    Height = 292
+    Height = 297
     Align = alLeft
     Indent = 19
     TabOrder = 2

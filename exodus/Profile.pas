@@ -46,8 +46,7 @@ type
     txtLast: TEdit;
     TabSheet2: TTabSheet;
     GrpListBox: TCheckListBox;
-    txtNewGrp: TEdit;
-    Button1: TButton;
+    btnAddGroup: TButton;
     TabSheet3: TTabSheet;
     lblURL: TLabel;
     Label12: TLabel;
@@ -109,7 +108,8 @@ type
     btnTime: TButton;
     memDesc: TTntMemo;
     Label3: TLabel;
-    btnUpdateNick: TTntButton;
+    txtNewGrp: TTntEdit;
+    lblUpdateNick: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -118,6 +118,7 @@ type
     procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
     procedure btnVersionClick(Sender: TObject);
     procedure lblEmailClick(Sender: TObject);
+    procedure btnAddGroupClick(Sender: TObject);
     procedure btnUpdateNickClick(Sender: TObject);
   private
     { Private declarations }
@@ -369,6 +370,7 @@ begin
     iq.Send;
 end;
 
+{---------------------------------------}
 procedure TfrmProfile.lblEmailClick(Sender: TObject);
 var
     url: string;
@@ -379,6 +381,18 @@ begin
     else
         url := 'mailto:' + txtPriEmail.Text;
     ShellExecute(0, 'open', PChar(url), '', '', SW_SHOW);
+end;
+
+{---------------------------------------}
+procedure TfrmProfile.btnAddGroupClick(Sender: TObject);
+var
+    tmps: Widestring;
+begin
+    // add this group to the listbox.
+    tmps := txtNewGrp.Text;
+    if (tmps <> '') then begin
+        GrpListBox.Items.Add(tmps);
+    end;
 end;
 
 procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
