@@ -132,7 +132,7 @@ begin
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
     Self.Show();
-    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), GetCallback, 4);
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), GetCallback, 30);
     with cur_iq do begin
         toJid := self.jid;
         iqType := 'get';
@@ -285,7 +285,7 @@ begin
     // send the iq-set
     // get pres packets
     pres_cb := MainSession.RegisterCallback(PresCallback);
-    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), RegCallback);
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), RegCallback, 30);
     cur_iq.iqType := 'set';
     cur_iq.toJID := self.jid;
     cur_iq.Namespace := XMLNS_REGISTER;

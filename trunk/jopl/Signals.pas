@@ -255,8 +255,8 @@ begin
     data.Add('Listener Methodname: ' + sl.methodname);
     if (tag <> nil) then
         data.Add('XML Packet: ' + tag.xml());
-
     _handler(data);
+    data.Free();
 end;
 
 {---------------------------------------}
