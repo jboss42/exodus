@@ -21,6 +21,7 @@
 ; BRANDING in this file.
 
 /*
+    2004-03-29 - Added MAP file to daily build installers.
     2004-02-11 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
                 (all changes were made implying the usage of a stock 2.0 version
                 of NSIS).
@@ -514,6 +515,7 @@ ${un.StrStrAdv}
 !define ZIP_EXTENSION ".zip"
 !define TEXT_EXTENSION ".txt"
 !define XML_EXTENSION ".xml"
+!define MAP_EXTENSION ".map"
 !define INSTALLER_WELCOME_BITMAP \
         "${NSISDIR}\Contrib\Graphics\Wizard\nsis.bmp" ; not standard
 !define INSTALLER_LANGUAGE_KEY "Language"
@@ -1809,6 +1811,11 @@ Section "$(NAME_Exodus)" SEC_Exodus
     SetOutPath $INSTDIR
     File "${PRODUCT}${EXEC_EXTENSION}"
     File "${IDLEHOOKS}${DLL_EXTENSION}"
+    
+    ; Daily builds should include the MAP file to get detailed AV reports.
+    !ifdef DAILY
+        File "${PRODUCT}${MAP_EXTENSION}"
+    !endif
 
     ; Make sure exodus is registered, for Win95 and NT4
     ; We need to do this to ensure that plugins can register properly.
