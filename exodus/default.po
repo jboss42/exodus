@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-23 23:51\n"
-"PO-Revision-Date: 2003-11-23 23:51\n"
+"POT-Creation-Date: 2003-11-24 10:20\n"
+"PO-Revision-Date: 2003-11-24 10:20\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -110,7 +110,7 @@ msgstr ""
 #. frmRemove..Font.Name
 #: RemoveContact.dfm:14
 #. frmRemove..lblJID..Font.Name
-#: RemoveContact.dfm:105
+#: RemoveContact.dfm:107
 #. frmRiser..Font.Name
 #: RiserWindow.dfm:13
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
@@ -137,8 +137,6 @@ msgstr ""
 #: subscribe.dfm:14
 #. frmSubscribe..lblJID..Font.Name
 #: subscribe.dfm:54
-#. Form1..Font.Name
-#: Test1.dfm:11
 #. frmVCard..Font.Name
 #: vcard.dfm:11
 #. frmWebDownload..Font.Name
@@ -602,7 +600,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2706
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:211
+#: jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:543
 #. frmMsgRecv..popContact..N2..Caption
@@ -695,7 +693,7 @@ msgstr ""
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:44
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:75
+#: invite.dfm:77
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:86
 #. frmRosterRecv..lvContacts......Caption
@@ -1734,22 +1732,22 @@ msgid "Remove Contacts"
 msgstr ""
 
 #. frmGrpRemove..optMove..Caption
-#: GrpRemove.dfm:48
+#: GrpRemove.dfm:50
 msgid "Move contacts to another group:"
 msgstr ""
 
 #. frmGrpRemove..optNuke..Caption
-#: GrpRemove.dfm:68
+#: GrpRemove.dfm:70
 msgid "Remove all contacts in this group:"
 msgstr ""
 
 #. frmGrpRemove..chkUnsub..Caption
-#: GrpRemove.dfm:76
+#: GrpRemove.dfm:78
 msgid "Remove these contacts from my roster."
 msgstr ""
 
 #. frmGrpRemove..chkUnsubed..Caption
-#: GrpRemove.dfm:86
+#: GrpRemove.dfm:88
 msgid "Force the contacts to remove me from their "
 "roster"
 msgstr ""
@@ -1774,7 +1772,7 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: InvalidRoster.dfm:36
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
-#: invite.dfm:99
+#: invite.dfm:101
 #. frmRosterWindow..popRoster..popRemove..Caption
 #: RosterWindow.dfm:382
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
@@ -1820,7 +1818,7 @@ msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:71
+#: invite.dfm:73
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:200
 #. frmRosterWindow..pnlFind..radNick..Caption
@@ -1829,7 +1827,7 @@ msgid "Nickname"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
-#: invite.dfm:108
+#: invite.dfm:110
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:148
 #. frmPrefPlugins..btnAddPlugin..Caption
@@ -1840,17 +1838,17 @@ msgid "Add"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label2..Caption
-#: invite.dfm:127
+#: invite.dfm:129
 msgid "Reason:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label1..Caption
-#: invite.dfm:135
+#: invite.dfm:137
 msgid "Invite the following contacts to:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
-#: invite.dfm:144
+#: invite.dfm:146
 msgid "Please join us in this conference room."
 msgstr ""
 
@@ -1889,7 +1887,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:203
+#: jud.dfm:203
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2194,7 +2192,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2694
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:218
+#: jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2245,81 +2243,81 @@ msgid "txtServer"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:42
+#: jud.dfm:42
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:63
+#: jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:77
+#: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:61
 msgid "TabSheet2"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:85
+#: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:99
+#: jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:96
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:107
+#: jud.dfm:107
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:123
+#: jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:116
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:139
+#: jud.dfm:139
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:147
+#: jud.dfm:147
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:167
+#: jud.dfm:167
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
-#: Jud.pas:641
-#: Jud.pas:643
+#: jud.pas:641
+#: jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:207
+#: jud.dfm:207
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:214
+#: jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #: Jabber1.pas:2256
@@ -2571,6 +2569,7 @@ msgstr ""
 #: ExSession.pas:484
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:43
+#: prefs/PrefNotify.pas:102
 msgid "File Transfers"
 msgstr ""
 
@@ -5712,28 +5711,28 @@ msgid "Your Registration to this service has Failed! Press Previous to go "
 msgstr ""
 
 #. frmRemove..optMove..Caption
-#: RemoveContact.dfm:59
+#: RemoveContact.dfm:61
 msgid "Remove this contact from this group"
 msgstr ""
 
 #. frmRemove..optRemove..Caption
-#: RemoveContact.dfm:68
+#: RemoveContact.dfm:70
 msgid "Remove this contact from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove1..Caption
-#: RemoveContact.dfm:79
+#: RemoveContact.dfm:81
 msgid "Remove this person from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove2..Caption
-#: RemoveContact.dfm:89
+#: RemoveContact.dfm:91
 msgid "Force this person to remove me from their "
 "roster"
 msgstr ""
 
 #. frmRemove..lblJID..Caption
-#: RemoveContact.dfm:100
+#: RemoveContact.dfm:102
 #. frmRosterWindow..StatBar......Text
 #: RosterWindow.dfm:182
 msgid "foo@jabber.org"
@@ -5944,27 +5943,27 @@ msgid "Gateway Server:"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:126
+#: RosterAdd.dfm:128
 msgid "Jabber"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:127
+#: RosterAdd.dfm:129
 msgid "MSN"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:128
+#: RosterAdd.dfm:130
 msgid "Yahoo"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:129
+#: RosterAdd.dfm:131
 msgid "AIM"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:130
+#: RosterAdd.dfm:132
 msgid "ICQ"
 msgstr ""
 
@@ -6210,11 +6209,6 @@ msgstr ""
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: subscribe.dfm:128
 msgid "Deny"
-msgstr ""
-
-#. Form1..Caption
-#: Test1.dfm:6
-msgid "Form1"
 msgstr ""
 
 #. frmVCard..Caption
@@ -6627,42 +6621,52 @@ msgid "Missing file:"
 msgstr ""
 
 #: ExSession.pas:475
+#: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr ""
 
 #: ExSession.pas:476
+#: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr ""
 
 #: ExSession.pas:477
+#: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr ""
 
 #: ExSession.pas:478
+#: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr ""
 
 #: ExSession.pas:479
+#: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr ""
 
 #: ExSession.pas:480
+#: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr ""
 
 #: ExSession.pas:481
+#: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr ""
 
 #: ExSession.pas:482
+#: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr ""
 
 #: ExSession.pas:483
+#: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr ""
 
 #: ExSession.pas:485
+#: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr ""
 
@@ -6935,18 +6939,18 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:317
+#: jud.pas:317
 #. we got an iq-error back
-#: Jud.pas:323
+#: jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:426
+#: jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:455
+#: jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
