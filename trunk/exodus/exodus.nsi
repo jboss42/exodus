@@ -87,29 +87,13 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         ; Set output path to the installation directory.
         SetOutPath $INSTDIR
         File "Exodus.exe"
+	File "IdleHooks.dll"
+
         ; BRANDING: Uncomment if you are doing a branded setup.
         ; SetOverwrite off ; only if you don't want to overwrite existing file.
         ; File "branding.xml"
         ; SetOverwrite on
 
-        ; install idlehooks on non-nt
-        Call GetWindowsVersion
-        Pop $0
-        StrCmp $0 "2000" lbl_noIdle
-
-        IfFileExists IdleHooks.dll lbl_noIdle
-
-!ifndef NO_NETWORK
-        ; BRANDING: change this URL.
-        NSISdl::download "${HOME_URL}/daily/extras/IdleHooks.dll" \
-                         $INSTDIR\IdleHooks.dll
-        StrCmp $0 "success" lbl_noIdle
-            Abort "Error downloading IdleHooks library"
-!else
-	File IdleHooks.dll
-!endif
-
-  lbl_noIdle:
         ; version(riched20) >= 5.30
         GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
         IntOp $R1 $R0 / 65536
@@ -405,71 +389,6 @@ SubCaption 3 ": Exit running Exodus versions!"
 !insertmacro MUI_SECTIONS_FINISHHEADER
 
 ; eof
-
-;------------------------------------------------------------------------------
-; GetWindowsVersion
-;
-; Based on Yazno's function, http://yazno.tripod.com/powerpimpit/
-; Returns on top of stack
-;
-; Windows Version (95, 98, ME, NT x.x, 2000)
-; or
-; '' (Unknown Windows Version)
-;
-; Usage:
-;   Call GetWindowsVersion
-;   Pop $0
-;   ; at this point $0 is "NT 4.0" or whatnot
-
-Function GetWindowsVersion
-  Push $0
-  Push $8
-  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
-  StrCmp $0 "" 0 lbl_winnt
-  ; we are not NT.
-  ReadRegStr $0 HKLM SOFTWARE\Microsoft\Windows\CurrentVersion VersionNumber
- 
-  StrCpy $8 $0 1
-  StrCmp $8 '4' 0 lbl_error
-
-  StrCpy $8 $0 3
-
-  StrCmp $8 '4.0' lbl_win32_95
-  StrCmp $8 '4.9' lbl_win32_ME lbl_win32_98
-
-  lbl_win32_95:
-    StrCpy $0 '95'
-  Goto lbl_done
-
-  lbl_win32_98:
-    StrCpy $0 '98'
-  Goto lbl_done
-
-  lbl_win32_ME:
-    StrCpy $0 'ME'
-  Goto lbl_done
-
-  lbl_winnt: 
-
-    StrCpy $8 $0 1
-    StrCmp $8 '3' lbl_winnt_x
-    StrCmp $8 '4' lbl_winnt_x
-    StrCmp $8 '5' lbl_winnt_5 lbl_error
-
-    lbl_winnt_x:
-      StrCpy $0 "NT $0" 6
-    Goto lbl_done
-
-    lbl_winnt_5:
-      Strcpy $0 '2000'
-    Goto lbl_done
-
-  lbl_error:
-    Strcpy $0 ''
-  lbl_done:
-  Pop $8
-  Exch $0
-FunctionEnd
 
 ;------------------------------------------------------------------------------
 ; NotifyInstances
