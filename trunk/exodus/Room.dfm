@@ -4,7 +4,6 @@ inherited frmRoom: TfrmRoom
   Width = 395
   Height = 305
   Caption = 'Conference Room'
-  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96
@@ -147,6 +146,8 @@ inherited frmRoom: TfrmRoom
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
         Layout = tlCenter
       end
     end

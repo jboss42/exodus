@@ -142,6 +142,7 @@ type
     _passwd: WideString;        // Room password
     _disconTime: TDateTime;     // Date/Time that we last got disconnected, local TZ
     _default_config: boolean;   // auto-accept the default room configuration.
+    _subject: WideString;
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -425,7 +426,6 @@ var
     tmp_jid: TJabberID;
     server: boolean;
     rm: TRoomMember;
-    tmps: string;
     etag: TXMLTag;
 begin
     // display the body of the msg
@@ -495,11 +495,9 @@ begin
     end;
 
     if Msg.Subject <> '' then begin
-        lblSubject.Caption := Msg.Subject;
-        tmps := Msg.Subject;
-        tmps := AnsiReplaceText(tmps, '|', Chr(13));
-        tmps := AnsiReplaceText(tmps, '&', '&&');
-        lblSubject.Hint := tmps;
+        _subject := Msg.Subject;
+        lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
+        lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
     end;
 
     Msg.Free();
@@ -1084,7 +1082,8 @@ begin
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
     lblSubject.Caption := '';
-
+    _subject := '';
+    
     if (_notify[1] <> 0) then
         setupKeywords();
 
@@ -1285,7 +1284,7 @@ var
     o, s: WideString;
 begin
     // Change the subject
-    s := lblSubject.Caption;
+    s := _subject;
     o := s;
     if InputQueryW(_(sRoomSubjPrompt), _(sRoomNewSubj), s) then begin
         if (o <> s) then
