@@ -57,6 +57,7 @@ procedure TeardownSession();
 
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 function CmdLine(): string;
+function checkSSL(): boolean;
 
 {---------------------------------------}
 resourcestring

@@ -441,6 +441,9 @@ begin
     end;
     list.Free();
 
+    if (not ExStartup.ssl_ok) then
+        ExStartup.ssl_ok := checkSSL();
+
     chkSSL.Visible := ExStartup.ssl_ok;
 end;
 
