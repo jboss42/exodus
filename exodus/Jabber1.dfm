@@ -219,6 +219,7 @@ object frmExodus: TfrmExodus
       Caption = 'Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
+        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TMenuItem
