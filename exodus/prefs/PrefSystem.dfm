@@ -17,14 +17,14 @@ object frmPrefSystem: TfrmPrefSystem
   TextHeight = 13
   object Label7: TLabel
     Left = 8
-    Top = 221
+    Top = 204
     Width = 133
     Height = 13
     Caption = 'Exodus language file to use:'
   end
   object lblPluginScan: TLabel
     Left = 27
-    Top = 262
+    Top = 245
     Width = 130
     Height = 13
     Cursor = crHandPoint
@@ -58,7 +58,7 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object chkAutoUpdate: TCheckBox
     Left = 8
-    Top = 196
+    Top = 179
     Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
@@ -90,7 +90,7 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object chkCloseMin: TCheckBox
     Left = 8
-    Top = 158
+    Top = 141
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
@@ -106,15 +106,16 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object chkOnTop: TCheckBox
     Left = 8
-    Top = 122
+    Top = 274
     Width = 169
     Height = 17
     Caption = 'Exodus is always on top'
     TabOrder = 7
+    Visible = False
   end
   object chkToolbox: TCheckBox
     Left = 8
-    Top = 140
+    Top = 123
     Width = 217
     Height = 17
     Caption = 'Small Titlebar for Exodus window'
@@ -122,7 +123,7 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object btnUpdateCheck: TButton
     Left = 222
-    Top = 192
+    Top = 175
     Width = 75
     Height = 25
     Caption = 'Check Now'
@@ -132,7 +133,7 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object chkSingleInstance: TCheckBox
     Left = 8
-    Top = 177
+    Top = 160
     Width = 209
     Height = 17
     Caption = 'Only allow a single instance of Exodus'
@@ -148,7 +149,7 @@ object frmPrefSystem: TfrmPrefSystem
   end
   object cboLocale: TComboBox
     Left = 29
-    Top = 237
+    Top = 220
     Width = 143
     Height = 21
     Style = csDropDownList
