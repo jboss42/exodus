@@ -197,6 +197,8 @@ begin
                     end
                     else if (tmps <> '}') then begin
                         // this is a valid entry.
+
+                        // xxx: take into account "screen name foo" here
                         itms.Delimiter := ' ';
                         itms.DelimitedText := tmps;
                         if (itms.Count > 1) then begin
