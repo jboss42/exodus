@@ -1,8 +1,7 @@
-library RosterTools;
+library ExRosterTools;
 
 uses
   ComServ,
-  ExodusRosterTools_TLB in 'ExodusRosterTools_TLB.pas',
   RosterPlugin in 'RosterPlugin.pas' {RosterPlugin: CoClass},
   Import in 'Import.pas' {frmImport},
   buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame},
@@ -16,7 +15,7 @@ uses
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
-  RosterTools_TLB in 'RosterTools_TLB.pas';
+  ExRosterTools_TLB in 'ExRosterTools_TLB.pas';
 
 exports
   DllGetClassObject,
