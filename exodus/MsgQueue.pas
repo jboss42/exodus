@@ -372,7 +372,7 @@ begin
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
     if (e.eType = evt_Chat) then begin
         // startChat will automatically play the queue of msgs
-        StartChat(e.from_jid.jid, '', true);
+        StartChat(e.from_jid.jid, e.from_jid.resource, true);
     end
     else begin
         edup := TJabberEvent.Create(e);
