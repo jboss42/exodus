@@ -2760,29 +2760,41 @@ begin
     // a bunch of fixed fields
     f := x.AddTag('field');
     f.setAttribute('type', 'fixed');
-    f.AddBasicTag('value', 'This is some longish fixed label. Blah, blah, blah, blah, blah, blah.');
+    f.AddBasicTag('value', '111 This is some longish fixed label. Blah, blah, blah, blah, blah, blah.');
 
     f := x.AddTag('field');
     f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com voo blah.');
-
-    {
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com blahlkjad;lasdlkasdlkasd;lksa;dlkasd;lkas;as;asa;ldakdalkda;ldka;kdasdla;kk.');
+    f.addBasicTag('value', '222 A label with a url like http://www.yahoo.com voo blah.');
 
     f := x.AddTag('field');
     f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+    f.addBasicTag('value', '333 A label with a url like http://www.yahoo.com blahlkjad;lasdlkasdlkasd;lksa;dlkasd;lkas;as;asa;ldakdalkda;ldka;kdasdla;kk.');
 
     f := x.AddTag('field');
     f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'foo bar 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+    f.addBasicTag('value', '444 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+
+    f := x.AddTag('field');
+    f.setAttribute('var', 'jidA');
+    f.setAttribute('label', 'Select a Jid');
+    f.setAttribute('type', 'jid-single');
+    f.AddBasicTag('value', 'foo@bar.com');
+
+    f := x.AddTag('field');
+    f.setAttribute('var', 'jidB');
+    f.setAttribute('label', 'Select several jids');
+    f.setAttribute('type', 'jid-multi');
+    f.AddBasicTag('value', 'a@bar.com');
+    f.AddBasicTag('value', 'b@baz.com');
+    f.AddBasicTag('value', 'c@thud.com');
 
     f := x.AddTag('field');
     f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
-    }
+    f.addBasicTag('value', '555 foo bar 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', '666 foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
 
     ShowXData(m);
 end;

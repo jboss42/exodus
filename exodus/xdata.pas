@@ -1,4 +1,23 @@
 unit xdata;
+{
+    Copyright 2005, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -14,13 +33,19 @@ type
 
   TXDataRow = class
   private
-    _grid: TTntStringGrid;
+    _owner: TWinControl;
     _hint: Widestring;
     _opts: TWidestringlist;
     _visible: boolean;
     
     procedure buildLabel(l: Widestring);
     procedure setVisible(val: Boolean);
+
+    procedure DrawLabel(r: TRect);
+    procedure DrawControl(r: TRect);
+    procedure DrawButton(r: TRect);
+
+    procedure JidSelect(Sender: TObject);
 
   public
     t: Widestring;
@@ -35,16 +60,12 @@ type
     valid: boolean;
     r: TRect;
 
-    constructor Create(grid: TTntStringGrid; x: TXMLTag);
+    constructor Create(o: TWinControl; x: TXMLTag);
     destructor Destroy(); override;
 
-    procedure DrawLabel(r: TRect);
-    procedure DrawControl(r: TRect);
-    procedure DrawButton(r: TRect);
-    
+    function  Draw(top, left, col_width: integer): integer;
     function  GetXML(): TXMLTag;
-
-    property Visible: boolean read _visible write setVisible;
+    property  Visible: boolean read _visible write setVisible;
   end;
 
   TfrmXData = class(TfrmDockable)
@@ -79,11 +100,11 @@ const BTN_W = 30;
 
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
-function  buildXData(x: TXMLTag; grid: TTntStringGrid; Rows: TList): integer; overload;
 
 implementation
 {$R *.dfm}
 uses
+    SelContact, Jabber1, 
     GnuGetText, JabberUtils, Session, Math, XMLUtils;
 
 const
@@ -103,7 +124,6 @@ begin
     f := TfrmXData.Create(nil);
     f.Render(tag);
     f.ShowDefault();
-    f.BringToFront();
     Result := true;
 end;
 
@@ -120,68 +140,17 @@ begin
 end;
 
 {---------------------------------------}
-function  buildXData(x: TXMLTag; grid: TTntStringGrid; Rows: TList): integer;
-var
-    tpe: Widestring;
-    fields: TXMLTagList;
-    ins: TXMLTag;
-    t, i, idx, rh: integer;
-    ro: TXDataRow;
-begin
-    //
-    grid.Visible := false;
-
-    tpe := x.GetAttribute('type');
-    fields := x.QueryTags('field');
-    ins := x.GetFirstTag('instructions');
-    idx := 0;
-
-    // size the grid correctly.
-    assert((Rows.Count = 0));
-    if (ins <> nil) then begin
-        grid.RowCount := fields.Count + 1;
-        ro := TXDataRow.Create(grid, ins);
-        Rows.Add(ro);
-        inc(idx);
-    end
-    else
-        grid.RowCount := fields.Count;
-
-    // generate rows
-    t := 0;
-    for i := 0 to fields.Count - 1 do begin
-        ro := TXDataRow.Create(grid, fields[i]);
-        if (ro.lbl <> nil) then
-            rh := ro.lbl.Height
-        else
-            rh := 0;
-
-        if (ro.con <> nil) then
-            rh := max(rh, ro.con.Height);
-        if (rh <> grid.RowHeights[idx]) then
-            grid.RowHeights[idx] := rh;
-        t := t + grid.RowHeights[idx];
-        Rows.Add(ro);
-        inc(idx);
-    end;
-
-    fields.Free();
-    grid.Visible := true;
-    Result := t;
-end;
-
-{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 const MULTI_HEIGHT = 65;
 
-constructor TXDataRow.Create(grid: TTntStringGrid; x: TXMLTag);
+constructor TXDataRow.Create(o: TWinControl; x: TXMLTag);
 var
     i, idx: integer;
-    o, ol, l: Widestring;
+    opt, ol, l: Widestring;
     xl: TXMLTagList;
 begin
-    _grid := grid;
+    _owner := o;
     _opts := nil;
     _visible := false;
     lbl := nil;
@@ -193,11 +162,9 @@ begin
 
     if (x.Name = 'instructions') then begin
         t := 'instructions';
-        lbl := TExodusLabel.Create(grid);
-        lbl.Caption := x.Data;
-        lbl.Parent := grid;
         fixed := true;
         req := false;
+        buildLabel(x.Data);
         exit;
     end;
 
@@ -221,30 +188,29 @@ begin
     end
 
     else if (t = 'boolean') then begin
-        //con := TTntCheckBox.Create(grid);
-        con := TCheckBox.Create(grid);
-        con.Parent := grid;
+        con := TTntCheckBox.Create(_owner);
+        con.Parent := _owner;
         con.Visible := false;
 
-        //with TTntCheckBox(con) do begin
-        with TCheckBox(con) do begin
+        with TTntCheckBox(con) do begin
             Caption := x.GetAttribute('label');
             d := Lowercase(d);
             Checked := ((d = 'true') or (d = '1') or (d = 'yes') or (d = 'assent'));
             Hint := _hint;
             WordWrap := true;
         end;
+        con.BringToFront();
     end
 
     else if ((t = 'text-multi') or (t = 'jid-multi')) then begin
         buildLabel(l);
-        con := TTntMemo.Create(grid);
-        con.Parent := grid;
+        con := TTntMemo.Create(_owner);
+        con.Parent := _owner;
         con.Visible := false;
 
         with TTntMemo(con) do begin
             Height := MULTI_HEIGHT;
-            ScrollBars := ssBoth;
+            ScrollBars := ssVertical;
             Lines.Clear();
             xl := x.QueryTags('value');
             for i := 0 to xl.Count - 1 do
@@ -255,8 +221,8 @@ begin
 
     else if (t = 'list-single') then begin
         buildLabel(l);
-        con := TTntComboBox.Create(grid);
-        con.Parent := grid;
+        con := TTntComboBox.Create(_owner);
+        con.Parent := _owner;
         con.Visible := false;
         _opts := TWidestringlist.Create();
 
@@ -265,11 +231,11 @@ begin
             Items.Clear();
             xl := x.QueryTags('option');
             for i := 0 to xl.Count - 1 do begin
-                o := xl[i].GetBasicText('value');
+                opt := xl[i].GetBasicText('value');
                 ol := xl[i].GetAttribute('label');
-                _opts.Add(o);
+                _opts.Add(opt);
                 if (ol = '') then
-                    Items.Add(o)
+                    Items.Add(opt)
                 else
                     Items.Add(ol);
             end;
@@ -280,8 +246,8 @@ begin
 
     else if (t = 'list-multi') then begin
         buildLabel(l);
-        con := TTntCheckListbox.Create(grid);
-        con.Parent := grid;
+        con := TTntCheckListbox.Create(_owner);
+        con.Parent := _owner;
         con.Visible := false;
         _opts := TWidestringlist.Create();
 
@@ -290,11 +256,11 @@ begin
             Items.Clear();
             xl := x.QueryTags('option');
             for i := 0 to xl.Count - 1 do begin
-                o := xl[i].GetBasicText('value');
+                opt := xl[i].GetBasicText('value');
                 ol := xl[i].GetAttribute('label');
-                _opts.Add(o);
+                _opts.Add(opt);
                 if (ol = '') then
-                    Items.Add(o)
+                    Items.Add(opt)
                 else
                     Items.Add(ol);
             end;
@@ -313,8 +279,8 @@ begin
     else begin
         // text-single, text-private or unknown
         buildLabel(l);
-        con := TTntEdit.Create(grid);
-        con.Parent := grid;
+        con := TTntEdit.Create(_owner);
+        con.Parent := _owner;
         con.Visible := false;
         with TTntEdit(con) do begin
             Text := d;
@@ -322,6 +288,17 @@ begin
                 PasswordChar := '*';
         end;
     end;
+
+    // Create '...' btns for jid-multi and jid-single
+    if ((t = 'jid-multi') or (t = 'jid-single')) then begin
+        btn := TTntButton.Create(_owner);
+        btn.Caption := '...';
+        btn.Parent := _owner;
+        btn.Visible := false;
+        btn.OnClick := JidSelect;
+        btn.Width := 20;
+    end;
+
 end;
 
 {---------------------------------------}
@@ -340,21 +317,17 @@ end;
 {---------------------------------------}
 procedure TXDataRow.buildLabel(l: Widestring);
 begin
-    lbl := TExodusLabel.Create(_grid);
-    lbl.Parent := _grid;
+    lbl := TExodusLabel.Create(_owner);
+    lbl.Parent := _owner;
 
     // put stars on required fields
     if (req) then
         lbl.Caption := l + '*'
     else
         lbl.Caption := l;
-        
+
     lbl.Hint := _hint;
     lbl.Visible := false;
-    if (fixed) then
-        lbl.Width := _grid.ColWidths[0] * 2
-    else
-        lbl.Width := _grid.ColWidths[0];
 end;
 
 {---------------------------------------}
@@ -441,6 +414,94 @@ begin
 end;
 
 {---------------------------------------}
+procedure TXDataRow.JidSelect(Sender: TObject);
+var
+    fsel: TfrmSelContact;
+begin
+    fsel := TfrmSelContact.Create(Application);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    frmExodus.PreModal(fsel);
+
+    if (fsel.ShowModal = mrOK) then begin
+        if (con is TTntEdit) then
+            TTntEdit(con).Text := fsel.GetSelectedJid()
+        else if (con is TTntMemo) then
+            TTntMemo(con).Lines.Add(fsel.GetSelectedJid());
+    end;
+
+    frmExodus.PostModal();
+end;
+
+{---------------------------------------}
+function TXDataRow.Draw(top, left, col_width: integer): integer;
+var
+    rh: integer;
+    r1, r2, r3, rj: TRect;
+begin
+    // check for hidden fields
+    if ((lbl = nil) and (con = nil)) then begin
+        Result := 0;
+        exit;
+    end;
+
+    // check the label height
+    if (lbl <> nil) then begin
+        if (fixed) then
+            lbl.Width := col_width * 2
+        else
+            lbl.Width := col_width;
+        lbl.AutoSize();
+
+        // allow for xtra whitespace between instructions
+        if (t = 'instructions') then
+            rh := lbl.Height + V_WS + V_WS
+        else
+            rh := lbl.Height + V_WS
+    end
+    else
+        rh := 0;
+
+    // check the control height
+    if (con <> nil) then
+        rh := max(rh, con.Height + V_WS);
+
+    // setup the rects for this row
+    r1.Top := top;
+    r1.Left := left;
+    r1.Right := col_width;
+    r1.Bottom := top + rh;
+
+    r2 := r1;
+    r2.Left := col_width;
+    r2.Right := r2.Left + col_width;
+
+    rj := r1;
+    rj.Right := col_width * 2;
+
+    r3 := r2;
+    r3.Left := r2.Right;
+    r3.Right := r2.Right + BTN_W;
+
+    if (fixed) then
+        DrawLabel(rj)
+    else if ((lbl = nil) and (con <> nil)) then
+        DrawControl(rj)
+    else begin
+        if (lbl <> nil) then
+            DrawLabel(r1);
+        if (con <> nil) then
+            DrawControl(r2);
+    end;
+
+    if (btn <> nil) then
+        DrawButton(r3);
+
+    Result := rh;
+
+end;
+
+{---------------------------------------}
 procedure TXDataRow.DrawLabel(r: TRect);
 begin
     if (lbl = nil) then exit;
@@ -484,7 +545,9 @@ begin
     if (btn = nil) then exit;
     if (r.Top < 0) then exit;
 
-    btn.SetBounds(r.Left, r.Top, (r.Right - r.Left), (r.Bottom - r.Top));
+    btn.Top := r.Top;
+    btn.Left := r.Left;
+
     if (not btn.Visible) then begin
         btn.Visible := true;
         btn.Invalidate();
@@ -568,7 +631,7 @@ begin
   inherited;
 
     // submit the form
-    if (_type = 'form') then begin
+    if ((_type = 'form') and (_to_jid <> '')) then begin
         // do something
         if (not MainSession.Active) then begin
             MessageDlgW(_('You are currently disconnected. Please reconnect before responding to this form.'),
@@ -589,8 +652,8 @@ begin
         end;
 
         MainSession.SendTag(r);
-        _responded := true;
     end;
+    _responded := true;
 
     Self.Close();
 end;
@@ -600,6 +663,7 @@ procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
 begin
   inherited;
     frameXData.Cancel();
+    Self.Close();
 end;
 
 {---------------------------------------}
@@ -607,7 +671,7 @@ procedure TfrmXData.Cancel();
 var
     r, x: TXMLTag;
 begin
-    if (_type = 'form') then begin
+    if ((_type = 'form') and (_to_jid <> '')) then begin
         if (not MainSession.Active) then begin
             MessageDlgW(_('You are currently disconnected. Please reconnect before responding to this form.'),
                 mtError, [mbOK], 0);
@@ -617,8 +681,8 @@ begin
         x := frameXData.cancel();
         r.AddTag(x);
         MainSession.SendTag(r);
-        _responded := true;
     end;
+    _responded := true;
 end;
 
 end.

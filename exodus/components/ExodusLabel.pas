@@ -30,6 +30,7 @@ type
     destructor Destroy(); override;
     procedure Paint(); override;
     procedure SetBounds(ALeft: Integer; ATop: Integer; AWidth: Integer; AHeight: Integer); override;
+    procedure AutoSize();
   published
     { Published declarations }
     property Caption: WideString read _caption write SetCaption;
@@ -101,6 +102,12 @@ end;
 procedure TExodusLabel.SetCaption(cap: WideString);
 begin
     _caption := cap;
+end;
+
+{---------------------------------------}
+procedure TExodusLabel.AutoSize();
+begin
+    MeasureMaybeDraw(false);
 end;
 
 {---------------------------------------}

@@ -4,12 +4,13 @@ inherited frmXData: TfrmXData
   Width = 363
   Height = 315
   Caption = 'xdata'
+  OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 247
+    Top = 251
     Width = 355
     Height = 34
     Align = alBottom
@@ -37,19 +38,15 @@ inherited frmXData: TfrmXData
     Left = 0
     Top = 0
     Width = 355
-    Height = 247
+    Height = 251
     Align = alClient
     TabOrder = 1
     inherited Panel1: TPanel
       Width = 355
-      Height = 247
+      Height = 251
       inherited ScrollBox1: TScrollBox
         Width = 345
-        Height = 237
-        inherited xGrid: TTntStringGrid
-          Width = 345
-          Height = 226
-        end
+        Height = 241
       end
     end
   end
