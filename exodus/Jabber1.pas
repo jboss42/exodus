@@ -1283,6 +1283,10 @@ begin
             _last_status := '';
             end;
         end
+    else if event = '/session/commtimeout' then begin
+        timAutoAway.Enabled := false;
+        _logoff := true;
+        end
 
     else if event = '/session/commerror' then begin
         timAutoAway.Enabled := false;

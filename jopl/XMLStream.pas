@@ -49,6 +49,7 @@ const
     WM_DISCONNECTED = WM_USER + 7007;
     WM_SEND = WM_USER + 7008;
     WM_SOCKET = WM_USER + 7010;
+    WM_TIMEOUT = WM_USER + 7011;
 
 type
     EXMLStream = class(Exception)
