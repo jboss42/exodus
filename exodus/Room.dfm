@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 256
-  Top = 267
+  Left = 259
+  Top = 270
   Width = 395
   Height = 305
   Caption = 'Conference Room'
