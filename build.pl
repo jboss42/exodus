@@ -42,11 +42,13 @@ chdir "exodus" or die;
 unlink "setup.exe";
 unlink "Exodus.exe";
 grep unlink, glob("output/*.dcu"); # rm *.dcu
-grep unlink, glob("*.dll"); # rm *.dll
+grep unlink, glob("*_emoticons.dll"); # rm *.dll
+grep unlink, glob("IdlHooks.dll");
 
 e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$rcc xml.rc");
+e("$rcc iehtml.rc");
 
 if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
