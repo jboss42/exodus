@@ -13,17 +13,20 @@ type
   private
     { Private declarations }
     // FOnURLClick: TRichEditURLClick;
+    _scrolling: boolean;
+    _at_bottom: boolean;
   protected
     { Protected declarations }
     procedure CreateWnd; override;
-    // procedure CreateParams(var Params: TCreateParams); override;
-    // procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
+    procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
   public
     { Public declarations }
     procedure InsertBitmap(bmp: Graphics.TBitmap);
+    procedure ScrollToBottom();
   published
     { Published declarations }
-    // property OnURLClick: TRichEditURLClick read FOnURLClick write FOnURLClick;
+    property atBottom: boolean read _at_bottom;
+    property isScrolling: boolean read _scrolling;
   end;
 
 const
@@ -39,70 +42,12 @@ uses
 procedure TExRichEdit.CreateWnd;
 begin
     inherited;
-    {
-    // Tell the window to auto-detect URL's
-    SendMessage(Self.Handle, EM_AUTOURLDETECT, integer(true), 0);
-
-    // Get the current Event Mask for notification
-    mask := SendMessage(Self.Handle, EM_GETEVENTMASK, 0, 0);
-
-    // Tell the window we want EN_LINK events
-    SendMessage(Self.Handle, EM_SETEVENTMASK, 0, (mask + ENM_LINK));
-    }
+    _scrolling := false;
+    _at_bottom := true;
 end;
 
-(*
-procedure TExRichEdit.CreateParams(var Params: TCreateParams);
-begin
-    // Make sure the richedit controls are subclassed using riched20.dll
-    if (_riched20 = 0) then begin
-        _riched20 := LoadLibrary('RICHED20.DLL');
-        if (_riched20 <= HINSTANCE_ERROR) then
-            _riched20 := 0;
-        end;
-    inherited CreateParams(Params);
-    CreateSubClass(Params, RICHEDIT_CLASS);
-end;
-*)
-
-{
-This is our custom CN_NOTIFY event handler..
-It will pick up the EN_LINK events.
-}
-
-{
-procedure TExRichEdit.CN_NOTIFY(var Msg: TWMNotify);
-var
-    purl: PChar;
-    en_link: TENLINK;
-    text_range: TTextRangeA;
-    ch_range: TCharRange;
-begin
-    case Msg.NMHdr^.code of
-        $070b: begin
-            en_link := TENLink((Pointer(Msg.NMHdr))^);
-            if (en_link.msg = WM_LBUTTONUP) then begin
-                ch_range := en_link.chrg;
-                text_range.chrg.cpMin := ch_range.cpMin;
-                text_range.chrg.cpMax := ch_range.cpMax;
-                purl := StrAlloc(ch_range.cpMax - ch_range.cpMin + 1);
-                text_range.lpstrText := purl;
-                SendMessage(Handle, EM_GETTEXTRANGE, 0, LongInt(@text_range));
-                if Assigned(FOnURLClick) then
-                    FOnURLClick(Self, String(purl));
-                // ShellExecute(0, 'open', purl, nil, nil, SW_SHOWNORMAL);
-                end;
-            end
-        else
-            inherited;
-        end;
-end;
-}
-
-{
-pgm 3/3/02 - Adding stuff to the rich edit control
-so that we can directly insert bitmaps
-}
+// pgm 3/3/02 - Adding stuff to the rich edit control
+// so that we can directly insert bitmaps
 procedure TExRichEdit.InsertBitmap(bmp: Graphics.TBitmap);
 var
     s : TStringStream;
@@ -111,6 +56,60 @@ begin
     s := TStringStream.Create(BitmapToRTF(bmp));
     RTFSelText := s.DataString;
     s.Free;
+end;
+
+// pgm 3/16/04 - Let's catch the scroll event and set our state
+procedure TExRichEdit.WMVScroll(var msg: TMessage);
+var
+    si: TSCROLLINFO;
+begin
+    if (msg.WParamLo = SB_ENDSCROLL) then begin
+        _scrolling := false;
+
+        si.cbSize := SizeOf(TScrollInfo);
+        si.fMask := SIF_ALL;
+        GetScrollInfo(Handle, SB_VERT, si);
+        if (si.nMax = -1) then
+            _at_bottom := true
+        else
+            _at_bottom := ((si.nPos + integer(si.nPage)) >= si.nMax);
+    end
+    else
+        _scrolling := true;
+
+    inherited;
+end;
+
+procedure TExRichEdit.ScrollToBottom();
+var
+    rect: TRect;
+    r: LongBool;
+    si: TSCROLLINFO;
+    i: integer;
+    dy, bl, lc: longint;
+begin
+    si.cbSize := SizeOf(TScrollInfo);
+    si.fMask := SIF_ALL;
+    r := GetScrollInfo(Handle, SB_VERT, si);
+
+    if ((r) and (si.nMax > 0)) then begin
+        // Get the character which is closest to the lower-right corner
+        // of the rectangle.
+        Perform(EM_GETRECT, 0, Longint(@rect));
+        i := Perform(EM_CHARFROMPOS, 0, integer(@rect.BottomRight));
+
+        // Get the line index which holds that char.
+        bl := Perform(EM_EXLINEFROMCHAR, 0, i);
+        lc := Perform(EM_GETLINECOUNT, 0, 0);
+
+        // dy = line-count - bottom-line
+        dy := lc - bl;
+
+        // Move by dy.
+        Perform(EM_LINESCROLL, 0, dy);
+    end;
+
+    _at_bottom := true;
 end;
 
 

@@ -80,8 +80,8 @@ end;
 procedure scrollRichEdit(RichEdit: TExRichEdit);
 begin
     // Send a "page down" scroll message
-    with RichEdit do
-        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+    // RichEdit.Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+    RichEdit.ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -90,9 +90,13 @@ var
     txt: WideString;
     c: TColor;
     at_bottom: boolean;
+    is_scrolling: boolean;
 begin
     // add the message to the richedit control
-    at_bottom := atBottom(RichEdit);
+    //at_bottom := atBottom(RichEdit);
+    at_bottom := RichEdit.atBottom;
+    is_scrolling := RichEdit.isScrolling;
+
     txt := Msg.Body;
 
     // Make sure we're inputting text in Unicode format.
@@ -164,7 +168,7 @@ begin
     RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
-    if ((at_bottom) and (AutoScroll)) then scrollRichEdit(RichEdit);
+    if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then scrollRichEdit(RichEdit);
 end;
 
 {---------------------------------------}
