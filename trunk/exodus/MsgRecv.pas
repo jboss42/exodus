@@ -277,15 +277,22 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.FormCreate(Sender: TObject);
 var
+    s: Widestring;
     echat: TExodusChat;
 begin
     // pre-fill parts of the header grid
     AssignUnicodeFont(Self);
     AssignUnicodeURL(txtFrom.Font, 8);
+    TranslateComponent(Self);
 
     lblFrom.Font.Style := [fsBold];
     lblSubject1.Font.Style := [fsBold];
     lblSubject2.Font.Style := [fsBold];
+
+    // ugh.. some translations use the old caption w/ trailing spaces
+    s := _('Subject') + ':';
+    lblSubject1.Caption := s;
+    lblSubject2.Caption := s;
 
     AssignDefaultFont(txtMsg.Font);
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
