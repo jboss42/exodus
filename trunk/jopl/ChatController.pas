@@ -30,19 +30,19 @@ type
 
     TChatController = class
     private
-        _jid: string;
-        _resource: string;
-        
+        _jid: Widestring;
+        _resource: Widestring;
+
         _cb: integer;
         _event: TChatMessageEvent;
     public
         msg_queue: TQueue;
         window: TObject;
 
-        constructor Create(sjid, sresource: string); 
+        constructor Create(sjid, sresource: Widestring);
         destructor Destroy; override;
 
-        procedure SetJID(sjid: string);
+        procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
         property OnMessage: TChatMessageEvent read _event write _event;
     end;
@@ -55,7 +55,7 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TChatController.Create(sjid, sresource: string);
+constructor TChatController.Create(sjid, sresource: Widestring);
 begin
     // Create a new chat controller..
     // Setup msg callbacks, and either queue them,
@@ -74,7 +74,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TChatController.SetJID(sjid: string);
+procedure TChatController.SetJID(sjid: Widestring);
 begin
     // If we already have a callback, then unregister
     // Then re-register for messages for the new jid
@@ -100,6 +100,7 @@ procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 begin
     // do stuff
     if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:data"]') <> nil) then exit;
+    if (tag.GetAttribute('type') = 'groupchat') then exit;
     
     // if we are paused, put on a delay tag.
     if (MainSession.IsPaused) then begin
