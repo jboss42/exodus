@@ -170,6 +170,7 @@ type
     _change_node: TTreeNode;    // the current node being changed
     _bookmark: TTreeNode;       // the Bookmarks container node
     _offline: TTreeNode;        // the Offline container node
+    _myres: TTreeNode;          // The My Resources node
     _hint_text : WideString;    // the hint text for the current node
 
     _cur_ritem: TJabberRosterItem;  // current roster item selected
@@ -247,6 +248,7 @@ resourcestring
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';
+    sMyResources = 'My Resources';
 
     sNetMeetingConnError = 'Your connection type does not support direct connections.';
 
@@ -292,6 +294,7 @@ begin
     _task_collapsed := false;
     _bookmark := nil;
     _offline := nil;
+    _myres := nil;
     _change_node := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
@@ -641,6 +644,7 @@ begin
 
     _bookmark := nil;
     _offline := nil;
+    _myres := nil;
 
     treeRoster.Items.EndUpdate;
 end;
@@ -794,13 +798,15 @@ begin
 
     if (event = '/presence/error') then
         // ignore
+
     else if (event = '/presence/offline') then begin
         // remove the node
         p := MainSession.PPDB.FindPres(jid, '');
-        if ritem <> nil then
+        if (ritem <> nil) then
             RenderNode(ritem, p);
     end
-    else if ritem <> nil then begin
+
+    else if (ritem <> nil) then begin
         // possibly re-render the node based on this pres packet
         p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
         RenderNode(ritem, p);
@@ -861,6 +867,8 @@ begin
         _offline := nil;
     if (node = _bookmark) then
         _bookmark := nil;
+    if (node = _myres) then
+        _myres := nil;
 
     node.Free();
 end;
@@ -962,6 +970,9 @@ begin
         and (is_transport = false)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)
+    else if (ritem.jid.jid = MainSession.BareJid) then
+        // this is another one of my own resources
+        tmp_grps.Add(sMyResources)
     else
         // otherwise, assign the grps from the roster item
         tmp_grps.Assign(ritem.Groups);
@@ -1012,6 +1023,17 @@ begin
                 resort := true;
             end;
             grp_node := _offline;
+        end
+
+        // The My resources grp is also special.. same as offline
+        else if (cur_grp = sMyResources) then begin
+            if (_myres = nil) then begin
+                _myres := treeRoster.Items.AddChild(nil, sMyResources);
+                _myres.ImageIndex := ico_right;
+                _myres.SelectedIndex := ico_right;
+                resort := true;
+            end;
+            grp_node := _myres;
         end
 
         else begin
@@ -1814,6 +1836,7 @@ begin
         if ((_group_counts) and
             (Node <> _offline) and
             (Node <> _bookmark) and
+            (Node <> _myres) and
             (Node.Text <> _transports)) then begin
             total := MainSession.roster.getGroupCount(Node.Text, false);
             online := MainSession.roster.getGroupCount(Node.Text, true);
@@ -2268,6 +2291,10 @@ begin
     else if (Node2 = _bookmark) then Compare := +1
     else if (trans1) then Compare := +1
     else if (trans2) then Compare := -1
+    else if (Node1 = _myres) then Compare := +1
+    else if (Node2 = _myres) then Compare := -1
+
+    // handle normal cases.
     else if (Node1.Level = Node2.Level) then begin
         Compare := AnsiCompareText(Node1.Text, Node2.Text);
     end
