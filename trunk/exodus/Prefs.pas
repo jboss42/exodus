@@ -176,12 +176,13 @@ type
     Label5: TLabel;
     chkHideBlocked: TCheckBox;
     chkPresErrors: TCheckBox;
-// PLUGIN:    tbsPlugins: TTabSheet;
-// PLUGIN:    StaticText12: TStaticText;
-// PLUGIN:    Label6: TLabel;
-// PLUGIN:    memPlugins: TMemo;
-// PLUGIN:    imgPlugins: TImage;
-// PLUGIN:    lblPlugins: TLabel;
+    tbsPlugins: TTabSheet;
+    StaticText12: TStaticText;
+    Label6: TLabel;
+    memPlugins: TMemo;
+    imgPlugins: TImage;
+    lblPlugins: TLabel;
+    chkLogRooms: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -211,6 +212,7 @@ type
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure chkLogClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -356,7 +358,9 @@ begin
         chkMsgQueue.Checked := getBool('msg_queue');
         chkEmoticons.Checked := getBool('emoticons');
         chkLog.Checked := getBool('log');
+        chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
+        self.chkLogClick(nil);
 
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');
@@ -426,7 +430,7 @@ begin
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
         fillStringList('blockers', memBlocks.Lines);
-// PLUGIN:        fillStringList('plugins', memPlugins.Lines);
+        fillStringList('plugins', memPlugins.Lines);
 
         // Custom Presence options
         _pres_list := getAllPresence();
@@ -491,6 +495,7 @@ begin
         setBool('emoticons', chkEmoticons.Checked);
         setBool('msg_queue', chkMsgQueue.Checked);
         setBool('log', chkLog.Checked);
+        setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
 
         reg := TRegistry.Create();
@@ -548,7 +553,7 @@ begin
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
-// PLUGIN:        setStringList('plugins', memPlugins.Lines);
+        setStringList('plugins', memPlugins.Lines);
 
         // Custom presence list
         RemoveAllPresence();
@@ -584,7 +589,7 @@ begin
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
     tbsCustomPres.TabVisible := false;
-// PLUGIN:    tbsPlugins.TabVisible := false;
+    tbsPlugins.TabVisible := false;
 
     chkNotify.Items.Strings[0]  := sSoundOnline;
     chkNotify.Items.Strings[1]  := sSoundOffline;
@@ -669,12 +674,12 @@ begin
         PageControl1.ActivePage := tbsMessages;
         // img := imgMessages;
         lbl := lblMessages;
+        end
+    else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
+        PageControl1.ActivePage := tbsPlugins;
+        // img := imgPlugins;
+        lbl := lblPlugins;
         end;
-// PLUGIN:    else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
-// PLUGIN:        PageControl1.ActivePage := tbsPlugins;
-// PLUGIN:        // img := imgPlugins;
-// PLUGIN:        lbl := lblPlugins;
-// PLUGIN:        end;
 
     for i := 0 to ScrollBox1.ControlCount - 1 do begin
         c := ScrollBox1.Controls[i];
@@ -1073,6 +1078,13 @@ begin
     btnFont.Enabled := (_clr_font <> '');
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 
+end;
+
+procedure TfrmPrefs.chkLogClick(Sender: TObject);
+begin
+    chkLogRooms.Enabled := chkLog.Checked;
+    txtLogPath.Enabled := chkLog.Checked;
+    btnLogBrowse.Enabled := chkLog.Checked;
 end;
 
 end.

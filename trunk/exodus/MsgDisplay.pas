@@ -510,9 +510,14 @@ begin
             else
                 color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_other')));
 
-            html := '<div style="' + bg + font + '">' +
+            if (Msg.Nick <> '') then
+                html := '<div style="' + bg + font + '">' +
                     time + '<span style="color: ' + color + ';">&lt;' +
-                    Msg.Nick + '&gt;</span> ' + txt + '</div>';
+                    Msg.Nick + '&gt;</span> ' + txt + '</div>'
+            else
+                html := '<div style="' + bg + font + '">' +
+                    time + '<span style="color: green;">' +
+                    txt + '</span></div>';
             end;
         end;
     Result := html;

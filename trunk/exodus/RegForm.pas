@@ -51,6 +51,7 @@ type
     procedure btnNextClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnDeleteClick(Sender: TObject);
   private
     { Private declarations }
     cur_iq: TJabberIQ;
@@ -63,6 +64,7 @@ type
     procedure doRegister();
     procedure RegCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+    procedure RemoveCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     jid: string;
@@ -99,7 +101,7 @@ var
 implementation
 {$R *.DFM}
 uses
-    S10n, Roster, Session;
+    Transports, S10n, Roster, Session;
 
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);
@@ -340,6 +342,32 @@ begin
         MainSession.UnRegisterCallback(pres_cb);
 
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.RemoveCallback(event: string; tag: TXMLTag);
+begin
+    if (event = 'timeout') then begin
+        MessageDlg('The agent you are trying to register with can not be reached.', mtError, [mbOK], 0);
+        end
+    else begin
+        if (tag.getAttribute('type') = 'error') then begin
+            MessageDlg('There was an error trying to remove your registration.', mtError,
+                [mbOK], 0);
+            end
+        else begin
+            MessageDlg('Your registration has been removed.', mtInformation, [mbOK], 0);
+            end;
+        end;
+    self.close();
+    exit;
+end;
+
+
+procedure TfrmRegister.btnDeleteClick(Sender: TObject);
+begin
+    RemoveTransport(jid);
+    Self.Close();
 end;
 
 end.

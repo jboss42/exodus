@@ -66,11 +66,11 @@ object frmRegister: TfrmRegister
     Top = 0
     Width = 304
     Height = 258
-    ActivePage = tabWelcome
+    ActivePage = tabAgent
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'
@@ -137,6 +137,7 @@ object frmRegister: TfrmRegister
             Height = 25
             Caption = 'Delete My Registration'
             TabOrder = 0
+            OnClick = btnDeleteClick
           end
         end
       end
