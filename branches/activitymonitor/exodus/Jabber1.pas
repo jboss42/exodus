@@ -2494,6 +2494,7 @@ begin
 
     if (frmRosterWindow <> nil) then
         frmRosterWindow.treeRoster.Invalidate();
+
     StopTrayAlert();
 end;
 
@@ -2973,10 +2974,22 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
+var
+    f: TForm;
 begin
     // do something here maybe
     if (timFlasher.Enabled) then
         timFlasher.Enabled := false;
+
+    if (Tabs.ActivePage <> nil) then begin
+        f := getTabForm(Tabs.ActivePage);
+
+        if (f is TfrmDockable) then begin
+           TfrmDockable(f).Unread := 0;
+           f.Perform(WM_ACTIVATE, WA_CLICKACTIVE, f.Handle);
+        end;
+    end;
+
 end;
 
 {---------------------------------------}
@@ -3017,9 +3030,14 @@ begin
 
     f := getTabForm(Tabs.ActivePage);
 
+    if (f is TfrmDockable) then begin
+       TfrmDockable(f).Unread := 0;
+    end;
+
     if (f is TfrmChat) then begin
-        if (Tabs.ActivePage.ImageIndex = tab_notify) then
-            Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage
+        if (Tabs.ActivePage.ImageIndex = tab_notify) then begin
+            Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage;
+        end;
     end
     else if (f is TfrmRoom) then begin
         Tabs.ActivePage.ImageIndex := ico_conf;

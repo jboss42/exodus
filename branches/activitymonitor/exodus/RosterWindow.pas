@@ -22,7 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    JabberID, GraphUtil, 
+    JabberID, GraphUtil, ActivityNode, 
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
@@ -197,6 +197,7 @@ type
     _xa: TTreeNode;
     _dnd: TTreeNode;
     _offline: TTreeNode;
+    _activity: TTreeNode;           // the Activity container node
     _bookmark: TTreeNode;           // the Bookmarks container node
     _myres: TTreeNode;              // The My Resources node
 
@@ -207,6 +208,7 @@ type
     _cur_ritem: TJabberRosterItem;  // current roster item selected
     _cur_grp: Widestring;           // current group selected
     _cur_go: TJabberGroup;          // current group object
+    _cur_activity: TActivityNode;   // current activity status
     _cur_bm: TJabberBookmark;       // current bookmark selected
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
@@ -246,12 +248,14 @@ type
     g_xa: Widestring;
     g_dnd: Widestring;
     g_unfiled: Widestring;
+    g_activity: WideString;
     g_bookmarks: Widestring;
     g_myres: Widestring;
 
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
+    procedure RenderActivity(an: TActivityNode);
     procedure RenderBookmark(bm: TJabberBookmark);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
     procedure RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
@@ -308,7 +312,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
-    ExSession, XferManager, CustomPres, RegForm, Math,    
+    ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
@@ -346,6 +350,7 @@ const
     sRosterOffline = 'Offline';
     sRosterPending = ' (Pending)';
 
+    sGrpActivity = 'Activity';
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
 
@@ -387,6 +392,7 @@ begin
     g_xa := _('Ext. Away');
     g_dnd := _('Do Not Disturb');
     g_unfiled := _('Unfiled');
+    g_activity := _('Activity');
     g_bookmarks := _('Bookmarks');
     g_myres := _('My Resources');
 
@@ -407,6 +413,7 @@ begin
 
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
+    _activity := nil;
     _bookmark := nil;
     _online := nil;
     _away := nil;
@@ -635,6 +642,7 @@ var
     p: TJabberPres;
     bi: integer;
     bm: TJabberBookmark;
+    an: TActivityNode;
 begin
     // callback from the session
     if event = '/roster/start' then begin
@@ -658,15 +666,21 @@ begin
 
         treeRoster.AlphaSort();
     end
+    else if event ='/roster/activity' then begin
+        an := ActivityNode.GetActivityNode(tag.GetAttribute('handle'), tag.GetAttribute('caption'));
+        an.Count := StrToInt(tag.GetAttribute('count'));
+        RenderActivity(an);
+    end
     else if event = '/roster/bookmark' then begin
         if (_brand_muc) then begin
             bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
             if bi >= 0 then begin
                 bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
-                if (bm <> nil) then
+                if (bm <> nil) then begin
                     RenderBookmark(bm);
-                if (bm.autoJoin and (bm.bmType = 'conference')) then
-                    StartRoom(bm.jid.jid, bm.nick);
+                    if (bm.autoJoin and (bm.bmType = 'conference')) then
+                        StartRoom(bm.jid.jid, bm.nick);
+                end;
             end;
         end;
     end
@@ -676,6 +690,49 @@ begin
             RenderNode(ritem, p);
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.RenderActivity(an: TActivityNode);
+var
+    agrp: TJabberGroup;
+    a_node: TTreeNode;
+    grp_rect: TRect;
+begin
+    if _activity = nil then begin
+        agrp := MainSession.Roster.AddGroup(g_activity);
+
+        if (agrp.Data = nil) then begin
+            _activity := treeRoster.Items.AddChild(nil, _('Activity'));
+            _activity.ImageIndex := ico_down;
+            _activity.SelectedIndex := ico_down;
+            _activity.Data := agrp;
+            agrp.Data := _activity;
+        end
+        else
+            _activity := TTreeNode(agrp.Data);
+        treeRoster.AlphaSort();
+    end;
+
+    if (an.Data = nil) then begin
+        a_node := treeRoster.Items.AddChild(_activity, an.Caption);
+        an.Data := a_node;
+        a_node.ImageIndex := ico_Offline; // TODO: use right presence icon, and change on presence changes
+        a_node.SelectedIndex := a_node.ImageIndex;
+        a_node.Data := an;
+    end
+    else begin
+        a_node := TTreeNode(an.Data);
+        assert(a_node <> nil);
+        grp_rect := a_node.DisplayRect(false);
+        InvalidateRect(treeRoster.Handle, @grp_rect, false);
+    end;
+
+    if (not _collapse_all) then
+        _activity.Expand(true);
+
+    // TODO: call InvalidateGrps on the node that was updated.
+    InvalidateGrps(a_node);
 end;
 
 {---------------------------------------}
@@ -761,7 +818,7 @@ begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if (((ni is TJabberGroup) and (n <> _offline)) or (n = _bookmark)) then begin
+        if (((ni is TJabberGroup) and (n <> _offline)) or (n = _bookmark) or (n = _activity)) then begin
             cur_grp := TJabberGroup(ni).Fullname;
             if ((_collapsed_grps.indexOf(cur_grp) = -1)) then
                 ExpandGrpNode(n);
@@ -816,8 +873,10 @@ begin
         end;
         for i := 0 to Bookmarks.Count - 1 do
             TJabberBookmark(Bookmarks.Objects[i]).Data := nil;
+        ActivityNode.ClearActivityNodes();
     end;
 
+    _activity := nil;
     _bookmark := nil;
     _offline := nil;
     _myres := nil;
@@ -840,6 +899,7 @@ begin
 
     Result := node_none;
     _cur_ritem := nil;
+    _cur_activity := nil;
     _cur_bm := nil;
     _cur_grp := '';
 
@@ -855,7 +915,10 @@ begin
         _cur_grp := go.FullName;
         _cur_go := go;
     end
-
+    else if (TObject(n.Data) is TActivityNode) then begin
+        Result := node_activity;
+        _cur_activity := TActivityNode(n.Data);
+    end
     else if (TObject(n.Data) is TJabberBookmark) then begin
         Result := node_bm;
         _cur_bm := TJabberBookmark(n.Data);
@@ -2363,7 +2426,12 @@ begin
         go := TJabberGroup(o);
         treeRoster.Canvas.Font.Style := [fsBold];
 
-        if ((Node = _offline) or
+        if (Node = _activity) then begin
+            c1 := go.getText();
+            c2 := '(' + IntToStr(ActivityNode.GetTotalUnread()) + ')';
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else if ((Node = _offline) or
             (Node = _bookmark) or
             (Node = _myres) or
             (go.FullName = _transports) or
@@ -2405,7 +2473,12 @@ begin
         // always custom draw roster items to get unicode goodness
         // determine the captions (c1 is nick, c2 is status)
         c2 := '';
-        if (ntype = node_bm) then begin
+        if (ntype = node_activity) then begin
+            c1 := _cur_activity.Caption;
+            c2 := '(' + IntToStr(_cur_activity.Count) + ')';
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else if (ntype = node_bm) then begin
             c1 := _cur_bm.bmName;
             DrawNodeText(Node, State, c1, c2);
         end
@@ -2997,6 +3070,8 @@ begin
     // handle special cases
     if (Node1 = _offline) then Compare := +1
     else if (Node2 = _offline) then Compare := -1
+    else if (Node1 = _activity) then Compare := -1
+    else if (Node2 = _activity) then Compare := +1
     else if (Node1 = _bookmark) then Compare := -1
     else if (Node2 = _bookmark) then Compare := +1
     else if (trans1) then Compare := +1
