@@ -76,7 +76,7 @@ implementation
 uses
     GTLanguagesEx, 
     AutoUpdate, FileCtrl,
-    PathSelector, PrefController, Registry, Session;
+    PathSelector, PrefController, Registry, Session, StrUtils;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -157,7 +157,7 @@ begin
         tmps := getString('locale');
         _old_locale := tmps;
 
-        if (tmps <> '') then begin
+        if (tmps <> '') and (LeftStr(tmps, 7) <> 'Default')) then begin
             i := _lang_codes.IndexOf(tmps);
             if (i >= 0) then
                 cboLocale.ItemIndex := i
