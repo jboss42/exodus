@@ -1,5 +1,8 @@
 program jopl_sample;
 
+{%File 'defaults.xml'}
+{$R 'defaults.res' 'defaults.rc'}
+
 uses
   Forms,
   Main in 'Main.pas' {Form1},
@@ -35,7 +38,8 @@ uses
   XMLSocketStream in '..\XMLSocketStream.pas',
   XMLStream in '..\XMLStream.pas',
   XMLTag in '..\XMLTag.pas',
-  XMLUtils in '..\XMLUtils.pas';
+  XMLUtils in '..\XMLUtils.pas',
+  StandardAuth in '..\StandardAuth.pas';
 
 {$R *.res}
 
