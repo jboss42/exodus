@@ -426,8 +426,9 @@ begin
     else begin
         // reply
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
-        frameButtons1.btnOK.Enabled := true;
+        frameButtons1.btnOK.Enabled := false;
         pnlReply.Visible := true;
+        pnlReply.Align := alBottom;
         MsgOut.SetFocus;
     end;
 end;
