@@ -491,6 +491,7 @@ begin
     // our own presence has changed
     else if event = '/session/presence' then begin
         ShowPresence(MainSession.show);
+        imgStatus.Hint := MainSession.Status;
     end
 
     // preferences have been changed, refresh the roster
