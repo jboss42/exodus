@@ -32,7 +32,7 @@ object frmMsgRecv: TfrmMsgRecv
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 1
+    TabOrder = 2
     inherited Bevel1: TBevel
       Width = 377
     end
@@ -60,7 +60,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
-    TabOrder = 2
+    TabOrder = 3
     Visible = False
     inline frameButtons2: TframeButtons
       Left = 3
@@ -267,7 +267,7 @@ object frmMsgRecv: TfrmMsgRecv
     Language = 1033
     ScrollBars = ssVertical
     ShowSelectionBar = False
-    TabOrder = 0
+    TabOrder = 1
     URLColor = clBlue
     URLCursor = crHandPoint
     OnURLClick = txtMsgURLClick
@@ -285,7 +285,7 @@ object frmMsgRecv: TfrmMsgRecv
     Height = 76
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 0
     object pnlHeader: TPanel
       Left = 41
       Top = 0
@@ -298,7 +298,7 @@ object frmMsgRecv: TfrmMsgRecv
         Left = 0
         Top = 22
         Width = 336
-        Height = 31
+        Height = 24
         Align = alTop
         BevelOuter = bvNone
         BorderWidth = 2
@@ -308,7 +308,7 @@ object frmMsgRecv: TfrmMsgRecv
           Left = 2
           Top = 2
           Width = 64
-          Height = 27
+          Height = 20
           Align = alLeft
           Caption = 'Subject:    '
           Color = clBtnFace
@@ -325,7 +325,7 @@ object frmMsgRecv: TfrmMsgRecv
           Left = 66
           Top = 2
           Width = 268
-          Height = 27
+          Height = 20
           Align = alClient
           TabOrder = 0
           WantReturns = False
@@ -334,7 +334,7 @@ object frmMsgRecv: TfrmMsgRecv
       end
       object pnlSubject: TPanel
         Left = 0
-        Top = 53
+        Top = 46
         Width = 336
         Height = 22
         Align = alTop

@@ -1266,10 +1266,18 @@ begin
             end;
 
         // setup the Exodus window..
+        {
         if (MainSession.Prefs.getBool('window_ontop')) then
             Self.FormStyle := fsStayOnTop
         else
             Self.FormStyle := fsNormal;
+        }
+        if (MainSession.Prefs.getBool('window_ontop')) then
+            SetWindowPos(Self.Handle, HWND_TOPMOST, 0,0,0,0,
+                SWP_NOMOVE + SWP_NOREPOSITION + SWP_NOSIZE)
+        else
+            SetWindowPos(Self.Handle, HWND_NOTOPMOST, 0,0,0,0,
+                SWP_NOMOVE + SWP_NOREPOSITION + SWP_NOSIZE);
 
         if (MainSession.Prefs.getBool('window_toolbox')) then begin
             if (Self.BorderStyle <> bsSizeToolWin) then begin

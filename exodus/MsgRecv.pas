@@ -106,6 +106,7 @@ procedure ShowEvent(e: TJabberEvent);
 
 resourcestring
     sMessageFrom = 'Message from ';
+    sMessageTo = 'Message to ';
 
     sRemove = 'Remove';
     sAccept = 'Accept';
@@ -493,11 +494,17 @@ begin
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then begin
         txtFrom.Caption := ritem.Nickname + ' <' + jid + '>';
-        Self.Caption := sMessageFrom + ritem.Nickname;
+        if (pnlSendSubject.Visible) then
+            Self.Caption := sMessageTo + ritem.Nickname
+        else
+            Self.Caption := sMessageFrom + ritem.Nickname;
         end
     else begin
         txtFrom.Caption := jid;
-        Self.Caption := sMessageFrom + jid;
+        if (pnlSendSubject.Visible) then
+            Self.Caption := sMessageTo + jid
+        else
+            Self.Caption := sMessageFrom + jid;
         end;
     tmp_jid.Free();
 end;
