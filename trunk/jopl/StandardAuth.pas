@@ -98,11 +98,20 @@ begin
         feats := _session.xmppFeatures;
         if (_sasl_auth.checkSASLFeatures(feats)) then
             _sasl_auth.StartAuthentication()
+        else if _session.Profile.WinLogin then begin
+            _session.FireEvent('/session/autherror', nil);
+            exit;
+        end
         else
             SendAuthGet();
     end
-    else
+    else begin
+        if _session.Profile.WinLogin then begin
+            _session.FireEvent('/session/autherror', nil);
+            exit;
+        end;
         SendAuthGet();
+    end;
 end;
 
 {---------------------------------------}
