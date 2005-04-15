@@ -126,7 +126,7 @@ implementation
 uses
     ExSession, Stringprep, 
     JabberUtils, ExUtils,  GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
-    Registry;
+    Registry, StrUtils;
 
 const
     sSmallKeys = 'Must have a larger number of poll keys.';
@@ -142,17 +142,9 @@ const
 function ShowConnDetails(p: TJabberProfile): integer;
 var
     f: TfrmConnDetails;
-    g: string;
-    l: cardinal;
 begin
     //
     f := TfrmConnDetails.Create(nil);
-
-    SetLength(g, 256);
-    l := 255;
-    GetComputerName(PChar(g), l);
-    SetLength(g, l);
-    MessageDlg(g, mtWarning, [mbOK], 0);
 
     with f do begin
         _profile := p;
@@ -173,12 +165,23 @@ procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 var
     valid: boolean;
     jid: Widestring;
+    tj: TJabberID;
 begin
     // Validate the JID..
     jid := cboJabberID.Text + '/' + cboResource.Text;
-    valid := (Pos('@', jid) > 0);
-    if (valid) then
-        valid := isValidJid(jid);
+    valid := true;
+
+    if (not isValidJid(jid)) then
+        valid := false
+    else begin
+        tj := TJabberID.Create(jid);
+        if not chkWinLogin.Checked then
+            valid := (tj.user <> '')
+        else
+            cboJabberID.Text := tj.domain;
+        tj.Free();
+    end;
+
 
     if (valid = false) then begin
         MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
@@ -525,8 +528,22 @@ begin
 end;
 
 procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
+var
+    p : integer;
 begin
-    txtPassword.Enabled := not chkWinLogin.Checked;
+    if chkWinLogin.Checked then begin
+        txtPassword.Enabled := false;
+        chkRegister.Checked := false;
+        chkRegister.Enabled := false;
+        p := pos('@', cboJabberID.Text);
+        if (p <> -1) then
+            cboJabberID.Text := MidStr(cboJabberID.Text, p+1, length(cboJabberID.Text));
+    end
+    else begin
+        txtPassword.Enabled := true;
+        chkRegister.Enabled := true;
+    end;
+
     if not txtPassword.Enabled then
         txtPassword.Text := '';
 end;

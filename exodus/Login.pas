@@ -144,7 +144,10 @@ var
 begin
     chkInvisible.Checked := false;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[cboProfiles.ItemIndex]);
-    lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
+    if (p.WinLogin) then
+        lblJID.Caption := p.Server + '/' + p.Resource
+    else
+        lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
 end;
 
 {---------------------------------------}
@@ -168,7 +171,10 @@ begin
     i := cboProfiles.ItemIndex;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
     ShowConnDetails(p);
-    lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
+    if (p.WinLogin) then
+        lblJID.Caption := p.Server + '/' + p.Resource
+    else
+        lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
 end;
 
 {---------------------------------------}
