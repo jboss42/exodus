@@ -278,7 +278,8 @@
     
     <brand_profile_save_password ></brand_profile_save_password>
     <brand_profile_server value="jabber.org"></brand_profile_server>
-    
+    <brand_profile_winlogin value="false"></brand_profile_winlogin>
+
     <brand_profile_server_list>
       <s>jabber.org</s>
       <s>jabber.com</s>
