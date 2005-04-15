@@ -121,7 +121,11 @@ begin
         end;
     end;
     ms.Free();
-    Result := (_best_mech <> '');
+
+    if (_session.Profile.WinLogin and (_best_mech <> 'NTLM')) then
+        Result := false
+    else
+        Result := (_best_mech <> '');
 end;
 
 {---------------------------------------}
