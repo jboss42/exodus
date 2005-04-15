@@ -80,6 +80,7 @@ type
     txtHost: TTntEdit;
     txtPort: TTntEdit;
     chkPolling: TTntCheckBox;
+    chkWinLogin: TTntCheckBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -91,6 +92,7 @@ type
     procedure optSSLClick(Sender: TObject);
     procedure chkSRVClick(Sender: TObject);
     procedure txtUsernameExit(Sender: TObject);
+    procedure chkWinLoginClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -140,9 +142,17 @@ const
 function ShowConnDetails(p: TJabberProfile): integer;
 var
     f: TfrmConnDetails;
+    g: string;
+    l: cardinal;
 begin
     //
     f := TfrmConnDetails.Create(nil);
+
+    SetLength(g, 256);
+    l := 255;
+    GetComputerName(PChar(g), l);
+    SetLength(g, l);
+    MessageDlg(g, mtWarning, [mbOK], 0);
 
     with f do begin
         _profile := p;
@@ -274,6 +284,7 @@ begin
         txtPassword.Text := Password;
         chkSavePasswd.Checked := SavePasswd;
         chkRegister.Checked := NewAccount;
+        chkWinLogin.Checked := WinLogin;
     end;
 end;
 
@@ -291,6 +302,7 @@ begin
         password := txtPassword.Text;
         resource := cboResource.Text;
         NewAccount := chkRegister.Checked;
+        WinLogin := chkWinLogin.Checked;
     end;
 end;
 
@@ -409,7 +421,7 @@ procedure TfrmConnDetails.txtUsernameKeyPress(Sender: TObject;
 var
     uh, r, jid: Widestring;
 begin
-    // alway allow people to fix mistakes :)
+    // always allow people to fix mistakes :)
     if (Key = #8) then exit;
 
     // check to make sure JID is valid
@@ -510,6 +522,13 @@ begin
         else
             cboResource.Text := outp;
     end;
+end;
+
+procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
+begin
+    txtPassword.Enabled := not chkWinLogin.Checked;
+    if not txtPassword.Enabled then
+        txtPassword.Text := '';
 end;
 
 end.

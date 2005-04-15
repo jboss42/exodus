@@ -21,10 +21,12 @@ unit SASLAuth;
 interface
 uses
     JabberAuth, IQ, Session, XMLTag, IdCoderMime, IdHashMessageDigest,
-    Classes, SysUtils;
+    Classes, SysUtils, IdAuthenticationSSPI;
 
 type
     TSASLAuth = class(TJabberAuth)
+        _best_mech: Widestring;
+
         _session: TJabberSession;
         _digest: boolean;
 
@@ -44,15 +46,20 @@ type
         _fail: integer;
         _resp: integer;
 
+        // NTLM
+        _ntlm : TIndySSPINTLMClient;
+
         procedure RegCallbacks();
         procedure StartDigest();
         procedure StartPlain();
+        procedure StartNTLM();
 
     published
         procedure C1Callback(event: string; xml: TXMLTag);
         procedure C2Callback(event: string; xml: TXMLTag);
 
         procedure PlainCallback(event: string; xml: TXMLTag);
+        procedure NTLMCallback(event: string; xml: TXMLTag);
 
         procedure FailCallback(event: string; xml: TXMLTag);
         procedure SuccessCallback(event: string; xml: TXMLTag);
@@ -67,10 +74,9 @@ type
 
         function StartRegistration(): boolean; override;
         procedure CancelRegistration(); override;
-
+        function checkSASLFeatures(feats: TXMLTag): boolean;
     end;
 
-function checkSASLFeatures(feats: TXMLTag): boolean;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -79,34 +85,42 @@ implementation
 uses
     JabberConst, XMLUtils, IdHash, Random;
 
-var
-    _best_mech: Widestring;
-
 {---------------------------------------}
-function checkSASLFeatures(feats: TXMLTag): boolean;
+function TSASLAuth.checkSASLFeatures(feats: TXMLTag): boolean;
 var
     i: integer;
     mstr: Widestring;
     m: TXMLTag;
     mechs: TXMLTagList;
+    ms : TStringList;
+    preferred : array of String;
 begin
     // TODO: Brute force look for plain or MD5-Digest
     m := feats.GetFirstTag('mechanisms');
     _best_mech := '';
+    ms := TStringList.Create();
     if (m <> nil) then begin
         mechs := m.ChildTags();
         for i := 0 to mechs.Count - 1 do begin
             mstr := mechs[i].Data;
-            if (mstr = 'DIGEST-MD5') then begin
-                // We have Digest!
-                _best_mech := mstr;
-            end
-            else if ((mstr = 'PLAIN') and (_best_mech = '')) then begin
-                // We have plain!
-                _best_mech := mstr;
+            ms.Add(mstr);
+        end;
+
+        SetLength(preferred, 3);
+        preferred[0] := 'NTLM';
+        preferred[1] := 'DIGEST-MD5';
+        preferred[2] := 'PLAIN';
+
+        for i := 0 to length(preferred)-1 do begin
+            if ms.IndexOf(preferred[i]) <> -1 then begin
+                if (preferred[i] <> 'NTLM') or (_session.Profile.WinLogin) then begin
+                    _best_mech := preferred[i];
+                    break;
+                end;
             end;
         end;
     end;
+    ms.Free();
     Result := (_best_mech <> '');
 end;
 
@@ -137,7 +151,9 @@ procedure TSASLAuth.StartAuthentication();
 begin
     // TODO: Fix brute force look for plain or MD5-Digest
     CancelAuthentication();
-    if (_best_mech = 'DIGEST-MD5') then
+    if (_best_mech = 'NTLM') then
+        StartNTLM()
+    else if (_best_mech = 'DIGEST-MD5') then
         StartDigest()
     else if (_best_mech = 'PLAIN') then
         StartPlain()
@@ -225,6 +241,51 @@ begin
     a.AddCData(c);
 
     _session.SendTag(a);
+end;
+
+{---------------------------------------}
+procedure TSASLAuth.StartNTLM();
+var
+    s: string;
+    a: TXMLTag;
+begin
+    _digest := false;
+    RegCallbacks();
+    _ccb := _session.RegisterCallback(NTLMCallback, '/packet/challenge');
+
+    _ntlm := TIndySSPINTLMClient.Create();
+    _ntlm.SetCredentialsAsCurrentUser();
+    s := _ntlm.InitAndBuildType1Message();
+
+    a := TXMLTag.Create('auth');
+    a.setAttribute('xmlns', XMLNS_XMPP_SASL);
+    a.setAttribute('mechanism', 'NTLM');
+
+    a.AddCData(_encoder.Encode(s));
+
+    _session.SendTag(a);
+end;
+
+{---------------------------------------}
+procedure TSASLAuth.NTLMCallback(event: string; xml: TXMLTag);
+var
+    c: string;
+    r: TXMLTag;
+begin
+    if (event <> 'xml') then begin
+        _session.SetAuthenticated(false, nil, false);
+        exit;
+    end;
+
+    c := _decoder.DecodeString(xml.Data);
+    c := _ntlm.UpdateAndBuildType3Message(c);
+
+    r := TXMLTag.Create('response');
+    r.setAttribute('xmlns', XMLNS_XMPP_SASL);
+
+    r.AddCData(_encoder.Encode(c));
+
+    _session.SendTag(r);
 end;
 
 {---------------------------------------}

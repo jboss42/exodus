@@ -982,7 +982,8 @@ begin
 
     // NB: For non-std auth agents, set prompt_password
     // accordingly.
-    if ((MainSession.password = '') and
+    if ((not MainSession.Profile.WinLogin) and
+        (MainSession.password = '') and
         (MainSession.getAuthAgent().prompt_password)) then begin
         pw := '';
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or

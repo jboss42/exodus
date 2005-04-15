@@ -651,6 +651,8 @@ end;
 procedure TJabberSession.BindCallback(event: string; tag: TXMLTag);
 var
     iq: TJabberIQ;
+    j: WideString;
+    jid: TJabberID;
 begin
     // Callback for our xmpp-bind request
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
@@ -658,6 +660,12 @@ begin
         exit;
     end
     else begin
+        j := tag.QueryXPData('/iq/bind[@xmlns="urn:ietf:params:xml:ns:xmpp-bind"]/jid');
+        jid := TJabberID.Create(j);
+        Profile.Username := jid.user;
+        Profile.Host := jid.domain;
+        Profile.Resource := jid.resource;
+
         iq := TJabberIQ.Create(Self, generateID(), SessionCallback);
         iq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';
         iq.qTag.Name := 'session';
