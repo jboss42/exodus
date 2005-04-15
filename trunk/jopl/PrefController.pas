@@ -138,6 +138,7 @@ type
         Avatar: Widestring;
         AvatarHash: Widestring;
         AvatarMime: Widestring;
+        WinLogin: boolean;
         
         // Socket connection
         Host: Widestring;
@@ -1385,6 +1386,7 @@ begin
         Resource   := getString('brand_profile_resource');
         Priority   := getInt('brand_profile_priority');
         SavePasswd := getBool('brand_profile_save_password');
+        WinLogin   := getBool('brand_profile_winlogin');
         ConnectionType := getInt('brand_profile_conn_type');
         temp       := false;
 
@@ -1448,6 +1450,12 @@ begin
         SavePasswd := SafeBool(tag.GetBasicText('save_passwd'))
     else
         SavePasswd := true;
+
+    ptag := tag.GetFirstTag('winlogin');
+    if (ptag <> nil) then
+        WinLogin := SafeBool(tag.GetBasicText('winlogin'))
+    else
+        WinLogin := false;
 
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
@@ -1518,6 +1526,7 @@ begin
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
+    node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
 
     ptag := node.AddTag('password');
     if (SavePasswd) then begin

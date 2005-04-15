@@ -23,7 +23,7 @@ interface
 
 uses
     JabberAuth, IQ, Session, XMLTag,
-    Classes, SysUtils;
+    Classes, SysUtils, SASLAuth;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -33,7 +33,7 @@ type
         _AuthType: TJabberAuthType;
         _auth_iq: TJabberIQ;
         _token: TXMLTag;
-        _sasl_auth: TJabberAuth;
+        _sasl_auth: TSASLAuth;
         _auto_auth: boolean;
 
         procedure SendAuthGet;
@@ -63,7 +63,7 @@ type
 
 implementation
 uses
-    SASLAuth, JabberConst, XMLUtils, JabberID;
+    JabberConst, XMLUtils, JabberID;
 
 {---------------------------------------}
 constructor TStandardAuth.Create(session: TJabberSession);
@@ -96,7 +96,7 @@ var
 begin
     if (_session.isXMPP) then begin
         feats := _session.xmppFeatures;
-        if (checkSASLFeatures(feats)) then
+        if (_sasl_auth.checkSASLFeatures(feats)) then
             _sasl_auth.StartAuthentication()
         else
             SendAuthGet();

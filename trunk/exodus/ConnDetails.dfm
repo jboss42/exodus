@@ -1,6 +1,6 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 196
-  Top = 230
+  Left = 256
+  Top = 245
   Width = 410
   Height = 288
   ActiveControl = cboJabberID
@@ -167,6 +167,15 @@ object frmConnDetails: TfrmConnDetails
         Min = -1
         Max = 128
         TabOrder = 4
+      end
+      object chkWinLogin: TTntCheckBox
+        Left = 100
+        Top = 179
+        Width = 181
+        Height = 17
+        Caption = 'Use Windows login information'
+        TabOrder = 7
+        OnClick = chkWinLoginClick
       end
     end
     object tbsConn: TTntTabSheet
