@@ -661,10 +661,13 @@ begin
     end
     else begin
         j := tag.QueryXPData('/iq/bind[@xmlns="urn:ietf:params:xml:ns:xmpp-bind"]/jid');
-        jid := TJabberID.Create(j);
-        Profile.Username := jid.user;
-        Profile.Host := jid.domain;
-        Profile.Resource := jid.resource;
+        if (j <> '') then begin
+            jid := TJabberID.Create(j);
+            Profile.Username := jid.user;
+            Profile.Host := jid.domain;
+            Profile.Resource := jid.resource;
+            jid.Free();
+        end;
 
         iq := TJabberIQ.Create(Self, generateID(), SessionCallback);
         iq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';

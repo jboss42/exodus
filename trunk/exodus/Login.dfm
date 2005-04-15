@@ -23,7 +23,7 @@ object frmLogin: TfrmLogin
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 88
+    Top = 84
     Width = 365
     Height = 35
     Align = alBottom
