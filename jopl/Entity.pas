@@ -21,7 +21,7 @@ unit Entity;
 
 interface
 uses
-    IQ, JabberID, XMLTag, Signals, Session, Unicode,
+    IQ, DiscoIdentity, JabberID, XMLTag, Signals, Session, Unicode,
     Classes, SysUtils;
 
 const
@@ -71,6 +71,7 @@ type
         _has_info: Boolean;             // do we need to do a disco#info?
         _has_items: boolean;            // do we have children?
         _items: TWidestringlist;        // our children
+        _idents: TWidestringlist;       // our Identities
         _iq: TJabberIQ;
 
         _cat: Widestring;
@@ -85,6 +86,9 @@ type
 
         function _getItem(i: integer): TJabberEntity;
         function _getItemCount: integer;
+
+        function _getIdentity(i: integer): TDiscoIdentity;
+        function _getIdentityCount: integer;
 
         procedure _discoInfo(js: TJabberSession; callback: TSignalEvent);
         procedure _discoItems(js: TJabberSession; callback: TSignalEvent);
@@ -134,6 +138,9 @@ type
         property ItemCount: Integer read _getItemCount;
         property Items[Index: integer]: TJabberEntity read _getItem;
 
+        property IdentityCount: Integer read _getIdentityCount;
+        property Identities[Index: integer]: TDiscoIdentity read _getIdentity;
+        
         property fallbackProtocols: boolean read _fallback write _fallback;
 
     end;
@@ -222,6 +229,9 @@ begin
     _items := TWidestringlist.Create();
     _items.Sorted := false;
 
+    _idents := TWidestringlist.Create();
+    _idents.Sorted := false;
+
     _timeout := 10;
     _node := node;
     _fallback := true;
@@ -238,6 +248,8 @@ begin
     jEntityCache.Remove(Self);
     ClearStringListObjects(_items);
     _items.Clear();
+    ClearStringListObjects(_idents);
+    _idents.Clear();
     _feats.Clear();
     FreeAndNil(_items);
     FreeAndNil(_feats);
@@ -270,6 +282,22 @@ function TJabberEntity._getItem(i: integer): TJabberEntity;
 begin
     if (i < _items.Count) then
         Result := TJabberEntity(_items.Objects[i])
+    else
+        Result := nil;
+end;
+
+
+{---------------------------------------}
+function TJabberEntity._getIdentityCount: integer;
+begin
+    Result := _idents.Count;
+end;
+
+{---------------------------------------}
+function TJabberEntity._getIdentity(i: integer): TDiscoIdentity;
+begin
+    if (i < _idents.Count) then
+        Result := TDiscoIdentity(_idents.Objects[i])
     else
         Result := nil;
 end;
@@ -543,6 +571,7 @@ begin
 
     _has_info := true;
     _feats.Clear();
+    _idents.Clear();
 
     q := tag.GetFirstTag('query');
     if (q = nil) then exit;
@@ -553,14 +582,22 @@ begin
         _feats.Add(fset[i].GetAttribute('var'));
     fset.Free();
 
-    // XXX: What to do w/ the other <identity> elements?
-    id := q.getFirstTag('identity');
-    if (id <> nil) then begin
-        _cat := id.getAttribute('category');
-        _cat_type := id.getAttribute('type');
-        if (_name = '') then
-            _name := id.getAttribute('name');
+    // XXX: Is this what to do w/ the other <identity> elements?
+    fset := q.QueryTags('identity');
+    for i := 0 to fset.count - 1 do begin
+        id := fset[i];
+        _idents.AddObject(id.GetAttribute('category') + '/' + id.GetAttribute('type'),
+                          TDiscoIdentity.Create(id.GetAttribute('category'),
+                                                id.GetAttribute('type'),
+                                                id.GetAttribute('name')));
+        if i = 0 then begin
+            _cat := id.getAttribute('category');
+            _cat_type := id.getAttribute('type');
+            if (_name = '') then
+                _name := id.getAttribute('name');
+        end;
     end;
+    fset.Free();
 
     _processLegacyFeatures();
 end;
