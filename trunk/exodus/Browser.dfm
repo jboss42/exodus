@@ -1,6 +1,6 @@
 object frmBrowse: TfrmBrowse
-  Left = 277
-  Top = 432
+  Left = 253
+  Top = 551
   Width = 430
   Height = 425
   Caption = 'Jabber Browser'
@@ -77,24 +77,65 @@ object frmBrowse: TfrmBrowse
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
-      BorderStyle = bsSingle
-      Color = clWindow
       TabOrder = 1
       Visible = False
-      object lblError: TTntLabel
+      object lblIdentity: TTntLabel
         Left = 4
         Top = 4
-        Width = 58
-        Height = 19
+        Width = 62
+        Height = 13
         Align = alTop
-        Caption = 'Error: '
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        WordWrap = True
+        Caption = 'Indentities:'
+      end
+      object Splitter1: TSplitter
+        Left = 4
+        Top = 137
+        Width = 62
+        Height = 3
+        Cursor = crVSplit
+        Align = alTop
+      end
+      object lblFeatures: TTntLabel
+        Left = 4
+        Top = 140
+        Width = 62
+        Height = 13
+        Align = alTop
+        Caption = 'Features:'
+      end
+      object vwInfo: TTntListView
+        Left = 4
+        Top = 17
+        Width = 62
+        Height = 120
+        Align = alTop
+        Columns = <
+          item
+            Caption = 'Name'
+          end
+          item
+            Caption = 'Category'
+          end
+          item
+            Caption = 'Type'
+          end>
+        HotTrack = True
+        HotTrackStyles = [htHandPoint, htUnderlineHot]
+        IconOptions.AutoArrange = True
+        OwnerData = True
+        SortType = stText
+        TabOrder = 1
+        ViewStyle = vsReport
+        OnData = vwInfoData
+      end
+      object lsFeatures: TTntListBox
+        Left = 4
+        Top = 153
+        Width = 62
+        Height = 124
+        Align = alClient
+        ItemHeight = 13
+        TabOrder = 0
       end
     end
   end
@@ -3881,6 +3922,10 @@ object frmBrowse: TfrmBrowse
     object mBookmark: TTntMenuItem
       Caption = 'Add Bookmark to Roster'
       OnClick = mBookmarkClick
+    end
+    object mGetInfo: TMenuItem
+      Caption = 'Get Info'
+      OnClick = mGetInfoClick
     end
     object N1: TTntMenuItem
       Caption = '-'

@@ -189,7 +189,8 @@ uses
   NewUser in 'NewUser.pas' {frmNewUser},
   pngzlib in '..\jopl\png\pngzlib.pas',
   pngimage in '..\jopl\png\pngimage.pas',
-  pnglang in '..\jopl\png\pnglang.pas';
+  pnglang in '..\jopl\png\pnglang.pas',
+  DiscoIdentity in '..\jopl\DiscoIdentity.pas';
 
 {$R *.TLB}
 

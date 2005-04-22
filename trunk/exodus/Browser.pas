@@ -39,10 +39,8 @@ type
     StatBar: TStatusBar;
     vwBrowse: TTntListView;
     popContext: TTntPopupMenu;
-    pnlInfo: TTntPanel;
     pnlTop: TTntPanel;
     btnClose: TSpeedButton;
-    lblError: TTntLabel;
     List1: TTntMenuItem;
     SmallIcons1: TTntMenuItem;
     LargeIcons1: TTntMenuItem;
@@ -80,6 +78,13 @@ type
     mRunCommand: TTntMenuItem;
     TntLabel1: TTntLabel;
     TntLabel2: TTntLabel;
+    pnlInfo: TTntPanel;
+    lblIdentity: TTntLabel;
+    Splitter1: TSplitter;
+    lblFeatures: TTntLabel;
+    lsFeatures: TTntListBox;
+    mGetInfo: TMenuItem;
+    vwInfo: TTntListView;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -113,6 +118,8 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure mRunCommandClick(Sender: TObject);
     procedure mAddContactClick(Sender: TObject);
+    procedure mGetInfoClick(Sender: TObject);
+    procedure vwInfoData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
     _cur: integer;
@@ -120,10 +127,12 @@ type
     _node_hist: TWidestringlist;
     _iq: TJabberIQ;
     _blist: TList;
+    _ilist: TList;
     _scb: integer;
     _ecb: integer;
     _ent: TJabberEntity;
     _node: boolean;
+    _pendingInfo: boolean;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure EntityCallback(event: string; tag:TXMLTag);
@@ -139,6 +148,7 @@ type
     procedure StopBar();
     procedure ContextMenu(enabled: boolean);
     procedure NodeVisible(vis: Boolean);
+    procedure ShowDiscoInfo();
 
   public
     { Public declarations }
@@ -159,7 +169,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 {---------------------------------------}
 implementation
 uses
-    EntityCache, GnuGetText, CommandWizard, 
+    EntityCache, GnuGetText, CommandWizard, DiscoIdentity,
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1;
 
@@ -311,7 +321,9 @@ begin
     _History := TWidestringList.Create();
     _node_hist := TWidestringList.Create();
     _blist := TList.Create();
+    _ilist := TList.Create();
     _iq := nil;
+    _pendingInfo := false;
     cur_sort := -1;
     sort_rev := false;
     vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
@@ -345,6 +357,8 @@ begin
     _node_hist.Free();
     _blist.Clear();
     _blist.Free();
+    _ilist.Clear();
+    _ilist.Free();
 end;
 
 {---------------------------------------}
@@ -648,6 +662,13 @@ begin
     if (_ent.jid.full = tmps) then begin
         if (event = '/session/entity/items') then
             ShowItems()
+        else begin // info
+
+        if _pendingInfo then begin
+            _pendingInfo := false;
+            PushJid(_ent.Jid.full, _ent.Node);
+            ShowDiscoInfo();
+        end
         else begin
             ShowInfo(_ent);
 
@@ -657,6 +678,7 @@ begin
             vwBrowse.Visible := true;
 
             StopBar();
+        end;
 
         end;
     end
@@ -681,6 +703,9 @@ begin
     // set the listview count
     vwBrowse.Items.Count := _blist.Count;
     StatBar.Panels[0].Text := IntToStr(_blist.Count) + _(' Objects');
+
+    if _blist.Count = 0 then
+        ShowDiscoInfo();
 end;
 
 {---------------------------------------}
@@ -729,7 +754,7 @@ begin
   inherited;
     with TTntListItem(Item) do begin
         if (index >= _blist.count) then exit;
-          
+
         b := TJabberEntity(_blist[index]);
         if (b.name <> '') then
             caption := b.name
@@ -932,6 +957,71 @@ begin
 
     cjid := itm.SubItems[0];
     
+end;
+
+procedure TfrmBrowse.ShowDiscoInfo();
+var
+    i: integer;
+begin
+    lsFeatures.Clear();
+    for i:=0 to _ent.FeatureCount-1 do begin
+        lsFeatures.Items.Add(_ent.Features[i]);
+    end;
+
+    _ilist.Clear;
+    for i:=0 to _ent.IdentityCount-1 do begin
+        _ilist.Add(_ent.Identities[i]);
+    end;
+    vwInfo.Items.Count := _ilist.Count;
+
+    pnlInfo.Visible := true;
+    pnlInfo.Align := alClient;
+end;
+
+procedure TfrmBrowse.mGetInfoClick(Sender: TObject);
+var
+    itm: TTntListItem;
+    jid: WideString;
+    node: WideString;
+begin
+    inherited;
+
+    itm := vwBrowse.Selected;
+    if itm = nil then exit;
+
+    jid := itm.SubItems[0];
+    node := itm.SubItems[2];
+
+    cboJID.Text := jid;
+    cboNode.Text := node;
+
+    _ent := jEntityCache.getByJid(jid, node);
+    if (_ent = nil) then
+        _ent := jEntityCache.fetch(jid, MainSession, true, node);
+    if not _ent.hasInfo then begin
+        _ent.getInfo(MainSession);
+        _pendingInfo := true;
+        exit;
+    end;
+        
+    PushJID(jid, node);
+
+    ShowDiscoInfo();
+end;
+
+procedure TfrmBrowse.vwInfoData(Sender: TObject; Item: TListItem);
+var
+    info: TDiscoIdentity;
+begin
+    with TTntListItem(Item) do begin
+        if (index >= _ilist.count) then exit;
+
+        info := TDiscoIdentity(_ilist[index]);
+        caption := info.Name;
+
+        SubItems.Add(info.Category);
+        SubItems.Add(info.DiscoType);
+    end;
 end;
 
 end.
