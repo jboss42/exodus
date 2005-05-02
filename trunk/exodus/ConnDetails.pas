@@ -294,18 +294,19 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.SaveProfile(profile: TJabberProfile);
 var
-    jid: TJabberID;
+    j: TJabberID;
 begin
     with Profile do begin
         // Update the profile
-        jid := TJabberID.Create(cboJabberID.Text);
-        Server := jid.domain;
-        Username := jid.user;
+        j := TJabberID.Create(cboJabberID.Text);
+        Server := j.domain;
+        Username := j.user;
         SavePasswd := chkSavePasswd.Checked;
         password := txtPassword.Text;
         resource := cboResource.Text;
         NewAccount := chkRegister.Checked;
         WinLogin := chkWinLogin.Checked;
+        j.Free();
     end;
 end;
 

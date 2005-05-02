@@ -89,7 +89,6 @@ type
     AppEvents: TApplicationEvents;
     Toolbar: TCoolBar;
     ToolBar1: TToolBar;
-    btnConnect: TToolButton;
     btnOnlineRoster: TToolButton;
     btnAddContact: TToolButton;
     btnRoom: TToolButton;
@@ -113,7 +112,7 @@ type
     ClearMessages1: TTntMenuItem;
     View1: TTntMenuItem;
     N7: TTntMenuItem;
-    Connect2: TTntMenuItem;
+    mnuDisconnect: TTntMenuItem;
     Test1: TTntMenuItem;
     Help1: TTntMenuItem;
     Tools1: TTntMenuItem;
@@ -140,7 +139,7 @@ type
     popCloseTab: TTntMenuItem;
     trayExit: TTntMenuItem;
     N01: TTntMenuItem;
-    trayConnect: TTntMenuItem;
+    trayDisconnect: TTntMenuItem;
     N4: TTntMenuItem;
     trayMessage: TTntMenuItem;
     trayPresence: TTntMenuItem;
@@ -184,7 +183,6 @@ type
     bigImages: TImageList;
 
     procedure FormCreate(Sender: TObject);
-    procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnOnlineRosterClick(Sender: TObject);
@@ -258,6 +256,7 @@ type
     procedure ResolverStatus(ASender: TObject; const AStatus: TIdStatus;
       const AStatusText: String);
     procedure mnuPluginOptsClick(Sender: TObject);
+    procedure mnuDisconnectClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -498,14 +497,17 @@ const
 {---------------------------------------}
 implementation
 uses
-    NewUser, CommandWizard, ExodusCOM_TLB, Notify,  
+
+    ZipMstr, // XXX: ZipMstr
+    
+    NewUser, CommandWizard, ExodusCOM_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
-    JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
+    JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
     XferManager, NodeItem, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
@@ -707,10 +709,6 @@ begin
     // Show the login window
     _reconnect_tries := 0;
     _new_account := false;
-
-    // only show the login window if the stream is nil.
-    if ((MainSession <> nil) and (MainSession.Stream = nil)) then
-        ShowLogin();
 end;
 
 {---------------------------------------}
@@ -1182,7 +1180,6 @@ begin
         timReconnect.Enabled := false;
         _logoff := false;
         _reconnect_tries := 0;
-        btnConnect.Down := true;
         setTrayIcon(1);
     end
 
@@ -1321,7 +1318,6 @@ begin
         setTrayIcon(0);
 
         _new_account := false;
-        btnConnect.Down := false;
         restoreMenus(false);
 
         if (_appclosing) then
@@ -1506,6 +1502,7 @@ end;
 procedure TfrmExodus.restoreMenus(enable: boolean);
 begin
     // (dis)enable the menus
+    mnuDisconnect.Enabled := enable;
     mnuMessage.Enabled := enable;
     mnuChat.Enabled := enable;
     mnuConference.Enabled := enable;
@@ -1527,6 +1524,7 @@ begin
     // (dis)enable the tray menus
     trayPresence.Enabled := enable;
     trayMessage.Enabled := enable;
+    trayDisconnect.Enabled := enable;
 
     // Enable toolbar btns
     btnOnlineRoster.Enabled := enable;
@@ -1557,20 +1555,6 @@ begin
             RenderEvent(e);
         end;
     end
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.btnConnectClick(Sender: TObject);
-begin
-    // connect to the server
-    if MainSession.Active then begin
-        _logoff := true;
-        MainSession.Disconnect();
-    end
-    else begin
-        _reconnect_tries := 0;
-        ShowLogin;
-    end;
 end;
 
 {---------------------------------------}
@@ -2741,15 +2725,30 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
-{
 var
+    {
     h: integer;
     i: IExodusController;
     f, o, m, x: TXMLTag;
     }
+    i: integer;
+    z: TZipMaster;
 begin
 
-    ShowNewUserWizard();
+    //ShowNewUserWizard();
+    z := TZipMaster.Create(nil);
+    i := z.Load_Unz_Dll();
+    ShowMessage(IntToStr(i));
+
+    i := z.Load_Zip_Dll();
+    ShowMessage(IntToStr(i));
+
+    z.ZipFileName := 'd:\temp\jisp\emoticons\Ninja.jisp';
+    i := z.Extract();
+    ShowMessage(IntToStr(i));
+
+    i := z.List();
+    ShowMessage(IntToStr(i));
 
     //
     //ShowMessage(BoolToStr(IsUnicodeEnabled()));
@@ -3372,6 +3371,14 @@ procedure TfrmExodus.mnuPluginOptsClick(Sender: TObject);
 begin
     // Show the prefs/plugins page.
     StartPrefs(pref_plugins);
+end;
+
+procedure TfrmExodus.mnuDisconnectClick(Sender: TObject);
+begin
+    if MainSession.Active then begin
+        _logoff := true;
+        MainSession.Disconnect();
+    end
 end;
 
 initialization

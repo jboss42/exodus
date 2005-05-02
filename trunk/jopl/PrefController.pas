@@ -124,6 +124,7 @@ type
         _password: Widestring;
 
         function getPassword: Widestring;
+        function getJid: Widestring;
         procedure setPassword(value: Widestring);
     public
         Name: Widestring;
@@ -171,7 +172,8 @@ type
         function IsValid() : boolean;
 
         property password: Widestring read getPassword write setPassword;
-end;
+        property Jid: Widestring read getJid;
+    end;
 
     TPrefKind = (pkClient, pkServer);
 
@@ -1415,6 +1417,15 @@ function TJabberProfile.getPassword: Widestring;
 begin
     // accessor for password
     result := _password;
+end;
+
+{---------------------------------------}
+function TJabberProfile.getJid: Widestring;
+begin
+    if (WinLogin) then
+        Result := Server + '/' + Resource
+    else
+        Result := Username + '@' + Server + '/' + Resource;
 end;
 
 {---------------------------------------}

@@ -116,7 +116,7 @@ object frmExodus: TfrmExodus
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 142
+      Width = 119
       Height = 27
       Align = alNone
       AutoSize = True
@@ -179,17 +179,6 @@ object frmExodus: TfrmExodus
         ImageIndex = 18
         OnClick = mnuBrowserClick
       end
-      object btnConnect: TToolButton
-        Left = 115
-        Top = 0
-        Hint = 'Connect/Disconnect'
-        AllowAllUp = True
-        AutoSize = True
-        Caption = 'Log On'
-        ImageIndex = 0
-        Visible = False
-        OnClick = btnConnectClick
-      end
     end
   end
   object pnlLeft: TPanel
@@ -214,10 +203,10 @@ object frmExodus: TfrmExodus
         Visible = False
         OnClick = Test1Click
       end
-      object Connect2: TTntMenuItem
-        Caption = 'Sign &On/Off'
+      object mnuDisconnect: TTntMenuItem
+        Caption = 'Sign &Off'
         ShortCut = 120
-        OnClick = btnConnectClick
+        OnClick = mnuDisconnectClick
       end
       object N7: TTntMenuItem
         Caption = '-'
@@ -3083,9 +3072,9 @@ object frmExodus: TfrmExodus
     object N4: TTntMenuItem
       Caption = '-'
     end
-    object trayConnect: TTntMenuItem
-      Caption = 'Log On/Off'
-      OnClick = btnConnectClick
+    object trayDisconnect: TTntMenuItem
+      Caption = 'Sign Off'
+      OnClick = mnuDisconnectClick
     end
     object N01: TTntMenuItem
       Caption = '-'
