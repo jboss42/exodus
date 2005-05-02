@@ -286,6 +286,11 @@ object frmExodus: TfrmExodus
           ShortCut = 16462
           OnClick = btnAddContactClick
         end
+        object mnuSearch: TTntMenuItem
+          Caption = '&Search for a Contact'
+          ShortCut = 16467
+          OnClick = mnuSearchClick
+        end
         object RemovePerson1: TTntMenuItem
           Caption = '&Remove a Contact'
           OnClick = btnDelPersonClick
@@ -312,11 +317,6 @@ object frmExodus: TfrmExodus
           Caption = 'Fin&d Contact Again'
           ShortCut = 114
           OnClick = mnuFindAgainClick
-        end
-        object mnuSearch: TTntMenuItem
-          Caption = '&Search for a Contact'
-          ShortCut = 16467
-          OnClick = mnuSearchClick
         end
         object NewGroup2: TTntMenuItem
           Caption = 'Add Roster &Group'

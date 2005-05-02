@@ -375,7 +375,6 @@ begin
     end;
     Ptr_MsgOutput: begin
         if (_chat <> nil) then begin
-
             // If we have an RTF msg list, use that
             if (TfrmChat(_chat.window).MsgList is TfRTFMsgList) then begin
                 p := @(TfRTFMsgList(TfrmChat(_chat.window).MsgList).MsgList);
@@ -405,16 +404,12 @@ end;
 procedure TExodusChat.AddMsgOut(const Value: WideString);
 begin
     // add something to the RichEdit control
-
-    // XXX: FIX AddMsgOut for new MsgList stuff
-    (*
     if (_chat <> nil) then
-        TfrmChat(_chat.window).MsgList.WideLines.Add(Value)
+        TfrmChat(_chat.window).MsgOut.WideLines.Add(Value)
     else if (_room <> nil) then
-        _room.MsgList.WideLines.Add(Value)
+        _room.MsgOut.WideLines.Add(Value)
     else if (_im <> nil) then
         _im.txtMsg.WideLines.Add(Value);
-    *)
 end;
 
 {---------------------------------------}

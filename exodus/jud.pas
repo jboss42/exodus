@@ -244,7 +244,6 @@ end;
 {---------------------------------------}
 procedure TfrmJUD.sendRequest();
 var
-    i: integer;
     valid: boolean;
     x: TXMLTag;
 begin
@@ -273,15 +272,7 @@ begin
         end
         else begin
             cur_state := 'items';
-            // go thru all the frames and add tags for each field
-            for i := 0 to TabFields.ControlCount - 1 do begin
-                if (TabFields.Controls[i] is TframeTopLabel) then begin
-                    with TframeTopLabel(TabFields.Controls[i]) do begin
-                        if (txtData.Text <> '') then
-                            cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
-                    end;
-                end;
-            end;
+            PopulateTopFields(TabFields, cur_iq.qTag);
         end;
     end;
 

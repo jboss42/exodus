@@ -30,7 +30,6 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = tbsUser
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -75,33 +74,54 @@ inherited frmNewUser: TfrmNewUser
     object tbsUser: TTabSheet
       Caption = 'tbsUser'
       ImageIndex = 5
-      object TntLabel4: TTntLabel
+      object lblUsername: TTntLabel
         Left = 16
-        Top = 16
-        Width = 142
+        Top = 64
+        Width = 137
         Height = 13
-        Caption = 'Select your desired username:'
+        Caption = 'Enter your desired username:'
       end
-      object TntLabel5: TTntLabel
+      object lblPassword: TTntLabel
         Left = 16
-        Top = 73
-        Width = 90
+        Top = 121
+        Width = 136
         Height = 13
-        Caption = 'Select a password:'
+        Caption = 'Enter your desired password:'
       end
       object txtUsername: TTntEdit
         Left = 41
-        Top = 32
+        Top = 80
         Width = 248
         Height = 21
         TabOrder = 0
       end
       object txtPassword: TTntEdit
         Left = 41
-        Top = 89
+        Top = 137
         Width = 248
         Height = 21
+        PasswordChar = '*'
         TabOrder = 1
+      end
+      object optNewAccount: TTntRadioButton
+        Left = 16
+        Top = 8
+        Width = 305
+        Height = 17
+        Caption = 'I need to create a new Jabber account'
+        Checked = True
+        TabOrder = 2
+        TabStop = True
+        OnClick = optExistingAccountClick
+      end
+      object optExistingAccount: TTntRadioButton
+        Left = 16
+        Top = 32
+        Width = 305
+        Height = 17
+        Caption = 'I already have a Jabber account'
+        TabOrder = 3
+        OnClick = optExistingAccountClick
       end
     end
     object tbsWait: TTabSheet
@@ -182,7 +202,8 @@ inherited frmNewUser: TfrmNewUser
         AutoSize = False
         Caption = 
           'Your Registration to this service has been completed Successfull' +
-          'y.'
+          'y. You can now add contacts to your Roster by selecting Tools | ' +
+          'Contacts from the main menu.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
