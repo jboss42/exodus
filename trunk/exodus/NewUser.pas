@@ -27,9 +27,13 @@ uses
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls,
     fXData;
 
+const
+    WM_NUS_CONNECT = WM_USER + 5400;
+
 type
-  TNewUserState = (nus_init, nus_list, nus_connect, nus_user,
-        nus_get, nus_xdata, nus_reg, nus_set, nus_error, nus_finish);
+  TNewUserState = (nus_init, nus_list, nus_disconnect, nus_connect, nus_user,
+        nus_get, nus_xdata, nus_reg, nus_set, nus_auth,
+        nus_error, nus_finish);
 
   TfrmNewUser = class(TfrmWizard)
     TntLabel1: TTntLabel;
@@ -44,17 +48,20 @@ type
     lblBad: TTntLabel;
     lblOK: TTntLabel;
     tbsUser: TTabSheet;
-    TntLabel4: TTntLabel;
+    lblUsername: TTntLabel;
     txtUsername: TTntEdit;
-    TntLabel5: TTntLabel;
+    lblPassword: TTntLabel;
     txtPassword: TTntEdit;
     optServer: TTntRadioButton;
     optPublic: TTntRadioButton;
+    optNewAccount: TTntRadioButton;
+    optExistingAccount: TTntRadioButton;
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure optExistingAccountClick(Sender: TObject);
   private
     { Private declarations }
     _state: TNewUserState;
@@ -77,6 +84,10 @@ type
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure RegGetCallback(event: string; tag: TXMLTag);
     procedure RegSetCallback(event: string; tag: TXMLTag);
+
+  protected
+    procedure WMConnect(var msg: TMessage); message WM_NUS_CONNECT;
+
   public
     { Public declarations }
   end;
@@ -122,7 +133,9 @@ begin
     tbsXData.TabVisible := false;
     tbsReg.TabVisible := false;
     tbsFinish.TabVisible := false;
-    
+
+    btnBack.Enabled := false;
+    btnCancel.Enabled := false;
     Tabs.ActivePage := TabSheet1;
 
     // the default list is brandable
@@ -145,10 +158,6 @@ end;
 procedure TfrmNewUser.btnNextClick(Sender: TObject);
 begin
   inherited;
-  {
-  TNewUserState = (nus_list, nus_server, nus_connect, nus_user,
-        nus_get, nus_xdata, nus_reg, nus_set, nus_finish);
-  }
     // goto the next state
     case _state of
     nus_init: begin
@@ -159,13 +168,19 @@ begin
         _runState();
     end;
     nus_user: begin
-        if (_xdata) then begin
+        if (optExistingAccount.Checked) then begin
+            _state := nus_auth;
+            _runState();
+        end
+        else if (_xdata) then begin
             _state := nus_xdata;
-            Tabs.ActivePage := tbsXData
+            Tabs.ActivePage := tbsXData;
+            btnBack.Enabled := true;
         end
         else if (_fields) then begin
             _state := nus_reg;
             Tabs.ActivePage := tbsReg;
+            btnBack.Enabled := true;
         end
         else begin
             _state := nus_set;
@@ -190,14 +205,29 @@ end;
 procedure TfrmNewUser.btnBackClick(Sender: TObject);
 begin
   inherited;
-    // XXX: implement back functionality
+    case _state of
+    nus_xdata, nus_reg: begin
+        _state := nus_user;
+        _runState();
+    end;
+    nus_user: begin
+        _state := nus_init;
+        _runState();
+    end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmNewUser.btnCancelClick(Sender: TObject);
 begin
   inherited;
-    // XXX: implement cancel functionality
+    if (_iq <> nil) then
+        FreeAndNil(_iq);
+
+    if ((MainSession.Active) and (not MainSession.Authenticated)) then
+        MainSession.Disconnect();
+
+    Self.Close();
 end;
 
 {---------------------------------------}
@@ -227,16 +257,44 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmNewUser.WMConnect(var msg: TMessage);
+begin
+    // try to connect
+    _state := nus_connect;
+    MainSession.Connect();
+end;
+
+{---------------------------------------}
 procedure TfrmNewUser.SessionCallback(event: string; tag: TXMLTag);
 begin
     //
-    if (_state = nus_connect) then begin
-        if (event = '/session/connected') then
+    if (_state = nus_disconnect) then begin
+        if (event = '/session/commerror') then
+            // ignore
+        else if (event = '/session/disconnected') then
+            // we can't just call connect from a disconnect handler.
+            // it causes threading issues
+            PostMessage(Self.Handle, WM_NUS_CONNECT, 0, 0);
+    end
+    else if (_state = nus_connect) then begin
+        if (event = '/session/disconnected') then
+            MainSession.Connect()
+        else if (event = '/session/connected') then
             _state := nus_user
         else if (event = '/session/commerror') then
             _state := nus_error;
 
         if (_state <> nus_connect) then
+            _runState();
+    end
+    else if (_state = nus_auth) then begin
+        if (event = '/session/authenticated') then
+            // XXX: add in new stages for vcard/profile info
+            _state := nus_finish
+        else if (event = '/session/autherror') then
+            _state := nus_error;
+
+        if (_state <> nus_auth) then
             _runState();
     end;
 end;
@@ -247,9 +305,16 @@ var
     q, x: TXMLTag;
     f: TXMLTagList;
 begin
-    //
     assert(_state = nus_get);
+    _doneWait();
     _iq := nil;
+
+    if (event <> 'xml') or (tag.GetAttribute('type') <> 'result') then begin
+        _state := nus_error;
+        _runState();
+        exit;
+    end;
+
     _state := nus_user;
 
     // build up the fields or x-data form
@@ -271,7 +336,16 @@ end;
 {---------------------------------------}
 procedure TfrmNewUser.RegSetCallback(event: string; tag: TXMLTag);
 begin
-    //
+    assert(_state = nus_set);
+    _doneWait();
+    _iq := nil;
+
+    if (event <> 'xml') or (tag.GetAttribute('type') <> 'result') then
+        _state := nus_error
+    else
+        _state := nus_auth;
+
+    _runState();
 end;
 
 {---------------------------------------}
@@ -279,23 +353,28 @@ procedure TfrmNewUser._wait();
 begin
     Tabs.ActivePage := tbsWait;
     aniWait.Active := true;
+    btnBack.Enabled := false;
+    btnCancel.Enabled := true;
 end;
 
 {---------------------------------------}
 procedure TfrmNewUser._doneWait();
 begin
     aniWait.Active := false;
+    btnCancel.Enabled := true;
 end;
 
 {---------------------------------------}
 procedure TfrmNewUser._runState();
+var
+    x: TXMLTag;
 begin
-    // XXX: run each state
-    {
-      TNewUserState = (nus_list, nus_server, nus_connect, nus_user,
-            nus_get, nus_xdata, nus_reg, nus_set, nus_finish);
-    }
+    // run each state
     case _state of
+    nus_init: begin
+        Tabs.ActivePage := TabSheet1;
+        btnBack.Enabled := false;
+    end;
     nus_list: begin
         // fetch the list of public servers
         _wait();
@@ -320,17 +399,22 @@ begin
             ResolvedPort := 5222;
         end;
         MainSession.Prefs.SaveProfiles();
-        Tabs.ActivePage := tbsWait;
-        aniWait.Active := true;
-        MainSession.Connect();
+        _wait();
+        if (MainSession.Active) then begin
+            _state := nus_disconnect;
+            MainSession.Disconnect();
+        end
+        else
+            MainSession.Connect();
     end;
     nus_user: begin
         Tabs.ActivePage := tbsUser;
+        btnBack.Enabled := true;
     end;
     nus_get: begin
         // send the iq-reg-get
+        _wait();
         _state := nus_get;
-        
         _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
             RegGetCallback, 30);
         _iq.Namespace := XMLNS_REGISTER;
@@ -339,6 +423,7 @@ begin
     end;
     nus_set: begin
         // send the iq-set request
+        _wait();
         _username := txtUsername.Text;
         _password := txtPassword.Text;
 
@@ -357,33 +442,68 @@ begin
         _iq.qTag.AddBasicTag('username', _username);
         _iq.qTag.AddBasicTag('password', _password);
 
-        // XXX: iq-set
         if (_xdata) then begin
             // get the xdata fields
+            x := xData.submit();
+            _iq.qTag.AddTag(x);
         end
         else begin
             // get the tbsReg fields
+            PopulateTopFields(tbsReg, _iq.qTag);
         end;
 
         _iq.Send();
     end;
 
+    nus_auth: begin
+        // authenticate the user
+        _wait();
+        MainSession.Profile.NewAccount := false;
+        MainSession.AuthAgent.StartAuthentication();
+    end;
+
+    nus_finish: begin
+        lblOK.Visible := true;
+        lblBad.Visible := false;
+        Tabs.ActivePage := tbsFinish;
+        btnNext.Caption := _('Finish');
+        btnBack.Enabled := false;
+        btnCancel.Enabled := false;
+    end;
+
+    nus_error: begin
+        lblOK.Visible := false;
+        lblBad.Visible := true;
+        Tabs.ActivePage := tbsFinish;
+        btnNext.Caption := _('Finish');
+        btnBack.Enabled := false;
+        btnCancel.Enabled := false;
+    end;
+
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmNewUser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
     // make sure we cancel any outstanding queries..
     if (_iq <> nil) then
         FreeAndNil(_iq);
+    Action := caFree;
+end;
 
-    {
-    if (_fields <> nil) then
-        FreeAndNil(_fields);
-    if (_xdata <> nil) then
-        FreeAndNil(_xdata);
-    }
+procedure TfrmNewUser.optExistingAccountClick(Sender: TObject);
+begin
+  inherited;
+    if (optNewAccount.Checked) then begin
+        lblUsername.Caption := _('Enter your desired username:');
+        lblPassword.Caption := _('Enter your desired password:');
+    end
+    else begin
+        lblUsername.Caption := _('Enter your username:');
+        lblPassword.Caption := _('Enter your password:');
+    end;
 end;
 
 end.

@@ -165,6 +165,9 @@ const
 procedure StartFileSend(jid: Widestring; filename: Widestring); forward;
 procedure StartFileReceive(from, url, desc: string); forward;
 
+var
+    xfer_lock: TCriticalSection;
+
 {---------------------------------------}
 procedure FileSend(tojid: string; fn: string = '');
 var
@@ -246,7 +249,9 @@ begin
     pkg.mode := send_auto;
     pkg.url := url;
 
+    xfer_lock.Acquire();
     getXferManager().sendFile(pkg);
+    xfer_lock.Release();
 end;
 
 {---------------------------------------}
@@ -290,7 +295,9 @@ begin
     pkg.mode := recv_oob;
     tmps := WideFormat(_(sXferRecv), [from]);
     tmp_jid.Free();
+    xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
+    xfer_lock.Release();
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
 end;
 
@@ -362,18 +369,23 @@ begin
     pkg.packet := TXMLTag.Create(tag);
     pkg.desc := '';
     pkg.hash := f.GetAttribute('hash');
+    xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
+    xfer_lock.Release();
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
 end;
 
 {---------------------------------------}
 function getXferManager(): TfrmXferManager;
 begin
+    xfer_lock.Acquire();
+
     if (frmXferManager = nil) then
         frmXferManager := TfrmXferManager.Create(Application);
 
     Result := frmXferManager;
     Result.ShowDefault();
+    xfer_lock.Release();
 end;
 
 {---------------------------------------}
@@ -866,6 +878,10 @@ begin
 end;
 
 initialization
+    xfer_lock := TCriticalSection.Create();
     frmXferManager := nil;
+
+finalization
+    FreeAndNil(xfer_lock);
 
 end.

@@ -163,6 +163,7 @@ type
         procedure addAvailJid(jid: Widestring);
         procedure removeAvailJid(jid: Widestring);
 
+        // Account information
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
         property Server: WideString read GetServer write SetServer;
@@ -170,9 +171,14 @@ type
         property Jid: Widestring read GetFullJid;
         property BareJid: Widestring read GetBareJid;
         property Port: integer read GetPort write SetPort;
+        property Profile: TJabberProfile read _profile;
+
+        // Presence Info
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
         property Status: WideString read _status;
+
+        // Stream stuff
         property Stream: TXMLStream read _stream;
         property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
@@ -180,14 +186,16 @@ type
         property IsResuming: boolean read _resuming;
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
-        property Profile: TJabberProfile read _profile;
-
         property isXMPP: boolean read _xmpp;
         property xmppFeatures: TXMLTag read _features;
         property SSLEnabled: boolean read _ssl_on;
         property xmlLang: WideString read _lang;
         property LoggingEnabled: boolean read _logger;
+
+        // Auth info
         property NoAuth: boolean read _no_auth write _no_auth;
+        property AuthAgent: TJabberAuth read _auth_agent;
+        property Authenticated: boolean read _authd;
     end;
 
 var
@@ -200,7 +208,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    EntityCache, 
+    EntityCache,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence;
 
@@ -605,7 +613,7 @@ begin
             FreeAndNil(_features);
             _features := TXMLTag.Create(tag);
 
-            if (_authd) then begin
+            if (_authd) and (not _no_auth) then begin
                 // We are already auth'd, lets bind to our resource
                 biq := TJabberIQ.Create(Self, generateID(), BindCallback);
                 biq.Namespace := 'urn:ietf:params:xml:ns:xmpp-bind';
@@ -624,7 +632,9 @@ begin
                 end;
 
                 // Otherwise, either try to register, or auth
-                if ((_register) or (_profile.NewAccount)) then begin
+                if (_no_auth) then
+                    // do nothing
+                else if ((_register) or (_profile.NewAccount)) then begin
 
                     if (_features.QueryXPTag('/stream:features/register[@xmlns="http://jabber.org/features/iq-register"]') = nil) then begin
                         // this server doesn't support inband reg.

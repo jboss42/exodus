@@ -2,7 +2,7 @@ object frmConnDetails: TfrmConnDetails
   Left = 256
   Top = 245
   Width = 410
-  Height = 288
+  Height = 295
   ActiveControl = cboJabberID
   Caption = 'Connection Details'
   Color = clBtnFace
@@ -20,7 +20,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 222
+    Top = 229
     Width = 402
     Height = 32
     Align = alBottom
@@ -46,7 +46,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 402
-    Height = 222
+    Height = 229
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -411,8 +411,8 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 130
-        Width = 394
+        Top = 137
+        Width = 390
         Height = 60
         Align = alBottom
         AutoSize = False

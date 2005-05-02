@@ -40,6 +40,7 @@ type
   
 procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
     var key: Widestring);
+procedure PopulateTopFields(ParentControl: TWinControl; container: TXMLTag);
 
 implementation
 
@@ -92,6 +93,20 @@ begin
     end;
 end;
 
+procedure PopulateTopFields(ParentControl: TWinControl; container: TXMLTag);
+var
+    i: integer;
+begin
+    // go thru all the frames and add tags for each field
+    for i := 0 to ParentControl.ControlCount - 1 do begin
+        if (ParentControl.Controls[i] is TframeTopLabel) then begin
+            with TframeTopLabel(ParentControl.Controls[i]) do begin
+                if (txtData.Text <> '') then
+                    container.AddBasicTag(field_name, txtData.Text);
+            end;
+        end;
+    end;
+end;
 
 procedure TframeTopLabel.FrameResize(Sender: TObject);
 begin

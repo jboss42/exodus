@@ -323,7 +323,8 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.Configure;
 begin
-
+    MessageDlg('There are no configurable options for this plugin.', mtInformation,
+        [mbOK], 0);
 end;
 
 {---------------------------------------}
@@ -441,6 +442,8 @@ begin
 
     f := TfrmView.Create(nil);
     f.ParentWindow := h;
+    f.Align := alClient;
+    f.BorderStyle := bsNone;
 
     f.db := _db;
     f.ShowJid(jid);

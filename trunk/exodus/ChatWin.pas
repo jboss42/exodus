@@ -888,9 +888,6 @@ var
     h: Widestring;
 begin
     // Change the bulb
-    if (_pres_img = tab_notify) then
-        exit;
-
     if (show = _('offline')) then
         _pres_img := ico_Offline
     else if (show = _('unknown')) then
@@ -915,7 +912,7 @@ begin
     lblNick.Hint := h;
 
     frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
-    if (Docked) then
+    if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
         Self.TabSheet.ImageIndex := _pres_img;
     _old_img := _pres_img;
 
