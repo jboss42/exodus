@@ -82,7 +82,6 @@ uses
   Langs in '..\jopl\Langs.pas',
   LibXmlComps in '..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\jopl\LibXmlParser.pas',
-  Login in 'Login.pas' {frmLogin},
   MsgController in '..\jopl\MsgController.pas',
   MsgDisplay in 'MsgDisplay.pas',
   MsgList in '..\jopl\MsgList.pas',
@@ -190,7 +189,8 @@ uses
   pngzlib in '..\jopl\png\pngzlib.pas',
   pngimage in '..\jopl\png\pngimage.pas',
   pnglang in '..\jopl\png\pnglang.pas',
-  DiscoIdentity in '..\jopl\DiscoIdentity.pas';
+  DiscoIdentity in '..\jopl\DiscoIdentity.pas',
+  fProfile in 'fProfile.pas' {frameProfile: TFrame};
 
 {$R *.TLB}
 

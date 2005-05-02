@@ -1,8 +1,8 @@
 object frmRosterWindow: TfrmRosterWindow
   Left = 271
   Top = 186
-  Width = 195
-  Height = 446
+  Width = 202
+  Height = 540
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Roster - Exodus'
@@ -52,8 +52,8 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 381
-    Width = 187
+    Top = 475
+    Width = 194
     Height = 10
     Align = alBottom
     AutoSize = True
@@ -67,7 +67,7 @@ object frmRosterWindow: TfrmRosterWindow
   object pnlFind: TPanel
     Left = 0
     Top = 0
-    Width = 187
+    Width = 194
     Height = 49
     Align = alTop
     BevelOuter = bvNone
@@ -128,9 +128,9 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object treeRoster: TTreeView
     Left = 0
-    Top = 210
-    Width = 187
-    Height = 147
+    Top = 321
+    Width = 194
+    Height = 130
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -174,8 +174,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 391
-    Width = 187
+    Top = 485
+    Width = 194
     Height = 21
     Panels = <
       item
@@ -186,8 +186,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 357
-    Width = 187
+    Top = 451
+    Width = 194
     Height = 24
     Align = alBottom
     BevelOuter = bvNone
@@ -204,29 +204,47 @@ object frmRosterWindow: TfrmRosterWindow
       OnPaint = imgStatusPaint
     end
     object imgSSL: TImage
-      Left = 162
+      Left = 173
       Top = 2
-      Width = 23
+      Width = 19
       Height = 20
       Align = alRight
       Center = True
       Picture.Data = {
-        07544269746D6170F6000000424DF60000000000000076000000280000001000
-        0000100000000100040000000000800000000000000000000000100000000000
-        0000000000000000800000800000008080008000000080008000808000008080
-        8000C0C0C0000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-        FF00333333000003333333330088888003333330778707877033330888870788
-        8803330777880887770333088880008888033307777000777703330888888888
-        8803333000000000003333330803330803333333080333080333333308033308
-        0333333377800087733333333088888033333333330000033333333333333333
-        3333}
+        07544269746D617036030000424D360300000000000036000000280000001000
+        0000100000000100180000000000000300000000000000000000000000000000
+        000080FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF
+        80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FF
+        FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
+        FFFF80FFFF2699D0007DC2007DC2007DC2007DC2007DC200629B00629B00629B
+        00629B00478900478900478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+        FF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD0799DE00478980FFFF80
+        FFFF80FFFF08A5EF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD0799DE
+        0799DE067EB7067EB700478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+        FF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD00478980FFFF80
+        FFFF80FFFF08A5EF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD
+        15B4FD0799DE067EB700478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+        FF4ACEFF4ACEFF15B4FD15B4FD15B4FD00B5FF15B4FD15B4FD00478980FFFF80
+        FFFF80FFFF08A5EF08A5EF08A5EF08A5EF0799DE0799DE0799DE0799DE067EB7
+        067EB7067EB7067EB700629B80FFFF80FFFF80FFFF80FFFF90917ADFE1BD7576
+        5F80FFFF80FFFF80FFFF80FFFF80FFFF90917AC9CBAB75765F80FFFF80FFFF80
+        FFFF80FFFF80FFFFA6A883EBEDC775765F80FFFF80FFFF80FFFF80FFFF80FFFF
+        90917AC9CBAB75765F80FFFF80FFFF80FFFF80FFFF80FFFFAFB370EBEDC79498
+        5580FFFF80FFFF80FFFF80FFFF80FFFF90917ADFE1BD75765F80FFFF80FFFF80
+        FFFF80FFFF80FFFFAFB370EBEDC7C4C6A294985575765F75765F75765F90917A
+        EBEDC7DFE1BD90917A80FFFF80FFFF80FFFF80FFFF80FFFF80FFFFAFB370EBED
+        C7EBEDC7EBEDC7EBEDC7EBEDC7EBEDC7DFE1BD90917A80FFFF80FFFF80FFFF80
+        FFFF80FFFF80FFFF80FFFF80FFFFAFB370AFB370A9AC78A9AC7890917A90917A
+        90917A80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FF
+        FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
+        FFFF}
       Transparent = True
       Visible = False
     end
     object pnlStatus: TTntPanel
       Left = 25
       Top = 2
-      Width = 137
+      Width = 148
       Height = 20
       Cursor = crArrow
       Align = alClient
@@ -252,8 +270,8 @@ object frmRosterWindow: TfrmRosterWindow
   object pnlConnect: TPanel
     Left = 0
     Top = 49
-    Width = 187
-    Height = 161
+    Width = 194
+    Height = 272
     Align = alTop
     BevelOuter = bvLowered
     BorderWidth = 4
@@ -264,32 +282,43 @@ object frmRosterWindow: TfrmRosterWindow
     TabOrder = 2
     object lblStatus: TTntLabel
       Left = 5
-      Top = 62
-      Width = 177
-      Height = 60
+      Top = 49
+      Width = 184
+      Height = 32
       Align = alTop
       Alignment = taCenter
       AutoSize = False
       Caption = 'Disconnected.'
       Transparent = False
     end
-    object lblLogin: TTntLabel
+    object lblCreate: TTntLabel
       Left = 5
-      Top = 122
-      Width = 177
+      Top = 254
+      Width = 184
+      Height = 13
+      Cursor = crHandPoint
+      Align = alBottom
+      Caption = 'Create a New Profile'
+      Transparent = False
+      OnClick = lblCreateClick
+    end
+    object lblConnect: TTntLabel
+      Left = 5
+      Top = 81
+      Width = 184
       Height = 13
       Cursor = crHandPoint
       Align = alTop
       Alignment = taCenter
-      Caption = 'Click to Login'
+      Caption = 'Connect with Profile:'
       Transparent = False
-      OnClick = lblLoginClick
+      OnClick = lblConnectClick
     end
     object pnlAnimation: TPanel
       Left = 5
       Top = 5
-      Width = 177
-      Height = 57
+      Width = 184
+      Height = 44
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
@@ -305,12 +334,23 @@ object frmRosterWindow: TfrmRosterWindow
         Visible = False
       end
     end
+    object boxProfiles: TScrollBox
+      Left = 5
+      Top = 94
+      Width = 184
+      Height = 160
+      Align = alClient
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
+      TabOrder = 1
+    end
   end
   object popRoster: TTntPopupMenu
     AutoHotkeys = maManual
     OnPopup = popRosterPopup
     Left = 8
-    Top = 208
+    Top = 344
     object popChat: TTntMenuItem
       Caption = 'Chat...'
       OnClick = popChatClick
@@ -398,7 +438,7 @@ object frmRosterWindow: TfrmRosterWindow
     AutoHotkeys = maManual
     Images = frmExodus.ImageList2
     Left = 8
-    Top = 240
+    Top = 376
     object presOnline: TTntMenuItem
       Caption = 'Available'
       ImageIndex = 1
@@ -442,7 +482,7 @@ object frmRosterWindow: TfrmRosterWindow
     BkColor = clWhite
     ShareImages = True
     Left = 40
-    Top = 178
+    Top = 314
     Bitmap = {
       494C010102000400040010001000FFFFFF00FF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -586,7 +626,7 @@ object frmRosterWindow: TfrmRosterWindow
   object popActions: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
-    Top = 208
+    Top = 344
     object popAddContact: TTntMenuItem
       Caption = 'Add Contact'
       OnClick = popAddContactClick
@@ -599,7 +639,7 @@ object frmRosterWindow: TfrmRosterWindow
   object popGroup: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
-    Top = 240
+    Top = 376
     object popGrpPresence: TTntMenuItem
       Caption = 'Send Presence'
       object popGrpAvailable: TTntMenuItem
@@ -653,7 +693,7 @@ object frmRosterWindow: TfrmRosterWindow
   object popBookmark: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 8
-    Top = 272
+    Top = 408
     object Join1: TTntMenuItem
       Caption = 'Join Group'
       OnClick = treeRosterDblClick
@@ -674,7 +714,7 @@ object frmRosterWindow: TfrmRosterWindow
   object popTransport: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
-    Top = 272
+    Top = 408
     object popTransLogoff: TTntMenuItem
       Caption = 'Log Off'
       OnClick = popTransLogoffClick
@@ -704,6 +744,6 @@ object frmRosterWindow: TfrmRosterWindow
     Interval = 100
     OnTimer = autoScrollTimer
     Left = 72
-    Top = 272
+    Top = 408
   end
 end
