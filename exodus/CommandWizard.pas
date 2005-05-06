@@ -308,18 +308,19 @@ begin
 
     msg := '';
     c := tag.GetFirstTag('command');
+
+    if (c = nil) then begin
+        msg := _('The result of the command execute was mal-formed.') + ' ' + msg;
+        fail(msg);
+        exit;
+    end;
+
     n := c.GetFirstTag('note');
     if (n <> nil) then
         msg := n.Data;
 
     if (tag.getAttribute('type') <> 'result') then begin
         msg := _('The execute query returned an error.') + ' ' + msg;
-        fail(msg);
-        exit;
-    end;
-
-    if (c = nil) then begin
-        msg := _('The result of the command execute was mal-formed.') + ' ' + msg;
         fail(msg);
         exit;
     end;
