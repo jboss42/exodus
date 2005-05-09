@@ -553,7 +553,7 @@ begin
         if (i mod 2 = 0) then
             f.Color := clBtnFace
         else
-            f.Color := pnlConnect.Color;
+            f.Color := clActiveBorder; //pnlConnect.Color;
 
         AssignUnicodeURL(f.Font, 8);
     end;
