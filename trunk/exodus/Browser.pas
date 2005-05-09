@@ -85,6 +85,7 @@ type
     lsFeatures: TTntListBox;
     mGetInfo: TMenuItem;
     vwInfo: TTntListView;
+    btnInfo: TToolButton;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -120,6 +121,7 @@ type
     procedure mAddContactClick(Sender: TObject);
     procedure mGetInfoClick(Sender: TObject);
     procedure vwInfoData(Sender: TObject; Item: TListItem);
+    procedure btnInfoClick(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -1022,6 +1024,12 @@ begin
         SubItems.Add(info.Category);
         SubItems.Add(info.DiscoType);
     end;
+end;
+
+procedure TfrmBrowse.btnInfoClick(Sender: TObject);
+begin
+    PushJid(_ent.Jid.full, _ent.Node);
+    ShowDiscoInfo();
 end;
 
 end.
