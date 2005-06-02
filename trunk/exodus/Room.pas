@@ -228,7 +228,7 @@ var
   xp_muc_reason: TXPLite;
 
 const
-    sRoom = '%s Room';
+    sRoom = '%s'; // Room';
     sNotifyKeyword = 'Keyword in ';
     sNotifyActivity = 'Activity in ';
     sRoomSubjChange = '/me has changed the subject to: ';
