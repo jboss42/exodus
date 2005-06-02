@@ -504,7 +504,7 @@ begin
     if (ritem <> nil) then begin
         // This person is in our roster
         lblNick.Caption := ritem.Nickname;
-        Caption := ritem.Nickname + ' - ' + _(sChat);
+        Caption := ritem.Nickname; //  + ' - ' + _(sChat);
         lblNick.Hint := _jid.full;
         MsgList.setTitle(ritem.Nickname);
         if (p = nil) then
