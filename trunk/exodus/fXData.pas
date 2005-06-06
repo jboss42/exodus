@@ -44,6 +44,8 @@ type
     procedure Render(tag: TXMLTag);
     function submit(): TXMLTag;
     function cancel(): TXMLTag;
+    function getUsername(): Widestring;
+    function getPassword(): Widestring;
   end;
 
 implementation
@@ -140,6 +142,38 @@ begin
     end;
 
     Result := x;
+end;
+
+{---------------------------------------}
+function TframeXData.getUsername(): Widestring;
+var
+    i: integer;
+    ro: TXDataRow;
+begin
+    Result := '';
+    for i := 0 to _rows.Count - 1 do begin
+        ro := TXDataRow(_rows[i]);
+        if (ro.v = 'username') then begin
+            Result := ro.d;
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TframeXData.getPassword(): Widestring;
+var
+    i: integer;
+    ro: TXDataRow;
+begin
+    Result := '';
+    for i := 0 to _rows.Count - 1 do begin
+        ro := TXDataRow(_rows[i]);
+        if (ro.v = 'password') then begin
+            Result := ro.d;
+            exit;
+        end;
+    end;
 end;
 
 {---------------------------------------}

@@ -29,6 +29,7 @@ uses
 
 const
     WM_NUS_CONNECT = WM_USER + 5400;
+    CONNECT_ATTEMPTS = 3;
 
 type
   TNewUserState = (nus_init, nus_list, nus_disconnect, nus_connect, nus_user,
@@ -76,6 +77,8 @@ type
     _xdata: boolean;
     _key: Widestring;
 
+    _connect_attempts: integer;
+
     procedure _runState();
     procedure _fetchServers();
     procedure _wait();
@@ -95,19 +98,19 @@ type
 var
   frmNewUser: TfrmNewUser;
 
-procedure ShowNewUserWizard();
+function ShowNewUserWizard(): integer;
 
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, fTopLabel, JabberConst,  
+    GnuGetText, fTopLabel, JabberConst, Jabber1, RosterWindow,   
     WebGet, XMLParser, PrefController, Session, ExUtils;
 
 {---------------------------------------}
-procedure ShowNewUserWizard();
+function ShowNewUserWizard(): integer;
 begin
     frmNewUser := TfrmNewUser.Create(nil);
-    frmNewUser.Show();
+    Result := frmNewUser.ShowModal();
 end;
 
 {---------------------------------------}
@@ -172,18 +175,8 @@ begin
             _state := nus_auth;
             _runState();
         end
-        else if (_xdata) then begin
-            _state := nus_xdata;
-            Tabs.ActivePage := tbsXData;
-            btnBack.Enabled := true;
-        end
-        else if (_fields) then begin
-            _state := nus_reg;
-            Tabs.ActivePage := tbsReg;
-            btnBack.Enabled := true;
-        end
         else begin
-            _state := nus_set;
+            _state := nus_get;
             _runState();
         end;
     end;
@@ -196,7 +189,12 @@ begin
         _runState();
     end;
     nus_finish: begin
-        Self.Close();
+        Self.ModalResult := mrOK;
+        //Self.Close();
+    end;
+    nus_error: begin
+        Self.ModalResult := mrCancel;
+        //Self.Close();
     end;
     end;
 end;
@@ -214,6 +212,22 @@ begin
         _state := nus_init;
         _runState();
     end;
+    nus_error: begin
+        btnNext.Caption := _('Next >');
+        if (MainSession.Active) then begin
+            // we at least connected
+            if (optExistingAccount.Checked) then
+                _state := nus_user
+            else if (_xdata) then
+                _state := nus_xdata
+            else
+                _state := nus_reg;
+        end
+        else
+            _state := nus_init;
+        _runState();
+    end;
+
     end;
 end;
 
@@ -260,8 +274,15 @@ end;
 procedure TfrmNewUser.WMConnect(var msg: TMessage);
 begin
     // try to connect
-    _state := nus_connect;
-    MainSession.Connect();
+    inc(_connect_attempts);
+    if (_connect_attempts > CONNECT_ATTEMPTS) then begin
+        _state := nus_error;
+        _runState();
+    end
+    else begin
+        _state := nus_connect;
+        MainSession.Connect();
+    end;
 end;
 
 {---------------------------------------}
@@ -277,8 +298,8 @@ begin
             PostMessage(Self.Handle, WM_NUS_CONNECT, 0, 0);
     end
     else if (_state = nus_connect) then begin
-        if (event = '/session/disconnected') then
-            MainSession.Connect()
+        if (event = '/session/disconnected') then 
+            PostMessage(Self.Handle, WM_NUS_CONNECT, 0, 0)
         else if (event = '/session/connected') then
             _state := nus_user
         else if (event = '/session/commerror') then
@@ -293,7 +314,7 @@ begin
             _state := nus_finish
         else if (event = '/session/autherror') then
             _state := nus_error;
-
+                        
         if (_state <> nus_auth) then
             _runState();
     end;
@@ -315,21 +336,25 @@ begin
         exit;
     end;
 
-    _state := nus_user;
-
     // build up the fields or x-data form
-    q := tag.QueryXPTag('/iq/query[@xmlns"jabber:iq:register"]');
+    q := tag.QueryXPTag('/iq/query[@xmlns="jabber:iq:register"]');
     x := q.QueryXPTag('/query/x[@xmlns="jabber:x:data"]');
     if (x <> nil) then begin
+        _state := nus_xdata;
         _xdata := true;
         xData.Render(x);
+        Tabs.ActivePage := tbsXData;
+        btnBack.Enabled := true;
     end
     else begin
+        _state := nus_reg;
         f := q.ChildTags();
         if (f.Count > 0) then begin
             _fields := true;
             RenderTopFields(tbsReg, f, _key);
         end;
+        Tabs.ActivePage := tbsReg;
+        btnBack.Enabled := true;
     end;
 end;
 
@@ -341,6 +366,7 @@ begin
     _iq := nil;
 
     if (event <> 'xml') or (tag.GetAttribute('type') <> 'result') then
+        // XXX: display more info about error?
         _state := nus_error
     else
         _state := nus_auth;
@@ -374,6 +400,7 @@ begin
     nus_init: begin
         Tabs.ActivePage := TabSheet1;
         btnBack.Enabled := false;
+        btnCancel.Enabled := true;
     end;
     nus_list: begin
         // fetch the list of public servers
@@ -384,10 +411,13 @@ begin
         _have_public_servers := true;
         optPublic.Enabled := false;
         optServer.Checked := true;
+        _runState();
     end;
     nus_connect: begin
         // try and connect to this server
+
         // XXX: DO SRV lookups here??
+        _connect_attempts := 0;
         _server := cboServer.Text;
         MainSession.NoAuth := true;
         with MainSession.Profile do begin
@@ -421,11 +451,35 @@ begin
         _iq.iqType := 'get';
         _iq.Send();
     end;
+    nus_xdata: begin
+        Tabs.ActivePage := tbsXData;
+        btnBack.Enabled := true;
+    end;
+    nus_reg: begin
+        Tabs.ActivePage := tbsReg;
+        btnBack.Enabled := true;
+    end;
     nus_set: begin
         // send the iq-set request
         _wait();
-        _username := txtUsername.Text;
-        _password := txtPassword.Text;
+        _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+            RegSetCallback, 30);
+        _iq.Namespace := XMLNS_REGISTER;
+        _iq.iqType := 'set';
+
+        if (_xdata) then begin
+            // get the xdata fields
+            _username := xData.getUsername();
+            _password := xData.getPassword();
+            x := xData.submit();
+            _iq.qTag.AddTag(x);
+        end
+        else begin
+            // get the tbsReg fields
+            _username := getTopFieldsUsername(tbsReg);
+            _password := getTopFieldsPassword(tbsReg);
+            PopulateTopFields(tbsReg, _iq.qTag);
+        end;
 
         with MainSession.Profile do begin
             Username := _username;
@@ -435,22 +489,7 @@ begin
             NewAccount := true;
         end;
 
-        _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-            RegSetCallback, 30);
-        _iq.Namespace := XMLNS_REGISTER;
-        _iq.iqType := 'set';
-        _iq.qTag.AddBasicTag('username', _username);
-        _iq.qTag.AddBasicTag('password', _password);
-
-        if (_xdata) then begin
-            // get the xdata fields
-            x := xData.submit();
-            _iq.qTag.AddTag(x);
-        end
-        else begin
-            // get the tbsReg fields
-            PopulateTopFields(tbsReg, _iq.qTag);
-        end;
+        MainSession.Prefs.SaveProfiles();
 
         _iq.Send();
     end;
@@ -458,7 +497,18 @@ begin
     nus_auth: begin
         // authenticate the user
         _wait();
-        MainSession.Profile.NewAccount := false;
+        _username := txtUsername.Text;
+        _password := txtPassword.Text;
+
+        with MainSession.Profile do begin
+            Username := _username;
+            Password := _password;
+            Resource := 'Exodus';
+            SavePasswd := true;
+            NewAccount := false;
+        end;
+
+        MainSession.Prefs.SaveProfiles();        
         MainSession.AuthAgent.StartAuthentication();
     end;
 
@@ -476,8 +526,13 @@ begin
         lblBad.Visible := true;
         Tabs.ActivePage := tbsFinish;
         btnNext.Caption := _('Finish');
-        btnBack.Enabled := false;
+        btnBack.Enabled := true;
         btnCancel.Enabled := false;
+
+        // make sure we don't try to reconnect underneath the hood:
+        frmExodus.CancelConnect();
+        frmExodus.timReconnect.Enabled := false;
+        frmRosterWindow.ToggleGUI(gui_disconnected);
     end;
 
     end;
@@ -493,14 +548,21 @@ begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmNewUser.optExistingAccountClick(Sender: TObject);
 begin
   inherited;
     if (optNewAccount.Checked) then begin
-        lblUsername.Caption := _('Enter your desired username:');
-        lblPassword.Caption := _('Enter your desired password:');
+        lblUsername.Visible := false;
+        lblPassword.Visible := false;
+        txtUsername.Visible := false;
+        txtPassword.Visible := false;
     end
     else begin
+        lblUsername.Visible := true;
+        lblPassword.Visible := true;
+        txtUsername.Visible := true;
+        txtPassword.Visible := true;
         lblUsername.Caption := _('Enter your username:');
         lblPassword.Caption := _('Enter your password:');
     end;

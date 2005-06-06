@@ -392,7 +392,7 @@ begin
         if (send_presence) then
             f.sendStartPresence();
 
-        f.Caption := WideFormat(_(sRoom), [tmp_jid.user]);
+        f.Caption := tmp_jid.user;
         if (MainSession.Prefs.getBool('expanded')) then begin
             f.DockForm;
         end;

@@ -42,12 +42,19 @@ procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
     var key: Widestring);
 procedure PopulateTopFields(ParentControl: TWinControl; container: TXMLTag);
 
+function getTopFieldsUsername(ParentControl: TWinControl): widestring;
+function getTopFieldsPassword(ParentControl: TWinControl): widestring;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
 uses
     ExUtils;
 
+{---------------------------------------}
 procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
     var key: Widestring);
 var
@@ -93,6 +100,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure PopulateTopFields(ParentControl: TWinControl; container: TXMLTag);
 var
     i: integer;
@@ -108,6 +116,44 @@ begin
     end;
 end;
 
+{---------------------------------------}
+function getTopFieldsUsername(ParentControl: TWinControl): widestring;
+var
+    i: integer;
+begin
+    Result := '';
+    for i := 0 to ParentControl.ControlCount - 1 do begin
+        if (ParentControl.Controls[i] is TframeTopLabel) then begin
+            with TframeTopLabel(ParentControl.Controls[i]) do begin
+                if (field_name = 'username') then begin
+                    Result := txtData.Text;
+                    exit;
+                end;
+            end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function getTopFieldsPassword(ParentControl: TWinControl): widestring;
+var
+    i: integer;
+begin
+    Result := '';
+    for i := 0 to ParentControl.ControlCount - 1 do begin
+        if (ParentControl.Controls[i] is TframeTopLabel) then begin
+            with TframeTopLabel(ParentControl.Controls[i]) do begin
+                if (field_name = 'password') then begin
+                    Result := txtData.Text;
+                    exit;
+                end;
+            end;
+        end;
+    end;
+end;
+
+
+{---------------------------------------}
 procedure TframeTopLabel.FrameResize(Sender: TObject);
 begin
     // resize the text box..

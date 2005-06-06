@@ -288,8 +288,10 @@ object frmRosterWindow: TfrmRosterWindow
       Align = alTop
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Disconnected.'
+      Caption = 'You are currently disconnected.'
       Transparent = False
+      Layout = tlCenter
+      WordWrap = True
     end
     object lblCreate: TTntLabel
       Left = 5
@@ -306,13 +308,29 @@ object frmRosterWindow: TfrmRosterWindow
       Left = 5
       Top = 81
       Width = 184
-      Height = 13
+      Height = 23
       Cursor = crHandPoint
       Align = alTop
       Alignment = taCenter
-      Caption = 'Connect with Profile:'
+      AutoSize = False
+      Caption = 'Click a profile to connect'
+      Color = clWindow
+      ParentColor = False
       Transparent = False
+      Layout = tlCenter
+      WordWrap = True
       OnClick = lblConnectClick
+    end
+    object lblNewUser: TTntLabel
+      Left = 5
+      Top = 241
+      Width = 184
+      Height = 13
+      Cursor = crHandPoint
+      Align = alBottom
+      Caption = 'Run the New User Wizard'
+      Transparent = False
+      OnClick = lblNewUserClick
     end
     object pnlAnimation: TPanel
       Left = 5
@@ -336,13 +354,13 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object boxProfiles: TScrollBox
       Left = 5
-      Top = 94
+      Top = 104
       Width = 184
-      Height = 160
+      Height = 137
       Align = alClient
-      BevelInner = bvNone
-      BevelOuter = bvNone
       BorderStyle = bsNone
+      Color = clWindow
+      ParentColor = False
       TabOrder = 1
     end
   end

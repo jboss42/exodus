@@ -940,7 +940,7 @@ begin
             mtWarning, [mbOK], 0);
     end;
 
-    // Creat and dock the MsgQueue if we're in expanded mode
+    // Create and dock the MsgQueue if we're in expanded mode
     if (MainSession.Prefs.getBool('expanded')) then begin
         _expanded := true;
         getMsgQueue();
@@ -1187,8 +1187,12 @@ begin
         _logoff := true;
         MainSession.Profile.password := '';
         MessageDlgW(_(sAuthError), mtError, [mbOK], 0);
-        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
-        PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+
+        // when the new user wizard is being used, NoAuth is set.
+        if (not MainSession.NoAuth) then begin
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+            PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+        end;
         exit;
     end
 
@@ -2725,17 +2729,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
-var
+//var
     {
     h: integer;
     i: IExodusController;
     f, o, m, x: TXMLTag;
     }
-    i: integer;
-    z: TZipMaster;
+    //i: integer;
+    //z: TZipMaster;
 begin
 
-    //ShowNewUserWizard();
+    ShowNewUserWizard();
+    {
     z := TZipMaster.Create(nil);
     i := z.Load_Unz_Dll();
     ShowMessage(IntToStr(i));
@@ -2749,6 +2754,7 @@ begin
 
     i := z.List();
     ShowMessage(IntToStr(i));
+    }
 
     //
     //ShowMessage(BoolToStr(IsUnicodeEnabled()));

@@ -2,7 +2,7 @@ object frmConnDetails: TfrmConnDetails
   Left = 256
   Top = 245
   Width = 410
-  Height = 295
+  Height = 314
   ActiveControl = cboJabberID
   Caption = 'Connection Details'
   Color = clBtnFace
@@ -18,38 +18,14 @@ object frmConnDetails: TfrmConnDetails
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 229
-    Width = 402
-    Height = 32
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 0
-    inherited Panel2: TPanel
-      Width = 402
-      Height = 32
-      inherited Bevel1: TBevel
-        Width = 402
-      end
-      inherited Panel1: TPanel
-        Left = 242
-        Height = 27
-        inherited btnOK: TTntButton
-          ModalResult = 0
-          OnClick = frameButtons1btnOKClick
-        end
-      end
-    end
-  end
   object PageControl1: TTntPageControl
     Left = 0
     Top = 0
     Width = 402
-    Height = 229
+    Height = 247
     ActivePage = tbsProfile
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
@@ -102,6 +78,15 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'Priority:'
         Transparent = True
+      end
+      object lblRename: TTntLabel
+        Left = 100
+        Top = 201
+        Width = 90
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Rename this profile'
+        OnClick = lblRenameClick
       end
       object cboJabberID: TTntComboBox
         Left = 100
@@ -411,7 +396,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 137
+        Top = 155
         Width = 390
         Height = 60
         Align = alBottom
@@ -451,6 +436,56 @@ object frmConnDetails: TfrmConnDetails
         Height = 17
         Caption = 'Use HTTP Polling'
         TabOrder = 3
+      end
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 247
+    Width = 402
+    Height = 33
+    Align = alBottom
+    BevelOuter = bvNone
+    BorderWidth = 4
+    TabOrder = 1
+    object Panel1: TPanel
+      Left = 159
+      Top = 4
+      Width = 239
+      Height = 25
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object btnOK: TTntButton
+        Left = 4
+        Top = 0
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        ModalResult = 1
+        TabOrder = 0
+        OnClick = frameButtons1btnOKClick
+      end
+      object btnCancel: TTntButton
+        Left = 82
+        Top = 0
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Cancel'
+        ModalResult = 2
+        TabOrder = 1
+      end
+      object btnConnect: TTntButton
+        Left = 161
+        Top = 0
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Connect'
+        ModalResult = 6
+        TabOrder = 2
       end
     end
   end

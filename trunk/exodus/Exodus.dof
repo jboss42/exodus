@@ -100,17 +100,13 @@ Conditionals=Exodus;TRACE_EXCEPTIONS
 DebugSourceDirs=D:\src\exodus\exodus\components\;D:\src\Indy\Source\
 UsePackages=1
 [Parameters]
-RunParams=-d -c debug.xml
+RunParams=-d -c test1.xml
 HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
 RemoteHost=192.168.1.188
 RemotePath=C:\Program Files\Exodus.exe
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
 IncludeVerInfo=0
 AutoIncBuild=0

@@ -85,7 +85,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, 
+    Avatar, NewUser,  
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
@@ -218,7 +218,7 @@ begin
             // -?           : help
             // -0           : DLLRegisterServer
             // -x [yes|no]  : expanded
-            // -X [URI]     : XMPP URL
+            // -u [URI]     : XMPP URL
             // -j [jid]     : jid
             // -p [pass]    : password
             // -r [res]     : resource
@@ -285,6 +285,7 @@ begin
         exit;
     end;
 
+    // if no config was specified, grab the default
     if (config = '') then
         config := getUserDir() + 'exodus.xml';
 
@@ -327,23 +328,30 @@ begin
         end;
     end;
 
+    // COM Controller
     ExRegController := TRegController.Create();
     ExRegController.SetSession(MainSession);
 
+    // GUI builder for Exodus <--> JOPL bridge
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
 
+    // Notification singlton
     _Notify := TNotifyController.Create;
     _Notify.SetSession(MainSession);
 
+    // S10N controller singleton
     _subcontroller := TSubController.Create();
 
+    // if they didn't specify debug mod, grab it from the prefs
     if not ExStartup.debug then
         ExStartup.debug := MainSession.Prefs.getBool('debug');
 
+    // if they didn't specify minimized mode, grab it from the prefs
     if not ExStartup.minimized then
         ExStartup.minimized := MainSession.Prefs.getBool('min_start');
 
+    // if they didn't specify expanded mode, grab it from the prefs
     if (expanded <> '') then
         MainSession.Prefs.SetBool('expanded', (expanded = 'yes'));
 
@@ -459,6 +467,8 @@ begin
                 end
                 else begin
                     if (not IsPositiveResult(ShowConnDetails(profile))) then begin
+                    //MainSession.ActivateProfile(prof_index);
+                    //XXX: if (not IsPositiveResult(ShowNewUserWizard())) then begin
                         result := false;
                         exit;
                     end;
@@ -509,6 +519,7 @@ begin
     ExCOMRoster := TExodusRoster.Create();
     ExCOMPPDB := TExodusPPDB.Create();
 
+    // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
     ExStartup.show := cli_show;
     ExStartup.status := cli_status;
