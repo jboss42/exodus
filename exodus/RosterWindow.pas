@@ -31,6 +31,11 @@ uses
 const
     WM_SHOWLOGIN = WM_USER + 5273;
 
+    // ToggleGUI states
+    gui_disconnected = 0;
+    gui_connecting = 1;
+    gui_connected = 2;
+
 type
 
   TfrmRosterWindow = class(TForm)
@@ -116,6 +121,7 @@ type
     autoScroll: TTimer;
     lblConnect: TTntLabel;
     boxProfiles: TScrollBox;
+    lblNewUser: TTntLabel;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -189,6 +195,7 @@ type
     procedure lblConnectClick(Sender: TObject);
     procedure lblDeleteClick(Sender: TObject);
     procedure lblModifyClick(Sender: TObject);
+    procedure lblNewUserClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -273,9 +280,7 @@ type
     procedure DrawAvatar(Node: TTreeNode; a: TAvatar);
     procedure DrawClientImage(Node: TTreeNode; jid: TJabberID);
     procedure DrawClientIndex(r: TRect; index: integer);
-
     procedure DoLogin(idx: integer);
-    procedure ToggleGUI(state: integer);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -305,6 +310,7 @@ type
 
     procedure updateReconnect(secs: integer);
     procedure ShowProfiles();
+    procedure ToggleGUI(state: integer);
 
     function RenderGroup(grp: TJabberGroup): TTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
@@ -321,7 +327,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
-    fProfile, ConnDetails,
+    fProfile, ConnDetails, NewUser, 
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
@@ -337,10 +343,10 @@ const
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
     sNoBroadcast = 'You must select more than one online contact to broadcast.';
-    sSignOn = 'Connect with Profile:';
+    sSignOn = 'Click a profile to connect';
     sNewProfile = 'Create a New Profile';
     sCancelLogin = 'Click to Cancel...';
-    sDisconnected = 'Disconnected.';
+    sDisconnected = 'You are currently disconnected.';
     sConnecting = 'Trying to connect...';
     sAuthenticating = 'Connected. '#13#10'Authenticating...';
     sAuthenticated = 'Authenticated.'#13#10'Getting Contacts...';
@@ -375,10 +381,6 @@ const
 
     MIN_WIDTH = 150;
 
-    gui_disconnected = 0;
-    gui_connecting = 1;
-    gui_connected = 2;
-
 {$R *.DFM}
 
 {---------------------------------------}
@@ -406,6 +408,7 @@ begin
     AssignUnicodeFont(Self, 9);
     AssignUnicodeFont(lblConnect.Font, 8);
     AssignUnicodeURL(lblCreate.Font, 8);
+    AssignUnicodeURL(lblNewUser.Font, 8);
     AssignUnicodeFont(pnlFind.Font, 8);
     StatBar.Font.Size := 8;
     TranslateComponent(Self);
@@ -553,7 +556,7 @@ begin
         if (i mod 2 = 0) then
             f.Color := clBtnFace
         else
-            f.Color := clActiveBorder; //pnlConnect.Color;
+            f.Color := clWindow;
 
         AssignUnicodeURL(f.Font, 8);
     end;
@@ -615,6 +618,7 @@ begin
         ClearNodes();
         ShowPresence('offline');
         MainSession.Roster.Clear();
+        pnlAnimation.Visible := false;
         treeRoster.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
@@ -625,13 +629,14 @@ begin
         lblCreate.Caption := _(sNewProfile);
         boxProfiles.Visible := true;
         lblCreate.Visible := true;
+        lblNewUser.Visible := true;
         imgSSL.Visible := false;
         lblConnect.Font.Color := clWindowText;
         lblConnect.Font.Style := [];
         AssignUnicodeFont(lblConnect.Font, 8);
-        lblConnect.Height := lblConnect.Height + 15;
     end
     else if (state = gui_connecting) then begin
+        pnlAnimation.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
         lblStatus.Visible := true;
@@ -639,6 +644,7 @@ begin
         lblConnect.Caption := _(sCancelLogin);
         boxProfiles.Visible := false;
         lblCreate.Visible := false;
+        lblNewUser.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
         Self.showAniStatus();
     end;
@@ -668,6 +674,7 @@ begin
         Self.showAniStatus();
         boxProfiles.Visible := false;
         lblCreate.Visible := false;
+        lblNewUser.Visible := false;
         ShowPresence('online');
         ResetPanels();
     end
@@ -679,6 +686,7 @@ begin
         Self.showAniStatus();
         boxProfiles.Visible := false;
         lblCreate.Visible := false;
+        lblNewUser.Visible := false;
     end
 
     // it's the end of the roster, update the GUI
@@ -3003,14 +3011,21 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.lblModifyClick(Sender: TObject);
 var
+    res: integer;
     idx: integer;
     p: TJabberProfile;
 begin
     assert(Sender is TTntLabel);
     idx := TTntLabel(Sender).Tag;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[idx]);
-    ShowConnDetails(p);
-    TTntLabel(Sender).Hint := p.Jid;
+    res := ShowConnDetails(p);
+    if ((res = mrOK) or (res = mrYES)) then begin
+        TFrameProfile(TTntLabel(Sender).Parent).lblName.Hint := p.Jid;
+        TFrameProfile(TTntLabel(Sender).Parent).lblName.Caption := p.Name;
+
+        if (res = mrYES) then
+            lblConnectClick(TFrameProfile(TTntLabel(Sender).Parent).lblName);
+    end;
 end;
 
 {---------------------------------------}
@@ -3432,6 +3447,39 @@ begin
     else
         treeRoster.Perform(WM_VSCROLL, SB_LINEDOWN, 0);
     treeRoster.Invalidate();
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.lblNewUserClick(Sender: TObject);
+var
+    pname: Widestring;
+    p: TJabberProfile;
+    i: integer;
+begin
+    // Run the new user wizard... first create a new profile
+    pname := _(sProfileNew);
+    if InputQueryW(_(sProfileCreate), _(sProfileNamePrompt), pname) then begin
+        p := MainSession.Prefs.CreateProfile(pname);
+        p.Resource := _(sProfileDefaultResource);
+        p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
+        MainSession.Prefs.SaveProfiles();
+        ShowProfiles();
+        i := MainSession.Prefs.Profiles.IndexOfObject(p);
+        assert(i >= 0);
+        MainSession.ActivateProfile(i);
+        if (ShowNewUserWizard() = mrCancel) then begin
+            // things didn't go so well.. cleanup
+            frmExodus.CancelConnect();
+            frmExodus.timReconnect.Enabled := false;
+            ToggleGUI(gui_disconnected);
+            MainSession.Prefs.RemoveProfile(p);
+            MainSession.Prefs.SaveProfiles();
+            ShowProfiles();
+        end
+        else
+            // make sure we're showing the right UI
+            ToggleGUI(gui_connected);
+    end;
 end;
 
 initialization

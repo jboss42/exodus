@@ -644,7 +644,7 @@ begin
 
                     CreateAccount();
                 end
-                else
+                else if (not _no_auth) then
                     _auth_agent.StartAuthentication();
             end;
         end

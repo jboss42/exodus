@@ -504,7 +504,7 @@ begin
     if (ritem <> nil) then begin
         // This person is in our roster
         lblNick.Caption := ritem.Nickname;
-        Caption := ritem.Nickname; //  + ' - ' + _(sChat);
+        Caption := ritem.Nickname;
         lblNick.Hint := _jid.full;
         MsgList.setTitle(ritem.Nickname);
         if (p = nil) then
@@ -528,7 +528,7 @@ begin
         lblNick.Caption := n;
         lblNick.Hint := cjid;
         MsgList.setTitle(cjid);
-        Caption := n + ' - ' + _(sChat);
+        Caption := n;
         if (p = nil) then
             ChangePresImage('unknown', 'Unknown Presence')
         else

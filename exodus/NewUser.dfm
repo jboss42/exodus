@@ -30,6 +30,7 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Tabs: TPageControl
+    ActivePage = tbsUser
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -80,6 +81,7 @@ inherited frmNewUser: TfrmNewUser
         Width = 137
         Height = 13
         Caption = 'Enter your desired username:'
+        Visible = False
       end
       object lblPassword: TTntLabel
         Left = 16
@@ -87,6 +89,7 @@ inherited frmNewUser: TfrmNewUser
         Width = 136
         Height = 13
         Caption = 'Enter your desired password:'
+        Visible = False
       end
       object txtUsername: TTntEdit
         Left = 41
@@ -94,6 +97,7 @@ inherited frmNewUser: TfrmNewUser
         Width = 248
         Height = 21
         TabOrder = 0
+        Visible = False
       end
       object txtPassword: TTntEdit
         Left = 41
@@ -102,6 +106,7 @@ inherited frmNewUser: TfrmNewUser
         Height = 21
         PasswordChar = '*'
         TabOrder = 1
+        Visible = False
       end
       object optNewAccount: TTntRadioButton
         Left = 16
@@ -130,7 +135,7 @@ inherited frmNewUser: TfrmNewUser
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 63
         Height = 13
         Align = alTop
         Caption = 'Please wait...'

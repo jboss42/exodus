@@ -29,7 +29,6 @@ uses
 
 type
   TfrmConnDetails = class(TForm)
-    frameButtons1: TframeButtons;
     PageControl1: TTntPageControl;
     tbsSocket: TTntTabSheet;
     tbsHttp: TTntTabSheet;
@@ -81,6 +80,12 @@ type
     txtPort: TTntEdit;
     chkPolling: TTntCheckBox;
     chkWinLogin: TTntCheckBox;
+    Panel2: TPanel;
+    Panel1: TPanel;
+    btnOK: TTntButton;
+    btnCancel: TTntButton;
+    btnConnect: TTntButton;
+    lblRename: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -93,6 +98,7 @@ type
     procedure chkSRVClick(Sender: TObject);
     procedure txtUsernameExit(Sender: TObject);
     procedure chkWinLoginClick(Sender: TObject);
+    procedure lblRenameClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -124,7 +130,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExSession, Stringprep, 
+    ExSession, Stringprep, InputPassword, 
     JabberUtils, ExUtils,  GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
     Registry, StrUtils;
 
@@ -381,6 +387,7 @@ begin
     TranslateComponent(Self);
 
     URLLabel(lblServerList);
+    URLLabel(lblRename);
     MainSession.Prefs.RestorePosition(Self);
 
     list := TWideStringList.Create();
@@ -452,11 +459,11 @@ begin
     if (MessageDlgW(_(sDownloadServers), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
         exit;
 
-    frameButtons1.btnOK.Enabled := false;
+    btnOK.Enabled := false;
 
     slist := ExWebDownload(_(sDownloadCaption), 'http://jabber.org/servers.xml');
 
-    frameButtons1.btnOK.Enabled := true;
+    btnOK.Enabled := true;
 
     if (slist = '') then exit;
 
@@ -528,6 +535,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
 var
     p : integer;
@@ -547,6 +555,19 @@ begin
 
     if not txtPassword.Enabled then
         txtPassword.Text := '';
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.lblRenameClick(Sender: TObject);
+var
+    new: Widestring;
+begin
+    // rename this profile
+    new := _profile.Name;
+    if (InputQueryW(_('Rename Profile'), _('New Profile Name:'), new)) then begin
+        _profile.Name := new;
+        Self.Caption := WideFormat(_(sConnDetails), [new]);
+    end;
 end;
 
 end.
