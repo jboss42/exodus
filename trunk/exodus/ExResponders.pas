@@ -114,6 +114,12 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
+    TConfirmationResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag: TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
 
 procedure initResponders();
 procedure cleanupResponders();
@@ -146,6 +152,8 @@ const
     sBrowse = 'Browse';
     sDisco = 'Disco';
     sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website.';
+    sConfirm = 'HTTP authentication';
+    sConfirmationDialog = 'Accept authentication request from %s';
 
 var
     _version: TVersionResponder;
@@ -158,6 +166,7 @@ var
     _unhandled: TUnhandledResponder;
     _sistart: TFactoryResponder;
     _avatar: TAvatarResponder;
+    _confirmation: TConfirmationResponder;
 
 {---------------------------------------}
 function getNick(j: Widestring): Widestring;
@@ -199,6 +208,7 @@ begin
         '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
         SIStart);
     _avatar := TAvatarResponder.Create(MainSession);
+    _confirmation := TConfirmationResponder.Create(MainSession);
 
     // Create some globally accessable responders.
     Exodus_Browse := TBrowseResponder.Create(MainSession);
@@ -460,6 +470,50 @@ begin
     end;
 
     _session.sendTag(r);
+end;
+
+{---------------------------------------}
+constructor TConfirmationResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, 'http://jabber.org/protocol/http-auth', 'confirm');
+end;
+
+{---------------------------------------}
+procedure TConfirmationResponder.iqCallback(event: string; tag: TXMLTag);
+var
+    x, r: TXMLTag;
+    url: WideString;
+begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    DoNotify(nil, 'notify_autoresponse',
+             WideFormat(_(sNotifyAutoResponse), [_(sLast),
+                getNick(tag.getAttribute('from'))]),
+             ico_info);
+
+    url := tag.QueryXPData('/iq/confirm@url');
+    if MessageBoxW(0, PWideChar(WideFormat(_(sConfirmationDialog), [url])),
+               PWideChar(_(sConfirm)),
+               MB_ICONQUESTION or MB_OKCANCEL) = IDCANCEL then begin
+        r := TXMLTag.Create('iq');
+        r.setAttribute('to', tag.getAttribute('from'));
+        r.setAttribute('id', tag.getAttribute('id'));
+        r.setAttribute('type', 'error');
+        x := r.AddTag('error');
+        x.setAttribute('code', '401');
+        x.setAttribute('type', 'auth');
+        x.AddTag('not-authorized').setAttribute('xmlns', 'urn:ietf:params:xml:xmpp-stanzas');
+        _session.SendTag(r);
+    end
+    else begin
+        // return iq/result
+        r := TXMLTag.Create('iq');
+        r.setAttribute('to', tag.getAttribute('from'));
+        r.setAttribute('id', tag.getAttribute('id'));
+        r.setAttribute('type', 'result');
+        _session.SendTag(r);
+    end;
+
 end;
 
 {---------------------------------------}

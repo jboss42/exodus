@@ -35,6 +35,7 @@ type
         procedure iqCallback(event: string; tag: TXMLTag); virtual; abstract;
     public
         constructor Create(Session: TJabberSession; namespace: string); overload; virtual;
+        constructor Create(Session: TJabberSession; namespace: string; tagname: string); overload; virtual;
         destructor Destroy; override;
 end;
 
@@ -46,9 +47,15 @@ implementation
 {---------------------------------------}
 constructor TJabberResponder.Create(Session: TJabberSession; namespace: string);
 begin
+    Create(Session, namespace, 'query');
+end;
+
+{---------------------------------------}
+constructor TJabberResponder.Create(Session: TJabberSession; namespace: string; tagname: string);
+begin
     inherited Create();
 
-    _cb := Session.RegisterCallback(iqCallback, '/packet/iq[@type="get"]/query[@xmlns="' + namespace + '"]');
+    _cb := Session.RegisterCallback(iqCallback, '/packet/iq[@type="get"]/' + tagname + '[@xmlns="' + namespace + '"]');
     _session := Session;
 end;
 
