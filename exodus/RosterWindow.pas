@@ -1566,14 +1566,26 @@ begin
         else if p = nil then
             cur_node.ImageIndex := ico_Offline
         else begin
-            if p.Show = 'away' then
-                cur_node.ImageIndex := ico_Away
-            else if p.Show = 'xa' then
-                cur_node.ImageIndex := ico_XA
-            else if p.Show = 'dnd' then
-                cur_node.ImageIndex := ico_DND
-            else
-                cur_node.ImageIndex := ico_Online
+            if p.Priority < 0 then begin
+                if p.Show = 'away' then
+                    cur_node.ImageIndex := ico_away_minus_one
+                else if p.Show = 'xa' then
+                    cur_node.ImageIndex := ico_xa_minus_one
+                else if p.Show = 'dnd' then
+                    cur_node.ImageIndex := ico_dnd_minus_one
+                else
+                    cur_node.ImageIndex := ico_online_minus_one
+            end
+            else begin
+                if p.Show = 'away' then
+                    cur_node.ImageIndex := ico_Away
+                else if p.Show = 'xa' then
+                    cur_node.ImageIndex := ico_XA
+                else if p.Show = 'dnd' then
+                    cur_node.ImageIndex := ico_DND
+                else
+                    cur_node.ImageIndex := ico_Online
+            end;
         end;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;

@@ -492,13 +492,19 @@ const
     ico_blockoffline = 41;
     ico_error = 32;
 
+    ico_online_minus_one = 44;
+    ico_away_minus_one = 45;
+    ico_dnd_minus_one = 46;
+    ico_chat_minus_one = 47;
+    ico_xa_minus_one = 48;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
 
-    ZipMstr, // XXX: ZipMstr
+    // XXX: ZipMstr
     
     NewUser, CommandWizard, ExodusCOM_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
@@ -684,7 +690,20 @@ begin
         SetForegroundWindow(Self.Handle);
         Application.ProcessMessages;
         popTray.Popup(cp.x, cp.y);
+    end
+
+    else if (Msg.LParam = WM_MOUSEMOVE) then begin
+        DebugMsg('Move');
+    end
+
+    else if (Msg.LParam = WM_MOUSELAST) then begin
+        DebugMsg('Out');
+    end
+
+    else begin
+        DebugMsg('other');
     end;
+
 end;
 
 {---------------------------------------}
