@@ -1249,6 +1249,16 @@ begin
         fps.Free();
     end
 
+    else if event = '/session/compressionerrror' then begin
+        if tag <> nil then
+            DebugMsg(tag.xml);
+        MessageDlgW(_('There was an error trying to setup compression.'), mtError,
+            [mbOK], 0);
+        _logoff := true;
+        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+    end
+
     else if event = '/session/regerror' then begin
         _logoff := true;
 

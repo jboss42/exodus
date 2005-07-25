@@ -70,6 +70,7 @@ type
         procedure Disconnect; override;
         function  isSSLCapable(): boolean; override;
         procedure EnableSSL(); override;
+        procedure EnableCompression(); override;
     end;
 
     THttpThread = class(TParseThread)
@@ -158,6 +159,12 @@ end;
 
 {---------------------------------------}
 procedure TXMLHttpStream.EnableSSL();
+begin
+    // no-op..
+    assert(false);
+end;
+
+procedure TXMLHttpStream.EnableCompression();
 begin
     // no-op..
     assert(false);

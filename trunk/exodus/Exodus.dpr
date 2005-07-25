@@ -190,7 +190,8 @@ uses
   pngimage in '..\jopl\png\pngimage.pas',
   pnglang in '..\jopl\png\pnglang.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
-  fProfile in 'fProfile.pas' {frameProfile: TFrame};
+  fProfile in 'fProfile.pas' {frameProfile: TFrame},
+  ZlibHandler in '..\jopl\ZlibHandler.pas';
 
 {$R *.TLB}
 

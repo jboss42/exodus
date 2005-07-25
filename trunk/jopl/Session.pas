@@ -19,6 +19,10 @@ unit Session;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 interface
 
 uses
@@ -45,6 +49,9 @@ type
         _cur_server: Widestring;
         _tls_cb: integer;
         _ssl_on: boolean;
+        _compression_cb: integer;
+        _compression_err_cb: integer;
+        _compression_on: boolean;
         _lang: WideString;
         _sent_stream: boolean;
 
@@ -93,6 +100,7 @@ type
         procedure StartSession(tag: TXMLTag);
         procedure ResetStream();
         procedure StartTLS();
+        procedure StartCompression(method: Widestring);
 
         function GetUsername(): WideString;
         function GetPassword(): WideString;
@@ -110,6 +118,8 @@ type
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure BindCallback(event: string; tag: TXMLTag);
         procedure TLSCallback(event: string; tag: TXMLTag);
+        procedure CompressionCallback(event: string; tag: TXMLTag);
+        procedure CompressionErrorCallback(event: string; tag: TXMLTag);
 
     public
         ppdb: TJabberPPDB;
@@ -191,6 +201,7 @@ type
         property SSLEnabled: boolean read _ssl_on;
         property xmlLang: WideString read _lang;
         property LoggingEnabled: boolean read _logger;
+        property CompressionEnabled: boolean read _compression_on;
 
         // Auth info
         property NoAuth: boolean read _no_auth write _no_auth;
@@ -257,6 +268,10 @@ begin
     _features := nil;
     _xmpp := false;
     _ssl_on := false;
+    _compression_on := false;
+    _tls_cb := -1;
+    _compression_cb := -1;
+    _compression_err_cb := -1;
     _logger := false;
     _logger_id := 0;
 
@@ -526,6 +541,7 @@ begin
     _authd := false;
     _cur_server := '';
     _ssl_on := false;
+    _compression_on := false;
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     if (_paused) then
@@ -550,6 +566,8 @@ procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     biq: TJabberIQ;
     l, lang, tmps: WideString;
+    methods: TXMLTagList;
+    i: integer;
 begin
     // Something is happening... our stream says so.
     if ((msg = 'connected') and (_sent_stream = false)) then begin
@@ -624,12 +642,28 @@ begin
             end
             else begin
                 // We aren't authd yet, check for StartTLS
+
                 if (_features.GetFirstTag('starttls') <> nil) then begin
                     if (_stream.isSSLCapable()) then begin
                         StartTLS();
                         exit;
                     end;
                 end;
+                
+                // now see if we can do compression
+                {$ifdef INDY9}
+                if (not _compression_on)  then begin
+                    methods := _features.QueryXPTags('/stream:features/compression[@xmlns="http://jabber.org/features/compress"]/method');
+                    for i := 0 to methods.Count - 1 do begin
+                        if methods.Tags[i].Data = 'zlib' then begin
+                            StartCompression('zlib');
+                            exit;
+                        end
+                    end;
+                    // doesn't support zlib
+                    Self.FireEvent('/session/compressionerror', nil);
+                end;
+                {$endif}
 
                 // Otherwise, either try to register, or auth
                 if (_no_auth) then
@@ -1137,6 +1171,7 @@ begin
     Self.SendTag(s);
 end;
 
+
 {---------------------------------------}
 procedure TJabberSession.TLSCallback(event: string; tag: TXMLTag);
 begin
@@ -1157,6 +1192,52 @@ begin
         _ssl_on := false;
     end;
 
+end;
+
+{---------------------------------------}
+procedure TJabberSession.StartCompression(method: WideString);
+var
+    s: TXMLTag;
+begin
+    _compression_cb := Self.RegisterCallback(CompressionCallback,
+        '/packet/compressed[@xmlns="http://jabber.org/protocol/compress"]');
+    _compression_err_cb := Self.RegisterCallback(CompressionErrorCallback,
+        '/packet/failure[@xmlns="http://jabber.org/protocol/compress"]');
+    s := TXMLTag.Create('compress');
+    s.setAttribute('xmlns', 'http://jabber.org/protocol/compress');
+    s.AddBasicTag('method', method);
+    Self.SendTag(s);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.CompressionCallback(event: string; tag: TXMLTag);
+begin
+    Self.UnRegisterCallback(_compression_cb);
+    _compression_cb := -1;
+
+    if (event <> 'xml') then begin
+        Self.FireEvent('/session/compressionerror', nil);
+        exit;
+    end;
+
+    try
+        _stream.EnableCompression();
+        ResetStream();
+        _compression_on := true;
+    except
+        Self.FireEvent('/session/compressionerror', nil);
+        _ssl_on := false;
+    end;
+
+end;
+
+{---------------------------------------}
+procedure TJabberSession.CompressionErrorCallback(event: string; tag: TXMLTag);
+begin
+    Self.UnRegisterCallback(_compression_err_cb);
+    _compression_err_cb := -1;
+
+    Self.FireEvent('/session/compressionerror', tag);
 end;
 
 end.

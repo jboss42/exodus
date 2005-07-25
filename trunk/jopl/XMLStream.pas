@@ -93,6 +93,7 @@ end;
         procedure ResetParser();
         function  isSSLCapable(): boolean; virtual; abstract;
         procedure EnableSSL(); virtual; abstract;
+        procedure EnableCompression; virtual; abstract;
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
         procedure UnregisterStreamCallback(p: TXMLStreamCallback);
