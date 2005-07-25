@@ -34,7 +34,7 @@ uses
     {$ifdef INDY9}
     IdIOHandlerSocket,
     {$endif}
-    Windows, ExtCtrls, IdSSLOpenSSL,
+    Windows, ExtCtrls, IdSSLOpenSSL, ZLib,
 
     {$endif}
 
@@ -68,6 +68,7 @@ type
         _profile:   TJabberProfile;
         _ssl_cert:  string;
         _ssl_err:   string;
+        _compress:  boolean;
 
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
@@ -100,7 +101,7 @@ type
         procedure Disconnect; override;
         function  isSSLCapable(): boolean; override;
         procedure EnableSSL(); override;
-
+        procedure EnableCompression(); override;
     end;
 
 
@@ -132,7 +133,7 @@ implementation
 
 uses
     {$ifdef INDY9}
-    HttpProxyIOHandler, IdSSLOpenSSLHeaders, 
+    HttpProxyIOHandler, IdSSLOpenSSLHeaders, ZlibHandler,
     {$endif}
     Session, StrUtils, Classes;
 
@@ -689,6 +690,7 @@ begin
     _iohandler.UseNagle := false;
     _socket.IOHandler := _iohandler;
 
+
     if (_profile.SocksType <> proxy_none) then begin
         // setup the socket to point to the handler..
         // and the handler to point to our SOCKS stuff
@@ -853,6 +855,18 @@ begin
             DoCallbacks('ssl-error', tag);
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TXMLSocketStream.EnableCompression();
+var
+    compressor : TZlibIOHandler;
+begin
+    compressor := TZlibIOHandler.Create(nil);
+    compressor.WrappedSocketHandler := _iohandler;
+    _iohandler := compressor;
+    _socket.IOHandler := _iohandler;
+    _compress := true;
 end;
 
 {---------------------------------------}
