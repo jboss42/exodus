@@ -83,7 +83,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    JabberConst, XMLUtils, IdHash, Random;
+    JabberConst, XMLUtils, IdException, IdHash, Random;
 
 {---------------------------------------}
 function TSASLAuth.checkSASLFeatures(feats: TXMLTag): boolean;
@@ -311,11 +311,21 @@ var
     rand: TRandom;
 begin
     if (event <> 'xml') then begin
+        CancelAuthentication();
         _session.SetAuthenticated(false, nil, false);
         exit;
     end;
 
-    c := _decoder.DecodeString(xml.Data);
+    try
+        c := _decoder.DecodeString(xml.Data);
+    except
+        on EIdException do begin
+            CancelAuthentication();
+            _session.SetAuthenticated(false, nil, false);
+            exit;
+        end;
+    end;
+
     pairs := TStringlist.Create();
     parseNameValues(pairs, c);
 
