@@ -299,6 +299,8 @@ const
     MUC_VISITOR = 'visitor';
     MUC_NONE = 'none';
 
+    ROOM_TIMEOUT = 3;
+
 
 function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid: Widestring; rnick: Widestring = '';
@@ -2309,7 +2311,12 @@ end;
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
     if (_pending_start = false) then exit;
-    if (tag = nil) then exit;
+    
+    if (tag = nil) then begin
+        // just try anyways
+        sendStartPresence();
+        exit;
+    end;
 
     if (tag.getAttribute('from') = Self.jid) then begin
         // we got info from our room...
@@ -2327,7 +2334,7 @@ begin
     if ((e = nil) or (not e.hasInfo)) then begin
         // try to disco#info this room
         _pending_start := true;
-        jEntityCache.discoInfo(self.jid, MainSession);
+        jEntityCache.discoInfo(self.jid, MainSession, '', ROOM_TIMEOUT);
         exit;
     end
     else if ((_passwd = '') and

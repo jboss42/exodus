@@ -47,7 +47,7 @@ type
         function fetch(jid: Widestring; js: TJabberSession;
             items_limit: boolean = true; node: Widestring = ''): TJabberEntity;
         function discoInfo(jid: Widestring; js: TJabberSession;
-            node: Widestring = ''): TJabberEntity;
+            node: Widestring = ''; timeout: integer = -1): TJabberEntity;
         function discoItems(jid: Widestring; js: TJabberSession;
             node: Widestring = ''): TJabberEntity;
 
@@ -367,7 +367,7 @@ end;
 
 {---------------------------------------}
 function TJabberEntityCache.discoInfo(jid: Widestring; js: TJabberSession;
-    node: Widestring = ''): TJabberEntity;
+    node: Widestring = ''; timeout: integer = -1): TJabberEntity;
 var
     e: TJabberEntity;
 begin
@@ -382,6 +382,8 @@ begin
     e := TJabberEntity.Create(TJabberID.Create(jid), node);
     e.fallbackProtocols := false;
     _cache.AddObject(jid, e);
+    if (timeout <> -1) then
+        e.timeout := timeout;
     e.getInfo(js);
     Result := e;
 end;

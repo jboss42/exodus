@@ -103,7 +103,7 @@ begin
         if (FindFirst(dir + '\*.*', faDirectory, sr) = 0) then begin
             repeat
                 // check for a LM_MESSAGES dir, and default.mo inside of it
-                lang := dir + '\' + sr.Name;
+                lang := dir + sr.Name;
                 lm := lang + '\LC_MESSAGES';
                 if (DirectoryExists(lm)) then begin
                     mo := lm + '\default.mo';
