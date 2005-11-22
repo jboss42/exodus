@@ -2538,7 +2538,8 @@ begin
         if (not _group_counts) then exit;
 
         go := TJabberGroup(o);
-        treeRoster.Canvas.Font.Style := [fsBold];
+        if (Win32Platform <> Ver_Platform_Win32_Windows) then
+            treeRoster.Canvas.Font.Style := [fsBold];
 
         if ((Node = _offline) or
             (Node = _bookmark) or
