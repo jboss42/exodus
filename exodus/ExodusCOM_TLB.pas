@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 7/25/2005 1:26:15 PM from Type Library described below.
+// File generated on 8/22/2005 3:20:57 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -21,7 +21,7 @@ unit ExodusCOM_TLB;
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

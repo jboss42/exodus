@@ -142,6 +142,7 @@ type
         property Identities[Index: integer]: TDiscoIdentity read _getIdentity;
         
         property fallbackProtocols: boolean read _fallback write _fallback;
+        property timeout: integer read _timeout write _timeout;
 
     end;
 
