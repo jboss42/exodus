@@ -583,6 +583,8 @@ begin
 
     // do this for immediate feedback
     ToggleGUI(gui_connecting);
+    AssignUnicodeURL(lblConnect.Font, 8);
+    lblConnect.Color := pnlConnect.Color;
 
     MainSession.Prefs.setInt('profile_active', idx);
     MainSession.Prefs.SaveProfiles();
@@ -626,6 +628,7 @@ begin
         pnlConnect.Align := alClient;
         lblStatus.Caption := _(sDisconnected);
         lblConnect.Caption := _(sSignOn);
+        lblConnect.Color := clWindow;
         lblCreate.Caption := _(sNewProfile);
         boxProfiles.Visible := true;
         lblCreate.Visible := true;
@@ -3440,6 +3443,8 @@ begin
     boxProfiles.Visible := false;
     lblConnect.Caption := _(sCancelReconnect);
     lblStatus.Caption := WideFormat(_(sReconnectIn), [secs]);
+    AssignUnicodeURL(lblConnect.Font, 8);
+    lblConnect.Color := pnlConnect.Color;
 end;
 
 {---------------------------------------}
