@@ -1703,7 +1703,10 @@ begin
         r := MainSession.Prefs.getInt(P_CHAT);
 
         if ((r = 0) or (r = 2)) then begin
-            win := StartChat(_cur_ritem.jid.jid, '', true);
+            if (_cur_ritem.Jid.resource <> '') then
+                win := StartChat(_cur_ritem.Jid.jid, _cur_ritem.jid.resource, true)
+            else
+                win := StartChat(_cur_ritem.jid.jid, '', true);
             win.Show();
             if ((MainSession.Prefs.getBool('expanded')) and
                 (win.TabSheet <> nil) and

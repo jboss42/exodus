@@ -114,8 +114,10 @@ begin
         t.Resume();
     end
     else begin
-        t.Execute();
-        result := t.Available;
+        //t.Execute();
+        //result := t.Available;
+        //t.Terminate();
+        t.Resume();
     end;
 end;
 
