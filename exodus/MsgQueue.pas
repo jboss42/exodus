@@ -189,11 +189,12 @@ begin
             // spool out queued chat messages to disk.
             if (event.eType = evt_Chat) then begin
                 c := MainSession.ChatList.FindChat(event.from_jid.jid, event.from_jid.resource, '');
-                assert(c <> nil);
-                tl := c.getTags();
-                for t := 0 to tl.Count - 1 do
-                    e.AddTag(tl[t]);
-                tl.Free();
+                if (c <> nil) then begin
+                    tl := c.getTags();
+                    for t := 0 to tl.Count - 1 do
+                        e.AddTag(tl[t]);
+                    tl.Free();
+                end;
             end;
         end;
     end;
