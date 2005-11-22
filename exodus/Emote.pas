@@ -548,6 +548,9 @@ var
 begin
     h := LoadLibraryW(PWChar(resdll));
 
+    if (h = 0) then
+        h := LoadLibrary(PChar(String(resdll)));
+
     if (h = 0) then begin
         // TODO: debug warning
         Result := false;
@@ -632,7 +635,21 @@ end;
 
 {---------------------------------------}
 procedure TEmoticonList.Clear();
+var
+    i: integer;
+    o: TObject;
 begin
+    // clear out the GDI objects
+    for i := 0 to _objects.Count - 1 do begin
+        o := _objects.Objects[i];
+        if o <> nil then begin
+            if o is TGifEmoticon then
+                TGifEmoticon(o)._gif.Free()
+            else if o is TBMPEmoticon then
+                TBMPEmoticon(o)._bmp.Free()
+        end;
+    end;
+
     ClearStringListObjects(_objects);
     _objects.Clear();
     _text.Clear();
