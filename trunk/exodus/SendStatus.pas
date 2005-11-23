@@ -390,8 +390,10 @@ var
 begin
     // This event should never timeout
     assert(_pkg <> nil);
-    assert(tag <> nil);
-    
+    // and yet it did.
+    // assert(tag <> nil);
+    if tag = nil then exit;
+
     if (tag.getAttribute('from') <> _pkg.recip) then exit;
 
     _iq := nil;
