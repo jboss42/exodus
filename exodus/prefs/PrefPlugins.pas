@@ -59,6 +59,7 @@ type
 
 const
     sRegPluginError = 'The plugin could not be registered with windows.';
+    sExternalLibrary = 'External Library';
 
 var
   frmPrefPlugins: TfrmPrefPlugins;
@@ -67,7 +68,7 @@ implementation
 {$R *.dfm}
 uses
     ActiveX, COMController, ComObj, ExodusCOM_TLB, JabberUtils, ExUtils,  
-    GnuGetText, PathSelector, Session;
+    GnuGetText, PathSelector, Registry, Session;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -132,14 +133,15 @@ var
     // stuff for reg
     LibHandle: THandle;
     RegProc: TRegProc;
+    dllname: String;
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();
     fl := TWidestringlist.Create();
+    LibHandle := 0;
 
     for i := 0 to lstPlugins.Items.Count - 1 do begin
         item := lstPlugins.Items[i];
-        fl.Add(item.SubItems[1]);
 
         if (item.Checked) then begin
             // save the Classname
@@ -148,7 +150,10 @@ begin
             // try to register it??
             // From the TRegSvr example.
             try
-                LibHandle := LoadLibrary(PChar(String(item.SubItems[1])));
+                dllname := String(item.SubItems[1]);
+                if dllname = sExternalLibrary then continue;
+                fl.Add(item.SubItems[1]);
+                LibHandle := LoadLibrary(PChar(dllname));
             except
                 LibHandle := 0;
             end;
@@ -179,7 +184,7 @@ begin
     end;
 
     MainSession.Prefs.setStringlist('plugin_selected', sl);
-    MainSession.Prefs.setStringlist('plugin_files', fl);
+    //MainSession.Prefs.setStringlist('plugin_files', fl);
     ReloadPlugins(sl);
     sl.Free();
     fl.Free();
@@ -193,6 +198,9 @@ var
     idx: integer;
     item: TTntListItem;
     dll, libname, obname, doc: WideString;
+    reg: TRegistry;
+    values: TStrings;
+    i: integer;
 begin
     dir := txtPluginDir.Text;
     if (not DirectoryExists(dir)) then exit;
@@ -212,6 +220,24 @@ begin
         until FindNext(sr) <> 0;
         FindClose(sr);
     end;
+
+    reg := TRegistry.Create();
+    reg.RootKey := HKEY_CURRENT_USER;
+    reg.OpenKey('\Software\Jabber\Exodus\Plugins', true);
+    values := TStringList.Create();
+    reg.GetValueNames(values);
+    for i := 0 to values.Count - 1 do begin
+        item := lstPlugins.Items.Add();
+        item.Caption := values[i];
+        item.SubItems.Add(reg.ReadString(values[i]));
+        item.SubItems.Add(sExternalLibrary);
+
+        // check to see if this is selected
+        idx := selected.IndexOf(item.Caption);
+        item.Checked := (idx >= 0);
+    end;
+    values.Free();
+    reg.Free();
 end;
 
 {---------------------------------------}
