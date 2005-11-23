@@ -117,6 +117,9 @@ type
     function addGroupMenu(const Caption: WideString): WideString; safecall;
     procedure removeGroupMenu(const ID: WideString); safecall;
     procedure registerWithService(const JabberID: WideString); safecall;
+    procedure lastRelease(var Shutdown: boolean);
+    procedure showAddContact(const jid: WideString); safecall;
+    
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -189,7 +192,7 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
-    Jabber1, Session, NodeItem, RemoveContact, Roster, RosterWindow, PluginAuth, PrefController,
+    Jabber1, Session, NodeItem, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 const
@@ -483,6 +486,7 @@ begin
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
+    ComServer.OnLastRelease := lastRelease;
 end;
 
 {---------------------------------------}
@@ -628,6 +632,7 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.UnRegisterCallback(callback_id: Integer);
+(*
 var
     idx: integer;
 begin
@@ -636,6 +641,9 @@ begin
         TPluginProxy(proxies.Objects[idx]).Free;
         proxies.Delete(idx);
     end;
+    *)
+begin
+//
 end;
 
 {---------------------------------------}
@@ -688,11 +696,15 @@ end;
 procedure TExodusController.removePluginMenu(const ID: WideString);
 var
     idx: integer;
+    o: TObject;
 begin
     idx := _menu_items.IndexOf(id);
     if (idx >= 0) then begin
-        TMenuItem(_menu_items.Objects[idx]).Free();
-        _menu_items.Delete(idx);
+        o := _menu_items.Objects[idx];
+        if assigned(o) then begin
+            TMenuItem(o).Free();
+            _menu_items.Delete(idx);
+        end;
     end;
 end;
 
@@ -1209,10 +1221,29 @@ begin
     StartServiceReg(JabberID);
 end;
 
+
+procedure TExodusController.lastRelease(var shutdown: boolean);
+begin
+    shutdown := false;
+end;
+
+procedure TExodusController.showAddContact(const jid: WideString);
+begin
+    RosterAdd.ShowAddContact(jid);
+end;
+
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,
     ciMultiInstance, tmApartment);
 
+  // WARNING: this is somewhat dangerous.  If we are running, and there are COM
+  // clients, and we exit, leaving those clients with pointers to us that are no
+  // longer valid, this says not to warn the Exodus user.  The reason for this
+  // is that the warning comes too late, and just leads to cores.
+  // TODO: figure out how to disconnect from all of the clients that are
+  // connected to us, using CoDisconnectObject.  
+  ComServer.UIInteractive := false;
+  
   plugs := TStringList.Create();
   proxies := TStringList.Create();
 

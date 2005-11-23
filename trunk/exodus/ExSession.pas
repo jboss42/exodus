@@ -225,13 +225,14 @@ begin
             // -i [pri]     : priority
             // -f [prof]    : profile name
             // -c [file]    : config file name
+            // -embedding   : heh.  win32 will pass this in when we're a COM server and not running yet.
             // -s [status]  : presence status
             // -w [show]    : presence show
             // -t           : show test menu
-            Options  := 'dmva?0xujprifcswot';
-            OptFlags := '------:::::::::::-';
-            ReqFlags := '                  ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,status,show,xmpp,testmenu';
+            Options  := 'dmva?0xujprifceswot';
+            OptFlags := '------::::::::-:::-';
+                ReqFlags := '                   ';
+            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,embedding,status,show,xmpp,testmenu';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
@@ -246,6 +247,7 @@ begin
                     Ord('i'): cli_priority := SafeInt(OptArg);
                     Ord('f'): profile_name := OptArg;
                     Ord('c'): config := OptArg;
+                    Ord('e'): ;
                     Ord('?'): show_help := true;
                     Ord('0'): regdll := true;
                     Ord('w'): cli_show := OptArg;
@@ -723,7 +725,7 @@ var
     i : integer;
     node: TXMLTag;
     jid: WideString;
-    add: TfrmAdd;
+    //add: TfrmAdd;
 begin
     if _xmpp_action_list.Count > 0 then begin
         SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
@@ -744,11 +746,14 @@ begin
         end
         else if (node.Name = 'subscribe') then begin
             if (jid <> '') then begin
+                ShowAddContact(jid);
+                (*
                 add := TfrmAdd.Create(Application);
                 add.cboType.ItemIndex := 0;
                 add.txtJID.Text := jid;
                 add.Show;
                 add.txtNickname.SetFocus();
+                *)
             end;
         end
         else if (node.Name = 'message') then begin
