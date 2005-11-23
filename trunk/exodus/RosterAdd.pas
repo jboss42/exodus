@@ -92,6 +92,7 @@ begin
     end;
     contact.Free();
     f.Show;
+    f.BringToFront();
 end;
 
 {---------------------------------------}
