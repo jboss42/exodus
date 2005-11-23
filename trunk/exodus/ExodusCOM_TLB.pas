@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 11/21/2005 8:06:39 PM from Type Library described below.
+// File generated on 11/18/2005 4:18:48 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -21,7 +21,7 @@ unit ExodusCOM_TLB;
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
+//   (1) v2.0 stdole, (C:\Windows\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -207,6 +207,7 @@ type
     function addGroupMenu(const Caption: WideString): WideString; safecall;
     procedure removeGroupMenu(const ID: WideString); safecall;
     procedure registerWithService(const JabberID: WideString); safecall;
+    procedure showAddContact(const jid: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -305,6 +306,7 @@ type
     function addGroupMenu(const Caption: WideString): WideString; dispid 202;
     procedure removeGroupMenu(const ID: WideString); dispid 203;
     procedure registerWithService(const JabberID: WideString); dispid 204;
+    procedure showAddContact(const jid: WideString); dispid 205;
   end;
 
 // *********************************************************************//
@@ -331,6 +333,7 @@ type
     procedure AddRoomUser(const jid: WideString; const nickname: WideString); safecall;
     procedure RemoveRoomUser(const jid: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
+    function GetControl(const Name: WideString): IUnknown; safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
     property CurrentThreadID: WideString read Get_CurrentThreadID;
@@ -361,6 +364,7 @@ type
     procedure AddRoomUser(const jid: WideString; const nickname: WideString); dispid 207;
     procedure RemoveRoomUser(const jid: WideString); dispid 208;
     property CurrentNick: WideString readonly dispid 209;
+    function GetControl(const Name: WideString): IUnknown; dispid 210;
   end;
 
 // *********************************************************************//
