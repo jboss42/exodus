@@ -14,15 +14,20 @@ type
     { Private declarations }
     _scrolling: boolean;
     _at_bottom: boolean;
+    _one_page: boolean;
   protected
     { Protected declarations }
     procedure CreateWnd; override;
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
+    procedure CheckBottom();
   public
     { Public declarations }
     procedure InsertBitmap(bmp: Graphics.TBitmap);
     procedure InsertRTF(rtf: string);
     procedure ScrollToBottom();
+    procedure ScrollToTop();
+    procedure ScrollPageUp();
+    procedure ScrollPageDown();
   published
     { Published declarations }
     property atBottom: boolean read _at_bottom;
@@ -63,26 +68,53 @@ begin
     RTFSelText := rtf;
 end;
 
-// pgm 3/16/04 - Let's catch the scroll event and set our state
-procedure TExRichEdit.WMVScroll(var msg: TMessage);
+procedure TExRichEdit.CheckBottom();
 var
     si: TSCROLLINFO;
 begin
+    si.cbSize := SizeOf(TScrollInfo);
+    si.fMask := SIF_ALL;
+    GetScrollInfo(Handle, SB_VERT, si);
+    if (si.nMin = -1) then
+        _one_page := true
+    else
+        _one_page := false;
+
+    if (si.nMax = -1) then
+        _at_bottom := true
+    else
+        _at_bottom := ((si.nPos + integer(si.nPage)) >= si.nMax);
+end;
+
+// pgm 3/16/04 - Let's catch the scroll event and set our state
+procedure TExRichEdit.WMVScroll(var msg: TMessage);
+begin
     if (msg.WParamLo = SB_ENDSCROLL) then begin
         _scrolling := false;
-
-        si.cbSize := SizeOf(TScrollInfo);
-        si.fMask := SIF_ALL;
-        GetScrollInfo(Handle, SB_VERT, si);
-        if (si.nMax = -1) then
-            _at_bottom := true
-        else
-            _at_bottom := ((si.nPos + integer(si.nPage)) >= si.nMax);
+        CheckBottom();
     end
     else
         _scrolling := true;
 
     inherited;
+end;
+
+procedure TExRichEdit.ScrollPageUp();
+begin
+    Perform(EM_SCROLL, SB_PAGEUP, 0);
+    CheckBottom();
+end;
+
+procedure TExRichEdit.ScrollPageDown();
+begin
+    Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+    CheckBottom();
+end;
+
+procedure TExRichEdit.ScrollToTop();
+begin
+    Perform(EM_SCROLL, SB_TOP, 0);
+    CheckBottom();
 end;
 
 procedure TExRichEdit.ScrollToBottom();
