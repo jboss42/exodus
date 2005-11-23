@@ -29,6 +29,7 @@ type
     procedure AddRoomUser(const JID, Nickname: WideString); safecall;
     procedure RemoveRoomUser(const JID: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
+    function GetControl(const Name: WideString): IUnknown; safecall;
     { Protected declarations }
 
   public
@@ -473,6 +474,28 @@ function TExodusChat.Get_CurrentNick: WideString;
 begin
     if (_room <> nil) then
         Result := _room.myNick;
+end;
+
+function TExodusChat.GetControl(const Name: WideString): IUnknown;
+var
+    comp : TComponent;
+begin
+    result := nil;
+    try
+        if (_chat <> nil) then begin
+            comp := TfrmChat(_chat.window).FindComponent(Name);
+            if comp <> nil then
+                result := comp.ComObject
+        end
+        else if (_room <> nil) then begin
+            comp := _room.FindComponent(Name);
+            if (comp <> nil) then
+                result := comp.ComObject;
+        end;
+    except
+        on EComponentError do
+            result := nil;
+    end;
 end;
 
 initialization

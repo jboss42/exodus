@@ -100,7 +100,7 @@ Conditionals=Exodus;TRACE_EXCEPTIONS
 DebugSourceDirs=D:\src\exodus\exodus\components\;D:\src\Indy\Source\
 UsePackages=1
 [Parameters]
-RunParams=-d -c debug.xml
+RunParams=-d -c test1.xml -embedding
 HostApplication=
 Launcher=
 UseLauncher=0
@@ -136,3 +136,16 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[HistoryLists\hlSearchPath]
+Count=1
+Item0=C:\src\exodus\exodus\output
+[HistoryLists\hlUnitOutputDirectory]
+Count=1
+Item0=./output
+[HistoryLists\hlOutputDirectorry]
+Count=2
+Item0=../
+Item1=./output
