@@ -208,6 +208,7 @@ type
     _change_node: TTreeNode;        // the current node being changed
 
     _online: TTreeNode;             // Special group nodes
+    _chat: TTreeNode;
     _away: TTreeNode;
     _xa: TTreeNode;
     _dnd: TTreeNode;
@@ -216,6 +217,11 @@ type
     _myres: TTreeNode;              // The My Resources node
 
     _offline_go: TJabberGroup;
+    _online_go: TJabberGroup;
+    _chat_go: TJabberGroup;
+    _away_go: TJabberGroup;
+    _xa_go: TJabberGroup;
+    _dnd_go: TJabberGroup;
     _myres_go: TJabberGroup;
 
     _hint_text : WideString;        // the hint text for the current node
@@ -257,6 +263,7 @@ type
 
     g_offline: Widestring;
     g_online: Widestring;
+    g_chat: Widestring;
     g_away: Widestring;
     g_xa: Widestring;
     g_dnd: Widestring;
@@ -281,6 +288,8 @@ type
     procedure DrawClientImage(Node: TTreeNode; jid: TJabberID);
     procedure DrawClientIndex(r: TRect; index: integer);
     procedure DoLogin(idx: integer);
+    
+    function GetSpecialGroup(var node: TTreeNode; var grp: TJabberGroup; caption: Widestring): TTreeNode;
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -415,6 +424,7 @@ begin
 
     g_offline := _('Offline');
     g_online := _('Available');
+    g_chat := _('Free to Chat');
     g_away := _('Away');
     g_xa := _('Ext. Away');
     g_dnd := _('Do Not Disturb');
@@ -1094,6 +1104,35 @@ begin
     // loop through all roster items and draw them
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
+
+    if (not _sort_roster) then begin
+        // remove availability grps
+        if (_online <> nil) then begin
+            assert(_online_go <> nil);
+            MainSession.roster.removeGroup(_online_go);
+            _online.Free();
+            _online := nil;
+        end;
+        if (_chat <> nil) then begin
+            assert(_chat_go <> nil);
+            Mainsession.roster.removeGroup(_chat_go);
+            _chat.Free();
+            _chat := nil;
+        end;
+        if (_xa <> nil) then begin
+            assert(_xa_go <> nil);
+            Mainsession.roster.removeGroup(_xa_go);
+            _xa.Free();
+            _xa := nil;
+        end;
+        if (_dnd <> nil) then begin
+            assert(_dnd_go <> nil);
+            Mainsession.roster.removeGroup(_dnd_go);
+            _dnd.Free();
+            _dnd := nil;
+        end;
+    end;
+
     ClearNodes;
 
     // make sure our item heights are setup correctly.
@@ -1132,6 +1171,11 @@ begin
             if ((go.Data <> _bookmark) and
                 (go <> _offline_go) and
                 (go <> _myres_go) and
+                (go <> _online_go) and
+                (go <> _chat_go) and
+                (go <> _away_go) and
+                (go <> _xa_go) and
+                (go <> _dnd_go) and
                 (go.isEmpty()) and (go.Parent = nil)) then
                 RenderGroup(go);
         end;
@@ -1404,11 +1448,21 @@ begin
 
     else if ((_sort_roster) and (not is_transport)) then begin
         // We are sorting the roster by <show>
-        if (p = nil) then tmp_grps.Add(g_offline)
-        else if (p.Show = 'away') then tmp_grps.Add(g_away)
-        else if (p.Show = 'xa') then tmp_grps.Add(g_xa)
-        else if (p.Show = 'dnd') then tmp_grps.Add(g_dnd)
-        else tmp_grps.Add(g_online);
+        if (p = nil) then begin
+            tmp_grps.Add(g_offline)
+        end
+        else if (p.Show = 'away') then begin
+            tmp_grps.Add(g_away)
+        end
+        else if (p.Show = 'xa') then begin
+            tmp_grps.Add(g_xa)
+        end
+        else if (p.Show = 'dnd') then begin
+            tmp_grps.Add(g_dnd)
+        end
+        else begin
+            tmp_grps.Add(g_online);
+        end;
     end
 
     else
@@ -1471,6 +1525,31 @@ begin
                 resort := true;
             end;
             grp_node := _offline;
+        end
+        else if (cur_grp = g_online) then begin
+            _online := GetSpecialGroup(_online, _online_go, g_online);
+            resort := true;
+            grp_node := _online;
+        end
+        else if (cur_grp = g_chat) then begin
+            _chat := GetSpecialGroup(_chat, _chat_go, g_chat);
+            resort := true;
+            grp_node := _chat;
+        end
+        else if (cur_grp = g_away) then begin
+            _away := GetSpecialGroup(_away, _away_go, g_away);
+            resort := true;
+            grp_node := _away;
+        end
+        else if (cur_grp = g_xa) then begin
+            _xa := GetSpecialGroup(_xa, _xa_go, g_xa);
+            resort := true;
+            grp_node := _xa;
+        end
+        else if (cur_grp = g_dnd) then begin
+            _dnd := GetSpecialGroup(_dnd, _dnd_go, g_dnd);
+            resort := true;
+            grp_node := _dnd;
         end
 
         // The My resources grp is also special.. same as offline
@@ -1621,7 +1700,20 @@ begin
         if ((treeRoster.Items.Count > 0) and (top_item <> nil)) then
             treeRoster.TopItem := top_item;
     end;
+end;
 
+{---------------------------------------}
+function TfrmRosterWindow.GetSpecialGroup(var node: TTreeNode; var grp: TJabberGroup; caption: Widestring): TTreeNode;
+begin
+    if (node = nil) then begin
+        node := treeRoster.Items.AddChild(nil, caption);
+        node.ImageIndex := ico_right;
+        node.SelectedIndex := ico_right;
+        grp := MainSession.Roster.addGroup(caption);
+        node.Data := grp;
+    end;
+
+    Result := node;
 end;
 
 {---------------------------------------}
