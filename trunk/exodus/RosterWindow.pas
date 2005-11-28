@@ -1513,17 +1513,8 @@ begin
         // The offline grp is special, we keep a pointer to
         // it at all times (if it exists).
         if (cur_grp = g_offline) then begin
-            if (_offline = nil) then begin
-                _offline := treeRoster.Items.AddChild(nil, _(sGrpOffline));
-                _offline.ImageIndex := ico_right;
-                _offline.SelectedIndex := ico_right;
-
-                _offline_go := TJabberGroup.Create(_(sGrpOffline));
-                _offline_go.Data := _offline;
-                _offline.Data := _offline_go;
-
-                resort := true;
-            end;
+            _offline := GetSpecialGroup(_offline, _offline_go, _(sGrpOffline));
+            resort := true;
             grp_node := _offline;
         end
         else if (cur_grp = g_online) then begin
