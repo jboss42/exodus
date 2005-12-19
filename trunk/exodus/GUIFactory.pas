@@ -131,7 +131,7 @@ begin
             mtError, [mbYes, mbNo], 0) = mrYes) then
             MainSession.CreateAccount()
         else
-            MainSession.FireEvent('/session/regerror', nil);
+            MainSession.FireEvent('/session/error/reg', nil);
     end
 
     else if (event = '/session/gui/reg-not-supported') then begin
@@ -139,7 +139,7 @@ begin
             mtError, [mbOK], 0);
     end
 
-    else if (event = '/session/gui/pres-error') then begin
+    else if (event = '/session/error/presence') then begin
         // Presence errors
         ri := MainSession.Roster.Find(tag.GetAttribute('from'));
         if ((ri <> nil) and
@@ -149,7 +149,7 @@ begin
         end;
     end
 
-    else if (event = '/session/gui/prefs-write-error') then begin
+    else if (event = '/session/error/prefs-write') then begin
         MessageDlgW(_(sPrefWriteError), mtError, [mbOK], 0);
     end
 
