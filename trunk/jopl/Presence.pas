@@ -369,7 +369,7 @@ begin
         (curp.error_code = '504')) then begin
             // we are getting a pres. packet for some kind of
             // invalid roster item
-            s.FireEvent('/session/gui/pres-error', tag);
+            s.FireEvent('/session/error/presence', tag);
             s.FireEvent('/presence/error', tag, curp);
         end
         else

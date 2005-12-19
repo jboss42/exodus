@@ -312,7 +312,7 @@ begin
         if (event = '/session/authenticated') then
             // XXX: add in new stages for vcard/profile info
             _state := nus_finish
-        else if (event = '/session/autherror') then
+        else if (event = '/session/error/auth') then
             _state := nus_error;
                         
         if (_state <> nus_auth) then

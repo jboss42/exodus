@@ -523,7 +523,7 @@ begin
     else begin
         // getting data from the socket
         if (Pos('<stream:error>', data) > 0) then
-            _dispatcher.DispatchSignal('/session/stream:error', nil);
+            _dispatcher.DispatchSignal('/session/error/stream', nil);
         _dataSignal.Invoke('/data/recv', nil, data);
     end;
 end;
@@ -542,7 +542,6 @@ begin
     _cur_server := '';
     _ssl_on := false;
     _compression_on := false;
-    _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     if (_paused) then
         Self.Play();
@@ -559,6 +558,7 @@ begin
     // clear the entity cache
     jEntityCache.Clear();
 
+    _dispatcher.DispatchSignal('/session/disconnected', nil);
 end;
 
 {---------------------------------------}
@@ -585,7 +585,7 @@ begin
 
     else if msg = 'ssl-error' then
         // Throw a dialog box up..
-        _dispatcher.DispatchSignal('/session/sslerror', tag)
+        _dispatcher.DispatchSignal('/session/error/ssl', tag)
 
     else if msg = 'disconnected' then
         // We're not connected anymore
@@ -623,7 +623,7 @@ begin
         end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
-            FireEvent('/session/stream:error', tag);
+            FireEvent('/session/error/stream', tag);
         end
 
         else if ((_xmpp) and (tag.Name = 'stream:features')) then begin
@@ -661,7 +661,7 @@ begin
                         end
                     end;
                     // doesn't support zlib
-                    Self.FireEvent('/session/compressionerror', nil);
+                    Self.FireEvent('/session/error/compression', nil);
                 end;
                 {$endif}
 
@@ -700,7 +700,7 @@ var
 begin
     // Callback for our xmpp-bind request
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
-        _dispatcher.DispatchSignal('/session/autherror', tag);
+        _dispatcher.DispatchSignal('/session/error/auth', tag);
         exit;
     end
     else begin
@@ -726,7 +726,7 @@ procedure TJabberSession.SessionCallback(event: string; tag: TXMLTag);
 begin
     // callback for our xmpp-session-start
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
-        _dispatcher.DispatchSignal('/session/autherror', tag);
+        _dispatcher.DispatchSignal('/session/error/auth', tag);
         exit;
     end
     else
@@ -1139,7 +1139,7 @@ begin
             StartSession(tag);
     end
     else begin
-        _dispatcher.DispatchSignal('/session/autherror', tag);
+        _dispatcher.DispatchSignal('/session/error/auth', tag);
     end;
 end;
 
@@ -1179,7 +1179,7 @@ begin
     _tls_cb := -1;
 
     if (event <> 'xml') then begin
-        Self.FireEvent('/session/tlserror', nil);
+        Self.FireEvent('/session/error/tls', nil);
         exit;
     end;
 
@@ -1188,7 +1188,7 @@ begin
         ResetStream();
         _ssl_on := true;
     except
-        Self.FireEvent('/session/tlserror', nil);
+        Self.FireEvent('/session/error/tls', nil);
         _ssl_on := false;
     end;
 
@@ -1216,7 +1216,7 @@ begin
     _compression_cb := -1;
 
     if (event <> 'xml') then begin
-        Self.FireEvent('/session/compressionerror', nil);
+        Self.FireEvent('/session/error/compression', nil);
         exit;
     end;
 
@@ -1225,7 +1225,7 @@ begin
         ResetStream();
         _compression_on := true;
     except
-        Self.FireEvent('/session/compressionerror', nil);
+        Self.FireEvent('/session/error/compression', nil);
         _ssl_on := false;
     end;
 
@@ -1237,8 +1237,11 @@ begin
     Self.UnRegisterCallback(_compression_err_cb);
     _compression_err_cb := -1;
 
-    Self.FireEvent('/session/compressionerror', tag);
+    Self.FireEvent('/session/error/compression', tag);
 end;
 
 end.
+
+
+
 
