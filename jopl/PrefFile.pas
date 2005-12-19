@@ -318,7 +318,7 @@ begin
     end;
 
     if (_writable = pwsNotWritable) then begin
-        MainSession.FireEvent('/session/gui/prefs-write-error', nil);
+        MainSession.FireEvent('/session/error/prefs-write', nil);
         exit;
     end;
 
@@ -329,7 +329,7 @@ begin
         fs.SaveToFile(_filename);
         _dirty := false;
     except
-        MainSession.FireEvent('/session/gui/prefs-write-error', nil);
+        MainSession.FireEvent('/session/error/prefs-write', nil);
     end;
 
     fs.Free();

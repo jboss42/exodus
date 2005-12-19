@@ -99,7 +99,7 @@ begin
         if (_sasl_auth.checkSASLFeatures(feats)) then
             _sasl_auth.StartAuthentication()
         else if _session.Profile.WinLogin then begin
-            _session.FireEvent('/session/autherror', nil);
+            _session.FireEvent('/session/error/auth', nil);
             exit;
         end
         else
@@ -107,7 +107,7 @@ begin
     end
     else begin
         if _session.Profile.WinLogin then begin
-            _session.FireEvent('/session/autherror', nil);
+            _session.FireEvent('/session/error/auth', nil);
             exit;
         end;
         SendAuthGet();
@@ -186,7 +186,7 @@ begin
         // NB: Don't call Disconnect from within a callback
         // rely on the application to catch this event and post
         // a message to disconnect
-        _session.FireEvent('/session/regerror', xml);
+        _session.FireEvent('/session/error/reg', xml);
     end
     else begin
         // We got a good registration...
@@ -214,13 +214,13 @@ begin
             etag := xml.GetFirstTag('error');
             if ((etag <> nil) and
                 (etag.getAttribute('code') = '401'))then begin
-                _session.FireEvent('/session/noaccount', xml);
+                _session.FireEvent('/session/error/noaccount', xml);
                 exit;
             end;
         end;
 
         // otherwise, auth-error
-        _session.FireEvent('/session/autherror', xml);
+        _session.FireEvent('/session/error/auth', xml);
         exit;
     end;
 
@@ -309,3 +309,4 @@ begin
 end;
 
 end.
+

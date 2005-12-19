@@ -51,6 +51,7 @@ type
     _queue: TObjectList;
     _cb: integer;
     _loading: boolean;
+    _sel: integer;
     
     procedure SaveEvents();
     procedure LoadEvents();
@@ -410,12 +411,19 @@ var
     e: TJabberEvent;
 begin
     txtMsg.InputFormat := ifUnicode;
-    if (lstEvents.SelCount <= 0) then
-        txtMsg.WideLines.Clear
+    if (lstEvents.SelCount <= 0) then begin
+        txtMsg.WideLines.Clear;
+        _sel := -1;
+    end
     else begin
-        e := TJabberEvent(_queue[lstEvents.Selected.Index]);
-        if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
+        e := TJabberEvent(_queue[Item.Index]);
+        if ((e <> nil) and (lstEvents.SelCount = 1) and
+            (e.Data.Text <> '') and (Item.Selected) and (Change = ctState) and
+            (Item.Index <> _sel) and (Item.Index >= 0) ) then begin
+            _sel := Item.Index;
             txtMsg.WideText := e.Data.Text;
+            txtMsg.ScrollToTop();
+        end;
     end;
 end;
 
@@ -494,13 +502,13 @@ begin
     end;
 
     if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
-        lstEvents.Selected := lstEvents.Items[first];
+        lstEvents.ItemIndex := first;
         e := TJabberEvent(_queue[first]);
         if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
     end
     else if (lstEvents.Items.Count > 0) then
-        lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
+        lstEvents.ItemIndex := lstEvents.Items.Count - 1;
 
     if (lstEvents.Selected <> nil) then begin
         lstEvents.Selected.MakeVisible(false);
@@ -513,12 +521,26 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+    c: integer;
 begin
     // pickup hot-keys on the list view..
     case Key of
     VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
         Key := $0;
         removeItems();
+    end;
+    Ord(' '): begin
+        Key := $0;
+        if txtMsg.atBottom then begin
+            c := _sel;
+            if (c + 1) < lstEvents.Items.Count then begin
+                lstEvents.ClearSelection();
+                lstEvents.ItemIndex := c + 1;
+            end;
+       end
+       else
+           txtMsg.ScrollPageDown();
     end;
     end;
 
@@ -572,7 +594,7 @@ procedure TfrmMsgQueue.lstEventsEnter(Sender: TObject);
 begin
   inherited;
     if ((lstEvents.ItemIndex = -1) and (lstEvents.Items.Count > 0)) then
-        lstEVents.ItemIndex := 0; 
+        lstEVents.ItemIndex := 0;
 end;
 
 end.
