@@ -1202,7 +1202,7 @@ begin
         setTrayIcon(1);
     end
 
-    else if event = '/session/autherror' then begin
+    else if event = '/session/error/auth' then begin
         _logoff := true;
         MainSession.Profile.password := '';
         MessageDlgW(_(sAuthError), mtError, [mbOK], 0);
@@ -1215,7 +1215,7 @@ begin
         exit;
     end
 
-    else if (event = '/session/tlserror') then begin
+    else if (event = '/session/error/tls') then begin
         MessageDlgW(_('There was an error trying to setup SSL.'), mtError,
             [mbOK], 0);
         _logoff := true;
@@ -1223,7 +1223,7 @@ begin
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end
 
-    else if ((event = '/session/sslerror') and (tag <> nil)) then begin
+    else if ((event = '/session/error/ssl') and (tag <> nil)) then begin
         fp := tag.getAttribute('fingerprint');
 
         // check for an allowed cert.
@@ -1259,7 +1259,7 @@ begin
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end
 
-    else if event = '/session/regerror' then begin
+    else if event = '/session/error/reg' then begin
         _logoff := true;
 
         m := _(sRegError);
@@ -1276,7 +1276,7 @@ begin
         exit;
     end
 
-    else if event = '/session/noaccount' then begin
+    else if event = '/session/error/noaccount' then begin
         if (MessageDlgW(_(sAuthNoAccount), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
             // Just disconnect, they don't want an account
             _logoff := true;
@@ -1389,7 +1389,7 @@ begin
         timAutoAway.Enabled := false;
     end
 
-    else if event = '/session/stream:error' then begin
+    else if event = '/session/error/stream' then begin
         // we got a stream error.
         // _logoff is set to tell the client to NOT to auto-reconnect
         // This prevents the clients from resource-battling
