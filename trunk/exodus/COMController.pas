@@ -91,14 +91,8 @@ type
       safecall;
     function Get_Roster: IExodusRoster; safecall;
     function Get_PPDB: IExodusPPDB; safecall;
-    function registerBrowseNS(const Namespace: WideString): WideString;
-      safecall;
-    function registerDiscoFeature(const Feature: WideString): WideString;
-      safecall;
     function registerDiscoItem(const JabberID, Name: WideString): WideString;
       safecall;
-    procedure removeBrowseNS(const ID: WideString); safecall;
-    procedure removeDiscoFeature(const ID: WideString); safecall;
     procedure removeDiscoItem(const ID: WideString); safecall;
     function registerPresenceXML(const XML: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
@@ -119,6 +113,8 @@ type
     procedure registerWithService(const JabberID: WideString); safecall;
     procedure lastRelease(var Shutdown: boolean);
     procedure showAddContact(const jid: WideString); safecall;
+    procedure registerCapExtension(const ext, feature: WideString); safecall;
+    procedure unregisterCapExtension(const ext: WideString); safecall;
     
     { Protected declarations }
   private
@@ -126,9 +122,11 @@ type
     _roster_menus: TWidestringlist;
     _msg_menus: TWidestringList;
     _nextid: longint;
+    _cookie: integer;
     
   public
     constructor Create();
+    procedure Initialize(); override;
     destructor Destroy(); override;
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
@@ -463,6 +461,7 @@ begin
     // call the plugin back
     // Lets just wholesale catch exceptions here. This will prevent
     // Exodus show catastrophic errors when plugins are bad
+    // TODO: think about unregistering the plugin if it throws an exception.
     try
         plugin := IUnknown(com) as IExodusPlugin;
         if (tag = nil) then
@@ -472,6 +471,8 @@ begin
 
         plugin.Process(_xpath, event, xml);
     except
+        self.Free();
+
     end;
 end;
 
@@ -486,20 +487,32 @@ begin
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
+end;
+
+procedure TExodusController.Initialize();
+begin
     ComServer.OnLastRelease := lastRelease;
+    OleCheck(RegisterActiveObject(self as IExodusController, CLASS_ExodusController, ACTIVEOBJECT_WEAK, _cookie));
 end;
 
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
-    // should we cleanup these menu items???
-    _menu_items.Free();
-    _roster_menus.Free();
-    _msg_menus.Free();
+    if (_menu_items <> nil) then begin
 
-    OutputDebugString('Destroying TExodusController');
+        //CoLockObjectExternal(self as IExodusController, false, true);
+        OleCheck(CoDisconnectObject(self as IExodusController, 0));
+        OleCheck(RevokeActiveObject(_cookie, nil));
 
-    inherited;
+        //OutputDebugString('Destroying TExodusController');
+        
+        // should we cleanup these menu items???
+        FreeAndNil(_menu_items);
+        FreeAndNil(_roster_menus);
+        FreeAndNil(_msg_menus);
+
+        inherited;
+    end;
 end;
 
 {---------------------------------------}
@@ -982,44 +995,10 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.registerBrowseNS(
-  const Namespace: WideString): WideString;
-begin
-    Result := IntToStr(Exodus_Browse.Namespaces.Add(namespace));
-end;
-
-{---------------------------------------}
-function TExodusController.registerDiscoFeature(
-  const Feature: WideString): WideString;
-begin
-    Result := IntToStr(Exodus_Disco_Info.Features.Add(Feature));
-end;
-
-{---------------------------------------}
 function TExodusController.registerDiscoItem(const JabberID,
   Name: WideString): WideString;
 begin
     Result := Exodus_Disco_Items.addItem(Name, JabberID);
-end;
-
-{---------------------------------------}
-procedure TExodusController.removeBrowseNS(const ID: WideString);
-var
-    idx: integer;
-begin
-    idx := StrToIntDef(ID, -1);
-    if ((idx >= 0) and (idx < Exodus_Browse.Namespaces.Count)) then
-        Exodus_Browse.Namespaces.Delete(idx);
-end;
-
-{---------------------------------------}
-procedure TExodusController.removeDiscoFeature(const ID: WideString);
-var
-    idx: integer;
-begin
-    idx := StrToIntDef(ID, -1);
-    if ((idx >= 0) and (idx < Exodus_Disco_Info.Features.Count)) then
-        Exodus_Disco_Info.Features.Delete(idx);
 end;
 
 {---------------------------------------}
@@ -1230,6 +1209,16 @@ end;
 procedure TExodusController.showAddContact(const jid: WideString);
 begin
     RosterAdd.ShowAddContact(jid);
+end;
+
+procedure TExodusController.registerCapExtension(const ext, feature: WideString);
+begin
+    Exodus_Disco_Info.AddExtension(ext, feature);
+end;
+
+procedure TExodusController.unregisterCapExtension(const ext: WideString);
+begin
+    Exodus_Disco_Info.RemoveExtension(ext);
 end;
 
 initialization

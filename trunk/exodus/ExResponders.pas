@@ -77,12 +77,16 @@ type
     end;
 
     TDiscoInfoResponder = class(TJabberResponder)
+    private
+        Extensions: TWideStringList;
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
-        Features: TWidestringlist;
         constructor Create(Session: TJabberSession); overload;
         destructor Destroy; override;
+        procedure AddExtension(ext: WideString; feature: WideString);
+        procedure RemoveExtension(ext: WideString);
+        function ExtList(): WideString;
     end;
 
     TFactoryResponder = class
@@ -714,14 +718,61 @@ end;
 constructor TDiscoInfoResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_DISCOINFO);
-    Features := TWideStringList.Create();
+    Extensions := TWideStringList.Create();
 end;
 
 {---------------------------------------}
 destructor TDiscoInfoResponder.Destroy;
 begin
-    Features.Free();
+    ClearStringListObjects(Extensions);
+    Extensions.Free();
     inherited;
+end;
+
+{---------------------------------------}
+procedure TDiscoInfoResponder.AddExtension(ext: WideString; feature: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := Extensions.IndexOf(ext);
+    if (i < 0) then begin
+        features := TWideStringList.Create();
+        Extensions.AddObject(ext, features);
+    end
+    else begin
+        features := TWideStringList(Extensions.Objects[i]);
+    end;
+
+    features.Add(feature);
+end;
+
+{---------------------------------------}
+procedure TDiscoInfoResponder.RemoveExtension(ext: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := Extensions.IndexOf(ext);
+    if (i < 0) then exit;
+
+    features := TWideStringList(Extensions.Objects[i]);
+
+    Extensions.Delete(i);
+    features.Free();
+end;
+
+{---------------------------------------}
+function TDiscoInfoResponder.ExtList(): WideString;
+var
+    i : integer;
+begin
+    Result := '';
+    for i := 0 to Extensions.Count - 1 do begin
+        if (i <> 0) then
+            Result := Result + ' ';
+        Result := Result + Extensions[i];
+    end;
 end;
 
 {---------------------------------------}
@@ -734,10 +785,12 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     end;
 
 var
-    i: integer;
+    i, j: integer;
     r, q: TXMLTag;
     node: WideString;
-    vsharp: WideString;
+    uri, ext: WideString;
+    extension : TWideStringList;
+    error: boolean;
 begin
     // return info results
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -745,69 +798,107 @@ begin
     q := tag.GetFirstTag('query');
     if (q = nil) then exit;
 
+    error := false;
+    extension := nil;
+
+    // The disco node should either not be present: "give me all of your features"
+    // Be URI#version: "give me the base features for this version" or
+    // Be URI#ext: "give me the features for this extension"
+    // other nodes, from plugins for example, MUST register their own callback
     node := q.GetAttribute('node');
-    vsharp := _session.Prefs.getString('client_caps_uri') + '#' + GetAppVersion();
+    if (node <> '') then begin
+        i := pos('#', node);
+        if (i = 0) then
+            error := true
+        else begin
+            uri := copy(node, 1, i - 1);
+            if (uri <> _session.Prefs.getString('client_caps_uri')) then
+                error := true
+            else begin
+                ext := copy(node, i+1, length(node) - i + 1);
+                if ext <> GetAppVersion() then begin
+                    j := Extensions.IndexOf(ext);
+                    if (j < 0) then
+                        error := true
+                    else begin
+                        extension := TWideStringList(Extensions.Objects[j]);
+                    end;
+                end;
+            end;
+        end;
+    end;
 
     r := TXMLTag.Create('iq');
-    with r do begin
-        setAttribute('to', tag.getAttribute('from'));
-        setAttribute('id', tag.GetAttribute('id'));
+    r.setAttribute('to', tag.getAttribute('from'));
+    r.setAttribute('id', tag.GetAttribute('id'));
+    q := r.AddTag('query');
+    q.setAttribute('xmlns', XMLNS_DISCOINFO);
+    if (node <> '') then
+        q.setAttribute('node', node);
 
-        // TODO: look for known extensions, as well
-        if (node <> '') and (node <> vsharp) then begin
-            setAttribute('type', 'error');
-            with r.AddBasicTag('error', 'Unknown node') do
-                setAttribute('code', '404');
-            _session.SendTag(r);
-            exit;
+    if (error) then begin
+        r.setAttribute('type', 'error');
+        with r.AddTag('error') do begin
+            setAttribute('code', '404');
+            setAttribute('type', 'cancel');
+            AddTagNS('item-not-found', XMLNS_STREAMERR);
         end;
+        _session.SendTag(r);
+        exit;
+    end;
 
-        setAttribute('type', 'result');
-        q := r.AddTag('query');
+    r.setAttribute('type', 'result');
 
-        if (node = '') or (node = vsharp) then begin
-            with q do begin
-                setAttribute('xmlns', XMLNS_DISCOINFO);
-            end;
-
-            addFeature(q, XMLNS_SEARCH);
-            addFeature(q, XMLNS_AGENTS);
-
-            addFeature(q, XMLNS_IQOOB);
-            addFeature(q, XMLNS_BROWSE);
-            addFeature(q, XMLNS_TIME);
-            addFeature(q, XMLNS_VERSION);
-            addFeature(q, XMLNS_LAST);
-            addFeature(q, XMLNS_DISCOITEMS);
-            addFeature(q, XMLNS_DISCOINFO);
-
-            // Various core extensions
-            addFeature(q, XMLNS_BM);
-            addFeature(q, XMLNS_XDATA);
-            addFeature(q, XMLNS_XCONFERENCE);
-            addFeature(q, XMLNS_XEVENT);
-
-            // MUC Stuff
-            addFeature(q, XMLNS_MUC);
-            addFeature(q, XMLNS_MUCUSER);
-            addFeature(q, XMLNS_MUCOWNER);
-
-            // File xfer
-            addFeature(q, XMLNS_SI);
-            addFeature(q, XMLNS_FTPROFILE);
-            addFeature(q, XMLNS_BYTESTREAMS);
+    if (extension <> nil) then begin
+        for j := 0 to extension.Count - 1 do begin
+            addFeature(q, extension[j]);
         end;
+    end
+    else begin
+        // no node or uri#ver
+        addFeature(q, XMLNS_SEARCH);
+        addFeature(q, XMLNS_AGENTS);
 
-        if (node <> vsharp) then begin
+        addFeature(q, XMLNS_IQOOB);
+        addFeature(q, XMLNS_BROWSE);
+        addFeature(q, XMLNS_TIME);
+        addFeature(q, XMLNS_VERSION);
+        addFeature(q, XMLNS_LAST);
+        addFeature(q, XMLNS_DISCOITEMS);
+        addFeature(q, XMLNS_DISCOINFO);
+
+        // Various core extensions
+        addFeature(q, XMLNS_BM);
+        addFeature(q, XMLNS_XDATA);
+        addFeature(q, XMLNS_XCONFERENCE);
+        addFeature(q, XMLNS_XEVENT);
+
+        // MUC Stuff
+        addFeature(q, XMLNS_MUC);
+        addFeature(q, XMLNS_MUCUSER);
+        addFeature(q, XMLNS_MUCOWNER);
+
+        // File xfer
+        addFeature(q, XMLNS_SI);
+        addFeature(q, XMLNS_FTPROFILE);
+        addFeature(q, XMLNS_BYTESTREAMS);
+
+        if (node = '') then begin
             with q.AddTag('identity') do begin
                 setAttribute('category', 'user');
                 setAttribute('type', 'client');
                 setAttribute('name', _session.Username);
             end;
-            for i := 0 to Features.Count - 1 do
-                addFeature(q, Features[i]);
+
+            for i := 0 to Extensions.Count - 1 do begin
+                extension := TWideStringList(Extensions.Objects[i]);
+                for j := 0 to extension.Count - 1 do begin
+                    addFeature(q, extension[j]);
+                end;
+            end;
         end;
     end;
+
 
     DoNotify(nil, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),

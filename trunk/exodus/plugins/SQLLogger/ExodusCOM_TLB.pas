@@ -12,16 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 11/18/2005 4:18:48 PM from Type Library described below.
+// File generated on 12/27/2005 3:23:23 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: c:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {5BABCA07-A359-4B42-8C03-C5B329E79E31}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -184,12 +184,8 @@ type
     procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
     function Get_Roster: IExodusRoster; safecall;
     function Get_PPDB: IExodusPPDB; safecall;
-    function registerBrowseNS(const Namespace: WideString): WideString; safecall;
     function registerDiscoItem(const JabberID: WideString; const Name: WideString): WideString; safecall;
-    function registerDiscoFeature(const Feature: WideString): WideString; safecall;
-    procedure removeBrowseNS(const ID: WideString); safecall;
     procedure removeDiscoItem(const ID: WideString); safecall;
-    procedure removeDiscoFeature(const ID: WideString); safecall;
     function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
     procedure trackWindowsMsg(Message: Integer); safecall;
@@ -208,6 +204,8 @@ type
     procedure removeGroupMenu(const ID: WideString); safecall;
     procedure registerWithService(const JabberID: WideString); safecall;
     procedure showAddContact(const jid: WideString); safecall;
+    procedure registerCapExtension(const ext: WideString; const feature: WideString); safecall;
+    procedure unregisterCapExtension(const ext: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -283,12 +281,8 @@ type
     procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 51;
     property Roster: IExodusRoster readonly dispid 54;
     property PPDB: IExodusPPDB readonly dispid 55;
-    function registerBrowseNS(const Namespace: WideString): WideString; dispid 9;
     function registerDiscoItem(const JabberID: WideString; const Name: WideString): WideString; dispid 10;
-    function registerDiscoFeature(const Feature: WideString): WideString; dispid 27;
-    procedure removeBrowseNS(const ID: WideString); dispid 52;
     procedure removeDiscoItem(const ID: WideString); dispid 53;
-    procedure removeDiscoFeature(const ID: WideString); dispid 56;
     function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
     procedure trackWindowsMsg(Message: Integer); dispid 59;
@@ -307,6 +301,8 @@ type
     procedure removeGroupMenu(const ID: WideString); dispid 203;
     procedure registerWithService(const JabberID: WideString); dispid 204;
     procedure showAddContact(const jid: WideString); dispid 205;
+    procedure registerCapExtension(const ext: WideString; const feature: WideString); dispid 206;
+    procedure unregisterCapExtension(const ext: WideString); dispid 207;
   end;
 
 // *********************************************************************//
