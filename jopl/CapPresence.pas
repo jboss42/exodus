@@ -37,12 +37,13 @@ type
 implementation
 
 uses
-    Session, PrefController, JabberConst, XMLUtils;
+    ExResponders, Session, PrefController, JabberConst, XMLUtils;
 
 {---------------------------------------}
 constructor TCapPresence.Create;
 var
     c : TXMLTag;
+    ext : WideString;
 begin
     inherited;
     // Add in client capabilities if we have them enabled.
@@ -51,6 +52,9 @@ begin
         c.setAttribute('xmlns', XMLNS_CLIENTCAPS);
         c.setAttribute('node', MainSession.Prefs.getString('client_caps_uri'));
         c.setAttribute('ver', GetAppVersion());
+        ext := Exodus_Disco_Info.ExtList();
+        if (ext <> '') then
+            c.setAttribute('ext', ext);
     end;
 end;
 
