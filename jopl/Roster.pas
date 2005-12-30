@@ -51,6 +51,8 @@ type
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
+        procedure UpdateCallback(event: string; tag: TXMLTag);
+        procedure RemoveCallback(event: string; tag: TXMLTag);
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
         procedure checkGroups(ri: TJabberRosterItem);
@@ -74,6 +76,7 @@ type
         procedure SetSession(js: TObject);
         procedure Fetch;
         procedure SaveBookmarks;
+        procedure parseItem(ri: TJabberRosterItem; tag: TXMLTag);
 
         procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
         procedure AddBookmark(sjid: Widestring; bm: TJabberBookmark);
@@ -115,7 +118,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    JabberConst, iq, s10n, XMLUtils, Session;
+    GnuGetText, JabberConst, iq, s10n, XMLUtils, Session;
 const
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
@@ -181,6 +184,8 @@ begin
     _js := js;
     with TJabberSession(_js) do begin
         RegisterCallback(Callback, '/packet/iq/query[@xmlns="jabber:iq:roster"]');
+        RegisterCallback(UpdateCallback, '/roster/item/update');
+        RegisterCallback(RemoveCallback, '/roster/item/remove');
         _pres_cb := RegisterCallback(presCallback);
     end;
 end;
@@ -302,6 +307,38 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberRoster.parseItem(ri: TJabberRosterItem; tag: TXMLTag);
+var
+    grps: TXMLTagList;
+    g: integer;
+    tmp_grp: Widestring;
+begin
+    ri.IsContact := true;
+    ri.Action := '/session/gui/contact';
+
+    ri.Tag := TXMLTag.Create(tag);
+    ri.Tag.setAttribute('xmlns', XMLNS_ROSTER);
+    ri.Text := tag.GetAttribute('name');
+
+    // if there is no nickname, just use the user portion of the jid
+    if (ri.Text = '') then
+        ri.Text := ri.Jid.user;
+
+    ri.ClearGroups();    
+    grps := tag.QueryXPTags('/item/group');
+    for g := 0 to grps.Count - 1 do begin
+        tmp_grp := Trim(TXMLTag(grps[g]).Data);
+        if (tmp_grp <> '') then
+            ri.AddGroup(tmp_grp);
+    end;
+    grps.Free();
+    ri.SetCleanGroups();
+    if (ri.Tooltip = '') then
+        ri.Tooltip := ri.jid.full + ': ' + _('Offline')
+end;
+
+
+{---------------------------------------}
 procedure TJabberRoster.Callback(event: string; tag: TXMLTag);
 var
     q: TXMLTag;
@@ -331,11 +368,10 @@ begin
         ri := Find(j);
 
         if ri = nil then begin
-            ri := TJabberRosterItem.Create;
+            ri := TJabberRosterItem.Create(j);
             Self.AddObject(j, ri);
         end;
-
-        ri.parse(ritems[i]);
+        parseItem(ri, ritems[i]);
         checkGroups(ri);
         s.FireEvent('/roster/item', tag, ri);
         if (ri.subscription = 'remove') then begin
@@ -349,22 +385,82 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+procedure TJabberRoster.UpdateCallback(event: string; tag: TXMLTag);
 var
     ri: TJabberRosterItem;
+    item, iq: TXMLTag;
+    g: integer;
+begin
+    // update this roster item if it's a jabber:iq:roster item
+    if (tag.GetAttribute('xmlns') <> XMLNS_ROSTER) then exit;
+
+    ri := Self.Find(tag.GetAttribute('jid'));
+    if (ri = nil) then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    with iq.AddTag('query') do begin
+        setAttribute('xmlns', XMLNS_ROSTER);
+        item := AddTag('item');
+        item.setAttribute('jid', ri.Jid.full);
+        item.setAttribute('name', ri.Text);
+
+        // add in groups
+        if (ri.AreGroupsDirty) then begin
+            for g := 0 to ri.DirtyGroupCount - 1 do
+                item.AddBasicTag('group', ri.DirtyGroup[g]);
+        end
+        else begin
+            for g := 0 to ri.GroupCount - 1 do
+                item.AddBasicTag('group', ri.Group[g]);
+        end;
+    end;
+    MainSession.SendTag(iq);
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.RemoveCallback(event: string; tag: TXMLTag);
+var
+    ri: TJabberRosterItem;
+    item, iq: TXMLTag;
+begin
+    if (tag.GetAttribute('xmlns') <> XMLNS_ROSTER) then exit;
+
+    ri := Self.Find(tag.GetAttribute('jid'));
+    if (ri = nil) then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    with iq.AddTag('query') do begin
+        setAttribute('xmlns', XMLNS_ROSTER);
+        item := AddTag('item');
+        item.setAttribute('jid', ri.Jid.full);
+        item.setAttribute('subscription', 'remove');
+    end;
+    MainSession.SendTag(iq);
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+var
+    p: TJabberPres;
+    ri: TJabberRosterItem;
     i, idx: integer;
-    cur_grp: Widestring;
+    tmps, cur_grp: Widestring;
     go: TJabberGroup;
 begin
     // we are getting /preseence events
+    ri := Self.Find(pres.fromJid.jid);
+    if (ri = nil) then
+        ri := Self.Find(pres.fromJid.full);
+
+    if (ri = nil) then exit;
+
     if ((event = '/presence/online') or (event = '/presence/offline')) then begin
 
         // this JID is coming online... inc group counters
-        ri := Self.Find(pres.fromJid.jid);
-        if (ri = nil) then
-            ri := Self.Find(pres.fromJid.full);
-
-        if (ri = nil) then exit;
 
         // special case for unfiled
         if (ri.GroupCount = 0) then begin
@@ -381,6 +477,21 @@ begin
                 go.setPresence(ri.jid, pres);
             end;
         end;
+    end;
+
+    // update tooltips for this roster item when presence changes
+    p := MainSession.ppdb.FindPres(ri.JID.jid, '');
+    if (p = nil) then
+        ri.Tooltip := ri.jid.full + ': ' + _('Offline')
+    else begin
+        // Compile a list of jid: status for each resource
+        tmps := '';
+        while (p <> nil) do begin
+            if (tmps <> '') then tmps := tmps + ''#13#10;
+            tmps := tmps + p.fromJid.full + ': ' + p.Status;
+            p := MainSession.ppdb.NextPres(p);
+        end;
+        ri.Tooltip := tmps;
     end;
 
 end;
@@ -717,12 +828,14 @@ begin
         ritems := tag.QueryXPTags('/iq/query/item');
         for i := 0 to ritems.Count - 1 do begin
             ct := ritems.Tags[i];
-            idx := Self.IndexOf(ct.GetAttribute('jid'));
+            tmp_jid := TJabberID.Create(ct.GetAttribute('jid'));
+            idx := Self.IndexOf(tmp_jid.full);
             if (idx = -1) then
-                ri := TJabberRosterItem.Create
+                ri := TJabberRosterItem.Create(tmp_jid.full)
             else
                 ri := TJabberRosterItem(Self.Objects[idx]);
-            ri.parse(ct);
+            tmp_jid.Free();
+            parseItem(ri, ct);
             checkGroups(ri);
             if (idx = -1) then
                 AddObject(WideLowerCase(ri.jid.Full), ri);
@@ -739,8 +852,8 @@ begin
         tmp_jid.Free();
         ct.setAttribute('subscription', 'both');
         ct.setAttribute('name', s.Username);
-        ri := TJabberRosterItem.Create();
-        ri.parse(ct);
+        ri := TJabberRosterItem.Create(tmp_jid.jid);
+        parseItem(ri, ct);
         Self.AddObject(WideLowerCase(ri.jid.Full), ri);
         s.FireEvent('/roster/item', ct, ri);
         ct.Free();

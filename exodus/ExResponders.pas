@@ -183,7 +183,7 @@ begin
     if (ritem = nil) then
         result := jid.jid
     else
-        result := ritem.Nickname;
+        result := ritem.Text;
     jid.Free();
 end;
 

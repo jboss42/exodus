@@ -157,7 +157,7 @@ var
 begin
     ritem := MainSession.roster.Find(jid);
     if ritem <> nil then
-        cap := ritem.nickname
+        cap := ritem.Text
     else
         cap := jid;
 

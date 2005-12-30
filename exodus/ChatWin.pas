@@ -277,7 +277,7 @@ begin
                     OtherNick := chat_nick;
             end
             else
-                OtherNick := ritem.Nickname;
+                OtherNick := ritem.Text;
         end
         else
             OtherNick := chat_nick;
@@ -503,10 +503,10 @@ begin
 
     if (ritem <> nil) then begin
         // This person is in our roster
-        lblNick.Caption := ritem.Nickname;
-        Caption := ritem.Nickname;
+        lblNick.Caption := ritem.Text;
+        Caption := ritem.Text;
         lblNick.Hint := _jid.full;
-        MsgList.setTitle(ritem.Nickname);
+        MsgList.setTitle(ritem.Text);
         if (p = nil) then
             ChangePresImage('offline', 'offline')
         else

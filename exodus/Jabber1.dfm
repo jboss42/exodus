@@ -1,6 +1,6 @@
 object frmExodus: TfrmExodus
-  Left = 217
-  Top = 190
+  Left = 195
+  Top = 168
   Width = 239
   Height = 371
   AlphaBlendValue = 240
@@ -3129,7 +3129,7 @@ object frmExodus: TfrmExodus
     Interval = 3000
     OnTimer = timAutoAwayTimer
     Left = 16
-    Top = 136
+    Top = 232
   end
   object popTabs: TTntPopupMenu
     AutoHotkeys = maManual

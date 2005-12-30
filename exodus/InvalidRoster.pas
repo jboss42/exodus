@@ -87,7 +87,7 @@ begin
         li := ListView1.Items.Add();
         li.Caption := tag.GetAttribute('from');
         e := tag.GetFirstTag('error');
-        li.SubItems.Add(ritem.nickname);
+        li.SubItems.Add(ritem.Text);
         if (e <> nil) then
             li.SubItems.Add(e.Data);
         li.Checked := true;

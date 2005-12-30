@@ -277,7 +277,7 @@ begin
         j := _selector.GetSelectedJID();
         ritem := MainSession.Roster.Find(j);
         if (ritem <> nil) then
-            AddJid(j, ritem.Nickname)
+            AddJid(j, ritem.Text)
         else
             AddJid(j, '');
     end;
@@ -333,7 +333,7 @@ begin
             if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
                 // We have a roster item
                 ritem := TJabberRosterItem(n.Data);
-                AddJid(ritem.jid.jid, ritem.Nickname);
+                AddJid(ritem.jid.jid, ritem.Text);
             end
             else if ((n.Data <> nil) and (TObject(n.Data) is TJabberGroup)) then begin
                 // We have a roster grp
@@ -341,7 +341,7 @@ begin
                 gitems := MainSession.roster.getGroupItems(grp.FullName, false);
                 for j := 0 to gitems.count - 1 do begin
                     ritem := TJabberRosterItem(gitems[j]);
-                    AddJid(ritem.Jid.jid, ritem.Nickname);
+                    AddJid(ritem.Jid.jid, ritem.Text);
                 end;
             end;
         end;

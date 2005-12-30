@@ -243,7 +243,7 @@ begin
     m.isMe := false;
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then
-        m.Nick := ritem.Nickname
+        m.Nick := ritem.Text
     else
         m.Nick := m.FromJID;
     LogMessage(m);
@@ -468,8 +468,8 @@ begin
             str_content := tag.GetBasicText('body');
             i_tags := tmp_tag.QueryTags('item');
             for j := 0 to i_tags.Count - 1 do begin
-                ri := TJabberRosterItem.Create();
-                ri.parse(i_tags[j]);
+                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
+                MainSession.roster.parseItem(ri, i_tags[j]);
                 _data_list.AddObject(ri.jid.jid, ri);
             end;
             i_tags.Free();

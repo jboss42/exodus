@@ -691,11 +691,11 @@ begin
     tmp_jid := TJabberID.Create(jid);
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then begin
-        txtFrom.Caption := ritem.Nickname + ' <' + jid + '>';
+        txtFrom.Caption := ritem.Text + ' <' + jid + '>';
         if (pnlSendSubject.Visible) then
-            Self.Caption := _(sMessageTo) + ritem.Nickname
+            Self.Caption := _(sMessageTo) + ritem.Text
         else
-            Self.Caption := _(sMessageFrom) + ritem.Nickname;
+            Self.Caption := _(sMessageFrom) + ritem.Text;
     end
     else begin
         txtFrom.Caption := jid;

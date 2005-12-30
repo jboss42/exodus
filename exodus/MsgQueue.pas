@@ -119,7 +119,7 @@ begin
     tmp_jid.Free();
 
     if (ritem <> nil) then
-        e.Caption := ritem.nickname
+        e.Caption := ritem.Text
     else
         e.Caption := e.from;
 
