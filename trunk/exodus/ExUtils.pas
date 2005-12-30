@@ -595,8 +595,8 @@ begin
         ri := TJabberRosterItem(items[i]);
         item := x.AddTag('item');
         item.setAttribute('jid', ri.jid.full);
-        item.setAttribute('name', ri.RawNickname);
-        b := b + Chr(13) + Chr(10) + ri.RawNickname + ': ' + ri.jid.full;
+        item.setAttribute('name', ri.Text);
+        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.full;
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');

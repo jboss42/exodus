@@ -77,7 +77,7 @@ begin
         ri := TJabberRosterItem(e.Data.Objects[i]);
         if ((ri <> nil) and (ri is TJabberRosterItem)) then begin
             n := lvContacts.Items.Add();
-            n.Caption := ri.nickname;
+            n.Caption := ri.Text;
             n.SubItems.Add(ri.jid.full);
             n.Checked := true;
         end;
@@ -130,7 +130,7 @@ begin
             if (ri = nil) then
                 MainSession.Roster.AddItem(jid, nick, cboGroup.Text, true)
             else begin
-                ri.Nickname := nick;
+                ri.Text := nick;
                 ri.ClearGroups();
                 ri.AddGroup(cboGroup.Text);
                 SendSubscribe(jid, MainSession);

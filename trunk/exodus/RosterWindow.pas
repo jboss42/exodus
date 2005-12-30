@@ -1492,8 +1492,8 @@ begin
     // determine the caption for the node
     if ((is_me) and (p <> nil)) then
         tmps := p.fromJid.resource
-    else if (ritem.RawNickname <> '') then
-        tmps := ritem.Nickname
+    else if (ritem.Text <> '') then
+        tmps := ritem.Text
     else
         tmps := ritem.jid.Full;
 
@@ -1783,21 +1783,7 @@ begin
     case getNodeType() of
     node_ritem: begin
         // chat or msg this person
-        r := MainSession.Prefs.getInt(P_CHAT);
-
-        if ((r = 0) or (r = 2)) then begin
-            if (_cur_ritem.Jid.resource <> '') then
-                win := StartChat(_cur_ritem.Jid.jid, _cur_ritem.jid.resource, true)
-            else
-                win := StartChat(_cur_ritem.jid.jid, '', true);
-            win.Show();
-            if ((MainSession.Prefs.getBool('expanded')) and
-                (win.TabSheet <> nil) and
-                (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
-                frmExodus.Tabs.ActivePage := win.TabSheet;
-        end
-        else if (r = 1) then
-            StartMsg(_cur_ritem.jid.jid);
+        MainSession.FireEvent(_cur_ritem.Action, _cur_ritem.Tag);
     end;
     node_myres: begin
         // chat my own resource
@@ -1826,8 +1812,6 @@ procedure TfrmRosterWindow.treeRosterMouseMove(Sender: TObject;
 var
     Node : TTreeNode;
     ri  : TJabberRosterItem;
-    p: TJabberPres;
-    tmps: Widestring;
 begin
     // Handle the changing of the treeview Hints
     // Based on the current node we are hovering over.
@@ -1850,20 +1834,7 @@ begin
     else if (TObject(Node.Data) is TJabberRosterItem) then begin
         ri := TJabberRosterItem(Node.Data);
         if ri = nil then exit;
-
-        p := MainSession.ppdb.FindPres(ri.JID.jid, '');
-        if (p = nil) then
-            _hint_text := ri.jid.full + ': ' + g_offline
-        else begin
-            // Compile a list of jid: status for each resource
-            tmps := '';
-            while (p <> nil) do begin
-                if (tmps <> '') then tmps := tmps + ''#13#10;
-                tmps := tmps + p.fromJid.full + ': ' + p.Status;
-                p := MainSession.ppdb.NextPres(p);
-            end;
-            _hint_text := tmps;
-        end;
+        _hint_text := ri.Tooltip;
     end
     else
         _hint_text := '';
@@ -2077,7 +2048,7 @@ begin
         if ((n = _change_node) and (Button = mbLeft)) then begin
             if ((getNodeType(n) = node_ritem) and
                 MainSession.Prefs.getBool('inline_status')) then begin
-                n.Text := _cur_ritem.Nickname;
+                n.Text := _cur_ritem.Text;
             end;
             n.EditText();
         end
@@ -2671,7 +2642,7 @@ begin
             DrawNodeText(Node, State, c1, c2);
         end
         else if (ntype = node_transport) then begin
-            c1 := _cur_ritem.Nickname;
+            c1 := _cur_ritem.Text;
             DrawNodeText(Node, State, c1, c2);
         end
         else if (ntype = node_myres) then begin
@@ -2681,8 +2652,8 @@ begin
             DrawNodeText(Node, State, c1, c2);
         end
         else if (_cur_ritem <> nil) then begin
-            if (_cur_ritem.RawNickname <> '') then
-                c1 := _cur_ritem.Nickname
+            if (_cur_ritem.Text <> '') then
+                c1 := _cur_ritem.Text
             else
                 c1 := _cur_ritem.jid.Full;
 
@@ -3292,9 +3263,9 @@ begin
         exit;
     end;
 
-    nick := ri.Nickname;
+    nick := ri.Text;
     if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
-        ri.Nickname := nick;
+        ri.Text := nick;
         ri.update();
     end;
 end;
@@ -3485,7 +3456,7 @@ begin
         if (not (TObject(node.Data) is TJabberRosterItem)) then continue;
         ri := TJabberRosterItem(node.Data);
         if radNick.Checked then
-            comp := Lowercase(ri.Nickname)
+            comp := Lowercase(ri.Text)
         else
             comp := Lowercase(ri.jid.jid);
 

@@ -113,8 +113,8 @@ begin
     if (sess.IsBlocked(j)) then exit;
     
     ritem := sess.roster.Find(j);
-    if ((ritem <> nil) and (ritem.nickname <> '')) then
-        nick := ritem.nickname
+    if ((ritem <> nil) and (ritem.Text <> '')) then
+        nick := ritem.Text
     else if (tmp_jid.user <> '') then
         nick := tmp_jid.user
     else

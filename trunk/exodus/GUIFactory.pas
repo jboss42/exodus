@@ -45,6 +45,7 @@ type
 implementation
 
 uses
+    PrefController, MsgRecv, 
     Dialogs, GnuGetText, AutoUpdateStatus, Controls, 
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
@@ -80,11 +81,11 @@ end;
 {---------------------------------------}
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
-    i: integer;
+    r, i: integer;
     dgrp, sjid: Widestring;
     tmp_jid: TJabberID;
     tmp_b: boolean;
-    chat: TfrmChat;
+    win, chat: TfrmChat;
     sub: TfrmSubscribe;
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
@@ -92,7 +93,30 @@ var
     q: TfrmMsgQueue;
 begin
     // check for various events to start GUIS
-    if (event = '/session/gui/chat') then begin
+    if (event = '/session/gui/contact') then begin
+        tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
+
+        r := MainSession.Prefs.getInt(P_CHAT);
+
+        if ((r = 0) or (r = 2)) then begin
+            if (tmp_jid.resource <> '') then
+                win := StartChat(tmp_jid.jid, tmp_jid.resource, true)
+            else
+                win := StartChat(tmp_jid.jid, '', true);
+            win.Show();
+
+            if ((MainSession.Prefs.getBool('expanded')) and
+                (win.TabSheet <> nil) and
+                (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
+                frmExodus.Tabs.ActivePage := win.TabSheet;
+        end
+        else if (r = 1) then
+            StartMsg(tmp_jid.jid);
+
+        tmp_jid.Free();
+
+    end
+    else if (event = '/session/gui/chat') then begin
         // if we are DND, or this is an offline msg, then possibly queue it,
         // depending on prefs.
         if (((MainSession.Prefs.getBool('queue_dnd_chats')) and
@@ -198,7 +222,7 @@ begin
                 txtNickname.Text := tmp_jid.user;
             end
             else if (ri <> nil) then begin
-                txtNickName.Text := ri.nickname;
+                txtNickName.Text := ri.Text;
                 if (ri.GroupCount > 0) then
                     cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
             end;

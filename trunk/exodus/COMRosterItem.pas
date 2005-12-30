@@ -74,10 +74,13 @@ end;
 {---------------------------------------}
 procedure TExodusRosterItem.Set_JabberID(const Value: WideString);
 begin
+    // XXX: remove Set_JabberID from the interface
+    {
     if (_ritem.jid <> nil) then
         _ritem.jid.Free();
 
     _ritem.setJid(value);
+    }
 end;
 
 {---------------------------------------}
@@ -89,7 +92,7 @@ end;
 {---------------------------------------}
 procedure TExodusRosterItem.Set_Subscription(const Value: WideString);
 begin
-    _ritem.Subscription := value;
+    _ritem.Tag.setAttribute('subscription', value);
 end;
 
 {---------------------------------------}
@@ -116,19 +119,20 @@ end;
 {---------------------------------------}
 function TExodusRosterItem.Get_Nickname: WideString;
 begin
-    Result := _ritem.Nickname;
+    Result := _ritem.Text;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Get_RawNickname: WideString;
 begin
-    Result := _ritem.RawNickname;
+    // XXX: raw nickname?
+    Result := _ritem.Text;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.XML: WideString;
 begin
-    Result := _ritem.xml();
+    // XXX: Result := _ritem.xml();
 end;
 
 {---------------------------------------}
@@ -140,7 +144,7 @@ end;
 {---------------------------------------}
 procedure TExodusRosterItem.Set_Nickname(const Value: WideString);
 begin
-    _ritem.Nickname := Value;
+    _ritem.Text := Value;
 end;
 
 {---------------------------------------}

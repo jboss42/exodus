@@ -306,8 +306,8 @@ begin
     end;
 
     // determine the caption for the node
-    if (ritem.Nickname <> '') then
-        tmps := ritem.Nickname
+    if (ritem.Text <> '') then
+        tmps := ritem.Text
     else
         tmps := ritem.jid.Full;
 
@@ -562,8 +562,8 @@ begin
             if (_show_status) then begin
 
                 // determine the caption
-                if (_cur_ritem.Nickname <> '') then
-                    c1 := _cur_ritem.Nickname
+                if (_cur_ritem.Text <> '') then
+                    c1 := _cur_ritem.Text
                 else
                     c1 := _cur_ritem.jid.Full;
 

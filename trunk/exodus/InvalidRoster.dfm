@@ -18,7 +18,7 @@ object frmInvalidRoster: TfrmInvalidRoster
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 208
+    Top = 205
     Width = 314
     Height = 32
     Align = alBottom
@@ -50,7 +50,7 @@ object frmInvalidRoster: TfrmInvalidRoster
     Left = 0
     Top = 0
     Width = 314
-    Height = 208
+    Height = 205
     Align = alClient
     Checkboxes = True
     Columns = <

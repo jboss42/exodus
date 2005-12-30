@@ -48,11 +48,13 @@ object frmMsgRecv: TfrmMsgRecv
       TabOrder = 1
       inherited Panel2: TPanel
         Width = 371
+        Height = 34
         inherited Bevel1: TBevel
           Width = 371
         end
         inherited Panel1: TPanel
           Left = 211
+          Height = 29
           inherited btnCancel: TTntButton [0]
             OnClick = frameButtons2btnCancelClick
           end
