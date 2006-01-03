@@ -645,7 +645,10 @@ end;
 {---------------------------------------}
 procedure TJabberRosterItem.setTag(new_tag: TXMLTag);
 begin
-    _tag.Free();
+    if (_tag = new_tag) then
+        exit;
+    if (_tag <> nil) then
+        _tag.Free();
     _tag := new_tag;
 end;
 
