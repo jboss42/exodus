@@ -298,7 +298,7 @@ begin
                 stag := AddTag('storage');
                 stag.setAttribute('xmlns', XMLNS_BM);
                 for i := 0 to Count - 1 do
-                    stag.AddTag(TXMLTag(Objects[i]))
+                    stag.AddTag(TXMLTag.Create(TXMLTag(Objects[i])))
             end;
         end;
         s.SendTag(iq);
@@ -307,7 +307,7 @@ begin
         // bookmarks from prefs
         stag := TXMLTag.Create('local-bookmarks');
         for i := 0 to Count - 1 do
-            stag.AddTag(TXMLTag(Objects[i]));
+            stag.AddTag(TXMLTag.Create(TXMLTag(Objects[i])));
         s.Prefs.SaveBookmarks(stag);
     end;
 end;
