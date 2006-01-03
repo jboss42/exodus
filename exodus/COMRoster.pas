@@ -32,11 +32,7 @@ type
     procedure AddItem(const JabberID, nickname, Group: WideString;
       Subscribe: WordBool); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
-    procedure AddBookmark(const JabberID, bmType, bmName, Nickname: WideString;
-      AutoJoin: WordBool); safecall;
     procedure Fetch; safecall;
-    procedure RemoveBookmark(const JabberID: WideString); safecall;
-    procedure SaveBookmarks; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
     function Count: Integer; safecall;
     { Protected declarations }
@@ -72,38 +68,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusRoster.AddBookmark(const JabberID, bmType, bmName,
-  Nickname: WideString; AutoJoin: WordBool);
-var
-    tmpjid: TJabberID;
-    bm: TJabberBookmark;
-begin
-    bm := TJabberBookmark.Create(nil);
-    tmpjid := TJabberID.Create(JabberID);
-    bm.jid := tmpjid;
-    bm.bmType := bmType;
-    bm.bmName := bmName;
-    bm.nick := Nickname;
-    bm.autoJoin := AutoJoin;
-    MainSession.roster.AddBookmark(JabberID, bm);
-end;
-
-{---------------------------------------}
 procedure TExodusRoster.Fetch;
 begin
     MainSession.roster.Fetch();
-end;
-
-{---------------------------------------}
-procedure TExodusRoster.RemoveBookmark(const JabberID: WideString);
-begin
-    MainSession.roster.RemoveBookmark(JabberID);
-end;
-
-{---------------------------------------}
-procedure TExodusRoster.SaveBookmarks;
-begin
-    MainSession.roster.SaveBookmarks();
 end;
 
 {---------------------------------------}

@@ -45,8 +45,8 @@ type
 implementation
 
 uses
-    PrefController, MsgRecv, 
-    Dialogs, GnuGetText, AutoUpdateStatus, Controls, 
+    PrefController, MsgRecv, Room, Bookmark,  
+    Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
 
@@ -86,6 +86,7 @@ var
     tmp_jid: TJabberID;
     tmp_b: boolean;
     win, chat: TfrmChat;
+    room: TfrmRoom;
     sub: TfrmSubscribe;
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
@@ -93,7 +94,15 @@ var
     q: TfrmMsgQueue;
 begin
     // check for various events to start GUIS
-    if (event = '/session/gui/contact') then begin
+    if (event = '/session/gui/conference-props') then begin
+        ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
+    end
+    else if (event = '/session/gui/conference') then begin
+        room := StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
+            tag.GetBasicText('password'));
+        room.Show();
+    end
+    else if (event = '/session/gui/contact') then begin
         tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
 
         r := MainSession.Prefs.getInt(P_CHAT);

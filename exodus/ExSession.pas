@@ -85,7 +85,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, NewUser,  
+    Avatar, NewUser, RosterImages,   
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,

@@ -505,7 +505,8 @@ implementation
 uses
 
     // XXX: ZipMstr
-    
+
+    RosterImages, 
     NewUser, CommandWizard, ExodusCOM_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
@@ -1305,6 +1306,9 @@ begin
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
+        RosterTreeImages.Clear();
+        RosterTreeImages.setImageList(Imagelist2);
+        
         Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
         Tabs.ActivePage := tbsRoster;

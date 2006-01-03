@@ -191,7 +191,9 @@ uses
   pnglang in '..\jopl\png\pnglang.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
-  ZlibHandler in '..\jopl\ZlibHandler.pas';
+  ZlibHandler in '..\jopl\ZlibHandler.pas',
+  Bookmarks in '..\jopl\Bookmarks.pas',
+  RosterImages in '..\jopl\RosterImages.pas';
 
 {$R *.TLB}
 

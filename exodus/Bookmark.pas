@@ -44,7 +44,6 @@ type
   private
     { Private declarations }
     new: boolean;
-    bm: TJabberBookmark;
   public
     { Public declarations }
   end;
@@ -59,23 +58,24 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  GnuGetText, JabberID, Session, RosterWindow;
+    XMLTag, JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
+    RosterWindow;
 
 function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 var
     f: TfrmBookmark;
-    i: integer;
+    bm: TXMLTag;
 begin
-    i := -1;
+    bm := nil;
     if (jid <> '') then
-        i := MainSession.Roster.Bookmarks.IndexOf(jid);
+        bm := MainSession.Bookmarks.FindBookmark(jid);
 
     f := TfrmBookmark.Create(Application);
-    if (i = -1) then f.Caption := _('Add a new bookmark');
-    
+    if (bm = nil) then f.Caption := _('Add a new bookmark');
+
     with f do begin
         cboType.ItemIndex := 0;
-        if (i < 0) then begin
+        if (bm = nil) then begin
             new := true;
             txtJid.Text := jid;
             txtNick.Text := MainSession.Profile.Username;
@@ -86,11 +86,10 @@ begin
         end
         else begin
             new := false;
-            bm := TJabberBookmark(MainSession.Roster.Bookmarks.Objects[i]);
-            txtJID.Text := bm.jid.full;
-            txtName.Text := bm.bmName;
-            txtNick.Text := bm.nick;
-            chkAutoJoin.Checked := bm.autoJoin;
+            txtJID.Text := bm.GetAttribute('jid');
+            txtName.Text := bm.GetAttribute('name');
+            chkAutoJoin.Checked := (bm.GetAttribute('autojoin') = 'true');
+            txtNick.Text := bm.GetBasicText('nick');
         end;
         Show();
     end;
@@ -105,24 +104,29 @@ begin
 end;
 
 procedure TfrmBookmark.frameButtons1btnOKClick(Sender: TObject);
+var
+    bm: TXMLTag;
+    ri: TJabberRosterItem;
 begin
     // Save any changes to the bookmark and resave
     if (new) then begin
-        bm := TJabberBookmark.Create(nil);
-        with bm do begin
-            jid := TJabberID.Create(txtJID.Text);
-            bmName := txtName.Text;
-            nick := txtNick.Text;
-            autoJoin := chkAutoJoin.Checked;
-        end;
-        MainSession.roster.AddBookmark(txtJID.Text, bm)
+        MainSession.Bookmarks.AddBookmark(txtJid.Text, txtName.Text,
+            txtNick.Text, chkAutoJoin.Checked);
     end
-    else with bm do begin
-        bmName := txtName.Text;
-        jid.ParseJID(txtJID.Text);
-        nick := txtNick.Text;
-        autoJoin := chkAutoJoin.Checked;
-        MainSession.Roster.UpdateBookmark(bm);
+    else begin
+        bm := MainSession.Bookmarks.FindBookmark(txtJid.Text);
+        if (bm <> nil) then begin
+            bm.setAttribute('name', txtName.Text);
+            if chkAutoJoin.Checked then
+                bm.setAttribute('autojoin', 'true')
+            else
+                bm.setAttribute('autojoin', 'false');
+            MainSession.bookmarks.SaveBookmarks();
+            ri := MainSession.Roster.Find(txtJid.Text);
+            assert(ri <> nil);
+            ri.Tag := bm;
+            MainSession.FireEvent('/roster/item', bm, ri);
+        end;
     end;
     Self.Close;
 end;
