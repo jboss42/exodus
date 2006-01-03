@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 12/29/2005 10:43:39 PM from Type Library described below.
+// File generated on 12/31/2005 4:40:07 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -447,12 +447,8 @@ type
   IExodusRoster = interface(IDispatch)
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; safecall;
-    procedure SaveBookmarks; safecall;
     procedure AddItem(const JabberID: WideString; const nickname: WideString; 
                       const Group: WideString; Subscribe: WordBool); safecall;
-    procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
-                          const bmName: WideString; const nickname: WideString; AutoJoin: WordBool); safecall;
-    procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
     function Count: Integer; safecall;
@@ -466,12 +462,8 @@ type
   IExodusRosterDisp = dispinterface
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; dispid 1;
-    procedure SaveBookmarks; dispid 2;
     procedure AddItem(const JabberID: WideString; const nickname: WideString; 
                       const Group: WideString; Subscribe: WordBool); dispid 3;
-    procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
-                          const bmName: WideString; const nickname: WideString; AutoJoin: WordBool); dispid 4;
-    procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
     function Count: Integer; dispid 8;

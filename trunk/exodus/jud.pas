@@ -266,7 +266,7 @@ begin
                 cur_state := 'xitems';
             except
                 on EXDataValidationError do begin
-                    // XXX
+                    // XXX - Handle validation errors
                 end;
             end;
         end

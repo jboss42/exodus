@@ -21,6 +21,7 @@ unit NodeItem;
 
 interface
 uses
+    TntMenus, 
     Presence, JabberID, Unicode, XMLTag, SysUtils, Classes;
 
 type
@@ -53,6 +54,7 @@ type
         Data: TObject;              // Linked to a GUI element for this grp.
 
         // New stuff for groups
+        Action: Widestring;
         KeepEmpty: boolean;         // Keep around this empty group?
         SortPriority: integer;      // pri for this group
         ShowPresence: boolean;      // show presence based counts
@@ -102,10 +104,8 @@ type
 
         _tag: TXMLTag;
 
-        //function getNick(): Widestring;
         function getGroupIndex(idx: integer): Widestring;
         function getDirtyIndex(idx: integer): Widestring;
-        //procedure fillTag(tag: TXMLTag);
         procedure setupDirty();
         procedure setTag(new_tag: TXMLTag);
 
@@ -116,6 +116,10 @@ type
         Status: Widestring;
         Tooltip: Widestring;
         Action: Widestring;     // dbl-click action
+        ImageIndex: integer;
+        Removed: boolean;
+        InlineEdit: boolean;
+        CustomContext: TTntPopupMenu;
 
         constructor Create(id: Widestring); overload;
         destructor Destroy; override;
@@ -191,6 +195,9 @@ implementation
 uses
     JabberConst, Session, XMLUtils;
 
+const
+    DEFAULT_SORT = 100;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -207,6 +214,9 @@ begin
 
     _grps := TWidestringlist.Create();
     _grps.CaseSensitive := true;
+
+    ShowPresence := true;
+    SortPriority := DEFAULT_SORT;
 
     // actually parse for nested groups
     if ((MainSession <> nil) and
@@ -549,6 +559,9 @@ begin
     _jid := TJabberID.Create(id);
     _data := nil;
     _dirty_grps := nil;
+
+    InlineEdit := false;
+    Removed := false;
 end;
 
 {---------------------------------------}

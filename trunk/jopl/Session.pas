@@ -27,7 +27,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Chat, MsgList, Presence, Roster, NodeItem,
+    JabberAuth, Chat, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -124,6 +124,7 @@ type
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
+        bookmarks: TBookmarkManager;
         MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
@@ -285,6 +286,10 @@ begin
     roster := TJabberRoster.Create;
     roster.SetSession(Self);
 
+    // Create the bookmark manager
+    bookmarks := TBookmarkManager.Create();
+    bookmarks.SetSession(Self);
+
     // Create the msg & chat controllers
     MsgList := TJabberMsgList.Create();
     ChatList := TJabberChatList.Create();
@@ -315,6 +320,7 @@ begin
     Prefs.Free();
     ppdb.Free();
     roster.Free();
+    bookmarks.Free();
     MsgList.Free();
     ChatList.Free();
     

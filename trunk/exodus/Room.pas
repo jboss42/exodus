@@ -1649,7 +1649,6 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
-    bm: TJabberBookmark;
     bm_name: WideString;
 begin
   inherited;
@@ -1657,12 +1656,7 @@ begin
     bm_name := Self.jid;
 
     if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
-        bm := TJabberBookmark.Create(nil);
-        bm.jid := TJabberID.Create(Self.jid);
-        bm.bmType := 'conference';
-        bm.nick := myNick;
-        bm.bmName := bm_name;
-        MainSession.roster.AddBookmark(bm.jid.full, bm);
+        MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false);
     end;
 end;
 

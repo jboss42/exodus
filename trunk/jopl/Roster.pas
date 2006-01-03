@@ -49,25 +49,33 @@ type
         _pres_cb: integer;
         _xdb_bm: boolean;
 
+        _ico_blockoffline: integer;
+        _ico_blocked: integer;
+        _ico_unknown: integer;
+        _ico_offline: integer;
+        _ico_away: integer;
+        _ico_xa: integer;
+        _ico_dnd: integer;
+        _ico_online: integer;
+
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
         procedure UpdateCallback(event: string; tag: TXMLTag);
         procedure RemoveCallback(event: string; tag: TXMLTag);
-        procedure bmCallback(event: string; tag: TXMLTag);
         procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+        procedure PrefsCallback(event: string; tag: TXMLTag);
+
         procedure checkGroups(ri: TJabberRosterItem);
 
         function  checkGroup(grp: Widestring): TJabberGroup;
         function  getNumGroups: integer;
         function  getGroupIndex(idx: integer): TJabberGroup;
 
-        procedure fireBookmark(bm: TJabberBookmark);
-
         function getItem(index: integer): TJabberRosterItem;
 
     public
-        Bookmarks: TWideStringList;
-
+        ActiveItem: TJabberRosterItem;
+        
         constructor Create;
         destructor Destroy; override;
 
@@ -75,13 +83,11 @@ type
 
         procedure SetSession(js: TObject);
         procedure Fetch;
-        procedure SaveBookmarks;
         procedure parseItem(ri: TJabberRosterItem; tag: TXMLTag);
 
-        procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
-        procedure AddBookmark(sjid: Widestring; bm: TJabberBookmark);
-        procedure RemoveBookmark(sjid: Widestring);
-        procedure UpdateBookmark(bm: TJabberBookmark);
+        procedure AddItem(jid: Widestring; ri: TJabberRosterItem); overload;
+        procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean); overload;
+        procedure RemoveItem(jid: Widestring);
 
         function Find(sjid: Widestring): TJabberRosterItem; reintroduce; overload;
 
@@ -118,7 +124,8 @@ type
 {---------------------------------------}
 implementation
 uses
-    GnuGetText, JabberConst, iq, s10n, XMLUtils, Session;
+    RosterImages, GnuGetText, JabberConst, iq, s10n, XMLUtils, Session;
+
 const
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
@@ -134,12 +141,12 @@ const
 constructor TJabberRoster.Create;
 begin
     inherited;
-    Bookmarks := TWideStringList.Create();
-
     _groups := TWidestringlist.Create();
     _groups.CaseSensitive := true;
 
+    // Create some special groups
     _unfiled := TJabberGroup.Create('Unfiled');
+
     _xdb_bm := true;
 end;
 
@@ -149,7 +156,6 @@ begin
     ClearStringListObjects(_groups);
     _groups.Free();
     _unfiled.Free();
-    Bookmarks.Free;
 
     inherited Destroy;
 end;
@@ -158,11 +164,9 @@ end;
 procedure TJabberRoster.Clear;
 begin
     // Free all the roster items.
-    ClearStringListObjects(Bookmarks);
     ClearStringListObjects(Self);
     ClearStringListObjects(_groups);
 
-    Bookmarks.Clear;
     _groups.Clear();
 
     inherited Clear();
@@ -186,8 +190,28 @@ begin
         RegisterCallback(Callback, '/packet/iq/query[@xmlns="jabber:iq:roster"]');
         RegisterCallback(UpdateCallback, '/roster/item/update');
         RegisterCallback(RemoveCallback, '/roster/item/remove');
+        RegisterCallback(PrefsCallback, '/session/prefs');
         _pres_cb := RegisterCallback(presCallback);
     end;
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.PrefsCallback(event: string; tag: TXMLTag);
+var
+    offline_grp: boolean;
+    go: TJabberGroup;
+begin
+    // setup the offline group
+    offline_grp := MainSession.Prefs.getBool('roster_offline_group');
+    go := MainSession.Roster.getGroup(_('Offline'));
+    if ((offline_grp) and (go = nil)) then begin
+        go := MainSession.Roster.addGroup(_('Offline'));
+        go.KeepEmpty := true;
+        go.SortPriority := 500;
+        go.ShowPresence := false;
+    end
+    else if ((not offline_grp) and (go <> nil)) then
+        MainSession.Roster.removeGroup(go);
 end;
 
 {---------------------------------------}
@@ -195,8 +219,22 @@ procedure TJabberRoster.Fetch;
 var
     js: TJabberSession;
     f_iq: TJabberIQ;
-    bm_iq: TJabberIQ;
+    go: TJabberGroup;
 begin
+    _ico_blockoffline := RosterTreeImages.Find('online_blocked');
+    _ico_blocked := RosterTreeImages.Find('blocked');
+    _ico_unknown := RosterTreeImages.Find('unknown');
+    _ico_offline := RosterTreeImages.Find('offline');
+    _ico_away := RosterTreeImages.Find('away');
+    _ico_xa := RosterTreeImages.Find('xa');
+    _ico_dnd := RosterTreeImages.Find('dnd');
+    _ico_online := RosterTreeImages.Find('available');
+
+    go := addGroup(_('Offline'));
+    go.SortPriority := 500;
+    go.ShowPresence := false;
+    go.KeepEmpty := true;
+
     js := TJabberSession(_js);
     f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 180);
     with f_iq do begin
@@ -204,105 +242,6 @@ begin
         toJID := '';
         Namespace := XMLNS_ROSTER;
         Send();
-    end;
-
-    bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback, 180);
-    with bm_iq do begin
-        iqType := 'get';
-        toJid := '';
-        Namespace := XMLNS_PRIVATE;
-        with qtag.AddTag('storage') do
-            setAttribute('xmlns', XMLNS_BM);
-        Send();
-    end;
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.bmCallback(event: string; tag: TXMLTag);
-var
-    bms: TXMLTagList;
-    i, idx: integer;
-    p, stag: TXMLTag;
-    bm: TJabberBookmark;
-    jid: string;
-begin
-    // get all of the bm's
-    bms := nil;
-    if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
-        // we got a response..
-        {
-        <iq type="set" id="jcl_4">
-            <query xmlns="jabber:iq:private">
-                <storage xmlns="storage:bookmarks">
-                    <conference jid="jdev@conference.jabber.org"><nick>pgmillard</nick>
-                    </conference>
-                </storage>
-        </query></iq>
-        }
-        stag := tag.QueryXPTag('/iq/query/storage');
-        if (stag <> nil) then
-            bms := stag.ChildTags();
-    end
-    else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
-        // XDB prolly doesn't support remote storage. Get bm's from prefs
-        _xdb_bm := false;
-        p := MainSession.Prefs.LoadBookmarks();
-        if (p <> nil) then
-            bms := p.ChildTags();
-    end;
-
-    if (bms <> nil) then begin
-        for i := 0 to bms.count -1  do begin
-            jid := WideLowerCase(bms[i].GetAttribute('jid'));
-            idx := Bookmarks.IndexOf(jid);
-            if (idx >= 0) then begin
-                // remove the existing bm
-                TJabberBookmark(Bookmarks.Objects[idx]).Free;
-                Bookmarks.Delete(idx);
-            end;
-            bm := TJabberBookmark.Create(bms[i]);
-            Bookmarks.AddObject(jid, bm);
-            checkGroup(sGrpBookmarks);
-        end;
-
-        for i := 0 to Bookmarks.Count - 1 do
-            FireBookmark(TJabberBookmark(Bookmarks.Objects[i]));
-        bms.Free();
-    end;
-
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.SaveBookmarks;
-var
-    s: TJabberSession;
-    stag, iq: TXMLTag;
-    i: integer;
-begin
-    // save bookmarks to jabber:iq:private
-    s := TJabberSession(_js);
-
-    if (_xdb_bm) then begin
-        iq := TXMLTag.Create('iq');
-        with iq do begin
-            setAttribute('type', 'set');
-            setAttribute('id', s.generateID());
-            with AddTag('query') do begin
-                setAttribute('xmlns', XMLNS_PRIVATE);
-                stag := AddTag('storage');
-                stag.setAttribute('xmlns', XMLNS_BM);
-                for i := 0 to Bookmarks.Count - 1 do
-                    TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
-            end;
-        end;
-        s.SendTag(iq);
-    end
-    else begin
-        // bookmarks from prefs
-        stag := TXMLTag.Create('local-bookmarks');
-        for i := 0 to Bookmarks.Count - 1 do
-            TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
-        MainSession.Prefs.SaveBookmarks(stag);
     end;
 end;
 
@@ -445,21 +384,77 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
 var
-    p: TJabberPres;
+    is_me: boolean;
     ri: TJabberRosterItem;
-    i, idx: integer;
-    tmps, cur_grp: Widestring;
     go: TJabberGroup;
+    i, idx: integer;
+    jid, tmps, cur_grp: Widestring;
+    is_blocked: boolean;
+    p: TJabberPres;
 begin
     // we are getting /preseence events
-    ri := Self.Find(pres.fromJid.jid);
-    if (ri = nil) then
-        ri := Self.Find(pres.fromJid.full);
+    if ((event = '/presence/error') or (event = '/presence/subscription')) then
+        exit;
+
+    is_me := false;
+    jid := pres.fromJid.jid;
+
+    if (jid = MainSession.BareJid) then begin
+        // this is one of my resources
+        is_me := true;
+
+        // check for the My Resources group
+        if (pres.PresType <> 'unavailable') then begin
+            go := Self.addGroup(_('My Resources'));
+            go.SortPriority := 750;
+            go.ShowPresence := false;
+            go.KeepEmpty := false;
+        end;
+
+        ri := MainSession.Roster.Find(pres.fromJid.full);
+        if (ri = nil) then begin
+            ri := TJabberRosterItem.Create(pres.fromJid.full);
+            ri.IsContact := true;
+            ri.Text := pres.fromJid.resource;
+            ri.Status := pres.Status;
+            ri.Action := '/session/gui/contact';
+            ri.Tooltip := pres.fromJid.full;
+            ri.AddGroup(_('My Resources'));
+            ri.SetCleanGroups();
+
+            ri.Tag := TXMLTag.Create('item');
+            ri.Tag.setAttribute('jid', pres.fromJid.full);
+            ri.Tag.setAttribute('subscription', 'both');
+            ri.Tag.setAttribute('name', pres.fromJid.Resource);
+
+            // add this item to the roster
+            MainSession.Roster.AddItem(pres.fromJid.full, ri);
+        end;
+    end
+    else begin
+        // this should always work for normal items
+        ri := MainSession.Roster.Find(jid);
+
+        // if we can't find the item based on bare jid, check the full jid.
+        // NB: this should catch most of the transport madness.
+        if (ri = nil) then begin
+            jid := pres.fromJid.full;
+            ri := MainSession.Roster.Find(jid);
+        end;
+
+        // if we still don't have a roster item,
+        // and we have no username portion of the JID, then
+        // check for jid/registered for more transport madness
+        if ((ri = nil) and (pres.fromJid.user = '') and (pres.fromJid.resource = '')) then begin
+            jid := pres.fromJid.domain + '/registered';
+            ri := MainSession.Roster.Find(jid);
+        end;
+    end;
 
     if (ri = nil) then exit;
+    if (not ri.IsContact) then exit;
 
     if ((event = '/presence/online') or (event = '/presence/offline')) then begin
-
         // this JID is coming online... inc group counters
 
         // special case for unfiled
@@ -474,13 +469,45 @@ begin
             idx := _groups.IndexOf(cur_grp);
             if (idx >= 0) then begin
                 go := TJabberGroup(_groups.Objects[idx]);
-                go.setPresence(ri.jid, pres);
+                if (go.ShowPresence) then
+                    go.setPresence(ri.jid, pres);
             end;
         end;
     end;
 
+    // is this contact blocked?
+    is_blocked := MainSession.isBlocked(ri.jid);
+
     // update tooltips for this roster item when presence changes
     p := MainSession.ppdb.FindPres(ri.JID.jid, '');
+
+    // if the primary resource is -1, then make believe they aren't online
+    if ((p <> nil) and (p.priority < 0)) then p := nil;
+
+    // setup the image
+    if ((is_me) and (p = nil)) then begin
+        // this resource isn't online anymore... remove it
+        ri.Removed := true;
+    end
+    else if ((is_blocked) and (p = nil)) then
+        ri.ImageIndex := _ico_blockoffline
+    else if (is_blocked) then
+        ri.ImageIndex := _ico_blocked
+    else if (ri.ask = 'subscribe') then
+        ri.ImageIndex := _ico_Unknown
+    else if p = nil then
+        ri.ImageIndex := _ico_Offline
+    else begin
+        if p.Show = 'away' then
+            ri.ImageIndex := _ico_Away
+        else if p.Show = 'xa' then
+            ri.ImageIndex := _ico_XA
+        else if p.Show = 'dnd' then
+            ri.ImageIndex := _ico_DND
+        else
+            ri.ImageIndex := _ico_Online
+    end;
+
     if (p = nil) then
         ri.Tooltip := ri.jid.full + ': ' + _('Offline')
     else begin
@@ -494,6 +521,8 @@ begin
         ri.Tooltip := tmps;
     end;
 
+    // notify the window that this item needs to be updated
+    MainSession.FireEvent('/roster/item', tag, ri);
 end;
 
 {---------------------------------------}
@@ -699,6 +728,13 @@ begin
     go.getRosterItems(Result, online);
 end;
 
+{---------------------------------------}
+procedure TJabberRoster.AddItem(jid: Widestring; ri: TJabberRosterItem);
+begin
+    Self.AddObject(jid, ri);
+    checkGroups(ri);
+    MainSession.FireEvent('/roster/item', ri.tag, ri);
+end;
 
 {---------------------------------------}
 procedure TJabberRoster.AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
@@ -718,67 +754,17 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.FireBookmark(bm: TJabberBookmark);
+procedure TJabberRoster.RemoveItem(jid: Widestring);
 var
-    p: TXMLTag;
-    t: TXMLTag;
-begin
-    p := TXMLTag.Create('bm');
-    t := bm.AddToTag(p);
-    with TJabberSession(_js) do
-        FireEvent('/roster/bookmark', t);
-    p.Free();
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.AddBookmark(sjid: Widestring; bm: TJabberBookmark);
-var
-    tbm : TJabberBookmark;
-    i : integer;
-begin
-    // Add a new bookmark to the list,
-    // save them, and fire out a new event
-    i := Bookmarks.IndexOf(sjid);
-    if (i >= 0) then begin
-        tbm := TJabberBookmark(Bookmarks.Objects[i]);
-        tbm.Copy(bm);
-        bm.Free();
-    end
-    else begin
-        Self.Bookmarks.AddObject(sjid, bm);
-        tbm := bm;
-    end;
-
-    Self.SaveBookmarks();
-    fireBookmark(tbm);
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.RemoveBookmark(sjid: Widestring);
-var
-    bm: TJabberBookmark;
+    ri: TJabberRosterItem;
     i: integer;
-    t: TXMLTag;
 begin
-    // remove a bm from the list
-    i := Bookmarks.IndexOf(sjid);
-    if ((i >= 0) and (i < Bookmarks.Count)) then begin
-        t := TXMLTag.Create('bm-delete');
-        bm := TJabberBookmark(Bookmarks.Objects[i]);
-        bm.AddToTag(t);
-        TJabberSession(_js).FireEvent('/session/del-bookmark', t);
-        t.Free();
-        bm.Free();
-        Bookmarks.Delete(i);
+    i := Self.IndexOf(jid);
+    if (i >= 0) then begin
+        ri := TJabberRosterItem(Objects[i]);
+        ri.Free();
+        Self.Delete(i);
     end;
-    Self.SaveBookmarks();
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.UpdateBookmark(bm: TJabberBookmark);
-begin
-    Self.SaveBookmarks();
-    Self.fireBookmark(bm);
 end;
 
 {---------------------------------------}
