@@ -1606,7 +1606,6 @@ begin
         if ((MainSession.Active) and (not _appclosing))then begin
             _appclosing := true;
             _logoff := true;
-            //MainSession.Stream.Disconnect();
             MainSession.Disconnect();
             CanClose := false;
             exit;
