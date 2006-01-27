@@ -45,9 +45,7 @@ type
     private
         _js: TObject;
         _groups: TWidestringlist;
-        _unfiled: TJabberGroup;
         _pres_cb: integer;
-        _xdb_bm: boolean;
 
         _ico_blockoffline: integer;
         _ico_blocked: integer;
@@ -72,6 +70,10 @@ type
         function  getGroupIndex(idx: integer): TJabberGroup;
 
         function getItem(index: integer): TJabberRosterItem;
+
+        function setupOfflineGrp(): TJabberGroup;
+        function setupUnfiledGrp(): TJabberGroup;
+        function setupMyResourcesGrp(): TJabberGroup;
 
     public
         ActiveItem: TJabberRosterItem;
@@ -143,11 +145,6 @@ begin
     inherited;
     _groups := TWidestringlist.Create();
     _groups.CaseSensitive := true;
-
-    // Create some special groups
-    _unfiled := TJabberGroup.Create('Unfiled');
-
-    _xdb_bm := true;
 end;
 
 {---------------------------------------}
@@ -155,7 +152,6 @@ destructor TJabberRoster.Destroy;
 begin
     ClearStringListObjects(_groups);
     _groups.Free();
-    _unfiled.Free();
 
     inherited Destroy;
 end;
@@ -196,6 +192,46 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberRoster.setupUnfiledGrp(): TJabberGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.addGroup(_('Unfiled'));
+    go.KeepEmpty := true;
+    go.SortPriority := 500;
+    go.ShowPresence := false;
+    go.DragTarget := false;
+    Result := go;
+end;
+
+
+{---------------------------------------}
+function TJabberRoster.setupOfflineGrp(): TJabberGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.addGroup(_('Offline'));
+    go.KeepEmpty := true;
+    go.SortPriority := 500;
+    go.ShowPresence := false;
+    go.DragTarget := false;
+    Result := go;
+end;
+
+{---------------------------------------}
+function TJabberRoster.setupMyResourcesGrp(): TJabberGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.addGroup(_('My Resources'));
+    go.KeepEmpty := false;
+    go.SortPriority := 750;
+    go.ShowPresence := false;
+    go.DragTarget := false;
+    Result := go;
+end;
+
+{---------------------------------------}
 procedure TJabberRoster.PrefsCallback(event: string; tag: TXMLTag);
 var
     offline_grp: boolean;
@@ -205,10 +241,7 @@ begin
     offline_grp := MainSession.Prefs.getBool('roster_offline_group');
     go := MainSession.Roster.getGroup(_('Offline'));
     if ((offline_grp) and (go = nil)) then begin
-        go := MainSession.Roster.addGroup(_('Offline'));
-        go.KeepEmpty := true;
-        go.SortPriority := 500;
-        go.ShowPresence := false;
+        setupOfflineGrp();
     end
     else if ((not offline_grp) and (go <> nil)) then
         MainSession.Roster.removeGroup(go);
@@ -219,7 +252,6 @@ procedure TJabberRoster.Fetch;
 var
     js: TJabberSession;
     f_iq: TJabberIQ;
-    go: TJabberGroup;
 begin
     _ico_blockoffline := RosterTreeImages.Find('online_blocked');
     _ico_blocked := RosterTreeImages.Find('blocked');
@@ -230,10 +262,8 @@ begin
     _ico_dnd := RosterTreeImages.Find('dnd');
     _ico_online := RosterTreeImages.Find('available');
 
-    go := addGroup(_('Offline'));
-    go.SortPriority := 500;
-    go.ShowPresence := false;
-    go.KeepEmpty := true;
+    setupOfflineGrp();
+    setupUnfiledGrp();
 
     js := TJabberSession(_js);
     f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 180);
@@ -386,7 +416,7 @@ procedure TJabberRoster.presCallback(event: string; tag: TXMLTag; pres: TJabberP
 var
     is_me: boolean;
     ri: TJabberRosterItem;
-    go: TJabberGroup;
+    unf, go: TJabberGroup;
     i, idx: integer;
     jid, tmps, cur_grp: Widestring;
     is_blocked: boolean;
@@ -405,10 +435,7 @@ begin
 
         // check for the My Resources group
         if (pres.PresType <> 'unavailable') then begin
-            go := Self.addGroup(_('My Resources'));
-            go.SortPriority := 750;
-            go.ShowPresence := false;
-            go.KeepEmpty := false;
+            setupMyResourcesGrp();
         end;
 
         ri := MainSession.Roster.Find(pres.fromJid.full);
@@ -459,7 +486,9 @@ begin
 
         // special case for unfiled
         if (ri.GroupCount = 0) then begin
-            _unfiled.setPresence(ri.jid.jid, pres);
+            unf := getGroup(_('Unfiled'));
+            assert(unf <> nil);
+            unf.setPresence(ri.jid.jid, pres);
             exit;
         end;
 
@@ -568,7 +597,7 @@ procedure TJabberRoster.checkGroups(ri: TJabberRosterItem);
 var
     n, nl, i: integer;
     gidx, jidx: boolean;
-    go: TJabberGroup;
+    unf, go: TJabberGroup;
     path, cur_grp: Widestring;
     p: TJabberPres;
 begin
@@ -596,14 +625,17 @@ begin
         end;
     end;
 
-    // If this ritem is in _unfiled, and they shouldn't be, remove them.
-    // If they need to be in _unfiled, but aren't, add them
-    jidx := _unfiled.inGroup(ri.jid);
+    // If this ritem is in unfiled, and they shouldn't be, remove them.
+    // If they need to be in unfiled, but aren't, add them
+    unf := getGroup(_('Unfiled'));
+    assert(unf <> nil);
+
+    jidx := unf.inGroup(ri.jid);
     if ((ri.GroupCount > 0) and (jidx)) then
-        _unfiled.removeJid(ri.jid)
+        unf.removeJid(ri.jid)
     else if ((ri.GroupCount = 0) and (not jidx)) then begin
-        _unfiled.addJid(ri.jid);
-        _unfiled.setPresence(ri.jid, p);
+        unf.addJid(ri.jid);
+        unf.setPresence(ri.jid, p);
     end;
 
     // Iterate all grps, either remove this jid from that grp
@@ -832,6 +864,8 @@ begin
         // roster item which represents us.
         // this way, when we receive our own presence, we just
         // let the normal stuff render it.
+
+        {
         ct := TXMLTag.Create('item');
         tmp_jid := TJabberID.Create(s.Jid);
         ct.setAttribute('jid', tmp_jid.jid);
@@ -843,6 +877,7 @@ begin
         Self.AddObject(WideLowerCase(ri.jid.Full), ri);
         s.FireEvent('/roster/item', ct, ri);
         ct.Free();
+        }
 
         ritems.Free();
         s.FireEvent('/roster/end', nil);

@@ -1416,6 +1416,7 @@ begin
     // If they aren't in any grps, put them into the Unfiled grp
     if (tmp_grps.Count <= 0) then begin
         go := MainSession.Roster.AddGroup(g_unfiled);
+        go.DragTarget := false;
         if (not go.inGroup(ritem.jid)) then
             go.AddJid(ritem.jid);
         go.setPresence(ritem.jid, p);
@@ -2050,30 +2051,31 @@ var
     ritem: TJabberRosterItem;
     sep, d_grp: Widestring;
     s_node, d_node: TTreeNode;
-    s_grp: TJabberGroup;
+    go, s_grp: TJabberGroup;
     items: TList;
 begin
-
     // Drop the roster items onto the roster
-
     // d_node   : the new group node
     // d_grp    : the new group name
     // s_node   : selected node we are changing (the thing that was dropped)
-
     d_node := treeRoster.GetNodeAt(X, Y);
     if d_node = nil then exit;
 
     if (TObject(d_node.Data) is TJabberGroup) then begin
         // they dropped on a grp
-        d_grp := TJabberGroup(d_node.Data).FullName
+        // leave d_node assigned
     end
     else if (TObject(d_node.Data) is TJabberRosterItem) then begin
         // they dropped on another item
         d_node := d_node.Parent;
-        d_grp := TJabberGroup(d_node.Data).FullName
     end
     else
         exit;
+
+    // see if we can drop on this group
+    go := TJabberGroup(d_node.Data);
+    d_grp := go.FullName;
+    if (go.DragTarget = false) then exit;
 
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
@@ -2133,6 +2135,9 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
+var
+    d_node: TTreeNode;
+    go: TJabberGroup;
 begin
     // Only accept items from the roster
     if (Source = treeRoster) then begin
@@ -2151,6 +2156,23 @@ begin
     end
     else
         autoScroll.Enabled := false;
+
+    // Check to see if we are allowed to drop here
+    d_node := treeRoster.GetNodeAt(X, Y);
+    if d_node = nil then exit;
+
+    if (TObject(d_node.Data) is TJabberGroup) then begin
+        // they dropped on a grp
+        go := TJabberGroup(d_node.Data);
+    end
+    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
+        // they dropped on another item
+        go := TJabberGroup(d_node.Parent.Data);
+    end
+    else
+        exit;
+
+    Accept := go.DragTarget;
 end;
 
 {---------------------------------------}

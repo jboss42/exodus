@@ -320,6 +320,8 @@ end;
 {---------------------------------------}
 procedure cleanupResponders();
 begin
+    if (Exodus_Disco_Info = nil) then exit;
+
     FreeAndNil(Exodus_Disco_Info);
     FreeAndNil(Exodus_Disco_Items);
     FreeAndNil(Exodus_Browse);

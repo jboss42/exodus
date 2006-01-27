@@ -107,7 +107,7 @@ object frmView: TfrmView
     Left = 0
     Top = 153
     Width = 197
-    Height = 262
+    Height = 266
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -228,13 +228,13 @@ object frmView: TfrmView
     Left = 197
     Top = 153
     Width = 380
-    Height = 262
+    Height = 266
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object Splitter1: TSplitter
       Left = 0
-      Top = 150
+      Top = 111
       Width = 380
       Height = 3
       Cursor = crVSplit
@@ -242,9 +242,9 @@ object frmView: TfrmView
     end
     object MsgList: TExRichEdit
       Left = 0
-      Top = 153
+      Top = 114
       Width = 380
-      Height = 109
+      Height = 152
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -328,7 +328,7 @@ object frmView: TfrmView
       LangOptions = [loAutoFont]
       Language = 1033
       ParentFont = False
-      ScrollBars = ssVertical
+      ScrollBars = ssBoth
       ShowSelectionBar = False
       TabOrder = 0
       URLColor = clBlue
@@ -344,7 +344,7 @@ object frmView: TfrmView
       Left = 0
       Top = 0
       Width = 380
-      Height = 150
+      Height = 111
       Align = alTop
       BevelInner = bvNone
       BevelWidth = 2

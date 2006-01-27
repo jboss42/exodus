@@ -711,11 +711,12 @@ begin
     FreeAndNil(ExRegController);
     }
 
-    FreeAndNil(_auth);
-    FreeAndNil(ExStartup);
-    FreeAndNil(ExCOMRoster);
-    FreeAndNil(ExCOMPPDB);
-    FreeAndNil(ExCOMController);
+    if (_auth <> nil) then              FreeAndNil(_auth);
+    if (ExStartup <> nil) then          FreeAndNil(ExStartup);
+    if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
+    if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
+    if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+
 end;
 
 {---------------------------------------}
@@ -725,7 +726,6 @@ var
     i : integer;
     node: TXMLTag;
     jid: WideString;
-    //add: TfrmAdd;
 begin
     if _xmpp_action_list.Count > 0 then begin
         SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
@@ -747,13 +747,6 @@ begin
         else if (node.Name = 'subscribe') then begin
             if (jid <> '') then begin
                 ShowAddContact(jid);
-                (*
-                add := TfrmAdd.Create(Application);
-                add.cboType.ItemIndex := 0;
-                add.txtJID.Text := jid;
-                add.Show;
-                add.txtNickname.SetFocus();
-                *)
             end;
         end
         else if (node.Name = 'message') then begin

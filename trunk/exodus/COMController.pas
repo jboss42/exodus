@@ -511,7 +511,7 @@ begin
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
 
-        inherited;
+        //inherited;
     end;
 end;
 
