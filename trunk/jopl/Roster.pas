@@ -196,8 +196,8 @@ function TJabberRoster.setupUnfiledGrp(): TJabberGroup;
 var
     go: TJabberGroup;
 begin
-    go := MainSession.Roster.addGroup(_('Unfiled'));
-    go.KeepEmpty := true;
+    go := addGroup(_('Unfiled'));
+    go.KeepEmpty := false;
     go.SortPriority := 500;
     go.ShowPresence := false;
     go.DragTarget := false;
@@ -212,7 +212,7 @@ function TJabberRoster.setupOfflineGrp(): TJabberGroup;
 var
     go: TJabberGroup;
 begin
-    go := MainSession.Roster.addGroup(_('Offline'));
+    go := addGroup(_('Offline'));
     go.KeepEmpty := true;
     go.SortPriority := 500;
     go.ShowPresence := false;
@@ -227,7 +227,7 @@ function TJabberRoster.setupMyResourcesGrp(): TJabberGroup;
 var
     go: TJabberGroup;
 begin
-    go := MainSession.Roster.addGroup(_('My Resources'));
+    go := addGroup(_('My Resources'));
     go.KeepEmpty := false;
     go.SortPriority := 750;
     go.ShowPresence := false;
@@ -244,13 +244,13 @@ var
     go: TJabberGroup;
 begin
     // setup the offline group
-    offline_grp := MainSession.Prefs.getBool('roster_offline_group');
-    go := MainSession.Roster.getGroup(_('Offline'));
+    offline_grp := TJabberSession(_js).Prefs.getBool('roster_offline_group');
+    go := getGroup(_('Offline'));
     if ((offline_grp) and (go = nil)) then begin
         setupOfflineGrp();
     end
     else if ((not offline_grp) and (go <> nil)) then
-        MainSession.Roster.removeGroup(go);
+        removeGroup(go);
 end;
 
 {---------------------------------------}
@@ -340,7 +340,7 @@ begin
         tmp_jid := TJabberID.Create(ritems[i].getAttribute('jid'));
         j := tmp_jid.full;
         tmp_jid.Free();
-        ri := Find(j);
+        ri := Self.Find(j);
 
         if ri = nil then begin
             ri := TJabberRosterItem.Create(j);
@@ -374,7 +374,7 @@ begin
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('id', TJabberSession(_js).generateID());
     with iq.AddTag('query') do begin
         setAttribute('xmlns', XMLNS_ROSTER);
         item := AddTag('item');
@@ -391,7 +391,7 @@ begin
                 item.AddBasicTag('group', ri.Group[g]);
         end;
     end;
-    MainSession.SendTag(iq);
+    TJabberSession(_js).SendTag(iq);
 end;
 
 {---------------------------------------}
@@ -407,14 +407,14 @@ begin
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('id', TJabberSession(_js).generateID());
     with iq.AddTag('query') do begin
         setAttribute('xmlns', XMLNS_ROSTER);
         item := AddTag('item');
         item.setAttribute('jid', ri.Jid.full);
         item.setAttribute('subscription', 'remove');
     end;
-    MainSession.SendTag(iq);
+    TJabberSession(_js).SendTag(iq);
 end;
 
 {---------------------------------------}
@@ -435,7 +435,7 @@ begin
     is_me := false;
     jid := pres.fromJid.jid;
 
-    if (jid = MainSession.BareJid) then begin
+    if (jid = TJabberSession(_js).BareJid) then begin
         // this is one of my resources
         is_me := true;
 
@@ -444,7 +444,7 @@ begin
             setupMyResourcesGrp();
         end;
 
-        ri := MainSession.Roster.Find(pres.fromJid.full);
+        ri := Self.Find(pres.fromJid.full);
         if (ri = nil) then begin
             ri := TJabberRosterItem.Create(pres.fromJid.full);
             ri.IsContact := true;
@@ -461,18 +461,18 @@ begin
             ri.Tag.setAttribute('name', pres.fromJid.Resource);
 
             // add this item to the roster
-            MainSession.Roster.AddItem(pres.fromJid.full, ri);
+            TJabberSession(_js).Roster.AddItem(pres.fromJid.full, ri);
         end;
     end
     else begin
         // this should always work for normal items
-        ri := MainSession.Roster.Find(jid);
+        ri := Self.Find(jid);
 
         // if we can't find the item based on bare jid, check the full jid.
         // NB: this should catch most of the transport madness.
         if (ri = nil) then begin
             jid := pres.fromJid.full;
-            ri := MainSession.Roster.Find(jid);
+            ri := Self.Find(jid);
         end;
 
         // if we still don't have a roster item,
@@ -480,7 +480,7 @@ begin
         // check for jid/registered for more transport madness
         if ((ri = nil) and (pres.fromJid.user = '') and (pres.fromJid.resource = '')) then begin
             jid := pres.fromJid.domain + '/registered';
-            ri := MainSession.Roster.Find(jid);
+            ri := Self.Find(jid);
         end;
     end;
 
@@ -511,10 +511,10 @@ begin
     end;
 
     // is this contact blocked?
-    is_blocked := MainSession.isBlocked(ri.jid);
+    is_blocked := TJabberSession(_js).isBlocked(ri.jid);
 
     // update tooltips for this roster item when presence changes
-    p := MainSession.ppdb.FindPres(ri.JID.jid, '');
+    p := TJabberSession(_js).ppdb.FindPres(ri.JID.jid, '');
 
     // if the primary resource is -1, then make believe they aren't online
     if ((p <> nil) and (p.priority < 0)) then p := nil;
@@ -551,13 +551,13 @@ begin
         while (p <> nil) do begin
             if (tmps <> '') then tmps := tmps + ''#13#10;
             tmps := tmps + p.fromJid.full + ': ' + p.Status;
-            p := MainSession.ppdb.NextPres(p);
+            p := TJabberSession(_js).ppdb.NextPres(p);
         end;
         ri.Tooltip := tmps;
     end;
 
     // notify the window that this item needs to be updated
-    MainSession.FireEvent('/roster/item', tag, ri);
+    TJabberSession(_js).FireEvent('/roster/item', tag, ri);
 end;
 
 {---------------------------------------}
@@ -567,7 +567,7 @@ var
     i: integer;
 begin
     l.Clear();
-    t := MainSession.Prefs.getString('roster_transport_grp');
+    t := TJabberSession(_js).Prefs.getString('roster_transport_grp');
     for i := 0 to _groups.Count - 1 do begin
         c := _groups[i];
         if ((c <> sGrpBookmarks) and
@@ -586,7 +586,7 @@ var
     i: integer;
 begin
     tnt.Clear();
-    t := MainSession.Prefs.getString('roster_transport_grp');
+    t := TJabberSession(_js).Prefs.getString('roster_transport_grp');
     for i := 0 to _groups.Count - 1 do begin
         c := _groups[i];
         if ((c <> sGrpBookmarks) and
@@ -609,10 +609,10 @@ var
 begin
     if ((ri.Subscription <> 'to') and
         (ri.Subscription <> 'both') and
-        (MainSession.Prefs.getBool('roster_show_unsub') = false)) then exit;
+        (TJabberSession(_js).Prefs.getBool('roster_show_unsub') = false)) then exit;
 
     // make sure _groups is populated.
-    p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+    p := TJabberSession(_js).ppdb.FindPres(ri.jid.jid, '');
 
     // Make sure we have all groups that this contact is in.
     for i := 0 to ri.GroupCount - 1 do begin
@@ -624,7 +624,7 @@ begin
             for n := 0 to nl-1 do begin
                 if (path <> '') then
                     path := path +
-                        MainSession.prefs.getString('group_seperator');
+                        TJabberSession(_js).prefs.getString('group_seperator');
                 path := path + go.Parts[n];
                 checkGroup(path);
             end;
@@ -771,7 +771,7 @@ procedure TJabberRoster.AddItem(jid: Widestring; ri: TJabberRosterItem);
 begin
     Self.AddObject(jid, ri);
     checkGroups(ri);
-    MainSession.FireEvent('/roster/item', ri.tag, ri);
+    TJabberSession(_js).FireEvent('/roster/item', ri.tag, ri);
 end;
 
 {---------------------------------------}
@@ -911,7 +911,7 @@ begin
         with qTag.AddTag('item') do begin
             setAttribute('jid', jid);
             setAttribute('name', nick);
-            if group <> '' then
+            if (group <> '') then
                 AddBasicTag('group', grp);
         end;
     end;

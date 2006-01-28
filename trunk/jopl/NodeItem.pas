@@ -218,6 +218,7 @@ begin
     _grps := TWidestringlist.Create();
     _grps.CaseSensitive := true;
 
+    Data := nil;
     AutoExpand := true;
     DragSource := true;
     DragTarget := true;
