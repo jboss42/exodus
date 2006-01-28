@@ -1033,6 +1033,7 @@ begin
         end;
     end;
 
+    // Clear out associated nodes
     ClearNodes;
 
     // make sure our item heights are setup correctly.
@@ -1059,8 +1060,10 @@ begin
         // iterate across the grps, render any empty ones
         for i := 0 to GroupsCount - 1 do begin
             go := Groups[i];
-            if ((go.KeepEmpty) and (go.isEmpty()) and (go.Parent = nil)) then
-                RenderGroup(go);
+            if ((go.Parent = nil) and (go.isEmpty())) then begin
+                if ((go.KeepEmpty) and (go.Data = nil)) then
+                    RenderGroup(go)
+            end;
         end;
     end;
 
@@ -2840,7 +2843,9 @@ begin
     // user is trying to change a node caption
     ntype := getNodeType(Node);
     if (ntype = node_ritem) then
-        AllowEdit := _cur_ritem.InlineEdit;
+        AllowEdit := _cur_ritem.InlineEdit
+    else
+        AllowEdit := false;
 end;
 
 {---------------------------------------}
