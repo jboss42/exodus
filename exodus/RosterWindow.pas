@@ -2136,8 +2136,9 @@ end;
 procedure TfrmRosterWindow.treeRosterDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 var
-    d_node: TTreeNode;
+    s_node, d_node: TTreeNode;
     go: TJabberGroup;
+    i: integer;
 begin
     // Only accept items from the roster
     if (Source = treeRoster) then begin
@@ -2157,6 +2158,30 @@ begin
     else
         autoScroll.Enabled := false;
 
+    // check the items being dragged
+    for i := 0 to treeRoster.SelectionCount - 1 do begin
+        s_node := treeRoster.Selections[i];
+        if (TObject(s_node.Data) is TJabberGroup) then begin
+            go := TJabberGroup(s_node.Data);
+            if (go.DragSource = false) then begin
+                Accept := false;
+                exit;
+            end;
+        end
+        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
+            go := TJabberGroup(s_node.Parent.Data);
+            if (go.DragSource = false) then begin
+                Accept := false;
+                exit;
+            end;
+        end
+        else begin
+            Accept := false;
+            exit;
+        end;
+    end;
+
+
     // Check to see if we are allowed to drop here
     d_node := treeRoster.GetNodeAt(X, Y);
     if d_node = nil then exit;
@@ -2171,6 +2196,7 @@ begin
     end
     else
         exit;
+
 
     Accept := go.DragTarget;
 end;

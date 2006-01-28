@@ -704,18 +704,14 @@ begin
         _mutex := 0;
     end;
 
-    {
-    FreeAndNil(_guibuilder);
-    FreeAndNil(_Notify);
-    FreeAndNil(_subcontroller);
-    FreeAndNil(ExRegController);
-    }
 
     if (_auth <> nil) then              FreeAndNil(_auth);
     if (ExStartup <> nil) then          FreeAndNil(ExStartup);
     if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
     if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
+    {
     if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+    }
 
 end;
 
