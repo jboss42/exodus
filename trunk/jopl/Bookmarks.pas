@@ -35,8 +35,6 @@ type
         _js: TObject;
         _menu: TTntPopupMenu;
 
-        procedure parseItem(tag: TXMLTag; ri: TJabberRosterItem);
-
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure UpdateCallback(event: string; tag: TXMLTag);
@@ -56,6 +54,7 @@ type
         procedure AddBookmark(sjid, name, nick: Widestring; auto_join: boolean);
         procedure RemoveBookmark(sjid: Widestring);
         function  FindBookmark(sjid: Widestring): TXMLTag;
+        procedure parseItem(tag: TXMLTag; ri: TJabberRosterItem);
 
     end;
 
