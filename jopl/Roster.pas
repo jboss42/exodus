@@ -202,6 +202,7 @@ begin
     go.ShowPresence := false;
     go.DragTarget := false;
     go.DragSource := true;
+    go.AutoExpand := true;
     Result := go;
 end;
 
@@ -217,6 +218,7 @@ begin
     go.ShowPresence := false;
     go.DragTarget := false;
     go.DragSource := false;
+    go.AutoExpand := false;
     Result := go;
 end;
 
@@ -231,6 +233,7 @@ begin
     go.ShowPresence := false;
     go.DragTarget := false;
     go.DragSource := false;
+    go.AutoExpand := true;
     Result := go;
 end;
 

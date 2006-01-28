@@ -53,6 +53,9 @@ var
 
 function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -61,6 +64,7 @@ uses
     XMLTag, JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
     RosterWindow;
 
+{---------------------------------------}
 function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 var
     f: TfrmBookmark;
@@ -97,12 +101,13 @@ begin
     Result := f;
 end;
 
-
+{---------------------------------------}
 procedure TfrmBookmark.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmBookmark.frameButtons1btnOKClick(Sender: TObject);
 var
     bm: TXMLTag;
@@ -115,28 +120,34 @@ begin
     end
     else begin
         bm := MainSession.Bookmarks.FindBookmark(txtJid.Text);
-        if (bm <> nil) then begin
-            bm.setAttribute('name', txtName.Text);
-            if chkAutoJoin.Checked then
-                bm.setAttribute('autojoin', 'true')
-            else
-                bm.setAttribute('autojoin', 'false');
-            MainSession.bookmarks.SaveBookmarks();
-            ri := MainSession.Roster.Find(txtJid.Text);
-            assert(ri <> nil);
-            ri.Tag := bm;
-            MainSession.FireEvent('/roster/item', bm, ri);
-        end;
+        assert(bm <> nil);
+        bm.setAttribute('name', txtName.Text);
+        if chkAutoJoin.Checked then
+            bm.setAttribute('autojoin', 'true')
+        else
+            bm.setAttribute('autojoin', 'false');
+        MainSession.bookmarks.SaveBookmarks();
+        ri := MainSession.Roster.Find(txtJid.Text);
+        assert(ri <> nil);
+        ri.Tag := bm;
+
+        // update the ritem
+        MainSession.Bookmarks.parseItem(bm, ri);
+
+        // tell everyone about the updated item
+        MainSession.FireEvent('/roster/item', bm, ri);
     end;
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmBookmark.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmBookmark.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);

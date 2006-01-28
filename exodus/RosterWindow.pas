@@ -211,17 +211,12 @@ type
     _away: TTreeNode;
     _xa: TTreeNode;
     _dnd: TTreeNode;
-    _offline: TTreeNode;
-    _bookmark: TTreeNode;           // the Bookmarks container node
-    _myres: TTreeNode;              // The My Resources node
 
-    _offline_go: TJabberGroup;
     _online_go: TJabberGroup;
     _chat_go: TJabberGroup;
     _away_go: TJabberGroup;
     _xa_go: TJabberGroup;
     _dnd_go: TJabberGroup;
-    _myres_go: TJabberGroup;
 
     _hint_text : WideString;        // the hint text for the current node
     _cur_ritem: TJabberRosterItem;  // current roster item selected
@@ -272,7 +267,6 @@ type
     procedure ExpandNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
-    procedure RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RemoveGroupNode(node: TTreeNode);
     procedure ResetPanels;
     procedure ChangeStatusImage(idx: integer);
@@ -443,13 +437,10 @@ begin
 
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
-    _bookmark := nil;
     _online := nil;
     _away := nil;
     _xa := nil;
     _dnd := nil;
-    _offline := nil;
-    _myres := nil;
     _change_node := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
@@ -814,20 +805,6 @@ begin
 
         treeRoster.AlphaSort();
     end
-    {
-    else if event = '/roster/bookmark' then begin
-        if (_brand_muc) then begin
-            bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
-            if bi >= 0 then begin
-                bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
-                if (bm <> nil) then
-                    RenderBookmark(bm);
-                if (bm.autoJoin and (bm.bmType = 'conference')) then
-                    StartRoom(bm.jid.jid, bm.nick);
-            end;
-        end;
-    end
-    }
     else if event = '/roster/item' then begin
         if ritem <> nil then begin
             p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
@@ -835,53 +812,6 @@ begin
         end;
     end;
 end;
-
-{---------------------------------------}
-{
-procedure TfrmRosterWindow.RenderBookmark(bm: TJabberBookmark);
-var
-    bgrp: TJabberGroup;
-    bm_node: TTreeNode;
-begin
-    // render this bookmark
-    if (not _brand_muc) then exit;
-
-    if _bookmark = nil then begin
-        // create some container for bookmarks.. addGrp returns
-        // the group if it already exists.
-        bgrp := MainSession.Roster.AddGroup(g_bookmarks);
-
-        if (bgrp.Data = nil) then begin
-            _bookmark := treeRoster.Items.AddChild(nil, _('Bookmarks'));
-            _bookmark.ImageIndex := ico_down;
-            _bookmark.SelectedIndex := ico_down;
-            _bookmark.Data := bgrp;
-            bgrp.Data := _bookmark;
-        end
-        else
-            _bookmark := TTreeNode(bgrp.Data);
-
-        treeRoster.AlphaSort();
-    end;
-
-    if (bm.Data <> nil) then begin
-        bm_node := TTreeNode(bm.Data);
-        assert(bm_node <> nil);
-        bm_node.Text := bm.bmName;
-    end
-    else begin
-        // add this conference to the bookmark nodes
-        bm_node := treeRoster.Items.AddChild(_bookmark, bm.bmName);
-        bm.Data := bm_node;
-        bm_node.ImageIndex := 21;
-        bm_node.SelectedIndex := bm_node.ImageIndex;
-        bm_node.Data := bm;
-    end;
-
-    if (not _collapse_all) then _bookmark.Expand(false);
-    treeRoster.AlphaSort(true);
-end;
-}
 
 {---------------------------------------}
 procedure TfrmRosterWindow.ExpandGrpNode(n: TTreeNode);
@@ -921,7 +851,7 @@ begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if (((ni is TJabberGroup) and (n <> _offline)) or (n = _bookmark)) then begin
+        if ((ni is TJabberGroup) and (TJabberGroup(ni).AutoExpand)) then begin
             cur_grp := TJabberGroup(ni).Fullname;
             if ((_collapsed_grps.indexOf(cur_grp) = -1)) then
                 ExpandGrpNode(n);
@@ -974,16 +904,7 @@ begin
             node_list := TWidestringlist(ri.Data);
             if (node_list <> nil) then node_list.Clear;
         end;
-
-        {
-        for i := 0 to Bookmarks.Count - 1 do
-            TJabberBookmark(Bookmarks.Objects[i]).Data := nil;
-        }
     end;
-
-    _bookmark := nil;
-    _offline := nil;
-    _myres := nil;
 
     treeRoster.Items.EndUpdate;
 end;
@@ -1018,21 +939,6 @@ begin
         _cur_grp := go.FullName;
         _cur_go := go;
     end
-
-    {
-    else if (TObject(n.Data) is TJabberBookmark) then begin
-        Result := node_bm;
-        _cur_bm := TJabberBookmark(n.Data);
-    end
-    }
-
-    {
-    else if (TObject(n.Data) is TJabberMyResource) then begin
-        Result := node_myres;
-        _cur_myres := TJabberMyResource(n.Data);
-    end
-    }
-
     else if (TObject(n.Data) is TJabberRosterItem) then begin
         Result := node_ritem;
         _cur_ritem := TJabberRosterItem(n.Data);
@@ -1062,11 +968,6 @@ begin
         if (((online) and (_cur_ritem.IsOnline)) or (not online)) then
             Result.Add(_cur_ritem);
     end;
-    {
-    node_myres: begin
-        Result.Add(_cur_myres.item);
-    end;
-    }
     node_grp: begin
         // add all online contacts in this grp to the Result list
         c := treeRoster.SelectionCount;
@@ -1080,12 +981,6 @@ begin
                 if (((online) and (ri.IsOnline)) or (not online)) then
                     Result.Add(TJabberRosterItem(node.Data));
             end
-
-            {
-            else if (ntype = node_myres) then
-                Result.Add(TJabberMyResource(node.Data).item)
-            }
-
             else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
                 // add this grp to the selection
                 _cur_go.getRosterItems(Result, online);
@@ -1154,17 +1049,6 @@ begin
     treeRoster.Items.BeginUpdate;
 
     with MainSession.Roster do begin
-
-        // If we are doing muc stuff, show bookmarks
-        {
-        if (_brand_muc) then begin
-            for i := 0 to Bookmarks.Count - 1 do begin
-                bm := TJabberBookmark(Bookmarks.Objects[i]);
-                RenderBookmark(bm);
-            end;
-        end;
-        }
-
         // iterate across all items and render them
         for i := 0 to Count - 1 do begin
             ri := TJabberRosterItem(Objects[i]);
@@ -1175,15 +1059,7 @@ begin
         // iterate across the grps, render any empty ones
         for i := 0 to GroupsCount - 1 do begin
             go := Groups[i];
-            if ((go.Data <> _bookmark) and
-                (go <> _offline_go) and
-                (go <> _myres_go) and
-                (go <> _online_go) and
-                (go <> _chat_go) and
-                (go <> _away_go) and
-                (go <> _xa_go) and
-                (go <> _dnd_go) and
-                (go.isEmpty()) and (go.Parent = nil)) then
+            if ((go.KeepEmpty) and (go.isEmpty()) and (go.Parent = nil)) then
                 RenderGroup(go);
         end;
     end;
@@ -1220,41 +1096,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
-var
-    n: TTreeNode;
-    node_list: TWidestringlist;
-    idx, i: integer;
-    mr: TJabberMyResource;
-begin
-    //
-    idx := -1;
-    node_list := TWidestringlist(ritem.Data);
-    if (node_list = nil) then exit;
-
-    for i := 0 to node_list.Count - 1 do begin
-        n := TTreeNode(node_list.Objects[i]);
-        if (n.Data = nil) then continue;
-
-        mr := TJabberMyResource(n.Data);
-        if (mr.Resource = p.fromJid.resource) then begin
-            idx := i;
-            break;
-        end;
-    end;
-
-    if (idx >= 0) then begin
-        n := TTreeNode(node_list.Objects[idx]);
-        node_list.Delete(idx);
-        n.Free();
-        if (_myres.Count <= 0) then begin
-            Self.RemoveGroupNode(_myres);
-            _myres := nil;
-        end;
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmRosterWindow.RemoveGroupNode(node: TTreeNode);
 var
     go: TJabberGroup;
@@ -1262,16 +1103,7 @@ begin
     go := TJabberGroup(node.Data);
     if (go = nil) then exit;
 
-    //MainSession.Roster.RemoveGroup(go);
     go.Data := nil;
-
-    if (node = _offline) then
-        _offline := nil;
-    if (node = _bookmark) then
-        _bookmark := nil;
-    if (node = _myres) then
-        _myres := nil;
-
     node.Free();
 end;
 
@@ -1345,11 +1177,7 @@ begin
 
         if (plevel < _show_filter) then begin
             // we shouldn't show this ritem
-            if ((plevel = show_offline) and (not _offline_grp) and
-                (ritem.jid.jid = MainSession.BareJid)) then
-                RemoveItemNode(ritem, p)
-            else
-                RemoveItemNodes(ritem);
+            RemoveItemNodes(ritem);
             exit;
         end;
     end
@@ -1449,13 +1277,6 @@ begin
 
         // The offline grp is special, we keep a pointer to
         // it at all times (if it exists).
-        {
-        if (cur_grp = g_offline) then begin
-            _offline := GetSpecialGroup(_offline, _offline_go, _(sGrpOffline));
-            resort := true;
-            grp_node := _offline;
-        end
-        }
         if (cur_grp = g_online) then begin
             _online := GetSpecialGroup(_online, _online_go, g_online);
             resort := true;
@@ -1522,7 +1343,7 @@ begin
         cur_node.Text := String(tmps);
         cur_node.Data := ritem;
         cur_node.ImageIndex := ritem.ImageIndex;
-        cur_node.SelectedIndex := cur_node.ImageIndex;
+        cur_node.SelectedIndex := ritem.ImageIndex;
 
         // only invalid if we're not doing a full roster draw.
         if ((not _FullRoster) and (grp_node <> nil)) then begin
@@ -1642,28 +1463,6 @@ begin
         // chat or msg this person
         MainSession.FireEvent(_cur_ritem.Action, _cur_ritem.Tag);
     end;
-    {
-    node_myres: begin
-        // chat my own resource
-        r := MainSession.Prefs.getInt(P_CHAT);
-
-        if ((r = 0) or (r = 2)) then begin
-            win := StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
-            win.Show();
-        end
-        else if (r = 1) then
-            StartMsg(_cur_myres.jid.full);
-    end;
-    }
-    {
-    node_bm: begin
-        // enter this conference
-        if _cur_bm.bmType = 'conference' then begin
-            room := StartRoom(_cur_bm.jid.jid, _cur_bm.nick);
-            room.Show();
-        end;
-    end;
-    }
     end;
 end;
 
@@ -1684,18 +1483,6 @@ begin
     if (TObject(Node.Data) is TJabberGroup) then begin
         _hint_text := TJabberGroup(Node.Data).getText();
     end
-    {
-    else if (TObject(Node.Data) is TJabberBookmark) then begin
-        _hint_text := TJabberBookmark(Node.Data).bmName;
-    end
-    }
-
-    {
-    else if (TObject(Node.Data) is TJabberMyResource) then begin
-        _hint_text := TJabberMyResource(Node.Data).jid.resource;
-    end
-    }
-
     else if (TObject(Node.Data) is TJabberRosterItem) then begin
         ri := TJabberRosterItem(Node.Data);
         if ri = nil then exit;
@@ -1942,19 +1729,21 @@ begin
     case (getNodeType()) of
     node_ritem: begin
         if (_cur_ritem = nil) then exit;
-        p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+
+        // if the ritem has a res, then always lookup pres for it.
+        if (_cur_ritem.jid.resource <> '') then
+            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid,
+                _cur_ritem.Jid.resource)
+        else
+            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+            
         if p = nil then
             // this person isn't online.
             jid := _cur_ritem.jid.jid
         else
+            // they are online, send directly to the resource
             jid := p.fromJID.full;
     end;
-    {
-    node_myres: begin
-        if (_cur_myres = nil) then exit;
-        jid := _cur_myres.jid.full;
-    end;
-    }
     end;
 
     if (jid = '') then exit;
@@ -1995,18 +1784,6 @@ begin
         if (_cur_ritem <> nil) then
             ShowProfile(_cur_ritem.jid.jid);
     end;
-    {
-    node_myres: begin
-        if (_cur_myres <> nil) then
-            ShowProfile(_cur_myres.jid.jid);
-    end;
-    }
-    {
-    node_bm: begin
-        if (_cur_bm <> nil) then
-            ShowBookmark(_cur_bm.jid.full);
-    end;
-    }
     end;
 end;
 
@@ -2019,16 +1796,6 @@ var
 begin
     // Remove this roster item.
     case getNodeType() of
-    {
-    node_bm: begin
-        // XXX: remove a bookmark
-        if (MessageDlgW(_(sRemoveBookmark), mtConfirmation,
-            [mbYes, mbNo], 0) = mrNo) then exit;
-        MainSession.roster.RemoveBookmark(_cur_bm.jid.full);
-        treeRoster.Selected.Free;
-
-    end;
-    }
     node_ritem: begin
         // remove a roster item
         if _cur_ritem <> nil then begin
@@ -2235,17 +2002,11 @@ begin
         treeRoster.PopupMenu := popActions;
         popProperties.Enabled := false;
     end;
-    {
-    node_bm: begin
-        treeRoster.PopupMenu := popBookmark;
-        treeRoster.Selected := n;
-    end;
-    }
     node_transport: begin
         treeRoster.PopupMenu := popTransport;
         treeRoster.Selected := n;
     end;
-    node_ritem, node_myres: begin
+    node_ritem: begin
         // show the roster menu when a node is hit
         if (_cur_ritem.CustomContext <> nil) then
             treeRoster.PopupMenu := _cur_ritem.CustomContext
@@ -2361,12 +2122,6 @@ begin
         if ritem <> nil then
             ShowLog(ritem.jid.jid);
     end;
-    {
-    else if (nt = node_myres) then begin
-        if (_cur_myres <> nil) then
-            ShowLog(_cur_myres.jid.jid);
-    end;
-    }
 end;
 
 {---------------------------------------}
@@ -2377,16 +2132,17 @@ var
 begin
     // chat w/ contact
     nt := getNodeType();
-    win := nil;
-    if (nt = node_ritem) then
-        win := StartChat(_cur_ritem.jid.jid, '', true);
-    {
-    else if (nt = node_myres) then
-        win := StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
-    }
+    if (nt = node_ritem) then begin
+        if (_cur_ritem.Jid.resource <> '') then
+            win := StartChat(_cur_ritem.jid.jid, _cur_ritem.Jid.resource,
+                true)
+        else
+            win := StartChat(_cur_ritem.jid.jid, '', true);
 
-    if (win <> nil) then
-        win.Show();
+        if (win <> nil) then
+            win.Show();
+
+    end;
 end;
 
 {---------------------------------------}
@@ -2397,11 +2153,7 @@ begin
     // send a normal msg
     nt := getNodeType();
     if (nt = node_ritem) then
-        StartMsg(_cur_ritem.jid.jid);
-    {
-    else if (nt = node_myres) then
-        StartMsg(_cur_myres.jid.full);
-    }
+        StartMsg(_cur_ritem.jid.full);
 end;
 
 {---------------------------------------}
@@ -2415,10 +2167,6 @@ begin
 
     if (TObject(node.Data) is TJabberRosterItem) then
         FileSend(TJabberRosterItem(node.Data).jid.full)
-    {
-    else if (TObject(node.Data) is TJabberMyResource) then
-        FileSend(TJabberMyResource(node.Data).jid.full);
-    }
 end;
 
 {---------------------------------------}
@@ -2521,19 +2269,14 @@ begin
         if (Win32Platform <> Ver_Platform_Win32_Windows) then
             treeRoster.Canvas.Font.Style := [fsBold];
 
-        {
-        if ((Node = _offline) or
-            (Node = _bookmark) or
-            (Node = _myres) or
-            (go.FullName = _transports) or
-            (_sort_roster)) then begin
-        }
         if (not go.ShowPresence) then begin
+            // If we aren't showing pres, then just show the total
             c1 := go.getText();
             c2 := '(' + IntToStr(Node.Count) + ')';
             DrawNodeText(Node, State, c1, c2);
         end
         else begin
+            // Otherwise, show online/total for presence enabled grps
             c1 := go.Parts[Node.Level] + ' ';
             if (Node.Level + 1 = go.NestLevel) then
                 c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')'
@@ -2566,24 +2309,10 @@ begin
         // determine the captions (c1 is nick, c2 is status)
         c2 := '';
 
-        {
-        if (ntype = node_bm) then begin
-            c1 := _cur_bm.bmName;
-            DrawNodeText(Node, State, c1, c2);
-        end
-        }
         if (ntype = node_transport) then begin
             c1 := _cur_ritem.Text;
             DrawNodeText(Node, State, c1, c2);
         end
-        {
-        else if (ntype = node_myres) then begin
-            c1 := _cur_myres.jid.resource;
-            if (_cur_myres.Presence.Status <> '') then
-                c2 := '(' + _cur_myres.Presence.Status + ')';
-            DrawNodeText(Node, State, c1, c2);
-        end
-        }
         else if (_cur_ritem <> nil) then begin
             c1 := _cur_ritem.Text;
             c2 := _cur_ritem.Status;
@@ -2708,7 +2437,6 @@ var
     tmps: Widestring;
 begin
     with treeRoster.Canvas do begin
-        //tmps := IntToStr(Node.AbsoluteIndex) + ': ' + c1;
         tmps := c1;
         tw := CanvasTextWidthW(treeRoster.Canvas, tmps);
         th := treeRoster.Canvas.TextHeight(tmps);
@@ -2751,16 +2479,18 @@ begin
         // draw the left hand image
         top_margin := (_item_height - frmExodus.ImageList2.Height) div 2;
         if (top_margin < 0) then top_margin := 0;
+
         if (Node.Level > 0) then begin
+            // this is an item or a group
             frmExodus.ImageList2.Draw(treeRoster.Canvas,
                 nRect.Left + treeRoster.Indent,
                 nRect.Top + top_margin, Node.ImageIndex);
         end
         else begin
-            // 27 = grp_expanded
-            // 28 = grp_collapsed
-            if (Node.Expanded) then ico := 27 else ico := 28;
-            frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+            // this is a group
+            if (Node.Expanded) then ico := ico_Down else ico := ico_Right;
+            frmExodus.ImageList2.Draw(treeRoster.Canvas,
+                nRect.Left + treeRoster.Indent,
                 nRect.Top + top_margin, ico);
         end;
 
@@ -3231,22 +2961,6 @@ begin
     Assert(Node2.Data <> nil);
 
     // define a custom sort routine for two roster nodes
-    {
-
-    trans1 := (node1.Text = _transports);
-    trans2 := (node2.Text = _transports);
-
-    // handle special cases
-    if (Node1 = _offline) then Compare := +1
-    else if (Node2 = _offline) then Compare := -1
-    else if (Node1 = _bookmark) then Compare := -1
-    else if (Node2 = _bookmark) then Compare := +1
-    else if (trans1) then Compare := +1
-    else if (trans2) then Compare := -1
-    else if (Node1 = _myres) then Compare := +1
-    else if (Node2 = _myres) then Compare := -1
-    }
-
     // handle normal cases.
     if (Node1.Level = Node2.Level) then begin
         o1 := TObject(Node1.Data);

@@ -60,6 +60,7 @@ type
         ShowPresence: boolean;      // show presence based counts
         DragTarget: boolean;        // Can items be dragged INTO this group?
         DragSource: boolean;        // Can items be dragged FROM this group?
+        AutoExpand: boolean;
 
         constructor create(name: Widestring);
         destructor destroy; override;
@@ -217,6 +218,7 @@ begin
     _grps := TWidestringlist.Create();
     _grps.CaseSensitive := true;
 
+    AutoExpand := true;
     DragSource := true;
     DragTarget := true;
     ShowPresence := true;
