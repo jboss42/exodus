@@ -1656,29 +1656,28 @@ begin
         // Unregister callbacks, etc.
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.Prefs.SavePosition(Self);
-
-        // Free everything else
-        TeardownSession();
     end;
 
     // give stuff a bit of time to shutdown
     Application.ProcessMessages();
     Application.ProcessMessages();
-
-    // Kill the tray icon stuff
-    if (_tray_icon <> nil) then
-        FreeAndNil(_tray_icon);
-
-    FreeAndNil(_docked_forms);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    // Kill the application
+    // Free everything else
+    TeardownSession();
+
+    // Kill the tray icon stuff
+    if (_tray_icon <> nil) then
+        FreeAndNil(_tray_icon);
+
+    if (_docked_forms <> nil) then
+        FreeAndNil(_docked_forms);
+
     Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
-    frmExodus := nil;
 end;
 
 {---------------------------------------}

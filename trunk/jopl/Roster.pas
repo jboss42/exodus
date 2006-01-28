@@ -201,6 +201,7 @@ begin
     go.SortPriority := 500;
     go.ShowPresence := false;
     go.DragTarget := false;
+    go.DragSource := true;
     Result := go;
 end;
 
@@ -215,6 +216,7 @@ begin
     go.SortPriority := 500;
     go.ShowPresence := false;
     go.DragTarget := false;
+    go.DragSource := false;
     Result := go;
 end;
 
@@ -228,6 +230,7 @@ begin
     go.SortPriority := 750;
     go.ShowPresence := false;
     go.DragTarget := false;
+    go.DragSource := false;
     Result := go;
 end;
 

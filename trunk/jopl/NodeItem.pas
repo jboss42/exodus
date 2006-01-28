@@ -58,7 +58,8 @@ type
         KeepEmpty: boolean;         // Keep around this empty group?
         SortPriority: integer;      // pri for this group
         ShowPresence: boolean;      // show presence based counts
-        DragTarget: boolean;        // Can items be dragged into this group?
+        DragTarget: boolean;        // Can items be dragged INTO this group?
+        DragSource: boolean;        // Can items be dragged FROM this group?
 
         constructor create(name: Widestring);
         destructor destroy; override;
@@ -216,6 +217,7 @@ begin
     _grps := TWidestringlist.Create();
     _grps.CaseSensitive := true;
 
+    DragSource := true;
     DragTarget := true;
     ShowPresence := true;
     SortPriority := DEFAULT_SORT;
@@ -638,7 +640,8 @@ var
     i: integer;
 begin
     if (_dirty_grps = nil) then exit;
-    
+
+    _grps.Clear();
     for i := 0 to _dirty_grps.Count - 1 do
         _grps.Add(_dirty_grps[i]);
     FreeAndNil(_dirty_grps);

@@ -180,6 +180,8 @@ begin
     go.SortPriority := 50;
     go.ShowPresence := false;
     go.KeepEmpty := false;
+    go.DragTarget := false;
+    go.DragSource := false;
 
     s := TJabberSession(_js);
     iq := TJabberIQ.Create(s, s.generateID(), bmCallback, 180);
