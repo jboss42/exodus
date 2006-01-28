@@ -99,6 +99,7 @@ type
     procedure txtUsernameExit(Sender: TObject);
     procedure chkWinLoginClick(Sender: TObject);
     procedure lblRenameClick(Sender: TObject);
+    procedure btnConnectClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -111,7 +112,7 @@ type
     procedure SaveProfile(profile: TJabberProfile);
     procedure RestoreConn(profile: TJabberProfile);
     procedure SaveConn(profile: TJabberProfile);
-
+    procedure updateProfile();
 
   public
     { Public declarations }
@@ -166,8 +167,7 @@ begin
     f.Free();
 end;
 
-{---------------------------------------}
-procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
+procedure TfrmConnDetails.updateProfile();
 var
     valid: boolean;
     jid: Widestring;
@@ -204,6 +204,12 @@ begin
         SaveHttp(_profile);
 
     MainSession.Prefs.SaveProfiles();
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
+begin
+    updateProfile();
     ModalResult := mrOK;
 end;
 
@@ -568,6 +574,13 @@ begin
         _profile.Name := new;
         Self.Caption := WideFormat(_(sConnDetails), [new]);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.btnConnectClick(Sender: TObject);
+begin
+    updateProfile();
+    ModalResult := mrYes;
 end;
 
 end.

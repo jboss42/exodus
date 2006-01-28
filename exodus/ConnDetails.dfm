@@ -486,6 +486,7 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Connect'
         ModalResult = 6
         TabOrder = 2
+        OnClick = btnConnectClick
       end
     end
   end
