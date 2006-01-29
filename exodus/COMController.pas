@@ -115,6 +115,7 @@ type
     procedure showAddContact(const jid: WideString); safecall;
     procedure registerCapExtension(const ext, feature: WideString); safecall;
     procedure unregisterCapExtension(const ext: WideString); safecall;
+    function Get_RosterImages: IExodusRosterImages; safecall;
     
     { Protected declarations }
   private
@@ -185,7 +186,7 @@ var
 implementation
 
 uses
-    DockContainer, Profile,  
+    DockContainer, Profile,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
@@ -1201,24 +1202,35 @@ begin
 end;
 
 
+{---------------------------------------}
 procedure TExodusController.lastRelease(var shutdown: boolean);
 begin
     shutdown := false;
 end;
 
+{---------------------------------------}
 procedure TExodusController.showAddContact(const jid: WideString);
 begin
     RosterAdd.ShowAddContact(jid);
 end;
 
+{---------------------------------------}
 procedure TExodusController.registerCapExtension(const ext, feature: WideString);
 begin
     Exodus_Disco_Info.AddExtension(ext, feature);
 end;
 
+{---------------------------------------}
 procedure TExodusController.unregisterCapExtension(const ext: WideString);
 begin
     Exodus_Disco_Info.RemoveExtension(ext);
+end;
+
+{---------------------------------------}
+function TExodusController.Get_RosterImages: IExodusRosterImages;
+begin
+    ExCOMRosterImages.ObjAddRef();
+    Result := ExCOMRosterImages;
 end;
 
 initialization
@@ -1230,9 +1242,9 @@ initialization
   // longer valid, this says not to warn the Exodus user.  The reason for this
   // is that the warning comes too late, and just leads to cores.
   // TODO: figure out how to disconnect from all of the clients that are
-  // connected to us, using CoDisconnectObject.  
+  // connected to us, using CoDisconnectObject.
   ComServer.UIInteractive := false;
-  
+
   plugs := TStringList.Create();
   proxies := TStringList.Create();
 

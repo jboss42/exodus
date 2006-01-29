@@ -866,25 +866,6 @@ begin
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
         end;
 
-        // I know this is evil... but lets just put in a "fake"
-        // roster item which represents us.
-        // this way, when we receive our own presence, we just
-        // let the normal stuff render it.
-
-        {
-        ct := TXMLTag.Create('item');
-        tmp_jid := TJabberID.Create(s.Jid);
-        ct.setAttribute('jid', tmp_jid.jid);
-        tmp_jid.Free();
-        ct.setAttribute('subscription', 'both');
-        ct.setAttribute('name', s.Username);
-        ri := TJabberRosterItem.Create(tmp_jid.jid);
-        parseItem(ri, ct);
-        Self.AddObject(WideLowerCase(ri.jid.Full), ri);
-        s.FireEvent('/roster/item', ct, ri);
-        ct.Free();
-        }
-
         ritems.Free();
         s.FireEvent('/roster/end', nil);
     end;

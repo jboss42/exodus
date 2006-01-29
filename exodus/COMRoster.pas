@@ -24,9 +24,11 @@ unit COMRoster;
 interface
 
 uses
-  ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    Unicode, TntClasses, Menus, TntMenus,
+    ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
+
   TExodusRoster = class(TAutoObject, IExodusRoster)
   protected
     function AddItem(const JabberID, nickname, Group: WideString;
@@ -42,7 +44,27 @@ type
     function Items(Index: Integer): IExodusRosterItem; safecall;
     procedure removeGroup(const grp: IExodusRosterGroup); safecall;
     procedure removeItem(const Item: IExodusRosterItem); safecall;
+    function addContextMenuItem(const menu_id, caption,
+      action: WideString): WideString; safecall;
+    function addContextMenu(const id: WideString): WordBool; safecall;
+    procedure removeContextMenu(const id: WideString); safecall;
+    procedure removeContextMenuItem(const menu_id, item_id: WideString);
+      safecall;
     { Protected declarations }
+
+  private
+    _menus: TWidestringlist;
+    _items: Twidestringlist;
+
+  published
+    procedure MenuClick(Sender: TObject);
+
+  public
+    constructor Create();
+    destructor Destroy(); override;
+
+    function findContextMenu(id: Widestring): TTntPopupMenu;
+
   end;
 
 {---------------------------------------}
@@ -51,8 +73,40 @@ type
 implementation
 
 uses
-    COMRosterGroup, 
+    SysUtils, XMLUtils, COMRosterGroup,
     COMRosterItem, NodeItem, Roster, JabberID, Session, Jabber1, ComServ;
+
+{---------------------------------------}
+constructor TExodusRoster.Create();
+begin
+    _menus := TWidestringlist.Create();
+    _items := TWidestringlist.Create();
+end;
+
+{---------------------------------------}
+destructor TExodusRoster.Destroy();
+begin
+    ClearStringListObjects(_items);
+    ClearStringListObjects(_menus);
+    _items.Clear();
+    _items.Free();
+    _menus.Clear();
+    _menus.Free();
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.MenuClick(Sender: TObject);
+var
+    idx: integer;
+    ri: TJabberRosterItem;
+begin
+    idx := _items.IndexOfObject(Sender);
+    if (idx >= 0) then begin
+        ri := MainSession.Roster.ActiveItem;
+        assert(ri <> nil);
+        MainSession.FireEvent(_items[idx], ri.Tag);
+    end;
+end;
 
 {---------------------------------------}
 function TExodusRoster.AddItem(const JabberID, nickname, Group: WideString;
@@ -169,6 +223,116 @@ end;
 procedure TExodusRoster.removeItem(const Item: IExodusRosterItem);
 begin
     MainSession.Roster.RemoveItem(Item.JabberID);
+end;
+
+{---------------------------------------}
+function TExodusRoster.addContextMenuItem(const menu_id, caption,
+  action: WideString): WideString;
+var
+    midx: integer;
+    menu: TTntPopupMenu;
+    mi: TTntMenuItem;
+    g: TGUID;
+begin
+    Result := '';
+    midx := _menus.IndexOf(menu_id);
+    if (midx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[midx]);
+
+    CreateGUID(g);
+    mi := TTntMenuItem.Create(menu);
+    mi.Name := 'pluginContext_item_' + GUIDToString(g);
+    mi.Caption := caption;
+    mi.OnClick := Self.MenuClick;
+    menu.Items.Add(mi);
+
+    _items.AddObject(action, mi);
+
+    Result := mi.Name;
+end;
+
+{---------------------------------------}
+function TExodusRoster.addContextMenu(const id: WideString): WordBool;
+var
+    idx: integer;
+    menu: TTntPopupMenu;
+begin
+    Result := false;
+    idx := _menus.IndexOf(id);
+    if (idx >= 0) then exit;
+
+    menu := TTntPopupMenu.Create(nil);
+    menu.Name := 'pluginContext_' + id;
+    menu.AutoHotkeys := maManual;
+    menu.AutoPopup := true;
+
+    _menus.AddObject(id, menu);
+    Result := true;
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.removeContextMenu(const id: WideString);
+var
+    i, midx, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuItem;
+begin
+    idx := _menus.IndexOf(id);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+    for i := menu.Items.Count - 1 downto 0 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        midx := _items.IndexOfObject(item);
+        assert(midx <> -1);
+        _items.Delete(midx);
+        item.Free();
+    end;
+    menu.Items.Clear();
+    menu.Free();
+
+    _menus.Delete(idx);
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.removeContextMenuItem(const menu_id,
+  item_id: WideString);
+var
+    i, midx, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuitem;
+begin
+    idx := _menus.IndexOf(menu_id);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = menu_id) then begin
+            menu.Items.Delete(i);
+            midx := _items.IndexOfObject(item);
+            assert(midx <> -1);
+            _items.Delete(midx);
+            item.Free();
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusRoster.findContextMenu(id: Widestring): TTntPopupMenu;
+var
+    idx: integer;
+    menu: TTntPopupMenu;
+begin
+    Result := nil;
+    idx := _menus.IndexOf(id);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+    Result := menu;
 end;
 
 initialization
