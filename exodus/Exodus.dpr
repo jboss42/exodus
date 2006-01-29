@@ -193,7 +193,8 @@ uses
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
   Bookmarks in '..\jopl\Bookmarks.pas',
-  RosterImages in '..\jopl\RosterImages.pas';
+  RosterImages in '..\jopl\RosterImages.pas',
+  COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass};
 
 {$R *.TLB}
 

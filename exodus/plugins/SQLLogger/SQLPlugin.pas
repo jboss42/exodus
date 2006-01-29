@@ -334,11 +334,11 @@ var
     f: TfrmView;
 begin
     if (id = _menu_search) then begin
-        h := _exodus.CreateDockableWindow('Search Logs');
+        //h := _exodus.CreateDockableWindow('Search Logs');
         f := TfrmView.Create(nil);
-        f.ParentWindow := h;
-        f.Align := alClient;
-        f.BorderStyle := bsNone;
+        //f.ParentWindow := h;
+        //f.Align := alClient;
+        //f.BorderStyle := bsNone;
 
         f.db := _db;
         f.ShowSearch();
@@ -438,12 +438,12 @@ var
     h: integer;
     f: TfrmView;
 begin
-    h := _exodus.CreateDockableWindow('SQL Log Viewer');
+    //h := _exodus.CreateDockableWindow('SQL Log Viewer');
 
     f := TfrmView.Create(nil);
-    f.ParentWindow := h;
-    f.Align := alClient;
-    f.BorderStyle := bsNone;
+    //f.ParentWindow := h;
+    //f.Align := alClient;
+    //f.BorderStyle := bsNone;
 
     f.db := _db;
     f.ShowJid(jid);

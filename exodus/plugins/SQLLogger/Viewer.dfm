@@ -107,7 +107,7 @@ object frmView: TfrmView
     Left = 0
     Top = 153
     Width = 197
-    Height = 266
+    Height = 262
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -228,7 +228,7 @@ object frmView: TfrmView
     Left = 197
     Top = 153
     Width = 380
-    Height = 266
+    Height = 262
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
@@ -244,7 +244,7 @@ object frmView: TfrmView
       Left = 0
       Top = 114
       Width = 380
-      Height = 152
+      Height = 148
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -328,7 +328,7 @@ object frmView: TfrmView
       LangOptions = [loAutoFont]
       Language = 1033
       ParentFont = False
-      ScrollBars = ssBoth
+      ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 0
       URLColor = clBlue

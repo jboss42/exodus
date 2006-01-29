@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/28/2006 2:58:08 PM from Type Library described below.
+// File generated on 1/28/2006 8:14:19 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,6 +22,7 @@ unit ExodusCOM_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -61,6 +62,8 @@ const
   IID_IExodusPresence: TGUID = '{D2FD3425-40CE-469F-A95C-1C80B7FF3119}';
   CLASS_ExodusPresence: TGUID = '{B9EED6FA-AB95-48CA-B485-1AF7E3CC0D0B}';
   IID_IExodusAuth: TGUID = '{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}';
+  IID_IExodusRosterGroup: TGUID = '{FA63024E-3453-4551-8CA0-AFB78B2066AD}';
+  CLASS_ExodusRosterGroup: TGUID = '{21D07EDA-E275-4F43-9933-D1C9F45FCA15}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -105,6 +108,8 @@ type
   IExodusPresenceDisp = dispinterface;
   IExodusAuth = interface;
   IExodusAuthDisp = dispinterface;
+  IExodusRosterGroup = interface;
+  IExodusRosterGroupDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -116,6 +121,7 @@ type
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
   ExodusPresence = IExodusPresence;
+  ExodusRosterGroup = IExodusRosterGroup;
 
 
 // *********************************************************************//
@@ -447,11 +453,19 @@ type
   IExodusRoster = interface(IDispatch)
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; safecall;
-    procedure AddItem(const JabberID: WideString; const nickname: WideString; 
-                      const Group: WideString; Subscribe: WordBool); safecall;
+    function AddItem(const JabberID: WideString; const nickname: WideString; 
+                     const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
     function Count: Integer; safecall;
+    procedure removeItem(const Item: IExodusRosterItem); safecall;
+    function addGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    function getGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    procedure removeGroup(const grp: IExodusRosterGroup); safecall;
+    function Get_GroupsCount: Integer; safecall;
+    function Groups(Index: Integer): IExodusRosterGroup; safecall;
+    function Items(Index: Integer): IExodusRosterItem; safecall;
+    property GroupsCount: Integer read Get_GroupsCount;
   end;
 
 // *********************************************************************//
@@ -462,11 +476,18 @@ type
   IExodusRosterDisp = dispinterface
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; dispid 1;
-    procedure AddItem(const JabberID: WideString; const nickname: WideString; 
-                      const Group: WideString; Subscribe: WordBool); dispid 3;
+    function AddItem(const JabberID: WideString; const nickname: WideString; 
+                     const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
     function Count: Integer; dispid 8;
+    procedure removeItem(const Item: IExodusRosterItem); dispid 201;
+    function addGroup(const grp: WideString): IExodusRosterGroup; dispid 202;
+    function getGroup(const grp: WideString): IExodusRosterGroup; dispid 203;
+    procedure removeGroup(const grp: IExodusRosterGroup); dispid 204;
+    property GroupsCount: Integer readonly dispid 205;
+    function Groups(Index: Integer): IExodusRosterGroup; dispid 206;
+    function Items(Index: Integer): IExodusRosterItem; dispid 207;
   end;
 
 // *********************************************************************//
@@ -621,6 +642,87 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusRosterGroup
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FA63024E-3453-4551-8CA0-AFB78B2066AD}
+// *********************************************************************//
+  IExodusRosterGroup = interface(IDispatch)
+    ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
+    function Get_Action: WideString; safecall;
+    procedure Set_Action(const Value: WideString); safecall;
+    function Get_KeepEmpty: WordBool; safecall;
+    procedure Set_KeepEmpty(Value: WordBool); safecall;
+    function Get_SortPriority: Integer; safecall;
+    procedure Set_SortPriority(Value: Integer); safecall;
+    function Get_ShowPresence: WordBool; safecall;
+    procedure Set_ShowPresence(Value: WordBool); safecall;
+    function Get_DragTarget: WordBool; safecall;
+    procedure Set_DragTarget(Value: WordBool); safecall;
+    function Get_DragSource: WordBool; safecall;
+    procedure Set_DragSource(Value: WordBool); safecall;
+    function Get_AutoExpand: WordBool; safecall;
+    procedure Set_AutoExpand(Value: WordBool); safecall;
+    function getText: WideString; safecall;
+    procedure addJid(const jid: WideString); safecall;
+    procedure removeJid(const jid: WideString); safecall;
+    function inGroup(const jid: WideString): WordBool; safecall;
+    function isEmpty: WordBool; safecall;
+    function getGroup(const group_name: WideString): IExodusRosterGroup; safecall;
+    procedure addGroup(const child: IExodusRosterGroup); safecall;
+    procedure removeGroup(const child: IExodusRosterGroup); safecall;
+    function getRosterItems(Online: WordBool): OleVariant; safecall;
+    function Get_NestLevel: Integer; safecall;
+    function Get_Online: Integer; safecall;
+    function Get_Total: Integer; safecall;
+    function Get_FullName: WideString; safecall;
+    function Get_Parent: IExodusRosterGroup; safecall;
+    function Parts(Index: Integer): WideString; safecall;
+    property Action: WideString read Get_Action write Set_Action;
+    property KeepEmpty: WordBool read Get_KeepEmpty write Set_KeepEmpty;
+    property SortPriority: Integer read Get_SortPriority write Set_SortPriority;
+    property ShowPresence: WordBool read Get_ShowPresence write Set_ShowPresence;
+    property DragTarget: WordBool read Get_DragTarget write Set_DragTarget;
+    property DragSource: WordBool read Get_DragSource write Set_DragSource;
+    property AutoExpand: WordBool read Get_AutoExpand write Set_AutoExpand;
+    property NestLevel: Integer read Get_NestLevel;
+    property Online: Integer read Get_Online;
+    property Total: Integer read Get_Total;
+    property FullName: WideString read Get_FullName;
+    property Parent: IExodusRosterGroup read Get_Parent;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterGroupDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FA63024E-3453-4551-8CA0-AFB78B2066AD}
+// *********************************************************************//
+  IExodusRosterGroupDisp = dispinterface
+    ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
+    property Action: WideString dispid 201;
+    property KeepEmpty: WordBool dispid 202;
+    property SortPriority: Integer dispid 203;
+    property ShowPresence: WordBool dispid 204;
+    property DragTarget: WordBool dispid 205;
+    property DragSource: WordBool dispid 206;
+    property AutoExpand: WordBool dispid 207;
+    function getText: WideString; dispid 208;
+    procedure addJid(const jid: WideString); dispid 209;
+    procedure removeJid(const jid: WideString); dispid 210;
+    function inGroup(const jid: WideString): WordBool; dispid 211;
+    function isEmpty: WordBool; dispid 212;
+    function getGroup(const group_name: WideString): IExodusRosterGroup; dispid 213;
+    procedure addGroup(const child: IExodusRosterGroup); dispid 214;
+    procedure removeGroup(const child: IExodusRosterGroup); dispid 215;
+    function getRosterItems(Online: WordBool): OleVariant; dispid 216;
+    property NestLevel: Integer readonly dispid 217;
+    property Online: Integer readonly dispid 218;
+    property Total: Integer readonly dispid 219;
+    property FullName: WideString readonly dispid 220;
+    property Parent: IExodusRosterGroup readonly dispid 221;
+    function Parts(Index: Integer): WideString; dispid 222;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -692,6 +794,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusPresence;
   end;
 
+// *********************************************************************//
+// The Class CoExodusRosterGroup provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterGroup exposed by              
+// the CoClass ExodusRosterGroup. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterGroup = class
+    class function Create: IExodusRosterGroup;
+    class function CreateRemote(const MachineName: string): IExodusRosterGroup;
+  end;
+
 implementation
 
 uses ComObj;
@@ -754,6 +868,16 @@ end;
 class function CoExodusPresence.CreateRemote(const MachineName: string): IExodusPresence;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusPresence) as IExodusPresence;
+end;
+
+class function CoExodusRosterGroup.Create: IExodusRosterGroup;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterGroup) as IExodusRosterGroup;
+end;
+
+class function CoExodusRosterGroup.CreateRemote(const MachineName: string): IExodusRosterGroup;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterGroup) as IExodusRosterGroup;
 end;
 
 end.
