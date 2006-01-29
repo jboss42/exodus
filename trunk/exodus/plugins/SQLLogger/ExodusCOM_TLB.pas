@@ -12,18 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/28/2006 8:35:58 PM from Type Library described below.
+// File generated on 1/29/2006 1:18:14 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.exe (1)
+// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {5BABCA07-A359-4B42-8C03-C5B329E79E31}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
-// Parent TypeLibrary:
-//   (0) v1.0 ExSQLLogger, (C:\src\exodus\exodus\plugins\SQLLogger\ExSQLLogger.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -65,6 +63,8 @@ const
   IID_IExodusAuth: TGUID = '{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}';
   IID_IExodusRosterGroup: TGUID = '{FA63024E-3453-4551-8CA0-AFB78B2066AD}';
   CLASS_ExodusRosterGroup: TGUID = '{21D07EDA-E275-4F43-9933-D1C9F45FCA15}';
+  IID_IExodusRosterImages: TGUID = '{F4AAF511-D144-42E7-B108-8A196D4BD115}';
+  CLASS_ExodusRosterImages: TGUID = '{1ADA45EB-EE12-4AC1-9E2B-AF1723DD1A28}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -111,6 +111,8 @@ type
   IExodusAuthDisp = dispinterface;
   IExodusRosterGroup = interface;
   IExodusRosterGroupDisp = dispinterface;
+  IExodusRosterImages = interface;
+  IExodusRosterImagesDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -123,6 +125,7 @@ type
   ExodusRosterItem = IExodusRosterItem;
   ExodusPresence = IExodusPresence;
   ExodusRosterGroup = IExodusRosterGroup;
+  ExodusRosterImages = IExodusRosterImages;
 
 
 // *********************************************************************//
@@ -213,6 +216,7 @@ type
     procedure showAddContact(const jid: WideString); safecall;
     procedure registerCapExtension(const ext: WideString; const feature: WideString); safecall;
     procedure unregisterCapExtension(const ext: WideString); safecall;
+    function Get_RosterImages: IExodusRosterImages; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -226,6 +230,7 @@ type
     property Roster: IExodusRoster read Get_Roster;
     property PPDB: IExodusPPDB read Get_PPDB;
     property LocalIP: WideString read Get_LocalIP;
+    property RosterImages: IExodusRosterImages read Get_RosterImages;
   end;
 
 // *********************************************************************//
@@ -310,6 +315,7 @@ type
     procedure showAddContact(const jid: WideString); dispid 205;
     procedure registerCapExtension(const ext: WideString; const feature: WideString); dispid 206;
     procedure unregisterCapExtension(const ext: WideString); dispid 207;
+    property RosterImages: IExodusRosterImages readonly dispid 208;
   end;
 
 // *********************************************************************//
@@ -454,8 +460,8 @@ type
   IExodusRoster = interface(IDispatch)
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; safecall;
-    function AddItem(const JabberID: WideString; const nickname: WideString; 
-                     const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
+    function Subscribe(const JabberID: WideString; const nickname: WideString; 
+                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
     function Count: Integer; safecall;
@@ -466,6 +472,12 @@ type
     function Get_GroupsCount: Integer; safecall;
     function Groups(Index: Integer): IExodusRosterGroup; safecall;
     function Items(Index: Integer): IExodusRosterItem; safecall;
+    function AddContextMenu(const ID: WideString): WordBool; safecall;
+    procedure RemoveContextMenu(const ID: WideString); safecall;
+    function addContextMenuItem(const menu_id: WideString; const Caption: WideString; 
+                                const action: WideString): WideString; safecall;
+    procedure removeContextMenuItem(const menu_id: WideString; const item_id: WideString); safecall;
+    function addItem(const JabberID: WideString): IExodusRosterItem; safecall;
     property GroupsCount: Integer read Get_GroupsCount;
   end;
 
@@ -477,8 +489,8 @@ type
   IExodusRosterDisp = dispinterface
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; dispid 1;
-    function AddItem(const JabberID: WideString; const nickname: WideString; 
-                     const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
+    function Subscribe(const JabberID: WideString; const nickname: WideString; 
+                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
     function Count: Integer; dispid 8;
@@ -489,6 +501,12 @@ type
     property GroupsCount: Integer readonly dispid 205;
     function Groups(Index: Integer): IExodusRosterGroup; dispid 206;
     function Items(Index: Integer): IExodusRosterItem; dispid 207;
+    function AddContextMenu(const ID: WideString): WordBool; dispid 208;
+    procedure RemoveContextMenu(const ID: WideString); dispid 209;
+    function addContextMenuItem(const menu_id: WideString; const Caption: WideString; 
+                                const action: WideString): WideString; dispid 210;
+    procedure removeContextMenuItem(const menu_id: WideString; const item_id: WideString); dispid 211;
+    function addItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
   end;
 
 // *********************************************************************//
@@ -539,12 +557,37 @@ type
     function Get_nickname: WideString; safecall;
     procedure Set_nickname(const Value: WideString); safecall;
     function Get_RawNickname: WideString; safecall;
+    function Get_ContextMenuID: WideString; safecall;
+    procedure Set_ContextMenuID(const Value: WideString); safecall;
+    function Get_Status: WideString; safecall;
+    procedure Set_Status(const Value: WideString); safecall;
+    function Get_Tooltip: WideString; safecall;
+    procedure Set_Tooltip(const Value: WideString); safecall;
+    function Get_action: WideString; safecall;
+    procedure Set_action(const Value: WideString); safecall;
+    function Get_imageIndex: Integer; safecall;
+    procedure Set_imageIndex(Value: Integer); safecall;
+    function Get_InlineEdit: WordBool; safecall;
+    procedure Set_InlineEdit(Value: WordBool); safecall;
+    procedure fireChange; safecall;
+    function Get_IsContact: WordBool; safecall;
+    procedure Set_IsContact(Value: WordBool); safecall;
+    procedure addGroup(const grp: WideString); safecall;
+    procedure removeGroup(const grp: WideString); safecall;
+    procedure setCleanGroups; safecall;
     property JabberID: WideString read Get_JabberID write Set_JabberID;
     property Subscription: WideString read Get_Subscription write Set_Subscription;
     property Ask: WideString read Get_Ask;
     property GroupCount: Integer read Get_GroupCount;
     property nickname: WideString read Get_nickname write Set_nickname;
     property RawNickname: WideString read Get_RawNickname;
+    property ContextMenuID: WideString read Get_ContextMenuID write Set_ContextMenuID;
+    property Status: WideString read Get_Status write Set_Status;
+    property Tooltip: WideString read Get_Tooltip write Set_Tooltip;
+    property action: WideString read Get_action write Set_action;
+    property imageIndex: Integer read Get_imageIndex write Set_imageIndex;
+    property InlineEdit: WordBool read Get_InlineEdit write Set_InlineEdit;
+    property IsContact: WordBool read Get_IsContact write Set_IsContact;
   end;
 
 // *********************************************************************//
@@ -564,6 +607,17 @@ type
     procedure Update; dispid 9;
     property nickname: WideString dispid 10;
     property RawNickname: WideString readonly dispid 11;
+    property ContextMenuID: WideString dispid 201;
+    property Status: WideString dispid 202;
+    property Tooltip: WideString dispid 203;
+    property action: WideString dispid 204;
+    property imageIndex: Integer dispid 205;
+    property InlineEdit: WordBool dispid 206;
+    procedure fireChange; dispid 207;
+    property IsContact: WordBool dispid 208;
+    procedure addGroup(const grp: WideString); dispid 210;
+    procedure removeGroup(const grp: WideString); dispid 211;
+    procedure setCleanGroups; dispid 212;
   end;
 
 // *********************************************************************//
@@ -649,8 +703,8 @@ type
 // *********************************************************************//
   IExodusRosterGroup = interface(IDispatch)
     ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
-    function Get_Action: WideString; safecall;
-    procedure Set_Action(const Value: WideString); safecall;
+    function Get_action: WideString; safecall;
+    procedure Set_action(const Value: WideString); safecall;
     function Get_KeepEmpty: WordBool; safecall;
     procedure Set_KeepEmpty(Value: WordBool); safecall;
     function Get_SortPriority: Integer; safecall;
@@ -678,7 +732,7 @@ type
     function Get_FullName: WideString; safecall;
     function Get_Parent: IExodusRosterGroup; safecall;
     function Parts(Index: Integer): WideString; safecall;
-    property Action: WideString read Get_Action write Set_Action;
+    property action: WideString read Get_action write Set_action;
     property KeepEmpty: WordBool read Get_KeepEmpty write Set_KeepEmpty;
     property SortPriority: Integer read Get_SortPriority write Set_SortPriority;
     property ShowPresence: WordBool read Get_ShowPresence write Set_ShowPresence;
@@ -699,7 +753,7 @@ type
 // *********************************************************************//
   IExodusRosterGroupDisp = dispinterface
     ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
-    property Action: WideString dispid 201;
+    property action: WideString dispid 201;
     property KeepEmpty: WordBool dispid 202;
     property SortPriority: Integer dispid 203;
     property ShowPresence: WordBool dispid 204;
@@ -721,6 +775,34 @@ type
     property FullName: WideString readonly dispid 220;
     property Parent: IExodusRosterGroup readonly dispid 221;
     function Parts(Index: Integer): WideString; dispid 222;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusRosterImages
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F4AAF511-D144-42E7-B108-8A196D4BD115}
+// *********************************************************************//
+  IExodusRosterImages = interface(IDispatch)
+    ['{F4AAF511-D144-42E7-B108-8A196D4BD115}']
+    function AddImageFilename(const ID: WideString; const filename: WideString): Integer; safecall;
+    function AddImageBase64(const ID: WideString; const base64: WideString): Integer; safecall;
+    function AddImageResource(const ID: WideString; instance: Integer; res_id: Integer): Integer; safecall;
+    procedure Remove(const ID: WideString); safecall;
+    function Find(const ID: WideString): Integer; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterImagesDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F4AAF511-D144-42E7-B108-8A196D4BD115}
+// *********************************************************************//
+  IExodusRosterImagesDisp = dispinterface
+    ['{F4AAF511-D144-42E7-B108-8A196D4BD115}']
+    function AddImageFilename(const ID: WideString; const filename: WideString): Integer; dispid 201;
+    function AddImageBase64(const ID: WideString; const base64: WideString): Integer; dispid 202;
+    function AddImageResource(const ID: WideString; instance: Integer; res_id: Integer): Integer; dispid 203;
+    procedure Remove(const ID: WideString); dispid 204;
+    function Find(const ID: WideString): Integer; dispid 205;
   end;
 
 // *********************************************************************//
@@ -807,6 +889,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusRosterGroup;
   end;
 
+// *********************************************************************//
+// The Class CoExodusRosterImages provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterImages exposed by              
+// the CoClass ExodusRosterImages. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterImages = class
+    class function Create: IExodusRosterImages;
+    class function CreateRemote(const MachineName: string): IExodusRosterImages;
+  end;
+
 implementation
 
 uses ComObj;
@@ -879,6 +973,16 @@ end;
 class function CoExodusRosterGroup.CreateRemote(const MachineName: string): IExodusRosterGroup;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterGroup) as IExodusRosterGroup;
+end;
+
+class function CoExodusRosterImages.Create: IExodusRosterImages;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterImages) as IExodusRosterImages;
+end;
+
+class function CoExodusRosterImages.CreateRemote(const MachineName: string): IExodusRosterImages;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterImages) as IExodusRosterImages;
 end;
 
 end.

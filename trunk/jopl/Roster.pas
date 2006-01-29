@@ -87,6 +87,7 @@ type
         procedure Fetch;
         procedure parseItem(ri: TJabberRosterItem; tag: TXMLTag);
 
+        function newItem(jid: Widestring): TJabberRosterItem;
         procedure AddItem(jid: Widestring; ri: TJabberRosterItem); overload;
         procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean); overload;
         procedure RemoveItem(jid: Widestring);
@@ -764,6 +765,12 @@ begin
     if (i = -1) then exit;
     go := TJabberGroup(_groups.Objects[i]);
     go.getRosterItems(Result, online);
+end;
+
+function TJabberRoster.newItem(jid: Widestring): TJabberRosterItem;
+begin
+    Result := TJabberRosterItem.Create(jid);
+    Self.AddObject(jid, Result);
 end;
 
 {---------------------------------------}

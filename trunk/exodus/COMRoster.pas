@@ -31,8 +31,7 @@ type
 
   TExodusRoster = class(TAutoObject, IExodusRoster)
   protected
-    function AddItem(const JabberID, nickname, Group: WideString;
-      Subscribe: WordBool): IExodusRosterItem; safecall;
+    function addItem(const JabberID: WideString): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     procedure Fetch; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
@@ -50,6 +49,8 @@ type
     procedure removeContextMenu(const id: WideString); safecall;
     procedure removeContextMenuItem(const menu_id, item_id: WideString);
       safecall;
+    function Subscribe(const JabberID, nickname, Group: WideString;
+      Subscribe: WordBool): IExodusRosterItem; safecall;
     { Protected declarations }
 
   private
@@ -73,7 +74,7 @@ type
 implementation
 
 uses
-    SysUtils, XMLUtils, COMRosterGroup,
+    XMLTag, StrUtils, SysUtils, XMLUtils, COMRosterGroup,
     COMRosterItem, NodeItem, Roster, JabberID, Session, Jabber1, ComServ;
 
 {---------------------------------------}
@@ -109,8 +110,24 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusRoster.AddItem(const JabberID, nickname, Group: WideString;
-  Subscribe: WordBool): IExodusRosterItem;
+function TExodusRoster.addItem(
+  const JabberID: WideString): IExodusRosterItem;
+var
+    x: TXMLTag;
+    ri: TJabberRosterItem;
+begin
+    x := TXMLTag.Create('item');
+    x.setAttribute('jid', JabberID);
+    x.setAttribute('xmlns', 'exodus:plugin-item');
+    ri := MainSession.Roster.newItem(JabberID);
+    ri.Tag := x;
+    
+    Result := TExodusRosterItem.Create(ri);
+end;
+
+{---------------------------------------}
+function TExodusRoster.Subscribe(const JabberID, nickname,
+  Group: WideString; Subscribe: WordBool): IExodusRosterItem;
 var
     ri: TJabberRosterItem;
 begin
@@ -233,6 +250,7 @@ var
     menu: TTntPopupMenu;
     mi: TTntMenuItem;
     g: TGUID;
+    guid: string;
 begin
     Result := '';
     midx := _menus.IndexOf(menu_id);
@@ -241,8 +259,11 @@ begin
     menu := TTntPopupMenu(_menus.Objects[midx]);
 
     CreateGUID(g);
+    guid := GUIDToString(g);
+    guid := AnsiMidStr(guid, 2, length(guid) - 2);
+    guid := AnsiReplaceStr(guid, '-', '_');
     mi := TTntMenuItem.Create(menu);
-    mi.Name := 'pluginContext_item_' + GUIDToString(g);
+    mi.Name := 'pluginContext_item_' + guid;
     mi.Caption := caption;
     mi.OnClick := Self.MenuClick;
     menu.Items.Add(mi);
