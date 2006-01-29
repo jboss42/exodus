@@ -1105,7 +1105,6 @@ var
 begin
     go := TJabberGroup(node.Data);
     if (go = nil) then exit;
-
     go.Data := nil;
     node.Free();
 end;
@@ -1260,8 +1259,11 @@ begin
         cur_grp  := node_list[i];
         cur_node := TTreeNode(node_list.Objects[i]);
         if (tmp_grps.IndexOf(cur_grp) < 0) then begin
+            grp_node := cur_node.Parent;
             node_list.Delete(i);
             cur_node.Free();
+            if (grp_node.Count = 0) then
+                RemoveGroupNode(grp_node);
         end;
     end;
 
