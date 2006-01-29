@@ -29,12 +29,19 @@ uses
 type
   TExodusRoster = class(TAutoObject, IExodusRoster)
   protected
-    procedure AddItem(const JabberID, nickname, Group: WideString;
-      Subscribe: WordBool); safecall;
+    function AddItem(const JabberID, nickname, Group: WideString;
+      Subscribe: WordBool): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     procedure Fetch; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
     function Count: Integer; safecall;
+    function addGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    function Get_GroupsCount: Integer; safecall;
+    function getGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    function Groups(Index: Integer): IExodusRosterGroup; safecall;
+    function Items(Index: Integer): IExodusRosterItem; safecall;
+    procedure removeGroup(const grp: IExodusRosterGroup); safecall;
+    procedure removeItem(const Item: IExodusRosterItem); safecall;
     { Protected declarations }
   end;
 
@@ -44,13 +51,21 @@ type
 implementation
 
 uses
+    COMRosterGroup, 
     COMRosterItem, NodeItem, Roster, JabberID, Session, Jabber1, ComServ;
 
 {---------------------------------------}
-procedure TExodusRoster.AddItem(const JabberID, nickname,
-  Group: WideString; Subscribe: WordBool);
+function TExodusRoster.AddItem(const JabberID, nickname, Group: WideString;
+  Subscribe: WordBool): IExodusRosterItem;
+var
+    ri: TJabberRosterItem;
 begin
     MainSession.roster.AddItem(JabberID, Nickname, Group, Subscribe);
+    ri := MainSession.Roster.Find(JabberID);
+    if (ri <> nil) then
+        Result := TExodusRosterItem.Create(ri)
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
@@ -89,9 +104,71 @@ begin
         Result := nil;
 end;
 
+{---------------------------------------}
 function TExodusRoster.Count: Integer;
 begin
     Result := MainSession.roster.Count;
+end;
+
+{---------------------------------------}
+function TExodusRoster.addGroup(const grp: WideString): IExodusRosterGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.addGroup(grp);
+    Result := TExodusRosterGroup.Create(go);
+end;
+
+{---------------------------------------}
+function TExodusRoster.Get_GroupsCount: Integer;
+begin
+    Result := MainSession.Roster.GroupsCount;
+end;
+
+{---------------------------------------}
+function TExodusRoster.getGroup(const grp: WideString): IExodusRosterGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.getGroup(grp);
+    if (go <> nil) then
+        Result := TExodusRosterGroup.Create(go)
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
+function TExodusRoster.Groups(Index: Integer): IExodusRosterGroup;
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.Groups[Index];
+    Result := TExodusRosterGroup.Create(go);
+end;
+
+{---------------------------------------}
+function TExodusRoster.Items(Index: Integer): IExodusRosterItem;
+var
+    ri: TJabberRosterItem;
+begin
+    ri := MainSession.Roster.Items[index];
+    Result := TExodusRosterItem.Create(ri);
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.removeGroup(const grp: IExodusRosterGroup);
+var
+    go: TJabberGroup;
+begin
+    go := MainSession.Roster.getGroup(grp.FullName);
+    if (go <> nil) then
+        MainSession.roster.removeGroup(go);
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.removeItem(const Item: IExodusRosterItem);
+begin
+    MainSession.Roster.RemoveItem(Item.JabberID);
 end;
 
 initialization
