@@ -125,14 +125,13 @@ end;
 {---------------------------------------}
 function TExodusRosterItem.Get_RawNickname: WideString;
 begin
-    // XXX: raw nickname?
     Result := _ritem.Text;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.XML: WideString;
 begin
-    // XXX: Result := _ritem.xml();
+    Result := _ritem.Tag.xml();
 end;
 
 {---------------------------------------}
