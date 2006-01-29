@@ -2652,33 +2652,29 @@ begin
     if ((Node = nil) or (Node.Level = 0)) then exit;
 
     // get the roster item attached to this node.
-    if (Node.Data = nil) then exit;
-    if (TObject(Node.Data) is TJabberBookmark) then exit;
-
-
-    if (TObject(Node.Data) is TJabberMyResource) then begin
-        j := TJabberMyResource(Node.Data).jid;
-    end
-    else begin
+    if (Node.Data = nil) then
+        exit
+    else if (TObject(Node.Data) is TJabberRosteritem) then begin
         ri := TJabberRosterItem(Node.Data);
+        if (not ri.IsContact) then exit;
         j := ri.jid;
+
+        // find out how many files we're accepting
+        nCount := DragQueryFile( msg.Drop,
+                                 $FFFFFFFF,
+                                 acFileName,
+                                 cnMaxFileNameLen );
+
+        // query Windows one at a time for the file name
+        for i := 0 to nCount-1 do begin
+            DragQueryFile( msg.Drop, i,
+                           acFileName, cnMaxFileNameLen );
+            FileSend(j.full, acFileName);
+        end;
+
+        // let Windows know that we're done
+        DragFinish( msg.Drop );
     end;
-
-    // find out how many files we're accepting
-    nCount := DragQueryFile( msg.Drop,
-                             $FFFFFFFF,
-                             acFileName,
-                             cnMaxFileNameLen );
-
-    // query Windows one at a time for the file name
-    for i := 0 to nCount-1 do begin
-        DragQueryFile( msg.Drop, i,
-                       acFileName, cnMaxFileNameLen );
-        FileSend(j.full, acFileName);
-    end;
-
-    // let Windows know that we're done
-    DragFinish( msg.Drop );
 end;
 
 {---------------------------------------}

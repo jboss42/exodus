@@ -158,40 +158,6 @@ type
         property Tag: TxMLTag read _tag write setTag;
     end;
 
-    TJabberMyResource = class(TJabberNodeItem)
-    private
-    public
-        jid: TJabberID;
-        Groups: TWidestringList;
-        Data: TObject;
-        Presence: TJabberPres;
-        Resource: Widestring;
-        item: TJabberRosterItem;
-
-        constructor Create;
-        destructor Destroy; override;
-
-        function getText(): Widestring; override;
-    end;
-
-    TJabberBookmark = class(TJabberNodeItem)
-    public
-        jid: TJabberID;
-        bmType: Widestring;
-        bmName: Widestring;
-        nick: Widestring;
-        autoJoin: boolean;
-        Data: TObject;
-
-        constructor Create(tag: TXMLTag);
-        destructor Destroy; override;
-
-        function AddToTag(parent: TXMLTag): TXMLTag;
-        procedure Copy(bm: TJabberBookmark);
-
-        function getText(): Widestring; override;
-    end;
-
     function NodeTypeLevel(node: TObject): integer;
 
 implementation
@@ -459,102 +425,6 @@ begin
         _grps.Delete(i);
 end;
 
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-constructor TJabberBookmark.Create(tag: TXMLTag);
-begin
-    //
-    inherited Create();
-
-    jid := nil;
-    bmName := '';
-    bmType := 'conference';
-    nick := '';
-    autoJoin := false;
-
-    if (tag <> nil) then begin
-        jid := TJabberID.Create(tag.GetAttribute('jid'));
-        bmName := tag.getAttribute('name');
-        autoJoin := SafeBool(tag.GetAttribute('autojoin'));
-        bmType := tag.name;
-        nick := tag.GetBasicText('nick');
-    end;
-end;
-
-{---------------------------------------}
-destructor TJabberBookmark.Destroy;
-begin
-    if (jid <> nil) then
-        jid.Free;
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-function TJabberBookmark.getText(): Widestring;
-begin
-    Result := bmName;
-end;
-
-{---------------------------------------}
-procedure TJabberBookmark.Copy(bm: TJabberBookmark);
-begin
-    bmType := bm.bmType;
-    bmName := bm.bmName;
-    nick := bm.nick;
-    autoJoin := bm.autoJoin;
-end;
-
-{---------------------------------------}
-function TJabberBookmark.AddToTag(parent: TXMLTag): TXMLTag;
-begin
-    // add this bookmark as another tag onto the parent
-    Result := parent.AddTag(bmType);
-    with Result do begin
-        setAttribute('jid', jid.full);
-        setAttribute('name', bmName);
-        setAttribute('autojoin', BoolToStr(autoJoin));
-        if (nick <> '') then
-            AddBasicTag('nick', nick);
-    end;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-constructor TJabberMyResource.Create;
-begin
-    //
-    inherited;
-
-    Groups := TWidestringList.Create();
-    Groups.CaseSensitive := true;
-
-    Data := nil;
-    Presence := nil;
-    Resource := '';
-    item := nil;
-end;
-
-{---------------------------------------}
-destructor TJabberMyResource.Destroy;
-begin
-    //
-    Groups.Free();
-    jid.Free();
-    if (Data <> nil) then
-        TObject(Data).Free();
-
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-function TJabberMyResource.getText(): Widestring;
-begin
-    Result := Resource;
-end;
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -778,10 +648,6 @@ begin
             ret := 1
         else if (node is TJabberGroup) then
             ret := 2
-        else if (node is TJabberMyResource) then
-            ret := 3
-        else if (node is TJabberBookmark) then
-            ret := 4
         else // in case of future expansion
             ret := 5;
     end;

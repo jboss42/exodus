@@ -40,7 +40,6 @@ type
     { Private declarations }
     _cur_ritem: TJabberRosterItem;
     _cur_grp: Widestring;
-    _cur_bm: TJabberBookmark;
 
     _jid_nodes: TWideStringlist;
     _grp_nodes: TWideStringlist;
@@ -109,7 +108,6 @@ procedure TframeTreeRoster.DrawRoster(online_only: boolean);
 var
     i: integer;
     ri: TJabberRosterItem;
-    // bm: TJabberBookmark;
     p: TJabberPres;
 begin
     // loop through all roster items and draw them
@@ -514,7 +512,6 @@ begin
 
     Result := node_none;
     _cur_ritem := nil;
-    _cur_bm := nil;
     _cur_grp := '';
 
     if (n = nil) then exit;
@@ -523,11 +520,6 @@ begin
     ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
         Result := node_grp;
         _cur_grp := n.Text;
-    end
-
-    else if (TObject(n.Data) is TJabberBookmark) then begin
-        Result := node_bm;
-        _cur_bm := TJabberBookmark(n.Data);
     end
 
     else if (TObject(n.Data) is TJabberRosterItem) then begin
