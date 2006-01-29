@@ -42,9 +42,12 @@ type
     procedure Remove; safecall;
     procedure Set_Nickname(const Value: WideString); safecall;
     procedure Update; safecall;
+    function Get_ContextMenuID: WideString; safecall;
+    procedure Set_ContextMenuID(const Value: WideString); safecall;
     { Protected declarations }
   private
     _ritem: TJabberRosterItem;
+    _menu_id: Widestring;
     
   public
     constructor Create(ritem: TJabberRosterItem);
@@ -56,13 +59,14 @@ type
 implementation
 
 uses
-    Session, JabberID, ComServ;
+    TntMenus, Menus, ExSession, COMRoster, Session, JabberID, ComServ;
 
 {---------------------------------------}
 constructor TExodusRosterItem.Create(ritem: TJabberRosterItem);
 begin
     // this is just a wrapper for the roster item
     _ritem := ritem;
+    _menu_id := '';
 end;
 
 {---------------------------------------}
@@ -150,6 +154,24 @@ end;
 procedure TExodusRosterItem.Update;
 begin
     _ritem.update();
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_ContextMenuID: WideString;
+begin
+    Result := _menu_id;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_ContextMenuID(const Value: WideString);
+var
+    menu: TTntPopupMenu;
+begin
+    menu := ExCOMRoster.findContextMenu(value);
+    if (menu <> nil) then begin
+        _menu_id := Value;
+        _ritem.CustomContext := menu;
+    end;
 end;
 
 initialization

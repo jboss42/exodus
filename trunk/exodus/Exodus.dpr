@@ -194,7 +194,8 @@ uses
   ZlibHandler in '..\jopl\ZlibHandler.pas',
   Bookmarks in '..\jopl\Bookmarks.pas',
   RosterImages in '..\jopl\RosterImages.pas',
-  COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass};
+  COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass},
+  COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass};
 
 {$R *.TLB}
 
