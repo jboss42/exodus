@@ -44,6 +44,22 @@ type
     procedure Update; safecall;
     function Get_ContextMenuID: WideString; safecall;
     procedure Set_ContextMenuID(const Value: WideString); safecall;
+    function Get_Action: WideString; safecall;
+    function Get_ImageIndex: Integer; safecall;
+    function Get_InlineEdit: WordBool; safecall;
+    function Get_Status: WideString; safecall;
+    function Get_Tooltip: WideString; safecall;
+    procedure Set_Action(const Value: WideString); safecall;
+    procedure Set_ImageIndex(Value: Integer); safecall;
+    procedure Set_InlineEdit(Value: WordBool); safecall;
+    procedure Set_Status(const Value: WideString); safecall;
+    procedure Set_Tooltip(const Value: WideString); safecall;
+    procedure fireChange; safecall;
+    function Get_IsContact: WordBool; safecall;
+    procedure Set_IsContact(Value: WordBool); safecall;
+    procedure addGroup(const grp: WideString); safecall;
+    procedure removeGroup(const grp: WideString); safecall;
+    procedure setCleanGroups; safecall;
     { Protected declarations }
   private
     _ritem: TJabberRosterItem;
@@ -172,6 +188,99 @@ begin
         _menu_id := Value;
         _ritem.CustomContext := menu;
     end;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_Action: WideString;
+begin
+    Result := _ritem.Action;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_ImageIndex: Integer;
+begin
+    Result := _ritem.ImageIndex;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_InlineEdit: WordBool;
+begin
+    Result := _ritem.InlineEdit;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_Status: WideString;
+begin
+    Result := _ritem.Status;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_Tooltip: WideString;
+begin
+    Result := _ritem.Tooltip;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_Action(const Value: WideString);
+begin
+    _ritem.Action := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_ImageIndex(Value: Integer);
+begin
+    _ritem.ImageIndex := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_InlineEdit(Value: WordBool);
+begin
+    _ritem.InlineEdit := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_Status(const Value: WideString);
+begin
+    _ritem.Status := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_Tooltip(const Value: WideString);
+begin
+    _ritem.Tooltip := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.fireChange;
+begin
+    MainSession.FireEvent('/roster/item', _ritem.tag, _ritem);
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_IsContact: WordBool;
+begin
+    Result := _ritem.IsContact;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_IsContact(Value: WordBool);
+begin
+    _ritem.IsContact := Value;
+end;
+
+procedure TExodusRosterItem.addGroup(const grp: WideString);
+begin
+    _ritem.AddGroup(grp);
+end;
+
+procedure TExodusRosterItem.removeGroup(const grp: WideString);
+begin
+    _ritem.DelGroup(grp);
+end;
+
+procedure TExodusRosterItem.setCleanGroups;
+begin
+    _ritem.SetCleanGroups();
 end;
 
 initialization
