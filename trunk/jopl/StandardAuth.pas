@@ -148,7 +148,8 @@ begin
     // find out the potential auth kinds for this user
     if (_auth_iq <> nil) then _auth_iq.Free();
 
-    _auth_iq := TJabberIQ.Create(_session, _session.generateID, AuthGetCallback, 180);
+    _auth_iq := TJabberIQ.Create(_session, _session.generateID, AuthGetCallback,
+        AUTH_TIMEOUT);
     with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'get';
@@ -165,7 +166,8 @@ begin
     // send an iq register
     if (_auth_iq <> nil) then _auth_iq.Free();
 
-    _auth_iq := TJabberIQ.Create(_session, _session.generateID, RegistrationCallback, 180);
+    _auth_iq := TJabberIQ.Create(_session, _session.generateID, RegistrationCallback,
+        AUTH_TIMEOUT);
     with _auth_iq do begin
         Namespace := XMLNS_REGISTER;
         iqType := 'set';
@@ -232,7 +234,8 @@ begin
     dig := qtag.GetFirstTag('digest');
 
     // setup the iq-set
-    _auth_iq := TJabberIQ.Create(_session, _session.generateID, AuthCallback, 180);
+    _auth_iq := TJabberIQ.Create(_session, _session.generateID, AuthCallback,
+        AUTH_TIMEOUT);
     with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'set';

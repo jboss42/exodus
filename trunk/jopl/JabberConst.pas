@@ -24,6 +24,8 @@ uses
     SysUtils, XMLTag, RegExpr;
 
 const
+    AUTH_TIMEOUT = 120;
+    
     XMLNS_AUTH       = 'jabber:iq:auth';
     XMLNS_ROSTER     = 'jabber:iq:roster';
     XMLNS_REGISTER   = 'jabber:iq:register';

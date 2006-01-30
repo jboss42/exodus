@@ -53,6 +53,7 @@ type
         procedure StartDigest();
         procedure StartPlain();
         procedure StartNTLM();
+        procedure StartExternal();
 
     published
         procedure C1Callback(event: string; xml: TXMLTag);
@@ -106,14 +107,21 @@ begin
             ms.Add(mstr);
         end;
 
-        SetLength(preferred, 3);
-        preferred[0] := 'NTLM';
-        preferred[1] := 'DIGEST-MD5';
-        preferred[2] := 'PLAIN';
+        SetLength(preferred, 4);
+        preferred[0] := 'EXTERNAL';
+        preferred[1] := 'NTLM';
+        preferred[2] := 'DIGEST-MD5';
+        preferred[3] := 'PLAIN';
 
         for i := 0 to length(preferred)-1 do begin
             if ms.IndexOf(preferred[i]) <> -1 then begin
-                if (preferred[i] <> 'NTLM') or (_session.Profile.WinLogin) then begin
+                if ((preferred[i] = 'EXTERNAL') and
+                    (_session.Profile.SSL_Cert <> '') and
+                    (_session.SSLEnabled)) then begin
+                    _best_mech := preferred[i];
+                    break;
+                end
+                else if (preferred[i] <> 'NTLM') or (_session.Profile.WinLogin) then begin
                     _best_mech := preferred[i];
                     break;
                 end;
@@ -161,6 +169,8 @@ begin
         StartDigest()
     else if (_best_mech = 'PLAIN') then
         StartPlain()
+    else if (_best_mech = 'EXTERNAL') then
+        StartExternal()
     else
         _session.setAuthenticated(false, nil, false);
 end;
@@ -243,6 +253,21 @@ begin
     FreeAndNil(ms);
 
     a.AddCData(c);
+
+    _session.SendTag(a);
+end;
+
+{---------------------------------------}
+procedure TSASLAuth.StartExternal();
+var
+    a: TXMLTag;
+begin
+    _digest := false;
+    RegCallbacks();
+
+    a := TXMLTag.Create('auth');
+    a.setAttribute('xmlns', XMLNS_XMPP_SASL);
+    a.setAttribute('mechanism', 'EXTERNAL');
 
     _session.SendTag(a);
 end;

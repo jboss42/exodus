@@ -639,7 +639,7 @@ begin
 
             if (_authd) and (not _no_auth) then begin
                 // We are already auth'd, lets bind to our resource
-                biq := TJabberIQ.Create(Self, generateID(), BindCallback);
+                biq := TJabberIQ.Create(Self, generateID(), BindCallback, AUTH_TIMEOUT);
                 biq.Namespace := 'urn:ietf:params:xml:ns:xmpp-bind';
                 biq.qTag.Name := 'bind';
                 biq.qTag.AddBasicTag('resource', Self.Resource);
@@ -719,7 +719,7 @@ begin
             jid.Free();
         end;
 
-        iq := TJabberIQ.Create(Self, generateID(), SessionCallback);
+        iq := TJabberIQ.Create(Self, generateID(), SessionCallback, AUTH_TIMEOUT);
         iq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';
         iq.qTag.Name := 'session';
         iq.iqType := 'set';
