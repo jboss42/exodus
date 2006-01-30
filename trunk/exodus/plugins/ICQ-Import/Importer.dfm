@@ -15,7 +15,7 @@ object frmImport: TfrmImport
   OnCreate = FormCreate
   DesignSize = (
     445
-    407)
+    411)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -124,8 +124,6 @@ object frmImport: TfrmImport
     Top = 144
     Width = 241
     Height = 17
-    Min = 0
-    Max = 100
     Smooth = True
     TabOrder = 7
   end

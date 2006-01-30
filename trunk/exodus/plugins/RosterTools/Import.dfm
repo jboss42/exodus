@@ -17,7 +17,7 @@ object frmImport: TfrmImport
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 257
+    Top = 261
     Width = 401
     Height = 30
     Align = alBottom
@@ -47,7 +47,7 @@ object frmImport: TfrmImport
     Left = 0
     Top = 0
     Width = 401
-    Height = 257
+    Height = 261
     Align = alClient
     Checkboxes = True
     Columns = <

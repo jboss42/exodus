@@ -12,16 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/29/2006 1:18:14 PM from Type Library described below.
+// File generated on 1/30/2006 1:43:59 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
-// LIBID: {5BABCA07-A359-4B42-8C03-C5B329E79E31}
+// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
+// LIBID: {85AA8EC3-C4AB-460B-828D-584AD1A44A2A}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -44,7 +44,7 @@ const
   ExodusCOMMajorVersion = 1;
   ExodusCOMMinorVersion = 0;
 
-  LIBID_ExodusCOM: TGUID = '{5BABCA07-A359-4B42-8C03-C5B329E79E31}';
+  LIBID_ExodusCOM: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
 
   IID_IExodusController: TGUID = '{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
