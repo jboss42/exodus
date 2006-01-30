@@ -134,7 +134,7 @@ begin
             if ((ri.Subscription = 'to') or (ri.Subscription = 'both')) then
                 continue;
         end;
-        r.AddItem(jid, name, grp, true);
+        r.Subscribe(jid, name, grp, true);
     end;
 
 end;

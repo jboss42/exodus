@@ -12,17 +12,17 @@ unit ExRosterTools_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 12:28:25 PM from Type Library described below.
+// File generated on 1/30/2006 9:39:42 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb (1)
-// LIBID: {5EA5A7C9-CA6B-4F61-8FF1-95BFAD75397F}
+// LIBID: {D090DD73-F546-4D85-87C8-734F21FEC653}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExRosterTools Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -45,9 +45,9 @@ const
   ExRosterToolsMajorVersion = 1;
   ExRosterToolsMinorVersion = 0;
 
-  LIBID_ExRosterTools: TGUID = '{5EA5A7C9-CA6B-4F61-8FF1-95BFAD75397F}';
+  LIBID_ExRosterTools: TGUID = '{D090DD73-F546-4D85-87C8-734F21FEC653}';
 
-  CLASS_RosterPlugin: TGUID = '{F4DAE94B-7B21-4576-A5D0-573A4E2CBD65}';
+  CLASS_RosterPlugin: TGUID = '{FBFDCB97-FB75-443E-A3D1-3EAFBE08E423}';
 type
 
 // *********************************************************************//

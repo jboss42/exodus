@@ -258,7 +258,7 @@ begin
         // this sets up implicit registration for this transport.
         if (i = 0) then
             exodus.monitorImplicitRegJID(li.SubItems[1], false);
-        r.AddItem(li.SubItems[1], li.SubItems[0], li.Caption, true);
+        r.Subscribe(li.SubItems[1], li.SubItems[0], li.Caption, true);
     end;
     r._Release();
 end;

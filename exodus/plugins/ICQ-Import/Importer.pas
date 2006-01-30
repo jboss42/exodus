@@ -206,7 +206,7 @@ begin
             // this sets up implicit registration for this transport.
             if (i = 0) then
                 exodus.monitorImplicitRegJID(li.SubItems[0], false);
-            r.AddItem(li.SubItems[0], li.Caption, 'ICQ Contacts', true);
+            r.Subscribe(li.SubItems[0], li.Caption, 'ICQ Contacts', true);
         end;
     end;
     r._Release();

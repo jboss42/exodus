@@ -12,17 +12,17 @@ unit ExImportICQ_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 1:40:42 PM from Type Library described below.
+// File generated on 1/30/2006 9:32:15 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ICQ-Import\ExImportICQ.tlb (1)
-// LIBID: {F02B8DD9-64FB-45ED-B0B4-9B124ED7D4A7}
+// LIBID: {ABFF5177-A3CD-44C7-9005-24BD069C1F5D}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExImportICQ Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -45,9 +45,9 @@ const
   ExImportICQMajorVersion = 1;
   ExImportICQMinorVersion = 0;
 
-  LIBID_ExImportICQ: TGUID = '{F02B8DD9-64FB-45ED-B0B4-9B124ED7D4A7}';
+  LIBID_ExImportICQ: TGUID = '{ABFF5177-A3CD-44C7-9005-24BD069C1F5D}';
 
-  CLASS_ICQImportPlugin: TGUID = '{2D36C7A4-7892-4366-A6D3-3F1565ED1433}';
+  CLASS_ICQImportPlugin: TGUID = '{AF223E4A-369F-4EF3-BC15-A6A26409AA56}';
 type
 
 // *********************************************************************//
