@@ -682,6 +682,7 @@ procedure TeardownSession();
 begin
     // free all of the stuff we created
     // kill all of the auto-responders..
+    OutputDebugString('TeardownSession');
     cleanupResponders();
 
     // Free the Richedit library
@@ -712,9 +713,7 @@ begin
     if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
     if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
     if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
-    {
     if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
-    }
 
 end;
 
@@ -813,6 +812,8 @@ initialization
     end;
 
 finalization
+    TeardownSession();
+
     if (uri_regex <> nil) then
         FreeAndNil(uri_regex);
     if (pair_regex <> nil) then

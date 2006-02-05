@@ -1667,7 +1667,7 @@ end;
 procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     // Free everything else
-    TeardownSession();
+    //TeardownSession();
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
