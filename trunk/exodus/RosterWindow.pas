@@ -196,6 +196,7 @@ type
     procedure lblDeleteClick(Sender: TObject);
     procedure lblModifyClick(Sender: TObject);
     procedure lblNewUserClick(Sender: TObject);
+    procedure treeRosterEndDrag(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -3230,6 +3231,15 @@ begin
             // make sure we're showing the right UI
             ToggleGUI(gui_connected);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterEndDrag(Sender, Target: TObject; X,
+  Y: Integer);
+begin
+    // Disable the auto scroll timer , if not infinite scroll up or down can
+    // happen - DC 09/20/2005
+    autoScroll.Enabled := false;
 end;
 
 initialization
