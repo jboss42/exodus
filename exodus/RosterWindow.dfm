@@ -140,6 +140,7 @@ object frmRosterWindow: TfrmRosterWindow
     OnDragOver = treeRosterDragOver
     OnEdited = treeRosterEdited
     OnEditing = treeRosterEditing
+    OnEndDrag = treeRosterEndDrag
     OnExit = treeRosterExit
     OnExpanded = treeRosterExpanded
     OnKeyPress = treeRosterKeyPress
