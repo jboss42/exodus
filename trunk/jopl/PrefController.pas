@@ -892,6 +892,7 @@ var
     dtop, tmp: TRect;
     mon: TMonitor;
     cp: TPoint;
+    vwidth, vht, i: integer;
 begin
     tmp := Bounds(l, t, w, h);
 
@@ -899,10 +900,16 @@ begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
-    // Get the nearest monitor to the form
-    cp := CenterPoint(tmp);
-    mon := Screen.MonitorFromWindow(form.Handle, mdNearest);
-    dtop := mon.WorkareaRect;
+    // For multiple monitors, make a desktop rect that spans all monitors
+    vwidth := 0;
+    vht := 0;
+    for i := 0 to Screen.MonitorCount - 1 do begin
+        mon := Screen.Monitors[i];
+        vwidth := vwidth + Abs(mon.WorkAreaRect.Right - mon.WorkAreaRect.Left);
+        vht := vht + Abs(mon.WorkAreaRect.Bottom - mon.WorkareaRect.Top);
+    end;
+
+    dtop := Bounds(0, 0, vwidth, vht);
 
     // Make it slightly bigger to acccomodate PtInRect
     dtop.Bottom := dtop.Bottom + 1;
@@ -913,6 +920,9 @@ begin
 
     if (ok = false) then begin
         // center it on the default monitor
+        mon := Screen.MonitorFromWindow(form.Handle, mdNearest);
+        dtop := mon.WorkAreaRect;
+
         cp := CenterPoint(dtop);
         l := cp.x - (w div 2);
         t := cp.y - (h div 2);
