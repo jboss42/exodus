@@ -410,20 +410,6 @@ begin
         // pull out from & ID for all types of events
         from := tag.getAttribute('from');
 
-        if (tag.getAttribute('type') = 'error') then begin
-            tmp_tag := tag.GetFirstTag('error');
-            if (tmp_tag <> nil) then begin
-                str_content := _('ERROR: ') + tmp_tag.Data();
-                ins :=  _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
-                    tmp_tag.getAttribute('code');
-            end
-            else
-                str_content := _('Unknown Error');
-            error := true;
-            ins := ins + _('Original Message was:');
-            _data_list.Insert(0, ins);
-        end;
-
         // Check for delay'd msgs
         delay := tag.QueryXPTag(XP_MSGDELAY);
         if (delay <> nil) then begin
@@ -438,8 +424,24 @@ begin
         _data_list.Clear();
         id := tag.getAttribute('id');
 
+        if (tag.getAttribute('type') = 'error') then begin
+            eType := evt_Message;
+            tmp_tag := tag.GetFirstTag('error');
+            if (tmp_tag <> nil) then begin
+                str_content := _('ERROR: ') + tmp_tag.Data();
+                ins :=  _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
+                    tmp_tag.getAttribute('code');
+            end
+            else
+                str_content := _('Unknown Error');
+            error := true;
+            ins := ins + _(#13#10'Original Message was:');
+            ins := ins + tag.GetBasicText('body');
+            _data_list.Insert(0, ins);
+        end
+
         // Look for various x-tags
-        if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then begin
+        else if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then begin
             // This is a MUC invite
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
