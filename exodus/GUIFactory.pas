@@ -100,9 +100,20 @@ begin
     else if (event = '/session/gui/conference') then begin
         room := StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
             tag.GetBasicText('password'));
+
+        // make sure it's not minimized
+        if (room.WindowState <> wsNormal) then
+            room.WindowState := wsNormal;
+
+        // make sure it's visible
         room.Show();
+
+        // make sure its in front
+        if (not room.Docked) then
+            room.BringToFront();
     end
     else if (event = '/session/gui/contact') then begin
+        // new outgoing message/chat window
         tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
 
         r := MainSession.Prefs.getInt(P_CHAT);
@@ -112,12 +123,25 @@ begin
                 win := StartChat(tmp_jid.jid, tmp_jid.resource, true)
             else
                 win := StartChat(tmp_jid.jid, '', true);
+
+            // make sure it's not minimized
+            if (win.WindowState <> wsNormal) then
+                win.WindowState := wsNormal;
+
+            // make sure it's visible
             win.Show();
+
+            // make sure it's in front
+            if (not win.Docked) then
+                win.BringToFront();
 
             if ((MainSession.Prefs.getBool('expanded')) and
                 (win.TabSheet <> nil) and
                 (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
                 frmExodus.Tabs.ActivePage := win.TabSheet;
+
+            // make sure to put the cursor in the outbound text entry box
+            win.MsgOut.SetFocus();
         end
         else if (r = 1) then
             StartMsg(tmp_jid.jid);
