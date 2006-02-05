@@ -123,7 +123,7 @@ type
     _roster_menus: TWidestringlist;
     _msg_menus: TWidestringList;
     _nextid: longint;
-    _cookie: integer;
+    // XXX: _cookie: integer;
     
   public
     constructor Create();
@@ -469,11 +469,9 @@ begin
             xml := ''
         else
             xml := tag.xml;
-
         plugin.Process(_xpath, event, xml);
     except
         self.Free();
-
     end;
 end;
 
@@ -490,10 +488,22 @@ begin
     _nextid := 0;
 end;
 
+{---------------------------------------}
 procedure TExodusController.Initialize();
 begin
+    (*
+    // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
+
     ComServer.OnLastRelease := lastRelease;
-    OleCheck(RegisterActiveObject(self as IExodusController, CLASS_ExodusController, ACTIVEOBJECT_WEAK, _cookie));
+
+    // This registers Exodus in the Running Object Table (ROT)
+    // so that other apps can use GetObject("Exodus")
+    OleCheck(RegisterActiveObject(self as IExodusController, CLASS_ExodusController,
+        ACTIVEOBJECT_WEAK, _cookie));
+
+    // this makes it so no one can unload us before we are ready
+    OleCheck(CoLockObjectExternal(self as IExodusController, true, true));
+    *)
 end;
 
 {---------------------------------------}
@@ -501,18 +511,20 @@ destructor TExodusController.Destroy();
 begin
     if (_menu_items <> nil) then begin
 
-        //CoLockObjectExternal(self as IExodusController, false, true);
-        OleCheck(CoDisconnectObject(self as IExodusController, 0));
-        OleCheck(RevokeActiveObject(_cookie, nil));
+        OutputDebugString('Destroying TExodusController');
 
-        //OutputDebugString('Destroying TExodusController');
-        
+        (*
+        OleCheck(CoLockObjectExternal(self as IExodusController, false, false));
+        OleCheck(RevokeActiveObject(_cookie, nil));
+        OleCheck(CoDisconnectObject(self as IExodusController, 0));
+        *)
+
         // should we cleanup these menu items???
         FreeAndNil(_menu_items);
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
 
-        //inherited;
+        inherited;
     end;
 end;
 
@@ -646,7 +658,6 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.UnRegisterCallback(callback_id: Integer);
-(*
 var
     idx: integer;
 begin
@@ -655,9 +666,6 @@ begin
         TPluginProxy(proxies.Objects[idx]).Free;
         proxies.Delete(idx);
     end;
-    *)
-begin
-//
 end;
 
 {---------------------------------------}
