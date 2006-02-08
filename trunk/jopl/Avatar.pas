@@ -21,7 +21,7 @@ unit Avatar;
 
 interface
 uses
-    Session, IQ, PNGImage, 
+    Session, IQ, PNGImage,
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
     Types, SysUtils, Classes;
 
@@ -83,6 +83,8 @@ type
         _xp1: TXPLite;
         _xp2: TXPLite;
 
+        _log: TStringlist;
+
     protected
         procedure presCallback(event: string; tag: TXMLTag);
         procedure sessionCallback(event: string; tag: TXMLTag);
@@ -98,6 +100,9 @@ type
         
         function Add(jid: Widestring; a: TAvatar): integer;
         function Find(jid: Widestring): TAvatar;
+        procedure Remove(a: TAvatar);
+
+        procedure Log(tmps: string);
     end;
 
 var
@@ -105,6 +110,9 @@ var
 
 implementation
 uses
+{$ifdef Exodus}
+    //Windows,
+{$endif}
     XMLParser, PrefController, JabberID;
 
 {---------------------------------------}
@@ -433,8 +441,10 @@ end;
 {---------------------------------------}
 procedure TAvatar.fetchCallback(event: string; tag: TXMLTag);
 var
+    tmps: string;
     tmpjid: TJabberID;
     q, d: TXMLTag;
+    old: TAvatar;
 begin
     _iq := nil;
     Pending := false;
@@ -455,7 +465,7 @@ begin
             q := tag.GetFirstTag('vCard');
         if (q = nil) then
             q := tag.GetFirstTag('query');
-            
+
         if (q <> nil) then begin
             d := q.GetFirstTag('PHOTO');
             if (d <> nil) then Parse(d);
@@ -464,7 +474,25 @@ begin
 
     if (Valid) then begin
         tmpjid := TJabberID.Create(jid);
-        Avatars.Add(tmpjid.jid, Self);
+        old := Avatars.Find(tmpjid.jid);
+        if (old = Self) then 
+            // do nothing
+        else if (old <> nil) then begin
+            Avatars.Remove(old);
+            old.Free();
+            Avatars.Add(tmpjid.jid, Self);
+        end
+        else
+            Avatars.Add(tmpjid.jid, Self);
+
+        // Save the cache
+        Avatars.Save();
+
+        {$ifdef Exodus}
+        tmps := 'AVATAR CB: ' + tmpjid.jid + ', HASH: ' + getHash();
+        Avatars.Log(tmps);
+        {$endif}
+
         tmpjid.Free();
         MainSession.FireEvent('/session/avatars', nil);
     end;
@@ -500,6 +528,7 @@ constructor TAvatarCache.Create();
 begin
     inherited Create;
     _cache := TWidestringlist.Create();
+    _log := TStringlist.Create();
 
     _xp1 := TXPLite.Create('/presence/x[@xmlns="jabber:x:avatar"]');
     _xp2 := TXPLite.Create('/presence/x[@xmlns="vcard-temp:x:update"]');
@@ -509,7 +538,21 @@ end;
 destructor  TAvatarCache.Destroy();
 begin
     Clear();
+
+    _cache.Free();
+    _log.Free();
+
+    _xp1.Free();
+    _xp2.Free();
+
     inherited;
+end;
+
+{---------------------------------------}
+procedure TAvatarCache.Log(tmps: string);
+begin
+    //_log.Add(tmps);
+    //_log.SaveToFile('c:\temp\avatars.txt');
 end;
 
 {---------------------------------------}
@@ -531,6 +574,16 @@ begin
     end;
 
     Result := i;
+end;
+
+{---------------------------------------}
+procedure TAvatarCache.Remove(a: TAvatar);
+var
+    idx: integer;
+begin
+    idx := _cache.IndexOfObject(a);
+    if (idx >= 0) then
+        _cache.Delete(idx);
 end;
 
 {---------------------------------------}
@@ -571,6 +624,7 @@ end;
 {---------------------------------------}
 procedure TAvatarCache.presCallback(event: string; tag: TXMLTag);
 var
+    tmps: string;
     fetch: boolean;
     a: TAvatar;
     fjid: TJabberID;
@@ -592,20 +646,30 @@ begin
         // old iq:avatar mode
         hash := x1.GetBasicText('hash');
 
+    // bail if we have no hash value
+    if (Trim(hash) = '') then exit;
+
     assert((x1 <> nil) or (x2 <> nil));
+
+    {$ifdef Exodus}
+    tmps := 'AVATAR: ' + fjid.jid + ', HASH: ' + hash;
+    Log(tmps);
+    {$endif}
 
     a := find(fjid.jid);
     if (a = nil) then begin
         fetch := true;
         a := TAvatar.Create();
+        a.jid := fjid.jid;
         _cache.AddObject(fjid.jid, a);
     end
     else begin
         // compare hashes
         if (a.Pending) then
             fetch := false
-        else if (hash <> a.getHash()) then
+        else if (hash <> a.getHash()) then begin
             fetch := true;
+        end;
     end;
 
     if (fetch) then begin
@@ -630,6 +694,7 @@ end;
 {---------------------------------------}
 procedure TAvatarCache.Load();
 var
+    tmps: string;
     a: TAvatar;
     i: integer;
     jid: Widestring;
@@ -650,13 +715,18 @@ begin
             items := root.QueryTags('item');
             for i := 0 to items.Count - 1 do begin
                 t := items[i];
-                //name := path + '\' + t.GetAttribute('name');
-                name := '"' + t.GetAttribute('name') + '"';
+                name := t.GetAttribute('name');
                 jid := t.GetAttribute('jid');
                 if ((jid <> '') and (name <> '') and (FileExists(name))) then begin
                     a := TAvatar.Create();
                     a.LoadFromFile(name);
+                    a.jid := jid;
                     _cache.AddObject(jid, a);
+                    {$ifdef Exodus}
+                    tmps := 'LOAD: ' + jid + ', HASH: ' + a.getHash();
+                    Log(tmps);
+                    {$endif}
+
                 end;
             end;
             items.Free();
@@ -671,11 +741,9 @@ procedure TAvatarCache.Save();
 var
     i: integer;
     a: TAvatar;
-    jid: Widestring;
     fn, path, name: string;
     root, t: TXMLTag;
     s: TWidestringlist;
-    tmp: TJabberID;
 begin
     path := getUserDir() + 'avatars';
     if (DirectoryExists(path) = false) then
@@ -687,14 +755,11 @@ begin
     root := TXMLTag.Create('cache');
     for i := 0 to _cache.Count - 1 do begin
         a := TAvatar(_cache.Objects[i]);
-        tmp := TJabberID.Create(a.jid);
-        jid := tmp.jid;
-        tmp.Free();
         name := path + '\' + a.getHash();
         a.SaveToFile(name);
         t := root.AddTag('item');
         t.setAttribute('name', name);
-        t.setAttribute('jid', jid);
+        t.setAttribute('jid', _cache[i]);
     end;
 
     s := TWidestringlist.Create();
