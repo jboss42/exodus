@@ -201,7 +201,7 @@ begin
     ri.AddGroup(_('Bookmarks'));
     ri.SetCleanGroups();
 
-    ri.ImageIndex := RosterTreeImages.Find('bookmark');
+    ri.ImageIndex := RosterTreeImages.Find('conference');
     ri.InlineEdit := true;
 
     // setup right click opts for bookmarks

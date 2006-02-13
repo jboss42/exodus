@@ -45,7 +45,7 @@ type
 implementation
 
 uses
-    PrefController, MsgRecv, Room, Bookmark,  
+    RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
@@ -166,14 +166,14 @@ begin
             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
             tmp_jid.Free;
             DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                     chat.Othernick, ico_user)
+                     chat.Othernick, RosterTreeImages.Find('contact'))
         end;
     end
 
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
-        q.LogEvent(e, e.str_content, ico_headline);
+        q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
         if (not q.visible) then q.ShowDefault();
     end
 
@@ -262,7 +262,7 @@ begin
             EnableAdd(tmp_b);
         end;
         DoNotify(nil, 'notify_s10n',
-                 'Subscription from ' + sjid, ico_key);
+                 'Subscription from ' + sjid, RosterTreeImages.Find('key'));
         tmp_jid.Free();
         sub.Show;
     end;

@@ -238,8 +238,8 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.cacheIcons();
 begin
-    _ico_blockoffline := RosterTreeImages.Find('online_blocked');
-    _ico_blocked := RosterTreeImages.Find('blocked');
+    _ico_blockoffline := RosterTreeImages.Find('offline_blocked');
+    _ico_blocked := RosterTreeImages.Find('online_blocked');
     _ico_unknown := RosterTreeImages.Find('unknown');
 end;
 

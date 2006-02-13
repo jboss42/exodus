@@ -52,6 +52,7 @@ procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer
 
 implementation
 uses
+    RosterImages, 
     BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
     Jabber1, PrefController, RiserWindow,
     Room, NodeItem, Roster, MMSystem, Debug, Session;
@@ -128,11 +129,13 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + _(sNotifyOnline), ico_Online)
+        DoNotify(nil, 'notify_online', nick + _(sNotifyOnline),
+            RosterTreeImages.Find('available'))
 
     // someone is going offline
     else if (event = '/presence/offline') then
-        DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline), ico_Offline)
+        DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline),
+            RosterTreeImages.Find('offline'))
 
     // don't display normal presence changes
     else if ((event = '/presence/available') or (event = '/presence/error')

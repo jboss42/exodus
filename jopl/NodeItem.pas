@@ -109,11 +109,6 @@ type
 
         // image handling stuff
         _img_prefix: Widestring;
-        _ico_offline: integer;
-        _ico_away: integer;
-        _ico_xa: integer;
-        _ico_dnd: integer;
-        _ico_online: integer;
 
         function getGroupIndex(idx: integer): Widestring;
         function getDirtyIndex(idx: integer): Widestring;
@@ -563,29 +558,26 @@ end;
 
 {---------------------------------------}
 procedure TJabberRosterItem.setImagePrefix(prefix: Widestring);
-
-    procedure cacheIndexes();
-    begin
-        _ico_offline := RosterTreeImages.Find(_img_prefix + 'offline');
-        _ico_away := RosterTreeImages.Find(_img_prefix + 'away');
-        _ico_xa := RosterTreeImages.Find(_img_prefix + 'xa');
-        _ico_dnd := RosterTreeImages.Find(_img_prefix + 'dnd');
-        _ico_online := RosterTreeImages.Find(_img_prefix + 'available');
-    end;
-
+var
+    offline, away, xa, dnd, chat, online: integer;
 begin
     // set the prefix and cache the images
     _img_prefix := prefix;
 
-    cacheIndexes();
+    offline := RosterTreeImages.Find(_img_prefix + 'offline');
+    away := RosterTreeImages.Find(_img_prefix + 'away');
+    xa := RosterTreeImages.Find(_img_prefix + 'xa');
+    dnd := RosterTreeImages.Find(_img_prefix + 'dnd');
+    chat := RosterTreeImages.Find(_img_prefix + 'chat');
+    online := RosterTreeImages.Find(_img_prefix + 'available');
 
     // make sure we got images
     // TODO: get default icon prefix from prefs
-    if ((_ico_offline = -1) or (_ico_away = -1) or (_ico_xa = -1) or
-        (_ico_dnd = -1) or (_ico_online = -1)) then begin
-        // XXX: log failure to get indexes
+    if ((offline = -1) or (away = -1) or (xa = -1) or
+        (dnd = -1) or (chat = -1) or (online = -1)) then begin
+        // XXX: log failure to get all images
+        // TODO: default image prefix from prefs
         _img_prefix := '';
-        cacheIndexes();
     end;
 
 end;
@@ -594,15 +586,17 @@ end;
 procedure TJabberRosterItem.setPresenceImage(show: Widestring);
 begin
     if (show = 'offline') then
-        ImageIndex := _ico_offline
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'offline')
     else if (show = 'away') then
-        ImageIndex := _ico_away
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'away')
     else if (show = 'xa') then
-        ImageIndex := _ico_xa
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'xa')
     else if (show = 'dnd') then
-        ImageIndex := _ico_dnd
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'dnd')
+    else if (show = 'chat') then
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'chat')
     else
-        ImageIndex := _ico_online;
+        ImageIndex := RosterTreeImages.Find(_img_prefix + 'available');
 end;
 
 {---------------------------------------}

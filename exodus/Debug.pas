@@ -99,6 +99,7 @@ implementation
 
 {$R *.dfm}
 uses
+    RosterImages, 
     MsgDisplay, GnuGetText, Signals, Session, JabberUtils, ExUtils,  Jabber1;
 
 var
@@ -169,7 +170,7 @@ begin
     // make sure the output is showing..
     inherited;
 
-    ImageIndex := ico_render;
+    ImageIndex := RosterTreeImages.Find('filter');
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;

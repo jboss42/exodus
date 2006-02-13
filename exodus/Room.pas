@@ -343,6 +343,7 @@ uses
     RiserWindow,
     RoomAdminList,
     Roster,
+    RosterImages, 
     RosterWindow,
     Session,
     Signals,
@@ -425,7 +426,7 @@ begin
     
     if (f.TabSheet <> nil) then begin
         frmExodus.Tabs.ActivePage := f.TabSheet;
-        f.TabSheet.ImageIndex := ico_conf;
+        f.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
     end;
     
     Result := f;
@@ -511,13 +512,13 @@ begin
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
             DoNotify(Self, _notify[1],
                      _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
-                     ico_conf, 'notify_keyword');
+                     RosterTreeImages.Find('conference'), 'notify_keyword');
             Msg.highlight := true;
         end
         else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) then
             DoNotify(Self, _notify[0],
                      _(sNotifyActivity) + Self.Caption,
-                     ico_conf, 'notify_roomactivity');
+                     RosterTreeImages.Find('conference'), 'notify_roomactivity');
     end;
 
     if (Msg.Subject <> '') then begin
@@ -1833,7 +1834,7 @@ begin
 
     inherited;
     if (Docked and (Self.TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := ico_conf;
+        Self.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
 
     btnClose.Visible := Docked;
 
@@ -2269,12 +2270,12 @@ begin
     // get the data for this person..
     rm := TRoomMember(_rlist[Item.Index]);
     TTntListItem(Item).Caption := rm.Nick;
-    if (rm.show = _(sBlocked)) then item.ImageIndex := ico_blocked
-    else if rm.show = 'away' then Item.ImageIndex := 2
-    else if rm.show = 'xa' then Item.ImageIndex := 10
-    else if rm.show = 'dnd' then Item.ImageIndex := 3
-    else if rm.show = 'chat' then Item.ImageIndex := 4
-    else Item.ImageIndex := 1;
+    if (rm.show = _(sBlocked)) then item.ImageIndex := RosterTreeImages.Find('online_blocked')
+    else if rm.show = 'away' then Item.ImageIndex := RosterTreeImages.Find('away')
+    else if rm.show = 'xa' then Item.ImageIndex := RosterTreeImages.Find('xa')
+    else if rm.show = 'dnd' then Item.ImageIndex := RosterTreeImages.Find('dnd')
+    else if rm.show = 'chat' then Item.ImageIndex := RosterTreeImages.Find('chat')
+    else Item.ImageIndex := RosterTreeImages.Find('available');
 
 end;
 

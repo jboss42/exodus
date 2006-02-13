@@ -60,6 +60,8 @@ type
     procedure addGroup(const grp: WideString); safecall;
     procedure removeGroup(const grp: WideString); safecall;
     procedure setCleanGroups; safecall;
+    function Get_ImagePrefix: WideString; safecall;
+    procedure Set_ImagePrefix(const Value: WideString); safecall;
     { Protected declarations }
   private
     _ritem: TJabberRosterItem;
@@ -268,19 +270,34 @@ begin
     _ritem.IsContact := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterItem.addGroup(const grp: WideString);
 begin
     _ritem.AddGroup(grp);
 end;
 
+{---------------------------------------}
 procedure TExodusRosterItem.removeGroup(const grp: WideString);
 begin
     _ritem.DelGroup(grp);
 end;
 
+{---------------------------------------}
 procedure TExodusRosterItem.setCleanGroups;
 begin
     _ritem.SetCleanGroups();
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_ImagePrefix: WideString;
+begin
+    Result := _ritem.ImagePrefix;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_ImagePrefix(const Value: WideString);
+begin
+    _ritem.ImagePrefix := Value;
 end;
 
 initialization

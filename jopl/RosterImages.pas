@@ -45,6 +45,7 @@ type
         procedure Remove(ImageIndex: integer); overload;
         procedure Remove(id: Widestring); overload;
         function  Find(id: Widestring): integer;
+        procedure GetIcon(index: integer; icon: TIcon);
     end;
 
 var
@@ -80,7 +81,7 @@ begin
     _imglist := images;
 
     {$ifdef Exodus}
-    _ids.Add('offline');
+    _ids.Add('offline');            // 0
     _ids.Add('available');
     _ids.Add('away');
     _ids.Add('dnd');
@@ -98,13 +99,13 @@ begin
     _ids.Add('note');
     _ids.Add('key_old');
     _ids.Add('flowchart');
-    _ids.Add('newsitem_old');
+    _ids.Add('newsitem');
     _ids.Add('image');
     _ids.Add('contact');
-    _ids.Add('bookmark');
+    _ids.Add('conference');
     _ids.Add('service');
     _ids.Add('newitem');
-    _ids.Add('keyword');
+    _ids.Add('key');
     _ids.Add('filter');
     _ids.Add('contact_folder');
     _ids.Add('open_group');
@@ -196,6 +197,12 @@ end;
 function TRosterImages.Find(id: Widestring): integer;
 begin
     Result := _ids.IndexOf(id);
+end;
+
+{---------------------------------------}
+procedure TRosterImages.GetIcon(index: integer; icon: TIcon);
+begin
+    _imglist.GetIcon(index, icon);
 end;
 
 initialization
