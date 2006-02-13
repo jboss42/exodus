@@ -107,12 +107,13 @@ end;
 {---------------------------------------}
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
-    iq: TXMLTag;
     ritem: TJabberRosterItem;
 begin
     // Handle removing from a single grp
+    ritem := MainSession.roster.Find(jid);
+    assert(ritem <> nil);
+    
     if (optMove.Checked) then begin
-        ritem := MainSession.roster.Find(jid);
         if ((ritem <> nil) and (ritem.IsInGroup(sel_grp))) then begin
             ritem.DelGroup(sel_grp);
             ritem.update();
@@ -122,28 +123,17 @@ begin
     // Really remove or unsub
     else if ((chkRemove1.Checked) and (chkRemove2.Checked)) then begin
         // send a subscription='remove'
-        iq := TXMLTag.Create('iq');
-        with iq do begin
-            setAttribute('type', 'set');
-            setAttribute('id', MainSession.generateID);
-            with AddTag('query') do begin
-                setAttribute('xmlns', XMLNS_ROSTER);
-                with AddTag('item') do begin
-                    setAttribute('jid', jid);
-                    setAttribute('subscription', 'remove');
-                end;
-            end;
-        end;
-        MainSession.SendTag(iq);
+        ritem.Remove();
     end
     else if chkRemove1.Checked then begin
         // send an unsubscribe
-        SendUnSubscribe(lblJID.Caption, MainSession);
+        SendUnSubscribe(ritem.Jid.full, MainSession);
     end
     else if chkRemove2.Checked then begin
         // send an unsubscribed
-        SendUnSubscribed(lblJID.Caption, MainSession);
+        SendUnSubscribed(ritem.jid.full, MainSession);
     end;
+
     Self.Close;
 end;
 

@@ -31,14 +31,14 @@ uses
 type
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
-    TRosterListener = class(TSignalListener)
+    TRosterListener = class(TPacketListener)
     public
     end;
 
-    TRosterSignal = class(TSignal)
+    TRosterSignal = class(TPacketSignal)
     public
         procedure Invoke(event: string; tag: TXMLTag; ritem: TJabberRosterItem = nil); overload;
-        function addListener(callback: TRosterEvent): TRosterListener; overload;
+        function addListener(callback: TRosterEvent; xplite: string): TRosterListener; overload;
     end;
 
     TJabberRoster = class(TWideStringList)
@@ -50,16 +50,11 @@ type
         _ico_blockoffline: integer;
         _ico_blocked: integer;
         _ico_unknown: integer;
-        _ico_offline: integer;
-        _ico_away: integer;
-        _ico_xa: integer;
-        _ico_dnd: integer;
-        _ico_online: integer;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
-        procedure UpdateCallback(event: string; tag: TXMLTag);
-        procedure RemoveCallback(event: string; tag: TXMLTag);
+        procedure UpdateCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+        procedure RemoveCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
         procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
         procedure PrefsCallback(event: string; tag: TXMLTag);
 
@@ -74,6 +69,8 @@ type
         function setupOfflineGrp(): TJabberGroup;
         function setupUnfiledGrp(): TJabberGroup;
         function setupMyResourcesGrp(): TJabberGroup;
+
+        procedure cacheIcons();
 
     public
         ActiveItem: TJabberRosterItem;
@@ -185,8 +182,8 @@ begin
     _js := js;
     with TJabberSession(_js) do begin
         RegisterCallback(Callback, '/packet/iq/query[@xmlns="jabber:iq:roster"]');
-        RegisterCallback(UpdateCallback, '/roster/item/update');
-        RegisterCallback(RemoveCallback, '/roster/item/remove');
+        RegisterCallback(UpdateCallback, '/roster/update/item[@xmlns="jabber:iq:roster"]');
+        RegisterCallback(RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
         RegisterCallback(PrefsCallback, '/session/prefs');
         _pres_cb := RegisterCallback(presCallback);
     end;
@@ -239,12 +236,22 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberRoster.cacheIcons();
+begin
+    _ico_blockoffline := RosterTreeImages.Find('online_blocked');
+    _ico_blocked := RosterTreeImages.Find('blocked');
+    _ico_unknown := RosterTreeImages.Find('unknown');
+end;
+
+{---------------------------------------}
 procedure TJabberRoster.PrefsCallback(event: string; tag: TXMLTag);
 var
     offline_grp: boolean;
     go: TJabberGroup;
 begin
     // setup the offline group
+    cacheIcons();
+    
     offline_grp := TJabberSession(_js).Prefs.getBool('roster_offline_group');
     go := getGroup(_('Offline'));
     if ((offline_grp) and (go = nil)) then begin
@@ -260,14 +267,7 @@ var
     js: TJabberSession;
     f_iq: TJabberIQ;
 begin
-    _ico_blockoffline := RosterTreeImages.Find('online_blocked');
-    _ico_blocked := RosterTreeImages.Find('blocked');
-    _ico_unknown := RosterTreeImages.Find('unknown');
-    _ico_offline := RosterTreeImages.Find('offline');
-    _ico_away := RosterTreeImages.Find('away');
-    _ico_xa := RosterTreeImages.Find('xa');
-    _ico_dnd := RosterTreeImages.Find('dnd');
-    _ico_online := RosterTreeImages.Find('available');
+    cacheIcons();
 
     setupOfflineGrp();
     setupUnfiledGrp();
@@ -361,17 +361,19 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.UpdateCallback(event: string; tag: TXMLTag);
+procedure TJabberRoster.UpdateCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
 var
     ri: TJabberRosterItem;
-    item, iq: TXMLTag;
+    tagitem, item, iq: TXMLTag;
     g: integer;
 begin
     // update this roster item if it's a jabber:iq:roster item
-    if (tag.GetAttribute('xmlns') <> XMLNS_ROSTER) then exit;
-
-    ri := Self.Find(tag.GetAttribute('jid'));
+    tagitem := tag.GetFirstTag('item');
+    ri := Self.Find(tagitem.GetAttribute('jid'));
     if (ri = nil) then exit;
+
+    // make sure it's the same one passed to us in the event
+    assert(ri = ritem);
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
@@ -396,15 +398,17 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.RemoveCallback(event: string; tag: TXMLTag);
+procedure TJabberRoster.RemoveCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
 var
     ri: TJabberRosterItem;
-    item, iq: TXMLTag;
+    tagitem, item, iq: TXMLTag;
 begin
-    if (tag.GetAttribute('xmlns') <> XMLNS_ROSTER) then exit;
-
-    ri := Self.Find(tag.GetAttribute('jid'));
+    tagitem := tag.GetFirstTag('item');
+    ri := Self.Find(tagitem.GetAttribute('jid'));
     if (ri = nil) then exit;
+
+    // make sure it's the same one passed to us in the event
+    assert(ri = ritem);
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
@@ -532,17 +536,9 @@ begin
     else if (ri.ask = 'subscribe') then
         ri.ImageIndex := _ico_Unknown
     else if p = nil then
-        ri.ImageIndex := _ico_Offline
-    else begin
-        if p.Show = 'away' then
-            ri.ImageIndex := _ico_Away
-        else if p.Show = 'xa' then
-            ri.ImageIndex := _ico_XA
-        else if p.Show = 'dnd' then
-            ri.ImageIndex := _ico_DND
-        else
-            ri.ImageIndex := _ico_Online
-    end;
+        ri.setPresenceImage('offline')
+    else
+        ri.setPresenceImage(p.show);
 
     if (p = nil) then
         ri.Tooltip := ri.jid.full + ': ' + _('Offline')
@@ -815,7 +811,7 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.ParseFullRoster(event: string; tag: TXMLTag);
 var
-    ct, etag: TXMLTag;
+    rt, ct, etag: TXMLTag;
     ritems: TXMLTagList;
     idx, i: integer;
     ri: TJabberRosterItem;
@@ -847,15 +843,24 @@ begin
         // this will happen if people are not using
         // mod_roster, but using mod_groups or something
         // similar
-        s.FireEvent('/roster/start', nil);
-        s.FireEvent('/roster/end', nil);
+        rt := TXMLTag.Create('start');
+        s.FireEvent('/roster/start', rt, TJabberRosterItem(nil));
+        rt.Free();
+
+        rt := TXMLTag.Create('end');
+        s.FireEvent('/roster/end', rt, TJabberRosterItem(nil));
+        rt.Free();
+        
         exit;
     end
 
     else begin
         // fire off the start event..
         // then cycle thru all the item tags
-        s.FireEvent('/roster/start', tag);
+        rt := TXMLTag.Create('start');
+        s.FireEvent('/roster/start', rt, TJabberRosterItem(nil));
+        rt.Free();
+
         ritems := tag.QueryXPTags('/iq/query/item');
         for i := 0 to ritems.Count - 1 do begin
             ct := ritems.Tags[i];
@@ -874,7 +879,10 @@ begin
         end;
 
         ritems.Free();
-        s.FireEvent('/roster/end', nil);
+
+        rt := TXMLTag.Create('end');
+        s.FireEvent('/roster/end', rt, TJabberRosterItem(nil));
+        rt.Free();
     end;
 end;
 
@@ -921,18 +929,21 @@ begin
     Self.Free();
 end;
 
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function TRosterSignal.addListener(callback: TRosterEvent): TRosterListener;
+function TRosterSignal.addListener(callback: TRosterEvent; xplite: string): TRosterListener;
 var
     l: TRosterListener;
+    xps: string;
 begin
     l := TRosterListener.Create();
     l.callback := TMethod(callback);
-    inherited addListener('', l);
+
+    xps := Copy(xplite, _len_event + 1, length(xplite) - _len_event);
+    l.xp.Parse(xps);
+
+    inherited addListener(xplite, l);
     Result := l;
 end;
 
@@ -940,11 +951,33 @@ end;
 procedure TRosterSignal.Invoke(event: string; tag: TXMLTag; ritem: TJabberRosterItem = nil);
 var
     i: integer;
-    l: TRosterListener;
-    cmp, e: string;
-    sig: TRosterEvent;
+    rl: TRosterListener;
+    xp: TXPLite;
+    re: TRosterEvent;
 begin
     // dispatch this to all interested listeners
+    // This is almost identical to TPacketSignal.Invoke()
+    inc(_invoking);
+    for i := 0 to Self.Count - 1 do begin
+        rl := TRosterListener(Self.Objects[i]);
+        xp := rl.XPLite;
+        if xp.Compare(tag) then begin
+            re := TRosterEvent(rl.Callback);
+            try
+                re(event, tag, ritem);
+            except
+                on e: Exception do
+                    Dispatcher.handleException(Self, e, rl, event, tag);
+            end;
+        end;
+    end;
+    dec(_invoking);
+
+    if (change_list.Count > 0) and (_invoking = 0) then
+        Self.processChangeList();
+
+
+    (*
     cmp := Lowercase(Trim(event));
     inc(_invoking);
     for i := 0 to Self.Count - 1 do begin
@@ -975,6 +1008,7 @@ begin
 
     if (change_list.Count > 0) and (_invoking = 0) then
         Self.processChangeList();
+    *)
 
 end;
 

@@ -107,10 +107,19 @@ type
 
         _tag: TXMLTag;
 
+        // image handling stuff
+        _img_prefix: Widestring;
+        _ico_offline: integer;
+        _ico_away: integer;
+        _ico_xa: integer;
+        _ico_dnd: integer;
+        _ico_online: integer;
+
         function getGroupIndex(idx: integer): Widestring;
         function getDirtyIndex(idx: integer): Widestring;
         procedure setupDirty();
         procedure setTag(new_tag: TXMLTag);
+        procedure setImagePrefix(prefix: Widestring);
 
     public
         // new bits for roster items
@@ -130,9 +139,17 @@ type
         function IsOnline: boolean;
         function getText(): Widestring; override;
 
+        // backwards compatibility for <item> tag lookups
+        function Ask(): Widestring;
+        function Subscription(): Widestring;
+
         procedure Remove;
         procedure Update;
 
+        // Presence based image stuff
+        procedure setPresenceImage(show: Widestring);
+
+        // Group management stuff
         function IsInGroup(grp: Widestring): boolean;
         function GroupCount: integer;
         function DirtyGroupCount: integer;
@@ -148,21 +165,19 @@ type
         property Group[index: integer]: Widestring read getGroupIndex;
         property DirtyGroup[index: integer]: Widestring read getDirtyIndex;
 
+        // Properties
         property Jid: TJabberID read _jid;
         property Data: TObject read _data write _data;
 
-        // backwards compatibility for <item> tag lookups
-        function Ask(): Widestring;
-        function Subscription(): Widestring;
-
         property Tag: TxMLTag read _tag write setTag;
+        property ImagePrefix: Widestring read _img_prefix write setImagePrefix;
     end;
 
     function NodeTypeLevel(node: TObject): integer;
 
 implementation
 uses
-    JabberConst, Session, XMLUtils;
+    RosterImages, JabberConst, Session, XMLUtils;
 
 const
     DEFAULT_SORT = 100;
@@ -439,6 +454,10 @@ begin
 
     InlineEdit := false;
     Removed := false;
+
+    // initialize to default icons
+    // TODO: get default icon set prefix from prefs
+    setImagePrefix('');
 end;
 
 {---------------------------------------}
@@ -465,15 +484,27 @@ end;
 
 {---------------------------------------}
 procedure TJabberRosterItem.Update;
+var
+    update: TXMLTag;
 begin
-    MainSession.FireEvent('/roster/item/update', tag);
+    // this get fired by the GUI layers when the item has changed
+    update := TXMLTag.Create('update');
+    update.AddTag(TXMLTag.Create(tag));
+    MainSession.FireEvent('/roster/item', update, self);
+    update.Free();
 end;
 
 {---------------------------------------}
 procedure TJabberRosterItem.remove;
+var
+    remove: TXMLTag;
 begin
+    // this get fired by the GUI layers when the item has been removed
     // remove this roster item from my roster;
-    MainSession.FireEvent('/roster/item/remove', tag);
+    remove := TXMLTag.Create('remove');
+    remove.AddTag(TXMLTag.Create(tag));
+    MainSession.FireEvent('/roster/remove', remove, self);
+    remove.Free();
 end;
 
 {---------------------------------------}
@@ -528,6 +559,50 @@ begin
     if (_tag <> nil) then
         _tag.Free();
     _tag := new_tag;
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.setImagePrefix(prefix: Widestring);
+
+    procedure cacheIndexes();
+    begin
+        _ico_offline := RosterTreeImages.Find(_img_prefix + 'offline');
+        _ico_away := RosterTreeImages.Find(_img_prefix + 'away');
+        _ico_xa := RosterTreeImages.Find(_img_prefix + 'xa');
+        _ico_dnd := RosterTreeImages.Find(_img_prefix + 'dnd');
+        _ico_online := RosterTreeImages.Find(_img_prefix + 'available');
+    end;
+
+begin
+    // set the prefix and cache the images
+    _img_prefix := prefix;
+
+    cacheIndexes();
+
+    // make sure we got images
+    // TODO: get default icon prefix from prefs
+    if ((_ico_offline = -1) or (_ico_away = -1) or (_ico_xa = -1) or
+        (_ico_dnd = -1) or (_ico_online = -1)) then begin
+        // XXX: log failure to get indexes
+        _img_prefix := '';
+        cacheIndexes();
+    end;
+
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.setPresenceImage(show: Widestring);
+begin
+    if (show = 'offline') then
+        ImageIndex := _ico_offline
+    else if (show = 'away') then
+        ImageIndex := _ico_away
+    else if (show = 'xa') then
+        ImageIndex := _ico_xa
+    else if (show = 'dnd') then
+        ImageIndex := _ico_dnd
+    else
+        ImageIndex := _ico_online;
 end;
 
 {---------------------------------------}
