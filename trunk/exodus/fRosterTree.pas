@@ -76,7 +76,7 @@ implementation
 
 {$R *.dfm}
 uses
-    XMLUtils, JabberUtils, ExUtils,  Jabber1, Session;
+    RosterImages, XMLUtils, JabberUtils, ExUtils,  Jabber1, Session;
 
 {---------------------------------------}
 procedure TframeTreeRoster.Initialize();
@@ -332,8 +332,8 @@ begin
         if (cur_grp = 'Offline') then begin
             if (_offline = nil) then begin
                 _offline := treeRoster.Items.AddChild(nil, 'Offline');
-                _offline.ImageIndex := ico_right;
-                _offline.SelectedIndex := ico_right;
+                _offline.ImageIndex := RosterTreeImages.Find('closed_group');
+                _offline.SelectedIndex := _offline.ImageIndex;
             end;
             grp_node := _offline;
         end
@@ -377,32 +377,7 @@ begin
 
         cur_node.Text := tmps;
         cur_node.Data := ritem;
-
-        // setup the image
-        if p = nil then
-            cur_node.ImageIndex := ico_Offline
-        else begin
-            if p.Priority < 0 then begin
-                if p.Show = 'away' then
-                    cur_node.ImageIndex := ico_away_minus_one
-                else if p.Show = 'xa' then
-                    cur_node.ImageIndex := ico_xa_minus_one
-                else if p.Show = 'dnd' then
-                    cur_node.ImageIndex := ico_dnd_minus_one
-                else
-                    cur_node.ImageIndex := ico_online_minus_one
-            end
-            else begin
-                if p.Show = 'away' then
-                    cur_node.ImageIndex := ico_Away
-                else if p.Show = 'xa' then
-                    cur_node.ImageIndex := ico_XA
-                else if p.Show = 'dnd' then
-                    cur_node.ImageIndex := ico_DND
-                else
-                    cur_node.ImageIndex := ico_Online
-            end;
-        end;
+        cur_node.ImageIndex := ritem.ImageIndex;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
         if (exp_grpnode) then grp_node.Expand(true);
@@ -433,8 +408,8 @@ begin
     cur_grp := _grp_nodes[grp_idx];
     grp_node := treeRoster.Items.AddChild(nil, cur_grp);
     _grp_nodes.Objects[grp_idx] := grp_node;
-    grp_node.ImageIndex := ico_Right;
-    grp_node.SelectedIndex := ico_Right;
+    grp_node.ImageIndex := RosterTreeImages.Find('closed_group');
+    grp_node.SelectedIndex := grp_node.ImageIndex;
     grp_node.Data := nil;
     result := grp_node;
 end;
@@ -472,8 +447,8 @@ procedure TframeTreeRoster.treeRosterCollapsed(Sender: TObject;
   Node: TTreeNode);
 begin
     if (Node.Level = 0) then begin
-        Node.ImageIndex := ico_Right;
-        Node.SelectedIndex := ico_Right;
+        Node.ImageIndex := RosterTreeImages.Find('closed_group');
+        Node.SelectedIndex := Node.ImageIndex;
 
         if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
             _collapsed_grps.Add(Node.Text);
@@ -488,8 +463,8 @@ var
     i: integer;
 begin
     if Node.Level = 0 then begin
-        Node.ImageIndex := ico_Down;
-        Node.SelectedIndex := ico_Down;
+        Node.ImageIndex := RosterTreeImages.Find('open_group');
+        Node.SelectedIndex := Node.ImageIndex;
         repeat
             i := _collapsed_grps.IndexOf(node.Text);
             if (i >= 0) then begin

@@ -143,6 +143,7 @@ implementation
 
 {$R *.dfm}
 uses
+    RosterImages, 
     JabberUtils, ExUtils,  Jabber1, JabberConst, JabberID, Presence, InputPassword,
     GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
 const
@@ -298,7 +299,8 @@ begin
     xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
     xfer_lock.Release();
-    DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
+    DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps,
+        RosterTreeImages.Find('service'));
 end;
 
 {---------------------------------------}
@@ -372,7 +374,8 @@ begin
     xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
     xfer_lock.Release();
-    DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
+    DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps,
+        RosterTreeImages.Find('service'));
 end;
 
 {---------------------------------------}

@@ -325,7 +325,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
-    fProfile, ConnDetails, NewUser, 
+    fProfile, ConnDetails, NewUser, RosterImages,  
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
@@ -1386,8 +1386,8 @@ function TfrmRosterWindow.GetSpecialGroup(var node: TTreeNode; var grp: TJabberG
 begin
     if (node = nil) then begin
         node := treeRoster.Items.AddChild(nil, caption);
-        node.ImageIndex := ico_right;
-        node.SelectedIndex := ico_right;
+        node.ImageIndex := RosterTreeImages.Find('closed_group');
+        node.SelectedIndex := node.ImageIndex;
         grp := MainSession.Roster.addGroup(caption);
         node.Data := grp;
     end;
@@ -1447,8 +1447,8 @@ begin
         end;
 
         p := grp_node;
-        grp_node.ImageIndex := ico_Right;
-        grp_node.SelectedIndex := ico_Right;
+        grp_node.ImageIndex := RosterTreeImages.Find('closed_group');
+        grp_node.SelectedIndex := grp_node.ImageIndex;
         inc(n);
     until (n = grp.NestLevel);
 
@@ -1553,27 +1553,27 @@ begin
     // display this show type
     if show = 'chat' then begin
         lblStatusLink.Caption := _(sRosterChat);
-        ChangeStatusImage(ico_Chat);
+        ChangeStatusImage(RosterTreeImages.Find('chat'));
     end
     else if show = 'away' then begin
         lblStatusLink.Caption := _(sRosterAway);
-        ChangeStatusImage(ico_Away);
+        ChangeStatusImage(RosterTreeImages.Find('away'));
     end
     else if show = 'xa' then begin
         lblStatusLink.Caption := _(sRosterXA);
-        ChangeStatusImage(ico_XA);
+        ChangeStatusImage(RosterTreeImages.Find('xa'));
     end
     else if show = 'dnd' then begin
         lblStatusLink.Caption := _(sRosterDND);
-        ChangeStatusImage(ico_DND);
+        ChangeStatusImage(RosterTreeImages.Find('dnd'));
     end
     else if show = 'offline' then begin
         lblStatusLink.Caption := _(sRosterOffline);
-        ChangeStatusImage(ico_Offline);
+        ChangeStatusImage(RosterTreeImages.Find('offline'));
     end
     else begin
         lblStatusLink.Caption := _(sRosterAvail);
-        ChangeStatusImage(ico_Online);
+        ChangeStatusImage(RosterTreeImages.Find('available'));
     end;
 
     s := Lowercase(MainSession.Status);
@@ -1628,8 +1628,8 @@ begin
     if (Node.Data = nil) then exit;
 
     if (TObject(Node.Data) is TJabberGroup) then begin
-        Node.ImageIndex := ico_Right;
-        Node.SelectedIndex := ico_Right;
+        Node.ImageIndex := RosterTreeImages.Find('closed_group');
+        Node.SelectedIndex := Node.ImageIndex;
         if (TObject(Node.Data) is TJabberGroup) then
             go := TJabberGroup(Node.Data)
         else
@@ -1653,8 +1653,8 @@ var
 begin
     if (TObject(Node.Data) is TJabberGroup) then begin
         go := TJabberGroup(Node.Data);
-        Node.ImageIndex := ico_Down;
-        Node.SelectedIndex := ico_Down;
+        Node.ImageIndex := RosterTreeImages.Find('open_group');
+        Node.SelectedIndex := Node.ImageIndex;
         dirty := false;
         repeat
             i := _collapsed_grps.IndexOf(go.Fullname);
@@ -2494,7 +2494,11 @@ begin
         end
         else begin
             // this is a group
-            if (Node.Expanded) then ico := ico_Down else ico := ico_Right;
+            if (Node.Expanded) then
+                ico := RosterTreeImages.Find('open_group')
+            else
+                ico := RosterTreeImages.Find('closed_group');
+
             frmExodus.ImageList2.Draw(treeRoster.Canvas,
                 nRect.Left + treeRoster.Indent,
                 nRect.Top + top_margin, ico);
@@ -2861,7 +2865,6 @@ begin
     if (getNodeType(Node) = node_ritem) then begin
         _cur_ritem.Text := S;
 
-        // XXX: is this right for an update to a roster item?
         update := TXMLTag.Create('update');
         update.AddTag(TXMLTag.Create(_cur_ritem.tag));
         MainSession.FireEvent('/roster/update', update, _cur_ritem);

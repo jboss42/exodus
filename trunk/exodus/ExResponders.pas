@@ -144,7 +144,7 @@ uses
     IdException, JclDebug, JclHookExcept, TypInfo,
     {$endif}
 
-    COMController, ExSession, GnuGetText,
+    RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
 
@@ -365,7 +365,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sVersion),
                                           getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
     win := '';
     WindowsVersion(win);
@@ -417,7 +417,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sTime),
                                           getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
     r := TXMLTag.Create('iq');
     res := GetTimeZoneInformation(tzi);
@@ -459,7 +459,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                                           getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
     // Respond to last queries
     r := TXMLTag.Create('iq');
@@ -495,7 +495,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                 getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
     url := tag.QueryXPData('/iq/confirm@url');
     if MessageBoxW(0, PWideChar(WideFormat(_(sConfirmationDialog), [url])),
@@ -550,7 +550,7 @@ begin
         DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                 getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
         // Respond to last queries
         r := TXMLTag.Create('iq');
@@ -595,7 +595,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
                                           getNick(tag.getAttribute('from'))]),
-             ico_info);
+             RosterTreeImages.Find('info'));
 
     r := TXMLTag.Create('iq');
     with r do begin
@@ -711,7 +711,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
-        ico_info);
+        RosterTreeImages.Find('info'));
 
     _session.SendTag(r);
 end;
@@ -905,7 +905,7 @@ begin
     DoNotify(nil, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
-        ico_info);
+        RosterTreeImages.Find('info'));
 
     _session.SendTag(r);
 end;

@@ -82,7 +82,7 @@ function ParseLastEvent(iq: TXMLTag): Widestring;
 implementation
 uses
     // Exodus/JOPL stuff
-    GnuGetText,
+    RosterImages, GnuGetText,
     JabberUtils, ExUtils,  JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
     MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
 
@@ -147,7 +147,11 @@ begin
     end;
 
     evt_Message: begin
-        if (e.error) then img_idx := ico_error else img_idx := 18;
+        if (e.error) then
+            img_idx := RosterTreeImages.Find('error')
+        else
+            img_idx := RosterTreeImages.Find('newsitem');
+            
         msg := e.str_content;
         DoNotify(nil, 'notify_normalmsg',
                  _(sMsgMessage) + tmp_jid.jid, img_idx);

@@ -801,6 +801,10 @@ begin
     // setup our tray icon
     _tray_icon := TIcon.Create();
 
+    // setup our master image list
+    RosterTreeImages.Clear();
+    RosterTreeImages.setImageList(Imagelist2);
+
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
     if (ExStartup.testaa) then
@@ -1306,9 +1310,6 @@ begin
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
-        RosterTreeImages.Clear();
-        RosterTreeImages.setImageList(Imagelist2);
-        
         Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
         Tabs.ActivePage := tbsRoster;
@@ -1657,6 +1658,9 @@ begin
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.Prefs.SavePosition(Self);
     end;
+
+    // Clear our master icon list
+    RosterTreeImages.Clear();
 
     // give stuff a bit of time to shutdown
     Application.ProcessMessages();
@@ -3059,11 +3063,11 @@ begin
             Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage
     end
     else if (f is TfrmRoom) then begin
-        Tabs.ActivePage.ImageIndex := ico_conf;
+        Tabs.ActivePage.ImageIndex := RosterTreeImages.Find('conference');
     end
     else if ((Tabs.ActivePage = tbsRoster) and
-        (tbsRoster.ImageIndex <> ico_ResFolder)) then
-        tbsRoster.ImageIndex := ico_ResFolder
+        (tbsRoster.ImageIndex <> RosterTreeImages.Find('multiple'))) then
+        tbsRoster.ImageIndex := RosterTreeImages.Find('multiple')
     else if (f is TfrmDockable) then
         Tabs.ActivePage.ImageIndex := TfrmDockable(f).ImageIndex;
 

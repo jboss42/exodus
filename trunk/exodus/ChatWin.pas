@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Avatar, Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
+    Avatar, Chat, ChatController, JabberID, XMLTag, IQ, Unicode, NodeItem,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage;
@@ -130,7 +130,7 @@ type
 
     procedure SetupPrefs();
     procedure SetupMenus();
-    procedure ChangePresImage(show: widestring; status: widestring);
+    procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
     procedure _sendMsg(txt: Widestring);
     procedure _sendComposing(id: Widestring);
@@ -175,12 +175,12 @@ procedure CloseAllChats;
 
 implementation
 uses
-    CapPresence,  
+    CapPresence, RosterImages,   
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
-    JabberMsg, NodeItem, Roster, Session, XMLUtils,
+    JabberMsg, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
 const
@@ -352,7 +352,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     OtherNick := '';
-    _pres_img := ico_Unknown;
+    _pres_img := RosterTreeImages.Find('unknown');
     _check_event := false;
     _last_id := '';
     _reply_id := '';
@@ -501,17 +501,18 @@ begin
     // whether or not to send directed presence to this person
     // do_pres := true;
 
-    if (ritem <> nil) then begin
+    if ((ritem <> nil) and (ritem.tag <> nil) and
+        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
+
         // This person is in our roster
         lblNick.Caption := ritem.Text;
         Caption := ritem.Text;
         lblNick.Hint := _jid.full;
         MsgList.setTitle(ritem.Text);
         if (p = nil) then
-            ChangePresImage('offline', 'offline')
+            ChangePresImage(ritem, 'offline', 'offline')
         else
-            ChangePresImage(p.show, p.status);
-
+            ChangePresImage(ritem, p.show, p.status);
         {
         if ((ritem.Subscription = 'to') or (ritem.Subscription = 'both')) then
             do_pres := false;
@@ -530,9 +531,9 @@ begin
         MsgList.setTitle(cjid);
         Caption := n;
         if (p = nil) then
-            ChangePresImage('unknown', 'Unknown Presence')
+            ChangePresImage(nil, 'unknown', 'Unknown Presence')
         else
-            ChangePresImage(p.show, p.status);
+            ChangePresImage(nil, p.show, p.status);
     end;
 
     // TODO: Can't send directed presence to people not in roster. Cope w/ TC??
@@ -723,7 +724,8 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
-        DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick, ico_user, 'notify_chatactivity');
+        DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick,
+            RosterTreeImages.Find('contact'), 'notify_chatactivity');
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
@@ -883,25 +885,33 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.ChangePresImage(show: WideString; status: WideString);
+procedure TfrmChat.ChangePresImage(ritem: TJabberRosterItem; show: WideString; status: WideString);
 var
     h: Widestring;
 begin
     // Change the bulb
-    if (show = _('offline')) then
-        _pres_img := ico_Offline
-    else if (show = _('unknown')) then
-        _pres_img := ico_Unknown
-    else if (show = _('away')) then
-        _pres_img := ico_Away
-    else if (show = _('xa')) then
-        _pres_img := ico_XA
-    else if (show = _('dnd')) then
-        _pres_img := ico_DND
-    else if (show = _('chat')) then
-        _pres_img := ico_Chat
-    else
-        _pres_img := ico_Online;
+    if (ritem = nil) then begin
+        // TODO: get image prefix from prefs
+        if (show = _('offline')) then
+            _pres_img := RosterTreeImages.Find('offline')
+        else if (show = _('unknown')) then
+            _pres_img := RosterTreeImages.Find('unknown')
+        else if (show = _('away')) then
+            _pres_img := RosterTreeImages.Find('away')
+        else if (show = _('xa')) then
+            _pres_img := RosterTreeImages.Find('xa')
+        else if (show = _('dnd')) then
+            _pres_img := RosterTreeImages.Find('dnd')
+        else if (show = _('chat')) then
+            _pres_img := RosterTreeImages.Find('chat')
+        else
+            _pres_img := RosterTreeImages.Find('available')
+    end
+    else begin
+        // Always use the image from the roster item
+        ritem.setPresenceImage(show);
+        _pres_img := ritem.ImageIndex;
+    end;
 
     _show := show;
     _status := status;
@@ -911,7 +921,7 @@ begin
     h := h + ' <' + _jid.full + '>';
     lblNick.Hint := h;
 
-    frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
+    RosterTreeImages.GetIcon(_pres_img, Self.Icon);
     if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
         Self.TabSheet.ImageIndex := _pres_img;
     _old_img := _pres_img;
@@ -925,17 +935,20 @@ var
     status, show, User, ts  : String;
     p: TJabberPres;
     j: TJabberID;
+    ritem: TJabberRosterItem;
 begin
     // Get the user
     user := tag.GetAttribute('from');
 
-    //check to see if this is the person you are chatting with...
-    if pos(jid, user) = 0 then Exit;
-
     // make sure the user is still connected
     j := TJabberID.Create(jid);
+
+    ritem := MainSession.Roster.Find(j.jid);
+    if (ritem = nil) then
+        ritem := MainSession.Roster.Find(j.full);
+
+    // Get the pres for this resource
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
-    j.Free();
     if (p = nil) then begin
         show := _(sOffline);
         status := _(sOffline);
@@ -945,7 +958,9 @@ begin
         status := tag.GetBasicText('status');
     end;
 
-    ChangePresImage(show, status);
+    j.Free();
+    ChangePresImage(ritem, show, status);
+
     if (status = '') then
         txt := show
     else
@@ -955,7 +970,7 @@ begin
         txt := _(sAvailable);
 
     if (MainSession.Prefs.getBool('timestamp')) then
-        ts := formatdatetime(MainSession.Prefs.getString('timestamp_format'),now)
+        ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now)
     else
         ts := '';
 
@@ -1201,11 +1216,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.DockForm;
+var
+    ritem: TJabberRosterItem;
 begin
     inherited;
     btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
-    ChangePresImage(_show, _status);
+
+    ritem := MainSession.Roster.Find(_jid.full);
+    ChangePresImage(ritem, _show, _status);
 end;
 
 {---------------------------------------}
@@ -1218,23 +1237,26 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+var
+    ritem: TJabberRosterItem;
 begin
     if (target = nil) then exit;
 
     inherited;
-    
+
     btnClose.Visible := Docked;
     if ((Docked) and (TabSheet <> nil)) then
         //Self.TabSheet.ImageIndex := -1;
         Self.TabSheet.ImageIndex := _old_img;
-    
+
     DragAcceptFiles(Handle, not Docked);
 
     // scroll the MsgView to the bottom.
     _scrollBottom();
     Self.Refresh();
 
-    ChangePresImage(_show, _status);
+    ritem := MainSession.Roster.Find(_jid.full);
+    ChangePresImage(ritem, _show, _status);
 end;
 
 {---------------------------------------}
