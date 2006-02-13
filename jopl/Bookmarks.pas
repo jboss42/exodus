@@ -37,7 +37,7 @@ type
 
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
-        procedure UpdateCallback(event: string; tag: TXMLTag);
+        procedure UpdateCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
         procedure bmCallback(event: string; tag: TXMLTag);
 
         procedure MenuClick(Sender: TObject);
@@ -134,23 +134,16 @@ begin
     _js := js;
     with TJabberSession(js) do begin
         RegisterCallback(Self.SessionCallback, '/session');
-        RegisterCallback(Self.UpdateCallback, '/roster/item/update');
+        RegisterCallback(Self.UpdateCallback,
+            '/roster/update/item[@xmlns="' + XMLNS_BM + '"]');
+        //XXX: Register for /roster/remove/item@[xmlns=XMLNS_BM] too
     end;
 end;
 
 {---------------------------------------}
-procedure TBookmarkManager.UpdateCallback(event: string; tag: TXMLTag);
-var
-    jid: Widestring;
-    ri: TJabberRosterItem;
+procedure TBookmarkManager.UpdateCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
 begin
-    if (tag.getAttribute('xmlns') <> XMLNS_BM) then exit;
-
-    jid := tag.getAttribute('jid');
-    ri := MainSession.Roster.Find(jid);
-    if (ri = nil) then exit;
-
-    tag.setAttribute('name', ri.Text);
+    ri.tag.setAttribute('name', ri.Text);
     SaveBookmarks();
 end;
 
@@ -349,17 +342,24 @@ end;
 {---------------------------------------}
 procedure TBookmarkManager.RemoveBookmark(sjid: Widestring);
 var
-    bm: TXMLTag;
+    remove, bm: TXMLTag;
     i: integer;
+    ri: TJabberRosterItem;
 begin
     // remove a bm from the list
     i := IndexOf(sjid);
     if ((i >= 0) and (i < Count)) then begin
+        ri := TJabberSession(_js).roster.Find(sjid);
+
         bm := TXMLTag(Objects[i]);
-        TJabberSession(_js).FireEvent('/roster/item/remove', bm);
+        remove := TXMLTag.Create('remove');
+        remove.AddTag(TXMLTag.Create(bm));
+
+        TJabberSession(_js).FireEvent('/roster/remove', remove, ri);
         Objects[i] := nil;
         Delete(i);
-        bm.Free();
+        remove.Free();
+        
         SaveBookmarks();
     end;
 end;

@@ -2104,8 +2104,11 @@ begin
     end;
     x := TXMLTag.Create('group');
     x.setAttribute('name', go.FullName);
-    MainSession.FireEvent('/roster/newgroup', x);
+
+    // XXX: is this event right for new groups?
+    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
     x.Free();
+
 end;
 
 {---------------------------------------}

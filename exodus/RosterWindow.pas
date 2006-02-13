@@ -432,7 +432,7 @@ begin
     _FullRoster := false;
     _collapsed_grps := TWideStringList.Create();
     _blockers := TWideStringlist.Create();
-    _rostercb := MainSession.RegisterCallback(RosterCallback);
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/roster');
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
     ChangeStatusImage(0);
 
@@ -2854,11 +2854,18 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterEdited(Sender: TObject;
   Node: TTreeNode; var S: String);
+var
+    update: TXMLTag;
 begin
     // user is done editing a node's text
     if (getNodeType(Node) = node_ritem) then begin
         _cur_ritem.Text := S;
-        MainSession.FireEvent('/roster/item/update', _cur_ritem.tag);
+
+        // XXX: is this right for an update to a roster item?
+        update := TXMLTag.Create('update');
+        update.AddTag(TXMLTag.Create(_cur_ritem.tag));
+        MainSession.FireEvent('/roster/update', update, _cur_ritem);
+        update.Free();
     end;
 end;
 

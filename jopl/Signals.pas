@@ -155,7 +155,7 @@ type
     // Signal that understands XPLite statements and invokes based on them
     TPacketEvent = procedure(event: string; tag: TXMLTag) of object;
     TPacketListener = class(TSignalListener)
-    private
+    protected
         xp: TXPLite;
     public
         constructor Create;
@@ -165,7 +165,7 @@ type
     end;
 
     TPacketSignal = class(TSignal)
-    private
+    protected
         _next: string;
         _len_event: integer;
     public

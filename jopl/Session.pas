@@ -147,7 +147,7 @@ type
         procedure setPresence(show, status: WideString; priority: integer);
 
         function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
-        function RegisterCallback(callback: TRosterEvent): integer; overload;
+        function RegisterCallback(callback: TRosterEvent; xplite: string): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         function RegisterCallback(callback: TDataStringEvent): integer; overload;
         procedure UnRegisterCallback(index: integer);
@@ -848,12 +848,12 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TRosterEvent): integer;
+function TJabberSession.RegisterCallback(callback: TRosterEvent; xplite: string): integer;
 var
     l: TRosterListener;
 begin
     // add a callback to the roster signal
-    l := _rosterSignal.addListener(callback);
+    l := _rosterSignal.addListener(callback, xplite);
     Result := l.cb_id;
 end;
 
