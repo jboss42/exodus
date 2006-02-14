@@ -41,6 +41,7 @@ const
     DT_LOCKED=2;	    // the winlogon desktop is active, and a user is logged
     DT_NO_LOG=3;	    // the winlogon desktop is active, and no user is logged
     DT_SCREENSAVER=4;	// the screensaver desktop is active
+    DT_FULLSCREEN=5;    // Something like PowerPoint is running full screen
 
     // FROM pbt.h in the win32 SDK
     PBT_APMQUERYSUSPEND = $0000;
@@ -2140,6 +2141,9 @@ var
     name: string;
     len: dword;
     hw: HWINSTA;
+    w: HWND;
+    wSize: TRect;
+    mon: TMonitor;
 begin
     if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
         result := DT_UNKNOWN;
@@ -2160,9 +2164,21 @@ begin
         exit;
     end;
     CloseDesktop(desk);
-    SetLength(name, len);
+    // there's a null on the end.  Not sure why this worked before the -1.
+    SetLength(name, len-1);
 
     if name = 'Default' then begin  // NO I18N!
+        // what about fullscreen mode, like PowerPoint shows?
+        w := GetForegroundWindow();
+        Windows.GetClientRect(w, wSize);
+        mon := Screen.MonitorFromWindow(w, mdNearest);
+        if((mon.BoundsRect.Left = wSize.Left) and
+           (mon.BoundsRect.Right = wSize.Right) and
+           (mon.BoundsRect.Top = wSize.Top) and
+           (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
+           result := DT_FULLSCREEN;
+           exit;
+        end;
         result := DT_OPEN;
         exit;
     end;
