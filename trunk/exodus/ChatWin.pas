@@ -909,8 +909,7 @@ begin
     end
     else begin
         // Always use the image from the roster item
-        ritem.setPresenceImage(show);
-        _pres_img := ritem.ImageIndex;
+        _pres_img := ritem.getPresenceImage(show);
     end;
 
     _show := show;

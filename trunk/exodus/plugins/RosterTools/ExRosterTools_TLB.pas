@@ -12,11 +12,11 @@ unit ExRosterTools_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/30/2006 9:39:42 AM from Type Library described below.
+// File generated on 2/7/2006 7:31:30 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb (1)
-// LIBID: {D090DD73-F546-4D85-87C8-734F21FEC653}
+// LIBID: {FB6C445F-B685-4A36-8176-A1F8BE4CFC5E}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExRosterTools Library
@@ -45,9 +45,9 @@ const
   ExRosterToolsMajorVersion = 1;
   ExRosterToolsMinorVersion = 0;
 
-  LIBID_ExRosterTools: TGUID = '{D090DD73-F546-4D85-87C8-734F21FEC653}';
+  LIBID_ExRosterTools: TGUID = '{FB6C445F-B685-4A36-8176-A1F8BE4CFC5E}';
 
-  CLASS_RosterPlugin: TGUID = '{FBFDCB97-FB75-443E-A3D1-3EAFBE08E423}';
+  CLASS_RosterPlugin: TGUID = '{2C1FCC87-075A-4369-9937-DDC9D91AF7BE}';
 type
 
 // *********************************************************************//
