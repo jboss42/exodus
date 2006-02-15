@@ -143,6 +143,7 @@ type
 
         // Presence based image stuff
         procedure setPresenceImage(show: Widestring);
+        function getPresenceImage(show: Widestring): integer;
 
         // Group management stuff
         function IsInGroup(grp: Widestring): boolean;
@@ -585,18 +586,24 @@ end;
 {---------------------------------------}
 procedure TJabberRosterItem.setPresenceImage(show: Widestring);
 begin
+    ImageIndex := getPresenceImage(show);
+end;
+
+{---------------------------------------}
+function TJabberRosterItem.getPresenceImage(show: Widestring): integer;
+begin
     if (show = 'offline') then
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'offline')
+        Result := RosterTreeImages.Find(_img_prefix + 'offline')
     else if (show = 'away') then
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'away')
+        Result := RosterTreeImages.Find(_img_prefix + 'away')
     else if (show = 'xa') then
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'xa')
+        Result := RosterTreeImages.Find(_img_prefix + 'xa')
     else if (show = 'dnd') then
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'dnd')
+        Result := RosterTreeImages.Find(_img_prefix + 'dnd')
     else if (show = 'chat') then
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'chat')
+        Result := RosterTreeImages.Find(_img_prefix + 'chat')
     else
-        ImageIndex := RosterTreeImages.Find(_img_prefix + 'available');
+        Result := RosterTreeImages.Find(_img_prefix + 'available');
 end;
 
 {---------------------------------------}

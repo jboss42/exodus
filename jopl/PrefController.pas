@@ -905,8 +905,8 @@ begin
     vht := 0;
     for i := 0 to Screen.MonitorCount - 1 do begin
         mon := Screen.Monitors[i];
-        vwidth := vwidth + Abs(mon.WorkAreaRect.Right - mon.WorkAreaRect.Left);
-        vht := vht + Abs(mon.WorkAreaRect.Bottom - mon.WorkareaRect.Top);
+        vwidth := vwidth + Abs(mon.BoundsRect.Right - mon.BoundsRect.Left);
+        vht := vht + Abs(mon.BoundsRect.Bottom - mon.BoundsRect.Top);
     end;
 
     dtop := Bounds(0, 0, vwidth, vht);

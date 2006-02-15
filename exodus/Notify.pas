@@ -94,6 +94,7 @@ end;
 {---------------------------------------}
 procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
+    idx: integer;
     sess: TJabberSession;
     nick, j, from: Widestring;
     ritem: TJabberRosterItem;
@@ -112,7 +113,7 @@ begin
     tmp_jid := TJabberID.Create(from);
     j := tmp_jid.jid;
     if (sess.IsBlocked(j)) then exit;
-    
+
     ritem := sess.roster.Find(j);
     if ((ritem <> nil) and (ritem.Text <> '')) then
         nick := ritem.Text
@@ -128,14 +129,22 @@ begin
     if (nick = '') then exit;
 
     // someone is coming online for the first time..
-    if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + _(sNotifyOnline),
-            RosterTreeImages.Find('available'))
+    if (event = '/presence/online') then begin
+        if (ritem <> nil) then
+            idx := ritem.getPresenceImage('available')
+        else
+            idx := RosterTreeImages.Find('available');
+        DoNotify(nil, 'notify_online', nick + _(sNotifyOnline), idx);
+    end
 
     // someone is going offline
-    else if (event = '/presence/offline') then
-        DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline),
-            RosterTreeImages.Find('offline'))
+    else if (event = '/presence/offline') then begin
+        if (ritem <> nil) then
+            idx := ritem.getPresenceImage('offline')
+        else
+            idx := RosterTreeImages.Find('offline');
+        DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline), idx);
+    end
 
     // don't display normal presence changes
     else if ((event = '/presence/available') or (event = '/presence/error')

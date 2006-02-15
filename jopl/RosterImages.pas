@@ -146,6 +146,11 @@ function TRosterImages.AddImage(id: Widestring; Image: TBitmap): integer;
 var
     i: integer;
 begin
+    if (_imglist = nil) then begin
+        Result := -1;
+        exit;
+    end;
+    
     i := _ids.IndexOf(id);
     if (i = -1) then begin
         // add the image
@@ -159,6 +164,10 @@ end;
 {---------------------------------------}
 procedure TRosterImages.Remove(ImageIndex: integer);
 begin
+    if (_imglist = nil) then begin
+        exit;
+    end;
+
     if (ImageIndex < _imglist.Count) then begin
         _imglist.Delete(ImageIndex);
         _ids.Delete(ImageIndex);
@@ -202,6 +211,10 @@ end;
 {---------------------------------------}
 procedure TRosterImages.GetIcon(index: integer; icon: TIcon);
 begin
+    if (_imglist = nil) then begin
+        exit;
+    end;
+
     _imglist.GetIcon(index, icon);
 end;
 

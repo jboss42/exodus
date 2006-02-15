@@ -1251,7 +1251,8 @@ initialization
   // is that the warning comes too late, and just leads to cores.
   // TODO: figure out how to disconnect from all of the clients that are
   // connected to us, using CoDisconnectObject.
-  ComServer.UIInteractive := false;
+
+  // XXX: ComServer.UIInteractive := false;
 
   plugs := TStringList.Create();
   proxies := TStringList.Create();
