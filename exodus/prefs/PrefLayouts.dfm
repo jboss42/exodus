@@ -1132,7 +1132,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   end
   object lblViewHelp: TTntLabel [4]
     Left = 8
-    Top = 64
+    Top = 82
     Width = 345
     Height = 41
     AutoSize = False
@@ -1143,12 +1143,12 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   end
   object cboView: TTntComboBox [5]
     Left = 4
-    Top = 36
+    Top = 54
     Width = 277
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 0
+    TabOrder = 1
     OnChange = cboViewChange
     Items.WideStrings = (
       'Show small roster and never dock'
@@ -1158,6 +1158,14 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   inherited pnlHeader: TTntPanel
     Width = 355
     Caption = 'Window Layouts'
-    TabOrder = 1
+    TabOrder = 2
+  end
+  object chkStacked: TTntCheckBox
+    Left = 4
+    Top = 32
+    Width = 201
+    Height = 17
+    Caption = 'Use multiple rows of tabs'
+    TabOrder = 0
   end
 end
