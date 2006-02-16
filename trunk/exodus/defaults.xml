@@ -116,6 +116,7 @@
     <!-- Layouts -->
     <expanded value="0"/>
     <roster_messenger value="1"/>
+    <stacked_tabs value="1"/>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>

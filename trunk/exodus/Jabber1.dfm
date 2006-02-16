@@ -47,6 +47,7 @@ object frmExodus: TfrmExodus
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     Images = ImageList2
+    MultiLine = True
     ParentFont = False
     PopupMenu = popTabs
     TabOrder = 0

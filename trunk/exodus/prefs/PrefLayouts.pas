@@ -32,6 +32,7 @@ type
     imgView3: TImage;
     imgView1: TImage;
     lblViewHelp: TTntLabel;
+    chkStacked: TTntCheckBox;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }
@@ -79,6 +80,7 @@ begin
         else
             cboView.ItemIndex := 0;
         cboViewChange(Self);
+        chkStacked.Checked := getBool('stacked_tabs');
     end;
 end;
 
@@ -100,6 +102,8 @@ begin
             setBool('expanded', true);
             setBool('roster_messenger', true);
         end;
+
+        setBool('stacked_tabs', chkStacked.Checked);
     end;
 end;
 

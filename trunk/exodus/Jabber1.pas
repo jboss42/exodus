@@ -866,6 +866,7 @@ begin
     restoreMenus(false);
     restoreToolbar();
     pnlRight.Visible := MainSession.Prefs.getBool('expanded');
+    Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
     restoreRoster();
 
     // some gui related flags
@@ -1453,6 +1454,7 @@ begin
         end
         else
             restoreRoster();
+        Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs')
     end
 
     else if (event = '/session/presence') then begin
