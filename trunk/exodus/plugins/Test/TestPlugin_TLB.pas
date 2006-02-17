@@ -12,17 +12,17 @@ unit TestPlugin_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/29/2006 1:03:44 PM from Type Library described below.
+// File generated on 2/17/2006 1:14:18 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\plugins\Test\TestPlugin.tlb (1)
+// Type Lib: D:\src\exodus\exodus\plugins\Test\TestPlugin.tlb (1)
 // LIBID: {78FCE930-6D97-4E80-A634-59897D6E8BB2}
 // LCID: 0
 // Helpfile: 
 // HelpString: TestPlugin Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (c:\src\exodus\exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
+//   (1) v1.0 ExodusCOM, (d:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -69,7 +69,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}
 // *********************************************************************//
-  ITesterPlugin = interface(IDispatch)
+  ITesterPlugin = interface(IExodusPlugin)
     ['{AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}']
   end;
 
@@ -80,6 +80,18 @@ type
 // *********************************************************************//
   ITesterPluginDisp = dispinterface
     ['{AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}']
+    procedure Startup(const ExodusController: IExodusController); dispid 1;
+    procedure Shutdown; dispid 2;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; dispid 8;
+    procedure Configure; dispid 12;
+    procedure MenuClick(const ID: WideString); dispid 201;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); dispid 202;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//

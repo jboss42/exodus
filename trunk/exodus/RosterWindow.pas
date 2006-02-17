@@ -2999,6 +2999,10 @@ begin
             else
                 Compare := AnsiCompareText(t1, t2);
         end
+        else if (o1 is TJabberGroup) then
+            Compare := +1
+        else if (o2 is TJabberGroup) then
+            Compare := -1
         else begin
             if (o1 is TJabberNodeItem) then
                 t1 := TJabberNodeItem(o1).GetText()

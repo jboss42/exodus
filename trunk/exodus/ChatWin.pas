@@ -1222,7 +1222,10 @@ begin
     btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
 
-    ritem := MainSession.Roster.Find(_jid.full);
+    ritem := MainSession.Roster.Find(_jid.jid);
+    if (ritem = nil) then
+        ritem := MainSession.Roster.FInd(_jid.full);
+        
     ChangePresImage(ritem, _show, _status);
 end;
 
@@ -1245,7 +1248,6 @@ begin
 
     btnClose.Visible := Docked;
     if ((Docked) and (TabSheet <> nil)) then
-        //Self.TabSheet.ImageIndex := -1;
         Self.TabSheet.ImageIndex := _old_img;
 
     DragAcceptFiles(Handle, not Docked);
@@ -1254,7 +1256,9 @@ begin
     _scrollBottom();
     Self.Refresh();
 
-    ritem := MainSession.Roster.Find(_jid.full);
+    ritem := MainSession.Roster.Find(_jid.jid);
+    if (ritem = nil) then
+        ritem := MainSession.Roster.Find(_jid.full);
     ChangePresImage(ritem, _show, _status);
 end;
 
