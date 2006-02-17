@@ -94,7 +94,7 @@ OutputDir=..
 UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=.\output
-SearchPath=
+SearchPath=.\ICQ\Component
 Packages=vcl;rtl;vclshlctrls
 Conditionals=
 DebugSourceDirs=
@@ -137,6 +137,10 @@ Comments=
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[HistoryLists\hlSearchPath]
+Count=2
+Item0=.\ICQ\Component
+Item1=.\ICQ
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output

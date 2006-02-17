@@ -1,7 +1,10 @@
 [
   uuid(467946CF-A73A-4084-B226-57C0FA897CBF), 
   version(1.0), 
-  helpstring("ExIRCPlugin Library")
+  helpstring("ExIRCPlugin Library"), 
+  custom(DE77BA64-517C-11D1-A2DA-0000F8773CE9, 100663657), 
+  custom(DE77BA63-517C-11D1-A2DA-0000F8773CE9, 1064853424), 
+  custom(DE77BA65-517C-11D1-A2DA-0000F8773CE9, "Created by MIDL version 6.00.0361 at Mon Sep 29 10:37:03 2003\n")
     
 ]
 library ExIRCPlugin
