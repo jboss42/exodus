@@ -1,10 +1,7 @@
 [
-  uuid(F02B8DD9-64FB-45ED-B0B4-9B124ED7D4A7), 
+  uuid(ABFF5177-A3CD-44C7-9005-24BD069C1F5D), 
   version(1.0), 
-  helpstring("ExImportICQ Library"), 
-  custom(DE77BA64-517C-11D1-A2DA-0000F8773CE9, 100663657), 
-  custom(DE77BA63-517C-11D1-A2DA-0000F8773CE9, 1055786574), 
-  custom(DE77BA65-517C-11D1-A2DA-0000F8773CE9, "Created by MIDL version 6.00.0361 at Mon Jun 16 12:02:53 2003\n")
+  helpstring("ExImportICQ Library")
     
 ]
 library ExImportICQ
@@ -14,7 +11,7 @@ library ExImportICQ
   importlib("stdole2.tlb");
 
   [
-    uuid(2D36C7A4-7892-4366-A6D3-3F1565ED1433), 
+    uuid(AF223E4A-369F-4EF3-BC15-A6A26409AA56), 
     version(1.0)
   ]
   coclass ICQImportPlugin
