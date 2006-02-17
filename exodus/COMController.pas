@@ -24,7 +24,7 @@ unit COMController;
 interface
 
 uses
-    XMLTag, Unicode, Menus,
+    Presence, NodeItem, XMLTag, Unicode, Menus,
     Windows, Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
@@ -159,6 +159,9 @@ type
         com: OleVariant;
         constructor Create(xpath: Widestring; obj: OleVariant);
         destructor Destroy; override;
+        procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+        procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
+        procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure Callback(event: string; tag: TXMLTag);
     end;
 
@@ -191,8 +194,8 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
-    Jabber1, Session, NodeItem, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
+    Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, ComServ;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -432,7 +435,16 @@ begin
 
     _xpath := xpath;
 
-    id := MainSession.RegisterCallback(Self.Callback, xpath);
+    // check for special signals
+    if (LeftStr(xpath, Length('/roster')) = '/roster') then
+        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
+    else if (LeftStr(xpath, Length('/presence')) = '/presence') then
+        id := MainSession.RegisterCallback(Self.PresenceCallback)
+    else if (LeftStr(xpath, Length('/data')) = '/data') then
+        id := MainSession.RegisterCallback(Self.DataCallback)
+    else
+        id := MainSession.RegisterCallback(Self.Callback, xpath);
+
     com := obj;
 
     proxies.AddObject(IntToStr(id), Self)
@@ -475,6 +487,24 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TPluginProxy.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+begin
+    Callback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TPluginProxy.PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
+begin
+    Callback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TPluginProxy.DataCallback(event: string; tag: TXMLTag; data: Widestring);
+begin
+    // XXX: create a tag and pass data in there?
+    Callback(event, tag);
+end;
 
 {---------------------------------------}
 {---------------------------------------}

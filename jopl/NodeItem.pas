@@ -109,6 +109,7 @@ type
 
         // image handling stuff
         _img_prefix: Widestring;
+        _last_show: Widestring;
 
         function getGroupIndex(idx: integer): Widestring;
         function getDirtyIndex(idx: integer): Widestring;
@@ -447,6 +448,7 @@ begin
     _jid := TJabberID.Create(id);
     _data := nil;
     _dirty_grps := nil;
+    _last_show := 'offline';
 
     InlineEdit := false;
     Removed := false;
@@ -581,11 +583,14 @@ begin
         _img_prefix := '';
     end;
 
+    setPresenceImage(_last_show);
+
 end;
 
 {---------------------------------------}
 procedure TJabberRosterItem.setPresenceImage(show: Widestring);
 begin
+    _last_show := show;
     ImageIndex := getPresenceImage(show);
 end;
 

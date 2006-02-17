@@ -5,10 +5,11 @@ unit Tester;
 interface
 
 uses
-  ComObj, ActiveX, ExodusCOM_TLB, TestPlugin_TLB, StdVcl;
+    XMLParser, 
+    ComObj, ActiveX, ExodusCOM_TLB, TestPlugin_TLB, StdVcl;
 
 type
-  TTesterPlugin = class(TAutoObject, IExodusPlugin, ITesterPlugin)
+  TTesterPlugin = class(TAutoObject, IExodusPlugin)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -28,14 +29,16 @@ type
   private
     _exodus: IExodusController;
     _session: integer;
+    _roster: integer;
     _menu_id: Widestring;
+    _parser: TXMLTagParser;
 
   end;
 
 implementation
 
 uses
-    Dialogs, ComServ;
+    XMLTag, Graphics, Dialogs, ComServ;
 
 function TTesterPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
@@ -79,8 +82,10 @@ end;
 
 procedure TTesterPlugin.Process(const xpath, event, xml: WideString);
 var
+    j: Widestring;
     grp: IExodusRosterGroup;
     ri: IExodusRosterItem;
+    tag: TXMLTag;
 begin
 
     if (event = '/session/authenticated') then begin
@@ -101,6 +106,20 @@ begin
         ri.setCleanGroups();
         ri.fireChange();
     end
+    else if (event = '/roster/item') then begin
+        _parser.ParseString(xml, '');
+        if (_parser.Count > 0) then begin
+            tag := _parser.popTag();
+            j := tag.getAttribute('jid');
+            if (j = 'bubba1@dustpuppy.corp.jabber.com') then begin
+                ri := _exodus.Roster.Find(j);
+                if (ri.ImagePrefix <> 'aim_') then begin
+                    ri.ImagePrefix := 'aim_';
+                    ri.fireChange();
+                end;
+            end;
+        end
+    end
     else if (event = '/session/gui/test1') then begin
         MessageDlg('event handler inside plugin', mtInformation, [mbOK], 0);
     end;
@@ -113,14 +132,32 @@ begin
 end;
 
 procedure TTesterPlugin.Startup(const ExodusController: IExodusController);
+(*
+var
+    bmp: TBitmap;
+*)
 begin
+    _parser := TXMLTagParser.Create();
+    
     _exodus := ExodusController;
     _session := _exodus.RegisterCallback('/session', Self);
+    _roster := _exodus.RegisterCallback('/roster/item', Self);
 
     _exodus.Roster.AddContextMenu('Tester_menu1');
     _menu_id := _exodus.Roster.addContextMenuItem('Tester_menu1', 'Foobar',
         '/session/gui/test1');
-    
+
+    (*
+    bmp := TBitamp.Create();
+    bmp.LoadFromFile();
+    *)
+
+    _exodus.RosterImages.AddImageFilename('aim_available', 'd:\src\exodus\exodus\plugins\test\online.bmp');
+    _exodus.RosterImages.AddImageFilename('aim_chat', 'd:\src\exodus\exodus\plugins\test\online.bmp');
+    _exodus.RosterImages.AddImageFilename('aim_away', 'd:\src\exodus\exodus\plugins\test\online.bmp');
+    _exodus.RosterImages.AddImageFilename('aim_xa', 'd:\src\exodus\exodus\plugins\test\online.bmp');
+    _exodus.RosterImages.AddImageFilename('aim_dnd', 'd:\src\exodus\exodus\plugins\test\online.bmp');
+    _exodus.RosterImages.AddImageFilename('aim_offline', 'd:\src\exodus\exodus\plugins\test\offline.bmp');
 end;
 
 initialization
