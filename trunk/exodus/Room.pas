@@ -91,6 +91,9 @@ type
     N7: TTntMenuItem;
     popRosterBrowse: TTntMenuItem;
     SpeedButton1: TSpeedButton;
+    popCopy: TTntMenuItem;
+    popCopyAll: TTntMenuItem;
+    N8: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -135,6 +138,8 @@ type
     procedure popRosterSubscribeClick(Sender: TObject);
     procedure popRosterVCardClick(Sender: TObject);
     procedure popRosterBrowseClick(Sender: TObject);
+    procedure popCopyClick(Sender: TObject);
+    procedure popCopyAllClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -584,15 +589,16 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.SendMsg;
 var
+    allowed: boolean;
     txt: Widestring;
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
 
     // plugin madness
-    TExodusChat(ComController).fireBeforeMsg(txt);
+    allowed := TExodusChat(ComController).fireBeforeMsg(txt);
 
-    if (txt = '') then exit;
+    if ((allowed = false) or (txt = '')) then exit;
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then
@@ -1374,7 +1380,6 @@ begin
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
     AssignUnicodeFont(lblSubject.Font, 8);
-    //lblSubject.Font.Style := [fsBold];
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
     _subject := '';
@@ -2507,6 +2512,20 @@ begin
         ShowBrowser(j.jid);
         j.Free();
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popCopyClick(Sender: TObject);
+begin
+  inherited;
+    MsgList.Copy();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popCopyAllClick(Sender: TObject);
+begin
+  inherited;
+    MsgList.CopyAll();
 end;
 
 initialization

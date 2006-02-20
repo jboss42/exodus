@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/17/2006 9:25:41 AM from Type Library described below.
+// File generated on 2/20/2006 8:47:08 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -425,7 +425,7 @@ type
 // *********************************************************************//
   IExodusChatPlugin = interface(IDispatch)
     ['{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}']
-    procedure onBeforeMessage(var Body: WideString); safecall;
+    function onBeforeMessage(var Body: WideString): WordBool; safecall;
     function onAfterMessage(var Body: WideString): WideString; safecall;
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
@@ -442,7 +442,7 @@ type
 // *********************************************************************//
   IExodusChatPluginDisp = dispinterface
     ['{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}']
-    procedure onBeforeMessage(var Body: WideString); dispid 1;
+    function onBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function onAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure onKeyPress(const Key: WideString); dispid 3;
     procedure onContextMenu(const ID: WideString); dispid 4;

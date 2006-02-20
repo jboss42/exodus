@@ -132,7 +132,7 @@ type
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
-    procedure _sendMsg(txt: Widestring);
+    function  _sendMsg(txt: Widestring): boolean;
     procedure _sendComposing(id: Widestring);
     
     function GetThread: String;
@@ -798,14 +798,18 @@ begin
     Msg.Free();
 end;
 
-
-procedure TfrmChat._sendMsg(txt: Widestring);
+{---------------------------------------}
+function TfrmChat._sendMsg(txt: Widestring): boolean;
+var
+    allowed: boolean;
 begin
     // plugin madness
+    allowed := true;
     if (chat_object <> nil) then
-        TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
+        allowed := TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
 
-    if (txt = '') then exit;
+    Result := allowed;
+    if ((allowed = false) or (txt = '')) then exit;
 
     sendRawMessage(txt, '', '', true);
 end;
@@ -823,11 +827,10 @@ begin
       exit;
     end;
 
-    _sendMsg(txt);
-
-    _sent_composing := false;
-
-    inherited;
+    if (_sendMsg(txt)) then begin
+        _sent_composing := false;
+        inherited;
+    end;
 end;
 
 {---------------------------------------}
