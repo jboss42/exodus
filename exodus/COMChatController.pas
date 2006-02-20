@@ -40,7 +40,7 @@ type
     procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
     procedure fireMsgKeyPress(Key: Char);
-    procedure fireBeforeMsg(var body: Widestring);
+    function  fireBeforeMsg(var body: Widestring): boolean;
     function  fireAfterMsg(var body: WideString): Widestring;
     procedure fireRecvMsg(body, xml: Widestring);
     procedure fireMenuClick(Sender: TObject);
@@ -131,12 +131,15 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireBeforeMsg(var body: Widestring);
+function TExodusChat.fireBeforeMsg(var body: Widestring): boolean;
 var
     i: integer;
 begin
-    for i := 0 to _plugs.Count - 1 do
-        TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
+    Result := true;
+    for i := 0 to _plugs.Count - 1 do begin
+        Result := TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
+        if (Result = false) then exit;
+    end;
 end;
 
 {---------------------------------------}

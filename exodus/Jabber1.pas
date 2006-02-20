@@ -2011,6 +2011,8 @@ procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
     // Close the whole honkin' thing
     _shutdown := true;
+    CloseAllRooms();
+    CloseAllChats();
     Self.Close;
 end;
 
@@ -3431,10 +3433,13 @@ begin
     StartPrefs(pref_plugins);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuDisconnectClick(Sender: TObject);
 begin
     if MainSession.Active then begin
         _logoff := true;
+        CloseAllRooms();
+        CloseAllChats();
         MainSession.Disconnect();
     end
 end;
