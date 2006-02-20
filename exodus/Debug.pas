@@ -191,17 +191,19 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.AddWideText(txt: WideString; txt_color: TColor);
 var
+    time: string;
     fvl: integer;
     at_bottom, is_scrolling: boolean;
 begin
     fvl := MsgDebug.FirstVisibleLine;
     at_bottom := MsgDebug.atBottom;
     is_scrolling := MsgDebug.isScrolling;
+    DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
     with MsgDebug do begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := txt_Color;
-        WideSelText := txt + ''#13#10;
+        WideSelText := '[' + time + ']  ' + txt + ''#13#10;
     end;
 
     // AutoScroll the window
