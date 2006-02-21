@@ -85,6 +85,8 @@ type
 
         _log: TStringlist;
 
+        procedure regCallbacks();
+
     protected
         procedure presCallback(event: string; tag: TXMLTag);
         procedure sessionCallback(event: string; tag: TXMLTag);
@@ -532,6 +534,9 @@ begin
 
     _xp1 := TXPLite.Create('/presence/x[@xmlns="jabber:x:avatar"]');
     _xp2 := TXPLite.Create('/presence/x[@xmlns="vcard-temp:x:update"]');
+    _pres1 := -1;
+    _pres2 := -1;
+    _sess := -1;
 end;
 
 {---------------------------------------}
@@ -608,16 +613,35 @@ begin
 end;
 
 {---------------------------------------}
+procedure TAvatarCache.regCallbacks();
+begin
+    if ((_session.Prefs.getBool('roster_avatars') = false) and
+        (_session.Prefs.getBool('chat_avatars') = false)) then begin
+        // turn off callbacks
+        if (_pres1 <> -1) then begin
+            _session.UnRegisterCallback(_pres1);
+            _session.UnRegisterCallback(_pres2);
+            _pres1 := -1;
+            _pres2 := -1;
+        end;
+    end
+    else begin
+        // turn on callbacks
+        if (_pres1 = -1) then begin
+            _pres1 := _session.RegisterCallback(presCallback,
+                '/packet/presence/x[@xmlns="vcard-temp:x:update"]');
+            _pres2 := _session.RegisterCallback(presCallback,
+                '/packet/presence/x[@xmlns="jabber:x:avatar"]');
+        end;
+    end;
+end;
+
+{---------------------------------------}
 procedure TAvatarCache.setSession(session: TJabberSession);
 begin
-    //
     _session := session;
-    _pres1 := _session.RegisterCallback(presCallback,
-        '/packet/presence/x[@xmlns="vcard-temp:x:update"]');
-    _pres2 := _session.RegisterCallback(presCallback,
-        '/packet/presence/x[@xmlns="jabber:x:avatar"]');
     _sess := _session.RegisterCallback(sessionCallback, '/session');
-
+    regCallbacks();
     Load();
 end;
 
@@ -688,7 +712,9 @@ end;
 procedure TAvatarCache.sessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then
-        Save();
+        Save()
+    else if (event = '/session/prefs') then
+        regCallbacks();
 end;
 
 {---------------------------------------}
