@@ -220,7 +220,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    EntityCache,
+    EntityCache, CapsCache, 
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence;
 
@@ -277,6 +277,7 @@ begin
     _logger_id := 0;
 
     // Create all the things which might register w/ the session
+    jCapsCache.SetSession(Self);
 
     // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
@@ -563,6 +564,7 @@ begin
 
     // clear the entity cache
     jEntityCache.Clear();
+    jCapsCache.Clear();
 
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 end;

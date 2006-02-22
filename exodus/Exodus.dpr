@@ -195,7 +195,10 @@ uses
   Bookmarks in '..\jopl\Bookmarks.pas',
   RosterImages in '..\jopl\RosterImages.pas',
   COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass},
-  COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass};
+  COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass},
+  CapsCache in '..\jopl\CapsCache.pas',
+  COMEntityCache in 'COMEntityCache.pas' {ExodusEntityCache: CoClass},
+  COMEntity in 'COMEntity.pas' {ExodusEntity: CoClass};
 
 {$R *.TLB}
 

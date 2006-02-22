@@ -67,6 +67,7 @@ type
         _name: Widestring;
         _feats: TWidestringlist;
         _type: TJabberEntityType;
+        _refs: TList;
 
         _has_info: Boolean;             // do we need to do a disco#info?
         _has_items: boolean;            // do we have children?
@@ -116,9 +117,16 @@ type
         procedure walk(js: TJabberSession; items_limit: boolean = true;
             timeout: integer = 10);
         procedure refresh(js: TJabberSession);
+        procedure LoadInfo(tag: TXMLTag);
+
+        procedure AddReference(e: TJabberEntity);
+        procedure RemoveReference(e: TJabberEntity);
+        procedure ClearReferences();
+
+        function hasFeature(f: Widestring): boolean;
+        function hasIdentity(category, disco_type: Widestring): boolean;
 
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
-        function hasFeature(f: Widestring): boolean;
         function getItemByFeature(f: Widestring): TJabberEntity;
 
         property Parent: TJabberEntity read _parent;
@@ -223,6 +231,7 @@ begin
     _node := '';
     _name := '';
     _feats := TWidestringlist.Create();
+    _refs := TList.Create();
     _type := ent_unknown;
     _has_info := false;
     _has_items := false;
@@ -268,8 +277,47 @@ end;
 
 {---------------------------------------}
 function TJabberEntity.hasFeature(f: Widestring): boolean;
+var
+    i: integer;
+    r: TJabberEntity;
 begin
-    Result := (_feats.IndexOf(f) >= 0)
+    Result := (_feats.IndexOf(f) >= 0);
+
+    // if we didn't find it directly, check our references
+    if (not Result) then begin
+        for i := 0 to _refs.Count - 1 do begin
+            r := TJabberEntity(_refs[i]);
+            Result := r.hasFeature(f);
+            if (Result) then exit;
+        end;
+    end;
+
+end;
+
+{---------------------------------------}
+function TJabberEntity.hasIdentity(category, disco_type: Widestring): boolean;
+var
+    di: TDiscoIdentity;
+    i: integer;
+    r: TJabberEntity;
+begin
+    // check our own idents first
+    Result := false;
+
+    for i := 0 to _idents.Count - 1 do begin
+        di := TDiscoIdentity(_idents[i]);
+        if ((di.Category = category) and (di.DiscoType = disco_type)) then begin
+            Result := true;
+            exit;
+        end;
+    end;
+
+    // check the idents of our regs
+    for i := 0 to _refs.Count - 1 do begin
+        r := TJabberEntity(_refs[i]);
+        Result := r.hasIdentity(category, disco_type);
+        if (Result) then exit;
+    end;
 end;
 
 {---------------------------------------}
@@ -535,6 +583,38 @@ begin
     _feats.Clear();
 
     _discoInfo(js, WalkCallback);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.LoadInfo(tag: TXMLTag);
+begin
+    _processDiscoInfo(tag);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.AddReference(e: TJabberEntity);
+var
+    idx: integer;
+begin
+    idx := _refs.IndexOf(e);
+    if (idx = -1) then
+        _refs.Add(e);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.RemoveReference(e: TJabberEntity);
+var
+    idx: integer;
+begin
+    idx := _refs.IndexOf(e);
+    if (idx >= 0) then
+        _refs.Delete(idx);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.ClearReferences();
+begin
+    _refs.Clear();
 end;
 
 {---------------------------------------}
