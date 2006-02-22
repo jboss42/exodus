@@ -305,7 +305,7 @@ begin
     Result := false;
 
     for i := 0 to _idents.Count - 1 do begin
-        di := TDiscoIdentity(_idents[i]);
+        di := TDiscoIdentity(_idents.Objects[i]);
         if ((di.Category = category) and (di.DiscoType = disco_type)) then begin
             Result := true;
             exit;

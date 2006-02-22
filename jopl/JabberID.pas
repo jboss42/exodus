@@ -35,6 +35,7 @@ type
     public
         constructor Create(jid: widestring); overload;
         constructor Create(user: widestring; domain: widestring; resource: widestring); overload;
+        constructor Create(jid: TJabberID); overload;
 
         function jid: widestring;
         function full: widestring;
@@ -114,7 +115,7 @@ begin
                 if (curlen > 256) then exit;
             end;
         end;
-            
+
         end;
     end;
     Result := true;
@@ -126,7 +127,7 @@ begin
     // parse the jid
     // user@domain/resource
     inherited Create();
-    
+
     _raw := jid;
     _user := '';
     _domain := '';
@@ -143,6 +144,16 @@ begin
     _user := user;
     _domain := domain;
     _resource := resource;
+end;
+
+constructor TJabberID.Create(jid: TJabberID);
+begin
+    inherited Create();
+
+    _raw := jid._raw;
+    _user := jid._user;
+    _domain := jid._domain;
+    _resource := jid._resource;
 end;
 
 {---------------------------------------}

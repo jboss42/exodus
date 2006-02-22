@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/21/2006 4:31:35 PM from Type Library described below.
+// File generated on 2/22/2006 11:47:02 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,8 +22,6 @@ unit ExodusCOM_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
-//   (3) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -229,6 +227,7 @@ type
     procedure registerCapExtension(const ext: WideString; const feature: WideString); safecall;
     procedure unregisterCapExtension(const ext: WideString); safecall;
     function Get_RosterImages: IExodusRosterImages; safecall;
+    function Get_EntityCache: IExodusEntityCache; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -243,6 +242,7 @@ type
     property PPDB: IExodusPPDB read Get_PPDB;
     property LocalIP: WideString read Get_LocalIP;
     property RosterImages: IExodusRosterImages read Get_RosterImages;
+    property EntityCache: IExodusEntityCache read Get_EntityCache;
   end;
 
 // *********************************************************************//
@@ -328,6 +328,7 @@ type
     procedure registerCapExtension(const ext: WideString; const feature: WideString); dispid 206;
     procedure unregisterCapExtension(const ext: WideString); dispid 207;
     property RosterImages: IExodusRosterImages readonly dispid 208;
+    property EntityCache: IExodusEntityCache readonly dispid 209;
   end;
 
 // *********************************************************************//
@@ -802,7 +803,8 @@ type
     ['{F4AAF511-D144-42E7-B108-8A196D4BD115}']
     function AddImageFilename(const ID: WideString; const filename: WideString): Integer; safecall;
     function AddImageBase64(const ID: WideString; const base64: WideString): Integer; safecall;
-    function AddImageResource(const ID: WideString; instance: Integer; res_id: Integer): Integer; safecall;
+    function AddImageResource(const ID: WideString; const LibName: WideString; 
+                              const ResName: WideString): Integer; safecall;
     procedure Remove(const ID: WideString); safecall;
     function Find(const ID: WideString): Integer; safecall;
   end;
@@ -816,7 +818,8 @@ type
     ['{F4AAF511-D144-42E7-B108-8A196D4BD115}']
     function AddImageFilename(const ID: WideString; const filename: WideString): Integer; dispid 201;
     function AddImageBase64(const ID: WideString; const base64: WideString): Integer; dispid 202;
-    function AddImageResource(const ID: WideString; instance: Integer; res_id: Integer): Integer; dispid 203;
+    function AddImageResource(const ID: WideString; const LibName: WideString; 
+                              const ResName: WideString): Integer; dispid 203;
     procedure Remove(const ID: WideString); dispid 204;
     function Find(const ID: WideString): Integer; dispid 205;
   end;
@@ -829,7 +832,7 @@ type
   IExodusEntityCache = interface(IDispatch)
     ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
     function getByJid(const jid: WideString; const node: WideString): IExodusEntity; safecall;
-    function fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; safecall;
+    function Fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; safecall;
     function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
     function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
   end;
@@ -842,7 +845,7 @@ type
   IExodusEntityCacheDisp = dispinterface
     ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
     function getByJid(const jid: WideString; const node: WideString): IExodusEntity; dispid 201;
-    function fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; dispid 202;
+    function Fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; dispid 202;
     function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 203;
     function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 204;
   end;
@@ -854,26 +857,26 @@ type
 // *********************************************************************//
   IExodusEntity = interface(IDispatch)
     ['{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}']
-    function hasFeature(const Feature: WideString): WordBool; safecall;
+    function hasFeature(const feature: WideString): WordBool; safecall;
     function hasIdentity(const Category: WideString; const DiscoType: WideString): WordBool; safecall;
     function hasItems: WordBool; safecall;
     function hasInfo: WordBool; safecall;
     function Get_jid: WideString; safecall;
     function Get_node: WideString; safecall;
-    function Get_category: WideString; safecall;
-    function Get_discoType: WideString; safecall;
+    function Get_Category: WideString; safecall;
+    function Get_DiscoType: WideString; safecall;
     function Get_Name: WideString; safecall;
     function Get_FeatureCount: Integer; safecall;
-    function Get_Feature(Index: Integer): WideString; safecall;
+    function Get_feature(Index: Integer): WideString; safecall;
     function Get_ItemsCount: Integer; safecall;
     function Get_Item(Index: Integer): IExodusEntity; safecall;
     property jid: WideString read Get_jid;
     property node: WideString read Get_node;
-    property category: WideString read Get_category;
-    property discoType: WideString read Get_discoType;
+    property Category: WideString read Get_Category;
+    property DiscoType: WideString read Get_DiscoType;
     property Name: WideString read Get_Name;
     property FeatureCount: Integer read Get_FeatureCount;
-    property Feature[Index: Integer]: WideString read Get_Feature;
+    property feature[Index: Integer]: WideString read Get_feature;
     property ItemsCount: Integer read Get_ItemsCount;
     property Item[Index: Integer]: IExodusEntity read Get_Item;
   end;
@@ -885,17 +888,17 @@ type
 // *********************************************************************//
   IExodusEntityDisp = dispinterface
     ['{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}']
-    function hasFeature(const Feature: WideString): WordBool; dispid 201;
+    function hasFeature(const feature: WideString): WordBool; dispid 201;
     function hasIdentity(const Category: WideString; const DiscoType: WideString): WordBool; dispid 202;
     function hasItems: WordBool; dispid 203;
     function hasInfo: WordBool; dispid 204;
     property jid: WideString readonly dispid 205;
     property node: WideString readonly dispid 206;
-    property category: WideString readonly dispid 207;
-    property discoType: WideString readonly dispid 208;
+    property Category: WideString readonly dispid 207;
+    property DiscoType: WideString readonly dispid 208;
     property Name: WideString readonly dispid 209;
     property FeatureCount: Integer readonly dispid 210;
-    property Feature[Index: Integer]: WideString readonly dispid 211;
+    property feature[Index: Integer]: WideString readonly dispid 211;
     property ItemsCount: Integer readonly dispid 212;
     property Item[Index: Integer]: IExodusEntity readonly dispid 213;
   end;

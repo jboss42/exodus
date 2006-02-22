@@ -22,7 +22,8 @@ unit ExSession;
 interface
 uses
     // Exodus'y stuff
-    COMRosterImages, COMController, COMRoster, COMPPDB, JabberID, 
+    COMEntityCache,
+    COMRosterImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
     S10n,
 
@@ -71,6 +72,7 @@ var
     ExCOMRoster: TExodusRoster;
     ExCOMPPDB: TExodusPPDB;
     ExCOMRosterImages: TExodusRosterImages;
+    ExCOMEntityCache: TExodusEntityCache;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
@@ -522,6 +524,7 @@ begin
     ExCOMRoster := TExodusRoster.Create();
     ExCOMPPDB := TExodusPPDB.Create();
     ExCOMRosterImages := TExodusRosterImages.Create();
+    ExCOMEntityCache := TExodusEntityCache.Create();
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
@@ -713,6 +716,7 @@ begin
     if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
     if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
     if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
+    if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
     if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
 
 end;
