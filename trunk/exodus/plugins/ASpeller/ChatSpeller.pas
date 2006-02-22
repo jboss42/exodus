@@ -32,7 +32,7 @@ type
   TChatSpeller = class(TAutoObject, IExodusChatPlugin)
   protected
     function onAfterMessage(var Body: WideString): WideString; safecall;
-    procedure onBeforeMessage(var Body: WideString); safecall;
+    function onBeforeMessage(var Body: WideString): WordBool; safecall;
     procedure onClose; safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onKeyPress(const Key: WideString); safecall;
@@ -118,9 +118,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TChatSpeller.onBeforeMessage(var Body: WideString);
+function TChatSpeller.onBeforeMessage(var Body: WideString): WordBool;
 begin
-
+    Result := true;
 end;
 
 {---------------------------------------}

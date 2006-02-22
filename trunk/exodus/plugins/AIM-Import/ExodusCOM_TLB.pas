@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/17/2006 9:25:41 AM from Type Library described below.
+// File generated on 2/21/2006 4:31:35 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,6 +22,8 @@ unit ExodusCOM_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
+//   (3) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -65,6 +67,10 @@ const
   CLASS_ExodusRosterGroup: TGUID = '{21D07EDA-E275-4F43-9933-D1C9F45FCA15}';
   IID_IExodusRosterImages: TGUID = '{F4AAF511-D144-42E7-B108-8A196D4BD115}';
   CLASS_ExodusRosterImages: TGUID = '{1ADA45EB-EE12-4AC1-9E2B-AF1723DD1A28}';
+  IID_IExodusEntityCache: TGUID = '{6759BFE4-C72D-42E3-86A3-1F343E848933}';
+  CLASS_ExodusEntityCache: TGUID = '{560DA524-0368-4DD1-8FD6-DEB5C4D3836F}';
+  IID_IExodusEntity: TGUID = '{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}';
+  CLASS_ExodusEntity: TGUID = '{E3AC5A8C-1771-4851-8CF0-106B4AD1AEBF}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -113,6 +119,10 @@ type
   IExodusRosterGroupDisp = dispinterface;
   IExodusRosterImages = interface;
   IExodusRosterImagesDisp = dispinterface;
+  IExodusEntityCache = interface;
+  IExodusEntityCacheDisp = dispinterface;
+  IExodusEntity = interface;
+  IExodusEntityDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -126,6 +136,8 @@ type
   ExodusPresence = IExodusPresence;
   ExodusRosterGroup = IExodusRosterGroup;
   ExodusRosterImages = IExodusRosterImages;
+  ExodusEntityCache = IExodusEntityCache;
+  ExodusEntity = IExodusEntity;
 
 
 // *********************************************************************//
@@ -425,7 +437,7 @@ type
 // *********************************************************************//
   IExodusChatPlugin = interface(IDispatch)
     ['{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}']
-    procedure onBeforeMessage(var Body: WideString); safecall;
+    function onBeforeMessage(var Body: WideString): WordBool; safecall;
     function onAfterMessage(var Body: WideString): WideString; safecall;
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
@@ -442,7 +454,7 @@ type
 // *********************************************************************//
   IExodusChatPluginDisp = dispinterface
     ['{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}']
-    procedure onBeforeMessage(var Body: WideString); dispid 1;
+    function onBeforeMessage(var Body: WideString): WordBool; dispid 1;
     function onAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure onKeyPress(const Key: WideString); dispid 3;
     procedure onContextMenu(const ID: WideString); dispid 4;
@@ -810,6 +822,85 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusEntityCache
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {6759BFE4-C72D-42E3-86A3-1F343E848933}
+// *********************************************************************//
+  IExodusEntityCache = interface(IDispatch)
+    ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
+    function getByJid(const jid: WideString; const node: WideString): IExodusEntity; safecall;
+    function fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; safecall;
+    function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
+    function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusEntityCacheDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {6759BFE4-C72D-42E3-86A3-1F343E848933}
+// *********************************************************************//
+  IExodusEntityCacheDisp = dispinterface
+    ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
+    function getByJid(const jid: WideString; const node: WideString): IExodusEntity; dispid 201;
+    function fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; dispid 202;
+    function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 203;
+    function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 204;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusEntity
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}
+// *********************************************************************//
+  IExodusEntity = interface(IDispatch)
+    ['{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}']
+    function hasFeature(const Feature: WideString): WordBool; safecall;
+    function hasIdentity(const Category: WideString; const DiscoType: WideString): WordBool; safecall;
+    function hasItems: WordBool; safecall;
+    function hasInfo: WordBool; safecall;
+    function Get_jid: WideString; safecall;
+    function Get_node: WideString; safecall;
+    function Get_category: WideString; safecall;
+    function Get_discoType: WideString; safecall;
+    function Get_Name: WideString; safecall;
+    function Get_FeatureCount: Integer; safecall;
+    function Get_Feature(Index: Integer): WideString; safecall;
+    function Get_ItemsCount: Integer; safecall;
+    function Get_Item(Index: Integer): IExodusEntity; safecall;
+    property jid: WideString read Get_jid;
+    property node: WideString read Get_node;
+    property category: WideString read Get_category;
+    property discoType: WideString read Get_discoType;
+    property Name: WideString read Get_Name;
+    property FeatureCount: Integer read Get_FeatureCount;
+    property Feature[Index: Integer]: WideString read Get_Feature;
+    property ItemsCount: Integer read Get_ItemsCount;
+    property Item[Index: Integer]: IExodusEntity read Get_Item;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusEntityDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}
+// *********************************************************************//
+  IExodusEntityDisp = dispinterface
+    ['{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}']
+    function hasFeature(const Feature: WideString): WordBool; dispid 201;
+    function hasIdentity(const Category: WideString; const DiscoType: WideString): WordBool; dispid 202;
+    function hasItems: WordBool; dispid 203;
+    function hasInfo: WordBool; dispid 204;
+    property jid: WideString readonly dispid 205;
+    property node: WideString readonly dispid 206;
+    property category: WideString readonly dispid 207;
+    property discoType: WideString readonly dispid 208;
+    property Name: WideString readonly dispid 209;
+    property FeatureCount: Integer readonly dispid 210;
+    property Feature[Index: Integer]: WideString readonly dispid 211;
+    property ItemsCount: Integer readonly dispid 212;
+    property Item[Index: Integer]: IExodusEntity readonly dispid 213;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -905,6 +996,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusRosterImages;
   end;
 
+// *********************************************************************//
+// The Class CoExodusEntityCache provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusEntityCache exposed by              
+// the CoClass ExodusEntityCache. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusEntityCache = class
+    class function Create: IExodusEntityCache;
+    class function CreateRemote(const MachineName: string): IExodusEntityCache;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusEntity provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusEntity exposed by              
+// the CoClass ExodusEntity. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusEntity = class
+    class function Create: IExodusEntity;
+    class function CreateRemote(const MachineName: string): IExodusEntity;
+  end;
+
 implementation
 
 uses ComObj;
@@ -987,6 +1102,26 @@ end;
 class function CoExodusRosterImages.CreateRemote(const MachineName: string): IExodusRosterImages;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterImages) as IExodusRosterImages;
+end;
+
+class function CoExodusEntityCache.Create: IExodusEntityCache;
+begin
+  Result := CreateComObject(CLASS_ExodusEntityCache) as IExodusEntityCache;
+end;
+
+class function CoExodusEntityCache.CreateRemote(const MachineName: string): IExodusEntityCache;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusEntityCache) as IExodusEntityCache;
+end;
+
+class function CoExodusEntity.Create: IExodusEntity;
+begin
+  Result := CreateComObject(CLASS_ExodusEntity) as IExodusEntity;
+end;
+
+class function CoExodusEntity.CreateRemote(const MachineName: string): IExodusEntity;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusEntity) as IExodusEntity;
 end;
 
 end.
