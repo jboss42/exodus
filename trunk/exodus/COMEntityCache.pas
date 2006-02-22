@@ -93,7 +93,10 @@ var
     ce: TExodusEntity;
 begin
     e := jEntityCache.getByJid(jid, node);
-    ce := TExodusEntity.Create(e);
+    if (e <> nil) then
+        ce := TExodusEntity.Create(e)
+    else
+        ce := nil;
     Result := ce;
 end;
 

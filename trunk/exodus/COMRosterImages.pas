@@ -24,8 +24,8 @@ unit COMRosterImages;
 interface
 
 uses
-    Classes, IdCoderMime, Graphics, 
-    ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    Classes, IdCoderMime, ExodusCOM_TLB,
+    Windows, Graphics, ComObj, ActiveX,  StdVcl;
 
 type
   TExodusRosterImages = class(TAutoObject, IExodusRosterImages)
@@ -33,8 +33,8 @@ type
     function AddImageBase64(const id, base64: WideString): Integer; safecall;
     function AddImageFilename(const id, filename: WideString): Integer;
       safecall;
-    function AddImageResource(const id: WideString; instance,
-      res_id: Integer): Integer; safecall;
+    function AddImageResource(const ID, LibName, ResName: WideString): Integer;
+      safecall;
     function Find(const id: WideString): Integer; safecall;
     procedure Remove(const id: WideString); safecall;
 
@@ -113,9 +113,11 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusRosterImages.AddImageResource(const id: WideString;
-  instance, res_id: Integer): Integer;
+function TExodusRosterImages.AddImageResource(const ID, LibName,
+  ResName: WideString): Integer;
 var
+    lname: string;
+    ins: THandle;
     idx: integer;
 begin
     idx := RosterTreeImages.Find(id);
@@ -124,8 +126,13 @@ begin
         exit;
     end;
 
-    _bmp.LoadFromResourceID(instance, res_id);
-    Result := RosterTreeImages.AddImage(id, _bmp);
+    lname := LibName;
+    ins := LoadLibrary(PChar(lname));
+    if (ins > 0) then begin
+        _bmp.LoadFromResourceName(ins, ResName);
+        Result := RosterTreeImages.AddImage(id, _bmp);
+        FreeLibrary(ins);
+    end;
 end;
 
 {---------------------------------------}

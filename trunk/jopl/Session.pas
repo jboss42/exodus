@@ -543,6 +543,9 @@ begin
     else if (not _authd) then 
         _auth_agent.CancelAuthentication();
 
+    // Do this before we invalidate our state
+    _dispatcher.DispatchSignal('/session/disconnected', nil);
+
     // Clear the roster, ppdb and fire the callbacks
     _first_pres := false;
     _authd := false;
@@ -566,7 +569,6 @@ begin
     jEntityCache.Clear();
     jCapsCache.Clear();
 
-    _dispatcher.DispatchSignal('/session/disconnected', nil);
 end;
 
 {---------------------------------------}

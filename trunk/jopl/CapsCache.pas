@@ -27,11 +27,25 @@ uses
     XMLTag, Unicode, Classes, SysUtils;
 
 type
+
+    TJabberCapsPending = class
+    public
+        capsid: Widestring;
+        jids: TWidestringlist;
+        constructor Create(cid: Widestring);
+        destructor Destroy(); override;
+    end;
+
     TJabberCapsCache = class
     private
         _xp: TXPLite;
+        _xp_q: TXPLite;
         _js: TObject;
         _cache: TWidestringlist;
+        _pending: TWidestringlist;
+
+        procedure addPending(ejid, node, caps_jid: Widestring);
+        procedure fireCaps(jid, capid: Widestring);
 
     published
         procedure PresCallback(event: string; tag: TXMLTag);
@@ -44,12 +58,15 @@ type
         procedure SetSession(js: TObject);
 
         procedure Clear();
-        procedure Save(filename: Widestring);
-        procedure Load(filename: Widestring);
+        procedure Save(filename: Widestring = '');
+        procedure Load(filename: Widestring = '');
     end;
 
 var
     jCapsCache: TJabberCapsCache;
+
+const
+    capsFilename = 'capscache.xml';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -57,20 +74,40 @@ var
 implementation
 
 uses
-    XMLParser, 
+    PrefController, XMLParser,
     DiscoIdentity, JabberUtils, JabberID, Entity, EntityCache, JabberConst, Session;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TJabberCapsPending.Create(cid: Widestring);
+begin
+    jids := TWidestringlist.Create();
+    capsid := cid;
+end;
+
+{---------------------------------------}
+destructor TJabberCapsPending.Destroy();
+begin
+    jids.Free();
+end;
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 constructor TJabberCapsCache.Create();
 begin
     _cache := TWidestringlist.Create();
+    _pending := TWidestringlist.Create();
     _xp := TXPLite.Create('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
+    _xp_q := TXPLite.Create('/iq/query[@xmlns="' + XMLNS_DISCOINFO + '"]');
 end;
 
 {---------------------------------------}
 destructor TJabberCapsCache.Destroy();
 begin
     _cache.Free();
+    _pending.Free();
 end;
 
 {---------------------------------------}
@@ -85,18 +122,66 @@ end;
 
 {---------------------------------------}
 procedure TJabberCapsCache.SessionCallback(event: string; tag: TXMLTag);
+var
+    i, idx: integer;
+    p: TJabberCapsPending;
+    key: Widestring;
+    q: TXMLTag;
 begin
-    //
+    // Save when we get disconnected, and load when we get auth'd
+    if (event = '/session/authenticated') then
+        Load()
+    else if (event = '/session/disconnected') then
+        Save()
+    else if ((event = '/session/entity/info') and (tag <> nil)) then begin
+        // check to see if this is in our pending list
+        q := tag.QueryXPTag(_xp_q);
+        if (q = nil) then exit;
+
+        // key into pending is from#node
+        key := tag.getAttribute('from') + '#' + q.GetAttribute('node');
+        idx := _pending.IndexOf(key);
+        if (idx = -1) then exit;
+
+        p := TJabberCapsPending(_pending.Objects[idx]);
+        for i := 0 to p.jids.Count - 1 do
+            fireCaps(p.jids[i], p.capsid);
+        p.Free();
+        _pending.Delete(idx);
+    end;
+end;
+
+{---------------------------------------}
+procedure TJabberCapsCache.addPending(ejid, node, caps_jid: Widestring);
+var
+    key: Widestring;
+    p: TJabberCapsPending;
+    idx: integer;
+begin
+    // key into pending is from#node
+    key := ejid + '#' + node;
+    idx := _pending.IndexOf(key);
+    if (idx = -1) then begin
+        p := TJabberCapsPending.Create(node);
+        _pending.AddObject(key, p);
+    end
+    else
+        p := TJabberCapsPending(_pending.Objects[idx]);
+
+    idx := p.jids.IndexOf(caps_jid);
+    if (idx = -1) then
+        p.jids.Add(caps_jid);
 end;
 
 {---------------------------------------}
 procedure TJabberCapsCache.Clear();
 begin
     _cache.Clear();
+    _pending.Clear();
 end;
 
 {---------------------------------------}
-procedure TJabberCapsCache.Save(filename: Widestring);
+procedure TJabberCapsCache.Save(filename: Widestring = '');
 var
     c, f, i: integer;
     di: TDiscoIdentity;
@@ -110,26 +195,33 @@ begin
 
     for c := 0 to _cache.Count - 1 do begin
         e := TJabberEntity(_cache.Objects[c]);
-        iq := cache.AddTag('iq');
-        iq.setAttribute('from', e.Jid.full);
-        iq.setAttribute('capid', _cache[c]);
-        
-        q := iq.AddTagNS('query', XMLNS_DISCOINFO);
-        for i := 0 to e.IdentityCount - 1 do begin
-            di := e.Identities[i];
-            cur := q.AddTag('identity');
-            cur.setAttribute('category', di.Category);
-            cur.setAttribute('type', di.DiscoType);
-        end;
 
-        for f := 0 to e.FeatureCount - 1 do begin
-            cur := q.AddTag('feature');
-            cur.setAttribute('var', e.Features[f]);
+        if (e.hasInfo) then begin
+            iq := cache.AddTag('iq');
+            iq.setAttribute('from', e.Jid.full);
+            iq.setAttribute('capid', _cache[c]);
+
+            q := iq.AddTagNS('query', XMLNS_DISCOINFO);
+            for i := 0 to e.IdentityCount - 1 do begin
+                di := e.Identities[i];
+                cur := q.AddTag('identity');
+                cur.setAttribute('category', di.Category);
+                cur.setAttribute('type', di.DiscoType);
+            end;
+
+            for f := 0 to e.FeatureCount - 1 do begin
+                cur := q.AddTag('feature');
+                cur.setAttribute('var', e.Features[f]);
+            end;
         end;
     end;
 
     s := TWidestringlist.Create();
     s.Add(cache.xml);
+
+    if (filename = '') then
+        filename := getUserDir() + capsFilename;
+
     s.SaveToFile(filename);
     s.Free();
 
@@ -137,7 +229,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberCapsCache.Load(filename: Widestring);
+procedure TJabberCapsCache.Load(filename: Widestring = '');
 var
     e: TJabberEntity;
     i: integer;
@@ -147,6 +239,11 @@ var
     capid, from: Widestring;
 begin
     parser := TXMLTagParser.Create();
+
+    if (filename = '') then
+        filename := getUserDir() + capsFilename;
+    if (not FileExists(filename)) then exit;
+
     parser.ParseFile(filename);
 
     if (parser.Count = 0) then begin
@@ -202,13 +299,21 @@ procedure TJabberCapsCache.PresCallback(event: string; tag: TXMLTag);
         Result := cache;
     end;
 
+    function checkInfo(cache: TJabberEntity; capid: Widestring; jid: TJabberID): boolean;
+    begin
+        Result := cache.hasInfo;
+        if (not Result) then
+            addPending(cache.Jid.full, capid, jid.full);
+    end;
+
 var
+    has_info: boolean;
     i: integer;
     cache, e: TJabberEntity;
     c: TXMLTag;
     exts: Widestring;
     from: TJabberID;
-    node, capid: Widestring;
+    node, cid, capid: Widestring;
     ids: TWidestringlist;
 begin
     if (event <> 'xml') then exit;
@@ -230,31 +335,50 @@ begin
 
     node := c.GetAttribute('node');
     capid := node + '#' + c.getAttribute('ver');
+    cid := capid;
 
     from := TJabberID.Create(tag.getAttribute('from'));
     e := jEntityCache.getByJid(from.full);
     if (e = nil) then begin
-        e := TJabberEntity.Create(from);
+        e := TJabberEntity.Create(TJabberID.Create(from));
         jEntityCache.Add(from.full, e);
     end;
 
     cache := getCache(capid, from);
     e.AddReference(cache);
+    has_info := checkInfo(cache, cid, from);
 
     exts := c.GetAttribute('ext');
     if (exts <> '') then begin
         ids := TWidestringlist.Create();
         split(exts, ids, ' ');
-
         for i := 0 to ids.count - 1 do begin
             capid := node + '#' + ids[i];
             cache := getCache(capid, from);
+            has_info := (has_info and checkInfo(cache, capid, from));
             e.AddReference(cache);
         end;
+        ids.Free();
     end;
 
+    if (has_info) then
+        fireCaps(from.full, cid);
+
+    from.Free();
 end;
 
+{---------------------------------------}
+procedure TJabberCapsCache.fireCaps(jid, capid: Widestring);
+var
+    caps: TXMLTag;
+begin
+    // we have all the info for this jid, send an event.
+    caps := TXMLTag.Create('caps');
+    caps.setAttribute('from', jid);
+    caps.setAttribute('capid', capid);
+    MainSession.FireEvent('/session/caps', caps);
+    caps.Free();
+end;
 
 initialization
     jCapsCache := TJabberCapsCache.Create();
