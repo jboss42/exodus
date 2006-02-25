@@ -251,6 +251,9 @@ begin
         eType := evt_Message;
 
         // setup the form for sending a msg
+
+        // XXX: check for sending normal msgs to offline users who can't do offline
+        
         SetupSend();
         recips.Add(msg_jid);
         SetupResources();

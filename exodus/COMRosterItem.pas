@@ -62,6 +62,10 @@ type
     procedure setCleanGroups; safecall;
     function Get_ImagePrefix: WideString; safecall;
     procedure Set_ImagePrefix(const Value: WideString); safecall;
+    function Get_CanOffline: WordBool; safecall;
+    function Get_IsNative: WordBool; safecall;
+    procedure Set_CanOffline(Value: WordBool); safecall;
+    procedure Set_IsNative(Value: WordBool); safecall;
     { Protected declarations }
   private
     _ritem: TJabberRosterItem;
@@ -298,6 +302,30 @@ end;
 procedure TExodusRosterItem.Set_ImagePrefix(const Value: WideString);
 begin
     _ritem.ImagePrefix := Value;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_CanOffline: WordBool;
+begin
+    Result := _ritem.CanOffline;
+end;
+
+{---------------------------------------}
+function TExodusRosterItem.Get_IsNative: WordBool;
+begin
+    Result := _ritem.IsNative;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_CanOffline(Value: WordBool);
+begin
+    _ritem.CanOffline := Value;
+end;
+
+{---------------------------------------}
+procedure TExodusRosterItem.Set_IsNative(Value: WordBool);
+begin
+    _ritem.IsNative := Value;
 end;
 
 initialization

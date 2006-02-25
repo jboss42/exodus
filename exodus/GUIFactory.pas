@@ -124,24 +124,26 @@ begin
             else
                 win := StartChat(tmp_jid.jid, '', true);
 
-            // make sure it's not minimized
-            if (win.WindowState <> wsNormal) then
-                win.WindowState := wsNormal;
+            if (win <> nil) then begin
+                // make sure it's not minimized
+                if (win.WindowState <> wsNormal) then
+                    win.WindowState := wsNormal;
 
-            // make sure it's visible
-            win.Show();
+                // make sure it's visible
+                win.Show();
 
-            // make sure it's in front
-            if (not win.Docked) then
-                win.BringToFront();
+                // make sure it's in front
+                if (not win.Docked) then
+                    win.BringToFront();
 
-            if ((MainSession.Prefs.getBool('expanded')) and
-                (win.TabSheet <> nil) and
-                (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
-                frmExodus.Tabs.ActivePage := win.TabSheet;
+                if ((MainSession.Prefs.getBool('expanded')) and
+                    (win.TabSheet <> nil) and
+                    (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
+                    frmExodus.Tabs.ActivePage := win.TabSheet;
 
-            // make sure to put the cursor in the outbound text entry box
-            win.MsgOut.SetFocus();
+                // make sure to put the cursor in the outbound text entry box
+                win.MsgOut.SetFocus();
+            end;
         end
         else if (r = 1) then
             StartMsg(tmp_jid.jid);
@@ -164,9 +166,10 @@ begin
             // New Chat Window
             tmp_jid := TJabberID.Create(tag.getAttribute('from'));
             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
+            if (chat <> nil) then
+                DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                     chat.Othernick, RosterTreeImages.Find('contact'));
             tmp_jid.Free;
-            DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                     chat.Othernick, RosterTreeImages.Find('contact'))
         end;
     end
 

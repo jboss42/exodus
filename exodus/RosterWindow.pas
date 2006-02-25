@@ -1978,7 +1978,7 @@ end;
 procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
 var
-    me, o, e: boolean;
+    offline, native, me, o, e: boolean;
     b, u: boolean;
     i, r: integer;
     n: TTreeNode;
@@ -2019,23 +2019,29 @@ begin
         else begin
             treeRoster.PopupMenu := popRoster;
             treeRoster.Selected := n;
-            o := false;
-            me := false;
+
+            o := false;         // online?
+            me := false;        // is this me?
+            native := true;     // are they native jabber?
+            offline := true;    // can they do offline?
+
             e := (_cur_ritem <> nil);
             if (e) then begin
                 // check to see if this person is online
                 ri := TJabberRosterItem(n.Data);
                 pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
                 o := (pri <> nil);
+                native := ri.IsNative;
+                offline := ri.CanOffline;
             end;
 
-            popChat.Enabled := e;
-            popMsg.Enabled := e;
+            popChat.Enabled := (e and (o or offline));
+            popMsg.Enabled := (e and (o or offline));
             popProperties.Enabled := true;
-            popSendFile.Enabled := (o) and
+            popSendFile.Enabled := (o) and (native) and
                 (MainSession.Profile.ConnectionType = conn_normal);
-                // and (not me);
-            popPresence.Enabled := e and (not me);
+            popInvite.Enabled := (native);
+            popPresence.Enabled := (e and (not me));
             popClientInfo.Enabled := true;
             popVersion.Enabled := o;
             popTime.Enabled := o;
