@@ -128,6 +128,8 @@ type
         Removed: boolean;
         InlineEdit: boolean;
         CustomContext: TTntPopupMenu;
+        IsNative: boolean;
+        CanOffline: boolean;
 
         constructor Create(id: Widestring); overload;
         destructor Destroy; override;
@@ -450,6 +452,8 @@ begin
     _dirty_grps := nil;
     _last_show := 'offline';
 
+    IsNative := true;
+    CanOffline := true;
     InlineEdit := false;
     Removed := false;
 

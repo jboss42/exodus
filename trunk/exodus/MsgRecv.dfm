@@ -22,7 +22,7 @@ object frmMsgRecv: TfrmMsgRecv
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 187
+    Top = 191
     Width = 377
     Height = 3
     Cursor = crVSplit
@@ -30,7 +30,7 @@ object frmMsgRecv: TfrmMsgRecv
   end
   object pnlReply: TPanel
     Left = 0
-    Top = 190
+    Top = 194
     Width = 377
     Height = 192
     Align = alBottom
@@ -168,7 +168,7 @@ object frmMsgRecv: TfrmMsgRecv
     Left = 0
     Top = 76
     Width = 377
-    Height = 81
+    Height = 85
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -453,7 +453,7 @@ object frmMsgRecv: TfrmMsgRecv
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 157
+    Top = 161
     Width = 377
     Height = 30
     Align = alBottom

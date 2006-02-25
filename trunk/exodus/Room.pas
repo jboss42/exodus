@@ -754,10 +754,12 @@ begin
         nick := _selectNick(wsl);
         if (nick = '') then exit;
         chat_win := StartChat(self.jid, nick, true, nick);
-        if (chat_win.TabSheet <> nil) then
-            frmExodus.Tabs.ActivePage := chat_win.TabSheet
-        else
-            chat_win.Show();
+        if (chat_win <> nil) then begin
+            if (chat_win.TabSheet <> nil) then
+                frmExodus.Tabs.ActivePage := chat_win.TabSheet
+            else
+                chat_win.Show();
+        end;
         Result := true;
     end
     else if (cmd = '/msg') then begin
@@ -1893,10 +1895,12 @@ begin
 
     tmp_jid := TJabberID.Create(rm.jid);
     chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
-    if (chat_win.TabSheet <> nil) then
-        frmExodus.Tabs.ActivePage := chat_win.TabSheet
-    else
-        chat_win.Show();
+    if (chat_win <> nil) then begin
+        if (chat_win.TabSheet <> nil) then
+            frmExodus.Tabs.ActivePage := chat_win.TabSheet
+        else
+            chat_win.Show();
+    end;
 
     tmp_jid.Free();
 end;

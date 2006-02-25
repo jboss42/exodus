@@ -155,7 +155,7 @@ type
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 
     procedure sendMsg; override;
-    procedure SetJID(cjid: widestring);
+    function  SetJID(cjid: widestring): boolean;
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -287,7 +287,14 @@ begin
         else
             cjid := sjid;
         tmp_jid.Free;
-        SetJID(cjid);
+
+        if (SetJID(cjid) = false) then begin
+            // we can't chat with this person for some reason
+            Result := nil;
+            chat.Free();
+            exit;
+        end;
+
         SetupResources();
 
         chat.OnMessage := MessageEvent;
@@ -445,7 +452,7 @@ end;
 
 
 {---------------------------------------}
-procedure TfrmChat.SetJID(cjid: widestring);
+function TfrmChat.SetJID(cjid: widestring): boolean;
 var
     ritem: TJabberRosterItem;
     p: TJabberPres;
@@ -455,6 +462,7 @@ var
     //dp: TCapPresence;
     n: Widestring;
 begin
+    Result := true;
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
 
@@ -503,6 +511,14 @@ begin
 
     if ((ritem <> nil) and (ritem.tag <> nil) and
         (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
+
+        // if this person can not do offline msgs, and they are offline, bail
+        if ((not ritem.CanOffline) and (p = nil)) then begin
+            MessageDlgW(_('This contact can not receive offline messages.'), mtError,
+                [mbOK], 0);
+            Result := false;
+            exit;
+        end;
 
         // This person is in our roster
         lblNick.Caption := ritem.Text;

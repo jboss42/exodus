@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/22/2006 11:47:02 AM from Type Library described below.
+// File generated on 2/24/2006 12:02:48 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -590,6 +590,10 @@ type
     procedure setCleanGroups; safecall;
     function Get_ImagePrefix: WideString; safecall;
     procedure Set_ImagePrefix(const Value: WideString); safecall;
+    function Get_IsNative: WordBool; safecall;
+    procedure Set_IsNative(Value: WordBool); safecall;
+    function Get_CanOffline: WordBool; safecall;
+    procedure Set_CanOffline(Value: WordBool); safecall;
     property JabberID: WideString read Get_JabberID write Set_JabberID;
     property Subscription: WideString read Get_Subscription write Set_Subscription;
     property Ask: WideString read Get_Ask;
@@ -604,6 +608,8 @@ type
     property InlineEdit: WordBool read Get_InlineEdit write Set_InlineEdit;
     property IsContact: WordBool read Get_IsContact write Set_IsContact;
     property ImagePrefix: WideString read Get_ImagePrefix write Set_ImagePrefix;
+    property IsNative: WordBool read Get_IsNative write Set_IsNative;
+    property CanOffline: WordBool read Get_CanOffline write Set_CanOffline;
   end;
 
 // *********************************************************************//
@@ -635,6 +641,8 @@ type
     procedure removeGroup(const grp: WideString); dispid 211;
     procedure setCleanGroups; dispid 212;
     property ImagePrefix: WideString dispid 209;
+    property IsNative: WordBool dispid 213;
+    property CanOffline: WordBool dispid 214;
   end;
 
 // *********************************************************************//
