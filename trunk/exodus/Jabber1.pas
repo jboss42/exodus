@@ -328,6 +328,8 @@ type
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
+    procedure _sendInitPresence();
+
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -1475,6 +1477,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
+begin
+    _sendInitPresence();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus._sendInitPresence();
 begin
     // set our presence now that we have our roster
 

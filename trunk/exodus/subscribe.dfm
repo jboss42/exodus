@@ -1,12 +1,12 @@
 object frmSubscribe: TfrmSubscribe
-  Left = 309
-  Top = 495
+  Left = 250
+  Top = 165
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 3
   Caption = 'Subscription Request'
-  ClientHeight = 198
-  ClientWidth = 252
+  ClientHeight = 218
+  ClientWidth = 322
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -24,8 +24,8 @@ object frmSubscribe: TfrmSubscribe
   TextHeight = 13
   object Label1: TTntLabel
     Left = 0
-    Top = 23
-    Width = 252
+    Top = 35
+    Width = 322
     Height = 26
     Align = alTop
     Caption = 
@@ -35,32 +35,14 @@ object frmSubscribe: TfrmSubscribe
   end
   object Bevel1: TBevel
     Left = 0
-    Top = 21
-    Width = 252
+    Top = 33
+    Width = 322
     Height = 2
     Align = alTop
   end
-  object lblJID: TTntLabel
-    Left = 0
-    Top = 0
-    Width = 252
-    Height = 21
-    Cursor = crHandPoint
-    Align = alTop
-    AutoSize = False
-    Caption = 'lblJID'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clBlue
-    Font.Height = -13
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
-    Transparent = False
-    OnClick = lblJIDClick
-  end
   object chkSubscribe: TTntCheckBox
     Left = 8
-    Top = 56
+    Top = 69
     Width = 217
     Height = 17
     Caption = 'Add this person to my roster'
@@ -71,8 +53,8 @@ object frmSubscribe: TfrmSubscribe
   end
   object boxAdd: TGroupBox
     Left = 24
-    Top = 72
-    Width = 209
+    Top = 88
+    Width = 289
     Height = 81
     TabOrder = 1
     object lblNickname: TTntLabel
@@ -92,14 +74,14 @@ object frmSubscribe: TfrmSubscribe
     object txtNickname: TTntEdit
       Left = 70
       Top = 14
-      Width = 121
+      Width = 200
       Height = 21
       TabOrder = 0
     end
     object cboGroup: TTntComboBox
       Left = 70
       Top = 44
-      Width = 123
+      Width = 200
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
@@ -109,20 +91,20 @@ object frmSubscribe: TfrmSubscribe
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 162
-    Width = 252
+    Top = 182
+    Width = 322
     Height = 36
     Align = alBottom
     AutoScroll = False
     TabOrder = 2
     inherited Panel2: TPanel
-      Width = 252
+      Width = 322
       Height = 36
       inherited Bevel1: TBevel
-        Width = 252
+        Width = 322
       end
       inherited Panel1: TPanel
-        Left = 92
+        Left = 162
         Height = 31
         inherited btnOK: TTntButton
           Caption = 'Accept'
@@ -135,9 +117,46 @@ object frmSubscribe: TfrmSubscribe
       end
     end
   end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 322
+    Height = 33
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 3
+    object imgIdent: TImage
+      Left = 0
+      Top = 0
+      Width = 33
+      Height = 33
+      Align = alLeft
+      Center = True
+      Transparent = True
+    end
+    object lblJID: TTntLabel
+      Left = 33
+      Top = 0
+      Width = 289
+      Height = 33
+      Cursor = crHandPoint
+      Align = alClient
+      AutoSize = False
+      Caption = 'lblJID'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlue
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+      Transparent = False
+      Layout = tlCenter
+      OnClick = lblJIDClick
+    end
+  end
   object PopupMenu1: TTntPopupMenu
-    Left = 8
-    Top = 168
+    Left = 208
+    Top = 56
     object mnuProfile: TTntMenuItem
       Caption = 'Show Profile'
       OnClick = mnuProfileClick

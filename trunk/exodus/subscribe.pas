@@ -22,8 +22,9 @@ unit Subscribe;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus;
+    XMLTag, NodeItem, JabberID,
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus;
 
 type
   TfrmSubscribe = class(TForm)
@@ -35,12 +36,14 @@ type
     txtNickname: TTntEdit;
     lblGroup: TTntLabel;
     cboGroup: TTntComboBox;
-    Bevel1: TBevel;
     PopupMenu1: TTntPopupMenu;
-    lblJID: TTntLabel;
     mnuMessage: TTntMenuItem;
     mnuChat: TTntMenuItem;
     mnuProfile: TTntMenuItem;
+    Panel1: TPanel;
+    imgIdent: TImage;
+    lblJID: TTntLabel;
+    Bevel1: TBevel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -53,8 +56,16 @@ type
     procedure chkSubscribeClick(Sender: TObject);
   private
     { Private declarations }
+    _jid: Widestring;
+    _capsid: Widestring;
+    _capscb: integer;
+
+  published
+    procedure CapsCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
+    procedure setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
     procedure EnableAdd(e: boolean);
   end;
 
@@ -68,12 +79,105 @@ procedure CloseSubscribeWindows();
 {---------------------------------------}
 implementation
 uses
-    ChatWin, JabberUtils, ExUtils,  GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
+    RosterImages,
+    JabberConst, JabberUtils, ExUtils, CapsCache, EntityCache, Entity,
+    ChatWin, GnuGetText, MsgRecv, Session, Profile, Presence;
 
 var
     _subscribe_windows: TList;
 
 {$R *.DFM}
+
+{---------------------------------------}
+procedure TfrmSubscribe.setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
+var
+    c: TXMLTag;
+    dgrp, id, capid: Widestring;
+    e: TJabberEntity;
+    idx: integer;
+begin
+    _jid := jid.full;
+    lblJID.Caption := jid.full;
+
+    chkSubscribe.Checked := true;
+    chkSubscribe.Enabled := true;
+
+    if (ri <> nil) then begin
+        if ((ri.Subscription = 'to') or (ri.Subscription = 'both')) then begin
+            chkSubscribe.Checked := false;
+            chkSubscribe.Enabled := false;
+        end;
+    end;
+
+    EnableAdd(chkSubscribe.Enabled);
+
+    if (chkSubscribe.Enabled) then begin
+        MainSession.Roster.AssignGroups(cboGroup.Items);
+        dgrp := MainSession.Prefs.getString('roster_default');
+        cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
+        if (ri <> nil) then begin
+            txtNickName.Text := ri.Text;
+            if (ri.GroupCount > 0) then
+                cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
+        end
+        else
+            txtNickname.Text := jid.user;
+    end;
+
+    idx := -1;
+
+    c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
+    if (c <> nil) then begin
+        capid := c.GetAttribute('node') + '#' + c.getAttribute('ver');
+        e := jCapsCache.find(capid);
+        if (e <> nil) then begin
+
+            // make sure we're not waiting for caps
+            if (not e.hasInfo) then begin
+                // bail out early so we leave the image empty
+                _capsid := capid;
+                _capscb := MainSession.RegisterCallback(CapsCallback, '/session/caps');
+                exit;
+            end
+            else if (e.IdentityCount > 0) then begin
+                // use the first identity we find, and get the image
+                id := e.Identities[0].Name;
+                idx := RosterTreeImages.Find('identity#' + id);
+            end;
+        end;
+    end;
+
+    if (idx = -1) then
+        idx := RosterTreeImages.Find('available');
+
+    if (idx >= 0) then
+        RosterTreeImages.GetImage(idx, imgIdent);
+end;
+
+{---------------------------------------}
+procedure TfrmSubscribe.CapsCallback(event: string; tag: TXMLTag);
+var
+    idx: integer;
+    id: Widestring;
+    e: TJabberEntity;
+begin
+    if (tag.GetAttribute('capsid') = _capsid) then begin
+        e := jCapsCache.find(_capsid);
+        assert(e <> nil);
+        assert(e.hasInfo);
+
+        if (e.IdentityCount > 0) then begin
+            id := e.Identities[0].Name;
+            idx := RosterTreeImages.Find('identity#' + id);
+
+            if (idx >= 0) then
+                RosterTreeImages.GetImage(idx, imgIdent);
+        end;
+
+        MainSession.UnRegisterCallback(_capscb);
+        _capscb := -1;
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmSubscribe.frameButtons1btnOKClick(Sender: TObject);
@@ -153,6 +257,7 @@ begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
     _subscribe_windows.Add(Self);
+    _capscb := -1;
 end;
 
 {---------------------------------------}
@@ -163,6 +268,9 @@ begin
     idx := _subscribe_windows.IndexOf(Self);
     if (idx > -1) then
         _subscribe_windows.Delete(idx);
+
+    if ((_capscb <> -1) and (MainSession <> nil)) then
+        MainSession.UnRegisterCallback(_capscb);
 end;
 
 {---------------------------------------}
