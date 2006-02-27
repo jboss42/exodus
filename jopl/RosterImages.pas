@@ -45,6 +45,8 @@ type
         procedure Remove(ImageIndex: integer); overload;
         procedure Remove(id: Widestring); overload;
         function  Find(id: Widestring): integer;
+
+        procedure GetImage(index: integer; img: TImage);
         procedure GetIcon(index: integer; icon: TIcon);
     end;
 
@@ -216,6 +218,13 @@ begin
     end;
 
     _imglist.GetIcon(index, icon);
+end;
+
+{---------------------------------------}
+procedure TRosterImages.GetImage(index: integer; img: TImage);
+begin
+    if (_imglist = nil) then exit;
+    _imglist.GetBitmap(index, img.Picture.Bitmap);
 end;
 
 initialization

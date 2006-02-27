@@ -24,7 +24,7 @@ uses
     {$ifdef Exodus}
     TntClasses,
     {$endif}
-    XMLTag, Unicode, Classes, SysUtils;
+    Entity, XMLTag, Unicode, Classes, SysUtils;
 
 type
 
@@ -57,6 +57,8 @@ type
 
         procedure SetSession(js: TObject);
 
+        function find(capid: Widestring): TJabberEntity;
+
         procedure Clear();
         procedure Save(filename: Widestring = '');
         procedure Load(filename: Widestring = '');
@@ -75,7 +77,7 @@ implementation
 
 uses
     PrefController, XMLParser,
-    DiscoIdentity, JabberUtils, JabberID, Entity, EntityCache, JabberConst, Session;
+    DiscoIdentity, JabberUtils, JabberID, EntityCache, JabberConst, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -274,6 +276,17 @@ begin
     cache.Free();
     parser.Free();
 
+end;
+
+{---------------------------------------}
+function TJabberCapsCache.find(capid: Widestring): TJabberEntity;
+var
+    idx: integer;
+begin
+    Result := nil;
+    idx := _cache.IndexOf(capid);
+    if (idx >= 0) then
+        Result := TJabberEntity(_cache.Objects[idx]);
 end;
 
 {---------------------------------------}

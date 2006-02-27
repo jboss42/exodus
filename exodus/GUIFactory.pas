@@ -82,9 +82,8 @@ end;
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
     r, i: integer;
-    dgrp, sjid: Widestring;
+    sjid: Widestring;
     tmp_jid: TJabberID;
-    tmp_b: boolean;
     win, chat: TfrmChat;
     room: TfrmRoom;
     sub: TfrmSubscribe;
@@ -233,12 +232,10 @@ begin
         sjid := tmp_jid.jid;
 
         ri := MainSession.Roster.Find(sjid);
-        tmp_b := true;
+
         if (ri <> nil) then begin
             if ((ri.subscription = 'from') or (ri.subscription = 'both')) then
                 exit;
-            if ((ri.subscription = 'to')) then
-                tmp_b := false;
         end;
 
         // block list?
@@ -247,23 +244,7 @@ begin
         if (_blockers.IndexOf(tmp_jid.jid) >= 0) then exit;
 
         sub := TfrmSubscribe.Create(Application);
-        with sub do begin
-            lblJID.Caption := sjid;
-            chkSubscribe.Checked := tmp_b;
-            chkSubscribe.Enabled := tmp_b;
-            MainSession.Roster.AssignGroups(cboGroup.Items);
-            dgrp := MainSession.Prefs.getString('roster_default');
-            cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
-            if (tmp_b) then begin
-                txtNickname.Text := tmp_jid.user;
-            end
-            else if (ri <> nil) then begin
-                txtNickName.Text := ri.Text;
-                if (ri.GroupCount > 0) then
-                    cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
-            end;
-            EnableAdd(tmp_b);
-        end;
+        sub.setup(tmp_jid, ri, tag);
         DoNotify(nil, 'notify_s10n',
                  'Subscription from ' + sjid, RosterTreeImages.Find('key'));
         tmp_jid.Free();
