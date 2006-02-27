@@ -24,7 +24,7 @@ interface
 uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, SelContact, Emote,
+    ShellAPI, Registry, SelContact, Emote, NodeItem, 
 
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -305,6 +305,7 @@ type
 
     // Some callbacks
     _sessioncb: integer;
+    _rostercb: integer;
     _dns_cb: integer;
 
     // Reconnect variables
@@ -357,6 +358,7 @@ type
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
     // This is only used for testing..
@@ -517,7 +519,7 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager, NodeItem, Stringprep, SSLWarn,
+    XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -838,6 +840,7 @@ begin
 
     // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/roster/end');
 
     // setup some branding stuff
     with (MainSession.Prefs) do begin
@@ -1320,18 +1323,6 @@ begin
         InitUpdateBranding();
         InitAutoUpdate();
 
-        // Don't broadcast our initial presence
-        _is_broadcast := true;
-        if (_is_autoxa) then
-            setAutoXA()
-        else if (_is_autoaway) then
-            setAutoAway()
-        else if (_last_show <> '') then
-            MainSession.setPresence(_last_show, _last_status, _last_priority)
-        else
-            MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
-        _is_broadcast := false;
-
         // if we have a new account, prompt for reg info
         if (_new_account) then begin
             if (MessageDlgW(_(sNewAccount), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
@@ -1480,6 +1471,25 @@ begin
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
         PostMessage(HWND_BROADCAST, sExodusPresence, self.Handle, msg.LParam);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
+begin
+    // set our presence now that we have our roster
+
+    // Don't broadcast our initial presence
+    _is_broadcast := true;
+    if (_is_autoxa) then
+        setAutoXA()
+    else if (_is_autoaway) then
+        setAutoAway()
+    else if (_last_show <> '') then
+        MainSession.setPresence(_last_show, _last_status, _last_priority)
+    else
+        MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
+    _is_broadcast := false;
+
 end;
 
 {---------------------------------------}
