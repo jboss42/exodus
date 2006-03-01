@@ -28,8 +28,6 @@ uses
 type
   TframeTreeRoster = class(TFrame)
     treeRoster: TTreeView;
-    ImageList1: TImageList;
-    ImageList2: TImageList;
     procedure treeRosterCollapsed(Sender: TObject; Node: TTreeNode);
     procedure treeRosterExpanded(Sender: TObject; Node: TTreeNode);
     procedure treeRosterCustomDrawItem(Sender: TCustomTreeView;
@@ -45,6 +43,7 @@ type
     _grp_nodes: TWideStringlist;
 
     _show_online: boolean;
+    _show_native: boolean;
     _show_status: boolean;
     _status_color: TColor;
     _offline: TTreeNode;
@@ -60,7 +59,7 @@ type
     { Public declarations }
     procedure Initialize();
     procedure Cleanup();
-    procedure DrawRoster(online_only: boolean);
+    procedure DrawRoster(online_only: boolean; native_only: boolean = true);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
     procedure ClearNodes();
     procedure ExpandNodes();
@@ -104,7 +103,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TframeTreeRoster.DrawRoster(online_only: boolean);
+procedure TframeTreeRoster.DrawRoster(online_only: boolean; native_only: boolean);
 var
     i: integer;
     ri: TJabberRosterItem;
@@ -112,9 +111,12 @@ var
 begin
     // loop through all roster items and draw them
     _show_online := online_only;
+    _show_native := native_only;
 
     _FullRoster := true;
     Self.ClearNodes();
+
+    treeRoster.Images := RosterTreeImages.ImageList;
 
     treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
     treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
@@ -252,6 +254,11 @@ begin
         ((p = nil) or (p.PresType = 'unavailable'))) then begin
         // Only show online, and don't use the offline grp
         // This person is not online, remove all nodes and bail
+        RemoveItemNodes(ritem);
+        exit;
+    end
+
+    else if ((_show_native) and (not ritem.IsNative)) then begin
         RemoveItemNodes(ritem);
         exit;
     end
@@ -564,7 +571,7 @@ begin
                     end;
 
                     // draw the image
-                    ImageList1.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+                    treeRoster.Images.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
                         nRect.Top, Node.ImageIndex);
 
                     // draw the text
@@ -608,7 +615,7 @@ begin
     if n = nil then exit;
     if (n.Level <> 0) then exit;
 
-    if X < (ImageList1.Width + 5) then begin
+    if (x < treeRoster.Images.Width + 5) then begin
         // clicking on a grp's widget
         if n.Expanded then
             n.Collapse(false)

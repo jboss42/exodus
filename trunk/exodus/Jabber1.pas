@@ -2959,7 +2959,7 @@ var
 begin
     // Send a msg via the tray menu popup
     fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.DrawRoster(true);
+    fsel.frameTreeRoster1.DrawRoster(true, false);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 
     if (fsel.ShowModal = mrOK) then begin
