@@ -197,6 +197,10 @@ type
     procedure lblModifyClick(Sender: TObject);
     procedure lblNewUserClick(Sender: TObject);
     procedure treeRosterEndDrag(Sender, Target: TObject; X, Y: Integer);
+    procedure treeRosterStartDrag(Sender: TObject;
+      var DragObject: TDragObject);
+    procedure treeRosterKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -245,6 +249,7 @@ type
     _offline_grp: boolean;          // Use the offline grp
     _show_unsub: boolean;           // Show unsubscribed contacts
     _drop_copy: boolean;            // is the drag operation trying to copy?
+    _drag_op: boolean;              // Are we doing a drag-n-drop?
     _avatars: boolean;
     _item_height: integer;
 
@@ -450,6 +455,8 @@ begin
     _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
     _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
     _drop := TExDropTarget.Create();
+    _drag_op := false;
+    _drop_copy := false;
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
     aniWait.Filename := '';
@@ -925,7 +932,6 @@ begin
 
     Result := node_none;
     _cur_ritem := nil;
-    //_cur_bm := nil;
     _cur_grp := '';
 
     if (n = nil) then exit;
@@ -1464,12 +1470,9 @@ procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 begin
     // Chat with this person
     _change_node := nil;
-    case getNodeType() of
-    node_ritem: begin
-        // chat or msg this person
+    if (getNodeType() = node_ritem) then
+        // Fire the associated event with this item
         MainSession.FireEvent(_cur_ritem.Action, _cur_ritem.Tag);
-    end;
-    end;
 end;
 
 {---------------------------------------}
@@ -1673,6 +1676,7 @@ end;
 procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
+    msg: string;
     al, ar: integer;
     n: TTreeNode;
 begin
@@ -1712,6 +1716,9 @@ begin
     end;
 
     _drop_copy :=  (ssCtrl in Shift);
+    msg := 'onMouseDown: _drop_copy = ' + BoolToStr(_drop_copy);
+    OutputDebugString(PChar(msg));
+
 end;
 
 {---------------------------------------}
@@ -1732,8 +1739,7 @@ var
 begin
     // send a client info request
     jid := '';
-    case (getNodeType()) of
-    node_ritem: begin
+    if (getNodeType() = node_ritem) then begin
         if (_cur_ritem = nil) then exit;
 
         // if the ritem has a res, then always lookup pres for it.
@@ -1742,14 +1748,13 @@ begin
                 _cur_ritem.Jid.resource)
         else
             p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-            
+
         if p = nil then
             // this person isn't online.
             jid := _cur_ritem.jid.jid
         else
             // they are online, send directly to the resource
             jid := p.fromJID.full;
-    end;
     end;
 
     if (jid = '') then exit;
@@ -1785,12 +1790,8 @@ end;
 procedure TfrmRosterWindow.popPropertiesClick(Sender: TObject);
 begin
     // Show properties for this roster item
-    case getNodeType() of
-    node_ritem: begin
-        if (_cur_ritem <> nil) then
+    if (getNodeType() = node_ritem) then
             ShowProfile(_cur_ritem.jid.jid);
-    end;
-    end;
 end;
 
 {---------------------------------------}
@@ -1801,8 +1802,7 @@ var
     go: TJabberGroup;
 begin
     // Remove this roster item.
-    case getNodeType() of
-    node_ritem: begin
+    if (getNodeType() = node_ritem) then begin
         // remove a roster item
         if _cur_ritem <> nil then begin
             go := nil;
@@ -1812,7 +1812,6 @@ begin
             if (go <> nil) then g := go.FullName else g := '';
             RemoveRosterItem(_cur_ritem.jid.full, g);
         end;
-    end;
     end;
 end;
 
@@ -2306,7 +2305,7 @@ begin
         ntype := getNodeType(Node);
         if (_avatars) then
             DefaultDraw := false
-        else if ((ntype = node_bm) or (ntype = node_transport)) then begin
+        else if (ntype = node_transport) then begin
             DefaultDraw := true;
             exit;
         end
@@ -2868,14 +2867,13 @@ var
     update: TXMLTag;
 begin
     // user is done editing a node's text
-    if (getNodeType(Node) = node_ritem) then begin
-        _cur_ritem.Text := S;
+    assert(getNodeType(Node) = node_ritem);
 
-        update := TXMLTag.Create('update');
-        update.AddTag(TXMLTag.Create(_cur_ritem.tag));
-        MainSession.FireEvent('/roster/update', update, _cur_ritem);
-        update.Free();
-    end;
+    _cur_ritem.Text := S;
+    update := TXMLTag.Create('update');
+    update.AddTag(TXMLTag.Create(_cur_ritem.tag));
+    MainSession.FireEvent('/roster/update', update, _cur_ritem);
+    update.Free();
 end;
 
 {---------------------------------------}
@@ -3067,7 +3065,7 @@ begin
         f.txtSendSubject.Text := 'URL';
         end;
     node_grp: begin
-        // we have to rpretend to select the group..
+        // we have to pretend to select the group..
         treeRoster.Selected := n;
         r := getSelectedContacts(true);
         jl := TWideStringlist.Create();
@@ -3260,6 +3258,27 @@ begin
     // Disable the auto scroll timer , if not infinite scroll up or down can
     // happen - DC 09/20/2005
     autoScroll.Enabled := false;
+    _drag_op := false;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterStartDrag(Sender: TObject;
+  var DragObject: TDragObject);
+begin
+    _drag_op := true;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+var
+    msg: string;
+begin
+    if (_drag_op) then begin
+        _drop_copy := (ssCtrl in Shift);
+        msg := 'onKeyDown: _drop_copy = ' + BoolToStr(_drop_copy);
+        OutputDebugString(PChar(msg));
+    end;
 end;
 
 initialization

@@ -48,6 +48,8 @@ type
 
         procedure GetImage(index: integer; img: TImage);
         procedure GetIcon(index: integer; icon: TIcon);
+
+        property ImageList: TImageList read _imglist;
     end;
 
 var

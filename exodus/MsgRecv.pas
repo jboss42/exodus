@@ -131,6 +131,10 @@ type
     procedure DisplayEvent(e: TJabberEvent);
 
     procedure SetupSend();
+
+    procedure SetupRecips(jid: Widestring); overload;
+    procedure SetupRecips(jidlist: TWidestringlist); overload;
+
     procedure setFrom(jid: WideString);
 
     procedure AddOutgoing(txt: Widestring);
@@ -223,8 +227,15 @@ begin
     Result := TfrmMsgRecv.Create(Application);
     with Result do begin
         eType := evt_Message;
-        recips.Assign(jids);
         SetupSend();
+        SetupRecips(jids);
+
+        // if none of our recips can receive this msg, bail
+        if (recips.Count <= 0) then begin
+            Free();
+            exit;
+        end;
+
         DisablePopup();
 
         // setup the form for sending a msg
@@ -251,11 +262,12 @@ begin
         eType := evt_Message;
 
         // setup the form for sending a msg
-
-        // XXX: check for sending normal msgs to offline users who can't do offline
-        
         SetupSend();
-        recips.Add(msg_jid);
+        SetupRecips(msg_jid);
+        if (recips.Count <= 0) then begin
+            Free();
+            exit;
+        end;
         SetupResources();
         setFrom(msg_jid);
         sizeHeaders();
@@ -422,6 +434,44 @@ begin
     btnClose.Visible := Docked;
 
     pnlTop.Height := pnlSendSubject.Top + pnlSendSubject.Height + 3;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.SetupRecips(jid: Widestring);
+var
+    msg: Widestring;
+    id: TJabberID;
+    p: TJabberPres;
+    ri: TJabberRosterItem;
+begin
+    // check to see if this user is online, can receive offlines, etc
+    id := TJabberID.Create(jid);
+    p := MainSession.ppdb.FindPres(id.jid, id.resource);
+    if (p = nil) then begin
+        ri := MainSession.Roster.Find(id.jid);
+        if (ri = nil) then
+            ri := MainSession.Roster.Find(id.full);
+
+        if ((ri <> nil) and (not ri.CanOffline)) then begin
+            msg := _('This contact (%s) can not receive offline messages.');
+            msg := WideFormat(msg, [id.full]);
+            MessageDlgW(msg, mtError, [mbOK], 0);
+            id.Free();
+            exit;
+        end;
+    end;
+
+    id.Free();
+    recips.add(jid);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.SetupRecips(jidlist: TWidestringlist);
+var
+    i: integer;
+begin
+    for i := 0 to jidlist.Count - 1 do
+        SetupRecips(jidlist[i]);
 end;
 
 {---------------------------------------}
