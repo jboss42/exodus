@@ -30,9 +30,6 @@ type
   TfrmChat = class(TfrmBaseChat)
     popContact: TTntPopupMenu;
     SaveDialog1: TSaveDialog;
-    mnuVersionRequest: TMenuItem;
-    mnuTimeRequest: TMenuItem;
-    mnuLastActivity: TMenuItem;
     btnClose: TSpeedButton;
     pnlJID: TPanel;
     lblNick: TTntLabel;
@@ -55,6 +52,11 @@ type
     mnuSave: TTntMenuItem;
     Panel3: TPanel;
     imgAvatar: TPaintBox;
+    PrintHistory1: TTntMenuItem;
+    mnuLastActivity: TTntMenuItem;
+    mnuTimeRequest: TTntMenuItem;
+    mnuVersionRequest: TTntMenuItem;
+    PrintDialog1: TPrintDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -84,6 +86,7 @@ type
     procedure popResourcesClick(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
     procedure imgAvatarClick(Sender: TObject);
+    procedure PrintHistory1Click(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -134,7 +137,7 @@ type
     procedure freeChatObject();
     function  _sendMsg(txt: Widestring): boolean;
     procedure _sendComposing(id: Widestring);
-    
+
     function GetThread: String;
 
   published
@@ -175,7 +178,7 @@ procedure CloseAllChats;
 
 implementation
 uses
-    CapPresence, RosterImages,   
+    CapPresence, RosterImages, PrtRichEdit, RTFMsgList, BaseMsgList, 
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
@@ -1460,6 +1463,28 @@ begin
     Avatar := _avatar;
     Show();
   end;
+end;
+
+{---------------------------------------}
+procedure TfrmChat.PrintHistory1Click(Sender: TObject);
+var
+    ml: TfBaseMsgList;
+    msglist: TfRTFMsgList;
+begin
+  inherited;
+    ml := getMsgList();
+
+    if (ml is TfRTFMsgList) then begin
+        msglist := TfRTFMsgList(ml);
+        with PrintDialog1 do begin
+            if (not Execute) then exit;
+
+            if (PrintRange = prSelection) then
+                PrintSelRichEdit(Self.Caption, TRichEdit(msglist.MsgList), Copies)
+            else
+                PrintAllRichEdit(Self.Caption, TRichEdit(msglist.MsgList), Copies);
+        end;
+    end;
 end;
 
 end.
