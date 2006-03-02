@@ -105,6 +105,10 @@ inherited frmChat: TfrmChat
       Caption = 'Clear History'
       OnClick = popClearHistoryClick
     end
+    object PrintHistory1: TTntMenuItem
+      Caption = 'Print ...'
+      OnClick = PrintHistory1Click
+    end
     object N5: TTntMenuItem
       Caption = '-'
     end
@@ -129,15 +133,15 @@ inherited frmChat: TfrmChat
     end
     object C1: TTntMenuItem
       Caption = 'Contact Info'
-      object mnuVersionRequest: TMenuItem
+      object mnuVersionRequest: TTntMenuItem
         Caption = 'Version Request'
         OnClick = CTCPClick
       end
-      object mnuTimeRequest: TMenuItem
+      object mnuTimeRequest: TTntMenuItem
         Caption = 'Time Request'
         OnClick = CTCPClick
       end
-      object mnuLastActivity: TMenuItem
+      object mnuLastActivity: TTntMenuItem
         Caption = 'Last Activity'
         OnClick = CTCPClick
       end
@@ -178,5 +182,10 @@ inherited frmChat: TfrmChat
     OnTimer = timBusyTimer
     Left = 48
     Top = 152
+  end
+  object PrintDialog1: TPrintDialog
+    Options = [poSelection]
+    Left = 80
+    Top = 184
   end
 end
