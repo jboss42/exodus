@@ -198,7 +198,8 @@ uses
   COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass},
   CapsCache in '..\jopl\CapsCache.pas',
   COMEntityCache in 'COMEntityCache.pas' {ExodusEntityCache: CoClass},
-  COMEntity in 'COMEntity.pas' {ExodusEntity: CoClass};
+  COMEntity in 'COMEntity.pas' {ExodusEntity: CoClass},
+  PrtRichEdit in 'PrtRichEdit.pas';
 
 {$R *.TLB}
 

@@ -163,6 +163,10 @@ inherited frmRoom: TfrmRoom
       Caption = 'Copy All'
       OnClick = popCopyAllClick
     end
+    object Print1: TTntMenuItem
+      Caption = 'Print ...'
+      OnClick = Print1Click
+    end
     object N8: TTntMenuItem
       Caption = '-'
     end
@@ -339,5 +343,10 @@ inherited frmRoom: TfrmRoom
     Title = 'Save Room Contents'
     Left = 49
     Top = 89
+  end
+  object PrintDialog1: TPrintDialog
+    Options = [poSelection]
+    Left = 80
+    Top = 87
   end
 end

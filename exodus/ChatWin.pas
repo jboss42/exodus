@@ -1468,6 +1468,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.PrintHistory1Click(Sender: TObject);
 var
+    cap: Widestring;
     ml: TfBaseMsgList;
     msglist: TfRTFMsgList;
 begin
@@ -1479,10 +1480,10 @@ begin
         with PrintDialog1 do begin
             if (not Execute) then exit;
 
-            if (PrintRange = prSelection) then
-                PrintSelRichEdit(Self.Caption, TRichEdit(msglist.MsgList), Copies)
-            else
-                PrintAllRichEdit(Self.Caption, TRichEdit(msglist.MsgList), Copies);
+            cap := _('Chat Transcript: %s');
+            cap := WideFormat(cap, [Self.Caption]);
+
+            PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
     end;
 end;
