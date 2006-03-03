@@ -111,6 +111,7 @@ end;
 procedure TfrmBookmark.frameButtons1btnOKClick(Sender: TObject);
 var
     bm: TXMLTag;
+    nick: TXMLTag;
     ri: TJabberRosterItem;
 begin
     // Save any changes to the bookmark and resave
@@ -126,6 +127,14 @@ begin
             bm.setAttribute('autojoin', 'true')
         else
             bm.setAttribute('autojoin', 'false');
+
+        nick := bm.GetFirstTag('nick');
+        if nick = nil then
+            nick := bm.AddTag('nick')
+        else
+            nick.ClearCData();
+        nick.AddCData(txtNick.Text);
+
         MainSession.bookmarks.SaveBookmarks();
         ri := MainSession.Roster.Find(txtJid.Text);
         assert(ri <> nil);
