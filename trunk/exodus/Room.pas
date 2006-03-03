@@ -94,6 +94,8 @@ type
     popCopy: TTntMenuItem;
     popCopyAll: TTntMenuItem;
     N8: TTntMenuItem;
+    Print1: TTntMenuItem;
+    PrintDialog1: TPrintDialog;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -140,6 +142,7 @@ type
     procedure popRosterBrowseClick(Sender: TObject);
     procedure popCopyClick(Sender: TObject);
     procedure popCopyAllClick(Sender: TObject);
+    procedure Print1Click(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -343,6 +346,7 @@ uses
     PrefController,
     Presence,
     Profile,
+    PrtRichEdit, RTFMsgList, BaseMsgList,
     RegForm,
     RichEdit,
     RiserWindow,
@@ -351,8 +355,8 @@ uses
     RosterImages, 
     RosterWindow,
     Session,
-    Signals,
     ShellAPI,
+    Signals,
     StrUtils,
     xData,
     XMLNode,
@@ -2530,6 +2534,29 @@ procedure TfrmRoom.popCopyAllClick(Sender: TObject);
 begin
   inherited;
     MsgList.CopyAll();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.Print1Click(Sender: TObject);
+var
+    cap: Widestring;
+    ml: TfBaseMsgList;
+    msglist: TfRTFMsgList;
+begin
+  inherited;
+    ml := getMsgList();
+
+    if (ml is TfRTFMsgList) then begin
+        msglist := TfRTFMsgList(ml);
+        with PrintDialog1 do begin
+            if (not Execute) then exit;
+
+            cap := _('Room Transcript: %s');
+            cap := WideFormat(cap, [Self.Caption]);
+
+            PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
+        end;
+    end;
 end;
 
 initialization
