@@ -1,10 +1,10 @@
 [
-  uuid(5BABCA07-A359-4B42-8C03-C5B329E79E31), 
+  uuid(85AA8EC3-C4AB-460B-828D-584AD1A44A2A), 
   version(1.0), 
   helpstring("Exodus COM Plugin interfaces")
     
 ]
-library ExodusCOM
+library Exodus
 {
 
   importlib("stdole2.tlb");
@@ -40,49 +40,6 @@ library ExodusCOM
     HWND_MsgOutput = 2, 
     Ptr_MsgOutput = 3
   } ChatParts;
-
-  [
-    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88), 
-    version(1.0), 
-    helpstring("Dispatch interface for ExodusChatPlugin Object"), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusChatPlugin: IDispatch
-  {
-    [
-    id(0x00000001)
-    ]
-    HRESULT _stdcall onBeforeMessage([in] BSTR * Body );
-    [
-    id(0x00000002)
-    ]
-    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
-    [
-    id(0x00000003)
-    ]
-    HRESULT _stdcall onKeyPress([in] BSTR Key );
-    [
-    id(0x00000004)
-    ]
-    HRESULT _stdcall onContextMenu([in] BSTR ID );
-    [
-    id(0x00000005)
-    ]
-    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
-    [
-    id(0x00000006)
-    ]
-    HRESULT _stdcall onClose( void );
-    [
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall onMenu([in] BSTR ID );
-    [
-    id(0x000000CA)
-    ]
-    HRESULT _stdcall onNewWindow([in] long HWND );
-  };
 
   [
     uuid(438DF52E-F892-456B-9FB0-3C64DBB85240), 
@@ -174,6 +131,122 @@ library ExodusCOM
     id(0x0000000B)
     ]
     HRESULT _stdcall RawNickname([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ContextMenuID([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ContextMenuID([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Status([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Status([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Tooltip([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Tooltip([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall action([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall action([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall imageIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall imageIndex([in] long Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall InlineEdit([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall InlineEdit([in] VARIANT_BOOL Value );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall fireChange( void );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall IsContact([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall IsContact([in] VARIANT_BOOL Value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall addGroup([in] BSTR grp );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall removeGroup([in] BSTR grp );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall setCleanGroups( void );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ImagePrefix([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ImagePrefix([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall IsNative([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall CanOffline([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall CanOffline([in] VARIANT_BOOL Value );
   };
 
   [
@@ -323,6 +396,80 @@ library ExodusCOM
   };
 
   [
+    uuid(21D07EDA-E275-4F43-9933-D1C9F45FCA15), 
+    version(1.0), 
+    helpstring("TExodusRosterGroup Object")
+  ]
+  coclass ExodusRosterGroup
+  {
+    [default] interface IExodusRosterGroup;
+  };
+
+  [
+    uuid(F4AAF511-D144-42E7-B108-8A196D4BD115), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusRosterImages Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRosterImages: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddImageFilename([in] BSTR ID, [in] BSTR filename, [out, retval] long * Index );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddImageBase64([in] BSTR ID, [in] BSTR base64, [out, retval] long * Index );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddImageResource([in] BSTR ID, [in] BSTR LibName, [in] BSTR ResName, [out, retval] long * Index );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Remove([in] BSTR ID );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Find([in] BSTR ID, [out, retval] long * Index );
+  };
+
+  [
+    uuid(1ADA45EB-EE12-4AC1-9E2B-AF1723DD1A28), 
+    version(1.0), 
+    helpstring("ExodusRosterImages Object")
+  ]
+  coclass ExodusRosterImages
+  {
+    [default] interface IExodusRosterImages;
+  };
+
+  [
+    uuid(560DA524-0368-4DD1-8FD6-DEB5C4D3836F), 
+    version(1.0), 
+    helpstring("ExodusDiscoCache Object")
+  ]
+  coclass ExodusEntityCache
+  {
+    [default] interface IExodusEntityCache;
+  };
+
+  [
+    uuid(E3AC5A8C-1771-4851-8CF0-106B4AD1AEBF), 
+    version(1.0), 
+    helpstring("ExodusEntity Object")
+  ]
+  coclass ExodusEntity
+  {
+    [default] interface IExodusEntity;
+  };
+
+  
+  typedef BSTR * PWideString1;
+
+  [
     uuid(808426B8-8C56-49FD-AE15-5D91DE1DE5EF), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
@@ -381,7 +528,7 @@ library ExodusCOM
     [
     id(0x00000010)
     ]
-    HRESULT _stdcall CreateDockableWindow([in] long HWND, [in] BSTR Caption );
+    HRESULT _stdcall CreateDockableWindow([in] BSTR Caption, [out, retval] long * HWND );
     [
     id(0x0000000E)
     ]
@@ -544,29 +691,13 @@ library ExodusCOM
     ]
     HRESULT _stdcall PPDB([out, retval] IExodusPPDB ** Value /*Warning: unable to validate structure name: */ );
     [
-    id(0x00000009)
-    ]
-    HRESULT _stdcall registerBrowseNS([in] BSTR Namespace, [out, retval] BSTR * ID );
-    [
     id(0x0000000A)
     ]
     HRESULT _stdcall registerDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
     [
-    id(0x0000001B)
-    ]
-    HRESULT _stdcall registerDiscoFeature([in] BSTR Feature, [out, retval] BSTR * ID );
-    [
-    id(0x00000034)
-    ]
-    HRESULT _stdcall removeBrowseNS([in] BSTR ID );
-    [
     id(0x00000035)
     ]
     HRESULT _stdcall removeDiscoItem([in] BSTR ID );
-    [
-    id(0x00000038)
-    ]
-    HRESULT _stdcall removeDiscoFeature([in] BSTR ID );
     [
     id(0x00000039)
     ]
@@ -632,6 +763,31 @@ library ExodusCOM
     id(0x000000CC)
     ]
     HRESULT _stdcall registerWithService([in] BSTR JabberID );
+    [
+    id(0x000000CD), 
+    helpstring("Show the \"add contact\" form")
+    ]
+    HRESULT _stdcall showAddContact([in] BSTR jid );
+    [
+    id(0x000000CE), 
+    helpstring("Register a JEP-115 extension.  Call multiple times with the same ext to set multiple features.")
+    ]
+    HRESULT _stdcall registerCapExtension([in] BSTR ext, [in] BSTR feature );
+    [
+    id(0x000000CF), 
+    helpstring("Unregister all of the features for a given ext.")
+    ]
+    HRESULT _stdcall unregisterCapExtension([in] BSTR ext );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall RosterImages([out, retval] IExodusRosterImages ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall EntityCache([out, retval] IExodusEntityCache ** Value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -711,6 +867,20 @@ library ExodusCOM
     id(0x000000D1)
     ]
     HRESULT _stdcall CurrentNick([out, retval] BSTR * Value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall GetControl([in] BSTR Name, [out, retval]  IUnknown ** Value );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
   };
 
   [
@@ -772,6 +942,49 @@ library ExodusCOM
   };
 
   [
+    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusChatPlugin Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChatPlugin: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall onBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall onKeyPress([in] BSTR Key );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall onContextMenu([in] BSTR ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall onClose( void );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall onMenu([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall onNewWindow([in] long HWND );
+  };
+
+  [
     uuid(29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusRoster Object"), 
@@ -785,21 +998,9 @@ library ExodusCOM
     ]
     HRESULT _stdcall Fetch( void );
     [
-    id(0x00000002)
-    ]
-    HRESULT _stdcall SaveBookmarks( void );
-    [
     id(0x00000003)
     ]
-    HRESULT _stdcall AddItem([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe );
-    [
-    id(0x00000004)
-    ]
-    HRESULT _stdcall AddBookmark([in] BSTR JabberID, [in] BSTR bmType, [in] BSTR bmName, [in] BSTR nickname, [in] VARIANT_BOOL AutoJoin );
-    [
-    id(0x00000005)
-    ]
-    HRESULT _stdcall RemoveBookmark([in] BSTR JabberID );
+    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
     [
     id(0x00000006)
     ]
@@ -812,6 +1013,55 @@ library ExodusCOM
     id(0x00000008)
     ]
     HRESULT _stdcall Count([out, retval] long * ItemCount );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall removeItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall addGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall getGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall removeGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GroupsCount([out, retval] long * Value );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Groups([in] long Index, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] IExodusRosterItem ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall AddContextMenu([in] BSTR ID, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall addContextMenuItem([in] BSTR menu_id, [in] BSTR Caption, [in] BSTR action, [out, retval] BSTR * ret );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall removeContextMenuItem([in] BSTR menu_id, [in] BSTR item_id );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall addItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** ret /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -843,4 +1093,249 @@ library ExodusCOM
     HRESULT _stdcall LastPresence([out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
   };
 
-}; 
+  [
+    uuid(FA63024E-3453-4551-8CA0-AFB78B2066AD), 
+    version(1.0), 
+    helpstring("Dispatch interface for TExodusRosterGroup Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRosterGroup: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall action([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall action([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall KeepEmpty([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall KeepEmpty([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall SortPriority([out, retval] long * Value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall SortPriority([in] long Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ShowPresence([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ShowPresence([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall DragTarget([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall DragTarget([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DragSource([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DragSource([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AutoExpand([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AutoExpand([in] VARIANT_BOOL Value );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall getText([out, retval] BSTR * Text );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall addJid([in] BSTR jid );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall removeJid([in] BSTR jid );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall inGroup([in] BSTR jid, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall isEmpty([out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall getGroup([in] BSTR group_name, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall addGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall removeGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall getRosterItems([in] VARIANT_BOOL Online, [out, retval] VARIANT * Items );
+    [
+    propget, 
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall NestLevel([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DA)
+    ]
+    HRESULT _stdcall Online([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall Total([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall FullName([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall Parent([out, retval] IExodusRosterGroup ** Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall Parts([in] long Index, [out, retval] BSTR * Value );
+  };
+
+  [
+    uuid(6759BFE4-C72D-42E3-86A3-1F343E848933), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusDiscoCache Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusEntityCache: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall getByJid([in] BSTR jid, [in] BSTR node, [out, retval] IExodusEntity ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Fetch([in] BSTR jid, [in] BSTR node, [in] VARIANT_BOOL items_limit, [out, retval] IExodusEntity ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall discoInfo([in] BSTR jid, [in] BSTR node, [in] long timeout, [out, retval] IExodusEntity ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall discoItems([in] BSTR jid, [in] BSTR node, [in] long timeout, [out, retval] IExodusEntity ** ret /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(1F8FF968-CB2A-480C-B8C2-1E34C493EC0F), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusEntity Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusEntity: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall hasFeature([in] BSTR feature, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall hasIdentity([in] BSTR Category, [in] BSTR DiscoType, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall hasItems([out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall hasInfo([out, retval] VARIANT_BOOL * ret );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall jid([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall node([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Category([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall DiscoType([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall FeatureCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall feature([in] long Index, [out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall ItemsCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall Item([in] long Index, [out, retval] IExodusEntity ** Value /*Warning: unable to validate structure name: */ );
+  };
+
+};

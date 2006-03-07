@@ -34,14 +34,13 @@ uses
   Forms,
   Controls,
   Windows,
-  MemCheck in '..\MemCheck.pas',
   About in 'About.pas' {frmAbout},
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   BaseChat in 'BaseChat.pas' {frmBaseChat},
   Bookmark in 'Bookmark.pas' {frmBookmark},
   Browser in 'Browser.pas' {frmBrowse},
-  chat in '..\jopl\Chat.pas',
+  Chat in '..\jopl\Chat.pas',
   ChatController in '..\jopl\ChatController.pas',
   ChatWin in 'ChatWin.pas' {frmChat},
   COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass},
@@ -67,13 +66,13 @@ uses
   fRosterTree in 'fRosterTree.pas' {frameTreeRoster: TFrame},
   fService in 'fService.pas' {frameObjectActions: TFrame},
   fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame},
-  getopt in 'getOpt.pas',
+  getOpt in 'getOpt.pas',
   GrpRemove in 'GrpRemove.pas' {frmGrpRemove},
   GUIFactory in 'GUIFactory.pas',
   InputPassword in 'InputPassword.pas' {frmInputPass},
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
-  Invite in 'invite.pas' {frmInvite},
-  iq in '..\jopl\IQ.pas',
+  invite in 'invite.pas' {frmInvite},
+  IQ in '..\jopl\IQ.pas',
   Jabber1 in 'Jabber1.pas' {frmExodus},
   JabberAuth in '..\jopl\JabberAuth.pas',
   JabberConst in '..\jopl\JabberConst.pas',
@@ -104,7 +103,7 @@ uses
   Prefs in 'Prefs.pas' {frmPrefs},
   PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
-  presence in '..\jopl\Presence.pas',
+  Presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
   RegExpr in '..\jopl\RegExpr.pas',
   Register in 'Register.pas',
@@ -117,13 +116,13 @@ uses
   RosterAdd in 'RosterAdd.pas' {frmAdd},
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
   RosterWindow in 'RosterWindow.pas' {frmRosterWindow},
-  s10n in '..\jopl\S10n.pas',
-  sechash in '..\jopl\SecHash.pas',
+  S10n in '..\jopl\S10n.pas',
+  SecHash in '..\jopl\SecHash.pas',
   SelContact in 'SelContact.pas' {frmSelContact},
   Session in '..\jopl\Session.pas',
   Signals in '..\jopl\Signals.pas',
   StandardAuth in '..\jopl\StandardAuth.pas',
-  Subscribe in 'subscribe.pas' {frmSubscribe},
+  subscribe in 'subscribe.pas' {frmSubscribe},
   Transports in 'Transports.pas',
   Unicode in '..\jopl\Unicode.pas',
   vcard in 'vcard.pas' {frmVCard},
@@ -199,7 +198,9 @@ uses
   CapsCache in '..\jopl\CapsCache.pas',
   COMEntityCache in 'COMEntityCache.pas' {ExodusEntityCache: CoClass},
   COMEntity in 'COMEntity.pas' {ExodusEntity: CoClass},
-  PrtRichEdit in 'PrtRichEdit.pas';
+  PrtRichEdit in 'PrtRichEdit.pas',
+  IdAuthenticationSSPI in '..\jopl\IdAuthenticationSSPI.pas',
+  IdSSPI in '..\jopl\IdSSPI.pas';
 
 {$R *.TLB}
 
@@ -225,7 +226,7 @@ begin
   Application.ShowMainForm := false;
 
   {$ifdef LEAKCHECK}
-  MemChk();
+  // MemChk();
   {$endif}
 
   // Main startup stuff
