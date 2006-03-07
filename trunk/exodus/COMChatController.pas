@@ -30,6 +30,8 @@ type
     procedure RemoveRoomUser(const JID: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
     function GetControl(const Name: WideString): IUnknown; safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
     { Protected declarations }
 
   public
@@ -479,6 +481,7 @@ begin
         Result := _room.myNick;
 end;
 
+{---------------------------------------}
 function TExodusChat.GetControl(const Name: WideString): IUnknown;
 var
     comp : TComponent;
@@ -499,6 +502,26 @@ begin
         on EComponentError do
             result := nil;
     end;
+end;
+
+{---------------------------------------}
+function TExodusChat.Get_Caption: WideString;
+begin
+    if (_chat <> nil) then
+        Result := TfrmChat(_chat.Window).Caption
+    else if (_room <> nil) then
+        Result := _room.Caption
+    else
+        Result := '';
+end;
+
+{---------------------------------------}
+procedure TExodusChat.Set_Caption(const Value: WideString);
+begin
+    if (_chat <> nil) then
+        TfrmChat(_chat.Window).Caption := Value
+    else if (_room <> nil) then
+        _room.Caption := Value;
 end;
 
 initialization

@@ -321,7 +321,7 @@ end;
 
 {$else}
 // TODO: Do we need a version of md5file for < INDY9??
-function MD5File(filename: Widestring): string
+function MD5File(filename: Widestring): string;
 begin
     Result := '';
 end;

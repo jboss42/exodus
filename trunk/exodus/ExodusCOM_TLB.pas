@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/3/2006 9:34:02 AM from Type Library described below.
+// File generated on 3/7/2006 10:03:50 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -41,10 +41,10 @@ uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ExodusCOMMajorVersion = 1;
-  ExodusCOMMinorVersion = 0;
+  ExodusMajorVersion = 1;
+  ExodusMinorVersion = 0;
 
-  LIBID_ExodusCOM: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
+  LIBID_Exodus: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
 
   IID_IExodusController: TGUID = '{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
@@ -356,10 +356,13 @@ type
     procedure RemoveRoomUser(const jid: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
     function GetControl(const Name: WideString): IUnknown; safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
     property CurrentThreadID: WideString read Get_CurrentThreadID;
     property CurrentNick: WideString read Get_CurrentNick;
+    property Caption: WideString read Get_Caption write Set_Caption;
   end;
 
 // *********************************************************************//
@@ -387,6 +390,7 @@ type
     procedure RemoveRoomUser(const jid: WideString); dispid 208;
     property CurrentNick: WideString readonly dispid 209;
     function GetControl(const Name: WideString): IUnknown; dispid 210;
+    property Caption: WideString dispid 211;
   end;
 
 // *********************************************************************//

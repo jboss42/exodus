@@ -273,7 +273,7 @@ begin
     setupUnfiledGrp();
 
     js := TJabberSession(_js);
-    f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 180);
+    f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 600);
     with f_iq do begin
         iqType := 'get';
         toJID := '';

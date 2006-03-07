@@ -1,7 +1,7 @@
 (*
 MemCheck: the ultimate memory troubles hunter
 Created by: Jean Marc Eber & Vincent Mahon, Société Générale, INFI/SGOP/R&D
-Version 2.64	-> Also update OutputFileHeader when changing the version #
+Version 2.73	-> Also update OutputFileHeader when changing the version #
 
 Contact...
 	Vincent.Mahon@free.fr
@@ -88,10 +88,21 @@ the fifteen, but this would be more work, and I know it is useless).
 unit MemCheck;
 {$A+}
 {$H+}
+{$IFDEF VER170}
+  //VER170 = Delphi 2005 for Win32
+  //Don't define DELPHI71_OR_LATER for Delphi 2005 for Win32.
+  {$UNDEF DELPHI71_OR_LATER}
+  {$DEFINE DELPHI6_OR_LATER}
+  {$DEFINE DELPHI7_OR_LATER}
+{$ENDIF}
 {$IFDEF VER150}
-	{$DEFINE DELPHI6_OR_LATER}
-	{$DEFINE DELPHI7_OR_LATER}
-	{$WARNINGS OFF}	//We probably don't want to hear about warnings - Not sure about that
+  {$IFNDEF DELPHI70_MODE}
+    {$DEFINE DELPHI71_OR_LATER}
+    //If you are using Delphi 7.0 (not 7.1), then specify DELPHI70_MODE symbol in "Project/Options/Conditional defines" - Delphi 7.1 has build no. 4.453
+  {$ENDIF}
+  {$DEFINE DELPHI7_OR_LATER}
+  {$DEFINE DELPHI6_OR_LATER}
+  {$WARNINGS OFF}	//We probably don't want to hear about warnings - Not sure about that
 {$ENDIF}
 {$IFDEF VER140}
 	{$DEFINE DELPHI6_OR_LATER}
@@ -141,7 +152,7 @@ ie, is the current memory manager memcheck's ?}
 function TextualDebugInfoForAddress(const TheAddress: Cardinal): string;
 
 var
-	MemCheckLogFileName: string = 'MemCheck.log';	//The file memcheck will log information to
+	MemCheckLogFileName: string = '';	//The file memcheck will log information to
 	DeallocateFreedMemoryWhenBlockBiggerThan: Integer = 0;
 	{should blocks be really deallocated when FreeMem is called ? If you want all blocks to be deallocated, set this
 	constant to 0. If you want blocks to be never deallocated, set the cstte to MaxInt. When blocks are not deallocated,
@@ -169,6 +180,7 @@ uses
 	Classes,
 	Math,
 	SyncObjs,
+	{$IFDEF USE_JEDI_JCL}JclDebug,{$ENDIF}
 	{$IFDEF DELPHI6_OR_LATER}Variants,{$ENDIF}
 	SysUtils;						   {Because of this uses, SysUtils must be finalized after MemCheck - Which is necessary anyway because SysUtils calls DoneExceptions in its finalization}
 
@@ -179,6 +191,9 @@ type
 	MReallocedUser means this block was reallocated}
 
 const
+	NoDebugInfo = '(no debug info)';
+	MemCheckLogFileNameSuffix = '_MemCheck.log';
+
 	(**************** MEMCHECK OPTIONS ********************)
 	DanglingInterfacesVerified = False;
 	{When an object is destroyed, should we fill the interface VMT with a special value which
@@ -231,6 +246,12 @@ const
 
 	UseDebugInfos = True;
 	//Should use the debug informations which are in the executable ?
+
+	RaiseExceptionsOnEnd = true;
+	//Should we use exceptions to show memory leak information ?
+
+	NotepadApp = 'notepad';
+	//The application launched to show the log file
 
    (**************** END OF MEMCHECK OPTIONS ********************)
 
@@ -456,7 +477,22 @@ var
 	RoutinesCount: integer;
 	Units: array of TUnitDebugInfos;
 	UnitsCount: integer;
-	OutputFileHeader: string = 'MemCheck version 2.64'#13#10;
+	OutputFileHeader: string = 'MemCheck version 2.73'#13#10;
+	HeapStatusSynchro : TSynchroObject;
+
+{$IFDEF USE_JEDI_JCL}
+function PointerToDebugInfo(Addr: Pointer): String; //!! by ray
+var
+	_file, _module, _proc: AnsiString;
+	_line: Integer;
+begin
+	JclDebug.MapOfAddr(Addr, _file, _module, _proc, _line);
+	if _file <> '' then
+		Result := Format('($%p) %s:%s:%d (%s)', [Addr, _module, _proc, _line, _file])
+	else
+		Result := Format('($%p) %s', [Addr, NoDebugInfo]);
+end;
+{$ENDIF}
 
 function BlockAllocationAddress(P: Pointer): Pointer;
 var
@@ -671,7 +707,11 @@ asm
 	cmp ebp, 0	//this can happen when there are no stack frames
 	je @@EndOfStack
 	{$IFDEF DELPHI6_OR_LATER}
-	mov eax, [ebp + 12]
+		{$IFNDEF DELPHI71_OR_LATER}
+		mov eax, [ebp + 12]
+		{$ELSE}
+		mov eax, [ebp + 16]
+		{$ENDIF}
 	{$ELSE}
 	mov eax, [ebp + 8]
 	{$ENDIF}
@@ -716,8 +756,13 @@ asm
 	mov eax, [ebp + 8]
 	sub eax, 9
 	{$ELSE}
-	mov eax, [EBP + 12]
-	sub eax, 15
+		{$IFNDEF DELPHI71_OR_LATER}
+		mov eax, [EBP + 12]
+		sub eax, 15
+		{$ELSE}
+		mov eax, [EBP + 16]
+		sub eax, 15
+		{$ENDIF}
 	{$ENDIF}
 	cmp eax, AddressOfNewInstance
 	je @@yes
@@ -758,7 +803,11 @@ function ltgmCallerOfGetMemIsTObjectCreate: boolean;
 asm
 	cmp ebp, 0	//this can happen when there are no stack frames
 	je @@EndOfStack
-	mov eax, [ebp + 36]
+		{$IFNDEF DELPHI71_OR_LATER}
+		mov eax, [ebp + 36]
+		{$ELSE}
+		mov eax, [ebp + 40]
+		{$ENDIF}
 	sub eax, 12
 	cmp eax, AddressOfTObjectCreate
 	jne @@no
@@ -774,7 +823,11 @@ function ltgmCallerOfTObjectCreate: pointer;
 asm
 	cmp ebp, 0	//this can happen when there are no stack frames
 	je @@EndOfStack
-	mov eax, [EBP + 56]
+		{$IFNDEF DELPHI71_OR_LATER}
+		mov eax, [EBP + 56]
+		{$ELSE}
+		mov eax, [EBP + 60]
+		{$ENDIF}
 	ret
 	@@EndOfStack:
 	mov eax, $FFFF
@@ -785,7 +838,11 @@ function ltgmCallerIsNewAnsiString: boolean;
 asm
 	cmp ebp, 0	//this can happen when there are no stack frames
 	je @@no
-	mov eax, [ebp + 12]
+		{$IFNDEF DELPHI71_OR_LATER}
+		mov eax, [EBP + 12]
+		{$ELSE}
+		mov eax, [EBP + 16]
+		{$ENDIF}
 	sub eax, 17
 	cmp eax, offset System.@NewAnsiString
 	je @@yes
@@ -795,15 +852,17 @@ asm
 	@@yes:
 	mov eax, 1
 end;
-{$ENDIF}
 
-{$IFDEF DELPHI6_OR_LATER}
 function CallerIsDynamicArrayAllocation: boolean;
 asm
 	cmp ebp, 0	//this can happen when there are no stack frames
 	je @@no
-	mov eax, [ebp + 12]
+	mov eax, [EBP + 12]
+	{$IFNDEF DELPHI71_OR_LATER}
 	add eax, 204
+	{$ELSE}
+	add eax, 216
+	{$ENDIF}
 	cmp eax, offset System.@DynArraySetLength
 	je @@yes
 	@@no:
@@ -1118,12 +1177,16 @@ end;
 
 function HeapCheckingGetMem(Size: Integer): Pointer;
 begin
-	if HeapStatusesDifferent(LastHeapStatus, GetHeapStatus) then
-		raise HeapCorrupted;
-
-	Result := OldMemoryManager.GetMem(Size);
-
-	UpdateLastHeapStatus;
+	HeapStatusSynchro.Acquire;
+	Result:= nil;	//Note: I don't understand right now why I get a warning if I suppress this line
+	try
+		if HeapStatusesDifferent(LastHeapStatus, GetHeapStatus) then
+			raise HeapCorrupted;
+		Result := OldMemoryManager.GetMem(Size);
+		UpdateLastHeapStatus;
+	finally
+		HeapStatusSynchro.Release;
+	end;
 end;
 
 function MemoryBlockFreed(Block: PMemoryBlocHeader): Boolean;
@@ -1396,57 +1459,60 @@ var
 	i: integer;
 	S: ShortString;
 begin
-	UnMemChk;
-	Block := LastBlock;	//note: no thread safety issue here
-	ShowCallStack := False;			 {for first block}
-	while Block <> nil do
-		begin
-			if BlocksToShow[Block.KindOfBlock] then
-				begin
-					if not MemoryBlockFreed(Block) then
-						{this is a leak}
-						begin
-							case Block.KindOfBlock of
-								MClass:
-									S := TObject(PChar(Block) + SizeOf(TMemoryBlocHeader)).ClassName;
-								MUser:
-									S := 'User';
-								MReallocedUser:
-									S := 'Realloc';
-							end;
+        if RaiseExceptionsOnEnd then
+			begin
+				UnMemChk;
+				Block := LastBlock;	//note: no thread safety issue here
+				ShowCallStack := False;			 {for first block}
+				while Block <> nil do
+					  begin
+							  if BlocksToShow[Block.KindOfBlock] then
+									  begin
+											  if not MemoryBlockFreed(Block) then
+													  {this is a leak}
+													  begin
+															  case Block.KindOfBlock of
+																	  MClass:
+																			  S := TObject(PChar(Block) + SizeOf(TMemoryBlocHeader)).ClassName;
+																	  MUser:
+																			  S := 'User';
+																	  MReallocedUser:
+																			  S := 'Realloc';
+															  end;
 
-							if (BlocksToShow[Block.KindOfBlock]) and ((Block.KindOfBlock <> MClass) or (TObject(PChar(Block) + SizeOf(TMemoryBlocHeader)) is InstancesConformingToForReporting)) then
-								try
-									raise EMemoryLeak.Create(S + ' allocated at ' + TextualDebugInfoForAddress(Cardinal(Block.CallerAddress[0])))at Block.CallerAddress[0];
-								except
-									on EMemoryLeak do ;
-								end;
+															  if (BlocksToShow[Block.KindOfBlock]) and ((Block.KindOfBlock <> MClass) or (TObject(PChar(Block) + SizeOf(TMemoryBlocHeader)) is InstancesConformingToForReporting)) then
+																	  try
+																			  raise EMemoryLeak.Create(S + ' allocated at ' + TextualDebugInfoForAddress(Cardinal(Block.CallerAddress[0])))at Block.CallerAddress[0];
+																	  except
+																			  on EMemoryLeak do ;
+																	  end;
 
-							if ShowCallStack then
-								for i := 1 to StoredCallStackDepth do
-									if Integer(Block.CallerAddress[i]) > 0 then
-										try
-											raise EStackUnwinding.Create(S + ' unwinding level ' + chr(ord('0') + i))at Block.CallerAddress[i]
-										except
-											on EStackUnwinding do ;
-										end;
+															  if ShowCallStack then
+																	  for i := 1 to StoredCallStackDepth do
+																			  if Integer(Block.CallerAddress[i]) > 0 then
+																					  try
+																							  raise EStackUnwinding.Create(S + ' unwinding level ' + chr(ord('0') + i))at Block.CallerAddress[i]
+																					  except
+																							  on EStackUnwinding do ;
+																					  end;
 
-							ShowCallStack := False;
-						end			 {Block.DestructionAdress = Nil}
-					else
-						{this is not a leak}
-						if CheckWipedBlocksOnTermination and (Block.AllocatedSize > 5) and (Block.AllocatedSize <= DoNotCheckWipedBlocksBiggerThan) and (not IsMemFilledWithChar(pchar(Block) + SizeOf(TMemoryBlocHeader) + 4, Block.AllocatedSize - 5, CharToUseToWipeOut)) then
-							begin
-								try
-									raise EFreedBlockDamaged.Create('Destroyed block damaged - Block allocated at ' + TextualDebugInfoForAddress(Cardinal(Block.CallerAddress[0])) + ' - destroyed at ' + TextualDebugInfoForAddress(Cardinal(Block.DestructionAdress)))at Block.CallerAddress[0]
-								except
-									on EFreedBlockDamaged do ;
-								end;
-							end;
-				end;
+															  ShowCallStack := False;
+													  end			 {Block.DestructionAdress = Nil}
+											  else
+													  {this is not a leak}
+													  if CheckWipedBlocksOnTermination and (Block.AllocatedSize > 5) and (Block.AllocatedSize <= DoNotCheckWipedBlocksBiggerThan) and (not IsMemFilledWithChar(pchar(Block) + SizeOf(TMemoryBlocHeader) + 4, Block.AllocatedSize - 5, CharToUseToWipeOut)) then
+															  begin
+																	  try
+																			  raise EFreedBlockDamaged.Create('Destroyed block damaged - Block allocated at ' + TextualDebugInfoForAddress(Cardinal(Block.CallerAddress[0])) + ' - destroyed at ' + TextualDebugInfoForAddress(Cardinal(Block.DestructionAdress)))at Block.CallerAddress[0]
+																	  except
+																			  on EFreedBlockDamaged do ;
+																	  end;
+															  end;
+									  end;
 
-			Block := Block.PreceedingBlock;
-		end;
+							  Block := Block.PreceedingBlock;
+					  end;
+			end;
 end;
 
 procedure dummy; forward;
@@ -1535,7 +1601,7 @@ var
 	Start, Finish, Pivot: integer;
 begin
 	Start := 0;
-	Result := '(no debug info)';
+	Result := NoDebugInfo;
 	Finish := RoutinesCount - 1;
 
 	while Start <= Finish do
@@ -1913,6 +1979,9 @@ begin
 			GetMemoryManager(OldMemoryManager);
 
 			LinkedListSynchro:= TCriticalSection.Create;
+
+			if CheckHeapStatus then
+				HeapStatusSynchro:= TSynchroObject.Create;
 		end;
 end;
 
@@ -2207,6 +2276,7 @@ begin
 	ChronogicalInfo := TLeakList.Create;
 
 	//Prepare the output file
+	if (IOResult <> 0) then ;	//Clears the internal IO error flag
 	AssignFile(OutputFile, MemCheckLogFileName + '.$$$');
 	Rewrite(OutputFile);
 	WriteLn(OutputFile, OutputFileHeader);
@@ -2299,7 +2369,7 @@ begin
 		DeleteFile(MemCheckLogFileName);
 	Rename(OutputFile, MemCheckLogFileName);
 	if ShowLogFileWhenUseful and (LeaksList.Count > 0) or CollectStatsAboutObjectAllocation or ComputeMemoryUsageStats or KeepMaxMemoryUsage then
-		WinExec(PChar('notepad ' + MemCheckLogFileName), sw_Show);
+		WinExec(PChar(NotepadApp + ' ' + MemCheckLogFileName), sw_Show);
 
 	//Release the memory
 	for i := 0 to LeaksList.Count - 1 do
@@ -2432,10 +2502,13 @@ begin
 end;
 
 function TextualDebugInfoForAddress(const TheAddress: Cardinal): string;
+{$IFNDEF USE_JEDI_JCL}
 var
 	U: TUnitDebugInfos;
 	AddressInDebugInfos: Cardinal;
+{$ENDIF}
 begin
+{$IFNDEF USE_JEDI_JCL}
 	InitializeOnce;
 
 	if UseDebugInfos and (TheAddress > Displ) then
@@ -2450,9 +2523,12 @@ begin
 				Result := RoutineWhichContainsAddress(AddressInDebugInfos);
 		end
 	else
-		Result := '(no debug info)';
+		Result := NoDebugInfo;
 
 	Result := Result + ' Find error: ' + CardinalToHexa(TheAddress);
+{$ELSE}
+	Result := PointerToDebugInfo(Pointer(TheAddress));
+{$ENDIF}
 end;
 
 procedure dummy;
@@ -2463,7 +2539,7 @@ begin
 end;
 
 initialization
-	MemCheckLogFileName := ExtractFilePath(ParamStr(0)) + MemCheckLogFileName;
+	MemCheckLogFileName := ChangeFileExt(ParamStr(0), MemCheckLogFileNameSuffix);
 finalization
 	if ExceptProc = @MyExceptProc then
 		{Exception logger installed}
@@ -2478,6 +2554,8 @@ finalization
 					GoThroughAllocatedBlocks;
 				end;
 
+			if CheckHeapStatus then
+				HeapStatusSynchro.Destroy;
 			LinkedListSynchro.Destroy;
 			FreeMem(TimeStamps);
 			FreeMem(AllocatedInstances);
