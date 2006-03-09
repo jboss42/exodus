@@ -22,7 +22,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 402
-    Height = 247
+    Height = 251
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
@@ -97,7 +97,7 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 0
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
-        Items.WideStrings = (
+        Items.Strings = (
           'jabber.org'
           'jabber.com')
       end
@@ -114,8 +114,8 @@ object frmConnDetails: TfrmConnDetails
         Top = 68
         Width = 170
         Height = 21
-        PasswordChar = '*'
         TabOrder = 1
+        PasswordCharW = '*'
       end
       object cboResource: TTntComboBox
         Left = 100
@@ -246,7 +246,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 345
         Height = 105
         Caption = 'SSL Modes'
-        Items.WideStrings = (
+        Items.Strings = (
           'Encrypt the connection whenever possible.'
           'All connections must be encrypted.'
           'Use old SSL port method.')
@@ -340,8 +340,8 @@ object frmConnDetails: TfrmConnDetails
         Width = 190
         Height = 21
         Enabled = False
-        PasswordChar = '*'
         TabOrder = 4
+        PasswordCharW = '*'
       end
       object cboSocksType: TTntComboBox
         Left = 91
@@ -351,7 +351,7 @@ object frmConnDetails: TfrmConnDetails
         Style = csDropDownList
         ItemHeight = 13
         TabOrder = 5
-        Items.WideStrings = (
+        Items.Strings = (
           'None'
           'Version 4'
           'Version 4a'
@@ -441,7 +441,7 @@ object frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 247
+    Top = 251
     Width = 402
     Height = 33
     Align = alBottom

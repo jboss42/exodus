@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/8/2006 2:19:41 PM from Type Library described below.
+// File generated on 3/9/2006 12:14:41 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -69,7 +69,7 @@ const
   CLASS_ExodusEntityCache: TGUID = '{560DA524-0368-4DD1-8FD6-DEB5C4D3836F}';
   IID_IExodusEntity: TGUID = '{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}';
   CLASS_ExodusEntity: TGUID = '{E3AC5A8C-1771-4851-8CF0-106B4AD1AEBF}';
-  IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
+  IID_IExodusControl: TGUID = '{0B992E91-DAD7-4CDC-9FD6-8007A63700E0}';
   IID_IExodusControlCheckBox: TGUID = '{896CCC11-8929-4FEC-BC95-C96E5027C1F6}';
   IID_IExodusControlComboBox: TGUID = '{16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}';
   IID_IExodusControlEdit: TGUID = '{A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}';
@@ -81,6 +81,7 @@ const
   IID_IExodusControlPopupMenu: TGUID = '{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}';
   IID_IExodusControlRadioButton: TGUID = '{87FAD954-03E1-4657-B58D-9947087EAAEC}';
   IID_IExodusControlRichEdit: TGUID = '{3997314D-4068-43E7-ACEB-150FF196069C}';
+  IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -101,6 +102,23 @@ const
   RosterItem = $00000000;
   Bookmark = $00000001;
   Group = $00000002;
+
+// Constants for enum ExodusControlTypes
+type
+  ExodusControlTypes = TOleEnum;
+const
+  ExodusControlButton = $00000000;
+  ExodusControlCheckBox = $00000001;
+  ExodusControlComboBox = $00000002;
+  ExodusControlEdit = $00000003;
+  ExodusControlFont = $00000004;
+  ExodusControlLabel = $00000005;
+  ExodusControlListBox = $00000006;
+  ExodusControlMenuItem = $00000007;
+  ExodusControlPanel = $00000008;
+  ExodusControlPopupMenu = $00000009;
+  ExodusControlRadioButton = $0000000A;
+  ExodusControlRichEdit = $0000000B;
 
 type
 
@@ -133,8 +151,8 @@ type
   IExodusEntityCacheDisp = dispinterface;
   IExodusEntity = interface;
   IExodusEntityDisp = dispinterface;
-  IExodusControlButton = interface;
-  IExodusControlButtonDisp = dispinterface;
+  IExodusControl = interface;
+  IExodusControlDisp = dispinterface;
   IExodusControlCheckBox = interface;
   IExodusControlCheckBoxDisp = dispinterface;
   IExodusControlComboBox = interface;
@@ -157,6 +175,8 @@ type
   IExodusControlRadioButtonDisp = dispinterface;
   IExodusControlRichEdit = interface;
   IExodusControlRichEditDisp = dispinterface;
+  IExodusControlButton = interface;
+  IExodusControlButtonDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -952,139 +972,24 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusControlButton
+// Interface: IExodusControl
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// GUID:      {0B992E91-DAD7-4CDC-9FD6-8007A63700E0}
 // *********************************************************************//
-  IExodusControlButton = interface(IDispatch)
-    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
-    function Get_Name: WideString; safecall;
-    procedure Set_Name(const Value: WideString); safecall;
-    function Get_Tag: Integer; safecall;
-    procedure Set_Tag(Value: Integer); safecall;
-    function Get_Left: Integer; safecall;
-    procedure Set_Left(Value: Integer); safecall;
-    function Get_Top: Integer; safecall;
-    procedure Set_Top(Value: Integer); safecall;
-    function Get_Width: Integer; safecall;
-    procedure Set_Width(Value: Integer); safecall;
-    function Get_Height: Integer; safecall;
-    procedure Set_Height(Value: Integer); safecall;
-    function Get_Cursor: Integer; safecall;
-    procedure Set_Cursor(Value: Integer); safecall;
-    function Get_Hint: WideString; safecall;
-    procedure Set_Hint(const Value: WideString); safecall;
-    function Get_HelpType: Integer; safecall;
-    procedure Set_HelpType(Value: Integer); safecall;
-    function Get_HelpKeyword: WideString; safecall;
-    procedure Set_HelpKeyword(const Value: WideString); safecall;
-    function Get_HelpContext: Integer; safecall;
-    procedure Set_HelpContext(Value: Integer); safecall;
-    function Get_BiDiMode: Integer; safecall;
-    procedure Set_BiDiMode(Value: Integer); safecall;
-    function Get_Cancel: Integer; safecall;
-    procedure Set_Cancel(Value: Integer); safecall;
-    function Get_Caption: WideString; safecall;
-    procedure Set_Caption(const Value: WideString); safecall;
-    function Get_Default: Integer; safecall;
-    procedure Set_Default(Value: Integer); safecall;
-    function Get_DragCursor: Integer; safecall;
-    procedure Set_DragCursor(Value: Integer); safecall;
-    function Get_DragKind: Integer; safecall;
-    procedure Set_DragKind(Value: Integer); safecall;
-    function Get_DragMode: Integer; safecall;
-    procedure Set_DragMode(Value: Integer); safecall;
-    function Get_Enabled: Integer; safecall;
-    procedure Set_Enabled(Value: Integer); safecall;
-    function Get_Font: IExodusControlFont; safecall;
-    function Get_ModalResult: Integer; safecall;
-    procedure Set_ModalResult(Value: Integer); safecall;
-    function Get_ParentBiDiMode: Integer; safecall;
-    procedure Set_ParentBiDiMode(Value: Integer); safecall;
-    function Get_ParentFont: Integer; safecall;
-    procedure Set_ParentFont(Value: Integer); safecall;
-    function Get_ParentShowHint: Integer; safecall;
-    procedure Set_ParentShowHint(Value: Integer); safecall;
-    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
-    function Get_ShowHint: Integer; safecall;
-    procedure Set_ShowHint(Value: Integer); safecall;
-    function Get_TabOrder: Integer; safecall;
-    procedure Set_TabOrder(Value: Integer); safecall;
-    function Get_TabStop: Integer; safecall;
-    procedure Set_TabStop(Value: Integer); safecall;
-    function Get_Visible: Integer; safecall;
-    procedure Set_Visible(Value: Integer); safecall;
-    function Get_WordWrap: Integer; safecall;
-    procedure Set_WordWrap(Value: Integer); safecall;
-    property Name: WideString read Get_Name write Set_Name;
-    property Tag: Integer read Get_Tag write Set_Tag;
-    property Left: Integer read Get_Left write Set_Left;
-    property Top: Integer read Get_Top write Set_Top;
-    property Width: Integer read Get_Width write Set_Width;
-    property Height: Integer read Get_Height write Set_Height;
-    property Cursor: Integer read Get_Cursor write Set_Cursor;
-    property Hint: WideString read Get_Hint write Set_Hint;
-    property HelpType: Integer read Get_HelpType write Set_HelpType;
-    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
-    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
-    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
-    property Cancel: Integer read Get_Cancel write Set_Cancel;
-    property Caption: WideString read Get_Caption write Set_Caption;
-    property Default: Integer read Get_Default write Set_Default;
-    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
-    property DragKind: Integer read Get_DragKind write Set_DragKind;
-    property DragMode: Integer read Get_DragMode write Set_DragMode;
-    property Enabled: Integer read Get_Enabled write Set_Enabled;
-    property Font: IExodusControlFont read Get_Font;
-    property ModalResult: Integer read Get_ModalResult write Set_ModalResult;
-    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
-    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
-    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
-    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
-    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
-    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
-    property TabStop: Integer read Get_TabStop write Set_TabStop;
-    property Visible: Integer read Get_Visible write Set_Visible;
-    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  IExodusControl = interface(IDispatch)
+    ['{0B992E91-DAD7-4CDC-9FD6-8007A63700E0}']
+    function Get_ControlType: ExodusControlTypes; safecall;
+    property ControlType: ExodusControlTypes read Get_ControlType;
   end;
 
 // *********************************************************************//
-// DispIntf:  IExodusControlButtonDisp
+// DispIntf:  IExodusControlDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// GUID:      {0B992E91-DAD7-4CDC-9FD6-8007A63700E0}
 // *********************************************************************//
-  IExodusControlButtonDisp = dispinterface
-    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
-    property Name: WideString dispid 1;
-    property Tag: Integer dispid 2;
-    property Left: Integer dispid 3;
-    property Top: Integer dispid 4;
-    property Width: Integer dispid 5;
-    property Height: Integer dispid 6;
-    property Cursor: Integer dispid 7;
-    property Hint: WideString dispid 8;
-    property HelpType: Integer dispid 9;
-    property HelpKeyword: WideString dispid 10;
-    property HelpContext: Integer dispid 11;
-    property BiDiMode: Integer dispid 12;
-    property Cancel: Integer dispid 13;
-    property Caption: WideString dispid 14;
-    property Default: Integer dispid 15;
-    property DragCursor: Integer dispid 16;
-    property DragKind: Integer dispid 17;
-    property DragMode: Integer dispid 18;
-    property Enabled: Integer dispid 19;
-    property Font: IExodusControlFont readonly dispid 20;
-    property ModalResult: Integer dispid 21;
-    property ParentBiDiMode: Integer dispid 22;
-    property ParentFont: Integer dispid 23;
-    property ParentShowHint: Integer dispid 24;
-    property PopupMenu: IExodusControlPopupMenu readonly dispid 25;
-    property ShowHint: Integer dispid 26;
-    property TabOrder: Integer dispid 27;
-    property TabStop: Integer dispid 28;
-    property Visible: Integer dispid 29;
-    property WordWrap: Integer dispid 30;
+  IExodusControlDisp = dispinterface
+    ['{0B992E91-DAD7-4CDC-9FD6-8007A63700E0}']
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1092,7 +997,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {896CCC11-8929-4FEC-BC95-C96E5027C1F6}
 // *********************************************************************//
-  IExodusControlCheckBox = interface(IDispatch)
+  IExodusControlCheckBox = interface(IExodusControl)
     ['{896CCC11-8929-4FEC-BC95-C96E5027C1F6}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -1241,6 +1146,7 @@ type
     property TabOrder: Integer dispid 33;
     property Visible: Integer dispid 34;
     property WordWrap: Integer dispid 35;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1248,7 +1154,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}
 // *********************************************************************//
-  IExodusControlComboBox = interface(IDispatch)
+  IExodusControlComboBox = interface(IExodusControl)
     ['{16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -1441,6 +1347,7 @@ type
     property Text: WideString dispid 44;
     property Visible: Integer dispid 45;
     property Items[Index: Integer]: WideString dispid 46;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1448,7 +1355,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}
 // *********************************************************************//
-  IExodusControlEdit = interface(IDispatch)
+  IExodusControlEdit = interface(IExodusControl)
     ['{A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -1633,6 +1540,7 @@ type
     property TabOrder: Integer dispid 42;
     property Text: WideString dispid 43;
     property Visible: Integer dispid 44;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1640,7 +1548,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {D8297D0C-A316-4E9D-A89C-095CFAE51141}
 // *********************************************************************//
-  IExodusControlFont = interface(IDispatch)
+  IExodusControlFont = interface(IExodusControl)
     ['{D8297D0C-A316-4E9D-A89C-095CFAE51141}']
     function Get_Charset: Integer; safecall;
     procedure Set_Charset(Value: Integer); safecall;
@@ -1675,6 +1583,7 @@ type
     property Name: WideString dispid 4;
     property Pitch: Integer dispid 5;
     property Size: Integer dispid 6;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1682,7 +1591,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {F53704E6-83C2-4021-97A5-169BC58D9E03}
 // *********************************************************************//
-  IExodusControlLabel = interface(IDispatch)
+  IExodusControlLabel = interface(IExodusControl)
     ['{F53704E6-83C2-4021-97A5-169BC58D9E03}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -1823,6 +1732,7 @@ type
     property Layout: Integer dispid 31;
     property Visible: Integer dispid 32;
     property WordWrap: Integer dispid 33;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -1830,7 +1740,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {F34F969E-4BC2-4ADE-8648-A8F618FCC205}
 // *********************************************************************//
-  IExodusControlListBox = interface(IDispatch)
+  IExodusControlListBox = interface(IExodusControl)
     ['{F34F969E-4BC2-4ADE-8648-A8F618FCC205}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2027,6 +1937,7 @@ type
     property TabOrder: Integer dispid 45;
     property TabWidth: Integer dispid 46;
     property Visible: Integer dispid 47;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -2034,7 +1945,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {EFBC071A-460A-4E1B-89EC-25B23460BA93}
 // *********************************************************************//
-  IExodusControlMenuItem = interface(IDispatch)
+  IExodusControlMenuItem = interface(IExodusControl)
     ['{EFBC071A-460A-4E1B-89EC-25B23460BA93}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2062,8 +1973,8 @@ type
     procedure Set_HelpContext(Value: Integer); safecall;
     function Get_Hint: WideString; safecall;
     procedure Set_Hint(const Value: WideString); safecall;
-    function Get_ImageIndex: Integer; safecall;
-    procedure Set_ImageIndex(Value: Integer); safecall;
+    function Get_imageIndex: Integer; safecall;
+    procedure Set_imageIndex(Value: Integer); safecall;
     function Get_RadioItem: Integer; safecall;
     procedure Set_RadioItem(Value: Integer); safecall;
     function Get_ShortCut: Integer; safecall;
@@ -2083,7 +1994,7 @@ type
     property GroupIndex: Integer read Get_GroupIndex write Set_GroupIndex;
     property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
     property Hint: WideString read Get_Hint write Set_Hint;
-    property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+    property imageIndex: Integer read Get_imageIndex write Set_imageIndex;
     property RadioItem: Integer read Get_RadioItem write Set_RadioItem;
     property ShortCut: Integer read Get_ShortCut write Set_ShortCut;
     property Visible: Integer read Get_Visible write Set_Visible;
@@ -2109,10 +2020,11 @@ type
     property GroupIndex: Integer dispid 11;
     property HelpContext: Integer dispid 12;
     property Hint: WideString dispid 13;
-    property ImageIndex: Integer dispid 14;
+    property imageIndex: Integer dispid 14;
     property RadioItem: Integer dispid 15;
     property ShortCut: Integer dispid 16;
     property Visible: Integer dispid 17;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -2120,7 +2032,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {BA37BB99-F039-49B7-AB56-819E87B0472F}
 // *********************************************************************//
-  IExodusControlPanel = interface(IDispatch)
+  IExodusControlPanel = interface(IExodusControl)
     ['{BA37BB99-F039-49B7-AB56-819E87B0472F}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2301,6 +2213,7 @@ type
     property TabOrder: Integer dispid 41;
     property TabStop: Integer dispid 42;
     property Visible: Integer dispid 43;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -2308,7 +2221,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {F80CD345-A91C-40C8-89CD-AD5BE532B9C2}
 // *********************************************************************//
-  IExodusControlPopupMenu = interface(IDispatch)
+  IExodusControlPopupMenu = interface(IExodusControl)
     ['{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2366,6 +2279,7 @@ type
     property OwnerDraw: Integer dispid 10;
     property ParentBiDiMode: Integer dispid 11;
     property TrackButton: Integer dispid 12;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -2373,7 +2287,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {87FAD954-03E1-4657-B58D-9947087EAAEC}
 // *********************************************************************//
-  IExodusControlRadioButton = interface(IDispatch)
+  IExodusControlRadioButton = interface(IExodusControl)
     ['{87FAD954-03E1-4657-B58D-9947087EAAEC}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2514,6 +2428,7 @@ type
     property TabStop: Integer dispid 31;
     property Visible: Integer dispid 32;
     property WordWrap: Integer dispid 33;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//
@@ -2521,7 +2436,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {3997314D-4068-43E7-ACEB-150FF196069C}
 // *********************************************************************//
-  IExodusControlRichEdit = interface(IDispatch)
+  IExodusControlRichEdit = interface(IExodusControl)
     ['{3997314D-4068-43E7-ACEB-150FF196069C}']
     function Get_Name: WideString; safecall;
     procedure Set_Name(const Value: WideString); safecall;
@@ -2726,6 +2641,144 @@ type
     property WantTabs: Integer dispid 47;
     property WantReturns: Integer dispid 48;
     property WordWrap: Integer dispid 49;
+    property ControlType: ExodusControlTypes readonly dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlButton
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// *********************************************************************//
+  IExodusControlButton = interface(IExodusControl)
+    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_Cancel: Integer; safecall;
+    procedure Set_Cancel(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Default: Integer; safecall;
+    procedure Set_Default(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ModalResult: Integer; safecall;
+    procedure Set_ModalResult(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property Cancel: Integer read Get_Cancel write Set_Cancel;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Default: Integer read Get_Default write Set_Default;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ModalResult: Integer read Get_ModalResult write Set_ModalResult;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlButtonDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// *********************************************************************//
+  IExodusControlButtonDisp = dispinterface
+    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property BiDiMode: Integer dispid 12;
+    property Cancel: Integer dispid 13;
+    property Caption: WideString dispid 14;
+    property Default: Integer dispid 15;
+    property DragCursor: Integer dispid 16;
+    property DragKind: Integer dispid 17;
+    property DragMode: Integer dispid 18;
+    property Enabled: Integer dispid 19;
+    property Font: IExodusControlFont readonly dispid 20;
+    property ModalResult: Integer dispid 21;
+    property ParentBiDiMode: Integer dispid 22;
+    property ParentFont: Integer dispid 23;
+    property ParentShowHint: Integer dispid 24;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 25;
+    property ShowHint: Integer dispid 26;
+    property TabOrder: Integer dispid 27;
+    property TabStop: Integer dispid 28;
+    property Visible: Integer dispid 29;
+    property WordWrap: Integer dispid 30;
+    property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
 // *********************************************************************//

@@ -56,7 +56,7 @@ object frmInputPass: TfrmInputPass
     Width = 246
     Height = 21
     Anchors = [akLeft, akTop, akRight]
-    PasswordChar = '*'
+    PasswordCharW = '*'
     TabOrder = 1
   end
 end

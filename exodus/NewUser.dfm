@@ -104,7 +104,7 @@ inherited frmNewUser: TfrmNewUser
         Top = 137
         Width = 248
         Height = 21
-        PasswordChar = '*'
+        PasswordCharW = '*'
         TabOrder = 1
         Visible = False
       end

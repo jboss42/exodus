@@ -40,7 +40,7 @@ object frmPassword: TfrmPassword
     Top = 27
     Width = 217
     Height = 21
-    PasswordChar = '*'
+    PasswordCharW = '*'
     TabOrder = 0
   end
   inline frameButtons1: TframeButtons
@@ -68,7 +68,7 @@ object frmPassword: TfrmPassword
     Top = 75
     Width = 217
     Height = 21
-    PasswordChar = '*'
+    PasswordCharW = '*'
     TabOrder = 1
   end
   object txtConfirmPassword: TTntEdit
@@ -76,7 +76,7 @@ object frmPassword: TfrmPassword
     Top = 123
     Width = 217
     Height = 21
-    PasswordChar = '*'
+    PasswordCharW = '*'
     TabOrder = 2
   end
 end

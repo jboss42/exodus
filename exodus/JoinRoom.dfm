@@ -105,7 +105,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Top = 160
         Width = 190
         Height = 21
-        PasswordChar = '*'
+        PasswordCharW = '*'
         TabOrder = 5
       end
       object txtNick: TTntEdit
