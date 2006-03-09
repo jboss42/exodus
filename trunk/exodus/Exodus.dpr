@@ -200,7 +200,19 @@ uses
   COMEntity in 'COMEntity.pas' {ExodusEntity: CoClass},
   PrtRichEdit in 'PrtRichEdit.pas',
   IdAuthenticationSSPI in '..\jopl\IdAuthenticationSSPI.pas',
-  IdSSPI in '..\jopl\IdSSPI.pas';
+  IdSSPI in '..\jopl\IdSSPI.pas',
+  COMExRichEdit in 'COMGuis\COMExRichEdit.pas',
+  COMExButton in 'COMGuis\COMExButton.pas',
+  COMExCheckBox in 'COMGuis\COMExCheckBox.pas',
+  COMExComboBox in 'COMGuis\COMExComboBox.pas',
+  COMExEdit in 'COMGuis\COMExEdit.pas',
+  COMExFont in 'COMGuis\COMExFont.pas',
+  COMExLabel in 'COMGuis\COMExLabel.pas',
+  COMExListBox in 'COMGuis\COMExListBox.pas',
+  COMExMenuItem in 'COMGuis\COMExMenuItem.pas',
+  COMExPanel in 'COMGuis\COMExPanel.pas',
+  COMExPopupMenu in 'COMGuis\COMExPopupMenu.pas',
+  COMExRadioButton in 'COMGuis\COMExRadioButton.pas';
 
 {$R *.TLB}
 
