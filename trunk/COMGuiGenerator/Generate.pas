@@ -248,7 +248,7 @@ begin
 
     f.Add('');
     f.Add('type');
-    f.Add('    ' + cname + ' = class(TAutoObject, ' + iname + ')');
+    f.Add('    ' + cname + ' = class(TAutoObject, IExodusControl, ' + iname + ')');
     f.Add('    public');
     f.Add('        constructor Create(control: ' + o.ClassName + ');');
     f.Add('');
@@ -258,6 +258,15 @@ begin
     f.Add('');
 
     f.Add('    protected');
+
+    // IExodusControl
+    f.Add('        function Get_ControlType: ExodusControlTypes; safecall;');
+    impl.Add('function ' + cname + '.Get_ControlType: ExodusControlTypes;');
+    impl.Add('begin');
+    impl.Add('    // XXX');
+    impl.Add('end;');
+    impl.Add('');
+
 
     // walk props
     new(props);
