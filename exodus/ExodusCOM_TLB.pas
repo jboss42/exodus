@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/7/2006 10:03:50 AM from Type Library described below.
+// File generated on 3/8/2006 2:19:41 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -41,10 +41,10 @@ uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ExodusMajorVersion = 1;
-  ExodusMinorVersion = 0;
+  ExodusCOMMajorVersion = 1;
+  ExodusCOMMinorVersion = 0;
 
-  LIBID_Exodus: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
+  LIBID_ExodusCOM: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
 
   IID_IExodusController: TGUID = '{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
@@ -69,6 +69,18 @@ const
   CLASS_ExodusEntityCache: TGUID = '{560DA524-0368-4DD1-8FD6-DEB5C4D3836F}';
   IID_IExodusEntity: TGUID = '{1F8FF968-CB2A-480C-B8C2-1E34C493EC0F}';
   CLASS_ExodusEntity: TGUID = '{E3AC5A8C-1771-4851-8CF0-106B4AD1AEBF}';
+  IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
+  IID_IExodusControlCheckBox: TGUID = '{896CCC11-8929-4FEC-BC95-C96E5027C1F6}';
+  IID_IExodusControlComboBox: TGUID = '{16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}';
+  IID_IExodusControlEdit: TGUID = '{A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}';
+  IID_IExodusControlFont: TGUID = '{D8297D0C-A316-4E9D-A89C-095CFAE51141}';
+  IID_IExodusControlLabel: TGUID = '{F53704E6-83C2-4021-97A5-169BC58D9E03}';
+  IID_IExodusControlListBox: TGUID = '{F34F969E-4BC2-4ADE-8648-A8F618FCC205}';
+  IID_IExodusControlMenuItem: TGUID = '{EFBC071A-460A-4E1B-89EC-25B23460BA93}';
+  IID_IExodusControlPanel: TGUID = '{BA37BB99-F039-49B7-AB56-819E87B0472F}';
+  IID_IExodusControlPopupMenu: TGUID = '{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}';
+  IID_IExodusControlRadioButton: TGUID = '{87FAD954-03E1-4657-B58D-9947087EAAEC}';
+  IID_IExodusControlRichEdit: TGUID = '{3997314D-4068-43E7-ACEB-150FF196069C}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -121,6 +133,30 @@ type
   IExodusEntityCacheDisp = dispinterface;
   IExodusEntity = interface;
   IExodusEntityDisp = dispinterface;
+  IExodusControlButton = interface;
+  IExodusControlButtonDisp = dispinterface;
+  IExodusControlCheckBox = interface;
+  IExodusControlCheckBoxDisp = dispinterface;
+  IExodusControlComboBox = interface;
+  IExodusControlComboBoxDisp = dispinterface;
+  IExodusControlEdit = interface;
+  IExodusControlEditDisp = dispinterface;
+  IExodusControlFont = interface;
+  IExodusControlFontDisp = dispinterface;
+  IExodusControlLabel = interface;
+  IExodusControlLabelDisp = dispinterface;
+  IExodusControlListBox = interface;
+  IExodusControlListBoxDisp = dispinterface;
+  IExodusControlMenuItem = interface;
+  IExodusControlMenuItemDisp = dispinterface;
+  IExodusControlPanel = interface;
+  IExodusControlPanelDisp = dispinterface;
+  IExodusControlPopupMenu = interface;
+  IExodusControlPopupMenuDisp = dispinterface;
+  IExodusControlRadioButton = interface;
+  IExodusControlRadioButtonDisp = dispinterface;
+  IExodusControlRichEdit = interface;
+  IExodusControlRichEditDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -913,6 +949,1783 @@ type
     property feature[Index: Integer]: WideString readonly dispid 211;
     property ItemsCount: Integer readonly dispid 212;
     property Item[Index: Integer]: IExodusEntity readonly dispid 213;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlButton
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// *********************************************************************//
+  IExodusControlButton = interface(IDispatch)
+    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_Cancel: Integer; safecall;
+    procedure Set_Cancel(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Default: Integer; safecall;
+    procedure Set_Default(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ModalResult: Integer; safecall;
+    procedure Set_ModalResult(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property Cancel: Integer read Get_Cancel write Set_Cancel;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Default: Integer read Get_Default write Set_Default;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ModalResult: Integer read Get_ModalResult write Set_ModalResult;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlButtonDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {0D41733E-3505-46FB-B199-C6046E1C84C7}
+// *********************************************************************//
+  IExodusControlButtonDisp = dispinterface
+    ['{0D41733E-3505-46FB-B199-C6046E1C84C7}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property BiDiMode: Integer dispid 12;
+    property Cancel: Integer dispid 13;
+    property Caption: WideString dispid 14;
+    property Default: Integer dispid 15;
+    property DragCursor: Integer dispid 16;
+    property DragKind: Integer dispid 17;
+    property DragMode: Integer dispid 18;
+    property Enabled: Integer dispid 19;
+    property Font: IExodusControlFont readonly dispid 20;
+    property ModalResult: Integer dispid 21;
+    property ParentBiDiMode: Integer dispid 22;
+    property ParentFont: Integer dispid 23;
+    property ParentShowHint: Integer dispid 24;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 25;
+    property ShowHint: Integer dispid 26;
+    property TabOrder: Integer dispid 27;
+    property TabStop: Integer dispid 28;
+    property Visible: Integer dispid 29;
+    property WordWrap: Integer dispid 30;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlCheckBox
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {896CCC11-8929-4FEC-BC95-C96E5027C1F6}
+// *********************************************************************//
+  IExodusControlCheckBox = interface(IDispatch)
+    ['{896CCC11-8929-4FEC-BC95-C96E5027C1F6}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_AllowGrayed: Integer; safecall;
+    procedure Set_AllowGrayed(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Checked: Integer; safecall;
+    procedure Set_Checked(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_State: Integer; safecall;
+    procedure Set_State(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property AllowGrayed: Integer read Get_AllowGrayed write Set_AllowGrayed;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Checked: Integer read Get_Checked write Set_Checked;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property State: Integer read Get_State write Set_State;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlCheckBoxDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {896CCC11-8929-4FEC-BC95-C96E5027C1F6}
+// *********************************************************************//
+  IExodusControlCheckBoxDisp = dispinterface
+    ['{896CCC11-8929-4FEC-BC95-C96E5027C1F6}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property TabStop: Integer dispid 12;
+    property Alignment: Integer dispid 13;
+    property AllowGrayed: Integer dispid 14;
+    property BiDiMode: Integer dispid 15;
+    property Caption: WideString dispid 16;
+    property Checked: Integer dispid 17;
+    property Color: Integer dispid 18;
+    property Ctl3D: Integer dispid 19;
+    property DragCursor: Integer dispid 20;
+    property DragKind: Integer dispid 21;
+    property DragMode: Integer dispid 22;
+    property Enabled: Integer dispid 23;
+    property Font: IExodusControlFont readonly dispid 24;
+    property ParentBiDiMode: Integer dispid 25;
+    property ParentColor: Integer dispid 26;
+    property ParentCtl3D: Integer dispid 27;
+    property ParentFont: Integer dispid 28;
+    property ParentShowHint: Integer dispid 29;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 30;
+    property ShowHint: Integer dispid 31;
+    property State: Integer dispid 32;
+    property TabOrder: Integer dispid 33;
+    property Visible: Integer dispid 34;
+    property WordWrap: Integer dispid 35;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlComboBox
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}
+// *********************************************************************//
+  IExodusControlComboBox = interface(IDispatch)
+    ['{16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_AutoComplete: Integer; safecall;
+    procedure Set_AutoComplete(Value: Integer); safecall;
+    function Get_AutoDropDown: Integer; safecall;
+    procedure Set_AutoDropDown(Value: Integer); safecall;
+    function Get_AutoCloseUp: Integer; safecall;
+    procedure Set_AutoCloseUp(Value: Integer); safecall;
+    function Get_BevelInner: Integer; safecall;
+    procedure Set_BevelInner(Value: Integer); safecall;
+    function Get_BevelKind: Integer; safecall;
+    procedure Set_BevelKind(Value: Integer); safecall;
+    function Get_BevelOuter: Integer; safecall;
+    procedure Set_BevelOuter(Value: Integer); safecall;
+    function Get_Style: Integer; safecall;
+    procedure Set_Style(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_CharCase: Integer; safecall;
+    procedure Set_CharCase(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_DropDownCount: Integer; safecall;
+    procedure Set_DropDownCount(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ImeMode: Integer; safecall;
+    procedure Set_ImeMode(Value: Integer); safecall;
+    function Get_ImeName: WideString; safecall;
+    procedure Set_ImeName(const Value: WideString); safecall;
+    function Get_ItemHeight: Integer; safecall;
+    procedure Set_ItemHeight(Value: Integer); safecall;
+    function Get_ItemIndex: Integer; safecall;
+    procedure Set_ItemIndex(Value: Integer); safecall;
+    function Get_MaxLength: Integer; safecall;
+    procedure Set_MaxLength(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_Sorted: Integer; safecall;
+    procedure Set_Sorted(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Text: WideString; safecall;
+    procedure Set_Text(const Value: WideString); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_Items(Index: Integer): WideString; safecall;
+    procedure Set_Items(Index: Integer; const Value: WideString); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property AutoComplete: Integer read Get_AutoComplete write Set_AutoComplete;
+    property AutoDropDown: Integer read Get_AutoDropDown write Set_AutoDropDown;
+    property AutoCloseUp: Integer read Get_AutoCloseUp write Set_AutoCloseUp;
+    property BevelInner: Integer read Get_BevelInner write Set_BevelInner;
+    property BevelKind: Integer read Get_BevelKind write Set_BevelKind;
+    property BevelOuter: Integer read Get_BevelOuter write Set_BevelOuter;
+    property Style: Integer read Get_Style write Set_Style;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property CharCase: Integer read Get_CharCase write Set_CharCase;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property DropDownCount: Integer read Get_DropDownCount write Set_DropDownCount;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ImeMode: Integer read Get_ImeMode write Set_ImeMode;
+    property ImeName: WideString read Get_ImeName write Set_ImeName;
+    property ItemHeight: Integer read Get_ItemHeight write Set_ItemHeight;
+    property ItemIndex: Integer read Get_ItemIndex write Set_ItemIndex;
+    property MaxLength: Integer read Get_MaxLength write Set_MaxLength;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property Sorted: Integer read Get_Sorted write Set_Sorted;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Text: WideString read Get_Text write Set_Text;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property Items[Index: Integer]: WideString read Get_Items write Set_Items;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlComboBoxDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}
+// *********************************************************************//
+  IExodusControlComboBoxDisp = dispinterface
+    ['{16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property AutoComplete: Integer dispid 12;
+    property AutoDropDown: Integer dispid 13;
+    property AutoCloseUp: Integer dispid 14;
+    property BevelInner: Integer dispid 15;
+    property BevelKind: Integer dispid 16;
+    property BevelOuter: Integer dispid 17;
+    property Style: Integer dispid 18;
+    property BiDiMode: Integer dispid 19;
+    property CharCase: Integer dispid 20;
+    property Color: Integer dispid 21;
+    property Ctl3D: Integer dispid 22;
+    property DragCursor: Integer dispid 23;
+    property DragKind: Integer dispid 24;
+    property DragMode: Integer dispid 25;
+    property DropDownCount: Integer dispid 26;
+    property Enabled: Integer dispid 27;
+    property Font: IExodusControlFont readonly dispid 28;
+    property ImeMode: Integer dispid 29;
+    property ImeName: WideString dispid 30;
+    property ItemHeight: Integer dispid 31;
+    property ItemIndex: Integer dispid 32;
+    property MaxLength: Integer dispid 33;
+    property ParentBiDiMode: Integer dispid 34;
+    property ParentColor: Integer dispid 35;
+    property ParentCtl3D: Integer dispid 36;
+    property ParentFont: Integer dispid 37;
+    property ParentShowHint: Integer dispid 38;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 39;
+    property ShowHint: Integer dispid 40;
+    property Sorted: Integer dispid 41;
+    property TabOrder: Integer dispid 42;
+    property TabStop: Integer dispid 43;
+    property Text: WideString dispid 44;
+    property Visible: Integer dispid 45;
+    property Items[Index: Integer]: WideString dispid 46;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlEdit
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}
+// *********************************************************************//
+  IExodusControlEdit = interface(IDispatch)
+    ['{A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_AutoSelect: Integer; safecall;
+    procedure Set_AutoSelect(Value: Integer); safecall;
+    function Get_AutoSize: Integer; safecall;
+    procedure Set_AutoSize(Value: Integer); safecall;
+    function Get_BevelInner: Integer; safecall;
+    procedure Set_BevelInner(Value: Integer); safecall;
+    function Get_BevelKind: Integer; safecall;
+    procedure Set_BevelKind(Value: Integer); safecall;
+    function Get_BevelOuter: Integer; safecall;
+    procedure Set_BevelOuter(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_BorderStyle: Integer; safecall;
+    procedure Set_BorderStyle(Value: Integer); safecall;
+    function Get_CharCase: Integer; safecall;
+    procedure Set_CharCase(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_HideSelection: Integer; safecall;
+    procedure Set_HideSelection(Value: Integer); safecall;
+    function Get_ImeMode: Integer; safecall;
+    procedure Set_ImeMode(Value: Integer); safecall;
+    function Get_ImeName: WideString; safecall;
+    procedure Set_ImeName(const Value: WideString); safecall;
+    function Get_MaxLength: Integer; safecall;
+    procedure Set_MaxLength(Value: Integer); safecall;
+    function Get_OEMConvert: Integer; safecall;
+    procedure Set_OEMConvert(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PasswordChar: WideString; safecall;
+    procedure Set_PasswordChar(const Value: WideString); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ReadOnly: Integer; safecall;
+    procedure Set_ReadOnly(Value: Integer); safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_Text: WideString; safecall;
+    procedure Set_Text(const Value: WideString); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property AutoSelect: Integer read Get_AutoSelect write Set_AutoSelect;
+    property AutoSize: Integer read Get_AutoSize write Set_AutoSize;
+    property BevelInner: Integer read Get_BevelInner write Set_BevelInner;
+    property BevelKind: Integer read Get_BevelKind write Set_BevelKind;
+    property BevelOuter: Integer read Get_BevelOuter write Set_BevelOuter;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property BorderStyle: Integer read Get_BorderStyle write Set_BorderStyle;
+    property CharCase: Integer read Get_CharCase write Set_CharCase;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property HideSelection: Integer read Get_HideSelection write Set_HideSelection;
+    property ImeMode: Integer read Get_ImeMode write Set_ImeMode;
+    property ImeName: WideString read Get_ImeName write Set_ImeName;
+    property MaxLength: Integer read Get_MaxLength write Set_MaxLength;
+    property OEMConvert: Integer read Get_OEMConvert write Set_OEMConvert;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PasswordChar: WideString read Get_PasswordChar write Set_PasswordChar;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ReadOnly: Integer read Get_ReadOnly write Set_ReadOnly;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property Text: WideString read Get_Text write Set_Text;
+    property Visible: Integer read Get_Visible write Set_Visible;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlEditDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}
+// *********************************************************************//
+  IExodusControlEditDisp = dispinterface
+    ['{A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property TabStop: Integer dispid 12;
+    property AutoSelect: Integer dispid 13;
+    property AutoSize: Integer dispid 14;
+    property BevelInner: Integer dispid 15;
+    property BevelKind: Integer dispid 16;
+    property BevelOuter: Integer dispid 17;
+    property BiDiMode: Integer dispid 18;
+    property BorderStyle: Integer dispid 19;
+    property CharCase: Integer dispid 20;
+    property Color: Integer dispid 21;
+    property Ctl3D: Integer dispid 22;
+    property DragCursor: Integer dispid 23;
+    property DragKind: Integer dispid 24;
+    property DragMode: Integer dispid 25;
+    property Enabled: Integer dispid 26;
+    property Font: IExodusControlFont readonly dispid 27;
+    property HideSelection: Integer dispid 28;
+    property ImeMode: Integer dispid 29;
+    property ImeName: WideString dispid 30;
+    property MaxLength: Integer dispid 31;
+    property OEMConvert: Integer dispid 32;
+    property ParentBiDiMode: Integer dispid 33;
+    property ParentColor: Integer dispid 34;
+    property ParentCtl3D: Integer dispid 35;
+    property ParentFont: Integer dispid 36;
+    property ParentShowHint: Integer dispid 37;
+    property PasswordChar: WideString dispid 38;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 39;
+    property ReadOnly: Integer dispid 40;
+    property ShowHint: Integer dispid 41;
+    property TabOrder: Integer dispid 42;
+    property Text: WideString dispid 43;
+    property Visible: Integer dispid 44;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlFont
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D8297D0C-A316-4E9D-A89C-095CFAE51141}
+// *********************************************************************//
+  IExodusControlFont = interface(IDispatch)
+    ['{D8297D0C-A316-4E9D-A89C-095CFAE51141}']
+    function Get_Charset: Integer; safecall;
+    procedure Set_Charset(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Pitch: Integer; safecall;
+    procedure Set_Pitch(Value: Integer); safecall;
+    function Get_Size: Integer; safecall;
+    procedure Set_Size(Value: Integer); safecall;
+    property Charset: Integer read Get_Charset write Set_Charset;
+    property Color: Integer read Get_Color write Set_Color;
+    property Height: Integer read Get_Height write Set_Height;
+    property Name: WideString read Get_Name write Set_Name;
+    property Pitch: Integer read Get_Pitch write Set_Pitch;
+    property Size: Integer read Get_Size write Set_Size;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlFontDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D8297D0C-A316-4E9D-A89C-095CFAE51141}
+// *********************************************************************//
+  IExodusControlFontDisp = dispinterface
+    ['{D8297D0C-A316-4E9D-A89C-095CFAE51141}']
+    property Charset: Integer dispid 1;
+    property Color: Integer dispid 2;
+    property Height: Integer dispid 3;
+    property Name: WideString dispid 4;
+    property Pitch: Integer dispid 5;
+    property Size: Integer dispid 6;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlLabel
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F53704E6-83C2-4021-97A5-169BC58D9E03}
+// *********************************************************************//
+  IExodusControlLabel = interface(IDispatch)
+    ['{F53704E6-83C2-4021-97A5-169BC58D9E03}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_Align: Integer; safecall;
+    procedure Set_Align(Value: Integer); safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_AutoSize: Integer; safecall;
+    procedure Set_AutoSize(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowAccelChar: Integer; safecall;
+    procedure Set_ShowAccelChar(Value: Integer); safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_Transparent: Integer; safecall;
+    procedure Set_Transparent(Value: Integer); safecall;
+    function Get_Layout: Integer; safecall;
+    procedure Set_Layout(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property Align: Integer read Get_Align write Set_Align;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property AutoSize: Integer read Get_AutoSize write Set_AutoSize;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Color: Integer read Get_Color write Set_Color;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowAccelChar: Integer read Get_ShowAccelChar write Set_ShowAccelChar;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property Transparent: Integer read Get_Transparent write Set_Transparent;
+    property Layout: Integer read Get_Layout write Set_Layout;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlLabelDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F53704E6-83C2-4021-97A5-169BC58D9E03}
+// *********************************************************************//
+  IExodusControlLabelDisp = dispinterface
+    ['{F53704E6-83C2-4021-97A5-169BC58D9E03}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property Align: Integer dispid 12;
+    property Alignment: Integer dispid 13;
+    property AutoSize: Integer dispid 14;
+    property BiDiMode: Integer dispid 15;
+    property Caption: WideString dispid 16;
+    property Color: Integer dispid 17;
+    property DragCursor: Integer dispid 18;
+    property DragKind: Integer dispid 19;
+    property DragMode: Integer dispid 20;
+    property Enabled: Integer dispid 21;
+    property Font: IExodusControlFont readonly dispid 22;
+    property ParentBiDiMode: Integer dispid 23;
+    property ParentColor: Integer dispid 24;
+    property ParentFont: Integer dispid 25;
+    property ParentShowHint: Integer dispid 26;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 27;
+    property ShowAccelChar: Integer dispid 28;
+    property ShowHint: Integer dispid 29;
+    property Transparent: Integer dispid 30;
+    property Layout: Integer dispid 31;
+    property Visible: Integer dispid 32;
+    property WordWrap: Integer dispid 33;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlListBox
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F34F969E-4BC2-4ADE-8648-A8F618FCC205}
+// *********************************************************************//
+  IExodusControlListBox = interface(IDispatch)
+    ['{F34F969E-4BC2-4ADE-8648-A8F618FCC205}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Style: Integer; safecall;
+    procedure Set_Style(Value: Integer); safecall;
+    function Get_AutoComplete: Integer; safecall;
+    procedure Set_AutoComplete(Value: Integer); safecall;
+    function Get_Align: Integer; safecall;
+    procedure Set_Align(Value: Integer); safecall;
+    function Get_BevelInner: Integer; safecall;
+    procedure Set_BevelInner(Value: Integer); safecall;
+    function Get_BevelKind: Integer; safecall;
+    procedure Set_BevelKind(Value: Integer); safecall;
+    function Get_BevelOuter: Integer; safecall;
+    procedure Set_BevelOuter(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_BorderStyle: Integer; safecall;
+    procedure Set_BorderStyle(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Columns: Integer; safecall;
+    procedure Set_Columns(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_ExtendedSelect: Integer; safecall;
+    procedure Set_ExtendedSelect(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ImeMode: Integer; safecall;
+    procedure Set_ImeMode(Value: Integer); safecall;
+    function Get_ImeName: WideString; safecall;
+    procedure Set_ImeName(const Value: WideString); safecall;
+    function Get_IntegralHeight: Integer; safecall;
+    procedure Set_IntegralHeight(Value: Integer); safecall;
+    function Get_ItemHeight: Integer; safecall;
+    procedure Set_ItemHeight(Value: Integer); safecall;
+    function Get_Items(Index: Integer): WideString; safecall;
+    procedure Set_Items(Index: Integer; const Value: WideString); safecall;
+    function Get_MultiSelect: Integer; safecall;
+    procedure Set_MultiSelect(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ScrollWidth: Integer; safecall;
+    procedure Set_ScrollWidth(Value: Integer); safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_Sorted: Integer; safecall;
+    procedure Set_Sorted(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabWidth: Integer; safecall;
+    procedure Set_TabWidth(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Style: Integer read Get_Style write Set_Style;
+    property AutoComplete: Integer read Get_AutoComplete write Set_AutoComplete;
+    property Align: Integer read Get_Align write Set_Align;
+    property BevelInner: Integer read Get_BevelInner write Set_BevelInner;
+    property BevelKind: Integer read Get_BevelKind write Set_BevelKind;
+    property BevelOuter: Integer read Get_BevelOuter write Set_BevelOuter;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property BorderStyle: Integer read Get_BorderStyle write Set_BorderStyle;
+    property Color: Integer read Get_Color write Set_Color;
+    property Columns: Integer read Get_Columns write Set_Columns;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property ExtendedSelect: Integer read Get_ExtendedSelect write Set_ExtendedSelect;
+    property Font: IExodusControlFont read Get_Font;
+    property ImeMode: Integer read Get_ImeMode write Set_ImeMode;
+    property ImeName: WideString read Get_ImeName write Set_ImeName;
+    property IntegralHeight: Integer read Get_IntegralHeight write Set_IntegralHeight;
+    property ItemHeight: Integer read Get_ItemHeight write Set_ItemHeight;
+    property Items[Index: Integer]: WideString read Get_Items write Set_Items;
+    property MultiSelect: Integer read Get_MultiSelect write Set_MultiSelect;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ScrollWidth: Integer read Get_ScrollWidth write Set_ScrollWidth;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property Sorted: Integer read Get_Sorted write Set_Sorted;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabWidth: Integer read Get_TabWidth write Set_TabWidth;
+    property Visible: Integer read Get_Visible write Set_Visible;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlListBoxDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F34F969E-4BC2-4ADE-8648-A8F618FCC205}
+// *********************************************************************//
+  IExodusControlListBoxDisp = dispinterface
+    ['{F34F969E-4BC2-4ADE-8648-A8F618FCC205}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property TabStop: Integer dispid 12;
+    property Style: Integer dispid 13;
+    property AutoComplete: Integer dispid 14;
+    property Align: Integer dispid 15;
+    property BevelInner: Integer dispid 16;
+    property BevelKind: Integer dispid 17;
+    property BevelOuter: Integer dispid 18;
+    property BiDiMode: Integer dispid 19;
+    property BorderStyle: Integer dispid 20;
+    property Color: Integer dispid 21;
+    property Columns: Integer dispid 22;
+    property Ctl3D: Integer dispid 23;
+    property DragCursor: Integer dispid 24;
+    property DragKind: Integer dispid 25;
+    property DragMode: Integer dispid 26;
+    property Enabled: Integer dispid 27;
+    property ExtendedSelect: Integer dispid 28;
+    property Font: IExodusControlFont readonly dispid 29;
+    property ImeMode: Integer dispid 30;
+    property ImeName: WideString dispid 31;
+    property IntegralHeight: Integer dispid 32;
+    property ItemHeight: Integer dispid 33;
+    property Items[Index: Integer]: WideString dispid 34;
+    property MultiSelect: Integer dispid 35;
+    property ParentBiDiMode: Integer dispid 36;
+    property ParentColor: Integer dispid 37;
+    property ParentCtl3D: Integer dispid 38;
+    property ParentFont: Integer dispid 39;
+    property ParentShowHint: Integer dispid 40;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 41;
+    property ScrollWidth: Integer dispid 42;
+    property ShowHint: Integer dispid 43;
+    property Sorted: Integer dispid 44;
+    property TabOrder: Integer dispid 45;
+    property TabWidth: Integer dispid 46;
+    property Visible: Integer dispid 47;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlMenuItem
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {EFBC071A-460A-4E1B-89EC-25B23460BA93}
+// *********************************************************************//
+  IExodusControlMenuItem = interface(IDispatch)
+    ['{EFBC071A-460A-4E1B-89EC-25B23460BA93}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_AutoCheck: Integer; safecall;
+    procedure Set_AutoCheck(Value: Integer); safecall;
+    function Get_AutoHotkeys: Integer; safecall;
+    procedure Set_AutoHotkeys(Value: Integer); safecall;
+    function Get_AutoLineReduction: Integer; safecall;
+    procedure Set_AutoLineReduction(Value: Integer); safecall;
+    function Get_Break: Integer; safecall;
+    procedure Set_Break(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Checked: Integer; safecall;
+    procedure Set_Checked(Value: Integer); safecall;
+    function Get_Default: Integer; safecall;
+    procedure Set_Default(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_GroupIndex: Integer; safecall;
+    procedure Set_GroupIndex(Value: Integer); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_ImageIndex: Integer; safecall;
+    procedure Set_ImageIndex(Value: Integer); safecall;
+    function Get_RadioItem: Integer; safecall;
+    procedure Set_RadioItem(Value: Integer); safecall;
+    function Get_ShortCut: Integer; safecall;
+    procedure Set_ShortCut(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property AutoCheck: Integer read Get_AutoCheck write Set_AutoCheck;
+    property AutoHotkeys: Integer read Get_AutoHotkeys write Set_AutoHotkeys;
+    property AutoLineReduction: Integer read Get_AutoLineReduction write Set_AutoLineReduction;
+    property Break: Integer read Get_Break write Set_Break;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Checked: Integer read Get_Checked write Set_Checked;
+    property Default: Integer read Get_Default write Set_Default;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property GroupIndex: Integer read Get_GroupIndex write Set_GroupIndex;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+    property RadioItem: Integer read Get_RadioItem write Set_RadioItem;
+    property ShortCut: Integer read Get_ShortCut write Set_ShortCut;
+    property Visible: Integer read Get_Visible write Set_Visible;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlMenuItemDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {EFBC071A-460A-4E1B-89EC-25B23460BA93}
+// *********************************************************************//
+  IExodusControlMenuItemDisp = dispinterface
+    ['{EFBC071A-460A-4E1B-89EC-25B23460BA93}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property AutoCheck: Integer dispid 3;
+    property AutoHotkeys: Integer dispid 4;
+    property AutoLineReduction: Integer dispid 5;
+    property Break: Integer dispid 6;
+    property Caption: WideString dispid 7;
+    property Checked: Integer dispid 8;
+    property Default: Integer dispid 9;
+    property Enabled: Integer dispid 10;
+    property GroupIndex: Integer dispid 11;
+    property HelpContext: Integer dispid 12;
+    property Hint: WideString dispid 13;
+    property ImageIndex: Integer dispid 14;
+    property RadioItem: Integer dispid 15;
+    property ShortCut: Integer dispid 16;
+    property Visible: Integer dispid 17;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlPanel
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {BA37BB99-F039-49B7-AB56-819E87B0472F}
+// *********************************************************************//
+  IExodusControlPanel = interface(IDispatch)
+    ['{BA37BB99-F039-49B7-AB56-819E87B0472F}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_Align: Integer; safecall;
+    procedure Set_Align(Value: Integer); safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_AutoSize: Integer; safecall;
+    procedure Set_AutoSize(Value: Integer); safecall;
+    function Get_BevelInner: Integer; safecall;
+    procedure Set_BevelInner(Value: Integer); safecall;
+    function Get_BevelOuter: Integer; safecall;
+    procedure Set_BevelOuter(Value: Integer); safecall;
+    function Get_BevelWidth: Integer; safecall;
+    procedure Set_BevelWidth(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_BorderWidth: Integer; safecall;
+    procedure Set_BorderWidth(Value: Integer); safecall;
+    function Get_BorderStyle: Integer; safecall;
+    procedure Set_BorderStyle(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_UseDockManager: Integer; safecall;
+    procedure Set_UseDockManager(Value: Integer); safecall;
+    function Get_DockSite: Integer; safecall;
+    procedure Set_DockSite(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_FullRepaint: Integer; safecall;
+    procedure Set_FullRepaint(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_Locked: Integer; safecall;
+    procedure Set_Locked(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentBackground: Integer; safecall;
+    procedure Set_ParentBackground(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property Align: Integer read Get_Align write Set_Align;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property AutoSize: Integer read Get_AutoSize write Set_AutoSize;
+    property BevelInner: Integer read Get_BevelInner write Set_BevelInner;
+    property BevelOuter: Integer read Get_BevelOuter write Set_BevelOuter;
+    property BevelWidth: Integer read Get_BevelWidth write Set_BevelWidth;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property BorderWidth: Integer read Get_BorderWidth write Set_BorderWidth;
+    property BorderStyle: Integer read Get_BorderStyle write Set_BorderStyle;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property UseDockManager: Integer read Get_UseDockManager write Set_UseDockManager;
+    property DockSite: Integer read Get_DockSite write Set_DockSite;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property FullRepaint: Integer read Get_FullRepaint write Set_FullRepaint;
+    property Font: IExodusControlFont read Get_Font;
+    property Locked: Integer read Get_Locked write Set_Locked;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentBackground: Integer read Get_ParentBackground write Set_ParentBackground;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Visible: Integer read Get_Visible write Set_Visible;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlPanelDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {BA37BB99-F039-49B7-AB56-819E87B0472F}
+// *********************************************************************//
+  IExodusControlPanelDisp = dispinterface
+    ['{BA37BB99-F039-49B7-AB56-819E87B0472F}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property Align: Integer dispid 12;
+    property Alignment: Integer dispid 13;
+    property AutoSize: Integer dispid 14;
+    property BevelInner: Integer dispid 15;
+    property BevelOuter: Integer dispid 16;
+    property BevelWidth: Integer dispid 17;
+    property BiDiMode: Integer dispid 18;
+    property BorderWidth: Integer dispid 19;
+    property BorderStyle: Integer dispid 20;
+    property Caption: WideString dispid 21;
+    property Color: Integer dispid 22;
+    property Ctl3D: Integer dispid 23;
+    property UseDockManager: Integer dispid 24;
+    property DockSite: Integer dispid 25;
+    property DragCursor: Integer dispid 26;
+    property DragKind: Integer dispid 27;
+    property DragMode: Integer dispid 28;
+    property Enabled: Integer dispid 29;
+    property FullRepaint: Integer dispid 30;
+    property Font: IExodusControlFont readonly dispid 31;
+    property Locked: Integer dispid 32;
+    property ParentBiDiMode: Integer dispid 33;
+    property ParentBackground: Integer dispid 34;
+    property ParentColor: Integer dispid 35;
+    property ParentCtl3D: Integer dispid 36;
+    property ParentFont: Integer dispid 37;
+    property ParentShowHint: Integer dispid 38;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 39;
+    property ShowHint: Integer dispid 40;
+    property TabOrder: Integer dispid 41;
+    property TabStop: Integer dispid 42;
+    property Visible: Integer dispid 43;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlPopupMenu
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F80CD345-A91C-40C8-89CD-AD5BE532B9C2}
+// *********************************************************************//
+  IExodusControlPopupMenu = interface(IDispatch)
+    ['{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Items: IExodusControlMenuItem; safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_AutoHotkeys: Integer; safecall;
+    procedure Set_AutoHotkeys(Value: Integer); safecall;
+    function Get_AutoLineReduction: Integer; safecall;
+    procedure Set_AutoLineReduction(Value: Integer); safecall;
+    function Get_AutoPopup: Integer; safecall;
+    procedure Set_AutoPopup(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_OwnerDraw: Integer; safecall;
+    procedure Set_OwnerDraw(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_TrackButton: Integer; safecall;
+    procedure Set_TrackButton(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Items: IExodusControlMenuItem read Get_Items;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property AutoHotkeys: Integer read Get_AutoHotkeys write Set_AutoHotkeys;
+    property AutoLineReduction: Integer read Get_AutoLineReduction write Set_AutoLineReduction;
+    property AutoPopup: Integer read Get_AutoPopup write Set_AutoPopup;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property OwnerDraw: Integer read Get_OwnerDraw write Set_OwnerDraw;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property TrackButton: Integer read Get_TrackButton write Set_TrackButton;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlPopupMenuDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F80CD345-A91C-40C8-89CD-AD5BE532B9C2}
+// *********************************************************************//
+  IExodusControlPopupMenuDisp = dispinterface
+    ['{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Items: IExodusControlMenuItem readonly dispid 3;
+    property Alignment: Integer dispid 4;
+    property AutoHotkeys: Integer dispid 5;
+    property AutoLineReduction: Integer dispid 6;
+    property AutoPopup: Integer dispid 7;
+    property BiDiMode: Integer dispid 8;
+    property HelpContext: Integer dispid 9;
+    property OwnerDraw: Integer dispid 10;
+    property ParentBiDiMode: Integer dispid 11;
+    property TrackButton: Integer dispid 12;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlRadioButton
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {87FAD954-03E1-4657-B58D-9947087EAAEC}
+// *********************************************************************//
+  IExodusControlRadioButton = interface(IDispatch)
+    ['{87FAD954-03E1-4657-B58D-9947087EAAEC}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_Checked: Integer; safecall;
+    procedure Set_Checked(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property Checked: Integer read Get_Checked write Set_Checked;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlRadioButtonDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {87FAD954-03E1-4657-B58D-9947087EAAEC}
+// *********************************************************************//
+  IExodusControlRadioButtonDisp = dispinterface
+    ['{87FAD954-03E1-4657-B58D-9947087EAAEC}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property Alignment: Integer dispid 12;
+    property BiDiMode: Integer dispid 13;
+    property Caption: WideString dispid 14;
+    property Checked: Integer dispid 15;
+    property Color: Integer dispid 16;
+    property Ctl3D: Integer dispid 17;
+    property DragCursor: Integer dispid 18;
+    property DragKind: Integer dispid 19;
+    property DragMode: Integer dispid 20;
+    property Enabled: Integer dispid 21;
+    property Font: IExodusControlFont readonly dispid 22;
+    property ParentBiDiMode: Integer dispid 23;
+    property ParentColor: Integer dispid 24;
+    property ParentCtl3D: Integer dispid 25;
+    property ParentFont: Integer dispid 26;
+    property ParentShowHint: Integer dispid 27;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 28;
+    property ShowHint: Integer dispid 29;
+    property TabOrder: Integer dispid 30;
+    property TabStop: Integer dispid 31;
+    property Visible: Integer dispid 32;
+    property WordWrap: Integer dispid 33;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusControlRichEdit
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {3997314D-4068-43E7-ACEB-150FF196069C}
+// *********************************************************************//
+  IExodusControlRichEdit = interface(IDispatch)
+    ['{3997314D-4068-43E7-ACEB-150FF196069C}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_TabStop: Integer; safecall;
+    procedure Set_TabStop(Value: Integer); safecall;
+    function Get_Align: Integer; safecall;
+    procedure Set_Align(Value: Integer); safecall;
+    function Get_Alignment: Integer; safecall;
+    procedure Set_Alignment(Value: Integer); safecall;
+    function Get_BevelInner: Integer; safecall;
+    procedure Set_BevelInner(Value: Integer); safecall;
+    function Get_BevelOuter: Integer; safecall;
+    procedure Set_BevelOuter(Value: Integer); safecall;
+    function Get_BevelKind: Integer; safecall;
+    procedure Set_BevelKind(Value: Integer); safecall;
+    function Get_BevelWidth: Integer; safecall;
+    procedure Set_BevelWidth(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_BorderStyle: Integer; safecall;
+    procedure Set_BorderStyle(Value: Integer); safecall;
+    function Get_BorderWidth: Integer; safecall;
+    procedure Set_BorderWidth(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_DragCursor: Integer; safecall;
+    procedure Set_DragCursor(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_HideSelection: Integer; safecall;
+    procedure Set_HideSelection(Value: Integer); safecall;
+    function Get_HideScrollBars: Integer; safecall;
+    procedure Set_HideScrollBars(Value: Integer); safecall;
+    function Get_ImeMode: Integer; safecall;
+    procedure Set_ImeMode(Value: Integer); safecall;
+    function Get_ImeName: WideString; safecall;
+    procedure Set_ImeName(const Value: WideString); safecall;
+    function Get_Lines(Index: Integer): WideString; safecall;
+    procedure Set_Lines(Index: Integer; const Value: WideString); safecall;
+    function Get_MaxLength: Integer; safecall;
+    procedure Set_MaxLength(Value: Integer); safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_ParentColor: Integer; safecall;
+    procedure Set_ParentColor(Value: Integer); safecall;
+    function Get_ParentCtl3D: Integer; safecall;
+    procedure Set_ParentCtl3D(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_ParentShowHint: Integer; safecall;
+    procedure Set_ParentShowHint(Value: Integer); safecall;
+    function Get_PlainText: Integer; safecall;
+    procedure Set_PlainText(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_ReadOnly: Integer; safecall;
+    procedure Set_ReadOnly(Value: Integer); safecall;
+    function Get_ScrollBars: Integer; safecall;
+    procedure Set_ScrollBars(Value: Integer); safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_TabOrder: Integer; safecall;
+    procedure Set_TabOrder(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WantTabs: Integer; safecall;
+    procedure Set_WantTabs(Value: Integer); safecall;
+    function Get_WantReturns: Integer; safecall;
+    procedure Set_WantReturns(Value: Integer); safecall;
+    function Get_WordWrap: Integer; safecall;
+    procedure Set_WordWrap(Value: Integer); safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property TabStop: Integer read Get_TabStop write Set_TabStop;
+    property Align: Integer read Get_Align write Set_Align;
+    property Alignment: Integer read Get_Alignment write Set_Alignment;
+    property BevelInner: Integer read Get_BevelInner write Set_BevelInner;
+    property BevelOuter: Integer read Get_BevelOuter write Set_BevelOuter;
+    property BevelKind: Integer read Get_BevelKind write Set_BevelKind;
+    property BevelWidth: Integer read Get_BevelWidth write Set_BevelWidth;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property BorderStyle: Integer read Get_BorderStyle write Set_BorderStyle;
+    property BorderWidth: Integer read Get_BorderWidth write Set_BorderWidth;
+    property Color: Integer read Get_Color write Set_Color;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property DragCursor: Integer read Get_DragCursor write Set_DragCursor;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property Font: IExodusControlFont read Get_Font;
+    property HideSelection: Integer read Get_HideSelection write Set_HideSelection;
+    property HideScrollBars: Integer read Get_HideScrollBars write Set_HideScrollBars;
+    property ImeMode: Integer read Get_ImeMode write Set_ImeMode;
+    property ImeName: WideString read Get_ImeName write Set_ImeName;
+    property Lines[Index: Integer]: WideString read Get_Lines write Set_Lines;
+    property MaxLength: Integer read Get_MaxLength write Set_MaxLength;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property ParentColor: Integer read Get_ParentColor write Set_ParentColor;
+    property ParentCtl3D: Integer read Get_ParentCtl3D write Set_ParentCtl3D;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property ParentShowHint: Integer read Get_ParentShowHint write Set_ParentShowHint;
+    property PlainText: Integer read Get_PlainText write Set_PlainText;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property ReadOnly: Integer read Get_ReadOnly write Set_ReadOnly;
+    property ScrollBars: Integer read Get_ScrollBars write Set_ScrollBars;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property TabOrder: Integer read Get_TabOrder write Set_TabOrder;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WantTabs: Integer read Get_WantTabs write Set_WantTabs;
+    property WantReturns: Integer read Get_WantReturns write Set_WantReturns;
+    property WordWrap: Integer read Get_WordWrap write Set_WordWrap;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlRichEditDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {3997314D-4068-43E7-ACEB-150FF196069C}
+// *********************************************************************//
+  IExodusControlRichEditDisp = dispinterface
+    ['{3997314D-4068-43E7-ACEB-150FF196069C}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property TabStop: Integer dispid 12;
+    property Align: Integer dispid 13;
+    property Alignment: Integer dispid 14;
+    property BevelInner: Integer dispid 15;
+    property BevelOuter: Integer dispid 16;
+    property BevelKind: Integer dispid 17;
+    property BevelWidth: Integer dispid 18;
+    property BiDiMode: Integer dispid 19;
+    property BorderStyle: Integer dispid 20;
+    property BorderWidth: Integer dispid 21;
+    property Color: Integer dispid 22;
+    property Ctl3D: Integer dispid 23;
+    property DragCursor: Integer dispid 24;
+    property DragKind: Integer dispid 25;
+    property DragMode: Integer dispid 26;
+    property Enabled: Integer dispid 27;
+    property Font: IExodusControlFont readonly dispid 28;
+    property HideSelection: Integer dispid 29;
+    property HideScrollBars: Integer dispid 30;
+    property ImeMode: Integer dispid 31;
+    property ImeName: WideString dispid 32;
+    property Lines[Index: Integer]: WideString dispid 33;
+    property MaxLength: Integer dispid 34;
+    property ParentBiDiMode: Integer dispid 35;
+    property ParentColor: Integer dispid 36;
+    property ParentCtl3D: Integer dispid 37;
+    property ParentFont: Integer dispid 38;
+    property ParentShowHint: Integer dispid 39;
+    property PlainText: Integer dispid 40;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 41;
+    property ReadOnly: Integer dispid 42;
+    property ScrollBars: Integer dispid 43;
+    property ShowHint: Integer dispid 44;
+    property TabOrder: Integer dispid 45;
+    property Visible: Integer dispid 46;
+    property WantTabs: Integer dispid 47;
+    property WantReturns: Integer dispid 48;
+    property WordWrap: Integer dispid 49;
   end;
 
 // *********************************************************************//

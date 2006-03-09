@@ -4,7 +4,7 @@
   helpstring("Exodus COM Plugin interfaces")
     
 ]
-library Exodus
+library ExodusCOM
 {
 
   importlib("stdole2.tlb");
@@ -1338,4 +1338,4 @@ library Exodus
     HRESULT _stdcall Item([in] long Index, [out, retval] IExodusEntity ** Value /*Warning: unable to validate structure name: */ );
   };
 
-};
+}; 
