@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <PersonalityInfo>
+    <Option>
+      <Option Name="Personality">Default.Personality</Option>
+      <Option Name="ProjectType"></Option>
+      <Option Name="Version">1.0</Option>
+      <Option Name="GUID">{56F496EE-991D-4A5B-8210-C96F36161906}</Option>
+    </Option>
+  </PersonalityInfo>
+  <Default.Personality>
+    
+    <Projects>
+      <Projects Name="Exodus.exe">exodus\Exodus.bdsproj</Projects>
+      <Projects Name="Generator.exe">COMGuiGenerator\Generator.bdsproj</Projects>
+      <Projects Name="Targets">Exodus.exe Generator.exe</Projects>
+    </Projects>
+    <Dependencies/>
+  </Default.Personality>
+</BorlandProject>

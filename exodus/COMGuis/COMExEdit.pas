@@ -31,15 +31,15 @@ unit COMExEdit;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlEdit = class(TAutoObject, IExodusControl, IExodusControlEdit)
     public
-        constructor Create(control: TEdit);
+        constructor Create(control: TTntEdit);
 
     private
-        _control: TEdit;
+        _control: TTntEdit;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -138,7 +138,7 @@ type
 implementation
 
 
-constructor TExControlEdit.Create(control: TEdit);
+constructor TExControlEdit.Create(control: TTntEdit);
 begin
      _control := control; 
 end;
@@ -602,7 +602,7 @@ end;
 
 procedure TExControlEdit.Set_PasswordChar(const Value: Widestring);
 begin
-      _control.PasswordChar := string(Value)[1];
+      _control.PasswordChar := Value;
 end;
 
 function TExControlEdit.Get_PopupMenu: IExodusControlPopupMenu;

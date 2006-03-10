@@ -31,15 +31,15 @@ unit COMExMenuItem;
 
 interface
 uses
-    Menus, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    TntMenus, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlMenuItem = class(TAutoObject, IExodusControl, IExodusControlMenuItem)
     public
-        constructor Create(control: TMenuItem);
+        constructor Create(control: TTntMenuItem);
 
     private
-        _control: TMenuItem;
+        _control: TTntMenuItem;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -86,7 +86,7 @@ type
 implementation
 
 
-constructor TExControlMenuItem.Create(control: TMenuItem);
+constructor TExControlMenuItem.Create(control: TTntMenuItem);
 begin
      _control := control; 
 end;

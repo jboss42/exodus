@@ -1,9 +1,9 @@
 object frmGen: TfrmGen
   Left = 239
   Top = 136
-  Width = 528
-  Height = 339
   Caption = 'Generate COM Interfaces'
+  ClientHeight = 309
+  ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object frmGen: TfrmGen
   OnCreate = FormCreate
   DesignSize = (
     520
-    305)
+    309)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel

@@ -20,6 +20,7 @@ unit Generate;
 }
 
 {$M+}
+{$METHODINFO ON}
 
 interface
 
@@ -39,6 +40,7 @@ type
   private
     { Private declarations }
     known_classes: TStringlist;
+    vcl_classes: TStringlist;
     uber_cl: TStringlist;
     uber_idl: TStringlist;
     files: TStringlist;
@@ -53,6 +55,7 @@ type
     procedure generateCOM(o: TClass);
     function addUse(new_unit, uses_str: string): string;
     procedure addFile(new_unit: string);
+    function stripClassName(class_name: string): string;
 
   public
     { Public declarations }
@@ -85,6 +88,7 @@ implementation
 {$R *.dfm}
 
 uses
+    TntMenus, TntClasses, TntControls, TntStdCtrls, TntGraphics, TntExtCtrls,
     ComCtrls, ExtCtrls, Menus, StrUtils;
 
 {---------------------------------------}
@@ -96,8 +100,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmGen.addClass(o: TClass);
+var
+    cc: TClassContainer;
+    vcl_name, cname: string;
 begin
-    known_classes.AddObject(Lowercase(o.ClassName), TClassContainer.Create(o.ClassName, o));
+    vcl_name := 'T' + stripClassName(o.Classname);
+
+    cname := Lowercase(o.Classname);
+    cc := TClassContainer.Create(o.ClassName, o);
+    known_classes.AddObject(cname, cc);
+
+    if (o.Classname <> vcl_name) then
+        vcl_classes.AddObject(Lowercase(vcl_name), cc);
 end;
 
 {---------------------------------------}
@@ -161,24 +175,30 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmGen.stripClassName(class_name: string): string;
+begin
+    if (UpperCase(MidStr(class_name, 1, 4)) = 'TTNT') then
+        Result := MidStr(class_name, 5, length(class_name) - 4)
+    else
+        Result := MidStr(class_name, 2, length(class_name) - 1);
+end;
+
+{---------------------------------------}
 function TfrmGen.getIName(o: TClass): string;
 begin
-    Result := MidStr(o.ClassName, 2, length(o.classname) - 1);
-    Result := 'IExodusControl' + Result;
+    Result := 'IExodusControl' + stripClassName(o.ClassName);
 end;
 
 {---------------------------------------}
 function TfrmGen.getCOMName(o: TClass): string;
 begin
-    Result := MidStr(o.ClassName, 2, length(o.classname) - 1);
-    Result := 'COMEx' + Result;
+    Result := 'COMEx' + stripClassName(o.ClassName);
 end;
 
 {---------------------------------------}
 function TfrmGen.getClassName(o: TClass): string;
 begin
-    Result := MidStr(o.ClassName, 2, length(o.classname) - 1);
-    Result := 'TExControl' + Result;
+    Result := 'TExControl' + stripClassName(o.ClassName);
 end;
 
 {---------------------------------------}
@@ -294,7 +314,7 @@ var
     use_idx: integer;
     use_str: string;
 
-    idl_cur, e, cidx, i: integer;
+    idl_cur, e, vidx, cidx, i: integer;
     class_fn, class_name, class_iname, class_cname: string;
     cc: TClassContainer;
 
@@ -307,7 +327,7 @@ begin
     com := getCOMName(o);
     iname := getIName(o);
     cname := getClassName(o);
-    idl_name := MidStr(iname, 2, Length(iname) - 1);
+    idl_name := stripClassName(o.ClassName);
 
     // get all the props
     info := o.ClassInfo;
@@ -483,11 +503,18 @@ begin
             // we care about some classes
             class_name := LowerCase(ptype^.Name);
 
+            cc := nil;
             cidx := known_classes.IndexOf(class_name);
-            if (cidx >= 0) then begin
+            if (cidx >= 0) then
+                cc := TClassContainer(known_classes.Objects[cidx])
+            else begin
+                vidx := vcl_classes.IndexOf(class_name);
+                if (vidx >= 0) then
+                    cc := TClassContainer(vcl_classes.Objects[vidx]);
+            end;
 
+            if (cc <> nil) then begin
                 // This is a class we are building an interface for
-                cc := TClassContainer(known_classes.Objects[cidx]);
                 class_iname := getIName(cc.c);
                 class_cname := getClassName(cc.c);
                 class_fn := getCOMName(cc.c);
@@ -515,6 +542,7 @@ begin
             else if ((class_name = 'tstrings') or
                 (class_name = 'tstringList') or
                 (class_name = 'twidestrings') or
+                (class_name = 'ttntstrings') or
                 (class_name = 'twidestringlist')) then begin
 
                 // Special handling for TStrings and related classes
@@ -760,21 +788,22 @@ end;
 procedure TfrmGen.FormCreate(Sender: TObject);
 begin
     known_classes := TStringlist.Create();
+    vcl_classes := TStringlist.Create();
     uber_idl := TStringlist.Create();
     uber_cl := TStringlist.Create();
     files := TStringlist.Create();
 
     addClass(TFont);
-    addClass(TPanel);
-    addClass(TMenuItem);
-    addClass(TPopupMenu);
-    addClass(TButton);
-    addClass(TLabel);
-    addClass(TEdit);
-    addClass(TCheckBox);
-    addClass(TRadioButton);
-    addClass(TListBox);
-    addClass(TComboBox);
+    addClass(TTntPanel);
+    addClass(TTntMenuItem);
+    addClass(TTntPopupMenu);
+    addClass(TTntButton);
+    addClass(TTntLabel);
+    addClass(TTntEdit);
+    addClass(TTntCheckBox);
+    addClass(TTntRadioButton);
+    addClass(TTntListBox);
+    addClass(TTntComboBox);
     addClass(TRichEdit);
 
 end;

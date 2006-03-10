@@ -31,15 +31,15 @@ unit COMExCheckBox;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlCheckBox = class(TAutoObject, IExodusControl, IExodusControlCheckBox)
     public
-        constructor Create(control: TCheckBox);
+        constructor Create(control: TTntCheckBox);
 
     private
-        _control: TCheckBox;
+        _control: TTntCheckBox;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -120,7 +120,7 @@ type
 implementation
 
 
-constructor TExControlCheckBox.Create(control: TCheckBox);
+constructor TExControlCheckBox.Create(control: TTntCheckBox);
 begin
      _control := control; 
 end;

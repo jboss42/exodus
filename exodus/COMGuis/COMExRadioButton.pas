@@ -31,15 +31,15 @@ unit COMExRadioButton;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlRadioButton = class(TAutoObject, IExodusControl, IExodusControlRadioButton)
     public
-        constructor Create(control: TRadioButton);
+        constructor Create(control: TTntRadioButton);
 
     private
-        _control: TRadioButton;
+        _control: TTntRadioButton;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -116,7 +116,7 @@ type
 implementation
 
 
-constructor TExControlRadioButton.Create(control: TRadioButton);
+constructor TExControlRadioButton.Create(control: TTntRadioButton);
 begin
      _control := control; 
 end;
