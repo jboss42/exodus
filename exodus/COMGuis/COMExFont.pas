@@ -34,7 +34,7 @@ uses
     Graphics, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlFont = class(TAutoObject, IExodusControlFont)
+    TExControlFont = class(TAutoObject, IExodusControl, IExodusControlFont)
     public
         constructor Create(control: TFont);
 
@@ -42,6 +42,7 @@ type
         _control: TFont;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Charset: Integer; safecall;
         procedure Set_Charset(Value: Integer); safecall;
         function Get_Color: Integer; safecall;
@@ -66,6 +67,11 @@ implementation
 constructor TExControlFont.Create(control: TFont);
 begin
      _control := control; 
+end;
+
+function TExControlFont.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlFont;
 end;
 
 function TExControlFont.Get_Charset: Integer;

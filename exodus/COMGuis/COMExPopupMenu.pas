@@ -34,7 +34,7 @@ uses
     COMExMenuItem, Menus, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlPopupMenu = class(TAutoObject, IExodusControlPopupMenu)
+    TExControlPopupMenu = class(TAutoObject, IExodusControl, IExodusControlPopupMenu)
     public
         constructor Create(control: TPopupMenu);
 
@@ -42,6 +42,7 @@ type
         _control: TPopupMenu;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -77,6 +78,11 @@ implementation
 constructor TExControlPopupMenu.Create(control: TPopupMenu);
 begin
      _control := control; 
+end;
+
+function TExControlPopupMenu.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlPopupMenu;
 end;
 
 function TExControlPopupMenu.Get_Name: Widestring;

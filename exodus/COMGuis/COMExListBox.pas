@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlListBox = class(TAutoObject, IExodusControlListBox)
+    TExControlListBox = class(TAutoObject, IExodusControl, IExodusControlListBox)
     public
         constructor Create(control: TListBox);
 
@@ -42,6 +42,7 @@ type
         _control: TListBox;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -107,6 +108,7 @@ type
         procedure Set_IntegralHeight(Value: Integer); safecall;
         function Get_ItemHeight: Integer; safecall;
         procedure Set_ItemHeight(Value: Integer); safecall;
+        function Get_ItemsCount: integer; safecall;
         function Get_Items(Index: integer): Widestring; safecall;
         procedure Set_Items(Index: integer; const Value: Widestring); safecall;
         function Get_MultiSelect: Integer; safecall;
@@ -146,6 +148,11 @@ implementation
 constructor TExControlListBox.Create(control: TListBox);
 begin
      _control := control; 
+end;
+
+function TExControlListBox.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlListBox;
 end;
 
 function TExControlListBox.Get_Name: Widestring;
@@ -557,6 +564,11 @@ end;
 procedure TExControlListBox.Set_ItemHeight(Value: Integer);
 begin
       _control.ItemHeight := Value;
+end;
+
+function TExControlListBox.Get_ItemsCount: integer;
+begin
+    Result := _control.Items.Count;
 end;
 
 function TExControlListBox.Get_Items(Index: integer): Widestring;

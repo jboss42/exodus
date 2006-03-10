@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlLabel = class(TAutoObject, IExodusControlLabel)
+    TExControlLabel = class(TAutoObject, IExodusControl, IExodusControlLabel)
     public
         constructor Create(control: TLabel);
 
@@ -42,6 +42,7 @@ type
         _control: TLabel;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -118,6 +119,11 @@ implementation
 constructor TExControlLabel.Create(control: TLabel);
 begin
      _control := control; 
+end;
+
+function TExControlLabel.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlLabel;
 end;
 
 function TExControlLabel.Get_Name: Widestring;

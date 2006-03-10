@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlRadioButton = class(TAutoObject, IExodusControlRadioButton)
+    TExControlRadioButton = class(TAutoObject, IExodusControl, IExodusControlRadioButton)
     public
         constructor Create(control: TRadioButton);
 
@@ -42,6 +42,7 @@ type
         _control: TRadioButton;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -118,6 +119,11 @@ implementation
 constructor TExControlRadioButton.Create(control: TRadioButton);
 begin
      _control := control; 
+end;
+
+function TExControlRadioButton.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlRadioButton;
 end;
 
 function TExControlRadioButton.Get_Name: Widestring;

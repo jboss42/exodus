@@ -2,12 +2,12 @@ program Generator;
 
 uses
   Forms,
-  Generate in 'Generate.pas' {Form1};
+  Generate in 'Generate.pas' {frmGen};
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrmGen, frmGen);
   Application.Run;
 end.
