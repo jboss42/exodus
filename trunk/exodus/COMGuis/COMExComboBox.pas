@@ -31,15 +31,15 @@ unit COMExComboBox;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlComboBox = class(TAutoObject, IExodusControl, IExodusControlComboBox)
     public
-        constructor Create(control: TComboBox);
+        constructor Create(control: TTntComboBox);
 
     private
-        _control: TComboBox;
+        _control: TTntComboBox;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -143,7 +143,7 @@ type
 implementation
 
 
-constructor TExControlComboBox.Create(control: TComboBox);
+constructor TExControlComboBox.Create(control: TTntComboBox);
 begin
      _control := control; 
 end;

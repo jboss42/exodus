@@ -31,15 +31,15 @@ unit COMExLabel;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlLabel = class(TAutoObject, IExodusControl, IExodusControlLabel)
     public
-        constructor Create(control: TLabel);
+        constructor Create(control: TTntLabel);
 
     private
-        _control: TLabel;
+        _control: TTntLabel;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -116,7 +116,7 @@ type
 implementation
 
 
-constructor TExControlLabel.Create(control: TLabel);
+constructor TExControlLabel.Create(control: TTntLabel);
 begin
      _control := control; 
 end;

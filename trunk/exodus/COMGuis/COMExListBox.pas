@@ -31,15 +31,15 @@ unit COMExListBox;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlListBox = class(TAutoObject, IExodusControl, IExodusControlListBox)
     public
-        constructor Create(control: TListBox);
+        constructor Create(control: TTntListBox);
 
     private
-        _control: TListBox;
+        _control: TTntListBox;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -145,7 +145,7 @@ type
 implementation
 
 
-constructor TExControlListBox.Create(control: TListBox);
+constructor TExControlListBox.Create(control: TTntListBox);
 begin
      _control := control; 
 end;

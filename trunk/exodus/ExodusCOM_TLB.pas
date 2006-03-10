@@ -1,4 +1,4 @@
-unit ExodusCOM_TLB;
+unit Exodus_TLB;
 
 // ************************************************************************ //
 // WARNING                                                                    
@@ -12,16 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/9/2006 9:14:34 PM from Type Library described below.
+// File generated on 3/10/2006 4:46:09 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {85AA8EC3-C4AB-460B-828D-584AD1A44A2A}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -41,10 +41,10 @@ uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ExodusCOMMajorVersion = 1;
-  ExodusCOMMinorVersion = 0;
+  ExodusMajorVersion = 1;
+  ExodusMinorVersion = 0;
 
-  LIBID_ExodusCOM: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
+  LIBID_Exodus: TGUID = '{85AA8EC3-C4AB-460B-828D-584AD1A44A2A}';
 
   IID_IExodusController: TGUID = '{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
@@ -2796,8 +2796,8 @@ type
 // *********************************************************************//
   IExodusIQListener = interface(IDispatch)
     ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
-    procedure Process(Handle: Integer; const XML: WideString); safecall;
-    procedure Timeout(Handle: Integer); safecall;
+    procedure Process(Handle: Integer; const xml: WideString); safecall;
+    procedure timeout(Handle: Integer); safecall;
   end;
 
 // *********************************************************************//
@@ -2807,8 +2807,8 @@ type
 // *********************************************************************//
   IExodusIQListenerDisp = dispinterface
     ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
-    procedure Process(Handle: Integer; const XML: WideString); dispid 201;
-    procedure Timeout(Handle: Integer); dispid 202;
+    procedure Process(Handle: Integer; const xml: WideString); dispid 201;
+    procedure timeout(Handle: Integer); dispid 202;
   end;
 
 // *********************************************************************//

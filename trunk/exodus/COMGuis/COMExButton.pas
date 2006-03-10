@@ -31,15 +31,15 @@ unit COMExButton;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
     TExControlButton = class(TAutoObject, IExodusControl, IExodusControlButton)
     public
-        constructor Create(control: TButton);
+        constructor Create(control: TTntButton);
 
     private
-        _control: TButton;
+        _control: TTntButton;
 
     protected
         function Get_ControlType: ExodusControlTypes; safecall;
@@ -110,7 +110,7 @@ type
 implementation
 
 
-constructor TExControlButton.Create(control: TButton);
+constructor TExControlButton.Create(control: TTntButton);
 begin
      _control := control; 
 end;
