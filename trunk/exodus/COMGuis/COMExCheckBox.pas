@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlCheckBox = class(TAutoObject, IExodusControlCheckBox)
+    TExControlCheckBox = class(TAutoObject, IExodusControl, IExodusControlCheckBox)
     public
         constructor Create(control: TCheckBox);
 
@@ -42,6 +42,7 @@ type
         _control: TCheckBox;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -122,6 +123,11 @@ implementation
 constructor TExControlCheckBox.Create(control: TCheckBox);
 begin
      _control := control; 
+end;
+
+function TExControlCheckBox.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlCheckBox;
 end;
 
 function TExControlCheckBox.Get_Name: Widestring;

@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlRichEdit = class(TAutoObject, IExodusControlRichEdit)
+    TExControlRichEdit = class(TAutoObject, IExodusControl, IExodusControlRichEdit)
     public
         constructor Create(control: TRichEdit);
 
@@ -42,6 +42,7 @@ type
         _control: TRichEdit;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -105,6 +106,7 @@ type
         procedure Set_ImeMode(Value: Integer); safecall;
         function Get_ImeName: Widestring; safecall;
         procedure Set_ImeName(const Value: Widestring); safecall;
+        function Get_LinesCount: integer; safecall;
         function Get_Lines(Index: integer): Widestring; safecall;
         procedure Set_Lines(Index: integer; const Value: Widestring); safecall;
         function Get_MaxLength: Integer; safecall;
@@ -150,6 +152,11 @@ implementation
 constructor TExControlRichEdit.Create(control: TRichEdit);
 begin
      _control := control; 
+end;
+
+function TExControlRichEdit.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlRichEdit;
 end;
 
 function TExControlRichEdit.Get_Name: Widestring;
@@ -545,6 +552,11 @@ end;
 procedure TExControlRichEdit.Set_ImeName(const Value: Widestring);
 begin
       _control.ImeName := Value;
+end;
+
+function TExControlRichEdit.Get_LinesCount: integer;
+begin
+    Result := _control.Lines.Count;
 end;
 
 function TExControlRichEdit.Get_Lines(Index: integer): Widestring;

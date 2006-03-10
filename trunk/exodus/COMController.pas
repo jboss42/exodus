@@ -117,6 +117,7 @@ type
     procedure unregisterCapExtension(const ext: WideString); safecall;
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
+    procedure Debug(const Value: WideString); safecall;
     
     { Protected declarations }
   private
@@ -1277,6 +1278,12 @@ function TExodusController.Get_EntityCache: IExodusEntityCache;
 begin
     ExCOMEntityCache.ObjAddRef();
     Result := ExCOMEntityCache;
+end;
+
+{---------------------------------------}
+procedure TExodusController.Debug(const Value: WideString);
+begin
+    DebugMessage(Value);
 end;
 
 initialization

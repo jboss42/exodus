@@ -212,7 +212,8 @@ uses
   COMExMenuItem in 'COMGuis\COMExMenuItem.pas',
   COMExPanel in 'COMGuis\COMExPanel.pas',
   COMExPopupMenu in 'COMGuis\COMExPopupMenu.pas',
-  COMExRadioButton in 'COMGuis\COMExRadioButton.pas';
+  COMExRadioButton in 'COMGuis\COMExRadioButton.pas',
+  COMExControls in 'COMGuis\COMExControls.pas';
 
 {$R *.TLB}
 

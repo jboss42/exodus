@@ -31,7 +31,10 @@ type
     function Get_CurrentNick: WideString; safecall;
     function GetControl(const Name: WideString): IUnknown; safecall;
     function Get_Caption: WideString; safecall;
-    procedure Set_Caption(const Value: WideString); safecall;
+    procedure Set_Caption(const Value: WideString); safecall;  function IExodusChat.GetControl = IExodusChat_GetControl;
+  
+    function IExodusChat_GetControl(const Name: WideString): IExodusControl;
+      safecall;
     { Protected declarations }
 
   public
@@ -66,6 +69,7 @@ end;
 implementation
 
 uses
+    COMExControls, 
     Controls, BaseMsgList, RTFMsgList, XMLTag, ComServ, Menus, SysUtils;
 
 {---------------------------------------}
@@ -484,23 +488,25 @@ end;
 {---------------------------------------}
 function TExodusChat.GetControl(const Name: WideString): IUnknown;
 var
+    i: IExodusControl;
     comp : TComponent;
 begin
+    i := nil;
     result := nil;
     try
         if (_chat <> nil) then begin
             comp := TfrmChat(_chat.window).FindComponent(Name);
             if comp <> nil then
-                result := comp.ComObject
+                i := getCOMControl(comp);
         end
         else if (_room <> nil) then begin
             comp := _room.FindComponent(Name);
             if (comp <> nil) then
-                result := comp.ComObject;
+                i := getCOMControl(comp);
         end;
     except
         on EComponentError do
-            result := nil;
+            Result := nil;
     end;
 end;
 
@@ -522,6 +528,12 @@ begin
         TfrmChat(_chat.Window).Caption := Value
     else if (_room <> nil) then
         _room.Caption := Value;
+end;
+
+function TExodusChat.IExodusChat_GetControl(
+  const Name: WideString): IExodusControl;
+begin
+
 end;
 
 initialization

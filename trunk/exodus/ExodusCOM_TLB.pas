@@ -12,16 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/9/2006 12:14:41 PM from Type Library described below.
+// File generated on 3/9/2006 9:11:17 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {85AA8EC3-C4AB-460B-828D-584AD1A44A2A}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -82,6 +82,7 @@ const
   IID_IExodusControlRadioButton: TGUID = '{87FAD954-03E1-4657-B58D-9947087EAAEC}';
   IID_IExodusControlRichEdit: TGUID = '{3997314D-4068-43E7-ACEB-150FF196069C}';
   IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
+  IID_IExodusIQListener: TGUID = '{57DFE494-4509-4972-A93B-6C7E6A9D6A59}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -177,6 +178,8 @@ type
   IExodusControlRichEditDisp = dispinterface;
   IExodusControlButton = interface;
   IExodusControlButtonDisp = dispinterface;
+  IExodusIQListener = interface;
+  IExodusIQListenerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -284,6 +287,7 @@ type
     procedure unregisterCapExtension(const ext: WideString); safecall;
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
+    procedure Debug(const Value: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -385,6 +389,7 @@ type
     procedure unregisterCapExtension(const ext: WideString); dispid 207;
     property RosterImages: IExodusRosterImages readonly dispid 208;
     property EntityCache: IExodusEntityCache readonly dispid 209;
+    procedure Debug(const Value: WideString); dispid 210;
   end;
 
 // *********************************************************************//
@@ -411,7 +416,7 @@ type
     procedure AddRoomUser(const jid: WideString; const nickname: WideString); safecall;
     procedure RemoveRoomUser(const jid: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
-    function GetControl(const Name: WideString): IUnknown; safecall;
+    function GetControl(const Name: WideString): IExodusControl; safecall;
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
     property jid: WideString read Get_jid;
@@ -445,7 +450,7 @@ type
     procedure AddRoomUser(const jid: WideString; const nickname: WideString); dispid 207;
     procedure RemoveRoomUser(const jid: WideString); dispid 208;
     property CurrentNick: WideString readonly dispid 209;
-    function GetControl(const Name: WideString): IUnknown; dispid 210;
+    function GetControl(const Name: WideString): IExodusControl; dispid 210;
     property Caption: WideString dispid 211;
   end;
 
@@ -2501,6 +2506,7 @@ type
     procedure Set_ImeMode(Value: Integer); safecall;
     function Get_ImeName: WideString; safecall;
     procedure Set_ImeName(const Value: WideString); safecall;
+    function Get_LinesCount: Integer; safecall;
     function Get_Lines(Index: Integer): WideString; safecall;
     procedure Set_Lines(Index: Integer; const Value: WideString); safecall;
     function Get_MaxLength: Integer; safecall;
@@ -2566,6 +2572,7 @@ type
     property HideScrollBars: Integer read Get_HideScrollBars write Set_HideScrollBars;
     property ImeMode: Integer read Get_ImeMode write Set_ImeMode;
     property ImeName: WideString read Get_ImeName write Set_ImeName;
+    property LinesCount: Integer read Get_LinesCount;
     property Lines[Index: Integer]: WideString read Get_Lines write Set_Lines;
     property MaxLength: Integer read Get_MaxLength write Set_MaxLength;
     property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
@@ -2624,23 +2631,24 @@ type
     property HideScrollBars: Integer dispid 30;
     property ImeMode: Integer dispid 31;
     property ImeName: WideString dispid 32;
-    property Lines[Index: Integer]: WideString dispid 33;
-    property MaxLength: Integer dispid 34;
-    property ParentBiDiMode: Integer dispid 35;
-    property ParentColor: Integer dispid 36;
-    property ParentCtl3D: Integer dispid 37;
-    property ParentFont: Integer dispid 38;
-    property ParentShowHint: Integer dispid 39;
-    property PlainText: Integer dispid 40;
-    property PopupMenu: IExodusControlPopupMenu readonly dispid 41;
-    property ReadOnly: Integer dispid 42;
-    property ScrollBars: Integer dispid 43;
-    property ShowHint: Integer dispid 44;
-    property TabOrder: Integer dispid 45;
-    property Visible: Integer dispid 46;
-    property WantTabs: Integer dispid 47;
-    property WantReturns: Integer dispid 48;
-    property WordWrap: Integer dispid 49;
+    property LinesCount: Integer readonly dispid 33;
+    property Lines[Index: Integer]: WideString dispid 34;
+    property MaxLength: Integer dispid 35;
+    property ParentBiDiMode: Integer dispid 36;
+    property ParentColor: Integer dispid 37;
+    property ParentCtl3D: Integer dispid 38;
+    property ParentFont: Integer dispid 39;
+    property ParentShowHint: Integer dispid 40;
+    property PlainText: Integer dispid 41;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 42;
+    property ReadOnly: Integer dispid 43;
+    property ScrollBars: Integer dispid 44;
+    property ShowHint: Integer dispid 45;
+    property TabOrder: Integer dispid 46;
+    property Visible: Integer dispid 47;
+    property WantTabs: Integer dispid 48;
+    property WantReturns: Integer dispid 49;
+    property WordWrap: Integer dispid 50;
     property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
@@ -2779,6 +2787,28 @@ type
     property Visible: Integer dispid 29;
     property WordWrap: Integer dispid 30;
     property ControlType: ExodusControlTypes readonly dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusIQListener
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {57DFE494-4509-4972-A93B-6C7E6A9D6A59}
+// *********************************************************************//
+  IExodusIQListener = interface(IDispatch)
+    ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
+    procedure Process(Handle: Integer; const XML: WideString); safecall;
+    procedure Timeout(Handle: Integer); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusIQListenerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {57DFE494-4509-4972-A93B-6C7E6A9D6A59}
+// *********************************************************************//
+  IExodusIQListenerDisp = dispinterface
+    ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
+    procedure Process(Handle: Integer; const XML: WideString); dispid 201;
+    procedure Timeout(Handle: Integer); dispid 202;
   end;
 
 // *********************************************************************//

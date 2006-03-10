@@ -34,7 +34,7 @@ uses
     COMExPopupMenu, COMExFont, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
 
 type
-    TExControlComboBox = class(TAutoObject, IExodusControlComboBox)
+    TExControlComboBox = class(TAutoObject, IExodusControl, IExodusControlComboBox)
     public
         constructor Create(control: TComboBox);
 
@@ -42,6 +42,7 @@ type
         _control: TComboBox;
 
     protected
+        function Get_ControlType: ExodusControlTypes; safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
@@ -130,6 +131,7 @@ type
         procedure Set_Text(const Value: Widestring); safecall;
         function Get_Visible: Integer; safecall;
         procedure Set_Visible(Value: Integer); safecall;
+        function Get_ItemsCount: integer; safecall;
         function Get_Items(Index: integer): Widestring; safecall;
         procedure Set_Items(Index: integer; const Value: Widestring); safecall;
     end;
@@ -144,6 +146,11 @@ implementation
 constructor TExControlComboBox.Create(control: TComboBox);
 begin
      _control := control; 
+end;
+
+function TExControlComboBox.Get_ControlType: ExodusControlTypes;
+begin
+    Result := ExodusControlComboBox;
 end;
 
 function TExControlComboBox.Get_Name: Widestring;
@@ -676,6 +683,11 @@ procedure TExControlComboBox.Set_Visible(Value: Integer);
 begin
    if (Value = 0) then _control.Visible := False;
    if (Value = 1) then _control.Visible := True;
+end;
+
+function TExControlComboBox.Get_ItemsCount: integer;
+begin
+    Result := _control.Items.Count;
 end;
 
 function TExControlComboBox.Get_Items(Index: integer): Widestring;
