@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/9/2006 9:11:17 PM from Type Library described below.
+// File generated on 3/9/2006 9:14:34 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
