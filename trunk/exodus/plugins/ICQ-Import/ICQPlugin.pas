@@ -24,7 +24,7 @@ unit ICQPlugin;
 interface
 
 uses
-    XMLParser, ExodusCOM_TLB, ExImportICQ_TLB, ComObj, ActiveX, StdVcl;
+    XMLParser, Exodus_TLB, ExImportICQ_TLB, ComObj, ActiveX, StdVcl;
 
 type
   TICQImportPlugin = class(TAutoObject, IExodusPlugin)

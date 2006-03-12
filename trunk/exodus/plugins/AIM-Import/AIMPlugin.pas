@@ -24,7 +24,7 @@ unit AIMPlugin;
 interface
 
 uses
-    ExodusCOM_TLB, XMLParser,
+    Exodus_TLB, XMLParser,
     ComObj, ActiveX, ExImportAIM_TLB, StdVcl;
 
 type

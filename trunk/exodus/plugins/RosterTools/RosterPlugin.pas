@@ -24,7 +24,7 @@ unit RosterPlugin;
 interface
 
 uses
-    ExodusCOM_TLB, Import, 
+    Exodus_TLB, Import,
     ComObj, ActiveX, RosterTools_TLB, StdVcl;
 
 type

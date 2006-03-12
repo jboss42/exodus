@@ -30,7 +30,7 @@ unit ExSQLLogger_TLB;
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
   
 
 // *********************************************************************//

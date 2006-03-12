@@ -25,7 +25,7 @@ interface
 
 uses
     ASpellHeadersDyn,
-    ExodusCOM_TLB, RichEdit2, ExRichEdit,
+    Exodus_TLB, RichEdit2, ExRichEdit,
     Classes, ComObj, ActiveX, ExASpell_TLB, StdVcl, Unicode;
 
 type

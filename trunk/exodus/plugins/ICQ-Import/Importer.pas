@@ -30,7 +30,7 @@ unit Importer;
 interface
 
 uses
-    ExodusCOM_TLB, ICQWorks,   
+    Exodus_TLB, ICQWorks,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ComCtrls, ICQDb, ExtCtrls;
 
