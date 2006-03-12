@@ -22,7 +22,7 @@ unit Import;
 interface
 
 uses
-    XMLParser, Unicode, ExodusCOM_TLB,   
+    XMLParser, Unicode, Exodus_TLB,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, buttonFrame, StdCtrls, CheckLst, TntCheckLst,
     TntComCtrls;

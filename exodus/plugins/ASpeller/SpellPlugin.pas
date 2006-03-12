@@ -24,7 +24,7 @@ unit SpellPlugin;
 interface
 
 uses
-    ASpellHeadersDyn, ExodusCOM_TLB,
+    ASpellHeadersDyn, Exodus_TLB,
     Classes, ComObj, ActiveX, ExASpell_TLB, StdVcl;
 
 type

@@ -29,6 +29,9 @@ program Exodus;
 {$ifdef VER150}
     {$define INDY9}
 {$endif}
+{$ifdef VER180}
+    {$define Indy9}
+{$endif}
 
 uses
   Forms,

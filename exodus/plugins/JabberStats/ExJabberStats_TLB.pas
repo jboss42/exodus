@@ -30,8 +30,8 @@ unit ExJabberStats_TLB;
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
-  
+uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
+
 
 // *********************************************************************//
 // GUIDS declared in the TypeLibrary. Following prefixes are used:        

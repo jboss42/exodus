@@ -1,10 +1,10 @@
 object frmImport: TfrmImport
   Left = 231
   Top = 165
-  Width = 417
-  Height = 329
   BorderWidth = 4
   Caption = 'Import Jabber Roster'
+  ClientHeight = 287
+  ClientWidth = 401
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,21 +17,29 @@ object frmImport: TfrmImport
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 261
+    Top = 257
     Width = 401
     Height = 30
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 257
+    ExplicitWidth = 401
+    ExplicitHeight = 30
     inherited Panel2: TPanel
       Width = 401
       Height = 30
+      ExplicitWidth = 401
+      ExplicitHeight = 30
       inherited Bevel1: TBevel
         Width = 401
+        ExplicitWidth = 401
       end
       inherited Panel1: TPanel
         Left = 241
         Height = 25
+        ExplicitLeft = 241
+        ExplicitHeight = 25
         inherited btnOK: TTntButton
           Caption = 'Import'
           OnClick = frameButtons1btnOKClick
@@ -47,7 +55,7 @@ object frmImport: TfrmImport
     Left = 0
     Top = 0
     Width = 401
-    Height = 261
+    Height = 257
     Align = alClient
     Checkboxes = True
     Columns = <

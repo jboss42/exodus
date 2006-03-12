@@ -1,9 +1,9 @@
 object frmImport: TfrmImport
   Left = 290
   Top = 143
-  Width = 453
-  Height = 441
   Caption = 'ICQ Contact List Import'
+  ClientHeight = 407
+  ClientWidth = 445
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object frmImport: TfrmImport
   OnCreate = FormCreate
   DesignSize = (
     445
-    411)
+    407)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -101,7 +101,7 @@ object frmImport: TfrmImport
     Top = 75
     Width = 241
     Height = 21
-    ItemHeight = 13
+    ItemHeight = 0
     TabOrder = 5
     OnChange = txtFilenameChange
     OnClick = txtFilenameChange

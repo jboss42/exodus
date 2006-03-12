@@ -25,7 +25,7 @@ interface
 
 uses
     XMLParser, XMLTag, JabberMsg, SQLiteTable,
-    ExodusCOM_TLB, ComObj, ActiveX, ExSQLLogger_TLB, StdVcl;
+    Exodus_TLB, ComObj, ActiveX, ExSQLLogger_TLB, StdVcl;
 
 type
   TSQLLogger = class(TAutoObject, IExodusPlugin)
@@ -330,7 +330,7 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.MenuClick(const ID: WideString);
 var
-    h: integer;
+    //h: integer;
     f: TfrmView;
 begin
     if (id = _menu_search) then begin
@@ -435,7 +435,7 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.showLog(jid: Widestring);
 var
-    h: integer;
+    //h: integer;
     f: TfrmView;
 begin
     //h := _exodus.CreateDockableWindow('SQL Log Viewer');

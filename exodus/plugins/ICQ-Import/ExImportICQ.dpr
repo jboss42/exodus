@@ -5,7 +5,6 @@ uses
   ICQPlugin in 'ICQPlugin.pas' {ICQImportPlugin: CoClass},
   Importer in 'Importer.pas' {frmImport},
   icqUtils in 'icqUtils.pas',
-  ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
   LibXmlParser in '..\..\..\jopl\LibXmlParser.pas',
   Unicode in '..\..\..\jopl\Unicode.pas',
   XMLAttrib in '..\..\..\jopl\XMLAttrib.pas',

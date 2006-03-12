@@ -26,7 +26,7 @@ interface
 
 uses
     XMLParser, XMLTag, JabberMsg, Graphics,
-    ExodusCOM_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
+    Exodus_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
 
 type
   THTMLLogger = class(TAutoObject, IExodusPlugin)

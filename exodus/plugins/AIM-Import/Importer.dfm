@@ -1,9 +1,9 @@
 object frmImport: TfrmImport
   Left = 236
   Top = 143
-  Width = 453
-  Height = 345
   Caption = 'AIM Buddy List (TM) Import'
+  ClientHeight = 311
+  ClientWidth = 445
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object frmImport: TfrmImport
   OnCreate = FormCreate
   DesignSize = (
     445
-    315)
+    311)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
