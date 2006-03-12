@@ -157,7 +157,7 @@ type
     procedure SetupResources();
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 
-    procedure sendMsg; override;
+    procedure SendMsg; override;
     function  SetJID(cjid: widestring): boolean;
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DockForm; override;

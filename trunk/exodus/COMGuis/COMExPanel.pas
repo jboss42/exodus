@@ -31,7 +31,7 @@ unit COMExPanel;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, TntExtCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,COMExFont,COMExPopupMenu,ComObj,Controls,Exodus_TLB,ExtCtrls,Forms,Graphics,StdCtrls,StdVcl,TntExtCtrls,TntMenus;
 
 type
     TExControlPanel = class(TAutoObject, IExodusControl, IExodusControlPanel)
@@ -47,8 +47,6 @@ type
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
         procedure Set_Tag(Value: Integer); safecall;
-        function Get_AlignWithMargins: Integer; safecall;
-        procedure Set_AlignWithMargins(Value: Integer); safecall;
         function Get_Left: Integer; safecall;
         procedure Set_Left(Value: Integer); safecall;
         function Get_Top: Integer; safecall;
@@ -166,18 +164,6 @@ end;
 procedure TExControlPanel.Set_Tag(Value: Integer);
 begin
       _control.Tag := Value;
-end;
-
-function TExControlPanel.Get_AlignWithMargins: Integer;
-begin
-    if (_control.AlignWithMargins = False) then Result := 0;
-    if (_control.AlignWithMargins = True) then Result := 1;
-end;
-
-procedure TExControlPanel.Set_AlignWithMargins(Value: Integer);
-begin
-   if (Value = 0) then _control.AlignWithMargins := False;
-   if (Value = 1) then _control.AlignWithMargins := True;
 end;
 
 function TExControlPanel.Get_Left: Integer;
@@ -516,7 +502,7 @@ end;
 
 function TExControlPanel.Get_Font: IExodusControlFont;
 begin
-      Result := TExControlFont.Create(_control.Font);
+      Result := TExControlFont.Create(TFont(_control.Font));
 end;
 
 function TExControlPanel.Get_Locked: Integer;
@@ -605,7 +591,7 @@ end;
 
 function TExControlPanel.Get_PopupMenu: IExodusControlPopupMenu;
 begin
-      Result := TExControlPopupMenu.Create(_control.PopupMenu);
+      Result := TExControlPopupMenu.Create(TTntPopupMenu(_control.PopupMenu));
 end;
 
 function TExControlPanel.Get_ShowHint: Integer;

@@ -33,7 +33,7 @@ type
     procedure Set_Data(const Value: WideString); safecall;
   protected
   public
-    constructor create; override;
+    constructor Create; override;
     destructor Destroy; override;
 
     function XML: WideString; override;

@@ -59,7 +59,7 @@ type
         constructor create; overload;
         constructor create(evt: TJabberEvent); overload;
 
-        destructor destroy; override;
+        destructor Destroy; override;
         procedure Parse(tag: TXMLTag);
 
         property Data: TWideStringlist read _data_list;

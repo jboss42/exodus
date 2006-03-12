@@ -31,13 +31,13 @@ unit COMExControls;
 
 interface
 uses
-ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,ComObj,Controls,Exodus_TLB,Forms,StdCtrls,StdVcl;
 
 function getCOMControl(o: TObject): IExodusControl;
 
 implementation
 uses
-    COMExFont,Graphics,COMExPanel,TntExtCtrls,COMExPopupMenu,COMExMenuItem,TntMenus,COMExButton,TntStdCtrls,COMExLabel,COMExEdit,COMExCheckBox,COMExRadioButton,COMExListBox,COMExComboBox,COMExRichEdit,ComCtrls;
+    ComCtrls,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExLabel,COMExListBox,COMExMenuItem,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,ExtCtrls,Graphics,Menus,TntExtCtrls,TntMenus,TntStdCtrls;
 
 function getCOMControl(o: TObject): IExodusControl;
 begin

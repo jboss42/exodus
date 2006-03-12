@@ -31,7 +31,7 @@ unit COMExFont;
 
 interface
 uses
-    Graphics, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,ComObj,Controls,Exodus_TLB,Forms,Graphics,StdCtrls,StdVcl;
 
 type
     TExControlFont = class(TAutoObject, IExodusControl, IExodusControlFont)
@@ -51,8 +51,6 @@ type
         procedure Set_Height(Value: Integer); safecall;
         function Get_Name: Widestring; safecall;
         procedure Set_Name(const Value: Widestring); safecall;
-        function Get_Orientation: Integer; safecall;
-        procedure Set_Orientation(Value: Integer); safecall;
         function Get_Pitch: Integer; safecall;
         procedure Set_Pitch(Value: Integer); safecall;
         function Get_Size: Integer; safecall;
@@ -114,16 +112,6 @@ end;
 procedure TExControlFont.Set_Name(const Value: Widestring);
 begin
       _control.Name := Value;
-end;
-
-function TExControlFont.Get_Orientation: Integer;
-begin
-      Result := _control.Orientation;
-end;
-
-procedure TExControlFont.Set_Orientation(Value: Integer);
-begin
-      _control.Orientation := Value;
 end;
 
 function TExControlFont.Get_Pitch: Integer;

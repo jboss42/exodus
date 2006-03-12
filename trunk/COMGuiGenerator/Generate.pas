@@ -43,8 +43,8 @@ type
     vcl_classes: TStringlist;
     uber_cl: TStringlist;
     uber_idl: TStringlist;
-    files: TStringlist;
-    uber_uses: string;
+    uber_top: TStringlist;
+    uber_uses: TStringlist;
 
     function getIName(o: TClass): string;
     function getCOMName(o: TClass): string;
@@ -53,9 +53,8 @@ type
     procedure idlHeader(idl: TStringlist; idl_name, iname: string);
     procedure pasHeader(f: TStringlist; unit_name: string);
     procedure generateCOM(o: TClass);
-    function addUse(new_unit, uses_str: string): string;
-    procedure addFile(new_unit: string);
     function stripClassName(class_name: string): string;
+    procedure addUber(unit_name: string);
 
   public
     { Public declarations }
@@ -99,6 +98,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmGen.addUber(unit_name: string);
+begin
+    if (uber_top.IndexOf(unit_name) = -1) then
+        uber_uses.Add(unit_name);
+end;
+
+{---------------------------------------}
 procedure TfrmGen.addClass(o: TClass);
 var
     cc: TClassContainer;
@@ -117,8 +123,7 @@ end;
 {---------------------------------------}
 procedure TfrmGen.Button1Click(Sender: TObject);
 var
-    uses_str: string;
-    uses_idx: integer;
+    top_idx, uses_idx: integer;
     cc: TClassContainer;
     i: integer;
 begin
@@ -130,8 +135,24 @@ begin
     pasHeader(uber_cl, 'COMExControls');
     uber_cl.Add('uses');
 
-    uber_uses := 'ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;';
-    uber_cl.Add(uber_uses);
+    uber_uses.Clear();
+    uber_uses.Duplicates := dupIgnore;
+    uber_uses.Sorted := true;
+    uber_uses.CaseSensitive := false;
+
+    uber_top.Clear();
+    uber_top.Sorted := true;
+    uber_top.CaseSensitive := false;
+    uber_top.Duplicates := dupIgnore;
+    uber_top.Add('ComObj');
+    uber_top.Add('ActiveX');
+    uber_top.Add('Forms');
+    uber_top.Add('Classes');
+    uber_top.Add('Controls');
+    uber_top.Add('StdCtrls');
+    uber_top.Add('StdVcl');
+    uber_top.Add('Exodus_TLB');
+    top_idx := uber_cl.Add('');
 
     uber_cl.Add('');
     uber_cl.Add('function getCOMControl(o: TObject): IExodusControl;');
@@ -159,15 +180,11 @@ begin
     uber_idl.Add('};');
 
     // fixup uses for COMExControls.pas
-    uses_str := '';
-    for i := 0 to files.Count - 1 do begin
-        uses_str := uses_str + files[i];
-        if (i = (files.Count - 1)) then
-            uses_str := uses_str + ';'
-        else
-            uses_str := uses_str + ',';
-    end;
-    uber_cl[uses_idx] := '    ' + uses_str;
+    uber_top.Delimiter := ',';
+    uber_cl[top_idx] := '    ' + uber_top.DelimitedText + ';';
+
+    uber_uses.Delimiter := ',';
+    uber_cl[uses_idx] := '    ' + uber_uses.DelimitedText + ';';
 
     // save our uber files
     uber_idl.SaveToFile(Edit1.Text + '\controls.idl');
@@ -272,26 +289,6 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmGen.addUse(new_unit, uses_str: string): string;
-begin
-    if (Pos(new_unit, uses_str) = 0) then
-        Result := new_unit + ', ' + uses_str
-    else
-        Result := uses_str;
-
-    addFile(new_unit);
-end;
-
-{---------------------------------------}
-procedure TfrmGen.addFile(new_unit: string);
-begin
-    if (Pos(new_unit, uber_uses) = 0) then begin
-        if (files.IndexOf(new_unit) = -1) then
-            files.Add(new_unit);
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmGen.generateCOM(o: TClass);
 var
     info: PTypeInfo;
@@ -312,6 +309,7 @@ var
     }
 
     use_idx: integer;
+    use_list: TStringlist;
     use_str: string;
 
     idl_cur, e, vidx, cidx, i: integer;
@@ -335,7 +333,7 @@ begin
     data := GetTypeData(info);
 
     // add this filename to our files list and a clause into COMExControls.pas
-    addFile(com);
+    addUber(com);
     uber_cl.Add('    if (o is ' + o.ClassName + ') then begin ');
     uber_cl.Add('        Result := IExodusControl(' + cname + '.Create(' + o.ClassName + '(o)));');
     uber_cl.Add('        exit;');
@@ -368,12 +366,30 @@ begin
     f.Add('uses');
 
     // setup our USES clause
-    use_str := 'ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;';
-    use_idx := f.Add(use_str);
+    use_list := TStringlist.Create();
+    use_list.Sorted := true;
+    use_list.CaseSensitive := false;
+    use_list.Duplicates := dupIgnore;
+    use_list.Add('ComObj');
+    use_list.Add('ActiveX');
+    use_list.Add('Forms');
+    use_list.Add('Classes');
+    use_list.Add('Controls');
+    use_list.Add('StdCtrls');
+    use_list.Add('StdVcl');
+    use_list.Add('Exodus_TLB');
+
+    use_idx := f.Add('');
 
     // add in the unit name for our embedded control
     unit_name := data^.UnitName;
-    use_str := addUse(unit_name, use_str);
+    use_list.add(unit_name);
+    addUber(unit_name);
+    if (Lowercase(MidStr(unit_name, 1, 3)) = 'tnt') then begin
+        unit_name := MidStr(unit_name, 4, length(unit_name) - 3);
+        use_list.Add(unit_name);
+        addUber(unit_name);
+    end;
 
     // Generate our Class Header for our AutoObject
     f.Add('');
@@ -447,11 +463,11 @@ begin
         tkEnumeration: begin
             mdata := GetTypeData(ptype^);
 
-            {
-            basedata := GetTypeData(mdata^.BaseType^);
-            unit_name := basedata^.EnumUnitName;
-            use_str := addUse(unit_name, use_str);
-            }
+            (*
+            unit_name := mdata^.UnitName;
+            if (unit_name <> '') then
+                use_lis.Add(unit_name);
+            *)
 
             getter := 'Get_' + pname + ': Integer;';
             setter := 'Set_' + pname + '(Value: Integer);';
@@ -520,7 +536,13 @@ begin
                 class_fn := getCOMName(cc.c);
 
                 // add this filename to our uses clause
-                use_str := addUse(class_fn, use_str);
+                use_list.Add(class_fn);
+                addUber(class_fn);
+
+                mdata := GetTypeData(cc.c.ClassInfo);
+                unit_name := mdata^.UnitName;
+                use_list.Add(unit_name);
+                addUber(unit_name);
 
                 getter := 'Get_' + pname + ': ' + class_iname + ';';
                 f.Add('        function ' + getter + ' safecall;');
@@ -528,7 +550,7 @@ begin
                 // getter impl
                 impl.Add('function ' + cname + '.' + getter);
                 impl.Add('begin');
-                impl.Add('      Result := ' + class_cname + '.Create(' + '_control.' + pname + ');');
+                impl.Add('      Result := ' + class_cname + '.Create(' + cc.c.ClassName +  '(_control.' + pname + '));');
                 impl.Add('end;');
                 impl.Add('');
 
@@ -686,8 +708,12 @@ begin
 
             end;
 
+        tkDynArray: begin
+            status.Lines.Add('DYNARRAY: ' + pname);
+        end;
+
         // these we can't handle
-        tkUnknown, tkVariant, tkRecord, tkInterface, tkInt64, tkDynArray: begin
+        tkUnknown, tkVariant, tkRecord, tkInterface, tkInt64: begin
             status.Lines.Add('UNHANDLED: ' + pname);
             end;
         end;
@@ -709,6 +735,8 @@ begin
             impl.Add('begin');
             if (pkind = tkChar) then
                 impl.Add('      _control.' + pname + ' := string(Value)[1];')
+            else if (pkind = tkWChar) then
+                impl.Add('      _control.' + pname + ' := Widestring(Value)[1];')
             else
                 impl.Add('      _control.' + pname + ' := Value;');
             impl.Add('end;');
@@ -766,6 +794,8 @@ begin
     f.Add('');
 
     // fixup our uses clause
+    use_list.Delimiter := ',';
+    use_str := use_list.DelimitedText + ';';
     f[use_idx] := '    ' + use_str;
 
     // Finish up the file
@@ -782,6 +812,7 @@ begin
     // cleanup
     impl.Free();
     f.Free();
+    use_list.Free();
 end;
 
 {---------------------------------------}
@@ -791,7 +822,8 @@ begin
     vcl_classes := TStringlist.Create();
     uber_idl := TStringlist.Create();
     uber_cl := TStringlist.Create();
-    files := TStringlist.Create();
+    uber_top := TStringlist.Create();
+    uber_uses := TStringlist.Create();
 
     addClass(TFont);
     addClass(TTntPanel);

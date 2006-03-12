@@ -5,7 +5,7 @@ unit COMChatController;
 interface
 
 uses
-    ExodusCOM_TLB, 
+    Exodus_TLB,
     Session, ChatController, ChatWin, Chat, Room, MsgRecv, Unicode,
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
@@ -536,7 +536,4 @@ begin
 
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusChat, Class_ExodusChat,
-    ciMultiInstance, tmApartment);
 end.

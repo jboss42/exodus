@@ -60,7 +60,7 @@ type
         constructor Create; override;
         destructor Destroy; override;
 
-        function xml: Widestring; override;
+        function XML: Widestring; override;
         function isSubscription: boolean;
         procedure parse();
 

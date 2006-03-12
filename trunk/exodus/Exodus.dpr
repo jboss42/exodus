@@ -57,7 +57,6 @@ uses
   DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass},
   Emoticons in 'Emoticons.pas' {frmEmoticons},
   ExEvents in 'ExEvents.pas',
-  ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
   ExResponders in 'ExResponders.pas',
   ExUtils in 'ExUtils.pas',
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
@@ -213,7 +212,8 @@ uses
   COMExPanel in 'COMGuis\COMExPanel.pas',
   COMExPopupMenu in 'COMGuis\COMExPopupMenu.pas',
   COMExRadioButton in 'COMGuis\COMExRadioButton.pas',
-  COMExControls in 'COMGuis\COMExControls.pas';
+  COMExControls in 'COMGuis\COMExControls.pas',
+  Exodus_TLB in 'Exodus_TLB.pas';
 
 {$R *.TLB}
 

@@ -41,7 +41,6 @@ var
   lastOffset, currPage, pageCount: integer;
   xOffset, yOffset: integer;
   FPageOffsets: array of TPageOffset;
-  TextLenEx: TGetTextLengthEx;
   firstPage: boolean;
 begin
   //First, get the size of a printed page in printer device units
@@ -128,7 +127,7 @@ begin
       SetLength(FPageOffsets, Length(FPageOffsets) + 1);
     FPageOffsets[High(FPageOffsets)] := po
   end;
-  pageCount := Length(FPageOffsets);
+  // pgm: pageCount := Length(FPageOffsets);
   SendMessage(RichEdt.Handle, EM_FORMATRANGE, 0, 0);
   RestoreDC(fr.hdc, - 1);
 

@@ -24,7 +24,7 @@ unit COMRosterItem;
 interface
 
 uses
-    NodeItem, Roster, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    NodeItem, Roster, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusRosterItem = class(TAutoObject, IExodusRosterItem)
@@ -328,7 +328,4 @@ begin
     _ritem.IsNative := Value;
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusRosterItem, Class_ExodusRosterItem,
-    ciMultiInstance, tmApartment);
 end.

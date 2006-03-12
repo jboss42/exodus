@@ -6,7 +6,7 @@ interface
 
 uses
     Dialogs, 
-    Windows, Controls, ComObj, ActiveX, ExodusCOM_TLB, StdVcl, Types;
+    Windows, Controls, ComObj, ActiveX, Exodus_TLB, StdVcl, Types;
 
 type
 

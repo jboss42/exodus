@@ -31,7 +31,7 @@ unit COMExRichEdit;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, ComCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,ComCtrls,COMExFont,COMExPopupMenu,ComObj,Controls,Exodus_TLB,Forms,Graphics,StdCtrls,StdVcl,TntMenus;
 
 type
     TExControlRichEdit = class(TAutoObject, IExodusControl, IExodusControlRichEdit)
@@ -485,7 +485,7 @@ end;
 
 function TExControlRichEdit.Get_Font: IExodusControlFont;
 begin
-      Result := TExControlFont.Create(_control.Font);
+      Result := TExControlFont.Create(TFont(_control.Font));
 end;
 
 function TExControlRichEdit.Get_HideSelection: Integer;
@@ -657,7 +657,7 @@ end;
 
 function TExControlRichEdit.Get_PopupMenu: IExodusControlPopupMenu;
 begin
-      Result := TExControlPopupMenu.Create(_control.PopupMenu);
+      Result := TExControlPopupMenu.Create(TTntPopupMenu(_control.PopupMenu));
 end;
 
 function TExControlRichEdit.Get_ReadOnly: Integer;

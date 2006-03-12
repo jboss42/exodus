@@ -24,7 +24,7 @@ unit COMRosterGroup;
 interface
 
 uses
-    NodeItem, Roster, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    NodeItem, Roster, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusRosterGroup = class(TAutoObject, IExodusRosterGroup)
@@ -261,7 +261,4 @@ begin
     Result := _grp.Parts[Index];
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusRosterGroup, Class_ExodusRosterGroup,
-    ciMultiInstance, tmApartment);
 end.

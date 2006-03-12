@@ -31,7 +31,7 @@ unit COMExEdit;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,COMExFont,COMExPopupMenu,ComObj,Controls,Exodus_TLB,Forms,Graphics,StdCtrls,StdVcl,TntMenus,TntStdCtrls;
 
 type
     TExControlEdit = class(TAutoObject, IExodusControl, IExodusControlEdit)
@@ -456,7 +456,7 @@ end;
 
 function TExControlEdit.Get_Font: IExodusControlFont;
 begin
-      Result := TExControlFont.Create(_control.Font);
+      Result := TExControlFont.Create(TFont(_control.Font));
 end;
 
 function TExControlEdit.Get_HideSelection: Integer;
@@ -602,12 +602,12 @@ end;
 
 procedure TExControlEdit.Set_PasswordChar(const Value: Widestring);
 begin
-      _control.PasswordChar := Value;
+      _control.PasswordChar := Widestring(Value)[1];
 end;
 
 function TExControlEdit.Get_PopupMenu: IExodusControlPopupMenu;
 begin
-      Result := TExControlPopupMenu.Create(_control.PopupMenu);
+      Result := TExControlPopupMenu.Create(TTntPopupMenu(_control.PopupMenu));
 end;
 
 function TExControlEdit.Get_ReadOnly: Integer;

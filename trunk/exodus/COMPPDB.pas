@@ -24,7 +24,7 @@ unit COMPPDB;
 interface
 
 uses
-  ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+  ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusPPDB = class(TAutoObject, IExodusPPDB)
@@ -91,7 +91,4 @@ begin
         Result := nil;
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusPPDB, Class_ExodusPPDB,
-    ciMultiInstance, tmApartment);
 end.

@@ -26,7 +26,7 @@ unit COMEntityCache;
 interface
 
 uses
-  ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+  ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusEntityCache = class(TAutoObject, IExodusEntityCache)
@@ -100,7 +100,4 @@ begin
     Result := ce;
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusEntityCache, Class_ExodusEntityCache,
-    ciMultiInstance, tmApartment);
 end.

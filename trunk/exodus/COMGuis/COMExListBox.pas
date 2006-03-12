@@ -31,7 +31,7 @@ unit COMExListBox;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,COMExFont,COMExPopupMenu,ComObj,Controls,Exodus_TLB,Forms,Graphics,StdCtrls,StdVcl,TntMenus,TntStdCtrls;
 
 type
     TExControlListBox = class(TAutoObject, IExodusControl, IExodusControlListBox)
@@ -499,7 +499,7 @@ end;
 
 function TExControlListBox.Get_Font: IExodusControlFont;
 begin
-      Result := TExControlFont.Create(_control.Font);
+      Result := TExControlFont.Create(TFont(_control.Font));
 end;
 
 function TExControlListBox.Get_ImeMode: Integer;
@@ -659,7 +659,7 @@ end;
 
 function TExControlListBox.Get_PopupMenu: IExodusControlPopupMenu;
 begin
-      Result := TExControlPopupMenu.Create(_control.PopupMenu);
+      Result := TExControlPopupMenu.Create(TTntPopupMenu(_control.PopupMenu));
 end;
 
 function TExControlListBox.Get_ScrollWidth: Integer;
