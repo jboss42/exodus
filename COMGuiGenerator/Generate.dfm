@@ -1,9 +1,9 @@
 object frmGen: TfrmGen
   Left = 239
   Top = 136
+  Width = 528
+  Height = 343
   Caption = 'Generate COM Interfaces'
-  ClientHeight = 309
-  ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

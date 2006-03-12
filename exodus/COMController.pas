@@ -25,7 +25,7 @@ interface
 
 uses
     Presence, NodeItem, XMLTag, Unicode, Menus,
-    Windows, Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusController = class(TAutoObject, IExodusController)
@@ -288,7 +288,7 @@ begin
             end;
 
             // is this the IExodusPlugin interface?
-            if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
+            if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin)) then begin
                 // oho!  it IS.  Get the name of this coclass, so we can show
                 // what we did.  Get the doc string, just to show off.
                 try

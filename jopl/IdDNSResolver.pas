@@ -208,7 +208,7 @@ type
     function GetOwner: TPersistent; override;
   public
     constructor Create(AResultRecord: TResultRecord);
-    destructor destroy; override;
+    destructor Destroy; override;
     function Add(Answer: string; var APos: Integer): TResultRecord;
     procedure Clear; reintroduce;
 

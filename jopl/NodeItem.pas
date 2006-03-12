@@ -63,7 +63,7 @@ type
         AutoExpand: boolean;
 
         constructor create(name: Widestring);
-        destructor destroy; override;
+        destructor Destroy; override;
 
         function getText(): Widestring; override;
 

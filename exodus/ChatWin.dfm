@@ -1,29 +1,38 @@
 inherited frmChat: TfrmChat
   Left = 284
   Top = 219
-  Width = 391
-  Height = 305
   ActiveControl = MsgOut
   Caption = 'Chat Window'
+  ClientHeight = 271
+  ClientWidth = 383
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
+  ExplicitWidth = 391
+  ExplicitHeight = 305
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 243
+    Top = 239
     Width = 383
+    ExplicitTop = 243
+    ExplicitWidth = 383
   end
   inherited pnlMsgList: TPanel
     Top = 32
     Width = 383
-    Height = 211
+    Height = 207
+    ExplicitTop = 32
+    ExplicitWidth = 383
+    ExplicitHeight = 211
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 383
+    ExplicitTop = 247
+    ExplicitWidth = 383
     inherited MsgOut: TExRichEdit
       Width = 379
       WantReturns = False
@@ -33,6 +42,8 @@ inherited frmChat: TfrmChat
   inherited Panel1: TPanel
     Width = 383
     Height = 32
+    ExplicitWidth = 383
+    ExplicitHeight = 32
     object btnClose: TSpeedButton
       Left = 354
       Top = 2
@@ -61,7 +72,7 @@ inherited frmChat: TfrmChat
         Left = 43
         Top = 0
         Width = 48
-        Height = 28
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Nickname'

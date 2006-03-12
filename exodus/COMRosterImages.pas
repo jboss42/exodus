@@ -24,7 +24,7 @@ unit COMRosterImages;
 interface
 
 uses
-    Classes, IdCoderMime, ExodusCOM_TLB,
+    Classes, IdCoderMime, Exodus_TLB,
     Windows, Graphics, ComObj, ActiveX,  StdVcl;
 
 type
@@ -147,7 +147,4 @@ begin
     RosterTreeImages.Remove(id);
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusRosterImages, Class_ExodusRosterImages,
-    ciMultiInstance, tmApartment);
 end.

@@ -22,8 +22,7 @@ unit PluginAuth;
 interface
 
 uses
-    ExodusCOM_TLB,
-    JabberAuth, Classes, SysUtils;
+    Exodus_TLB, JabberAuth, Classes, SysUtils;
 
 type
     TExPluginAuth = Class(TJabberAuth)

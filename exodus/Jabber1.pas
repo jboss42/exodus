@@ -512,7 +512,7 @@ uses
     // XXX: ZipMstr
 
     RosterImages, 
-    NewUser, CommandWizard, ExodusCOM_TLB, Notify,
+    NewUser, CommandWizard, Exodus_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,

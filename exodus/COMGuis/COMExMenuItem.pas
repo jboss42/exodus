@@ -31,7 +31,7 @@ unit COMExMenuItem;
 
 interface
 uses
-    TntMenus, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,ComObj,Controls,Exodus_TLB,Forms,Menus,StdCtrls,StdVcl,TntMenus;
 
 type
     TExControlMenuItem = class(TAutoObject, IExodusControl, IExodusControlMenuItem)

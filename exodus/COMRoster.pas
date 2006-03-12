@@ -25,7 +25,7 @@ interface
 
 uses
     Unicode, TntClasses, Menus, TntMenus,
-    ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
 
@@ -356,7 +356,4 @@ begin
     Result := menu;
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusRoster, Class_ExodusRoster,
-    ciMultiInstance, tmApartment);
 end.

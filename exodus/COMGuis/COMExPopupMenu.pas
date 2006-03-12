@@ -31,7 +31,7 @@ unit COMExPopupMenu;
 
 interface
 uses
-    COMExMenuItem, TntMenus, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,COMExMenuItem,ComObj,Controls,Exodus_TLB,Forms,Menus,StdCtrls,StdVcl,TntMenus;
 
 type
     TExControlPopupMenu = class(TAutoObject, IExodusControl, IExodusControlPopupMenu)
@@ -107,7 +107,7 @@ end;
 
 function TExControlPopupMenu.Get_Items: IExodusControlMenuItem;
 begin
-      Result := TExControlMenuItem.Create(_control.Items);
+      Result := TExControlMenuItem.Create(TTntMenuItem(_control.Items));
 end;
 
 function TExControlPopupMenu.Get_Alignment: Integer;

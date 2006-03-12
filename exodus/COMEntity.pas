@@ -25,7 +25,7 @@ interface
 
 uses
     Entity, 
-    ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
   TExodusEntity = class(TAutoObject, IExodusEntity)
@@ -148,7 +148,4 @@ begin
     Result := _e.ItemCount;
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TExodusEntity, Class_ExodusEntity,
-    ciMultiInstance, tmApartment);
 end.

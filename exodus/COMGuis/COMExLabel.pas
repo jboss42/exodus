@@ -31,7 +31,7 @@ unit COMExLabel;
 
 interface
 uses
-    COMExPopupMenu, COMExFont, TntStdCtrls, ComObj, ActiveX, ExodusCOM_TLB, Forms, Classes, Controls, StdCtrls, StdVcl;
+    ActiveX,Classes,COMExFont,COMExPopupMenu,ComObj,Controls,Exodus_TLB,Forms,Graphics,StdCtrls,StdVcl,TntMenus,TntStdCtrls;
 
 type
     TExControlLabel = class(TAutoObject, IExodusControl, IExodusControlLabel)
@@ -370,7 +370,7 @@ end;
 
 function TExControlLabel.Get_Font: IExodusControlFont;
 begin
-      Result := TExControlFont.Create(_control.Font);
+      Result := TExControlFont.Create(TFont(_control.Font));
 end;
 
 function TExControlLabel.Get_ParentBiDiMode: Integer;
@@ -423,7 +423,7 @@ end;
 
 function TExControlLabel.Get_PopupMenu: IExodusControlPopupMenu;
 begin
-      Result := TExControlPopupMenu.Create(_control.PopupMenu);
+      Result := TExControlPopupMenu.Create(TTntPopupMenu(_control.PopupMenu));
 end;
 
 function TExControlLabel.Get_ShowAccelChar: Integer;

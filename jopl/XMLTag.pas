@@ -94,7 +94,7 @@ type
 
     function Data: WideString;
     function Namespace(children: boolean = false): WideString;
-    function xml: WideString; override;
+    function XML: WideString; override;
 
     procedure ClearTags;
     procedure ClearCData;
