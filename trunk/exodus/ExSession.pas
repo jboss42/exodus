@@ -827,4 +827,5 @@ finalization
 
     ClearXMPPActions();
     _xmpp_action_list.Free();
+
 end.

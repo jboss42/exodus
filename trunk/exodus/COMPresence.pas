@@ -165,4 +165,8 @@ begin
     _p.toJid := tmpjid;
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusPresence, Class_ExodusPresence,
+    ciMultiInstance, tmApartment);
+
 end.

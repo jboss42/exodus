@@ -91,4 +91,8 @@ begin
         Result := nil;
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusPPDB, Class_ExodusPPDB,
+    ciMultiInstance, tmApartment);
+
 end.

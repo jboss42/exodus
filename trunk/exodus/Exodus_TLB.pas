@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/12/2006 3:08:49 PM from Type Library described below.
+// File generated on 3/12/2006 8:07:49 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -74,6 +74,15 @@ const
   IID_IExodusControlRichEdit: TGUID = '{3997314D-4068-43E7-ACEB-150FF196069C}';
   IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
   IID_IExodusIQListener: TGUID = '{57DFE494-4509-4972-A93B-6C7E6A9D6A59}';
+  CLASS_ExodusChat: TGUID = '{C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6}';
+  CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
+  CLASS_ExodusPPDB: TGUID = '{9ED8C497-1121-4C9E-B586-C7DFDB35B581}';
+  CLASS_ExodusRosterItem: TGUID = '{B39343ED-2E2D-4C91-AE4F-E0153BA347DA}';
+  CLASS_ExodusPresence: TGUID = '{8B7DF610-B49C-4A90-9B98-CB0CB27D8827}';
+  CLASS_ExodusRosterGroup: TGUID = '{05237BC3-3093-4541-941D-A38FAFB78D89}';
+  CLASS_ExodusRosterImages: TGUID = '{F0EA9081-9352-496D-94BA-E96605166527}';
+  CLASS_ExodusEntityCache: TGUID = '{B777EA4A-A2A4-4597-87E2-E1B9800BFDC2}';
+  CLASS_ExodusEntity: TGUID = '{F7D97ED8-C6BA-470F-8D63-7A6D70894AB3}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -177,6 +186,15 @@ type
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
   ExodusController = IExodusController;
+  ExodusChat = IExodusChat;
+  ExodusRoster = IExodusRoster;
+  ExodusPPDB = IExodusPPDB;
+  ExodusRosterItem = IExodusRosterItem;
+  ExodusPresence = IExodusPresence;
+  ExodusRosterGroup = IExodusRosterGroup;
+  ExodusRosterImages = IExodusRosterImages;
+  ExodusEntityCache = IExodusEntityCache;
+  ExodusEntity = IExodusEntity;
 
 
 // *********************************************************************//
@@ -270,6 +288,7 @@ type
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
+    function TrackIQ(const XML: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -372,6 +391,7 @@ type
     property RosterImages: IExodusRosterImages readonly dispid 208;
     property EntityCache: IExodusEntityCache readonly dispid 209;
     procedure Debug(const Value: WideString); dispid 210;
+    function TrackIQ(const XML: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; dispid 211;
   end;
 
 // *********************************************************************//
@@ -804,6 +824,7 @@ type
     function Get_FullName: WideString; safecall;
     function Get_Parent: IExodusRosterGroup; safecall;
     function Parts(Index: Integer): WideString; safecall;
+    procedure fireChange; safecall;
     property action: WideString read Get_action write Set_action;
     property KeepEmpty: WordBool read Get_KeepEmpty write Set_KeepEmpty;
     property SortPriority: Integer read Get_SortPriority write Set_SortPriority;
@@ -847,6 +868,7 @@ type
     property FullName: WideString readonly dispid 220;
     property Parent: IExodusRosterGroup readonly dispid 221;
     function Parts(Index: Integer): WideString; dispid 222;
+    procedure fireChange; dispid 223;
   end;
 
 // *********************************************************************//
@@ -2778,8 +2800,8 @@ type
 // *********************************************************************//
   IExodusIQListener = interface(IDispatch)
     ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
-    procedure Process(Handle: Integer; const xml: WideString); safecall;
-    procedure timeout(Handle: Integer); safecall;
+    procedure ProcessIQ(const Handle: WideString; const xml: WideString); safecall;
+    procedure TimeoutIQ(const Handle: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -2789,8 +2811,8 @@ type
 // *********************************************************************//
   IExodusIQListenerDisp = dispinterface
     ['{57DFE494-4509-4972-A93B-6C7E6A9D6A59}']
-    procedure Process(Handle: Integer; const xml: WideString); dispid 201;
-    procedure timeout(Handle: Integer); dispid 202;
+    procedure ProcessIQ(const Handle: WideString; const xml: WideString); dispid 201;
+    procedure TimeoutIQ(const Handle: WideString); dispid 202;
   end;
 
 // *********************************************************************//
@@ -2805,6 +2827,114 @@ type
     class function CreateRemote(const MachineName: string): IExodusController;
   end;
 
+// *********************************************************************//
+// The Class CoExodusChat provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusChat exposed by              
+// the CoClass ExodusChat. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusChat = class
+    class function Create: IExodusChat;
+    class function CreateRemote(const MachineName: string): IExodusChat;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusRoster provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRoster exposed by              
+// the CoClass ExodusRoster. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRoster = class
+    class function Create: IExodusRoster;
+    class function CreateRemote(const MachineName: string): IExodusRoster;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusPPDB provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPPDB exposed by              
+// the CoClass ExodusPPDB. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPPDB = class
+    class function Create: IExodusPPDB;
+    class function CreateRemote(const MachineName: string): IExodusPPDB;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusRosterItem provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterItem exposed by              
+// the CoClass ExodusRosterItem. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterItem = class
+    class function Create: IExodusRosterItem;
+    class function CreateRemote(const MachineName: string): IExodusRosterItem;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusPresence provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPresence exposed by              
+// the CoClass ExodusPresence. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPresence = class
+    class function Create: IExodusPresence;
+    class function CreateRemote(const MachineName: string): IExodusPresence;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusRosterGroup provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterGroup exposed by              
+// the CoClass ExodusRosterGroup. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterGroup = class
+    class function Create: IExodusRosterGroup;
+    class function CreateRemote(const MachineName: string): IExodusRosterGroup;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusRosterImages provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterImages exposed by              
+// the CoClass ExodusRosterImages. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterImages = class
+    class function Create: IExodusRosterImages;
+    class function CreateRemote(const MachineName: string): IExodusRosterImages;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusEntityCache provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusEntityCache exposed by              
+// the CoClass ExodusEntityCache. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusEntityCache = class
+    class function Create: IExodusEntityCache;
+    class function CreateRemote(const MachineName: string): IExodusEntityCache;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusEntity provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusEntity exposed by              
+// the CoClass ExodusEntity. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusEntity = class
+    class function Create: IExodusEntity;
+    class function CreateRemote(const MachineName: string): IExodusEntity;
+  end;
+
 implementation
 
 uses ComObj;
@@ -2817,6 +2947,96 @@ end;
 class function CoExodusController.CreateRemote(const MachineName: string): IExodusController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusController) as IExodusController;
+end;
+
+class function CoExodusChat.Create: IExodusChat;
+begin
+  Result := CreateComObject(CLASS_ExodusChat) as IExodusChat;
+end;
+
+class function CoExodusChat.CreateRemote(const MachineName: string): IExodusChat;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusChat) as IExodusChat;
+end;
+
+class function CoExodusRoster.Create: IExodusRoster;
+begin
+  Result := CreateComObject(CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusRoster.CreateRemote(const MachineName: string): IExodusRoster;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusPPDB.Create: IExodusPPDB;
+begin
+  Result := CreateComObject(CLASS_ExodusPPDB) as IExodusPPDB;
+end;
+
+class function CoExodusPPDB.CreateRemote(const MachineName: string): IExodusPPDB;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPPDB) as IExodusPPDB;
+end;
+
+class function CoExodusRosterItem.Create: IExodusRosterItem;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterItem) as IExodusRosterItem;
+end;
+
+class function CoExodusRosterItem.CreateRemote(const MachineName: string): IExodusRosterItem;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterItem) as IExodusRosterItem;
+end;
+
+class function CoExodusPresence.Create: IExodusPresence;
+begin
+  Result := CreateComObject(CLASS_ExodusPresence) as IExodusPresence;
+end;
+
+class function CoExodusPresence.CreateRemote(const MachineName: string): IExodusPresence;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPresence) as IExodusPresence;
+end;
+
+class function CoExodusRosterGroup.Create: IExodusRosterGroup;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterGroup) as IExodusRosterGroup;
+end;
+
+class function CoExodusRosterGroup.CreateRemote(const MachineName: string): IExodusRosterGroup;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterGroup) as IExodusRosterGroup;
+end;
+
+class function CoExodusRosterImages.Create: IExodusRosterImages;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterImages) as IExodusRosterImages;
+end;
+
+class function CoExodusRosterImages.CreateRemote(const MachineName: string): IExodusRosterImages;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterImages) as IExodusRosterImages;
+end;
+
+class function CoExodusEntityCache.Create: IExodusEntityCache;
+begin
+  Result := CreateComObject(CLASS_ExodusEntityCache) as IExodusEntityCache;
+end;
+
+class function CoExodusEntityCache.CreateRemote(const MachineName: string): IExodusEntityCache;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusEntityCache) as IExodusEntityCache;
+end;
+
+class function CoExodusEntity.Create: IExodusEntity;
+begin
+  Result := CreateComObject(CLASS_ExodusEntity) as IExodusEntity;
+end;
+
+class function CoExodusEntity.CreateRemote(const MachineName: string): IExodusEntity;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusEntity) as IExodusEntity;
 end;
 
 end.

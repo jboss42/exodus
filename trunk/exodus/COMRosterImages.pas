@@ -147,4 +147,9 @@ begin
     RosterTreeImages.Remove(id);
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusRosterImages, Class_ExodusRosterImages,
+    ciMultiInstance, tmApartment);
+
+
 end.

@@ -59,6 +59,7 @@ type
     function Get_Parent: IExodusRosterGroup; safecall;
     function Get_Total: Integer; safecall;
     function Parts(Index: Integer): WideString; safecall;
+    procedure fireChange; safecall;
 
   private
     _grp: TJabberGroup;
@@ -74,7 +75,7 @@ type
 implementation
 
 uses
-    Variants, Classes, Session, JabberID, ComServ;
+    XMLTag, Variants, Classes, Session, JabberID, ComServ;
 
 {---------------------------------------}
 constructor TExodusRosterGroup.Create(grp: TJabberGroup);
@@ -83,96 +84,115 @@ begin
     _grp := grp;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_Action: WideString;
 begin
     Result := _grp.Action;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_AutoExpand: WordBool;
 begin
     Result := _grp.AutoExpand;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_DragSource: WordBool;
 begin
     Result := _grp.DragSource;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_DragTarget: WordBool;
 begin
     Result := _grp.DragTarget;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_KeepEmpty: WordBool;
 begin
     Result := _grp.KeepEmpty;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_ShowPresence: WordBool;
 begin
     Result := _grp.ShowPresence;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_SortPriority: Integer;
 begin
     Result := _grp.SortPriority;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.getText: WideString;
 begin
     Result := _grp.getText();
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_Action(const Value: WideString);
 begin
     _grp.Action := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_AutoExpand(Value: WordBool);
 begin
     _grp.AutoExpand := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_DragSource(Value: WordBool);
 begin
     _grp.DragSource := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_DragTarget(Value: WordBool);
 begin
     _grp.DragTarget := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_KeepEmpty(Value: WordBool);
 begin
     _grp.KeepEmpty := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_ShowPresence(Value: WordBool);
 begin
     _grp.ShowPresence := Value;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.Set_SortPriority(Value: Integer);
 begin
     _grp.SortPriority := Value;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.inGroup(const jid: WideString): WordBool;
 begin
     Result := _grp.inGroup(jid);
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.isEmpty: WordBool;
 begin
     Result := _grp.isEmpty();
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.addJid(const jid: WideString);
 begin
     _grp.AddJid(jid);
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.getGroup(
   const group_name: WideString): IExodusRosterGroup;
 var
@@ -185,11 +205,13 @@ begin
         Result := nil;
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.removeJid(const jid: WideString);
 begin
     _grp.removeJid(jid);
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.addGroup(const child: IExodusRosterGroup);
 var
     go: TJabberGroup;
@@ -199,6 +221,7 @@ begin
         _grp.addGroup(go);
 end;
 
+{---------------------------------------}
 procedure TExodusRosterGroup.removeGroup(const child: IExodusRosterGroup);
 var
     go: TJabberGroup;
@@ -208,6 +231,7 @@ begin
         _grp.removeGroup(go);
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.getRosterItems(Online: WordBool): OleVariant;
 var
     i: integer;
@@ -228,21 +252,25 @@ begin
     Result := va;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_FullName: WideString;
 begin
     Result := _grp.FullName;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_NestLevel: Integer;
 begin
     Result := _grp.NestLevel;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_Online: Integer;
 begin
     Result := _grp.Online;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_Parent: IExodusRosterGroup;
 begin
     if (_grp.Parent <> nil) then
@@ -251,14 +279,27 @@ begin
         Result := nil;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Get_Total: Integer;
 begin
     Result := _grp.Total;
 end;
 
+{---------------------------------------}
 function TExodusRosterGroup.Parts(Index: Integer): WideString;
 begin
     Result := _grp.Parts[Index];
+end;
+
+{---------------------------------------}
+procedure TExodusRosterGroup.fireChange;
+var
+    x: TXMLTag;
+begin
+    x := TXMLTag.Create('group');
+    x.setAttribute('name', _grp.FullName);
+    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+    x.Free();
 end;
 
 end.

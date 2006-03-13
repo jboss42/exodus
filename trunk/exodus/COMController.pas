@@ -24,7 +24,8 @@ unit COMController;
 interface
 
 uses
-    Presence, NodeItem, XMLTag, Unicode, Menus,
+    ExtCtrls, 
+    Presence, NodeItem, XMLParser, XMLTag, Unicode, Menus,
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
@@ -118,6 +119,8 @@ type
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
+    function TrackIQ(const XML: WideString; const Listener: IExodusIQListener;
+      Timeout: Integer): WideString; safecall;
     
     { Protected declarations }
   private
@@ -125,6 +128,7 @@ type
     _roster_menus: TWidestringlist;
     _msg_menus: TWidestringList;
     _nextid: longint;
+    _parser: TXMLTagParser;
     // XXX: _cookie: integer;
     
   public
@@ -165,6 +169,24 @@ type
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure Callback(event: string; tag: TXMLTag);
+    end;
+
+    TIQProxy = class
+    Private
+        _iqid: integer;
+        _disid: integer;
+        _timer: TTimer;
+
+    Public
+        iqid: Widestring;
+        com: IExodusIQListener;
+
+        constructor Create(x: TXMLTag; Timeout_val: integer; obj: IExodusIQListener);
+        destructor  Destroy; override;
+
+        procedure Callback(event: string; tag: TXMLTag);
+        procedure Timeout(Sender: TObject);
+
     end;
 
     TMenuContainer = class
@@ -511,6 +533,71 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TIQProxy.Create(x: TXMLTag; Timeout_val: integer; obj: IExodusIQListener);
+var
+    xp: Widestring;
+begin
+    assert(x.Name = 'iq');
+    iqid := MainSession.generateID();
+    x.setAttribute('id', iqid);
+
+    xp := '/packet/iq[@id="' + iqid + '"]';
+
+    // register with the dispatcher
+    _iqid := MainSession.RegisterCallback(Self.Callback, xp);
+    _disid := MainSession.RegisterCallback(Self.Callback, '/session/disconnected');
+
+    // setup our timer
+    _timer := TTimer.Create(nil);
+    _timer.Interval := Timeout_val * 1000;
+    _timer.OnTimer := Self.Timeout;
+
+    // send the iq
+    _timer.Enabled := true;
+    MainSession.SendTag(x);
+end;
+
+{---------------------------------------}
+destructor  TIQProxy.Destroy;
+begin
+    if (MainSession <> nil) then begin
+        MainSession.UnRegisterCallback(_iqid);
+        MainSession.UnRegisterCallback(_disid);
+    end;
+
+    _timer.Free();
+end;
+
+{---------------------------------------}
+procedure TIQProxy.Callback(event: string; tag: TXMLTag);
+begin
+    //
+    _timer.Enabled := false;
+
+    if ((event = 'xml') and (tag <> nil)) then
+        com.ProcessIQ(iqid, tag.xml)
+    else
+        com.ProcessIQ(iqid, '');
+
+    Self.Free();
+end;
+
+{---------------------------------------}
+procedure TIQProxy.Timeout(Sender: TObject);
+begin
+    // we got a timeout event
+    _timer.Enabled := false;
+
+    // callback our listener
+    com.TimeoutIQ(iqid);
+
+    Self.Free;
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TExodusController.Create();
 begin
     inherited Create();
@@ -518,6 +605,7 @@ begin
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
     _nextid := 0;
+    _parser := TXMLTagParser.Create();
 end;
 
 {---------------------------------------}
@@ -555,6 +643,7 @@ begin
         FreeAndNil(_menu_items);
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
+        FreeAndNil(_parser);
 
         inherited;
     end;
@@ -1284,6 +1373,30 @@ end;
 procedure TExodusController.Debug(const Value: WideString);
 begin
     DebugMessage(Value);
+end;
+
+{---------------------------------------}
+function TExodusController.TrackIQ(const XML: WideString;
+  const Listener: IExodusIQListener; Timeout: Integer): WideString;
+var
+    p: TIQProxy;
+    iqt: Widestring;
+    x: TXMLTag;
+begin
+    // parse and track this IQ
+    Result := '';
+    _parser.Clear();
+    _parser.ParseString(XML, '');
+    if (_parser.Count > 0) then begin
+        x := _parser.popTag();
+        iqt := x.GetAttribute('type');
+        if ((x.Name = 'iq') and ((iqt = 'get') or (iqt = 'set'))) then begin
+            p := TIQProxy.Create(x, Timeout, Listener);
+            Result := p.iqid;
+        end;
+    end;
+
+    _parser.Clear();
 end;
 
 initialization
