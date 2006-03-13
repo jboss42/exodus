@@ -148,4 +148,8 @@ begin
     Result := _e.ItemCount;
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusEntity, Class_ExodusEntity,
+    ciMultiInstance, tmApartment);
+
 end.

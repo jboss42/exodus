@@ -789,6 +789,9 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
 var
+    go: TJabberGroup;
+    grp_node: TTreeNode;
+    grp_rect: TRect;
     p: TJabberPres;
 begin
     // callback from the session
@@ -817,6 +820,24 @@ begin
         if ritem <> nil then begin
             p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
             RenderNode(ritem, p);
+        end;
+    end
+    else if (event = '/roster/group') then begin
+        if (tag = nil) then exit;
+        
+        if (tag.Name = 'group') then begin
+            go := MainSession.roster.getGroup(tag.GetAttribute('name'));
+            if (go <> nil) then begin
+                grp_node := TTreeNode(go.Data);
+                if (grp_node = nil) then begin
+                    grp_node := RenderGroup(go);
+                    go.Data := grp_node;
+                end;
+
+                // force a redraw
+                grp_rect := grp_node.DisplayRect(false);
+                InvalidateRect(treeRoster.Handle, @grp_rect, true);
+            end;
         end;
     end;
 end;
@@ -1626,6 +1647,7 @@ end;
 procedure TfrmRosterWindow.treeRosterCollapsed(Sender: TObject;
   Node: TTreeNode);
 var
+    x: TXMLTag;
     go: TJabberGroup;
 begin
     if (Node.Data = nil) then exit;
@@ -1633,15 +1655,17 @@ begin
     if (TObject(Node.Data) is TJabberGroup) then begin
         Node.ImageIndex := RosterTreeImages.Find('closed_group');
         Node.SelectedIndex := Node.ImageIndex;
-        if (TObject(Node.Data) is TJabberGroup) then
-            go := TJabberGroup(Node.Data)
-        else
-            exit;
+        go := TJabberGroup(Node.Data);
 
         if (_collapsed_grps.indexOf(go.FullName) = -1) then begin
             _collapsed_grps.Add(go.FullName);
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
         end;
+
+        x := TXMLTag.Create('collapse');
+        x.setAttribute('name', go.FullName);
+        MainSession.FireEvent('/roster/collapse', x, TJabberRosterItem(nil));
+        x.Free();
     end;
 
 end;
@@ -1650,6 +1674,7 @@ end;
 procedure TfrmRosterWindow.treeRosterExpanded(Sender: TObject;
   Node: TTreeNode);
 var
+    x: TXMLTag;
     i: integer;
     dirty: boolean;
     go: TJabberGroup;
@@ -1669,6 +1694,11 @@ begin
 
         if (dirty) then
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
+
+        x := TXMLTag.Create('expand');
+        x.setAttribute('name', go.FullName);
+        MainSession.FireEvent('/roster/expand', x, TJabberRosterItem(nil));
+        x.Free();
     end;
 end;
 

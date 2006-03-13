@@ -100,4 +100,8 @@ begin
     Result := ce;
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusEntityCache, Class_ExodusEntityCache,
+    ciMultiInstance, tmApartment);
+
 end.

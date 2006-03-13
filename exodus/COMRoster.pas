@@ -356,4 +356,9 @@ begin
     Result := menu;
 end;
 
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusRoster, Class_ExodusRoster,
+    ciMultiInstance, tmApartment);
+
+
 end.

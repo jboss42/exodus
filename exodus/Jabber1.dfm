@@ -1,10 +1,10 @@
 object frmExodus: TfrmExodus
   Left = 194
   Top = 115
+  Width = 239
+  Height = 391
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 337
-  ClientWidth = 231
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -29,16 +29,15 @@ object frmExodus: TfrmExodus
   TextHeight = 13
   object SplitterLeft: TSplitter
     Left = 57
-    Top = 31
-    Height = 306
+    Top = 33
+    Height = 304
     OnMoved = SplitterRightMoved
-    ExplicitHeight = 286
   end
   object Tabs: TTntPageControl
     Left = 60
-    Top = 31
+    Top = 33
     Width = 171
-    Height = 306
+    Height = 304
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -67,14 +66,10 @@ object frmExodus: TfrmExodus
       Font.Style = []
       ImageIndex = 7
       ParentFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 257
+        Height = 275
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -82,7 +77,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 257
+        Height = 275
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -95,7 +90,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 55
-        Height = 257
+        Height = 275
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -109,21 +104,21 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 0
     Width = 231
-    Height = 31
+    Height = 33
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <
       item
         Control = ToolBar1
         ImageIndex = -1
-        MinHeight = 27
+        MinHeight = 29
         Width = 227
       end>
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
       Width = 119
-      Height = 27
+      Height = 29
       Align = alNone
       AutoSize = True
       BorderWidth = 1
@@ -136,7 +131,7 @@ object frmExodus: TfrmExodus
       Transparent = True
       object btnOnlineRoster: TToolButton
         Left = 0
-        Top = 0
+        Top = 2
         Hint = 'View Online/All'
         AllowAllUp = True
         AutoSize = True
@@ -146,7 +141,7 @@ object frmExodus: TfrmExodus
       end
       object btnAddContact: TToolButton
         Left = 23
-        Top = 0
+        Top = 2
         Hint = 'Add Contact'
         AllowAllUp = True
         AutoSize = True
@@ -156,7 +151,7 @@ object frmExodus: TfrmExodus
       end
       object btnRoom: TToolButton
         Left = 46
-        Top = 0
+        Top = 2
         Hint = 'Join a conference'
         AllowAllUp = True
         AutoSize = True
@@ -166,7 +161,7 @@ object frmExodus: TfrmExodus
       end
       object btnFind: TToolButton
         Left = 69
-        Top = 0
+        Top = 2
         Hint = 'Search for Contacts'
         AllowAllUp = True
         AutoSize = True
@@ -176,7 +171,7 @@ object frmExodus: TfrmExodus
       end
       object btnBrowser: TToolButton
         Left = 92
-        Top = 0
+        Top = 2
         Hint = 'Jabber Browser'
         AllowAllUp = True
         AutoSize = True
@@ -187,14 +182,13 @@ object frmExodus: TfrmExodus
   end
   object pnlLeft: TPanel
     Left = 0
-    Top = 31
+    Top = 33
     Width = 57
-    Height = 306
+    Height = 304
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitHeight = 286
   end
   object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual

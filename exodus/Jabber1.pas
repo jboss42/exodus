@@ -2801,7 +2801,7 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
-//var
+var
     {
     h: integer;
     i: IExodusController;
@@ -2809,9 +2809,30 @@ procedure TfrmExodus.Test1Click(Sender: TObject);
     }
     //i: integer;
     //z: TZipMaster;
+    go: TJabberGroup;
+    x: TXMLTag;
 begin
+    go := MainSession.Roster.addGroup('aaaa');
+    go.SortPriority := 900;
+    go.KeepEmpty := true;
+    go.ShowPresence := false;
 
-    ShowNewUserWizard();
+    x := TXMLTag.Create('group');
+    x.setAttribute('name', go.FullName);
+    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+    x.Free();
+
+    go := MainSession.Roster.addGroup('bbbb');
+    go.SortPriority := 900;
+    go.KeepEmpty := true;
+    go.ShowPresence := false;
+
+    x := TXMLTag.Create('group');
+    x.setAttribute('name', go.FullName);
+    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+    x.Free();
+
+    // ShowNewUserWizard();
     {
     z := TZipMaster.Create(nil);
     i := z.Load_Unz_Dll();
