@@ -109,12 +109,6 @@ correct version for the event that you are firing.</p>
 		<td valign="top">&nbsp;</td>
 	</tr>
 	<tr>
-		<td valign="top" width="265">/roster/bookmark</td>
-		<td valign="top">&lt;bm&gt;&lt;conference jid='' name='' autojoin='true|false'&gt;&lt;nick&gt;nick&lt;/nick&lt;/conference&gt;&lt;/bm&gt;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">Bookmark was created or updated.</td>
-	</tr>
-	<tr>
 		<td valign="top" width="265">/roster/end</td>
 		<td valign="top">nil</td>
 		<td valign="top">&nbsp;</td>
@@ -122,15 +116,33 @@ correct version for the event that you are firing.</p>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/roster/item</td>
+		<td valign="top">&lt;item xmlns='jabber:iq:roster' name='' jid=''&gt;</td>
 		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">Render this roster item</td>
 	</tr>
 	<tr>
-		<td valign="top" width="265">/roster/newgroup</td>
+		<td valign="top" width="265">/roster/item</td>
+		<td valign="top">&lt;conference xmlns='storage:bookmarks' jid='' name='' autojoin='true|false'&gt;&lt;nick&gt;nick&lt;/nick&lt;/conference&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Bookmark was created or updated.</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/roster/group</td>
 		<td valign="top">&lt;group name=''/&gt;</td>
 		<td valign="top">&nbsp;</td>
-		<td valign="top">New roster group was created</td>
+		<td valign="top">Render this roster group.</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/roster/collapse</td>
+		<td valign="top">&lt;collapse name=''/&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">This group is now collapsed</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/roster/expand</td>
+		<td valign="top">&lt;expand name=''/&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">This group is now expanded</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/roster/start</td>
@@ -139,6 +151,12 @@ correct version for the event that you are firing.</p>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">Roster update is starting.&nbsp; Fires once before 
 		processing roster the first time.</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/roster/remove</td>
+		<td valign="top">&lt;item xmlns='jabber:iq:roster' name='' jid=''&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Roster item (or bookmark) is being removed.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/session/avatars</td>
@@ -162,6 +180,12 @@ correct version for the event that you are firing.</p>
 		<td valign="top">A jid has been blocked.</td>
 	</tr>
 	<tr>
+		<td valign="top" width="265">/session/caps</td>
+		<td valign="top">&lt;caps from='' capid=''/&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">We have client caps for a specific cap ID from this jid.</td>
+	</tr>
+	<tr>
 		<td valign="top" width="265">/session/close-rooms</td>
 		<td valign="top">&lt;partall&gt;message&lt;/partall&gt;</td>
 		<td valign="top">&nbsp;</td>
@@ -172,13 +196,6 @@ correct version for the event that you are firing.</p>
 		<td valign="top">nil</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">Starting the connect process</td>
-	</tr>
-	<tr>
-		<td valign="top" width="265">/session/del-bookmark (<font color="#800000">How 
-		come this isn't /roster/del-bookmark?)</font></td>
-		<td valign="top">&lt;bm-delete&gt;&lt;conference jid='' name='' autojoin='true|false'&gt;&lt;nick&gt;nick&lt;/nick&lt;/conference&gt;&lt;/bm-delete&gt;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">Bookmark was deleted.&nbsp; </td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/session/disconnected</td>
@@ -307,6 +324,18 @@ correct version for the event that you are firing.</p>
 		<td valign="top">&lt;message/&gt;</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">First chat from a person.</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/session/gui/conference</td>
+		<td valign="top">&lt;conference xmlns='storage:bookmarks' jid='' name='' autojoin='true|false'&gt;&lt;nick&gt;nick&lt;/nick&lt;/conference&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Join this chat room.</td>
+	</tr>
+	<tr>
+		<td valign="top" width="265">/session/gui/conference-props</td>
+		<td valign="top">&lt;conference xmlns='storage:bookmarks' jid='' name='' autojoin='true|false'&gt;&lt;nick&gt;nick&lt;/nick&lt;/conference&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Show bookmark properties for this bookmark.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/session/gui/headline</td>
