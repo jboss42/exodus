@@ -121,6 +121,7 @@ type
     procedure Debug(const Value: WideString); safecall;
     function TrackIQ(const XML: WideString; const Listener: IExodusIQListener;
       Timeout: Integer): WideString; safecall;
+    procedure FireEvent(const Event, XML, Arg: WideString); safecall;
     
     { Protected declarations }
   private
@@ -161,6 +162,7 @@ type
     private
         _xpath: Widestring;
     public
+        proxy_idx: integer;
         id: integer;
         com: OleVariant;
         constructor Create(xpath: Widestring; obj: OleVariant);
@@ -471,7 +473,7 @@ begin
 
     com := obj;
 
-    proxies.AddObject(IntToStr(id), Self)
+    proxy_idx := proxies.AddObject(IntToStr(id), Self)
 end;
 
 {---------------------------------------}
@@ -762,7 +764,7 @@ var
     pp: TPluginProxy;
 begin
     pp := TPluginProxy.Create(xpath, callback);
-    Result := pp.id;
+    Result := pp.proxy_idx;
 end;
 
 {---------------------------------------}
@@ -1400,6 +1402,46 @@ begin
     end;
 
     _parser.Clear();
+end;
+
+{---------------------------------------}
+procedure TExodusController.FireEvent(const Event, XML, Arg: WideString);
+var
+    jid: TJabberID;
+    x: TXMLTag;
+    ri: TJabberRosterItem;
+    p: TJabberPres;
+begin
+    _parser.Clear();
+    _parser.ParseString(XML, '');
+    if (_parser.Count > 0) then
+        x := _parser.popTag()
+    else
+        x := nil;
+    _parser.Clear();
+
+    if (LeftStr(Event, Length('/roster')) = '/roster') then begin
+        ri := nil;
+        if (Arg <> '') then begin
+            ri := MainSession.roster.Find(Arg);
+            x := ri.Tag;
+        end;
+        MainSession.FireEvent(Event, x, ri);
+    end
+    else if (LeftStr(Event, Length('/presence')) = '/presence') then begin
+        p := nil;
+        if (Arg <> '') then begin
+            jid := TJabberID.Create(Arg);
+            p := MainSession.ppdb.FindPres(jid.jid, jid.resource);
+            jid.Free();
+        end;
+        MainSession.FireEvent(Event, x, p);
+    end
+    else if (LeftStr(Event, Length('/data')) = '/data') then
+        MainSession.FireEvent(Event, x, Arg)
+    else
+        MainSession.FireEvent(Event, x);
+
 end;
 
 initialization
