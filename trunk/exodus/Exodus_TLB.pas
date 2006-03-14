@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 8:08:56 AM from Type Library described below.
+// File generated on 3/14/2006 10:30:08 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -289,6 +289,7 @@ type
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
     function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; safecall;
+    procedure FireEvent(const Event: WideString; const XML: WideString; const Arg: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -392,6 +393,7 @@ type
     property EntityCache: IExodusEntityCache readonly dispid 209;
     procedure Debug(const Value: WideString); dispid 210;
     function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; dispid 211;
+    procedure FireEvent(const Event: WideString; const XML: WideString; const Arg: WideString); dispid 212;
   end;
 
 // *********************************************************************//
