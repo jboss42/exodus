@@ -548,6 +548,7 @@ begin
     _disid := MainSession.RegisterCallback(Self.Callback, '/session/disconnected');
 
     // setup our timer
+    com := obj;
     _timer := TTimer.Create(nil);
     _timer.Interval := Timeout_val * 1000;
     _timer.OnTimer := Self.Timeout;
@@ -1393,7 +1394,9 @@ begin
         if ((x.Name = 'iq') and ((iqt = 'get') or (iqt = 'set'))) then begin
             p := TIQProxy.Create(x, Timeout, Listener);
             Result := p.iqid;
-        end;
+        end
+        else
+            DebugMsg('TrackIQ must be called with a valid iq element with type="set" or type="get".');
     end;
 
     _parser.Clear();

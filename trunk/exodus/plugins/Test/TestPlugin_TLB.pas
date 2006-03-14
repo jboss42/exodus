@@ -12,16 +12,16 @@ unit TestPlugin_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/17/2006 1:14:18 PM from Type Library described below.
+// File generated on 3/14/2006 8:08:58 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\Test\TestPlugin.tlb (1)
-// LIBID: {78FCE930-6D97-4E80-A634-59897D6E8BB2}
+// LIBID: {AF37C26D-7CFA-4F88-B8B1-4231A360F8C7}
 // LCID: 0
 // Helpfile: 
 // HelpString: TestPlugin Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (d:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 Exodus, (D:\src\exodus\exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -30,7 +30,7 @@ unit TestPlugin_TLB;
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
   
 
 // *********************************************************************//
@@ -45,54 +45,19 @@ const
   TestPluginMajorVersion = 1;
   TestPluginMinorVersion = 0;
 
-  LIBID_TestPlugin: TGUID = '{78FCE930-6D97-4E80-A634-59897D6E8BB2}';
+  LIBID_TestPlugin: TGUID = '{AF37C26D-7CFA-4F88-B8B1-4231A360F8C7}';
 
-  IID_ITesterPlugin: TGUID = '{AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}';
-  CLASS_TesterPlugin: TGUID = '{DE6D1148-AC93-412F-AF4B-F26C24136D2C}';
+  CLASS_TesterPlugin: TGUID = '{937A783C-8F47-4BD4-A844-42A3627DA763}';
+  CLASS_TesterIQCallback: TGUID = '{A43EF53C-B2D2-4E8E-8D44-142803FC1736}';
 type
-
-// *********************************************************************//
-// Forward declaration of types defined in TypeLibrary                    
-// *********************************************************************//
-  ITesterPlugin = interface;
-  ITesterPluginDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
   TesterPlugin = IExodusPlugin;
+  TesterIQCallback = IExodusIQListener;
 
-
-// *********************************************************************//
-// Interface: ITesterPlugin
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}
-// *********************************************************************//
-  ITesterPlugin = interface(IExodusPlugin)
-    ['{AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}']
-  end;
-
-// *********************************************************************//
-// DispIntf:  ITesterPluginDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}
-// *********************************************************************//
-  ITesterPluginDisp = dispinterface
-    ['{AE5CDE9B-CFD3-4BE9-9855-C1A1BD52A089}']
-    procedure Startup(const ExodusController: IExodusController); dispid 1;
-    procedure Shutdown; dispid 2;
-    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
-    procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
-    procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
-    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
-                   const XTags: WideString): WideString; dispid 8;
-    procedure Configure; dispid 12;
-    procedure MenuClick(const ID: WideString); dispid 201;
-    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
-                           var Subject: WideString); dispid 202;
-    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
-  end;
 
 // *********************************************************************//
 // The Class CoTesterPlugin provides a Create and CreateRemote method to          
@@ -104,6 +69,18 @@ type
   CoTesterPlugin = class
     class function Create: IExodusPlugin;
     class function CreateRemote(const MachineName: string): IExodusPlugin;
+  end;
+
+// *********************************************************************//
+// The Class CoTesterIQCallback provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusIQListener exposed by              
+// the CoClass TesterIQCallback. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoTesterIQCallback = class
+    class function Create: IExodusIQListener;
+    class function CreateRemote(const MachineName: string): IExodusIQListener;
   end;
 
 implementation
@@ -118,6 +95,16 @@ end;
 class function CoTesterPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_TesterPlugin) as IExodusPlugin;
+end;
+
+class function CoTesterIQCallback.Create: IExodusIQListener;
+begin
+  Result := CreateComObject(CLASS_TesterIQCallback) as IExodusIQListener;
+end;
+
+class function CoTesterIQCallback.CreateRemote(const MachineName: string): IExodusIQListener;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_TesterIQCallback) as IExodusIQListener;
 end;
 
 end.
