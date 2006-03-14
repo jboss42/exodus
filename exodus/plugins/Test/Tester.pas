@@ -6,7 +6,7 @@ interface
 
 uses
     XMLParser, 
-    ComObj, ActiveX, ExodusCOM_TLB, TestPlugin_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB, TestPlugin_TLB, StdVcl;
 
 type
   TTesterPlugin = class(TAutoObject, IExodusPlugin)
@@ -31,6 +31,8 @@ type
     _session: integer;
     _roster: integer;
     _menu_id: Widestring;
+    _menu1: Widestring;
+    _menu2: Widestring;
     _parser: TXMLTagParser;
 
   end;
@@ -38,7 +40,7 @@ type
 implementation
 
 uses
-    XMLTag, Graphics, Dialogs, ComServ;
+    TesterIQCallback, XMLTag, Graphics, Dialogs, ComServ;
 
 function TTesterPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
@@ -52,8 +54,23 @@ begin
 end;
 
 procedure TTesterPlugin.MenuClick(const ID: WideString);
+var
+    cb: TTesterIQCallback;
+    iqid, xml: Widestring;
+    jid: string;
 begin
-
+    if (ID = _menu1) then begin
+        // test TrackIQ()
+        jid := 'pgmillard@jabber.org';
+        if (InputQuery('vCard lookup', 'Enter JID', jid)) then begin
+            xml := '<iq type="get" to="' + jid + '"><vCard xmlns="vcard-temp"/></iq>';
+            cb := TTesterIQCallback.Create();
+            iqid := _exodus.TrackIQ(xml, cb, 60);
+        end;
+    end
+    else if (ID = _menu2) then begin
+        // test FireEvent()
+    end;
 end;
 
 procedure TTesterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
@@ -111,6 +128,7 @@ begin
         if (_parser.Count > 0) then begin
             tag := _parser.popTag();
             j := tag.getAttribute('jid');
+            (*
             if (j = 'bubba1@dustpuppy.corp.jabber.com') then begin
                 ri := _exodus.Roster.Find(j);
                 if (ri.ImagePrefix <> 'aim_') then begin
@@ -118,6 +136,7 @@ begin
                     ri.fireChange();
                 end;
             end;
+            *)
         end
     end
     else if (event = '/session/gui/test1') then begin
@@ -138,7 +157,7 @@ var
 *)
 begin
     _parser := TXMLTagParser.Create();
-    
+
     _exodus := ExodusController;
     _session := _exodus.RegisterCallback('/session', Self);
     _roster := _exodus.RegisterCallback('/roster/item', Self);
@@ -147,17 +166,22 @@ begin
     _menu_id := _exodus.Roster.addContextMenuItem('Tester_menu1', 'Foobar',
         '/session/gui/test1');
 
+    _menu1 := _exodus.addPluginMenu('Test TrackIQ');
+    _menu2 := _exodus.addPluginMenu('Test FireEvent');
+
     (*
     bmp := TBitamp.Create();
     bmp.LoadFromFile();
     *)
 
+    (*
     _exodus.RosterImages.AddImageFilename('aim_available', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_chat', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_away', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_xa', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_dnd', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_offline', 'd:\src\exodus\exodus\plugins\test\offline.bmp');
+    *)
 end;
 
 initialization

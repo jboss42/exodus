@@ -12,7 +12,7 @@ unit ExJabberStats_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 12:23:32 PM from Type Library described below.
+// File generated on 3/14/2006 8:08:58 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)
@@ -21,8 +21,8 @@ unit ExJabberStats_TLB;
 // Helpfile: 
 // HelpString: ExJabberStats Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v1.0 Exodus, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -31,7 +31,7 @@ unit ExJabberStats_TLB;
 interface
 
 uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
-
+  
 
 // *********************************************************************//
 // GUIDS declared in the TypeLibrary. Following prefixes are used:        

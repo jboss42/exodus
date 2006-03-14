@@ -12,16 +12,16 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/12/2006 8:07:49 PM from Type Library described below.
+// File generated on 3/14/2006 8:08:56 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {85AA8EC3-C4AB-460B-828D-584AD1A44A2A}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -288,7 +288,7 @@ type
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
-    function TrackIQ(const XML: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; safecall;
+    function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -391,7 +391,7 @@ type
     property RosterImages: IExodusRosterImages readonly dispid 208;
     property EntityCache: IExodusEntityCache readonly dispid 209;
     procedure Debug(const Value: WideString); dispid 210;
-    function TrackIQ(const XML: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; dispid 211;
+    function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; dispid 211;
   end;
 
 // *********************************************************************//
@@ -910,8 +910,8 @@ type
     ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
     function getByJid(const jid: WideString; const node: WideString): IExodusEntity; safecall;
     function Fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; safecall;
-    function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
-    function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; safecall;
+    function discoInfo(const jid: WideString; const node: WideString; Timeout: Integer): IExodusEntity; safecall;
+    function discoItems(const jid: WideString; const node: WideString; Timeout: Integer): IExodusEntity; safecall;
   end;
 
 // *********************************************************************//
@@ -923,8 +923,8 @@ type
     ['{6759BFE4-C72D-42E3-86A3-1F343E848933}']
     function getByJid(const jid: WideString; const node: WideString): IExodusEntity; dispid 201;
     function Fetch(const jid: WideString; const node: WideString; items_limit: WordBool): IExodusEntity; dispid 202;
-    function discoInfo(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 203;
-    function discoItems(const jid: WideString; const node: WideString; timeout: Integer): IExodusEntity; dispid 204;
+    function discoInfo(const jid: WideString; const node: WideString; Timeout: Integer): IExodusEntity; dispid 203;
+    function discoItems(const jid: WideString; const node: WideString; Timeout: Integer): IExodusEntity; dispid 204;
   end;
 
 // *********************************************************************//
