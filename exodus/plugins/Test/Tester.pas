@@ -70,6 +70,7 @@ begin
     end
     else if (ID = _menu2) then begin
         // test FireEvent()
+        _exodus.FireEvent('/data/debug', '', 'Some debug message');
     end;
 end;
 
@@ -81,8 +82,16 @@ end;
 
 procedure TTesterPlugin.NewChat(const jid: WideString;
   const Chat: IExodusChat);
+var
+    c: IExodusControl;
+    p: IExodusControlPanel;
 begin
-
+    c := Chat.GetControl('pnlMsglist');
+    if ((c <> nil) and (c.ControlType = ExodusControlPanel)) then begin
+        p := (c as IExodusControlPanel);
+        p.BorderWidth := 20;
+        p.Color := clRed;
+    end;
 end;
 
 procedure TTesterPlugin.NewOutgoingIM(const jid: WideString;

@@ -12,7 +12,7 @@ unit TestPlugin_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 8:08:58 AM from Type Library described below.
+// File generated on 3/14/2006 2:00:21 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\Test\TestPlugin.tlb (1)

@@ -45,7 +45,7 @@ begin
         Result := IExodusControl(TExControlFont.Create(TFont(o)));
         exit;
     end;
-    if (o is TTntPanel) then begin 
+    if (o is TTntPanel) or (o is TPanel) then begin
         Result := IExodusControl(TExControlPanel.Create(TTntPanel(o)));
         exit;
     end;

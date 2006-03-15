@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 10:30:08 AM from Type Library described below.
+// File generated on 3/14/2006 1:48:55 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -289,7 +289,7 @@ type
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
     function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; safecall;
-    procedure FireEvent(const Event: WideString; const XML: WideString; const Arg: WideString); safecall;
+    procedure FireEvent(const Event: WideString; const xml: WideString; const Arg: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -393,7 +393,7 @@ type
     property EntityCache: IExodusEntityCache readonly dispid 209;
     procedure Debug(const Value: WideString); dispid 210;
     function TrackIQ(const xml: WideString; const Listener: IExodusIQListener; Timeout: Integer): WideString; dispid 211;
-    procedure FireEvent(const Event: WideString; const XML: WideString; const Arg: WideString); dispid 212;
+    procedure FireEvent(const Event: WideString; const xml: WideString; const Arg: WideString); dispid 212;
   end;
 
 // *********************************************************************//
@@ -467,7 +467,7 @@ type
     ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
-    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
+    procedure Process(const xpath: WideString; const Event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
@@ -488,7 +488,7 @@ type
     ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
     procedure Startup(const ExodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
-    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
+    procedure Process(const xpath: WideString; const Event: WideString; const xml: WideString); dispid 3;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
     function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
