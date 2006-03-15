@@ -94,7 +94,7 @@ OutputDir=..\
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=
+SearchPath=..\..; ..\..\..\jopl
 Packages=vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;VclSmp;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;vclshlctrls;dclOfficeXP;TntUnicodeVcl_R70;ExComponents;DJcl;ZMstr7R178
 Conditionals=
 DebugSourceDirs=
@@ -135,7 +135,11 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 [Excluded Packages]
+d:\dev\delphi7\Projects\Bpl\ZMstr7D178.bpl=ZipMaster 1.78
 D:\Src\ElTree\Code\dclelpD7.bpl=ElTree Lite (Design-time)
+D:\Dev\Delphi7\Projects\Bpl\JclFavoriteFoldersExpert70.bpl=JCL Open and Save IDE dialogs with favorite folders
+D:\Dev\Delphi7\Projects\Bpl\JclSIMDViewExpert70.bpl=JCL Debug Window of XMM registers
+D:\Dev\Delphi7\Projects\Bpl\JclVersionControlExpert70.bpl=JCL Integration of version control systems in the IDE
 [HistoryLists\hlDebugSourcePath]
 Count=1
 Item0=D:\src\exodus\exodus\components\;D:\src\Indy\Source\
@@ -147,9 +151,10 @@ Item1=Exodus;TRACE_EXCEPTIONS;LEAKCHECK
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=$(DELPHI)\Lib\Debug;.\components
-Item1=C:\src\exodus\exodus\output
+Count=3
+Item0=..\..; ..\..\..\jopl
+Item1=$(DELPHI)\Lib\Debug;.\components
+Item2=C:\src\exodus\exodus\output
 [HistoryLists\hlUnitOutputDirectory]
 Count=2
 Item0=.\output

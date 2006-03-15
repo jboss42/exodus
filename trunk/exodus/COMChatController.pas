@@ -47,12 +47,9 @@ type
     procedure AddRoomUser(const JID, Nickname: WideString); safecall;
     procedure RemoveRoomUser(const JID: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
-    function GetControl(const Name: WideString): IUnknown; safecall;
+    function GetControl(const Name: WideString): IExodusControl; safecall;
     function Get_Caption: WideString; safecall;
-    procedure Set_Caption(const Value: WideString); safecall;  function IExodusChat.GetControl = IExodusChat_GetControl;
-  
-    function IExodusChat_GetControl(const Name: WideString): IExodusControl;
-      safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
     { Protected declarations }
 
   public
@@ -504,7 +501,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.GetControl(const Name: WideString): IUnknown;
+function TExodusChat.GetControl(const Name: WideString): IExodusControl;
 var
     i: IExodusControl;
     comp : TComponent;
@@ -550,10 +547,8 @@ begin
         _room.Caption := Value;
 end;
 
-function TExodusChat.IExodusChat_GetControl(
-  const Name: WideString): IExodusControl;
-begin
-
-end;
+initialization
+  TAutoObjectFactory.Create(ComServer, TExodusChat, Class_ExodusChat,
+    ciMultiInstance, tmApartment);
 
 end.
