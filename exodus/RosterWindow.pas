@@ -281,8 +281,6 @@ type
     procedure InvalidateGrps(node: TTreeNode);
     procedure ExpandGrpNode(n: TTreeNode);
     procedure DrawAvatar(Node: TTreeNode; a: TAvatar);
-    procedure DrawClientImage(Node: TTreeNode; jid: TJabberID);
-    procedure DrawClientIndex(r: TRect; index: integer);
     procedure DoLogin(idx: integer);
     
     function GetSpecialGroup(var node: TTreeNode; var grp: TJabberGroup; caption: Widestring): TTreeNode;
@@ -2379,11 +2377,7 @@ begin
                 a := Avatars.Find(_cur_ritem.jid.jid);
                 if (a <> nil) then
                     // draw the avatar
-                    DrawAvatar(Node, a)
-                else begin
-                    // draw the client img
-                    DrawClientImage(Node, _cur_ritem.jid);
-                end;
+                    DrawAvatar(Node, a);
             end;
         end;
     end;
@@ -2401,70 +2395,6 @@ begin
     r.Bottom := r.Top + _item_height;
     if ((a.valid) and (not a.pending)) then
         a.Draw(treeRoster.Canvas, r);
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.DrawClientIndex(r: TRect; index: integer);
-var
-    i: TRect;
-begin
-    // erase the old image
-    with (_client_bmp.Canvas) do begin
-        i.Top := 0;
-        i.Left := 0;
-        i.Right := 48;
-        i.Bottom := 48;
-        Brush.Color := treeRoster.Color;
-        Brush.Style := bsSolid;
-        FillRect(i);
-    end;
-
-    // get the new bmp
-    _client_bmp.Transparent := true;
-    frmExodus.imgListClients.GetBitmap(index, _client_bmp);
-
-    // draw it.
-    treeRoster.Canvas.StretchDraw(r, _client_bmp);
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.DrawClientImage(Node: TTreeNode; jid: TJabberID);
-var
-    p: TJabberPres;
-    t: TXMLTag;
-    res, n: Widestring;
-    r: TRect;
-begin
-    p := MainSession.ppdb.FindPres(jid.jid, '');
-    if (p = nil) then exit;
-
-    t := p.QueryXPTag(_caps_xp);
-
-    r := Node.DisplayRect(false);
-    r.Right := r.Right - 2;
-    r.Left := r.Right - _item_height;
-    r.Bottom := r.Top + _item_height;
-
-    if (t <> nil) then begin
-        n := t.GetAttribute('node');
-        if (n = 'http://exodus.jabberstudio.org/caps') then begin
-            // exodus
-            DrawClientIndex(r, 5);
-        end;
-    end
-    else begin
-        res := Lowercase(p.fromJid.resource);
-        if (res = 'gaim') then
-            DrawClientIndex(r, 0)
-        else if (res = 'miranda') then
-            DrawClientIndex(r, 1)
-        else if (res = 'nitro') then
-            DrawClientIndex(r, 2)
-        else if (res = 'psi') then
-            DrawClientIndex(r, 3)
-        else if (res = 'tkabber') then
-            DrawClientIndex(r, 4);
-    end;
 end;
 
 {---------------------------------------}

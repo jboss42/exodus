@@ -45,6 +45,7 @@ type
         procedure Remove(ImageIndex: integer); overload;
         procedure Remove(id: Widestring); overload;
         function  Find(id: Widestring): integer;
+        function  GetID(index: integer): Widestring;
 
         procedure GetImage(index: integer; img: TImage);
         procedure GetIcon(index: integer; icon: TIcon);
@@ -134,6 +135,26 @@ begin
     _ids.Add('dnd_neg');
     _ids.Add('chat_neg');
     _ids.Add('xa_neg');
+    _ids.Add('network');
+    _ids.Add('network_disabled');
+    _ids.Add('addcontact');
+    _ids.Add('addcontact_disabled');
+    _ids.Add('delcontact');
+    _ids.Add('delcontact_disabled');
+    _ids.Add('showonline');
+    _ids.Add('showonline_disabled');
+    _ids.Add('right_arrow');
+    _ids.Add('left_arrow');
+    _ids.Add('joinroom');
+    _ids.Add('joinroom_disabled');
+    _ids.Add('edit');
+    _ids.Add('edit_disabled');
+    _ids.Add('trash');
+    _ids.Add('trash_disabled');
+    _ids.Add('search');
+    _ids.Add('search_disabled');
+    _ids.Add('browser');
+    _ids.Add('browser_disabled');
     {$endif}
 end;
 
@@ -210,6 +231,15 @@ end;
 function TRosterImages.Find(id: Widestring): integer;
 begin
     Result := _ids.IndexOf(id);
+end;
+
+{---------------------------------------}
+function TRosterImages.GetID(index: integer): Widestring;
+begin
+    if (index >= 0) and (index < _ids.Count) then
+        Result := _ids[index]
+    else
+        Result := '';
 end;
 
 {---------------------------------------}

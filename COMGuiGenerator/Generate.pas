@@ -87,7 +87,7 @@ implementation
 {$R *.dfm}
 
 uses
-    TntMenus, TntClasses, TntControls, TntStdCtrls, TntGraphics, TntExtCtrls,
+    TntComCtrls, TntButtons, TntMenus, TntClasses, TntControls, TntStdCtrls, TntGraphics, TntExtCtrls,
     ComCtrls, ExtCtrls, Menus, StrUtils;
 
 {---------------------------------------}
@@ -313,7 +313,7 @@ var
     use_str: string;
 
     idl_cur, e, vidx, cidx, i: integer;
-    class_fn, class_name, class_iname, class_cname: string;
+    vcl_class, class_fn, class_name, class_iname, class_cname: string;
     cc: TClassContainer;
 
     idl, impl, f: TStringlist;
@@ -326,6 +326,7 @@ begin
     iname := getIName(o);
     cname := getClassName(o);
     idl_name := stripClassName(o.ClassName);
+    vcl_class := 'T' + idl_name;
 
     // get all the props
     info := o.ClassInfo;
@@ -334,7 +335,11 @@ begin
 
     // add this filename to our files list and a clause into COMExControls.pas
     addUber(com);
-    uber_cl.Add('    if (o is ' + o.ClassName + ') then begin ');
+    if (o.ClassName = vcl_class) then
+        uber_cl.Add('    if (o is ' + o.ClassName + ') then begin ')
+    else
+        uber_cl.Add('    if ((o is ' + o.ClassName + ') or (o is ' + vcl_class + ')) then begin');
+
     uber_cl.Add('        Result := IExodusControl(' + cname + '.Create(' + o.ClassName + '(o)));');
     uber_cl.Add('        exit;');
     uber_cl.Add('    end;');
@@ -829,13 +834,18 @@ begin
     addClass(TTntPanel);
     addClass(TTntMenuItem);
     addClass(TTntPopupMenu);
+    addClass(TTntMainMenu);
     addClass(TTntButton);
+    addClass(TTntBitBtn);
+    addClass(TTntSpeedButton);
     addClass(TTntLabel);
     addClass(TTntEdit);
     addClass(TTntCheckBox);
     addClass(TTntRadioButton);
     addClass(TTntListBox);
     addClass(TTntComboBox);
+    addClass(TTntMemo);
+    addClass(TTntPageControl);
     addClass(TRichEdit);
 
 end;

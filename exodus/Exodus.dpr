@@ -30,7 +30,7 @@ program Exodus;
     {$define INDY9}
 {$endif}
 {$ifdef VER180}
-    {$define Indy9}
+    {$define INDY9}
 {$endif}
 
 uses
@@ -216,7 +216,14 @@ uses
   COMExPopupMenu in 'COMGuis\COMExPopupMenu.pas',
   COMExRadioButton in 'COMGuis\COMExRadioButton.pas',
   COMExControls in 'COMGuis\COMExControls.pas',
-  Exodus_TLB in 'Exodus_TLB.pas';
+  Exodus_TLB in 'Exodus_TLB.pas',
+  COMExSpeedButton in 'COMGuis\COMExSpeedButton.pas',
+  COMExBitBtn in 'COMGuis\COMExBitBtn.pas',
+  COMExMainMenu in 'COMGuis\COMExMainMenu.pas',
+  COMExMemo in 'COMGuis\COMExMemo.pas',
+  COMExPageControl in 'COMGuis\COMExPageControl.pas',
+  COMToolbar in 'COMToolbar.pas' {ExodusToolbar: CoClass},
+  COMToolbarButton in 'COMToolbarButton.pas' {ExodusToolbarButton: CoClass};
 
 {$R *.TLB}
 
