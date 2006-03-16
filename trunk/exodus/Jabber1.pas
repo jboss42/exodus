@@ -82,7 +82,6 @@ type
     ImageList2: TImageList;
     SplitterRight: TSplitter;
     timFlasher: TTimer;
-    ImageList1: TImageList;
     timAutoAway: TTimer;
     popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
@@ -96,7 +95,6 @@ type
     btnBrowser: TToolButton;
     btnFind: TToolButton;
     timReconnect: TTimer;
-    ImageList3: TImageList;
     pnlLeft: TPanel;
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
@@ -180,7 +178,6 @@ type
     IdAntiFreeze1: TIdAntiFreeze;
     mnuPluginOpts: TTntMenuItem;
     N15: TTntMenuItem;
-    imgListClients: TImageList;
     bigImages: TImageList;
 
     procedure FormCreate(Sender: TObject);
@@ -511,7 +508,7 @@ uses
 
     // XXX: ZipMstr
 
-    RosterImages, 
+    RosterImages, COMToolbar, COMToolbarButton,
     NewUser, CommandWizard, Exodus_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
@@ -2802,6 +2799,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
 var
+    i: IExodusController;
+    btn: IExodusToolbarButton;
     {
     h: integer;
     i: IExodusController;
@@ -2809,9 +2808,15 @@ var
     }
     //i: integer;
     //z: TZipMaster;
-    go: TJabberGroup;
-    x: TXMLTag;
+    //go: TJabberGroup;
+    //x: TXMLTag;
 begin
+    i := ExCOMController as IExodusController;
+    btn := i.Toolbar.addButton('contact');
+    btn.Tooltip := 'Some tooltip';
+    
+
+    {
     go := MainSession.Roster.addGroup('aaaa');
     go.SortPriority := 900;
     go.KeepEmpty := true;
@@ -2831,6 +2836,7 @@ begin
     x.setAttribute('name', go.FullName);
     MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
     x.Free();
+    }
 
     // ShowNewUserWizard();
     {

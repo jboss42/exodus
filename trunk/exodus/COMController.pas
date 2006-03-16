@@ -122,7 +122,10 @@ type
     function TrackIQ(const XML: WideString; const Listener: IExodusIQListener;
       Timeout: Integer): WideString; safecall;
     procedure FireEvent(const Event, XML, Arg: WideString); safecall;
-    
+    function RegisterListener(const xpath: WideString;
+      const Listener: IExodusListener): Integer; safecall;
+    function Get_Toolbar: IExodusToolbar; safecall;
+
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -161,11 +164,19 @@ type
     TPluginProxy = class
     private
         _xpath: Widestring;
+
+        procedure init(xpath: Widestring);
+
     public
         proxy_idx: integer;
         id: integer;
-        com: OleVariant;
-        constructor Create(xpath: Widestring; obj: OleVariant);
+
+        com: IExodusPlugin;
+        l: IExodusListener;
+
+        constructor Create(xpath: Widestring; obj: IExodusPlugin); overload;
+        constructor Create(xpath: Widestring; obj: IExodusListener); overload;
+
         destructor Destroy; override;
         procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
@@ -455,10 +466,31 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TPluginProxy.Create(xpath: Widestring; obj: OleVariant);
+constructor TPluginProxy.Create(xpath: Widestring; obj: IExodusPlugin);
 begin
     inherited Create;
 
+    com := obj;
+    l := nil;
+
+    init(xpath);
+end;
+
+{---------------------------------------}
+constructor TPluginProxy.Create(xpath: Widestring; obj: IExodusListener);
+begin
+    inherited Create;
+
+    com := nil;
+    l := obj;
+
+    init(xpath);
+end;
+
+
+{---------------------------------------}
+procedure TPluginProxy.init(xpath: Widestring);
+begin
     _xpath := xpath;
 
     // check for special signals
@@ -470,8 +502,6 @@ begin
         id := MainSession.RegisterCallback(Self.DataCallback)
     else
         id := MainSession.RegisterCallback(Self.Callback, xpath);
-
-    com := obj;
 
     proxy_idx := proxies.AddObject(IntToStr(id), Self)
 end;
@@ -494,7 +524,6 @@ end;
 {---------------------------------------}
 procedure TPluginProxy.Callback(event: string; tag: TXMLTag);
 var
-    plugin: IExodusPlugin;
     xml: WideString;
 begin
     // call the plugin back
@@ -502,12 +531,15 @@ begin
     // Exodus show catastrophic errors when plugins are bad
     // TODO: think about unregistering the plugin if it throws an exception.
     try
-        plugin := IUnknown(com) as IExodusPlugin;
         if (tag = nil) then
             xml := ''
         else
             xml := tag.xml;
-        plugin.Process(_xpath, event, xml);
+
+        if (com <> nil) then
+            com.Process(_xpath, event, xml)
+        else if (l <> nil) then
+            l.ProcessEvent(event, xml);
     except
         self.Free();
     end;
@@ -1442,6 +1474,23 @@ begin
     else
         MainSession.FireEvent(Event, x);
 
+end;
+
+{---------------------------------------}
+function TExodusController.RegisterListener(const xpath: WideString;
+  const Listener: IExodusListener): Integer;
+var
+    pp: TPluginProxy;
+begin
+    pp := TPluginProxy.Create(xpath, Listener);
+    Result := pp.proxy_idx;
+end;
+
+{---------------------------------------}
+function TExodusController.Get_Toolbar: IExodusToolbar;
+begin
+    ExCOMToolbar.ObjAddRef();
+    Result := ExCOMToolbar;
 end;
 
 initialization

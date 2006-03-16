@@ -37,7 +37,7 @@ function getCOMControl(o: TObject): IExodusControl;
 
 implementation
 uses
-    ComCtrls,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExLabel,COMExListBox,COMExMenuItem,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,ExtCtrls,Graphics,Menus,TntExtCtrls,TntMenus,TntStdCtrls;
+    Buttons,ComCtrls,COMExBitBtn,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExLabel,COMExListBox,COMExMainMenu,COMExMemo,COMExMenuItem,COMExPageControl,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,COMExSpeedButton,ExtCtrls,Graphics,Menus,TntButtons,TntComCtrls,TntExtCtrls,TntMenus,TntStdCtrls;
 
 function getCOMControl(o: TObject): IExodusControl;
 begin
@@ -45,44 +45,64 @@ begin
         Result := IExodusControl(TExControlFont.Create(TFont(o)));
         exit;
     end;
-    if (o is TTntPanel) or (o is TPanel) then begin
+    if ((o is TTntPanel) or (o is TPanel)) then begin
         Result := IExodusControl(TExControlPanel.Create(TTntPanel(o)));
         exit;
     end;
-    if (o is TTntMenuItem) then begin 
+    if ((o is TTntMenuItem) or (o is TMenuItem)) then begin
         Result := IExodusControl(TExControlMenuItem.Create(TTntMenuItem(o)));
         exit;
     end;
-    if (o is TTntPopupMenu) then begin 
+    if ((o is TTntPopupMenu) or (o is TPopupMenu)) then begin
         Result := IExodusControl(TExControlPopupMenu.Create(TTntPopupMenu(o)));
         exit;
     end;
-    if (o is TTntButton) then begin 
+    if ((o is TTntMainMenu) or (o is TMainMenu)) then begin
+        Result := IExodusControl(TExControlMainMenu.Create(TTntMainMenu(o)));
+        exit;
+    end;
+    if ((o is TTntButton) or (o is TButton)) then begin
         Result := IExodusControl(TExControlButton.Create(TTntButton(o)));
         exit;
     end;
-    if (o is TTntLabel) then begin 
+    if ((o is TTntBitBtn) or (o is TBitBtn)) then begin
+        Result := IExodusControl(TExControlBitBtn.Create(TTntBitBtn(o)));
+        exit;
+    end;
+    if ((o is TTntSpeedButton) or (o is TSpeedButton)) then begin
+        Result := IExodusControl(TExControlSpeedButton.Create(TTntSpeedButton(o)));
+        exit;
+    end;
+    if ((o is TTntLabel) or (o is TLabel)) then begin
         Result := IExodusControl(TExControlLabel.Create(TTntLabel(o)));
         exit;
     end;
-    if (o is TTntEdit) then begin 
+    if ((o is TTntEdit) or (o is TEdit)) then begin
         Result := IExodusControl(TExControlEdit.Create(TTntEdit(o)));
         exit;
     end;
-    if (o is TTntCheckBox) then begin 
+    if ((o is TTntCheckBox) or (o is TCheckBox)) then begin
         Result := IExodusControl(TExControlCheckBox.Create(TTntCheckBox(o)));
         exit;
     end;
-    if (o is TTntRadioButton) then begin 
+    if ((o is TTntRadioButton) or (o is TRadioButton)) then begin
         Result := IExodusControl(TExControlRadioButton.Create(TTntRadioButton(o)));
         exit;
     end;
-    if (o is TTntListBox) then begin 
+    if ((o is TTntListBox) or (o is TListBox)) then begin
         Result := IExodusControl(TExControlListBox.Create(TTntListBox(o)));
         exit;
     end;
-    if (o is TTntComboBox) then begin 
+    if ((o is TTntComboBox) or (o is TComboBox)) then begin
         Result := IExodusControl(TExControlComboBox.Create(TTntComboBox(o)));
+        exit;
+    end;
+    if ((o is TTntMemo) or (o is TMemo)) then begin
+        Result := IExodusControl(TExControlMemo.Create(TTntMemo(o)));
+        exit;
+    end;
+    if ((o is TTntPageControl) or (o is TPageControl)) then begin
+        Result := IExodusControl(TExControlPageControl.Create(TTntPageControl(o)));
         exit;
     end;
     if (o is TRichEdit) then begin 
