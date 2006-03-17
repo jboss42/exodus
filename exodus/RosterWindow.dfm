@@ -330,16 +330,29 @@ object frmRosterWindow: TfrmRosterWindow
         Visible = False
       end
     end
-    object boxProfiles: TScrollBox
+    object lstProfiles: TTntListView
       Left = 5
       Top = 104
       Width = 184
       Height = 137
       Align = alClient
       BorderStyle = bsNone
-      Color = clWindow
-      ParentColor = False
+      Columns = <>
+      HotTrackStyles = [htHandPoint, htUnderlineHot]
+      Items.Data = {
+        440000000200000001000000FFFFFFFFFFFFFFFF00000000000000000950726F
+        66696C65203101000000FFFFFFFFFFFFFFFF00000000000000000950726F6669
+        6C652032}
+      ParentShowHint = False
+      PopupMenu = popProfiles
+      ShowHint = True
+      SmallImages = frmExodus.ImageList2
       TabOrder = 1
+      ViewStyle = vsList
+      OnClick = lblConnectClick
+      OnDblClick = lblConnectClick
+      OnInfoTip = lstProfilesInfoTip
+      OnKeyPress = lstProfilesKeyPress
     end
   end
   object popRoster: TTntPopupMenu
@@ -709,5 +722,20 @@ object frmRosterWindow: TfrmRosterWindow
     OnTimer = autoScrollTimer
     Left = 72
     Top = 408
+  end
+  object popProfiles: TTntPopupMenu
+    Left = 72
+    Top = 344
+    object ModifyProfile1: TTntMenuItem
+      Caption = 'Modify Profile'
+      OnClick = lblModifyClick
+    end
+    object RenameProfile1: TTntMenuItem
+      Caption = 'Rename Profile'
+    end
+    object DeleteProfile1: TTntMenuItem
+      Caption = 'Delete Profile'
+      OnClick = lblDeleteClick
+    end
   end
 end

@@ -26,7 +26,7 @@ uses
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
-    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids;
+    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -120,8 +120,12 @@ type
     popVersion: TTntMenuItem;
     autoScroll: TTimer;
     lblConnect: TTntLabel;
-    boxProfiles: TScrollBox;
     lblNewUser: TTntLabel;
+    popProfiles: TTntPopupMenu;
+    ModifyProfile1: TTntMenuItem;
+    RenameProfile1: TTntMenuItem;
+    DeleteProfile1: TTntMenuItem;
+    lstProfiles: TTntListView;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -201,6 +205,9 @@ type
       var DragObject: TDragObject);
     procedure treeRosterKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure lstProfilesKeyPress(Sender: TObject; var Key: Char);
+    procedure lstProfilesInfoTip(Sender: TObject; Item: TListItem;
+      var InfoTip: String);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -520,55 +527,18 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.ShowProfiles();
 var
-    f: TframeProfile;
     c, i: integer;
-    p: TJabberProfile;
+    li: TTntListItem;
 begin
     c := MainSession.Prefs.Profiles.Count;
 
-    // erase everything already in there
-    boxProfiles.DisableAlign();
-
-    for i := boxProfiles.ControlCount - 1 downto 0 do begin
-        boxProfiles.Controls[i].Free();
-    end;
+    lstProfiles.Items.Clear();
 
     for i := 0 to c - 1 do begin
-        p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
-
-        f := TFrameProfile.Create(Self);
-        f.Name := 'fprofile_' + IntToStr(i);
-        f.Parent := boxProfiles;
-        f.Visible := true;
-        f.Align := alTop;
-        f.lblName.Caption := MainSession.Prefs.Profiles[i];
-        f.lblName.Tag := i;
-        f.lblName.OnClick := lblConnectClick;
-        f.lblName.Hint := p.Jid;
-        f.ParentBackground := false;
-
-        f.lblModify.OnClick := lblModifyClick;
-        f.lblModify.Tag := i;
-
-        f.lblDelete.OnClick := lblDeleteClick;
-        f.lblDelete.Tag := i;
-
-        if (i mod 2 = 0) then
-            f.Color := clBtnFace
-        else
-            f.Color := clWindow;
-
-        AssignUnicodeURL(f.Font, 8);
+        li := lstProfiles.Items.Add();
+        li.ImageIndex := 1;
+        li.Caption := MainSession.Prefs.Profiles[i];
     end;
-
-    i := MainSession.Prefs.getInt('profile_active');
-    if (i < 0) then i := 0;
-    if (i >= c) then i := c - 1;
-
-    lblConnect.Tag := i;
-
-    boxProfiles.EnableAlign();
-
 end;
 
 {---------------------------------------}
@@ -630,7 +600,7 @@ begin
         lblConnect.Caption := _(sSignOn);
         lblConnect.Color := clWindow;
         lblCreate.Caption := _(sNewProfile);
-        boxProfiles.Visible := true;
+        lstProfiles.Visible := true;
         lblCreate.Visible := true;
         lblNewUser.Visible := true;
         imgSSL.Visible := false;
@@ -645,7 +615,7 @@ begin
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);
         lblConnect.Caption := _(sCancelLogin);
-        boxProfiles.Visible := false;
+        lstProfiles.Visible := false;
         lblCreate.Visible := false;
         lblNewUser.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
@@ -675,7 +645,7 @@ begin
         lblConnect.Caption := _(sCancelLogin);
         lblStatus.Caption := _(sAuthenticating);
         Self.showAniStatus();
-        boxProfiles.Visible := false;
+        lstProfiles.Visible := false;
         lblCreate.Visible := false;
         lblNewUser.Visible := false;
         ShowPresence('online');
@@ -687,7 +657,7 @@ begin
         lblConnect.Caption := _(sCancelLogin);
         lblStatus.Caption := _(sAuthenticated);
         Self.showAniStatus();
-        boxProfiles.Visible := false;
+        lstProfiles.Visible := false;
         lblCreate.Visible := false;
         lblNewUser.Visible := false;
     end
@@ -2730,17 +2700,18 @@ var
     res: integer;
     idx: integer;
     p: TJabberProfile;
+    li: TTntListItem;
 begin
-    assert(Sender is TTntLabel);
-    idx := TTntLabel(Sender).Tag;
+    idx := lstProfiles.ItemIndex;
+    if (idx < 0) then exit;
+
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[idx]);
     res := ShowConnDetails(p);
     if ((res = mrOK) or (res = mrYES)) then begin
-        TFrameProfile(TTntLabel(Sender).Parent).lblName.Hint := p.Jid;
-        TFrameProfile(TTntLabel(Sender).Parent).lblName.Caption := p.Name;
-
+        li := lstProfiles.Items[idx];
+        li.Caption := p.Name;
         if (res = mrYES) then
-            lblConnectClick(TFrameProfile(TTntLabel(Sender).Parent).lblName);
+            lblConnectClick(Self);
     end;
 end;
 
@@ -2758,10 +2729,8 @@ begin
             ToggleGUI(gui_disconnected);
         end;
     end
-    else begin
-        assert(Sender is TTntLabel);
-        DoLogin(TTntLabel(Sender).Tag);
-    end;
+    else if (lstProfiles.ItemIndex >= 0) then
+        DoLogin(lstProfiles.ItemIndex);
 end;
 
 {---------------------------------------}
@@ -2788,9 +2757,11 @@ var
     p: TJabberProfile;
 begin
     // Delete this profile
+    i := lstProfiles.ItemIndex;
+    if (i < 0) then exit;
+
     if (MessageDlgW(_(sProfileRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
 
-    i := TTntLabel(Sender).Tag;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
     MainSession.Prefs.RemoveProfile(p);
     MainSession.Prefs.setInt('profile_active', 0);
@@ -3146,13 +3117,14 @@ begin
     3: show := 'xa';
     4: show := 'dnd';
     end;
+
     MainSession.setPresence(show, '', MainSession.Priority);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.updateReconnect(secs: integer);
 begin
-    boxProfiles.Visible := false;
+    lstProfiles.Visible := false;
     lblConnect.Caption := _(sCancelReconnect);
     lblStatus.Caption := WideFormat(_(sReconnectIn), [secs]);
     AssignUnicodeURL(lblConnect.Font, 8);
@@ -3238,6 +3210,29 @@ begin
         _drop_copy := (ssCtrl in Shift);
         msg := 'onKeyDown: _drop_copy = ' + BoolToStr(_drop_copy);
         OutputDebugString(PChar(msg));
+    end;
+end;
+
+procedure TfrmRosterWindow.lstProfilesKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+    if Key = Chr(13) then lblConnectClick(Self);
+end;
+
+procedure TfrmRosterWindow.lstProfilesInfoTip(Sender: TObject;
+  Item: TListItem; var InfoTip: String);
+var
+    idx: integer;
+    p: TJabberProfile;
+begin
+    if (Item = nil) then begin
+        InfoTip := '';
+        exit;
+    end
+    else begin
+        idx := Item.Index;
+        p := TJabberProfile(MainSession.Prefs.Profiles.Objects[idx]);
+        InfoTip := p.Jid;
     end;
 end;
 
