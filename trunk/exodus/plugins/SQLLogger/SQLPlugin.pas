@@ -28,7 +28,7 @@ uses
     Exodus_TLB, ComObj, ActiveX, ExSQLLogger_TLB, StdVcl;
 
 type
-  TSQLLogger = class(TAutoObject, IExodusPlugin)
+  TSQLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -45,22 +45,27 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    function Get_isDateEnabled: WordBool; safecall;
+    procedure Clear(const jid: WideString); safecall;
+    procedure GetDays(const jid: WideString; Month, Year: Integer;
+      const Listener: IExodusLogListener); safecall;
+    procedure GetMessages(const jid: WideString; ChunkSize, Day, Month,
+      Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener);
+      safecall;
+    procedure LogMessage(const Msg: IExodusLogMsg); safecall;
+    procedure Purge; safecall;
+    procedure Show(const jid: WideString); safecall;
   private
     _exodus: IExodusController;
-    _parser: TXMLTagParser;
-
-    // callbacks
-    _logger: integer;
-    _show: integer;
-    _purge: integer;
-    _clear: integer;
-    _sess: integer;
 
     // prefs
     _path: Widestring;
     _fn: Widestring;
     _cur_user: Widestring;
     _mid: String;
+
+    // callbacks
+    _sess: integer;
 
     // menus
     _menu_search: Widestring;
@@ -71,11 +76,6 @@ type
     procedure _convertLogs0();
     function _createInfoTable(): string;
 
-  public
-    procedure logMessage(log: TXMLTag);
-    procedure showLog(jid: Widestring);
-    procedure clearLog(jid: Widestring);
-    procedure purgeLogs();
   end;
 
 const
@@ -139,7 +139,6 @@ var
     tmp: TSQLiteTable;
 begin
     _exodus := ExodusController;
-    _parser := TXMLTagParser.Create();
     _db := nil;
 
     // Prefs
@@ -234,12 +233,11 @@ begin
         tmp.Free();
     end;
 
+    // Set us as the contact logger
+    _exodus.ContactLogger := Self as IExodusLogger;
+
     // Register for packets
-    _logger := _exodus.RegisterCallback('/log/logger', Self);
-    _show := _exodus.RegisterCallback('/log/show', Self);
-    _clear := _exodus.RegisterCallback('/log/clear', Self);
-    _purge := _exodus.RegisterCallback('/log/purge', Self);
-    _sess := _exodus.RegisterCallback('/session', Self);
+    _sess := _exodus.RegisterCallback('/session/connected', Self);
 
     // Register menu items
     _menu_search := _exodus.addPluginMenu('Search Logs');
@@ -272,45 +270,21 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.Shutdown;
 begin
-
     // unreg menu items
     _exodus.removePluginMenu(_menu_search);
 
     // unreg callbacks
-    _exodus.UnRegisterCallback(_logger);
-    _exodus.UnRegisterCallback(_show);
-    _exodus.UnRegisterCallback(_clear);
-    _exodus.UnRegisterCallback(_purge);
     _exodus.UnRegisterCallback(_sess);
-
-    _parser.Free();
 end;
 
 {---------------------------------------}
 procedure TSQLLogger.Process(const xpath, event, xml: WideString);
-var
-    x: TXMLTag;
 begin
-
     // grab our new username
     if (event = '/session/connected') then begin
         _cur_user := _exodus.Username + '@' + _exodus.Server;
         exit;
     end;
-
-    _parser.ParseString(xml, '');
-    if (_parser.Count = 0) then exit;
-
-    x := _parser.popTag();
-
-    if (x.Name = 'logger') then
-        logMessage(x)
-    else if (x.Name = 'show') then
-        showLog(x.getAttribute('jid'))
-    else if (x.Name = 'clear') then
-        clearLog(x.getAttribute('jid'))
-    else if (x.Name = 'purge') then
-        purgeLogs();
 end;
 
 {---------------------------------------}
@@ -375,12 +349,41 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSQLLogger.logMessage(log: TXMLTag);
+{---------------------------------------}
+{         IExodusLogger                 }
+{---------------------------------------}
+function TSQLLogger.Get_isDateEnabled: WordBool;
+begin
+    Result := false;
+end;
+
+{---------------------------------------}
+procedure TSQLLogger.Clear(const jid: WideString);
+begin
+    // XXX: Clear()
+end;
+
+{---------------------------------------}
+procedure TSQLLogger.GetDays(const jid: WideString; Month, Year: Integer;
+  const Listener: IExodusLogListener);
+begin
+    // XXX: GetDays()
+end;
+
+{---------------------------------------}
+procedure TSQLLogger.GetMessages(const jid: WideString; ChunkSize, Day,
+  Month, Year: Integer; Cancel: WordBool;
+  const Listener: IExodusLogListener);
+begin
+    // XXX: GetMessages()
+end;
+
+{---------------------------------------}
+procedure TSQLLogger.LogMessage(const Msg: IExodusLogMsg);
 var
     di: integer;
     ti: double;
 
-    d: TXMLTag;
     cmd: String;
     sql: String;
     fromjid: TJabberID;
@@ -398,10 +401,10 @@ var
     mtype: string;
     outstr: string;
 begin
-    outb := (log.getAttribute('dir') = 'out');
+    outb := (Msg.Direction = 'out');
 
-    fromjid := TJabberID.Create(log.getAttribute('from'));
-    tojid := TJabberID.Create(log.getAttribute('to'));
+    fromjid := TJabberID.Create(Msg.From);
+    tojid := TJabberID.Create(Msg.To_);
 
     user_jid := UTF8Encode(_cur_user);
     if (outb) then
@@ -409,21 +412,19 @@ begin
     else
         jid := UTF8Encode(fromjid.jid);
 
-    thread := UTF8Encode(log.GetBasicText('thread'));
-    mtype := log.getAttribute('type');
+    thread := UTF8Encode(Msg.Thread);
+    mtype := Msg.MsgType;
 
-    subject := str2sql(UTF8Encode(log.GetBasicText('subject')));
-    nick := str2sql(UTF8Encode(log.getAttribute('nick')));
-    body := str2sql(UTF8Encode(log.GetBasicText('body')));
+    subject := str2sql(UTF8Encode(Msg.Subject));
+    nick := str2sql(UTF8Encode(Msg.Nick));
+    body := str2sql(UTF8Encode(Msg.Body));
 
     if (outb) then outstr := 'TRUE' else outstr := 'FALSE';
 
-    ts := Now();
-    d := log.QueryXPTag('/logger/x[@xmlns="jabber:x:delay"]');
-    if (d <> nil) then begin
-        if (d.Data <> '') then
-            ts := JabberToDateTime(d.Data);
-    end;
+    if (Msg.Timestamp <> '') then
+        ts := JabberToDateTime(Msg.Timestamp)
+    else
+        ts := Now();
 
     cmd := 'INSERT INTO jlogs VALUES ("%s", "%s", "%s", %d, %8.6f, "%s", "%s", "%s", "%s", "%s", "%s");';
     di := Trunc(ts);
@@ -433,7 +434,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSQLLogger.showLog(jid: Widestring);
+procedure TSQLLogger.Purge;
+begin
+    // XXX: Purge
+end;
+
+{---------------------------------------}
+procedure TSQLLogger.Show(const jid: WideString);
 var
     //h: integer;
     f: TfrmView;
@@ -448,18 +455,6 @@ begin
     f.db := _db;
     f.ShowJid(jid);
     f.Show();
-end;
-
-{---------------------------------------}
-procedure TSQLLogger.clearLog(jid: Widestring);
-begin
-    //
-end;
-
-{---------------------------------------}
-procedure TSQLLogger.purgeLogs();
-begin
-    //
 end;
 
 initialization

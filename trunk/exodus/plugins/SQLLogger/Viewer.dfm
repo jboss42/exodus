@@ -57,7 +57,7 @@ object frmView: TfrmView
       Text = '<ALL CONTACTS>'
       OnChange = cboJidChange
       OnSelect = cboJidSelect
-      Items.WideStrings = (
+      Items.Strings = (
         '<ALL CONTACTS>')
     end
     object txtWords: TTntEdit
@@ -88,7 +88,7 @@ object frmView: TfrmView
       TabOrder = 3
       Text = 'Selected Day'
       OnChange = cboDateFilterChange
-      Items.WideStrings = (
+      Items.Strings = (
         'Selected Day'
         'Current Month'
         'All Dates')
@@ -107,7 +107,7 @@ object frmView: TfrmView
     Left = 0
     Top = 153
     Width = 197
-    Height = 262
+    Height = 266
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -228,7 +228,7 @@ object frmView: TfrmView
     Left = 197
     Top = 153
     Width = 380
-    Height = 262
+    Height = 266
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
@@ -244,7 +244,7 @@ object frmView: TfrmView
       Left = 0
       Top = 114
       Width = 380
-      Height = 148
+      Height = 152
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <

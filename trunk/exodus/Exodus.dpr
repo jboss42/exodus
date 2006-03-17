@@ -223,7 +223,10 @@ uses
   COMExMemo in 'COMGuis\COMExMemo.pas',
   COMExPageControl in 'COMGuis\COMExPageControl.pas',
   COMToolbar in 'COMToolbar.pas' {ExodusToolbar: CoClass},
-  COMToolbarButton in 'COMToolbarButton.pas' {ExodusToolbarButton: CoClass};
+  COMToolbarButton in 'COMToolbarButton.pas' {ExodusToolbarButton: CoClass},
+  COMExForm in 'COMGuis\COMExForm.pas',
+  COMLogMsg in 'COMLogMsg.pas' {ExodusLogMsg: CoClass},
+  COMLogListener in 'COMLogListener.pas' {ExodusLogListener: CoClass};
 
 {$R *.TLB}
 

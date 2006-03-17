@@ -868,6 +868,7 @@ begin
     uber_uses := TStringlist.Create();
 
     addClass(TFont);
+    addClass(TForm);
     addClass(TTntPanel);
     addClass(TTntMenuItem);
     addClass(TTntPopupMenu);

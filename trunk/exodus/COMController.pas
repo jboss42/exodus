@@ -125,6 +125,10 @@ type
     function RegisterListener(const xpath: WideString;
       const Listener: IExodusListener): Integer; safecall;
     function Get_Toolbar: IExodusToolbar; safecall;
+    function Get_ContactLogger: IExodusLogger; safecall;
+    procedure Set_ContactLogger(const Value: IExodusLogger); safecall;
+    function Get_RoomLogger: IExodusLogger; safecall;
+    procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
 
     { Protected declarations }
   private
@@ -134,6 +138,9 @@ type
     _nextid: longint;
     _parser: TXMLTagParser;
     // XXX: _cookie: integer;
+
+    _contact_logger: IExodusLogger;
+    _room_logger: IExodusLogger;
     
   public
     constructor Create();
@@ -151,6 +158,9 @@ type
         var Body: Widestring; var Subject: Widestring);
 
     procedure populateMsgMenus(parent: TPopupMenu; event: TNotifyEvent);
+
+    property ContactLogger: IExodusLogger read _contact_logger write Set_ContactLogger;
+    property RoomLogger: IExodusLogger read _room_logger write Set_RoomLogger; 
 
   end;
 
@@ -1491,6 +1501,32 @@ function TExodusController.Get_Toolbar: IExodusToolbar;
 begin
     ExCOMToolbar.ObjAddRef();
     Result := ExCOMToolbar;
+end;
+
+{---------------------------------------}
+function TExodusController.Get_ContactLogger: IExodusLogger;
+begin
+    Result := _contact_logger;
+end;
+
+{---------------------------------------}
+procedure TExodusController.Set_ContactLogger(const Value: IExodusLogger);
+begin
+    _contact_logger := Value;
+    MainSession.FireEvent('/session/logger', nil);
+end;
+
+{---------------------------------------}
+function TExodusController.Get_RoomLogger: IExodusLogger;
+begin
+    Result := _room_logger;
+end;
+
+{---------------------------------------}
+procedure TExodusController.Set_RoomLogger(const Value: IExodusLogger);
+begin
+    _room_logger := Value;
+    MainSession.FireEvent('/session/room-logger', nil);
 end;
 
 initialization

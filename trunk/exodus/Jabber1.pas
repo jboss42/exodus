@@ -962,7 +962,7 @@ begin
 
     // If they had logging turned on, warn them that they need to
     // enable a logging plugin now.
-    if (MainSession.Prefs.getBool('log') and (MainSession.LoggingEnabled = false)) then begin
+    if (MainSession.Prefs.getBool('log') and (ExCOMController.ContactLogger = nil)) then begin
         MainSession.Prefs.setBool('log', false);
         MessageDlgW(_('Message logging is now performed by plugins. Please enable a logging plugin to regain this functionality.'),
             mtWarning, [mbOK], 0);
@@ -2798,12 +2798,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
-var
+//var
     {
     i: IExodusController;
     btn: IExodusToolbarButton;
     }
-    btn: TToolButton;
+    // btn: TToolButton;
 
     {
     h: integer;
@@ -2821,12 +2821,13 @@ begin
     btn.Tooltip := 'Some tooltip';
     }
 
+    {
     btn := TToolButton.Create(Self);
     btn.Parent := ToolBar1;
     btn.Left := ToolBar1.Buttons[ToolBar1.ButtonCount - 1].Left +
         ToolBar1.Buttons[ToolBar1.ButtonCount - 1].Width + 1;
     btn.ImageIndex := 10;
-
+    }
 
     {
     go := MainSession.Roster.addGroup('aaaa');

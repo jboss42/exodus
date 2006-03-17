@@ -2078,7 +2078,7 @@ begin
             popRemove.Enabled := (not me);
 
             // only enable this if we have a logger.
-            popHistory.Enabled := MainSession.LoggingEnabled;
+            popHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 
             if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
                 popBlock.Caption := _(sBtnUnBlock);

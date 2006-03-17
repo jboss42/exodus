@@ -44,10 +44,13 @@ const
 function WindowsVersion(var verinfo: string): integer;
 function URLToFilename(url: string): string;
 
-procedure ClearLog(jid: string);
-procedure ClearAllLogs();
 procedure LogMessage(Msg: TJabberMessage);
-procedure ShowLog(jid: string);
+procedure ShowLog(jid: Widestring);
+procedure ClearAllLogs();
+procedure ClearLog(jid: Widestring);
+procedure ShowRoomLog(jid: Widestring);
+procedure ClearRoomLog(jid: Widestring);
+procedure ClearAllRoomLogs();
 
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
@@ -99,7 +102,7 @@ function IsUnicodeEnabled(): boolean;
 {---------------------------------------}
 implementation
 uses
-    ExSession, GnuGetText, Presence, InputPassword, 
+    Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
     IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
     XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
@@ -252,63 +255,80 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure ShowLog(jid: string);
+procedure ShowLog(jid: Widestring);
 var
-    x: TXMLTag;
+    logger: IExodusLogger;
 begin
-    // Show the log, or ask the user to turn on logging
-    x := TXMLTag.Create('show');
-    x.setAttribute('jid', jid);
-    MainSession.FireEvent('/log', x);
+    logger := ExCOMController.ContactLogger;
+    if (logger <> nil) then
+        logger.Show(jid);
 end;
 
 {---------------------------------------}
-procedure ClearLog(jid: string);
+procedure ClearLog(jid: Widestring);
 var
-    x: TXMLTag;
+    logger: IExodusLogger;
 begin
-    x := TXMLTag.Create('clear');
-    x.setAttribute('jid', jid);
-    MainSession.FireEvent('/log', x);
+    logger := ExCOMController.ContactLogger;
+    if (logger <> nil) then
+        logger.Clear(jid);
 end;
 
 {---------------------------------------}
 procedure ClearAllLogs();
 var
-    x: TXMLTag;
+    logger: IExodusLogger;
 begin
-    x := TXMLTag.Create('purge');
-    MainSession.FireEvent('/log', x);
+    logger := ExCOMController.ContactLogger;
+    if (logger <> nil) then
+        logger.Purge();
+end;
+
+{---------------------------------------}
+procedure ShowRoomLog(jid: Widestring);
+var
+    logger: IExodusLogger;
+begin
+    logger := ExCOMController.RoomLogger;
+    if (logger <> nil) then
+        logger.Show(jid);
+end;
+
+{---------------------------------------}
+procedure ClearRoomLog(jid: Widestring);
+var
+    logger: IExodusLogger;
+begin
+    logger := ExCOMController.RoomLogger;
+    if (logger <> nil) then
+        logger.Clear(jid);
+end;
+
+{---------------------------------------}
+procedure ClearAllRoomLogs();
+var
+    logger: IExodusLogger;
+begin
+    logger := ExCOMController.RoomLogger;
+    if (logger <> nil) then
+        logger.Purge();
 end;
 
 {---------------------------------------}
 procedure LogMessage(msg: TJabberMessage);
 var
-    x: TXMLTag;
+    logger: IExodusLogger;
+    m: TExodusLogMsg;
 begin
-    // Fire an event so any logging plugins can do their thing.
-    x := TXMLTag.Create('logger');
-    if (msg.isMe) then
-        x.setAttribute('dir', 'out')
+    if (msg.MsgType = 'groupchat') then
+        logger := ExCOMController.RoomLogger
     else
-        x.setAttribute('dir', 'in');
+        logger := ExCOMController.ContactLogger;
 
-    x.setAttribute('nick', msg.Nick);
-    x.setAttribute('id', msg.id);
-    x.setAttribute('type', msg.MsgType);
-    x.setAttribute('to', msg.ToJid);
-    x.setAttribute('from', msg.FromJid);
+    if (logger = nil) then exit;
 
-    x.AddBasicTag('body', msg.Body);
-    x.AddBasicTag('thread', msg.Thread);
-    x.AddBasicTag('subject', msg.Subject);
-    with x.AddTag('x') do begin
-        setAttribute('xmlns', 'jabber:x:delay');
-        setAttribute('stamp', DateTimeToJabber(msg.Time));
-    end;
-
-    // Send it off
-    MainSession.FireEvent('/log', x);
+    m := TExodusLogMsg.Create(msg);
+    logger.LogMessage(m);
 end;
 
 {---------------------------------------}

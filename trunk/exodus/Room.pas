@@ -547,11 +547,8 @@ begin
         DisplayMsg(Msg, MsgList);
 
         // log if we have logs for TC turned on.
-        if ((MainSession.Prefs.getBool('log_rooms')) and
-            (MainSession.Prefs.getBool('log'))) then begin
-            Msg.isMe := False;
-            LogMessage(Msg);
-        end;
+        Msg.isMe := False;
+        LogMessage(Msg);
 
         if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) then
             MsgOut.SetFocus();
@@ -1858,14 +1855,14 @@ end;
 procedure TfrmRoom.popShowHistoryClick(Sender: TObject);
 begin
     inherited;
-    ShowLog(Self.jid);
+    ShowRoomLog(Self.jid);
 end;
 
 {---------------------------------------}
 procedure TfrmRoom.popClearHistoryClick(Sender: TObject);
 begin
     inherited;
-    ClearLog(Self.jid);
+    ClearRoomLog(Self.jid);
 end;
 
 {---------------------------------------}

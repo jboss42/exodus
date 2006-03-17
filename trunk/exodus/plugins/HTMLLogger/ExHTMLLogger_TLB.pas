@@ -12,7 +12,7 @@ unit ExHTMLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 8:08:57 AM from Type Library described below.
+// File generated on 3/17/2006 12:06:20 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\HTMLLogger\ExHTMLLogger.tlb (1)

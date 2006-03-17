@@ -602,8 +602,8 @@ begin
             mtag.addInsertedXML(xml);
 
         // log the msg
-        if (MainSession.Prefs.getBool('log')) then
-            LogMessage(m);
+        LogMessage(m);
+
         jabberSendMsg(recips[i], mtag, _xtags, txt, s);
         m.Free();
     end;
