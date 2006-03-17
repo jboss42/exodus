@@ -320,6 +320,14 @@ var
     id_str, getter, setter, pname, com, cname, iname, idl_name, idl_fn, fn: string;
     idl_getter, idl_setter: string;
     unit_name, enum_name: string;
+
+    is_class_list: boolean;
+    class_list_type: string;
+    class_list_get: string;
+    class_list_set: string;
+    cl_idl_get: string;
+    cl_idl_set: string;
+    cl_get_empty: string;
 begin
     // generate various names
     com := getCOMName(o);
@@ -534,7 +542,37 @@ begin
                     cc := TClassContainer(vcl_classes.Objects[vidx]);
             end;
 
-            if (cc <> nil) then begin
+            // These are special classes that use [Index]
+            if ((class_name = 'tstrings') or
+                (class_name = 'tstringList') or
+                (class_name = 'twidestrings') or
+                (class_name = 'ttntstrings') or
+                (class_name = 'twidestringlist')) then begin
+                is_class_list := true;
+                class_list_type := 'Widestring';
+                class_list_set := '_control.' + pname + '[Index] := Value;';
+                class_list_get := 'Result := _control.' + pname + '[Index]';
+                cl_idl_get := 'BSTR *';
+                cl_idl_set := 'BSTR';
+                cl_get_empty := ''#39#39';';
+            end
+            else if (
+                (class_name = 'ttntmenuitem') or
+                (class_name = 'tmenuitem')) then begin
+                is_class_list := true;
+                class_list_type := 'IExodusControlMenuItem';
+                class_list_get := 'Result := TExControlMenuItem.Create(TTntMenuItem(_control.' + pname + '[Index])) as IExodusControlMenuItem';
+                class_list_set := '';
+                cl_idl_get := 'IExodusControlMenuItem **';
+                cl_idl_set := '';
+                cl_get_empty := 'nil;';
+                use_list.Add('COMExMenuItem');
+            end
+            else
+                is_class_list := false;
+
+
+            if ((cc <> nil) and (is_class_list = false)) then begin
                 // This is a class we are building an interface for
                 class_iname := getIName(cc.c);
                 class_cname := getClassName(cc.c);
@@ -566,13 +604,8 @@ begin
                 idl_getter := 'HRESULT _stdcall ' + pname + '([out, retval] ' + class_iname + ' ** Value );';
 
             end
-            else if ((class_name = 'tstrings') or
-                (class_name = 'tstringList') or
-                (class_name = 'twidestrings') or
-                (class_name = 'ttntstrings') or
-                (class_name = 'twidestringlist')) then begin
-
-                // Special handling for TStrings and related classes
+            else if (is_class_list) then begin
+                // Special handling for TStrings and similar classes
 
                 // first output a Get_FooCount property
                 getter := 'Get_' + pname + 'Count: integer;';
@@ -594,32 +627,36 @@ begin
 
 
                 // next output a Get_Foo() and Set_Foo() props
-                getter := 'Get_' + pname + '(Index: integer): Widestring;';
-                setter := 'Set_' + pname + '(Index: integer; const Value: Widestring);';
-
-                f.Add('        function ' + getter + ' safecall;');
-                f.Add('        procedure ' + setter + ' safecall;');
-
                 // getter
-                impl.Add('function ' + cname + '.' + getter);
-                impl.Add('begin');
-                impl.Add('   if ((Index >= 0) and (Index < _control.' + pname + '.Count)) then');
-                impl.Add('      Result := _control.' + pname + '[Index]');
-                impl.Add('   else ');
-                impl.Add('      Result := '#39#39';');
-                impl.Add('end;');
-                impl.Add('');
+                if (class_list_get <> '') then begin
+                    getter := 'Get_' + pname + '(Index: integer): ' + class_list_type + ';';
+                    f.Add('        function ' + getter + ' safecall;');
+                    impl.Add('function ' + cname + '.' + getter);
+                    impl.Add('begin');
+                    impl.Add('   if ((Index >= 0) and (Index < _control.' + pname + '.Count)) then');
+                    impl.Add('      ' + class_list_get);
+                    impl.Add('   else ');
+                    impl.Add('      Result := ' + cl_get_empty);
+                    impl.Add('end;');
+                    impl.Add('');
 
-                // setter impl
-                impl.Add('procedure ' + cname + '.' + setter);
-                impl.Add('begin');
-                impl.Add('   if ((Index >= 0) and (Index < _control.' + pname + '.Count)) then');
-                impl.Add('      _control.' + pname + '[Index] := Value;');
-                impl.Add('end;');
-                impl.Add('');
+                    idl_getter := 'HRESULT _stdcall ' + pname + '([in] long Index, [out, retval] ' + cl_idl_get + ' Value );';
+                end;
 
-                idl_getter := 'HRESULT _stdcall ' + pname + '([in] long Index, [out, retval] BSTR *Value );';
-                idl_setter := 'HRESULT _stdcall ' + pname + '([in] long Index, [in] BSTR Value );';
+                // setter
+                if (class_list_set <> '') then begin
+                    setter := 'Set_' + pname + '(Index: integer; const Value: ' + class_list_type + ');';
+                    f.Add('        procedure ' + setter + ' safecall;');
+
+                    impl.Add('procedure ' + cname + '.' + setter);
+                    impl.Add('begin');
+                    impl.Add('   if ((Index >= 0) and (Index < _control.' + pname + '.Count)) then');
+                    impl.Add('      ' + class_list_set);
+                    impl.Add('end;');
+                    impl.Add('');
+
+                    idl_setter := 'HRESULT _stdcall ' + pname + '([in] long Index, [in] ' + cl_idl_set + ' Value );';
+                end;
 
                 getter := '';
                 setter := '';

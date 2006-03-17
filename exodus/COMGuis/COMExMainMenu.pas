@@ -47,7 +47,8 @@ type
         procedure Set_Name(const Value: Widestring); safecall;
         function Get_Tag: Integer; safecall;
         procedure Set_Tag(Value: Integer); safecall;
-        function Get_Items: IExodusControlMenuItem; safecall;
+        function Get_ItemsCount: integer; safecall;
+        function Get_Items(Index: integer): IExodusControlMenuItem; safecall;
         function Get_AutoHotkeys: Integer; safecall;
         procedure Set_AutoHotkeys(Value: Integer); safecall;
         function Get_AutoLineReduction: Integer; safecall;
@@ -99,9 +100,17 @@ begin
       _control.Tag := Value;
 end;
 
-function TExControlMainMenu.Get_Items: IExodusControlMenuItem;
+function TExControlMainMenu.Get_ItemsCount: integer;
 begin
-      Result := TExControlMenuItem.Create(TTntMenuItem(_control.Items));
+    Result := _control.Items.Count;
+end;
+
+function TExControlMainMenu.Get_Items(Index: integer): IExodusControlMenuItem;
+begin
+   if ((Index >= 0) and (Index < _control.Items.Count)) then
+      Result := TExControlMenuItem.Create(TTntMenuItem(_control.Items[Index])) as IExodusControlMenuItem
+   else 
+      Result := nil;
 end;
 
 function TExControlMainMenu.Get_AutoHotkeys: Integer;

@@ -14,7 +14,7 @@ object frmGen: TfrmGen
   OnCreate = FormCreate
   DesignSize = (
     520
-    309)
+    313)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel

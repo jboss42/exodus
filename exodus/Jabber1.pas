@@ -2799,8 +2799,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
 var
+    {
     i: IExodusController;
     btn: IExodusToolbarButton;
+    }
+    btn: TToolButton;
+
     {
     h: integer;
     i: IExodusController;
@@ -2811,10 +2815,18 @@ var
     //go: TJabberGroup;
     //x: TXMLTag;
 begin
+    {
     i := ExCOMController as IExodusController;
     btn := i.Toolbar.addButton('contact');
     btn.Tooltip := 'Some tooltip';
-    
+    }
+
+    btn := TToolButton.Create(Self);
+    btn.Parent := ToolBar1;
+    btn.Left := ToolBar1.Buttons[ToolBar1.ButtonCount - 1].Left +
+        ToolBar1.Buttons[ToolBar1.ButtonCount - 1].Width + 1;
+    btn.ImageIndex := 10;
+
 
     {
     go := MainSession.Roster.addGroup('aaaa');

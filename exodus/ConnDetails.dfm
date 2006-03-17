@@ -1,6 +1,6 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 256
-  Top = 245
+  Left = 513
+  Top = 170
   Width = 410
   Height = 314
   ActiveControl = cboJabberID
