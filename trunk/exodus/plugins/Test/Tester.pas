@@ -89,7 +89,7 @@ begin
     c := Chat.GetControl('pnlMsglist');
     if ((c <> nil) and (c.ControlType = ExodusControlPanel)) then begin
         p := (c as IExodusControlPanel);
-        p.BorderWidth := 20;
+        p.BorderWidth := 5;
         p.Color := clRed;
     end;
 end;

@@ -12,7 +12,7 @@ unit TestPlugin_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 2:00:21 PM from Type Library described below.
+// File generated on 3/17/2006 3:46:11 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\Test\TestPlugin.tlb (1)
@@ -21,7 +21,7 @@ unit TestPlugin_TLB;
 // Helpfile: 
 // HelpString: TestPlugin Library
 // DepndLst: 
-//   (1) v1.0 Exodus, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 Exodus, (d:\src\exodus\exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
