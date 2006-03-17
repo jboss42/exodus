@@ -12,16 +12,16 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/15/2006 10:15:08 PM from Type Library described below.
+// File generated on 3/16/2006 10:57:26 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
 // LIBID: {85AA8EC3-C4AB-460B-828D-584AD1A44A2A}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -2276,7 +2276,8 @@ type
     procedure Set_Name(const Value: WideString); safecall;
     function Get_Tag: Integer; safecall;
     procedure Set_Tag(Value: Integer); safecall;
-    function Get_Items: IExodusControlMenuItem; safecall;
+    function Get_ItemsCount: Integer; safecall;
+    function Get_Items(Index: Integer): IExodusControlMenuItem; safecall;
     function Get_Alignment: Integer; safecall;
     procedure Set_Alignment(Value: Integer); safecall;
     function Get_AutoHotkeys: Integer; safecall;
@@ -2297,7 +2298,8 @@ type
     procedure Set_TrackButton(Value: Integer); safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Tag: Integer read Get_Tag write Set_Tag;
-    property Items: IExodusControlMenuItem read Get_Items;
+    property ItemsCount: Integer read Get_ItemsCount;
+    property Items[Index: Integer]: IExodusControlMenuItem read Get_Items;
     property Alignment: Integer read Get_Alignment write Set_Alignment;
     property AutoHotkeys: Integer read Get_AutoHotkeys write Set_AutoHotkeys;
     property AutoLineReduction: Integer read Get_AutoLineReduction write Set_AutoLineReduction;
@@ -2318,16 +2320,17 @@ type
     ['{F80CD345-A91C-40C8-89CD-AD5BE532B9C2}']
     property Name: WideString dispid 1;
     property Tag: Integer dispid 2;
-    property Items: IExodusControlMenuItem readonly dispid 3;
-    property Alignment: Integer dispid 4;
-    property AutoHotkeys: Integer dispid 5;
-    property AutoLineReduction: Integer dispid 6;
-    property AutoPopup: Integer dispid 7;
-    property BiDiMode: Integer dispid 8;
-    property HelpContext: Integer dispid 9;
-    property OwnerDraw: Integer dispid 10;
-    property ParentBiDiMode: Integer dispid 11;
-    property TrackButton: Integer dispid 12;
+    property ItemsCount: Integer readonly dispid 3;
+    property Items[Index: Integer]: IExodusControlMenuItem readonly dispid 4;
+    property Alignment: Integer dispid 5;
+    property AutoHotkeys: Integer dispid 6;
+    property AutoLineReduction: Integer dispid 7;
+    property AutoPopup: Integer dispid 8;
+    property BiDiMode: Integer dispid 9;
+    property HelpContext: Integer dispid 10;
+    property OwnerDraw: Integer dispid 11;
+    property ParentBiDiMode: Integer dispid 12;
+    property TrackButton: Integer dispid 13;
     property ControlType: ExodusControlTypes readonly dispid 201;
   end;
 
@@ -3026,7 +3029,8 @@ type
     procedure Set_Name(const Value: WideString); safecall;
     function Get_Tag: Integer; safecall;
     procedure Set_Tag(Value: Integer); safecall;
-    function Get_Items: IExodusControlMenuItem; safecall;
+    function Get_ItemsCount: Integer; safecall;
+    function Get_Items(Index: Integer): IExodusControlMenuItem; safecall;
     function Get_AutoHotkeys: Integer; safecall;
     procedure Set_AutoHotkeys(Value: Integer); safecall;
     function Get_AutoLineReduction: Integer; safecall;
@@ -3041,7 +3045,8 @@ type
     procedure Set_ParentBiDiMode(Value: Integer); safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Tag: Integer read Get_Tag write Set_Tag;
-    property Items: IExodusControlMenuItem read Get_Items;
+    property ItemsCount: Integer read Get_ItemsCount;
+    property Items[Index: Integer]: IExodusControlMenuItem read Get_Items;
     property AutoHotkeys: Integer read Get_AutoHotkeys write Set_AutoHotkeys;
     property AutoLineReduction: Integer read Get_AutoLineReduction write Set_AutoLineReduction;
     property AutoMerge: Integer read Get_AutoMerge write Set_AutoMerge;
@@ -3059,13 +3064,14 @@ type
     ['{0C3AE024-51A4-453F-91CB-B0EEBA175AED}']
     property Name: WideString dispid 1;
     property Tag: Integer dispid 2;
-    property Items: IExodusControlMenuItem readonly dispid 3;
-    property AutoHotkeys: Integer dispid 4;
-    property AutoLineReduction: Integer dispid 5;
-    property AutoMerge: Integer dispid 6;
-    property BiDiMode: Integer dispid 7;
-    property OwnerDraw: Integer dispid 8;
-    property ParentBiDiMode: Integer dispid 9;
+    property ItemsCount: Integer readonly dispid 3;
+    property Items[Index: Integer]: IExodusControlMenuItem readonly dispid 4;
+    property AutoHotkeys: Integer dispid 5;
+    property AutoLineReduction: Integer dispid 6;
+    property AutoMerge: Integer dispid 7;
+    property BiDiMode: Integer dispid 8;
+    property OwnerDraw: Integer dispid 9;
+    property ParentBiDiMode: Integer dispid 10;
   end;
 
 // *********************************************************************//
