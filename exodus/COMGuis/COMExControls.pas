@@ -37,12 +37,16 @@ function getCOMControl(o: TObject): IExodusControl;
 
 implementation
 uses
-    Buttons,ComCtrls,COMExBitBtn,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExLabel,COMExListBox,COMExMainMenu,COMExMemo,COMExMenuItem,COMExPageControl,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,COMExSpeedButton,ExtCtrls,Graphics,Menus,TntButtons,TntComCtrls,TntExtCtrls,TntMenus,TntStdCtrls;
+    Buttons,ComCtrls,COMExBitBtn,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExForm,COMExLabel,COMExListBox,COMExMainMenu,COMExMemo,COMExMenuItem,COMExPageControl,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,COMExSpeedButton,ExtCtrls,Graphics,Menus,TntButtons,TntComCtrls,TntExtCtrls,TntMenus,TntStdCtrls;
 
 function getCOMControl(o: TObject): IExodusControl;
 begin
     if (o is TFont) then begin 
         Result := IExodusControl(TExControlFont.Create(TFont(o)));
+        exit;
+    end;
+    if (o is TForm) then begin 
+        Result := IExodusControl(TExControlForm.Create(TForm(o)));
         exit;
     end;
     if ((o is TTntPanel) or (o is TPanel)) then begin

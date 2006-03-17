@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/16/2006 10:57:26 AM from Type Library described below.
+// File generated on 3/17/2006 11:09:58 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,6 +22,8 @@ unit Exodus_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
+//   (3) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -93,6 +95,12 @@ const
   IID_IExodusToolbarButton: TGUID = '{D4749AC4-6EBE-493B-844C-0455FF0A4A77}';
   CLASS_ExodusToolbar: TGUID = '{E12A4659-336B-4921-AC6A-771B1DCA5AF8}';
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
+  IID_IExodusControlForm: TGUID = '{2F60EC05-634D-44B2-BECB-059169BA1459}';
+  IID_IExodusLogger: TGUID = '{80C6930B-37BD-4414-9E1F-466366EC1840}';
+  IID_IExodusLogMsg: TGUID = '{2E945876-C2E5-4A24-98B4-0E38BD65D431}';
+  CLASS_ExodusLogMsg: TGUID = '{740743C0-7BEF-48E8-BD05-1470047F03CA}';
+  IID_IExodusLogListener: TGUID = '{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}';
+  CLASS_ExodusLogListener: TGUID = '{98ED888A-0569-4E5B-8933-36EBF08812B4}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -135,6 +143,7 @@ const
   ExodusControlMemo = $0000000E;
   ExodusControlPageControl = $0000000F;
   ExodusControlSpeedButton = $00000010;
+  ExodusControlForm = $00000011;
 
 type
 
@@ -211,6 +220,14 @@ type
   IExodusToolbarDisp = dispinterface;
   IExodusToolbarButton = interface;
   IExodusToolbarButtonDisp = dispinterface;
+  IExodusControlForm = interface;
+  IExodusControlFormDisp = dispinterface;
+  IExodusLogger = interface;
+  IExodusLoggerDisp = dispinterface;
+  IExodusLogMsg = interface;
+  IExodusLogMsgDisp = dispinterface;
+  IExodusLogListener = interface;
+  IExodusLogListenerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -228,6 +245,8 @@ type
   ExodusEntity = IExodusEntity;
   ExodusToolbar = IExodusToolbar;
   ExodusToolbarButton = IExodusToolbarButton;
+  ExodusLogMsg = IExodusLogMsg;
+  ExodusLogListener = IExodusLogListener;
 
 
 // *********************************************************************//
@@ -325,6 +344,10 @@ type
     procedure FireEvent(const Event: WideString; const xml: WideString; const Arg: WideString); safecall;
     function RegisterListener(const xpath: WideString; const Listener: IExodusListener): Integer; safecall;
     function Get_Toolbar: IExodusToolbar; safecall;
+    function Get_ContactLogger: IExodusLogger; safecall;
+    procedure Set_ContactLogger(const Value: IExodusLogger); safecall;
+    function Get_RoomLogger: IExodusLogger; safecall;
+    procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -341,6 +364,8 @@ type
     property RosterImages: IExodusRosterImages read Get_RosterImages;
     property EntityCache: IExodusEntityCache read Get_EntityCache;
     property Toolbar: IExodusToolbar read Get_Toolbar;
+    property ContactLogger: IExodusLogger read Get_ContactLogger write Set_ContactLogger;
+    property RoomLogger: IExodusLogger read Get_RoomLogger write Set_RoomLogger;
   end;
 
 // *********************************************************************//
@@ -432,6 +457,8 @@ type
     procedure FireEvent(const Event: WideString; const xml: WideString; const Arg: WideString); dispid 212;
     function RegisterListener(const xpath: WideString; const Listener: IExodusListener): Integer; dispid 213;
     property Toolbar: IExodusToolbar readonly dispid 214;
+    property ContactLogger: IExodusLogger dispid 215;
+    property RoomLogger: IExodusLogger dispid 216;
   end;
 
 // *********************************************************************//
@@ -3657,6 +3684,347 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusControlForm
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2F60EC05-634D-44B2-BECB-059169BA1459}
+// *********************************************************************//
+  IExodusControlForm = interface(IDispatch)
+    ['{2F60EC05-634D-44B2-BECB-059169BA1459}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const Value: WideString); safecall;
+    function Get_Tag: Integer; safecall;
+    procedure Set_Tag(Value: Integer); safecall;
+    function Get_Left: Integer; safecall;
+    procedure Set_Left(Value: Integer); safecall;
+    function Get_Top: Integer; safecall;
+    procedure Set_Top(Value: Integer); safecall;
+    function Get_Width: Integer; safecall;
+    procedure Set_Width(Value: Integer); safecall;
+    function Get_Height: Integer; safecall;
+    procedure Set_Height(Value: Integer); safecall;
+    function Get_Cursor: Integer; safecall;
+    procedure Set_Cursor(Value: Integer); safecall;
+    function Get_Hint: WideString; safecall;
+    procedure Set_Hint(const Value: WideString); safecall;
+    function Get_HelpType: Integer; safecall;
+    procedure Set_HelpType(Value: Integer); safecall;
+    function Get_HelpKeyword: WideString; safecall;
+    procedure Set_HelpKeyword(const Value: WideString); safecall;
+    function Get_HelpContext: Integer; safecall;
+    procedure Set_HelpContext(Value: Integer); safecall;
+    function Get_Align: Integer; safecall;
+    procedure Set_Align(Value: Integer); safecall;
+    function Get_AlphaBlend: Integer; safecall;
+    procedure Set_AlphaBlend(Value: Integer); safecall;
+    function Get_AlphaBlendValue: Integer; safecall;
+    procedure Set_AlphaBlendValue(Value: Integer); safecall;
+    function Get_AutoScroll: Integer; safecall;
+    procedure Set_AutoScroll(Value: Integer); safecall;
+    function Get_AutoSize: Integer; safecall;
+    procedure Set_AutoSize(Value: Integer); safecall;
+    function Get_BiDiMode: Integer; safecall;
+    procedure Set_BiDiMode(Value: Integer); safecall;
+    function Get_BorderStyle: Integer; safecall;
+    procedure Set_BorderStyle(Value: Integer); safecall;
+    function Get_BorderWidth: Integer; safecall;
+    procedure Set_BorderWidth(Value: Integer); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const Value: WideString); safecall;
+    function Get_ClientHeight: Integer; safecall;
+    procedure Set_ClientHeight(Value: Integer); safecall;
+    function Get_ClientWidth: Integer; safecall;
+    procedure Set_ClientWidth(Value: Integer); safecall;
+    function Get_Color: Integer; safecall;
+    procedure Set_Color(Value: Integer); safecall;
+    function Get_TransparentColor: Integer; safecall;
+    procedure Set_TransparentColor(Value: Integer); safecall;
+    function Get_TransparentColorValue: Integer; safecall;
+    procedure Set_TransparentColorValue(Value: Integer); safecall;
+    function Get_Ctl3D: Integer; safecall;
+    procedure Set_Ctl3D(Value: Integer); safecall;
+    function Get_UseDockManager: Integer; safecall;
+    procedure Set_UseDockManager(Value: Integer); safecall;
+    function Get_DefaultMonitor: Integer; safecall;
+    procedure Set_DefaultMonitor(Value: Integer); safecall;
+    function Get_DockSite: Integer; safecall;
+    procedure Set_DockSite(Value: Integer); safecall;
+    function Get_DragKind: Integer; safecall;
+    procedure Set_DragKind(Value: Integer); safecall;
+    function Get_DragMode: Integer; safecall;
+    procedure Set_DragMode(Value: Integer); safecall;
+    function Get_Enabled: Integer; safecall;
+    procedure Set_Enabled(Value: Integer); safecall;
+    function Get_ParentFont: Integer; safecall;
+    procedure Set_ParentFont(Value: Integer); safecall;
+    function Get_Font: IExodusControlFont; safecall;
+    function Get_FormStyle: Integer; safecall;
+    procedure Set_FormStyle(Value: Integer); safecall;
+    function Get_HelpFile: WideString; safecall;
+    procedure Set_HelpFile(const Value: WideString); safecall;
+    function Get_KeyPreview: Integer; safecall;
+    procedure Set_KeyPreview(Value: Integer); safecall;
+    function Get_Menu: IExodusControlMainMenu; safecall;
+    function Get_OldCreateOrder: Integer; safecall;
+    procedure Set_OldCreateOrder(Value: Integer); safecall;
+    function Get_ObjectMenuItemCount: Integer; safecall;
+    function Get_ObjectMenuItem(Index: Integer): IExodusControlMenuItem; safecall;
+    function Get_ParentBiDiMode: Integer; safecall;
+    procedure Set_ParentBiDiMode(Value: Integer); safecall;
+    function Get_PixelsPerInch: Integer; safecall;
+    procedure Set_PixelsPerInch(Value: Integer); safecall;
+    function Get_PopupMenu: IExodusControlPopupMenu; safecall;
+    function Get_Position: Integer; safecall;
+    procedure Set_Position(Value: Integer); safecall;
+    function Get_PrintScale: Integer; safecall;
+    procedure Set_PrintScale(Value: Integer); safecall;
+    function Get_Scaled: Integer; safecall;
+    procedure Set_Scaled(Value: Integer); safecall;
+    function Get_ScreenSnap: Integer; safecall;
+    procedure Set_ScreenSnap(Value: Integer); safecall;
+    function Get_ShowHint: Integer; safecall;
+    procedure Set_ShowHint(Value: Integer); safecall;
+    function Get_SnapBuffer: Integer; safecall;
+    procedure Set_SnapBuffer(Value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Set_Visible(Value: Integer); safecall;
+    function Get_WindowState: Integer; safecall;
+    procedure Set_WindowState(Value: Integer); safecall;
+    function Get_WindowMenuCount: Integer; safecall;
+    function Get_WindowMenu(Index: Integer): IExodusControlMenuItem; safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Tag: Integer read Get_Tag write Set_Tag;
+    property Left: Integer read Get_Left write Set_Left;
+    property Top: Integer read Get_Top write Set_Top;
+    property Width: Integer read Get_Width write Set_Width;
+    property Height: Integer read Get_Height write Set_Height;
+    property Cursor: Integer read Get_Cursor write Set_Cursor;
+    property Hint: WideString read Get_Hint write Set_Hint;
+    property HelpType: Integer read Get_HelpType write Set_HelpType;
+    property HelpKeyword: WideString read Get_HelpKeyword write Set_HelpKeyword;
+    property HelpContext: Integer read Get_HelpContext write Set_HelpContext;
+    property Align: Integer read Get_Align write Set_Align;
+    property AlphaBlend: Integer read Get_AlphaBlend write Set_AlphaBlend;
+    property AlphaBlendValue: Integer read Get_AlphaBlendValue write Set_AlphaBlendValue;
+    property AutoScroll: Integer read Get_AutoScroll write Set_AutoScroll;
+    property AutoSize: Integer read Get_AutoSize write Set_AutoSize;
+    property BiDiMode: Integer read Get_BiDiMode write Set_BiDiMode;
+    property BorderStyle: Integer read Get_BorderStyle write Set_BorderStyle;
+    property BorderWidth: Integer read Get_BorderWidth write Set_BorderWidth;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property ClientHeight: Integer read Get_ClientHeight write Set_ClientHeight;
+    property ClientWidth: Integer read Get_ClientWidth write Set_ClientWidth;
+    property Color: Integer read Get_Color write Set_Color;
+    property TransparentColor: Integer read Get_TransparentColor write Set_TransparentColor;
+    property TransparentColorValue: Integer read Get_TransparentColorValue write Set_TransparentColorValue;
+    property Ctl3D: Integer read Get_Ctl3D write Set_Ctl3D;
+    property UseDockManager: Integer read Get_UseDockManager write Set_UseDockManager;
+    property DefaultMonitor: Integer read Get_DefaultMonitor write Set_DefaultMonitor;
+    property DockSite: Integer read Get_DockSite write Set_DockSite;
+    property DragKind: Integer read Get_DragKind write Set_DragKind;
+    property DragMode: Integer read Get_DragMode write Set_DragMode;
+    property Enabled: Integer read Get_Enabled write Set_Enabled;
+    property ParentFont: Integer read Get_ParentFont write Set_ParentFont;
+    property Font: IExodusControlFont read Get_Font;
+    property FormStyle: Integer read Get_FormStyle write Set_FormStyle;
+    property HelpFile: WideString read Get_HelpFile write Set_HelpFile;
+    property KeyPreview: Integer read Get_KeyPreview write Set_KeyPreview;
+    property Menu: IExodusControlMainMenu read Get_Menu;
+    property OldCreateOrder: Integer read Get_OldCreateOrder write Set_OldCreateOrder;
+    property ObjectMenuItemCount: Integer read Get_ObjectMenuItemCount;
+    property ObjectMenuItem[Index: Integer]: IExodusControlMenuItem read Get_ObjectMenuItem;
+    property ParentBiDiMode: Integer read Get_ParentBiDiMode write Set_ParentBiDiMode;
+    property PixelsPerInch: Integer read Get_PixelsPerInch write Set_PixelsPerInch;
+    property PopupMenu: IExodusControlPopupMenu read Get_PopupMenu;
+    property Position: Integer read Get_Position write Set_Position;
+    property PrintScale: Integer read Get_PrintScale write Set_PrintScale;
+    property Scaled: Integer read Get_Scaled write Set_Scaled;
+    property ScreenSnap: Integer read Get_ScreenSnap write Set_ScreenSnap;
+    property ShowHint: Integer read Get_ShowHint write Set_ShowHint;
+    property SnapBuffer: Integer read Get_SnapBuffer write Set_SnapBuffer;
+    property Visible: Integer read Get_Visible write Set_Visible;
+    property WindowState: Integer read Get_WindowState write Set_WindowState;
+    property WindowMenuCount: Integer read Get_WindowMenuCount;
+    property WindowMenu[Index: Integer]: IExodusControlMenuItem read Get_WindowMenu;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusControlFormDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2F60EC05-634D-44B2-BECB-059169BA1459}
+// *********************************************************************//
+  IExodusControlFormDisp = dispinterface
+    ['{2F60EC05-634D-44B2-BECB-059169BA1459}']
+    property Name: WideString dispid 1;
+    property Tag: Integer dispid 2;
+    property Left: Integer dispid 3;
+    property Top: Integer dispid 4;
+    property Width: Integer dispid 5;
+    property Height: Integer dispid 6;
+    property Cursor: Integer dispid 7;
+    property Hint: WideString dispid 8;
+    property HelpType: Integer dispid 9;
+    property HelpKeyword: WideString dispid 10;
+    property HelpContext: Integer dispid 11;
+    property Align: Integer dispid 12;
+    property AlphaBlend: Integer dispid 13;
+    property AlphaBlendValue: Integer dispid 14;
+    property AutoScroll: Integer dispid 15;
+    property AutoSize: Integer dispid 16;
+    property BiDiMode: Integer dispid 17;
+    property BorderStyle: Integer dispid 18;
+    property BorderWidth: Integer dispid 19;
+    property Caption: WideString dispid 20;
+    property ClientHeight: Integer dispid 21;
+    property ClientWidth: Integer dispid 22;
+    property Color: Integer dispid 23;
+    property TransparentColor: Integer dispid 24;
+    property TransparentColorValue: Integer dispid 25;
+    property Ctl3D: Integer dispid 26;
+    property UseDockManager: Integer dispid 27;
+    property DefaultMonitor: Integer dispid 28;
+    property DockSite: Integer dispid 29;
+    property DragKind: Integer dispid 30;
+    property DragMode: Integer dispid 31;
+    property Enabled: Integer dispid 32;
+    property ParentFont: Integer dispid 33;
+    property Font: IExodusControlFont readonly dispid 34;
+    property FormStyle: Integer dispid 35;
+    property HelpFile: WideString dispid 36;
+    property KeyPreview: Integer dispid 37;
+    property Menu: IExodusControlMainMenu readonly dispid 38;
+    property OldCreateOrder: Integer dispid 39;
+    property ObjectMenuItemCount: Integer readonly dispid 40;
+    property ObjectMenuItem[Index: Integer]: IExodusControlMenuItem readonly dispid 41;
+    property ParentBiDiMode: Integer dispid 42;
+    property PixelsPerInch: Integer dispid 43;
+    property PopupMenu: IExodusControlPopupMenu readonly dispid 44;
+    property Position: Integer dispid 45;
+    property PrintScale: Integer dispid 46;
+    property Scaled: Integer dispid 47;
+    property ScreenSnap: Integer dispid 48;
+    property ShowHint: Integer dispid 49;
+    property SnapBuffer: Integer dispid 50;
+    property Visible: Integer dispid 51;
+    property WindowState: Integer dispid 52;
+    property WindowMenuCount: Integer readonly dispid 53;
+    property WindowMenu[Index: Integer]: IExodusControlMenuItem readonly dispid 54;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusLogger
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {80C6930B-37BD-4414-9E1F-466366EC1840}
+// *********************************************************************//
+  IExodusLogger = interface(IDispatch)
+    ['{80C6930B-37BD-4414-9E1F-466366EC1840}']
+    procedure LogMessage(const Msg: IExodusLogMsg); safecall;
+    procedure Show(const JID: WideString); safecall;
+    procedure Clear(const JID: WideString); safecall;
+    procedure Purge; safecall;
+    procedure GetDays(const JID: WideString; Month: Integer; Year: Integer; 
+                      const Listener: IExodusLogListener); safecall;
+    procedure GetMessages(const JID: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
+                          Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener); safecall;
+    function Get_isDateEnabled: WordBool; safecall;
+    property isDateEnabled: WordBool read Get_isDateEnabled;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusLoggerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {80C6930B-37BD-4414-9E1F-466366EC1840}
+// *********************************************************************//
+  IExodusLoggerDisp = dispinterface
+    ['{80C6930B-37BD-4414-9E1F-466366EC1840}']
+    procedure LogMessage(const Msg: IExodusLogMsg); dispid 201;
+    procedure Show(const JID: WideString); dispid 202;
+    procedure Clear(const JID: WideString); dispid 203;
+    procedure Purge; dispid 204;
+    procedure GetDays(const JID: WideString; Month: Integer; Year: Integer; 
+                      const Listener: IExodusLogListener); dispid 205;
+    procedure GetMessages(const JID: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
+                          Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener); dispid 206;
+    property isDateEnabled: WordBool readonly dispid 207;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusLogMsg
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2E945876-C2E5-4A24-98B4-0E38BD65D431}
+// *********************************************************************//
+  IExodusLogMsg = interface(IDispatch)
+    ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
+    function Get_To_: WideString; safecall;
+    function Get_From: WideString; safecall;
+    function Get_MsgType: WideString; safecall;
+    function Get_ID: WideString; safecall;
+    function Get_Nick: WideString; safecall;
+    function Get_Body: WideString; safecall;
+    function Get_Thread: WideString; safecall;
+    function Get_Subject: WideString; safecall;
+    function Get_Timestamp: WideString; safecall;
+    function Get_Direction: WideString; safecall;
+    function Get_XML: WideString; safecall;
+    property To_: WideString read Get_To_;
+    property From: WideString read Get_From;
+    property MsgType: WideString read Get_MsgType;
+    property ID: WideString read Get_ID;
+    property Nick: WideString read Get_Nick;
+    property Body: WideString read Get_Body;
+    property Thread: WideString read Get_Thread;
+    property Subject: WideString read Get_Subject;
+    property Timestamp: WideString read Get_Timestamp;
+    property Direction: WideString read Get_Direction;
+    property XML: WideString read Get_XML;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusLogMsgDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2E945876-C2E5-4A24-98B4-0E38BD65D431}
+// *********************************************************************//
+  IExodusLogMsgDisp = dispinterface
+    ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
+    property To_: WideString readonly dispid 201;
+    property From: WideString readonly dispid 202;
+    property MsgType: WideString readonly dispid 203;
+    property ID: WideString readonly dispid 204;
+    property Nick: WideString readonly dispid 205;
+    property Body: WideString readonly dispid 206;
+    property Thread: WideString readonly dispid 207;
+    property Subject: WideString readonly dispid 208;
+    property Timestamp: WideString readonly dispid 209;
+    property Direction: WideString readonly dispid 210;
+    property XML: WideString readonly dispid 211;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusLogListener
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {6D58A577-6BC4-4B1C-B5F8-759B94136B0A}
+// *********************************************************************//
+  IExodusLogListener = interface(IDispatch)
+    ['{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}']
+    procedure ProcessMessages(Count: Integer; Messages: PSafeArray); safecall;
+    procedure EndMessages(Day: Integer; Month: Integer; Year: Integer); safecall;
+    procedure Error(Day: Integer; Month: Integer; Year: Integer); safecall;
+    procedure ProcessDates(Count: Integer; Dates: PSafeArray); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusLogListenerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {6D58A577-6BC4-4B1C-B5F8-759B94136B0A}
+// *********************************************************************//
+  IExodusLogListenerDisp = dispinterface
+    ['{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}']
+    procedure ProcessMessages(Count: Integer; Messages: {??PSafeArray}OleVariant); dispid 201;
+    procedure EndMessages(Day: Integer; Month: Integer; Year: Integer); dispid 202;
+    procedure Error(Day: Integer; Month: Integer; Year: Integer); dispid 203;
+    procedure ProcessDates(Count: Integer; Dates: {??PSafeArray}OleVariant); dispid 204;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -3800,6 +4168,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusToolbarButton;
   end;
 
+// *********************************************************************//
+// The Class CoExodusLogMsg provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusLogMsg exposed by              
+// the CoClass ExodusLogMsg. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusLogMsg = class
+    class function Create: IExodusLogMsg;
+    class function CreateRemote(const MachineName: string): IExodusLogMsg;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusLogListener provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusLogListener exposed by              
+// the CoClass ExodusLogListener. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusLogListener = class
+    class function Create: IExodusLogListener;
+    class function CreateRemote(const MachineName: string): IExodusLogListener;
+  end;
+
 implementation
 
 uses ComObj;
@@ -3922,6 +4314,26 @@ end;
 class function CoExodusToolbarButton.CreateRemote(const MachineName: string): IExodusToolbarButton;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusToolbarButton) as IExodusToolbarButton;
+end;
+
+class function CoExodusLogMsg.Create: IExodusLogMsg;
+begin
+  Result := CreateComObject(CLASS_ExodusLogMsg) as IExodusLogMsg;
+end;
+
+class function CoExodusLogMsg.CreateRemote(const MachineName: string): IExodusLogMsg;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusLogMsg) as IExodusLogMsg;
+end;
+
+class function CoExodusLogListener.Create: IExodusLogListener;
+begin
+  Result := CreateComObject(CLASS_ExodusLogListener) as IExodusLogListener;
+end;
+
+class function CoExodusLogListener.CreateRemote(const MachineName: string): IExodusLogListener;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusLogListener) as IExodusLogListener;
 end;
 
 end.

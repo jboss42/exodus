@@ -29,7 +29,7 @@ uses
     Exodus_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
 
 type
-  THTMLLogger = class(TAutoObject, IExodusPlugin)
+  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -46,17 +46,21 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    function Get_isDateEnabled: WordBool; safecall;
+    procedure Clear(const jid: WideString); safecall;
+    procedure GetDays(const jid: WideString; Month, Year: Integer;
+      const Listener: IExodusLogListener); safecall;
+    procedure GetMessages(const jid: WideString; ChunkSize, Day, Month,
+      Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener);
+      safecall;
+    procedure LogMessage(const Msg: IExodusLogMsg); safecall;
+    procedure Purge; safecall;
+    procedure Show(const jid: WideString); safecall;
 
   private
     _exodus: IExodusController;
-    _parser: TXMLTagParser;
 
     // callbacks
-    _logger: integer;
-    _show: integer;
-    _purge: integer;
-    _clear: integer;
-
     _path: Widestring;
     _roster: boolean;
     _rooms: boolean;
@@ -68,8 +72,8 @@ type
     _font_name: Widestring;
     _font_size: Widestring;
 
-    function _getMsgHTML(Msg: TJabberMessage): string;
-    procedure _logMessage(log: TXMLTag);
+    function _getMsgHTML(Msg: IExodusLogMsg): string;
+    procedure _logMessage(log: IExodusLogMsg);
     procedure _showLog(jid: Widestring);
     procedure _clearLog(jid: Widestring);
 
@@ -84,8 +88,8 @@ type
 {---------------------------------------}
 implementation
 uses
-    Prefs,
-    JabberUtils, XMLUtils, Windows, IdGlobal, StrUtils, 
+    Prefs,  
+    JabberUtils, XMLUtils, Windows, IdGlobal, StrUtils,
     Controls, ShellAPI, Dialogs, SysUtils, Classes, JabberID, ComServ;
 
 const
@@ -104,7 +108,6 @@ const
 procedure THTMLLogger.Startup(const ExodusController: IExodusController);
 begin
     _exodus := ExodusController;
-    _parser := TXMLTagParser.Create();
 
     // get some configs
     _path := _exodus.getPrefAsString('log_path');
@@ -119,30 +122,23 @@ begin
     _font_name := _exodus.getPrefAsString('font_name');
     _font_size := _exodus.getPrefAsString('font_size');
 
-    // Register for packets
-    _logger := _exodus.RegisterCallback('/log/logger', Self);
-    _show := _exodus.RegisterCallback('/log/show', Self);
-    _clear := _exodus.RegisterCallback('/log/clear', Self);
-    _purge := _exodus.RegisterCallback('/log/purge', Self);
+    // Set us up as the contact logger
+    _exodus.ContactLogger := Self as IExodusLogger;
 end;
 
 {---------------------------------------}
 procedure THTMLLogger.Shutdown;
 begin
-    _exodus.UnRegisterCallback(_logger);
-    _exodus.UnRegisterCallback(_show);
-    _exodus.UnRegisterCallback(_clear);
-    _exodus.UnRegisterCallback(_purge);
-
-    _parser.Free();
+    //_exodus.ContactLogger := nil;
 end;
 
 {---------------------------------------}
-function THTMLLogger._getMsgHTML(Msg: TJabberMessage): string;
+function THTMLLogger._getMsgHTML(Msg: IExodusLogMsg): string;
 var
     html, txt: Widestring;
     ret, color, time, bg, font: string;
     cr_pos: integer;
+    mtime: TDateTime;
 begin
     // replace CR's w/ <br> tags
     txt := HTML_EscapeChars(Msg.Body, false, true);
@@ -171,19 +167,22 @@ begin
     end;
 
     // timestamp if we're supposed to..
-    if (_timestamp) then
+    if (_timestamp) then begin
+        mtime := JabberToDateTime(Msg.Timestamp);
         time := '<span style="color: gray;">[' +
-                FormatDateTime(_format, Msg.Time) +
-                ']</span>'
+                FormatDateTime(_format, mtime) +
+                ']</span>';
+    end
     else
         time := '';
 
-    if Msg.Action then begin
+
+    if (MidStr(Msg.Body, 1, 3) = '/me') then begin
         html := html + '<div style="' + bg + font + '">' + time +
                 '<span style="color: purple;">* ' + Msg.Nick + ' ' + txt + '</span></div>';
     end
     else begin
-        if Msg.isMe then
+        if (Msg.Direction = 'out') then
             color := ColorToHTML(_me)
         else
             color := ColorToHTML(_other);
@@ -270,81 +269,36 @@ end;
 
 {---------------------------------------}
 procedure THTMLLogger.Process(const xpath, event, xml: WideString);
-var
-    x: TXMLTag;
 begin
-    _parser.ParseString(xml, '');
-    if (_parser.Count = 0) then exit;
-
-    x := _parser.popTag();
-
-    if (x.Name = 'logger') then
-        _logMessage(x)
-    else if (x.Name = 'show') then
-        _showLog(x.getAttribute('jid'))
-    else if (x.Name = 'clear') then
-        _clearLog(x.getAttribute('jid'))
-    else if (x.Name = 'purge') then
-        purgeLogs();
 
 end;
 
 {---------------------------------------}
-procedure THTMLLogger._logMessage(log: TXMLTag);
+procedure THTMLLogger._logMessage(log: IExodusLogMsg);
 var
-    d: TXMLTag;
     buff: string;
-    rjid, fn: Widestring;
+    fn: Widestring;
     header: boolean;
-    j: TJabberID;
+    rjid, j: TJabberID;
     ndate: TDateTime;
     fs: TFileStream;
-    msg: TJabberMessage;
     ritem: IExodusRosterItem;
 begin
-    msg := TJabberMessage.Create();
-    msg.ToJID := log.getAttribute('to');
-    msg.FromJid := log.getAttribute('from');
-
-    if (log.getAttribute('dir') = 'out') then begin
-        msg.isMe := true;
-        rjid := Msg.ToJid;
-    end
-    else begin
-        msg.isMe := false;
-        rjid := Msg.FromJid;
-    end;
-
     // check the roster for the rjid, and bail if we aren't logging non-roster folk
-    if (_roster) then begin
-        ritem := _exodus.Roster.find(rjid);
-        if (ritem = nil) then begin
-            msg.Free();
-            exit;
-        end;
-    end;
-
-    msg.Nick := log.getAttribute('nick');
-    msg.id := log.getAttribute('id');
-    msg.MsgType := log.getAttribute('type');
-    msg.Body := log.GetBasicText('body');
-    msg.thread := log.GetBasicText('thread');
-    msg.subject := log.GetBasicText('subject');
-
-    d := log.QueryXPTag('/logger/x[@xmlns="jabber:x:delay"]');
-    if (d <> nil) then begin
-        if (d.Data <> '') then
-            msg.Time := JabberToDateTime(d.Data);
+    if (_roster) and (log.Direction = 'in') then begin
+        rjid := TJabberID.Create(log.from);
+        ritem := _exodus.Roster.find(rjid.jid);
+        rjid.Free();
+        if (ritem = nil) then exit;
     end;
 
     // prepare to log
     fn := _path;
 
-    if (msg.isMe) then
-        j := TJabberID.Create(msg.ToJid)
+    if (log.Direction = 'out') then
+        j := TJabberID.Create(log.To_)
     else
-        j := TJabberID.Create(msg.FromJid);
-
+        j := TJabberID.Create(log.From);
 
     if (Copy(fn, length(fn), 1) <> '\') then
         fn := fn + '\';
@@ -352,7 +306,6 @@ begin
     if (not DirectoryExists(fn)) then begin
         // mkdir
         if CreateDir(fn) = false then begin
-            msg.Free();
             MessageDlg(sBadLogDir, mtError, [mbOK], 0);
             exit;
         end;
@@ -383,7 +336,6 @@ begin
     except
         on e: Exception do begin
             MessageDlg('Could not open log file: ' + fn, mtError, [mbOK], 0);
-            msg.Free();
             exit;
         end;
     end;
@@ -394,11 +346,10 @@ begin
         fs.Write(Pointer(buff)^, Length(buff));
     end;
 
-    buff := _getMsgHTML(Msg);
+    buff := _getMsgHTML(log);
     fs.Write(Pointer(buff)^, Length(buff));
     fs.Free();
     j.Free();
-    Msg.Free();
 end;
 
 {---------------------------------------}
@@ -458,6 +409,50 @@ begin
     ShellExecute(0, PChar(cmd), nil, nil, nil, SW_HIDE);
 
     MessageDlgW(sFilesDeleted, mtInformation, [mbOK], 0);
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{            IExodusLogger              }
+{---------------------------------------}
+{---------------------------------------}
+function THTMLLogger.Get_isDateEnabled: WordBool;
+begin
+    Result := false;
+end;
+
+procedure THTMLLogger.Clear(const jid: WideString);
+begin
+    _clearLog(jid);
+end;
+
+procedure THTMLLogger.GetDays(const jid: WideString; Month, Year: Integer;
+  const Listener: IExodusLogListener);
+begin
+    // NOT IMPL
+end;
+
+procedure THTMLLogger.GetMessages(const jid: WideString; ChunkSize, Day,
+  Month, Year: Integer; Cancel: WordBool;
+  const Listener: IExodusLogListener);
+begin
+    // NOT IMPL
+end;
+
+procedure THTMLLogger.LogMessage(const Msg: IExodusLogMsg);
+begin
+    _logMessage(Msg);
+end;
+
+procedure THTMLLogger.Purge;
+begin
+    purgeLogs();
+end;
+
+procedure THTMLLogger.Show(const jid: WideString);
+begin
+    _showLog(jid);
 end;
 
 initialization

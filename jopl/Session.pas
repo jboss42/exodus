@@ -59,7 +59,6 @@ type
         _dispatcher: TSignalDispatcher;
 
         // main packet handling signals
-        _logSignal: TPacketSignal;
         _filterSignal: TPacketSignal;
         _preSignal: TPacketSignal;
         _packetSignal: TPacketSignal;
@@ -83,8 +82,6 @@ type
         _first_pres: boolean;
         _avails: TWidestringlist;
         _auth_agent: TJabberAuth;
-        _logger: boolean;
-        _logger_id: integer;
         _no_auth: boolean;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
@@ -201,7 +198,6 @@ type
         property xmppFeatures: TXMLTag read _features;
         property SSLEnabled: boolean read _ssl_on;
         property xmlLang: WideString read _lang;
-        property LoggingEnabled: boolean read _logger;
         property CompressionEnabled: boolean read _compression_on;
 
         // Auth info
@@ -239,13 +235,11 @@ begin
     _dispatcher := TSignalDispatcher.Create;
 
     // Core packet signals
-    _logSignal := TPacketSignal.Create('/log', '');
     _filterSignal := TPacketSignal.Create('/filter', '/pre');
     _preSignal := TPacketSignal.Create('/pre', '/packet');
     _packetSignal := TPacketSignal.Create('/packet', '/post');
     _postSignal := TPacketSignal.Create('/post', '/unhandled');
     _unhandledSignal := TBasicSignal.Create('/unhandled');
-    _dispatcher.AddSignal(_logSignal);
     _dispatcher.AddSignal(_filterSignal);
     _dispatcher.AddSignal(_preSignal);
     _dispatcher.AddSignal(_packetSignal);
@@ -273,8 +267,6 @@ begin
     _tls_cb := -1;
     _compression_cb := -1;
     _compression_err_cb := -1;
-    _logger := false;
-    _logger_id := 0;
 
     // Create all the things which might register w/ the session
     jCapsCache.SetSession(Self);
@@ -694,7 +686,6 @@ begin
         end
 
         else begin
-            _dispatcher.DispatchSignal('/log', tag);
             _dispatcher.DispatchSignal('/filter', tag);
         end;
     end;
@@ -816,19 +807,7 @@ begin
 
     // Find the correct signal to register with
     i := _dispatcher.IndexOf(tok1);
-    if (tok1 = '/log') then begin
-        pk := _logSignal.addListener(xplite, callback);
-        result := pk.cb_id;
-
-        // check to see if this a msg logger..
-        if (xplite = '/log/logger') then begin
-            _logger := true;
-            _logger_id := pk.cb_id;
-            Prefs.setBool('log', true);
-            FireEvent('/session/logger', nil);
-        end;
-    end
-    else if (tok1 = '/filter') then begin
+    if (tok1 = '/filter') then begin
         pk := _filterSignal.addListener(xplite, callback);
         result := pk.cb_id;
     end
@@ -915,12 +894,6 @@ begin
     // Unregister a callback
     if (index >= 0) then
         _dispatcher.DeleteListener(index);
-
-    if ((_logger_id <> 0) and (_logger_id = index)) then begin
-        _logger_id := 0;
-        _logger := false;
-        FireEvent('/session/logger', nil);
-    end;
 end;
 
 {---------------------------------------}

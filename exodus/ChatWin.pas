@@ -394,8 +394,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.setupMenus();
 begin
-    mnuHistory.Enabled := MainSession.LoggingEnabled;
-    popClearHistory.Enabled := MainSession.LoggingEnabled;
+    mnuHistory.Enabled := (ExCOMController.ContactLogger <> nil);
+    popClearHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 end;
 
 {---------------------------------------}
@@ -748,8 +748,7 @@ begin
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
-        if (MainSession.Prefs.getBool('log')) then
-            LogMessage(Msg);
+        LogMessage(Msg);
 
         // check for displayed events
         etag := tag.QueryXPTag(XP_MSGXEVENT);
@@ -811,8 +810,7 @@ begin
     DisplayMsg(Msg, MsgList);
 
     // log the msg
-    if (MainSession.Prefs.getBool('log')) then
-        LogMessage(Msg);
+    LogMessage(Msg);
 
     Msg.Free();
 end;

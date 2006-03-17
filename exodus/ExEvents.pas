@@ -239,8 +239,6 @@ var
     ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
 begin
-    if (not MainSession.Prefs.getBool('log')) then exit;
-
     tmp_jid := TJabberID.Create(e.from);
 
     m := TJabberMessage.Create(e.tag);
