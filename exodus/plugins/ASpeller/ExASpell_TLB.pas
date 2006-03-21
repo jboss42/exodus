@@ -12,7 +12,7 @@ unit ExAspell_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 8:08:57 AM from Type Library described below.
+// File generated on 3/21/2006 10:14:49 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ASpeller\ExAspell.tlb (1)

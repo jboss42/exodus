@@ -286,7 +286,7 @@ var
 begin
     // check the roster for the rjid, and bail if we aren't logging non-roster folk
     if (_roster) and (log.Direction = 'in') then begin
-        rjid := TJabberID.Create(log.from);
+        rjid := TJabberID.Create(log.FromJid);
         ritem := _exodus.Roster.find(rjid.jid);
         rjid.Free();
         if (ritem = nil) then exit;
@@ -296,9 +296,9 @@ begin
     fn := _path;
 
     if (log.Direction = 'out') then
-        j := TJabberID.Create(log.To_)
+        j := TJabberID.Create(log.ToJid)
     else
-        j := TJabberID.Create(log.From);
+        j := TJabberID.Create(log.FromJid);
 
     if (Copy(fn, length(fn), 1) <> '\') then
         fn := fn + '\';

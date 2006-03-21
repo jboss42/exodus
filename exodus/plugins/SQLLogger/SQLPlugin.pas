@@ -403,8 +403,8 @@ var
 begin
     outb := (Msg.Direction = 'out');
 
-    fromjid := TJabberID.Create(Msg.From);
-    tojid := TJabberID.Create(Msg.To_);
+    fromjid := TJabberID.Create(Msg.FromJid);
+    tojid := TJabberID.Create(Msg.ToJid);
 
     user_jid := UTF8Encode(_cur_user);
     if (outb) then
