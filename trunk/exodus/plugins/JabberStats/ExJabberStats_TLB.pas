@@ -12,7 +12,7 @@ unit ExJabberStats_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/14/2006 8:08:58 AM from Type Library described below.
+// File generated on 3/21/2006 10:14:51 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)

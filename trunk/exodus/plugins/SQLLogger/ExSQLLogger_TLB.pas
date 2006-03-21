@@ -12,7 +12,7 @@ unit ExSQLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/17/2006 3:35:37 PM from Type Library described below.
+// File generated on 3/21/2006 10:14:52 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\SQLLogger\ExSQLLogger.tlb (1)
