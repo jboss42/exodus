@@ -170,6 +170,7 @@ type
     fHandle: CtxtHandle;
     fHasHandle: Boolean;
     fExpiry: TimeStamp;
+    fNetworkDREP: Boolean;                                                  // pgm - kerb
     function getHandle: PCtxtHandle;
     function getExpiry: TimeStamp;
     procedure updateHasContextAndCheckForError(
@@ -193,6 +194,8 @@ type
     property Handle: PCtxtHandle read getHandle;
     property Authenticated: Boolean read GetAuthenticated;
     property Expiry: TimeStamp read getExpiry;
+    property NetworkRep: Boolean read fNetworkDREP write fNetworkDREP;      // pgm - kerb
+
   public
     constructor Create(aCredentials: TSSPICredentials);
     destructor Destroy; override;
@@ -239,6 +242,11 @@ type
       const aTargetName: string; var aToPeerToken: string): Boolean;
   public
     constructor Create(aCredentials: TSSPICredentials);
+
+    // pgm - this is so we can get access to SetEstablishedFlags from elsewhere
+    property RequestedFlags: ULONG read GetRequestedFlags write fReqReguested;
+    property EstablishedFlags: ULONG read fReqEstablished;
+
   end;
 
   TIndySSPINTLMClient = class(TObject)
@@ -270,6 +278,8 @@ type
     procedure Reset; override;
   end;
 
+function getSSPIInterface(): TSSPIInterface; // pgm - kerb
+
 implementation
 
 uses
@@ -280,6 +290,11 @@ uses
 
 var
   g: TSSPIInterface;
+
+function getSSPIInterface(): TSSPIInterface;
+begin
+    Result := g;
+end;
 
 { ESSPIException }
 
@@ -701,6 +716,7 @@ var
   tmp: PCtxtHandle;
   tmp2: PSecBufferDesc;
   r: ULONG;
+  drep: ULONG;      // pgm - kerb
 begin
   if fHasHandle then begin
     tmp := @fHandle;
@@ -709,10 +725,17 @@ begin
     tmp := nil;
     tmp2 := nil;
   end;
+
+  // pgm - kerb
+  if fNetworkDREP then
+    drep := SECURITY_NETWORK_DREP
+  else
+    drep := SECURITY_NATIVE_DREP;
+
   Result :=
     g.FunctionTable.InitializeSecurityContextA(
     Credentials.Handle, tmp, aTokenSourceName,
-    GetRequestedFlags, 0, SECURITY_NATIVE_DREP, tmp2, 0,
+    GetRequestedFlags, 0, drep, tmp2, 0,
     @fHandle, @aOut, @r, @fExpiry
     );
   updateHasContextAndCheckForError(

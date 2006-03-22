@@ -1,10 +1,10 @@
 object frmExodus: TfrmExodus
   Left = 258
   Top = 118
-  Width = 239
-  Height = 415
   AlphaBlendValue = 240
   Caption = 'Exodus'
+  ClientHeight = 365
+  ClientWidth = 231
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -118,7 +118,7 @@ object frmExodus: TfrmExodus
       Left = 9
       Top = 0
       Width = 119
-      Height = 29
+      Height = 27
       Align = alNone
       AutoSize = True
       BorderWidth = 1
@@ -131,7 +131,7 @@ object frmExodus: TfrmExodus
       Transparent = True
       object btnOnlineRoster: TToolButton
         Left = 0
-        Top = 2
+        Top = 0
         Hint = 'View Online/All'
         AllowAllUp = True
         AutoSize = True
@@ -141,7 +141,7 @@ object frmExodus: TfrmExodus
       end
       object btnAddContact: TToolButton
         Left = 23
-        Top = 2
+        Top = 0
         Hint = 'Add Contact'
         AllowAllUp = True
         AutoSize = True
@@ -151,7 +151,7 @@ object frmExodus: TfrmExodus
       end
       object btnRoom: TToolButton
         Left = 46
-        Top = 2
+        Top = 0
         Hint = 'Join a conference'
         AllowAllUp = True
         AutoSize = True
@@ -161,7 +161,7 @@ object frmExodus: TfrmExodus
       end
       object btnFind: TToolButton
         Left = 69
-        Top = 2
+        Top = 0
         Hint = 'Search for Contacts'
         AllowAllUp = True
         AutoSize = True
@@ -171,7 +171,7 @@ object frmExodus: TfrmExodus
       end
       object btnBrowser: TToolButton
         Left = 92
-        Top = 2
+        Top = 0
         Hint = 'Jabber Browser'
         AllowAllUp = True
         AutoSize = True

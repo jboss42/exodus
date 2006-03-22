@@ -1,10 +1,10 @@
 object frmConnDetails: TfrmConnDetails
   Left = 513
   Top = 170
-  Width = 410
-  Height = 314
   ActiveControl = cboJabberID
   Caption = 'Connection Details'
+  ClientHeight = 305
+  ClientWidth = 402
   Color = clBtnFace
   Constraints.MinWidth = 410
   DefaultMonitor = dmDesktop
@@ -22,13 +22,15 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 402
-    Height = 251
+    Height = 272
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 251
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
+      ExplicitHeight = 223
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
@@ -81,7 +83,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblRename: TTntLabel
         Left = 100
-        Top = 201
+        Top = 217
         Width = 90
         Height = 13
         Cursor = crHandPoint
@@ -114,8 +116,8 @@ object frmConnDetails: TfrmConnDetails
         Top = 68
         Width = 170
         Height = 21
+        PasswordChar = '*'
         TabOrder = 1
-        PasswordCharW = '*'
       end
       object cboResource: TTntComboBox
         Left = 100
@@ -162,10 +164,20 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 7
         OnClick = chkWinLoginClick
       end
+      object chkKerberos: TTntCheckBox
+        Left = 100
+        Top = 197
+        Width = 181
+        Height = 17
+        Caption = 'Use Kerberos'
+        TabOrder = 8
+        OnClick = chkWinLoginClick
+      end
     end
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
+      ExplicitHeight = 223
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -216,6 +228,7 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
+      ExplicitHeight = 223
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -256,6 +269,7 @@ object frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
+      ExplicitHeight = 223
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -340,8 +354,8 @@ object frmConnDetails: TfrmConnDetails
         Width = 190
         Height = 21
         Enabled = False
+        PasswordChar = '*'
         TabOrder = 4
-        PasswordCharW = '*'
       end
       object cboSocksType: TTntComboBox
         Left = 91
@@ -363,6 +377,7 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
+      ExplicitHeight = 223
       object Label1: TTntLabel
         Left = 1
         Top = 27
@@ -396,7 +411,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 155
+        Top = 180
         Width = 390
         Height = 60
         Align = alBottom
@@ -407,6 +422,7 @@ object frmConnDetails: TfrmConnDetails
           ' work. Contact your server administrator for additional informat' +
           'ion.'
         WordWrap = True
+        ExplicitTop = 155
       end
       object txtURL: TTntEdit
         Left = 100
@@ -441,13 +457,14 @@ object frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 251
+    Top = 272
     Width = 402
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
+    ExplicitTop = 251
     object Panel1: TPanel
       Left = 159
       Top = 4

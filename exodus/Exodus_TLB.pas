@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/17/2006 11:09:58 AM from Type Library described below.
+// File generated on 3/21/2006 10:21:37 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,8 +22,6 @@ unit Exodus_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
-//   (3) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -3918,12 +3916,12 @@ type
   IExodusLogger = interface(IDispatch)
     ['{80C6930B-37BD-4414-9E1F-466366EC1840}']
     procedure LogMessage(const Msg: IExodusLogMsg); safecall;
-    procedure Show(const JID: WideString); safecall;
-    procedure Clear(const JID: WideString); safecall;
+    procedure Show(const jid: WideString); safecall;
+    procedure Clear(const jid: WideString); safecall;
     procedure Purge; safecall;
-    procedure GetDays(const JID: WideString; Month: Integer; Year: Integer; 
+    procedure GetDays(const jid: WideString; Month: Integer; Year: Integer; 
                       const Listener: IExodusLogListener); safecall;
-    procedure GetMessages(const JID: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
+    procedure GetMessages(const jid: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
                           Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener); safecall;
     function Get_isDateEnabled: WordBool; safecall;
     property isDateEnabled: WordBool read Get_isDateEnabled;
@@ -3937,12 +3935,12 @@ type
   IExodusLoggerDisp = dispinterface
     ['{80C6930B-37BD-4414-9E1F-466366EC1840}']
     procedure LogMessage(const Msg: IExodusLogMsg); dispid 201;
-    procedure Show(const JID: WideString); dispid 202;
-    procedure Clear(const JID: WideString); dispid 203;
+    procedure Show(const jid: WideString); dispid 202;
+    procedure Clear(const jid: WideString); dispid 203;
     procedure Purge; dispid 204;
-    procedure GetDays(const JID: WideString; Month: Integer; Year: Integer; 
+    procedure GetDays(const jid: WideString; Month: Integer; Year: Integer; 
                       const Listener: IExodusLogListener); dispid 205;
-    procedure GetMessages(const JID: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
+    procedure GetMessages(const jid: WideString; ChunkSize: Integer; Day: Integer; Month: Integer; 
                           Year: Integer; Cancel: WordBool; const Listener: IExodusLogListener); dispid 206;
     property isDateEnabled: WordBool readonly dispid 207;
   end;
@@ -3954,8 +3952,8 @@ type
 // *********************************************************************//
   IExodusLogMsg = interface(IDispatch)
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
-    function Get_To_: WideString; safecall;
-    function Get_From: WideString; safecall;
+    function Get_toJid: WideString; safecall;
+    function Get_fromJid: WideString; safecall;
     function Get_MsgType: WideString; safecall;
     function Get_ID: WideString; safecall;
     function Get_Nick: WideString; safecall;
@@ -3964,9 +3962,9 @@ type
     function Get_Subject: WideString; safecall;
     function Get_Timestamp: WideString; safecall;
     function Get_Direction: WideString; safecall;
-    function Get_XML: WideString; safecall;
-    property To_: WideString read Get_To_;
-    property From: WideString read Get_From;
+    function Get_xml: WideString; safecall;
+    property toJid: WideString read Get_toJid;
+    property fromJid: WideString read Get_fromJid;
     property MsgType: WideString read Get_MsgType;
     property ID: WideString read Get_ID;
     property Nick: WideString read Get_Nick;
@@ -3975,7 +3973,7 @@ type
     property Subject: WideString read Get_Subject;
     property Timestamp: WideString read Get_Timestamp;
     property Direction: WideString read Get_Direction;
-    property XML: WideString read Get_XML;
+    property xml: WideString read Get_xml;
   end;
 
 // *********************************************************************//
@@ -3985,8 +3983,8 @@ type
 // *********************************************************************//
   IExodusLogMsgDisp = dispinterface
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
-    property To_: WideString readonly dispid 201;
-    property From: WideString readonly dispid 202;
+    property toJid: WideString readonly dispid 201;
+    property fromJid: WideString readonly dispid 202;
     property MsgType: WideString readonly dispid 203;
     property ID: WideString readonly dispid 204;
     property Nick: WideString readonly dispid 205;
@@ -3995,7 +3993,7 @@ type
     property Subject: WideString readonly dispid 208;
     property Timestamp: WideString readonly dispid 209;
     property Direction: WideString readonly dispid 210;
-    property XML: WideString readonly dispid 211;
+    property xml: WideString readonly dispid 211;
   end;
 
 // *********************************************************************//

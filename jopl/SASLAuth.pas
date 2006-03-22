@@ -46,13 +46,9 @@ type
         _fail: integer;
         _resp: integer;
 
-        // NTLM
-        _ntlm : TIndySSPINTLMClient;
-
         procedure RegCallbacks();
         procedure StartDigest();
         procedure StartPlain();
-        procedure StartNTLM();
         procedure StartExternal();
 
     published
@@ -60,7 +56,6 @@ type
         procedure C2Callback(event: string; xml: TXMLTag);
 
         procedure PlainCallback(event: string; xml: TXMLTag);
-        procedure NTLMCallback(event: string; xml: TXMLTag);
 
         procedure FailCallback(event: string; xml: TXMLTag);
         procedure SuccessCallback(event: string; xml: TXMLTag);
@@ -109,7 +104,6 @@ begin
 
         SetLength(preferred, 4);
         preferred[0] := 'EXTERNAL';
-        preferred[1] := 'NTLM';
         preferred[2] := 'DIGEST-MD5';
         preferred[3] := 'PLAIN';
 
@@ -121,7 +115,7 @@ begin
                     _best_mech := preferred[i];
                     break;
                 end
-                else if (preferred[i] <> 'NTLM') or (_session.Profile.WinLogin) then begin
+                else begin
                     _best_mech := preferred[i];
                     break;
                 end;
@@ -130,10 +124,7 @@ begin
     end;
     ms.Free();
 
-    if (_session.Profile.WinLogin and (_best_mech <> 'NTLM')) then
-        Result := false
-    else
-        Result := (_best_mech <> '');
+    Result := (_best_mech <> '');
 end;
 
 {---------------------------------------}
@@ -163,9 +154,7 @@ procedure TSASLAuth.StartAuthentication();
 begin
     // TODO: Fix brute force look for plain or MD5-Digest
     CancelAuthentication();
-    if (_best_mech = 'NTLM') then
-        StartNTLM()
-    else if (_best_mech = 'DIGEST-MD5') then
+    if (_best_mech = 'DIGEST-MD5') then
         StartDigest()
     else if (_best_mech = 'PLAIN') then
         StartPlain()
@@ -270,51 +259,6 @@ begin
     a.setAttribute('mechanism', 'EXTERNAL');
 
     _session.SendTag(a);
-end;
-
-{---------------------------------------}
-procedure TSASLAuth.StartNTLM();
-var
-    s: string;
-    a: TXMLTag;
-begin
-    _digest := false;
-    RegCallbacks();
-    _ccb := _session.RegisterCallback(NTLMCallback, '/packet/challenge');
-
-    _ntlm := TIndySSPINTLMClient.Create();
-    _ntlm.SetCredentialsAsCurrentUser();
-    s := _ntlm.InitAndBuildType1Message();
-
-    a := TXMLTag.Create('auth');
-    a.setAttribute('xmlns', XMLNS_XMPP_SASL);
-    a.setAttribute('mechanism', 'NTLM');
-
-    a.AddCData(_encoder.Encode(s));
-
-    _session.SendTag(a);
-end;
-
-{---------------------------------------}
-procedure TSASLAuth.NTLMCallback(event: string; xml: TXMLTag);
-var
-    c: string;
-    r: TXMLTag;
-begin
-    if (event <> 'xml') then begin
-        _session.SetAuthenticated(false, nil, false);
-        exit;
-    end;
-
-    c := _decoder.DecodeString(xml.Data);
-    c := _ntlm.UpdateAndBuildType3Message(c);
-
-    r := TXMLTag.Create('response');
-    r.setAttribute('xmlns', XMLNS_XMPP_SASL);
-
-    r.AddCData(_encoder.Encode(c));
-
-    _session.SendTag(r);
 end;
 
 {---------------------------------------}

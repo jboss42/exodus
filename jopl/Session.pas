@@ -446,15 +446,27 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.DoConnect;
+var
+    auth: TJabberAuth;
 begin
     assert(_stream = nil);
     _sent_stream := false;
     if (_profile = nil) then
         raise Exception.Create('Invalid profile')
     else if (_stream <> nil) then
-        raise Exception.Create('Session is already connected')
-    else if (not Assigned(_auth_agent)) then
-        raise Exception.Create('No auth agent has been assigned');
+        raise Exception.Create('Session is already connected');
+
+    // Create the AuthAgent
+    if (_profile.KerbAuth) then
+        auth := CreateJabberAuth('kerberos', Self)
+    else
+        auth := CreateJabberAUth('xmpp', Self);
+
+    if (auth = nil) then
+        raise Exception.Create('No appropriate Auth Agent found.');
+
+    // set this auth agent as our current one
+    setAuthAgent(auth);
 
     case _profile.ConnectionType of
     conn_normal:

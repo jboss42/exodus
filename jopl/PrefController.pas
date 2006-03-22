@@ -140,6 +140,7 @@ type
         AvatarHash: Widestring;
         AvatarMime: Widestring;
         WinLogin: boolean;
+        KerbAuth: boolean;
         
         // Socket connection
         Host: Widestring;
@@ -1399,6 +1400,7 @@ begin
         Priority   := getInt('brand_profile_priority');
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
+        KerbAuth   := getBool('brand_profile_kerbauth');
         ConnectionType := getInt('brand_profile_conn_type');
         temp       := false;
 
@@ -1454,15 +1456,8 @@ begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
 
-    // Make sure we stringprep the username
     Username := tag.GetBasicText('username');
-    tmps := xmpp_nodeprep(Username);
-    Username := tmps;
-
-    // Make sure we nameprep the server
     Server := tag.GetBasicText('server');
-    tmps := xmpp_nameprep(Server);
-    Server := tmps;
 
     // check for this flag this way, so that if the tag
     // doesn't exist, it'll default to true.
@@ -1477,6 +1472,22 @@ begin
         WinLogin := SafeBool(tag.GetBasicText('winlogin'))
     else
         WinLogin := false;
+
+    ptag := tag.GetFirstTag('kerblogin');
+    if (ptag <> nil) then
+        KerbAuth := SafeBool(tag.GetBasicText('kerblogin'))
+    else
+        KerbAuth := false;
+
+    if (not KerbAuth) then begin
+        // Make sure we stringprep the username
+        tmps := xmpp_nodeprep(Username);
+        Username := tmps;
+
+        // Make sure we nameprep the server
+        tmps := xmpp_nameprep(Server);
+        Server := tmps;
+    end;
 
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
@@ -1548,6 +1559,7 @@ begin
     node.AddBasicTag('server', Server);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
     node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
+    node.AddBasicTag('kerblogin', SafeBoolStr(KerbAuth));
 
     ptag := node.AddTag('password');
     if (SavePasswd) then begin
