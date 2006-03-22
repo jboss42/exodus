@@ -60,11 +60,23 @@ type
         property AutoAuth: boolean read _auto_auth write _auto_auth;
     end;
 
+function StandardAuthFactory(session: TObject): TJabberAuth;
 
 implementation
 uses
     JabberConst, XMLUtils, JabberID;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+function StandardAuthFactory(session: TObject): TJabberAuth;
+begin
+    Result := TStandardAuth.Create(TJabberSession(session));
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 constructor TStandardAuth.Create(session: TJabberSession);
 begin
@@ -310,6 +322,10 @@ begin
     prompt_password := false;
     _token := tag;
 end;
+
+initialization
+    RegisterJabberAuth('xmpp', StandardAuthFactory);
+
 
 end.
 

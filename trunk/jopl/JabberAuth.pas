@@ -25,10 +25,13 @@ uses
     Classes, SysUtils;
 
 type
+    TJabberAuth = class;
+    TJabberAuthFactory = function(session: TObject): TJabberAuth;
+
     TJabberAuth = Class
     public
         prompt_password: boolean;
-        
+
         procedure StartAuthentication(); virtual; abstract;
         procedure CancelAuthentication(); virtual; abstract;
 
@@ -36,7 +39,56 @@ type
         procedure CancelRegistration(); virtual; abstract;
     end;
 
+function RegisterJabberAuth(name: string; factory: TJabberAuthFactory): boolean;
+function CreateJabberAuth(name: string; session: TObject): TJabberAuth;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
+uses
+    Session;
+
+var
+    jAuthRegistry: TStringlist;
+
+{---------------------------------------}
+function RegisterJabberAuth(name: string; factory: TJabberAuthFactory): boolean;
+var
+    idx: integer;
+begin
+    Result := false;
+
+    idx := jAuthRegistry.IndexOf(name);
+    if (idx >= 0) then exit;
+
+    jAuthRegistry.AddObject(name, @factory);
+    Result := true;
+end;
+
+{---------------------------------------}
+function CreateJabberAuth(name: string; session: TObject): TJabberAuth;
+var
+    js: TJabberSession;
+    factory: TJabberAuthFactory;
+    idx: integer;
+begin
+    Result := nil;
+    idx := jAuthRegistry.IndexOf(name);
+    if (idx >= 0) then begin
+        factory := TJabberAuthFactory(Pointer(integer((jAuthRegistry.Objects[idx]))));
+        js := TJabberSession(session);
+        Result := factory(js);
+    end;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+initialization
+    jAuthRegistry := TStringList.Create();
+
+finalization
+    jAuthRegistry.Free();
 
 end.
- 

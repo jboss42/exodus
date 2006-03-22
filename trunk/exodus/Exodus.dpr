@@ -226,7 +226,8 @@ uses
   COMToolbarButton in 'COMToolbarButton.pas' {ExodusToolbarButton: CoClass},
   COMExForm in 'COMGuis\COMExForm.pas',
   COMLogMsg in 'COMLogMsg.pas' {ExodusLogMsg: CoClass},
-  COMLogListener in 'COMLogListener.pas' {ExodusLogListener: CoClass};
+  COMLogListener in 'COMLogListener.pas' {ExodusLogListener: CoClass},
+  KerbAuth in '..\jopl\KerbAuth.pas';
 
 {$R *.TLB}
 

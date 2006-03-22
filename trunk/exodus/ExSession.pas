@@ -138,7 +138,6 @@ var
     _richedit: THandle;
     _mutex: THandle;
     _xmpp_action_list: TList;
-    _auth: TStandardAuth;
 
 
 
@@ -314,10 +313,6 @@ begin
         UseLanguage(tmp_locale);
     end;
 
-    // Set our session to use the normal auth agent
-    _auth := TStandardAuth.Create(MainSession);
-    MainSession.setAuthAgent(_auth);
-
     // Check for a single instance
     if (MainSession.Prefs.getBool('single_instance')) then begin
         _mutex := CreateMutex(nil, true, PChar('Exodus' +
@@ -454,9 +449,12 @@ begin
                         auth_node.RemoveTag(node);
                     end;
 
+                    {
+                    // XXX: deal with tokenauth somehow?
                     node := auth_node.GetFirstTag('tokenauth');
                     if (node <> nil) then
                         _auth.TokenAuth := node;
+                    }
                 end;
 
                 prof_index := Profiles.IndexOfObject(profile);
@@ -712,8 +710,6 @@ begin
         _mutex := 0;
     end;
 
-
-    if (_auth <> nil) then              FreeAndNil(_auth);
     if (ExStartup <> nil) then          FreeAndNil(ExStartup);
     if (ExCOMToolbar <> nil) then       FreeAndNil(ExCOMToolbar);
     if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);

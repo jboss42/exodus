@@ -28,14 +28,14 @@ type
   protected
     function Get_Body: WideString; safecall;
     function Get_Direction: WideString; safecall;
-    function Get_From: WideString; safecall;
+    function Get_FromJid: WideString; safecall;
     function Get_ID: WideString; safecall;
     function Get_MsgType: WideString; safecall;
     function Get_Nick: WideString; safecall;
     function Get_Subject: WideString; safecall;
     function Get_Thread: WideString; safecall;
     function Get_Timestamp: WideString; safecall;
-    function Get_To_: WideString; safecall;
+    function Get_ToJid: WideString; safecall;
     function Get_XML: WideString; safecall;
 
   end;
@@ -74,7 +74,7 @@ begin
     Result := _dir;
 end;
 
-function TExodusLogMsg.Get_From: WideString;
+function TExodusLogMsg.Get_FromJid: WideString;
 begin
     Result := _from;
 end;
@@ -109,7 +109,7 @@ begin
     Result := _delay;
 end;
 
-function TExodusLogMsg.Get_To_: WideString;
+function TExodusLogMsg.Get_ToJid: WideString;
 begin
     Result := _to;
 end;
