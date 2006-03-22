@@ -324,8 +324,7 @@ begin
 end;
 
 initialization
-    RegisterJabberAuth('xmpp', StandardAuthFactory);
-
+    RegisterJabberAuth('XMPP', StandardAuthFactory);
 
 end.
 

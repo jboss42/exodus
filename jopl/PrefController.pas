@@ -141,6 +141,7 @@ type
         AvatarMime: Widestring;
         WinLogin: boolean;
         KerbAuth: boolean;
+        SASLRealm: Widestring;
         
         // Socket connection
         Host: Widestring;
@@ -1401,6 +1402,7 @@ begin
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
         KerbAuth   := getBool('brand_profile_kerbauth');
+        SASLRealm  := getString('brand_profile_saslrealm');
         ConnectionType := getInt('brand_profile_conn_type');
         temp       := false;
 
@@ -1458,6 +1460,7 @@ begin
 
     Username := tag.GetBasicText('username');
     Server := tag.GetBasicText('server');
+    SASLRealm := tag.GetBasicText('saslrealm');
 
     // check for this flag this way, so that if the tag
     // doesn't exist, it'll default to true.
@@ -1479,15 +1482,13 @@ begin
     else
         KerbAuth := false;
 
-    if (not KerbAuth) then begin
-        // Make sure we stringprep the username
-        tmps := xmpp_nodeprep(Username);
-        Username := tmps;
+    // Make sure we stringprep the username
+    tmps := xmpp_nodeprep(Username);
+    Username := tmps;
 
-        // Make sure we nameprep the server
-        tmps := xmpp_nameprep(Server);
-        Server := tmps;
-    end;
+    // Make sure we nameprep the server
+    tmps := xmpp_nameprep(Server);
+    Server := tmps;
 
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
@@ -1556,6 +1557,7 @@ begin
     node.ClearTags();
     node.setAttribute('name', Name);
     node.AddBasicTag('username', Username);
+    node.AddBasicTag('saslrealm', SASLRealm);
     node.AddBasicTag('server', Server);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
     node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
