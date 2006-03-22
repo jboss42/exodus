@@ -12,7 +12,7 @@ unit ExAspell_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/21/2006 10:14:49 AM from Type Library described below.
+// File generated on 3/22/2006 8:29:19 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ASpeller\ExAspell.tlb (1)
@@ -21,7 +21,7 @@ unit ExAspell_TLB;
 // Helpfile: 
 // HelpString: ExAspell Library
 // DepndLst: 
-//   (1) v1.0 Exodus, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\runner\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -30,7 +30,7 @@ unit ExAspell_TLB;
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
   
 
 // *********************************************************************//

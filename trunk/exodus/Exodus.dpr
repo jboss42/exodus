@@ -228,7 +228,9 @@ uses
   COMLogMsg in 'COMLogMsg.pas' {ExodusLogMsg: CoClass},
   COMLogListener in 'COMLogListener.pas' {ExodusLogListener: CoClass},
   KerbAuth in '..\jopl\KerbAuth.pas',
-  NTLMAuth in '..\jopl\NTLMAuth.pas';
+  NTLMAuth in '..\jopl\NTLMAuth.pas',
+  SASLMech in '..\jopl\SASLMech.pas',
+  ExternalAuth in '..\jopl\ExternalAuth.pas';
 
 {$R *.TLB}
 

@@ -457,10 +457,12 @@ begin
         raise Exception.Create('Session is already connected');
 
     // Create the AuthAgent
-    if (_profile.KerbAuth) then
-        auth := CreateJabberAuth('kerberos', Self)
+    if (profile.SSL_Cert <> '')  then
+        auth := CreateJabberAuth('EXTERNAL', Self)
+    else if (_profile.KerbAuth) then
+        auth := CreateJabberAuth('GSSAPI', Self)
     else
-        auth := CreateJabberAUth('xmpp', Self);
+        auth := CreateJabberAuth('XMPP', Self);
 
     if (auth = nil) then
         raise Exception.Create('No appropriate Auth Agent found.');

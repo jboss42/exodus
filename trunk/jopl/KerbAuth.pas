@@ -1,6 +1,6 @@
 unit KerbAuth;
 {
-    Copyright 2003, Peter Millard
+    Copyright 2006, Peter Millard
 
     This file is part of Exodus.
 
@@ -21,7 +21,7 @@ unit KerbAuth;
 
 interface
 uses
-    IdAuthenticationSSPI, IdSSPI,
+    IdAuthenticationSSPI, IdSSPI, SASLMech, 
     JabberAuth, IQ, Session, XMLTag, IdCoderMime, IdHashMessageDigest,
     Classes, SysUtils;
 
@@ -33,43 +33,19 @@ type
     // ------------------------------------------------------------------------
     // This is our JabberAuth plugin for TJabberSession
     // ------------------------------------------------------------------------
-    TKerbAuth = class(TJabberAuth)
+    TKerbAuth = class(TSASLMech)
     private
-        _session: TJabberSession;
-
-        // Lets get us some useful objects
-        _decoder: TIdDecoderMime;
-        _encoder: TIdEncoderMime;
-
-        // Callbacks
-        _ccb: integer;
-        _fail: integer;
-        _resp: integer;
-        _succ: integer;
-
         // the server SPN
         _state: TKerbState;
         _server_spn: Widestring;
         _kerb: TSSPIKerbClient;
-
-        procedure _error(tag: TXMLTag = nil);
-
+    protected
+        function getInitialResponse(mech: TXMLTag): Widestring; override;
     published
-        procedure Challenge(event: string; tag: TXMLTag);
-        procedure Success(event: string; tag: TXMLTag);
-        procedure Fail(event: string; tag: TXMLTag);
-
+        procedure Challenge(event: string; tag: TXMLTag); override;
     public
         constructor Create(session: TJabberSession);
         destructor Destroy(); override;
-
-        // TJabberAuth
-        procedure StartAuthentication(); override;
-        procedure CancelAuthentication(); override;
-
-        function StartRegistration(): boolean; override;
-        procedure CancelRegistration(); override;
-
     end;
 
     // ------------------------------------------------------------------------
@@ -126,13 +102,7 @@ end;
 {---------------------------------------}
 constructor TKerbAuth.Create(session: TJabberSession);
 begin
-    _session := session;
-    _decoder := TIdDecoderMime.Create(nil);
-    _encoder := TIdEncoderMime.Create(nil);
-    _ccb := -1;
-    _fail := -1;
-    _resp := -1;
-    _succ := -1;
+    inherited Create('GSSAPI', session);
     _state := kerb_auth;
     _kerb := TSSPIKerbClient.Create();
 end;
@@ -140,89 +110,36 @@ end;
 {---------------------------------------}
 destructor TKerbAuth.Destroy;
 begin
-    FreeAndNil(_decoder);
-    FreeAndNil(_encoder);
     FreeAndNil(_kerb);
-
-  inherited;
+    inherited Destroy();
 end;
 
 {---------------------------------------}
-procedure TKerbAuth._error(tag: TXMLTag);
-begin
-    //_session.FireEvent('/session/error/auth', tag);
-    _session.setAuthenticated(false, nil, false);
-    CancelAuthentication();
-end;
-
-{---------------------------------------}
-procedure TKerbAuth.StartAuthentication;
+function TKerbAuth.getInitialResponse(mech: TXMLTag): Widestring;
 var
-    i: integer;
-    mechs: TXMLTagList;
-    m, f: TXMLTag;
-    cur_mech: Widestring;
-    init, tok: string;
+    realm: Widestring;
+    tok: string;
 begin
-    // make sure any old callbacks are cleared out
-    CancelAuthentication();
+    _server_spn := mech.getAttribute('kerb:principal');
 
-    if (not _session.isXMPP) then begin
-        // if we're not XMPP, bail
-        _error();
+    // initialize our creds
+    if (_session.Profile.WinLogin) then
+        _kerb.SetCredentials()
+    else begin
+        realm := _session.Profile.SASLRealm;
+        if (realm = '') then realm := _session.Server;        
+        _kerb.SetCredentials(realm, _session.Username, _session.Password);
+    end;
+
+
+    // send out the packet letting server know we want GSSAPI
+    if (not _kerb.Initial(_server_spn, tok)) then begin
+        error();
         exit;
     end;
 
-    f := _session.xmppFeatures;
-    mechs := f.QueryXPTags('/stream:features/mechanisms/mechanism');
-    if (mechs = nil) then begin
-        // if we have no mechs, bail
-        _error();
-        exit;
-    end;
-
-    // look for the GSSAPI mech
-    for i := 0 to mechs.Count - 1 do begin
-        cur_mech := mechs[i].Data;
-        if (cur_mech = 'GSSAPI') then begin
-            _server_spn := mechs[i].getAttribute('kerb:principal');
-            mechs.Free();
-
-            // Register for out Callbacks
-            _ccb := _session.RegisterCallback(Challenge, '/packet/challenge[@xmlns="' + XMLNS_XMPP_SASL + '"]');
-            _succ := _session.RegisterCallback(Success, '/packet/success[@xmlns="' + XMLNS_XMPP_SASL + '"]');
-            _fail := _session.RegisterCallback(Fail, '/packet/failure[@xmlns="' + XMLNS_XMPP_SASL + '"]');
-
-            // initialize our creds
-            if (_session.Profile.WinLogin) then
-                _kerb.SetCredentials()
-            else
-                _kerb.SetCredentials(_session.Server, _session.Username, _session.Password);
-
-            // send out the packet letting server know we want GSSAPI
-            if (not _kerb.Initial(_server_spn, tok)) then begin
-                _error();
-                exit;
-            end;
-
-            // encode the ticket
-            init := _encoder.Encode(tok);
-
-            // fire off our auth packet
-            m := TXMLTag.Create('auth');
-            m.setAttribute('xmlns', XMLNS_XMPP_SASL);
-            m.setAttribute('mechanism', 'GSSAPI');
-            m.AddCData(init);
-            _session.SendTag(m);
-            exit;
-        end;
-    end;
-
-    mechs.Free();
-
-    // if we get here, we didn't find GSSAPI, bail
-    _error();
-
+    // encode the ticket
+    Result := _encoder.Encode(tok);
 end;
 
 {---------------------------------------}
@@ -273,53 +190,11 @@ begin
                 _session.SendTag(resp);
             end
             else
-                _error(tag);
+                error(tag);
         end;
     except
-        on ESSPIException do _error(tag);
+        on ESSPIException do error(tag);
     end;
-end;
-
-{---------------------------------------}
-procedure TKerbAuth.Success(event: string; tag: TXMLTag);
-begin
-    CancelAuthentication();
-    _session.setAuthenticated(true, tag, true);
-end;
-
-{---------------------------------------}
-procedure TKerbAuth.Fail(event: string; tag: TXMLTag);
-begin
-    // Something bad happened during the SASL exchange
-    _error(tag);
-end;
-
-{---------------------------------------}
-function TKerbAuth.StartRegistration: boolean;
-begin
-    // we don't support registration
-    Result := false;
-end;
-
-{---------------------------------------}
-procedure TKerbAuth.CancelAuthentication;
-begin
-    if (_session <> nil) then begin
-        if (_ccb <> -1) then _session.UnRegisterCallback(_ccb);
-        if (_succ <> -1) then _session.UnRegisterCallback(_succ);
-        if (_fail <> -1) then _session.UnRegisterCallback(_fail);
-    end;
-
-    _ccb := -1;
-    _succ := -1;
-    _fail := -1;
-end;
-
-{---------------------------------------}
-procedure TKerbAuth.CancelRegistration;
-begin
-  inherited;
-    // NOOP
 end;
 
 {---------------------------------------}
@@ -455,7 +330,7 @@ end;
 
 
 initialization
-    RegisterJabberAuth('kerberos', KerbAuthFactory);
+    RegisterJabberAuth('GSSAPI', KerbAuthFactory);
 
 
 end.

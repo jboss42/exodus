@@ -87,6 +87,8 @@ type
     btnConnect: TTntButton;
     lblRename: TTntLabel;
     chkKerberos: TTntCheckBox;
+    TntLabel2: TTntLabel;
+    txtRealm: TTntEdit;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -298,6 +300,7 @@ begin
         cboJabberID.Text := Username + '@' + Server;
         cboResource.Text := Resource;
         txtPassword.Text := Password;
+        txtRealm.Text := SASLRealm;
         chkSavePasswd.Checked := SavePasswd;
         chkRegister.Checked := NewAccount;
         chkWinLogin.Checked := WinLogin;
@@ -308,25 +311,17 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.SaveProfile(profile: TJabberProfile);
 var
-    l1, l2: integer;
     j: TJabberID;
 begin
     with Profile do begin
         // Update the profile
         j := TJabberID.Create(cboJabberID.Text);
-        if (chkKerberos.Checked) then begin
-            l1 := Length(j.user);
-            l2 := Length(j.domain);
-            Server := Copy(cboJabberID.Text, l1 + 2, l2);
-            Username := j.user;
-        end
-        else begin
-            Server := j.domain;
-            Username := j.user;
-        end;
+        Server := j.domain;
+        Username := j.user;
         SavePasswd := chkSavePasswd.Checked;
         password := txtPassword.Text;
         resource := cboResource.Text;
+        SASLRealm := txtRealm.Text;
         NewAccount := chkRegister.Checked;
         WinLogin := chkWinLogin.Checked;
         KerbAuth := chkKerberos.Checked;
@@ -539,10 +534,8 @@ begin
         jid := TJabberID.Create(cboJabberID.Text);
         if (not jid.isValid) then
             MessageDlgW(_('The Jabber ID you entered is not allowed.'), mtError, [mbOK], 0)
-        else begin
-            if (not chkKerberos.Checked) then
-                cboJabberID.Text := jid.jid;
-        end;
+        else
+            cboJabberID.Text := jid.jid;
         jid.Free();
     end
     else if (Sender = cboResource) then begin
