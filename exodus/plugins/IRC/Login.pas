@@ -3,7 +3,7 @@ unit Login;
 interface
 
 uses
-    ExodusCOM_TLB,
+    Exodus_TLB,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, buttonFrame;
 

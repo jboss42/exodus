@@ -23,7 +23,7 @@ my $rcc = "\"$::D/Bin/brcc32.exe\"";
 my $jclopts = "-I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\"";
 my $opts = "-LUvcl -LUrtl -B -Q -U\"$DD\\Lib\" $jclopts";
 my $comp = "..\\..\\Components";
-my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
+my $plugopts = "$opts -U\"..\\..\" -U.. -U\"..\\..\\..\\jopl\" -U\"$comp\" -U\"$::TNT\"";
 my $installer = "1";
 
 if ($#ARGV >= 0) {
@@ -140,8 +140,8 @@ sub plug {
   unless ($dpr) { chdir ".."; return };
   unless (-e("plugin-info.nsh")) { chdir ".."; return };
 
-  grep unlink, glob("ExodusCOM_TLB.*");
-  e("copy ..\\..\\ExodusCOM_TLB.pas");
+#  grep unlink, glob("ExodusCOM_TLB.*");
+#  e("copy ..\\..\\ExodusCOM_TLB.pas");
 
   my $thisopts = $plugopts;
   if ($p =~ /ICQ/) { $thisopts .= " -U$::ICQ"; }

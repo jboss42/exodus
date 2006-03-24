@@ -3,7 +3,7 @@ unit IRCSession;
 interface
 
 uses
-    ExodusCOM_TLB, RoomPlugin,
+    Exodus_TLB, RoomPlugin,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, IdBaseComponent, IdComponent,
     IdTCPConnection, IdTCPClient, IdIRC, IdAntiFreezeBase, IdAntiFreeze;

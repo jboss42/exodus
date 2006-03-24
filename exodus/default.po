@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-03-01 16:40\n"
-"PO-Revision-Date: 2006-03-01 16:40\n"
+"POT-Creation-Date: 2006-03-24 10:29\n"
+"PO-Revision-Date: 2006-03-24 10:29\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,7 +167,7 @@ msgstr ""
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1437
 #: About.pas:81
-#: ExEvents.pas:309
+#: ExEvents.pas:307
 msgid "Version: "
 msgstr ""
 
@@ -490,7 +490,7 @@ msgstr ""
 #. frameButtons..Panel2..Panel1..btnOK..Caption
 #: buttonFrame.dfm:37
 #. frmConnDetails..Panel2..Panel1..btnOK..Caption
-#: ConnDetails.dfm:464
+#: ConnDetails.dfm:492
 #. frmEmoteProps..btnOK..Caption
 #: EmoteProps.dfm:62
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
@@ -512,7 +512,7 @@ msgstr ""
 #. frameButtons..Panel2..Panel1..btnCancel..Caption
 #: buttonFrame.dfm:48
 #. frmConnDetails..Panel2..Panel1..btnCancel..Caption
-#: ConnDetails.dfm:476
+#: ConnDetails.dfm:504
 #. frmDockWizard..TntPanel1..btnCancel..Caption
 #: DockWizard.dfm:56
 #. frmEmoteProps..btnCancel..Caption
@@ -607,41 +607,41 @@ msgstr ""
 #. frmBrowse..popContext..N1..Caption
 #: Browser.dfm:4203
 #. frmChat..popContact..N5..Caption
-#: ChatWin.dfm:109
+#: ChatWin.dfm:113
 #. frmChat..popContact..N4..Caption
-#: ChatWin.dfm:116
+#: ChatWin.dfm:120
 #. frmChat..popContact..N1..Caption
-#: ChatWin.dfm:150
+#: ChatWin.dfm:154
 #. frmDebug..PopupMenu1..N1..Caption
 #: Debug.dfm:304
 #. frmExodus..MainMenu1..Exodus1..N7..Caption
-#: Jabber1.dfm:213
+#: Jabber1.dfm:211
 #. frmExodus..MainMenu1..Exodus1..N14..Caption
-#: Jabber1.dfm:251
+#: Jabber1.dfm:249
 #. frmExodus..MainMenu1..Exodus1..N9..Caption
-#: Jabber1.dfm:273
+#: Jabber1.dfm:271
 #. frmExodus..MainMenu1..Tools1..mnuContacts..N10..Caption
-#: Jabber1.dfm:310
+#: Jabber1.dfm:308
 #. frmExodus..MainMenu1..Tools1..mnuContacts..N8..Caption
-#: Jabber1.dfm:327
+#: Jabber1.dfm:325
 #. frmExodus..MainMenu1..Tools1..mnuPresence..N11..Caption
-#: Jabber1.dfm:367
+#: Jabber1.dfm:365
 #. frmExodus..MainMenu1..Tools1..N2..Caption
-#: Jabber1.dfm:383
+#: Jabber1.dfm:381
 #. frmExodus..MainMenu1..Tools1..N3..Caption
-#: Jabber1.dfm:398
+#: Jabber1.dfm:396
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..N15..Caption
-#: Jabber1.dfm:435
+#: Jabber1.dfm:433
 #. frmExodus..MainMenu1..Tools1..N1..Caption
-#: Jabber1.dfm:439
+#: Jabber1.dfm:437
 #. frmExodus..MainMenu1..Help1..N12..Caption
-#: Jabber1.dfm:450
+#: Jabber1.dfm:448
 #. frmExodus..popTray..trayPresence..N5..Caption
-#: Jabber1.dfm:2552
+#: Jabber1.dfm:2439
 #. frmExodus..popTray..N4..Caption
-#: Jabber1.dfm:2566
+#: Jabber1.dfm:2453
 #. frmExodus..popTray..N01..Caption
-#: Jabber1.dfm:2573
+#: Jabber1.dfm:2460
 #. frmJud..PopupMenu1..N1..Caption
 #: jud.dfm:228
 #. frmMsgRecv..popContact..N1..Caption
@@ -649,35 +649,35 @@ msgstr ""
 #. frmMsgRecv..popContact..N2..Caption
 #: MsgRecv.dfm:530
 #. frmRoom..popRoom..N8..Caption
-#: Room.dfm:167
+#: Room.dfm:171
 #. frmRoom..popRoom..popAdmin..N4..Caption
-#: Room.dfm:221
+#: Room.dfm:225
 #. frmRoom..popRoom..popAdmin..N5..Caption
-#: Room.dfm:232
+#: Room.dfm:236
 #. frmRoom..popRoom..N1..Caption
-#: Room.dfm:244
+#: Room.dfm:248
 #. frmRoom..popRoom..N6..Caption
-#: Room.dfm:263
+#: Room.dfm:267
 #. frmRoom..popRoomRoster..N7..Caption
-#: Room.dfm:288
+#: Room.dfm:292
 #. frmRoom..popRoomRoster..N3..Caption
-#: Room.dfm:306
+#: Room.dfm:310
 #. frmRosterWindow..popRoster..popPresence..N2..Caption
-#: RosterWindow.dfm:400
-#. frmRosterWindow..popRoster..N1..Caption
 #: RosterWindow.dfm:413
+#. frmRosterWindow..popRoster..N1..Caption
+#: RosterWindow.dfm:426
 #. frmRosterWindow..popRoster..N7..Caption
-#: RosterWindow.dfm:430
+#: RosterWindow.dfm:443
 #. frmRosterWindow..popStatus..N8..Caption
-#: RosterWindow.dfm:469
+#: RosterWindow.dfm:482
 #. frmRosterWindow..popGroup..N3..Caption
-#: RosterWindow.dfm:635
+#: RosterWindow.dfm:648
 #. frmRosterWindow..popGroup..N4..Caption
-#: RosterWindow.dfm:650
+#: RosterWindow.dfm:663
 #. frmRosterWindow..popBookmark..N5..Caption
-#: RosterWindow.dfm:666
+#: RosterWindow.dfm:679
 #. frmRosterWindow..popTransport..N6..Caption
-#: RosterWindow.dfm:691
+#: RosterWindow.dfm:704
 msgid "-"
 msgstr ""
 
@@ -710,7 +710,7 @@ msgstr ""
 #. frmCommandWizard..Tabs..TabSheet1..TntLabel2..Caption
 #: CommandWizard.dfm:65
 #. frmConnDetails..PageControl1..tbsProfile..lblUsername..Caption
-#: ConnDetails.dfm:37
+#: ConnDetails.dfm:39
 #. frmSelContact..Panel1..Label1..Caption
 #: SelContact.dfm:71
 msgid "Jabber ID:"
@@ -736,7 +736,7 @@ msgstr ""
 #. frmBrowse..Caption
 #: Browser.dfm:6
 #. frmExodus..Toolbar..ToolBar1..btnBrowser..Hint
-#: Jabber1.dfm:177
+#: Jabber1.dfm:175
 msgid "Jabber Browser"
 msgstr ""
 
@@ -873,7 +873,7 @@ msgstr ""
 #: Profile.dfm:408
 #. frmVCard..PageControl1..TabSheet4..Caption
 #: vcard.dfm:245
-#: ConnDetails.pas:413
+#: ConnDetails.pas:420
 msgid "Home"
 msgstr ""
 
@@ -976,7 +976,7 @@ msgstr ""
 #. frmBrowse..popContext..mBrowse..Caption
 #: Browser.dfm:4187
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
-#: ConnDetails.dfm:239
+#: ConnDetails.dfm:265
 #. frmEmoteProps..btnBrowse..Caption
 #: EmoteProps.dfm:46
 #. frmVCard..PageControl1..TabSheet1..btnPicBrowse..Caption
@@ -1011,7 +1011,7 @@ msgstr ""
 #. frmBrowse..popContext..mVCard..Caption
 #: Browser.dfm:4206
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
-#: Jabber1.dfm:424
+#: Jabber1.dfm:422
 msgid "vCard"
 msgstr ""
 
@@ -1086,12 +1086,19 @@ msgstr ""
 #. frmMsgRecv..popContact..popClearHistory..Caption
 #: MsgRecv.dfm:490
 #. frmRoom..popRoom..popClearHistory..Caption
-#: Room.dfm:178
+#: Room.dfm:182
 msgid "Clear History"
 msgstr ""
 
+#. frmChat..popContact..PrintHistory1..Caption
+#: ChatWin.dfm:109
+#. frmRoom..popRoom..Print1..Caption
+#: Room.dfm:167
+msgid "Print ..."
+msgstr ""
+
 #. frmChat..popContact..popResources..Caption
-#: ChatWin.dfm:113
+#: ChatWin.dfm:117
 #. frmMsgRecv..popContact..mnuResources..Caption
 #: MsgRecv.dfm:525
 #. frmProfile..PageControl1..TabSheet7..Caption
@@ -1101,95 +1108,95 @@ msgid "Resources"
 msgstr ""
 
 #. frmChat..popContact..mnuSendFile..Caption
-#: ChatWin.dfm:119
+#: ChatWin.dfm:123
 msgid "Send File ..."
 msgstr ""
 
 #. frmChat..popContact..popAddContact..Caption
-#: ChatWin.dfm:123
+#: ChatWin.dfm:127
 msgid "Add to roster ..."
 msgstr ""
 
 #. frmChat..popContact..mnuProfile..Caption
-#: ChatWin.dfm:127
+#: ChatWin.dfm:131
 msgid "Show Profile ..."
 msgstr ""
 
 #. frmChat..popContact..C1..Caption
-#: ChatWin.dfm:131
+#: ChatWin.dfm:135
 msgid "Contact Info"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuVersionRequest..Caption
-#: ChatWin.dfm:133
+#: ChatWin.dfm:137
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
 #: MsgRecv.dfm:500
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
-#: RosterWindow.dfm:377
+#: RosterWindow.dfm:390
 msgid "Version Request"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
-#: ChatWin.dfm:137
+#: ChatWin.dfm:141
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
 #: MsgRecv.dfm:504
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
-#: RosterWindow.dfm:381
+#: RosterWindow.dfm:394
 msgid "Time Request"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuLastActivity..Caption
-#: ChatWin.dfm:141
+#: ChatWin.dfm:145
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
 #: MsgRecv.dfm:508
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #: Profile.dfm:223
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
-#: RosterWindow.dfm:385
-#: ExEvents.pas:539
+#: RosterWindow.dfm:398
+#: ExEvents.pas:537
 msgid "Last Activity"
 msgstr ""
 
 #. frmChat..popContact..mnuBlock..Caption
-#: ChatWin.dfm:146
+#: ChatWin.dfm:150
 #. frmMsgRecv..popContact..mnuBlock..Caption
 #: MsgRecv.dfm:513
 msgid "Block Contact"
 msgstr ""
 
 #. frmChat..popContact..NotificationOptions1..Caption
-#: ChatWin.dfm:153
+#: ChatWin.dfm:157
 #. frmRoom..popRoom..NotificationOptions1..Caption
-#: Room.dfm:247
+#: Room.dfm:251
 msgid "Notification Options ..."
 msgstr ""
 
 #. frmChat..popContact..mnuOnTop..Caption
-#: ChatWin.dfm:157
+#: ChatWin.dfm:161
 #. frmRoom..popRoom..mnuOnTop..Caption
-#: Room.dfm:255
+#: Room.dfm:259
 msgid "Always on Top"
 msgstr ""
 
 #. frmChat..popContact..mnuReturns..Caption
-#: ChatWin.dfm:161
+#: ChatWin.dfm:165
 msgid "Embed Returns"
 msgstr ""
 
 #. frmChat..popContact..mnuWordwrap..Caption
-#: ChatWin.dfm:165
+#: ChatWin.dfm:169
 #. frmRoom..popRoom..mnuWordwrap..Caption
-#: Room.dfm:251
+#: Room.dfm:255
 msgid "Word Wrap Input"
 msgstr ""
 
 #. frmChat..SaveDialog1..DefaultExt
-#: ChatWin.dfm:170
+#: ChatWin.dfm:174
 msgid "html"
 msgstr ""
 
 #. frmChat..SaveDialog1..Filter
-#: ChatWin.dfm:171
+#: ChatWin.dfm:175
 msgid "RTF Files|*.rtf|All Files|*.*"
 msgstr ""
 
@@ -1262,7 +1269,7 @@ msgid "Please wait..."
 msgstr ""
 
 #. frmConnDetails..Caption
-#: ConnDetails.dfm:7
+#: ConnDetails.dfm:5
 msgid "Connection Details"
 msgstr ""
 
@@ -1272,9 +1279,9 @@ msgid "Account Details"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
-#: ConnDetails.dfm:45
+#: ConnDetails.dfm:47
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
-#: ConnDetails.dfm:299
+#: ConnDetails.dfm:325
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
 #: JoinRoom.dfm:61
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
@@ -1285,64 +1292,69 @@ msgid "Password:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
-#: ConnDetails.dfm:53
+#: ConnDetails.dfm:55
 msgid "Resource:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..lblServerList..Caption
-#: ConnDetails.dfm:62
+#: ConnDetails.dfm:64
 msgid "Download a list of public servers"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label13..Caption
-#: ConnDetails.dfm:71
+#: ConnDetails.dfm:73
 msgid "Enter desired Jabber ID for new accounts."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label6..Caption
-#: ConnDetails.dfm:79
+#: ConnDetails.dfm:81
 #. frmPrefPresence..GroupBox1..Label14..Caption
 #: prefs/PrefPresence.dfm:174
 msgid "Priority:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..lblRename..Caption
-#: ConnDetails.dfm:88
+#: ConnDetails.dfm:90
 msgid "Rename this profile"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.WideStrings
-#: ConnDetails.dfm:101
+#. frmConnDetails..PageControl1..tbsProfile..TntLabel2..Caption
+#: ConnDetails.dfm:98
+msgid "SASL Realm:"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.Strings
+#: ConnDetails.dfm:111
 #. frmNewUser..Tabs..TabSheet1..cboServer..Text
 #: NewUser.dfm:54
 msgid "jabber.org"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.WideStrings
-#: ConnDetails.dfm:102
+#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.Strings
+#: ConnDetails.dfm:112
 msgid "jabber.com"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
-#: ConnDetails.dfm:109
+#: ConnDetails.dfm:119
 msgid "Save pass&word"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
-#: ConnDetails.dfm:117
+#: ConnDetails.dfm:127
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
-#: ConnDetails.dfm:343
-#. frmInputPass..txtPassword..PasswordChar
+#: ConnDetails.dfm:369
+#. frmInputPass..txtPassword..PasswordCharW
 #: InputPassword.dfm:59
-#. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
+#. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordCharW
 #: JoinRoom.dfm:108
-#. frmNewUser..Tabs..tbsUser..txtPassword..PasswordChar
+#. frmNewUser..Tabs..tbsUser..txtPassword..PasswordCharW
 #: NewUser.dfm:107
-#. frmPassword..txtOldPassword..PasswordChar
+#. frmPassword..txtOldPassword..PasswordCharW
 #: Password.dfm:43
-#. frmPassword..txtNewPassword..PasswordChar
+#. frmPassword..txtNewPassword..PasswordCharW
 #: Password.dfm:71
-#. frmPassword..txtConfirmPassword..PasswordChar
+#. frmPassword..txtConfirmPassword..PasswordCharW
 #: Password.dfm:79
 #. frmPrefNetwork..GroupBox2..txtProxyPassword..PasswordChar
 #: prefs/PrefNetwork.dfm:171
@@ -1352,38 +1364,43 @@ msgid "*"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..chkRegister..Caption
-#: ConnDetails.dfm:135
+#: ConnDetails.dfm:145
 msgid "This is a new account"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..chkWinLogin..Caption
-#: ConnDetails.dfm:161
+#: ConnDetails.dfm:171
 msgid "Use Windows login information"
 msgstr ""
 
+#. frmConnDetails..PageControl1..tbsProfile..chkKerberos..Caption
+#: ConnDetails.dfm:180
+msgid "Use Kerberos"
+msgstr ""
+
 #. frmConnDetails..PageControl1..tbsConn..Caption
-#: ConnDetails.dfm:167
+#: ConnDetails.dfm:193
 msgid "Connection"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
-#: ConnDetails.dfm:174
+#: ConnDetails.dfm:200
 msgid "Automatically discover host and port"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
-#: ConnDetails.dfm:189
+#: ConnDetails.dfm:215
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
-#: ConnDetails.dfm:264
+#: ConnDetails.dfm:290
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
 #: prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label7..Caption
-#: ConnDetails.dfm:197
+#: ConnDetails.dfm:223
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
-#: ConnDetails.dfm:273
+#: ConnDetails.dfm:299
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
 #: prefs/PrefNetwork.dfm:101
 #. frmPrefTransfer..grpWebDav..lblDavPort..Caption
@@ -1392,49 +1409,49 @@ msgid "Port:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..Caption
-#: ConnDetails.dfm:218
+#: ConnDetails.dfm:244
 msgid "Encryption"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..TntLabel1..Caption
-#: ConnDetails.dfm:224
+#: ConnDetails.dfm:250
 msgid "SSL Certificate:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL..Caption
-#: ConnDetails.dfm:248
+#: ConnDetails.dfm:274
 msgid "SSL Modes"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:250
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:276
 msgid "Encrypt the connection whenever possible."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:251
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:277
 msgid "All connections must be encrypted."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:252
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:278
 msgid "Use old SSL port method."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..Caption
-#: ConnDetails.dfm:257
+#: ConnDetails.dfm:283
 msgid "Proxy"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
-#: ConnDetails.dfm:282
+#: ConnDetails.dfm:308
 #. frmPrefPresence..GroupBox1..Label13..Caption
 #: prefs/PrefPresence.dfm:166
 msgid "Type:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
-#: ConnDetails.dfm:290
+#: ConnDetails.dfm:316
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
 #: prefs/PrefNetwork.dfm:110
 #. frmPrefTransfer..grpWebDav..lblDavUsername..Caption
@@ -1443,67 +1460,67 @@ msgid "Username:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
-#: ConnDetails.dfm:308
+#: ConnDetails.dfm:334
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
 #: prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:355
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:381
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
 #: Profile.dfm:171
 msgid "None"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:356
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:382
 msgid "Version 4"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:357
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:383
 msgid "Version 4a"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:358
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:384
 msgid "Version 5"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:359
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:385
 msgid "HTTP"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Caption
-#: ConnDetails.dfm:364
+#: ConnDetails.dfm:390
 msgid "HTTP Polling"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
-#: ConnDetails.dfm:371
+#: ConnDetails.dfm:397
 msgid "URL:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
-#: ConnDetails.dfm:379
+#: ConnDetails.dfm:405
 msgid "Poll Time:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
-#: ConnDetails.dfm:387
-#: ExUtils.pas:436
+#: ConnDetails.dfm:413
+#: ExUtils.pas:456
 msgid "seconds"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
-#: ConnDetails.dfm:394
+#: ConnDetails.dfm:420
 msgid "# of Keys:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
-#: ConnDetails.dfm:408
+#: ConnDetails.dfm:434
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling "
 "proxy. You can not use some \"standard\" HTTP proxy for this to work. "
 "Contact your server administrator for additional "
@@ -1511,22 +1528,22 @@ msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling "
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..chkPolling..Caption
-#: ConnDetails.dfm:437
+#: ConnDetails.dfm:464
 msgid "Use HTTP Polling"
 msgstr ""
 
 #. frmConnDetails..Panel2..Panel1..btnConnect..Caption
-#: ConnDetails.dfm:486
+#: ConnDetails.dfm:514
 msgid "Connect"
 msgstr ""
 
 #. frmConnDetails..OpenDialog1..DefaultExt
-#: ConnDetails.dfm:494
+#: ConnDetails.dfm:522
 msgid "pem"
 msgstr ""
 
 #. frmConnDetails..OpenDialog1..Filter
-#: ConnDetails.dfm:495
+#: ConnDetails.dfm:523
 msgid "SSL Key Files|*.pem|All Files|*.*"
 msgstr ""
 
@@ -1593,27 +1610,27 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:77
 #. frmRoom..popRoomRoster..popRosterChat..Caption
-#: Room.dfm:276
+#: Room.dfm:280
 msgid "Chat"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:78
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
-#: Jabber1.dfm:337
+#: Jabber1.dfm:335
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
-#: Jabber1.dfm:2522
+#: Jabber1.dfm:2409
 #. frmRosterWindow..popStatus..presOnline..Caption
-#: RosterWindow.dfm:439
+#: RosterWindow.dfm:452
 #. init the cmd line stuff
 #: ExSession.pas:196
-#: Jabber1.pas:3050
-#: RosterWindow.pas:394
-#: RosterWindow.pas:420
-#: RosterWindow.pas:1578
+#: Jabber1.pas:3090
+#: RosterWindow.pas:399
+#: RosterWindow.pas:425
+#: RosterWindow.pas:1567
 #. reset status to online;
-#: RosterWindow.pas:1622
-#: /src/exodus/jopl/PrefController.pas:1257
+#: RosterWindow.pas:1611
+#: /src/exodus/jopl/PrefController.pas:1259
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1624,16 +1641,16 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:79
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
-#: Jabber1.dfm:349
+#: Jabber1.dfm:347
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
-#: Jabber1.dfm:2534
+#: Jabber1.dfm:2421
 #. frmRosterWindow..popStatus..presAway..Caption
-#: RosterWindow.dfm:451
-#: Jabber1.pas:3048
-#: RosterWindow.pas:396
-#: RosterWindow.pas:422
-#: RosterWindow.pas:1562
-#: /src/exodus/jopl/PrefController.pas:1275
+#: RosterWindow.dfm:464
+#: Jabber1.pas:3088
+#: RosterWindow.pas:401
+#: RosterWindow.pas:427
+#: RosterWindow.pas:1551
+#: /src/exodus/jopl/PrefController.pas:1277
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1643,7 +1660,7 @@ msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:80
-#: RosterWindow.pas:423
+#: RosterWindow.pas:428
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:68
 msgid "Ext. Away"
@@ -1652,14 +1669,14 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:81
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
-#: Jabber1.dfm:361
+#: Jabber1.dfm:359
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
-#: Jabber1.dfm:2546
+#: Jabber1.dfm:2433
 #. frmRosterWindow..popStatus..presDND..Caption
-#: RosterWindow.dfm:463
-#: RosterWindow.pas:398
-#: RosterWindow.pas:424
-#: RosterWindow.pas:1570
+#: RosterWindow.dfm:476
+#: RosterWindow.pas:403
+#: RosterWindow.pas:429
+#: RosterWindow.pas:1559
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:67
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1721,7 +1738,7 @@ msgstr ""
 #. frmDebug..PopupMenu1..Find1..Caption
 #: Debug.dfm:293
 #. frmExodus..Toolbar..ToolBar1..btnFind..Caption
-#: Jabber1.dfm:170
+#: Jabber1.dfm:168
 msgid "Find"
 msgstr ""
 
@@ -1735,7 +1752,7 @@ msgstr ""
 #. frmMsgRecv..Caption
 #: MsgRecv.dfm:6
 #. frmRoom..popRoomRoster..popRosterMsg..Caption
-#: Room.dfm:272
+#: Room.dfm:276
 msgid "Message"
 msgstr ""
 
@@ -1752,11 +1769,11 @@ msgstr ""
 #. frmDebug..PopupMenu1..popPres..Caption
 #: Debug.dfm:319
 #. frmExodus..popTray..trayPresence..Caption
-#: Jabber1.dfm:2519
+#: Jabber1.dfm:2406
 #. frmPrefs..Scroller..lblCustomPres..Caption
 #: Prefs.dfm:1932
 #. frmRosterWindow..popRoster..popPresence..Caption
-#: RosterWindow.dfm:390
+#: RosterWindow.dfm:403
 msgid "Presence"
 msgstr ""
 
@@ -1917,7 +1934,7 @@ msgstr ""
 #. frameObjectActions..pConf..lblConf..Caption
 #: fService.dfm:82
 #. frmExodus..Toolbar..ToolBar1..btnRoom..Hint
-#: Jabber1.dfm:157
+#: Jabber1.dfm:155
 msgid "Join a conference"
 msgstr ""
 
@@ -1977,7 +1994,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:1018
+#: Jabber1.pas:1015
 msgid "Exodus Password"
 msgstr ""
 
@@ -1998,13 +2015,13 @@ msgstr ""
 #. frmRoomAdminList..Panel2..btnRemove..Caption
 #: RoomAdminList.dfm:85
 #. frmRosterWindow..popRoster..popRemove..Caption
-#: RosterWindow.dfm:420
+#: RosterWindow.dfm:433
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
-#: RosterWindow.dfm:646
+#: RosterWindow.dfm:659
 #. frmRosterWindow..popBookmark..Delete1..Caption
-#: RosterWindow.dfm:669
+#: RosterWindow.dfm:682
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
-#: RosterWindow.dfm:702
+#: RosterWindow.dfm:715
 #: /src/exodus/jopl/Bookmarks.pas:91
 #. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteRemove..Caption
 #: prefs/PrefEmote.dfm:64
@@ -2040,16 +2057,16 @@ msgstr ""
 #. frmInvite..Caption
 #: invite.dfm:5
 #. frmRosterWindow..popRoster..popInvite..Caption
-#: RosterWindow.dfm:367
+#: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGrpInvite..Caption
-#: RosterWindow.dfm:619
+#: RosterWindow.dfm:632
 msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
 #: invite.dfm:111
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
-#: Jabber1.dfm:150
+#: Jabber1.dfm:148
 #. frmRoomAdminList..Panel2..TntButton1..Caption
 #: RoomAdminList.dfm:94
 #. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteAdd..Caption
@@ -2077,14 +2094,14 @@ msgid "Please join us in this conference room."
 msgstr ""
 
 #. frmExodus..Caption
-#: Jabber1.dfm:7
-#: ConnDetails.pas:415
+#: Jabber1.dfm:5
+#: ConnDetails.pas:422
 #. do this.
-#: ExSession.pas:505
-#: Jabber1.pas:1349
-#: RosterWindow.pas:584
-#: RosterWindow.pas:2817
-#: RosterWindow.pas:3232
+#: ExSession.pas:504
+#: Jabber1.pas:1346
+#: RosterWindow.pas:552
+#: RosterWindow.pas:2746
+#: RosterWindow.pas:3164
 #: /src/exodus/jopl/JabberUtils.pas:212
 msgid "Exodus"
 msgstr ""
@@ -2100,309 +2117,309 @@ msgid "THIS IS PNLRIGHT"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnOnlineRoster..Hint
-#: Jabber1.dfm:137
+#: Jabber1.dfm:135
 msgid "View Online/All"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnOnlineRoster..Caption
-#: Jabber1.dfm:140
+#: Jabber1.dfm:138
 msgid "View"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
-#: Jabber1.dfm:147
+#: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
 #: jud.dfm:220
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
-#: RosterWindow.dfm:595
+#: RosterWindow.dfm:608
 msgid "Add Contact"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnRoom..Caption
-#: Jabber1.dfm:160
+#: Jabber1.dfm:158
 msgid "Rooms"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnFind..Hint
-#: Jabber1.dfm:167
+#: Jabber1.dfm:165
 msgid "Search for Contacts"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..Caption
-#: Jabber1.dfm:201
+#: Jabber1.dfm:199
 msgid "&Exodus"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..Test1..Caption
-#: Jabber1.dfm:203
+#: Jabber1.dfm:201
 msgid "Test"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuDisconnect..Caption
-#: Jabber1.dfm:208
+#: Jabber1.dfm:206
 msgid "Sign &Off"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..Caption
-#: Jabber1.dfm:216
+#: Jabber1.dfm:214
 msgid "&View"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuOnline..Caption
-#: Jabber1.dfm:218
+#: Jabber1.dfm:216
 msgid "Show &Only Online"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuToolbar..Caption
-#: Jabber1.dfm:223
+#: Jabber1.dfm:221
 msgid "Show Toolbar"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuStatBar..Caption
-#: Jabber1.dfm:227
+#: Jabber1.dfm:225
 msgid "Show Status Bar"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuExpanded..Caption
-#: Jabber1.dfm:231
+#: Jabber1.dfm:229
 msgid "Dock Windows"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
-#: Jabber1.dfm:236
+#: Jabber1.dfm:234
 msgid "Instant Messages"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..ShowXML1..Caption
-#: Jabber1.dfm:240
+#: Jabber1.dfm:238
 msgid "Show Debug XML"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
-#: Jabber1.dfm:246
+#: Jabber1.dfm:244
 msgid "Clear &Instant Messages"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
-#: Jabber1.dfm:254
+#: Jabber1.dfm:252
 msgid "Send Instant &Message"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuChat..Caption
-#: Jabber1.dfm:259
+#: Jabber1.dfm:257
 msgid "Start &Chat"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuConference..Caption
-#: Jabber1.dfm:264
+#: Jabber1.dfm:262
 msgid "&Join a Chat Room"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuRegisterService..Caption
-#: Jabber1.dfm:269
+#: Jabber1.dfm:267
 msgid "&Register with a Service"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..Exit2..Caption
-#: Jabber1.dfm:276
+#: Jabber1.dfm:274
 msgid "E&xit"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..Caption
-#: Jabber1.dfm:282
+#: Jabber1.dfm:280
 msgid "&Tools"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Caption
-#: Jabber1.dfm:284
+#: Jabber1.dfm:282
 msgid "&Contacts"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..AddPerson1..Caption
-#: Jabber1.dfm:286
+#: Jabber1.dfm:284
 msgid "&Add Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuSearch..Caption
-#: Jabber1.dfm:291
+#: Jabber1.dfm:289
 msgid "&Search for a Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..RemovePerson1..Caption
-#: Jabber1.dfm:296
+#: Jabber1.dfm:294
 msgid "&Remove a Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..MessageHistory2..Caption
-#: Jabber1.dfm:300
+#: Jabber1.dfm:298
 msgid "Contact's Message &History"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Properties2..Caption
-#: Jabber1.dfm:305
+#: Jabber1.dfm:303
 msgid "Contact &Properties"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFind..Caption
-#: Jabber1.dfm:313
+#: Jabber1.dfm:311
 msgid "&Find Contact in Roster"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
-#: Jabber1.dfm:318
+#: Jabber1.dfm:316
 msgid "Fin&d Contact Again"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..NewGroup2..Caption
-#: Jabber1.dfm:323
+#: Jabber1.dfm:321
 msgid "Add Roster &Group"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..SubscribetoPresence2..Caption
-#: Jabber1.dfm:330
+#: Jabber1.dfm:328
 msgid "Su&bscribe to Presence"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Caption
-#: Jabber1.dfm:335
+#: Jabber1.dfm:333
 msgid "&Presence"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presChat..Caption
-#: Jabber1.dfm:343
+#: Jabber1.dfm:341
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
-#: Jabber1.dfm:2528
+#: Jabber1.dfm:2415
 #. frmRosterWindow..popStatus..presChat..Caption
-#: RosterWindow.dfm:445
-#: RosterWindow.pas:395
-#: RosterWindow.pas:421
+#: RosterWindow.dfm:458
+#: RosterWindow.pas:400
+#: RosterWindow.pas:426
 #. display this show type
-#: RosterWindow.pas:1558
+#: RosterWindow.pas:1547
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:211
 msgid "Free to Chat"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Caption
-#: Jabber1.dfm:355
+#: Jabber1.dfm:353
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
-#: Jabber1.dfm:2540
+#: Jabber1.dfm:2427
 #. frmRosterWindow..popStatus..presXA..Caption
-#: RosterWindow.dfm:457
-#: RosterWindow.pas:397
-#: RosterWindow.pas:1566
+#: RosterWindow.dfm:470
+#: RosterWindow.pas:402
+#: RosterWindow.pas:1555
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:214
 msgid "Xtended Away"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Custom3..Caption
-#: Jabber1.dfm:371
+#: Jabber1.dfm:369
 msgid "Custom"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presToggle..Caption
-#: Jabber1.dfm:377
+#: Jabber1.dfm:375
 msgid "Toggle"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuRegistration..Caption
-#: Jabber1.dfm:386
+#: Jabber1.dfm:384
 msgid "Edit My &Registration"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuMyVCard..Caption
-#: Jabber1.dfm:390
+#: Jabber1.dfm:388
 msgid "Edit My Profile, Avatar"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPassword..Caption
-#: Jabber1.dfm:394
+#: Jabber1.dfm:392
 msgid "Change My &Password"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuVCard..Caption
-#: Jabber1.dfm:401
+#: Jabber1.dfm:399
 msgid "&Lookup a vCard"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuBookmark..Caption
-#: Jabber1.dfm:405
+#: Jabber1.dfm:403
 msgid "Add a Boo&kmark"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuBrowser..Caption
-#: Jabber1.dfm:409
+#: Jabber1.dfm:407
 msgid "Jabber &Browser"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..Caption
-#: Jabber1.dfm:414
+#: Jabber1.dfm:412
 msgid "Server Info"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuVersion..Caption
-#: Jabber1.dfm:416
+#: Jabber1.dfm:414
 msgid "Version "
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
-#: Jabber1.dfm:420
+#: Jabber1.dfm:418
 #: ExResponders.pas:418
 msgid "Time"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..Caption
-#: Jabber1.dfm:429
+#: Jabber1.dfm:427
 msgid "Plu&gins"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..mnuPluginOpts..Caption
-#: Jabber1.dfm:431
+#: Jabber1.dfm:429
 msgid "Options ..."
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..Preferences1..Caption
-#: Jabber1.dfm:442
+#: Jabber1.dfm:440
 msgid "&Options..."
 msgstr ""
 
 #. frmExodus..MainMenu1..Help1..Caption
-#: Jabber1.dfm:448
+#: Jabber1.dfm:446
 msgid "&Help"
 msgstr ""
 
 #. frmExodus..MainMenu1..Help1..About1..Caption
-#: Jabber1.dfm:453
+#: Jabber1.dfm:451
 msgid "About"
 msgstr ""
 
 #. frmExodus..popTabs..popCloseTab..Caption
-#: Jabber1.dfm:2500
+#: Jabber1.dfm:2387
 msgid "Close Window"
 msgstr ""
 
 #. frmExodus..popTabs..popFloatTab..Caption
-#: Jabber1.dfm:2505
+#: Jabber1.dfm:2392
 msgid "Float Window"
 msgstr ""
 
 #. frmExodus..popTray..trayShow..Caption
-#: Jabber1.dfm:2515
+#: Jabber1.dfm:2402
 msgid "Show Exodus"
 msgstr ""
 
 #. frmExodus..popTray..trayPresence..Custom2..Caption
-#: Jabber1.dfm:2556
+#: Jabber1.dfm:2443
 #. frmRosterWindow..popStatus..Custom1..Caption
-#: RosterWindow.dfm:473
+#: RosterWindow.dfm:486
 msgid "Custom ..."
 msgstr ""
 
 #. frmExodus..popTray..trayMessage..Caption
-#: Jabber1.dfm:2561
+#: Jabber1.dfm:2448
 #. frmJud..PopupMenu1..popMessage..Caption
 #: jud.dfm:235
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
@@ -2411,12 +2428,12 @@ msgid "Send Message"
 msgstr ""
 
 #. frmExodus..popTray..trayDisconnect..Caption
-#: Jabber1.dfm:2569
+#: Jabber1.dfm:2456
 msgid "Sign Off"
 msgstr ""
 
 #. frmExodus..popTray..trayExit..Caption
-#: Jabber1.dfm:2576
+#: Jabber1.dfm:2463
 msgid "Exit Exodus"
 msgstr ""
 
@@ -2600,7 +2617,7 @@ msgstr ""
 #: jud.dfm:231
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:165
-#: Jabber1.pas:2523
+#: Jabber1.pas:2520
 msgid "Start Chat"
 msgstr ""
 
@@ -2666,7 +2683,7 @@ msgstr ""
 #. frmMsgRecv..popContact..mnuHistory..Caption
 #: MsgRecv.dfm:486
 #. frmRoom..popRoom..popShowHistory..Caption
-#: Room.dfm:174
+#: Room.dfm:178
 msgid "Show History"
 msgstr ""
 
@@ -2680,7 +2697,7 @@ msgstr ""
 #. frmMsgRecv..popContact..C1..Caption
 #: MsgRecv.dfm:498
 #. frmRosterWindow..popRoster..popClientInfo..Caption
-#: RosterWindow.dfm:375
+#: RosterWindow.dfm:388
 msgid "Client Info"
 msgstr ""
 
@@ -2887,7 +2904,7 @@ msgstr ""
 #: Prefs.dfm:2639
 #. frmXferManager..Panel1..pnlCaption..Caption
 #: XferManager.dfm:53
-#: ExSession.pas:515
+#: ExSession.pas:514
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
@@ -3052,7 +3069,7 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet2..Panel3..btnAddGroup..Caption
 #: Profile.dfm:277
 #. frmRosterWindow..popActions..popAddGroup..Caption
-#: RosterWindow.dfm:599
+#: RosterWindow.dfm:612
 msgid "Add Group"
 msgstr ""
 
@@ -5941,7 +5958,7 @@ msgstr ""
 #: Profile.dfm:744
 #. frmVCard..PageControl1..TabSheet5..Caption
 #: vcard.dfm:576
-#: ConnDetails.pas:414
+#: ConnDetails.pas:421
 msgid "Work"
 msgstr ""
 
@@ -6090,164 +6107,164 @@ msgid "Edit Subject"
 msgstr ""
 
 #. frmRoom..popRoom..popClear..Caption
-#: Room.dfm:170
+#: Room.dfm:174
 msgid "Clear Window"
 msgstr ""
 
 #. frmRoom..popRoom..popBookmark..Caption
-#: Room.dfm:182
+#: Room.dfm:186
 msgid "Bookmark Room..."
 msgstr ""
 
 #. frmRoom..popRoom..popRegister..Caption
-#: Room.dfm:186
+#: Room.dfm:190
 msgid "Register with Room..."
 msgstr ""
 
 #. frmRoom..popRoom..popInvite..Caption
-#: Room.dfm:190
+#: Room.dfm:194
 msgid "Invite Contacts..."
 msgstr ""
 
 #. frmRoom..popRoom..popNick..Caption
-#: Room.dfm:194
+#: Room.dfm:198
 msgid "Change Nickname..."
 msgstr ""
 
 #. frmRoom..popRoom..S1..Caption
-#: Room.dfm:198
+#: Room.dfm:202
 msgid "Save As..."
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..Caption
-#: Room.dfm:202
+#: Room.dfm:206
 msgid "Admin"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
-#: Room.dfm:205
+#: Room.dfm:209
 #. edit a list
-#: Room.pas:2097
+#: Room.pas:2098
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
-#: Room.dfm:209
-#: Room.pas:2099
+#: Room.dfm:213
+#: Room.pas:2100
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
-#: Room.dfm:213
-#: Room.pas:2101
+#: Room.dfm:217
+#: Room.pas:2102
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
-#: Room.dfm:217
-#: Room.pas:2103
+#: Room.dfm:221
+#: Room.pas:2104
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
-#: Room.dfm:224
-#: Room.pas:2105
+#: Room.dfm:228
+#: Room.pas:2106
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
-#: Room.dfm:228
-#: Room.pas:2107
+#: Room.dfm:232
+#: Room.pas:2108
 msgid "Edit Owner List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popConfigure..Caption
-#: Room.dfm:235
+#: Room.dfm:239
 msgid "Configure Room"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
-#: Room.dfm:239
-#: Room.pas:2121
+#: Room.dfm:243
+#: Room.pas:2122
 msgid "Destroy Room"
 msgstr ""
 
 #. frmRoom..popRoom..popClose..Caption
-#: Room.dfm:259
+#: Room.dfm:263
 msgid "Close Room"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterSendJID..Caption
-#: Room.dfm:280
+#: Room.dfm:284
 msgid "Send my JID"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterBlock..Caption
-#: Room.dfm:284
+#: Room.dfm:288
 #. frmRosterWindow..popRoster..popBlock..Caption
-#: RosterWindow.dfm:416
+#: RosterWindow.dfm:429
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
-#: RosterWindow.dfm:638
-#: Room.pas:1813
-#: RosterWindow.pas:2060
+#: RosterWindow.dfm:651
+#: Room.pas:1814
+#: RosterWindow.pas:2058
 #. do blocking madness
-#: RosterWindow.pas:2098
-#: RosterWindow.pas:2103
+#: RosterWindow.pas:2096
+#: RosterWindow.pas:2101
 msgid "Block"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterSubscribe..Caption
-#: Room.dfm:291
+#: Room.dfm:295
 msgid "Add contact to my roster"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterVCard..Caption
-#: Room.dfm:296
+#: Room.dfm:300
 msgid "Contact's Profile"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterBrowse..Caption
-#: Room.dfm:301
+#: Room.dfm:305
 msgid "Browse contact"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popKick..Caption
-#: Room.dfm:309
+#: Room.dfm:313
 msgid "Kick"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popBan..Caption
-#: Room.dfm:314
+#: Room.dfm:318
 msgid "Ban"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popVoice..Caption
-#: Room.dfm:319
+#: Room.dfm:323
 msgid "Toggle Voice"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popModerator..Caption
-#: Room.dfm:324
+#: Room.dfm:328
 msgid "Make Moderator"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
-#: Room.dfm:329
+#: Room.dfm:333
 msgid "Make Administrator"
 msgstr ""
 
 #. frmRoom..dlgSave..DefaultExt
-#: Room.dfm:335
+#: Room.dfm:339
 msgid ".rtf"
 msgstr ""
 
 #. frmRoom..dlgSave..Filter
-#: Room.dfm:336
+#: Room.dfm:340
 msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
 msgstr ""
 
 #. frmRoom..dlgSave..Title
-#: Room.dfm:339
+#: Room.dfm:343
 msgid "Save Room Contents"
 msgstr ""
 
@@ -6270,7 +6287,7 @@ msgstr ""
 #: RosterAdd.dfm:34
 #. frmSubscribe..boxAdd..lblNickname..Caption
 #: subscribe.dfm:65
-#: ExUtils.pas:321
+#: ExUtils.pas:341
 msgid "Nickname:"
 msgstr ""
 
@@ -6359,11 +6376,11 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:241
-#: ExUtils.pas:676
-#: ExUtils.pas:694
-#: ExUtils.pas:712
-#: RosterWindow.pas:419
-#: RosterWindow.pas:1574
+#: ExUtils.pas:696
+#: ExUtils.pas:714
+#: ExUtils.pas:732
+#: RosterWindow.pas:424
+#: RosterWindow.pas:1563
 #: /src/exodus/jopl/Roster.pas:213
 #: /src/exodus/jopl/Roster.pas:256
 #: /src/exodus/jopl/Roster.pas:313
@@ -6373,22 +6390,22 @@ msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #: RosterWindow.dfm:269
-#: RosterWindow.pas:429
-#: RosterWindow.pas:631
+#: RosterWindow.pas:434
+#: RosterWindow.pas:599
 msgid "You are currently disconnected."
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblCreate..Caption
 #: RosterWindow.dfm:281
-#: RosterWindow.pas:431
-#: RosterWindow.pas:634
+#: RosterWindow.pas:436
+#: RosterWindow.pas:602
 msgid "Create a New Profile"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblConnect..Caption
 #: RosterWindow.dfm:294
-#: RosterWindow.pas:430
-#: RosterWindow.pas:632
+#: RosterWindow.pas:435
+#: RosterWindow.pas:600
 msgid "Click a profile to connect"
 msgstr ""
 
@@ -6398,102 +6415,102 @@ msgid "Run the New User Wizard"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popChat..Caption
-#: RosterWindow.dfm:351
+#: RosterWindow.dfm:364
 msgid "Chat..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popMsg..Caption
-#: RosterWindow.dfm:355
+#: RosterWindow.dfm:368
 msgid "Message..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popHistory..Caption
-#: RosterWindow.dfm:359
+#: RosterWindow.dfm:372
 msgid "Show History..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popSendFile..Caption
-#: RosterWindow.dfm:363
+#: RosterWindow.dfm:376
 msgid "Send File..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popSendContacts..Caption
-#: RosterWindow.dfm:371
+#: RosterWindow.dfm:384
 msgid "Send Contact To..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendPres..Caption
-#: RosterWindow.dfm:392
+#: RosterWindow.dfm:405
 msgid "Send Visible"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
-#: RosterWindow.dfm:396
+#: RosterWindow.dfm:409
 msgid "Send Invisible"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
-#: RosterWindow.dfm:403
+#: RosterWindow.dfm:416
 msgid "Subscribe Again"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popRename..Caption
-#: RosterWindow.dfm:408
+#: RosterWindow.dfm:421
 msgid "Rename..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popProperties..Caption
-#: RosterWindow.dfm:425
+#: RosterWindow.dfm:438
 msgid "Properties..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..Caption
-#: RosterWindow.dfm:608
+#: RosterWindow.dfm:621
 msgid "Send Presence"
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
-#: RosterWindow.dfm:610
+#: RosterWindow.dfm:623
 msgid "Visible"
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
-#: RosterWindow.dfm:614
+#: RosterWindow.dfm:627
 msgid "Invisible"
 msgstr ""
 
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
-#: RosterWindow.dfm:623
+#: RosterWindow.dfm:636
 msgid "Broadcast Message"
 msgstr ""
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
-#: RosterWindow.dfm:627
+#: RosterWindow.dfm:640
 msgid "Send Contacts To..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
-#: RosterWindow.dfm:631
+#: RosterWindow.dfm:644
 msgid "Move or Copy Contacts..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
-#: RosterWindow.dfm:642
+#: RosterWindow.dfm:655
 msgid "Rename"
 msgstr ""
 
 #. frmRosterWindow..popGroup..NewGroup1..Caption
-#: RosterWindow.dfm:653
+#: RosterWindow.dfm:666
 msgid "New Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Join1..Caption
-#: RosterWindow.dfm:662
+#: RosterWindow.dfm:675
 msgid "Join Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Properties1..Caption
-#: RosterWindow.dfm:674
+#: RosterWindow.dfm:687
 #: /src/exodus/jopl/Bookmarks.pas:97
 #. frmPrefPresence..GroupBox1..Caption
 #: prefs/PrefPresence.dfm:143
@@ -6501,23 +6518,40 @@ msgid "Properties"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransLogoff..Caption
-#: RosterWindow.dfm:683
+#: RosterWindow.dfm:696
 msgid "Log Off"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransLogon..Caption
-#: RosterWindow.dfm:687
+#: RosterWindow.dfm:700
 msgid "Log On"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransProperties..Caption
-#: RosterWindow.dfm:694
+#: RosterWindow.dfm:707
 msgid "Rename ..."
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransEdit..Caption
-#: RosterWindow.dfm:698
+#: RosterWindow.dfm:711
 msgid "Properties ..."
+msgstr ""
+
+#. frmRosterWindow..popProfiles..ModifyProfile1..Caption
+#: RosterWindow.dfm:730
+msgid "Modify Profile"
+msgstr ""
+
+#. frmRosterWindow..popProfiles..RenameProfile1..Caption
+#: RosterWindow.dfm:734
+#. rename this profile
+#: ConnDetails.pas:580
+msgid "Rename Profile"
+msgstr ""
+
+#. frmRosterWindow..popProfiles..DeleteProfile1..Caption
+#: RosterWindow.dfm:737
+msgid "Delete Profile"
 msgstr ""
 
 #. frmSelContact..Caption
@@ -6746,106 +6780,110 @@ msgid " Objects"
 msgstr ""
 
 #. if this person can not do offline msgs, and they are offline, bail
-#: ChatWin.pas:517
+#: ChatWin.pas:520
 msgid "This contact can not receive offline "
 "messages."
 msgstr ""
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:644
+#: ChatWin.pas:647
 msgid " is replying --"
 msgstr ""
 
 #. Display the error info..
-#: ChatWin.pas:704
+#: ChatWin.pas:707
 msgid "The last message bounced!. "
 msgstr ""
 
-#: ChatWin.pas:710
+#: ChatWin.pas:713
 msgid "Error Code: "
 msgstr ""
 
-#: ChatWin.pas:743
+#: ChatWin.pas:746
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:868
+#: ChatWin.pas:869
 #. post a msg to the window and disable the text input box.
-#: Room.pas:895
+#: Room.pas:896
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:888
+#: ChatWin.pas:889
 msgid "This user is now blocked."
 msgstr ""
 
 #. TODO: get image prefix from prefs
-#: ChatWin.pas:914
+#: ChatWin.pas:915
 #. Get the pres for this resource
-#: ChatWin.pas:971
 #: ChatWin.pas:972
+#: ChatWin.pas:973
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:916
+#: ChatWin.pas:917
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:918
+#: ChatWin.pas:919
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:920
+#: ChatWin.pas:921
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:922
+#: ChatWin.pas:923
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:924
+#: ChatWin.pas:925
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:988
+#: ChatWin.pas:989
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:995
+#: ChatWin.pas:996
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:1021
+#: ChatWin.pas:1022
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1335
+#: ChatWin.pas:1336
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
+#: ChatWin.pas:1481
+msgid "Chat Transcript: %s"
+msgstr ""
+
 #. remove from list?
-#: COMController.pas:227
+#: COMController.pas:273
 msgid "Remove this plugin from the list of plugins to be loaded at "
 "startup?"
 msgstr ""
 
-#: COMController.pas:326
+#: COMController.pas:372
 msgid "Plugin could not be created. (%s)"
 msgstr ""
 
-#: COMController.pas:336
+#: COMController.pas:382
 msgid "Plugin class does not support IExodusPlugin. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:348
+#: COMController.pas:394
 msgid "Plugin class could not be initialized. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:370
+#: COMController.pas:416
 msgid "Plugin could not be initialized or configured."
 msgstr ""
 
@@ -6886,51 +6924,46 @@ msgid "This jabber entity does not support remote "
 "commands."
 msgstr ""
 
-#: ConnDetails.pas:158
-#: ConnDetails.pas:575
+#: ConnDetails.pas:161
+#: ConnDetails.pas:582
 msgid "%s Details"
 msgstr ""
 
-#: ConnDetails.pas:193
+#: ConnDetails.pas:196
 msgid "The Jabber ID you entered (username@server/resource) is invalid. "
 "Please enter a valid username, server, and "
 "resource."
 msgstr ""
 
-#: ConnDetails.pas:332
+#: ConnDetails.pas:339
 msgid "This profile is currently to use SSL, however, your system does not "
 "have the required libraries to use SSL. Turning SSL "
 "OFF."
 msgstr ""
 
-#: ConnDetails.pas:380
+#: ConnDetails.pas:387
 msgid "Must have a larger number of poll keys."
 msgstr ""
 
-#: ConnDetails.pas:465
+#: ConnDetails.pas:472
 msgid "Download the public server list from jabber.org? (Requires an "
 "internet connection)."
 msgstr ""
 
-#: ConnDetails.pas:470
+#: ConnDetails.pas:477
 msgid "Downloading public server list"
 msgstr ""
 
 #. stringprep txtUsername, cboServer, or cboResource.
-#: ConnDetails.pas:529
+#: ConnDetails.pas:536
 msgid "The Jabber ID you entered is not allowed."
 msgstr ""
 
-#: ConnDetails.pas:538
+#: ConnDetails.pas:545
 msgid "The resource you entered is not allowed."
 msgstr ""
 
-#. rename this profile
-#: ConnDetails.pas:573
-msgid "Rename Profile"
-msgstr ""
-
-#: ConnDetails.pas:573
+#: ConnDetails.pas:580
 msgid "New Profile Name:"
 msgstr ""
 
@@ -6953,63 +6986,63 @@ msgstr ""
 msgid "Invite from "
 msgstr ""
 
-#: ExEvents.pas:283
-#: ExEvents.pas:527
+#: ExEvents.pas:281
+#: ExEvents.pas:525
 msgid "Time Response"
 msgstr ""
 
-#: ExEvents.pas:286
+#: ExEvents.pas:284
 msgid "Local Time: "
 msgstr ""
 
-#: ExEvents.pas:289
+#: ExEvents.pas:287
 msgid "Ping Time: %s seconds."
 msgstr ""
 
-#: ExEvents.pas:305
-#: ExEvents.pas:533
+#: ExEvents.pas:303
+#: ExEvents.pas:531
 msgid "Version Response"
 msgstr ""
 
-#: ExEvents.pas:305
+#: ExEvents.pas:303
 msgid "Description: "
 msgstr ""
 
-#: ExEvents.pas:313
+#: ExEvents.pas:311
 msgid "OS: "
 msgstr ""
 
-#: ExEvents.pas:327
+#: ExEvents.pas:325
 msgid "Idle for "
 msgstr ""
 
-#: ExEvents.pas:435
-#: ExEvents.pas:436
-#: Room.pas:496
-#: Room.pas:499
+#: ExEvents.pas:433
+#: ExEvents.pas:434
+#: Room.pas:500
+#: Room.pas:503
 msgid "ERROR: "
 msgstr ""
 
-#: ExEvents.pas:436
+#: ExEvents.pas:434
 msgid ", Code="
 msgstr ""
 
-#: ExEvents.pas:440
+#: ExEvents.pas:438
 msgid "Unknown Error"
 msgstr ""
 
-#: ExEvents.pas:442
+#: ExEvents.pas:440
 msgid "\n"
 "Original Message was:"
 msgstr ""
 
 #. this is a queue'd chat msg
-#: ExEvents.pas:489
+#: ExEvents.pas:487
 msgid "New chat conversation"
 msgstr ""
 
 #. check for x:oob URL's
-#: ExEvents.pas:510
+#: ExEvents.pas:508
 msgid "This message contains a URL: "
 msgstr ""
 
@@ -7120,131 +7153,131 @@ msgstr ""
 msgid " -X [xmpp URI] \t : XMPP URI handling\n"
 msgstr ""
 
-#: ExSession.pas:382
+#: ExSession.pas:378
 msgid "Missing file:"
 msgstr ""
 
 #. otherwise, if we have no profiles yet, use the default profile name.
-#: ExSession.pas:401
+#: ExSession.pas:397
 #. make sure we have at least a default profile
-#: RosterWindow.pas:2840
+#: RosterWindow.pas:2771
 msgid "Default Profile"
 msgstr ""
 
-#: ExSession.pas:506
+#: ExSession.pas:505
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr ""
 
-#: ExSession.pas:507
+#: ExSession.pas:506
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr ""
 
-#: ExSession.pas:508
+#: ExSession.pas:507
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr ""
 
-#: ExSession.pas:509
+#: ExSession.pas:508
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr ""
 
-#: ExSession.pas:510
+#: ExSession.pas:509
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr ""
 
-#: ExSession.pas:511
+#: ExSession.pas:510
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr ""
 
-#: ExSession.pas:512
+#: ExSession.pas:511
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr ""
 
-#: ExSession.pas:513
+#: ExSession.pas:512
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr ""
 
-#: ExSession.pas:514
+#: ExSession.pas:513
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr ""
 
-#: ExSession.pas:516
+#: ExSession.pas:515
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr ""
 
-#: ExUtils.pas:322
+#: ExUtils.pas:342
 msgid "First Name:"
 msgstr ""
 
-#: ExUtils.pas:323
+#: ExUtils.pas:343
 msgid "Last Name:"
 msgstr ""
 
-#: ExUtils.pas:324
+#: ExUtils.pas:344
 msgid "EMail Address:"
 msgstr ""
 
-#: ExUtils.pas:325
+#: ExUtils.pas:345
 msgid "Password"
 msgstr ""
 
-#: ExUtils.pas:326
+#: ExUtils.pas:346
 msgid "UserName:"
 msgstr ""
 
-#: ExUtils.pas:433
+#: ExUtils.pas:453
 msgid "days"
 msgstr ""
 
-#: ExUtils.pas:434
+#: ExUtils.pas:454
 msgid "hours"
 msgstr ""
 
-#: ExUtils.pas:435
+#: ExUtils.pas:455
 msgid "minutes"
 msgstr ""
 
-#: ExUtils.pas:439
+#: ExUtils.pas:459
 msgid " unknown last result: "
 msgstr ""
 
-#: ExUtils.pas:450
+#: ExUtils.pas:470
 msgid "%d day, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:451
+#: ExUtils.pas:471
 msgid "%d hour, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:452
+#: ExUtils.pas:472
 msgid "%d minute, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:453
+#: ExUtils.pas:473
 msgid "%d second."
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:591
+#: ExUtils.pas:611
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:670
-#: ExUtils.pas:688
-#: ExUtils.pas:706
-#: RosterWindow.pas:426
+#: ExUtils.pas:690
+#: ExUtils.pas:708
+#: ExUtils.pas:726
+#: RosterWindow.pas:431
 #. setup the Bookmarks group first
 #: /src/exodus/jopl/Bookmarks.pas:169
 #: /src/exodus/jopl/Bookmarks.pas:171
@@ -7252,10 +7285,10 @@ msgstr ""
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:673
-#: ExUtils.pas:691
-#: ExUtils.pas:709
-#: RosterWindow.pas:425
+#: ExUtils.pas:693
+#: ExUtils.pas:711
+#: ExUtils.pas:729
+#: RosterWindow.pas:430
 #: /src/exodus/jopl/Roster.pas:197
 #. special case for unfiled
 #: /src/exodus/jopl/Roster.pas:500
@@ -7264,25 +7297,25 @@ msgstr ""
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:996
+#: ExUtils.pas:1016
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:997
+#: ExUtils.pas:1017
 msgid "Enter new group name below. "
 msgstr ""
 
-#: ExUtils.pas:1000
+#: ExUtils.pas:1020
 msgid "To create a nested group a name like "
 "foo%sbar."
 msgstr ""
 
-#: ExUtils.pas:1002
+#: ExUtils.pas:1022
 msgid "New Roster Group"
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:1007
+#: ExUtils.pas:1027
 msgid "This group already exists!"
 msgstr ""
 
@@ -7367,133 +7400,133 @@ msgid "Conference Room:"
 msgstr ""
 
 #. enable a logging plugin now.
-#: Jabber1.pas:970
+#: Jabber1.pas:967
 msgid "Message logging is now performed by plugins. Please enable a logging "
 "plugin to regain this functionality."
 msgstr ""
 
-#: Jabber1.pas:1018
+#: Jabber1.pas:1015
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1118
+#: Jabber1.pas:1115
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1140
+#: Jabber1.pas:1137
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. depending on that API call.
-#: Jabber1.pas:1153
+#: Jabber1.pas:1150
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1158
+#: Jabber1.pas:1155
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1220
+#: Jabber1.pas:1217
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1231
+#: Jabber1.pas:1228
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1267
+#: Jabber1.pas:1264
 msgid "There was an error trying to setup compression."
 msgstr ""
 
-#: Jabber1.pas:1277
+#: Jabber1.pas:1274
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1292
+#: Jabber1.pas:1289
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1330
+#: Jabber1.pas:1327
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2319
+#: Jabber1.pas:2316
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2355
+#: Jabber1.pas:2352
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2372
+#: Jabber1.pas:2369
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2407
+#: Jabber1.pas:2404
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2407
-#: Jabber1.pas:2523
-#: Jabber1.pas:2798
+#: Jabber1.pas:2404
+#: Jabber1.pas:2520
+#: Jabber1.pas:2795
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2624
+#: Jabber1.pas:2621
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2628
+#: Jabber1.pas:2625
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2649
-#: Jabber1.pas:2657
+#: Jabber1.pas:2646
+#: Jabber1.pas:2654
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2652
+#: Jabber1.pas:2649
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2738
+#: Jabber1.pas:2735
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2738
+#: Jabber1.pas:2735
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2798
+#: Jabber1.pas:2795
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:3154
+#: Jabber1.pas:3194
 #. send roster items to this contact.
-#: Jabber1.pas:3164
+#: Jabber1.pas:3204
 #. Send contacts to this JID..
-#: RosterWindow.pas:2669
-#: RosterWindow.pas:2959
+#: RosterWindow.pas:2599
+#: RosterWindow.pas:2890
 #. we got a URL drop
-#: RosterWindow.pas:3052
-#: RosterWindow.pas:3084
+#: RosterWindow.pas:2983
+#: RosterWindow.pas:3015
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3291
+#: Jabber1.pas:3331
 msgid "Branding error!"
 msgstr ""
 
@@ -7733,238 +7766,242 @@ msgstr ""
 msgid "Remove this contact from the %s group."
 msgstr ""
 
-#: Room.pas:495
 #: Room.pas:499
+#: Room.pas:503
 msgid "Your message to the room bounced."
 msgstr ""
 
 #. if blocked ignore anything they say, even subject changes.
-#: Room.pas:507
-#: Room.pas:1335
-#: Room.pas:1765
+#: Room.pas:511
+#: Room.pas:1336
+#: Room.pas:1766
 #. block
-#: Room.pas:1773
-#: Room.pas:1810
+#: Room.pas:1774
+#: Room.pas:1811
 #. get the data for this person..
-#: Room.pas:2282
+#: Room.pas:2283
 msgid "Blocked"
 msgstr ""
 
 #. check for keywords
-#: Room.pas:519
+#: Room.pas:523
 msgid "Keyword in "
 msgstr ""
 
-#: Room.pas:525
+#: Room.pas:529
 msgid "Activity in "
 msgstr ""
 
-#: Room.pas:532
-#: Room.pas:1385
+#: Room.pas:536
+#: Room.pas:1386
 msgid "Click the button to change the room "
 "subject."
 msgstr ""
 
-#: Room.pas:533
-#: Room.pas:1386
+#: Room.pas:537
+#: Room.pas:1387
 msgid "No room subject"
 msgstr ""
 
-#: Room.pas:538
+#: Room.pas:542
 #. send the msg out
-#: Room.pas:1588
+#: Room.pas:1589
 msgid "/me has changed the subject to: "
 msgstr ""
 
-#: Room.pas:777
+#: Room.pas:778
 msgid "Groupchat private message"
 msgstr ""
 
 #. check for various presence errors
-#: Room.pas:972
-#: Room.pas:1249
+#: Room.pas:973
+#: Room.pas:1250
 #. they match
-#: Room.pas:1625
+#: Room.pas:1626
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
 
-#: Room.pas:981
+#: Room.pas:982
 msgid "You supplied an invalid password to enter this "
 "room."
 msgstr ""
 
-#: Room.pas:989
+#: Room.pas:990
 msgid "The room is being created. Please try again "
 "later."
 msgstr ""
 
-#: Room.pas:994
+#: Room.pas:995
 msgid "You are not allowed to enter the room."
 msgstr ""
 
-#: Room.pas:999
-#: Room.pas:1248
+#: Room.pas:1000
+#: Room.pas:1249
 msgid "You are not on the member list for this room. Try and "
 "register?"
 msgstr ""
 
-#: Room.pas:1013
+#: Room.pas:1014
 msgid "You are not allowed to join this room. The room could be password "
 "protected, or you could be on the ban "
 "list."
 msgstr ""
 
-#: Room.pas:1020
+#: Room.pas:1021
 msgid "The room has been destroyed for an unknown "
 "reason."
 msgstr ""
 
 #. this user has changed their nick..
-#: Room.pas:1043
-#: Room.pas:1244
+#: Room.pas:1044
+#: Room.pas:1245
 msgid "%s is now known as %s."
 msgstr ""
 
-#: Room.pas:1051
-#: Room.pas:1242
+#: Room.pas:1052
+#: Room.pas:1243
 msgid "%s has been banned from this room. %s"
 msgstr ""
 
-#: Room.pas:1052
-#: Room.pas:1245
+#: Room.pas:1053
+#: Room.pas:1246
 msgid "%s has been kicked from this room. %s"
 msgstr ""
 
-#: Room.pas:1058
+#: Room.pas:1059
 msgid "%s has left the room."
 msgstr ""
 
-#: Room.pas:1086
+#: Room.pas:1087
 msgid "%s has entered the room."
 msgstr ""
 
 #. someone maybe changed my role
-#: Room.pas:1112
+#: Room.pas:1113
 msgid "You have been granted voice."
 msgstr ""
 
-#: Room.pas:1114
+#: Room.pas:1115
 msgid "Your voice has been revoked."
 msgstr ""
 
-#: Room.pas:1116
+#: Room.pas:1117
 msgid "%s has a new role of %s."
 msgstr ""
 
 #. this is the first time I've joined the room
-#: Room.pas:1156
+#: Room.pas:1157
 msgid "You are not allowed to speak in this "
 "room."
 msgstr ""
 
-#: Room.pas:1158
+#: Room.pas:1159
 msgid "You are currently a moderator of this "
 "room."
 msgstr ""
 
-#: Room.pas:1243
+#: Room.pas:1244
 msgid "This room has been destroyed."
 msgstr ""
 
-#: Room.pas:1246
+#: Room.pas:1247
 msgid "You are on the ban list for this room."
 msgstr ""
 
-#: Room.pas:1247
+#: Room.pas:1248
 msgid "You are not allowed to create rooms."
 msgstr ""
 
-#: Room.pas:1291
+#: Room.pas:1292
 msgid "There was an error using the default room configuration. Configuring "
 "it manually."
 msgstr ""
 
-#: Room.pas:1441
+#: Room.pas:1442
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1601
+#: Room.pas:1602
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1601
+#: Room.pas:1602
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1644
-#: Room.pas:1644
+#: Room.pas:1645
+#: Room.pas:1645
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1666
+#: Room.pas:1667
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1666
+#: Room.pas:1667
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1811
-#: RosterWindow.pas:2056
-#: RosterWindow.pas:2108
+#: Room.pas:1812
+#: RosterWindow.pas:2054
+#: RosterWindow.pas:2106
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1971
+#: Room.pas:1972
 msgid "Role: "
 msgstr ""
 
-#: Room.pas:1972
+#: Room.pas:1973
 msgid "Affiliation: "
 msgstr ""
 
-#: Room.pas:1999
+#: Room.pas:2000
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:2000
-#: Room.pas:2000
+#: Room.pas:2001
+#: Room.pas:2001
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:2003
+#: Room.pas:2004
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:2004
-#: Room.pas:2004
+#: Room.pas:2005
+#: Room.pas:2005
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:2118
+#: Room.pas:2119
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:2120
+#: Room.pas:2121
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:2121
+#: Room.pas:2122
 msgid "Destroy Reason"
 msgstr ""
 
 #. this room needs a passwd, and they didn't give us one..
-#: Room.pas:2349
+#: Room.pas:2350
 msgid "Password Prompt"
 msgstr ""
 
-#: Room.pas:2349
+#: Room.pas:2350
 msgid "Room Password"
+msgstr ""
+
+#: Room.pas:2551
+msgid "Room Transcript: %s"
 msgstr ""
 
 #: RoomAdminList.pas:158
@@ -7993,99 +8030,98 @@ msgid "The gateway server you requested does not have a transport for this "
 "contact type."
 msgstr ""
 
-#: RosterWindow.pas:427
+#: RosterWindow.pas:432
 #: /src/exodus/jopl/Roster.pas:228
 #: /src/exodus/jopl/Roster.pas:460
 msgid "My Resources"
 msgstr ""
 
-#: RosterWindow.pas:648
+#: RosterWindow.pas:616
 msgid "Trying to connect..."
 msgstr ""
 
-#: RosterWindow.pas:649
+#: RosterWindow.pas:617
 #. we've got a socket connection
-#: RosterWindow.pas:677
+#: RosterWindow.pas:645
 #. we've been authenticated
-#: RosterWindow.pas:689
-#: RosterWindow.pas:2791
+#: RosterWindow.pas:657
+#: RosterWindow.pas:2722
 msgid "Click to Cancel..."
 msgstr ""
 
-#: RosterWindow.pas:678
+#: RosterWindow.pas:646
 msgid "Connected. \n"
 "Authenticating..."
 msgstr ""
 
-#: RosterWindow.pas:690
+#: RosterWindow.pas:658
 msgid "Authenticated.\n"
 "Getting Contacts..."
 msgstr ""
 
-#: RosterWindow.pas:2338
+#: RosterWindow.pas:2336
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2575
+#: RosterWindow.pas:2505
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2575
+#: RosterWindow.pas:2505
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2697
+#: RosterWindow.pas:2627
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2726
+#: RosterWindow.pas:2656
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2754
+#: RosterWindow.pas:2684
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2795
-#: RosterWindow.pas:3196
+#: RosterWindow.pas:2726
+#: RosterWindow.pas:3128
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
 #. Create a new profile
-#: RosterWindow.pas:2814
+#: RosterWindow.pas:2743
 #. Run the new user wizard... first create a new profile
-#: RosterWindow.pas:3229
+#: RosterWindow.pas:3161
 msgid "Untitled Profile"
 msgstr ""
 
-#: RosterWindow.pas:2815
-#: RosterWindow.pas:3230
+#: RosterWindow.pas:2744
+#: RosterWindow.pas:3162
 msgid "New Profile"
 msgstr ""
 
-#: RosterWindow.pas:2815
-#: RosterWindow.pas:3230
+#: RosterWindow.pas:2744
+#: RosterWindow.pas:3162
 msgid "Enter Profile Name"
 msgstr ""
 
-#. Delete this profile
-#: RosterWindow.pas:2831
+#: RosterWindow.pas:2763
 msgid "Remove this profile?"
 msgstr ""
 
-#: RosterWindow.pas:2964
+#: RosterWindow.pas:2895
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2964
+#: RosterWindow.pas:2895
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:3197
+#: RosterWindow.pas:3129
 msgid "Reconnect in %d seconds."
 msgstr ""
 
@@ -8204,59 +8240,59 @@ msgid "Your new file transfer port will not take affect until all current "
 msgstr ""
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:627
+#: /src/exodus/jopl/PrefController.pas:629
 msgid "Away as a result of idle."
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:629
+#: /src/exodus/jopl/PrefController.pas:631
 msgid "XA as a result of idle."
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1266
+#: /src/exodus/jopl/PrefController.pas:1268
 msgid "Free for Chat"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1284
+#: /src/exodus/jopl/PrefController.pas:1286
 msgid "Lunch"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1293
+#: /src/exodus/jopl/PrefController.pas:1295
 msgid "Meeting"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1302
+#: /src/exodus/jopl/PrefController.pas:1304
 msgid "Bank"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1311
+#: /src/exodus/jopl/PrefController.pas:1313
 msgid "Extended Away"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1320
+#: /src/exodus/jopl/PrefController.pas:1322
 msgid "Gone Home"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1329
+#: /src/exodus/jopl/PrefController.pas:1331
 msgid "Gone to Work"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1338
+#: /src/exodus/jopl/PrefController.pas:1340
 msgid "Sleeping"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1347
+#: /src/exodus/jopl/PrefController.pas:1349
 msgid "Do Not disturb"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1356
+#: /src/exodus/jopl/PrefController.pas:1358
 msgid "Busy"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1365
+#: /src/exodus/jopl/PrefController.pas:1367
 msgid "Working"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1374
+#: /src/exodus/jopl/PrefController.pas:1376
 msgid "Mad"
 msgstr ""
 
