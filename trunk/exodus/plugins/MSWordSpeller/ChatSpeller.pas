@@ -5,7 +5,7 @@ unit ChatSpeller;
 interface
 
 uses
-    Word2000, ExodusCOM_TLB,
+    Word2000, Exodus_TLB,
     ComCtrls, RichEdit2, ExRichEdit, SysUtils, Graphics,
     ComObj, ActiveX, ExWordSpeller_TLB, StdVcl;
 

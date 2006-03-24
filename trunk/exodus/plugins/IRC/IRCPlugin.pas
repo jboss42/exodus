@@ -6,7 +6,7 @@ interface
 
 uses
     Login, IRCSession, Classes, 
-    ExodusCOM_TLB, ComObj, ActiveX, ExIRCPlugin_TLB, StdVcl;
+    Exodus_TLB, ComObj, ActiveX, ExIRCPlugin_TLB, StdVcl;
 
 type
   TIRCPlugin = class(TAutoObject, IExodusPlugin)
