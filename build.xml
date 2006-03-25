@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<project name="exodus" basedir="." default="setup">
+  <property name="delphi" value="c:/dev/Delphi7"/>
+  <property name="TNT" value="c:\src\exodus\exodus\components\tntUnicode"/>
+  <property name="JCL" value="C:\src\exodus\exodus\components\jcl\source"/>
+  <property name="DX" value="c:\\dev\\dxgettext"/>
+
+  <property environment="env"/>
+  <property file='user.properties'/>
+
+  <property name="dcc" value="${delphi}/bin/dcc32.exe"/>
+  <property name="rcc" value="${delphi}/bin/brcc32.exe"/>
+  <property name="dxgettext" value="${DX}/dxgettext.exe"/>
+  <property name="msgfmt" value="${DX}/msgfmt.exe"/>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="exodus">
+	<include name="setup.exe"/>
+	<include name="Exodus.exe"/>
+	<include name="*_emoticons.dll"/>
+	<include name="IdleHooks.dll"/>
+	<include name="locale.zip"/>
+	<include name="*.dcu"/>
+      </fileset>
+      <fileset dir="jopl" includes="*.dcu"/>
+      <fileset dir="exodus/output" includes="*.dcu"/>
+      <fileset dir="exodus/locale" includes="**/default.mo"/>
+      <fileset dir="exodus/plugins">
+	<include name="*.zip"/>
+	<include name="*.dll"/>
+      </fileset>
+    </delete> 
+  </target>
+
+  <target name="idlehooks" depends="clean">
+    <exec dir="exodus" executable="${dcc}">
+      <arg value='-B'/>
+      <arg value='-Q'/>
+      <arg value='-U"${delphi}\Lib"'/>
+      <arg value="-GD"/>
+      <arg value="-Noutput"/>
+      <arg value="IdleHooks.dpr"/>
+    </exec>
+  </target>
+
+  <target name="resources">
+    <exec dir="exodus" executable="${rcc}">
+      <arg value="version.rc"/>
+    </exec>
+    <exec dir="exodus" executable="${rcc}">
+      <arg value="xml.rc"/>
+    </exec>
+    <exec dir="exodus" executable="${rcc}">
+      <arg value="iehtml.rc"/>
+    </exec>
+  </target>
+
+  <target name="exodus" depends="clean, resources">
+    <exec dir="exodus" executable="${dcc}">
+      <arg value='-LUvcl'/>
+      <arg value='-LUrtl'/>
+      <arg value='-B'/>
+      <arg value='-Q'/>
+      <arg value='-U"${delphi}\Lib"'/>
+      <arg value='-I"${JCL}"'/>
+      <arg value='-U"${JCL}"'/>
+      <arg value='-U"${JCL}\common"'/>
+      <arg value='-U"${JCL}\vcl"'/>
+      <arg value='-U"${JCL}\windows"'/>
+      <arg value="-DExodus"/>
+      <arg value="-GD"/>
+      <arg value="-DTRACE_EXCEPTIONS"/>
+      <arg value="-Noutput"/>
+      <arg value='-U"Components"'/>
+      <arg value='-U"${TNT}"'/>
+      <arg value="Exodus.dpr"/>
+    </exec>
+  </target>
+
+  <target name="gettext">
+    <apply dir="exodus" executable="${dxgettext}" parallel="true" verbose="true">
+      <fileset dir="exodus">
+	<include name="*.pas"/>
+	<include name="*.inc"/>
+	<include name="*.dpr"/>
+	<include name="*.xfm"/>
+	<include name="*.dfm"/>
+      </fileset>
+      <fileset dir="jopl">
+	<include name="*.pas"/>
+	<include name="*.inc"/>
+	<include name="*.dpr"/>
+	<include name="*.xfm"/>
+	<include name="*.dfm"/>
+      </fileset>
+      <fileset dir="exodus/prefs">
+	<include name="*.pas"/>
+	<include name="*.inc"/>
+	<include name="*.dpr"/>
+	<include name="*.xfm"/>
+	<include name="*.dfm"/>
+      </fileset>
+    </apply>
+    <apply dir="exodus" executable="${msgfmt}" 
+	   dest="exodus/locale" verbose="true">
+      <fileset dir="exodus/locale">
+	<include name="**/default.po"/>
+      </fileset>
+      <srcfile/>
+      <arg value="-o"/>
+      <targetfile/>
+      <mapper type="glob" from="*.po" to="*.mo"/>
+    </apply>
+    <zip destfile="exodus/locale.zip" basedir="exodus" 
+	 includes="locale/**/*.mo"/>
+  </target>
+
+  <target name="msn">
+    <exec dir="exodus/msn-emoticons" executable="${dcc}">
+      <arg value='-B'/>
+      <arg value='-Q'/>
+      <arg value='-U"${delphi}\Lib"'/>
+      <arg value="-GD"/>
+      <arg value="-Noutput"/>
+      <arg value="msn_emoticons.dpr"/>
+    </exec>    
+  </target>
+
+  <target name="yahoo">
+    <exec dir="exodus/yahoo-emoticons" executable="${dcc}">
+      <arg value='-B'/>
+      <arg value='-Q'/>
+      <arg value='-U"${delphi}\Lib"'/>
+      <arg value="-GD"/>
+      <arg value="-Noutput"/>
+      <arg value="yahoo_emoticons.dpr"/>
+    </exec>    
+  </target>
+
+  <target name="plugins">
+    <subant target="">
+      <property name="dcc" value="${dcc}"/>
+      <property name="TNT" value="${TNT}"/>
+      <fileset dir="exodus/plugins" includes="*/build.xml"/>
+    </subant>
+  </target>
+
+  <target name="setup" depends="idlehooks, exodus, gettext, msn, yahoo, plugins">
+  </target>
+</project>
