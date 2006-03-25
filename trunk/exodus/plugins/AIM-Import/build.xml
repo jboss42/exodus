@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<project name="htmllogger" basedir="." default="dll">
+  <target name="dll">
+    <exec dir="." executable="${dcc}">
+      <arg value='-B'/>
+      <arg value='-Q'/>
+      <arg value='-U"${delphi}\Lib"'/>
+      <arg value="-GD"/>
+      <arg value="-Noutput"/>
+      <arg value="-U..\.."/>
+      <arg value="-U.."/>
+      <arg value="-U..\..\..\jopl"/>
+      <arg value="-U..\..\Components"/>
+      <arg value="-U${TNT}"/>
+      <arg value="ExImportAIM.dpr"/>
+    </exec>
+  </target>
+</project>
