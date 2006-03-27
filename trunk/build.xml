@@ -5,10 +5,15 @@
   <property name="TNT" value="c:\src\exodus\exodus\components\tntUnicode"/>
   <property name="JCL" value="C:\src\exodus\exodus\components\jcl\source"/>
   <property name="DX" value="c:\\dev\\dxgettext"/>
+  <property name="NSIS" value="c:\program files\NSIS\makensis.exe"/>
 
   <property environment="env"/>
   <property file='user.properties'/>
 
+  <property name="opts.delphi" 
+	    value="-LUvcl -LUrtl -B -Q -U${delphi}\Lib -GD -N.\output"/>
+  <property name="opts.jcl" 
+	    value='-I"${JCL}" -U"${JCL}" -U"${JCL}\common" -U"${JCL}\vcl" -U"${JCL}\windows"'/>
   <property name="dcc" value="${delphi}/bin/dcc32.exe"/>
   <property name="rcc" value="${delphi}/bin/brcc32.exe"/>
   <property name="dxgettext" value="${DX}/dxgettext.exe"/>
@@ -19,6 +24,7 @@
       <fileset dir="exodus">
 	<include name="setup.exe"/>
 	<include name="Exodus.exe"/>
+	<include name="Exodus.zip"/>
 	<include name="*_emoticons.dll"/>
 	<include name="IdleHooks.dll"/>
 	<include name="locale.zip"/>
@@ -30,17 +36,14 @@
       <fileset dir="exodus/plugins">
 	<include name="*.zip"/>
 	<include name="*.dll"/>
+	<include name="*/output/*"/>
       </fileset>
     </delete> 
   </target>
 
   <target name="idlehooks" depends="clean">
     <exec dir="exodus" executable="${dcc}">
-      <arg value='-B'/>
-      <arg value='-Q'/>
-      <arg value='-U"${delphi}\Lib"'/>
-      <arg value="-GD"/>
-      <arg value="-Noutput"/>
+      <arg line="${opts.delphi}"/>
       <arg value="IdleHooks.dpr"/>
     </exec>
   </target>
@@ -57,22 +60,12 @@
     </exec>
   </target>
 
-  <target name="exodus" depends="clean, resources">
+  <target name="exodus" depends="resources">
     <exec dir="exodus" executable="${dcc}">
-      <arg value='-LUvcl'/>
-      <arg value='-LUrtl'/>
-      <arg value='-B'/>
-      <arg value='-Q'/>
-      <arg value='-U"${delphi}\Lib"'/>
-      <arg value='-I"${JCL}"'/>
-      <arg value='-U"${JCL}"'/>
-      <arg value='-U"${JCL}\common"'/>
-      <arg value='-U"${JCL}\vcl"'/>
-      <arg value='-U"${JCL}\windows"'/>
+      <arg line='${opts.delphi}'/> 
+      <arg line='${opts.jcl}'/>
       <arg value="-DExodus"/>
-      <arg value="-GD"/>
       <arg value="-DTRACE_EXCEPTIONS"/>
-      <arg value="-Noutput"/>
       <arg value='-U"Components"'/>
       <arg value='-U"${TNT}"'/>
       <arg value="Exodus.dpr"/>
@@ -140,13 +133,38 @@
   </target>
 
   <target name="plugins">
-    <subant target="">
+    <delete>
+      <fileset dir="exodus/plugins">
+	<include name="plugin-sections-new.nsi"/>
+	<include name="plugin-desc-new.nsi"/>
+	<include name="plugin-i18n-new.nsh"/>
+      </fileset>
+    </delete>
+    <subant verbose="true" genericantfile="plugin.xml">
+      <property name="opts.delphi" value="${opts.delphi}"/>
       <property name="dcc" value="${dcc}"/>
       <property name="TNT" value="${TNT}"/>
-      <fileset dir="exodus/plugins" includes="*/build.xml"/>
+      <property name="exodus" value="${basedir}"/>
+      <property name="exodus.includes" 
+		value="-U${basedir}/jopl -U${basedir}/exodus/output"/>
+      <dirset dir="exodus/plugins" includes="*"/>
     </subant>
   </target>
 
-  <target name="setup" depends="idlehooks, exodus, gettext, msn, yahoo, plugins">
+  <target name='installer' 
+	  depends='idlehooks, exodus, gettext, msn, yahoo, plugins'>
+    <zip basedir="exodus" 
+	 destfile="exodus/Exodus.zip" 
+	 includesfile="exodus/zipfiles.txt">
+      <fileset dir="exodus/plugins" includes="*.dll"/>
+    </zip>
+    <exec dir="exodus" executable="${NSIS}">
+      <arg value="/v1"/>
+      <arg value="/DDAILY"/>
+      <arg value="exodus-new.nsi"/>
+    </exec>
+  </target>
+
+  <target name="setup" depends="clean, installer">
   </target>
 </project>
