@@ -30,15 +30,14 @@ requires
   vcl,
   designide,
   vclx,
-  {$ifdef VER180}
-  TntUnicodeVcl;
-  {$else}
-  TntUnicodeVcl_R70;
-  {$endif}
+  TntUnicodeVcl,
+  vclactnband,
+  vcldb,
+  dbrtl;
 
 contains
   ExRichEdit in 'ExRichEdit.pas',
-  RichOLE in 'richole.pas',
+  richole in 'richole.pas',
   RichEdit2 in 'RichEdit2.pas',
   RTFProperty in 'RTFProperty.pas',
   RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
@@ -46,6 +45,7 @@ contains
   Langs in 'Langs.pas',
   ExodusLabel in 'ExodusLabel.pas',
   Unicode in '..\..\jopl\Unicode.pas',
-  RegExpr in '..\..\jopl\RegExpr.pas';
+  RegExpr in '..\..\jopl\RegExpr.pas',
+  TopStatusFrame in 'TopStatusFrame.pas';
 
 end.
