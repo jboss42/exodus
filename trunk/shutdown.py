@@ -55,7 +55,10 @@ while True:
     wins = []
     last = 0
     while True:
-        win = win32gui.FindWindowEx(0, last, "TFrmExodus", None)
+        try:
+            win = win32gui.FindWindowEx(0, last, "TFrmExodus", None)
+        except:
+            sys.exit(0)
         if win == 0:
             break
         pid = win32process.GetWindowThreadProcessId(win)[1]

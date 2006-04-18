@@ -26,7 +26,10 @@ key = win32api.RegOpenKey(key, "Jabber")
 key = win32api.RegOpenKey(key, "Exodus")
 try:
     restart = win32api.RegOpenKey(key, "Restart")
-
+except:
+    sys.exit(0)
+    
+try:
     keys = []
     for i in range(0, win32api.RegQueryInfoKey(restart)[0]):
         keys.append(win32api.RegEnumKey(restart, i))
