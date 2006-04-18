@@ -23,10 +23,10 @@
   <!-- once you set a prop, it stays set -->
   <property file='user.properties'/>
 
-  <property name="delphi" value="c:/dev/Delphi7"/>
+  <property name="delphi" value="C:\Program Files\Borland\BDS\4.0"/>
   <property name="TNT" value="c:\src\exodus\exodus\components\tntUnicode"/>
   <property name="JCL" value="C:\src\exodus\exodus\components\jcl\source"/>
-  <property name="DX" value="c:\dev\dxgettext"/>
+  <property name="DX" value="C:\Program Files\dxgettext"/>
   <property name="NSIS" value="c:\program files\NSIS\makensis.exe"/>
   <property name="runner" value="c:\program files\exodus"/>
 
