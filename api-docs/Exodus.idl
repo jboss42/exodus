@@ -432,11 +432,11 @@ library Exodus
   ]
     /**
         \interface IExodusControlFont
-        \brief An encapsulation of a Font.
+        \brief Font associated with an IExodusControl
 
-        A Font used within IExodusControl controls. This interface defines properties
-        to accesses and modify the character set, color, height, pitch, size and
-        font name of a font.
+        This interface describes a font used within IExodusControl controls.
+        Methods are defined to accesses and modify the character set, color,
+        height, pitch, size and font name (family) of the font.
 
         \since 0.9.1.1
     **/
@@ -447,12 +447,11 @@ library Exodus
 
         Each typeface (specified by the Name property) supports one or more
         character sets. Check the information supplied by the font vendor to
-        determine what values of Charset might be returned.
-
-        This method is the getter for the Charset property.
+        determine what possible values of the character set might be.
 
         \param Value The current character set identifier.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
+        \see #Name
     **/
     [
     propget,
@@ -464,12 +463,11 @@ library Exodus
 
         Each typeface (specified by the Name property) supports one or more
         character sets. Check the information supplied by the font vendor to
-        determine what values of Charset are valid.
-
-        This method is the setter for the Charset property.
+        determine what is a valid \c Value.
 
         \param Value The new character set identifier.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
+        \see #Name
     **/
     [
     propput,
@@ -481,21 +479,19 @@ library Exodus
 
         Color is specified as a specific 4-byte hexadecimal number, the low three
         bytes represent RGB color intensities for blue, green, and red, respectively.
-        The value 0x00FF0000 represents full-intensity, pure blue, 0x0000FF00 is
-        pure green, and 0x000000FF is pure red. 0x00000000 is black and 0x00FFFFFF
+        The value \p 0x00FF0000 represents full-intensity, pure blue, \p 0x0000FF00 is
+        pure green, and \p 0x000000FF is pure red. \p 0x00000000 is black and \p 0x00FFFFFF
         is white.
 
         If the highest-order byte is zero, the color obtained is the closest
         matching color in the system palette. If the highest-order byte is one
-        (0x01), the color obtained is the closest matching color in the currently
-        realized palette. If the highest-order byte is two (0x02), the value is
+        (<code>0x01</code>), the color obtained is the closest matching color in the currently
+        realized palette. If the highest-order byte is two (<code>0x02</code>), the value is
         matched with the nearest color in the logical palette of the current device
         context.
 
-        This method is the getter for the property Color.
-
         \param Value The font's current color.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
     **/
     [
     propget,
@@ -507,21 +503,19 @@ library Exodus
 
         Color is specified as a specific 4-byte hexadecimal number, the low three
         bytes represent RGB color intensities for blue, green, and red, respectively.
-        The value 0x00FF0000 represents full-intensity, pure blue, 0x0000FF00 is
-        pure green, and 0x000000FF is pure red. 0x00000000 is black and 0x00FFFFFF
+        The value \p 0x00FF0000 represents full-intensity, pure blue, \p 0x0000FF00 is
+        pure green, and \p 0x000000FF is pure red. \p 0x00000000 is black and \p 0x00FFFFFF
         is white.
 
         If the highest-order byte is zero, the color obtained is the closest
         matching color in the system palette. If the highest-order byte is one
-        (0x01), the color obtained is the closest matching color in the currently
-        realized palette. If the highest-order byte is two (0x02), the value is
+        (<code>0x01</code>), the color obtained is the closest matching color in the currently
+        realized palette. If the highest-order byte is two (<code>0x02</code>), the value is
         matched with the nearest color in the logical palette of the current device
         context.
 
-        This method is the setter for the property Color.
-
         \param Value The font's new color.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
     **/
     [
     propput,
@@ -541,10 +535,8 @@ library Exodus
         concerned with the actual size of the font in pixels when displaying
         the font on the screen.
 
-        This method is the getter for the property Height.
-
         \param Value The font's current height.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see #Size
     **/
     [
@@ -565,10 +557,8 @@ library Exodus
         concerned with the actual size of the font in pixels when displaying
         the font on the screen.
 
-        This method is the setter for the property Height.
-
         \param Value The font's new height.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see #Size
     **/
     [
@@ -581,17 +571,16 @@ library Exodus
 
         Use Name to specify the typeface of the font. If the font family
         described by Name includes multiple character sets, be sure to set the
-        Charset property as well.
-        Note:
-            If the combination of font family (typeface) and attributes
-            (such as bold or italic) specifies a font that is not available on
-            the system, the system substitutes a different font.
-
-        This method is the getter for the property Name.
+        Charset property as well.\n
+        \b Note:
+        \note
+        If the combination of font family (typeface) and attributes
+        (such as bold or italic) specifies a font that is not available on
+        the system, the system substitutes a different font.
 
         \param Value The current font family.
-        \return HRESULT
-        \see Charset, Pitch, Size
+        \return S_OK if successful, or an error value otherwise.
+        \see #Charset, #Pitch, #Size
     **/
     [
     propget,
@@ -603,17 +592,18 @@ library Exodus
 
         Use Name to specify the typeface of the font. If the font family
         described by Name includes multiple character sets, be sure to set the
-        Charset property as well.
-        Note:
-            If the combination of font family (typeface) and attributes
-            (such as bold or italic) specifies a font that is not available on
-            the system, the system substitutes a different font.
+        Charset property as well.\n
+        \b Note:
+        \note
+        If the combination of font family (typeface) and attributes
+        (such as bold or italic) specifies a font that is not available on
+        the system, the system substitutes a different font.
 
         This method is the setter for the property Name.
 
         \param Value The new font family.
-        \return HRESULT
-        \see Charset, Pitch, Size
+        \return S_OK if successful, or an error value otherwise.
+        \see #Charset, #Pitch, #Size
     **/
     [
     propput,
@@ -630,18 +620,21 @@ library Exodus
         Variable pitch fonts are generally used to give text a more natural
         appearance.
 
-        Setting the Pitch of a fixed-pitch font to fpVariable or a
-        variable-pitch font to fpFixed will cause window system to find what it
+        Setting the Pitch of a fixed-pitch font to variable or a
+        variable-pitch font to fixed will cause window system to find what it
         considers the best match to all of the font characteristics that have
         been specified. This might have no effect on the appearance of a font,
         or might cause the window system to substitute a different font with the
         appropriate pitch. For example, setting the pitch of Serif
-        (a variable-pitch font) to fpFixed causes Courier to be displayed.
-        
-        This method is the getter for the property Pitch.
+        (a variable-pitch font) to fixed causes Courier to be displayed.
+
+        \p Value will be one of three values:
+        \li 0 default for the font
+        \li 1 variable-pitch
+        \li 2 fixed-pitch
 
         \param Value The font's current pitch.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see Name
     **/
     [
@@ -667,10 +660,15 @@ library Exodus
         appropriate pitch. For example, setting the pitch of Serif
         (a variable-pitch font) to fpFixed causes Courier to be displayed.
 
-        This method is the setter for the property Pitch.
-
+        \p Value must be one of three values:
+        \li 0 default for the font
+        \li 1 variable-pitch
+        \li 2 fixed-pitch
+        
+        If \p Value is anything else the font's pitch will not be changed.
+         
         \param Value The font's new pitch.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see Name
     **/
     [
@@ -681,15 +679,13 @@ library Exodus
     /**
         \brief Get the font's size.
 
-        Use Size to specify the point size of the font. If the value is negative,
+        Use Size to get the point size of the font. If the value is negative,
         the internal leading that appears at the top of each line of text is
-        included. If the value is positive, Size represents the height of the
+        included. If the value is positive, \p Value represents the height of the
         characters but not the internal leading.
 
-        This method is the getter for the property Size.
-
         \param Value The font's current size.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see Height
     **/
     [
@@ -702,13 +698,11 @@ library Exodus
 
         Use Size to specify the point size of the font. If the value is negative,
         the internal leading that appears at the top of each line of text is
-        included. If the value is positive, Size represents the height of the
+        included. If the value is positive, \p Value represents the height of the
         characters but not the internal leading.
 
-        This method is the setter for the property Size.
-
         \param Value The font's new size.
-        \return HRESULT
+        \return S_OK if successful, or an error value otherwise.
         \see Height
     **/
     [
@@ -737,180 +731,418 @@ library Exodus
 
    interface IExodusControlMenuItem: IExodusControl
   {
+    /**
+        \brief Get the name of the menu item
+
+        Use to find out what the name of the control is.
+        \c Value must have at least 250 bytes allocated.
+
+        \param Value \c BSTR to fill with the menu items name
+        \return S_OK on success
+    **/
     [
-    propget, 
+    propget,
     id(0x00000001)
     ]
     HRESULT _stdcall Name([out, retval] BSTR * Value );
+    /**
+        \brief Set the name of the menu item.
+
+        Sets the name of the menu item.
+
+        WARNING This is the name code uses when referencing
+        the menu item and changing it at runtime could cause exceptions to
+        be thrown.
+        \c Value must be a valid Pascal identifier. Only the
+        first 250 characters will are significant and case is ignored.
+
+        \param Value The new name of the menu item.
+        \return S_OK if name change was successful
+    **/
     [
-    propput, 
+    propput,
     id(0x00000001)
     ]
     HRESULT _stdcall Name([in] BSTR Value );
+    /**
+        \brief Get the Tag from the control
+
+        Each IExodusControl has a 32 bit value associated with it that the
+        user may use as they see fit. Typical uses are as a pointer to additonal
+        information or for bitmasked flags.
+
+        \param Value The current user data for this control.
+        \return S_OK on success
+    **/
     [
-    propget, 
+    propget,
     id(0x00000002)
     ]
     HRESULT _stdcall Tag([out, retval] long * Value );
+    /**
+        \brief Set the Tag for the control
+
+        Each IExodusControl has a 32 bit value associated with it that the
+        user may use as they see fit. Typical uses are as a pointer to additonal
+        information or for bitmasked flags.
+
+        \param Value The new user data for this control
+        \return S_OK on success
+    **/
     [
-    propput, 
+    propput,
     id(0x00000002)
     ]
     HRESULT _stdcall Tag([in] long Value );
+    /**
+        \brief Get state of auto check functionality.
+
+        When AutoCheck is true, then every time the menu item is clicked, the
+        value of the Checked property toggles automatically before any events
+        are fired. When AutoCheck is false, the application must explicitly set
+        the value of the Checked property.
+
+        \c Value will either be 0 (FALSE) or 1(TRUE).
+
+        \param Value The current state of auto checking.
+        \return S_OK on success
+    **/
     [
-    propget, 
+    propget,
     id(0x00000003)
     ]
     HRESULT _stdcall AutoCheck([out, retval] long * Value );
+    /**
+        \brief Set the state of auto check functionality
+
+        When AutoCheck is true, then every time the menu item is clicked, the
+        value of the Checked property toggles automatically before any events
+        are fired. When AutoCheck is false, the application must explicitly set
+        the value of the Checked property.
+
+        \c Value must be either 0 (FALSE) or 1(TRUE). All other values will
+        be ignored and the auto check functionality will be unchanged.
+
+        \param Value The new state of auto checking.
+        \return S_OK
+    **/
     [
-    propput, 
+    propput,
     id(0x00000003)
     ]
     HRESULT _stdcall AutoCheck([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000004)
     ]
     HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000004)
     ]
     HRESULT _stdcall AutoHotkeys([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000005)
     ]
     HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000005)
     ]
     HRESULT _stdcall AutoLineReduction([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000006)
     ]
     HRESULT _stdcall Break([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000006)
     ]
     HRESULT _stdcall Break([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000007)
     ]
     HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000007)
     ]
     HRESULT _stdcall Caption([in] BSTR Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000008)
     ]
     HRESULT _stdcall Checked([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000008)
     ]
     HRESULT _stdcall Checked([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000009)
     ]
     HRESULT _stdcall Default([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000009)
     ]
     HRESULT _stdcall Default([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000A)
     ]
     HRESULT _stdcall Enabled([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000A)
     ]
     HRESULT _stdcall Enabled([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000B)
     ]
     HRESULT _stdcall GroupIndex([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000B)
     ]
     HRESULT _stdcall GroupIndex([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000C)
     ]
     HRESULT _stdcall HelpContext([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000C)
     ]
     HRESULT _stdcall HelpContext([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000D)
     ]
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000D)
     ]
     HRESULT _stdcall Hint([in] BSTR Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000E)
     ]
     HRESULT _stdcall imageIndex([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000E)
     ]
     HRESULT _stdcall imageIndex([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x0000000F)
     ]
     HRESULT _stdcall RadioItem([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x0000000F)
     ]
     HRESULT _stdcall RadioItem([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000010)
     ]
     HRESULT _stdcall ShortCut([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000010)
     ]
     HRESULT _stdcall ShortCut([in] long Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000011)
     ]
     HRESULT _stdcall Visible([out, retval] long * Value );
+    /**
+        \brief
+
+        \param Value
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000011)
     ]
     HRESULT _stdcall Visible([in] long Value );
   };
 
   [
-    uuid(31485408-E6E7-437D-A0FE-C176DF0D2CD8), 
+    uuid(31485408-E6E7-437D-A0FE-C176DF0D2CD8),
     version(1.0)
   ]
   /**
