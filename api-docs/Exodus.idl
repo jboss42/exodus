@@ -49,7 +49,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-   /** !\interface IExodusRosterItem
+   /**\interface IExodusRosterItem
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -57,7 +57,7 @@ library Exodus
 
    interface IExodusRosterItem: IDispatch
   {
-  	/** !
+  	/**
     	\brief a breif description of JabberID get
 
       more detail
@@ -67,7 +67,7 @@ library Exodus
     id(0x00000001)
     ]
     HRESULT _stdcall JabberID([out, retval] BSTR * Value );
-  	/** !
+  	/**
     	\brief a breif description of JabberID put
 
       more detail
@@ -255,7 +255,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-   /** !\interface IExodusPresence
+   /**\interface IExodusPresence
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -360,7 +360,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusAuth
+  /**\interface IExodusAuth
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -393,9 +393,10 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusRosterImages
-    \brief a breif description
-    
+  /**
+  \interface IExodusRosterImages
+  brief a breif description
+
     <p>a more detailed description</p>
   **/
 
@@ -424,91 +425,314 @@ library Exodus
   };
 
   [
-    uuid(D8297D0C-A316-4E9D-A89C-095CFAE51141), 
+    uuid(D8297D0C-A316-4E9D-A89C-095CFAE51141),
     version(1.0),
-    dual, 
+    dual,
     oleautomation
   ]
-  /** !\interface IExodusControlFont
-    \brief a breif description
-    
-    <p>a more detailed description</p>
-  **/
+    /**
+        \interface IExodusControlFont
+        \brief An encapsulation of a Font.
 
+        A Font used within IExodusControl controls. This interface defines properties
+        to accesses and modify the character set, color, height, pitch, size and
+        font name of a font.
+
+        \since 0.9.1.1
+    **/
    interface IExodusControlFont: IExodusControl
   {
+    /**
+        \brief Get the font's character set.
+
+        Each typeface (specified by the Name property) supports one or more
+        character sets. Check the information supplied by the font vendor to
+        determine what values of Charset might be returned.
+
+        This method is the getter for the Charset property.
+
+        \param Value The current character set identifier.
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000001)
     ]
     HRESULT _stdcall Charset([out, retval] long * Value );
+    /**
+        \brief Set the font's character set.
+
+        Each typeface (specified by the Name property) supports one or more
+        character sets. Check the information supplied by the font vendor to
+        determine what values of Charset are valid.
+
+        This method is the setter for the Charset property.
+
+        \param Value The new character set identifier.
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000001)
     ]
     HRESULT _stdcall Charset([in] long Value );
+    /**
+        \brief Get the font's color.
+
+        Color is specified as a specific 4-byte hexadecimal number, the low three
+        bytes represent RGB color intensities for blue, green, and red, respectively.
+        The value 0x00FF0000 represents full-intensity, pure blue, 0x0000FF00 is
+        pure green, and 0x000000FF is pure red. 0x00000000 is black and 0x00FFFFFF
+        is white.
+
+        If the highest-order byte is zero, the color obtained is the closest
+        matching color in the system palette. If the highest-order byte is one
+        (0x01), the color obtained is the closest matching color in the currently
+        realized palette. If the highest-order byte is two (0x02), the value is
+        matched with the nearest color in the logical palette of the current device
+        context.
+
+        This method is the getter for the property Color.
+
+        \param Value The font's current color.
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x00000002)
     ]
     HRESULT _stdcall Color([out, retval] long * Value );
+    /**
+        \brief Set the font's color.
+
+        Color is specified as a specific 4-byte hexadecimal number, the low three
+        bytes represent RGB color intensities for blue, green, and red, respectively.
+        The value 0x00FF0000 represents full-intensity, pure blue, 0x0000FF00 is
+        pure green, and 0x000000FF is pure red. 0x00000000 is black and 0x00FFFFFF
+        is white.
+
+        If the highest-order byte is zero, the color obtained is the closest
+        matching color in the system palette. If the highest-order byte is one
+        (0x01), the color obtained is the closest matching color in the currently
+        realized palette. If the highest-order byte is two (0x02), the value is
+        matched with the nearest color in the logical palette of the current device
+        context.
+
+        This method is the setter for the property Color.
+
+        \param Value The font's new color.
+        \return HRESULT
+    **/
     [
-    propput, 
+    propput,
     id(0x00000002)
     ]
     HRESULT _stdcall Color([in] long Value );
+    /**
+        \brief Get the font's height.
+
+        Use Height to specify the height of the font in pixels. If the value is
+        negative, the internal leading that appears at the top of each line of
+        text is not measured. If the value is positive, Height represents the
+        height of the characters plus the internal leading.
+
+        To specify the size of the font in points, use the Size property instead.
+        Users usually specify font size in points, while applications may be
+        concerned with the actual size of the font in pixels when displaying
+        the font on the screen.
+
+        This method is the getter for the property Height.
+
+        \param Value The font's current height.
+        \return HRESULT
+        \see #Size
+    **/
     [
-    propget, 
+    propget,
     id(0x00000003)
     ]
     HRESULT _stdcall Height([out, retval] long * Value );
+    /**
+        \brief Set the font's height.
+
+        Use Height to specify the height of the font in pixels. If the value is
+        negative, the internal leading that appears at the top of each line of
+        text is not measured. If the value is positive, Height represents the
+        height of the characters plus the internal leading.
+
+        To specify the size of the font in points, use the Size property instead.
+        Users usually specify font size in points, while applications may be
+        concerned with the actual size of the font in pixels when displaying
+        the font on the screen.
+
+        This method is the setter for the property Height.
+
+        \param Value The font's new height.
+        \return HRESULT
+        \see #Size
+    **/
     [
-    propput, 
+    propput,
     id(0x00000003)
     ]
     HRESULT _stdcall Height([in] long Value );
+    /**
+        \brief Get the font family.
+
+        Use Name to specify the typeface of the font. If the font family
+        described by Name includes multiple character sets, be sure to set the
+        Charset property as well.
+        Note:
+            If the combination of font family (typeface) and attributes
+            (such as bold or italic) specifies a font that is not available on
+            the system, the system substitutes a different font.
+
+        This method is the getter for the property Name.
+
+        \param Value The current font family.
+        \return HRESULT
+        \see Charset, Pitch, Size
+    **/
     [
-    propget, 
+    propget,
     id(0x00000004)
     ]
     HRESULT _stdcall Name([out, retval] BSTR * Value );
+    /**
+        \brief Set the font family.
+
+        Use Name to specify the typeface of the font. If the font family
+        described by Name includes multiple character sets, be sure to set the
+        Charset property as well.
+        Note:
+            If the combination of font family (typeface) and attributes
+            (such as bold or italic) specifies a font that is not available on
+            the system, the system substitutes a different font.
+
+        This method is the setter for the property Name.
+
+        \param Value The new font family.
+        \return HRESULT
+        \see Charset, Pitch, Size
+    **/
     [
-    propput, 
+    propput,
     id(0x00000004)
     ]
     HRESULT _stdcall Name([in] BSTR Value );
+    /**
+        \brief Get the font's pitch.
+
+        Each typeface has an associated pitch. The characters in fixed-pitch
+        fonts are all the same width. The characters in variable-pitch fonts
+        differ in width. Fixed pitch fonts are generally used for representing
+        source code, because they allow the indentation to line up properly.
+        Variable pitch fonts are generally used to give text a more natural
+        appearance.
+
+        Setting the Pitch of a fixed-pitch font to fpVariable or a
+        variable-pitch font to fpFixed will cause window system to find what it
+        considers the best match to all of the font characteristics that have
+        been specified. This might have no effect on the appearance of a font,
+        or might cause the window system to substitute a different font with the
+        appropriate pitch. For example, setting the pitch of Serif
+        (a variable-pitch font) to fpFixed causes Courier to be displayed.
+        
+        This method is the getter for the property Pitch.
+
+        \param Value The font's current pitch.
+        \return HRESULT
+        \see Name
+    **/
     [
-    propget, 
+    propget,
     id(0x00000005)
     ]
     HRESULT _stdcall Pitch([out, retval] long * Value );
+    /**
+        \brief Set the font's pitch.
+
+        Each typeface has an associated pitch. The characters in fixed-pitch
+        fonts are all the same width. The characters in variable-pitch fonts
+        differ in width. Fixed pitch fonts are generally used for representing
+        source code, because they allow the indentation to line up properly.
+        Variable pitch fonts are generally used to give text a more natural
+        appearance.
+
+        Setting the Pitch of a fixed-pitch font to fpVariable or a
+        variable-pitch font to fpFixed will cause window system to find what it
+        considers the best match to all of the font characteristics that have
+        been specified. This might have no effect on the appearance of a font,
+        or might cause the window system to substitute a different font with the
+        appropriate pitch. For example, setting the pitch of Serif
+        (a variable-pitch font) to fpFixed causes Courier to be displayed.
+
+        This method is the setter for the property Pitch.
+
+        \param Value The font's new pitch.
+        \return HRESULT
+        \see Name
+    **/
     [
-    propput, 
+    propput,
     id(0x00000005)
     ]
     HRESULT _stdcall Pitch([in] long Value );
+    /**
+        \brief Get the font's size.
+
+        Use Size to specify the point size of the font. If the value is negative,
+        the internal leading that appears at the top of each line of text is
+        included. If the value is positive, Size represents the height of the
+        characters but not the internal leading.
+
+        This method is the getter for the property Size.
+
+        \param Value The font's current size.
+        \return HRESULT
+        \see Height
+    **/
     [
-    propget, 
+    propget,
     id(0x00000006)
     ]
     HRESULT _stdcall Size([out, retval] long * Value );
+    /**
+        \brief Set the font's size.
+
+        Use Size to specify the point size of the font. If the value is negative,
+        the internal leading that appears at the top of each line of text is
+        included. If the value is positive, Size represents the height of the
+        characters but not the internal leading.
+
+        This method is the setter for the property Size.
+
+        \param Value The font's new size.
+        \return HRESULT
+        \see Height
+    **/
     [
-    propput, 
+    propput,
     id(0x00000006)
     ]
     HRESULT _stdcall Size([in] long Value );
   };
 
   [
-    uuid(EFBC071A-460A-4E1B-89EC-25B23460BA93), 
+    uuid(EFBC071A-460A-4E1B-89EC-25B23460BA93),
     version(1.0),
-    dual, 
+    dual,
     oleautomation
   ]
-  /** !\interface IExodusControlMenuItem
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlMenuItem
+    \brief Describes the properties of an item in a menu.
+
+    Use IExodusControlMenuItem to specify the appearance and behavior of an
+    item in a menu. Each IExodusControlMainMenu or IExodusControlPopupMenu
+    object can contain multiple menu items
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlMenuItem: IExodusControl
@@ -689,9 +913,14 @@ library Exodus
     uuid(31485408-E6E7-437D-A0FE-C176DF0D2CD8), 
     version(1.0)
   ]
+  /**
+    \brief Enumeration of available IExodusControl types
+
+    An enumeration of currently supported IExodusControl types.
+  **/
   typedef enum tagExodusControlTypes
   {
-    ExodusControlButton = 0, 
+    ExodusControlButton = 0,
     ExodusControlCheckBox = 1, 
     ExodusControlComboBox = 2, 
     ExodusControlEdit = 3, 
@@ -717,7 +946,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusIQListener
+  /**\interface IExodusIQListener
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -833,7 +1062,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusListener
+  /**\interface IExodusListener
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -853,7 +1082,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusToolbarButton
+  /**\interface IExodusToolbarButton
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -930,7 +1159,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusLogMsg
+  /**\interface IExodusLogMsg
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1012,7 +1241,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusLogListener
+  /**\interface IExodusLogListener
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1058,7 +1287,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusController
+  /**\interface IExodusController
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1426,7 +1655,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusChat
+  /**\interface IExodusChat
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1525,7 +1754,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusPlugin
+  /**\interface IExodusPlugin
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1589,7 +1818,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-/** !\interface IExodusChatPlugin
+/**\interface IExodusChatPlugin
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1638,7 +1867,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusRoster
+  /**\interface IExodusRoster
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1724,7 +1953,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** ! \interface IExodusPPDB
+  /** \interface IExodusPPDB
   	\brief exoudus ppdb
 
     ppdb for exodus
@@ -1744,7 +1973,7 @@ library Exodus
     id(0x00000003)
     ]
     HRESULT _stdcall Count([out, retval] long * Value );
-    /** !
+    /**
     	\brief last known presence
 
       you got it
@@ -1765,7 +1994,7 @@ library Exodus
     dual,
     oleautomation
   ]
-  /** !\interface IExodusRosterGroup
+  /**\interface IExodusRosterGroup
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1921,7 +2150,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusEntityCache
+  /**\interface IExodusEntityCache
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -1954,7 +2183,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusEntity
+  /**\interface IExodusEntity
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -2031,30 +2260,40 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControl
-    \brief a breif description
-    
-    <p>a more detailed description</p>
-  **/
+	/**
+  	    \interface IExodusControl
+        \brief Parent interface for Controls
 
+        Parent interface for controls. Provides ExodusControlTypes type information
+	**/
    interface IExodusControl: IDispatch
   {
+    /**
+        \brief Get type for the control
+
+        Get the type for an instance of an IExodusControl.
+
+        This method is a getter for the readonly property ControlType.
+
+        \param Value The ExodusControlTypes type of this control.
+        \return HRESULT
+    **/
     [
-    propget, 
+    propget,
     id(0x000000C9)
     ]
     HRESULT _stdcall ControlType([out, retval] ExodusControlTypes * Value /*Warning: unable to validate structure name: */ );
   };
 
   [
-    uuid(896CCC11-8929-4FEC-BC95-C96E5027C1F6), 
-    version(1.0), 
-    dual, 
+    uuid(896CCC11-8929-4FEC-BC95-C96E5027C1F6),
+    version(1.0),
+    dual,
     oleautomation
   ]
-  /** !\interface IExodusControlCheckBox
+  /**\interface IExodusControlCheckBox
     \brief a breif description
-    
+
     <p>a more detailed description</p>
   **/
 
@@ -2408,7 +2647,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlComboBox
+  /**\interface IExodusControlComboBox
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -2874,7 +3113,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlEdit
+  /**\interface IExodusControlEdit
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -3320,7 +3559,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlLabel
+  /**\interface IExodusControlLabel
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -3656,7 +3895,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlListBox
+  /**\interface IExodusControlListBox
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -4132,7 +4371,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlPanel
+  /**\interface IExodusControlPanel
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -4568,7 +4807,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlPopupMenu
+  /**\interface IExodusControlPopupMenu
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -4704,7 +4943,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlRadioButton
+  /**\interface IExodusControlRadioButton
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -5040,7 +5279,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlRichEdit
+  /**\interface IExodusControlRichEdit
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -5541,7 +5780,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlButton
+  /**\interface IExodusControlButton
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -5847,7 +6086,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlBitBtn
+  /**\interface IExodusControlBitBtn
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -6213,7 +6452,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlMainMenu
+  /**\interface IExodusControlMainMenu
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -6319,7 +6558,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlMemo
+  /**\interface IExodusControlMemo
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -6790,7 +7029,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlPageControl
+  /**\interface IExodusControlPageControl
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -7166,7 +7405,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlSpeedButton
+  /**\interface IExodusControlSpeedButton
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -7472,7 +7711,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusToolbar
+  /**\interface IExodusToolbar
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -7501,7 +7740,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusControlForm
+  /**\interface IExodusControlForm
     \brief a breif description
     
     <p>a more detailed description</p>
@@ -8022,7 +8261,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /** !\interface IExodusLogger
+  /**\interface IExodusLogger
     \brief a breif description
     
     <p>a more detailed description</p>
