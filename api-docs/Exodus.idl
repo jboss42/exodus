@@ -445,9 +445,9 @@ library Exodus
     /**
         \brief Get the font's character set.
 
-        Each typeface (specified by the Name property) supports one or more
-        character sets. Check the information supplied by the font vendor to
-        determine what possible values of the character set might be.
+        Retrieve the font's character set.
+        
+        See Charset(long Value) for a detailed explanation.
 
         \param Value The current character set identifier.
         \return S_OK if successful, or an error value otherwise.
@@ -461,13 +461,15 @@ library Exodus
     /**
         \brief Set the font's character set.
 
-        Each typeface (specified by the Name property) supports one or more
-        character sets. Check the information supplied by the font vendor to
-        determine what is a valid \c Value.
+        Specify the font's character set.
+
+        Each typeface (specified by Name(BSTR Value)) supports one or more
+        character sets.\n
+        Check the information supplied by the font vendor to
+        determine what possible values of the character set might be.
 
         \param Value The new character set identifier.
         \return S_OK if successful, or an error value otherwise.
-        \see #Name
     **/
     [
     propput,
@@ -477,18 +479,9 @@ library Exodus
     /**
         \brief Get the font's color.
 
-        Color is specified as a specific 4-byte hexadecimal number, the low three
-        bytes represent RGB color intensities for blue, green, and red, respectively.
-        The value \p 0x00FF0000 represents full-intensity, pure blue, \p 0x0000FF00 is
-        pure green, and \p 0x000000FF is pure red. \p 0x00000000 is black and \p 0x00FFFFFF
-        is white.
+        Retrieve the font's current color.
 
-        If the highest-order byte is zero, the color obtained is the closest
-        matching color in the system palette. If the highest-order byte is one
-        (<code>0x01</code>), the color obtained is the closest matching color in the currently
-        realized palette. If the highest-order byte is two (<code>0x02</code>), the value is
-        matched with the nearest color in the logical palette of the current device
-        context.
+        See Color(long Value) for a detailed explanation.\n
 
         \param Value The font's current color.
         \return S_OK if successful, or an error value otherwise.
@@ -501,6 +494,8 @@ library Exodus
     /**
         \brief Set the font's color.
 
+        Specify the font's color.
+
         Color is specified as a specific 4-byte hexadecimal number, the low three
         bytes represent RGB color intensities for blue, green, and red, respectively.
         The value \p 0x00FF0000 represents full-intensity, pure blue, \p 0x0000FF00 is
@@ -514,6 +509,8 @@ library Exodus
         matched with the nearest color in the logical palette of the current device
         context.
 
+        If \p Value cannot be parsed correctly the font's color will remain unchanged.
+
         \param Value The font's new color.
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -525,15 +522,13 @@ library Exodus
     /**
         \brief Get the font's height.
 
-        Use Height to specify the height of the font in pixels. If the value is
-        negative, the internal leading that appears at the top of each line of
-        text is not measured. If the value is positive, Height represents the
-        height of the characters plus the internal leading.
+        Retrieve the height of the font in pixels.
 
-        To specify the size of the font in points, use the Size property instead.
-        Users usually specify font size in points, while applications may be
-        concerned with the actual size of the font in pixels when displaying
-        the font on the screen.
+        If \p Value is
+        negative, it only specifys the font height and does not include
+        the internal leading that appears at the top of each line of text.
+        If \p Value is positive, it includes the height of the characters
+        plus the internal leading.
 
         \param Value The font's current height.
         \return S_OK if successful, or an error value otherwise.
@@ -547,12 +542,15 @@ library Exodus
     /**
         \brief Set the font's height.
 
-        Use Height to specify the height of the font in pixels. If the value is
-        negative, the internal leading that appears at the top of each line of
-        text is not measured. If the value is positive, Height represents the
-        height of the characters plus the internal leading.
+        Specify the height of the font in pixels.
 
-        To specify the size of the font in points, use the Size property instead.
+        If \p Value is
+        negative, it will only specify the font height and the internal leading
+        that appears at the top of each line of text is not measured.
+        If \p Value is positive, it will specify the height of the characters
+        plus the internal leading.
+
+        To specify the size of the font in points, use Size(long Value).
         Users usually specify font size in points, while applications may be
         concerned with the actual size of the font in pixels when displaying
         the font on the screen.
@@ -569,14 +567,9 @@ library Exodus
     /**
         \brief Get the font family.
 
-        Use Name to specify the typeface of the font. If the font family
-        described by Name includes multiple character sets, be sure to set the
-        Charset property as well.\n
-        \b Note:
-        \note
-        If the combination of font family (typeface) and attributes
-        (such as bold or italic) specifies a font that is not available on
-        the system, the system substitutes a different font.
+        Retrieve the font family.
+
+        \p Value should have at least 256 bytes allocated.
 
         \param Value The current font family.
         \return S_OK if successful, or an error value otherwise.
@@ -590,16 +583,14 @@ library Exodus
     /**
         \brief Set the font family.
 
-        Use Name to specify the typeface of the font. If the font family
-        described by Name includes multiple character sets, be sure to set the
+        Specify the font family (typeface) of the font.
+
+        If the font family
+        described by \p Value includes multiple character sets, be sure to set the
         Charset property as well.\n
-        \b Note:
-        \note
         If the combination of font family (typeface) and attributes
         (such as bold or italic) specifies a font that is not available on
         the system, the system substitutes a different font.
-
-        This method is the setter for the property Name.
 
         \param Value The new font family.
         \return S_OK if successful, or an error value otherwise.
@@ -613,6 +604,8 @@ library Exodus
     /**
         \brief Get the font's pitch.
 
+        Retrieve the font's pitch.
+
         Each typeface has an associated pitch. The characters in fixed-pitch
         fonts are all the same width. The characters in variable-pitch fonts
         differ in width. Fixed pitch fonts are generally used for representing
@@ -620,16 +613,8 @@ library Exodus
         Variable pitch fonts are generally used to give text a more natural
         appearance.
 
-        Setting the Pitch of a fixed-pitch font to variable or a
-        variable-pitch font to fixed will cause window system to find what it
-        considers the best match to all of the font characteristics that have
-        been specified. This might have no effect on the appearance of a font,
-        or might cause the window system to substitute a different font with the
-        appropriate pitch. For example, setting the pitch of Serif
-        (a variable-pitch font) to fixed causes Courier to be displayed.
-
-        \p Value will be one of three values:
-        \li 0 default for the font
+        \p Value will be one of the following:
+        \li 0 default pitch of the font family
         \li 1 variable-pitch
         \li 2 fixed-pitch
 
@@ -645,28 +630,21 @@ library Exodus
     /**
         \brief Set the font's pitch.
 
-        Each typeface has an associated pitch. The characters in fixed-pitch
-        fonts are all the same width. The characters in variable-pitch fonts
-        differ in width. Fixed pitch fonts are generally used for representing
-        source code, because they allow the indentation to line up properly.
-        Variable pitch fonts are generally used to give text a more natural
-        appearance.
+        Specify the font's pitch.
 
-        Setting the Pitch of a fixed-pitch font to fpVariable or a
-        variable-pitch font to fpFixed will cause window system to find what it
+        See Pitch(long * Value) for additonal information.
+
+        Setting the Pitch of a fixed-pitch font to variable or a
+        variable-pitch font to fixed will cause window system to find what it
         considers the best match to all of the font characteristics that have
         been specified. This might have no effect on the appearance of a font,
         or might cause the window system to substitute a different font with the
         appropriate pitch. For example, setting the pitch of Serif
-        (a variable-pitch font) to fpFixed causes Courier to be displayed.
+        (a variable-pitch font) to fixed causes Courier to be displayed.
 
-        \p Value must be one of three values:
-        \li 0 default for the font
-        \li 1 variable-pitch
-        \li 2 fixed-pitch
-        
-        If \p Value is anything else the font's pitch will not be changed.
-         
+        Setting \p Value to anything other than 0 (default), 1 (variable) or 2 (fixed)
+        will be ignored and the font's pitch will remain unchanged..
+
         \param Value The font's new pitch.
         \return S_OK if successful, or an error value otherwise.
         \see Name
@@ -679,10 +657,9 @@ library Exodus
     /**
         \brief Get the font's size.
 
-        Use Size to get the point size of the font. If the value is negative,
-        the internal leading that appears at the top of each line of text is
-        included. If the value is positive, \p Value represents the height of the
-        characters but not the internal leading.
+        Retrieve the font's size in points.
+
+        See Size(long Value) for a detailed explanation.
 
         \param Value The font's current size.
         \return S_OK if successful, or an error value otherwise.
@@ -696,9 +673,11 @@ library Exodus
     /**
         \brief Set the font's size.
 
-        Use Size to specify the point size of the font. If the value is negative,
+        Specify the point size of the font.
+
+        If \p Value is negative,
         the internal leading that appears at the top of each line of text is
-        included. If the value is positive, \p Value represents the height of the
+        included. If the \p Value is positive, \p Value represents the height of the
         characters but not the internal leading.
 
         \param Value The font's new size.
