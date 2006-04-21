@@ -539,6 +539,10 @@ library Exodus
     id(0x00000003)
     ]
     HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput,
+    id(0x00000003)
+    ]
     /**
         \brief Set the font's height.
 
@@ -559,10 +563,6 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
         \see #Size
     **/
-    [
-    propput,
-    id(0x00000003)
-    ]
     HRESULT _stdcall Height([in] long Value );
     /**
         \brief Get the font family.
@@ -2679,9 +2679,14 @@ library Exodus
     id(0x00000003)
     ]
     /**
-        \brief
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
 
-        \param Value
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * Value );
@@ -2690,10 +2695,19 @@ library Exodus
     id(0x00000003)
     ]
     /**
-        \brief 
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
 
-        \param Value
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
         \return S_OK if successful, or an error value otherwise.
+        \see Top
     **/
     HRESULT _stdcall Left([in] long Value );
     [
@@ -2701,9 +2715,14 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief 
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
 
-        \param Value
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Top([out, retval] long * Value );
@@ -2712,10 +2731,19 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief 
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
 
-        \param Value
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
         \return S_OK if successful, or an error value otherwise.
+        \see Left
     **/
     HRESULT _stdcall Top([in] long Value );
     [
@@ -2723,9 +2751,13 @@ library Exodus
     id(0x00000005)
     ]
     /**
-        \brief 
+        \brief Get the horizontal size of the control.
 
-        \param Value
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Width([out, retval] long * Value );
@@ -2734,9 +2766,14 @@ library Exodus
     id(0x00000005)
     ]
     /**
-        \brief 
+        \brief  Set the horizontal size of the control.
 
-        \param Value
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Width([in] long Value );
@@ -2745,9 +2782,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief 
+        \brief Get the verticle size of the control.
 
-        \param Value
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * Value );
@@ -2756,9 +2797,14 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief 
+        \brief  Set the verticle size of the control.
 
-        \param Value
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([in] long Value );
@@ -3591,9 +3637,14 @@ library Exodus
     id(0x00000003)
     ]
     /**
-        \brief 
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
 
-        \param Value
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * Value );
@@ -3602,10 +3653,19 @@ library Exodus
     id(0x00000003)
     ]
     /**
-        \brief 
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
 
-        \param Value
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
         \return S_OK if successful, or an error value otherwise.
+        \see Top
     **/
     HRESULT _stdcall Left([in] long Value );
     [
@@ -3613,9 +3673,14 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief 
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
 
-        \param Value
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Top([out, retval] long * Value );
@@ -3624,10 +3689,19 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief 
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
 
-        \param Value
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
         \return S_OK if successful, or an error value otherwise.
+        \see Left
     **/
     HRESULT _stdcall Top([in] long Value );
     [
@@ -3635,9 +3709,13 @@ library Exodus
     id(0x00000005)
     ]
     /**
-        \brief 
+        \brief Get the horizontal size of the control.
 
-        \param Value
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Width([out, retval] long * Value );
@@ -3646,9 +3724,14 @@ library Exodus
     id(0x00000005)
     ]
     /**
-        \brief 
+        \brief  Set the horizontal size of the control.
 
-        \param Value
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Width([in] long Value );
@@ -3657,9 +3740,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief 
+        \brief Get the verticle size of the control.
 
-        \param Value
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * Value );
@@ -3668,9 +3755,14 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief 
+        \brief  Set the verticle size of the control.
 
-        \param Value
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([in] long Value );
@@ -4519,41 +4611,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -5237,41 +5423,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -5865,41 +6145,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -6621,41 +6995,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -7622,41 +8090,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -8262,41 +8824,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -9034,41 +9690,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -9563,41 +10313,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -10373,41 +11217,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -11111,41 +12049,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -11677,41 +12709,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
@@ -12235,41 +13361,135 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Retrieve the horizontal coordinate of the left edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Left(long Value) for additional information.
+
+        \param Value Left side poition of control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Left([out, retval] long * Value );
     [
     propput, 
     id(0x00000003)
     ]
+    /**
+        \brief Set the horizontal coordinate of the left edge of a control relative to its parent.
+
+        Specify the horizontal coordinate of the left edge of a control relative to its parent.
+
+        If the control is contained in another control, the Left (and Top)
+        are relative to the parent control. \n
+        For IExodusControlForm, Left is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New horizontal position of LHS of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Top
+    **/
     HRESULT _stdcall Left([in] long Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+
+        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+
+        \p Value is in pixels.
+        See Top(long Value) for additional information.
+
+        \param Value Coordinate of the top of the control
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Top([out, retval] long * Value );
     [
     propput, 
     id(0x00000004)
     ]
+    /**
+        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+
+        Specify the verticle coordinate of the top edge of a control relative to its parent.
+
+        If the control is contained in another control, top (and left) coordinates
+        are relative to the parent control. \n
+        For IExodusControlForm, top is relative to the screen.
+
+        \p Value is in pixels.
+
+        \param Value New verticle position of top of control.
+        \return S_OK if successful, or an error value otherwise.
+        \see Left
+    **/
     HRESULT _stdcall Top([in] long Value );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get the horizontal size of the control.
+
+        Retrieve the horizontal size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The horizontal size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief  Set the horizontal size of the control.
+
+         Specify the horizontal size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting width has no effect.
+
+        \param Value The new width
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Width([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get the verticle size of the control.
+
+        Retrieve the verticle size of the control.
+
+        \p Value is in pixels.
+
+        \param Value The verticle size of the control.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief  Set the verticle size of the control.
+
+         Specify the verticle size of the control.
+
+         \p Value is in pixels.
+         \note For IExodusPageControl controls setting height has no effect.
+
+        \param Value The new height
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Height([in] long Value );
     [
     propget, 
