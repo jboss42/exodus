@@ -49,112 +49,247 @@ library Exodus
     dual, 
     oleautomation
   ]
-   /**\interface IExodusRosterItem
-    \brief a breif description
+   /**  \interface IExodusRosterItem
+        \brief Methods for Roster Items.
     
-    <p>a more detailed description</p>
+        Encapsulates Roster Items.
    **/
 
    interface IExodusRosterItem: IDispatch
   {
   	/**
-    	\brief a breif description of JabberID get
+    	\brief This method is the getter for the roster item's JID.
+        
+        This method allows access to the JID of this roster item.
 
-      more detail
-		**/
+        \param Value A pointer to <code>BSTR</code> which is the roster item's full JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000001)
     ]
     HRESULT _stdcall JabberID([out, retval] BSTR * Value );
   	/**
-    	\brief a breif description of JabberID put
+    	\brief This method is depreciated and does nothing.
 
-      more detail
-		**/
+        This method is a no op at this time and will likely be removed.
+    **/
     [
     propput,
     id(0x00000001)
     ]
     HRESULT _stdcall JabberID([in] BSTR Value );
+    /**
+       \brief This method is a getter for the subscription member.
 
+       This methods returns the value of subscription for this roster item.  The value returned should be a valid subscription state or blank:
+       \li None
+       \li None + Pending Out
+       \li None + Pending In
+       \li None + Pending Out/In
+       \li To
+       \li To + Pending In
+       \li From
+       \li From + Pending Out
+       \li Both
+       \li '' (blank if not set)
+
+       \param Value is a pointer to \c BSTR value representing the roster item's subscription.
+       \return \c HRESULT either \c S_OK or an error value.
+        **/
     [
     propget,
     id(0x00000002)
     ]
     ;!
     HRESULT _stdcall Subscription([out, retval] BSTR * Value );
+    /**
+        \brief This method is the setter for the subscription value.
+
+        This method sets the subscription state for this roster item.  
+        \n\b Note: using this doesn't actually change the subscription state via protocol.
+
+        \param Value A pointer to \c BSTR for the new value of the subscription.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000002)
     ]
     HRESULT _stdcall Subscription([in] BSTR Value );
+    /**
+        \brief This method is the getter for the ask value of this roster item.
+
+        This method returns the value of the ask attribute (subscription or '' if not set).
+
+        \param Value A pointer to \c BSTR that will hold the value of the roster item's ask attribute.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000004)
     ]
     HRESULT _stdcall Ask([out, retval] BSTR * Value );
+    /**
+        \brief This method counts the number of groups this roster item is in.
+
+        \param Value A pointer to \c long that gets set with the number of groups this item is in.
+        \return \c HRESULT either \c S_OK or an error value.                   
+    **/
     [
     propget,
     id(0x00000005)
     ]
     HRESULT _stdcall GroupCount([out, retval] long * Value );
+    /**
+        \brief This method finds the group name at the specified index.
+
+        This method will return the group name at the specified index from the list of groups this item belongs to.
+
+        \param Index The index of the group a \c long.
+        \param Value A pointer to \c BSTR that receives the group name at the specified index.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall Group([in] long Index, [out, retval] BSTR * Value );
+    /**
+        \brief This method creates an XML description of this Roster Item.
+
+        \param xml A pointer to \c BSTR which receives the XML representation of this roster item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000007)
     ]
     HRESULT _stdcall xml([out, retval] BSTR * xml );
+    /**
+        \brief This method removes this roster item from the roster.
+
+        This method removes the item from the roster and fires a /roster/remove event with a remove element payload.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000008)
     ]
     HRESULT _stdcall Remove( void );
+    /**
+        \brief This method updates the roster item.
+
+        This method fires a /roster/item event with a update element payload.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000009)
     ]
     HRESULT _stdcall Update( void );
+    /**
+        \brief This method accesses the nickname of this roster item.
+
+        \param Value A pointer to \c BSTR that receives the roster item's nickname.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x0000000A)
     ]
     HRESULT _stdcall nickname([out, retval] BSTR * Value );
+    /**
+        \brief This method sets the nickname of this roster item.
+
+        \param Value A \c BSTR contianing the desired nickname.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x0000000A)
     ]
     HRESULT _stdcall nickname([in] BSTR Value );
+    /**
+        \brief This method sets the nickname of this roster item.
+
+        \param Value A \c BSTR contianing the desired nickname.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x0000000B)
     ]
     HRESULT _stdcall RawNickname([out, retval] BSTR * Value );
+    /**
+        \brief This method accesses the menu id associated with this roster item.
+
+        This may return empty string if no context menu is associated with this item.
+
+        \param Value A pointer to \c BSTR that receives the value of menu id.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000C9)
     ]
     HRESULT _stdcall ContextMenuID([out, retval] BSTR * Value );
+    /**
+        \brief This method sets the value of the menu id.
+
+        This method not only sets the member menu id, but sets the 
+        \c TJabberRosterItem's custom context menu.
+
+        \param Value A \c BSTR representing the id of the desired menu item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000C9)
     ]
     HRESULT _stdcall ContextMenuID([in] BSTR Value );
+    /**
+        \brief This method accesses the status of this roster item.
+
+        This is the value of the staus element of the entities' presence.
+
+        \param Value A pointer to \c BSTR that receives the item's presence.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CA)
     ]
     HRESULT _stdcall Status([out, retval] BSTR * Value );
+    /**
+        \brief This method sets the status of this roster item.
+
+        \b Note this doesn't send protocol, only changes the value on this object.
+
+        \param  Value A \c BSTR that contains the new status.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000CA)
     ]
     HRESULT _stdcall Status([in] BSTR Value );
+    /**
+        \brief This method returns the tooltip associated with this roster item.
+
+        \param Value A pointer to \c BSTR that receives the tooltip text.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CB)
     ]
     HRESULT _stdcall Tooltip([out, retval] BSTR * Value );
+    /**
+        \brief This method sets the tooltip associated with this roster item.
+
+        \param Value A \c BSTR that is the new tooltip.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000CB)
