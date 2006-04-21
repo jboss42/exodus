@@ -2592,10 +2592,14 @@ library Exodus
     dual,
     oleautomation
   ]
-  /**\interface IExodusControlCheckBox
-    \brief a breif description
+  /**
+    \interface IExodusControlCheckBox
+    \brief A checkable box that can be on (checked) or off (unchecked).
 
-    <p>a more detailed description</p>
+    Presents an option to the users. The user can check the box to select the
+    option, or uncheck it to deselect the option.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlCheckBox: IExodusControl
@@ -3500,10 +3504,14 @@ library Exodus
     dual,
     oleautomation
   ]
-  /**\interface IExodusControlComboBox
-    \brief a breif description
+  /**
+    \interface IExodusControlComboBox
+    \brief Combines an edit box with a scrollable list.
 
-    <p>a more detailed description</p>
+    An edit box with a scrollable drop-down list attached to it.
+    Users can select an item from the list or type directly into the edit box.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlComboBox: IExodusControl
@@ -4425,10 +4433,14 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlEdit
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlEdit
+    \brief  A wrapper for a Windows single-line edit control.
+
+    Edit controls are used to retrieve text that users type.
+    Edit controls can also display text to the user.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlEdit: IExodusControl
@@ -5138,10 +5150,15 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlLabel
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlLabel
+    \brief A nonwindowed control that displays text on a form.
+
+    Use to add text that the user can't edit to a form.
+    This text can be used to label another control, and can set focus to
+    that control when the user types an accelerator key
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlLabel: IExodusControl
@@ -5762,10 +5779,14 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlListBox
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlListBox
+    \brief Displays a collection of items in a scrollable list.
+
+    Use to display a scrollable list of items that users can select, add, or
+    delete. This control is a wrapper for the Windows listbox control.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlListBox: IExodusControl
@@ -6505,10 +6526,23 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlPanel
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlPanel
+    \brief A generic panel control.
+
+     Panels have properties for providing a beveled border around the control,
+     as well as methods to help manage the placement of child controls embedded
+     in the panel.
+
+     You can also use panels to group controls together, similar to the way you
+     can use a group box, but with a beveled border (or no border) rather than
+     the group box outline. Panels are typically used for groups of controls
+     within a single form.
+
+     Panels with no borders are useful as docking sites when writing applications
+     that use drag-and-dock.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlPanel: IExodusControl
@@ -7241,10 +7275,12 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlPopupMenu
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlPopupMenu
+    \brief encapsulates the methods of a pop-up menu.
+
+    This is a placeholder for a discussion of popup menus         
+    \since 0.9.1.1
   **/
 
    interface IExodusControlPopupMenu: IExodusControl
@@ -7492,10 +7528,22 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlRadioButton
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlRadioButton
+    \brief A wrapper for a system radio button. 
+
+    Radio buttons present a set of mutually exclusive options to the
+    user- that is, only one radio button in a set can be selected at a time.
+    When the user selects a radio button, the previously selected radio button
+    becomes unselected.
+
+    By default, all radio buttons that are directly contained in the same
+    windowed control container, such as an IExodusControlPanel, are grouped.
+    For example, two radio buttons on a IExodusControlForm can be checked at
+    the same time only if they are contained in separate containers, such as
+    two different panels.
+
+    \since 0.9.1.1
   **/
 
    interface IExodusControlRadioButton: IExodusControl
@@ -8128,10 +8176,14 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlRichEdit
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlRichEdit
+    \brief a wrapper for a Windows rich text edit control.
+
+    Rich text edit controls let the user enter text that includes variation in
+    font attributes and paragraph formatting information.
+
+    \since 0.9.1.1 
   **/
 
    interface IExodusControlRichEdit: IExodusControl
@@ -8896,10 +8948,14 @@ library Exodus
     dual, 
     oleautomation
   ]
-  /**\interface IExodusControlButton
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusControlButton
+    \brief A push button control.
+
+    A standard push button on a form. To use a button that displays a bitmap
+    instead of a label, use IExodusControlBitBtn.
+
+    \since 0.9.1.1   
   **/
 
    interface IExodusControlButton: IExodusControl
