@@ -1042,27 +1042,47 @@ library Exodus
     id(0x0000000C)
     ]
     HRESULT _stdcall HelpContext([in] long Value );
-    /**
-        \brief
-
-        \param Value
-        \return S_OK if successful, or an error value otherwise.
-    **/
     [
     propget,
     id(0x0000000D)
     ]
-    HRESULT _stdcall Hint([out, retval] BSTR * Value );
     /**
-        \brief
+        \brief Get the text string that can appear when the user moves the mouse over the control.
 
-        \param Value
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
         \return S_OK if successful, or an error value otherwise.
     **/
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput,
     id(0x0000000D)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     /**
         \brief
@@ -2813,9 +2833,16 @@ library Exodus
     id(0x00000007)
     ]
     /**
-        \brief 
+        \brief Get the cursor displayed when mouse is within bounds of control.
 
-        \param Value
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
@@ -2824,9 +2851,17 @@ library Exodus
     id(0x00000007)
     ]
     /**
-        \brief 
+        \brief Set the cursor displayed when mouse is within bounds of control.
 
-        \param Value
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Cursor([in] long Value );
@@ -2835,9 +2870,15 @@ library Exodus
     id(0x00000008)
     ]
     /**
-        \brief 
+        \brief Get the text string that can appear when the user moves the mouse over the control.
 
-        \param Value
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
@@ -2846,10 +2887,24 @@ library Exodus
     id(0x00000008)
     ]
     /**
-        \brief 
+        \brief Set the text string that can appear when the users moves the mouse over the control
 
-        \param Value
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
         \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
     **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
@@ -3395,9 +3450,15 @@ library Exodus
     id(0x0000001D)
     ]
     /**
-        \brief 
+        \brief Get where a control looks to find out if its Help Hint should be shown.
 
-        \param Value
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
@@ -3406,31 +3467,48 @@ library Exodus
     id(0x0000001D)
     ]
     /**
-        \brief 
+        \brief Set where a control looks to find out if its Help Hint should be shown.
 
-        \param Value
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
         \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
     **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget,
     id(0x0000001E)
     ]
-    /**
-        \brief 
-
-        \param Value
-        \return S_OK if successful, or an error value otherwise.
-    **/
     HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
     [
     propget,
     id(0x0000001F)
     ]
     /**
-        \brief 
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
 
-        \param Value
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
@@ -3439,10 +3517,28 @@ library Exodus
     id(0x0000001F)
     ]
     /**
-        \brief 
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
 
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
         \param Value
         \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
     **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
@@ -3771,9 +3867,16 @@ library Exodus
     id(0x00000007)
     ]
     /**
-        \brief 
+        \brief Get the cursor displayed when mouse is within bounds of control.
 
-        \param Value
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
@@ -3782,9 +3885,17 @@ library Exodus
     id(0x00000007)
     ]
     /**
-        \brief 
+        \brief Set the cursor displayed when mouse is within bounds of control.
 
-        \param Value
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Cursor([in] long Value );
@@ -3793,9 +3904,15 @@ library Exodus
     id(0x00000008)
     ]
     /**
-        \brief 
+        \brief Get the text string that can appear when the user moves the mouse over the control.
 
-        \param Value
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
@@ -3804,10 +3921,24 @@ library Exodus
     id(0x00000008)
     ]
     /**
-        \brief 
+        \brief Set the text string that can appear when the users moves the mouse over the control
 
-        \param Value
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
         \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
     **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
@@ -4415,11 +4546,46 @@ library Exodus
     propget, 
     id(0x00000026)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000026)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -4430,11 +4596,47 @@ library Exodus
     propget, 
     id(0x00000028)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000028)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -4745,21 +4947,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -5236,11 +5497,46 @@ library Exodus
     propget, 
     id(0x00000025)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000025)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -5271,11 +5567,47 @@ library Exodus
     propget, 
     id(0x00000029)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000029)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -5557,21 +5889,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -5959,11 +6350,46 @@ library Exodus
     propget, 
     id(0x0000001A)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001A)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -5984,11 +6410,47 @@ library Exodus
     propget, 
     id(0x0000001D)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001D)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -6279,21 +6741,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -6800,11 +7321,46 @@ library Exodus
     propget, 
     id(0x00000028)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000028)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -6825,11 +7381,47 @@ library Exodus
     propget, 
     id(0x0000002B)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000002B)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -7129,21 +7721,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -7663,11 +8314,46 @@ library Exodus
     propget, 
     id(0x00000026)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000026)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -7678,11 +8364,47 @@ library Exodus
     propget, 
     id(0x00000028)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000028)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -8224,21 +8946,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -8648,11 +9429,46 @@ library Exodus
     propget, 
     id(0x0000001B)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001B)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -8663,11 +9479,47 @@ library Exodus
     propget, 
     id(0x0000001D)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001D)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -8958,21 +9810,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -9474,11 +10385,46 @@ library Exodus
     propget, 
     id(0x00000028)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000028)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -9519,11 +10465,47 @@ library Exodus
     propget, 
     id(0x0000002D)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000002D)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -9824,21 +10806,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -10141,11 +11182,46 @@ library Exodus
     propget, 
     id(0x00000018)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000018)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -10156,11 +11232,47 @@ library Exodus
     propget, 
     id(0x0000001A)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001A)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -10447,21 +11559,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -10764,11 +11935,46 @@ library Exodus
     propget, 
     id(0x00000018)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000018)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -10779,11 +11985,47 @@ library Exodus
     propget, 
     id(0x0000001A)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001A)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -11351,21 +12593,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -11847,11 +13148,46 @@ library Exodus
     propget, 
     id(0x00000026)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000026)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -11882,11 +13218,47 @@ library Exodus
     propget, 
     id(0x0000002A)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000002A)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -12183,21 +13555,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -12477,11 +13908,46 @@ library Exodus
     propget, 
     id(0x00000019)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000019)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -12512,11 +13978,47 @@ library Exodus
     propget, 
     id(0x0000001D)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001D)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -12843,21 +14345,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -13125,11 +14686,46 @@ library Exodus
     propget, 
     id(0x00000018)
     ]
+    /**
+        \brief Get where a control looks to find out if its Help Hint should be shown.
+
+        Retrieve where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        \p Value will either be 0 (FALSE) or 1 (TRUE). See ParentShowHint(long Value)
+        for additional information.
+
+        \param Value Should control use parent's ShowHint flag?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ParentShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000018)
     ]
+    /**
+        \brief Set where a control looks to find out if its Help Hint should be shown.
+
+        Specify where a control looks to find out if its Help Hint should be
+        shown, either from its parent or itself.
+
+        Use ParentShowHint to ensure that all the controls on a form either
+        uniformly show their Help Hints or uniformly do not show them.
+        If ParentShowHint is true, the control uses the ShowHint value of its
+        parent. If ParentShowHint is false, the control uses the value of its
+        own ShowHint.
+
+        To provide Help Hints for only selected controls on a form,
+        set the ShowHint for those controls that should have Help Hints to true,
+        and ParentShowHint becomes false automatically.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and ParentShowHelp's value does not change.
+
+        \param Value Whether control should use parent's ShowHint.
+        \return S_OK if successful, or an error value otherwise.
+        \see Hint, ShowHint
+    **/
     HRESULT _stdcall ParentShowHint([in] long Value );
     [
     propget, 
@@ -13185,11 +14781,47 @@ library Exodus
     propget, 
     id(0x0000001B)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001B)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
@@ -13495,21 +15127,80 @@ library Exodus
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get the cursor displayed when mouse is within bounds of control.
+
+        Retrieve an enumeration of the cursor shown when the mouse is within
+        the bounds of the control.
+
+        \p Value will be an integer enumeration into the currently loaded
+        cursor set.\n
+        See Cursor(long Value) for additional information
+
+        \param Value The cursor enumeration
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set the cursor displayed when mouse is within bounds of control.
+
+        Specify the cursor displayed when the mouse pointer is within the control's
+        boundries.
+
+        \p Value is one of the enumerated cursor types defined by the currently
+        loaded cursor set.
+
+        todo: what is this enumeration? at least provide default and wait.
+
+        \param Value The new cursor.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Cursor([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get the text string that can appear when the user moves the mouse over the control.
+
+        Retrieve the text string that can appear when the user moves the mouse
+        over the control.
+
+        \p Value should be have space for at least 256 characters allocated.
+        See Hint(BSTR Value) for additional information.
+
+        \param Value The string that will show if hinting is enabled.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Hint([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set the text string that can appear when the users moves the mouse over the control
+
+        Specify the text string that can appear when the users moves the mouse over the control.
+
+        Use hint to provide a string of help text as a Help Hint.
+        A Help Hint is a box containing help text that appears for a control
+        when the user moves the mouse pointer over the control and pauses
+        momentarily.
+
+        To set up Help Hints:\n
+        Specify the hint of each control for which a Help Hint should appear.\n
+        Set ShowHint of each appropriate control to true, or set
+        ParentShowHint of all controls to true and set ShowHint
+        of the IExodusControlForm to true.
+
+        \param Value The new hint.
+        \return S_OK if successful, or an error value otherwise.
+        \see ShowHint, ParentShowHint
+    **/
     HRESULT _stdcall Hint([in] BSTR Value );
     [
     propget, 
@@ -14081,11 +15772,47 @@ library Exodus
     propget, 
     id(0x00000031)
     ]
+    /**
+        \brief Get whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Retrieve whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        \p Value will either be 0 (FALSE) or 1(TRUE). See ShowHint(long Value)
+        for additional information.
+
+        \param Value Should Help Hint be displayed?
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShowHint([out, retval] long * Value );
     [
     propput, 
     id(0x00000031)
     ]
+    /**
+        \brief Set whether the control displays a Help Hint when the mouse pointer rests momentarily on the control.
+
+        Specify whether the control displays a Help Hint when the mouse
+        pointer rests momentarily on the control.
+
+        To enable Help Hint for a particular control, either the control's own
+        ShowHint must be true, or the control's ParentShowHint must be true and
+        its parent's ShowHint property must be true.
+
+        For example, imagine an IExodusControlCheckBox within an IExodusControlPanel.
+        If the ShowHint of the panel is true and the ParentShowHint of the
+        check box is true, but the ShowHint of the check box is false,
+        the check box still displays its Help Hint.
+
+        Changing the ShowHint value automatically sets the ParentShowHint to false.
+
+        \p Value must be either 0 (FALSE) or 1 (TRUE). All other values are ignored
+        and the Help Hint state will not change.
+        \param Value
+        \return S_OK if successful, or an error value otherwise.
+
+        \see Hint, ParentShowHint
+    **/
     HRESULT _stdcall ShowHint([in] long Value );
     [
     propget, 
