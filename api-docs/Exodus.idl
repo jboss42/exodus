@@ -84,20 +84,14 @@ library Exodus
        \brief This method is a getter for the subscription member.
 
        This methods returns the value of subscription for this roster item.  The value returned should be a valid subscription state or blank:
-       \li None
-       \li None + Pending Out
-       \li None + Pending In
-       \li None + Pending Out/In
        \li To
-       \li To + Pending In
        \li From
-       \li From + Pending Out
        \li Both
        \li '' (blank if not set)
 
        \param Value is a pointer to \c BSTR value representing the roster item's subscription.
        \return \c HRESULT either \c S_OK or an error value.
-        **/
+     **/
     [
     propget,
     id(0x00000002)
@@ -108,7 +102,7 @@ library Exodus
         \brief This method is the setter for the subscription value.
 
         This method sets the subscription state for this roster item.  
-        \n\b Note: using this doesn't actually change the subscription state via protocol.
+        \n\b Note: Call Update to send new roster item to the server.
 
         \param Value A pointer to \c BSTR for the new value of the subscription.
         \return \c HRESULT either \c S_OK or an error value.
@@ -121,7 +115,7 @@ library Exodus
     /**
         \brief This method is the getter for the ask value of this roster item.
 
-        This method returns the value of the ask attribute (subscription or '' if not set).
+        This method returns the value of the ask attribute (subscribe or blank if not set).
 
         \param Value A pointer to \c BSTR that will hold the value of the roster item's ask attribute.
         \return \c HRESULT either \c S_OK or an error value.
@@ -168,7 +162,7 @@ library Exodus
     /**
         \brief This method removes this roster item from the roster.
 
-        This method removes the item from the roster and fires a /roster/remove event with a remove element payload.
+        This method removes the item from the roster and fires a /roster/remove event with a remove element payload.  The same as setting Subscription and calling Update.
 
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -200,6 +194,8 @@ library Exodus
     HRESULT _stdcall nickname([out, retval] BSTR * Value );
     /**
         \brief This method sets the nickname of this roster item.
+
+        \b Note: Call Update to send new roster item to the server.
 
         \param Value A \c BSTR contianing the desired nickname.
         \return \c HRESULT either \c S_OK or an error value.
@@ -295,87 +291,234 @@ library Exodus
     id(0x000000CB)
     ]
     HRESULT _stdcall Tooltip([in] BSTR Value );
+    /**
+        \brief This method access the value of the double-click action.
+
+        The value of action is the name of the event fired when this roster
+        item is double clicked. Typically the value is '/session/gui/contact'.
+
+        \param Value A pointer to \c BSTR that receives the value of action.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CC)
     ]
     HRESULT _stdcall action([out, retval] BSTR * Value );
+    /**
+        \brief This method sets the value of action.
+
+        The value of action should be a valid event name. Typically it is '/session/gui/contact'.
+
+        \param Value A \c BSTR representing the new value for action.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000CC)
     ]
     HRESULT _stdcall action([in] BSTR Value );
+    /**
+        \brief This method accesses the roster item's image index.
+
+        The image index determines the image displayed by this item in the roster. 
+        The image index is determined from the value of the show element of this 
+        item's presence.  The IExodusRosterImages class is responsible for maintaining 
+        mappings between the images and the show values - see IExodusRosterImages::Find.
+
+        \param Value A pointer to \c long receiving the value of the image's index.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CD)
     ]
     HRESULT _stdcall imageIndex([out, retval] long * Value );
+    /**
+        \brief This method sets the roster item's image index.
+
+        The image index determines the image displayed by this item in the roster.
+        Normally this item is determined from mappings of show element values to 
+        images kept by the IExodusRosterImages class - see IExodusRosterImages::Find.
+
+        \param Value A \c long representing the new image index to be set.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000CD)
     ]
     HRESULT _stdcall imageIndex([in] long Value );
+    /**
+        \brief Allows the caller to determine if the roster item's caption is editable.
+
+        A true value indicates the caption is editable.
+
+        \param Value A pointer to \c VARIANT_BOOL that recieves the value of the editable property.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CE)
     ]
     HRESULT _stdcall InlineEdit([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Allows caller to mark the roster item's caption as readonly or writable.
+
+        A true value indicates the caption is editable.
+
+        \param Value A \c VARIANT_BOOL containing the new value for the property.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000CE)
     ]
     HRESULT _stdcall InlineEdit([in] VARIANT_BOOL Value );
+    /**
+        \brief Fires a /roster/item event signalling a change to the roster item.
+
+        This method should be called whenever a change is made to the roster
+        item that requires a UI update.
+    
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CF)
     ]
     HRESULT _stdcall fireChange( void );
+    /**
+        \brief  Indicates if this roster item is a contact.
+
+        Not all roster items are contacts. Use this method to tell.
+
+        \param Value a pointer to \c VARIANT_BOOL that recieves the properties' value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000D0)
     ]
     HRESULT _stdcall IsContact([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Set to indicate if this roster item is a contact.
+
+        \param Value A \c VARIANT_BOOL indicating the new value to set.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000D0)
     ]
     HRESULT _stdcall IsContact([in] VARIANT_BOOL Value );
+    /**
+        \brief Adds this roster item to the new group.
+
+        This method adds this item to the specified group.  Update should
+        be called after this method to notify the UI of the change.
+
+        \param grp A \c BSTR containing the group to add this item to.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D2)
     ]
     HRESULT _stdcall addGroup([in] BSTR grp );
+    /**
+        \brief Removes this roster item from the named group.
+
+        \b Note: Update should be called after this method to notify the UI the change.
+
+        \param A \c BSTR containing the group to remove this item from.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D3)
     ]
     HRESULT _stdcall removeGroup([in] BSTR grp );
+    /**
+        \brief Updates any pending changes the groups this roster item belongs to.
+        
+        This applies updates to the internal roster item's data store. It does
+        not cause a UI update.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D4)
     ]
     HRESULT _stdcall setCleanGroups( void );
+    /**
+        \brief Accesses the imageprefix of this roster item.
+
+        The image prefix is prepended to the name of the show value set from 
+        the item's presence to determine which image is selected for display.
+        See IExodusRosterImages.
+
+        \param Value A pointer to \c BSTR that receives the value of the image prefix.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000D1)
     ]
     HRESULT _stdcall ImagePrefix([out, retval] BSTR * Value );
+    /**
+        \brief Sets the image prefix for this roster item.
+
+        The image prefix is prepended to the name of the show value set from 
+        the item's presence to determine which image is selected for display.
+        See IExodusRosterImages.
+
+        \param Value A \c BSTR containing the new value for image prefix.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000D1)
     ]
     HRESULT _stdcall ImagePrefix([in] BSTR Value );
+    /**
+        \brief Sets the IsNative property.
+        
+        \param Value A pointer to \c BSTR that receives the current value of this property.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000D5)
     ]
     HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets the IsNative property.
+
+        \param Value A \c VARIANT_BOOL containing the new value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000D5)
     ]
     HRESULT _stdcall IsNative([in] VARIANT_BOOL Value );
+    /**
+        \brief Indicates if this roster item can receive offline messages.
+
+        True indicates the contact can receive offline messages.
+
+        \param Value A pointer to \c VARIANT_BOOL that receives the current property value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000D6)
     ]
     HRESULT _stdcall CanOffline([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets the flag indicating this contact can receive offline messages.
+
+        \param Value A \c VARIANT_BOOL containing the new value of this property.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput, 
     id(0x000000D6)
@@ -553,6 +696,11 @@ library Exodus
     id(0x000000CC)
     ]
     HRESULT _stdcall Remove([in] BSTR ID );
+    /**
+        \brief some info here
+        \param ID A \c BSTR representing the ide of the image to find.
+        \param Index A pointer to \c long that receives the image's index.
+    **/
     [
     id(0x000000CD)
     ]
