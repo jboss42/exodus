@@ -23,7 +23,7 @@
   <!-- once you set a prop, it stays set -->
   <property file='user.properties'/>
 
-  <property name="delphi" value="C:\Program Files\Borland\BDS\4.0"/>
+  <property name="delphi" value="C:/Program Files/Borland/BDS/4.0"/>
   <property name="TNT" value="c:\src\exodus\exodus\components\tntUnicode"/>
   <property name="JCL" value="C:\src\exodus\exodus\components\jcl\source"/>
   <property name="DX" value="C:\Program Files\dxgettext"/>
@@ -31,7 +31,7 @@
   <property name="runner" value="c:\program files\exodus"/>
 
   <property name="opts.delphi" 
-	    value="-LUvcl -LUrtl -B -Q -U${delphi}\Lib -GD -N.\output"/>
+	    value='-LUvcl -LUrtl -B -Q -U"${delphi}\Lib" -U"${delphi}\Lib\Indy9" -GD -N.\output'/>
   <property name="opts.jcl" 
 	    value='-I"${JCL}" -U"${JCL}" -U"${JCL}\common" -U"${JCL}\vcl" -U"${JCL}\windows"'/>
 
