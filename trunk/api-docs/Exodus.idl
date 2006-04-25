@@ -480,7 +480,9 @@ library Exodus
     HRESULT _stdcall ImagePrefix([in] BSTR Value );
     /**
         \brief Sets the IsNative property.
-        
+       
+        This is reserved for future use.
+
         \param Value A pointer to \c BSTR that receives the current value of this property.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -491,6 +493,8 @@ library Exodus
     HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * Value );
     /**
         \brief Sets the IsNative property.
+
+        This is reserved for future use.
 
         \param Value A \c VARIANT_BOOL containing the new value.
         \return \c HRESULT either \c S_OK or an error value.
@@ -2309,79 +2313,239 @@ library Exodus
     dual,
     oleautomation
   ]
-  /**\interface IExodusRoster
-    \brief a breif description
-
-    <p>a more detailed description</p>
+  /**
+    \interface IExodusRoster
+    \brief IExodusRoster encapsulates the roster and related activities.
+     
+     Common roster mamangement functions are defined in this interface.
   **/
 
    interface IExodusRoster: IDispatch
   {
+    /**
+        \brief Calling this method fetches the user's roster.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000001)
     ]
     HRESULT _stdcall Fetch( void );
+    /**
+        \brief Adds an item to the roster w/o optional subscription.
+
+        This method adds an item to the roster including sending an update event to the
+        UI (i.e. the same as calling IExodusRosterItem.Update).  Depending on the value of
+        the Subscribe parameter a subscription request is sent to the contact.
+
+        \param JabberID The JID of the roster item to be added.
+        \param nickname The name displayed by the UI for this JID.
+        \param Group The name of the group to add this roster item to.
+        \param Subscribe True if a subscription should be sent to the contact.
+        \param Item The roster item that was added or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000003)
     ]
     HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Finds the JID in the roster.
+
+        \param JabberID The JID of the contact to find.
+        \param Item The roster item that was found or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall Find([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Finds a roster item by index.
+
+        This method returns the roster item at the specified index or nil.
+
+        \param Index The index of the roster item to retreive.
+        \param Item The desired IExodusRosterItem or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000007)
     ]
     HRESULT _stdcall Item([in] long Index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Returns the number of items in the roster.
+
+        \param ItemCount the number of items in the roster
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000008)
     ]
     HRESULT _stdcall Count([out, retval] long * ItemCount );
+    /**
+        \brief Removes an item from the roster.
+
+        This method doesn't update the server just removes the item from internal
+        roster representation.
+
+        \param Item the item to remove.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall removeItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Adds the specified group to the roster.
+
+        This method does not cause an update on the UI.
+
+        \param grp The name of the group to add.
+        \param Ret The \c IExodusRosterGroup that was created.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall addGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Finds a roster group by name.
+
+        This method finds the named group in the roster or returns nil if the 
+        group doesn't exist.
+
+       \param grp The name of the group to find.
+       \param Ret This is the \c IExodusRosterGroup that was found or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall getGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Removes a group from the roster.
+
+        This method does not update the server or the UI.
+
+        \param grp The \c IExodusRosterGroup to remove.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
     HRESULT _stdcall removeGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Returns the number of groups in the roster.
+
+        \param Value the number of groups in the roster.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CD)
     ]
     HRESULT _stdcall GroupsCount([out, retval] long * Value );
+    /**
+        \brief Finds a group by index in the roster.
+
+        This method will can return nil if the index is greater than the actual
+        number of roster groups. If the index is negative behavior is undefined.
+
+        \param Index The index of the desired group.
+        \param Ret The desired \c IExodusRosterGroup or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CE)
     ]
     HRESULT _stdcall Groups([in] long Index, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Finds an item by index but Items should be used instead.
+
+        This finds a roster item by index. Similar to Items but without the index checking.  This method can return a valid IExodusRosterItem that is invalid to use.
+
+        \param Index The index of the desired item (should be >= 0 and <= maximum number of roster items)
+        \param Ret The desired IExodusRosterItem, nil, or a valid IExodusRosterItem with invalid contents.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CF)
     ]
     HRESULT _stdcall Items([in] long Index, [out, retval] IExodusRosterItem ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Adds a context menu to the roster.
+
+        This method adds a context menu to the roster using the given id. 
+        If a menu with this id exists a duplicate is not added.  
+        
+        \b Note: If a context menu is added with this method, it should be 
+        removed using RemoveContextMenu.
+
+        \param ID The id of the menu to add.
+        \param Ret True if the menu item was added.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D0)
     ]
     HRESULT _stdcall AddContextMenu([in] BSTR ID, [out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Removes the context menu from the Roster.
+
+        Removes the menu identified by the given ID from the roster.
+
+        \param ID The id of the menu to remove.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D1)
     ]
     HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    /**
+        \brief Adds a context menu item to a context menu.
+
+        Adds a context menu item to the specified menu. The specified action 
+        should be a handled event name. The unique id of the menu item which
+        is returned should be tracked to be able to remove the menuitem later.
+
+        \b Note: IF a context menu item is added using this method, it should 
+        be removed using removeContextMenuItem.
+
+        \param menu_id The id of the menu to add this item to.
+        \param Caption The human readable name of this menu item exposed to the UI.
+        \param action A handeled event name.
+        \param Ret The id of the menu item (used to remove it).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D2)
     ]
     HRESULT _stdcall addContextMenuItem([in] BSTR menu_id, [in] BSTR Caption, [in] BSTR action, [out, retval] BSTR * Ret );
+    /**
+        \brief Removes a context menu item from a menu.
+
+        The specified menu item id is removed from the specified menu.  The
+        menu item id used should be the one returned by addContextmenuItem.
+
+        \param menu_id The id of the menu to add the item to.
+        \param item_id The id of menu item to remove.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D3)
     ]
     HRESULT _stdcall removeContextMenuItem([in] BSTR menu_id, [in] BSTR item_id );
+    /**
+        \brief Adds a new plugin-roster item to the roster.
+
+        These roster items are uniquely identified in their xml representation
+        by the namespace 'exodus:plugin-item'.
+
+        \param JabberID The JID of the contact to be added.
+        \param Ret the \c IExodusRosterItem that was created.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D4)
     ]
