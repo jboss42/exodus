@@ -127,6 +127,8 @@ library Exodus
     HRESULT _stdcall Ask([out, retval] BSTR * Value );
     /**
         \brief This method counts the number of groups this roster item is in.
+        
+        This method counts the number of groups this roster item is in.
 
         \param Value A pointer to \c long that gets set with the number of groups this item is in.
         \return \c HRESULT either \c S_OK or an error value.                   
@@ -151,6 +153,8 @@ library Exodus
     HRESULT _stdcall Group([in] long Index, [out, retval] BSTR * Value );
     /**
         \brief This method creates an XML description of this Roster Item.
+        
+        This method creates an XML description of this Roster Item.
 
         \param xml A pointer to \c BSTR which receives the XML representation of this roster item.
         \return \c HRESULT either \c S_OK or an error value.
@@ -183,6 +187,8 @@ library Exodus
     HRESULT _stdcall Update( void );
     /**
         \brief This method accesses the nickname of this roster item.
+        
+        This method accesses the nickname of this roster item.
 
         \param Value A pointer to \c BSTR that receives the roster item's nickname.
         \return \c HRESULT either \c S_OK or an error value.
@@ -195,6 +201,7 @@ library Exodus
     /**
         \brief This method sets the nickname of this roster item.
 
+        This method sets the nickname of this roster item.
         \b Note: Call Update to send new roster item to the server.
 
         \param Value A \c BSTR contianing the desired nickname.
@@ -208,6 +215,8 @@ library Exodus
     /**
         \brief This method sets the nickname of this roster item.
 
+        This method sets the nickname of this roster item.
+        
         \param Value A \c BSTR contianing the desired nickname.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -259,6 +268,7 @@ library Exodus
     /**
         \brief This method sets the status of this roster item.
 
+        This method sets the status of this roster item.
         \b Note this doesn't send protocol, only changes the value on this object.
 
         \param  Value A \c BSTR that contains the new status.
@@ -272,6 +282,8 @@ library Exodus
     /**
         \brief This method returns the tooltip associated with this roster item.
 
+        This method returns the tooltip associated with this roster item.
+        
         \param Value A pointer to \c BSTR that receives the tooltip text.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -283,6 +295,8 @@ library Exodus
     /**
         \brief This method sets the tooltip associated with this roster item.
 
+        This method sets the tooltip associated with this roster item.
+        
         \param Value A \c BSTR that is the new tooltip.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -403,6 +417,8 @@ library Exodus
     /**
         \brief Set to indicate if this roster item is a contact.
 
+        Set to indicate if this roster item is a contact.
+        
         \param Value A \c VARIANT_BOOL indicating the new value to set.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -427,6 +443,7 @@ library Exodus
     /**
         \brief Removes this roster item from the named group.
 
+        Removes this roster item from the named group.
         \b Note: Update should be called after this method to notify the UI the change.
 
         \param A \c BSTR containing the group to remove this item from.
@@ -479,7 +496,7 @@ library Exodus
     ]
     HRESULT _stdcall ImagePrefix([in] BSTR Value );
     /**
-        \brief Sets the IsNative property.
+        \brief Sets the IsNative property - reserved for future use.
        
         This is reserved for future use.
 
@@ -492,7 +509,7 @@ library Exodus
     ]
     HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * Value );
     /**
-        \brief Sets the IsNative property.
+        \brief Sets the IsNative property - reserved for future use.
 
         This is reserved for future use.
 
@@ -507,6 +524,7 @@ library Exodus
     /**
         \brief Indicates if this roster item can receive offline messages.
 
+        Indicates if this roster item can receive offline messages.
         True indicates the contact can receive offline messages.
 
         \param Value A pointer to \c VARIANT_BOOL that receives the current property value.
@@ -520,6 +538,8 @@ library Exodus
     /**
         \brief Sets the flag indicating this contact can receive offline messages.
 
+        Sets the flag indicating this contact can receive offline messages.
+        
         \param Value A \c VARIANT_BOOL containing the new value of this property.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -676,34 +696,87 @@ library Exodus
     oleautomation
   ]
   /**
-  \interface IExodusRosterImages
-  brief a breif description
+    \interface IExodusRosterImages
+    \brief This interface defines how to work with images used by roster items.
 
-    <p>a more detailed description</p>
+    This interface allows plugins to add, remove, and find roster item images.
+    All images are identified by an id from which they can be found. Typically
+    this id is the show element's value taken from the presence packet.
   **/
 
    interface IExodusRosterImages: IDispatch
   {
+    /**
+        \brief Loads a roster image from the filesystem.
+
+        This method will load a roster image from the filesystem.  This method
+        will not replace an existing id so use Remove first to override existing ids.
+        The return value is the image's index in roster's image store.
+
+        \param ID The identifier for this image - usually one of away, chat, dnd, xa.
+        \param filename The path and filename to the image being loaded.
+        \param Index The image index assigned by the internal data store or -1 for failure.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall AddImageFilename([in] BSTR ID, [in] BSTR filename, [out, retval] long * Index );
+    /**
+        \brief Loads a roster image from a base64 encoded string.
+
+        This method will decoded a base64 encoded image. This method will not replace
+        and existing id so user Remove first to override existing ids.
+
+        \param ID The identifier for this image - usually one of away, chat, dnd, xa.
+        \param base64 The base64 encoded image data to load.
+        \param Index The image index assigned by the internal data store or -1 for failure.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall AddImageBase64([in] BSTR ID, [in] BSTR base64, [out, retval] long * Index );
+    /**
+        \brief Loads a roster image from a resource (such as a DLL).
+
+        This method will attempt to peform a LoadLibrary call on the specified 
+        resource.  If successful, an attempt to load the named resource will be
+        made. This method will not replace and existing id so user Remove first 
+        to override existing ids.
+
+        \param ID The identifier for this image - usually one of away, chat, dnd, xa.
+        \param LibName The name (optionally including path) of the resource to load the image from.
+        \param ResName The name of the resource specific to it's library.
+        \param Index The image index assigned by the internal data store or -1 for failure.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall AddImageResource([in] BSTR ID, [in] BSTR LibName, [in] BSTR ResName, [out, retval] long * Index );
+    /**
+        \brief Removes the specified roster image.
+
+        The roster image with the specified id is removed from the roster's 
+        internal image store.
+
+        \param ID The id of the image to remove - usually one of away, chat, dnd, xa.
+        \return \c HRESULT either \c S_OK or an error value.
+   **/
     [
     id(0x000000CC)
     ]
     HRESULT _stdcall Remove([in] BSTR ID );
     /**
-        \brief some info here
+        \brief Finds a roster image by id.
+
+        This method returns the index of of the specified image in the roster's
+        internal image store or -1 if the id wasn't found.
+
         \param ID A \c BSTR representing the ide of the image to find.
-        \param Index A pointer to \c long that receives the image's index.
+        \param Index The index of the image or -1.
+        \return \c HRESULT either \c S_OK or an error value.
     **/
     [
     id(0x000000CD)
@@ -2325,6 +2398,8 @@ library Exodus
     /**
         \brief Calling this method fetches the user's roster.
 
+        Calling this method fetches the user's roster.
+
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2351,6 +2426,8 @@ library Exodus
     HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
     /**
         \brief Finds the JID in the roster.
+        
+        Finds the JID in the roster.
 
         \param JabberID The JID of the contact to find.
         \param Item The roster item that was found or nil.
@@ -2375,6 +2452,8 @@ library Exodus
     HRESULT _stdcall Item([in] long Index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
     /**
         \brief Returns the number of items in the roster.
+        
+        Returns the number of items in the roster.
 
         \param ItemCount the number of items in the roster
         \return \c HRESULT either \c S_OK or an error value.
@@ -2437,6 +2516,8 @@ library Exodus
     HRESULT _stdcall removeGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
     /**
         \brief Returns the number of groups in the roster.
+        
+        Returns the number of groups in the roster.
 
         \param Value the number of groups in the roster.
         \return \c HRESULT either \c S_OK or an error value.
