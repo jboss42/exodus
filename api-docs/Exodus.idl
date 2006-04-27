@@ -320,7 +320,7 @@ library Exodus
     ]
     HRESULT _stdcall action([out, retval] BSTR * Value );
     /**
-        \brief This method sets the value of action.
+        \brief Sets the double click action event name.
 
         The value of action should be a valid event name. Typically it is '/session/gui/contact'.
 
@@ -2681,149 +2681,418 @@ library Exodus
     dual,
     oleautomation
   ]
-  /**\interface IExodusRosterGroup
-    \brief a breif description
+  /**
+    \interface IExodusRosterGroup
+    \brief Encapsulates a roster group and associated actions.
 
-    <p>a more detailed description</p>
+    Methods for managing roster groups.
   **/
-
    interface IExodusRosterGroup: IDispatch
   {
+    /**
+        \brief Accesses the value of the double-click action.
+
+        The value of action is the name of the event fired when this roster
+        item is double clicked.
+
+        \param Value receives the value of action.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000C9)
     ]
     HRESULT _stdcall action([out, retval] BSTR * Value );
+    /**
+        \brief Sets the double click action event name.
+
+        The value of action should be a valid event name.
+
+        \param Value the new event name.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000C9)
     ]
     HRESULT _stdcall action([in] BSTR Value );
+    /**
+        \brief Accesses flag for displaying group when empty.
+
+        When True this flag will cause the roster to display this item even if
+        it's empty.  This flag does not affect the existance of
+
+        \param Value True if this group should be shown when empty.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CA)
     ]
     HRESULT _stdcall KeepEmpty([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets flag for displaying group when empty.
+
+        When True this flag will cause the roster to display this item even if
+        it's empty.
+
+        \param Value True if this group should be shown when empty.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CA)
     ]
     HRESULT _stdcall KeepEmpty([in] VARIANT_BOOL Value );
+    /**
+        \brief Gets the relative sort priority for this roster group.
+
+        This value affects the placement of the group in the roster.
+        "Unknown" and "Offline" groups have a value of 500 and "My Resources"
+        group is set at 750.
+
+        \param Value The group's current sort priority.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CB)
     ]
     HRESULT _stdcall SortPriority([out, retval] long * Value );
+    /**
+        \brief Sets the relative sort priority for this roster group.
+
+        This value affects the placement of the group in the roster.
+        "Unknown" and "Offline" groups have a value of 500 and "My Resources"
+        group is set at 750.
+
+        \param Value a relative (postive) numberic value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CB)
     ]
     HRESULT _stdcall SortPriority([in] long Value );
+    /**
+        \brief Indicates if this group shows presence of it's members.
+
+        Set to True if this group's items should reflect presence.
+
+        \param Value true if this group's items show presence icons.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CC)
     ]
     HRESULT _stdcall ShowPresence([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets a flag indicating if group shows presence icons.
+
+        Set to True if this group's items should reflect presence.
+
+        \param Value true if this group's items show presence icons.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CC)
     ]
     HRESULT _stdcall ShowPresence([in] VARIANT_BOOL Value );
+    /**
+        \brief Accessor for the flag indicating if the group is a drag target.
+        
+        True if the roster group is an allowable drag target.
+
+        \param Value True if this is a drop target.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CD)
     ]
     HRESULT _stdcall DragTarget([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets the flag indicating if this is a valid drap traget.
+
+        Set to True to allow the UI to send drop events to this group.
+
+        \param Value new value for the drap target flag.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CD)
     ]
     HRESULT _stdcall DragTarget([in] VARIANT_BOOL Value );
+    /**
+        \brief Accessor for flag indicating if this is a drag source.
+
+        True if the UI allows this group to be a source of drag events.
+
+        \param Value receives the current value of the flag.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CE)
     ]
     HRESULT _stdcall DragSource([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets the flag indicating if this is a drag source.
+
+        Set to True to tell the UI to allow this group to be the source
+        of drag events.
+
+        \param Value the new value for this flag.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CE)
     ]
     HRESULT _stdcall DragSource([in] VARIANT_BOOL Value );
+    /**
+        \brief Flag indicating group should auto-expand in roster.
+
+        A True value indcates this group should be auto-expanded in the roster
+        tree view.
+
+        \param Value Set to True to auto-expand the group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CF)
     ]
     HRESULT _stdcall AutoExpand([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets flag indicating this group should auto-expand in roster.
+
+        Set to True to cause group to auto-expand in the roster tree view.
+
+        \param Value True if group is set to auto-expand.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000CF)
     ]
     HRESULT _stdcall AutoExpand([in] VARIANT_BOOL Value );
+    /**
+        \brief Accesses the name of the group.
+
+        This accesses the name of the group dispalyed in the roster.
+        
+        \param Text receives the name of the group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D0)
     ]
     HRESULT _stdcall getText([out, retval] BSTR * Text );
+    /**
+        \brief Adds a JID to this group.
+
+        This method adds a contact to the group by JID.  To save the change 
+        use IExodusRoster.Update afterwards.
+
+        \param jid The JID to be added to the group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D1)
     ]
     HRESULT _stdcall addJid([in] BSTR jid );
+    /**
+        \brief Removes a JID from this group.
+
+        This method removes a contact from the group by JID. To save the change
+        use IExodusRoster.Update afterwards.
+
+        \param jid The JID to be removed from the group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D2)
     ]
     HRESULT _stdcall removeJid([in] BSTR jid );
+    /**
+        \brief Determines if the JID is in this group.
+
+        A True result indicates the JID is in this group.
+
+        \param jid The search JID.
+        \param Ret True if the JID is in the group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D3)
     ]
     HRESULT _stdcall inGroup([in] BSTR jid, [out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Determines if the group has no items/sub-groups.
+
+        A True result indcates this group has no JIDs or sub-groups.
+
+        \param Ret True if group has no items/sub-groups.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D4)
     ]
     HRESULT _stdcall isEmpty([out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Gets a group by it's fullname.
+
+        This method retreives a group by name (see FullName) from the roster. 
+        It may return nil if the group name isn't found.
+
+        \param group_name The name of the group to get.
+        \param Ret The specified group or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D5)
     ]
     HRESULT _stdcall getGroup([in] BSTR group_name, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Adds a sub-group to this group.
+
+        This method adds a sub-group to the roster by fullname (see FullName). 
+        Roster.Update should be called to save changes to the server.
+        \n\b NOTE: This method will replace an existing group with the same name.
+
+        \param child The group to be added.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D6)
     ]
     HRESULT _stdcall addGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Removes a sub-group.
+
+        Removes a sub-group from this group.
+
+        \param child The sub-group to remove. Should not be nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D7)
     ]
     HRESULT _stdcall removeGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Returns roster items in the group and sub-groups.
+
+        The method will return contacts from the group and all sub-goups 
+        filtering based on the value of the Online parameter.
+
+        \param Online Set to true to return only online contacts.
+        \param Items The list of items returned.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D8)
     ]
     HRESULT _stdcall getRosterItems([in] VARIANT_BOOL Online, [out, retval] VARIANT * Items );
+    /**
+        \brief Determines the nested level of this group.
+
+        The nest level of the group is relative from the root of the roster's tree.
+
+        \param Value a zero based index
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D9)
     ]
     HRESULT _stdcall NestLevel([out, retval] long * Value );
+    /**
+        \brief Determines the number of online contacts in the group.
+
+        Determines the number of online contacts for this group and all 
+        sub-groups.
+
+        \param Value Receives the number of online users.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000DA)
     ]
     HRESULT _stdcall Online([out, retval] long * Value );
+    /**
+        \brief Counts the total number of contacts in the group.
+
+        This method counts the total number of contacts in this group and all 
+        sub-groups.
+
+        \param Value The total number of contacts in this group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000DB)
     ]
     HRESULT _stdcall Total([out, retval] long * Value );
+    /**
+        \brief Retrieves the fullname of this group including parent groups.
+
+        The fullname contains the name of any parent groups the current group 
+        may have.  Top level roster groups have no beginning separator. For
+        example:
+        \li 'My Group' is a top level folder
+        \li 'My Group/My Sub-group' is 'My Sub-group' is at the second nest level.
+
+        \param Value Receives the fullname of this group.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000DC)
     ]
     HRESULT _stdcall FullName([out, retval] BSTR * Value );
+    /**
+        \brief Retrieves the parent of this group.
+
+        This method retrieves the parent group of this group or nil if the
+        group has no parent.
+
+        \param Value The parent group or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000DD)
     ]
     HRESULT _stdcall Parent([out, retval] IExodusRosterGroup ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Retrieves the parent group at the given index.
+
+        This method retrieves the parent group at the given index.  The index
+        is zero based starting at the furthest ancestor group.  If the index
+        exceeds the nest level blank is returned. No lower bounds checking is
+        performed.
+
+        \param Index The index representing the desired nest level.
+        \param Value The group name (not fullname) found at Index.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000DE)
     ]
     HRESULT _stdcall Parts([in] long Index, [out, retval] BSTR * Value );
+    /**
+        \brief Notifies the UI that the group has changed.
+
+        This method notifies the UI that the group has changed and needs to be
+        re-rendered.  The event fired is '/roster/group'.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000DF)
     ]
