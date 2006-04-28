@@ -1868,63 +1868,152 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogMsg
-    \brief a breif description
+    \brief A data structure for logging messages to persistant storage.
 
-    <p>a more detailed description</p>
+    A data structure containing all the data related to a message to be stored to persistant storage.
+    Used by IExodusLogger.
   **/
 
    interface IExodusLogMsg: IDispatch
   {
+    /**
+        \brief The 'to' JID of the message to be logged.
+
+        The 'to' JID of the message to be logged.
+
+        \param Value 'To' JID Value
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000C9)
     ]
     HRESULT _stdcall toJid([out, retval] BSTR * Value );
+    /**
+        \brief The 'from' JID of the message to be logged.
+
+        The 'from' JID of the message to be logged.
+
+        \param Value 'From' JID Value
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CA)
     ]
     HRESULT _stdcall fromJid([out, retval] BSTR * Value );
+    /**
+        \brief Type of message to be logged.
+
+        Type of message to be logged. //???dda
+
+        \param Value Type of message.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CB)
     ]
     HRESULT _stdcall MsgType([out, retval] BSTR * Value );
+    /**
+        \brief Message ID
+
+        Message ID
+
+        \param Value Message ID
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CC)
     ]
     HRESULT _stdcall ID([out, retval] BSTR * Value );
+    /**
+        \brief Nickname associated with message to be logged.
+
+        Nickname associated with message to be logged.
+
+        \param Value Nickname
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CD)
     ]
     HRESULT _stdcall Nick([out, retval] BSTR * Value );
+    /**
+        \brief The body of the message to be logged.
+
+        The body of the message to be logged.
+
+        \param Value Body data to be logged
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CE)
     ]
     HRESULT _stdcall Body([out, retval] BSTR * Value );
+    /**
+        \brief Conversation thread identifier.
+
+        Conversation thread identifier.
+
+        \param Value Conversation thread ID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CF)
     ]
     HRESULT _stdcall Thread([out, retval] BSTR * Value );
+    /**
+        \brief Subject of the conversation for which message is to be logged.
+
+        Subject of the conversation for which message is to be logged.
+
+        \param Value Subject
+        \return \c HRESULT either \c S_OK or an error value.
+    **/    
     [
     propget,
     id(0x000000D0)
     ]
     HRESULT _stdcall Subject([out, retval] BSTR * Value );
+    /**
+        \brief Timestamp for message to be logged.
+
+        Timestamp for message to be logged.
+
+        \param Value Timestamp
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D1)
     ]
     HRESULT _stdcall Timestamp([out, retval] BSTR * Value );
+    /**
+        \brief Was message sent to or from client.
+
+        Was message sent to or from client.
+
+        \param Value Direction
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D2)
     ]
     HRESULT _stdcall Direction([out, retval] BSTR * Value );
+    /**
+        \brief Raw XML of message to be logged.
+
+        Raw XML of message to be logged.
+
+        \param Value XML
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D3)
@@ -1950,25 +2039,65 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogListener
-    \brief a breif description
+    \brief Return path for getting logged messages by date.
 
-    <p>a more detailed description</p>
+    This interface is used by IExodusLogger as a return path for the
+    GetDays and GetMessages calls.
   **/
 
    interface IExodusLogListener: IDispatch
   {
+    /**
+        \brief Process a chunk of archived messages.
+
+        Process a chunk of archived messages.
+
+        \param Count Number of messages in array.
+        \param Messages Array of returned messages
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall ProcessMessages([in] long Count, [in] SAFEARRAY(long) Messages );
+    /**
+        \brief End of returning messages for a specific date.
+
+        End of returning messages for a specific date.
+
+        \param Day Day of Messages
+        \param Month Month of Messages
+        \param Year Year of Messages
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall EndMessages([in] long Day, [in] long Month, [in] long Year );
+    /**
+        \brief Error in retrieving messages.
+
+        Error in retrieving messages for specific date.
+
+        \param Day Day of Messages
+        \param Month Month of Messages
+        \param Year Year of Messages
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall Error([in] long Day, [in] long Month, [in] long Year );
+    /**
+        \brief A list of dates with archived messages available.
+
+        A list of dates with archived messages available.
+        This is a list of dates within a specific Month and Year.
+
+        \param Count Number of dates in array.
+        \param Dates Array with valid dates for the queried month and year.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
@@ -19670,37 +19799,109 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogger
-    \brief a breif description
+    \brief Inteface for logging of messages.
     
-    <p>a more detailed description</p>
+    This Interface defines methods for both adding and retrieving messages from a persistent store.
+    Items are logged and retrieved via JID and optionally date.
   **/
 
    interface IExodusLogger: IDispatch
   {
+    /**
+        \brief Logs a message to persistent store.
+
+        This method will store a message to the persistent store.
+
+        \param Msg The message to be logged to the persistent store.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall LogMessage([in] IExodusLogMsg * Msg /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Display full log for a specific JID.
+
+        This method instructs the plugin to display the message log for a specific JID.
+
+        \param jid The JID to display the message history for.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall Show([in] BSTR jid );
+    /**
+        \brief Delete log for a specific JID.
+
+        This method instructs the plugin to delete the message log for a specific JID.
+
+        \param jid The JID to delete the message history for.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall Clear([in] BSTR jid );
+    /**
+        \brief Delete all stored message logs
+
+        This method instructs the plugin to delete all stored message logs.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
     HRESULT _stdcall Purge( void );
+    /**
+        \brief Get a list of days for which there are stored message logs.
+
+        If the plugin supports message log retrieval by date, 
+        this method queries the plugin for what days of a specific 
+        month and year have message logs for a specific JID.
+        The plugin calls back an IExodusListener to supply the dates.
+
+        \param jid The JID for which to retrieve dates.
+        \param Month The month for which to retrieve dates.
+        \param Year The year for which to retrieve dates.
+        \param Listener The IExodusLogListener for the plugin to call back to supply the dates.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CD)
     ]
     HRESULT _stdcall GetDays([in] BSTR jid, [in] long Month, [in] long Year, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get the message log for a specific date.
+
+        If the plugin supports message log retrieval by date, 
+        this method queries the plugin for the message log for
+        a specific date and  for a specific JID.
+        The plugin calls back an IExodusListener to supply the message log.
+
+        \param jid The JID for which to retrieve the message log.
+        \param ChunkSize The maximum amount of data to be retrieved at one time
+        \param Day The day for which to retrieve the message log.
+        \param Month The month for which to retrieve the message log.
+        \param Year The year for which to retrieve the message log.
+        \param Cancel Cancel message log retrieval for this date and Jid.
+        \param Listener The IExodusLogListener for the plugin to call back to supply the message log.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CE)
     ]
     HRESULT _stdcall GetMessages([in] BSTR jid, [in] long ChunkSize, [in] long Day, [in] long Month, [in] long Year, [in] VARIANT_BOOL Cancel, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Is message log retrieval by date supported.
+
+        Queres the plugin to determine if the plugin supports
+        retrieving message logs by specific date.
+
+        \param Value Ture if message log retrieval by date is supported, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget, 
     id(0x000000CF)
