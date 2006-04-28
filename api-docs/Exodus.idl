@@ -2641,32 +2641,63 @@ library Exodus
     oleautomation
   ]
   /** \interface IExodusPPDB
-  	\brief exoudus ppdb
+  	\brief Methods for accessing the Exodus Presence Database.
 
-    ppdb for exodus
+    Methods for managing presence by for JIDs. 
   **/
    interface IExodusPPDB: IDispatch
   {
+    /**
+        \brief Finds presence for the given JID & resource.
+
+        This method retrieves the presence for this full JID.  If resource is 
+        omitted, then the highest priority presence for the bare JID is returned.
+
+        \param JabberID The JID whose presence we want.
+        \param resource The specific resource - should be blank & not nil.
+        \param Presence The presence that was found or nil if not found or not yet received.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000001)
     ]
     HRESULT _stdcall Find([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Presence /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Retrieves the next presence packet retrieved for the given JID.
+
+        This method retrieves the next presence packet based on the supplied jid and resource.
+
+        \param JabberID The JID whose next presence we want.
+        \param resource The specific resource - should be blank & not nil.
+        \param Value The next presence that was found - nil if not found or none received.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000002)
     ]
     HRESULT _stdcall Next([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Counts the presence packets in the database.
+
+        This method determines the total number of presence packets being held
+        by the Exodus presence database.
+
+        \param Value The number of packets in the database.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000003)
     ]
     HRESULT _stdcall Count([out, retval] long * Value );
     /**
-    	\brief last known presence
+        \brief Gets the last presence recieved.
 
-      you got it
+        Retrieves the last presence packet received or nil if none yet received.
 
-      \return the presence
-		*/
+        \param Value The last presence received or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000004)
@@ -3045,9 +3076,9 @@ library Exodus
         may have.  Top level roster groups have no beginning separator. For
         example:
         \li 'My Group' is a top level folder
-        \li 'My Group/My Sub-group' is 'My Sub-group' is at the second nest level.
+        \li In 'My Group/My Sub-group', 'My Sub-group' is at the first nest level.
 
-        \param Value Receives the fullname of this group.
+        \param Value Receives the full name of this group.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
