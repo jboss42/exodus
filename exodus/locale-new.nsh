@@ -93,7 +93,7 @@
 !define i18n_NAME_Exodus_ZH "${i18n_NAME_Exodus_EN}"
 
 ; Section description (DESC_Exodus)
-!define i18n_DESC_Exodus_EN "The main exodus program."
+!define i18n_DESC_Exodus_EN "The main ${PRODUCT} program."
 !define i18n_DESC_Exodus_CA "${i18n_DESC_Exodus_EN}"
 !define i18n_DESC_Exodus_CZ "${i18n_DESC_Exodus_EN}"
 !define i18n_DESC_Exodus_DA "${i18n_DESC_Exodus_EN}"
@@ -655,7 +655,7 @@
 !endif
 
 ; Close running Exodus message (MSG_NotifyInstances)
-!define i18n_MSG_NotifyInstances_EN "You must exit all running copies of Exodus to continue!"
+!define i18n_MSG_NotifyInstances_EN "You must exit all running copies of ${PRODUCT} to continue!"
 !define i18n_MSG_NotifyInstances_CA "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_CZ "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_DA "${i18n_MSG_NotifyInstances_EN}"
@@ -669,7 +669,7 @@
 !define i18n_MSG_NotifyInstances_NO "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_PL "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_PT_BR "${i18n_MSG_NotifyInstances_EN}"
-!define i18n_MSG_NotifyInstances_PT_PT "Tem que encerrar todas as cópias do Exodus antes de continuar!"
+!define i18n_MSG_NotifyInstances_PT_PT "Tem que encerrar todas as cópias do ${PRODUCT} antes de continuar!"
 !define i18n_MSG_NotifyInstances_RU "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_SL "${i18n_MSG_NotifyInstances_EN}"
 !define i18n_MSG_NotifyInstances_ZH "${i18n_MSG_NotifyInstances_EN}"
@@ -695,7 +695,7 @@
 !define i18n_NAME_SHELL_ZH "${i18n_NAME_SHELL_EN}"
 
 ; Shortcut creation window subcaption (DESC_SHELL)
-!define i18n_DESC_SHELL_EN "Select options to install other shortcuts for Exodus."
+!define i18n_DESC_SHELL_EN "Select options to install other shortcuts for ${PRODUCT}."
 !define i18n_DESC_SHELL_CA "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_CZ "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_DA "${i18n_DESC_SHELL_EN}"
@@ -709,7 +709,7 @@
 !define i18n_DESC_SHELL_NO "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_PL "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_PT_BR "${i18n_DESC_SHELL_EN}"
-!define i18n_DESC_SHELL_PT_PT "Opções para instalar outros atalhos para o Exodus."
+!define i18n_DESC_SHELL_PT_PT "Opções para instalar outros atalhos para o ${PRODUCT}."
 !define i18n_DESC_SHELL_RU "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_SL "${i18n_DESC_SHELL_EN}"
 !define i18n_DESC_SHELL_ZH "${i18n_DESC_SHELL_EN}"
@@ -755,7 +755,7 @@
 !define i18n_DESC_QuicklaunchShortcut_ZH "${i18n_DESC_QuicklaunchShortcut_EN}"
 
 ; Auto-start shortcut description (DESC_StartWithWin)
-!define i18n_DESC_StartWithWin_EN "Start Exodus when Windows starts"
+!define i18n_DESC_StartWithWin_EN "Start ${PRODUCT} when Windows starts"
 !define i18n_DESC_StartWithWin_CA "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_CZ "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_DA "${i18n_DESC_StartWithWin_EN}"
@@ -769,7 +769,7 @@
 !define i18n_DESC_StartWithWin_NO "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_PL "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_PT_BR "${i18n_DESC_StartWithWin_EN}"
-!define i18n_DESC_StartWithWin_PT_PT "Iniciar o Exodus no arranque do Windows"
+!define i18n_DESC_StartWithWin_PT_PT "Iniciar o ${PRODUCT} no arranque do Windows"
 !define i18n_DESC_StartWithWin_RU "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_SL "${i18n_DESC_StartWithWin_EN}"
 !define i18n_DESC_StartWithWin_ZH "${i18n_DESC_StartWithWin_EN}"
@@ -835,7 +835,7 @@
 !define i18n_DESC_unCustomShellField1_ZH "${i18n_DESC_unCustomShellField1_EN}"
 
 ; unCustomShell Field2 description (DESC_unCustomShellField2)
-!define i18n_DESC_unCustomShellField2_EN "Remove Exodus Log Files"
+!define i18n_DESC_unCustomShellField2_EN "Remove ${PRODUCT} Log Files"
 !define i18n_DESC_unCustomShellField2_CA "${i18n_DESC_unCustomShellField2_EN}"
 !define i18n_DESC_unCustomShellField2_CZ "${i18n_DESC_unCustomShellField2_EN}"
 !define i18n_DESC_unCustomShellField2_DA "${i18n_DESC_unCustomShellField2_EN}"
