@@ -852,25 +852,54 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusAuth
-    \brief a breif description
+    \brief Interface for Authentication Plugins.
     
-    <p>a more detailed description</p>
+    This is the interface for plugins that handle different kinds of authentication.
   **/
 
    interface IExodusAuth: IDispatch
   {
+    /**
+        \brief Starting Authentication.
+
+        Starting the Authentication Process.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000001)
     ]
     HRESULT _stdcall StartAuth( void );
+    /**
+        \brief Cancel an in-process authentication.
+
+        Cancel an in-process authentication.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000002)
     ]
     HRESULT _stdcall CancelAuth( void );
+    /**
+        \brief Start the registration process.
+
+        Start the registration process.
+
+        \param RegSupported True if registration is supported, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000003)
     ]
     HRESULT _stdcall StartRegistration([out, retval] VARIANT_BOOL * RegSupported );
+    /**
+        \brief Cancel an in-process registration.
+
+        Cancel an in-process registration.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000004)
     ]
@@ -2493,90 +2522,260 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusChat
-    \brief a breif description
+    \brief Interface for triggering events in a chat window.
 
-    <p>a more detailed description</p>
+    This interface allows a plugin to trigger events and query properties of a chat window.
   **/
 
    interface IExodusChat: IDispatch
   {
+    /**
+        \brief JID of remote user or room. 
+
+        This is the JID of the room or user with which the conversation is being held.
+
+        \param Value JID of user or room.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000001)
     ]
     HRESULT _stdcall jid([out, retval] BSTR * Value );
+    /**
+        \brief Add a menu item to the window's context menu.
+
+        Add a menu item to the window's context menu.
+
+        \param Caption String for this menu item.
+        \param ID ID of this menu item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000002)
     ]
     HRESULT _stdcall AddContextMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    /**
+        \brief Gets the text in the message out input box.
+
+        Gets the text in the message out input box.
+
+        \param Value Text currently in the message out input box.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000004)
     ]
     HRESULT _stdcall MsgOutText([out, retval] BSTR * Value );
+    /**
+        \brief Registers a Plugin with the chat window.
+
+        Registers a plugin (IExodusChatPlugin) with the chat window.
+
+        \param Plugin The Plugin interface to be registered.
+        \param ID The ID assigned to this plugin.  Used for unregistering plugin.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000003)
     ]
     HRESULT _stdcall RegisterPlugin([in] IExodusChatPlugin * Plugin /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    /**
+        \brief Unregisters a plugin with the chat window.
+
+        Unregisters a plugin (IExodusChatPlugin) with the chat window.
+
+        \param ID ID returned by RegisterPlugin.
+        \param Success True if unregistration was successful, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000005)
     ]
     HRESULT _stdcall UnRegister([in] long ID, [out, retval] VARIANT_BOOL * Success );
+    /**
+        \brief Get an integer handle to the various elements in a chat.
+
+        This method gives a way to get the memory location (Handle) for various parts of the chat.
+        Returned value is integer and must be cast to correct type before use.\n
+        Valid values for parameter Part:\n
+        HWND_MsgInput = 0\n
+        HWND_MsgOutput = 1\n
+        Ptr_MsgInput = 2\n
+        Ptr_MsgOutput = 3\n
+
+        \param Part What handle/pointer to return.
+        \param Value Returned hanle/pointer as integer.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall getMagicInt([in] ChatParts Part /*Warning: unable to validate structure name: */, [out, retval] long * Value );
+    /**
+        \brief Remove a menu item from the context menu.
+
+        Remove a menu item from the context menu.
+
+        \param ID ID of the menu item to be removed.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000007)
     ]
     HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    /**
+        \brief Add text to message out input box.
+
+        Add text to message out input box.
+
+        \param Value Text to add to message out input box.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall AddMsgOut([in] BSTR Value );
+    /**
+        \brief Add a menu item to the message out input box menu.
+
+        Add a menu item to the message out input box menu.
+
+        \param Caption String for this menu item.
+        \param MenuID Id for this menu item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall AddMsgOutMenu([in] BSTR Caption, [out, retval] BSTR * MenuID );
+    /**
+        \brief Remove a menu item from the message out input box.
+
+        Remove a menu item from the message out input box.
+
+        \param MenuID ID of the menu item to be removed.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall RemoveMsgOutMenu([in] BSTR MenuID );
+    /**
+        \brief Send a message to the chat.
+
+        This method sends a message to the chat room from the current user.
+
+        \param Body Body of the message to be sent.
+        \param Subject Subject of the message to be sent.
+        \param xml The xml of the message to be sent.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
     HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * xml );
+    /**
+        \brief Get the current thread ID.
+
+        Get the current thread ID.
+
+        \param Thread The thread ID for the current conversation thread.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CD)
     ]
     HRESULT _stdcall CurrentThreadID([out, retval] BSTR * Thread );
+    /**
+        \brief Display a message in the chat or room history.
+
+        This method will generate and display a message in the chat or room history.  
+        Message is not actually sent to remote user or room.
+
+        \param Body Body of message to display.
+        \param Subject Subject of message to display.
+        \param From The From JID of the message to display.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CE)
     ]
     HRESULT _stdcall DisplayMessage([in] BSTR Body, [in] BSTR Subject, [in] BSTR From );
+    /**
+        \brief Add a user to a room.
+
+        Add a user to a room.
+
+        \param jid JID of the user to be added to room.
+        \param nickname Nickname of the user to be added to the room.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CF)
     ]
     HRESULT _stdcall AddRoomUser([in] BSTR jid, [in] BSTR nickname );
+    /**
+        \brief Remove a user from a room.
+
+        Remove a user from a room.
+
+        \param jid JID of the user to be removed from the room.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D0)
     ]
     HRESULT _stdcall RemoveRoomUser([in] BSTR jid );
+    /**
+        \brief Get the user's current nickname.
+
+        Get the user's current nickname.
+
+        \param Value Current user's nickname.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D1)
     ]
     HRESULT _stdcall CurrentNick([out, retval] BSTR * Value );
+    /**
+        \brief Get a handle to the interface for a chat window control.
+
+        This method will set the passed in pointer to a reference of the control named.
+
+        \param Name Name of the control desired.
+        \param Value Pointer to the control.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D2)
     ]
     HRESULT _stdcall GetControl([in] BSTR Name, [out, retval] IExodusControl ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get the caption for the chat.
+
+        Get the caption for the chat.
+
+        \param Value Pointer to Caption Value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D3)
     ]
     HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    /**
+        \brief Get the caption for the chat.
+
+        Get the caption for the chat.
+
+        \param Value Caption Value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000D3)
@@ -2656,41 +2855,108 @@ library Exodus
     oleautomation
   ]
 /**\interface IExodusChatPlugin
-    \brief a breif description
+    \brief Interface for messages to a Chat Plugin
 
-    <p>a more detailed description</p>
+    Interface for a chat window to notify a Chat plugin of an event in the chat window.
+    Should be registered with IExodusChat interface.
    **/
 
    interface IExodusChatPlugin: IDispatch
   {
+    /**
+        \brief A message is being composed.
+
+        A message is being composed.
+
+        \param Body Body of the message.
+        \param Allow Should this message be allowed to be sent.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000001)
     ]
     HRESULT _stdcall onBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
+    /**
+        \brief A message is done composing.
+
+        A message is done composing and about to be sent.
+
+        \param Body Body of the message
+        \param Additional_XML Additional XML to be added to the outgoing message.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000002)
     ]
     HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    /**
+        \brief A key was pressed
+
+        A key was pressed in a chat window.
+
+        \param Key The key that was pressed
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000003)
     ]
     HRESULT _stdcall onKeyPress([in] BSTR Key );
+    /**
+        \brief A context menu was selected
+
+        A item in a context menu was selected.
+
+        \param ID The ID of the menu that was selected.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000004)
     ]
     HRESULT _stdcall onContextMenu([in] BSTR ID );
+    /**
+        \brief A message was received.
+
+        A message was received.
+
+        \param Body Body of the received message.
+        \param xml Raw XML of the received message
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000005)
     ]
     HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
+    /**
+        \brief The chat is closing.
+
+        The chat is closing.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall onClose( void );
+    /**
+        \brief A menu item was selected
+
+        A menu item was selected
+
+        \param ID ID of selected menu item
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall onMenu([in] BSTR ID );
+    /**
+        \brief A new chat window is being created.
+
+        A new chat window is being created.
+
+        \param HWND Handle to new chat window.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
