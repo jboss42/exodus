@@ -2791,56 +2791,153 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusPlugin
-    \brief a breif description
+    \brief Basic inteface for plugins.
 
-    <p>a more detailed description</p>
+    This is the basic interface for plugins. 
+    It implements such things as plugin startup and shutdown that
+    are common to all plugins.
   **/
 
    interface IExodusPlugin: IDispatch
   {
+    /**
+        \brief First method called when client starts the plugin.
+
+        First method called when client starts the plugin.
+        Any plugin startup and initialization code should be done here.
+
+        \param ExodusController A handle to the exodus controller starting the plugin.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000001),
     helpstring("Exodus is starting the plugin")
     ]
     HRESULT _stdcall Startup([in] IExodusController * ExodusController /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Last method called when the client shuts down the plugin.
+
+        Last method called when the client shuts down the plugin.
+        Any needed cleanup or deconstruction code should be done here.
+
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000002),
     helpstring("Exodus is shutting down the plugin")
     ]
     HRESULT _stdcall Shutdown( void );
+    /**
+        \brief Plugin is receiving a packet to process.
+
+        Plugin is receiving a packet to process.
+
+        \param xpath XPath of packet.
+        \param Event Event that packet belongs to.
+        \param xml XML Packet XML.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000003),
     helpstring("Plugin is receiving a packet")
     ]
     HRESULT _stdcall Process([in] BSTR xpath, [in] BSTR Event, [in] BSTR xml );
+    /**
+        \brief A new chat window is starting.
+
+        A new chat window is starting.
+
+        \param jid JID of the remote user of the chat.
+        \param Chat A reference to the IExodusChat interface for this chat.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000004),
     helpstring("A new chat window is starting")
     ]
     HRESULT _stdcall NewChat([in] BSTR jid, [in] IExodusChat * Chat /*Warning: unable to validate structure name: */ );
+    /**
+        \brief A new room is starting.
+
+        A new room is starting.
+
+        \param jid JID of the room.
+        \param Room a reference to the IExodusChat interface for this room.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000005),
     helpstring("A new room is starting")
     ]
     HRESULT _stdcall NewRoom([in] BSTR jid, [in] IExodusChat * Room /*Warning: unable to validate structure name: */ );
+    /**
+        \brief A new IM is about to go out.
+
+        A new IM (Broadcast message) is about to be sent.
+
+        \param jid JID of the receipient of the IM.
+        \param Body Body of the IM.
+        \param Subject Subject of the IM.
+        \param XTags for the IM.
+        \param AddXML XML to be added to the IM by the plugin.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x00000008),
     helpstring("A New IM is about to go out.")
     ]
     HRESULT _stdcall NewIM([in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject, [in] BSTR XTags, [out, retval] BSTR * AddXML );
+    /**
+        \brief A request to configure the plugin has been made.
+
+        A request to configure the plugin has been made.
+        If the plugin has any configurable options, it should
+        provide an GUI interface to set those options when this
+        method is called.
+
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x0000000C),
     helpstring("The plugin should configure itself")
     ]
     HRESULT _stdcall Configure( void );
+    /**
+        \brief A menu item was clicked.
+
+        A menu item was clicked
+
+        \param ID ID of the menu item selected.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall MenuClick([in] BSTR ID );
+    /**
+        \brief A menu item in the messages window was clicked.
+
+        A menu item in the messages window was clicked.
+
+        \param ID ID of the menu item selected.
+        \param jid JID of the message for which the menu item was selected.
+        \param Body Body of the message for which the menu item was selected.
+        \param Subject Subject of the message for which the menu item was selected.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall MsgMenuClick([in] BSTR ID, [in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject );
+    /**
+        \brief A new IM is being created.
+
+        A new IM is being created.
+
+        \param jid JID of the receipient of the IM
+        \param InstantMsg Handle to the IExodusChat associated with the new IM.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000CB)
     ]
