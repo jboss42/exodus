@@ -558,86 +558,275 @@ library Exodus
     oleautomation
   ]
    /**\interface IExodusPresence
-    \brief a breif description
-    
-    <p>a more detailed description</p>
+    \brief Encapsulates a presence packet.
+   
+    This interface has methods for accessing and setting fields on a presence 
+    packet.
    **/
 
    interface IExodusPresence: IDispatch
   {
+    /**
+        \brief Gets the presence type for this presence.
+
+        This method gets the presence type for this presence. This is the type 
+        attribute on the presence packet.  Per RFC 3921 valid values may be:
+        \li unavailable
+        \li subscribe
+        \li subscribed
+        \li unsubscribe
+        \li unsubscribed
+        \li probe
+        \li error
+
+        \param Value Recieves the type of this presence.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000001)
     ]
     HRESULT _stdcall PresType([out, retval] BSTR * Value );
+    /**
+        \brief Sets the presence type of this presence.
+
+        This method sets the type attribue of the presence packet. 
+        See PresType(BSTR*) for more information.
+
+        \param Value The value of the new type attribute.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000001)
     ]
     HRESULT _stdcall PresType([in] BSTR Value );
+    /**
+        \brief Retreives the status of this presence.
+
+        This method retrieves the value of this presence's status element.  
+        Status is a natural language description of the show value (see Show). 
+        The status may be localized or custom (i.e. it is not standarized) and 
+        \e should not be nil - but this is NOT prevented.
+
+        \param Value Recieves the status, blank, or possibly nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000002)
     ]
     HRESULT _stdcall Status([out, retval] BSTR * Value );
+    /**
+        \brief Sets the status of this presence.
+
+        Sets the status element's value. The value is a natural language 
+        description of the show value (see Show).  The value is free form but 
+        the best practice is to not set it to nil.
+
+        \param Value The new value of the presence's status.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000002)
     ]
     HRESULT _stdcall Status([in] BSTR Value );
+    /**
+        \brief Retrieves the value of the presence's show element.
+
+        The show element is optional and indicates the JID's availability in a
+        number of preset states (per RFC 3921):
+        \li away -- The JID is temporarily away.
+        \li chat -- The JID is actively interested in chatting.
+        \li dnd  -- The JID is busy ("Do Not Disturb").
+        \li xa   -- The JID is away for an extended period ("eXtended Away").
+
+        This value \e should not be nil, but the setter does NOT prevent this.
+
+        \param Value away, chat, dnd, xa, '' if none, or possibly nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000003)
     ]
     HRESULT _stdcall Show([out, retval] BSTR * Value );
+    /**
+        \brief Sets the value of the presence's show element.
+
+        The show element is optional and indicates the JID's availability in a
+        number of preset states (per RFC 3921):
+        \li away -- The JID is temporarily away.
+        \li chat -- The JID is actively interested in chatting.
+        \li dnd  -- The JID is busy ("Do Not Disturb").
+        \li xa   -- The JID is away for an extended period ("eXtended Away").
+
+        Best practices should be to not set this to nil (use blank instead), 
+        but this is not prevented.
+
+        \param Value The new value of show (away, chat, dnd, xa).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000003)
     ]
     HRESULT _stdcall Show([in] BSTR Value );
+    /**
+        \brief Retrieves the priority of this presence.
+
+        Priority is an optional element and may be an integer between 
+        -128 and +127.  Higher numbers indicate servers give more priority
+        to this JID when routing stanzas.  The default is 0.
+
+        \param Value Receives the priorty of this presence (-128 to +127).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000004)
     ]
     HRESULT _stdcall Priority([out, retval] long * Value );
+    /**
+        \brief Sets the priorty of this presence.
+
+        Priority is an optional element and may be an integer between 
+        -128 and +127.  Higher numbers indicate servers give more priority
+        to this JID when routing stanzas.  The default is 0.
+
+        \param Value the new priorty value (-128 to +127).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000004)
     ]
     HRESULT _stdcall Priority([in] long Value );
+    /**
+        \brief Retrieves the error code for this presence.
+
+        If the presence packet contained an error code this method retrieves it.
+        Value \e should not be nil, but ErrorString(BSTR) does not prevent this.
+
+        \n Error stanzas and codes are defined in RFC 3920 and JEP-0086.
+        
+        \n \b Note: Exodus will also fire events when presence packets with an error 
+        stanza are received:
+            \li Error codes 500, 502, 504 - Exodus assumes this is an invalid 
+            roster item and the following events are fired:
+            '/session/error/presence' and '/presence/error'
+           
+           \li Error code 400, only with a blank from attribute, is considered 
+           invisible packet bouncing and MainSession presence set to Available.
+
+           \li All Other Error codes result in Exodus firing a '/presence/error' 
+           event.
+
+        \param Value Receives the error code or blank if none.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000005)
     ]
     HRESULT _stdcall ErrorString([out, retval] BSTR * Value );
+    /**
+        \brief Sets an error code for this presence.
+
+        The value should be as defined in RFC 3920 and JEP-0086, but are 
+        essentially HTTP codes.
+
+        \param Value The value to set the code to.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000005)
     ]
     HRESULT _stdcall ErrorString([in] BSTR Value );
+    /**
+        \brief Creates and XML representation of this presence.
+
+        This method returns the XML representation of this presence.
+
+        \param xml Receives the XML for this presence packet.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall xml([out, retval] BSTR * xml );
+    /**
+        \brief Determines if this presence packet affects subscription state.
+
+        This method will return True if the type (see PresType(BSTR*)) is one of:
+        \li subscribe
+        \li subscribed
+        \li unsubscribe
+        \li unsubscribed
+
+        \param Subscription True if this presence deals with subscription state.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000007)
     ]
     HRESULT _stdcall isSubscription([out, retval] VARIANT_BOOL * Subscription );
+    /**
+        \brief Returns the JID from the presence packet's to attribute.
+
+        This method returns the JID from presence packet's to attribute. This 
+        \e should not return nil, but the setter does NOT prevent this 
+        (see toJID(BSTR*)).
+
+        \param Value Receives the JID this presence was directed to.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000008)
     ]
     HRESULT _stdcall toJid([out, retval] BSTR * Value );
+    /**
+        \brief Sets the JID this presence should be directed to.
+
+        This method sets the to attribute of this presence packet. It determines
+        to whom the packet is sent.  This value should NOT be blank or set to nil.
+
+        \param Value The JID that should receive this presence: should not be blank or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000008)
     ]
     HRESULT _stdcall toJid([in] BSTR Value );
+    /**
+        \brief Retrieves the JID that sent this presence packet.
+
+        This method retrieves the JID that sent the presence packet. Determined
+        by examining the from attribute of the presence packet.  This should
+        not be null or blank, but the setter does not prevent this (see fromJid(BSTR*)).
+
+        \param Value Receives the JID sending this presence: should not be blank or nil.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000009)
     ]
     HRESULT _stdcall fromJid([out, retval] BSTR * Value );
+    /**
+        \brief Sets the from attribute of this presence.
+
+        This method sets the from attribute of the presence packet.  Best 
+        practice is to never set this to blank or NIL, but this is allowed.
+        \n\b Note: Servers may ignore or modify this attribute to avoid spoofing.
+
+        \param Value The JID to whom this presence belongs.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x00000009)
@@ -2993,7 +3182,7 @@ library Exodus
 
         This method adds a sub-group to the roster by fullname (see FullName). 
         Roster.Update should be called to save changes to the server.
-        \n\b NOTE: This method will replace an existing group with the same name.
+        \n\b Note: This method will replace an existing group with the same name.
 
         \param child The group to be added.
         \return \c HRESULT either \c S_OK or an error value.
