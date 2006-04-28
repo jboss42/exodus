@@ -1820,48 +1820,112 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusToolbarButton
-    \brief a breif description
+    \brief Interface to the Exodus toolbar buttons.
 
-    <p>a more detailed description</p>
+    Interface to the Exodus toolbar buttons.
   **/
 
    interface IExodusToolbarButton: IDispatch
   {
+    /**
+        \brief Is the button visible.
+
+        Is the button visible.
+
+        \param Value True if button is visible, false if not.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x000000C9)
     ]
     HRESULT _stdcall Visible([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Set visibility of button.
+
+        Set visibility of button.
+
+        \param Value True to make button visible, False to make button invisible.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x000000C9)
     ]
     HRESULT _stdcall Visible([in] VARIANT_BOOL Value );
+    /**
+        \brief Retreive the button tooltip.
+
+        Retreive the button tooltip.
+
+        \param Value Receives the current button tooltip.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x000000CA)
     ]
     HRESULT _stdcall Tooltip([out, retval] BSTR * Value );
+    /**
+        \brief Set the button tooltip.
+
+        Set the button tooltip.
+
+        \param Value Tooltip to set for the button.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x000000CA)
     ]
     HRESULT _stdcall Tooltip([in] BSTR Value );
+    /**
+        \brief Retreive the button ID.
+
+        Retreive the button ID.
+
+        \param Value Receives the button ID.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x000000CB)
     ]
     HRESULT _stdcall ImageID([out, retval] BSTR * Value );
+    /**
+        \brief Set the image for the button.
+
+        Set the image for the button.
+
+        \param Value ID Value for the button image.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x000000CB)
     ]
     HRESULT _stdcall ImageID([in] BSTR Value );
+    /**
+        \brief Is the button enabled.
+
+        Is the button enabled.
+
+        \param Value True if button is enabled, False if not.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x000000CC)
     ]
     HRESULT _stdcall Enabled([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Enable or disable button.
+
+        Enable or disable button.
+
+        \param Value True to enable button, False to disable button.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x000000CC)
@@ -19008,22 +19072,48 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusToolbar
-    \brief a breif description
+    \brief Inteface to the Exodus Toolbar.
     
-    <p>a more detailed description</p>
+    This is the interface to the Exodus toolbar.
   **/
 
    interface IExodusToolbar: IDispatch
   {
+    /**
+        \brief How many buttons are on the toolbar.
+
+        Called to get the count of the number of IExodusToolbarButton buttons are on the toolbar.
+
+        \param Value Number of buttons on the toolbar
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x000000C9)
     ]
     HRESULT _stdcall Count([out, retval] long * Value );
+    /**
+        \brief Get a handle to a specific button on the toolbar.
+
+        Get a handle to a specific button on the toolbar.
+
+        \param Index Zero based index of the desired button.
+        \param Button Handle to the IExodusToolBarButton.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall getButton([in] long Index, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Add a new button to the Toolbar.
+
+        Add a new button to the Toolbar.
+
+        \param ImageID ID of the for the toolbar button.
+        \param Button Handle to the IExodusToolbarButton to be added.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000CB)
     ]
