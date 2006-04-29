@@ -1,5 +1,4 @@
-/*! \mainpage Exodus API Documentation
- *  
+g`" *  
  *  \section sec_1 COM API
  *  The COM APIs to Exodus are documented for plugin devleopers. 
  *  Plugin developers are free to use any language supporting COM.
@@ -2217,238 +2216,753 @@ library Exodus
     dual,
     oleautomation
   ]
-  /**\interface IExodusController
-    \brief a breif description
+  /**
+    \interface IExodusController
+    \brief Provides interface to control Exodus.
 
-    <p>a more detailed description</p>
+    "Where all the good stuff happens."
   **/
-
    interface IExodusController: IDispatch
   {
+    /**
+        \brief Indicates if the session is connected.
+
+        This method indicates if the session is connected to the server.
+
+        \param Value True if connected.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000001)
     ]
     HRESULT _stdcall Connected([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Retreives the username portion of the profile's JID.
+
+        This method gets the username portion of the current profile's JID. Under 
+        normal conditions, this return value is never nil or blank (as long as 
+        the profile is valid).
+
+        \param Value The username portion of the JID - never nil or blank.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000002)
     ]
     HRESULT _stdcall Username([out, retval] BSTR * Value );
+    /**
+        \brief Retrieves the hostname portion of the profile's JID.
+
+        This method gets the hostname portion of the current profile's JID.
+
+        \param Value Recieves the hostname portion of the profile's JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000003)
     ]
     HRESULT _stdcall Server([out, retval] BSTR * Value );
+    /**
+        \brief Registers an event callback for a plugin.
+
+        Register your plugin to receive packets which match a specific xpath-like 
+        expression. The following are SAMPLES of some of the expressions you may use:
+        \n /session - Catch all session related events.  In these cases there will be no stanza returned in the event.
+        \n /packet/message[@type="headline"] - Catch all headline messages.
+        \n /packet/iq[@id="my_id"] - Catch all iq packets which have this ID attribute.
+
+        Note that exodus does not include a COMPLETE xpath parser. You may use 
+        any variations of the samples show above. Note that you should use 
+        /packet whenever attempting to catch incoming packets from the socket. 
+        All of the "top level" strings which you may use are as follows:
+            \li /session - Session and connection related details. Events will occur like /session/connected, /session/prefs, etc..
+            \li /packet - Catch any generic packet.
+            \li /roster - Catch new roster item pushes, and full roster results.
+            \li /presence - Catch presence packets coming into the system.
+            \li /windows - Catch windows events related to a specific window.
+       
+        \param xpat The xpath expression to use for this callback.
+        \param callback the IExodusPlugin object which will receive events.
+        \param ID The ID of the registered callback - save for use in UnRegisterCallback.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000004)
     ]
     HRESULT _stdcall RegisterCallback([in] BSTR xpath, [in] IExodusPlugin * callback /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    /**
+        \brief Unregisters a previously registered stream callback.
+
+        This method unregisters a previously registered callback (see RegisterCallback).
+
+        \param ID The id returned when registering the callback.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000005)
     ]
     HRESULT _stdcall UnRegisterCallback([in] long ID );
+    /**
+        \brief Sends the provided xml to the server.
+
+        This method sends the xml directly to the server.
+
+        \b Note: The xml must be well formed as Exodus does not enforce this. 
+        If the xml is invalid the server will disconnect the session.
+
+        \param xml The xml to send to the server.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000006)
     ]
     HRESULT _stdcall Send([in] BSTR xml );
+    /**
+        \brief Searches for the JID in the roster.
+
+        This method will search the roster for the given JID. Will return True
+        if the JID is found.
+
+        \param jid The JID to find in the roster.
+        \param Value True if the JID is in the roster, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000007)
     ]
     HRESULT _stdcall isRosterJID([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Checks the subscription state of the supplied JID.
+
+        The method will return True if the JID is found and has a subscription 
+        state of 'to' or 'both'.
+
+        \param jid The JID to check in the roster.
+        \param Value True if the JID is found and subscription is 'to' or 'both'.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000008)
     ]
     HRESULT _stdcall isSubscribed([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Changes the presence of the session JID.
+
+        This method changes the presence of the session JID.
+
+        \param Show  The contents of the show element to use. MUST be either: blank (empty string, ""), "chat", "away", "xa", or "dnd".  
+        \param Status  The extended attribute of the presence. Can be any string but is typically kept relatively short. Like: "I'm in a meeting".  
+        \param Priority  The new priority of this client. Do not specify to keep the existing priority.  
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000B)
     ]
     HRESULT _stdcall ChangePresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    /**
+        \brief Starts a chat with the given JID and resource.
+
+        This method starts a chat with the given JID and specific resource.  
+        The nickname is used as an alternate display for the JID in the UI.
+
+        \param jid The JID with whom to start a chat.
+        \param resource The specific resource to chat with (can be blank but not nil).
+        \param nickname The alternate name for this JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000C)
     ]
     HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR nickname );
+    /**
+        \brief Displays the profile for this JID.
+
+        This method causes the profile to be fetched and opens the profile 
+        screen for the given JID.
+
+        \param jid The JID whose profile will be dipslayed.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000D)
     ]
     HRESULT _stdcall GetProfile([in] BSTR jid );
+    /**
+        \brief Creates an instance of a dockable window.
+
+        This method creates an instance of TfrmDockContainer (a dockable window)
+        using the given caption. The method returns the window's handle. 
+
+        \param Caption The desired caption on the window.
+        \param HWND The window handle of the created window.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000010)
     ]
     HRESULT _stdcall CreateDockableWindow([in] BSTR Caption, [out, retval] long * HWND );
+    /**
+        \brief Adds a menu to the Plugins-menu.
+
+        A menu is added to the Exodus Plugins-menu using the given caption. The
+        method returns an ID which is used to by removePluginMenu.
+
+        \param Caption The name of the menu to be added.
+        \param ID The id generated by Exodus - save to remove the menu (see removePluginMenu).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000E)
     ]
     HRESULT _stdcall addPluginMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    /**
+        \brief Removes a menu form the Plugins-menu.
+
+        This method uses the ID returned when calling addPluginMenu to find and
+        remove the menu.  If the ID is not found no action occurs.
+
+        \param ID The id of the menu to remove.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000F)
     ]
     HRESULT _stdcall removePluginMenu([in] BSTR ID );
+    /**
+        \brief Monitors this JID to determine if Registration needs to be done.
+
+        This method will watch for a presence packet type='error' and a code of
+        407 for this JID. If received, a registration from will be displayed 
+        (see TfrmRegister).
+
+        \param JabberID The JID to be monitored.
+        \param FullJID Flag indicating if this is a full JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000011)
     ]
     HRESULT _stdcall monitorImplicitRegJID([in] BSTR JabberID, [in] VARIANT_BOOL FullJID );
+    /**
+        \brief Not yet implemented.
+        
+        Not yet implemented.
+    **/
     [
     id(0x00000012)
     ]
     HRESULT _stdcall getAgentList([in] BSTR Server );
+    /**
+        \brief Searches for the service on the given server.
+
+        This method searches the given server for the named item and if found
+        returns it's JID.
+
+        \param Server the server to search.
+        \param Service the named feature to find.
+        \param JabberID the JID of the item or '' if not found.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000013)
     ]
     HRESULT _stdcall getAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
+    /**
+        \brief Generates an id unique to the application.
+
+        This method generates a unique id. This id is typically used for 
+        setting the id on IQ packets.
+
+        \param ID Recieves the unique id.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000014)
     ]
     HRESULT _stdcall generateID([out, retval] BSTR * ID );
+    /**
+        \brief Determines if the JID should be blocked.
+
+        This method will return True if the given JID is found in the blocked
+        list or if the user has selected to block non-roster contacts and this 
+        JID is not in the user's roster.
+
+        \param JabberID The JID which may need blocking.
+        \param Blocked - True if this JID should be blocked.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000015)
     ]
     HRESULT _stdcall isBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
+    /**
+        \brief Adds this JID to the block list.
+
+        This method will add the given JID to the block list.
+
+        \param JabberID The JID to block.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000016)
     ]
     HRESULT _stdcall Block([in] BSTR JabberID );
+    /**
+        \brief Removes a JID from the block list.
+
+        This method removes a JID from the block list.
+
+        \param JabberID The JID to remove from the block list.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000017)
     ]
     HRESULT _stdcall UnBlock([in] BSTR JabberID );
+    /**
+        \brief Returns the resource of the session JID.
+
+        This method returns the resource associated with the current session JID.
+
+        \param Value Recieves the resource of the session JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000018)
     ]
     HRESULT _stdcall resource([out, retval] BSTR * Value );
+    /**
+        \brief Gets the port used to connect to the Jabber server.
+
+        This method gets the port used to connect to the Jabbser server. This
+        is set from the current profile.
+
+        \param Value The connection port number.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000019)
     ]
     HRESULT _stdcall Port([out, retval] long * Value );
+    /**
+        \brief Gets the priority of the session's presence.
+
+        This method returns the priority of the main session's presence.
+
+        \param Value The session's priority:  -128 to +127.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x0000001A)
     ]
     HRESULT _stdcall Priority([out, retval] long * Value );
+    /**
+        \brief Get's the status of the session's presence.
+
+        This method returns the status of the main session's presence.
+
+        \param Value A natural language description of the show value.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x0000001C)
     ]
     HRESULT _stdcall PresenceStatus([out, retval] BSTR * Value );
+    /**
+        \brief Get's the show value of the session's presence.
+
+        This method returns the show value of the main session's presence.
+        This is a machine readable value (see IExodusPresence.Show).
+
+        \param Value - The show value one of: show, away, dnd, xa
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x0000001D)
     ]
     HRESULT _stdcall PresenceShow([out, retval] BSTR * Value );
+    /**
+        \brief Determines if the session is paused.
+
+        This method returns True if the session is paused. Messages
+        received while in paused mode will be queued for later delivery.
+
+        \param Value True if the session is paused.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x0000001E)
     ]
     HRESULT _stdcall IsPaused([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Determine if the session's presence is set to invisble.
+
+        This method returns True if the main session's presence has been
+        set to invisible.
+
+        \param Value True if session's presence is set to invisible.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x0000001F)
     ]
     HRESULT _stdcall IsInvisible([out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Attempts to connect to the server.
+
+        This method attempts to connect to the server.  Exodus will only attempt
+        to connect if the main session is not already connected.  If no profile
+        has been selected an exception will be raised.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000020)
     ]
     HRESULT _stdcall Connect( void );
+    /**
+        \brief Disconnects from the server.
+
+        This method disconnects the active session from the server.
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000021)
     ]
     HRESULT _stdcall Disconnect( void );
+    /**
+        \brief Retrieves a preference value as a string.
+
+        This method will return the value of the given preference as a String.
+
+        \param Key Preference to get.  Should not be nil.
+        \param Value The string value of the preference or blank if not found.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000022)
     ]
     HRESULT _stdcall getPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
+    /**
+        \brief Retrieves a preference value as an int.
+
+        This method will return the value of the given preference as a int.
+
+        \param Key The preference to get.  Should not be nil.
+        \param Value The int value of the preference or 0 if not found.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000023)
     ]
     HRESULT _stdcall getPrefAsInt([in] BSTR Key, [out, retval] long * Value );
+    /**
+        \brief Retrieves a preference value as a boolean.
+
+        This method will return the value of the given preference as a boolean.
+
+        \param Key The preference to get.  Should not be nil.
+        \param Value The boolean value of the preference.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000024)
     ]
     HRESULT _stdcall getPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
+    /**
+        \brief Sets the given preference using a string.
+
+        This method sets the given preference using the given string value.
+
+        \param Key The preference to set. Should not be nil.
+        \param Value The new value of the preference.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000025)
     ]
     HRESULT _stdcall setPrefAsString([in] BSTR Key, [in] BSTR Value );
+    /**
+        \brief Sets the given preference using a integer.
+
+        This method sets the given preference using the given integer value.
+
+        \param Key The preference to set. Should not be nil.
+        \param Value The new value of the preference.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000026)
     ]
     HRESULT _stdcall setPrefAsInt([in] BSTR Key, [in] long Value );
+    /**
+        \brief Sets the given preference using a boolean
+
+        This method sets the given preference using the given boolean value.
+
+        \param Key The preference to set. Should not be nil.
+        \param Value The new value of the preference.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000027)
     ]
     HRESULT _stdcall setPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
+    /**
+        \brief Finds an existing chat session for the given JID/resource.
+
+        This method searches existing chat sessions for the given JID/resource 
+        and returns the window handle to the window.
+
+        \param JabberID The JID whose chat session is desired.
+        \param resource The specific resource of the JID (if any).
+        \param Handle The window handle of the existing chat window or nil if not found.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000028)
     ]
     HRESULT _stdcall findChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
+    /**
+        \brief Not yet implemented - do not call.
+
+        Not yet implemented. Do not call.
+    **/
     [
     id(0x00000029)
     ]
     HRESULT _stdcall startSearch([in] BSTR SearchJID );
+    /**
+        \brief Creates or enters or shows a room window.
+
+        This method uses the supplied roomjid, nickname, password (optional) to 
+        enter or create a room and find or show a room window. 
+        
+        The send presence parameter determines if the room should be created if 
+        it doesn't exist.  If a new room is is created, plugins are notified via 
+        the IExodusPlugin.NewRoom callback.
+       
+        If a password is required but not supplied, then a popup dialog will prompt the user.
+        
+        \b Note: If text conferencing is branded off nothing happens (brand_muc pref).
+
+        \param RoomJID The JID of the room to enter.
+        \param nickname The nickname to use in the room. Should not be nil. If blank, the default_nick pref is used.
+        \param Password The password (optional). Should not be nil use blank.
+        \param SendPresence True if Exodus should create the room if it doesn't exist.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002A)
     ]
     HRESULT _stdcall startRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password, [in] VARIANT_BOOL SendPresence );
+    /**
+        \brief Creates an instant message window.
+
+        This method creates an instant message window for chatting with the 
+        given JID. This method creates the window but doesn't show it. Exodus
+        notifies plugins the chat window is being created by using the
+        IExodusPlugin.NewOutgoingIM callback.
+
+        \param JabberID The JID with whom to chat.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002B)
     ]
     HRESULT _stdcall startInstantMsg([in] BSTR JabberID );
+    /**
+        \brief Opens the Jabber Browser window.
+
+        This method opens the Jabber browser window with the selected JID or
+        the session JID if none supplied.
+
+        \param BrowseJID The JID to browse.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002C)
     ]
     HRESULT _stdcall startBrowser([in] BSTR BrowseJID );
+    /**
+        \brief Creates the join room window.
+
+        This method shows the join room window prepopulated with the information 
+        provided. If text conferencing is branded off this does nothing (brand_muc pref).
+
+        \param RoomJID The jid of the room to join (must not be nil).
+        \param nickname The nickname to use in the room (use blank instead of nil).
+        \param Password The password to use on entering the room (use blank instead of nil).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002D)
     ]
     HRESULT _stdcall showJoinRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
+    /**
+        \brief Shows the preferences window.
+
+        This method causes the preferences window to display.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002E)
     ]
     HRESULT _stdcall showPrefs( void );
+    /**
+        \brief Shows the the custom presence dialog.
+
+        This method causes the custom presence dialog to display.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000002F)
     ]
     HRESULT _stdcall showCustomPresDialog( void );
+    /**
+        \brief Shows the debug XML window.
+
+        This method shows the debug XML window.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000030)
     ]
     HRESULT _stdcall showDebug( void );
+    /**
+        \brief Shows the login window.
+
+        This method shows the login window.
+        \b Note: You should check the connected property before call this method 
+        (see Connected).
+
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000031)
     ]
     HRESULT _stdcall showLogin( void );
+    /**
+        \brief Shows a toast pop-up window.
+
+        This method shows a toast pop-up window using the given message text and image.
+        The plugin can (optionally) supply it's own window handle to focus when the toast 
+        link is clicked on.
+
+        \param Message The text to display in the toast.
+        \param wndHandle The window handle to focus when toast clicked (can be 0).
+        \param imageIndex The index of the image to show on the toast window.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000032)
     ]
     HRESULT _stdcall showToast([in] BSTR Message, [in] long wndHandle, [in] long imageIndex );
+    /**
+        \brief Changes the presence of the session JID.
+
+        This method changes the presence of this session JID.
+
+        \param Show The new show value describing the availability (show, away, dnd, xa).
+        \param Status The new status value (natural language description of the show state).
+        \param Priority The new priority (-128 to +127).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000033)
     ]
     HRESULT _stdcall setPresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    /**
+        \brief Returns the Roster interface.
+
+        This method returns the roster interface.
+
+        \param Value The IExodusRoster interface.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000036)
     ]
     HRESULT _stdcall Roster([out, retval] IExodusRoster ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Returns the presence database interface.
+
+        This method returns the presence database interface.
+
+        \param Value The IExodusPPDB interface.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x00000037)
     ]
     HRESULT _stdcall PPDB([out, retval] IExodusPPDB ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Adds a plugin's disco item to those sent by Exodus.
+
+        This method adds the given disco item to Exodus' own. Exodus returns an 
+        ID that should be kept and used when removing the item (see removeDiscoItem).
+
+        \param JabberID The JID of the new item.
+        \param Name The name attribute of the disco item.
+        \param ID The id used when removing this item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000000A)
     ]
     HRESULT _stdcall registerDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
+    /**
+        \brief Removes a plugin's disco item from Exodus.
+
+        This method removes a disco item from Exodus using the id returned when
+        registering it (see registerDiscoItem).
+
+        \param ID The id returned when registering this item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000035)
     ]
     HRESULT _stdcall removeDiscoItem([in] BSTR ID );
+    /**
+        \brief Allows plugins to append static XML to each presence packet sent by Exodus.
+
+        This method allows plugins to append static XML to each presence packet 
+        sent by Exodus. The XML \b must be well formed.
+
+        Calling this method will return an ID which plugins should use to 
+        remove this XML (see removePresenceXML).
+
+        \param xml The well-formed XML to append to presence packets.
+        \param ID The ID assigned to this XML by Exodus - used for removing it.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x00000039)
     ]
     HRESULT _stdcall registerPresenceXML([in] BSTR xml, [out, retval] BSTR * ID );
+    /**
+        \brief Allows plugins to remove static XML being appened to presence packets.
+
+        This method allows plugins to remove static XML being appened to 
+        presence packets using it's registration id.
+
+        \param ID The id obtained when the XML was added using (registerPresenceXML).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x0000003A)
     ]
