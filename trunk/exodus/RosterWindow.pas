@@ -2039,9 +2039,10 @@ begin
                 (MainSession.Profile.ConnectionType = conn_normal);
             popInvite.Enabled := (native);
             popPresence.Enabled := (e and (not me));
-            popClientInfo.Enabled := true;
-            popVersion.Enabled := o;
-            popTime.Enabled := o;
+//            popClientInfo.Enabled := true;
+            popClientInfo.Enabled := (native);
+            popVersion.Enabled := (o) and (native);
+            popTime.Enabled := (o) and (native);
             popRename.Enabled := (not me);
             popHistory.Enabled := e;
             popBlock.Enabled := (not me);
