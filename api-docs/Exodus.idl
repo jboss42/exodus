@@ -1683,17 +1683,34 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusIQListener
-    \brief a breif description
+    \brief A Listening inteface specifically for tracking IQ requests.
 
-    <p>a more detailed description</p>
+    A Listening inteface specifically for tracking IQ requests.
   **/
 
    interface IExodusIQListener: IDispatch
   {
+    /**
+        \brief IQ request has returned, needs processing.
+
+        IQ request has returned, needs processing.
+
+        \param Handle Handle to IQ request.
+        \param xml XML of the IQ request response.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall ProcessIQ([in] BSTR Handle, [in] BSTR xml );
+    /**
+        \brief IQ request has timed out.
+
+        IQ request has timed out.
+
+        \param Handle Handle of timed out IQ request.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000CA)
     ]
@@ -1799,13 +1816,23 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusListener
-    \brief a breif description
+    \brief A basic listener to process events.
     
-    <p>a more detailed description</p>
+    A basic listener to process events.  
+    Should be registered with IExodusController.
   **/
 
    interface IExodusListener: IDispatch
   {
+    /**
+        \brief Process an event for which this interface was registered.
+
+        Process an event for which this interface was registered.
+
+        \param Event The event that is to be processed.
+        \param xml XML associated with the event.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     id(0x000000C9)
     ]
