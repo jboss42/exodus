@@ -3234,24 +3234,87 @@ library Exodus
     helpstring("Unregister all of the features for a given ext.")
     ]
     HRESULT _stdcall unregisterCapExtension([in] BSTR ext );
+    /**
+        \brief Gets the roster images COM interface.
+
+        This method returns the IExodusRosterImages COM interface.  This 
+        interface allows plugins to add, load or find images in the roster's
+        image cache.
+
+        \param Value A IExodusRosterImages COM inteface.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D0)
     ]
     HRESULT _stdcall RosterImages([out, retval] IExodusRosterImages ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the disco entity cache COM interface.
+
+        This method returns the IExodusEntityCache interface. This inteface
+        allows plugins to find information in the disco cache or retrieve 
+        disco information from entities.
+
+        \param Value An IExodusEntityCache COM interface.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D1)
     ]
     HRESULT _stdcall EntityCache([out, retval] IExodusEntityCache ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Writes a message the debug window.
+
+        This method allows plugins to write messages to the debug window.
+
+        \param Value the message to write to the debug window (should not be nil).
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D2)
     ]
     HRESULT _stdcall Debug([in] BSTR Value );
+    /**
+        \brief Call to be notified of the result of an IQ get/set.
+
+        The plugin can register to track a given IQ get/set.  Exodus will call
+        back the supplied listener using IExodusIQListener.ProcessIQ.
+
+        \param xml The IQ to track.
+        \param Listener The IExodusIQListener to callback.
+        \param Timeout The timeout value for the listener (in seconds).
+        \param Ret The id of the IQ being tracked. 
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D3)
     ]
     HRESULT _stdcall TrackIQ([in] BSTR xml, [in] IExodusIQListener * Listener /*Warning: unable to validate structure name: */, [in] long Timeout, [out, retval] BSTR * Ret );
+    /**
+        \brief Fires an event.
+
+        This method fires the given event with the optional argument. The xml
+        element is required and should not be nil.  The argument (Arg) is 
+        optional and can be blank but not nil.  The argument Arg is interpreted 
+        according to the type of event being fired:
+        \li /roster 
+          Arg is expected to be a roster JID, the xml param is overwritten with 
+          the roster item's xml representation.
+        \li /presence
+          Arg is expected to be a valid JID whose presence is located in the 
+          presence database.
+        \li /data
+          Arg is passed through directly.
+        \li any other value
+          Arg is ignored.
+
+        \param Event The name of the event (i.e. /roster/remove).
+        \param xml 
+        \param Arg Either a JID or data to be passed to the event handlers.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D4)
     ]
