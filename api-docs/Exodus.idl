@@ -3311,7 +3311,7 @@ library Exodus
           Arg is ignored.
 
         \param Event The name of the event (i.e. /roster/remove).
-        \param xml 
+        \param xml The XML that is passed to event listeners.
         \param Arg Either a JID or data to be passed to the event handlers.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -3319,30 +3319,94 @@ library Exodus
     id(0x000000D4)
     ]
     HRESULT _stdcall FireEvent([in] BSTR Event, [in] BSTR xml, [in] BSTR Arg );
+    /**
+        \brief Allows plugins to register a listener on a signal chain.
+
+        This method will allow the plugin to be notified of events on the 
+        signal chain described by the xpath parameter:
+            Recognized chains are:
+                /roster
+                /data
+                /presence
+                /filter
+                /pre
+                /packet
+                /post
+        The returned id is used to unregister this listener (see UnRegisterCallback).
+
+        \param xpath The xpath to match.
+        \param Listener The listener to notify when the xpath is matched.
+        \param ID The id of the registered listener - use to remove (see UnRegisterCallback)
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000D5)
     ]
     HRESULT _stdcall RegisterListener([in] BSTR xpath, [in] IExodusListener * Listener /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    /**
+        \brief Allows plugins to access the Exodus toolbar.
+
+        This method returns the IExodusToolbar COM interface.
+
+        \param Value The IExodusToolbar COM interface.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D6)
     ]
     HRESULT _stdcall Toolbar([out, retval] IExodusToolbar ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the contact message logger.
+
+        This method gets the IExodusLogger contact logger for use by plugins.
+        The contact logger is responsible for logging messages for this contact.
+
+        \param Value An instance of IExodusLogger used for logging messages. 
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D7)
     ]
     HRESULT _stdcall ContactLogger([out, retval] IExodusLogger ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Sets the logger used for contact messages.
+
+        This method sets the logger used to log contact messages with the given
+        instance of IExodusLogger.  Calling this method causes an 
+        '/session/logger' event to fire.
+
+        \param Value The IExodusLogger that will log contact messages.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000D7)
     ]
     HRESULT _stdcall ContactLogger([in] IExodusLogger * Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the room logger.
+
+        This method gets the IExodusLogger interface used for room logging.
+
+        \param Value An instance of IExodusLogger used for room logging.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D8)
     ]
     HRESULT _stdcall RoomLogger([out, retval] IExodusLogger ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Sets the logger used for room logging.
+
+        This method sets the room logger using the given IExodusLogger instance. 
+        This method causes a '/session/room-logger' event to fire.
+
+        \param Value The IExodusLogger interface to be used for room logging.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propput,
     id(0x000000D8)
