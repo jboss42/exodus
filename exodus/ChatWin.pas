@@ -279,8 +279,11 @@ begin
                 else
                     OtherNick := chat_nick;
             end
-            else
+            else begin
                 OtherNick := ritem.Text;
+                mnuSendFile.Enabled := ritem.IsNative;
+                C1.Enabled := ritem.IsNative;
+            end;
         end
         else
             OtherNick := chat_nick;
