@@ -1,7 +1,6 @@
 object frmInvite: TfrmInvite
   Left = 400
   Top = 181
-  AutoScroll = False
   Caption = 'Invite to Conference'
   ClientHeight = 268
   ClientWidth = 323
@@ -25,18 +24,27 @@ object frmInvite: TfrmInvite
     Width = 323
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 234
+    ExplicitWidth = 323
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 323
       Height = 34
+      ExplicitWidth = 323
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 323
+        ExplicitWidth = 323
       end
       inherited Panel1: TPanel
         Left = 159
         Width = 164
         Height = 29
+        ExplicitLeft = 159
+        ExplicitWidth = 164
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -128,6 +136,7 @@ object frmInvite: TfrmInvite
         Height = 13
         Align = alTop
         Caption = 'Reason:'
+        ExplicitWidth = 40
       end
       object Label1: TTntLabel
         Left = 0
@@ -136,6 +145,7 @@ object frmInvite: TfrmInvite
         Height = 13
         Align = alTop
         Caption = 'Invite the following contacts to:'
+        ExplicitWidth = 147
       end
       object memReason: TTntMemo
         Left = 0
@@ -143,7 +153,7 @@ object frmInvite: TfrmInvite
         Width = 317
         Height = 62
         Align = alClient
-        Lines.WideStrings = (
+        Lines.Strings = (
           'Please join us in this conference room.')
         TabOrder = 0
       end
