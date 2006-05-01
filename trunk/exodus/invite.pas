@@ -161,6 +161,18 @@ begin
     else
         cap := jid;
 
+    // make sure this JID supports MUC
+    if ((ritem.tag <> nil) and
+        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
+
+        // if this person can not do offline msgs, and they are offline, bail
+        { TODO : if (not ritem.CanMUC) then begin }
+        if (not ritem.IsNative) then begin
+            MessageDlgW(_('This contact can not join chat rooms.'), mtError,
+                [mbOK], 0);
+            exit;
+        end;
+    end;
     // make sure we don't already have an item w/ this caption
     for i := 0 to lstJIDS.Items.Count - 1 do
         if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
