@@ -4656,25 +4656,70 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusEntityCache
-    \brief a breif description
+    \brief A cache of all the IExodusEntity items known by the system.
 
-    <p>a more detailed description</p>
+    A cache of all the IExodusEntity items known by the system.
   **/
 
    interface IExodusEntityCache: IDispatch
   {
+    /**
+        \brief Get an IExodusEntity by JID.
+
+        Get an IExodusEntity by JID.
+
+        \param jid JID for the requested IExodusEntity.
+        \param node ???
+        \param Ret Receives IExodusEntity for requested JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall getByJid([in] BSTR jid, [in] BSTR node, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Fetch disco info from server or cache as needed.
+
+        Fetch disco info from server or cache as needed.
+				Fires '/session/entity/info' events against TJabberSession passed in node.
+
+        \param jid JID for the requested IExodusEntity.
+        \param node JabberSession object to fire events.
+        \param items_limit Limit of the number of items returned from server query.
+        \param Ret Receives IExodusEntity for requested JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall Fetch([in] BSTR jid, [in] BSTR node, [in] VARIANT_BOOL items_limit, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Dispatch a disco info query for JID.
+
+        Dispatch a disco info query for JID.
+        
+
+        \param jid JID for the requested IExodusEntity.
+        \param node JabberSession object associated with this query.
+        \param Timeout Timeout value (seconds) for query.
+        \param Ret Receives IExodusEntity for requested JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall discoInfo([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Dispatch a disco items query for JID.
+
+        Dispatch a disco items query for JID.
+
+        \param jid JID for the requested IExodusEntity.
+        \param node JabberSession object associated with this query.
+        \param Timeout Timeout value (seconds) for query.
+        \param Ret Receives IExodusEntity for requested JID.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
@@ -4689,69 +4734,179 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusEntity
-    \brief a breif description
+    \brief A representation of the disco info, features, and capabilities for various items in the system.
 
-    <p>a more detailed description</p>
+    A entity is a representation of the capabilities, features and disco info for a specific JID.
+    This could be info on the client used by a contact, or a server's capablities, etc.
   **/
 
    interface IExodusEntity: IDispatch
   {
+    /**
+        \brief Does the entity have a specific feature.
+
+        Does the entity have a specific feature.
+
+        \param feature The feature being queried.
+        \param Ret True if entity has the specified feature, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000C9)
     ]
     HRESULT _stdcall hasFeature([in] BSTR feature, [out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Does this entity have a specific Identity.
+
+        Does this entity have a specific Identity.
+
+        \param Category Identity category to query.
+        \param DiscoType Disco type to query.
+        \param True if has Identity, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CA)
     ]
     HRESULT _stdcall hasIdentity([in] BSTR Category, [in] BSTR DiscoType, [out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Are there disco items associated with this entity.
+
+        Are there disco items associated with this entity.
+
+        \param Ret True if there are items, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CB)
     ]
     HRESULT _stdcall hasItems([out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Is there disco info associated with this entity.
+
+        Is there disco info associated with this entity.
+
+        \param Ret True if there is info, False if not.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     id(0x000000CC)
     ]
     HRESULT _stdcall hasInfo([out, retval] VARIANT_BOOL * Ret );
+    /**
+        \brief Get the JID associated with this entity.
+
+        Get the JID associated with this entity.
+
+        \param Value Receives JID associated with this entity.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CD)
     ]
     HRESULT _stdcall jid([out, retval] BSTR * Value );
+    /**
+        \brief Text representation of the node associated with this entity.
+
+        Text representation of the node associated with this entity.
+
+        \param Value Receives raw XML of node.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CE)
     ]
     HRESULT _stdcall node([out, retval] BSTR * Value );
+    /**
+        \brief Category of entity.
+
+        Category of entity.
+
+        \param Value Receives category for entity.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000CF)
     ]
     HRESULT _stdcall Category([out, retval] BSTR * Value );
+    /**
+        \brief Disco type of entity.
+
+        Disco type of entity.
+
+        \param Value Receives Disco type of entity.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D0)
     ]
     HRESULT _stdcall DiscoType([out, retval] BSTR * Value );
+    /**
+        \brief Name of entity.
+
+        Name of entity.
+
+        \param Value Receives name of entity.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D1)
     ]
     HRESULT _stdcall Name([out, retval] BSTR * Value );
+    /**
+        \brief A count of the number of features in this entity.
+
+        A count of the number of features in this entity.
+
+        \param Value Receives number of features.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D2)
     ]
     HRESULT _stdcall FeatureCount([out, retval] long * Value );
+    /**
+        \brief Retreives feature value by index.
+
+        Retreives feature value by zero based index.
+
+        \param Index Zero based index of desired feature.
+        \param Value Receives requested feature.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D3)
     ]
     HRESULT _stdcall feature([in] long Index, [out, retval] BSTR * Value );
+    /**
+        \brief A count of the number of items in this entity.
+
+        A count of the number of items in this entity.
+
+        \param Value Receives the number of items.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D4)
     ]
     HRESULT _stdcall ItemsCount([out, retval] long * Value );
+    /**
+        \brief Retrieves an item by index.
+
+        Retrieves an item by zero based index.
+
+        \param Index Zero based index of desired item.
+        \param Value Receives IExodusEntity interface for requested item.
+        \return \c HRESULT either \c S_OK or an error value.
+    **/
     [
     propget,
     id(0x000000D5)
