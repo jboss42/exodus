@@ -529,10 +529,14 @@ begin
         // this resource isn't online anymore... remove it
         ri.Removed := true;
     end
-    else if ((is_blocked) and (p = nil)) then
-        ri.ImageIndex := _ico_blockoffline
-    else if (is_blocked) then
-        ri.ImageIndex := _ico_blocked
+    else if ((is_blocked) and (p = nil)) then begin
+        //ri.ImageIndex := _ico_blockoffline
+        ri.ImageIndex := RosterTreeImages.Find(ri.ImagePrefix + 'offline_blocked');
+    end
+    else if (is_blocked) then begin
+        //ri.ImageIndex := _ico_blocked
+        ri.ImageIndex := RosterTreeImages.Find(ri.ImagePrefix + 'online_blocked');
+    end
     else if (ri.ask = 'subscribe') then
         ri.ImageIndex := _ico_Unknown
     else if p = nil then
