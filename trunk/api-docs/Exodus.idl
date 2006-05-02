@@ -1399,31 +1399,111 @@ library Exodus
     propget,
     id(0x00000004)
     ]
+    /**
+        \brief Get whether the accelerator keys for menu items can be reset automatically.
+
+        Retrieve whether the accelerator keys for menu items can be reset automatically.
+
+				Use AutoHotkeys to indicate whether the menu should automatically ensure that accelerator keys for its items are reset if necessary so that every menu item has an accelerator key and no two items have the same accelerator key. This ensures that menu items added dynamically at runtime can have accelerator keys that do not introduce conflicts. TMenu tries to preserve all existing accelerator key mappings when adjusting the accelerator keys, but may be forced to change some in order to ensure that every item has a unique accelerator.
+				 
+				Before the menu is displayed, the menu checks and adjusts the accelerator key mappings if AutoHotkeys is maAutomatic. When AutoHotkeys is maManual, the menu does not alter the top-level menu items, but may adjust the accelerator keys for submenus, depending on the AutoHotkeys property of the menu item that is the parent of the submenu.
+				 
+        \p Value should be ???
+        
+        \param Value Receives the value of AutoHotKeys.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
     [
     propput,
     id(0x00000004)
     ]
+    /**
+        \brief Set whether the accelerator keys for menu items can be reset automatically.
+
+        Specifies whether the accelerator keys for menu items can be reset automatically.
+
+				Use AutoHotkeys to indicate whether the menu should automatically ensure that accelerator keys for its items are reset if necessary so that every menu item has an accelerator key and no two items have the same accelerator key. This ensures that menu items added dynamically at runtime can have accelerator keys that do not introduce conflicts. TMenu tries to preserve all existing accelerator key mappings when adjusting the accelerator keys, but may be forced to change some in order to ensure that every item has a unique accelerator.
+				 
+				Before the menu is displayed, the menu checks and adjusts the accelerator key mappings if AutoHotkeys is maAutomatic. When AutoHotkeys is maManual, the menu does not alter the top-level menu items, but may adjust the accelerator keys for submenus, depending on the AutoHotkeys property of the menu item that is the parent of the submenu.
+				 
+        \p Value should be ???
+        
+        \param Value Sets the value of AutoHotKeys.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoHotkeys([in] long Value );
     [
     propget,
     id(0x00000005)
     ]
+    /**
+        \brief Get whether redundant separator bars are automatically removed from the menu.
+
+        Retrieve whether redundant separator bars are automatically removed from the menu.
+
+				Use AutoLineReduction to indicate whether the menu should automatically ensure that the menu does not start or end with a separator bar and that two separator bars do not appear next to each other. This ensures that menus built dynamically at runtime do not have separator bars in undesired positions.
+ 
+				Before the menu is displayed, it removes superfluous separator bars when AutoLineReduction is maAutomatic. When AutoLineReduction is maManual, the menu does not remove separators from the top-level menu items, but may remove superfluous separators from submenus, depending on the AutoLineReduction property of the menu item that is the parent of the submenu.				
+        
+        \p Value should be ???
+        
+        \param Value Receives the value of AutoLineReduction.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
     [
     propput,
     id(0x00000005)
     ]
+    /**
+        \brief Set whether redundant separator bars are automatically removed from the menu.
+
+        Specifies whether redundant separator bars are automatically removed from the menu.
+
+				Use AutoLineReduction to indicate whether the menu should automatically ensure that the menu does not start or end with a separator bar and that two separator bars do not appear next to each other. This ensures that menus built dynamically at runtime do not have separator bars in undesired positions.
+ 
+				Before the menu is displayed, it removes superfluous separator bars when AutoLineReduction is maAutomatic. When AutoLineReduction is maManual, the menu does not remove separators from the top-level menu items, but may remove superfluous separators from submenus, depending on the AutoLineReduction property of the menu item that is the parent of the submenu.				
+        
+        \p Value should be ???
+        
+        \param Value Sets the value of AutoLineReduction.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoLineReduction([in] long Value );
     [
     propget,
     id(0x00000006)
     ]
+    /**
+        \brief Get whether the menu item starts a new column in the menu.
+
+        Retreive whether the menu item starts a new column in the menu.
+
+				Set Break to break a long menu into columns at the item described by this menu item. The value of Break indicates whether the menu is broken into columns, and if so, whether a bar appears between the columns of the parent menu.
+        
+        \p Value should be ???
+        
+        \param Value Receives the value of Break.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Break([out, retval] long * Value );
     [
     propput,
     id(0x00000006)
     ]
+    /**
+        \brief Set whether the menu item starts a new column in the menu.
+
+        Specifies whether the menu item starts a new column in the menu.
+
+				Set Break to break a long menu into columns at the item described by this menu item. The value of Break indicates whether the menu is broken into columns, and if so, whether a bar appears between the columns of the parent menu.
+        
+        \p Value should be ???
+        
+        \param Value Sets the value of Break.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Break([in] long Value );
     [
     propget,
@@ -1472,21 +1552,73 @@ library Exodus
     propget,
     id(0x00000008)
     ]
+    /**
+        \brief Get whether a check mark should appear beside the Caption.
+
+        Retreive whether a check mark should appear beside the Caption.
+
+				Use Checked to allow a menu item to work like a check box. If Checked is true, the menu item appears checked. If Checked is false, the menu item remains unchecked.
+        
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Receives the value of Checked.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Checked([out, retval] long * Value );
     [
     propput,
     id(0x00000008)
     ]
+    /**
+        \brief Set whether a check mark should appear beside the Caption.
+
+        Specified whether a check mark should appear beside the Caption.
+
+				Use Checked to allow a menu item to work like a check box. If Checked is true, the menu item appears checked. If Checked is false, the menu item remains unchecked.
+        
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Sets the value of Checked.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Checked([in] long Value );
     [
     propget,
     id(0x00000009)
     ]
+    /**
+        \brief Get whether the menu item is invoked when the parent item is double clicked.
+
+        Retreive whether the menu item is invoked when the parent item is double clicked.
+
+				Set Default to specify whether a menu item is the default item in a submenu. Default menu items are executed when the parent item is double-clicked, allowing users to avoid navigating the submenus that contain them. 
+
+				The default item appears in boldface. A submenu can have only one default item. If the Items list of the parent menu item already contains a default menu item, setting the Default property to true sets the Default property of the previous default item to false.        
+				
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Receives the value of Default.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Default([out, retval] long * Value );
     [
     propput,
     id(0x00000009)
     ]
+    /**
+        \brief Set whether the menu item is invoked when the parent item is double clicked.
+
+        Specifies whether the menu item is invoked when the parent item is double clicked.
+
+				Set Default to specify whether a menu item is the default item in a submenu. Default menu items are executed when the parent item is double-clicked, allowing users to avoid navigating the submenus that contain them. 
+
+				The default item appears in boldface. A submenu can have only one default item. If the Items list of the parent menu item already contains a default menu item, setting the Default property to true sets the Default property of the previous default item to false.        
+				
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Sets the value of Default.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Default([in] long Value );
     [
     propget,
@@ -1525,21 +1657,64 @@ library Exodus
     propget,
     id(0x0000000B)
     ]
+    /**
+        \brief Get the Identity of  the logical group to which the menu item belongs.
+
+        Retreive the Identity of  the logical group to which the menu item belongs.
+
+				Use GroupIndex to control how menus are merged. In applications that contain multiple forms, items from the menus of secondary forms can be merged into the application's main menu as those forms become active. MDI applications always merge the menus of child windows with the main menu of the parent window. 
+				
+        \param Value Receives the value of the group index.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall GroupIndex([out, retval] long * Value );
     [
     propput,
     id(0x0000000B)
     ]
+    /**
+        \brief Set the Identity of  the logical group to which the menu item belongs.
+
+        Specifies the Identity of  the logical group to which the menu item belongs.
+
+				Use GroupIndex to control how menus are merged. In applications that contain multiple forms, items from the menus of secondary forms can be merged into the application's main menu as those forms become active. MDI applications always merge the menus of child windows with the main menu of the parent window. 
+				
+        \param Value Sets the value of the group index.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall GroupIndex([in] long Value );
     [
     propget,
     id(0x0000000C)
     ]
+    /**
+        \brief Get numeric ID for control's context-sensitive help topic
+
+        Retrieve numeric ID for control's context-sensitive help topic.
+
+        If \p Value is 0 (default), no help topic is provided for this control.
+
+        \param Value The help numeric topic ID.
+        \return S_OK if successful, or an error value otherwise.
+        \see HelpType
+    **/
     HRESULT _stdcall HelpContext([out, retval] long * Value );
     [
     propput,
     id(0x0000000C)
     ]
+    /**
+        \brief Set numeric ID for control's context-sensitive help topic
+
+        Specify numeric ID for control's context-sensitive help topic.
+
+        Supports context-sensitive help for applications that use numeric topic IDs.
+        If \p Value is 0, no help topic is provided for this control.
+
+        \param Value The new help numeric topic ID.
+        \return S_OK if successful, or an error value otherwise.
+        \see HelpType
+    **/
     HRESULT _stdcall HelpContext([in] long Value );
     [
     propget,
@@ -1587,31 +1762,91 @@ library Exodus
     propget,
     id(0x0000000E)
     ]
+    /**
+        \brief Get which image maintained by the parent menu appears next to the menu item.
+        
+        Receives which image maintained by the parent menu appears next to the menu item.
+
+        Set ImageIndex to designate an image that should appear next to the caption when the menu item is drawn. On top-level menu items, ImageIndex specifies a zero-offset index into the Images property of the parent menu (TMenu or TPopupMenu). On submenu items, ImageIndex is the zero-offset index into the parent item's SubMenuImages property.
+
+        \param Value Receives the image index.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall imageIndex([out, retval] long * Value );
     [
     propput,
     id(0x0000000E)
     ]
+    /**
+        \brief Set which image maintained by the parent menu appears next to the menu item.
+        
+        Specifies which image maintained by the parent menu appears next to the menu item.
+
+        Set ImageIndex to designate an image that should appear next to the caption when the menu item is drawn. On top-level menu items, ImageIndex specifies a zero-offset index into the Images property of the parent menu (TMenu or TPopupMenu). On submenu items, ImageIndex is the zero-offset index into the parent item's SubMenuImages property.
+
+        \param Value Setsthe image index.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall imageIndex([in] long Value );
     [
     propget,
     id(0x0000000F)
     ]
+    /**
+        \brief Get whether the menu item is mutually exclusive with other menu items in its group.
+        
+        Receives whether the menu item is mutually exclusive with other menu items in its group.
+
+        Use RadioItem to make the menu item behave like a radio button with a group of other menu items. The group of menu items is the set of all menu items in a pop-up or drop-down menu that have the same value of GroupIndex. When RadioItem is true, only one menu item in the group that contains the menu item can be checked at a time. The single selected menu item in the group is indicated by a round dot next to the Caption.
+
+        \param Value Receives the RadioItem state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall RadioItem([out, retval] long * Value );
     [
     propput,
     id(0x0000000F)
     ]
+    /**
+        \brief Set whether the menu item is mutually exclusive with other menu items in its group.
+        
+        Specifies whether the menu item is mutually exclusive with other menu items in its group.
+
+        Use RadioItem to make the menu item behave like a radio button with a group of other menu items. The group of menu items is the set of all menu items in a pop-up or drop-down menu that have the same value of GroupIndex. When RadioItem is true, only one menu item in the group that contains the menu item can be checked at a time. The single selected menu item in the group is indicated by a round dot next to the Caption.
+
+        \param Value Sets the RadioItem state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall RadioItem([in] long Value );
     [
     propget,
     id(0x00000010)
     ]
+    /**
+        \brief Get the key combination users can type to quickly access the menu item.
+        
+        Receives the key combination users can type to quickly access the menu item.
+
+        Use ShortCut to allow the user to type a key combination instead of selecting the item using the menu. This key combination appears to the right of the menu item in the menu.
+
+        \param Value Receives the ShortCut.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShortCut([out, retval] long * Value );
     [
     propput,
     id(0x00000010)
     ]
+    /**
+        \brief Set the key combination users can type to quickly access the menu item.
+        
+        Specifies the key combination users can type to quickly access the menu item.
+
+        Use ShortCut to allow the user to type a key combination instead of selecting the item using the menu. This key combination appears to the right of the menu item in the menu.
+
+        \param Value Sets the ShortCut.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ShortCut([in] long Value );
     [
     propget,
