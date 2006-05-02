@@ -16178,12 +16178,33 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
 
     **/
-    HRESULT _stdcall BiDiMode([in] long Value );
+    HRESULT _stdcall BiDiMode([in] long Value );    
+    /**
+        \brief Gets the value of the button's cancel property.
+
+        This method returns the value of the button's cancel property. When set
+        to true, pressing the escape key will cause the onClick event handler to 
+        execute.
+
+        \param Value The current value of the button's cancel property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000D)
     ]
     HRESULT _stdcall Cancel([out, retval] long * Value );
+    /**
+        \brief Sets the value of the button's cancel property.
+
+        This method sets the value of the button's cancel property.  When set
+        to true, pressing the escape key will cause the onClick event handler to 
+        execute.
+
+        \param Value The new value of the button's cancel property.
+        \return S_OK if successful, or an error value otherwise.
+
+    **/
     [
     propput, 
     id(0x0000000D)
@@ -16232,11 +16253,31 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Caption([in] BSTR Value );
+    /**
+        \brief Gets the value of the button's default property.
+
+        This method gets the value of the button's default property.  When set
+        to true, pressing the enter key will cause the onClick event handler to 
+        execute.
+
+        \param Value The current value of the button's default property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000F)
     ]
     HRESULT _stdcall Default([out, retval] long * Value );
+    /**
+        \brief Sets the value of the button's default property.
+
+        This method sets the value of the button's default property.  When set
+        to true, pressing the enter key will cause the onClick event handler to 
+        execute.
+
+        \param Value The new value of the button's default property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000F)
@@ -16392,11 +16433,57 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the ModalResult property, affects how/if the parent (modal) form closes on button click.
+        
+        The ModalResult property will determines how the modal parent form will 
+        react when the button is clicked. When the button is clicked, the 
+        ModalResult property of its parent form is set with the value of the 
+        button's property.
+
+        Possible values of ModalResult include:
+        \li mrNone      (0)         The default value before user exits.
+        \li mrOk        (idOK)      The user exited using the OK button.
+        \li mrCancel    (idCancel)  The user exited with the CANCEL button.
+        \li mrAbort     (idAbort)   The user exited with the ABORT button.
+        \li mrRetry     (idRetry)   The user exited with the RETRY button.
+        \li mrIgnore    (idIgnore)  The user exited with the IGNORE button.
+        \li mrYes       (idYes)     The user exited with the YES button.
+        \li mrNo        (idNo)      The user exited with the NO button.
+        \li mrAll       (mrNo+1)    The user exited with the ALL button.
+        \li mrNoToAll   (mrAll+1)   The user exited with the NO TO ALL button.
+        \li mrYesToAll  (mrNoToAll+1) The user exited with the YES TO ALL button.
+       
+        \param Value The current value of ModalResult.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000015)
     ]
     HRESULT _stdcall ModalResult([out, retval] long * Value );
+    /**
+        \brief Sets if a button closes it's (modal) parent form and how.
+
+        Setting the ModalResult property will cause the modal parent form to close 
+        when the button is clicked. When the button is clicked, the ModalResult 
+        property of its parent form is set with the value of the button's property.
+        Possible values of ModalResult include:
+        \li mrNone      (0)         The default value before user exits.
+        \li mrOk        (idOK)      The user exited using the OK button.
+        \li mrCancel    (idCancel)  The user exited with the CANCEL button.
+        \li mrAbort     (idAbort)   The user exited with the ABORT button.
+        \li mrRetry     (idRetry)   The user exited with the RETRY button.
+        \li mrIgnore    (idIgnore)  The user exited with the IGNORE button.
+        \li mrYes       (idYes)     The user exited with the YES button.
+        \li mrNo        (idNo)      The user exited with the NO button.
+        \li mrAll       (mrNo+1)    The user exited with the ALL button.
+        \li mrNoToAll   (mrAll+1)   The user exited with the NO TO ALL button.
+        \li mrYesToAll  (mrNoToAll+1) The user exited with the YES TO ALL button.
+       
+        \param Value The new value of ModalResult.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000015)
@@ -16726,11 +16813,35 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Visible([in] long Value );
+    /**
+        \brief Get whether the button text wraps to fit the width of the control.
+
+        Retrieve whether the button text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Receives WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001E)
     ]
     HRESULT _stdcall WordWrap([out, retval] long * Value );
+    /**
+        \brief Set whether the button text wraps to fit the width of the control.
+
+        Specifies whether the button text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Sets WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001E)
@@ -17183,11 +17294,32 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Gets the value of the button's cancel property.
+
+        This method returns the value of the button's cancel property. When set
+        to true, pressing the escape key will cause the onClick event handler to 
+        execute.
+
+        \param Value The current value of the button's cancel property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000D)
     ]
     HRESULT _stdcall Cancel([out, retval] long * Value );
+    /**
+        \brief Sets the value of the button's cancel property.
+
+        This method sets the value of the button's cancel property.  When set
+        to true, pressing the escape key will cause the onClick event handler to 
+        execute.
+
+        \param Value The new value of the button's cancel property.
+        \return S_OK if successful, or an error value otherwise.
+
+    **/
     [
     propput, 
     id(0x0000000D)
@@ -17236,11 +17368,31 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Caption([in] BSTR Value );
+    /**
+        \brief Gets the value of the button's default property.
+
+        This method gets the value of the button's default property.  When set
+        to true, pressing the enter key will cause the onClick event handler to 
+        execute.
+
+        \param Value The current value of the button's default property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000F)
     ]
     HRESULT _stdcall Default([out, retval] long * Value );
+    /**
+        \brief Sets the value of the button's default property.
+
+        This method sets the value of the button's default property.  When set
+        to true, pressing the enter key will cause the onClick event handler to 
+        execute.
+
+        \param Value The new value of the button's default property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000F)
@@ -17396,11 +17548,57 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the ModalResult property, affects how/if the parent (modal) form closes on button click.
+        
+        The ModalResult property will determines how the modal parent form will 
+        react when the button is clicked. When the button is clicked, the 
+        ModalResult property of its parent form is set with the value of the 
+        button's property.
+
+        Possible values of ModalResult include:
+        \li mrNone      (0)         The default value before user exits.
+        \li mrOk        (idOK)      The user exited using the OK button.
+        \li mrCancel    (idCancel)  The user exited with the CANCEL button.
+        \li mrAbort     (idAbort)   The user exited with the ABORT button.
+        \li mrRetry     (idRetry)   The user exited with the RETRY button.
+        \li mrIgnore    (idIgnore)  The user exited with the IGNORE button.
+        \li mrYes       (idYes)     The user exited with the YES button.
+        \li mrNo        (idNo)      The user exited with the NO button.
+        \li mrAll       (mrNo+1)    The user exited with the ALL button.
+        \li mrNoToAll   (mrAll+1)   The user exited with the NO TO ALL button.
+        \li mrYesToAll  (mrNoToAll+1) The user exited with the YES TO ALL button.
+       
+        \param Value The current value of ModalResult.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000015)
     ]
     HRESULT _stdcall ModalResult([out, retval] long * Value );
+    /**
+        \brief Sets if a button closes it's (modal) parent form and how.
+
+        Setting the ModalResult property will cause the modal parent form to close 
+        when the button is clicked. When the button is clicked, the ModalResult 
+        property of its parent form is set with the value of the button's property.
+        Possible values of ModalResult include:
+        \li mrNone      (0)         The default value before user exits.
+        \li mrOk        (idOK)      The user exited using the OK button.
+        \li mrCancel    (idCancel)  The user exited with the CANCEL button.
+        \li mrAbort     (idAbort)   The user exited with the ABORT button.
+        \li mrRetry     (idRetry)   The user exited with the RETRY button.
+        \li mrIgnore    (idIgnore)  The user exited with the IGNORE button.
+        \li mrYes       (idYes)     The user exited with the YES button.
+        \li mrNo        (idNo)      The user exited with the NO button.
+        \li mrAll       (mrNo+1)    The user exited with the ALL button.
+        \li mrNoToAll   (mrAll+1)   The user exited with the NO TO ALL button.
+        \li mrYesToAll  (mrNoToAll+1) The user exited with the YES TO ALL button.
+       
+        \param Value The new value of ModalResult.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000015)
@@ -17730,71 +17928,235 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Visible([in] long Value );
+    /**
+        \brief Gets the WordWrap property (determines if button text wraps).
+        
+        When True the button label will display multiple lines of text wrapping 
+        at the right margin. When set to False, the button text is limited to a 
+        single line and text that is too wide is truncated.
+    
+        \param Value The value of WordWrap (True if multiline text is allowed).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001E)
     ]
     HRESULT _stdcall WordWrap([out, retval] long * Value );
+    /**
+        \brief Sets the WordWrap property (determines if button text wraps).
+        
+        When True the button label will display multiple lines of text wrapping 
+        at the right margin. When set to False, the button text is limited to a 
+        single line and text that is too wide is truncated.
+    
+        \param Value The new value of WordWrap (True if multiline text is allowed).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001E)
     ]
     HRESULT _stdcall WordWrap([in] long Value );
+    /**
+        \brief Returns they kind of button this is.
+
+        The button's kind property gives an indication as to the appearance
+        of the bit button and it's response when the user clicks the button.
+        Some of the possible values are: 
+        \li bkCustom
+        \li bkOK
+        \li bkCancel
+        \li bkHelp
+        \li bkYes
+        \li bkNo
+        \li bkClose
+        \li bkAbort
+        \li bkRetry
+        \li bkIgnore
+        \li bkAll
+
+        \param Value The current value of the kind property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001F)
     ]
     HRESULT _stdcall Kind([out, retval] long * Value );
+    /**
+        \brief Sets they kind of button this is.
+
+        The button's kind property gives an indication as to the appearance
+        of the bit button and it's response when the user clicks the button.
+        Some of the possible values are: 
+        \li bkCustom
+        \li bkOK
+        \li bkCancel
+        \li bkHelp
+        \li bkYes
+        \li bkNo
+        \li bkClose
+        \li bkAbort
+        \li bkRetry
+        \li bkIgnore
+        \li bkAll
+
+        \param Value The new value of the kind property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001F)
     ]
     HRESULT _stdcall Kind([in] long Value );
+    /**
+        \brief Gets the layout used by the button image.
+
+        This method gets the layout used by the button image. 
+        The layout value are:
+        \li 0 - left justified
+        \li 1 - right justified
+        \li 2 - top of bottom
+        \li 3 - bottom of button
+
+        \param Value An ordinal indicating the justification of the image.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000020)
     ]
     HRESULT _stdcall Layout([out, retval] long * Value );
+    /**
+        \brief Sets the layout used by the button image.
+
+        This method sets the layout used by the button image. 
+        The layout value are:
+        \li 0 - left justified
+        \li 1 - right justified
+        \li 2 - top of bottom
+        \li 3 - bottom of button
+
+        \param Value Sets the new alignment (0-left, 1-right, 2-top, 3-bottom).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000020)
     ]
     HRESULT _stdcall Layout([in] long Value );
+    /**
+        \brief Gets the margins of the button control.
+
+        Gets the margins of the button control.
+
+        \param Value The current value of the margin in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000021)
     ]
     HRESULT _stdcall Margin([out, retval] long * Value );
+    /**
+        \brief Sets the margins of the button control.
+
+        Sets the margins of the button control.
+
+        \param Value The new value of the margin in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000021)
     ]
     HRESULT _stdcall Margin([in] long Value );
+    /**
+        \brief Gets the number images contained in the button's bitmap.
+
+        Gets the number images contained in the button's bitmap, by default 
+        this value is set to 1.
+
+        \param Value Receives the number of images in the button's bitmap.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000022)
     ]
     HRESULT _stdcall NumGlyphs([out, retval] long * Value );
+    /**
+        \brief Sets the number images contained in the button's bitmap.
+
+        Sets the number images contained in the button's bitmap, by default 
+        this value is set to 1.
+
+        \param Value The number of images in the button's bitmap.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000022)
     ]
     HRESULT _stdcall NumGlyphs([in] long Value );
+    /**
+        \brief Gets the visual style property of the button.
+
+        This method gets the visual style property of the button.
+        The property determines the look and feel of the button:
+        \li 0 - Autodetect
+        \li 1 - Windows 3.1 (old school 16-bit pushbutton)
+        \li 2 - New Modern look and feel
+
+        \param Value The value of the style property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000023)
     ]
     HRESULT _stdcall Style([out, retval] long * Value );
+    /**
+        \brief Sets the visual style property of the button.
+
+        This method sets the visual style property of the button.
+        The property determines the look and feel of the button:
+        \li 0 - Autodetect
+        \li 1 - Windows 3.1 (old school 16-bit pushbutton)
+        \li 2 - New Modern look and feel
+
+        \param Value The new value of the style property (one of: 0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000023)
     ]
     HRESULT _stdcall Style([in] long Value );
+    /**
+        \brief Gets the number of pixels between the image and the caption.
+
+        The number of pixels between the image and the caption. Use -1 to make
+        the button center the text between the image and the edge of the button.
+
+        \param Value The current value of the Spacing in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000024)
     ]
     HRESULT _stdcall Spacing([out, retval] long * Value );
+    /**
+        \brief Sets the number of pixels between the image and the caption.
+
+        The number of pixels between the image and the caption. Use -1 to make
+        the button center the text between the image and the edge of the button.
+
+        \param Value The new value of the Spacing in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000024)
