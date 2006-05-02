@@ -5456,21 +5456,63 @@ library Exodus
         \see TabOrder
     **/
     HRESULT _stdcall TabStop([in] long Value );
+    /**
+        \brief Get how the text is aligned within the memo control.
+
+        Retreive how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000D)
     ]
     HRESULT _stdcall Alignment([out, retval] long * Value );
+    /**
+        \brief Set how the text is aligned within the memo control.
+
+        Specify how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000D)
     ]
     HRESULT _stdcall Alignment([in] long Value );
+    /**
+        \brief Gets flag indicating if checkbox can be grayed out.
+        
+        Gets the AllowGrayed property which indicates if control allowed to be in 
+        grayed out state. Should be 1 if allowed 0 if not.
+
+        \param Value Indicates if the greyed state is allowed (1) or not (0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000E)
     ]
     HRESULT _stdcall AllowGrayed([out, retval] long * Value );
+    /**
+        \brief Sets flag indicating checkbox can be grayed out.
+        
+        Sets the AllowGrayed property which indicates if control allowed to be in 
+        grayed out state. Should be 1 if allowed 0 if not.
+
+        \param Value New value indicating if greyed state is allowed (1) or not (0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000E)
@@ -5561,11 +5603,33 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Caption([in] BSTR Value );
+     /**
+        \brief Get whether the checkbox is checked.
+
+        Retrieve whether the checkbox is checked.
+
+        Read Checked to determine whether the checkbox is checked. Set Checked 
+        to false to uncheck the checkbox.
+				
+        \p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Receives the value of Checked.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000011)
     ]
     HRESULT _stdcall Checked([out, retval] long * Value );
+    /**
+        \brief Sets whether the checkbox is checked.
+
+        Sets whether the checkbox is checked.
+        \p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value True to check the checkbox, false to uncheck it.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000011)
@@ -6037,11 +6101,36 @@ library Exodus
         \see Hint, ParentShowHint
     **/
     HRESULT _stdcall ShowHint([in] long Value );
+    /**
+        \brief Determines the state of the checkbox (checked/unchecked/grayed).
+
+        Determines the state of the checkbox (checked/unchecked/grayed).
+        Similar to Checked, but detects the grayed state as well. Values can be:
+        \li 0   Unchecked
+        \li 1   Checked
+        \li 2   Greyed
+
+        \param Value Recieves the state of the checkbox (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000020)
     ]
     HRESULT _stdcall State([out, retval] long * Value );
+    /**
+        \brief Sets the state of the checkbox (checked/unchecked/grayed).
+
+        Sets the state of the checkbox (checked/unchecked/grayed).
+        Similar to Checked, but sets the checkbox to the grayed state as well.
+        Values can be:
+        \li 0   Unchecked
+        \li 1   Checked
+        \li 2   Greyed
+
+        \param Value The new state of the checkbox (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000020)
@@ -6134,11 +6223,35 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Visible([in] long Value );
+    /**
+        \brief Get whether the checkbox text wraps to fit the width of the control.
+
+        Retrieve whether the checkbox text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Receives WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000023)
     ]
     HRESULT _stdcall WordWrap([out, retval] long * Value );
+    /**
+        \brief Set whether the checkbox text wraps to fit the width of the control.
+
+        Specifies whether the checkbox text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Sets WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000023)
