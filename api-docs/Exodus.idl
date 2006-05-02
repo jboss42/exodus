@@ -11224,61 +11224,217 @@ library Exodus
     propget, 
     id(0x0000000C)
     ]
+    /**
+        \brief Get how the control aligns within its container (parent control).
+
+        Retreive how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([out, retval] long * Value );
     [
     propput, 
     id(0x0000000C)
     ]
+    /**
+        \brief Set how the control aligns within its container (parent control).
+
+        Specify how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([in] long Value );
     [
     propget, 
     id(0x0000000D)
     ]
+    /**
+        \brief Get how the text is aligned within the memo control.
+
+        Retreive how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([out, retval] long * Value );
     [
     propput, 
     id(0x0000000D)
     ]
+    /**
+        \brief Set how the text is aligned within the memo control.
+
+        Specify how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([in] long Value );
     [
     propget, 
     id(0x0000000E)
     ]
+    /**
+        \brief Get whether the control sizes itself automatically to accommodate its contents.
+
+        Retreive whether the control sizes itself automatically to accommodate its contents.
+
+				Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's autosize setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoSize([out, retval] long * Value );
     [
     propput, 
     id(0x0000000E)
     ]
+    /**
+        \brief Set whether the control sizes itself automatically to accommodate its contents.
+
+        Specifies whether the control sizes itself automatically to accommodate its contents.
+
+				Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Gets control's autosize setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoSize([in] long Value );
     [
     propget, 
     id(0x0000000F)
     ]
+    /**
+        \brief Get the cut of the inner bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelInner([out, retval] long * Value );
     [
     propput, 
     id(0x0000000F)
     ]
+    /**
+        \brief Set the cut of the inner bevel.
+
+        Specifies the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelInner([in] long Value );
     [
     propget, 
     id(0x00000010)
     ]
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+				The outer bevel appears immediately inside the border and outside the inner bevel. 
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
     [
     propput, 
     id(0x00000010)
     ]
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+				The outer bevel appears immediately inside the border and outside the inner bevel. 
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelOuter([in] long Value );
     [
     propget, 
     id(0x00000011)
     ]
+    /**
+        \brief Get the width of the inner and outer bevels.
+
+        Retreive the width of the inner and outer bevels.
+
+				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Receives control's bevel width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelWidth([out, retval] long * Value );
     [
     propput, 
     id(0x00000011)
     ]
+    /**
+        \brief Set the width of the inner and outer bevels.
+
+        Specify the width of the inner and outer bevels.
+
+				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Sets control's bevel width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelWidth([in] long Value );
     [
     propget, 
@@ -11324,21 +11480,69 @@ library Exodus
     propget, 
     id(0x00000013)
     ]
+    /**
+        \brief Get the width of the control's border
+
+        Retreive the width of the control's border
+
+				Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Receives control's border width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderWidth([out, retval] long * Value );
     [
     propput, 
     id(0x00000013)
     ]
+    /**
+        \brief Set the width of the control's border
+
+        Specify the width of the control's border
+
+				Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Sets control's border width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderWidth([in] long Value );
     [
     propget, 
     id(0x00000014)
     ]
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value should be ???.
+ 
+        \param Value Receives control's border style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
     [
     propput, 
     id(0x00000014)
     ]
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value should be ???.
+ 
+        \param Value Sets control's border style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderStyle([in] long Value );
     [
     propget, 
@@ -11446,21 +11650,73 @@ library Exodus
     propget, 
     id(0x00000018)
     ]
+    /**
+        \brief Get whether the docking manager is used in drag-and-dock operations.
+
+        Retreive whether the docking manager is used in drag-and-dock operations.
+
+				Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+				
+				The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's UseDockManager setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall UseDockManager([out, retval] long * Value );
     [
     propput, 
     id(0x00000018)
     ]
+    /**
+        \brief Set whether the docking manager is used in drag-and-dock operations.
+
+        Specifies whether the docking manager is used in drag-and-dock operations.
+
+				Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+				
+				The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's UseDockManager setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall UseDockManager([in] long Value );
     [
     propget, 
     id(0x00000019)
     ]
+    /**
+        \brief Get whether the control can be the target of drag-and-dock operations.
+
+        Retreive whether the control can be the target of drag-and-dock operations.
+
+				Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall DockSite([out, retval] long * Value );
     [
     propput, 
     id(0x00000019)
     ]
+    /**
+        \brief Set whether the control can be the target of drag-and-dock operations.
+
+        Specifies whether the control can be the target of drag-and-dock operations.
+
+				Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall DockSite([in] long Value );
     [
     propget, 
@@ -11598,11 +11854,35 @@ library Exodus
     propget, 
     id(0x0000001E)
     ]
+    /**
+        \brief Get how the panel repaints itself when it is resized.
+
+        Retreive how the panel repaints itself when it is resized.
+
+				FullRepaint controls how the panel responds when it is resized. When FullRepaint is true, the entire panel, including the beveled border repaints when the size changes. When FullRepaint is false, only the area inside the beveled border repaints.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's FullRepaint setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall FullRepaint([out, retval] long * Value );
     [
     propput, 
     id(0x0000001E)
     ]
+    /**
+        \brief Set how the panel repaints itself when it is resized.
+
+        Specifies how the panel repaints itself when it is resized.
+
+				FullRepaint controls how the panel responds when it is resized. When FullRepaint is true, the entire panel, including the beveled border repaints when the size changes. When FullRepaint is false, only the area inside the beveled border repaints.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's FullRepaint setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall FullRepaint([in] long Value );
     [
     propget, 
@@ -11626,11 +11906,35 @@ library Exodus
     propget, 
     id(0x00000020)
     ]
+    /**
+        \brief Get whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
+
+        Retreive whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
+
+				Set the Locked property to false when the panel is used as a toolbar by a TOleContainer component. Any panels aligned to a TOleContainer are assumed to be replaceable toolbars unless the Locked property is true. Prevent the panel from being replaced by an OLE server's toolbar by setting the panel's Locked property to true.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's Locked setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Locked([out, retval] long * Value );
     [
     propput, 
     id(0x00000020)
     ]
+    /**
+        \brief Set whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
+
+        Specifies whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
+
+				Set the Locked property to false when the panel is used as a toolbar by a TOleContainer component. Any panels aligned to a TOleContainer are assumed to be replaceable toolbars unless the Locked property is true. Prevent the panel from being replaced by an OLE server's toolbar by setting the panel's Locked property to true.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's Locked setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Locked([in] long Value );
     [
     propget, 
@@ -12034,7 +12338,7 @@ library Exodus
   ]
   /**
     \interface IExodusControlPopupMenu
-    \brief encapsulates the methods of a pop-up menu.
+    \brief Encapsulates the methods of a pop-up menu.
 
     This is a placeholder for a discussion of popup menus         
     \since 0.9.1.1
@@ -12116,51 +12420,172 @@ library Exodus
     propget, 
     id(0x00000003)
     ]
+    /**
+        \brief Get the number of items in the popup menu.
+
+        Retrieve the number of items in the popup menu.
+
+        \param Value The number of items in the popup menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ItemsCount([out, retval] long * Value );
     [
     propget, 
     id(0x00000004)
     ]
+    /**
+        \brief Get a specific menu item.
+
+        Retrieve a specific IExodusControlMenuItem by index.
+        
+        \param Index Zero based index of IExodusControlMenuItem to retrieve.
+        \param Value IExodusControlMenuItem retrieved.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Items([in] long Index, [out, retval] IExodusControlMenuItem ** Value /*Warning: unable to validate structure name: */ );
     [
     propget, 
     id(0x00000005)
     ]
+    /**
+        \brief Get where the pop-up menu appears when the user clicks the right mouse button.
+
+        Retrieve where the pop-up menu appears when the user clicks the right mouse button.
+        
+        \p Value should be ???
+        
+        \param Value Receives the alignment of the popup menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([out, retval] long * Value );
     [
     propput, 
     id(0x00000005)
     ]
+    /**
+        \brief Set where the pop-up menu appears when the user clicks the right mouse button.
+
+        Specifies where the pop-up menu appears when the user clicks the right mouse button.
+        
+        \p Value should be ???
+        
+        \param Value Sets the alignment of the popup menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([in] long Value );
     [
     propget, 
     id(0x00000006)
     ]
+    /**
+        \brief Get whether the accelerator keys for menu items can be reset automatically.
+
+        Retrieve whether the accelerator keys for menu items can be reset automatically.
+
+				Use AutoHotkeys to indicate whether the menu should automatically ensure that accelerator keys for its items are reset if necessary so that every menu item has an accelerator key and no two items have the same accelerator key. This ensures that menu items added dynamically at runtime can have accelerator keys that do not introduce conflicts. TMenu tries to preserve all existing accelerator key mappings when adjusting the accelerator keys, but may be forced to change some in order to ensure that every item has a unique accelerator.
+				 
+				Before the menu is displayed, the menu checks and adjusts the accelerator key mappings if AutoHotkeys is maAutomatic. When AutoHotkeys is maManual, the menu does not alter the top-level menu items, but may adjust the accelerator keys for submenus, depending on the AutoHotkeys property of the menu item that is the parent of the submenu.
+				 
+        \p Value should be ???
+        
+        \param Value Receives the value of AutoHotKeys.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
     [
     propput, 
     id(0x00000006)
     ]
+    /**
+        \brief Set whether the accelerator keys for menu items can be reset automatically.
+
+        Specifies whether the accelerator keys for menu items can be reset automatically.
+
+				Use AutoHotkeys to indicate whether the menu should automatically ensure that accelerator keys for its items are reset if necessary so that every menu item has an accelerator key and no two items have the same accelerator key. This ensures that menu items added dynamically at runtime can have accelerator keys that do not introduce conflicts. TMenu tries to preserve all existing accelerator key mappings when adjusting the accelerator keys, but may be forced to change some in order to ensure that every item has a unique accelerator.
+				 
+				Before the menu is displayed, the menu checks and adjusts the accelerator key mappings if AutoHotkeys is maAutomatic. When AutoHotkeys is maManual, the menu does not alter the top-level menu items, but may adjust the accelerator keys for submenus, depending on the AutoHotkeys property of the menu item that is the parent of the submenu.
+				 
+        \p Value should be ???
+        
+        \param Value Sets the value of AutoHotKeys.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoHotkeys([in] long Value );
     [
     propget, 
     id(0x00000007)
     ]
+    /**
+        \brief Get whether redundant separator bars are automatically removed from the menu.
+
+        Retrieve whether redundant separator bars are automatically removed from the menu.
+
+				Use AutoLineReduction to indicate whether the menu should automatically ensure that the menu does not start or end with a separator bar and that two separator bars do not appear next to each other. This ensures that menus built dynamically at runtime do not have separator bars in undesired positions.
+ 
+				Before the menu is displayed, it removes superfluous separator bars when AutoLineReduction is maAutomatic. When AutoLineReduction is maManual, the menu does not remove separators from the top-level menu items, but may remove superfluous separators from submenus, depending on the AutoLineReduction property of the menu item that is the parent of the submenu.				
+        
+        \p Value should be ???
+        
+        \param Value Receives the value of AutoLineReduction.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
     [
     propput, 
     id(0x00000007)
     ]
+    /**
+        \brief Set whether redundant separator bars are automatically removed from the menu.
+
+        Specifies whether redundant separator bars are automatically removed from the menu.
+
+				Use AutoLineReduction to indicate whether the menu should automatically ensure that the menu does not start or end with a separator bar and that two separator bars do not appear next to each other. This ensures that menus built dynamically at runtime do not have separator bars in undesired positions.
+ 
+				Before the menu is displayed, it removes superfluous separator bars when AutoLineReduction is maAutomatic. When AutoLineReduction is maManual, the menu does not remove separators from the top-level menu items, but may remove superfluous separators from submenus, depending on the AutoLineReduction property of the menu item that is the parent of the submenu.				
+        
+        \p Value should be ???
+        
+        \param Value Sets the value of AutoLineReduction.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoLineReduction([in] long Value );
     [
     propget, 
     id(0x00000008)
     ]
+    /**
+        \brief Get whether the pop-up menu appears automatically when the user clicks the right mouse button.
+
+        Retrieve whether the pop-up menu appears automatically when the user clicks the right mouse button.
+
+				Set AutoPopup to true to cause the pop-up menu to appear automatically when the user clicks the right mouse button on a control that has the pop-up menu specified as its PopupMenu property. The application key present on keyboards specifically designed for 32-bit Windows will also show this menu when pressed.
+ 
+				Set AutoPopup to false if the appearance of the pop-up menu should be controlled programmatically. To display a pop-up menu when AutoPopup is false, use the Popup method.
+        
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Receives the value of AutoPopup.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoPopup([out, retval] long * Value );
     [
     propput, 
     id(0x00000008)
     ]
+    /**
+        \brief Set whether the pop-up menu appears automatically when the user clicks the right mouse button.
+
+        Specifies whether the pop-up menu appears automatically when the user clicks the right mouse button.
+
+				Set AutoPopup to true to cause the pop-up menu to appear automatically when the user clicks the right mouse button on a control that has the pop-up menu specified as its PopupMenu property. The application key present on keyboards specifically designed for 32-bit Windows will also show this menu when pressed.
+ 
+				Set AutoPopup to false if the appearance of the pop-up menu should be controlled programmatically. To display a pop-up menu when AutoPopup is false, use the Popup method.
+        
+        \p Value is 1 (TRUE) or 0 (FALSE)
+        
+        \param Value Sets the value of AutoPopup.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall AutoPopup([in] long Value );
     [
     propget, 
@@ -12206,21 +12631,63 @@ library Exodus
     propget, 
     id(0x0000000A)
     ]
+    /**
+        \brief Get numeric ID for control's context-sensitive help topic.
+
+        Retrieve numeric ID for control's context-sensitive help topic.
+
+				If Value is 0 (default), no help topic is provided for this control.        
+				
+        \param Value The help numeric topic ID.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HelpContext([out, retval] long * Value );
     [
     propput, 
     id(0x0000000A)
     ]
+    /**
+        \brief Set numeric ID for control's context-sensitive help topic.
+
+        Supports context-sensitive help for applications that use topic keyords. If \p Value is an empty string (zero length), no help topic is provided for this control.        
+				
+        \param Value The new help topic keyword.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HelpContext([in] long Value );
     [
     propget, 
     id(0x0000000B)
     ]
+    /**
+        \brief Get whether the menu items are drawn by the application.
+
+        Retrieve whether the menu items are drawn by the application.
+
+				Set OwnerDraw to true to indicate that the application will draw menu items in an OnDrawItem event handler.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Receives the state of ownerdraw.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall OwnerDraw([out, retval] long * Value );
     [
     propput, 
     id(0x0000000B)
     ]
+    /**
+        \brief Set whether the menu items are drawn by the application.
+
+        Specifies whether the menu items are drawn by the application.
+
+				Set OwnerDraw to true to indicate that the application will draw menu items in an OnDrawItem event handler.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Sets the state of ownerdraw.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall OwnerDraw([in] long Value );
     [
     propget, 
@@ -12271,11 +12738,35 @@ library Exodus
     propget, 
     id(0x0000000D)
     ]
+    /**
+        \brief Get which mouse button activates the popup menu when it is associated with a toolbar button
+
+        Retrieve which mouse button activates the popup menu when it is associated with a toolbar button
+
+				Use TrackButton to specify which mouse button activates the popup menu when it is associated with a toolbar button.
+				
+				\p Value should be ???
+				
+        \param Value Receives which mouse button activates the popup menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TrackButton([out, retval] long * Value );
     [
     propput, 
     id(0x0000000D)
     ]
+    /**
+        \brief Set which mouse button activates the popup menu when it is associated with a toolbar button
+
+        Specifies which mouse button activates the popup menu when it is associated with a toolbar button
+
+				Use TrackButton to specify which mouse button activates the popup menu when it is associated with a toolbar button.
+				
+				\p Value should be ???
+				
+        \param Value Sets which mouse button activates the popup menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TrackButton([in] long Value );
   };
 
@@ -12700,11 +13191,35 @@ library Exodus
     propget, 
     id(0x0000000C)
     ]
+    /**
+        \brief Get the position of the caption relative to the radio button.
+
+        Retrieve the position of the caption relative to the radio button.
+
+				Use Alignment to determine whether the caption of the radio button should appear to the left of the radio button or to the right of the radio button.
+				
+				\p Value should be ???
+
+        \param Value Receives the Alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([out, retval] long * Value );
     [
     propput, 
     id(0x0000000C)
     ]
+    /**
+        \brief Set the position of the caption relative to the radio button.
+
+        Specifies the position of the caption relative to the radio button.
+
+				Use Alignment to determine whether the caption of the radio button should appear to the left of the radio button or to the right of the radio button.
+				
+				\p Value should be ???
+
+        \param Value Sets the Alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([in] long Value );
     [
     propget, 
@@ -12793,11 +13308,35 @@ library Exodus
     propget, 
     id(0x0000000F)
     ]
+    /**
+        \brief Get whether the option represented by the radio button is selected.
+
+        Retrieve whether the option represented by the radio button is selected.
+
+				Read Checked to determine whether the radio button is selected. Set Checked to true to select the radio button and deselect all other radio buttons in the same container. Set Checked to false to deselect the radio button, leaving no radio button in the group selected.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Receives the value of Checked.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Checked([out, retval] long * Value );
     [
     propput, 
     id(0x0000000F)
     ]
+    /**
+        \brief Set whether the option represented by the radio button is selected.
+
+        Specifies whether the option represented by the radio button is selected.
+
+				Read Checked to determine whether the radio button is selected. Set Checked to true to select the radio button and deselect all other radio buttons in the same container. Set Checked to false to deselect the radio button, leaving no radio button in the group selected.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Sets the value of Checked.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Checked([in] long Value );
     [
     propget, 
@@ -13394,11 +13933,35 @@ library Exodus
     propget, 
     id(0x00000021)
     ]
+    /**
+        \brief Get whether the button text wraps to fit the width of the control.
+
+        Retrieve whether the button text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Receives WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WordWrap([out, retval] long * Value );
     [
     propput, 
     id(0x00000021)
     ]
+    /**
+        \brief Set whether the button text wraps to fit the width of the control.
+
+        Specifies whether the button text wraps to fit the width of the control.
+
+				Set WordWrap to true to allow the label to display multiple line of text. When WordWrap is true, text that is too wide for the control wraps at the right margin.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+
+        \param Value Sets WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WordWrap([in] long Value );
   };
 
@@ -13853,61 +14416,221 @@ library Exodus
     propget, 
     id(0x0000000D)
     ]
+    /**
+        \brief Get how the control aligns within its container (parent control).
+
+        Retreive how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([out, retval] long * Value );
     [
     propput, 
     id(0x0000000D)
     ]
+    /**
+        \brief Set how the control aligns within its container (parent control).
+
+        Specify how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([in] long Value );
     [
     propget, 
     id(0x0000000E)
     ]
+    /**
+        \brief Get how the text is aligned within the memo control.
+
+        Retreive how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([out, retval] long * Value );
     [
     propput, 
     id(0x0000000E)
     ]
+    /**
+        \brief Set how the text is aligned within the memo control.
+
+        Specify how the text is aligned within the memo control.
+
+				Use Alignment to change the way the text is formatted by the memo control.
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Alignment([in] long Value );
     [
     propget, 
     id(0x0000000F)
     ]
+    /**
+        \brief Get the cut of the inner bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelInner([out, retval] long * Value );
     [
     propput, 
     id(0x0000000F)
     ]
+    /**
+        \brief Set the cut of the inner bevel.
+
+        Specifies the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelInner([in] long Value );
     [
     propget, 
     id(0x00000010)
     ]
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+				The outer bevel appears immediately inside the border and outside the inner bevel. 
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
     [
     propput, 
     id(0x00000010)
     ]
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+				The outer bevel appears immediately inside the border and outside the inner bevel. 
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelOuter([in] long Value );
     [
     propget, 
     id(0x00000011)
     ]
+    /**
+        \brief Get the control's bevel style.
+
+        Retreive the control's bevel style.
+
+				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+				 
+				\p Value should be ???
+ 
+        \param Value Receives control's bevel style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelKind([out, retval] long * Value );
     [
     propput, 
     id(0x00000011)
     ]
+    /**
+        \brief Set the control's bevel style.
+
+        Specify the control's bevel style.
+
+				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+				 
+				\p Value should be ???
+ 
+        \param Value Sets control's bevel style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelKind([in] long Value );
     [
     propget, 
     id(0x00000012)
     ]
+    /**
+        \brief Get the width of the inner and outer bevels.
+
+        Retreive the width of the inner and outer bevels.
+
+				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Receives control's bevel width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelWidth([out, retval] long * Value );
     [
     propput, 
     id(0x00000012)
     ]
+    /**
+        \brief Set the width of the inner and outer bevels.
+
+        Specify the width of the inner and outer bevels.
+
+				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Sets control's bevel width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BevelWidth([in] long Value );
     [
     propget, 
@@ -13953,21 +14676,69 @@ library Exodus
     propget, 
     id(0x00000014)
     ]
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value should be ???.
+ 
+        \param Value Receives control's border style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
     [
     propput, 
     id(0x00000014)
     ]
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value should be ???.
+ 
+        \param Value Sets control's border style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderStyle([in] long Value );
     [
     propget, 
     id(0x00000015)
     ]
+    /**
+        \brief Get the width of the control's border
+
+        Retreive the width of the control's border
+
+				Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Receives control's border width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderWidth([out, retval] long * Value );
     [
     propput, 
     id(0x00000015)
     ]
+    /**
+        \brief Set the width of the control's border
+
+        Specify the width of the control's border
+
+				Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
+				 
+				\p Value should be in pixels.
+ 
+        \param Value Sets control's border width.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall BorderWidth([in] long Value );
     [
     propget, 
@@ -14182,66 +14953,220 @@ library Exodus
     propget, 
     id(0x0000001D)
     ]
+    /**
+        \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HideSelection([out, retval] long * Value );
     [
     propput, 
     id(0x0000001D)
     ]
+    /**
+        \brief Set whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Specify whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HideSelection([in] long Value );
     [
     propget, 
     id(0x0000001E)
     ]
+    /**
+        \brief Get whether the scroll bars disappear when not needed.
+
+        Retreive whether the scroll bars disappear when not needed
+
+				Use HideScrollBars to determine whether the scroll bars disappear from the edit control when the text appears completely within the edit window. Set HideScrollBars to false to prevent the scroll bars from flashing on and off when the contents of the rich edit control change.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HideScrollBars value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HideScrollBars([out, retval] long * Value );
     [
     propput, 
     id(0x0000001E)
     ]
+    /**
+        \brief Set whether the scroll bars disappear when not needed.
+
+        Specify whether the scroll bars disappear when not needed
+
+				Use HideScrollBars to determine whether the scroll bars disappear from the edit control when the text appears completely within the edit window. Set HideScrollBars to false to prevent the scroll bars from flashing on and off when the contents of the rich edit control change.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HideScrollBars value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HideScrollBars([in] long Value );
     [
     propget, 
     id(0x0000001F)
     ]
+    /**
+        \brief Get the behavior of the input method editor (IME).
+
+        Retreive the behavior of the input method editor (IME).
+
+				Use ImeMode to configure the way an IME processes user keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application. 
+
+				ImeMode allows a control to influence the type of conversion performed by the IME so that it is appropriate for the input expected by the control. For example, a control that only accepts numeric input might specify an ImeMode of imClose, as no conversion is necessary for numeric input.
+ 
+				\p Value should be ???
+ 
+        \param Value Receives control's IMEMode value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ImeMode([out, retval] long * Value );
     [
     propput, 
     id(0x0000001F)
     ]
+    /**
+        \brief Set the behavior of the input method editor (IME).
+
+        Specifies the behavior of the input method editor (IME).
+
+				Use ImeMode to configure the way an IME processes user keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application. 
+
+				ImeMode allows a control to influence the type of conversion performed by the IME so that it is appropriate for the input expected by the control. For example, a control that only accepts numeric input might specify an ImeMode of imClose, as no conversion is necessary for numeric input.
+ 
+				\p Value should be ???
+ 
+        \param Value Specifies control's IMEMode value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ImeMode([in] long Value );
     [
     propget, 
     id(0x00000020)
     ]
+    /**
+        \brief Get the input method editor (IME) to use for converting keyboard input to Asian language characters.
+
+        Retreive the input method editor (IME) to use for converting keyboard input to Asian language characters.
+
+				Set ImeName to specify which IME to use for converting keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application.
+ 
+				ImeName must specify one of the IMEs that has been installed through the Windows control panel. The property inspector provides a drop-down list of all currently installed IMEs on the system. At runtime, applications can obtain a list of currently installed IMEs from the global Screen variable.
+ 
+ 				If ImeName specifies an unavailable IME, the IME that was active when the application started is used instead. No exception is generated.
+ 
+				\p Value should be ???
+ 
+        \param Value Receives control's IMEName value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000020)
     ]
+    /**
+        \brief Set the input method editor (IME) to use for converting keyboard input to Asian language characters.
+
+        Specifies the input method editor (IME) to use for converting keyboard input to Asian language characters.
+
+				Set ImeName to specify which IME to use for converting keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application.
+ 
+				ImeName must specify one of the IMEs that has been installed through the Windows control panel. The property inspector provides a drop-down list of all currently installed IMEs on the system. At runtime, applications can obtain a list of currently installed IMEs from the global Screen variable.
+ 
+ 				If ImeName specifies an unavailable IME, the IME that was active when the application started is used instead. No exception is generated.
+ 
+				\p Value should be ???
+ 
+        \param Value Sets control's IMEName value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ImeName([in] BSTR Value );
     [
     propget, 
     id(0x00000021)
     ]
+    /**
+        \brief Get how many lines of text there are in the control.
+
+        Retreive how many lines of text there are in the control.
+
+        \param Value Receives the number of lines of text.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall LinesCount([out, retval] long * Value );
     [
     propget, 
     id(0x00000022)
     ]
+    /**
+        \brief Get the individual lines of text in the rich text edit control.
+
+        Retreive the individual lines of text in the rich text edit control.
+
+				\param Index Zero based index of which line to retreive.
+				\param Value Returned String.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Lines([in] long Index, [out, retval] BSTR * Value );
     [
     propput, 
     id(0x00000022)
     ]
+    /**
+        \brief Set the individual lines of text in the rich text edit control.
+
+        Specify the individual lines of text in the rich text edit control.
+
+				\param Index Zero based index of which line to set.
+				\param Value String to set.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Lines([in] long Index, [in] BSTR Value );
     [
     propget, 
     id(0x00000023)
     ]
+    /**
+        \brief Get the maximum number of characters the user can enter into the edit control.
+
+        Retreive the maximum number of characters the user can enter into the edit control.
+
+				Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+				
+				\param Value Receives the Maximum Length.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall MaxLength([out, retval] long * Value );
     [
     propput, 
     id(0x00000023)
     ]
+    /**
+        \brief Set the maximum number of characters the user can enter into the edit control.
+
+        Specifies the maximum number of characters the user can enter into the edit control.
+
+				Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+				
+				\param Value Set the MaximumLength.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall MaxLength([in] long Value );
     [
     propget, 
@@ -14436,11 +15361,35 @@ library Exodus
     propget, 
     id(0x00000029)
     ]
+    /**
+        \brief Get whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
+
+        Retreive whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
+
+				To write the rich text in the control to a plain text file, set PlainText to true before streaming the text to a file. To ignore the rich text information encoded in a file, set PlainText to true before streaming the text to the control. To stream in the rich text attributes encoded in a file, or save the encoding of the rich text attributes to a file, set PlainText to false.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Receives Plain Text value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall PlainText([out, retval] long * Value );
     [
     propput, 
     id(0x00000029)
     ]
+    /**
+        \brief Set whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
+
+        Specifies whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
+
+				To write the rich text in the control to a plain text file, set PlainText to true before streaming the text to a file. To ignore the rich text information encoded in a file, set PlainText to true before streaming the text to the control. To stream in the rich text attributes encoded in a file, or save the encoding of the rich text attributes to a file, set PlainText to false.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Sets Plain Text value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall PlainText([in] long Value );
     [
     propget, 
@@ -14468,21 +15417,75 @@ library Exodus
     propget, 
     id(0x0000002B)
     ]
+    /**
+        \brief Get whether the user can change the text of the edit control.
+
+        Retreive whether the user can change the text of the edit control.
+
+				To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+				Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Receives Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ReadOnly([out, retval] long * Value );
     [
     propput, 
     id(0x0000002B)
     ]
+    /**
+        \brief Set whether the user can change the text of the edit control.
+
+        Specifies whether the user can change the text of the edit control.
+
+				To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+				Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Sets Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ReadOnly([in] long Value );
     [
     propget, 
     id(0x0000002C)
     ]
+    /**
+        \brief Get whether the control has scroll bars.
+
+        Retreive whether the control has scroll bars.
+
+				Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+				
+				\p Value should be ???
+				
+				\param Value Receives Scroll Bars value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ScrollBars([out, retval] long * Value );
     [
     propput, 
     id(0x0000002C)
     ]
+    /**
+        \brief Set whether the control has scroll bars.
+
+        Specifies whether the control has scroll bars.
+
+				Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+				
+				\p Value should be ???
+				
+				\param Value Receives Scroll Bars value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ScrollBars([in] long Value );
     [
     propget, 
@@ -14621,31 +15624,109 @@ library Exodus
     propget, 
     id(0x00000030)
     ]
+    /**
+        \brief Get whether the user can insert tab characters into the text.
+
+        Retreive whether the user can insert tab characters into the text.
+
+				Set WantTabs to true to allow users to enter tab characters into the text. Set WantTabs to false if you want the tab character to select the next control on the form instead.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Receives WantTabs value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WantTabs([out, retval] long * Value );
     [
     propput, 
     id(0x00000030)
     ]
+    /**
+        \brief Set whether the user can insert tab characters into the text.
+
+        Specifies whether the user can insert tab characters into the text.
+
+				Set WantTabs to true to allow users to enter tab characters into the text. Set WantTabs to false if you want the tab character to select the next control on the form instead.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Sets WantTabs value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WantTabs([in] long Value );
     [
     propget, 
     id(0x00000031)
     ]
+    /**
+        \brief Get whether the user can insert return characters into the text.
+
+        Retreive whether the user can insert return characters into the text.
+
+				Set WantReturns to true to allow users to enter return characters into the text. Set WantReturns to false to allow the form to handle return characters instead. 
+				
+				For example, in a form with a default button (such as an OK button) and a memo control, if WantReturns is false, pressing Enter chooses the default button. If WantReturns is true, pressing Enter inserts a return character in the text.
+ 				Note: If WantReturns is false, users can still enter return characters into the text by pressing Ctrl+Enter.
+ 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Receives WantReturns value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WantReturns([out, retval] long * Value );
     [
     propput, 
     id(0x00000031)
     ]
+    /**
+        \brief Set whether the user can insert return characters into the text.
+
+        Specifies whether the user can insert return characters into the text.
+
+				Set WantReturns to true to allow users to enter return characters into the text. Set WantReturns to false to allow the form to handle return characters instead. 
+				
+				For example, in a form with a default button (such as an OK button) and a memo control, if WantReturns is false, pressing Enter chooses the default button. If WantReturns is true, pressing Enter inserts a return character in the text.
+ 				Note: If WantReturns is false, users can still enter return characters into the text by pressing Ctrl+Enter.
+ 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Sets WantReturns value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WantReturns([in] long Value );
     [
     propget, 
     id(0x00000032)
     ]
+    /**
+        \brief Get whether the edit control inserts soft carriage returns so text wraps at the right margin.
+
+        Retreive whether the edit control inserts soft carriage returns so text wraps at the right margin.
+
+				Set WordWrap to true to make the edit control wrap text at the right margin so it fits in the client area. The wrapping is cosmetic only. The text does not include any return characters that were not explicitly entered. Set WordWrap to false to have the edit control show a separate line only where return characters were explicitly entered into the text.
+ 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Receives WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WordWrap([out, retval] long * Value );
     [
     propput, 
     id(0x00000032)
     ]
+    /**
+        \brief Set whether the edit control inserts soft carriage returns so text wraps at the right margin.
+
+        Specifies whether the edit control inserts soft carriage returns so text wraps at the right margin.
+
+				Set WordWrap to true to make the edit control wrap text at the right margin so it fits in the client area. The wrapping is cosmetic only. The text does not include any return characters that were not explicitly entered. Set WordWrap to false to have the edit control show a separate line only where return characters were explicitly entered into the text.
+ 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+				\param Value Sets WordWrap value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall WordWrap([in] long Value );
   };
 
@@ -18162,9 +19243,9 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusControlPageControl
-    \brief a breif description
+    \brief A set of pages used to make a multiple page dialog box.
     
-    <p>a more detailed description</p>
+    Use IExodusControlPageControl to create a multiple page dialog or tabbed notebook.
   **/
 
    interface IExodusControlPageControl: IDispatch
@@ -18564,11 +19645,39 @@ library Exodus
     propget, 
     id(0x0000000C)
     ]
+    /**
+        \brief Get how the control aligns within its container (parent control).
+
+        Retreive how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([out, retval] long * Value );
     [
     propput, 
     id(0x0000000C)
     ]
+    /**
+        \brief Set how the control aligns within its container (parent control).
+
+        Specify how the control aligns within its container (parent control).
+
+				Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+				Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+				\p Value should be ???
+ 
+        \param Value Sets control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Align([in] long Value );
     [
     propget, 
@@ -18614,11 +19723,35 @@ library Exodus
     propget, 
     id(0x0000000E)
     ]
+    /**
+        \brief Get whether the control can be the target of drag-and-dock operations.
+
+        Retreive whether the control can be the target of drag-and-dock operations.
+
+				Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall DockSite([out, retval] long * Value );
     [
     propput, 
     id(0x0000000E)
     ]
+    /**
+        \brief Set whether the control can be the target of drag-and-dock operations.
+
+        Specifies whether the control can be the target of drag-and-dock operations.
+
+				Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall DockSite([in] long Value );
     [
     propget, 
@@ -18774,31 +19907,103 @@ library Exodus
     propget, 
     id(0x00000014)
     ]
+    /**
+        \brief Get whether labels on the tab under the mouse are automatically highlighted.
+
+        Retrieves whether labels on the tab under the mouse are automatically highlighted.
+
+				Set HotTrack to true to provide visual feedback to the user about which tab would be selected if the mouse button is clicked. HotTrack is especially useful when the tab control contains multiple rows of tabs.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HotTrack setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HotTrack([out, retval] long * Value );
     [
     propput, 
     id(0x00000014)
     ]
+    /**
+        \brief Set whether labels on the tab under the mouse are automatically highlighted.
+
+        Specifies whether labels on the tab under the mouse are automatically highlighted.
+
+				Set HotTrack to true to provide visual feedback to the user about which tab would be selected if the mouse button is clicked. HotTrack is especially useful when the tab control contains multiple rows of tabs.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's HotTrack setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall HotTrack([in] long Value );
     [
     propget, 
     id(0x00000015)
     ]
+    /**
+        \brief Get whether the tabs can appear on more than one row.
+
+        Retrieves whether the tabs can appear on more than one row.
+
+				Use MultiLine to determine how the tabs are displayed. If MultiLine is true, the tabs are displayed on more than one row when the number of tabs exceeds the number that fits across the top of the tab control. How many rows is determined by how many tabs are in the tab control. If MultiLine is false, the tabs are displayed on one row only, and the user must scroll the displayed scroll arrows to view all the tabs.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's MultiLine setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall MultiLine([out, retval] long * Value );
     [
     propput, 
     id(0x00000015)
     ]
+    /**
+        \brief Set whether the tabs can appear on more than one row.
+
+        Specifies whether the tabs can appear on more than one row.
+
+				Use MultiLine to determine how the tabs are displayed. If MultiLine is true, the tabs are displayed on more than one row when the number of tabs exceeds the number that fits across the top of the tab control. How many rows is determined by how many tabs are in the tab control. If MultiLine is false, the tabs are displayed on one row only, and the user must scroll the displayed scroll arrows to view all the tabs.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's MultiLine setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall MultiLine([in] long Value );
     [
     propget, 
     id(0x00000016)
     ]
+    /**
+        \brief Get whether the menu items are drawn by the application.
+
+        Retrieve whether the menu items are drawn by the application.
+
+				Set OwnerDraw to true to indicate that the application will draw menu items in an OnDrawItem event handler.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Receives the state of ownerdraw.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall OwnerDraw([out, retval] long * Value );
     [
     propput, 
     id(0x00000016)
     ]
+    /**
+        \brief Set whether the menu items are drawn by the application.
+
+        Specifies whether the menu items are drawn by the application.
+
+				Set OwnerDraw to true to indicate that the application will draw menu items in an OnDrawItem event handler.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Sets the state of ownerdraw.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall OwnerDraw([in] long Value );
     [
     propget, 
@@ -18957,21 +20162,69 @@ library Exodus
     propget, 
     id(0x0000001B)
     ]
+    /**
+        \brief Get whether rows of tabs stretch to fill the width of the control.
+
+        Retrieve whether rows of tabs stretch to fill the width of the control.
+
+				Use RaggedRight to get or set whether rows of tabs stretch to fill the width of the control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Receives the RaggedRight state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall RaggedRight([out, retval] long * Value );
     [
     propput, 
     id(0x0000001B)
     ]
+    /**
+        \brief Swhether rows of tabs stretch to fill the width of the control.
+
+        Specifies whether rows of tabs stretch to fill the width of the control.
+
+				Use RaggedRight to get or set whether rows of tabs stretch to fill the width of the control.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Sets the RaggedRight state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall RaggedRight([in] long Value );
     [
     propget, 
     id(0x0000001C)
     ]
+    /**
+        \brief Get how the rows of tabs are scrolled in a multi-line tab control.
+
+        Retrieve how the rows of tabs are scrolled in a multi-line tab control.
+
+				Set ScrollOpposite to determine where previous rows of tabs in a multi-line tab control move when the user selects a tab in another row.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Receives the ScrollOpposite state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ScrollOpposite([out, retval] long * Value );
     [
     propput, 
     id(0x0000001C)
     ]
+    /**
+        \brief Set how the rows of tabs are scrolled in a multi-line tab control.
+
+        Specifies how the rows of tabs are scrolled in a multi-line tab control.
+
+				Set ScrollOpposite to determine where previous rows of tabs in a multi-line tab control move when the user selects a tab in another row.
+				
+				\p Value is 1 (TRUE) or 0 (FALSE)
+				
+        \param Value Sets the ScrollOpposite state.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall ScrollOpposite([in] long Value );
     [
     propget, 
@@ -19023,31 +20276,103 @@ library Exodus
     propget, 
     id(0x0000001E)
     ]
+    /**
+        \brief Get the style of the tab control.
+
+        Retrieve the style of the tab control.
+
+				Use Style to determine the appearance of the tabs. These can appear as notebook tabs or as buttons.
+				
+				\p Value should be ???
+				
+        \param Value Receives the tab control style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Style([out, retval] long * Value );
     [
     propput, 
     id(0x0000001E)
     ]
+    /**
+        \brief Set the style of the tab control.
+
+        Specifies the style of the tab control.
+
+				Use Style to determine the appearance of the tabs. These can appear as notebook tabs or as buttons.
+				
+				\p Value should be ???
+				
+        \param Value Sets the tab control style.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Style([in] long Value );
     [
     propget, 
     id(0x0000001F)
     ]
+    /**
+        \brief Get the height, in pixels, of the tabs in the tab control.
+
+        Retrieve the height, in pixels, of the tabs in the tab control.
+
+				Set TabHeight to control the height of the tabs that appear above the client region of the tab control. The TabHeight property is the vertical size in pixels of the individual tabs. If TabHeight is set to 0, the tabs automatically size themselves to fit their text.
+				
+				\p Value is in pixels.
+				
+        \param Value Receives the Tab Height in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabHeight([out, retval] long * Value );
     [
     propput, 
     id(0x0000001F)
     ]
+    /**
+        \brief Set the height, in pixels, of the tabs in the tab control.
+
+        Specifies the height, in pixels, of the tabs in the tab control.
+
+				Set TabHeight to control the height of the tabs that appear above the client region of the tab control. The TabHeight property is the vertical size in pixels of the individual tabs. If TabHeight is set to 0, the tabs automatically size themselves to fit their text.
+				
+				\p Value is in pixels.
+				
+        \param Value Sets the Tab Height in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabHeight([in] long Value );
     [
     propget, 
     id(0x00000020)
     ]
+    /**
+        \brief Get the Identity of the selected tab on a tab control.
+
+        Retrieve the Identity of the selected tab on a tab control.
+
+				Read TabIndex to determine which tab was selected by the user. TabIndex is the index of the tab in the list of labels maintained by the Tabs property. The first (leftmost) tab has a TabIndex of 0, the next has 1, and so on. If no tabs are selected, TabIndex has a value of -1.
+				
+				Set TabIndex to programmatically change the selected tab in the tab control.
+				
+        \param Value Receives the current TabIndex.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabIndex([out, retval] long * Value );
     [
     propput, 
     id(0x00000020)
     ]
+    /**
+        \brief Set the Identity of the selected tab on a tab control.
+
+        Specifies the Identity of the selected tab on a tab control.
+
+				Read TabIndex to determine which tab was selected by the user. TabIndex is the index of the tab in the list of labels maintained by the Tabs property. The first (leftmost) tab has a TabIndex of 0, the next has 1, and so on. If no tabs are selected, TabIndex has a value of -1.
+				
+				Set TabIndex to programmatically change the selected tab in the tab control.
+				
+        \param Value Sets the current TabIndex.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabIndex([in] long Value );
     [
     propget, 
@@ -19109,11 +20434,31 @@ library Exodus
     propget, 
     id(0x00000022)
     ]
+    /**
+        \brief Get whether tabs appear at the top or bottom.
+
+        Retrieve whether tabs appear at the top or bottom.
+
+				\p Value should be ???
+				
+        \param Value Receives the current TabPosition.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabPosition([out, retval] long * Value );
     [
     propput, 
     id(0x00000022)
     ]
+    /**
+        \brief Set whether tabs appear at the top or bottom.
+
+        Specifies whether tabs appear at the top or bottom.
+
+				\p Value should be ???
+				
+        \param Value Sets the current TabPosition.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabPosition([in] long Value );
     [
     propget, 
@@ -19157,11 +20502,35 @@ library Exodus
     propget, 
     id(0x00000024)
     ]
+    /**
+        \brief Get the horizontal size, in pixels, of the tabs in the tab control.
+
+        Retrieve the horizontal size, in pixels, of the tabs in the tab control.
+        
+        TabWidth specifies a fixed width for all tabs. If TabWidth is 0, then each tab is automatically made wide enough to show its caption.
+
+				\p Value is in pixels.
+				
+        \param Value Receives the current TabWidth in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabWidth([out, retval] long * Value );
     [
     propput, 
     id(0x00000024)
     ]
+    /**
+        \brief Set the horizontal size, in pixels, of the tabs in the tab control.
+
+        Specifies the horizontal size, in pixels, of the tabs in the tab control.
+        
+        TabWidth specifies a fixed width for all tabs. If TabWidth is 0, then each tab is automatically made wide enough to show its caption.
+
+				\p Value is in pixels.
+				
+        \param Value Sets the current TabWidth in pixels.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall TabWidth([in] long Value );
     [
     propget, 
@@ -19203,9 +20572,11 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusControlSpeedButton
-    \brief a breif description
+    \brief An interface to a SpeedButton control.
     
-    <p>a more detailed description</p>
+    An interface to a SpeedButton control.
+    A SpeedButton is a button that is used to execute commands or set modes.
+    
   **/
 
    interface IExodusControlSpeedButton: IDispatch
@@ -19601,11 +20972,48 @@ library Exodus
         \see HelpType
     **/
     HRESULT _stdcall HelpContext([in] long Value );
+    /**
+        \brief Get whether all speed buttons in the group that contains this speed button can be unselected at the same time.
+
+        Retrieve whether all speed buttons in the group that contains this speed button can be unselected at the same time.
+
+        Use AllowAllUp with a group of buttons that belong to the same group. Speed buttons belong to the same group if they have the same value on their GroupIndex property. Buttons in the same group behave in a mutually exclusive fashion: when one button in the group is selected (down), all other buttons in the group become unselected (up). 
+        
+				If AllowAllUp is true, all of the speed buttons in a group can be unselected at the same time. Clicking the single selected button in the group will deselect that button without selecting another. If AllowAllUp is false, exactly one of the buttons in the group must be selected at any time. Clicking a down button won't return the button to its up state.
+ 
+				Changing the value of the AllowAllUp property for one speed button in a group changes the AllowAllUp value for all buttons in the group.
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value Receives current value.
+        \return S_OK if successful, or an error value otherwise.
+        \see HelpType
+    **/
     [
     propget, 
     id(0x0000000C)
     ]
     HRESULT _stdcall AllowAllUp([out, retval] long * Value );
+    /**
+        \brief Set whether all speed buttons in the group that contains this speed button can be unselected at the same time.
+
+        Specify whether all speed buttons in the group that contains this speed button can be unselected at the same time.
+        
+        Use AllowAllUp with a group of buttons that belong to the same group. Speed buttons belong to the same group if they have the same value on their GroupIndex property. Buttons in the same group behave in a mutually exclusive fashion: when one button in the group is selected (down), all other buttons in the group become unselected (up). 
+        
+				If AllowAllUp is true, all of the speed buttons in a group can be unselected at the same time. Clicking the single selected button in the group will deselect that button without selecting another. If AllowAllUp is false, exactly one of the buttons in the group must be selected at any time. Clicking a down button won't return the button to its up state.
+ 
+				Changing the value of the AllowAllUp property for one speed button in a group changes the AllowAllUp value for all buttons in the group.
+				
+				Note: If GroupIndex is zero, AllowAllUp has no effect.
+ 
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value Receives current value.
+        \return S_OK if successful, or an error value otherwise.
+        \see HelpType
+    **/
     [
     propput, 
     id(0x0000000C)
@@ -19651,21 +21059,87 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Get the GroupIndex value.
+
+        Retrieve the GroupIndex value for this control.
+        
+        When GroupIndex is 0, the button behaves independently of all other buttons on the form. When the user clicks such a speed button, the button appears pressed (in its clicked state) and then returns to its normal up state when the user releases the mouse button.
+ 
+				When GroupIndex is greater than 0, the button remains selected (in its down state) when clicked by the user. When the user clicks a selected button, it returns to the up state, unless Caption is false. Setting the GroupIndex property of a single speed button to a value greater than 0 causes the button to behave as a two-state button when Caption is true.
+ 
+				Speed buttons with the same GroupIndex property value (other than 0), work together as a group. When the user clicks one of these buttons, it remains selected until the user clicks another speed button belonging to the same group. Speed buttons used in this way can present mutually exclusive choices to the user.
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value Receives GroupIndex value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000E)
     ]
     HRESULT _stdcall GroupIndex([out, retval] long * Value );
+    /**
+        \brief Set the GroupIndex value.
+
+        Specify the GroupIndex value for this control.  The GroupIndex value allows speed buttons to work together as a group.
+        
+        When GroupIndex is 0, the button behaves independently of all other buttons on the form. When the user clicks such a speed button, the button appears pressed (in its clicked state) and then returns to its normal up state when the user releases the mouse button.
+ 
+				When GroupIndex is greater than 0, the button remains selected (in its down state) when clicked by the user. When the user clicks a selected button, it returns to the up state, unless Caption is false. Setting the GroupIndex property of a single speed button to a value greater than 0 causes the button to behave as a two-state button when Caption is true.
+ 
+				Speed buttons with the same GroupIndex property value (other than 0), work together as a group. When the user clicks one of these buttons, it remains selected until the user clicks another speed button belonging to the same group. Speed buttons used in this way can present mutually exclusive choices to the user.
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value GroupIndex value to set.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000E)
     ]
     HRESULT _stdcall GroupIndex([in] long Value );
+    /**
+        \brief Get the selected state of the SpeedButton.
+
+				Read Down to determine whether a speed button is selected. The Down property only applies if the GroupIndex property of the button is nonzero.
+				 
+				When GroupIndex is greater than 0, set Down to true to select a button. When the user clicks on a button in the unselected (up) state, the button is selected and Down is set to true. When the user clicks on a button in the selected (down) state, if Caption is true, the button becomes unselected and Down is set to false.
+				 
+				At design time, specify which button in a group is the initially selected button by setting the Down property of the selected button to true.
+
+				Note:  When GroupIndex is 0, buttons do not remain in the selected state when clicked.
+ 
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value GroupIndex value to set.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000F)
     ]
     HRESULT _stdcall Down([out, retval] long * Value );
+    /**
+        \brief Set the selected state of the SpeedButton.
+
+				Set Down to specify whether a speed button is selected. The Down property only applies if the GroupIndex property of the button is nonzero.
+				 
+				When GroupIndex is greater than 0, set Down to true to select a button. When the user clicks on a button in the unselected (up) state, the button is selected and Down is set to true. When the user clicks on a button in the selected (down) state, if Caption is true, the button becomes unselected and Down is set to false.
+				 
+				At design time, specify which button in a group is the initially selected button by setting the Down property of the selected button to true.
+
+				Note:  When GroupIndex is 0, buttons do not remain in the selected state when clicked.
+ 
+
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value GroupIndex value to set.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000F)
@@ -19751,11 +21225,35 @@ library Exodus
     propget, 
     id(0x00000012)
     ]
+    /**
+        \brief Get whether the button has a 3D border that provides a raised or lowered look.
+
+        Retrieve whether the button has a 3D border that provides a raised or lowered look.
+
+        Set Flat to true to remove the raised border when the button is unselected and the lowered border when the button is clicked or selected. When Flat is true, use separate bitmaps for the different button states to provide visual feedback to the user about the button state.
+        
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value 1 (TRUE) for flat, 0 (FALSE) for 3D.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Flat([out, retval] long * Value );
     [
     propput, 
     id(0x00000012)
     ]
+    /**
+        \brief Set whether the button has a 3D border that provides a raised or lowered look.
+
+        Specify whether the button has a 3D border that provides a raised or lowered look.
+
+        Set Flat to true to remove the raised border when the button is unselected and the lowered border when the button is clicked or selected. When Flat is true, use separate bitmaps for the different button states to provide visual feedback to the user about the button state.
+        
+        \p Value will be either 0 (FALSE) or 1 (TRUE)
+
+        \param Value 1 (TRUE) for flat, 0 (FALSE) for 3D.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Flat([in] long Value );
     [
     propget, 
@@ -19779,31 +21277,101 @@ library Exodus
     propget, 
     id(0x00000014)
     ]
+    /**
+        \brief Get where the image or text appears on the speed button.
+
+        Retrieve where the image or text appears on the speed button.
+
+        Use Layout to determine the position of the bitmap specified by the Glyph property or the text specified by the Caption property.
+        
+        \p Value will  be ????
+
+        \param Value Receives the control's current layout.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Layout([out, retval] long * Value );
     [
     propput, 
     id(0x00000014)
     ]
+    /**
+        \brief Set where the image or text appears on the speed button.
+
+        Specify where the image or text appears on the speed button.
+
+        Use Layout to determine the position of the bitmap specified by the Glyph property or the text specified by the Caption property.
+        
+        \p Value will  be ????
+
+        \param Value Sets the control's current layout.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Layout([in] long Value );
     [
     propget, 
     id(0x00000015)
     ]
+    /**
+        \brief Get the number of pixels between the edge of the button and the image or caption drawn on its surface.
+
+        Retrieve the number of pixels between the edge of the button and the image or caption drawn on its surface.
+
+        Use Margin to specify the indentation of the image specified by the Glyph property or the text specified by the Caption property. The edges that Margin separates depends on the Layout property. If Layout is blGlyphLeft, the margin appears between the left edge of the image or caption and the left edge of the button. If Layout is blGlyphRight, the margin separates the right edges. If Layout is blGlyphTop, the margin separates the top edges, and if Layout is blGlyphBottom, the margin separates the bottom edges.
+ 
+				If \p Value Margin is –1, the image or text is centered on the button.
+
+
+        \param Value Receives the control's current margin.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Margin([out, retval] long * Value );
     [
     propput, 
     id(0x00000015)
     ]
+    /**
+        \brief Set the number of pixels between the edge of the button and the image or caption drawn on its surface.
+
+        Specify the number of pixels between the edge of the button and the image or caption drawn on its surface.
+
+        Use Margin to specify the indentation of the image specified by the Glyph property or the text specified by the Caption property. The edges that Margin separates depends on the Layout property. If Layout is blGlyphLeft, the margin appears between the left edge of the image or caption and the left edge of the button. If Layout is blGlyphRight, the margin separates the right edges. If Layout is blGlyphTop, the margin separates the top edges, and if Layout is blGlyphBottom, the margin separates the bottom edges.
+ 
+				If \p Value Margin is –1, the image or text is centered on the button.
+
+
+        \param Value Sets the control's current margin.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Margin([in] long Value );
     [
     propget, 
     id(0x00000016)
     ]
+    /**
+        \brief Get the number of images included in the Glyph property.
+
+        Retrieve the number of images included in the Glyph property.
+
+        Use NumGlyphs to the number of images provided by the bitmap assigned to the Glyph property. All images must be the same size and next to each other in a row. The Glyph property can provide up to four images.
+
+        \param Value Receives the control's current number of glyphs.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall NumGlyphs([out, retval] long * Value );
     [
     propput, 
     id(0x00000016)
     ]
+    /**
+        \brief Set the number of images included in the Glyph property.
+
+        Specify the number of images included in the Glyph property.
+
+        Use NumGlyphs to the number of images provided by the bitmap assigned to the Glyph property. All images must be the same size and next to each other in a row. The Glyph property can provide up to four images.
+
+        \param Value Sets the control's current number of glyphs.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall NumGlyphs([in] long Value );
     [
     propget, 
@@ -20008,21 +21576,69 @@ library Exodus
     propget, 
     id(0x0000001C)
     ]
+    /**
+        \brief Get where the image and text appear on a speed button.
+
+        Retrieve where the image and text appear on a speed button.
+
+        Use Spacing to the number of pixels that should appear between the image specified in the Glyph property and the text specified in the Caption property. 
+
+				If Spacing is a positive number, its value is the number of pixels between the image and text. If Spacing is 0, the image and text appear flush with each other. If Spacing is -1, the text appears centered between the image and the button edge.
+
+        \param Value Receives the control's current spacing.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Spacing([out, retval] long * Value );
     [
     propput, 
     id(0x0000001C)
     ]
+    /**
+        \brief Set where the image and text appear on a speed button.
+
+        Specifies where the image and text appear on a speed button.
+
+        Use Spacing to the number of pixels that should appear between the image specified in the Glyph property and the text specified in the Caption property. 
+
+				If Spacing is a positive number, its value is the number of pixels between the image and text. If Spacing is 0, the image and text appear flush with each other. If Spacing is -1, the text appears centered between the image and the button edge.
+
+        \param Value Sets the control's current spacing.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Spacing([in] long Value );
     [
     propget, 
     id(0x0000001D)
     ]
+    /**
+        \brief Get whether the background of the button is transparent.
+
+        Retrieve whether the background of the button is transparent.
+
+        Use Transparent to specify whether the background of the button is transparent.
+        
+        \p Value will be either 0 (FALSE) or 1 (TRUE).
+
+        \param Value Receives the control's transparency.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Transparent([out, retval] long * Value );
     [
     propput, 
     id(0x0000001D)
     ]
+    /**
+        \brief Set where the image and text appear on a speed button.
+
+        Specifies where the image and text appear on a speed button.
+
+        Use Transparent to specify whether the background of the button is transparent.
+        
+        \p Value will be either 0 (FALSE) or 1 (TRUE).
+
+        \param Value Sets the control's transparency.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     HRESULT _stdcall Transparent([in] long Value );
     [
     propget, 
