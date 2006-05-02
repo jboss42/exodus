@@ -6903,71 +6903,262 @@ library Exodus
         \see HelpType
     **/
     HRESULT _stdcall HelpContext([in] long Value );
+    /**
+        \brief Gets the flag indicating if text entered will autocomplete.
+        
+        Gets the flag indicating if text entered will autocomplete.  Text 
+        matching items in the combobox will autocomplete if this property is 
+        set to 1.
+
+        \param Value Recieves the value of this property (1 or 0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000C)
     ]
     HRESULT _stdcall AutoComplete([out, retval] long * Value );
+    /**
+        \brief Sets the flag indicating if text entered will autocomplete.
+        
+        Sets the flag indicating if text entered will autocomplete.  Text 
+        matching items in the combobox will autocomplete if this property is 
+        set to 1.
+
+        \param Value The new value of this property (1 or 0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000C)
     ]
     HRESULT _stdcall AutoComplete([in] long Value );
+    /**
+        \brief Gets flag indicating if dropdown list appears when user types.
+        
+        Specifies whether the drop-down list drops down automatically in 
+        response to user keystrokes. A value of 1 indicates it will drop-down
+        automatically. A value of 0 indicates it won't automatically drop-down.
+
+        \param Value Recieves the value of the AutoDropdown property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000D)
     ]
     HRESULT _stdcall AutoDropDown([out, retval] long * Value );
+    /**
+        \brief Sets flag indicating if dropdown list appears when user types.
+        
+        Specifies whether the drop-down list drops down automatically in 
+        response to user keystrokes. A value of 1 indicates it will drop-down
+        automatically. A value of 0 indicates it won't automatically drop-down.
+
+        \param Value The new value of the AutoDropdown property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000D)
     ]
     HRESULT _stdcall AutoDropDown([in] long Value );
+    /**
+        \brief Gets flag indicating if dropdown list auto-closes when item is selected.
+        
+        Gets the flag indicating if dropdown list auto-closes when user selects 
+        an item. A Value of 1 indicates the combobox will autoclose, and 0 means it won't.
+
+        \param Value Recieves the value of the AutoCloseUp property (1 or 0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000E)
     ]
     HRESULT _stdcall AutoCloseUp([out, retval] long * Value );
+    /**
+        \brief Sets flag indicating if dropdown list auto-closes when item is selected.
+        
+        Sets the flag indicating if dropdown list auto-closes when user selects 
+        an item. A Value of 1 indicates the combobox will autoclose, and 0 means it won't.
+
+        \param Value The new value of the AutoCloseUp property (1 or 0).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000E)
     ]
     HRESULT _stdcall AutoCloseUp([in] long Value );
+    /**
+        \brief Get the cut of the inner bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+                \li bvNone    (0)   No bevel
+                \li bvLowered (1)   Lowered bevel
+                \li bvRaised  (2)   Raised bevel
+                \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+				\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([out, retval] long * Value );
+    /**
+        \brief Gets the cut of the outer bevel.
+
+        Retrieves the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([in] long Value );
+    /**
+        \brief Get the control's bevel style.
+
+        Retreive the control's bevel style.
+
+				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+                \p Value can be:
+                \li bkNone  (0)     No bevel
+                \li bkTile  (1)     Sharply defined bevel
+                \li bkSoft  (2)     Softer contrasts than bkTile
+                \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Receives control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([out, retval] long * Value );
+    /**
+        \brief Set the control's bevel style.
+
+        Specify the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+            \p Value can be:
+            \li bkNone  (0)     No bevel
+            \li bkTile  (1)     Sharply defined bevel
+            \li bkSoft  (2)     Softer contrasts than bkTile
+            \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Sets control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([in] long Value );
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retrieve the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+		The outer bevel appears immediately inside the border and outside the inner bevel. 
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000011)
     ]
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+	    The outer bevel appears immediately inside the border and outside the inner bevel. 
+        
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Sets control's bevel (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000011)
     ]
     HRESULT _stdcall BevelOuter([in] long Value );
+    /**
+        \brief Gets the visual style property of the control.
+
+        This method gets the visual style property of the control.
+        The property determines the look and feel of the control:
+        \li 0 - Autodetect
+        \li 1 - Windows 3.1 (old school 16-bit style)
+        \li 2 - New Modern look and feel
+
+        \param Value The value of the style property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000012)
     ]
     HRESULT _stdcall Style([out, retval] long * Value );
+    /**
+        \brief Sets the visual style property of the control.
+
+        This method sets the visual style property of the control.
+        The property determines the look and feel of the control:
+        \li 0 - Autodetect
+        \li 1 - Windows 3.1 (old school 16-bit style)
+        \li 2 - New Modern look and feel
+
+        \param Value The new value of the style property (one of: 0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput,
     id(0x00000012)
@@ -7013,11 +7204,41 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Gets the flag indicating control forces text case.
+
+        Use CharCase to force the text contents of the control into either upper 
+        or lower case.  Once converted the original case information cannont be
+        recovered.
+
+        Values are:
+        \li ecNormal    (0) - leaves case unaltered
+        \li ecUpperCase (1) - forces text to upper case
+        \li ecLowerCase (2) - forces text to lower case
+
+        \param The current value of the CharCase property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget,
     id(0x00000014)
     ]
     HRESULT _stdcall CharCase([out, retval] long * Value );
+    /**
+        \brief Sets the flag indicating control forces text case.
+
+        Use CharCase to force the text contents of the control into either upper 
+        or lower case.  Once converted the original case information cannont be
+        recovered.
+
+        Values are:
+        \li ecNormal    (0) - leaves case unaltered
+        \li ecUpperCase (1) - forces text to upper case
+        \li ecLowerCase (2) - forces text to lower case
+
+        \param The new value of the CharCase property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000014)
@@ -7181,11 +7402,29 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall DragMode([in] long Value );
+    /**
+        \brief Gets the value of the DropDownCount property.
+
+        Use the DropDownCount property to determine how many items are shown by
+        default when the dropdown list opens.  The default value is 8.
+
+        \param Value The current value of dropdown list items to show.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001A)
     ]
     HRESULT _stdcall DropDownCount([out, retval] long * Value );
+    /**
+        \brief Sets the value of the DropDownCount property.
+
+        Use the DropDownCount property to determine how many items are shown by
+        default when the dropdown list opens.  The default value is 8.
+
+        \param Value The new amount of dropdown items to show.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001A)
@@ -11679,15 +11918,19 @@ library Exodus
     id(0x0000000F)
     ]
     /**
-        \brief Get the cut of the inner bevel.
+        \brief Gets the cut of the inner bevel.
 
-        Retreive the cut of the inner bevel.
+        Retreives the cut of the inner bevel.
 
 				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
-				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+                \li bvNone    (0)   No bevel
+                \li bvLowered (1)   Lowered bevel
+                \li bvRaised  (2)   Raised bevel
+                \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
 				 
-				\p Value should be ???
+				\p Value should be one of 0, 1, 2, 3.
  
         \param Value Receives control's bevel.
         \return S_OK if successful, or an error value otherwise.
@@ -11698,15 +11941,19 @@ library Exodus
     id(0x0000000F)
     ]
     /**
-        \brief Set the cut of the inner bevel.
+        \brief Sets the cut of the inner bevel.
 
         Specifies the cut of the inner bevel.
 
-				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
-				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border.
+		The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+        \li bvNone    (0)   No bevel
+        \li bvLowered (1)   Lowered bevel
+        \li bvRaised  (2)   Raised bevel
+        \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
 				 
-				\p Value should be ???
+		\p Value should be one of 0, 1, 2, 3.
  
         \param Value Sets control's bevel.
         \return S_OK if successful, or an error value otherwise.
@@ -11719,14 +11966,18 @@ library Exodus
     /**
         \brief Get the cut of the outer bevel.
 
-        Retreive the cut of the inner bevel.
+        Retrieve the cut of the inner bevel.
 
-				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
  
-				The outer bevel appears immediately inside the border and outside the inner bevel. 
+		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
 				 
-				\p Value should be ???
- 
+        \p Value should be one of 0, 1, 2, 3.
+				 
         \param Value Receives control's bevel.
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -11740,11 +11991,17 @@ library Exodus
 
         Specifies the cut of the inner bevel.
 
-				Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
- 
-				The outer bevel appears immediately inside the border and outside the inner bevel. 
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+
+		The outer bevel appears immediately inside the border and outside the inner bevel. 
 				 
-				\p Value should be ???
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
  
         \param Value Sets control's bevel.
         \return S_OK if successful, or an error value otherwise.
@@ -14920,10 +15177,13 @@ library Exodus
 				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
 				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+                \p Value can be:
+                \li bkNone  (0)     No bevel
+                \li bkTile  (1)     Sharply defined bevel
+                \li bkSoft  (2)     Softer contrasts than bkTile
+                \li bkFlat  (3)     Broad flat bevel
 				 
-				\p Value should be ???
- 
-        \param Value Receives control's bevel style.
+        \param Value Receives control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BevelKind([out, retval] long * Value );
@@ -14939,10 +15199,13 @@ library Exodus
 				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
 				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+                \p Value can be:
+                \li bkNone  (0)     No bevel
+                \li bkTile  (1)     Sharply defined bevel
+                \li bkSoft  (2)     Softer contrasts than bkTile
+                \li bkFlat  (3)     Broad flat bevel
 				 
-				\p Value should be ???
- 
-        \param Value Sets control's bevel style.
+        \param Value Sets control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BevelKind([in] long Value );
@@ -18449,12 +18712,12 @@ library Exodus
     ]
     HRESULT _stdcall NumGlyphs([in] long Value );
     /**
-        \brief Gets the visual style property of the button.
+        \brief Gets the visual style property of the control.
 
-        This method gets the visual style property of the button.
-        The property determines the look and feel of the button:
+        This method gets the visual style property of the control.
+        The property determines the look and feel of the control:
         \li 0 - Autodetect
-        \li 1 - Windows 3.1 (old school 16-bit pushbutton)
+        \li 1 - Windows 3.1 (old school 16-bit style)
         \li 2 - New Modern look and feel
 
         \param Value The value of the style property (0, 1, 2).
@@ -18466,12 +18729,12 @@ library Exodus
     ]
     HRESULT _stdcall Style([out, retval] long * Value );
     /**
-        \brief Sets the visual style property of the button.
+        \brief Sets the visual style property of the control.
 
-        This method sets the visual style property of the button.
-        The property determines the look and feel of the button:
+        This method sets the visual style property of the control.
+        The property determines the look and feel of the control:
         \li 0 - Autodetect
-        \li 1 - Windows 3.1 (old school 16-bit pushbutton)
+        \li 1 - Windows 3.1 (old school 16-bit style)
         \li 2 - New Modern look and feel
 
         \param Value The new value of the style property (one of: 0, 1, 2).
