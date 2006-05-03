@@ -7131,15 +7131,19 @@ library Exodus
     ]
     HRESULT _stdcall BevelOuter([in] long Value );
     /**
-        \brief Gets the visual style property of the control.
+        \brief Gets the style property of the combo box.
 
         This method gets the visual style property of the control.
-        The property determines the look and feel of the control:
-        \li 0 - Autodetect
-        \li 1 - Windows 3.1 (old school 16-bit style)
-        \li 2 - New Modern look and feel
+        The property determines the look and feel of the control.
+        
+        \c Value can be:
+        \li 0 - Drop down list with all items of the same height
+        \li 1 - An edit box over a list box of values
+        \li 2 - Drop down list but text box isn't editable
+        \li 3 - Drop down list that can combine text/graphics, items are all of ItemHeight height.
+        \li 4 - Drop down list that can combine text/graphics, items are of variable height.
 
-        \param Value The value of the style property (0, 1, 2).
+        \param Value The value of the style property (0, 1, 2, 3, 4).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7148,15 +7152,19 @@ library Exodus
     ]
     HRESULT _stdcall Style([out, retval] long * Value );
     /**
-        \brief Sets the visual style property of the control.
+        \brief Sets the style property of the combo box.
 
         This method sets the visual style property of the control.
-        The property determines the look and feel of the control:
-        \li 0 - Autodetect
-        \li 1 - Windows 3.1 (old school 16-bit style)
-        \li 2 - New Modern look and feel
+        The property determines the look and feel of the control.
 
-        \param Value The new value of the style property (one of: 0, 1, 2).
+        \c Value can be:
+        \li 0 - Drop down list with all items of the same height
+        \li 1 - An edit box over a list box of values
+        \li 2 - Drop down list but text box isn't editable
+        \li 3 - Drop down list that can combine text/graphics, items are all of ItemHeight height.
+        \li 4 - Drop down list that can combine text/graphics, items are of variable height.
+
+        \param Value The value of the style property (0, 1, 2, 3, 4).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7481,31 +7489,130 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the current value of the IME mode for this control.
+
+        This method gets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value Receives the current value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001D)
     ]
     HRESULT _stdcall ImeMode([out, retval] long * Value );
+    /**
+        \brief Sets the current value of the IME mode for this control.
+
+        This method sets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value The new value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001D)
     ]
     HRESULT _stdcall ImeMode([in] long Value );
+    /**
+        \brief Gets the ImeName property of the control.
+
+        Gets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determines which IME tool will be used to convert user 
+        input.
+
+        \param Value Receives the name of the current IME instance being used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    /**
+        \brief Sets the ImeName property of the control.
+
+        Sets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determine which IME tool will be used to convert user 
+        input. If the supplied name isn't recognized the currently selected IME
+        instance remains active and no error is thrown.
+
+        \param Value The new name of the IME instance to be used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeName([in] BSTR Value );
+    /**
+        \brief Gets the height of combo items in pixels.
+
+        This method gets the height of the combo items in the drop down list 
+        in pixels.
+
+        \param Value The height in pixels of the combo items.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001F)
     ]
     HRESULT _stdcall ItemHeight([out, retval] long * Value );
+    /**
+        \brief Sets the height of combobox list items in pixels.
+
+        This method sets the height of the combobox list items in pixels.
+        
+        \b Note: This only works if and only if the Style property is set to 
+        3 or 4 (the owner-draw settings).
+
+        \param Value The height in pixels of the combo items.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001F)
