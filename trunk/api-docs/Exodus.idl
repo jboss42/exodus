@@ -7618,21 +7618,64 @@ library Exodus
     id(0x0000001F)
     ]
     HRESULT _stdcall ItemHeight([in] long Value );
+    /**
+        \brief Gets the currently selected item's index.
+
+        This method retrieves the currently selected item's index.  The first
+        item in the list is item 0 and if no item is selected the value is -1.
+
+        \param Value Receieves the index of the currently selected item or -1 if no selection.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000020)
     ]
     HRESULT _stdcall ItemIndex([out, retval] long * Value );
+    /**
+        \brief Sets the currently selected item by index.
+
+        This method sets the currently selected item programmatically using 
+        it's index number.  Indexes are zero based. Use -1 to clear selection.
+
+        \param Value The new index of the selected item or -1 for no selection.
+        \return S_OK if successful, or an error value otherwise.
+    **/
+    **/
     [
     propput, 
     id(0x00000020)
     ]
     HRESULT _stdcall ItemIndex([in] long Value );
+    /**
+        \brief Gets the maximum number of characters that can be input in the edit box.
+
+        This method returns the limit to the number of characters that can be 
+        input into the edit portion of the combo box.  A value of 0 indicates 
+        there is no application limit (the underlying OS widgets may still have 
+        a limit).
+
+        \param Value Receives the maximum number characters that can be input to the edit box.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000021)
     ]
     HRESULT _stdcall MaxLength([out, retval] long * Value );
+    /**
+        \brief Sets the maximum number of characters that can be input in the edit box.
+
+        This method sets the limit to the number of characters that can be input
+        into the edit portion of the combo box.  A value of 0 indicates there is
+        no application limit (the underlying OS widgets may still have a limit).
+
+        Setting this value while text is in the input box will not truncate 
+        existing text, it will only limit further user input.
+
+        \param Value Receives the maximum number characters that can be input to the edit box.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000021)
@@ -7895,11 +7938,37 @@ library Exodus
         \see Hint, ParentShowHint
     **/
     HRESULT _stdcall ShowHint([in] long Value );
+    /**
+        \brief Retrieves flag indicating if combo box list items are sorted.
+
+        This method retrieves the flag indicating if the combo box list items 
+        are sorted alphabetically.
+        Values can be:
+        \li 0 - unsorted
+        \li 1 - sorted
+
+        \param Value Receives the sorted flag (0 unsorted, 1 sorted).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000029)
     ]
     HRESULT _stdcall Sorted([out, retval] long * Value );
+    /**
+        \brief Sets flag indicating if combo box list items are sorted.
+
+        This method sets the flag indicating if the combo box list items are 
+        sorted alphabetically.
+        Values can be:
+        \li 0 - unsorted
+        \li 1 - sorted
+
+        Note: Once items are sorted the original order is lost.
+
+        \param Value The new value for the sorted flag (0 unsorted, 1 sorted).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000029)
@@ -7999,11 +8068,29 @@ library Exodus
         \see TabOrder
     **/
     HRESULT _stdcall TabStop([in] long Value );
+    /**
+        \brief Gets the text in the edit portion of the combo box.
+
+        This method retrieves the text in the edit portion of the combo box. This
+        could return an existing list item's text or user entered text.
+
+        \param Value Receives the text in the edit portion of the combo box.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002C)
     ]
     HRESULT _stdcall Text([out, retval] BSTR * Value );
+    /**
+        \brief Sets the text in the edit portion of the combo box.
+
+        This method sets the text in the edit portion of the combo box. This
+        could return an existing list item's text or user entered text.
+
+        \param Value The new text to place in the edit portion of the combo box.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002C)
@@ -8016,7 +8103,7 @@ library Exodus
     /**
         \brief Get whether or not the control appears on screen.
 
-        Retrieve whether or not the control appears on screen.
+        Retrieves whether or not the control appears on screen.
 
         \p Value will either be 0 (FALSE, invisible) or 1 (TRUE, visible).
 
@@ -8040,11 +8127,32 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Visible([in] long Value );
+    /**
+        \brief Gets the list item text at the specified index.
+
+        This method returns the list item text at the given index. This method
+        does bounds checking on the supplied index.
+
+        \param Index The zero based index of the item to retrieve.
+        \param Value Receives the value of the item (or blank if index invalid).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002E)
     ]
     HRESULT _stdcall Items([in] long Index, [out, retval] BSTR * Value );
+    /**
+        \brief Sets the list item text at the specified index.
+
+        This method sets the list item text at the given index. This method does
+        bounds checking on the supplied index. It is not possible to add items
+        using this method - but the existing values can be modified.
+
+        \param Index The zero based index of the item to set.
+        \param Value The new value of the list item (do not use nil - blank is allowed).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002E)
