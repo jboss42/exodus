@@ -7014,22 +7014,22 @@ library Exodus
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([out, retval] long * Value );
-    /**
-        \brief Gets the cut of the outer bevel.
+  /**
+        \brief Sets the cut of the inner bevel.
 
-        Retrieves the cut of the inner bevel.
+        Specifies the cut of the inner bevel.
 
-		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+		The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+        \li bvNone    (0)   No bevel
+        \li bvLowered (1)   Lowered bevel
+        \li bvRaised  (2)   Raised bevel
+        \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+		\p Value should be one of 0, 1, 2, 3.
  
-		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
-            \li bvNone    (0)   No bevel
-            \li bvLowered (1)   Lowered bevel
-            \li bvRaised  (2)   Raised bevel
-            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
-				 
-        \p Value should be one of 0, 1, 2, 3.
-				 
-        \param Value Receives control's bevel.
+        \param Value Sets control's bevel.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7042,14 +7042,14 @@ library Exodus
 
         Retreive the control's bevel style.
 
-				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
-				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
-                \p Value can be:
-                \li bkNone  (0)     No bevel
-                \li bkTile  (1)     Sharply defined bevel
-                \li bkSoft  (2)     Softer contrasts than bkTile
-                \li bkFlat  (3)     Broad flat bevel
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
 				 
         \param Value Receives control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
@@ -7067,11 +7067,11 @@ library Exodus
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
 		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
-            \p Value can be:
-            \li bkNone  (0)     No bevel
-            \li bkTile  (1)     Sharply defined bevel
-            \li bkSoft  (2)     Softer contrasts than bkTile
-            \li bkFlat  (3)     Broad flat bevel
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
 				 
         \param Value Sets control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
@@ -8607,51 +8607,209 @@ library Exodus
         \see TabOrder
     **/
     HRESULT _stdcall TabStop([in] long Value );
+    /**
+        \brief Gets flag indicating if text should be selected when control is focused.
+
+        This method gets flag indicating if text should be selected when control
+        is focused.
+
+        Value can be:
+        \li 0  - false (text not selected)
+        \li 1  - true  (text will be selected)
+
+        \param Value Receives the value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000D)
     ]
     HRESULT _stdcall AutoSelect([out, retval] long * Value );
+    /**
+        \brief Sets flag indicating if text should be selected when control is focused.
+
+        This method sets a flag indicating if text should be selected when 
+        control is focused.
+
+        Value can be:
+        \li 0  - false (text not selected)
+        \li 1  - true  (text will be selected)
+
+        \param Value Sets the value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000D)
     ]
     HRESULT _stdcall AutoSelect([in] long Value );
+    /**
+        \brief Get whether the control sizes itself automatically to accommodate its contents.
+
+        Retreive whether the control sizes itself automatically to accommodate its contents.
+
+				Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's autosize setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000E)
     ]
     HRESULT _stdcall AutoSize([out, retval] long * Value );
+    /**
+        \brief Set whether the control sizes itself automatically to accommodate its contents.
+
+        Specifies whether the control sizes itself automatically to accommodate its contents.
+
+				Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
+				 
+				\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Gets control's autosize setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000E)
     ]
     HRESULT _stdcall AutoSize([in] long Value );
+    /**
+        \brief Gets the cut of the inner bevel.
+
+        Retreives the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+                \li bvNone    (0)   No bevel
+                \li bvLowered (1)   Lowered bevel
+                \li bvRaised  (2)   Raised bevel
+                \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+				\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([out, retval] long * Value );
+    /**
+        \brief Sets the cut of the inner bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+		The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+        \li bvNone    (0)   No bevel
+        \li bvLowered (1)   Lowered bevel
+        \li bvRaised  (2)   Raised bevel
+        \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+		\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([in] long Value );
+    /**
+        \brief Get the control's bevel style.
+
+        Retreive the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Receives control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([out, retval] long * Value );
+    /**
+        \brief Sets the control's bevel style.
+
+        Specify the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Sets control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([in] long Value );
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retrieve the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000011)
     ]
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+
+		The outer bevel appears immediately inside the border and outside the inner bevel. 
+				 
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000011)
@@ -8697,21 +8855,79 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Receives control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000013)
     ]
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Sets control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000013)
     ]
     HRESULT _stdcall BorderStyle([in] long Value );
+    /**
+        \brief Gets the flag indicating control forces text case.
+
+        Use CharCase to force the text contents of the control into either upper 
+        or lower case.  Once converted the original case information cannont be
+        recovered.
+
+        Values are:
+        \li ecNormal    (0) - leaves case unaltered
+        \li ecUpperCase (1) - forces text to upper case
+        \li ecLowerCase (2) - forces text to lower case
+
+        \param The current value of the CharCase property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000014)
     ]
     HRESULT _stdcall CharCase([out, retval] long * Value );
+    /**
+        \brief Sets the flag indicating control forces text case.
+
+        Use CharCase to force the text contents of the control into either upper 
+        or lower case.  Once converted the original case information cannont be
+        recovered.
+
+        Values are:
+        \li ecNormal    (0) - leaves case unaltered
+        \li ecUpperCase (1) - forces text to upper case
+        \li ecLowerCase (2) - forces text to lower case
+
+        \param The new value of the CharCase property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000014)
@@ -8926,51 +9142,206 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propget, 
     id(0x0000001C)
     ]
     HRESULT _stdcall HideSelection([out, retval] long * Value );
+    /**
+        \brief Set whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Specify whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001C)
     ]
     HRESULT _stdcall HideSelection([in] long Value );
+    /**
+        \brief Gets the current value of the IME mode for this control.
+
+        This method gets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value Receives the current value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001D)
     ]
     HRESULT _stdcall ImeMode([out, retval] long * Value );
+    /**
+        \brief Sets the current value of the IME mode for this control.
+
+        This method sets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value The new value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001D)
     ]
     HRESULT _stdcall ImeMode([in] long Value );
+    /**
+        \brief Gets the ImeName property of the control.
+
+        Gets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determines which IME tool will be used to convert user 
+        input.
+
+        \param Value Receives the name of the current IME instance being used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    /**
+        \brief Sets the ImeName property of the control.
+
+        Sets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determine which IME tool will be used to convert user 
+        input. If the supplied name isn't recognized the currently selected IME
+        instance remains active and no error is thrown.
+
+        \param Value The new name of the IME instance to be used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeName([in] BSTR Value );
+   /**
+        \brief Get the maximum number of characters the user can enter into the edit control.
+
+        Retreive the maximum number of characters the user can enter into the edit control.
+
+		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+				
+		\param Value Receives the Maximum Length.
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propget, 
     id(0x0000001F)
     ]
     HRESULT _stdcall MaxLength([out, retval] long * Value );
+    /**
+        \brief Set the maximum number of characters the user can enter into the edit control.
+
+        Specifies the maximum number of characters the user can enter into the edit control.
+
+		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+				
+		\param Value Set the MaximumLength.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001F)
     ]
     HRESULT _stdcall MaxLength([in] long Value );
+    /**
+        \brief Gets flag that determines if characters typed in control will map to OEM.
+
+        This method gets the flag that determines if characters typed in control
+        are converted from ANSI to OEM back to ANSI. The conversion is to ensure 
+        entered characters can be unambiguously mapped to an OEM character.
+
+        Note: If your application supports Unicode this functionality may not be needed.
+
+        Values can be:
+        \li 0 - no conversion
+        \li 1 - perform conversion of text from ANSI to OEM back to ANSI
+
+        \param Value The current value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000020)
     ]
     HRESULT _stdcall OEMConvert([out, retval] long * Value );
+   /**
+        \brief Sets flag that determines if characters typed in control will map to OEM.
+
+        This method gets the flag that determines if characters typed in control
+        are converted from ANSI to OEM back to ANSI. The conversion is to ensure 
+        entered characters can be unambiguously mapped to an OEM character.
+
+        Note: If your application supports Unicode this functionality may not be needed.
+
+        Values can be:
+        \li 0 - no conversion
+        \li 1 - perform conversion of text from ANSI to OEM back to ANSI
+
+        \param Value The current value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propput, 
     id(0x00000020)
@@ -9165,11 +9536,35 @@ library Exodus
         \see Hint, ShowHint
     **/
     HRESULT _stdcall ParentShowHint([in] long Value );
+    /**
+        \brief Gets the character used to display in place of typed characters.
+
+        This method gets the character used to show in place of plain text in
+        password fields.  If the value is nil (null) then no display 
+        replacement is done.  
+        
+        Note: The actual value of the Text property is unchanged.
+
+        \param Value Receives the character used to replace typed characters (can be nil).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000026)
     ]
     HRESULT _stdcall PasswordChar([out, retval] BSTR * Value );
+    /**
+        \brief Sets the character used to display in place of typed characters.
+
+        This method sets the character used to show in place of plain text in
+        password fields.  If the value is nil (null) then no display 
+        replacement is done.  
+        
+        Note: The actual value of the Text property is unchanged.
+
+        \param Value The character used to replace typed characters (can be nil).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000026)
@@ -9197,11 +9592,39 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get whether the user can change the text of the edit control.
+
+        Retreive whether the user can change the text of the edit control.
+
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+		
+		\p Value is 1 (TRUE) or 0 (FALSE)
+		
+		\param Value Receives Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propget, 
     id(0x00000028)
     ]
     HRESULT _stdcall ReadOnly([out, retval] long * Value );
+    /**
+        \brief Set whether the user can change the text of the edit control.
+
+        Specifies whether the user can change the text of the edit control.
+
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+
+		\p Value is 1 (TRUE) or 0 (FALSE)
+				
+		\param Value Sets Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000028)
@@ -9309,11 +9732,27 @@ library Exodus
         \see TabStop
     **/
     HRESULT _stdcall TabOrder([in] long Value );
+    /**
+        \brief Gets the text string associated with the control.
+
+        This method retrieves the text string associated with the control.
+
+        \param Value Receives the current value of the control's text.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002B)
     ]
     HRESULT _stdcall Text([out, retval] BSTR * Value );
+    /**
+        \brief Sets the text string associated with the control.
+
+        This method sets the text string associated with the control.
+
+        \param Value The new value of the control's text.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002B)
@@ -10859,31 +11298,139 @@ library Exodus
     id(0x0000000F)
     ]
     HRESULT _stdcall Align([in] long Value );
+    /**
+        \brief Get the cut of the inner bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+                \li bvNone    (0)   No bevel
+                \li bvLowered (1)   Lowered bevel
+                \li bvRaised  (2)   Raised bevel
+                \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+				\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelInner([out, retval] long * Value );
+     /**
+        \brief Sets the cut of the inner bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+		The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+        \li bvNone    (0)   No bevel
+        \li bvLowered (1)   Lowered bevel
+        \li bvRaised  (2)   Raised bevel
+        \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+		\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelInner([in] long Value );
+    /**
+        \brief Get the control's bevel style.
+
+        Retreive the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Receives control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000011)
     ]
     HRESULT _stdcall BevelKind([out, retval] long * Value );
+    /**
+        \brief Sets the control's bevel style.
+
+        Specify the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Sets control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000011)
     ]
     HRESULT _stdcall BevelKind([in] long Value );
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retrieve the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000012)
     ]
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+	    The outer bevel appears immediately inside the border and outside the inner bevel. 
+        
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Sets control's bevel (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000012)
@@ -10929,11 +11476,39 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Receives control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000014)
     ]
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Sets control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000014)
@@ -11168,21 +11743,100 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the current value of the IME mode for this control.
+
+        This method gets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value Receives the current value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeMode([out, retval] long * Value );
+    /**
+        \brief Sets the current value of the IME mode for this control.
+
+        This method sets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value The new value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001E)
     ]
     HRESULT _stdcall ImeMode([in] long Value );
+    /**
+        \brief Gets the ImeName property of the control.
+
+        Gets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determines which IME tool will be used to convert user 
+        input.
+
+        \param Value Receives the name of the current IME instance being used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001F)
     ]
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    /**
+        \brief Sets the ImeName property of the control.
+
+        Sets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determine which IME tool will be used to convert user 
+        input. If the supplied name isn't recognized the currently selected IME
+        instance remains active and no error is thrown.
+
+        \param Value The new name of the IME instance to be used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001F)
@@ -12341,9 +12995,11 @@ library Exodus
 
 				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
-				\p Value should be ???.
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
  
-        \param Value Receives control's border style.
+        \param Value Receives control's border style (0 or 1).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
@@ -12358,9 +13014,11 @@ library Exodus
 
 				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
-				\p Value should be ???.
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
  
-        \param Value Sets control's border style.
+        \param Value Sets control's border style (0 or 1).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BorderStyle([in] long Value );
@@ -15389,14 +16047,14 @@ library Exodus
 
         Retreive the control's bevel style.
 
-				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
-				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
-                \p Value can be:
-                \li bkNone  (0)     No bevel
-                \li bkTile  (1)     Sharply defined bevel
-                \li bkSoft  (2)     Softer contrasts than bkTile
-                \li bkFlat  (3)     Broad flat bevel
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
 				 
         \param Value Receives control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
@@ -15407,18 +16065,18 @@ library Exodus
     id(0x00000011)
     ]
     /**
-        \brief Set the control's bevel style.
+        \brief Sets the control's bevel style.
 
         Specify the control's bevel style.
 
-				Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
-				BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
-                \p Value can be:
-                \li bkNone  (0)     No bevel
-                \li bkTile  (1)     Sharply defined bevel
-                \li bkSoft  (2)     Softer contrasts than bkTile
-                \li bkFlat  (3)     Broad flat bevel
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
 				 
         \param Value Sets control's bevel style (0, 1, 2, 3).
         \return S_OK if successful, or an error value otherwise.
@@ -15509,9 +16167,11 @@ library Exodus
 
 				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
-				\p Value should be ???.
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
  
-        \param Value Receives control's border style.
+        \param Value Receives control's border style (0 or 1).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
@@ -15526,9 +16186,11 @@ library Exodus
 
 				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
-				\p Value should be ???.
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
  
-        \param Value Sets control's border style.
+        \param Value Sets control's border style (0 or 1).
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall BorderStyle([in] long Value );
@@ -15848,17 +16510,29 @@ library Exodus
     id(0x0000001F)
     ]
     /**
-        \brief Get the behavior of the input method editor (IME).
+        \brief Gets the current value of the IME mode for this control.
 
-        Retreive the behavior of the input method editor (IME).
+        This method gets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
 
-				Use ImeMode to configure the way an IME processes user keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application. 
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
 
-				ImeMode allows a control to influence the type of conversion performed by the IME so that it is appropriate for the input expected by the control. For example, a control that only accepts numeric input might specify an ImeMode of imClose, as no conversion is necessary for numeric input.
- 
-				\p Value should be ???
- 
-        \param Value Receives control's IMEMode value.
+        \param Value Receives the current value of the ImeMode property.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ImeMode([out, retval] long * Value );
@@ -15867,17 +16541,29 @@ library Exodus
     id(0x0000001F)
     ]
     /**
-        \brief Set the behavior of the input method editor (IME).
+        \brief Sets the current value of the IME mode for this control.
 
-        Specifies the behavior of the input method editor (IME).
+        This method sets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
 
-				Use ImeMode to configure the way an IME processes user keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application. 
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
 
-				ImeMode allows a control to influence the type of conversion performed by the IME so that it is appropriate for the input expected by the control. For example, a control that only accepts numeric input might specify an ImeMode of imClose, as no conversion is necessary for numeric input.
- 
-				\p Value should be ???
- 
-        \param Value Specifies control's IMEMode value.
+        \param Value The new value of the ImeMode property.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ImeMode([in] long Value );
@@ -15886,19 +16572,16 @@ library Exodus
     id(0x00000020)
     ]
     /**
-        \brief Get the input method editor (IME) to use for converting keyboard input to Asian language characters.
+        \brief Gets the ImeName property of the control.
 
-        Retreive the input method editor (IME) to use for converting keyboard input to Asian language characters.
+        Gets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determines which IME tool will be used to convert user 
+        input.
 
-				Set ImeName to specify which IME to use for converting keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application.
- 
-				ImeName must specify one of the IMEs that has been installed through the Windows control panel. The property inspector provides a drop-down list of all currently installed IMEs on the system. At runtime, applications can obtain a list of currently installed IMEs from the global Screen variable.
- 
- 				If ImeName specifies an unavailable IME, the IME that was active when the application started is used instead. No exception is generated.
- 
-				\p Value should be ???
- 
-        \param Value Receives control's IMEName value.
+        \param Value Receives the name of the current IME instance being used.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
@@ -15907,19 +16590,17 @@ library Exodus
     id(0x00000020)
     ]
     /**
-        \brief Set the input method editor (IME) to use for converting keyboard input to Asian language characters.
+        \brief Sets the ImeName property of the control.
 
-        Specifies the input method editor (IME) to use for converting keyboard input to Asian language characters.
+        Sets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determine which IME tool will be used to convert user 
+        input. If the supplied name isn't recognized the currently selected IME
+        instance remains active and no error is thrown.
 
-				Set ImeName to specify which IME to use for converting keystrokes. An IME is a front-end input processor for Asian language characters. The IME hooks all keyboard input, converts it to Asian characters in a conversion window, and sends the converted characters or strings on to the application.
- 
-				ImeName must specify one of the IMEs that has been installed through the Windows control panel. The property inspector provides a drop-down list of all currently installed IMEs on the system. At runtime, applications can obtain a list of currently installed IMEs from the global Screen variable.
- 
- 				If ImeName specifies an unavailable IME, the IME that was active when the application started is used instead. No exception is generated.
- 
-				\p Value should be ???
- 
-        \param Value Sets control's IMEName value.
+        \param Value The new name of the IME instance to be used.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ImeName([in] BSTR Value );
@@ -15973,9 +16654,9 @@ library Exodus
 
         Retreive the maximum number of characters the user can enter into the edit control.
 
-				Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
 				
-				\param Value Receives the Maximum Length.
+		\param Value Receives the Maximum Length.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall MaxLength([out, retval] long * Value );
@@ -15988,9 +16669,9 @@ library Exodus
 
         Specifies the maximum number of characters the user can enter into the edit control.
 
-				Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
+		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
 				
-				\param Value Set the MaximumLength.
+		\param Value Set the MaximumLength.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall MaxLength([in] long Value );
@@ -16248,14 +16929,13 @@ library Exodus
 
         Retreive whether the user can change the text of the edit control.
 
-				To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
  
-				Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
-
-				
-				\p Value is 1 (TRUE) or 0 (FALSE)
-				
-				\param Value Receives Read Only value.
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+		
+		\p Value is 1 (TRUE) or 0 (FALSE)
+		
+		\param Value Receives Read Only value.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ReadOnly([out, retval] long * Value );
@@ -16268,14 +16948,13 @@ library Exodus
 
         Specifies whether the user can change the text of the edit control.
 
-				To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
  
-				Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
 
+		\p Value is 1 (TRUE) or 0 (FALSE)
 				
-				\p Value is 1 (TRUE) or 0 (FALSE)
-				
-				\param Value Sets Read Only value.
+		\param Value Sets Read Only value.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ReadOnly([in] long Value );
@@ -19674,31 +20353,139 @@ library Exodus
     id(0x0000000E)
     ]
     HRESULT _stdcall Alignment([in] long Value );
+    /**
+        \brief Get the cut of the inner bevel.
+
+        Retreive the cut of the inner bevel.
+
+				Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+				The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+                \li bvNone    (0)   No bevel
+                \li bvLowered (1)   Lowered bevel
+                \li bvRaised  (2)   Raised bevel
+                \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+				\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([out, retval] long * Value );
+     /**
+        \brief Sets the cut of the inner bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
+
+		The inner bevel appears immediately inside the outer bevel. If there is no outer bevel, the inner bevel appears immediately inside the border. Values are:
+        \li bvNone    (0)   No bevel
+        \li bvLowered (1)   Lowered bevel
+        \li bvRaised  (2)   Raised bevel
+        \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+		\p Value should be one of 0, 1, 2, 3.
+ 
+        \param Value Sets control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000000F)
     ]
     HRESULT _stdcall BevelInner([in] long Value );
+    /**
+        \brief Get the control's bevel style.
+
+        Retreive the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Receives control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([out, retval] long * Value );
+    /**
+        \brief Sets the control's bevel style.
+
+        Specify the control's bevel style.
+
+		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
+ 
+		BevelKind, in combination with BevelWidth and the cut of the bevel specified by BevelInner or BevelOuter , can create a variety of effects. 
+        \p Value can be:
+        \li bkNone  (0)     No bevel
+        \li bkTile  (1)     Sharply defined bevel
+        \li bkSoft  (2)     Softer contrasts than bkTile
+        \li bkFlat  (3)     Broad flat bevel
+				 
+        \param Value Sets control's bevel style (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000010)
     ]
     HRESULT _stdcall BevelKind([in] long Value );
+    /**
+        \brief Get the cut of the outer bevel.
+
+        Retrieve the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+		The outer bevel appears immediately inside the border and outside the inner bevel. Values are:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Receives control's bevel.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000011)
     ]
     HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    /**
+        \brief Set the cut of the outer bevel.
+
+        Specifies the cut of the inner bevel.
+
+		Use BevelInner to specify whether the outer bevel has a raised, lowered, or flat look.
+ 
+	    The outer bevel appears immediately inside the border and outside the inner bevel. 
+        
+        \c Value can be:
+            \li bvNone    (0)   No bevel
+            \li bvLowered (1)   Lowered bevel
+            \li bvRaised  (2)   Raised bevel
+            \li bvSpace   (3)   Appears as a space if Kind is not bkTile else it's raised.
+				 
+        \p Value should be one of 0, 1, 2, 3.
+				 
+        \param Value Sets control's bevel (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000011)
@@ -19744,11 +20531,39 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Receives control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000013)
     ]
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Sets control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000013)
@@ -19963,31 +20778,134 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001B)
     ]
     HRESULT _stdcall HideSelection([out, retval] long * Value );
+    /**
+        \brief Set whether the visual indication of the selected text remains when focus shifts to another control.
+
+        Specify whether the visual indication of the selected text remains when focus shifts to another control.
+
+				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
+				 
+				\p Value should be 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's HideSelection value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001B)
     ]
     HRESULT _stdcall HideSelection([in] long Value );
+    /**
+        \brief Gets the current value of the IME mode for this control.
+
+        This method gets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value Receives the current value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001C)
     ]
     HRESULT _stdcall ImeMode([out, retval] long * Value );
+    /**
+        \brief Sets the current value of the IME mode for this control.
+
+        This method sets the current value of the IME mode for this control. IME
+        is (Input Method Editor), Microsoft's solution to entering double-byte
+        character sets with a standard keyboard (such as Chinese, Japanese, and 
+        Korean).  This setting appears to control if IME is available for this control
+        as well as how keyboard input is interepted.
+
+        \c Value can be:
+        \li 0  - disabled (user cannot enable IME)
+        \li 1  - close
+        \li 2  - open
+        \li 3  - don't care
+        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 6  - Hiragana DBC (only Japanese IME)
+        \li 7  - Katakana SBC (only Japanese IME)
+        \li 8  - Katakana DBC (only Japanese IME)
+        \li 9  - Chinese
+        \li 10 - Hangul SBC (only Korean IME)
+        \li 11 - Hangul DBC (only Korean IME)
+
+        \param Value The new value of the ImeMode property.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001C)
     ]
     HRESULT _stdcall ImeMode([in] long Value );
+    /**
+        \brief Gets the ImeName property of the control.
+
+        Gets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determines which IME tool will be used to convert user 
+        input.
+
+        \param Value Receives the name of the current IME instance being used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001D)
     ]
     HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    /**
+        \brief Sets the ImeName property of the control.
+
+        Sets the ImeName property of the control. IME is Input method Editor,
+        Microsoft's solution to entering double-byte character sets with a 
+        standard keyboard (such as Chinese, Japanese, and Korean). 
+        
+        This property determine which IME tool will be used to convert user 
+        input. If the supplied name isn't recognized the currently selected IME
+        instance remains active and no error is thrown.
+
+        \param Value The new name of the IME instance to be used.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001D)
@@ -20018,11 +20936,43 @@ library Exodus
     id(0x00000020)
     ]
     HRESULT _stdcall MaxLength([in] long Value );
+    /**
+        \brief Gets flag that determines if characters typed in control will map to OEM.
+
+        This method gets the flag that determines if characters typed in control
+        are converted from ANSI to OEM back to ANSI. The conversion is to ensure 
+        entered characters can be unambiguously mapped to an OEM character.
+
+        Note: If your application supports Unicode this functionality may not be needed.
+
+        Values can be:
+        \li 0 - no conversion
+        \li 1 - perform conversion of text from ANSI to OEM back to ANSI
+
+        \param Value The current value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000021)
     ]
     HRESULT _stdcall OEMConvert([out, retval] long * Value );
+    /**
+        \brief Sets flag that determines if characters typed in control will map to OEM.
+
+        This method gets the flag that determines if characters typed in control
+        are converted from ANSI to OEM back to ANSI. The conversion is to ensure 
+        entered characters can be unambiguously mapped to an OEM character.
+
+        Note: If your application supports Unicode this functionality may not be needed.
+
+        Values can be:
+        \li 0 - no conversion
+        \li 1 - perform conversion of text from ANSI to OEM back to ANSI
+
+        \param Value The current value of the flag (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propput, 
     id(0x00000021)
@@ -20239,11 +21189,39 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Get whether the user can change the text of the edit control.
+
+        Retreive whether the user can change the text of the edit control.
+
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+		
+		\p Value is 1 (TRUE) or 0 (FALSE)
+		
+		\param Value Receives Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000028)
     ]
     HRESULT _stdcall ReadOnly([out, retval] long * Value );
+    /**
+        \brief Set whether the user can change the text of the edit control.
+
+        Specifies whether the user can change the text of the edit control.
+
+		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
+ 
+		Setting ReadOnly to true ensures that the text is not altered, while still allowing the user to select text. The selected text can then be manipulated by the application, or copied to the Clipboard.
+
+		\p Value is 1 (TRUE) or 0 (FALSE)
+				
+		\param Value Sets Read Only value.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000028)
@@ -23411,11 +24389,39 @@ library Exodus
 
     **/
     HRESULT _stdcall BiDiMode([in] long Value );
+    /**
+        \brief Get whether the edit control has a single line border around the client area.
+
+        Retreive whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Receives control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000012)
     ]
     HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    /**
+        \brief Set whether the edit control has a single line border around the client area.
+
+        Specify whether the edit control has a single line border around the client area.
+
+				Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
+				 
+				\p Value can be:
+                \li 0 - no border
+                \li 1 - single line border
+ 
+        \param Value Sets control's border style (0 or 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000012)
