@@ -21156,6 +21156,27 @@ library Exodus
         \see TabOrder
     **/
     HRESULT _stdcall TabStop([in] long Value );
+    /**
+        \brief Get how the control aligns within its container (parent control).
+
+        Retreive how the control aligns within its container (parent control).
+
+		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
+				 
+		Note: To cause a control to maintain a specified relationship with an edge of its parent, but not necessarily lie along one edge of the parent, use the Anchors property instead.
+				
+		\p Values can be:
+        \li 0 - no alignment - control remains where placed on the form
+        \li 1 - top
+        \li 2 - bottom
+        \li 3 - left
+        \li 4 - right
+        \li 5 - client - fills the entire client area
+        \li 6 - custom
+ 
+        \param Value Receives control's alignment.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000000D)
@@ -25886,7 +25907,7 @@ library Exodus
         Note: If the application uses a 16-bit color palette, TransparentColorValue 
         must be a basic color.
 
-        \param Value The new value of TransparentColorValue.
+        \param Value Receives the current value of TransparentColorValue.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
