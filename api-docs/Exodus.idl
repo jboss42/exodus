@@ -13721,11 +13721,11 @@ library Exodus
 
         Retreive whether the docking manager is used in drag-and-dock operations.
 
-				Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
-				
-				The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
-				 
-				\p Value is 1 (TRUE) or 0 (FALSE)
+        Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+
+        The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+		
+        \p Value is 1 (TRUE) or 0 (FALSE)
  
         \param Value Receives control's UseDockManager setting.
         \return S_OK if successful, or an error value otherwise.
@@ -13740,11 +13740,11 @@ library Exodus
 
         Specifies whether the docking manager is used in drag-and-dock operations.
 
-				Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
-				
-				The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+		Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+			
+		The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
 				 
-				\p Value is 1 (TRUE) or 0 (FALSE)
+		\p Value is 1 (TRUE) or 0 (FALSE)
  
         \param Value Sets control's UseDockManager setting.
         \return S_OK if successful, or an error value otherwise.
@@ -13759,9 +13759,9 @@ library Exodus
 
         Retreive whether the control can be the target of drag-and-dock operations.
 
-				Set DockSite to true to allow other controls to be docked to this windowed control.
+		Set DockSite to true to allow other controls to be docked to this windowed control.
 				
-				\p Value is 1 (TRUE) or 0 (FALSE)
+		\p Value is 1 (TRUE) or 0 (FALSE)
  
         \param Value Receives control's DockSite setting.
         \return S_OK if successful, or an error value otherwise.
@@ -13776,9 +13776,9 @@ library Exodus
 
         Specifies whether the control can be the target of drag-and-dock operations.
 
-				Set DockSite to true to allow other controls to be docked to this windowed control.
+		Set DockSite to true to allow other controls to be docked to this windowed control.
 				
-				\p Value is 1 (TRUE) or 0 (FALSE)
+		\p Value is 1 (TRUE) or 0 (FALSE)
  
         \param Value Sets control's DockSite setting.
         \return S_OK if successful, or an error value otherwise.
@@ -25931,31 +25931,115 @@ library Exodus
         \brief Has no effect on 32-bit versions of Windows and on NT 4.0 and later, unsupported.
     **/
     HRESULT _stdcall Ctl3D([in] long Value );
+    /**
+        \brief Get whether the docking manager is used in drag-and-dock operations.
+
+        Retreive whether the docking manager is used in drag-and-dock operations.
+
+        Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+
+        The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+		
+        \p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's UseDockManager setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001B)
     ]
     HRESULT _stdcall UseDockManager([out, retval] long * Value );
+    /**
+        \brief Set whether the docking manager is used in drag-and-dock operations.
+
+        Specifies whether the docking manager is used in drag-and-dock operations.
+
+		Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
+			
+		The docking manager handles the positioning of docked controls and any painting of docking zones around those controls. If you do not use a docking manager, docked controls are aligned to the windowed control based on the closest edge to where they are released. When you do not use a docking manager, there is no region for a user to grab to automatically undock a docked control.
+				 
+		\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's UseDockManager setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001B)
     ]
     HRESULT _stdcall UseDockManager([in] long Value );
+    /**
+        \brief Gets property specifing which monitor is used to display the form.
+
+
+        This method gets property specifing which monitor is used to display 
+        the form.
+
+        Values can be:
+        \li 0 - No attempt is made position the form on a monitor.
+        \li 1 - The form is positioned on the system's first monitor.
+        \li 2 - The form appears on the same monitor as the application's main form.
+        \li 3 - The form appears on the same monitor as the currently active form.
+
+        \param Value Receives the value of the property (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001C)
     ]
     HRESULT _stdcall DefaultMonitor([out, retval] long * Value );
+    /**
+        \brief Sets property specifing which monitor is used to display the form.
+
+
+        This method sets property specifing which monitor is used to display 
+        the form.
+
+        Values can be:
+        \li 0 - No attempt is made position the form on a monitor.
+        \li 1 - The form is positioned on the system's first monitor.
+        \li 2 - The form appears on the same monitor as the application's main form.
+        \li 3 - The form appears on the same monitor as the currently active form.
+
+        \param Value The new value of the property (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001C)
     ]
     HRESULT _stdcall DefaultMonitor([in] long Value );
+    /**
+        \brief Get whether the control can be the target of drag-and-dock operations.
+
+        Retreive whether the control can be the target of drag-and-dock operations.
+
+		Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+		\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Receives control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000001D)
     ]
     HRESULT _stdcall DockSite([out, retval] long * Value );
+    /**
+        \brief Set whether the control can be the target of drag-and-dock operations.
+
+        Specifies whether the control can be the target of drag-and-dock operations.
+
+		Set DockSite to true to allow other controls to be docked to this windowed control.
+				
+		\p Value is 1 (TRUE) or 0 (FALSE)
+ 
+        \param Value Sets control's DockSite setting.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000001D)
@@ -26118,56 +26202,174 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the property determining the style of the form.
+
+        This method gets the property determining the style of the form.
+        Values can be:
+        \li 0 - The form is not a MDI parent or MDI child window.
+        \li 1 - The form is a MDI child window.
+        \li 2 - The form is a MDI parent window.
+        \li 3 - The form remains on top of the desktop and other forms in the project (except forms with this FormStyle setting).
+
+        \param Value Receives the value of the property (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000023)
     ]
     HRESULT _stdcall FormStyle([out, retval] long * Value );
+    /**
+        \brief Sets the property determining the style of the form.
+
+        This method sets the property determining the style of the form.
+        Values can be:
+        \li 0 - The form is not a MDI parent or MDI child window.
+        \li 1 - The form is a MDI child window.
+        \li 2 - The form is a MDI parent window.
+        \li 3 - The form remains on top of the desktop and other forms in the project (except forms with this FormStyle setting).
+
+        \param Value The new value of the property (0, 1, 2, 3).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000023)
     ]
     HRESULT _stdcall FormStyle([in] long Value );
+    /**
+        \brief Gets the name of the file used to display the application's help.
+
+        This gets the name of the file used to display the application's help.
+
+        \param Value Receives the name of the application's help file.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000024)
     ]
     HRESULT _stdcall HelpFile([out, retval] BSTR * Value );
+    /**
+        \brief Sets the name of the file used to display the application's help.
+
+        This sets the name of the file used to display the application's help.
+
+        \param Value Receives the name of the application's help file.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000024)
     ]
     HRESULT _stdcall HelpFile([in] BSTR Value );
+    /**
+        \brief Gets the property indicating the form should receive keyboard events before the active control.
+
+        This method gets the property indicating the form should receive keyboard
+        events before the active control.  If this propety is true (1), keyboard 
+        events occur on the form before the active control, if false the form does 
+        not receive events.  Values can be true (1) and false (0).
+        
+        \b Note: Navigation keys and buttons with focus and the Default property set 
+        to true do not generate keyboard events.
+
+        \param Value Receives the value of the property (0, 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000025)
     ]
     HRESULT _stdcall KeyPreview([out, retval] long * Value );
+    /**
+        \brief Sets the property indicating the form should receive keyboard events before the active control.
+
+        This method sets the property indicating the form should receive keyboard
+        events before the active control.  If this propety is true (1), keyboard 
+        events occur on the form before the active control, if false the form does 
+        not receive events.  Values can be true (1) and false (0).
+        
+        \b Note: Navigation keys and buttons with focus and the Default property set 
+        to true do not generate keyboard events.
+
+        \param Value The new value of the property (0, 1).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000025)
     ]
     HRESULT _stdcall KeyPreview([in] long Value );
+    /**
+        \brief Gets the form's main menu.
+
+        This method gets the form's main menu.
+
+        \param Value Receives the form's menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000026)
     ]
     HRESULT _stdcall Menu([out, retval] IExodusControlMainMenu ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the property indicating when OnCreate and OnDestroy events occur.
+
+        This method gets the property indicating when OnCreate and OnDestroy 
+        events occur.  When OldCreateOrder is false (0 - the default) the OnCreate 
+        event occurs after all constructors are finished and the OnDestroy event 
+        occurs before any destructors are called.
+       
+       \param Value Receives the value of the property (0 - false, 1 - true).
+       \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000027)
     ]
     HRESULT _stdcall OldCreateOrder([out, retval] long * Value );
+    /**
+        \brief Sets the property indicating when OnCreate and OnDestroy events occur.
+
+        This method sets the property indicating when OnCreate and OnDestroy 
+        events occur.  When OldCreateOrder is false (0 - the default) the OnCreate 
+        event occurs after all constructors are finished and the OnDestroy event 
+        occurs before any destructors are called.
+       
+       \param Value Receives the value of the property (0 - false, 1 - true).
+       \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000027)
     ]
     HRESULT _stdcall OldCreateOrder([in] long Value );
+    /**
+        \brief Gets the number of items in the form's menu.
+
+        This method gets the number of items in the form's menu.
+
+        \param Value Receives the item count of the form's menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000028)
     ]
     HRESULT _stdcall ObjectMenuItemCount([out, retval] long * Value );
+    /**
+        \brief Gets a form's menu item by index.
+
+        This method gets a form's menu item by index. The index is subjected
+        to bounds checking and nil is returned if the index is out of bounds.
+
+        \param Index The index of the desired menu item.
+        \param Value Receives the menu item or nil if not found.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000029)
@@ -26218,11 +26420,35 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall ParentBiDiMode([in] long Value );
+    /**
+        \brief Gets the property describing the proportion of the font on the user's system.
+
+        This method gets the property describing the proportion of the font on 
+        the user's system. This property can be adjusted at runtime to change 
+        how the form is scaled to the active screen resolution.
+
+        To use this the Scaled property must be set to true.
+
+        \param Value Receives the value of the property in pixels per inch.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002B)
     ]
     HRESULT _stdcall PixelsPerInch([out, retval] long * Value );
+    /**
+        \brief Sets the property describing the proportion of the font on the user's system.
+
+        This method sets the property describing the proportion of the font on 
+        the user's system. This property can be adjusted at runtime to change 
+        how the form is scaled to the active screen resolution.
+
+        To use this the Scaled property must be set to true.
+
+        \param Value The new value of the property in pixels per inch.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002B)
@@ -26250,41 +26476,143 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    /**
+        \brief Gets the property affecting the forms size and position.
+
+        This method gets the property affecting the forms size and position.
+        Values can be:
+        \li 0 - Form position and size appears as in design mode.
+        \li 1 - Form appears as determined by the OS. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
+        \li 2 - Form retains design time size, but the OS chooses the position. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
+        \li 3 - Form appears in design time position, but OS chooses the size.
+        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systemsthe form can be moved so it fits on one monitor.
+        \li 5 - Form retains the design time size, but is positioned in the center of the screen (no adjustments made for multi-monitor systems).
+        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used ona main form it acts like 4.
+        \li 7 - Form retains the design time size, but is positioned in the center of the form specified by the Owner property. If Owner does not specify a form, acts like 6.
+
+        \param Value Receives the value of the property (0-7).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002D)
     ]
     HRESULT _stdcall Position([out, retval] long * Value );
+    /**
+        \brief Sets the property affecting the forms size and position.
+
+        This method sets the property affecting the forms size and position.
+        Values can be:
+        \li 0 - Form position and size appears as in design mode.
+        \li 1 - Form appears as determined by the OS. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
+        \li 2 - Form retains the design time size, but the OS chooses the position. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
+        \li 3 - Form appears in design time position, but OS chooses the size.
+        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systemsthe form can be moved so it fits on one monitor.
+        \li 5 - Form retains the design time size, but is positioned in the center of the screen (no adjustments made for multi-monitor systems).
+        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used ona main form it acts like 4.
+        \li 7 - Form retains the design time size, but is positioned in the center of the form specified by the Owner property. If Owner does not specify a form, acts like 6.
+
+        \param Value Receives the value of the property (0-7).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002D)
     ]
     HRESULT _stdcall Position([in] long Value );
+    /**
+        \brief Gets the property representing the proportions of a printed form.
+
+        This method gets the property representing the proportions of a printed 
+        form.
+        Values can be:
+        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distored.
+        \li 1 - The form is printed approximately the size appearing on screen.
+        \li 2 - The form is printed using the screen proportions but in a size fitting the printed page.
+
+        \param Value Receives the value of the property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002E)
     ]
     HRESULT _stdcall PrintScale([out, retval] long * Value );
+    /**
+        \brief Sets the property representing the proportions of a printed form.
+
+        This method sets the property representing the proportions of a printed 
+        form.
+        Values can be:
+        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distored.
+        \li 1 - The form is printed approximately the size appearing on screen.
+        \li 2 - The form is printed using the screen proportions but in a size fitting the printed page.
+
+        \param Value Receives the value of the property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002E)
     ]
     HRESULT _stdcall PrintScale([in] long Value );
+    /**
+        \brief Gets the property indicating if the form is sized using PixelsPerInch.
+
+        This method gets the property indicating if the form is sized using 
+        PixelsPerInch.  If true (1), the form will resize itself to differences
+        between the font used at design time and the current system font at 
+        runtime.
+
+        \param Value Receives the value of the property (0 - false, 1 - true).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x0000002F)
     ]
     HRESULT _stdcall Scaled([out, retval] long * Value );
+    /**
+        \brief Sets the property indicating if the form is sized using PixelsPerInch.
+
+        This method sets the property indicating if the form is sized using 
+        PixelsPerInch.  If true (1), the form will resize itself to differences
+        between the font used at design time and the current system font at 
+        runtime.
+
+        \param Value The new value of the property (0 - false, 1 - true).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x0000002F)
     ]
     HRESULT _stdcall Scaled([in] long Value );
+    /**
+        \brief Gets the property specifing if a form snaps to the edge of the screen.
+
+        This method gets the property specifing if a form snaps to the edge of 
+        the screen when the form is moved at runtime.  To determine how close the 
+        form needs be before snapping to the screen edges use SnapBuffer.
+
+        \param Value Receives the value of the property (0 - false, 1 - true).
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propget, 
     id(0x00000030)
     ]
     HRESULT _stdcall ScreenSnap([out, retval] long * Value );
+    /**
+        \brief Sets the property specifing if a form snaps to the edge of the screen.
+
+        This method sets the property specifing if a form snaps to the edge of 
+        the screen when the form is moved at runtime.  To determine how close the 
+        form needs be before snapping to the screen edges use SnapBuffer.
+
+        \param Value The new value of the property (0 - false, 1 - true).
+        \return S_OK if successful, or an error value otherwise.
+    **/ 
     [
     propput, 
     id(0x00000030)
@@ -26336,11 +26664,29 @@ library Exodus
         \see Hint, ParentShowHint
     **/
     HRESULT _stdcall ShowHint([in] long Value );
+    /**
+        \brief Gets the value specifing the distance for screen snap.
+
+        This method gets the value specifing the distance for screen snap in 
+        pixels (see ScreenSnap).
+
+        \param Value Receives the value of the property (in pixels).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000032)
     ]
     HRESULT _stdcall SnapBuffer([out, retval] long * Value );
+    /**
+        \brief Sets the value specifing the distance for screen snap.
+
+        This method sets the value specifing the distance for screen snap in 
+        pixels (see ScreenSnap).
+
+        \param Value The new value of the property (in pixels).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000032)
@@ -26377,21 +26723,63 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Visible([in] long Value );
+    /**
+        \brief Gets property indicating how the window appears (maximized, minimized, normal).
+
+        This method gets the property indicating how the window appears (maximized, minimized, normal).
+        Values can be:
+        \li 0 - normal
+        \li 1 - minimized
+        \li 2 - maximized
+
+        \param Value Receives the value of the property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000034)
     ]
     HRESULT _stdcall WindowState([out, retval] long * Value );
+    /**
+        \brief Sets property indicating how the window appears (maximized, minimized, normal).
+
+        This method sets the property indicating how the window appears (maximized, minimized, normal).
+        Values can be:
+        \li 0 - normal
+        \li 1 - minimized
+        \li 2 - maximized
+
+        \param Value The new value of the property (0, 1, 2).
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propput, 
     id(0x00000034)
     ]
     HRESULT _stdcall WindowState([in] long Value );
+    /**
+        \brief Gets the count of items in the form's menu.
+
+        This method gets the count of items inthe form'smenu.
+
+        \param Value Receives the count of items in the form's menu.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000035)
     ]
     HRESULT _stdcall WindowMenuCount([out, retval] long * Value );
+    /**
+        \brief Gets an item from the form's menu.
+
+        This method gets an item by index from the form's menu.  Bounds checking
+        is performed and nil is returned if Index is out of range.
+
+        \param Index The index of the menu item to return.
+        \param Value The desired menu item or nil if not found or index out of range.
+        \return S_OK if successful, or an error value otherwise.
+    **/
     [
     propget, 
     id(0x00000036)
