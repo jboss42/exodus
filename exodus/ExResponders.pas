@@ -155,7 +155,7 @@ const
     sLast = 'Last';
     sBrowse = 'Browse';
     sDisco = 'Disco';
-    sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website.';
+    sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to submit a bug report at the exodus website.';
     sConfirm = 'HTTP authentication';
     sConfirmationDialog = 'Accept authentication request from %s';
 
