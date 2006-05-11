@@ -95,7 +95,7 @@ uses
     Browser, ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,
-    XMLParser, XMLUtils;
+    XMLParser, XMLUtils, DebugLogger;
 
 const
     sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
@@ -146,7 +146,7 @@ var
 {---------------------------------------}
 function SetupSession(): boolean;
 var
-    regdll, invisible, show_help: boolean;
+    regdll, invisible, show_help, log_debug: boolean;
     jid: TJabberID;
     expanded, pass, resource, profile_name, config, xmpp_file, xmpp_uri : String;
     prof_index: integer;
@@ -199,6 +199,7 @@ begin
     invisible := false;
     show_help := false;
     regdll := false;
+    log_debug := false;
 
     ExStartup := TExStartParams.Create();
 
@@ -216,6 +217,7 @@ begin
     with TGetOpts.Create(nil) do begin
         try
             // -d           : debug
+            // -l           : log debug output to file
             // -m           : minimized
             // -v           : invisible
             // -?           : help
@@ -232,14 +234,19 @@ begin
             // -s [status]  : presence status
             // -w [show]    : presence show
             // -t           : show test menu
-            Options  := 'dmva?0xujprifceswot';
-            OptFlags := '------::::::::-:::-';
-                ReqFlags := '                   ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,embedding,status,show,xmpp,testmenu';
+
+            Options  := 'dlmva?0xujprifceswot';
+
+            OptFlags := '-------::::::::-:::-';
+
+            ReqFlags := '                    ';
+
+            LongOpts := 'debug,log,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,embedding,status,show,xmpp,testmenu';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
                     Ord('d'): ExStartup.debug := true;
+                    Ord('l'): log_debug := true;
                     Ord('x'): expanded := OptArg;
                     Ord('m'): ExStartup.minimized := true;
                     Ord('a'): ExStartup.testaa := true;
@@ -494,6 +501,10 @@ begin
     // Initialize the global responders/xpath events
     initResponders();
 
+    if (log_debug) then begin
+        StartDebugLogger(ChangeFileExt(config, '.log'));
+    end;
+
     // if we don't have sound registry settings, then add them
     // sigh.  If we had an installer, that would be the place to
     // do this.
@@ -687,6 +698,7 @@ begin
     // kill all of the auto-responders..
     OutputDebugString('TeardownSession');
     cleanupResponders();
+    StopDebugLogger();
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
