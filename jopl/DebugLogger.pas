@@ -99,7 +99,7 @@ begin
 
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
     line := '[' + time + ']  ' + line + ''#13#10;
-    WRITELN(_logfile, line);
+    WRITE(_logfile, line);
 end;
 
 {---------------------------------------}
