@@ -1511,9 +1511,17 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.Set_ContactLogger(const Value: IExodusLogger);
+var
+    x: TXMLTag;
 begin
     _contact_logger := Value;
-    MainSession.FireEvent('/session/logger', nil);
+    if (Value = nil) then
+        x := TXMLTag.Create('off')
+    else begin
+        x := TXMLTag.Create('on');
+        x.setAttribute('date_enabled', BoolToStr(Value.IsDateEnabled));
+    end;
+    MainSession.FireEvent('/session/logger', x);
 end;
 
 {---------------------------------------}
@@ -1524,9 +1532,17 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.Set_RoomLogger(const Value: IExodusLogger);
+var
+    x: TXMLTag;
 begin
     _room_logger := Value;
-    MainSession.FireEvent('/session/room-logger', nil);
+    if (Value = nil) then
+        x := TXMLTag.Create('off')
+    else begin
+        x := TXMLTag.Create('on');
+        x.setAttribute('date_enabled', BoolToStr(Value.IsDateEnabled));
+    end;
+    MainSession.FireEvent('/session/room-logger', x);
 end;
 
 initialization
