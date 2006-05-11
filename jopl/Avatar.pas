@@ -445,7 +445,7 @@ procedure TAvatar.fetchCallback(event: string; tag: TXMLTag);
 var
     tmps: string;
     tmpjid: TJabberID;
-    q, d: TXMLTag;
+    q, d, x: TXMLTag;
     old: TAvatar;
 begin
     _iq := nil;
@@ -495,8 +495,11 @@ begin
         Avatars.Log(tmps);
         {$endif}
 
+        x := TXMLTag.Create('avatar');
+        x.setAttribute('jid', tmpjid.jid);
+        MainSession.FireEvent('/session/avatars', x);
+
         tmpjid.Free();
-        MainSession.FireEvent('/session/avatars', nil);
     end;
 end;
 
