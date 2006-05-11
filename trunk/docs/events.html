@@ -9,9 +9,114 @@ body { font-family: Tahoma, Arial, Helvetica; }
 <h1>Event handling in Exodus</h1>
 <p>Subscribe to events using MainSession.RegisterCallback().  You'll
 need to register the correct kind of event handler for the event that
-you are catching.</p>
+you are catching.  There are several kinds of events available:</p>
+
+<ul>
+<li><b>Basic</b>: basic event that doesn't need extra information.
+Callback includes the event that was fired, and an XML element with
+more information.</li>
+<li><b>Packet</b>: protocol stanza received from the server.  These
+events can be filtered using a subset of 
+<a href="http://www.w3.org/TR/xpath">XPath</a>, known as "XPLite"
+(TODO: doc XPLite).
+Callback includes the event that was registered for, and an XML tag
+that includes the protocol.  The event parameter in the callback will
+usually be 'xml', but may be 'timeout', if, for example, there has
+been an IQ timeout.</li>
+<li><b>Roster</b>: roster-related events, fired by the business logic 
+after the model changes.  Callback includes a roster
+item, which can be nil for certain events.</li>
+<li><b>Presence</b>: presence-related events, fired by the business
+logic after the model changes.  Callback includes a presence object
+associated with the event.</li>
+<li><b>String</b>: miscellaneous events.  Callback includes a string.</li>
+</ul>
+
+<p>You can register for events by specifying a selector as a string.
+Example: '/session/connected'. The first section of the event selector
+(up to the optional second '/' character), must be from the following
+list:</p>
+
+<table border="1"  id="event_cat_table" style="border-collapse: collapse">
+   <tr>
+       	<th width="265" valign="top">Event category</th>
+	<th valign="top">Type</th>
+	<th valign="top">Meaning</th>
+   </tr>
+   <tr>
+      <td>/filter</td>
+      <td>Packet</td>
+      <td>Plugins that want to catch protocol before it hits the core
+	should register here.  If nothing catches an event in /filter,
+	/pre is checked.</td>
+   </tr>
+   <tr>
+      <td>/pre</td>
+      <td>Packet</td>
+      <td>Things in the core that want to prevent "normal" processing
+	should go here.  Examples include x:data in a message,
+	invites, OOBs, etc.  If nothing catches an event in /pre,
+	/packet is checked.</td>
+   </tr>
+   <tr>
+      <td>/packet</td>
+      <td>Packet</td>
+      <td>Core processing of protocol.  If nothing catches an event in
+	/packet, /post is checked.</td>
+   </tr>
+   <tr>
+      <td>/post</td>
+      <td>Packet</td>
+      <td>Stanzas that weren't handled by anything else.  Plugins that
+	want to defer to things in the core might register here.  If
+	nothing catches an event in /post, /unhandled is checked.</td>
+   </tr>
+   <tr>
+      <td>/unhandled</td>
+      <td>Packet</td>
+      <td>Stanzas that weren't handled anywhere else.  This is where
+	IQ/501's get returned, for example.</td>
+   </tr>
+   <tr>
+      <td>/windows</td>
+      <td>Packet</td>
+      <td>Deprecated.  Used to catch windows events.  WARNING: could
+	cause performance issues.</td>
+   </tr>
+   <tr>
+      <td>/session</td>
+      <td>Basic</td>
+      <td>Session business logic events.</td>
+   </tr>
+   <tr>
+      <td>/roster</td>
+      <td>Roster</td>
+      <td>Roster business logic events.</td>
+   </tr>
+   <tr>
+      <td>/presence</td>
+      <td>Presence</td>
+      <td>Presence business logic events.</td>
+   </tr>
+   <tr>
+      <td>/data</td>
+      <td>String</td>
+      <td>Debug events.</td>
+   </tr>
+</table>
+
+<p>From the second slash on, the event selector can be used to narrow
+down which events call the callback.  For packet events, this
+portion of the selector can be an XPLite.  For other event types, this
+is just a string, which is compared against the name of the actual
+event fired, to see if the event starts with the same characters as
+the selector.  As an example, if you register for '/session', you'll
+receive all session events.  If you register for
+'/session/error', you'll receive '/session/error/auth' and
+'/session/error/reg'.</p>
+
 <p>Fire events using MainSession.fireEvent().  Make sure to use the
-correct version for the event that you are firing.</p>
+correct version of fireEvent() for the event that you are firing.</p>
 
 <table border="1" width="100%" id="table1" style="border-collapse: collapse">
 	<tr>
@@ -49,64 +154,48 @@ correct version for the event that you are firing.</p>
 		Data was received</td>
 	</tr>
 	<tr>
-		<td valign="top" width="265">/log</td>
-		<td valign="top">
-		<ul>
-			<li>&lt;show/&gt;</li>
-			<li>&lt;clear/&gt;</li>
-			<li>&lt;purge/&gt;</li>
-			<li>&lt;logger dir='in|out' nick='' id='' type='' to='' from=''&gt;<br>
-&nbsp; &lt;body/&gt;&lt;thread/&gt;&lt;subject/&gt;<br>
-&nbsp; &lt;x xmlns='jabber:x:delay' stamp=''&gt;<br>
-			&lt;/logger&gt;</li>
-		</ul>
-		</td>
-		<td valign="top">
-		&nbsp;</td>
-		<td valign="top">
-		<ul>
-			<li>Show the log</li>
-			<li>Clear the log</li>
-			<li>Purge the log</li>
-			<li>Log this</li>
-		</ul>
-		</td>
-	</tr>
-	<tr>
 		<td valign="top" width="265">/presence/available</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">The user has changed presence, and is
+		still available.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/error</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">We've received a presence error.
+		Typically this is a 5xx from S2S being down.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/online</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">The user is newly online (we've
+		received the first presence stanza from them).</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/offline</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">The last online resource for a
+		user has gone offline.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/subscription</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">We've received a subscription
+		request.  No processing of the subscription has taken
+		place yet.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/unavailable</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
-		<td valign="top">&nbsp;</td>
+		<td valign="top">&lt;presence .../&gt;</td>
+		<td valign="top">TJabberPres</td>
+		<td valign="top">One resource for this user has gone
+		offline.  The user still has at least one more
+		resource online, however.</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/roster/end</td>
