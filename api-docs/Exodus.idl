@@ -2409,8 +2409,10 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogListener
-    \brief Return path for getting logged messages by date.
+    \brief <b>UNSUPPORTED</b> - Return path for getting logged messages by date.
 
+    <b>UNSUPPORTED INTERFACE</b>
+    
     This interface is used by IExodusLogger as a return path for the
     GetDays and GetMessages calls.
   **/
@@ -2420,7 +2422,7 @@ library Exodus
     /**
         \brief Process a chunk of archived messages.
 
-        Process a chunk of archived messages.
+        <b>UNSUPPORTED</b> - Process a chunk of archived messages.
 
         \param Count Number of messages in array.
         \param Messages Array of returned messages
@@ -2433,7 +2435,7 @@ library Exodus
     /**
         \brief End of returning messages for a specific date.
 
-        End of returning messages for a specific date.
+        <b>UNSUPPORTED</b> - End of returning messages for a specific date.
 
         \param Day Day of Messages
         \param Month Month of Messages
@@ -2447,7 +2449,7 @@ library Exodus
     /**
         \brief Error in retrieving messages.
 
-        Error in retrieving messages for specific date.
+        <b>UNSUPPORTED</b> - Error in retrieving messages for specific date.
 
         \param Day Day of Messages
         \param Month Month of Messages
@@ -2461,7 +2463,7 @@ library Exodus
     /**
         \brief A list of dates with archived messages available.
 
-        A list of dates with archived messages available.
+        <b>UNSUPPORTED</b> - A list of dates with archived messages available.
         This is a list of dates within a specific Month and Year.
 
         \param Count Number of dates in array.
@@ -3944,9 +3946,7 @@ library Exodus
   /**\interface IExodusPlugin
     \brief Basic inteface for plugins.
 
-    This is the basic interface for plugins. 
-    It implements such things as plugin startup and shutdown that
-    are common to all plugins.
+    IExodusPlugin is the core interface that is used by exodus, and MUST be implemented by all plugins.
   **/
 
    interface IExodusPlugin: IDispatch
@@ -3957,7 +3957,7 @@ library Exodus
         First method called when client starts the plugin.
         Any plugin startup and initialization code should be done here.
 
-        \param ExodusController A handle to the exodus controller starting the plugin.
+        \param ExodusController The COM Object which represents the Exodus application. Plugins will most likely want to cache this object in order to make other calls back to the exodus application itself.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -3968,8 +3968,7 @@ library Exodus
     /**
         \brief Last method called when the client shuts down the plugin.
 
-        Last method called when the client shuts down the plugin.
-        Any needed cleanup or deconstruction code should be done here.
+        This method is called whenever the plugin is being shutdown. Possible reasons for this may be that the application is shutting down (very common) or the user has selected to disable this particular plugin. You should make sure that all refcounts are decremented such that the exodus process can be completely freed if the application is exiting.
 
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -3981,11 +3980,11 @@ library Exodus
     /**
         \brief Plugin is receiving a packet to process.
 
-        Plugin is receiving a packet to process.
+        When a plugin registers to receive packets (by calling RegisterCallback), exodus will call this method for every packet which matches the provided xpath statement.
 
-        \param xpath XPath of packet.
-        \param Event Event that packet belongs to.
-        \param xml XML Packet XML.
+        \param xpath xpath string of the event the plugin registered for earlier.
+        \param Event Event will almost always be the string "xml" or possibly "timeout".
+        \param xml A BSTR containing the raw serialized XML. Plugins are responsible for re-parsing the serialized XML if a DOM object is required.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -3996,7 +3995,7 @@ library Exodus
     /**
         \brief A new chat window is starting.
 
-        A new chat window is starting.
+        When a new chat window is started by either the user, or an incoming message element, this method is called. If a plugin wishes to add functionality to this chat window, it should register with the IExodusChat object passed as the second parameter. Typically, plugins which are interested in chat windows will wish to instantiate some other COM object for each window. The main plugin should use this event to do this, and register the new object instance with the chat object passed in.
 
         \param jid JID of the remote user of the chat.
         \param Chat A reference to the IExodusChat interface for this chat.
@@ -4010,7 +4009,7 @@ library Exodus
     /**
         \brief A new room is starting.
 
-        A new room is starting.
+        Almost identical to the NewChat event, but fired when new conference rooms are started. The same IExodusChat controller is used to manipulate the room object.
 
         \param jid JID of the room.
         \param Room a reference to the IExodusChat interface for this room.
@@ -4024,12 +4023,14 @@ library Exodus
     /**
         \brief A new IM is about to go out.
 
-        A new IM (Broadcast message) is about to be sent.
+        This event is fired whenever an IM message (not a chat or groupchat) is being sent from the system. This includes messages like room invites, and roster items being sent. Plugins are allowed to change the value of the Body and Subject paramaters if necessary.
+        
+        Plugins should return WELL-FORMED XML as a return value if that plugin needs to append additional elements into the message stanza. For example, a plugin could return: <x xmlns="foo">Some CDATA</x> and have that x tag be inserted into the outgoing message.
 
-        \param jid JID of the receipient of the IM.
-        \param Body Body of the IM.
-        \param Subject Subject of the IM.
-        \param XTags for the IM.
+        \param jid The jabber ID of where the message is being sent to.
+        \param Body The current body of the message. Plugins may modify this parameter.
+        \param Subject The current subject of the message. Plugins may modify this parameter.
+        \param XTags The current string representing all xtags being appending to the outgoing message.
         \param AddXML XML to be added to the IM by the plugin.
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -4041,10 +4042,7 @@ library Exodus
     /**
         \brief A request to configure the plugin has been made.
 
-        A request to configure the plugin has been made.
-        If the plugin has any configurable options, it should
-        provide an GUI interface to set those options when this
-        method is called.
+				Exodus calls this method from the plugin options window where the user can configure a specific plugin. Plugins should display some kind of configuration dialog and allow the user to specific options. In order to persist options (preferences), plugins can use the appropriate IExodusController methods (such as getPrefAsString and setPrefAsString) to persist options directly to the exodus.xml file in the user's profile. 
 
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -4056,9 +4054,9 @@ library Exodus
     /**
         \brief A menu item was clicked.
 
-        A menu item was clicked
+        Plugins are allowed to add menu items into the main menu under the Tools | Plugins selection. When a menu item is clicked which belongs to any plugin, this method is fired for all plugins. Plugins MUST cache the ID's which are returned from the AddPluginMenu method or from the AddContactMenu method.
 
-        \param ID ID of the menu item selected.
+        \param ID The ID of the menu item being clicked. When this method is called, compare the ID passed to the cached id's of the menu items that your plugin added, and act accordingly.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -4068,12 +4066,12 @@ library Exodus
     /**
         \brief A menu item in the messages window was clicked.
 
-        A menu item in the messages window was clicked.
+        Plugins are allowed to add menu items to the context menu for Instant Message (IM) windows. This event is fired whenever one of these menu items is clicked which belongs to any plugin. Similar to the MenuClick event, plugins should cache the ID which they receive from addMessageMenu method.
 
-        \param ID ID of the menu item selected.
-        \param jid JID of the message for which the menu item was selected.
-        \param Body Body of the message for which the menu item was selected.
-        \param Subject Subject of the message for which the menu item was selected.
+        \param ID The idenitifer of the menu clicked.
+        \param jid The jabber id of the recipient of the mesage.
+        \param Body The current body of the message. The plugin may modify this parameter.
+        \param Subject The current subject of the message. The plugin may modify this parameter.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -4083,10 +4081,10 @@ library Exodus
     /**
         \brief A new IM is being created.
 
-        A new IM is being created.
+        Almost identical to the NewChat event, but fired when a new instant message window is opened. The same IExodusChat controller is used to get events and manipulate the IM window.
 
-        \param jid JID of the receipient of the IM
-        \param InstantMsg Handle to the IExodusChat associated with the new IM.
+        \param jid The jabber ID of the recipient.
+        \param The COM object which can be used to manipulate the message window.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -26850,9 +26848,9 @@ library Exodus
     ]
     HRESULT _stdcall Purge( void );
     /**
-        \brief Get a list of days for which there are stored message logs.
+        \brief <b>UNSUPPORTED</b> - Get a list of days for which there are stored message logs.
 
-        If the plugin supports message log retrieval by date, 
+        <b>UNSUPPORTED</b> - If the plugin supports message log retrieval by date, 
         this method queries the plugin for what days of a specific 
         month and year have message logs for a specific JID.
         The plugin calls back an IExodusListener to supply the dates.
@@ -26868,9 +26866,9 @@ library Exodus
     ]
     HRESULT _stdcall GetDays([in] BSTR jid, [in] long Month, [in] long Year, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
     /**
-        \brief Get the message log for a specific date.
+        \brief <b>UNSUPPORTED</b> - Get the message log for a specific date.
 
-        If the plugin supports message log retrieval by date, 
+        <b>UNSUPPORTED</b> - If the plugin supports message log retrieval by date, 
         this method queries the plugin for the message log for
         a specific date and  for a specific JID.
         The plugin calls back an IExodusListener to supply the message log.
@@ -26889,9 +26887,9 @@ library Exodus
     ]
     HRESULT _stdcall GetMessages([in] BSTR jid, [in] long ChunkSize, [in] long Day, [in] long Month, [in] long Year, [in] VARIANT_BOOL Cancel, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
     /**
-        \brief Is message log retrieval by date supported.
+        \brief <b>UNSUPPORTED</b> - Is message log retrieval by date supported.
 
-        Queres the plugin to determine if the plugin supports
+        <b>UNSUPPORTED</b> - Queres the plugin to determine if the plugin supports
         retrieving message logs by specific date.
 
         \param Value Ture if message log retrieval by date is supported, False if not.
