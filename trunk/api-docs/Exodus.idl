@@ -9,7 +9,7 @@ g`" *
  * 
 */
 [
-  uuid(85AA8EC3-C4AB-460B-828D-584AD1A44A2A), 
+  uuid(37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8), 
   version(1.0), 
   helpstring("Exodus COM Plugin interfaces")
     
@@ -42,7 +42,7 @@ library Exodus
   } ChatParts;
 
   [
-    uuid(F710F80C-C74A-4A69-8D2B-023504125B96), 
+    uuid(BDD5493D-440F-4376-802B-070B5A4ABFF3), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusRosterItem Object"), 
     dual, 
@@ -161,7 +161,7 @@ library Exodus
     [
     id(0x00000007)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    HRESULT _stdcall XML([out, retval] BSTR * XML );
     /**
         \brief This method removes this roster item from the roster.
 
@@ -196,7 +196,7 @@ library Exodus
     propget, 
     id(0x0000000A)
     ]
-    HRESULT _stdcall nickname([out, retval] BSTR * Value );
+    HRESULT _stdcall Nickname([out, retval] BSTR * Value );
     /**
         \brief This method sets the nickname of this roster item.
 
@@ -210,7 +210,7 @@ library Exodus
     propput, 
     id(0x0000000A)
     ]
-    HRESULT _stdcall nickname([in] BSTR Value );
+    HRESULT _stdcall Nickname([in] BSTR Value );
     /**
         \brief This method gets the nickname of this roster item.
 
@@ -319,7 +319,7 @@ library Exodus
     propget, 
     id(0x000000CC)
     ]
-    HRESULT _stdcall action([out, retval] BSTR * Value );
+    HRESULT _stdcall Action([out, retval] BSTR * Value );
     /**
         \brief Sets the double click action event name.
 
@@ -332,7 +332,7 @@ library Exodus
     propput, 
     id(0x000000CC)
     ]
-    HRESULT _stdcall action([in] BSTR Value );
+    HRESULT _stdcall Action([in] BSTR Value );
     /**
         \brief This method accesses the roster item's image index.
 
@@ -348,7 +348,7 @@ library Exodus
     propget, 
     id(0x000000CD)
     ]
-    HRESULT _stdcall imageIndex([out, retval] long * Value );
+    HRESULT _stdcall ImageIndex([out, retval] long * Value );
     /**
         \brief This method sets the roster item's image index.
 
@@ -363,7 +363,7 @@ library Exodus
     propput, 
     id(0x000000CD)
     ]
-    HRESULT _stdcall imageIndex([in] long Value );
+    HRESULT _stdcall ImageIndex([in] long Value );
     /**
         \brief Allows the caller to determine if the roster item's caption is editable.
 
@@ -401,7 +401,7 @@ library Exodus
     [
     id(0x000000CF)
     ]
-    HRESULT _stdcall fireChange( void );
+    HRESULT _stdcall FireChange( void );
     /**
         \brief  Indicates if this roster item is a contact.
 
@@ -440,7 +440,7 @@ library Exodus
     [
     id(0x000000D2)
     ]
-    HRESULT _stdcall addGroup([in] BSTR grp );
+    HRESULT _stdcall AddGroup([in] BSTR grp );
     /**
         \brief Removes this roster item from the named group.
 
@@ -453,7 +453,7 @@ library Exodus
     [
     id(0x000000D3)
     ]
-    HRESULT _stdcall removeGroup([in] BSTR grp );
+    HRESULT _stdcall RemoveGroup([in] BSTR grp );
     /**
         \brief Updates any pending changes the groups this roster item belongs to.
         
@@ -465,7 +465,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall setCleanGroups( void );
+    HRESULT _stdcall SetCleanGroups( void );
     /**
         \brief Accesses the imageprefix of this roster item.
 
@@ -552,7 +552,7 @@ library Exodus
   };
 
   [
-    uuid(D2FD3425-40CE-469F-A95C-1C80B7FF3119), 
+    uuid(FF4EFE7E-35AC-48B5-ACDB-6753C402F0DB), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPresence Object"), 
     dual, 
@@ -757,7 +757,7 @@ library Exodus
     [
     id(0x00000006)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    HRESULT _stdcall XML([out, retval] BSTR * XML );
     /**
         \brief Determines if this presence packet affects subscription state.
 
@@ -773,7 +773,7 @@ library Exodus
     [
     id(0x00000007)
     ]
-    HRESULT _stdcall isSubscription([out, retval] VARIANT_BOOL * Subscription );
+    HRESULT _stdcall IsSubscription([out, retval] VARIANT_BOOL * Subscription );
     /**
         \brief Returns the JID from the presence packet's to attribute.
 
@@ -788,7 +788,7 @@ library Exodus
     propget,
     id(0x00000008)
     ]
-    HRESULT _stdcall toJid([out, retval] BSTR * Value );
+    HRESULT _stdcall ToJid([out, retval] BSTR * Value );
     /**
         \brief Sets the JID this presence should be directed to.
 
@@ -802,7 +802,7 @@ library Exodus
     propput,
     id(0x00000008)
     ]
-    HRESULT _stdcall toJid([in] BSTR Value );
+    HRESULT _stdcall ToJid([in] BSTR Value );
     /**
         \brief Retrieves the JID that sent this presence packet.
 
@@ -817,7 +817,7 @@ library Exodus
     propget,
     id(0x00000009)
     ]
-    HRESULT _stdcall fromJid([out, retval] BSTR * Value );
+    HRESULT _stdcall FromJid([out, retval] BSTR * Value );
     /**
         \brief Sets the from attribute of this presence.
 
@@ -832,7 +832,7 @@ library Exodus
     propput,
     id(0x00000009)
     ]
-    HRESULT _stdcall fromJid([in] BSTR Value );
+    HRESULT _stdcall FromJid([in] BSTR Value );
   };
 
   [
@@ -847,7 +847,7 @@ library Exodus
   } ActiveItem;
 
   [
-    uuid(D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0), 
+    uuid(BFE1905C-3620-4C9D-B0C2-27EB456EF73B), 
     version(1.0), 
     dual, 
     oleautomation
@@ -1778,7 +1778,7 @@ library Exodus
     propget,
     id(0x0000000E)
     ]
-    /**
+    HRESULT _stdcall ImageIndex([out, retval] long * Value );
         \brief Get which image maintained by the parent menu appears next to the menu item.
         
         Receives which image maintained by the parent menu appears next to the menu item.
@@ -1793,7 +1793,7 @@ library Exodus
     propput,
     id(0x0000000E)
     ]
-    /**
+    HRESULT _stdcall ImageIndex([in] long Value );
         \brief Set which image maintained by the parent menu appears next to the menu item.
         
         Specifies which image maintained by the parent menu appears next to the menu item.
@@ -1953,7 +1953,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall ProcessIQ([in] BSTR Handle, [in] BSTR xml );
+    HRESULT _stdcall ProcessIQ([in] BSTR Handle, [in] BSTR XML );
     /**
         \brief IQ request has timed out.
 
@@ -2087,7 +2087,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall ProcessEvent([in] BSTR Event, [in] BSTR xml );
+    HRESULT _stdcall ProcessEvent([in] BSTR Event, [in] BSTR XML );
   };
 
   [
@@ -2258,7 +2258,7 @@ library Exodus
     propget,
     id(0x000000C9)
     ]
-    HRESULT _stdcall toJid([out, retval] BSTR * Value );
+    HRESULT _stdcall ToJid([out, retval] BSTR * Value );
     /**
         \brief The 'from' JID of the message to be logged.
 
@@ -2271,7 +2271,7 @@ library Exodus
     propget,
     id(0x000000CA)
     ]
-    HRESULT _stdcall fromJid([out, retval] BSTR * Value );
+    HRESULT _stdcall FromJid([out, retval] BSTR * Value );
     /**
         \brief Gets the JID of the message's sender.
 
@@ -2388,7 +2388,7 @@ library Exodus
     propget,
     id(0x000000D3)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * Value );
+    HRESULT _stdcall XML([out, retval] BSTR * Value );
   };
 
   [
@@ -2490,7 +2490,7 @@ library Exodus
   typedef BSTR * PWideString1;
 
   [
-    uuid(808426B8-8C56-49FD-AE15-5D91DE1DE5EF),
+    uuid(0BB5F3EB-D671-420F-93BA-61049B046912), 
     version(1.0),
     helpstring("Dispatch interface for ExodusController Object"),
     dual,
@@ -2599,7 +2599,7 @@ library Exodus
     [
     id(0x00000006)
     ]
-    HRESULT _stdcall Send([in] BSTR xml );
+    HRESULT _stdcall Send([in] BSTR XML );
     /**
         \brief Searches for the JID in the roster.
 
@@ -2613,7 +2613,7 @@ library Exodus
     [
     id(0x00000007)
     ]
-    HRESULT _stdcall isRosterJID([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall IsRosterJID([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
     /**
         \brief Checks the subscription state of the supplied JID.
 
@@ -2627,7 +2627,7 @@ library Exodus
     [
     id(0x00000008)
     ]
-    HRESULT _stdcall isSubscribed([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall IsSubscribed([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
     /**
         \brief Changes the presence of the session JID.
 
@@ -2656,7 +2656,7 @@ library Exodus
     [
     id(0x0000000C)
     ]
-    HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR nickname );
+    HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR Nickname );
     /**
         \brief Displays the profile for this JID.
 
@@ -2697,7 +2697,7 @@ library Exodus
     [
     id(0x0000000E)
     ]
-    HRESULT _stdcall addPluginMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    HRESULT _stdcall AddPluginMenu([in] BSTR Caption, [out, retval] BSTR * ID );
     /**
         \brief Removes a menu item from the Plugins-menu.
 
@@ -2710,7 +2710,7 @@ library Exodus
     [
     id(0x0000000F)
     ]
-    HRESULT _stdcall removePluginMenu([in] BSTR ID );
+    HRESULT _stdcall RemovePluginMenu([in] BSTR ID );
     /**
         \brief Monitors this JID to determine if Registration needs to be done.
 
@@ -2725,7 +2725,7 @@ library Exodus
     [
     id(0x00000011)
     ]
-    HRESULT _stdcall monitorImplicitRegJID([in] BSTR JabberID, [in] VARIANT_BOOL FullJID );
+    HRESULT _stdcall MonitorImplicitRegJID([in] BSTR JabberID, [in] VARIANT_BOOL FullJID );
     /**
         \brief Not yet implemented.
         
@@ -2734,7 +2734,7 @@ library Exodus
     [
     id(0x00000012)
     ]
-    HRESULT _stdcall getAgentList([in] BSTR Server );
+    HRESULT _stdcall GetAgentList([in] BSTR Server );
     /**
         \brief Searches for the service on the given server.
 
@@ -2749,7 +2749,7 @@ library Exodus
     [
     id(0x00000013)
     ]
-    HRESULT _stdcall getAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
+    HRESULT _stdcall GetAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
     /**
         \brief Generates an id unique to the application.
 
@@ -2762,7 +2762,7 @@ library Exodus
     [
     id(0x00000014)
     ]
-    HRESULT _stdcall generateID([out, retval] BSTR * ID );
+    HRESULT _stdcall GenerateID([out, retval] BSTR * ID );
     /**
         \brief Determines if the JID should be blocked.
 
@@ -2777,7 +2777,7 @@ library Exodus
     [
     id(0x00000015)
     ]
-    HRESULT _stdcall isBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
+    HRESULT _stdcall IsBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
     /**
         \brief Adds this JID to the block list.
 
@@ -2933,7 +2933,7 @@ library Exodus
     [
     id(0x00000022)
     ]
-    HRESULT _stdcall getPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
+    HRESULT _stdcall GetPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
     /**
         \brief Retrieves a preference value as an int.
 
@@ -2946,7 +2946,7 @@ library Exodus
     [
     id(0x00000023)
     ]
-    HRESULT _stdcall getPrefAsInt([in] BSTR Key, [out, retval] long * Value );
+    HRESULT _stdcall GetPrefAsInt([in] BSTR Key, [out, retval] long * Value );
     /**
         \brief Retrieves a preference value as a boolean.
 
@@ -2959,7 +2959,7 @@ library Exodus
     [
     id(0x00000024)
     ]
-    HRESULT _stdcall getPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall GetPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
     /**
         \brief Sets the given preference using a string.
 
@@ -2972,7 +2972,7 @@ library Exodus
     [
     id(0x00000025)
     ]
-    HRESULT _stdcall setPrefAsString([in] BSTR Key, [in] BSTR Value );
+    HRESULT _stdcall SetPrefAsString([in] BSTR Key, [in] BSTR Value );
     /**
         \brief Sets the given preference using a integer.
 
@@ -2985,7 +2985,7 @@ library Exodus
     [
     id(0x00000026)
     ]
-    HRESULT _stdcall setPrefAsInt([in] BSTR Key, [in] long Value );
+    HRESULT _stdcall SetPrefAsInt([in] BSTR Key, [in] long Value );
     /**
         \brief Sets the given preference using a boolean
 
@@ -2998,7 +2998,7 @@ library Exodus
     [
     id(0x00000027)
     ]
-    HRESULT _stdcall setPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
+    HRESULT _stdcall SetPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
     /**
         \brief Finds an existing chat session for the given JID/resource.
 
@@ -3013,7 +3013,7 @@ library Exodus
     [
     id(0x00000028)
     ]
-    HRESULT _stdcall findChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
+    HRESULT _stdcall FindChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
     /**
         \brief Not yet implemented - do not call.
 
@@ -3022,7 +3022,7 @@ library Exodus
     [
     id(0x00000029)
     ]
-    HRESULT _stdcall startSearch([in] BSTR SearchJID );
+    HRESULT _stdcall StartSearch([in] BSTR SearchJID );
     /**
         \brief Creates or enters or shows a room window.
 
@@ -3046,7 +3046,7 @@ library Exodus
     [
     id(0x0000002A)
     ]
-    HRESULT _stdcall startRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password, [in] VARIANT_BOOL SendPresence );
+    HRESULT _stdcall StartRoom([in] BSTR RoomJID, [in] BSTR Nickname, [in] BSTR Password, [in] VARIANT_BOOL SendPresence );
     /**
         \brief Creates an instant message window.
 
@@ -3061,7 +3061,7 @@ library Exodus
     [
     id(0x0000002B)
     ]
-    HRESULT _stdcall startInstantMsg([in] BSTR JabberID );
+    HRESULT _stdcall StartInstantMsg([in] BSTR JabberID );
     /**
         \brief Opens the Jabber Browser window.
 
@@ -3074,7 +3074,7 @@ library Exodus
     [
     id(0x0000002C)
     ]
-    HRESULT _stdcall startBrowser([in] BSTR BrowseJID );
+    HRESULT _stdcall StartBrowser([in] BSTR BrowseJID );
     /**
         \brief Creates the join room window.
 
@@ -3089,7 +3089,7 @@ library Exodus
     [
     id(0x0000002D)
     ]
-    HRESULT _stdcall showJoinRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
+    HRESULT _stdcall ShowJoinRoom([in] BSTR RoomJID, [in] BSTR Nickname, [in] BSTR Password );
     /**
         \brief Shows the preferences window.
 
@@ -3099,7 +3099,7 @@ library Exodus
     [
     id(0x0000002E)
     ]
-    HRESULT _stdcall showPrefs( void );
+    HRESULT _stdcall ShowPrefs( void );
     /**
         \brief Shows the the custom presence dialog.
 
@@ -3109,7 +3109,7 @@ library Exodus
     [
     id(0x0000002F)
     ]
-    HRESULT _stdcall showCustomPresDialog( void );
+    HRESULT _stdcall ShowCustomPresDialog( void );
     /**
         \brief Shows the debug XML window.
 
@@ -3119,7 +3119,7 @@ library Exodus
     [
     id(0x00000030)
     ]
-    HRESULT _stdcall showDebug( void );
+    HRESULT _stdcall ShowDebug( void );
     /**
         \brief Shows the login window.
 
@@ -3132,7 +3132,7 @@ library Exodus
     [
     id(0x00000031)
     ]
-    HRESULT _stdcall showLogin( void );
+    HRESULT _stdcall ShowLogin( void );
     /**
         \brief Shows a toast pop-up window.
 
@@ -3148,7 +3148,7 @@ library Exodus
     [
     id(0x00000032)
     ]
-    HRESULT _stdcall showToast([in] BSTR Message, [in] long wndHandle, [in] long imageIndex );
+    HRESULT _stdcall ShowToast([in] BSTR Message, [in] long wndHandle, [in] long ImageIndex );
     /**
         \brief Changes the presence of the session JID.
 
@@ -3162,7 +3162,7 @@ library Exodus
     [
     id(0x00000033)
     ]
-    HRESULT _stdcall setPresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    HRESULT _stdcall SetPresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
     /**
         \brief Returns the Roster interface.
 
@@ -3203,7 +3203,7 @@ library Exodus
     [
     id(0x0000000A)
     ]
-    HRESULT _stdcall registerDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
+    HRESULT _stdcall RegisterDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
     /**
         \brief Removes a plugin's disco item from Exodus.
 
@@ -3216,7 +3216,7 @@ library Exodus
     [
     id(0x00000035)
     ]
-    HRESULT _stdcall removeDiscoItem([in] BSTR ID );
+    HRESULT _stdcall RemoveDiscoItem([in] BSTR ID );
     /**
         \brief Allows plugins to append static XML to each presence packet sent by Exodus.
 
@@ -3233,7 +3233,7 @@ library Exodus
     [
     id(0x00000039)
     ]
-    HRESULT _stdcall registerPresenceXML([in] BSTR xml, [out, retval] BSTR * ID );
+    HRESULT _stdcall RegisterPresenceXML([in] BSTR XML, [out, retval] BSTR * ID );
     /**
         \brief Allows plugins to remove static XML being appened to presence packets.
 
@@ -3246,7 +3246,7 @@ library Exodus
     [
     id(0x0000003A)
     ]
-    HRESULT _stdcall removePresenceXML([in] BSTR ID );
+    HRESULT _stdcall RemovePresenceXML([in] BSTR ID );
     /**
         \brief Causes the given Windows message to generate Exodus events.
 
@@ -3260,7 +3260,7 @@ library Exodus
     [
     id(0x0000003B)
     ]
-    HRESULT _stdcall trackWindowsMsg([in] long Message );
+    HRESULT _stdcall TrackWindowsMsg([in] long Message );
     /**
         \brief Adds a context menu to the roster.
 
@@ -3275,7 +3275,7 @@ library Exodus
     [
     id(0x0000003C)
     ]
-    HRESULT _stdcall addContactMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    HRESULT _stdcall AddContactMenu([in] BSTR Caption, [out, retval] BSTR * ID );
     /**
         \brief Removes a context menu from the roster.
 
@@ -3288,7 +3288,7 @@ library Exodus
     [
     id(0x0000003D)
     ]
-    HRESULT _stdcall removeContactMenu([in] BSTR ID );
+    HRESULT _stdcall RemoveContactMenu([in] BSTR ID );
     /**
         \brief Returns the JID of the currently selected roster item.
 
@@ -3301,7 +3301,7 @@ library Exodus
     [
     id(0x0000003E)
     ]
-    HRESULT _stdcall getActiveContact([out, retval] BSTR * jid );
+    HRESULT _stdcall GetActiveContact([out, retval] BSTR * jid );
     /**
         \brief Returns the name of the currently selected roster group.
 
@@ -3314,7 +3314,7 @@ library Exodus
     [
     id(0x0000003F)
     ]
-    HRESULT _stdcall getActiveGroup([out, retval] BSTR * Name );
+    HRESULT _stdcall GetActiveGroup([out, retval] BSTR * Name );
     /**
         \brief Returns a list of currently selected contacts.
 
@@ -3328,7 +3328,7 @@ library Exodus
     [
     id(0x00000041)
     ]
-    HRESULT _stdcall getActiveContacts([in] VARIANT_BOOL Online, [out, retval] VARIANT * JIDS );
+    HRESULT _stdcall GetActiveContacts([in] VARIANT_BOOL Online, [out, retval] VARIANT * JIDS );
     /**
         \brief Gets the IP address of the client.
 
@@ -3357,7 +3357,7 @@ library Exodus
     [
     id(0x00000042)
     ]
-    HRESULT _stdcall setPluginAuth([in] IExodusAuth * AuthAgent /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall SetPluginAuth([in] IExodusAuth * AuthAgent /*Warning: unable to validate structure name: */ );
     /**
         \brief Use to inform Exodus of the results of the plugin's authentication results.
 
@@ -3369,7 +3369,7 @@ library Exodus
     [
     id(0x00000043)
     ]
-    HRESULT _stdcall setAuthenticated([in] VARIANT_BOOL Authed, [in] BSTR xml );
+    HRESULT _stdcall SetAuthenticated([in] VARIANT_BOOL Authed, [in] BSTR XML );
     /**
         \brief This method informs Exodus of the authenticated session JID.
 
@@ -3385,7 +3385,7 @@ library Exodus
     [
     id(0x00000044)
     ]
-    HRESULT _stdcall setAuthJID([in] BSTR Username, [in] BSTR Host, [in] BSTR resource );
+    HRESULT _stdcall SetAuthJID([in] BSTR Username, [in] BSTR Host, [in] BSTR resource );
     /**
         \brief Adds a menu item to "normal" message window context menus.
 
@@ -3400,7 +3400,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall addMessageMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    HRESULT _stdcall AddMessageMenu([in] BSTR Caption, [out, retval] BSTR * ID );
     /**
         \brief Adds a menu item to the context menu for roster groups.
 
@@ -3415,7 +3415,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall addGroupMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    HRESULT _stdcall AddGroupMenu([in] BSTR Caption, [out, retval] BSTR * ID );
     /**
         \brief Removes a context menu item from roster groups.
 
@@ -3428,7 +3428,7 @@ library Exodus
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall removeGroupMenu([in] BSTR ID );
+    HRESULT _stdcall RemoveGroupMenu([in] BSTR ID );
     /**
         \brief Shows the service registration wizard.
 
@@ -3441,7 +3441,7 @@ library Exodus
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall registerWithService([in] BSTR JabberID );
+    HRESULT _stdcall RegisterWithService([in] BSTR JabberID );
     /**
         \brief Shows the add contact dialog.
 
@@ -3455,7 +3455,7 @@ library Exodus
     id(0x000000CD),
     helpstring("Show the \"add contact\" form")
     ]
-    HRESULT _stdcall showAddContact([in] BSTR jid );
+    HRESULT _stdcall ShowAddContact([in] BSTR jid );
     /**
         \brief Registers an Caps extension with Exodus.
 
@@ -3472,7 +3472,7 @@ library Exodus
     id(0x000000CE),
     helpstring("Register a JEP-115 extension.  Call multiple times with the same ext to set multiple features.")
     ]
-    HRESULT _stdcall registerCapExtension([in] BSTR ext, [in] BSTR feature );
+    HRESULT _stdcall RegisterCapExtension([in] BSTR ext, [in] BSTR feature );
     /**
         \brief Unregisters a Caps extension with Exodus.
 
@@ -3486,7 +3486,7 @@ library Exodus
     id(0x000000CF),
     helpstring("Unregister all of the features for a given ext.")
     ]
-    HRESULT _stdcall unregisterCapExtension([in] BSTR ext );
+    HRESULT _stdcall UnregisterCapExtension([in] BSTR ext );
     /**
         \brief Gets the roster images COM interface.
 
@@ -3544,7 +3544,7 @@ library Exodus
     [
     id(0x000000D3)
     ]
-    HRESULT _stdcall TrackIQ([in] BSTR xml, [in] IExodusIQListener * Listener /*Warning: unable to validate structure name: */, [in] long Timeout, [out, retval] BSTR * Ret );
+    HRESULT _stdcall TrackIQ([in] BSTR XML, [in] IExodusIQListener * Listener /*Warning: unable to validate structure name: */, [in] long Timeout, [out, retval] BSTR * Ret );
     /**
         \brief Fires an event.
 
@@ -3571,7 +3571,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall FireEvent([in] BSTR Event, [in] BSTR xml, [in] BSTR Arg );
+    HRESULT _stdcall FireEvent([in] BSTR Event, [in] BSTR XML, [in] BSTR Arg );
     /**
         \brief Allows plugins to register a listener on a signal chain.
 
@@ -3668,7 +3668,7 @@ library Exodus
   };
 
   [
-    uuid(DA56D31B-1D1D-4F33-A04E-E28611E3011E),
+    uuid(D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3), 
     version(1.0),
     helpstring("Dispatch interface for ExodusChat Object"),
     dual,
@@ -3746,7 +3746,7 @@ library Exodus
     [
     id(0x00000005)
     ]
-    HRESULT _stdcall UnRegister([in] long ID, [out, retval] VARIANT_BOOL * Success );
+    HRESULT _stdcall UnRegisterPlugin([in] long ID, [out, retval] VARIANT_BOOL * Success );
     /**
         \brief Get an integer handle to the various elements in a chat.
 
@@ -3765,7 +3765,7 @@ library Exodus
     [
     id(0x00000006)
     ]
-    HRESULT _stdcall getMagicInt([in] ChatParts Part /*Warning: unable to validate structure name: */, [out, retval] long * Value );
+    HRESULT _stdcall GetMagicInt([in] ChatParts Part /*Warning: unable to validate structure name: */, [out, retval] long * Value );
     /**
         \brief Remove a menu item from the context menu.
 
@@ -3828,7 +3828,7 @@ library Exodus
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * xml );
+    HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * XML );
     /**
         \brief Get the current thread ID.
 
@@ -3869,7 +3869,7 @@ library Exodus
     [
     id(0x000000CF)
     ]
-    HRESULT _stdcall AddRoomUser([in] BSTR jid, [in] BSTR nickname );
+    HRESULT _stdcall AddRoomUser([in] BSTR jid, [in] BSTR Nickname );
     /**
         \brief Remove a user from a room.
 
@@ -3991,7 +3991,7 @@ library Exodus
     id(0x00000003),
     helpstring("Plugin is receiving a packet")
     ]
-    HRESULT _stdcall Process([in] BSTR xpath, [in] BSTR Event, [in] BSTR xml );
+    HRESULT _stdcall Process([in] BSTR xpath, [in] BSTR Event, [in] BSTR XML );
     /**
         \brief A new chat window is starting.
 
@@ -4094,7 +4094,7 @@ library Exodus
   };
 
   [
-    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88),
+    uuid(E28E487A-7258-4B32-AD1C-F23A808F0460), 
     version(1.0),
     helpstring("Dispatch interface for ExodusChatPlugin Object"),
     dual,
@@ -4121,7 +4121,7 @@ library Exodus
     [
     id(0x00000001)
     ]
-    HRESULT _stdcall onBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
+    HRESULT _stdcall OnBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
     /**
         \brief A message is done composing.
 
@@ -4134,7 +4134,7 @@ library Exodus
     [
     id(0x00000002)
     ]
-    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    HRESULT _stdcall OnAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
     /**
         \brief A key was pressed
 
@@ -4146,7 +4146,7 @@ library Exodus
     [
     id(0x00000003)
     ]
-    HRESULT _stdcall onKeyPress([in] BSTR Key );
+    HRESULT _stdcall OnKeyPress([in] BSTR Key );
     /**
         \brief A context menu was selected
 
@@ -4158,7 +4158,7 @@ library Exodus
     [
     id(0x00000004)
     ]
-    HRESULT _stdcall onContextMenu([in] BSTR ID );
+    HRESULT _stdcall OnContextMenu([in] BSTR ID );
     /**
         \brief A message was received.
 
@@ -4171,7 +4171,7 @@ library Exodus
     [
     id(0x00000005)
     ]
-    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
+    HRESULT _stdcall OnRecvMessage([in] BSTR Body, [in] BSTR XML );
     /**
         \brief The chat is closing.
 
@@ -4182,7 +4182,7 @@ library Exodus
     [
     id(0x00000006)
     ]
-    HRESULT _stdcall onClose( void );
+    HRESULT _stdcall OnClose( void );
     /**
         \brief A menu item was selected
 
@@ -4194,7 +4194,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall onMenu([in] BSTR ID );
+    HRESULT _stdcall OnMenu([in] BSTR ID );
     /**
         \brief A new chat window is being created.
 
@@ -4206,7 +4206,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall onNewWindow([in] long HWND );
+    HRESULT _stdcall OnNewWindow([in] long HWND );
   };
 
   [
@@ -4253,7 +4253,7 @@ library Exodus
     [
     id(0x00000003)
     ]
-    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR Nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
     /**
         \brief Finds the JID in the roster.
         
@@ -4304,7 +4304,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall removeItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall RemoveItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
     /**
         \brief Adds the specified group to the roster.
 
@@ -4317,7 +4317,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall addGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
     /**
         \brief Finds a roster group by name.
 
@@ -4331,7 +4331,7 @@ library Exodus
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall getGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
     /**
         \brief Removes a group from the roster.
 
@@ -4343,7 +4343,7 @@ library Exodus
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall removeGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
     /**
         \brief Returns the number of groups in the roster.
         
@@ -4433,7 +4433,7 @@ library Exodus
     [
     id(0x000000D2)
     ]
-    HRESULT _stdcall addContextMenuItem([in] BSTR menu_id, [in] BSTR Caption, [in] BSTR action, [out, retval] BSTR * Ret );
+    HRESULT _stdcall AddContextMenuItem([in] BSTR menu_id, [in] BSTR Caption, [in] BSTR Action, [out, retval] BSTR * Ret );
     /**
         \brief Removes a context menu item from a menu.
 
@@ -4447,7 +4447,7 @@ library Exodus
     [
     id(0x000000D3)
     ]
-    HRESULT _stdcall removeContextMenuItem([in] BSTR menu_id, [in] BSTR item_id );
+    HRESULT _stdcall RemoveContextMenuItem([in] BSTR menu_id, [in] BSTR item_id );
     /**
         \brief Adds a new plugin-roster item to the roster.
 
@@ -4461,7 +4461,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall addItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Ret /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -4564,7 +4564,7 @@ library Exodus
     propget,
     id(0x000000C9)
     ]
-    HRESULT _stdcall action([out, retval] BSTR * Value );
+    HRESULT _stdcall Action([out, retval] BSTR * Value );
     /**
         \brief Sets the double click action event name.
 
@@ -4577,7 +4577,7 @@ library Exodus
     propput,
     id(0x000000C9)
     ]
-    HRESULT _stdcall action([in] BSTR Value );
+    HRESULT _stdcall Action([in] BSTR Value );
     /**
         \brief Accesses property for displaying group when empty.
 
@@ -4753,7 +4753,7 @@ library Exodus
     [
     id(0x000000D0)
     ]
-    HRESULT _stdcall getText([out, retval] BSTR * Text );
+    HRESULT _stdcall GetText([out, retval] BSTR * Text );
     /**
         \brief Adds a JID to this group.
 
@@ -4766,7 +4766,7 @@ library Exodus
     [
     id(0x000000D1)
     ]
-    HRESULT _stdcall addJid([in] BSTR jid );
+    HRESULT _stdcall AddJid([in] BSTR jid );
     /**
         \brief Removes a JID from this group.
 
@@ -4779,7 +4779,7 @@ library Exodus
     [
     id(0x000000D2)
     ]
-    HRESULT _stdcall removeJid([in] BSTR jid );
+    HRESULT _stdcall RemoveJid([in] BSTR jid );
     /**
         \brief Determines if the JID is in this group.
 
@@ -4792,7 +4792,7 @@ library Exodus
     [
     id(0x000000D3)
     ]
-    HRESULT _stdcall inGroup([in] BSTR jid, [out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall InGroup([in] BSTR jid, [out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Determines if the group has no items/sub-groups.
 
@@ -4804,7 +4804,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall isEmpty([out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall IsEmpty([out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Gets a group by it's fullname.
 
@@ -4818,7 +4818,7 @@ library Exodus
     [
     id(0x000000D5)
     ]
-    HRESULT _stdcall getGroup([in] BSTR group_name, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetGroup([in] BSTR group_name, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
     /**
         \brief Adds a sub-group to this group.
 
@@ -4832,7 +4832,7 @@ library Exodus
     [
     id(0x000000D6)
     ]
-    HRESULT _stdcall addGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
     /**
         \brief Removes a sub-group.
 
@@ -4844,7 +4844,7 @@ library Exodus
     [
     id(0x000000D7)
     ]
-    HRESULT _stdcall removeGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
     /**
         \brief Returns roster items in the group and sub-groups.
 
@@ -4858,7 +4858,7 @@ library Exodus
     [
     id(0x000000D8)
     ]
-    HRESULT _stdcall getRosterItems([in] VARIANT_BOOL Online, [out, retval] VARIANT * Items );
+    HRESULT _stdcall GetRosterItems([in] VARIANT_BOOL Online, [out, retval] VARIANT * Items );
     /**
         \brief Determines the nested level of this group.
 
@@ -4958,7 +4958,7 @@ library Exodus
     [
     id(0x000000DF)
     ]
-    HRESULT _stdcall fireChange( void );
+    HRESULT _stdcall FireChange( void );
   };
 
   [
@@ -4989,7 +4989,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall getByJid([in] BSTR jid, [in] BSTR node, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetByJid([in] BSTR jid, [in] BSTR node, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
     /**
         \brief Fetch disco info from server or cache as needed.
 
@@ -5021,7 +5021,7 @@ library Exodus
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall discoInfo([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall DiscoInfo([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
     /**
         \brief Dispatch a disco items query for JID.
 
@@ -5036,7 +5036,7 @@ library Exodus
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall discoItems([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall DiscoItems([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -5067,7 +5067,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall hasFeature([in] BSTR feature, [out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall HasFeature([in] BSTR feature, [out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Does this entity have a specific Identity.
 
@@ -5081,7 +5081,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall hasIdentity([in] BSTR Category, [in] BSTR DiscoType, [out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall HasIdentity([in] BSTR Category, [in] BSTR DiscoType, [out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Are there disco items associated with this entity.
 
@@ -5093,7 +5093,7 @@ library Exodus
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall hasItems([out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall HasItems([out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Is there disco info associated with this entity.
 
@@ -5105,7 +5105,7 @@ library Exodus
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall hasInfo([out, retval] VARIANT_BOOL * Ret );
+    HRESULT _stdcall HasInfo([out, retval] VARIANT_BOOL * Ret );
     /**
         \brief Get the JID associated with this entity.
 
@@ -24936,7 +24936,7 @@ library Exodus
   };
 
   [
-    uuid(BB690222-3D16-46F3-8579-8888FD61DDF4), 
+    uuid(7949D67E-E287-4643-90DA-E6FE7EDEFA97), 
     version(1.0), 
     dual, 
     oleautomation
@@ -24974,7 +24974,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall getButton([in] long Index, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetButton([in] long Index, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
     /**
         \brief Add a new button to the Toolbar.
 
@@ -24987,7 +24987,7 @@ library Exodus
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall addButton([in] BSTR ImageID, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddButton([in] BSTR ImageID, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -25767,7 +25767,7 @@ library Exodus
     propput, 
     id(0x00000015)
     ]
-    HRESULT _stdcall ClientHeight([in] long Value );a
+    HRESULT _stdcall ClientHeight([in] long Value );
     /**
         \brief Gets the width in pixels of the form's client area.
 
@@ -26786,7 +26786,7 @@ library Exodus
   };
 
   [
-    uuid(80C6930B-37BD-4414-9E1F-466366EC1840), 
+    uuid(35542007-5701-4190-AB28-D25EB186CC19), 
     version(1.0), 
     dual, 
     oleautomation
@@ -26899,7 +26899,7 @@ library Exodus
     propget, 
     id(0x000000CF)
     ]
-    HRESULT _stdcall isDateEnabled([out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall IsDateEnabled([out, retval] VARIANT_BOOL * Value );
   };
 
 };
