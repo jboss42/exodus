@@ -1418,7 +1418,7 @@ library Exodus
   };
 
   [
-    uuid(DCDFAD67-6CB2-4202-B29C-50D633C02596), 
+    uuid(98B21105-E964-4A58-AD6E-2B61B9F2ECA8), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPlugin Object"), 
     dual, 
