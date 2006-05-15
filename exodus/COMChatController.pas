@@ -33,7 +33,7 @@ type
     function Get_jid: WideString; safecall;
     function AddContextMenu(const Caption: WideString): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
-    function UnRegister(ID: Integer): WordBool; safecall;
+    function UnRegisterPlugin(ID: Integer): WordBool; safecall;
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer;
       safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
@@ -333,7 +333,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.UnRegister(ID: Integer): WordBool;
+function TExodusChat.UnRegisterPlugin(ID: Integer): WordBool;
 var
     cp: TChatPlugin;
 begin
