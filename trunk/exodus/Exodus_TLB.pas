@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/15/2006 9:28:33 AM from Type Library described below.
+// File generated on 5/15/2006 10:16:17 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -49,7 +49,7 @@ const
   IID_IExodusController: TGUID = '{0BB5F3EB-D671-420F-93BA-61049B046912}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
-  IID_IExodusPlugin: TGUID = '{DCDFAD67-6CB2-4202-B29C-50D633C02596}';
+  IID_IExodusPlugin: TGUID = '{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}';
   IID_IExodusChatPlugin: TGUID = '{E28E487A-7258-4B32-AD1C-F23A808F0460}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
@@ -524,10 +524,10 @@ type
 // *********************************************************************//
 // Interface: IExodusPlugin
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {DCDFAD67-6CB2-4202-B29C-50D633C02596}
+// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
-    ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
+    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); safecall;
@@ -545,10 +545,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusPluginDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {DCDFAD67-6CB2-4202-B29C-50D633C02596}
+// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
-    ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
+    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
     procedure Startup(const ExodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); dispid 3;
