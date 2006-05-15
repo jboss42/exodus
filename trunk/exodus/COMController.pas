@@ -68,54 +68,53 @@ type
     procedure Connect; safecall;
     procedure Disconnect; safecall;
     procedure UnBlock(const JabberID: WideString); safecall;
-    function getPrefAsBool(const Key: WideString): WordBool; safecall;
-    function getPrefAsInt(const Key: WideString): Integer; safecall;
-    function getPrefAsString(const Key: WideString): WideString; safecall;
-    procedure setPrefAsBool(const Key: WideString; Value: WordBool); safecall;
-    procedure setPrefAsInt(const Key: WideString; Value: Integer); safecall;
-    procedure setPrefAsString(const Key_, Value: WideString); safecall;
-    function findChat(const JabberID, Resource: WideString): Integer; safecall;
-    procedure startInstantMsg(const JabberID: WideString); safecall;
-    procedure startRoom(const RoomJID, nickname, Password: WideString;
+    function GetPrefAsBool(const Key: WideString): WordBool; safecall;
+    function GetPrefAsInt(const Key: WideString): Integer; safecall;
+    function GetPrefAsString(const Key: WideString): WideString; safecall;
+    procedure SetPrefAsBool(const Key: WideString; Value: WordBool); safecall;
+    procedure SetPrefAsInt(const Key: WideString; Value: Integer); safecall;
+    procedure SetPrefAsString(const Key, Value: WideString); safecall;
+    function FindChat(const JabberID, resource: WideString): Integer; safecall;
+    procedure StartInstantMsg(const JabberID: WideString); safecall;
+    procedure StartRoom(const RoomJID, nickname, Password: WideString;
       SendPresence: WordBool); safecall;
-    procedure startSearch(const SearchJID: WideString); safecall;
-    procedure showJoinRoom(const RoomJID, Nickname, Password: WideString);
+    procedure StartSearch(const SearchJID: WideString); safecall;
+    procedure ShowJoinRoom(const RoomJID, nickname, Password: WideString); safecall;
+    procedure StartBrowser(const BrowseJID: WideString); safecall;
+    procedure ShowCustomPresDialog; safecall;
+    procedure ShowDebug; safecall;
+    procedure ShowLogin; safecall;
+    procedure ShowPrefs; safecall;
+    procedure ShowToast(const Message: WideString; wndHandle, imageIndex: Integer);
       safecall;
-    procedure startBrowser(const BrowseJID: WideString); safecall;
-    procedure showCustomPresDialog; safecall;
-    procedure showDebug; safecall;
-    procedure showLogin; safecall;
-    procedure showPrefs; safecall;
-    procedure showToast(const Message: WideString; wndHandle,
-      imageIndex: Integer); safecall;
-    procedure setPresence(const Show, Status: WideString; Priority: Integer);
+    procedure SetPresence(const Show, Status: WideString; Priority: Integer);
       safecall;
     function Get_Roster: IExodusRoster; safecall;
     function Get_PPDB: IExodusPPDB; safecall;
-    function registerDiscoItem(const JabberID, Name: WideString): WideString;
+    function RegisterDiscoItem(const JabberID, Name: WideString): WideString;
       safecall;
-    procedure removeDiscoItem(const ID: WideString); safecall;
-    function registerPresenceXML(const XML: WideString): WideString; safecall;
-    procedure removePresenceXML(const ID: WideString); safecall;
-    procedure trackWindowsMsg(Message: Integer); safecall;
-    function addContactMenu(const Caption: WideString): WideString; safecall;
-    procedure removeContactMenu(const ID: WideString); safecall;
-    function getActiveContact: WideString; safecall;
-    function getActiveGroup: WideString; safecall;
-    function getActiveContacts(Online: WordBool): OleVariant; safecall;
+    procedure RemoveDiscoItem(const ID: WideString); safecall;
+    function RegisterPresenceXML(const xml: WideString): WideString; safecall;
+    procedure RemovePresenceXML(const ID: WideString); safecall;
+    procedure TrackWindowsMsg(Message: Integer); safecall;
+    function AddContactMenu(const Caption: WideString): WideString; safecall;
+    procedure RemoveContactMenu(const ID: WideString); safecall;
+    function GetActiveContact: WideString; safecall;
+    function GetActiveGroup: WideString; safecall;
+    function GetActiveContacts(Online: WordBool): OleVariant; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
     procedure setAuthenticated(Authed: WordBool; const XML: WideString);
       safecall;
     procedure setAuthJID(const Username, Host, Resource: WideString); safecall;
-    function addMessageMenu(const Caption: WideString): WideString; safecall;
-    function addGroupMenu(const Caption: WideString): WideString; safecall;
-    procedure removeGroupMenu(const ID: WideString); safecall;
-    procedure registerWithService(const JabberID: WideString); safecall;
+    function AddMessageMenu(const Caption: WideString): WideString; safecall;
+    function AddGroupMenu(const Caption: WideString): WideString; safecall;
+    procedure RemoveGroupMenu(const ID: WideString); safecall;
+    procedure RegisterWithService(const JabberID: WideString); safecall;
     procedure lastRelease(var Shutdown: boolean);
-    procedure showAddContact(const jid: WideString); safecall;
-    procedure registerCapExtension(const ext, feature: WideString); safecall;
-    procedure unregisterCapExtension(const ext: WideString); safecall;
+    procedure ShowAddContact(const jid: WideString); safecall;
+    procedure RegisterCapExtension(const ext, feature: WideString); safecall;
+    procedure UnregisterCapExtension(const ext: WideString); safecall;
     function Get_RosterImages: IExodusRosterImages; safecall;
     function Get_EntityCache: IExodusEntityCache; safecall;
     procedure Debug(const Value: WideString); safecall;
@@ -1030,47 +1029,45 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.getPrefAsBool(const Key: WideString): WordBool;
+function TExodusController.GetPrefAsBool(const Key: WideString): WordBool;
 begin
     Result := MainSession.Prefs.getBool(key);
 end;
 
 {---------------------------------------}
-function TExodusController.getPrefAsInt(const Key: WideString): Integer;
+function TExodusController.GetPrefAsInt(const Key: WideString): Integer;
 begin
     Result := MainSession.Prefs.getInt(key);
 end;
 
 {---------------------------------------}
-function TExodusController.getPrefAsString(
-  const Key: WideString): WideString;
+function TExodusController.GetPrefAsString(const Key: WideString): WideString;
 begin
     Result := MainSession.Prefs.getString(key);
 end;
 
 {---------------------------------------}
-procedure TExodusController.setPrefAsBool(const Key: WideString;
+procedure TExodusController.SetPrefAsBool(const Key: WideString;
   Value: WordBool);
 begin
     MainSession.Prefs.setBool(key, value);
 end;
 
 {---------------------------------------}
-procedure TExodusController.setPrefAsInt(const Key: WideString;
-  Value: Integer);
+procedure TExodusController.SetPrefAsInt(const Key: WideString; Value: Integer);
 begin
     MainSession.Prefs.setInt(key, value);
 end;
 
 {---------------------------------------}
-procedure TExodusController.setPrefAsString(const Key_, Value: WideString);
+procedure TExodusController.SetPrefAsString(const Key, Value: WideString);
 begin
-    MainSession.Prefs.setString(Key_, value);
+    MainSession.Prefs.setString(Key, value);
 end;
 
 {---------------------------------------}
-function TExodusController.findChat(const JabberID,
-  Resource: WideString): Integer;
+function TExodusController.FindChat(const JabberID,
+  resource: WideString): Integer;
 var
     c: TChatController;
 begin
@@ -1082,26 +1079,26 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.startInstantMsg(const JabberID: WideString);
+procedure TExodusController.StartInstantMsg(const JabberID: WideString);
 begin
     startMsg(JabberID);
 end;
 
 {---------------------------------------}
-procedure TExodusController.startRoom(const RoomJID, nickname,
+procedure TExodusController.StartRoom(const RoomJID, nickname,
   Password: WideString; SendPresence: WordBool);
 begin
     Room.startRoom(RoomJID, Nickname, Password, SendPresence);
 end;
 
 {---------------------------------------}
-procedure TExodusController.startSearch(const SearchJID: WideString);
+procedure TExodusController.StartSearch(const SearchJID: WideString);
 begin
     startSearch(SearchJID);
 end;
 
 {---------------------------------------}
-procedure TExodusController.showJoinRoom(const RoomJID, Nickname,
+procedure TExodusController.ShowJoinRoom(const RoomJID, nickname,
   Password: WideString);
 var
     tmpjid: TJabberID;
@@ -1112,44 +1109,44 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.startBrowser(const BrowseJID: WideString);
+procedure TExodusController.StartBrowser(const BrowseJID: WideString);
 begin
     showBrowser(BrowseJID);
 end;
 
 {---------------------------------------}
-procedure TExodusController.showCustomPresDialog;
+procedure TExodusController.ShowCustomPresDialog;
 begin
     ShowCustomPresence();
 end;
 
 {---------------------------------------}
-procedure TExodusController.showDebug;
+procedure TExodusController.ShowDebug;
 begin
     ShowDebugForm();
 end;
 
 {---------------------------------------}
-procedure TExodusController.showLogin;
+procedure TExodusController.ShowLogin;
 begin
     PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
 end;
 
 {---------------------------------------}
-procedure TExodusController.showPrefs;
+procedure TExodusController.ShowPrefs;
 begin
     startPrefs();
 end;
 
 {---------------------------------------}
-procedure TExodusController.showToast(const Message: WideString; wndHandle,
+procedure TExodusController.ShowToast(const Message: WideString; wndHandle,
   imageIndex: Integer);
 begin
     showRiserWindow(wndHandle, Message, imageIndex);
 end;
 
 {---------------------------------------}
-procedure TExodusController.setPresence(const Show, Status: WideString;
+procedure TExodusController.SetPresence(const Show, Status: WideString;
   Priority: Integer);
 begin
     MainSession.setPresence(Show, Status, Priority);
@@ -1170,27 +1167,27 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.registerDiscoItem(const JabberID,
+function TExodusController.RegisterDiscoItem(const JabberID,
   Name: WideString): WideString;
 begin
     Result := Exodus_Disco_Items.addItem(Name, JabberID);
 end;
 
 {---------------------------------------}
-procedure TExodusController.removeDiscoItem(const ID: WideString);
+procedure TExodusController.RemoveDiscoItem(const ID: WideString);
 begin
     Exodus_Disco_Items.removeItem(ID);
 end;
 
 {---------------------------------------}
-function TExodusController.registerPresenceXML(
-  const XML: WideString): WideString;
+function TExodusController.RegisterPresenceXML(
+  const xml: WideString): WideString;
 begin
     Result := IntToStr(MainSession.Presence_XML.Add(XML));
 end;
 
 {---------------------------------------}
-procedure TExodusController.removePresenceXML(const ID: WideString);
+procedure TExodusController.RemovePresenceXML(const ID: WideString);
 var
     idx: integer;
 begin
@@ -1200,13 +1197,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.trackWindowsMsg(Message: Integer);
+procedure TExodusController.TrackWindowsMsg(Message: Integer);
 begin
     frmExodus.TrackWindowsMsg(Message);
 end;
 
 {---------------------------------------}
-function TExodusController.addContactMenu(
+function TExodusController.AddContactMenu(
   const Caption: WideString): WideString;
 var
     id: Widestring;
@@ -1224,7 +1221,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.removeContactMenu(const ID: WideString);
+procedure TExodusController.RemoveContactMenu(const ID: WideString);
 var
     idx: integer;
 begin
@@ -1236,7 +1233,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.getActiveContact: WideString;
+function TExodusController.GetActiveContact: WideString;
 var
     ritem: TJabberRosterItem;
 begin
@@ -1248,13 +1245,13 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.getActiveGroup: WideString;
+function TExodusController.GetActiveGroup: WideString;
 begin
     Result := frmRosterWindow.CurGroup;
 end;
 
 {---------------------------------------}
-function TExodusController.getActiveContacts(Online: WordBool): OleVariant;
+function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
 var
     clist: TList;
     i: integer;
@@ -1305,7 +1302,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.addMessageMenu(
+function TExodusController.AddMessageMenu(
   const Caption: WideString): WideString;
 var
     mc: TMenuContainer;
@@ -1339,8 +1336,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.addGroupMenu(
-  const Caption: WideString): WideString;
+function TExodusController.AddGroupMenu(const Caption: WideString): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
@@ -1357,7 +1353,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.removeGroupMenu(const ID: WideString);
+procedure TExodusController.RemoveGroupMenu(const ID: WideString);
 var
     idx: integer;
 begin
@@ -1369,8 +1365,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.registerWithService(
-  const JabberID: WideString);
+procedure TExodusController.RegisterWithService(const JabberID: WideString);
 begin
     StartServiceReg(JabberID);
 end;
@@ -1383,19 +1378,20 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.showAddContact(const jid: WideString);
+procedure TExodusController.ShowAddContact(const jid: WideString);
 begin
     RosterAdd.ShowAddContact(jid);
 end;
 
 {---------------------------------------}
-procedure TExodusController.registerCapExtension(const ext, feature: WideString);
+procedure TExodusController.RegisterCapExtension(const ext,
+  feature: WideString);
 begin
     Exodus_Disco_Info.AddExtension(ext, feature);
 end;
 
 {---------------------------------------}
-procedure TExodusController.unregisterCapExtension(const ext: WideString);
+procedure TExodusController.UnregisterCapExtension(const ext: WideString);
 begin
     Exodus_Disco_Info.RemoveExtension(ext);
 end;
