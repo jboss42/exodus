@@ -3748,9 +3748,9 @@ library Exodus
     ]
     HRESULT _stdcall UnRegisterPlugin([in] long ID, [out, retval] VARIANT_BOOL * Success );
     /**
-        \brief Get an integer handle to the various elements in a chat.
+        \brief <b>DEPRECATED</b> - Get an integer handle to the various elements in a chat.
 
-        This method gives a way to get the memory location (Handle) for various parts of the chat.
+        <b>DEPRECATED</b> - This method gives a way to get the memory location (Handle) for various parts of the chat.
         Returned value is integer and must be cast to correct type before use.\n
         Valid values for parameter Part:\n
         HWND_MsgInput = 0\n
@@ -4110,9 +4110,11 @@ library Exodus
    interface IExodusChatPlugin: IDispatch
   {
     /**
-        \brief A message is being composed.
+        \brief The user has entered text to send to a Room or Contact
 
-        A message is being composed.
+        The client is about to send this message to the Room or Contact.
+        The plugin may evaluate the message and either modify the message by changing the body, or 
+        prevent the message from being sent by returning false (0) in the Allow paramerter.
 
         \param Body Body of the message.
         \param Allow Should this message be allowed to be sent.
@@ -4123,9 +4125,10 @@ library Exodus
     ]
     HRESULT _stdcall OnBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
     /**
-        \brief A message is done composing.
+        \brief A message is being sent to the Room or Contact.
 
-        A message is done composing and about to be sent.
+        A message is being sent to the Room or Contact.
+        The plugin may add additional XML to the outgoing message.
 
         \param Body Body of the message
         \param Additional_XML Additional XML to be added to the outgoing message.
@@ -4138,7 +4141,7 @@ library Exodus
     /**
         \brief A key was pressed
 
-        A key was pressed in a chat window.
+        A key was pressed in a chat window message composition box.
 
         \param Key The key that was pressed
         \return \c HRESULT either \c S_OK or an error value.
@@ -4160,9 +4163,9 @@ library Exodus
     ]
     HRESULT _stdcall OnContextMenu([in] BSTR ID );
     /**
-        \brief A message was received.
+        \brief A message was received from the Contact or Room.
 
-        A message was received.
+        A message was received from the Contact or Room.
 
         \param Body Body of the received message.
         \param xml Raw XML of the received message
@@ -4176,6 +4179,7 @@ library Exodus
         \brief The chat is closing.
 
         The chat is closing.
+        Please, do any required cleanup, including unregistering the plugin here.
 
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -4196,9 +4200,9 @@ library Exodus
     ]
     HRESULT _stdcall OnMenu([in] BSTR ID );
     /**
-        \brief A new chat window is being created.
+        \brief <b>UNSUPPORTED<b> - A new chat window is being created.
 
-        A new chat window is being created.
+        <b>UNSUPPORTED<b> - A new chat window is being created.
 
         \param HWND Handle to new chat window.
         \return \c HRESULT either \c S_OK or an error value.
