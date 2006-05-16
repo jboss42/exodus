@@ -95,6 +95,8 @@ begin
     InfoBox.WideLines.Add('');
 
     MainSession.Prefs.RestorePosition(Self);
+
+    MainSession.Prefs.getImage('appimage', image1);
 end;
 
 procedure TfrmAbout.InfoBoxURLClick(Sender: TObject; url: String);

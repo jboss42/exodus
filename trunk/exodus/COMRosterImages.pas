@@ -144,7 +144,7 @@ end;
 {---------------------------------------}
 procedure TExodusRosterImages.Remove(const id: WideString);
 begin
-    RosterTreeImages.Remove(id);
+    RosterTreeImages.RemoveImage(id);
 end;
 
 initialization

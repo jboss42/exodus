@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/15/2006 10:16:17 AM from Type Library described below.
+// File generated on 5/15/2006 7:23:44 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 

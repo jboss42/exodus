@@ -451,7 +451,7 @@ const
     sPasswordChanged = 'Password changed.';
     sPasswordOldError = 'Old password is incorrect.';
     sPasswordNewError = 'New password does not match.';
-    sPasswordCaption = 'Exodus Password';
+    sPasswordCaption = 'Password';
     sPasswordPrompt = 'Enter Password';
 
     sBrandingError = 'Branding error!';
@@ -508,7 +508,9 @@ uses
 
     // XXX: ZipMstr
 
-    RosterImages, COMToolbar, COMToolbarButton,
+    RosterImages,
+    ExodusImageList,
+    COMToolbar, COMToolbarButton,
     NewUser, CommandWizard, Exodus_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
@@ -757,7 +759,7 @@ begin
     if (not _shutdown) then begin
         reg := TRegistry.Create();
         reg.RootKey := HKEY_CURRENT_USER;
-        reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
+        reg.OpenKey('\Software\Jabber\' + getAppInfo().ID + '\Restart\' + IntToStr(Application.Handle), true);
 
         reg.WriteString('cmdline', '"' + ParamStr(0) +
                         '" -c "' + MainSession.Prefs.Filename + '"');
@@ -804,7 +806,6 @@ begin
     _tray_icon := TIcon.Create();
 
     // setup our master image list
-    RosterTreeImages.Clear();
     RosterTreeImages.setImageList(Imagelist2);
 
     // if we are testing auto-away, then fire the
@@ -946,7 +947,7 @@ begin
         uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
         uCallbackMessage := WM_TRAY;
         hIcon := picon.Handle;
-        strPCopy(szTip, sExodus);
+        strPCopy(szTip, getAppInfo().Caption);
         cbSize := SizeOf(_tray);
     end;
     Shell_NotifyIcon(NIM_ADD, @_tray);
@@ -1343,7 +1344,7 @@ begin
         timAutoAway.Enabled := false;
         CloseSubscribeWindows();
 
-        Self.Caption := _(sExodus);
+        Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
@@ -3503,6 +3504,9 @@ begin
 end;
 
 initialization
+    //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
+    //problems for branded clients
+    //(for instance when Exodus and brand are both running). Ask Joe H.
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     sShellRestart := RegisterWindowMessage('TaskbarCreated');
