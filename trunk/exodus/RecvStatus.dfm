@@ -4,6 +4,7 @@ object fRecvStatus: TfRecvStatus
   Width = 495
   Height = 90
   TabOrder = 0
+  TabStop = True
   object Panel3: TPanel
     Left = 0
     Top = 0
@@ -16,8 +17,8 @@ object fRecvStatus: TfRecvStatus
     object lblFile: TTntLabel
       Left = 2
       Top = 20
-      Width = 491
-      Height = 18
+      Width = 26
+      Height = 13
       Align = alClient
       Caption = 'lblFile'
       Transparent = False
@@ -26,7 +27,7 @@ object fRecvStatus: TfRecvStatus
     object lblFrom: TTntLabel
       Left = 2
       Top = 7
-      Width = 491
+      Width = 34
       Height = 13
       Align = alTop
       Caption = 'lblFrom'
@@ -61,7 +62,7 @@ object fRecvStatus: TfRecvStatus
     object lblStatus: TTntLabel
       Left = 7
       Top = 7
-      Width = 312
+      Width = 43
       Height = 13
       Align = alTop
       Caption = 'Status...'
@@ -104,7 +105,6 @@ object fRecvStatus: TfRecvStatus
   end
   object httpClient: TIdHTTP
     MaxLineAction = maException
-    ReadTimeout = 0
     AllowCookies = False
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
@@ -121,7 +121,6 @@ object fRecvStatus: TfRecvStatus
   object tcpClient: TIdTCPClient
     IOHandler = SocksHandler
     MaxLineAction = maException
-    ReadTimeout = 0
     Port = 0
     Left = 256
   end

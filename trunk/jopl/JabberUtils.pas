@@ -20,7 +20,7 @@ unit JabberUtils;
 }
 interface
 uses
-    Unicode, XMLTag, Dialogs, Graphics, Classes, SysUtils;
+    Unicode, PrefController, XMLTag, Dialogs, Graphics, Classes, SysUtils;
 
 function jabberIQResult(orig: TXMLTag): TXMLTag;
 function jabberIQError(orig: TXMLTag): TXMLTag;
@@ -209,7 +209,7 @@ begin
         flags := flags or MB_OK;
 
     {$ifdef EXODUS}
-    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(_('Exodus')),
+    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(PrefController.getAppInfo.Caption),
         flags);
     {$else}
     res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(Caption),

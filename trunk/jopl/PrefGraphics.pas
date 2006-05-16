@@ -70,10 +70,7 @@ end;
 
 function dllLoad(g : TBrandedGraphic) : boolean;
 var
-    lname: string;
     ins: THandle;
-    idx: integer;
-    rs : TResourceStream;
 begin
     Result := false;
     ins := LoadLibrary(PChar(String(g.source)));
@@ -220,6 +217,7 @@ begin
             end;
         end;
     end;
+    Result := true;
 end;
 
 

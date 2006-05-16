@@ -1,9 +1,9 @@
 object frmMsgQueue: TfrmMsgQueue
   Left = 247
   Top = 194
-  Width = 454
-  Height = 310
   Caption = 'Events'
+  ClientHeight = 276
+  ClientWidth = 446
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -12,7 +12,6 @@ object frmMsgQueue: TfrmMsgQueue
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
-  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate

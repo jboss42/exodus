@@ -1,11 +1,11 @@
 object frmInputPass: TfrmInputPass
   Left = 234
   Top = 143
-  Width = 281
-  Height = 131
   ActiveControl = txtPassword
   BorderWidth = 3
-  Caption = 'Exodus Password'
+  Caption = 'Password'
+  ClientHeight = 91
+  ClientWidth = 267
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object frmInputPass: TfrmInputPass
   OnCreate = FormCreate
   DesignSize = (
     267
-    95)
+    91)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -32,21 +32,29 @@ object frmInputPass: TfrmInputPass
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 63
+    Top = 59
     Width = 267
     Height = 32
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 59
+    ExplicitWidth = 267
+    ExplicitHeight = 32
     inherited Panel2: TPanel
       Width = 267
       Height = 32
+      ExplicitWidth = 267
+      ExplicitHeight = 32
       inherited Bevel1: TBevel
         Width = 267
+        ExplicitWidth = 267
       end
       inherited Panel1: TPanel
         Left = 107
         Height = 27
+        ExplicitLeft = 107
+        ExplicitHeight = 27
       end
     end
   end
@@ -56,7 +64,7 @@ object frmInputPass: TfrmInputPass
     Width = 246
     Height = 21
     Anchors = [akLeft, akTop, akRight]
-    PasswordCharW = '*'
+    PasswordChar = '*'
     TabOrder = 1
   end
 end

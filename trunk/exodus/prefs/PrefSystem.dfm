@@ -34,6 +34,7 @@ inherited frmPrefSystem: TfrmPrefSystem
     Width = 307
     Caption = 'System Options'
     TabOrder = 12
+    ExplicitWidth = 307
   end
   object chkAutoUpdate: TTntCheckBox
     Left = 8
@@ -126,7 +127,7 @@ inherited frmPrefSystem: TfrmPrefSystem
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 9
-    Items.WideStrings = (
+    Items.Strings = (
       'English (American)')
   end
   object txtDefaultNick: TTntEdit

@@ -155,7 +155,7 @@ const
     sLast = 'Last';
     sBrowse = 'Browse';
     sDisco = 'Disco';
-    sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to submit a bug report at the exodus website.';
+    sExceptionMsg = 'An error has occurred. An error log file will automatically be saved to your desktop. Use this file to submit a bug report at the website.';
     sConfirm = 'HTTP authentication';
     sConfirmationDialog = 'Accept authentication request from %s';
 
@@ -271,7 +271,7 @@ begin
     WindowsVersion(ver);
     e_data.Insert(0, '---------------------------------------');
     e_data.Insert(0, 'Date, Time: ' + DateTimeToStr(Now()));
-    e_data.Insert(0, 'Exodus ver: ' + GetAppVersion());
+    e_data.Insert(0, PrefController.getAppInfo.ID + ' ver: ' + GetAppVersion());
     e_data.Insert(0, ver);
 
     // Dump current plugins
@@ -378,7 +378,7 @@ begin
         setAttribute('to', tag.getAttribute('from'));
         with AddTag('query') do begin
             setAttribute('xmlns', XMLNS_VERSION);
-            AddBasicTag('name', 'Exodus');
+            AddBasicTag('name', PrefController.getAppInfo.ID);
             AddBasicTag('version', app);
             AddBasicTag('os', win);
         end;

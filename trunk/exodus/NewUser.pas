@@ -484,7 +484,7 @@ begin
         with MainSession.Profile do begin
             Username := _username;
             password := _password;
-            Resource := 'Exodus';
+            Resource := PrefController.getAppInfo.ID;
             SavePasswd := true;
             NewAccount := true;
         end;
@@ -503,7 +503,7 @@ begin
         with MainSession.Profile do begin
             Username := _username;
             Password := _password;
-            Resource := 'Exodus';
+            Resource := PrefController.getAppInfo.ID;
             SavePasswd := true;
             NewAccount := false;
         end;

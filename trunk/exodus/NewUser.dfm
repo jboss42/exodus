@@ -24,6 +24,7 @@ inherited frmNewUser: TfrmNewUser
     inherited lblWizardTitle: TTntLabel
       Width = 99
       Caption = 'New User Wizard'
+      ExplicitWidth = 99
     end
     inherited lblWizardDetails: TTntLabel
       Caption = 'This wizard will create a new jabber account for you.'
@@ -35,7 +36,7 @@ inherited frmNewUser: TfrmNewUser
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 392
         Height = 39
         Align = alTop
         Caption = 
@@ -49,7 +50,7 @@ inherited frmNewUser: TfrmNewUser
         Top = 80
         Width = 249
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         Text = 'jabber.org'
       end
@@ -75,6 +76,10 @@ inherited frmNewUser: TfrmNewUser
     object tbsUser: TTabSheet
       Caption = 'tbsUser'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblUsername: TTntLabel
         Left = 16
         Top = 64
@@ -104,7 +109,7 @@ inherited frmNewUser: TfrmNewUser
         Top = 137
         Width = 248
         Height = 21
-        PasswordCharW = '*'
+        PasswordChar = '*'
         TabOrder = 1
         Visible = False
       end
@@ -132,6 +137,10 @@ inherited frmNewUser: TfrmNewUser
     object tbsWait: TTabSheet
       Caption = 'tbsWait'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblWait: TTntLabel
         Left = 0
         Top = 0
@@ -154,6 +163,10 @@ inherited frmNewUser: TfrmNewUser
     object tbsXData: TTabSheet
       Caption = 'tbsXData'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline xData: TframeXData
         Left = 0
         Top = 0
@@ -161,12 +174,19 @@ inherited frmNewUser: TfrmNewUser
         Height = 226
         Align = alClient
         TabOrder = 0
+        TabStop = True
+        ExplicitWidth = 402
+        ExplicitHeight = 226
         inherited Panel1: TPanel
           Width = 402
           Height = 226
+          ExplicitWidth = 402
+          ExplicitHeight = 226
           inherited ScrollBox1: TScrollBox
             Width = 392
             Height = 216
+            ExplicitWidth = 392
+            ExplicitHeight = 216
           end
         end
       end
@@ -174,10 +194,18 @@ inherited frmNewUser: TfrmNewUser
     object tbsReg: TTabSheet
       Caption = 'tbsReg'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tbsFinish: TTabSheet
       Caption = 'tbsFinish'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblBad: TTntLabel
         Left = 0
         Top = 65

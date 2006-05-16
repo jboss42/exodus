@@ -416,8 +416,9 @@ var
 
 const
     sXMPP_Profile = '-*- Temp profile: %s -*-';
+{*
     sExodus = 'Exodus';
-
+*}
     //sChat = 'Chat';
 
     sCommError = 'There was an error during communication with the Jabber Server';
@@ -825,6 +826,9 @@ begin
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
         self.Caption := GetString('brand_caption');
+        trayShow.Caption := _('Show ') + getAppInfo.ID;
+        trayExit.Caption := _('Exit ') + getAppInfo.ID;
+        Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
 
         menu_list := TWideStringList.Create();
