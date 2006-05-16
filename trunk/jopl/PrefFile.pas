@@ -73,7 +73,11 @@ type
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean;
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);
 {$endif}
-
+        {**
+            Get/set the xml child of a pref.
+        **}
+        function getXMLPref(pkey : WideString) : TXMLTag;
+        procedure setXMLPref(pkey : WideString; value : TXMLTag);
         // Custom pres
         function findPresenceTag(pkey: Widestring): TXMLTag;
         function getAllPresence(): TWidestringList;
@@ -98,6 +102,7 @@ end;
 implementation
 
 uses
+    PrefController, //map vlaue class
     Windows, SysUtils, XMLParser, Session;
 
 const
@@ -364,7 +369,7 @@ begin
     for i := 0 to s.Count - 1 do
         sl.Add(s.Tags[i].Data);
     s.Free;
-    
+
     Result := true;
 end;
 
@@ -628,6 +633,38 @@ begin
         _bms.AddTag(TXMLTag.Create(blist[i]));
     end;
     Save();
+end;
+
+{**
+    Get/set the xml child of a pref.
+**}
+function TPrefFile.getXMLPref(pkey : WideString) : TXMLTag;
+var
+    t: TXMLTag;
+    m: TXMLTagList;
+    i: integer;
+begin
+    Result := nil;
+    t := _pref.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    Result := TXMLTag.Create('xmlpref');
+    m := t.ChildTags();
+    for i := 0 to m.Count - 1 do begin
+        Result.AddTag(TXMLTag.Create(m[i]));
+    end;
+    m.Free();
+end;
+
+procedure TPrefFile.setXMLPref(pkey : WideString; value : TXMLTag);
+var
+    t: TXMLTag;
+begin
+    t := _pref.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    t.ClearTags();
+    t.AddTag(TXMLTag.Create(value));
 end;
 
 end.
