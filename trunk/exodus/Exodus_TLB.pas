@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/15/2006 7:23:44 PM from Type Library described below.
+// File generated on 5/16/2006 11:34:16 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -346,6 +346,7 @@ type
     procedure Set_ContactLogger(const Value: IExodusLogger); safecall;
     function Get_RoomLogger: IExodusLogger; safecall;
     procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
+    procedure AddStringlistValue(const Key: WideString; const Value: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -457,6 +458,7 @@ type
     property Toolbar: IExodusToolbar readonly dispid 214;
     property ContactLogger: IExodusLogger dispid 215;
     property RoomLogger: IExodusLogger dispid 216;
+    procedure AddStringlistValue(const Key: WideString; const Value: WideString); dispid 217;
   end;
 
 // *********************************************************************//

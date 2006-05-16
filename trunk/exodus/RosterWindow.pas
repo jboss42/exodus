@@ -629,6 +629,9 @@ procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
     ritem: TJabberRosterItem;
     b_jid: Widestring;
+    imgsrc, restype, resname : Widestring;
+    ins: cardinal;
+    
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -751,6 +754,50 @@ begin
     // we got a new avatar in the cache
     else if (event = '/session/avatars') then begin
         treeRoster.Refresh();
+    end
+
+    // image on/off
+    else if (event = '/session/adimage/on') then begin
+        if (tag <> nil) then begin
+            restype := tag.GetAttribute('type');
+            resname := tag.GetAttribute('resname');
+            imgsrc  := tag.GetAttribute('source');
+
+            if (restype = 'dll') then begin
+                ins := LoadLibraryW(PWChar(imgsrc));
+                if (ins = 0) then
+                    ins := LoadLibrary(PChar(String(imgsrc)));
+                if (ins > 0) then begin
+                    imgAd.Picture.Bitmap.LoadFromResourceName(ins, resname);
+                    FreeLibrary(ins);
+                end;
+            end;
+            {Todo:
+            else if (restype = 'file') then begin
+
+            end
+            else if (restype = 'resource') then begin
+
+
+            end;
+            }
+        end
+        else begin
+            resname := MainSession.Prefs.getString('brand_ad');
+            if (resname <> '') then begin
+                imgAd.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + resname);
+            end;
+            _adURL := MainSession.Prefs.getString('brand_ad_url');
+            if (_adURL <> '') then
+                imgAd.Cursor := crHandPoint;
+        end;
+
+        imgAd.Visible := true;
+
+
+    end
+    else if (event = '/session/adimage/off') then begin
+        imgAd.Visible := false;
     end;
 end;
 
