@@ -98,7 +98,7 @@ uses
     XMLParser, XMLUtils, DebugLogger;
 
 const
-    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
+    sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
     sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
     sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
     sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
@@ -299,7 +299,7 @@ begin
 
     // if no config was specified, grab the default
     if (config = '') then
-        config := getUserDir() + 'exodus.xml';
+        config := getUserDir() + getAppInfo().ID + '.xml';
 
     // Create our main Session object
     MainSession := TJabberSession.Create(config);
@@ -322,7 +322,7 @@ begin
 
     // Check for a single instance
     if (MainSession.Prefs.getBool('single_instance')) then begin
-        _mutex := CreateMutex(nil, true, PChar('Exodus' +
+        _mutex := CreateMutex(nil, true, PChar(getAppInfo().ID +
             ExtractFileName(config)));
         if (_mutex <> 0) and (GetLastError = 0) then begin
             // we are good to go..
@@ -511,8 +511,8 @@ begin
     try
         reg := TRegistry.Create();
         reg.RootKey := HKEY_CURRENT_USER;
-        reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
-        reg.WriteString('', _('Exodus'));
+        reg.OpenKey('\AppEvents\Schemes\Apps\' + getAppInfo().ID , true);
+        reg.WriteString('', getAppInfo().ID);
         AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
         AddSound(reg, 'notify_invite', _(sSoundInvite));
         AddSound(reg, 'notify_keyword', _(sSoundKeyword));
@@ -674,8 +674,8 @@ end;
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 begin
     // Add a new sound entry into the registry
-    reg.CreateKey('\AppEvents\Schemes\Apps\Exodus\EXODUS_' + pref_name);
-    reg.OpenKey('\AppEvents\EventLabels\EXODUS_' + pref_name, true);
+    reg.CreateKey('\AppEvents\Schemes\Apps\' + getAppInfo().ID + '\' + UpperCase(getAppInfo().ID) + '_' + pref_name);
+    reg.OpenKey('\AppEvents\EventLabels\' + UpperCase(getAppInfo().ID) + '_' + pref_name, true);
     reg.WriteString('', user_text);
 end;
 
@@ -803,6 +803,9 @@ begin
 end;
 
 initialization
+    //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
+    //problems for branded clients
+    //(for instance when Exodus and brand are both running). Ask Joe H.
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     _xmpp_action_list := TList.Create();
     uri_regex := TRegExpr.Create();

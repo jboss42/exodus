@@ -231,8 +231,9 @@ uses
   NTLMAuth in '..\jopl\NTLMAuth.pas',
   SASLMech in '..\jopl\SASLMech.pas',
   ExternalAuth in '..\jopl\ExternalAuth.pas',
-  DebugLogger in '..\jopl\DebugLogger.pas';
-
+  DebugLogger in '..\jopl\DebugLogger.pas',
+  ExodusImageList in '..\jopl\ExodusImageList.pas',
+  PrefGraphics in '..\jopl\PrefGraphics.pas';
 {$R *.TLB}
 
 {$R *.RES}
