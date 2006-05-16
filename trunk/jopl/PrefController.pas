@@ -228,6 +228,8 @@ type
         procedure setDateTime(pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
 
+        procedure AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
+        
 {$ifdef Exodus}
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
@@ -846,44 +848,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
-var
-    uf: TPrefFile;
-begin
-    // TODO: what SHOULD we do if we get a server-side pref request, and we
-    // haven't gotten any server prefs yet?
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
 
-    if (not uf.fillStringlist(pkey, sl)) then begin
-        if (not s_brand_file.fillStringlist(pkey, sl)) then
-            s_default_file.fillStringlist(pkey, sl);
-    end;
-end;
-
-{---------------------------------------}
-{$ifdef Exodus}
-procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
-var
-    uf: TPrefFile;
-begin
-    // TODO: what SHOULD we do if we get a server-side pref request, and we
-    // haven't gotten any server prefs yet?
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    if (not uf.fillStringlist(pkey, sl)) then begin
-        if (not s_brand_file.fillStringlist(pkey, sl)) then
-            s_default_file.fillStringlist(pkey, sl);
-    end;
-end;
-{$endif}
-
-{---------------------------------------}
 procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
 begin
      if (pvalue) then
@@ -922,6 +887,56 @@ procedure TPrefController.setInt(pkey: Widestring; pvalue: integer; server_side:
 begin
     setString(pkey, IntToStr(pvalue), server_side);
 end;
+{---------------------------------------}
+procedure TPrefController.AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    uf.AddStringListValue(pkey, value);
+    Save();
+end;
+{---------------------------------------}
+procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    if (not uf.fillStringlist(pkey, sl)) then begin
+        if (not s_brand_file.fillStringlist(pkey, sl)) then
+            s_default_file.fillStringlist(pkey, sl);
+    end;
+end;
+
+{---------------------------------------}
+{$ifdef Exodus}
+procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    if (not uf.fillStringlist(pkey, sl)) then begin
+        if (not s_brand_file.fillStringlist(pkey, sl)) then
+            s_default_file.fillStringlist(pkey, sl);
+    end;
+end;
+{$endif}
 
 {---------------------------------------}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
