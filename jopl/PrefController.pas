@@ -25,6 +25,7 @@ unit PrefController;
 
 interface
 uses
+    ExtCtrls,
     Unicode, XMLTag, XMLParser, Presence, IdHTTP, IdSocks,
 
     {$ifdef Win32}
@@ -117,6 +118,14 @@ const
     P_EVENT_WIDTH = 'event_width';
 
 type
+    TPrefMapValue = class
+    private
+        FValue : WideString;
+    public
+        Constructor Create(value : WideString);
+        property Value : WideString read FValue;
+    end;
+
     TPrefController = class;
 
     TJabberProfile = class
@@ -142,7 +151,7 @@ type
         WinLogin: boolean;
         KerbAuth: boolean;
         SASLRealm: Widestring;
-        
+
         // Socket connection
         Host: Widestring;
         Port: integer;
@@ -223,6 +232,14 @@ type
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
 {$endif}
+        {**
+            Get/set the xml child of a pref.
+        **}
+        function getXMLPref(pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
+        procedure setXMLPref(pkey : WideString; value : TXMLTag; server_side: TPrefKind = pkClient);
+
+        function getImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient) : boolean;
+        procedure setImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient);
 
         // Custom presence getters
         function getAllPresence(): TWidestringList;
@@ -266,6 +283,22 @@ type
         property Profiles: TStringlist read _profiles write _profiles;
         property Filename: WideString read _pref_filename;
 end;
+    {**
+        Wrapper around application specific information like ID and caption
+        This information is taken from the branding or default and is accessable
+        immediately after loadtime.
+    **}
+    TApplicationInfo = class
+    private
+        cachedID      : String;
+        cachedCaption : WideString;
+
+        function GetID() : string;
+        function GetCaption : WideString;
+    public
+        property ID : String read getID;
+        property Caption : WideString read getCaption;
+    end;
 
 var
     s_brand_file: TPrefFile;
@@ -279,6 +312,18 @@ const
 function getPrefState(pkey: Widestring): TPrefState;
 function getMyDocs: string;
 function getUserDir: string;
+{**
+    Application ID. This is an ID that can be used for paths, filenames,
+    window message ID, resources. It is NOT a caption.
+
+    Will attempt to get the ID from branding or default prefs. Defaults to Exodus
+    if not available. The ID may change in one specific state. If the ID
+    is not available because the default and branding prefs have not
+    yet been loaded, Exodus will be returned. This MAY happen if
+    ID is used in an initialization section. After initialization,
+    the ID may not be Exodus.
+**}
+function getAppInfo(): TApplicationInfo;
 
 {$ifdef Win32}
 function ReplaceEnvPaths(value: string): string;
@@ -297,6 +342,7 @@ uses
     {$ifdef Exodus}
     GnuGetText,
     {$endif}
+    PrefGraphics, //graphics handling for prefs
     JabberConst, StrUtils, Stringprep,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
@@ -304,7 +350,13 @@ uses
 var
     task_rect: TRect;
     task_dir: integer;
+    cachedAppInfo : TApplicationInfo; //App info once we can get defaults and branding
+    s_Graphics: TPrefGraphic;
 
+Constructor TPrefMapValue.Create(value : WideString);
+begin
+    FValue := value;
+end;
 
 {---------------------------------------}
 function getPrefState(pkey: WideString): TPrefState;
@@ -314,6 +366,75 @@ begin
         Result := s_default_file.getState(pkey);
     if (Result = psUnknown) then
         Result := psReadWrite;
+end;
+
+
+{---------------------------------------}
+{** Attempt to get pref from branding prefs. If it is not there or
+    is locked down, get the pref from defaults.
+    \return The pref from branding if possible, or from defaults. returns
+            an empty string if not present or available in either
+**}
+function getBrandingOrDefaultPref(pkey : WideString) : WideString;
+var
+    defaultPrefState  : TPrefState;
+    brandingPrefState : TPrefState;
+    defaultValue      : WideString;
+    brandingValue     : WideString;
+begin
+    defaultPrefState := s_default_file.getState(pkey);
+    defaultValue := s_default_file.getString(pkey);
+    if ((defaultPrefState = psReadOnly) or (defaultPrefState = psInvisible)) then begin
+        // default isn't over-ridable, even by branding.  This can happen
+        // if the admin compiles in the defaults.
+        Result := defaultValue;
+        exit;
+    end;
+
+    brandingValue := s_brand_file.getString(pkey);
+    brandingPrefState := s_brand_file.getState(pkey);
+    if ((brandingPrefState = psReadOnly) or (brandingPrefState = psInvisible)) then begin
+        Result := brandingValue;
+        exit;
+    end;
+
+    if (brandingValue <> '') then
+        Result := brandingValue
+    else if (defaultValue <> '') then
+        Result := defaultValue
+    else
+        Result := '';
+end;
+
+function TApplicationInfo.GetID() : String;
+var
+    tstr : string;
+begin
+    try
+        if (cachedID = '') then
+        begin
+            //remove .exe
+            tstr := ExtractFileName(Application.ExeName);
+            cachedID := Copy(tstr, 0, Length(tstr) - 4);
+        end;
+        Result := cachedID;
+    Except
+        cachedID := '';
+        Result := 'Exodus';
+    end;
+end;
+
+function TApplicationInfo.GetCaption() : WideString; begin
+    try
+        if (cachedCaption = '') then
+        begin
+            cachedCaption := getBrandingOrDefaultPref('brand_caption');
+        end;
+        Result := cachedCaption;
+    Except
+        cachedCaption := '';
+        Result := 'Exodus';
+    end;
 end;
 
 {$ifndef Exodus}
@@ -353,6 +474,26 @@ begin
 end;
 
 {---------------------------------------}
+{**
+    Application ID. This is an ID that can be used for paths, filenames,
+    window message ID, resources. It is NOT a caption.
+
+    Will attempt to get the ID from branding or default prefs. Defaults to Exodus
+    if not available. The ID may change in one specific state. If the ID
+    is not available because the default and branding prefs have not
+    yet been loaded, Exodus will be returned. This MAY happen if
+    ID is used in an initialization section. After initialization,
+    the ID may not be Exodus.
+**}
+function getAppInfo() : TApplicationInfo;
+begin
+    if (cachedAppInfo = nil) then begin
+        cachedAppInfo := TApplicationInfo.create();
+    end;
+    Result := cachedAppInfo;
+end;
+
+{---------------------------------------}
 function getUserDir: string;
 var
     appdata: string;
@@ -368,7 +509,7 @@ var
     begin
         // first just check the file
         Result := false;
-        fn := dir + 'exodus.xml';
+        fn := dir + getAppInfo().ID + '.xml';
         if (fileExists(fn)) then begin
             Result := true;
             exit;
@@ -397,18 +538,20 @@ var
 
 begin
     try
+        //get application name from either default or branding
+
         reg := TRegistry.Create;
         try //finally free
             with reg do begin
                 RootKey := HKEY_CURRENT_USER;
                 OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
                 if ValueExists('AppData') then begin
-                    appdata := ReadString('AppData') + '\Exodus\';
+                    appdata := ReadString('AppData') + '\' + getAppInfo().ID + '\';
                     appdata := ReplaceEnvPaths(appdata);
                 end;
 
                 if ValueExists('Local AppData') then begin
-                    local_appdata := ReadString('Local AppData') + '\Exodus\';
+                    local_appdata := ReadString('Local AppData') + '\' + getAppInfo().ID + '\';
                     local_appdata := ReplaceEnvPaths(local_appdata);
                 end;
 
@@ -523,6 +666,8 @@ begin
 
     getDefaultPos();
 
+    s_Graphics.setBranded(getXMLPref('brand_images'));
+    
     {$ifdef Exodus}
     // Write out the current prefs file..
     // this is so the un-installer can remove the prefs
@@ -534,7 +679,7 @@ begin
     reg := TRegistry.Create();
     try
         reg.RootKey := HKEY_CURRENT_USER;
-        reg.OpenKey('\Software\Jabber\Exodus', true);
+        reg.OpenKey('\Software\Jabber\' + getAppInfo().ID, true);
         reg.WriteString('prefs_file', _pref_filename);
         reg.CloseKey();
     finally
@@ -570,6 +715,14 @@ begin
     // TODO: save server prefs
 end;
 
+function allowOverride(prefs : TPrefFile; pkey : WideString) : boolean;
+var
+    t : TPrefState;
+begin
+    t := prefs.getState(pkey);
+    result := (t <> psReadOnly) and (t <> psInvisible);
+end;
+
 {---------------------------------------}
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
@@ -588,7 +741,7 @@ begin
 
     ds := s_default_file.getState(pkey);
     dv := s_default_file.getString(pkey);
-    if ((ds = psReadOnly) or (ds = psInvisible)) then begin
+    if (not allowOverride(s_default_file, pkey)) then begin
         // default isn't over-ridable, even by branding.  This can happen
         // if the admin compiles in the defaults.
         if (dv <> '') then
@@ -600,7 +753,7 @@ begin
 
     bv := s_brand_file.getString(pkey);
     bs := s_brand_file.getState(pkey);
-    if ((bs = psReadOnly) or (bs = psInvisible)) then begin
+    if (not allowOverride(s_brand_file, pkey)) then begin
         if (bv <> '') then
             Result := bv
         else if (dv <> '') then
@@ -630,9 +783,9 @@ begin
     else if pkey = 'xa_status' then
         result := _(sIdleXA)
     else if pkey = 'log_path' then
-        result := getMyDocs() + 'Exodus-Logs'
+        result := getMyDocs() + getAppInfo().ID + '-Logs'
     else if pkey = 'xfer_path' then
-        result := getMyDocs() + 'Exodus-Downloads'
+        result := getMyDocs() + getAppInfo().ID + '-Downloads'
     else if pkey = 'spool_path' then
         result := getUserDir() + 'spool.xml'
 
@@ -801,6 +954,62 @@ begin
     Save();
 end;
 {$endif}
+
+function getBestFile(userFile : TPrefFile; pkey : WideString) : TPrefFile;
+begin
+    if (not allowOverride(s_default_file, pkey)) then
+        Result := s_default_file
+    else if (not allowOverride(s_brand_file, pkey)) then
+        Result := s_brand_file
+    else if (userFile.getXMLPref(pKey) <> nil) then
+        Result := userFile
+    else if (s_brand_file.getXMLPref(pKey) <> nil) then
+        Result := s_brand_file
+    else
+        Result := s_default_file
+end;
+{**
+    Get/set the xml child of a pref.
+**}
+function TPrefController.getXMLPref(pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
+var
+    uf: TPrefFile;
+begin
+   // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    uf := getBestFile(uf, pkey);
+
+    result := uf.getXMLPref(pKey);
+end;
+
+procedure TPrefController.setXMLPref(pkey : WideString; value : TXMLTag; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+   // TODO: see getString()
+    if (allowOverride(s_default_file, pkey) and allowOverride(s_brand_file, pkey)) then begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
+        uf.setXMLPref(pkey, value);
+    end;
+end;
+
+
+function TPrefController.getImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient) : boolean;
+begin
+    Result := s_Graphics.getImage(pkey, image, imagelist);
+end;
+
+procedure TPrefController.setImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient);
+begin
+    s_Graphics.setImage(pkey, image, imagelist);
+end;
 
 {---------------------------------------}
 procedure TPrefController.removePresence(pvalue: TJabberCustomPres);
@@ -1544,7 +1753,7 @@ begin
 
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
-    if (Resource = '') then Resource := 'Exodus';
+    if (Resource = '') then Resource := getAppInfo().ID;
 end;
 
 {---------------------------------------}
@@ -1614,9 +1823,12 @@ end;
 initialization
     s_default_file := TPrefFile.CreateFromResource('defaults');
     s_brand_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'branding.xml');
+    cachedAppInfo := TApplicationInfo.create();
+    s_Graphics := TPrefGraphic.Create();
 
 finalization
     s_default_file.Free();
     s_brand_file.Free();
+    cachedAppInfo.Free();
 end.
 
