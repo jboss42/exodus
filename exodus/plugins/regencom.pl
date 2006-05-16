@@ -10,7 +10,7 @@ for $s (@sub) {
     print "$pwd/$s\n";
     chdir "$pwd/$s";
     grep unlink, glob("ExodusCOM_TLB.*");
-    e("copy ..\\..\\ExodusCOM_TLB.pas");
+    e("copy ..\\..\\Exodus_TLB.pas");
 }
 
 sub e {
