@@ -543,6 +543,10 @@ begin
     try
         if (tag = nil) then
             xml := ''
+        else if (tag.Name = 'junk') then
+            // Must have come from datacallback with nil tag.
+            // Thus using "fake" tag to pass data.
+            xml := tag.Data
         else
             xml := tag.xml;
 
@@ -570,8 +574,15 @@ end;
 {---------------------------------------}
 procedure TPluginProxy.DataCallback(event: string; tag: TXMLTag; data: Widestring);
 begin
-    // XXX: create a tag and pass data in there?
-    Callback(event, tag);
+    if (tag = nil) then begin
+        // Create a short term tag object to pass data through.
+        // XXX: find a beter solution
+        tag := TXMLTag.Create('junk', data);
+        Callback(event, tag);
+        tag.Destroy;
+    end
+    else
+        Callback(event, tag);
 end;
 
 {---------------------------------------}
