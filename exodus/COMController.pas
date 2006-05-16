@@ -128,6 +128,7 @@ type
     procedure Set_ContactLogger(const Value: IExodusLogger); safecall;
     function Get_RoomLogger: IExodusLogger; safecall;
     procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
+    procedure AddStringlistValue(const Key, Value: WideString); safecall;
 
     { Protected declarations }
   private
@@ -1539,6 +1540,11 @@ begin
         x.setAttribute('date_enabled', BoolToStr(Value.IsDateEnabled));
     end;
     MainSession.FireEvent('/session/room-logger', x);
+end;
+
+procedure TExodusController.AddStringlistValue(const Key, Value: WideString);
+begin
+    MainSession.Prefs.AddStringlistValue(key, value);
 end;
 
 initialization

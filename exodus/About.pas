@@ -53,7 +53,7 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  GnuGetText, ShellAPI, XMLUtils, Session;
+    JabberUtils, ExUtils,  GnuGetText, ShellAPI, XMLUtils, Session, Unicode;
 
 const
     sAbout1 = 'Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
@@ -75,6 +75,9 @@ begin
 end;
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
+var
+    additional  : TWideStringList;
+    i           : Integer;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
@@ -94,6 +97,15 @@ begin
     InfoBox.WideLines.Add(_(sAbout6));
     InfoBox.WideLines.Add('');
 
+    additional := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('about_additional_list', additional);
+    for i := 0 to additional.Count - 1 do begin
+        InfoBox.WideLines.Add(additional.Strings[i]);
+    end;
+
+    additional.Free();
+
+    InfoBox.WideLines.Add('');
     MainSession.Prefs.RestorePosition(Self);
 
     MainSession.Prefs.getImage('appimage', image1);
