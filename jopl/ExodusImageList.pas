@@ -134,7 +134,6 @@ procedure TExodusImageList.setImagelist(images: TImagelist; ids : TWideStringLis
 var
     i : integer;
     img : TImage;
-    tbmp : TBitmap;
 begin
     _imgList := images;
     _ids.Clear();

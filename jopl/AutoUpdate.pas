@@ -55,9 +55,10 @@ function InitAutoUpdate(background : boolean = true) : boolean;
 procedure InitUpdateBranding();
 procedure FireAutoUpdate(URL: string);
 
+{*
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
-    
+*}    
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}

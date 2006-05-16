@@ -139,6 +139,7 @@ var
 implementation
 
 uses
+    PrefController,
     Emoticons, Windows, SysUtils, Session, XmlUtils, Forms, 
     XMLParser, XMLTag, Classes, StrUtils;
 
@@ -505,7 +506,7 @@ begin
     // Create some meta-info
     m := d.AddTag('meta');
     m.AddBasicTag('name', ExtractFileName(filename));
-    m.AddBasicTag('description', 'Custom emotion list for Exodus client');
+    m.AddBasicTag('description', 'Custom emotion list for ' + PrefController.getAppInfo.ID +' client');
 
     // walk the list.
     for i := 0 to _objects.Count - 1 do begin

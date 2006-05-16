@@ -185,7 +185,7 @@ begin
         try
             reg.RootKey := HKEY_CURRENT_USER;
             reg.OpenKey(RUN_ONCE, true);
-            chkAutoStart.Checked := (reg.ValueExists('Exodus'));
+            chkAutoStart.Checked := (reg.ValueExists(PrefController.getAppInfo.ID));
             reg.CloseKey();
         finally
             reg.Free();
@@ -221,14 +221,14 @@ begin
             reg.OpenKey(RUN_ONCE, true);
 
             if (not chkAutoStart.Checked) then begin
-                if (reg.ValueExists('Exodus')) then
-                    reg.DeleteValue('Exodus');
+                if (reg.ValueExists(PrefController.getAppInfo.ID)) then
+                    reg.DeleteValue(PrefController.getAppInfo.ID);
             end
             else begin
                 cmd := '"' + ParamStr(0) + '"';
                 for i := 1 to ParamCount do
                     cmd := cmd + ' "' + ParamStr(i) + '"';
-                reg.WriteString('Exodus',  cmd);
+                reg.WriteString(PrefController.getAppInfo.ID,  cmd);
             end;
             reg.CloseKey();
         finally

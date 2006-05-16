@@ -76,7 +76,7 @@ var
   frmMsgQueue: TfrmMsgQueue;
 
 const
-    sNoSpoolDir = 'Exodus could not create or write to the spool directory specified in the options.';
+    sNoSpoolDir = ' could not create or write to the spool directory specified in the options.';
 
 function getMsgQueue: TfrmMsgQueue;
 
@@ -164,7 +164,7 @@ begin
     if (not DirectoryExists(dir)) then begin
         MkDir(dir);
         if (not DirectoryExists(dir)) then begin
-            MessageDlgW(_(sNoSpoolDir), mtError, [mbOK], 0);
+            MessageDlgW(PrefController.getAppInfo.ID + (sNoSpoolDir), mtError, [mbOK], 0);
             exit;
         end;
     end;

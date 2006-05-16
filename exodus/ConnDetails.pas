@@ -419,7 +419,7 @@ begin
     else begin
         cboResource.Items.Add(_(sResourceHome));
         cboResource.Items.Add(_(sResourceWork));
-        cboResource.Items.Add(_('Exodus'));
+        cboResource.Items.Add(_(PrefController.getAppInfo.ID));
     end;
     list.Free();
 

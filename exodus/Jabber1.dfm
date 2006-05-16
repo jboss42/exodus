@@ -59,7 +59,6 @@ object frmExodus: TfrmExodus
     OnDragOver = TabsDragOver
     OnMouseDown = TabsMouseDown
     OnUnDock = TabsUnDock
-    ExplicitHeight = 334
     object tbsRoster: TTntTabSheet
       Caption = 'Messenger'
       Font.Charset = DEFAULT_CHARSET
@@ -69,7 +68,6 @@ object frmExodus: TfrmExodus
       Font.Style = []
       ImageIndex = 7
       ParentFont = False
-      ExplicitHeight = 305
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
@@ -90,7 +88,6 @@ object frmExodus: TfrmExodus
         DragCursor = crDefault
         DragKind = dkDock
         TabOrder = 0
-        ExplicitHeight = 305
       end
       object pnlRight: TPanel
         Left = 108
@@ -103,7 +100,6 @@ object frmExodus: TfrmExodus
         DragCursor = crDefault
         DragKind = dkDock
         TabOrder = 1
-        ExplicitHeight = 305
       end
     end
   end
@@ -196,7 +192,6 @@ object frmExodus: TfrmExodus
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitHeight = 334
   end
   object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual

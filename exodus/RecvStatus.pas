@@ -145,7 +145,7 @@ type
 
 implementation
 uses
-    XMLUtils, StrUtils, JabberID, 
+    XMLUtils, StrUtils, JabberID, PrefController,
     IQ, GnuGetText, Session, JabberConst, JabberUtils, ExUtils;
 
 const
@@ -492,7 +492,7 @@ begin
     tmps := Sha1Hash(hash_key);
     j1.Free();
     j2.Free();
-    
+
     tcpClient.IOHandler := SocksHandler;
     tcpClient.Host := tmps;
     tcpClient.Port := 0;
@@ -716,7 +716,7 @@ begin
 
     if (_hosts.Count = 0) then begin
         // we ran out of streamhosts to try. bummer :(
-        MessageDlgW(_('Exodus was unable to connect to any file transfer proxies or the sender.'),
+        MessageDlgW(PrefController.getAppInfo.ID + _(' was unable to connect to any file transfer proxies or the sender.'),
             mtError, [mbOK], 0);
 
         // send error back to sender.
