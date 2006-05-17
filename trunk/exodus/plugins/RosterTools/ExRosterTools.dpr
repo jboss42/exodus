@@ -15,7 +15,6 @@ uses
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
-  RosterTools_TLB in 'RosterTools_TLB.pas',
   ExRosterTools_TLB in 'ExRosterTools_TLB.pas';
 
 exports
