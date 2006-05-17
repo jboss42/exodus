@@ -25,7 +25,7 @@ interface
 
 uses
     Exodus_TLB, Import,
-    ComObj, ActiveX, RosterTools_TLB, StdVcl;
+    ComObj, ActiveX, ExRosterTools_TLB, StdVcl;
 
 type
   TRosterPlugin = class(TAutoObject, IExodusPlugin)
