@@ -26,7 +26,7 @@ unit PrefController;
 interface
 uses
     ExtCtrls,
-    Unicode, XMLTag, XMLParser, Presence, IdHTTP, IdSocks,
+    Unicode, XMLTag, XMLParser, Presence, IdHTTP, IdSocks, JabberID,
 
     {$ifdef Win32}
     Forms, Windows, Registry,
@@ -131,15 +131,24 @@ type
     TJabberProfile = class
     private
         _password: Widestring;
+        _jabberID: TJabberID;
 
         function getPassword: Widestring;
         function getJid: Widestring;
         procedure setPassword(value: Widestring);
+
+
+        function getUsername() : Widestring;
+        procedure setUsername(username: Widestring);
+
+        function getServer(): Widestring;
+        procedure setServer(server: Widestring);
+
+        function getResource(): Widestring;
+        procedure setResource(res: Widestring);
+
     public
         Name: Widestring;
-        Username: Widestring;
-        Server: Widestring;
-        Resource: Widestring;
         Priority: integer;
         SavePasswd: boolean;
         ConnectionType: integer;
@@ -181,9 +190,16 @@ type
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
         function IsValid() : boolean;
+        function getDisplayUsername(): Widestring;
+        function getJabberID(): TJabberID;
 
         property password: Widestring read getPassword write setPassword;
         property Jid: Widestring read getJid;
+
+        property Username: Widestring read getUsername write setUsername;
+        property Server: Widestring read getServer write setServer;
+        property Resource: Widestring read getResource write setResource;
+
     end;
 
     TPrefKind = (pkClient, pkServer);
@@ -1618,10 +1634,10 @@ begin
     Name       := prof_name;
 
     with prefs do begin
-        Username   := getString('brand_profile_username');
         password   := getString('brand_profile_password');
-        Server     := getString('brand_profile_server');
-        Resource   := getString('brand_profile_resource');
+        _jabberID := TJabberID.create(getString('brand_profile_username'),
+                                     getString('brand_profile_server'),
+                                     getString('brand_profile_resource'));
         Priority   := getInt('brand_profile_priority');
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
@@ -1661,9 +1677,9 @@ end;
 function TJabberProfile.getJid: Widestring;
 begin
     if (WinLogin) then
-        Result := Server + '/' + Resource
+        Result := _jabberID.domain + '/' + _jabberID.resource
     else
-        Result := Username + '@' + Server + '/' + Resource;
+        Result := _jabberID.full;
 end;
 
 {---------------------------------------}
@@ -1676,14 +1692,19 @@ end;
 {---------------------------------------}
 procedure TJabberProfile.Load(tag: TXMLTag);
 var
-    tmps: Widestring;
+    tmps, tmps1: Widestring;
     ptag: TXMLTag;
 begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
 
-    Username := tag.GetBasicText('username');
-    Server := tag.GetBasicText('server');
+    tmps := tag.GetBasicText('server');
+    if (tmps = '') then tmps := 'jabber.org';
+
+    tmps1 := tag.GetBasicText('resource');
+    if (tmps1 = '') then tmps1 := 'Exodus';
+
+    _jabberID := TJabberID.create(tag.GetBasicText('username'), tmps, tmps1);
     SASLRealm := tag.GetBasicText('saslrealm');
 
     // check for this flag this way, so that if the tag
@@ -1706,14 +1727,6 @@ begin
     else
         KerbAuth := false;
 
-    // Make sure we stringprep the username
-    tmps := xmpp_nodeprep(Username);
-    Username := tmps;
-
-    // Make sure we nameprep the server
-    tmps := xmpp_nameprep(Server);
-    Server := tmps;
-
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
         Password := DecodeString(ptag.Data)
@@ -1727,7 +1740,6 @@ begin
         Avatar := ptag.Data;
     end;
 
-    Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
     ConnectionType := SafeInt(tag.GetBasicText('connection_type'));
 
@@ -1780,9 +1792,9 @@ begin
 
     node.ClearTags();
     node.setAttribute('name', Name);
-    node.AddBasicTag('username', Username);
+    node.AddBasicTag('username', _jabberID.user);
     node.AddBasicTag('saslrealm', SASLRealm);
-    node.AddBasicTag('server', Server);
+    node.AddBasicTag('server', _jabberID.domain);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
     node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
     node.AddBasicTag('kerblogin', SafeBoolStr(KerbAuth));
@@ -1793,7 +1805,7 @@ begin
         ptag.AddCData(EncodeString(Password));
     end;
 
-    node.AddBasicTag('resource', Resource);
+    node.AddBasicTag('resource', _jabberID.resource);
     node.AddBasicTag('priority', IntToStr(Priority));
     node.AddBasicTag('connection_type', IntToStr(ConnectionType));
 
@@ -1820,19 +1832,82 @@ begin
         x.setAttribute('hash', AvatarHash);
         x.setAttribute('mime-type', AvatarMime);
     end;
-    
+
 end;
 
 {---------------------------------------}
 function TJabberProfile.IsValid() : boolean;
 begin
     if (Name = '') then result := false
-    else if (Username = '') then result := false
-    else if (Server = '') then result := false
+    else if (_jabberID.user = '') then result := false
+    else if (_jabberID.domain = '') then result := false
     else if (Password = '') then result := false
-    else if (Resource = '') then result := false
+    else if (_jabberID.resource = '') then result := false
     else if (Port = 0) then result := false
     else result := true;
+end;
+{---------------------------------------}
+function TJabberProfile.getUsername() : Widestring;
+begin
+    Result := '';
+    if (_jabberID <> nil) then
+      Result := _jabberID.user;
+end;
+{---------------------------------------}
+procedure TJabberProfile.setUsername(username: Widestring);
+var
+    domain, res: widestring;
+begin
+    domain := _jabberID.domain;
+    res := _jabberID.resource;
+    _jabberID.free();
+    _jabberID := TJabberID.Create(username, domain, res);
+end;
+{---------------------------------------}
+function TJabberProfile.getServer(): Widestring;
+begin
+    Result := '';
+    if (_jabberID <> nil) then
+      Result := _jabberID.domain;
+end;
+{---------------------------------------}
+procedure TJabberProfile.setServer(server: Widestring);
+var
+    username, res: widestring;
+begin
+    username := _jabberID.user;
+    res := _jabberID.resource;
+    _jabberID.free();
+    _jabberID := TJabberID.Create(username, server, res);
+end;
+{---------------------------------------}
+function TJabberProfile.getResource(): Widestring;
+begin
+    Result := '';
+    if (_jabberID <> nil) then
+      Result := _jabberID.resource;
+end;
+{---------------------------------------}
+procedure TJabberProfile.setResource(res: Widestring);
+var
+    username, server: widestring;
+begin
+    username := _jabberID.user;
+    server   := _jabberID.domain;
+    _jabberID.Free();
+    _jabberID := TJabberID.Create(username, server, res);
+end;
+{---------------------------------------}
+function TJabberProfile.getDisplayUsername(): Widestring;
+begin
+    Result := '';
+    if (_jabberID <> nil) then
+        Result := _jabberID.userDisplay;
+end;
+{---------------------------------------}
+function TJabberProfile.getJabberID(): TJabberID;
+begin
+    Result := _jabberID;
 end;
 
 initialization

@@ -43,7 +43,7 @@ type
 
   TFileXferPkg = class
     mode: TFileXferMode;
-    recip: Widestring;
+    recipDisplay: Widestring;
     pathname: Widestring;
     url: string;
     desc: Widestring;
@@ -54,6 +54,15 @@ type
     packet: TXMLTag;
     stream_host: Widestring;
     hash: string;
+
+    procedure setRecip(r: Widestring);
+    function  getRecip(): Widestring;
+
+    private
+        recipient: Widestring;
+
+    published
+    property recip: Widestring read getRecip write setRecip;
   end;
 
     THostPortPair = class
@@ -294,7 +303,7 @@ begin
     pkg.pathname := ExtractFilename(URLToFileName(url));
     pkg.desc := desc;
     pkg.mode := recv_oob;
-    tmps := WideFormat(_(sXferRecv), [from]);
+    tmps := WideFormat(_(sXferRecv), [pkg.recip]);
     tmp_jid.Free();
     xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
@@ -361,8 +370,6 @@ begin
         exit;
     end;
 
-    tmps := WideFormat(_(sXferRecv), [from]);
-
     pkg := TFileXferPkg.Create();
     pkg.mode := recv_si;
     pkg.recip := tag.getAttribute('from');
@@ -374,6 +381,8 @@ begin
     xfer_lock.Acquire();
     getXferManager().RecvFile(pkg);
     xfer_lock.Release();
+
+    tmps := WideFormat(_(sXferRecv), [pkg.recipDisplay]);
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps,
         RosterTreeImages.Find('service'));
 end;
@@ -878,6 +887,20 @@ begin
 
 
     end;
+end;
+
+procedure TFileXferPkg.setRecip(r: Widestring);
+var
+    jid: TJabberID;
+begin
+    recipient := r;
+    jid := TJabberID.Create(r);
+    recipDisplay := jid.getDisplayFull();
+    jid.Free();
+end;
+function  TFileXferPkg.getRecip(): Widestring;
+begin
+    Result := recipient;
 end;
 
 initialization

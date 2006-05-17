@@ -24,7 +24,7 @@ uses
   ComCtrls, 
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, fRosterTree, buttonFrame, Menus, StdCtrls, TntStdCtrls, ExtCtrls,
-  TntMenus;
+  TntMenus, JabberID;
 
 type
   TfrmSelContact = class(TForm)
@@ -90,8 +90,12 @@ end;
 
 {---------------------------------------}
 function TfrmSelContact.GetSelectedJID(): Widestring;
+var
+    jid: TJabberID;
 begin
-    Result := txtJid.Text;
+    jid := TJabberID.Create(txtJid.Text, false);
+    Result := jid.jid();
+    jid.Free();
 end;
 
 {---------------------------------------}
@@ -109,7 +113,7 @@ begin
     if (Node = nil) then exit;
     if (Node.Level = 0) then exit;
 
-    txtJid.Text := TJabberRosterItem(Node.Data).jid.full;
+    txtJid.Text := TJabberRosterItem(Node.Data).jid.getDisplayFull();
 end;
 
 end.

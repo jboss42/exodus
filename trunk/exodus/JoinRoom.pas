@@ -121,7 +121,7 @@ begin
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Prefs.getString('default_nick');
         if (txtNick.Text = '') then
-            txtNick.Text := MainSession.Username;
+            txtNick.Text := MainSession.Profile.getDisplayUsername();
         //txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
         populateServers();
         Show;
@@ -141,7 +141,7 @@ begin
         txtNick.Text := nick;
 
         if (txtNick.Text = '') then
-            txtNick.Text := MainSession.Username;
+            txtNick.Text := MainSession.Profile.getDisplayUsername();
 
         populateServers();
         Show;
@@ -237,6 +237,7 @@ var
     dconfig: boolean;
     pass: Widestring;
     rjid: Widestring;
+    rmjid: TJabberID;
     li: TTntListItem;
 begin
     if ((Tabs.ActivePage = tabSheet1) and (optBrowse.Checked)) then begin
@@ -264,6 +265,9 @@ begin
         if (li = nil) then exit;
         rjid := li.Caption + '@' + li.SubItems[0];
     end;
+    rmjid := TJabberID.Create(rjid, false);
+    rjid := rmjid.jid();
+    rmjid.Free();
 
     if (txtNick.Text = '') then begin
         MessageDlgW(_(sInvalidNick), mtError, [mbOK], 0);
@@ -482,9 +486,9 @@ begin
     i := Item.Index;
     if ((i < 0) or (i > _cur.Count)) then exit;
     ce := TJabberEntity(_cur[i]);
-    Item.Caption := ce.Jid.user;
+    Item.Caption := ce.Jid.userDisplay;
     Item.SubItems.Add(ce.jid.domain);
-    Item.SubItems.Add(ce.Name);
+    Item.SubItems.Add(ce.Jid.userDisplay);
 end;
 
 {---------------------------------------}

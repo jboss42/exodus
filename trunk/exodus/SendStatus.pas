@@ -363,7 +363,7 @@ end;
 procedure TfSendStatus.Setup(pkg: TFileXferPkg);
 begin
     _pkg := pkg;
-    lblTo.Caption := pkg.recip;
+    lblTo.Caption := pkg.recipDisplay;
     lblFile.Caption := ExtractFilename(pkg.pathname);
     lblStatus.Caption := _(sXferWaiting);
 end;
@@ -801,7 +801,7 @@ begin
         _state := send_offer_hosts
     else begin
         lblStatus.Caption := WideFormat(_('Your file transfer was refused to %s'),
-            [_pkg.recip]);
+            [_pkg.recipDisplay]);
         btnCancel.Caption := _('Close');
         _state := send_cancel;
     end;
@@ -884,7 +884,7 @@ begin
     else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
         // they refused
         MessageDlgW(WideFormat(_('The recipient (%s) refused your file: %s'),
-            [_pkg.recip, _pkg.pathname]), mtError, [mbOK], 0);
+            [_pkg.recipDisplay, _pkg.pathname]), mtError, [mbOK], 0);
         _state := send_cancel;
         DoState();
         getXferManager().killFrame(Self);

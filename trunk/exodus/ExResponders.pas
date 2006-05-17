@@ -181,7 +181,7 @@ begin
     jid := TJabberID.Create(j);
     ritem := MainSession.roster.Find(jid.jid);
     if (ritem = nil) then
-        result := jid.jid
+        result := jid.getDisplayJID()
     else
         result := ritem.Text;
     jid.Free();
@@ -606,8 +606,7 @@ begin
         with AddTag('user') do begin
             setAttribute('xmlns', XMLNS_BROWSE);
             setAttribute('type', 'client');
-            setAttribute('jid', _session.Username + '@' + _session.Server +
-                '/' + _session.Resource);
+            setAttribute('jid', _session.Profile.getJabberID.full());
             setAttribute('name', _session.Username);
 
             AddBasicTag('ns', XMLNS_SEARCH);

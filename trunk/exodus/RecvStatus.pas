@@ -609,7 +609,7 @@ begin
     _cur := -1;
     _pres := -1;
     bar1.Max := pkg.size;
-    lblFrom.Caption := pkg.recip;
+    lblFrom.Caption := pkg.recipDisplay;
     lblFile.Caption := ExtractFilename(pkg.pathname);
     lblStatus.Caption := '';
     _pres := MainSession.RegisterCallback(PresCallback);
@@ -770,7 +770,7 @@ begin
         MainSession.UnRegisterCallback(_pres);
         _pres := -1;
         MessageDlgW(WideFormat(_('The sender of a file transfer (%s) went offline.'),
-            [_pkg.recip]), mtError, [mbOK], 0);
+            [_pkg.recipDisplay]), mtError, [mbOK], 0);
         _state := recv_si_cancel;
         getXferManager().killFrame(Self);
     end;

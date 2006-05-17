@@ -69,6 +69,7 @@ function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 var
     f: TfrmBookmark;
     bm: TXMLTag;
+    tmp: TJabberID;
 begin
     bm := nil;
     if (jid <> '') then
@@ -79,22 +80,25 @@ begin
 
     with f do begin
         cboType.ItemIndex := 0;
+        tmp := TJabberID.Create(jid);
         if (bm = nil) then begin
             new := true;
-            txtJid.Text := jid;
-            txtNick.Text := MainSession.Profile.Username;
+            txtJid.Text := tmp.getDisplayJID();
+            txtNick.Text := MainSession.Profile.getDisplayUsername();
             if (name <> '') then
                 txtName.Text := bm_name
             else
-                txtName.Text := jid;
+                txtName.Text := tmp.getDisplayJID();
         end
         else begin
             new := false;
-            txtJID.Text := bm.GetAttribute('jid');
+            tmp := TJabberID.Create(bm.GetAttribute('jid'));
+            txtJID.Text := tmp.getDisplayJID();
             txtName.Text := bm.GetAttribute('name');
             chkAutoJoin.Checked := (bm.GetAttribute('autojoin') = 'true');
             txtNick.Text := bm.GetBasicText('nick');
         end;
+        tmp.Free();
         Show();
     end;
 
@@ -113,14 +117,16 @@ var
     bm: TXMLTag;
     nick: TXMLTag;
     ri: TJabberRosterItem;
+    jid: TJabberID;
 begin
     // Save any changes to the bookmark and resave
+    jid := TJabberID.Create(txtJid.Text, false);
     if (new) then begin
-        MainSession.Bookmarks.AddBookmark(txtJid.Text, txtName.Text,
+        MainSession.Bookmarks.AddBookmark(jid.jid(), txtName.Text,
             txtNick.Text, chkAutoJoin.Checked);
     end
     else begin
-        bm := MainSession.Bookmarks.FindBookmark(txtJid.Text);
+        bm := MainSession.Bookmarks.FindBookmark(jid.jid());
         assert(bm <> nil);
         bm.setAttribute('name', txtName.Text);
         if chkAutoJoin.Checked then
@@ -136,7 +142,7 @@ begin
         nick.AddCData(txtNick.Text);
 
         MainSession.bookmarks.SaveBookmarks();
-        ri := MainSession.Roster.Find(txtJid.Text);
+        ri := MainSession.Roster.Find(jid.jid());
         assert(ri <> nil);
         ri.Tag := bm;
 
@@ -146,6 +152,7 @@ begin
         // tell everyone about the updated item
         MainSession.FireEvent('/roster/item', bm, ri);
     end;
+    jid.Free();
     Self.Close;
 end;
 

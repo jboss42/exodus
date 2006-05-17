@@ -744,7 +744,7 @@ begin
     tmp_jid := TJabberID.Create(jid);
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then begin
-        txtFrom.Caption := ritem.Text + ' <' + jid + '>';
+        txtFrom.Caption := ritem.Text + ' <' + tmp_jid.getDisplayFull() + '>';
         if (pnlSendSubject.Visible) then
             Self.Caption := _(sMessageTo) + ritem.Text
         else

@@ -190,7 +190,7 @@ begin
     ritem := MainSession.roster.Find(from.jid);
     if ((ritem <> nil) and (ritem.ask = 'subscribe')) then begin
         // we are got denied by this person
-        MessageDlg(Format(sS10nDeny, [from.jid]), mtInformation, [mbOK], 0);
+        MessageDlg(Format(sS10nDeny, [from.GetDisplayJID()]), mtInformation, [mbOK], 0);
         ritem.remove();
     end;
     from.Free();

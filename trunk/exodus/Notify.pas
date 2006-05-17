@@ -118,7 +118,7 @@ begin
     if ((ritem <> nil) and (ritem.Text <> '')) then
         nick := ritem.Text
     else if (tmp_jid.user <> '') then
-        nick := tmp_jid.user
+        nick := tmp_jid.userDisplay
     else
         nick := '';
 

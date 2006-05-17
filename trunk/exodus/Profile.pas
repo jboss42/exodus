@@ -166,7 +166,7 @@ begin
         MainSession.Roster.AssignGroups(GrpListBox.Items);
         ResListBox.Items.Clear;
         optSubscrip.ItemIndex := 0;
-        txtJID.Text := tmp_jid.jid;
+        txtJID.Text := tmp_jid.getDisplayJID();
 
         ritem := MainSession.Roster.Find(tmp_jid.jid);
         if (ritem <> nil) then begin

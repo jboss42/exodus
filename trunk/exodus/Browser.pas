@@ -197,8 +197,9 @@ begin
 
     if (jid = '') then
         Result.GoJID(MainSession.Server, false)
-    else
+    else begin
         Result.GoJID(jid, true);
+    end;
 end;
 
 {---------------------------------------}
@@ -245,10 +246,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.GoJID(jid: Widestring; refresh: boolean; node: Widestring);
+var
+  tjid: TJabberID;
 begin
-    cboJID.Text := jid;
+    tjid := TJabberID.Create(jid);
+    cboJID.Text := tjid.GetDisplayFull();
     DoBrowse(jid, refresh, node);
     PushJID(jid, node);
+    tjid.Free();
 end;
 
 {---------------------------------------}
