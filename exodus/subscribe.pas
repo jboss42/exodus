@@ -56,7 +56,7 @@ type
     procedure chkSubscribeClick(Sender: TObject);
   private
     { Private declarations }
-    _jid: Widestring;
+    _jid: TJabberID;
     _capsid: Widestring;
     _capscb: integer;
 
@@ -96,8 +96,8 @@ var
     e: TJabberEntity;
     idx: integer;
 begin
-    _jid := jid.full;
-    lblJID.Caption := jid.full;
+    _jid := TJabberID.Create(jid);
+    lblJID.Caption := _jid.getDisplayFull();
 
     chkSubscribe.Checked := true;
     chkSubscribe.Enabled := true;
@@ -121,7 +121,7 @@ begin
                 cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
         end
         else
-            txtNickname.Text := jid.user;
+            txtNickname.Text := jid.userDisplay;
     end;
 
     idx := -1;
@@ -184,9 +184,10 @@ procedure TfrmSubscribe.frameButtons1btnOKClick(Sender: TObject);
 var
     sjid, snick, sgrp: string;
     p1: TJabberPres;
+
 begin
     // send a subscribed and possible add..
-    sjid := lblJID.Caption;
+    sjid := _jid.full();
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
 
@@ -207,7 +208,7 @@ var
     p: TJabberPres;
     sjid: string;
 begin
-    sjid := lblJID.Caption;
+    sjid := _jid.full();
     p := TJabberPres.Create;
     p.toJID := TJabberID.Create(sjid);
     p.PresType := 'unsubscribed';
@@ -226,20 +227,20 @@ end;
 {---------------------------------------}
 procedure TfrmSubscribe.mnuMessageClick(Sender: TObject);
 begin
-    StartMsg(lblJID.Caption);
+    StartMsg(_jid.full());
 end;
 
 {---------------------------------------}
 procedure TfrmSubscribe.mnuChatClick(Sender: TObject);
 begin
-    StartChat(lblJID.Caption, '', true);
+    StartChat(_jid.full(), '', true);
 end;
 
 {---------------------------------------}
 procedure TfrmSubscribe.mnuProfileClick(Sender: TObject);
 begin
     // muh.  not exactly right, but at least it isn't *wrong*.
-    ShowProfile(lblJID.Caption).FormStyle := fsStayOnTop;
+    ShowProfile(_jid.full()).FormStyle := fsStayOnTop;
 end;
 
 {---------------------------------------}
@@ -271,6 +272,9 @@ begin
 
     if ((_capscb <> -1) and (MainSession <> nil)) then
         MainSession.UnRegisterCallback(_capscb);
+
+    if (_jid <> nil) then
+        _jid.Free();
 end;
 
 {---------------------------------------}

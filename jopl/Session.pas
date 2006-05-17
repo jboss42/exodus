@@ -164,6 +164,7 @@ type
         function generateID: WideString;
         function IsBlocked(jid : WideString): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
+        function getDisplayUsername(): widestring;
 
         procedure Block(jid : TJabberID);
         procedure UnBlock(jid : TJabberID);
@@ -1235,6 +1236,11 @@ begin
     _compression_err_cb := -1;
 
     Self.FireEvent('/session/error/compression', tag);
+end;
+
+function TJabberSession.getDisplayUsername(): widestring;
+begin
+    Result := Profile.getJabberID.userDisplay;
 end;
 
 end.

@@ -147,6 +147,7 @@ var
     i: integer;
     rjid: WideString;
     items: TXMLTagList;
+    itemJID: TJabberID;
 begin
     // callback for list administration
     _iq := nil;
@@ -168,10 +169,12 @@ begin
 
     if (items.Count > 0) then begin
         for i := 0 to items.Count - 1 do begin
+            itemJID := TJabberID.Create(items[i].GetAttribute('jid'));
             li := TTntListItem(lstItems.Items.Add());
             li.Caption := items[i].GetAttribute('nick');
-            li.SubItems.Add(items[i].GetAttribute('jid'));
+            li.SubItems.Add(itemJID.getDisplayFull());
             li.Checked := true;
+            itemJID.Free();
         end;
     end;
 
@@ -298,7 +301,7 @@ begin
 
     li := TTntListItem(lstItems.Items.Add());
     li.Caption := n;
-    li.SubItems.Add(tmp_jid.full);
+    li.SubItems.Add(tmp_jid.getDisplayFull());
     li.Checked := true;
     _adds.AddObject(tmp_jid.full, li);
 
@@ -353,11 +356,13 @@ procedure TfrmRoomAdminList.btnRemoveClick(Sender: TObject);
 var
     j: Widestring;
     idx, i: integer;
+    itemJID: TJabberID;
 begin
     // Remove these folks from the list
     for i := lstItems.Items.Count - 1 downto 0 do begin
         if (lstItems.Items[i].Selected) then begin
-            j := lstItems.Items[i].SubItems[0];
+            itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
+            j := itemJID.full();
             idx := _adds.IndexOf(j);
             if (idx >= 0) then
                 _adds.Delete(idx)

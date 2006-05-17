@@ -310,7 +310,7 @@ begin
     grps.Free();
     ri.SetCleanGroups();
     if (ri.Tooltip = '') then
-        ri.Tooltip := ri.jid.full + ': ' + _('Offline')
+        ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
 end;
 
 
@@ -456,7 +456,7 @@ begin
             ri.Text := pres.fromJid.resource;
             ri.Status := pres.Status;
             ri.Action := '/session/gui/contact';
-            ri.Tooltip := pres.fromJid.full;
+            ri.Tooltip := pres.fromJid.getDisplayFull();
             ri.AddGroup(_('My Resources'));
             ri.SetCleanGroups();
 
@@ -545,13 +545,13 @@ begin
         ri.setPresenceImage(p.show);
 
     if (p = nil) then
-        ri.Tooltip := ri.jid.full + ': ' + _('Offline')
+        ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
     else begin
         // Compile a list of jid: status for each resource
         tmps := '';
         while (p <> nil) do begin
             if (tmps <> '') then tmps := tmps + ''#13#10;
-            tmps := tmps + p.fromJid.full + ': ' + p.Status;
+            tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
             p := TJabberSession(_js).ppdb.NextPres(p);
         end;
         ri.Tooltip := tmps;

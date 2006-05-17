@@ -24,11 +24,19 @@ uses
     Unicode, XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus;
+    RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
+    JabberID;
 
 type
   TMemberNode = TTntListItem;
   TRoomMember = class
+  private
+    _real_jid: TJabberID;
+
+    function  getRealJID(): WideString;
+    function  getRealDisplayJID(): WideString;
+    procedure setRealJID(jid: WideString);
+
   public
     Nick: Widestring;
     jid: Widestring;
@@ -38,7 +46,9 @@ type
     blockShow: Widestring;
     role: WideString;
     affil: WideString;
-    real_jid: WideString;
+    destructor Destroy(); override;
+  published
+    property real_jid: WideString read getRealJID write setRealJID;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -336,7 +346,6 @@ uses
     IQ,
     Jabber1,
     JabberConst,
-    JabberID,
     JabberMsg,
     JoinRoom,
     MsgDisplay,
@@ -383,7 +392,7 @@ begin
     // Find out nick..
     if (rnick = '') then begin
         n := MainSession.Prefs.getString('default_nick');
-        if (n = '') then n := MainSession.Username;
+        if (n = '') then n := MainSession.Profile.getDisplayUsername();
     end
     else
         n := rnick;
@@ -404,7 +413,7 @@ begin
         if (send_presence) then
             f.sendStartPresence();
 
-        f.Caption := tmp_jid.user;
+        f.Caption := tmp_jid.userDisplay;
         if (MainSession.Prefs.getBool('expanded')) then begin
             f.DockForm;
         end;
@@ -427,8 +436,8 @@ begin
         // let the plugins know about the new room
         ExComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
 
-        tmp_jid.Free();
         room_list.AddObject(rjid, f);
+        tmp_jid.Free();
     end;
 
     f.Show;
@@ -1659,10 +1668,12 @@ end;
 procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
     bm_name: WideString;
+    tmp_jid: TJabberID;
 begin
   inherited;
     // bookmark this room..
-    bm_name := Self.jid;
+    tmp_jid := TJabberID.Create(Self.jid);
+    bm_name := tmp_jid.getDisplayJID();
 
     if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
         MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false);
@@ -1973,7 +1984,7 @@ begin
                 tmps := tmps + ''#13#10 + _('Affiliation: ') + m.affil;
             end;
             if (m.real_jid <> '') then
-                tmps := tmps + ''#13#10 + '<' + m.real_jid + '>';
+                tmps := tmps + ''#13#10 + '<' + m.getRealDisplayJID() + '>';
         end;
         InfoTip := tmps;
     end;
@@ -2554,6 +2565,39 @@ begin
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
     end;
+end;
+
+function TRoomMember.getRealJID(): WideString;
+begin
+    Result := '';
+    if (_real_jid <> nil) then
+    begin
+        Result := _real_jid.full();
+    end;
+end;
+
+function TRoomMember.getRealDisplayJID(): WideString;
+begin
+    Result := '';
+    if (_real_jid <> nil) then
+    begin
+        Result := _real_jid.getDisplayFull();
+    end;
+end;
+
+procedure TRoomMember.setRealJID(jid: WideString);
+begin
+    if (_real_jid <> nil) then
+      _real_jid.Free();
+
+    _real_jid := TJabberID.Create(jid);
+end;
+
+destructor TRoomMember.Destroy();
+begin
+    inherited Destroy();
+    if (_real_jid <> nil) then
+      _real_jid.Free();
 end;
 
 initialization

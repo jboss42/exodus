@@ -297,7 +297,7 @@ procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
         // populate the fields
-        cboJabberID.Text := Username + '@' + Server;
+        cboJabberID.Text := profile.getDisplayUsername() + '@' + Server;
         cboResource.Text := Resource;
         txtPassword.Text := Password;
         txtRealm.Text := SASLRealm;
@@ -315,9 +315,9 @@ var
 begin
     with Profile do begin
         // Update the profile
-        j := TJabberID.Create(cboJabberID.Text);
+        j := TJabberID.Create(cboJabberID.Text, false);
         Server := j.domain;
-        Username := j.user;
+        Username := j.User;
         SavePasswd := chkSavePasswd.Checked;
         password := txtPassword.Text;
         resource := cboResource.Text;
@@ -447,7 +447,7 @@ var
 begin
     // always allow people to fix mistakes :)
     if (Key = #8) then exit;
-
+                                   {
     // check to make sure JID is valid
     uh := cboJabberID.Text;
     r := cboResource.Text;
@@ -458,6 +458,7 @@ begin
     jid := uh + '/' + r;
     if (not isValidJid(jid)) then
         Key := #0;
+        }
 end;
 
 {---------------------------------------}
@@ -531,11 +532,11 @@ var
 begin
     // stringprep txtUsername, cboServer, or cboResource.
     if (Sender = cboJabberID) then begin
-        jid := TJabberID.Create(cboJabberID.Text);
+        jid := TJabberID.Create(cboJabberID.Text, false);
         if (not jid.isValid) then
             MessageDlgW(_('The Jabber ID you entered is not allowed.'), mtError, [mbOK], 0)
         else
-            cboJabberID.Text := jid.jid;
+            cboJabberID.Text := jid.getDisplayJID();
         jid.Free();
     end
     else if (Sender = cboResource) then begin

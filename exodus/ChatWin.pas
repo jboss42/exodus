@@ -422,7 +422,7 @@ begin
 
     _mynick := MainSession.Prefs.getString('default_nick');
     if (_mynick = '') then
-        _mynick := MainSession.Username;
+        _mynick := MainSession.Profile.getDisplayUsername();
 end;
 
 {---------------------------------------}
@@ -529,7 +529,7 @@ begin
         // This person is in our roster
         lblNick.Caption := ritem.Text;
         Caption := ritem.Text;
-        lblNick.Hint := _jid.full;
+        lblNick.Hint := _jid.getDisplayFull();
         MsgList.setTitle(ritem.Text);
         if (p = nil) then
             ChangePresImage(ritem, 'offline', 'offline')
@@ -543,10 +543,10 @@ begin
     else begin
         if (OtherNick <> '') then
             n := OtherNick
-        else if (_jid.user <> '') then
-            n := _jid.user
+        else if (_jid.userDisplay <> '') then
+            n := _jid.userDisplay
         else
-            n := _jid.full;
+            n := _jid.getDisplayFull();
 
         lblNick.Caption := n;
         lblNick.Hint := cjid;
@@ -940,7 +940,7 @@ begin
 
     h := show;
     if (status <> '') then h := h + ', ' + status;
-    h := h + ' <' + _jid.full + '>';
+    h := h + ' <' + _jid.getDisplayFull() + '>';
     lblNick.Hint := h;
 
     RosterTreeImages.GetIcon(_pres_img, Self.Icon);

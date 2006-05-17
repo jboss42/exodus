@@ -180,8 +180,7 @@ begin
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');
 
     if MainSession.Active then begin
-        lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
-            '/' + MainSession.Resource;
+        lblJID.Caption := MainSession.Profile.getJabberID().getDisplayFull;
     end
     else
         lblJID.Caption := _('Disconnected');
@@ -382,8 +381,7 @@ end;
 procedure TfrmDebug.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/authenticated') then begin
-        lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
-            '/' + MainSession.Resource;
+        lblJID.Caption := MainSession.Profile.getJabberID().getDisplayFull;;
     end
     else if (event = '/session/disconnected') then
         lblJID.Caption := _('Disconnected');

@@ -25,7 +25,7 @@ uses
     Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
-  TntStdCtrls, TntComCtrls;
+  TntStdCtrls, TntComCtrls, JabberID;
 
 type
   TfrmInvite = class(TForm)
@@ -74,7 +74,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, JabberID, PrefController,
+    ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
     JabberConst, InputPassword,
     Session, Room, RosterWindow, NodeItem, Roster;
 
@@ -135,9 +135,12 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 var
     i: integer;
     f: TfrmInvite;
+    rjid: TJabberID;
 begin
     f := TfrmInvite.Create(Application);
-    f.cboRoom.Text := room_jid;
+    rjid := TJabberID.Create(room_jid);
+    f.cboRoom.Text := rjid.getDisplayJID();
+    rjid.Free();
 
     // Only add the jids selected
     if (jids <> nil) then begin
@@ -179,7 +182,7 @@ begin
 
     n := lstJIDS.Items.Add();
     n.Caption := cap;
-    n.SubItems.Add(jid);
+    n.SubItems.Add(ritem.Jid.getDisplayFull());
 end;
 
 {---------------------------------------}
@@ -196,9 +199,11 @@ var
     x, msg: TXMLTag;
     b, room: WideString;
     room_idx: integer;
+    jid, roomJID: TJabberID;
 begin
     // Make sure we are actually in this room...
-    room := cboRoom.Text;
+    roomJID := TJabberID.Create(cboRoom.Text, false);
+    room := roomJID.jid();
 
     if ((room = '') or (not isValidJID(room))) then begin
         MessageDlgW(_(sInvalidRoomJID), mtError, [mbOK], 0);
@@ -212,19 +217,21 @@ begin
 
     // Send out invites.
     b := WideFormat(_(sInviteBody), [room]);
-    memReason.Lines.Add(_(sConfRoom) + ' ' + room);
+    memReason.Lines.Add(_(sConfRoom) + ' ' + roomJID.getDisplayJID());
 
     for i := 0 to lstJIDS.Items.Count - 1 do begin
         msg := TXMLTag.Create('message');
         if ((frm <> nil) and (frm.isMUCRoom)) then begin
             // this is MUC.. use muc#user
-            msg.setAttribute('to', room);
+            msg.setAttribute('to', roomJID.jid());
             b := '';
             x := msg.AddTag('x');
             with x do begin
                 setAttribute('xmlns', xmlns_mucuser);
                 with AddTag('invite') do begin
-                    setAttribute('to', lstJIDS.Items[i].SubItems[0]);
+                    jid := TJabberID.Create(lstJIDS.Items[i].SubItems[0],false);
+                    setAttribute('to', jid.jid );
+                    jid.Free();
                     AddBasicTag('reason', memReason.Lines.Text);
                 end;
             end;
@@ -236,21 +243,34 @@ begin
             x := msg.AddTag('x');
             with x do begin
                 setAttribute('xmlns', 'jabber:x:conference');
-                setAttribute('jid', room);
+                setAttribute('jid', roomJID.jid());
             end;
         end;
         jabberSendMsg(msg.getAttribute('to'), msg, x, b, '');
     end;
+    roomJID.Free();
     Self.Close;
 end;
 
 {---------------------------------------}
 procedure TfrmInvite.FormCreate(Sender: TObject);
+var
+    tmp: TWideStringList;
+    jid: TJabberID;
+    i  : integer;
 begin
     // make the form the same width as the list view
     TranslateComponent(Self);
     Self.ClientWidth := pnlMain.Width + 2;
-    AssignTntStrings(room.room_list, cboRoom.Items);
+    tmp := TWideStringList.Create();
+    for i := 0 to room.room_list.Count - 1 do
+        begin
+            jid := TJabberID.Create(room.room_list.Strings[i]);
+            tmp.Add(jid.getDisplayJID());
+            jid.Free();
+        end;
+    AssignTntStrings(tmp, cboRoom.Items);
+    tmp.Free();
     pnlMain.Align := alClient;
     _selector := TfrmSelContact.Create(nil);
 end;

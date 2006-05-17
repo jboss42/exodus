@@ -189,11 +189,14 @@ end;
 
 {---------------------------------------}
 procedure TBookmarkManager.parseItem(tag: TXMLTag; ri: TJabberRosterItem);
+var
+    jid: TJabberID;
 begin
+    jid := TJabberID.Create(tag.GetAttribute('jid'));
     ri.IsContact := false;
     ri.Text := tag.getAttribute('name');
     ri.Status := '';
-    ri.Tooltip := tag.GetAttribute('jid');
+    ri.Tooltip := jid.getDisplayJID();
     ri.Action := '/session/gui/conference';
     ri.Tag := tag;
     tag.setAttribute('xmlns', XMLNS_BM);
@@ -206,6 +209,8 @@ begin
 
     // setup right click opts for bookmarks
     ri.CustomContext := _menu;
+
+    jid.Free();
 end;
 
 {---------------------------------------}
@@ -320,7 +325,6 @@ begin
         <password>titania</password>
     </conference>
     }
-
     bm := TXMLTag.Create('conference');
     bm.setAttribute('xmlns', XMLNS_BM);
     bm.setAttribute('jid', sjid);

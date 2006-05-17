@@ -143,7 +143,7 @@ begin
         img_idx := 23;
         msg := e.str_content;
         DoNotify(nil, 'notify_newchat',
-            _('Chat with ') + tmp_jid.jid, img_idx);
+            _('Chat with ') + tmp_jid.getDisplayJID(), img_idx);
     end;
 
     evt_Message: begin
@@ -154,7 +154,7 @@ begin
             
         msg := e.str_content;
         DoNotify(nil, 'notify_normalmsg',
-                 _(sMsgMessage) + tmp_jid.jid, img_idx);
+                 _(sMsgMessage) + tmp_jid.getDisplayJID(), img_idx);
 
         xml := e.tag;
         if (xml <> nil) then begin
@@ -177,7 +177,7 @@ begin
         img_idx := 21;
         msg := e.str_content;
         DoNotify(nil, 'notify_invite',
-                 _(sMsgInvite) + tmp_jid.jid, img_idx);
+                 _(sMsgInvite) + tmp_jid.getDisplayJID(), img_idx);
     end;
 
     evt_RosterItems: begin

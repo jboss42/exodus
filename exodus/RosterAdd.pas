@@ -87,8 +87,8 @@ var
 begin
     f := TfrmAdd.Create(Application);
     if (contact <> nil) then begin
-        f.txtJid.Text := contact.jid;
-        f.txtNickname.Text := contact.user;
+        f.txtJid.Text := contact.GetDisplayJID();
+        f.txtNickname.Text := contact.userDisplay;
     end;
     contact.Free();
     f.Show;
@@ -140,12 +140,13 @@ begin
     else begin
         // Adding a normal Jabber user
         // check to see if we have an "@" sign
-        if (Lowercase(sjid) = Lowercase(MainSession.Username + '@' + MainSession.Server)) then begin
+        tmp_jid := TJabberID.Create(sjid, false);
+        sjid := tmp_jid.jid;
+        if (Lowercase(sjid) = Lowercase(MainSession.Profile.getJabberID().jid())) then begin
             MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);
             exit;
         end;
 
-        tmp_jid := TJabberID.Create(sjid);
         if (tmp_jid.user = '') then
             if MessageDlgW(_(sNoDomain), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         if (tmp_jid.resource <> '') then

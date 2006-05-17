@@ -392,14 +392,14 @@ begin
         // otherwise, if a jid was specified, use it as the profile name.
         // otherwise, if we have no profiles yet, use the default profile name.
         if (connect_node <> nil) then begin
-            profile_name := WideFormat(sXMPP_Profile, [jid.jid]);
+            profile_name := WideFormat(sXMPP_Profile, [jid.GetDisplayJID()]);
             profile := CreateProfile(profile_name);
             profile.temp := true;
         end
         else begin
             if (profile_name = '') then begin
                 if (jid <> nil) then
-                    profile_name := jid.jid
+                    profile_name := jid.GetDisplayJID()
                 else if (Profiles.Count = 0) then
                     profile_name := _(sDefaultProfile);
             end;

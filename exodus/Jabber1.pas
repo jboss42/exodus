@@ -1304,7 +1304,7 @@ begin
     end
 
     else if event = '/session/authenticated' then with MainSession do begin
-        Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
+        Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
         setTrayInfo(Self.Caption);
 
         // Accept files dragged from Explorer
@@ -2510,6 +2510,7 @@ var
     n: TTreeNode;
     ritem: TJabberRosterItem;
     jid: WideString;
+    tjid: TJabberID;
 begin
     // Start a chat w/ a specific JID
     jid := '';
@@ -2518,12 +2519,19 @@ begin
         if (TObject(n.Data) is TJabberRosterItem) then begin
             ritem := TJabberRosterItem(n.Data);
             if ritem <> nil then
-                jid := ritem.jid.jid
+            begin
+                jid := ritem.jid.getDisplayJID();
+            end;
         end;
     end;
 
     if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
+    begin
+        tjid := TJabberID.Create(jid, false);
+        jid := tjid.jid();
+        tjid.Free();
         StartChat(jid, '', true);
+    end;
 end;
 
 {---------------------------------------}
@@ -2785,6 +2793,7 @@ var
     jid: WideString;
     n: TTreeNode;
     ritem: TJabberRosterItem;
+    tjid: TJabberID;
 begin
     // Message someone
     jid := '';
@@ -2793,12 +2802,19 @@ begin
         if (TObject(n.Data) is TJabberRosterItem) then begin
             ritem := TJabberRosterItem(n.Data);
             if ritem <> nil then
-                jid := ritem.jid.jid
+            begin
+                jid := ritem.jid.getDisplayJID()
+            end;
         end;
     end;
 
     if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
+    begin
+        tjid := TJabberID.Create(jid, false);
+        jid := tjid.jid();
+        tjid.Free();
         StartMsg(jid);
+    end;
 end;
 
 {---------------------------------------}

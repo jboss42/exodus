@@ -3280,7 +3280,7 @@ begin
     else begin
         idx := Item.Index;
         p := TJabberProfile(MainSession.Prefs.Profiles.Objects[idx]);
-        InfoTip := p.Jid;
+        InfoTip := p.getJabberID().getDisplayJID();
     end;
 end;
 
