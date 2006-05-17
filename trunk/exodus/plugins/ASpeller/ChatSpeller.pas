@@ -129,7 +129,7 @@ begin
     if (_ignore <> '') then
         removeMenus();
 
-    _chat.UnRegister(reg_id);
+    _chat.UnRegisterPlugin(reg_id);
 end;
 
 {---------------------------------------}
