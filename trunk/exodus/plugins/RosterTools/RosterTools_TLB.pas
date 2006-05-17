@@ -1,4 +1,4 @@
-unit RosterTools_TLB;
+unit ExRosterTools_TLB;
 
 // ************************************************************************ //
 // WARNING                                                                    
@@ -12,17 +12,17 @@ unit RosterTools_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 1:33:30 PM from Type Library described below.
+// File generated on 5/17/2006 9:16:31 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb (1)
 // LIBID: {5EA5A7C9-CA6B-4F61-8FF1-95BFAD75397F}
 // LCID: 0
 // Helpfile: 
 // HelpString: RosterTools Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v1.0 Exodus, (C:\Projects\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -42,10 +42,10 @@ uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  RosterToolsMajorVersion = 1;
-  RosterToolsMinorVersion = 0;
+  ExRosterToolsMajorVersion = 1;
+  ExRosterToolsMinorVersion = 0;
 
-  LIBID_RosterTools: TGUID = '{5EA5A7C9-CA6B-4F61-8FF1-95BFAD75397F}';
+  LIBID_ExRosterTools: TGUID = '{5EA5A7C9-CA6B-4F61-8FF1-95BFAD75397F}';
 
   CLASS_RosterPlugin: TGUID = '{F4DAE94B-7B21-4576-A5D0-573A4E2CBD65}';
 type
