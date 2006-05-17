@@ -9,7 +9,7 @@ my $idl;
 for $s (@sub) {
     print "$pwd/$s\n";
     chdir "$pwd/$s";
-    grep unlink, glob("ExodusCOM_TLB.*");
+    grep unlink, glob("Exodus_TLB.*");
     e("copy ..\\..\\Exodus_TLB.pas");
 }
 
