@@ -31,10 +31,10 @@ type
         procedure createDefaultIDs();override;
     end;
 
-{$IFDEF EXODUS}
 const
     IMAGE_LIST_ID_ROSTER    : WideString = 'roster';
 
+{$IFDEF EXODUS}
     RI_OFFLINE_KEY          : WideString = 'offline';
     RI_OFFLINE_INDEX        : Integer = 0;
     RI_AVAILABLE_KEY        : WideString = 'available';
