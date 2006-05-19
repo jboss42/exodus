@@ -172,6 +172,13 @@ begin
     end;
     nus_user: begin
         if (optExistingAccount.Checked) then begin
+             with MainSession.Profile do begin
+                Username := txtUsername.Text;
+                Password := txtPassword.Text;
+                Resource := PrefController.getAppInfo.ID;
+                SavePasswd := true;
+                NewAccount := false;
+              end;
             _state := nus_auth;
             _runState();
         end
@@ -314,7 +321,7 @@ begin
             _state := nus_finish
         else if (event = '/session/error/auth') then
             _state := nus_error;
-                        
+
         if (_state <> nus_auth) then
             _runState();
     end;
@@ -325,6 +332,7 @@ procedure TfrmNewUser.RegGetCallback(event: string; tag: TXMLTag);
 var
     q, x: TXMLTag;
     f: TXMLTagList;
+    idx: integer;
 begin
     assert(_state = nus_get);
     _doneWait();
@@ -351,6 +359,11 @@ begin
         f := q.ChildTags();
         if (f.Count > 0) then begin
             _fields := true;
+            // Form may have been rendered before - remove it
+            for idx := 0 to (tbsReg.ControlCount-1) do
+                begin
+                    tbsReg.Controls[0].Destroy;
+                end;
             RenderTopFields(tbsReg, f, _key);
         end;
         Tabs.ActivePage := tbsReg;
@@ -480,7 +493,7 @@ begin
             _password := getTopFieldsPassword(tbsReg);
             PopulateTopFields(tbsReg, _iq.qTag);
         end;
-
+        
         with MainSession.Profile do begin
             Username := _username;
             password := _password;
@@ -488,23 +501,15 @@ begin
             SavePasswd := true;
             NewAccount := true;
         end;
-
-        MainSession.Prefs.SaveProfiles();
-
+               
         _iq.Send();
     end;
 
     nus_auth: begin
         // authenticate the user
         _wait();
-        _username := txtUsername.Text;
-        _password := txtPassword.Text;
 
         with MainSession.Profile do begin
-            Username := _username;
-            Password := _password;
-            Resource := PrefController.getAppInfo.ID;
-            SavePasswd := true;
             NewAccount := false;
         end;
 
