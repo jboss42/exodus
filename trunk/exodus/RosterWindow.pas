@@ -2786,6 +2786,7 @@ procedure TfrmRosterWindow.lblCreateClick(Sender: TObject);
 var
     pname: Widestring;
     p: TJabberProfile;
+    i: Integer;
 begin
     // Create a new profile
     pname := _(sProfileNew);
@@ -2793,8 +2794,25 @@ begin
         p := MainSession.Prefs.CreateProfile(pname);
         p.Resource := _(sProfileDefaultResource);
         p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
-        ShowConnDetails(p);
-        ShowProfiles();
+        case (ShowConnDetails(p)) of
+            mrCancel: Begin
+                MainSession.Prefs.RemoveProfile(p);
+                MainSession.Prefs.SaveProfiles();
+                ShowProfiles();
+            End;
+            mrYes: Begin
+                MainSession.Prefs.SaveProfiles();
+                i := MainSession.Prefs.Profiles.IndexOfObject(p);
+                assert(i >= 0);
+                MainSession.ActivateProfile(i);
+                ShowProfiles();
+                DoLogin(i);
+            End;
+            mrOK: Begin
+                MainSession.Prefs.SaveProfiles();
+                ShowProfiles();
+            End;
+        end;
     end;
 end;
 
