@@ -1106,7 +1106,7 @@ end;
 {---------------------------------------}
 procedure TExodusController.StartSearch(const SearchJID: WideString);
 begin
-    startSearch(SearchJID);
+    JUD.StartSearch(SearchJID);
 end;
 
 {---------------------------------------}
