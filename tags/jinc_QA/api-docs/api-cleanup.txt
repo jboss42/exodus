@@ -1,5 +1,0 @@
-API cleanup notes.
-
-Why aren't IExodusToolBar and IExodusToolBarButton part of COM GUI? 
-Why do they use different types for booleans? (long in COMGUI classes, VARIANT_BOOL in these classes), should they use the same param types?
-
