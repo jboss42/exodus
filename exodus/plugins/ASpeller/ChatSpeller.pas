@@ -29,7 +29,7 @@ uses
     Classes, ComObj, ActiveX, ExASpell_TLB, StdVcl, Unicode;
 
 type
-  TChatSpeller = class(TAutoObject, IExodusChatPlugin)
+  TChatSpeller = class(TAutoObject, IExodusChatPlugin, IExodusMenuListener)
   protected
     function onAfterMessage(var Body: WideString): WideString; safecall;
     function onBeforeMessage(var Body: WideString): WordBool; safecall;
@@ -39,6 +39,13 @@ type
     procedure onMenu(const ID: WideString); safecall;
     procedure onNewWindow(HWND: Integer); safecall;
     procedure onRecvMessage(const Body, xml: WideString); safecall;
+
+    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; safecall;
+    procedure OnAfterRecvMessage(var Body: WideString); safecall;
+
+        //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
+
   private
     _chat: IExodusChat;
     _msgout: TExRichEdit;
@@ -218,16 +225,16 @@ begin
         if (_ignore <> '') then removeMenus();
 
         // populate our lists..
-        _ignore := _chat.AddMsgOutMenu(sIgnore);
-        _ign_all := _chat.AddMsgOutMenu(sIgnoreAll);
-        _add := _chat.AddMsgOutMenu(sAddCustom);
-        _add_lower := _chat.AddMsgOutMenu(sAddCustomLower);
-        _sep := _chat.AddMsgOutMenu('-');
+        _ignore := _chat.AddMsgOutMenu(sIgnore, Self);
+        _ign_all := _chat.AddMsgOutMenu(sIgnoreAll, Self);
+        _add := _chat.AddMsgOutMenu(sAddCustom, Self);
+        _add_lower := _chat.AddMsgOutMenu(sAddCustomLower, Self);
+        _sep := _chat.AddMsgOutMenu('-', nil);
 
         repeat
             word_ := aspell_string_enumeration_next(elements);
             if (word_ <> nil) then begin
-                menu_id := _chat.AddMsgOutMenu(word_);
+                menu_id := _chat.AddMsgOutMenu(word_, Self);
                 if (menu_id <> '') then begin
                     _suggs.Add(menu_id);
                     _words.Add(word_);
@@ -344,7 +351,19 @@ procedure TChatSpeller.onRecvMessage(const Body, xml: WideString);
 begin
 
 end;
+function TChatSpeller.OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool;
+begin
+    Result := false;
+end;
+procedure TChatSpeller.OnAfterRecvMessage(var Body: WideString);
+begin
 
+end;
+
+procedure TChatSpeller.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+begin
+
+end;
 initialization
   TAutoObjectFactory.Create(ComServer, TChatSpeller, Class_ChatSpeller,
     ciMultiInstance, tmApartment);

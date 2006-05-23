@@ -42,7 +42,8 @@ type
       Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
-    { Protected declarations }
+    //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
 
   private
     _controller: IExodusController;
@@ -161,6 +162,12 @@ end;
 
 procedure TICQImportPlugin.NewOutgoingIM(const jid: WideString;
   const InstantMsg: IExodusChat);
+begin
+
+end;
+
+//IExodusMenuListener
+procedure TICQImportPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
 begin
 
 end;

@@ -28,7 +28,7 @@ uses
     ComObj, ActiveX, ExImportAIM_TLB, StdVcl;
 
 type
-  TAIMImportPlugin = class(TAutoObject, IExodusPlugin)
+  TAIMImportPlugin = class(TAutoObject, IExodusPlugin, IExodusMenuListener)
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
@@ -43,6 +43,7 @@ type
       Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
     { Protected declarations }
   private
     _controller: IExodusController;
@@ -136,7 +137,7 @@ procedure TAIMImportPlugin.Startup(
   const ExodusController: IExodusController);
 begin
     _controller := ExodusController;
-    _menu_id := _controller.addPluginMenu('Import AIM Buddy List');
+    _menu_id := _controller.addPluginMenu('Import AIM Buddy List', Self);
     _agent_cb := _controller.RegisterCallback('/session/agents', Self);
     _parser := TXMLTagParser.Create();
 end;
@@ -164,6 +165,11 @@ end;
 {---------------------------------------}
 procedure TAIMImportPlugin.NewOutgoingIM(const jid: WideString;
   const InstantMsg: IExodusChat);
+begin
+
+end;
+
+procedure TAimImportPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
 begin
 
 end;

@@ -48,7 +48,8 @@ type
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
     function CreateDockableWindow(const Caption: WideString): Integer;
       safecall;
-    function addPluginMenu(const Caption: WideString): WideString; safecall;
+    function AddPluginMenu(const caption: WideString;
+      const menuListener: IExodusMenuListener): WideString; safecall;
     procedure removePluginMenu(const ID: WideString); safecall;
     procedure monitorImplicitRegJID(const JabberID: WideString;
       FullJID: WordBool); safecall;
@@ -97,7 +98,8 @@ type
     function RegisterPresenceXML(const xml: WideString): WideString; safecall;
     procedure RemovePresenceXML(const ID: WideString); safecall;
     procedure TrackWindowsMsg(Message: Integer); safecall;
-    function AddContactMenu(const Caption: WideString): WideString; safecall;
+    function AddContactMenu(const caption: WideString;
+      const menuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveContactMenu(const ID: WideString); safecall;
     function GetActiveContact: WideString; safecall;
     function GetActiveGroup: WideString; safecall;
@@ -107,8 +109,10 @@ type
     procedure setAuthenticated(Authed: WordBool; const XML: WideString);
       safecall;
     procedure setAuthJID(const Username, Host, Resource: WideString); safecall;
-    function AddMessageMenu(const Caption: WideString): WideString; safecall;
-    function AddGroupMenu(const Caption: WideString): WideString; safecall;
+    function AddMessageMenu(const caption: WideString;
+      const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddGroupMenu(const caption: WideString;
+      const menuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveGroupMenu(const ID: WideString); safecall;
     procedure RegisterWithService(const JabberID: WideString); safecall;
     procedure lastRelease(var Shutdown: boolean);
@@ -129,6 +133,7 @@ type
     function Get_RoomLogger: IExodusLogger; safecall;
     procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
     procedure AddStringlistValue(const Key, Value: WideString); safecall;
+    procedure RemoveMessageMenu(const menuID: WideString); safecall;
 
     { Protected declarations }
   private
@@ -873,8 +878,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.addPluginMenu(
-  const Caption: WideString): WideString;
+function TExodusController.AddPluginMenu(const caption: WideString;
+  const menuListener: IExodusMenuListener): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
@@ -1215,8 +1220,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.AddContactMenu(
-  const Caption: WideString): WideString;
+function TExodusController.AddContactMenu(const caption: WideString;
+  const menuListener: IExodusMenuListener): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
@@ -1314,8 +1319,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.AddMessageMenu(
-  const Caption: WideString): WideString;
+function TExodusController.AddMessageMenu(const caption: WideString;
+  const menuListener: IExodusMenuListener): WideString;
 var
     mc: TMenuContainer;
     id: Widestring;
@@ -1348,7 +1353,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.AddGroupMenu(const Caption: WideString): WideString;
+function TExodusController.AddGroupMenu(const caption: WideString;
+  const menuListener: IExodusMenuListener): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
@@ -1556,6 +1562,11 @@ end;
 procedure TExodusController.AddStringlistValue(const Key, Value: WideString);
 begin
     MainSession.Prefs.AddStringlistValue(key, value);
+end;
+
+procedure TExodusController.RemoveMessageMenu(const menuID: WideString);
+begin
+
 end;
 
 initialization
