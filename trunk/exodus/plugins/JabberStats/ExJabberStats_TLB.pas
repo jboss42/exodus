@@ -12,17 +12,17 @@ unit ExJabberStats_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/22/2006 4:32:37 PM from Type Library described below.
+// File generated on 5/22/2006 10:08:24 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)
+// Type Lib: C:\source\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)
 // LIBID: {B39E3BDE-7316-4019-8F34-0C8DEA778330}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExJabberStats Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\runner\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v1.0 Exodus, (C:\source\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

@@ -45,7 +45,8 @@ type
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
-
+    //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
   private
     _exodus: IExodusController;
     _loaded: boolean;
@@ -241,6 +242,11 @@ begin
     _loaded := true;
 end;
 
+//IExodusMenuListener
+procedure TSpellPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+begin
+
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TSpellPlugin, Class_SpellPlugin,

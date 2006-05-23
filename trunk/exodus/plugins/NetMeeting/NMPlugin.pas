@@ -9,7 +9,7 @@ uses
     ComObj, ActiveX, ExNetMeeting_TLB, StdVcl;
 
 type
-  TExNetmeetingPlugin = class(TAutoObject, IExodusPlugin)
+  TExNetmeetingPlugin = class(TAutoObject, IExodusPlugin, IExodusMenuListener)
   protected
     function onInstantMsg(const Body, Subject: WideString): WideString;
       safecall;
@@ -28,7 +28,8 @@ type
       Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
-    { Protected declarations }
+        //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
   private
     _menu_id: Widestring;
     _exodus: IExodusController;
@@ -150,7 +151,7 @@ procedure TExNetmeetingPlugin.Startup(
 begin
     _parser := TXMLTagParser.Create();
     _exodus := ExodusController;
-    _menu_id := _exodus.addContactMenu('Start NetMeeting Call... ');
+    _menu_id := _exodus.addContactMenu('Start NetMeeting Call... ', Self);
     _xpath := '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]';
     _cb := _exodus.RegisterCallback(_xpath, Self);
 end;
@@ -169,6 +170,12 @@ end;
 
 procedure TExNetmeetingPlugin.NewOutgoingIM(const jid: WideString;
   const InstantMsg: IExodusChat);
+begin
+
+end;
+
+//IExodusMenuListener
+procedure TExNetmeetingPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
 begin
 
 end;

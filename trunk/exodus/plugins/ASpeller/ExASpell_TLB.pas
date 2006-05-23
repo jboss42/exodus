@@ -12,17 +12,17 @@ unit ExAspell_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/22/2006 4:32:36 PM from Type Library described below.
+// File generated on 5/22/2006 10:08:09 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\ASpeller\ExAspell.tlb (1)
+// Type Lib: C:\source\exodus\exodus\plugins\ASpeller\ExAspell.tlb (1)
 // LIBID: {FCC22055-8B46-40DE-A8D1-59666F9B8D06}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExAspell Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\runner\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v1.0 Exodus, (C:\source\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

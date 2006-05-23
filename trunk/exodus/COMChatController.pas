@@ -31,7 +31,7 @@ type
   TExodusChat = class(TAutoObject, IExodusChat)
   protected
     function Get_jid: WideString; safecall;
-    function AddContextMenu(const Caption: WideString): WideString; safecall;
+    function AddContextMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
     function UnRegisterPlugin(ID: Integer): WordBool; safecall;
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer;
@@ -39,7 +39,7 @@ type
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     procedure AddMsgOut(const Value: WideString); safecall;
-    function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
+    function AddMsgOutMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
     procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); safecall;
     function Get_CurrentThreadID: WideString; safecall;
@@ -227,7 +227,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.AddContextMenu(const Caption: WideString): WideString;
+function TExodusChat.AddContextMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
@@ -267,7 +267,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.AddMsgOutMenu(const Caption: WideString): WideString;
+function TExodusChat.AddMsgOutMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString;
 var
     id: Widestring;
     mi: TMenuItem;

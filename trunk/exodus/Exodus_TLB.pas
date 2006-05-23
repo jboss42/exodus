@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/22/2006 6:33:08 PM from Type Library described below.
+// File generated on 5/22/2006 9:32:44 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -49,7 +49,7 @@ const
   IID_IExodusController: TGUID = '{0BB5F3EB-D671-420F-93BA-61049B046912}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
-  IID_IExodusPlugin: TGUID = '{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}';
+  IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
   IID_IExodusChatPlugin: TGUID = '{E28E487A-7258-4B32-AD1C-F23A808F0460}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
@@ -99,6 +99,7 @@ const
   CLASS_ExodusLogMsg: TGUID = '{740743C0-7BEF-48E8-BD05-1470047F03CA}';
   IID_IExodusLogListener: TGUID = '{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}';
   CLASS_ExodusLogListener: TGUID = '{98ED888A-0569-4E5B-8933-36EBF08812B4}';
+  IID_IExodusPlugin: TGUID = '{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -152,8 +153,8 @@ type
   IExodusControllerDisp = dispinterface;
   IExodusChat = interface;
   IExodusChatDisp = dispinterface;
-  IExodusPlugin = interface;
-  IExodusPluginDisp = dispinterface;
+  IExodusMenuListener = interface;
+  IExodusMenuListenerDisp = dispinterface;
   IExodusChatPlugin = interface;
   IExodusChatPluginDisp = dispinterface;
   IExodusRoster = interface;
@@ -226,6 +227,8 @@ type
   IExodusLogMsgDisp = dispinterface;
   IExodusLogListener = interface;
   IExodusLogListenerDisp = dispinterface;
+  IExodusPlugin = interface;
+  IExodusPluginDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -273,8 +276,8 @@ type
                         const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     function CreateDockableWindow(const Caption: WideString): Integer; safecall;
-    function AddPluginMenu(const Caption: WideString): WideString; safecall;
-    procedure RemovePluginMenu(const ID: WideString); safecall;
+    function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemovePluginMenu(const menuID: WideString); safecall;
     procedure MonitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
     procedure GetAgentList(const Server: WideString); safecall;
     function GetAgentService(const Server: WideString; const Service: WideString): WideString; safecall;
@@ -299,11 +302,11 @@ type
     procedure SetPrefAsBool(const Key: WideString; Value: WordBool); safecall;
     function FindChat(const JabberID: WideString; const resource: WideString): Integer; safecall;
     procedure StartSearch(const SearchJID: WideString); safecall;
-    procedure StartRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure StartRoom(const RoomJID: WideString; const nickname: WideString; 
                         const Password: WideString; SendPresence: WordBool); safecall;
     procedure StartInstantMsg(const JabberID: WideString); safecall;
     procedure StartBrowser(const BrowseJID: WideString); safecall;
-    procedure ShowJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure ShowJoinRoom(const RoomJID: WideString; const nickname: WideString; 
                            const Password: WideString); safecall;
     procedure ShowPrefs; safecall;
     procedure ShowCustomPresDialog; safecall;
@@ -318,8 +321,8 @@ type
     function RegisterPresenceXML(const XML: WideString): WideString; safecall;
     procedure RemovePresenceXML(const ID: WideString); safecall;
     procedure TrackWindowsMsg(Message: Integer); safecall;
-    function AddContactMenu(const Caption: WideString): WideString; safecall;
-    procedure RemoveContactMenu(const ID: WideString); safecall;
+    function AddContactMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveContactMenu(const menuID: WideString); safecall;
     function GetActiveContact: WideString; safecall;
     function GetActiveGroup: WideString; safecall;
     function GetActiveContacts(Online: WordBool): OleVariant; safecall;
@@ -328,9 +331,9 @@ type
     procedure SetAuthenticated(Authed: WordBool; const XML: WideString); safecall;
     procedure SetAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); safecall;
-    function AddMessageMenu(const Caption: WideString): WideString; safecall;
-    function AddGroupMenu(const Caption: WideString): WideString; safecall;
-    procedure RemoveGroupMenu(const ID: WideString); safecall;
+    function AddMessageMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddGroupMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveGroupMenu(const menuID: WideString); safecall;
     procedure RegisterWithService(const JabberID: WideString); safecall;
     procedure ShowAddContact(const jid: WideString); safecall;
     procedure RegisterCapExtension(const ext: WideString; const feature: WideString); safecall;
@@ -347,6 +350,7 @@ type
     function Get_RoomLogger: IExodusLogger; safecall;
     procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
     procedure AddStringlistValue(const Key: WideString; const Value: WideString); safecall;
+    procedure RemoveMessageMenu(const menuID: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -387,8 +391,8 @@ type
                         const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
     function CreateDockableWindow(const Caption: WideString): Integer; dispid 16;
-    function AddPluginMenu(const Caption: WideString): WideString; dispid 14;
-    procedure RemovePluginMenu(const ID: WideString); dispid 15;
+    function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 14;
+    procedure RemovePluginMenu(const menuID: WideString); dispid 15;
     procedure MonitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
     procedure GetAgentList(const Server: WideString); dispid 18;
     function GetAgentService(const Server: WideString; const Service: WideString): WideString; dispid 19;
@@ -413,11 +417,11 @@ type
     procedure SetPrefAsBool(const Key: WideString; Value: WordBool); dispid 39;
     function FindChat(const JabberID: WideString; const resource: WideString): Integer; dispid 40;
     procedure StartSearch(const SearchJID: WideString); dispid 41;
-    procedure StartRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure StartRoom(const RoomJID: WideString; const nickname: WideString; 
                         const Password: WideString; SendPresence: WordBool); dispid 42;
     procedure StartInstantMsg(const JabberID: WideString); dispid 43;
     procedure StartBrowser(const BrowseJID: WideString); dispid 44;
-    procedure ShowJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure ShowJoinRoom(const RoomJID: WideString; const nickname: WideString; 
                            const Password: WideString); dispid 45;
     procedure ShowPrefs; dispid 46;
     procedure ShowCustomPresDialog; dispid 47;
@@ -432,8 +436,8 @@ type
     function RegisterPresenceXML(const XML: WideString): WideString; dispid 57;
     procedure RemovePresenceXML(const ID: WideString); dispid 58;
     procedure TrackWindowsMsg(Message: Integer); dispid 59;
-    function AddContactMenu(const Caption: WideString): WideString; dispid 60;
-    procedure RemoveContactMenu(const ID: WideString); dispid 61;
+    function AddContactMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 60;
+    procedure RemoveContactMenu(const menuID: WideString); dispid 61;
     function GetActiveContact: WideString; dispid 62;
     function GetActiveGroup: WideString; dispid 63;
     function GetActiveContacts(Online: WordBool): OleVariant; dispid 65;
@@ -442,9 +446,9 @@ type
     procedure SetAuthenticated(Authed: WordBool; const XML: WideString); dispid 67;
     procedure SetAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); dispid 68;
-    function AddMessageMenu(const Caption: WideString): WideString; dispid 201;
-    function AddGroupMenu(const Caption: WideString): WideString; dispid 202;
-    procedure RemoveGroupMenu(const ID: WideString); dispid 203;
+    function AddMessageMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 201;
+    function AddGroupMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 202;
+    procedure RemoveGroupMenu(const menuID: WideString); dispid 203;
     procedure RegisterWithService(const JabberID: WideString); dispid 204;
     procedure ShowAddContact(const jid: WideString); dispid 205;
     procedure RegisterCapExtension(const ext: WideString; const feature: WideString); dispid 206;
@@ -459,6 +463,7 @@ type
     property ContactLogger: IExodusLogger dispid 215;
     property RoomLogger: IExodusLogger dispid 216;
     procedure AddStringlistValue(const Key: WideString; const Value: WideString); dispid 217;
+    procedure RemoveMessageMenu(const menuID: WideString); dispid 218;
   end;
 
 // *********************************************************************//
@@ -469,20 +474,20 @@ type
   IExodusChat = interface(IDispatch)
     ['{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}']
     function Get_jid: WideString; safecall;
-    function AddContextMenu(const Caption: WideString): WideString; safecall;
+    function AddContextMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; safecall;
     function UnRegisterPlugin(ID: Integer): WordBool; safecall;
     function GetMagicInt(Part: ChatParts): Integer; safecall;
-    procedure RemoveContextMenu(const ID: WideString); safecall;
+    procedure RemoveContextMenu(const menuID: WideString); safecall;
     procedure AddMsgOut(const Value: WideString); safecall;
-    function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
-    procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
+    function AddMsgOutMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveMsgOutMenu(const menuID: WideString); safecall;
     procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); safecall;
     function Get_CurrentThreadID: WideString; safecall;
     procedure DisplayMessage(const Body: WideString; const Subject: WideString; 
                              const From: WideString); safecall;
-    procedure AddRoomUser(const jid: WideString; const Nickname: WideString); safecall;
+    procedure AddRoomUser(const jid: WideString; const nickname: WideString); safecall;
     procedure RemoveRoomUser(const jid: WideString); safecall;
     function Get_CurrentNick: WideString; safecall;
     function GetControl(const Name: WideString): IExodusControl; safecall;
@@ -503,20 +508,20 @@ type
   IExodusChatDisp = dispinterface
     ['{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}']
     property jid: WideString readonly dispid 1;
-    function AddContextMenu(const Caption: WideString): WideString; dispid 2;
+    function AddContextMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 2;
     property MsgOutText: WideString readonly dispid 4;
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; dispid 3;
     function UnRegisterPlugin(ID: Integer): WordBool; dispid 5;
     function GetMagicInt(Part: ChatParts): Integer; dispid 6;
-    procedure RemoveContextMenu(const ID: WideString); dispid 7;
+    procedure RemoveContextMenu(const menuID: WideString); dispid 7;
     procedure AddMsgOut(const Value: WideString); dispid 201;
-    function AddMsgOutMenu(const Caption: WideString): WideString; dispid 202;
-    procedure RemoveMsgOutMenu(const MenuID: WideString); dispid 203;
+    function AddMsgOutMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 202;
+    procedure RemoveMsgOutMenu(const menuID: WideString); dispid 203;
     procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); dispid 204;
     property CurrentThreadID: WideString readonly dispid 205;
     procedure DisplayMessage(const Body: WideString; const Subject: WideString; 
                              const From: WideString); dispid 206;
-    procedure AddRoomUser(const jid: WideString; const Nickname: WideString); dispid 207;
+    procedure AddRoomUser(const jid: WideString; const nickname: WideString); dispid 207;
     procedure RemoveRoomUser(const jid: WideString); dispid 208;
     property CurrentNick: WideString readonly dispid 209;
     function GetControl(const Name: WideString): IExodusControl; dispid 210;
@@ -524,45 +529,23 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusPlugin
+// Interface: IExodusMenuListener
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// GUID:      {2ABB30A9-94E3-4085-BED5-4561F62E36EF}
 // *********************************************************************//
-  IExodusPlugin = interface(IDispatch)
-    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
-    procedure Startup(const ExodusController: IExodusController); safecall;
-    procedure Shutdown; safecall;
-    procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); safecall;
-    procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
-    procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
-                   const XTags: WideString): WideString; safecall;
-    procedure Configure; safecall;
-    procedure MenuClick(const ID: WideString); safecall;
-    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
-                           var Subject: WideString); safecall;
-    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
+  IExodusMenuListener = interface(IDispatch)
+    ['{2ABB30A9-94E3-4085-BED5-4561F62E36EF}']
+    procedure OnMenuItemClick(const menuID: WideString; const XML: WideString); safecall;
   end;
 
 // *********************************************************************//
-// DispIntf:  IExodusPluginDisp
+// DispIntf:  IExodusMenuListenerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// GUID:      {2ABB30A9-94E3-4085-BED5-4561F62E36EF}
 // *********************************************************************//
-  IExodusPluginDisp = dispinterface
-    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
-    procedure Startup(const ExodusController: IExodusController); dispid 1;
-    procedure Shutdown; dispid 2;
-    procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); dispid 3;
-    procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
-    procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
-    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
-                   const XTags: WideString): WideString; dispid 8;
-    procedure Configure; dispid 12;
-    procedure MenuClick(const ID: WideString); dispid 201;
-    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
-                           var Subject: WideString); dispid 202;
-    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
+  IExodusMenuListenerDisp = dispinterface
+    ['{2ABB30A9-94E3-4085-BED5-4561F62E36EF}']
+    procedure OnMenuItemClick(const menuID: WideString; const XML: WideString); dispid 255;
   end;
 
 // *********************************************************************//
@@ -570,17 +553,17 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {E28E487A-7258-4B32-AD1C-F23A808F0460}
 // *********************************************************************//
-  IExodusChatPlugin = interface(IDispatch)
+  IExodusChatPlugin = interface(IExodusMenuListener)
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var body: WideString): WordBool; safecall;
-    function OnAfterMessage(var body: WideString): WideString; safecall;
-    procedure OnKeyPress(const key: WideString); safecall;
-    procedure OnContextMenu(const id: WideString); safecall;
+    function OnBeforeMessage(var Body: WideString): WordBool; safecall;
+    function OnAfterMessage(var Body: WideString): WideString; safecall;
+    procedure OnKeyPress(const Key: WideString); safecall;
+    procedure OnContextMenu(const ID: WideString); safecall;
     procedure OnClose; safecall;
-    procedure OnMenu(const id: WideString); safecall;
-    procedure OnNewWindow(hwnd: Integer); safecall;
-    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; safecall;
-    procedure OnAfterRecvMessage(var body: WideString); safecall;
+    procedure OnMenu(const ID: WideString); safecall;
+    procedure OnNewWindow(HWND: Integer); safecall;
+    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; safecall;
+    procedure OnAfterRecvMessage(var Body: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -590,15 +573,16 @@ type
 // *********************************************************************//
   IExodusChatPluginDisp = dispinterface
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var body: WideString): WordBool; dispid 1;
-    function OnAfterMessage(var body: WideString): WideString; dispid 2;
-    procedure OnKeyPress(const key: WideString); dispid 3;
-    procedure OnContextMenu(const id: WideString); dispid 4;
+    function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
+    function OnAfterMessage(var Body: WideString): WideString; dispid 2;
+    procedure OnKeyPress(const Key: WideString); dispid 3;
+    procedure OnContextMenu(const ID: WideString); dispid 4;
     procedure OnClose; dispid 6;
-    procedure OnMenu(const id: WideString); dispid 201;
-    procedure OnNewWindow(hwnd: Integer); dispid 202;
-    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; dispid 203;
-    procedure OnAfterRecvMessage(var body: WideString); dispid 204;
+    procedure OnMenu(const ID: WideString); dispid 201;
+    procedure OnNewWindow(HWND: Integer); dispid 202;
+    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; dispid 203;
+    procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
+    procedure OnMenuItemClick(const menuID: WideString; const XML: WideString); dispid 255;
   end;
 
 // *********************************************************************//
@@ -609,7 +593,7 @@ type
   IExodusRoster = interface(IDispatch)
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; safecall;
-    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
+    function Subscribe(const JabberID: WideString; const nickname: WideString; 
                        const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
@@ -623,9 +607,9 @@ type
     function Items(Index: Integer): IExodusRosterItem; safecall;
     function AddContextMenu(const ID: WideString): WordBool; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
-    function AddContextMenuItem(const menu_id: WideString; const Caption: WideString; 
-                                const Action: WideString): WideString; safecall;
-    procedure RemoveContextMenuItem(const menu_id: WideString; const item_id: WideString); safecall;
+    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
+                                const action: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); safecall;
     function AddItem(const JabberID: WideString): IExodusRosterItem; safecall;
     property GroupsCount: Integer read Get_GroupsCount;
   end;
@@ -638,7 +622,7 @@ type
   IExodusRosterDisp = dispinterface
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; dispid 1;
-    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
+    function Subscribe(const JabberID: WideString; const nickname: WideString; 
                        const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
@@ -652,9 +636,9 @@ type
     function Items(Index: Integer): IExodusRosterItem; dispid 207;
     function AddContextMenu(const ID: WideString): WordBool; dispid 208;
     procedure RemoveContextMenu(const ID: WideString); dispid 209;
-    function AddContextMenuItem(const menu_id: WideString; const Caption: WideString; 
-                                const Action: WideString): WideString; dispid 210;
-    procedure RemoveContextMenuItem(const menu_id: WideString; const item_id: WideString); dispid 211;
+    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
+                                const action: WideString; const menuListener: IExodusMenuListener): WideString; dispid 210;
+    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); dispid 211;
     function AddItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
   end;
 
@@ -703,8 +687,8 @@ type
     function XML: WideString; safecall;
     procedure Remove; safecall;
     procedure Update; safecall;
-    function Get_Nickname: WideString; safecall;
-    procedure Set_Nickname(const Value: WideString); safecall;
+    function Get_nickname: WideString; safecall;
+    procedure Set_nickname(const Value: WideString); safecall;
     function Get_RawNickname: WideString; safecall;
     function Get_ContextMenuID: WideString; safecall;
     procedure Set_ContextMenuID(const Value: WideString); safecall;
@@ -712,8 +696,8 @@ type
     procedure Set_Status(const Value: WideString); safecall;
     function Get_Tooltip: WideString; safecall;
     procedure Set_Tooltip(const Value: WideString); safecall;
-    function Get_Action: WideString; safecall;
-    procedure Set_Action(const Value: WideString); safecall;
+    function Get_action: WideString; safecall;
+    procedure Set_action(const Value: WideString); safecall;
     function Get_ImageIndex: Integer; safecall;
     procedure Set_ImageIndex(Value: Integer); safecall;
     function Get_InlineEdit: WordBool; safecall;
@@ -734,12 +718,12 @@ type
     property Subscription: WideString read Get_Subscription write Set_Subscription;
     property Ask: WideString read Get_Ask;
     property GroupCount: Integer read Get_GroupCount;
-    property Nickname: WideString read Get_Nickname write Set_Nickname;
+    property nickname: WideString read Get_nickname write Set_nickname;
     property RawNickname: WideString read Get_RawNickname;
     property ContextMenuID: WideString read Get_ContextMenuID write Set_ContextMenuID;
     property Status: WideString read Get_Status write Set_Status;
     property Tooltip: WideString read Get_Tooltip write Set_Tooltip;
-    property Action: WideString read Get_Action write Set_Action;
+    property action: WideString read Get_action write Set_action;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
     property InlineEdit: WordBool read Get_InlineEdit write Set_InlineEdit;
     property IsContact: WordBool read Get_IsContact write Set_IsContact;
@@ -763,12 +747,12 @@ type
     function XML: WideString; dispid 7;
     procedure Remove; dispid 8;
     procedure Update; dispid 9;
-    property Nickname: WideString dispid 10;
+    property nickname: WideString dispid 10;
     property RawNickname: WideString readonly dispid 11;
     property ContextMenuID: WideString dispid 201;
     property Status: WideString dispid 202;
     property Tooltip: WideString dispid 203;
-    property Action: WideString dispid 204;
+    property action: WideString dispid 204;
     property ImageIndex: Integer dispid 205;
     property InlineEdit: WordBool dispid 206;
     procedure FireChange; dispid 207;
@@ -864,8 +848,8 @@ type
 // *********************************************************************//
   IExodusRosterGroup = interface(IDispatch)
     ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
-    function Get_Action: WideString; safecall;
-    procedure Set_Action(const Value: WideString); safecall;
+    function Get_action: WideString; safecall;
+    procedure Set_action(const Value: WideString); safecall;
     function Get_KeepEmpty: WordBool; safecall;
     procedure Set_KeepEmpty(Value: WordBool); safecall;
     function Get_SortPriority: Integer; safecall;
@@ -894,7 +878,7 @@ type
     function Get_Parent: IExodusRosterGroup; safecall;
     function Parts(Index: Integer): WideString; safecall;
     procedure FireChange; safecall;
-    property Action: WideString read Get_Action write Set_Action;
+    property action: WideString read Get_action write Set_action;
     property KeepEmpty: WordBool read Get_KeepEmpty write Set_KeepEmpty;
     property SortPriority: Integer read Get_SortPriority write Set_SortPriority;
     property ShowPresence: WordBool read Get_ShowPresence write Set_ShowPresence;
@@ -915,7 +899,7 @@ type
 // *********************************************************************//
   IExodusRosterGroupDisp = dispinterface
     ['{FA63024E-3453-4551-8CA0-AFB78B2066AD}']
-    property Action: WideString dispid 201;
+    property action: WideString dispid 201;
     property KeepEmpty: WordBool dispid 202;
     property SortPriority: Integer dispid 203;
     property ShowPresence: WordBool dispid 204;
@@ -4024,6 +4008,49 @@ type
     procedure EndMessages(Day: Integer; Month: Integer; Year: Integer); dispid 202;
     procedure Error(Day: Integer; Month: Integer; Year: Integer); dispid 203;
     procedure ProcessDates(Count: Integer; Dates: {??PSafeArray}OleVariant); dispid 204;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPlugin
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// *********************************************************************//
+  IExodusPlugin = interface(IExodusMenuListener)
+    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
+    procedure Startup(const ExodusController: IExodusController); safecall;
+    procedure Shutdown; safecall;
+    procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); safecall;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; safecall;
+    procedure Configure; safecall;
+    procedure MenuClick(const ID: WideString); safecall;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPluginDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// *********************************************************************//
+  IExodusPluginDisp = dispinterface
+    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
+    procedure Startup(const ExodusController: IExodusController); dispid 1;
+    procedure Shutdown; dispid 2;
+    procedure Process(const xpath: WideString; const Event: WideString; const XML: WideString); dispid 3;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; dispid 8;
+    procedure Configure; dispid 12;
+    procedure MenuClick(const ID: WideString); dispid 201;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); dispid 202;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
+    procedure OnMenuItemClick(const menuID: WideString; const XML: WideString); dispid 255;
   end;
 
 // *********************************************************************//

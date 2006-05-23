@@ -29,7 +29,7 @@ uses
     Exodus_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
 
 type
-  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
+  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger, IExodusMenuListener)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -56,6 +56,8 @@ type
     procedure LogMessage(const Msg: IExodusLogMsg); safecall;
     procedure Purge; safecall;
     procedure Show(const jid: WideString); safecall;
+    //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
 
   private
     _exodus: IExodusController;
@@ -454,6 +456,9 @@ procedure THTMLLogger.Show(const jid: WideString);
 begin
     _showLog(jid);
 end;
+
+//IExodusMenuListener
+procedure THTMLLogger.OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
 
 initialization
   TAutoObjectFactory.Create(ComServer, THTMLLogger, Class_HTMLLogger,

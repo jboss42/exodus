@@ -43,8 +43,8 @@ type
     function Items(Index: Integer): IExodusRosterItem; safecall;
     procedure removeGroup(const grp: IExodusRosterGroup); safecall;
     procedure removeItem(const Item: IExodusRosterItem); safecall;
-    function addContextMenuItem(const menu_id, caption,
-      action: WideString): WideString; safecall;
+    function AddContextMenuItem(const menuID, caption, action: WideString;
+      const menuListener: IExodusMenuListener): WideString; safecall;
     function addContextMenu(const id: WideString): WordBool; safecall;
     procedure removeContextMenu(const id: WideString); safecall;
     procedure removeContextMenuItem(const menu_id, item_id: WideString);
@@ -243,8 +243,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusRoster.addContextMenuItem(const menu_id, caption,
-  action: WideString): WideString;
+function TExodusRoster.AddContextMenuItem(const menuID, caption,
+  action: WideString; const menuListener: IExodusMenuListener): WideString;
 var
     midx: integer;
     menu: TTntPopupMenu;
@@ -253,7 +253,7 @@ var
     guid: string;
 begin
     Result := '';
-    midx := _menus.IndexOf(menu_id);
+    midx := _menus.IndexOf(menuID);
     if (midx = -1) then exit;
 
     menu := TTntPopupMenu(_menus.Objects[midx]);

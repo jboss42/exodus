@@ -28,7 +28,7 @@ uses
     ComObj, ActiveX, ExRosterTools_TLB, StdVcl;
 
 type
-  TRosterPlugin = class(TAutoObject, IExodusPlugin)
+  TRosterPlugin = class(TAutoObject, IExodusPlugin, IExodusMenuListener)
   protected
     function onInstantMsg(const Body, Subject: WideString): WideString;
       safecall;
@@ -47,7 +47,8 @@ type
       Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
-    { Protected declarations }
+        //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
   private
     _exodus: IExodusController;
     _import: Widestring;
@@ -141,8 +142,8 @@ end;
 procedure TRosterPlugin.Startup(const ExodusController: IExodusController);
 begin
     _exodus := ExodusController;
-    _export := _exodus.addPluginMenu('Export Jabber Roster...');
-    _import := _exodus.addPluginMenu('Import Jabber Roster...');
+    _export := _exodus.addPluginMenu('Export Jabber Roster...', Self);
+    _import := _exodus.addPluginMenu('Import Jabber Roster...', Self);
 end;
 
 function TRosterPlugin.NewIM(const jid: WideString; var Body,
@@ -159,6 +160,12 @@ end;
 
 procedure TRosterPlugin.NewOutgoingIM(const jid: WideString;
   const InstantMsg: IExodusChat);
+begin
+
+end;
+
+//IExodusMenuListener
+procedure TRosterPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
 begin
 
 end;
