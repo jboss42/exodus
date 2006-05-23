@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/23/2006 11:10:59 AM from Type Library described below.
+// File generated on 5/23/2006 11:31:42 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
@@ -279,7 +279,6 @@ type
     function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
     procedure RemovePluginMenu(const menuID: WideString); safecall;
     procedure MonitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
-    procedure GetAgentList(const Server: WideString); safecall;
     function GetAgentService(const Server: WideString; const Service: WideString): WideString; safecall;
     function GenerateID: WideString; safecall;
     function IsBlocked(const JabberID: WideString): WordBool; safecall;
@@ -394,7 +393,6 @@ type
     function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 14;
     procedure RemovePluginMenu(const menuID: WideString); dispid 15;
     procedure MonitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
-    procedure GetAgentList(const Server: WideString); dispid 18;
     function GetAgentService(const Server: WideString; const Service: WideString): WideString; dispid 19;
     function GenerateID: WideString; dispid 20;
     function IsBlocked(const JabberID: WideString): WordBool; dispid 21;
@@ -604,7 +602,6 @@ type
     procedure RemoveGroup(const grp: IExodusRosterGroup); safecall;
     function Get_GroupsCount: Integer; safecall;
     function Groups(Index: Integer): IExodusRosterGroup; safecall;
-    function Items(Index: Integer): IExodusRosterItem; safecall;
     function AddContextMenu(const ID: WideString): WordBool; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
@@ -633,7 +630,6 @@ type
     procedure RemoveGroup(const grp: IExodusRosterGroup); dispid 204;
     property GroupsCount: Integer readonly dispid 205;
     function Groups(Index: Integer): IExodusRosterGroup; dispid 206;
-    function Items(Index: Integer): IExodusRosterItem; dispid 207;
     function AddContextMenu(const ID: WideString): WordBool; dispid 208;
     procedure RemoveContextMenu(const ID: WideString); dispid 209;
     function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
@@ -678,9 +674,7 @@ type
   IExodusRosterItem = interface(IDispatch)
     ['{BDD5493D-440F-4376-802B-070B5A4ABFF3}']
     function Get_JabberID: WideString; safecall;
-    procedure Set_JabberID(const Value: WideString); safecall;
     function Get_Subscription: WideString; safecall;
-    procedure Set_Subscription(const Value: WideString); safecall;
     function Get_Ask: WideString; safecall;
     function Get_GroupCount: Integer; safecall;
     function Group(Index: Integer): WideString; safecall;
@@ -689,7 +683,6 @@ type
     procedure Update; safecall;
     function Get_nickname: WideString; safecall;
     procedure Set_nickname(const Value: WideString); safecall;
-    function Get_RawNickname: WideString; safecall;
     function Get_ContextMenuID: WideString; safecall;
     procedure Set_ContextMenuID(const Value: WideString); safecall;
     function Get_Status: WideString; safecall;
@@ -714,12 +707,11 @@ type
     procedure Set_IsNative(Value: WordBool); safecall;
     function Get_CanOffline: WordBool; safecall;
     procedure Set_CanOffline(Value: WordBool); safecall;
-    property JabberID: WideString read Get_JabberID write Set_JabberID;
-    property Subscription: WideString read Get_Subscription write Set_Subscription;
+    property JabberID: WideString read Get_JabberID;
+    property Subscription: WideString read Get_Subscription;
     property Ask: WideString read Get_Ask;
     property GroupCount: Integer read Get_GroupCount;
     property nickname: WideString read Get_nickname write Set_nickname;
-    property RawNickname: WideString read Get_RawNickname;
     property ContextMenuID: WideString read Get_ContextMenuID write Set_ContextMenuID;
     property Status: WideString read Get_Status write Set_Status;
     property Tooltip: WideString read Get_Tooltip write Set_Tooltip;
@@ -739,8 +731,8 @@ type
 // *********************************************************************//
   IExodusRosterItemDisp = dispinterface
     ['{BDD5493D-440F-4376-802B-070B5A4ABFF3}']
-    property JabberID: WideString dispid 1;
-    property Subscription: WideString dispid 2;
+    property JabberID: WideString readonly dispid 1;
+    property Subscription: WideString readonly dispid 2;
     property Ask: WideString readonly dispid 4;
     property GroupCount: Integer readonly dispid 5;
     function Group(Index: Integer): WideString; dispid 6;
@@ -748,7 +740,6 @@ type
     procedure Remove; dispid 8;
     procedure Update; dispid 9;
     property nickname: WideString dispid 10;
-    property RawNickname: WideString readonly dispid 11;
     property ContextMenuID: WideString dispid 201;
     property Status: WideString dispid 202;
     property Tooltip: WideString dispid 203;
