@@ -148,7 +148,7 @@ var
     i: integer;
 begin
     for i := 0 to _plugs.count - 1 do
-        TChatPlugin(_plugs[i]).com.onKeyPress(Key);
+        //TChatPlugin(_plugs[i]).com.OnKeyUp(Key);
 end;
 
 {---------------------------------------}
