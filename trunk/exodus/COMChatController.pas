@@ -62,7 +62,7 @@ type
     procedure fireMsgKeyPress(Key: Char);
     function  fireBeforeMsg(var body: Widestring): boolean;
     function  fireAfterMsg(var body: WideString): Widestring;
-    procedure fireRecvMsg(body, xml: Widestring);
+    function  fireRecvMsg(body, xml: Widestring): boolean;
     procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
@@ -176,12 +176,15 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireRecvMsg(body, xml: Widestring);
+function TExodusChat.fireRecvMsg(body, xml: Widestring): boolean;
 var
     i: integer;
 begin
-    for i := 0 to _plugs.Count - 1 do
-        TChatPlugin(_plugs[i]).com.onRecvMessage(body, xml);
+    Result := True;
+    for i := 0 to _plugs.Count - 1 do begin
+        Result := TChatPlugin(_plugs[i]).com.OnBeforeRecvMessage(body, xml);
+        if (Result = false) then exit;
+    end;
 end;
 
 {---------------------------------------}

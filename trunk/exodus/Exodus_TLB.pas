@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/16/2006 11:34:16 AM from Type Library described below.
+// File generated on 5/22/2006 6:33:08 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
@@ -270,7 +270,7 @@ type
     function IsSubscribed(const jid: WideString): WordBool; safecall;
     procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
     procedure StartChat(const jid: WideString; const resource: WideString; 
-                        const Nickname: WideString); safecall;
+                        const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     function CreateDockableWindow(const Caption: WideString): Integer; safecall;
     function AddPluginMenu(const Caption: WideString): WideString; safecall;
@@ -384,7 +384,7 @@ type
     function IsSubscribed(const jid: WideString): WordBool; dispid 8;
     procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 11;
     procedure StartChat(const jid: WideString; const resource: WideString; 
-                        const Nickname: WideString); dispid 12;
+                        const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
     function CreateDockableWindow(const Caption: WideString): Integer; dispid 16;
     function AddPluginMenu(const Caption: WideString): WideString; dispid 14;
@@ -572,14 +572,15 @@ type
 // *********************************************************************//
   IExodusChatPlugin = interface(IDispatch)
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var Body: WideString): WordBool; safecall;
-    function OnAfterMessage(var Body: WideString): WideString; safecall;
-    procedure OnKeyPress(const Key: WideString); safecall;
-    procedure OnContextMenu(const ID: WideString); safecall;
-    procedure OnRecvMessage(const Body: WideString; const XML: WideString); safecall;
+    function OnBeforeMessage(var body: WideString): WordBool; safecall;
+    function OnAfterMessage(var body: WideString): WideString; safecall;
+    procedure OnKeyPress(const key: WideString); safecall;
+    procedure OnContextMenu(const id: WideString); safecall;
     procedure OnClose; safecall;
-    procedure OnMenu(const ID: WideString); safecall;
-    procedure OnNewWindow(HWND: Integer); safecall;
+    procedure OnMenu(const id: WideString); safecall;
+    procedure OnNewWindow(hwnd: Integer); safecall;
+    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; safecall;
+    procedure OnAfterRecvMessage(var body: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -589,14 +590,15 @@ type
 // *********************************************************************//
   IExodusChatPluginDisp = dispinterface
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
-    function OnAfterMessage(var Body: WideString): WideString; dispid 2;
-    procedure OnKeyPress(const Key: WideString); dispid 3;
-    procedure OnContextMenu(const ID: WideString); dispid 4;
-    procedure OnRecvMessage(const Body: WideString; const XML: WideString); dispid 5;
+    function OnBeforeMessage(var body: WideString): WordBool; dispid 1;
+    function OnAfterMessage(var body: WideString): WideString; dispid 2;
+    procedure OnKeyPress(const key: WideString); dispid 3;
+    procedure OnContextMenu(const id: WideString); dispid 4;
     procedure OnClose; dispid 6;
-    procedure OnMenu(const ID: WideString); dispid 201;
-    procedure OnNewWindow(HWND: Integer); dispid 202;
+    procedure OnMenu(const id: WideString); dispid 201;
+    procedure OnNewWindow(hwnd: Integer); dispid 202;
+    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; dispid 203;
+    procedure OnAfterRecvMessage(var body: WideString); dispid 204;
   end;
 
 // *********************************************************************//
