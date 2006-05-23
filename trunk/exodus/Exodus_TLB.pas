@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/22/2006 9:32:44 PM from Type Library described below.
+// File generated on 5/23/2006 11:10:59 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -555,15 +555,15 @@ type
 // *********************************************************************//
   IExodusChatPlugin = interface(IExodusMenuListener)
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var Body: WideString): WordBool; safecall;
-    function OnAfterMessage(var Body: WideString): WideString; safecall;
-    procedure OnKeyPress(const Key: WideString); safecall;
-    procedure OnContextMenu(const ID: WideString); safecall;
+    function OnBeforeMessage(var body: WideString): WordBool; safecall;
+    function OnAfterMessage(var body: WideString): WideString; safecall;
+    procedure OnContextMenu(const id: WideString); safecall;
     procedure OnClose; safecall;
-    procedure OnMenu(const ID: WideString); safecall;
-    procedure OnNewWindow(HWND: Integer); safecall;
-    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; safecall;
-    procedure OnAfterRecvMessage(var Body: WideString); safecall;
+    procedure OnMenu(const id: WideString); safecall;
+    procedure OnNewWindow(hwnd: Integer); safecall;
+    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; safecall;
+    procedure OnAfterRecvMessage(var body: WideString); safecall;
+    function OnKeyUp(const key: WideString; const shiftState: WideString): WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -573,15 +573,15 @@ type
 // *********************************************************************//
   IExodusChatPluginDisp = dispinterface
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
-    function OnBeforeMessage(var Body: WideString): WordBool; dispid 1;
-    function OnAfterMessage(var Body: WideString): WideString; dispid 2;
-    procedure OnKeyPress(const Key: WideString); dispid 3;
-    procedure OnContextMenu(const ID: WideString); dispid 4;
+    function OnBeforeMessage(var body: WideString): WordBool; dispid 1;
+    function OnAfterMessage(var body: WideString): WideString; dispid 2;
+    procedure OnContextMenu(const id: WideString); dispid 4;
     procedure OnClose; dispid 6;
-    procedure OnMenu(const ID: WideString); dispid 201;
-    procedure OnNewWindow(HWND: Integer); dispid 202;
-    function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; dispid 203;
-    procedure OnAfterRecvMessage(var Body: WideString); dispid 204;
+    procedure OnMenu(const id: WideString); dispid 201;
+    procedure OnNewWindow(hwnd: Integer); dispid 202;
+    function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; dispid 203;
+    procedure OnAfterRecvMessage(var body: WideString); dispid 204;
+    function OnKeyUp(const key: WideString; const shiftState: WideString): WordBool; dispid 301;
     procedure OnMenuItemClick(const menuID: WideString; const XML: WideString); dispid 255;
   end;
 
