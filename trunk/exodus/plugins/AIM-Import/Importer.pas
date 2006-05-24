@@ -121,7 +121,7 @@ procedure TfrmImport.validateGateway();
 begin
     // wait for the callback
     btnNext.Enabled := false;
-    exodus.getAgentList(txtGateway.Text);
+    //exodus.getAgentList(txtGateway.Text);
 end;
 
 {---------------------------------------}
