@@ -41,6 +41,7 @@ type
         _stream_id: WideString;
         _show: WideString;
         _status: WideString;
+        _extensions: TWideStringList;
         _priority: integer;
         _invisible: boolean;
         _profile: TJabberProfile;
@@ -142,6 +143,10 @@ type
         function  getAuthAgent: TJabberAuth;
 
         procedure setPresence(show, status: WideString; priority: integer);
+        function  GetExtList(): TWideStringList;
+        function  GetExtStr(): WideString;
+        procedure AddExtension(ext: WideString; feature: WideString);
+        procedure RemoveExtension(ext: WideString);
 
         function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
         function RegisterCallback(callback: TRosterEvent; xplite: string): integer; overload;
@@ -302,6 +307,8 @@ begin
 
     // Create the Presence_XML list for stashing stuff in every pres packet
     Presence_XML := TWideStringlist.Create();
+
+    _extensions := TWideStringList.Create();
 end;
 
 {---------------------------------------}
@@ -317,7 +324,9 @@ begin
     bookmarks.Free();
     MsgList.Free();
     ChatList.Free();
-    
+    ClearStringListObjects(_extensions);
+    _extensions.Free();
+
     _avails.Free();
 
     if (_stream <> nil) then
@@ -987,6 +996,57 @@ begin
                 Self.Play();
         end;
     end;
+end;
+{---------------------------------------}
+function TJabberSession.GetExtList(): TWideStringList;
+begin
+    Result := _extensions;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetExtStr(): WideString;
+var
+    i : integer;
+begin
+    Result := '';
+    for i := 0 to _extensions.Count - 1 do begin
+        if (i <> 0) then
+            Result := Result + ' ';
+        Result := Result + _extensions[i];
+    end;
+end;
+{---------------------------------------}
+
+procedure TJabberSession.AddExtension(ext: WideString; feature: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := _extensions.IndexOf(ext);
+    if (i < 0) then begin
+        features := TWideStringList.Create();
+        _extensions.AddObject(ext, features);
+    end
+    else begin
+        features := TWideStringList(_extensions.Objects[i]);
+    end;
+
+    features.Add(feature);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.RemoveExtension(ext: WideString);
+var
+    i : integer;
+    features : TWideStringList;
+begin
+    i := _extensions.IndexOf(ext);
+    if (i < 0) then exit;
+
+    features := TWideStringList(_extensions.Objects[i]);
+
+    _extensions.Delete(i);
+    features.Free();
 end;
 
 {---------------------------------------}
