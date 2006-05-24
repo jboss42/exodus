@@ -77,16 +77,10 @@ type
     end;
 
     TDiscoInfoResponder = class(TJabberResponder)
-    private
-        Extensions: TWideStringList;
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-        destructor Destroy; override;
-        procedure AddExtension(ext: WideString; feature: WideString);
-        procedure RemoveExtension(ext: WideString);
-        function ExtList(): WideString;
     end;
 
     TFactoryResponder = class
@@ -719,63 +713,7 @@ end;
 constructor TDiscoInfoResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_DISCOINFO);
-    Extensions := TWideStringList.Create();
 end;
-
-{---------------------------------------}
-destructor TDiscoInfoResponder.Destroy;
-begin
-    ClearStringListObjects(Extensions);
-    Extensions.Free();
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TDiscoInfoResponder.AddExtension(ext: WideString; feature: WideString);
-var
-    i : integer;
-    features : TWideStringList;
-begin
-    i := Extensions.IndexOf(ext);
-    if (i < 0) then begin
-        features := TWideStringList.Create();
-        Extensions.AddObject(ext, features);
-    end
-    else begin
-        features := TWideStringList(Extensions.Objects[i]);
-    end;
-
-    features.Add(feature);
-end;
-
-{---------------------------------------}
-procedure TDiscoInfoResponder.RemoveExtension(ext: WideString);
-var
-    i : integer;
-    features : TWideStringList;
-begin
-    i := Extensions.IndexOf(ext);
-    if (i < 0) then exit;
-
-    features := TWideStringList(Extensions.Objects[i]);
-
-    Extensions.Delete(i);
-    features.Free();
-end;
-
-{---------------------------------------}
-function TDiscoInfoResponder.ExtList(): WideString;
-var
-    i : integer;
-begin
-    Result := '';
-    for i := 0 to Extensions.Count - 1 do begin
-        if (i <> 0) then
-            Result := Result + ' ';
-        Result := Result + Extensions[i];
-    end;
-end;
-
 {---------------------------------------}
 procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
 
@@ -818,11 +756,11 @@ begin
             else begin
                 ext := copy(node, i+1, length(node) - i + 1);
                 if ext <> GetAppVersion() then begin
-                    j := Extensions.IndexOf(ext);
+                    j := MainSession.GetExtList().IndexOf(ext);
                     if (j < 0) then
                         error := true
                     else begin
-                        extension := TWideStringList(Extensions.Objects[j]);
+                        extension := TWideStringList(MainSession.GetExtList().Objects[j]);
                     end;
                 end;
             end;
@@ -891,8 +829,8 @@ begin
                 setAttribute('name', _session.Username);
             end;
 
-            for i := 0 to Extensions.Count - 1 do begin
-                extension := TWideStringList(Extensions.Objects[i]);
+            for i := 0 to MainSession.GetExtList().Count - 1 do begin
+                extension := TWideStringList(MainSession.GetExtList().Objects[i]);
                 for j := 0 to extension.Count - 1 do begin
                     addFeature(q, extension[j]);
                 end;
