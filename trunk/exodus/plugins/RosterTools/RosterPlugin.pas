@@ -72,46 +72,7 @@ begin
 end;
 
 procedure TRosterPlugin.menuClick(const ID: WideString);
-var
-    fImport: TfrmImport;
-    sl: TWidestringlist;
-    doc, item: TXMLTag;
-    r: IExodusRoster;
-    ri: IExodusRosterItem;
-    i: integer;
-    grp: Widestring;
 begin
-    if (id = _export) then begin
-        fImport := TfrmImport.Create(nil);
-        if (fImport.SaveDialog1.Execute()) then begin
-            r := _exodus.Roster;
-            doc := TXMLTag.Create('exodus-roster');
-            for i := 0 to r.Count - 1 do begin
-                ri := r.Item(i);
-                item := doc.AddTag('item');
-                item.setAttribute('jid', ri.JabberID);
-                item.setAttribute('name', ri.nickname);
-                grp := ri.Group(0);
-                if (grp <> '') then
-                    item.AddBasicTag('group', grp);
-            end;
-
-            sl := TWidestringlist.Create();
-            sl.Add(doc.xml);
-            sl.SaveToFile(fImport.SaveDialog1.Filename);
-            sl.Free();
-            fImport.Free();
-        end;
-    end
-    else if (id = _import) then begin
-        fImport := TfrmImport.Create(nil);
-        if (not fImport.OpenDialog1.Execute()) then begin
-            fImport.Free();
-            exit;
-        end;
-
-        fImport.ImportFile(_exodus, fImport.OpenDialog1.FileName);
-    end;
 end;
 
 procedure TRosterPlugin.NewChat(const jid: WideString;
@@ -166,8 +127,46 @@ end;
 
 //IExodusMenuListener
 procedure TRosterPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    fImport: TfrmImport;
+    sl: TWidestringlist;
+    doc, item: TXMLTag;
+    r: IExodusRoster;
+    ri: IExodusRosterItem;
+    i: integer;
+    grp: Widestring;
 begin
+    if (menuID = _export) then begin
+        fImport := TfrmImport.Create(nil);
+        if (fImport.SaveDialog1.Execute()) then begin
+            r := _exodus.Roster;
+            doc := TXMLTag.Create('exodus-roster');
+            for i := 0 to r.Count - 1 do begin
+                ri := r.Item(i);
+                item := doc.AddTag('item');
+                item.setAttribute('jid', ri.JabberID);
+                item.setAttribute('name', ri.nickname);
+                grp := ri.Group(0);
+                if (grp <> '') then
+                    item.AddBasicTag('group', grp);
+            end;
 
+            sl := TWidestringlist.Create();
+            sl.Add(doc.xml);
+            sl.SaveToFile(fImport.SaveDialog1.Filename);
+            sl.Free();
+            fImport.Free();
+        end;
+    end
+    else if (menuID = _import) then begin
+        fImport := TfrmImport.Create(nil);
+        if (not fImport.OpenDialog1.Execute()) then begin
+            fImport.Free();
+            exit;
+        end;
+
+        fImport.ImportFile(_exodus, fImport.OpenDialog1.FileName);
+    end;
 end;
 
 initialization

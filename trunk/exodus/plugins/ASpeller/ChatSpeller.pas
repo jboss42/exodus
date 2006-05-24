@@ -247,71 +247,7 @@ end;
 
 {---------------------------------------}
 procedure TChatSpeller.onMenu(const ID: WideString);
-
-    procedure doSelection(new_word: string = '');
-    var
-        o_start, o_len: integer;
-    begin
-        with _MsgOut do begin
-            o_start := SelStart;
-            o_len := SelLength;
-
-            SelStart := _cur_start;
-            SelLength := _cur_len;
-
-            SelAttributes.Color := clBlack;
-            SelAttributes.Style := [];
-            if (new_word <> '') then
-                SelText := new_word;
-
-            SelStart := o_start;
-            SelLength := o_len;
-        end;
-    end;
-
-
-var
-    sidx: integer;
-    rep: string;
 begin
-    // check for our various menus
-    sidx := _suggs.IndexOf(ID);
-    if (sidx >= 0) then begin
-        // they clicked a suggestion
-        rep := _words[sidx];
-        aspell_speller_store_replacement(_speller, PChar(_cur_word),
-            length(_cur_word), PChar(rep), length(rep));
-        doSelection(rep);
-    end
-
-    else if (ID = _ignore) then begin
-        // ignore, just change formatting back
-        doSelection();
-    end
-
-    else if (ID = _ign_all) then begin
-        // ignore all
-        aspell_speller_add_to_session(_speller, PChar(_cur_word), length(_cur_word));
-        doSelection();
-    end
-
-    else if (ID = _add) then begin
-        // add to dict
-        aspell_speller_add_to_personal(_speller, PChar(_cur_word), length(_cur_word));
-        doSelection();
-    end
-
-    else if (ID = _add_lower) then begin
-        // add lower to dict
-        aspell_speller_add_to_personal(_speller, PChar(LowerCase(_cur_word)),
-            length(_cur_word));
-        doSelection();
-    end
-    else
-        // break out so we don't removeMenus
-        exit;
-
-    removeMenus();
 end;
 
 {---------------------------------------}
@@ -361,9 +297,72 @@ begin
 end;
 
 procedure TChatSpeller.OnMenuItemClick(const menuID : WideString; const xml : WideString);
-begin
+    procedure doSelection(new_word: string = '');
+    var
+        o_start, o_len: integer;
+    begin
+        with _MsgOut do begin
+            o_start := SelStart;
+            o_len := SelLength;
 
+            SelStart := _cur_start;
+            SelLength := _cur_len;
+
+            SelAttributes.Color := clBlack;
+            SelAttributes.Style := [];
+            if (new_word <> '') then
+                SelText := new_word;
+
+            SelStart := o_start;
+            SelLength := o_len;
+        end;
+    end;
+
+
+var
+    sidx: integer;
+    rep: string;
+begin
+    // check for our various menus
+    sidx := _suggs.IndexOf(menuID);
+    if (sidx >= 0) then begin
+        // they clicked a suggestion
+        rep := _words[sidx];
+        aspell_speller_store_replacement(_speller, PChar(_cur_word),
+            length(_cur_word), PChar(rep), length(rep));
+        doSelection(rep);
+    end
+
+    else if (menuID = _ignore) then begin
+        // ignore, just change formatting back
+        doSelection();
+    end
+
+    else if (menuID = _ign_all) then begin
+        // ignore all
+        aspell_speller_add_to_session(_speller, PChar(_cur_word), length(_cur_word));
+        doSelection();
+    end
+
+    else if (menuID = _add) then begin
+        // add to dict
+        aspell_speller_add_to_personal(_speller, PChar(_cur_word), length(_cur_word));
+        doSelection();
+    end
+
+    else if (menuID = _add_lower) then begin
+        // add lower to dict
+        aspell_speller_add_to_personal(_speller, PChar(LowerCase(_cur_word)),
+            length(_cur_word));
+        doSelection();
+    end
+    else
+        // break out so we don't removeMenus
+        exit;
+
+    removeMenus();
 end;
+
 initialization
   TAutoObjectFactory.Create(ComServer, TChatSpeller, Class_ChatSpeller,
     ciMultiInstance, tmApartment);

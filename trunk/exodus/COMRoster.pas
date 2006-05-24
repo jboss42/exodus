@@ -100,12 +100,20 @@ procedure TExodusRoster.MenuClick(Sender: TObject);
 var
     idx: integer;
     ri: TJabberRosterItem;
+{$IFNDEF OLD_MENU_EVENTS}
+    mi : TTnTMenuItem;
+{$ENDIF}
 begin
     idx := _items.IndexOfObject(Sender);
     if (idx >= 0) then begin
         ri := MainSession.Roster.ActiveItem;
         assert(ri <> nil);
+{$IFDEF OLD_MENU_EVENTS}
         MainSession.FireEvent(_items[idx], ri.Tag);
+{$ELSE}
+        mi := TTntMenuItem(_items.Objects[idx]);
+        IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, ri.Tag.XML);
+{$ENDIF}
     end;
 end;
 
@@ -266,6 +274,7 @@ begin
     mi.Name := 'pluginContext_item_' + guid;
     mi.Caption := caption;
     mi.OnClick := Self.MenuClick;
+    mi.Tag := Integer(menuListener);
     menu.Items.Add(mi);
 
     _items.AddObject(action, mi);
@@ -308,6 +317,7 @@ begin
         midx := _items.IndexOfObject(item);
         assert(midx <> -1);
         _items.Delete(midx);
+        item.Tag := 0;
         item.Free();
     end;
     menu.Items.Clear();
@@ -336,6 +346,7 @@ begin
             midx := _items.IndexOfObject(item);
             assert(midx <> -1);
             _items.Delete(midx);
+            item.Tag := 0;
             item.Free();
             exit;
         end;

@@ -58,53 +58,7 @@ begin
 end;
 
 procedure TExNetmeetingPlugin.menuClick(const ID: WideString);
-var
-    p: IExodusPresence;
-    pres: IExodusPPDB;
-    myip, jid: Widestring;
-    iq, q: TXMLTag;
-    reg : TRegistry ;
-    NMName : String ;
 begin
-    if (id <> _menu_id) then exit;
-
-    // ok, we have our menu item..
-    jid := _exodus.getActiveContact();
-    pres := _exodus.PPDB;
-    p := pres.Find(jid, '');
-    if (p <> nil) then begin
-        // send the iq-set to this contact
-        reg := TRegistry.Create ;
-        reg.RootKey := HKEY_LOCAL_MACHINE;
-        if reg.OpenKey('SOFTWARE\Clients\Internet Call\Microsoft NetMeeting\shell\open\Command', false) then
-        begin
-            NMName := reg.ReadString('') ;
-            ShellExecute(0, 'open', PChar(NMName), nil, nil, SW_SHOWNORMAL);
-        end
-        else
-            MessageDlg(sNetMeetingStartErr, mtWarning, [mbOK], 0);
-        reg.Free;
-
-        myip := _exodus.LocalIP;
-        if (myip = '') then begin
-            MessageDlg(sNetMeetingConnError, mtError, [mbOK], 0);
-            exit;
-        end;
-
-        iq := TXMLTag.Create('iq');
-        iq.setAttribute('to', p.fromJid);
-        iq.setAttribute('type', 'set');
-
-        q := iq.AddTag('query');
-        q.setAttribute('xmlns', 'jabber:iq:oob');
-
-        q.AddBasicTag('url', 'callto:' + myip + '+type=ip');
-        q.AddBasicTag('desc', 'Netmeeting compatible call');
-
-        _exodus.Send(iq.xml);
-
-        iq.Free();
-    end;
 end;
 
 procedure TExNetmeetingPlugin.NewChat(const jid: WideString;
@@ -176,8 +130,53 @@ end;
 
 //IExodusMenuListener
 procedure TExNetmeetingPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    p: IExodusPresence;
+    pres: IExodusPPDB;
+    myip, jid: Widestring;
+    iq, q: TXMLTag;
+    reg : TRegistry ;
+    NMName : String ;
 begin
+    if (menuID <> _menu_id) then exit;
 
+    // ok, we have our menu item..
+    jid := _exodus.getActiveContact();
+    pres := _exodus.PPDB;
+    p := pres.Find(jid, '');
+    if (p <> nil) then begin
+        // send the iq-set to this contact
+        reg := TRegistry.Create ;
+        reg.RootKey := HKEY_LOCAL_MACHINE;
+        if reg.OpenKey('SOFTWARE\Clients\Internet Call\Microsoft NetMeeting\shell\open\Command', false) then
+        begin
+            NMName := reg.ReadString('') ;
+            ShellExecute(0, 'open', PChar(NMName), nil, nil, SW_SHOWNORMAL);
+        end
+        else
+            MessageDlg(sNetMeetingStartErr, mtWarning, [mbOK], 0);
+        reg.Free;
+
+        myip := _exodus.LocalIP;
+        if (myip = '') then begin
+            MessageDlg(sNetMeetingConnError, mtError, [mbOK], 0);
+            exit;
+        end;
+
+        iq := TXMLTag.Create('iq');
+        iq.setAttribute('to', p.fromJid);
+        iq.setAttribute('type', 'set');
+
+        q := iq.AddTag('query');
+        q.setAttribute('xmlns', 'jabber:iq:oob');
+
+        q.AddBasicTag('url', 'callto:' + myip + '+type=ip');
+        q.AddBasicTag('desc', 'Netmeeting compatible call');
+
+        _exodus.Send(iq.xml);
+
+        iq.Free();
+    end;
 end;
 
 initialization
