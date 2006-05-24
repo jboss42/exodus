@@ -56,8 +56,6 @@ type
 implementation
 
 uses
-    ExEvents, MsgQueue, 
-    
     // JOPL stuff
     ChatController, JabberConst, PrefController, Session,
     XMLUtils,
