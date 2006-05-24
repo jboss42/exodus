@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/24/2006 1:28:47 PM from Type Library described below.
+// File generated on 5/24/2006 3:29:55 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -551,7 +551,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {E28E487A-7258-4B32-AD1C-F23A808F0460}
 // *********************************************************************//
-  IExodusChatPlugin = interface(IExodusMenuListener)
+  IExodusChatPlugin = interface(IDispatch)
     ['{E28E487A-7258-4B32-AD1C-F23A808F0460}']
     function OnBeforeMessage(var body: WideString): WordBool; safecall;
     function OnAfterMessage(var body: WideString): WideString; safecall;
@@ -576,7 +576,6 @@ type
     function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; dispid 203;
     procedure OnAfterRecvMessage(var body: WideString); dispid 204;
     function OnKeyUp(const key: WideString; const shiftState: WideString): WordBool; dispid 301;
-    procedure OnMenuItemClick(const menuID: WideString; const xml: WideString); dispid 255;
   end;
 
 // *********************************************************************//
@@ -4002,7 +4001,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
 // *********************************************************************//
-  IExodusPlugin = interface(IExodusMenuListener)
+  IExodusPlugin = interface(IDispatch)
     ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
     procedure Startup(const exodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
@@ -4031,7 +4030,6 @@ type
                    const xTags: WideString): WideString; dispid 8;
     procedure Configure; dispid 12;
     procedure NewOutgoingIM(const jid: WideString; const instantMsg: IExodusChat); dispid 203;
-    procedure OnMenuItemClick(const menuID: WideString; const xml: WideString); dispid 255;
   end;
 
 // *********************************************************************//
