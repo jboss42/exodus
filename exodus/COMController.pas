@@ -1451,13 +1451,13 @@ end;
 procedure TExodusController.RegisterCapExtension(const ext,
   feature: WideString);
 begin
-    Exodus_Disco_Info.AddExtension(ext, feature);
+    MainSession.AddExtension(ext, feature);
 end;
 
 {---------------------------------------}
 procedure TExodusController.UnregisterCapExtension(const ext: WideString);
 begin
-    Exodus_Disco_Info.RemoveExtension(ext);
+    MainSession.RemoveExtension(ext);
 end;
 
 {---------------------------------------}
