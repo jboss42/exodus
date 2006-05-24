@@ -32,7 +32,6 @@ type
   TStatsPlugin = class(TAutoObject, IExodusPlugin)
   protected
     procedure Configure; safecall;
-    procedure menuClick(const ID: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
       safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat);
@@ -42,8 +41,6 @@ type
     procedure Startup(const ExodusController: IExodusController); safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
     //IExodusMenuListener
@@ -80,11 +77,6 @@ begin
     end;
 
     fConfig.Free();
-end;
-
-procedure TStatsPlugin.menuClick(const ID: WideString);
-begin
-
 end;
 
 procedure TStatsPlugin.NewChat(const jid: WideString;
@@ -174,12 +166,6 @@ end;
 
 function TStatsPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
-begin
-
-end;
-
-procedure TStatsPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
-  Subject: WideString);
 begin
 
 end;

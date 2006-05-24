@@ -33,13 +33,10 @@ type
     procedure Shutdown; safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    procedure menuClick(const ID: WideString); safecall;
     procedure Configure; safecall;
     procedure Process(const xpath, event, xml: WideString); safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
     //IExodusMenuListener
@@ -62,11 +59,6 @@ implementation
 uses
     XMLTag, Importer, StrUtils, SysUtils,
     Dialogs, ComServ;
-
-{-----------------------------------------}
-procedure TICQImportPlugin.menuClick(const ID: WideString);
-begin
-end;
 
 {-----------------------------------------}
 procedure TICQImportPlugin.AgentsList(const Server: WideString);
@@ -141,13 +133,6 @@ begin
 
 end;
 
-{-----------------------------------------}
-procedure TICQImportPlugin.MsgMenuClick(const ID, jid: WideString;
-  var Body, Subject: WideString);
-begin
-
-end;
-
 procedure TICQImportPlugin.NewOutgoingIM(const jid: WideString;
   const InstantMsg: IExodusChat);
 begin
@@ -159,7 +144,7 @@ procedure TICQImportPlugin.OnMenuItemClick(const menuID : WideString; const xml 
 var
     f: TfrmImport;
 begin
-    if (id = _menu_id) then begin
+    if (menuID = _menu_id) then begin
         // make sure we are online..
         if (_controller.Connected = false) then begin
             MessageDlg('You must be connected before trying to import a ICQ Contact List.',

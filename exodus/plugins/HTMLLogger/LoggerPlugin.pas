@@ -34,9 +34,6 @@ type
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
-    procedure MenuClick(const ID: WideString); safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
       safecall;
     procedure NewOutgoingIM(const jid: WideString;
@@ -233,19 +230,6 @@ begin
     end;
 
     p.Free();    
-end;
-
-{---------------------------------------}
-procedure THTMLLogger.MenuClick(const ID: WideString);
-begin
-
-end;
-
-{---------------------------------------}
-procedure THTMLLogger.MsgMenuClick(const ID, jid: WideString; var Body,
-  Subject: WideString);
-begin
-
 end;
 
 {---------------------------------------}
@@ -458,7 +442,10 @@ begin
 end;
 
 //IExodusMenuListener
-procedure THTMLLogger.OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
+procedure THTMLLogger.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+begin
+
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, THTMLLogger, Class_HTMLLogger,
