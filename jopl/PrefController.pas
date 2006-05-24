@@ -746,7 +746,7 @@ function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pk
 var
     uf: TPrefFile;
     dv, bv, uv: Widestring;
-    ds, bs: TPrefState;
+//    ds, bs: TPrefState;
 begin
     Result := '';
 
@@ -757,7 +757,7 @@ begin
     else
         uf := _server_file;
 
-    ds := s_default_file.getState(pkey);
+//    ds := s_default_file.getState(pkey);
     dv := s_default_file.getString(pkey);
     if (not allowOverride(s_default_file, pkey)) then begin
         // default isn't over-ridable, even by branding.  This can happen
@@ -770,7 +770,7 @@ begin
     end;
 
     bv := s_brand_file.getString(pkey);
-    bs := s_brand_file.getState(pkey);
+//    bs := s_brand_file.getState(pkey);
     if (not allowOverride(s_brand_file, pkey)) then begin
         if (bv <> '') then
             Result := bv

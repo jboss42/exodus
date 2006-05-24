@@ -9,7 +9,7 @@ uses
     ComObj, ActiveX, Exodus_TLB, TestPlugin_TLB, StdVcl;
 
 type
-  TTesterPlugin = class(TAutoObject, IExodusPlugin)
+  TTesterPlugin = class(TAutoObject, IExodusPlugin, IExodusMenuListener)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -26,6 +26,8 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
   private
     _exodus: IExodusController;
     _session: integer;
@@ -54,24 +56,7 @@ begin
 end;
 
 procedure TTesterPlugin.MenuClick(const ID: WideString);
-var
-    cb: TTesterIQCallback;
-    iqid, xml: Widestring;
-    jid: string;
 begin
-    if (ID = _menu1) then begin
-        // test TrackIQ()
-        jid := 'pgmillard@jabber.org';
-        if (InputQuery('vCard lookup', 'Enter JID', jid)) then begin
-            xml := '<iq type="get" to="' + jid + '"><vCard xmlns="vcard-temp"/></iq>';
-            cb := TTesterIQCallback.Create();
-            iqid := _exodus.TrackIQ(xml, cb, 60);
-        end;
-    end
-    else if (ID = _menu2) then begin
-        // test FireEvent()
-        _exodus.FireEvent('/data/debug', '', 'Some debug message');
-    end;
 end;
 
 procedure TTesterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
@@ -172,11 +157,12 @@ begin
     _roster := _exodus.RegisterCallback('/roster/item', Self);
 
     _exodus.Roster.AddContextMenu('Tester_menu1');
-    _menu_id := _exodus.Roster.addContextMenuItem('Tester_menu1', 'Foobar',
-        '/session/gui/test1');
 
-    _menu1 := _exodus.addPluginMenu('Test TrackIQ');
-    _menu2 := _exodus.addPluginMenu('Test FireEvent');
+    _menu_id := _exodus.Roster.addContextMenuItem('Tester_menu1', 'Foobar',
+        '/session/gui/test1', Self);
+
+    _menu1 := _exodus.addPluginMenu('Test TrackIQ', Self);
+    _menu2 := _exodus.addPluginMenu('Test FireEvent', Self);
 
     (*
     bmp := TBitamp.Create();
@@ -191,6 +177,28 @@ begin
     _exodus.RosterImages.AddImageFilename('aim_dnd', 'd:\src\exodus\exodus\plugins\test\online.bmp');
     _exodus.RosterImages.AddImageFilename('aim_offline', 'd:\src\exodus\exodus\plugins\test\offline.bmp');
     *)
+end;
+
+//IExodusMenuListener
+procedure TTesterPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    cb: TTesterIQCallback;
+    iqid, txml: Widestring;
+    jid: string;
+begin
+    if (menuID = _menu1) then begin
+        // test TrackIQ()
+        jid := 'pgmillard@jabber.org';
+        if (InputQuery('vCard lookup', 'Enter JID', jid)) then begin
+            txml := '<iq type="get" to="' + jid + '"><vCard xmlns="vcard-temp"/></iq>';
+            cb := TTesterIQCallback.Create();
+            iqid := _exodus.TrackIQ(txml, cb, 60);
+        end;
+    end
+    else if (menuID = _menu2) then begin
+        // test FireEvent()
+        _exodus.FireEvent('/data/debug', '', 'Some debug message');
+    end;
 end;
 
 initialization

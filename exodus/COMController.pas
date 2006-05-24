@@ -222,6 +222,7 @@ type
         idx: integer;
         id: Widestring;
         caption: Widestring;
+        listener : IExodusMenuListener;
     end;
 
 
@@ -888,10 +889,12 @@ begin
     mi := TMenuItem.Create(frmExodus);
     frmExodus.mnuPlugins.Add(mi);
     mi.Caption := caption;
-    mi.OnClick := frmExodus.mnuPluginDummyClick;
+    mi.OnClick := frmExodus.mnuPluginDummyClick; //calls fireMenuClick
     inc(_nextid);
     id := 'plugin_' + IntToStr(_nextid);
     mi.Name := id;
+    //add menulistener as menu items tag
+    mi.tag := Integer(menuListener);
     _menu_items.AddObject(id, mi);
     Result := id;
 end;
@@ -906,6 +909,7 @@ begin
     if (idx >= 0) then begin
         o := _menu_items.Objects[idx];
         if assigned(o) then begin
+            TMenuItem(o).Tag := 0;
             TMenuItem(o).Free();
             _menu_items.Delete(idx);
         end;
@@ -915,24 +919,49 @@ end;
 {---------------------------------------}
 procedure TExodusController.fireMenuClick(Sender: TObject);
 var
-    i, idx: integer;
+    idx : Integer;
+{$IFDEF OLD_MENU_EVENTS}
+    i: integer;
+{$ELSE}
+    mListener : IExodusMenuListener;
+{$ENDIF}
 begin
     idx := _menu_items.IndexOfObject(Sender);
     if (idx >= 0) then begin
+{$IFDEF OLD_MENU_EVENTS}
+        //broadcast to all plugins the menu selection
         for i := 0 to plugs.count - 1 do
             TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+{$ELSE}
+        //fire event on one menu listener
+        mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
+        if (mListener <> nil) then
+            mListener.OnMenuItemClick(_menu_items[idx], '');
+{$ENDIF}
     end;
 end;
 
 {---------------------------------------}
 procedure TExodusController.fireRosterMenuClick(Sender: TObject);
 var
-    i, idx: integer;
+    idx : Integer;
+{$IFDEF OLD_MENU_EVENTS}
+    i: integer;
+{$ELSE}
+    mListener : IExodusMenuListener;
+{$ENDIF}
 begin
     idx := _roster_menus.indexOfObject(Sender);
     if (idx >= 0) then begin
+{$IFDEF OLD_MENU_EVENTS}
         for i := 0 to plugs.count - 1 do
             TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
+{$ELSE}
+        //fire event on one menu listener
+        mListener := IExodusMenuListener(TMenuItem(_roster_menus.Objects[idx]).Tag);
+        if (mListener <> nil) then
+            mListener.OnMenuItemClick(_roster_menus[idx], '');
+{$ENDIF}
     end;
 end;
 
@@ -1233,6 +1262,8 @@ begin
     mi.OnClick := frmRosterWindow.pluginClick;
     id := 'ct_menu_' + IntToStr(_roster_menus.Count);
     mi.Name := id;
+    //add menu listener as menu items tag
+    mi.Tag := Integer(menuListener);
     _roster_menus.AddObject(id, mi);
     Result := id;
 end;
@@ -1244,6 +1275,7 @@ var
 begin
     idx := _roster_menus.IndexOf(ID);
     if (idx >= 0) then begin
+        TMenuItem(_roster_menus.Objects[idx]).Tag := 0; //loose IExodusMenuListener ref
         TMenuItem(_roster_menus.Objects[idx]).Free();
         _roster_menus.Delete(idx);
     end;
@@ -1331,6 +1363,7 @@ begin
     mc.id := id;
     mc.caption := Caption;
     mc.idx := _msg_menus.AddObject(id, mc);
+    mc.listener := menuListener;
     Result := id;
 end;
 
@@ -1366,6 +1399,7 @@ begin
     mi.OnClick := frmRosterWindow.pluginClick;
     id := 'group_menu_' + IntToStr(_roster_menus.Count);
     mi.Name := id;
+    mi.Tag := Integer(menuListener);
     _roster_menus.AddObject(id, mi);
     Result := id;
 end;
@@ -1377,6 +1411,7 @@ var
 begin
     idx := _roster_menus.IndexOf(ID);
     if (idx >= 0) then begin
+        TMenuItem(_roster_menus.Objects[idx]).Tag := 0;
         TMenuItem(_roster_menus.Objects[idx]).Free();
         _roster_menus.Delete(idx);
     end;

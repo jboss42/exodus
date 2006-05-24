@@ -65,19 +65,7 @@ uses
 
 {-----------------------------------------}
 procedure TICQImportPlugin.menuClick(const ID: WideString);
-var
-    f: TfrmImport;
 begin
-    if (id = _menu_id) then begin
-        // make sure we are online..
-        if (_controller.Connected = false) then begin
-            MessageDlg('You must be connected before trying to import a ICQ Contact List.',
-                mtError, [mbOK], 0);
-            exit;
-        end;
-        f := getImportForm(_controller, true);
-        f.Show();
-    end;
 end;
 
 {-----------------------------------------}
@@ -168,8 +156,19 @@ end;
 
 //IExodusMenuListener
 procedure TICQImportPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    f: TfrmImport;
 begin
-
+    if (id = _menu_id) then begin
+        // make sure we are online..
+        if (_controller.Connected = false) then begin
+            MessageDlg('You must be connected before trying to import a ICQ Contact List.',
+                mtError, [mbOK], 0);
+            exit;
+        end;
+        f := getImportForm(_controller, true);
+        f.Show();
+    end;
 end;
 
 initialization

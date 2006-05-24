@@ -65,19 +65,7 @@ uses
 
 {---------------------------------------}
 procedure TAIMImportPlugin.menuClick(const ID: WideString);
-var
-    f: TfrmImport;
 begin
-    if (id = _menu_id) then begin
-        // make sure we are online..
-        if (_controller.Connected = false) then begin
-            MessageDlg('You must be connected before trying to import a AIM Buddy List.',
-                mtError, [mbOK], 0);
-            exit;
-        end;
-        f := getImportForm(_controller, true);
-        f.Show();
-    end;
 end;
 
 {---------------------------------------}
@@ -170,8 +158,19 @@ begin
 end;
 
 procedure TAimImportPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    f: TfrmImport;
 begin
-
+    if (menuID = _menu_id) then begin
+        // make sure we are online..
+        if (_controller.Connected = false) then begin
+            MessageDlg('You must be connected before trying to import a AIM Buddy List.',
+                mtError, [mbOK], 0);
+            exit;
+        end;
+        f := getImportForm(_controller, true);
+        f.Show();
+    end;
 end;
 
 initialization

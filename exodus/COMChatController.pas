@@ -208,12 +208,24 @@ end;
 {---------------------------------------}
 procedure TExodusChat.fireMenuClick(Sender: TObject);
 var
-    i, idx: integer;
+    idx : Integer;
+{$IFDEF OLD_MENU_EVENTS}
+    i: integer;
+{$ELSE}
+    mListener : IExodusMenuListener;
+{$ENDIF}
 begin
     idx := _menu_items.IndexOfObject(Sender);
     if (idx >= 0) then begin
+{$IFDEF OLD_MENU_EVENTS}
         for i := 0 to _plugs.Count - 1 do
             TChatPlugin(_plugs[i]).com.onMenu(_menu_items[idx]);
+{$ELSE}
+        //fire event on one menu listener
+        mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
+        if (mListener <> nil) then
+            mListener.OnMenuItemClick(_menu_items[idx], '');
+{$ENDIF}
     end;
 end;
 
@@ -243,6 +255,7 @@ begin
         mi.Name := id;
         mi.OnClick := _room.pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         _room.popRoom.Items.Add(mi);
     end
     else if (_chat <> nil) then begin
@@ -250,6 +263,7 @@ begin
         mi.Name := id;
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popContact.Items.Add(mi);
     end
     else if (_im <> nil) then begin
@@ -257,6 +271,7 @@ begin
         mi.Name := id;
         mi.OnClick := _im.pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         _im.popContact.Items.Add(mi);
     end
     else
@@ -279,6 +294,7 @@ begin
         mi.Name := id;
         mi.OnClick := _room.pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         _room.popOut.Items.Add(mi);
     end
     else if (_chat <> nil) then begin
@@ -286,6 +302,7 @@ begin
         mi.Name := id;
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popOut.Items.Add(mi);
     end
     else if (_im <> nil) then begin
@@ -293,6 +310,7 @@ begin
         mi.Name := id;
         mi.OnClick := _im.pluginMenuClick;
         mi.Caption := caption;
+        mi.Tag := Integer(menuListener);
         _im.popClipboard.Items.Add(mi);
     end
     else
@@ -313,6 +331,7 @@ begin
     if (idx < 0) then exit;
     mi := TMenuItem(_menu_items.Objects[idx]);
     _menu_items.Delete(idx);
+    mi.Tag := 0;
     mi.Free();
 end;
 

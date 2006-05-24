@@ -442,8 +442,8 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.txtUsernameKeyPress(Sender: TObject;
   var Key: Char);
-var
-    uh, r, jid: Widestring;
+//var
+//    uh, r, jid: Widestring;
 begin
     // always allow people to fix mistakes :)
     if (Key = #8) then exit;
