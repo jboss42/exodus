@@ -37,7 +37,7 @@ type
 implementation
 
 uses
-    ExResponders, Session, PrefController, JabberConst, XMLUtils;
+    Session, PrefController, JabberConst, XMLUtils;
 
 {---------------------------------------}
 constructor TCapPresence.Create;
@@ -52,7 +52,7 @@ begin
         c.setAttribute('xmlns', XMLNS_CLIENTCAPS);
         c.setAttribute('node', MainSession.Prefs.getString('client_caps_uri'));
         c.setAttribute('ver', GetAppVersion());
-        ext := Exodus_Disco_Info.ExtList();
+        ext := MainSession.GetExtStr();
         if (ext <> '') then
             c.setAttribute('ext', ext);
     end;
