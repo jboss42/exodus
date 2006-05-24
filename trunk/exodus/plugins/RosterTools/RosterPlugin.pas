@@ -33,7 +33,6 @@ type
     function onInstantMsg(const Body, Subject: WideString): WideString;
       safecall;
     procedure Configure; safecall;
-    procedure menuClick(const ID: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
       safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat);
@@ -43,8 +42,6 @@ type
     procedure Startup(const ExodusController: IExodusController); safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
         //IExodusMenuListener
@@ -69,10 +66,6 @@ end;
 procedure TRosterPlugin.Configure;
 begin
 
-end;
-
-procedure TRosterPlugin.menuClick(const ID: WideString);
-begin
 end;
 
 procedure TRosterPlugin.NewChat(const jid: WideString;
@@ -109,12 +102,6 @@ end;
 
 function TRosterPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
-begin
-
-end;
-
-procedure TRosterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
-  Subject: WideString);
 begin
 
 end;

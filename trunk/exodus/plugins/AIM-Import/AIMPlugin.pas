@@ -35,12 +35,9 @@ type
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    procedure menuClick(const ID: WideString); safecall;
     procedure Configure; safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewOutgoingIM(const jid: WideString;
       const InstantMsg: IExodusChat); safecall;
     procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
@@ -62,11 +59,6 @@ implementation
 uses
     XMLTag, Importer, StrUtils, SysUtils,
     Dialogs, ComServ;
-
-{---------------------------------------}
-procedure TAIMImportPlugin.menuClick(const ID: WideString);
-begin
-end;
 
 {---------------------------------------}
 procedure TAIMImportPlugin.AgentsList(Server: Widestring);
@@ -139,13 +131,6 @@ end;
 {---------------------------------------}
 function TAIMImportPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
-begin
-
-end;
-
-{---------------------------------------}
-procedure TAIMImportPlugin.MsgMenuClick(const ID, jid: WideString;
-  var Body, Subject: WideString);
 begin
 
 end;

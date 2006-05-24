@@ -14,9 +14,6 @@ type
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
-    procedure MenuClick(const ID: WideString); safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
       safecall;
     procedure NewOutgoingIM(const jid: WideString;
@@ -51,16 +48,6 @@ begin
 end;
 
 procedure TTesterPlugin.Configure;
-begin
-
-end;
-
-procedure TTesterPlugin.MenuClick(const ID: WideString);
-begin
-end;
-
-procedure TTesterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
-  Subject: WideString);
 begin
 
 end;

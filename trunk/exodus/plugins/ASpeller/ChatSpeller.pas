@@ -36,10 +36,8 @@ type
     procedure onClose; safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onKeyPress(const Key: WideString); safecall;
-    procedure onMenu(const ID: WideString); safecall;
     procedure onNewWindow(HWND: Integer); safecall;
     procedure onRecvMessage(const Body, xml: WideString); safecall;
-
     function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; safecall;
     procedure OnAfterRecvMessage(var Body: WideString); safecall;
 
@@ -243,11 +241,6 @@ begin
         until (word_ = nil);
         delete_aspell_string_enumeration(elements);
     end;
-end;
-
-{---------------------------------------}
-procedure TChatSpeller.onMenu(const ID: WideString);
-begin
 end;
 
 {---------------------------------------}

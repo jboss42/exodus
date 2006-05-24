@@ -755,12 +755,23 @@ end;
 procedure TExodusController.fireMsgMenuClick(idx: integer; jid: Widestring;
         var Body: Widestring; var Subject: Widestring);
 var
-    i: integer;
+//    i: integer;
+    txml : TXMLTag;
+    mc: TMenuContainer;
 begin
     if (idx >= _msg_menus.Count) then exit;
+    //create xml to pass onto event
+    txml := TXMLTag.Create('msg-menu-data');
+    txml.AddBasicTag('jid', jid);
+    txml.AddBasicTag('body', body);
+    txml.AddBasicTag('subject', subject);
+    mc := TMenuContainer(_msg_menus.Objects[idx]);
+    mc.listener.OnMenuItemClick(_msg_menus[idx], txml.XML);
+{*
     for i := 0 to plugs.Count - 1 do
         TPlugin(plugs.Objects[i]).com.MsgMenuClick(_msg_menus[idx], jid,
             Body, Subject);
+*}            
 end;
 
 {---------------------------------------}
