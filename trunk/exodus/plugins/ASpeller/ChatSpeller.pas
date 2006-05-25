@@ -36,6 +36,8 @@ type
     procedure onClose; safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onKeyPress(const Key: WideString); safecall;
+    function OnKeyUp(key: Integer; shiftState: Integer): WordBool; safecall;
+    function OnKeyDown(key: Integer; shiftState: Integer): WordBool; safecall;
     procedure onNewWindow(HWND: Integer); safecall;
     procedure onRecvMessage(const Body, xml: WideString); safecall;
     function OnBeforeRecvMessage(const Body: WideString; const XML: WideString): WordBool; safecall;
@@ -199,7 +201,16 @@ begin
         end;
     end;
 end;
-
+{---------------------------------------}
+function TChatSpeller.OnKeyUp(key: Integer; shiftState: Integer): WordBool;
+begin
+    Result := false;
+end;
+{---------------------------------------}
+function TChatSpeller.OnKeyDown(key: Integer; shiftState: Integer): WordBool;
+begin
+    Result := false;
+end;
 {---------------------------------------}
 function TChatSpeller.checkWord(w: Widestring): boolean;
 var
