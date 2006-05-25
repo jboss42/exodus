@@ -29,7 +29,7 @@ uses
     Exodus_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
 
 type
-  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger, IExodusMenuListener)
+  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
@@ -53,8 +53,6 @@ type
     procedure LogMessage(const Msg: IExodusLogMsg); safecall;
     procedure Purge; safecall;
     procedure Show(const jid: WideString); safecall;
-    //IExodusMenuListener
-    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
 
   private
     _exodus: IExodusController;
@@ -87,7 +85,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    Prefs,  
+    HtmlPrefs,
     JabberUtils, XMLUtils, Windows, IdGlobal, StrUtils,
     Controls, ShellAPI, Dialogs, SysUtils, Classes, JabberID, ComServ;
 
@@ -211,9 +209,9 @@ end;
 {---------------------------------------}
 procedure THTMLLogger.Configure;
 var
-    p: TfrmPrefs;
+    p: TfrmHtmlPrefs;
 begin
-    p := TfrmPrefs.Create(nil);
+    p := TfrmHtmlPrefs.Create(nil);
     p.Logger := Self;
     p.txtLogPath.Text := _path;
     p.chkLogRooms.Checked := _rooms;
@@ -439,12 +437,6 @@ end;
 procedure THTMLLogger.Show(const jid: WideString);
 begin
     _showLog(jid);
-end;
-
-//IExodusMenuListener
-procedure THTMLLogger.OnMenuItemClick(const menuID : WideString; const xml : WideString);
-begin
-
 end;
 
 initialization
