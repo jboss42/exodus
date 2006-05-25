@@ -1,0 +1,7805 @@
+[
+  uuid(37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8), 
+  version(1.0), 
+  helpstring("Exodus COM Plugin interfaces")
+    
+]
+library Exodus
+{
+
+  importlib("stdole2.tlb");
+
+  [
+    uuid(E89B1EBA-8CF8-4A00-B15D-18149A0FA830), 
+    version(1.0), 
+    helpstring("ExodusController Object")
+  ]
+  coclass ExodusController
+  {
+    [default] interface IExodusController;
+  };
+
+  [
+    uuid(9AE59046-2197-429A-A62D-8EE61122B04E), 
+    version(1.0)
+  ]
+  typedef enum tagChatParts
+  {
+    HWND_MsgInput = 0, 
+    Ptr_MsgInput = 1, 
+    HWND_MsgOutput = 2, 
+    Ptr_MsgOutput = 3
+  } ChatParts;
+
+  [
+    uuid(BDD5493D-440F-4376-802B-070B5A4ABFF3), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusRosterItem Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRosterItem: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall JabberID([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall JabberID([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Subscription([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Subscription([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Ask([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall GroupCount([out, retval] long * Value );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Group([in] long Index, [out, retval] BSTR * Value );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall XML([out, retval] BSTR * XML );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Remove( void );
+    [
+    id(0x00000009)
+    ]
+    HRESULT _stdcall Update( void );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall Nickname([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall Nickname([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall RawNickname([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ContextMenuID([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ContextMenuID([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Status([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Status([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Tooltip([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Tooltip([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Action([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Action([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall ImageIndex([in] long Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall InlineEdit([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall InlineEdit([in] VARIANT_BOOL Value );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall FireChange( void );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall IsContact([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall IsContact([in] VARIANT_BOOL Value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall AddGroup([in] BSTR grp );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall RemoveGroup([in] BSTR grp );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall SetCleanGroups( void );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ImagePrefix([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ImagePrefix([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall IsNative([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall CanOffline([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall CanOffline([in] VARIANT_BOOL Value );
+  };
+
+  [
+    uuid(FF4EFE7E-35AC-48B5-ACDB-6753C402F0DB), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusPresence Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPresence: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall PresType([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall PresType([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Status([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Status([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Show([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Show([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Priority([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Priority([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall ErrorString([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall ErrorString([in] BSTR Value );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall XML([out, retval] BSTR * XML );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall IsSubscription([out, retval] VARIANT_BOOL * Subscription );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall ToJid([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall ToJid([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall FromJid([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall FromJid([in] BSTR Value );
+  };
+
+  [
+    uuid(1E010B88-4A61-4185-A243-A6283A26C80E), 
+    version(1.0)
+  ]
+  typedef enum tagActiveItem
+  {
+    RosterItem = 0, 
+    Bookmark = 1, 
+    Group = 2
+  } ActiveItem;
+
+  [
+    uuid(BFE1905C-3620-4C9D-B0C2-27EB456EF73B), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusAuth: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall StartAuth( void );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall CancelAuth( void );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall StartRegistration([out, retval] VARIANT_BOOL * RegSupported );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall CancelRegistration( void );
+  };
+
+  [
+    uuid(F4AAF511-D144-42E7-B108-8A196D4BD115), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusRosterImages Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRosterImages: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddImageFilename([in] BSTR ID, [in] BSTR filename, [out, retval] long * Index );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddImageBase64([in] BSTR ID, [in] BSTR base64, [out, retval] long * Index );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddImageResource([in] BSTR ID, [in] BSTR LibName, [in] BSTR ResName, [out, retval] long * Index );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Remove([in] BSTR ID );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Find([in] BSTR ID, [out, retval] long * Index );
+  };
+
+  [
+    uuid(D8297D0C-A316-4E9D-A89C-095CFAE51141), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlFont: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Charset([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Charset([in] long Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Pitch([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Pitch([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Size([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Size([in] long Value );
+  };
+
+  [
+    uuid(EFBC071A-460A-4E1B-89EC-25B23460BA93), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlMenuItem: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall AutoCheck([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall AutoCheck([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall AutoHotkeys([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall AutoLineReduction([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Break([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Break([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Checked([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Checked([in] long Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall Default([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall Default([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall GroupIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall GroupIndex([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall ImageIndex([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall RadioItem([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall RadioItem([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall ShortCut([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall ShortCut([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(31485408-E6E7-437D-A0FE-C176DF0D2CD8), 
+    version(1.0)
+  ]
+  typedef enum tagExodusControlTypes
+  {
+    ExodusControlButton = 0, 
+    ExodusControlCheckBox = 1, 
+    ExodusControlComboBox = 2, 
+    ExodusControlEdit = 3, 
+    ExodusControlFont = 4, 
+    ExodusControlLabel = 5, 
+    ExodusControlListBox = 6, 
+    ExodusControlMenuItem = 7, 
+    ExodusControlPanel = 8, 
+    ExodusControlPopupMenu = 9, 
+    ExodusControlRadioButton = 10, 
+    ExodusControlRichEdit = 11, 
+    ExodusControlBitBtn = 12, 
+    ExodusControlMainMenu = 13, 
+    ExodusControlMemo = 14, 
+    ExodusControlPageControl = 15, 
+    ExodusControlSpeedButton = 16, 
+    ExodusControlForm = 17
+  } ExodusControlTypes;
+
+  [
+    uuid(57DFE494-4509-4972-A93B-6C7E6A9D6A59), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusIQListener: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ProcessIQ([in] BSTR Handle, [in] BSTR XML );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall TimeoutIQ([in] BSTR Handle );
+  };
+
+  [
+    uuid(C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6), 
+    version(1.0), 
+    noncreatable, 
+    hidden
+  ]
+  coclass ExodusChat
+  {
+    [default] interface IExodusChat;
+  };
+
+  [
+    uuid(027E1B53-59A9-4FA4-9610-AC6CA2561248), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusRoster
+  {
+    [default] interface IExodusRoster;
+  };
+
+  [
+    uuid(9ED8C497-1121-4C9E-B586-C7DFDB35B581), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusPPDB
+  {
+    [default] interface IExodusPPDB;
+  };
+
+  [
+    uuid(B39343ED-2E2D-4C91-AE4F-E0153BA347DA), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusRosterItem
+  {
+    [default] interface IExodusRosterItem;
+  };
+
+  [
+    uuid(8B7DF610-B49C-4A90-9B98-CB0CB27D8827), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusPresence
+  {
+    [default] interface IExodusPresence;
+  };
+
+  [
+    uuid(05237BC3-3093-4541-941D-A38FAFB78D89), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusRosterGroup
+  {
+    [default] interface IExodusRosterGroup;
+  };
+
+  [
+    uuid(F0EA9081-9352-496D-94BA-E96605166527), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusRosterImages
+  {
+    [default] interface IExodusRosterImages;
+  };
+
+  [
+    uuid(B777EA4A-A2A4-4597-87E2-E1B9800BFDC2), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusEntityCache
+  {
+    [default] interface IExodusEntityCache;
+  };
+
+  [
+    uuid(F7D97ED8-C6BA-470F-8D63-7A6D70894AB3), 
+    version(1.0), 
+    noncreatable, 
+    hidden
+  ]
+  coclass ExodusEntity
+  {
+    [default] interface IExodusEntity;
+  };
+
+  [
+    uuid(28132170-54E2-4BDD-A37D-BE115E68F044), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusListener: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ProcessEvent([in] BSTR Event, [in] BSTR XML );
+  };
+
+  [
+    uuid(D4749AC4-6EBE-493B-844C-0455FF0A4A77), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusToolbarButton: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Visible([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Visible([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Tooltip([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Tooltip([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ImageID([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ImageID([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Enabled([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Enabled([in] VARIANT_BOOL Value );
+  };
+
+  [
+    uuid(E12A4659-336B-4921-AC6A-771B1DCA5AF8), 
+    version(1.0), 
+    helpstring("ExodusToolbar Object")
+  ]
+  coclass ExodusToolbar
+  {
+    [default] interface IExodusToolbar;
+  };
+
+  [
+    uuid(D29EB98A-994F-4E67-A12F-652733E7E5DD), 
+    version(1.0), 
+    helpstring("ExodusToolbarButton Object")
+  ]
+  coclass ExodusToolbarButton
+  {
+    [default] interface IExodusToolbarButton;
+  };
+
+  [
+    uuid(2E945876-C2E5-4A24-98B4-0E38BD65D431), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusLogMsg Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusLogMsg: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ToJid([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall FromJid([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall MsgType([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ID([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Nick([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Body([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Thread([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall Subject([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall Timestamp([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall Direction([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall XML([out, retval] BSTR * Value );
+  };
+
+  [
+    uuid(740743C0-7BEF-48E8-BD05-1470047F03CA), 
+    version(1.0), 
+    helpstring("ExodusLogMsg Object")
+  ]
+  coclass ExodusLogMsg
+  {
+    [default] interface IExodusLogMsg;
+  };
+
+  [
+    uuid(6D58A577-6BC4-4B1C-B5F8-759B94136B0A), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusLogListener Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusLogListener: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ProcessMessages([in] long Count, [in] SAFEARRAY(long) Messages );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall EndMessages([in] long Day, [in] long Month, [in] long Year );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Error([in] long Day, [in] long Month, [in] long Year );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ProcessDates([in] long Count, [in] SAFEARRAY(long) Dates );
+  };
+
+  [
+    uuid(98ED888A-0569-4E5B-8933-36EBF08812B4), 
+    version(1.0), 
+    helpstring("ExodusLogListener Object")
+  ]
+  coclass ExodusLogListener
+  {
+    [default] interface IExodusLogListener;
+  };
+
+  
+  typedef BSTR * PWideString1;
+
+  [
+    uuid(0BB5F3EB-D671-420F-93BA-61049B046912), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusController Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusController: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Connected([out, retval] VARIANT_BOOL * Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Username([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Server([out, retval] BSTR * Value );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall RegisterCallback([in] BSTR xpath, [in] IExodusPlugin * callback /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall UnRegisterCallback([in] long ID );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Send([in] BSTR XML );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall IsRosterJID([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall IsSubscribed([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall ChangePresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    [
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR Nickname );
+    [
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall GetProfile([in] BSTR jid );
+    [
+    id(0x00000010)
+    ]
+    HRESULT _stdcall CreateDockableWindow([in] BSTR Caption, [out, retval] long * HWND );
+    [
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AddPluginMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall RemovePluginMenu([in] BSTR ID );
+    [
+    id(0x00000011)
+    ]
+    HRESULT _stdcall MonitorImplicitRegJID([in] BSTR JabberID, [in] VARIANT_BOOL FullJID );
+    [
+    id(0x00000012)
+    ]
+    HRESULT _stdcall GetAgentList([in] BSTR Server );
+    [
+    id(0x00000013)
+    ]
+    HRESULT _stdcall GetAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
+    [
+    id(0x00000014)
+    ]
+    HRESULT _stdcall GenerateID([out, retval] BSTR * ID );
+    [
+    id(0x00000015)
+    ]
+    HRESULT _stdcall IsBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
+    [
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Block([in] BSTR JabberID );
+    [
+    id(0x00000017)
+    ]
+    HRESULT _stdcall UnBlock([in] BSTR JabberID );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall resource([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall Port([out, retval] long * Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Priority([out, retval] long * Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall PresenceStatus([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall PresenceShow([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall IsPaused([out, retval] VARIANT_BOOL * Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall IsInvisible([out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Connect( void );
+    [
+    id(0x00000021)
+    ]
+    HRESULT _stdcall Disconnect( void );
+    [
+    id(0x00000022)
+    ]
+    HRESULT _stdcall GetPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
+    [
+    id(0x00000023)
+    ]
+    HRESULT _stdcall GetPrefAsInt([in] BSTR Key, [out, retval] long * Value );
+    [
+    id(0x00000024)
+    ]
+    HRESULT _stdcall GetPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000025)
+    ]
+    HRESULT _stdcall SetPrefAsString([in] BSTR Key, [in] BSTR Value );
+    [
+    id(0x00000026)
+    ]
+    HRESULT _stdcall SetPrefAsInt([in] BSTR Key, [in] long Value );
+    [
+    id(0x00000027)
+    ]
+    HRESULT _stdcall SetPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
+    [
+    id(0x00000028)
+    ]
+    HRESULT _stdcall FindChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
+    [
+    id(0x00000029)
+    ]
+    HRESULT _stdcall StartSearch([in] BSTR SearchJID );
+    [
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall StartRoom([in] BSTR RoomJID, [in] BSTR Nickname, [in] BSTR Password, [in] VARIANT_BOOL SendPresence );
+    [
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall StartInstantMsg([in] BSTR JabberID );
+    [
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall StartBrowser([in] BSTR BrowseJID );
+    [
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall ShowJoinRoom([in] BSTR RoomJID, [in] BSTR Nickname, [in] BSTR Password );
+    [
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall ShowPrefs( void );
+    [
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall ShowCustomPresDialog( void );
+    [
+    id(0x00000030)
+    ]
+    HRESULT _stdcall ShowDebug( void );
+    [
+    id(0x00000031)
+    ]
+    HRESULT _stdcall ShowLogin( void );
+    [
+    id(0x00000032)
+    ]
+    HRESULT _stdcall ShowToast([in] BSTR Message, [in] long wndHandle, [in] long ImageIndex );
+    [
+    id(0x00000033)
+    ]
+    HRESULT _stdcall SetPresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    [
+    propget, 
+    id(0x00000036)
+    ]
+    HRESULT _stdcall Roster([out, retval] IExodusRoster ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000037)
+    ]
+    HRESULT _stdcall PPDB([out, retval] IExodusPPDB ** Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall RegisterDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
+    [
+    id(0x00000035)
+    ]
+    HRESULT _stdcall RemoveDiscoItem([in] BSTR ID );
+    [
+    id(0x00000039)
+    ]
+    HRESULT _stdcall RegisterPresenceXML([in] BSTR XML, [out, retval] BSTR * ID );
+    [
+    id(0x0000003A)
+    ]
+    HRESULT _stdcall RemovePresenceXML([in] BSTR ID );
+    [
+    id(0x0000003B)
+    ]
+    HRESULT _stdcall TrackWindowsMsg([in] long Message );
+    [
+    id(0x0000003C)
+    ]
+    HRESULT _stdcall AddContactMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x0000003D)
+    ]
+    HRESULT _stdcall RemoveContactMenu([in] BSTR ID );
+    [
+    id(0x0000003E)
+    ]
+    HRESULT _stdcall GetActiveContact([out, retval] BSTR * jid );
+    [
+    id(0x0000003F)
+    ]
+    HRESULT _stdcall GetActiveGroup([out, retval] BSTR * Name );
+    [
+    id(0x00000041)
+    ]
+    HRESULT _stdcall GetActiveContacts([in] VARIANT_BOOL Online, [out, retval] VARIANT * JIDS );
+    [
+    propget, 
+    id(0x00000040)
+    ]
+    HRESULT _stdcall LocalIP([out, retval] BSTR * Value );
+    [
+    id(0x00000042)
+    ]
+    HRESULT _stdcall SetPluginAuth([in] IExodusAuth * AuthAgent /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000043)
+    ]
+    HRESULT _stdcall SetAuthenticated([in] VARIANT_BOOL Authed, [in] BSTR XML );
+    [
+    id(0x00000044)
+    ]
+    HRESULT _stdcall SetAuthJID([in] BSTR Username, [in] BSTR Host, [in] BSTR resource );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddMessageMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddGroupMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall RemoveGroupMenu([in] BSTR ID );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall RegisterWithService([in] BSTR JabberID );
+    [
+    id(0x000000CD), 
+    helpstring("Show the \"add contact\" form")
+    ]
+    HRESULT _stdcall ShowAddContact([in] BSTR jid );
+    [
+    id(0x000000CE), 
+    helpstring("Register a JEP-115 extension.  Call multiple times with the same ext to set multiple features.")
+    ]
+    HRESULT _stdcall RegisterCapExtension([in] BSTR ext, [in] BSTR feature );
+    [
+    id(0x000000CF), 
+    helpstring("Unregister all of the features for a given ext.")
+    ]
+    HRESULT _stdcall UnregisterCapExtension([in] BSTR ext );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall RosterImages([out, retval] IExodusRosterImages ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall EntityCache([out, retval] IExodusEntityCache ** Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall Debug([in] BSTR Value );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall TrackIQ([in] BSTR XML, [in] IExodusIQListener * Listener /*Warning: unable to validate structure name: */, [in] long Timeout, [out, retval] BSTR * Ret );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall FireEvent([in] BSTR Event, [in] BSTR XML, [in] BSTR Arg );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall RegisterListener([in] BSTR xpath, [in] IExodusListener * Listener /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall Toolbar([out, retval] IExodusToolbar ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall ContactLogger([out, retval] IExodusLogger ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propput, 
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall ContactLogger([in] IExodusLogger * Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall RoomLogger([out, retval] IExodusLogger ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propput, 
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall RoomLogger([in] IExodusLogger * Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall AddStringlistValue([in] BSTR Key, [in] BSTR Value );
+  };
+
+  [
+    uuid(D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusChat Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChat: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall jid([out, retval] BSTR * Value );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall AddContextMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall MsgOutText([out, retval] BSTR * Value );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall RegisterPlugin([in] IExodusChatPlugin * Plugin /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall UnRegisterPlugin([in] long ID, [out, retval] VARIANT_BOOL * Success );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall GetMagicInt([in] ChatParts Part /*Warning: unable to validate structure name: */, [out, retval] long * Value );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddMsgOut([in] BSTR Value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddMsgOutMenu([in] BSTR Caption, [out, retval] BSTR * MenuID );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall RemoveMsgOutMenu([in] BSTR MenuID );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * XML );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall CurrentThreadID([out, retval] BSTR * Thread );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DisplayMessage([in] BSTR Body, [in] BSTR Subject, [in] BSTR From );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AddRoomUser([in] BSTR jid, [in] BSTR Nickname );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall RemoveRoomUser([in] BSTR jid );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall CurrentNick([out, retval] BSTR * Value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall GetControl([in] BSTR Name, [out, retval] IExodusControl ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+  };
+
+  [
+    uuid(98B21105-E964-4A58-AD6E-2B61B9F2ECA8), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusPlugin Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPlugin: IDispatch
+  {
+    [
+    id(0x00000001), 
+    helpstring("Exodus is starting the plugin")
+    ]
+    HRESULT _stdcall Startup([in] IExodusController * ExodusController /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000002), 
+    helpstring("Exodus is shutting down the plugin")
+    ]
+    HRESULT _stdcall Shutdown( void );
+    [
+    id(0x00000003), 
+    helpstring("Plugin is receiving a packet")
+    ]
+    HRESULT _stdcall Process([in] BSTR xpath, [in] BSTR Event, [in] BSTR XML );
+    [
+    id(0x00000004), 
+    helpstring("A new chat window is starting")
+    ]
+    HRESULT _stdcall NewChat([in] BSTR jid, [in] IExodusChat * Chat /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000005), 
+    helpstring("A new room is starting")
+    ]
+    HRESULT _stdcall NewRoom([in] BSTR jid, [in] IExodusChat * Room /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000008), 
+    helpstring("A New IM is about to go out.")
+    ]
+    HRESULT _stdcall NewIM([in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject, [in] BSTR XTags, [out, retval] BSTR * AddXML );
+    [
+    id(0x0000000C), 
+    helpstring("The plugin should configure itself")
+    ]
+    HRESULT _stdcall Configure( void );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall MenuClick([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall MsgMenuClick([in] BSTR ID, [in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall NewOutgoingIM([in] BSTR jid, [in] IExodusChat * InstantMsg /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(E28E487A-7258-4B32-AD1C-F23A808F0460), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusChatPlugin Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChatPlugin: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall OnBeforeMessage([in] BSTR * Body, [out, retval] VARIANT_BOOL * Allow );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall OnAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall OnKeyPress([in] BSTR Key );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall OnContextMenu([in] BSTR ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall OnRecvMessage([in] BSTR Body, [in] BSTR XML );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall OnClose( void );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall OnMenu([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall OnNewWindow([in] long HWND );
+  };
+
+  [
+    uuid(29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusRoster Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRoster: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Fetch( void );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR Nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Find([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Item([in] long Index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Count([out, retval] long * ItemCount );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall RemoveItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall GetGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GroupsCount([out, retval] long * Value );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Groups([in] long Index, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] IExodusRosterItem ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall AddContextMenu([in] BSTR ID, [out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall AddContextMenuItem([in] BSTR menu_id, [in] BSTR Caption, [in] BSTR Action, [out, retval] BSTR * Ret );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall RemoveContextMenuItem([in] BSTR menu_id, [in] BSTR item_id );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall AddItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Ret /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(284E49F2-2006-4E48-B0E0-233867A78E54), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusPPDB Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPPDB: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Find([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Presence /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Next([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Count([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall LastPresence([out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(FA63024E-3453-4551-8CA0-AFB78B2066AD), 
+    version(1.0), 
+    helpstring("Dispatch interface for TExodusRosterGroup Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRosterGroup: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Action([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Action([in] BSTR Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall KeepEmpty([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall KeepEmpty([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall SortPriority([out, retval] long * Value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall SortPriority([in] long Value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ShowPresence([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ShowPresence([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall DragTarget([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall DragTarget([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DragSource([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DragSource([in] VARIANT_BOOL Value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AutoExpand([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AutoExpand([in] VARIANT_BOOL Value );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall GetText([out, retval] BSTR * Text );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall AddJid([in] BSTR jid );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall RemoveJid([in] BSTR jid );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall InGroup([in] BSTR jid, [out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall IsEmpty([out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall GetGroup([in] BSTR group_name, [out, retval] IExodusRosterGroup ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall AddGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * child /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall GetRosterItems([in] VARIANT_BOOL Online, [out, retval] VARIANT * Items );
+    [
+    propget, 
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall NestLevel([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DA)
+    ]
+    HRESULT _stdcall Online([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall Total([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall FullName([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall Parent([out, retval] IExodusRosterGroup ** Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall Parts([in] long Index, [out, retval] BSTR * Value );
+    [
+    id(0x000000DF)
+    ]
+    HRESULT _stdcall FireChange( void );
+  };
+
+  [
+    uuid(6759BFE4-C72D-42E3-86A3-1F343E848933), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusDiscoCache Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusEntityCache: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall GetByJid([in] BSTR jid, [in] BSTR node, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Fetch([in] BSTR jid, [in] BSTR node, [in] VARIANT_BOOL items_limit, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall DiscoInfo([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall DiscoItems([in] BSTR jid, [in] BSTR node, [in] long Timeout, [out, retval] IExodusEntity ** Ret /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(1F8FF968-CB2A-480C-B8C2-1E34C493EC0F), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusEntity Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusEntity: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall HasFeature([in] BSTR feature, [out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall HasIdentity([in] BSTR Category, [in] BSTR DiscoType, [out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall HasItems([out, retval] VARIANT_BOOL * Ret );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall HasInfo([out, retval] VARIANT_BOOL * Ret );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall jid([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall node([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Category([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall DiscoType([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall FeatureCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall feature([in] long Index, [out, retval] BSTR * Value );
+    [
+    propget, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall ItemsCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall Item([in] long Index, [out, retval] IExodusEntity ** Value /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(0B992E91-DAD7-4CDC-9FD6-8007A63700E0), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControl: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ControlType([out, retval] ExodusControlTypes * Value /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(896CCC11-8929-4FEC-BC95-C96E5027C1F6), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlCheckBox: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AllowGrayed([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AllowGrayed([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Checked([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Checked([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall State([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall State([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(16D21C8F-EF88-4E93-87C6-CD8F8C1EE7F7), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlComboBox: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall AutoComplete([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall AutoComplete([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AutoDropDown([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AutoDropDown([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoCloseUp([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoCloseUp([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Style([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Style([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall CharCase([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall CharCase([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DropDownCount([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DropDownCount([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeName([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ItemHeight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ItemHeight([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall ItemIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall ItemIndex([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall MaxLength([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall MaxLength([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall Sorted([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall Sorted([in] long Value );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Text([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Text([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall Items([in] long Index, [in] BSTR Value );
+  };
+
+  [
+    uuid(A7B8A353-FF1E-4933-9A01-BD7B0FDC6F02), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlEdit: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AutoSelect([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AutoSelect([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall CharCase([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall CharCase([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall HideSelection([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall HideSelection([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeName([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall MaxLength([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall MaxLength([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall OEMConvert([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall OEMConvert([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall PasswordChar([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall PasswordChar([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ReadOnly([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ReadOnly([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall Text([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall Text([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(F53704E6-83C2-4021-97A5-169BC58D9E03), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlLabel: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ShowAccelChar([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ShowAccelChar([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Transparent([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Transparent([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Layout([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Layout([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(F34F969E-4BC2-4ADE-8648-A8F618FCC205), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlListBox: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Style([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Style([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoComplete([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoComplete([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelKind([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Columns([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Columns([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ExtendedSelect([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ExtendedSelect([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall ImeMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ImeName([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall IntegralHeight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall IntegralHeight([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ItemHeight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ItemHeight([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Items([in] long Index, [in] BSTR Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall MultiSelect([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall MultiSelect([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ScrollWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ScrollWidth([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Sorted([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Sorted([in] long Value );
+    [
+    propget, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall TabWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall TabWidth([in] long Value );
+    [
+    propget, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(BA37BB99-F039-49B7-AB56-819E87B0472F), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlPanel: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AutoSize([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall UseDockManager([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall UseDockManager([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DockSite([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DockSite([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall FullRepaint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall FullRepaint([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Locked([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Locked([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBackground([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBackground([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(F80CD345-A91C-40C8-89CD-AD5BE532B9C2), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlPopupMenu: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall ItemsCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] IExodusControlMenuItem ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall AutoHotkeys([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall AutoLineReduction([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall AutoPopup([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall AutoPopup([in] long Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall OwnerDraw([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall OwnerDraw([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall TrackButton([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall TrackButton([in] long Value );
+  };
+
+  [
+    uuid(87FAD954-03E1-4657-B58D-9947087EAAEC), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlRadioButton: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Checked([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Checked([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(3997314D-4068-43E7-ACEB-150FF196069C), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlRichEdit: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelKind([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BevelWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BevelWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall BorderWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall BorderWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall HideSelection([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall HideSelection([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall HideScrollBars([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall HideScrollBars([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ImeMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall ImeMode([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall ImeName([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall LinesCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Lines([in] long Index, [out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Lines([in] long Index, [in] BSTR Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall MaxLength([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall MaxLength([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall PlainText([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall PlainText([in] long Value );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall ReadOnly([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall ReadOnly([in] long Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall ScrollBars([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall ScrollBars([in] long Value );
+    [
+    propget, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x00000030)
+    ]
+    HRESULT _stdcall WantTabs([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000030)
+    ]
+    HRESULT _stdcall WantTabs([in] long Value );
+    [
+    propget, 
+    id(0x00000031)
+    ]
+    HRESULT _stdcall WantReturns([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000031)
+    ]
+    HRESULT _stdcall WantReturns([in] long Value );
+    [
+    propget, 
+    id(0x00000032)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000032)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(0D41733E-3505-46FB-B199-C6046E1C84C7), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlButton: IExodusControl
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Cancel([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Cancel([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Default([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Default([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ModalResult([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ModalResult([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(2954B16B-64BA-4441-A476-918CCCCA9B46), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlBitBtn: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Cancel([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Cancel([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Default([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Default([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ModalResult([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ModalResult([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Kind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Kind([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Layout([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Layout([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall Margin([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall Margin([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall NumGlyphs([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall NumGlyphs([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall Style([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall Style([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall Spacing([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall Spacing([in] long Value );
+  };
+
+  [
+    uuid(0C3AE024-51A4-453F-91CB-B0EEBA175AED), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlMainMenu: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall ItemsCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Items([in] long Index, [out, retval] IExodusControlMenuItem ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall AutoHotkeys([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall AutoHotkeys([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall AutoLineReduction([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall AutoLineReduction([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall AutoMerge([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall AutoMerge([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall OwnerDraw([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall OwnerDraw([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+  };
+
+  [
+    uuid(62B921DE-13F1-4F63-BCA6-30EE3C66D454), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlMemo: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Alignment([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall Alignment([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall BevelInner([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall BevelKind([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BevelOuter([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall HideSelection([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall HideSelection([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ImeMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ImeMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeName([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ImeName([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall LinesCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Lines([in] long Index, [out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall Lines([in] long Index, [in] BSTR Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall MaxLength([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall MaxLength([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall OEMConvert([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall OEMConvert([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall ParentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall ParentCtl3D([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ReadOnly([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ReadOnly([in] long Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall ScrollBars([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall ScrollBars([in] long Value );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall WantReturns([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall WantReturns([in] long Value );
+    [
+    propget, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall WantTabs([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall WantTabs([in] long Value );
+    [
+    propget, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall WordWrap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall WordWrap([in] long Value );
+  };
+
+  [
+    uuid(AF41AC90-38C4-46FB-9A45-D7C26ECB2E1C), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlPageControl: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall DockSite([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall DockSite([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall DragCursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall DragCursor([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall HotTrack([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall HotTrack([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall MultiLine([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall MultiLine([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall OwnerDraw([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall OwnerDraw([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall RaggedRight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall RaggedRight([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ScrollOpposite([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall ScrollOpposite([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Style([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Style([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall TabHeight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall TabHeight([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall TabIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall TabIndex([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall TabOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall TabOrder([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall TabPosition([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall TabPosition([in] long Value );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall TabStop([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall TabStop([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall TabWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall TabWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(0706359E-DD10-4D98-862B-7417E5E79DE8), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlSpeedButton: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall AllowAllUp([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall AllowAllUp([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall GroupIndex([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall GroupIndex([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Down([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall Down([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Flat([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall Flat([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Layout([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Layout([in] long Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Margin([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall Margin([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall NumGlyphs([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall NumGlyphs([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall ParentShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall Spacing([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall Spacing([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Transparent([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall Transparent([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+  };
+
+  [
+    uuid(7949D67E-E287-4643-90DA-E6FE7EDEFA97), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusToolbar: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Count([out, retval] long * Value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall GetButton([in] long Index, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddButton([in] BSTR ImageID, [out, retval] IExodusToolbarButton ** Button /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(2F60EC05-634D-44B2-BECB-059169BA1459), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusControlForm: IDispatch
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Name([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Tag([in] long Value );
+    [
+    propget, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Left([in] long Value );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Top([in] long Value );
+    [
+    propget, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000005)
+    ]
+    HRESULT _stdcall Width([in] long Value );
+    [
+    propget, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Height([in] long Value );
+    [
+    propget, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Cursor([in] long Value );
+    [
+    propget, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Hint([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000009)
+    ]
+    HRESULT _stdcall HelpType([in] long Value );
+    [
+    propget, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall HelpKeyword([in] BSTR Value );
+    [
+    propget, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall HelpContext([in] long Value );
+    [
+    propget, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall Align([in] long Value );
+    [
+    propget, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AlphaBlend([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall AlphaBlend([in] long Value );
+    [
+    propget, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AlphaBlendValue([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall AlphaBlendValue([in] long Value );
+    [
+    propget, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall AutoScroll([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall AutoScroll([in] long Value );
+    [
+    propget, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall AutoSize([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000010)
+    ]
+    HRESULT _stdcall AutoSize([in] long Value );
+    [
+    propget, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000011)
+    ]
+    HRESULT _stdcall BiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BorderStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000012)
+    ]
+    HRESULT _stdcall BorderStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000013)
+    ]
+    HRESULT _stdcall BorderWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000014)
+    ]
+    HRESULT _stdcall Caption([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ClientHeight([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000015)
+    ]
+    HRESULT _stdcall ClientHeight([in] long Value );
+    [
+    propget, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ClientWidth([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000016)
+    ]
+    HRESULT _stdcall ClientWidth([in] long Value );
+    [
+    propget, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Color([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000017)
+    ]
+    HRESULT _stdcall Color([in] long Value );
+    [
+    propget, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall TransparentColor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000018)
+    ]
+    HRESULT _stdcall TransparentColor([in] long Value );
+    [
+    propget, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall TransparentColorValue([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000019)
+    ]
+    HRESULT _stdcall TransparentColorValue([in] long Value );
+    [
+    propget, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Ctl3D([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Ctl3D([in] long Value );
+    [
+    propget, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall UseDockManager([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall UseDockManager([in] long Value );
+    [
+    propget, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall DefaultMonitor([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall DefaultMonitor([in] long Value );
+    [
+    propget, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall DockSite([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall DockSite([in] long Value );
+    [
+    propget, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall DragKind([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall DragKind([in] long Value );
+    [
+    propget, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall DragMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall DragMode([in] long Value );
+    [
+    propget, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Enabled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Enabled([in] long Value );
+    [
+    propget, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentFont([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000021)
+    ]
+    HRESULT _stdcall ParentFont([in] long Value );
+    [
+    propget, 
+    id(0x00000022)
+    ]
+    HRESULT _stdcall Font([out, retval] IExodusControlFont ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall FormStyle([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000023)
+    ]
+    HRESULT _stdcall FormStyle([in] long Value );
+    [
+    propget, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall HelpFile([out, retval] BSTR * Value );
+    [
+    propput, 
+    id(0x00000024)
+    ]
+    HRESULT _stdcall HelpFile([in] BSTR Value );
+    [
+    propget, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall KeyPreview([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000025)
+    ]
+    HRESULT _stdcall KeyPreview([in] long Value );
+    [
+    propget, 
+    id(0x00000026)
+    ]
+    HRESULT _stdcall Menu([out, retval] IExodusControlMainMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall OldCreateOrder([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000027)
+    ]
+    HRESULT _stdcall OldCreateOrder([in] long Value );
+    [
+    propget, 
+    id(0x00000028)
+    ]
+    HRESULT _stdcall ObjectMenuItemCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000029)
+    ]
+    HRESULT _stdcall ObjectMenuItem([in] long Index, [out, retval] IExodusControlMenuItem ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ParentBiDiMode([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall ParentBiDiMode([in] long Value );
+    [
+    propget, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall PixelsPerInch([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall PixelsPerInch([in] long Value );
+    [
+    propget, 
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall Position([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall Position([in] long Value );
+    [
+    propget, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall PrintScale([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall PrintScale([in] long Value );
+    [
+    propget, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Scaled([out, retval] long * Value );
+    [
+    propput, 
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall Scaled([in] long Value );
+    [
+    propget, 
+    id(0x00000030)
+    ]
+    HRESULT _stdcall ScreenSnap([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000030)
+    ]
+    HRESULT _stdcall ScreenSnap([in] long Value );
+    [
+    propget, 
+    id(0x00000031)
+    ]
+    HRESULT _stdcall ShowHint([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000031)
+    ]
+    HRESULT _stdcall ShowHint([in] long Value );
+    [
+    propget, 
+    id(0x00000032)
+    ]
+    HRESULT _stdcall SnapBuffer([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000032)
+    ]
+    HRESULT _stdcall SnapBuffer([in] long Value );
+    [
+    propget, 
+    id(0x00000033)
+    ]
+    HRESULT _stdcall Visible([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000033)
+    ]
+    HRESULT _stdcall Visible([in] long Value );
+    [
+    propget, 
+    id(0x00000034)
+    ]
+    HRESULT _stdcall WindowState([out, retval] long * Value );
+    [
+    propput, 
+    id(0x00000034)
+    ]
+    HRESULT _stdcall WindowState([in] long Value );
+    [
+    propget, 
+    id(0x00000035)
+    ]
+    HRESULT _stdcall WindowMenuCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x00000036)
+    ]
+    HRESULT _stdcall WindowMenu([in] long Index, [out, retval] IExodusControlMenuItem ** Value /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(35542007-5701-4190-AB28-D25EB186CC19), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusLogger: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall LogMessage([in] IExodusLogMsg * Msg /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Show([in] BSTR jid );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Clear([in] BSTR jid );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Purge( void );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GetDays([in] BSTR jid, [in] long Month, [in] long Year, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall GetMessages([in] BSTR jid, [in] long ChunkSize, [in] long Day, [in] long Month, [in] long Year, [in] VARIANT_BOOL Cancel, [in] IExodusLogListener * Listener /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall IsDateEnabled([out, retval] VARIANT_BOOL * Value );
+  };
+
+};
