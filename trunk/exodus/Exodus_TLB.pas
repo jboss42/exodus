@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/24/2006 3:29:55 PM from Type Library described below.
+// File generated on 5/24/2006 5:33:55 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\exodus\svn\exodus\exodus\Exodus.tlb (1)
@@ -559,7 +559,8 @@ type
     procedure OnNewWindow(hwnd: Integer); safecall;
     function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; safecall;
     procedure OnAfterRecvMessage(var body: WideString); safecall;
-    function OnKeyUp(const key: WideString; const shiftState: WideString): WordBool; safecall;
+    function OnKeyUp(key: Integer; shiftState: Integer): WordBool; safecall;
+    function OnKeyDown(key: Integer; shiftState: Integer): WordBool; safecall;
   end;
 
 // *********************************************************************//
@@ -575,7 +576,8 @@ type
     procedure OnNewWindow(hwnd: Integer); dispid 202;
     function OnBeforeRecvMessage(const body: WideString; const xml: WideString): WordBool; dispid 203;
     procedure OnAfterRecvMessage(var body: WideString); dispid 204;
-    function OnKeyUp(const key: WideString; const shiftState: WideString): WordBool; dispid 301;
+    function OnKeyUp(key: Integer; shiftState: Integer): WordBool; dispid 301;
+    function OnKeyDown(key: Integer; shiftState: Integer): WordBool; dispid 201;
   end;
 
 // *********************************************************************//
