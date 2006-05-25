@@ -28,14 +28,11 @@ uses
     Exodus_TLB, ComObj, ActiveX, ExSQLLogger_TLB, StdVcl;
 
 type
-  TSQLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
+  TSQLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger, IExodusMenuListener)
   protected
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
-    procedure MenuClick(const ID: WideString); safecall;
-    procedure MsgMenuClick(const ID, jid: WideString; var Body,
-      Subject: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
       safecall;
     procedure NewOutgoingIM(const jid: WideString;
@@ -55,6 +52,9 @@ type
     procedure LogMessage(const Msg: IExodusLogMsg); safecall;
     procedure Purge; safecall;
     procedure Show(const jid: WideString); safecall;
+
+    //IExodusMenuListener
+    procedure OnMenuItemClick(const menuID : WideString; const xml : WideString); safecall;
   private
     _exodus: IExodusController;
 
@@ -240,7 +240,7 @@ begin
     _sess := _exodus.RegisterCallback('/session/connected', Self);
 
     // Register menu items
-    _menu_search := _exodus.addPluginMenu('Search Logs');
+    _menu_search := _exodus.addPluginMenu('Search Logs', Self);
 end;
 
 {---------------------------------------}
@@ -299,32 +299,6 @@ procedure TSQLLogger.Configure;
 begin
     MessageDlg('There are no configurable options for this plugin.', mtInformation,
         [mbOK], 0);
-end;
-
-{---------------------------------------}
-procedure TSQLLogger.MenuClick(const ID: WideString);
-var
-    //h: integer;
-    f: TfrmView;
-begin
-    if (id = _menu_search) then begin
-        //h := _exodus.CreateDockableWindow('Search Logs');
-        f := TfrmView.Create(nil);
-        //f.ParentWindow := h;
-        //f.Align := alClient;
-        //f.BorderStyle := bsNone;
-
-        f.db := _db;
-        f.ShowSearch();
-        f.Show();
-    end;
-end;
-
-{---------------------------------------}
-procedure TSQLLogger.MsgMenuClick(const ID, jid: WideString; var Body,
-  Subject: WideString);
-begin
-
 end;
 
 {---------------------------------------}
@@ -455,6 +429,24 @@ begin
     f.db := _db;
     f.ShowJid(jid);
     f.Show();
+end;
+
+procedure TSQLLogger.OnMenuItemClick(const menuID : WideString; const xml : WideString);
+var
+    //h: integer;
+    f: TfrmView;
+begin
+    if (menuID = _menu_search) then begin
+        //h := _exodus.CreateDockableWindow('Search Logs');
+        f := TfrmView.Create(nil);
+        //f.ParentWindow := h;
+        //f.Align := alClient;
+        //f.BorderStyle := bsNone;
+
+        f.db := _db;
+        f.ShowSearch();
+        f.Show();
+    end;
 end;
 
 initialization
