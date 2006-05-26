@@ -5,6 +5,8 @@ inherited frmNewUser: TfrmNewUser
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
+  ExplicitWidth = 416
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -31,26 +33,30 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = tbsUser
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 27
+      ExplicitWidth = 402
+      ExplicitHeight = 226
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 392
+        Width = 402
         Height = 39
         Align = alTop
         Caption = 
           'You must select a server to use for your jabber account. This se' +
-          'rver may be a local server provided by you internet server provi' +
-          'der, or you may use one of the public jabber servers.'
+          'rver may be a local server provided by your internet service pro' +
+          'vider, or you may use one of the public jabber servers.'
         WordWrap = True
+        ExplicitWidth = 392
       end
       object cboServer: TTntComboBox
         Left = 40
         Top = 80
         Width = 249
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         Text = 'jabber.org'
       end
@@ -76,10 +82,6 @@ inherited frmNewUser: TfrmNewUser
     object tbsUser: TTabSheet
       Caption = 'tbsUser'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblUsername: TTntLabel
         Left = 16
         Top = 64
@@ -137,18 +139,15 @@ inherited frmNewUser: TfrmNewUser
     object tbsWait: TTabSheet
       Caption = 'tbsWait'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 63
+        Width = 402
         Height = 13
         Align = alTop
         Caption = 'Please wait...'
         WordWrap = True
+        ExplicitWidth = 63
       end
       object aniWait: TAnimate
         Left = 0
@@ -163,10 +162,6 @@ inherited frmNewUser: TfrmNewUser
     object tbsXData: TTabSheet
       Caption = 'tbsXData'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline xData: TframeXData
         Left = 0
         Top = 0
@@ -194,18 +189,10 @@ inherited frmNewUser: TfrmNewUser
     object tbsReg: TTabSheet
       Caption = 'tbsReg'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tbsFinish: TTabSheet
       Caption = 'tbsFinish'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblBad: TTntLabel
         Left = 0
         Top = 65
@@ -214,9 +201,9 @@ inherited frmNewUser: TfrmNewUser
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has Failed! Press Previous to ' +
-          'go back and verify that all of the parameters have been filled i' +
-          'n correctly. Press Cancel to close this wizard.'
+          'Your Registration to this service has Failed! Press Back and ver' +
+          'ify that all of the parameters have been filled in correctly. Pr' +
+          'ess Cancel to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
