@@ -93,6 +93,7 @@ implementation
 initialization
     XP_MSGXDATA := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XDATA + '"]');
     XP_MUCINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]');
+    XP_MUCADMINMSG := TXPLite.Create('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="101"]');
     XP_CONFINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]');
     XP_JCFINVITE := TXPLite.Create('/message/x[@xmlns="jabber:x:invite"]');
     XP_MSGXROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
