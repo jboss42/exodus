@@ -73,6 +73,7 @@ const
 var
     XP_MSGXDATA: TXPLite;
     XP_MUCINVITE: TXPLite;
+    XP_MUCADMINMSG : TXPLite;
     XP_CONFINVITE: TXPLite;
     XP_JCFINVITE: TXPLite;
     XP_MSGXROSTER: TXPLite;
