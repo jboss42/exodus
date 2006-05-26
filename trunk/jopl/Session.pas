@@ -138,6 +138,11 @@ type
 
         // AuthAgent stuff
         procedure setAuthAgent(new_auth: TJabberAuth);
+        {*
+            Create an auth agaent from current profile information UNLESS
+            already assigned. nop if already assigned.
+        *}
+        procedure checkAuthAgent();
         procedure setAuthdJID(user, host, res: Widestring);
         procedure setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
         function  getAuthAgent: TJabberAuth;
@@ -456,8 +461,6 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.DoConnect;
-var
-    auth: TJabberAuth;
 begin
     assert(_stream = nil);
     _sent_stream := false;
@@ -466,20 +469,8 @@ begin
     else if (_stream <> nil) then
         raise Exception.Create('Session is already connected');
 
-    // Create the AuthAgent
-    if (profile.SSL_Cert <> '')  then
-        auth := CreateJabberAuth('EXTERNAL', Self)
-    else if (_profile.KerbAuth) then
-        auth := CreateJabberAuth('GSSAPI', Self)
-    else
-        auth := CreateJabberAuth('XMPP', Self);
-
-    if (auth = nil) then
-        raise Exception.Create('No appropriate Auth Agent found.');
-
-    // set this auth agent as our current one
-    setAuthAgent(auth);
-
+    checkAuthAgent(); //see if we have an auth agent already, or create one from profile info
+            
     case _profile.ConnectionType of
     conn_normal:
         _stream := TXMLSocketStream.Create('stream:stream');
@@ -1166,6 +1157,35 @@ begin
     if (assigned(_auth_agent)) then
         FreeAndNil(_auth_agent);
     _auth_agent := new_auth;
+end;
+
+{*
+    Create an auth agaent from current profile information UNLESS
+    already assigned. nop if already assigned.
+*}
+procedure TJabberSession.checkAuthAgent();
+var
+    auth: TJabberAuth;
+begin
+    assert(_profile <> nil); //should not try to set authagent until profile is set
+    assert(_stream = nil); //should not try to change authagent oncve connected
+
+    if (not assigned(_auth_agent)) then begin
+        // Create the AuthAgent
+        if (profile.SSL_Cert <> '')  then
+            auth := CreateJabberAuth('EXTERNAL', Self)
+        else if (_profile.KerbAuth) then
+            auth := CreateJabberAuth('GSSAPI', Self)
+        else
+            auth := CreateJabberAuth('XMPP', Self);
+
+        if (auth = nil) then
+            raise Exception.Create('No appropriate Auth Agent found.');
+
+        // set this auth agent as our current one
+        setAuthAgent(auth);
+    end;
+    
 end;
 
 {---------------------------------------}
