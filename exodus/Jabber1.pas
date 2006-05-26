@@ -1013,6 +1013,10 @@ begin
 
     // NB: For non-std auth agents, set prompt_password
     // accordingly.
+    //make sure we have an auth agent
+    //JJF not sure why we have to check password before auth attempt. Shouldn't
+    //the PW be checked by auth anyway and user prompted at that time???
+    MainSession.checkAuthAgent();
     if ((not MainSession.Profile.WinLogin) and
         (MainSession.password = '') and
         ((MainSession.getAuthAgent() = nil) or (MainSession.getAuthAgent().prompt_password))) then begin
@@ -1026,9 +1030,7 @@ begin
             MainSession.Profile.password := pw;
             MainSession.Prefs.SaveProfiles();
         end;
-
     end;
-
     MainSession.FireEvent('/session/connecting', nil);
 
     with MainSession.Profile do begin
