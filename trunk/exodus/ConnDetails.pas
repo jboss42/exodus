@@ -103,6 +103,7 @@ type
     procedure chkWinLoginClick(Sender: TObject);
     procedure lblRenameClick(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
+    procedure chkSavePasswdClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -217,6 +218,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmConnDetails.chkSavePasswdClick(Sender: TObject);
+begin
+      if (not chkSavePasswd.Checked) then
+          txtPassword.Text := '';
+end;
+
 procedure TfrmConnDetails.chkSocksAuthClick(Sender: TObject);
 begin
     if (chkSocksAuth.Checked) then begin
@@ -299,7 +306,8 @@ begin
         // populate the fields
         cboJabberID.Text := profile.getDisplayUsername() + '@' + Server;
         cboResource.Text := Resource;
-        txtPassword.Text := Password;
+        if (SavePasswd) then
+            txtPassword.Text := Password;
         txtRealm.Text := SASLRealm;
         chkSavePasswd.Checked := SavePasswd;
         chkRegister.Checked := NewAccount;
@@ -319,7 +327,10 @@ begin
         Server := j.domain;
         Username := j.User;
         SavePasswd := chkSavePasswd.Checked;
-        password := txtPassword.Text;
+        if (not SavePasswd) then
+            password := ''
+        else
+          password := txtPassword.Text;
         resource := cboResource.Text;
         SASLRealm := txtRealm.Text;
         NewAccount := chkRegister.Checked;

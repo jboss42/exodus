@@ -29,10 +29,6 @@ object frmConnDetails: TfrmConnDetails
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
-      ExplicitLeft = 172
-      ExplicitTop = -12
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
@@ -120,6 +116,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 17
         Caption = 'Save pass&word'
         TabOrder = 6
+        OnClick = chkSavePasswdClick
       end
       object txtPassword: TTntEdit
         Left = 100
@@ -134,7 +131,7 @@ object frmConnDetails: TfrmConnDetails
         Top = 92
         Width = 170
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 2
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
@@ -194,10 +191,6 @@ object frmConnDetails: TfrmConnDetails
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -248,10 +241,6 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -292,10 +281,6 @@ object frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -403,10 +388,6 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label1: TTntLabel
         Left = 1
         Top = 27
@@ -493,7 +474,6 @@ object frmConnDetails: TfrmConnDetails
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
-    ExplicitTop = 272
     object Panel1: TPanel
       Left = 159
       Top = 4

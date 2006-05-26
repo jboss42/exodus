@@ -548,6 +548,10 @@ var
 begin
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[idx]);
 
+    if ((not p.SavePasswd) and (p.password <> '')) then begin
+        p.password := '';
+    end;
+
     if (Trim(p.Resource) = '') then
         p.Resource := _(sProfileDefaultResource);
 
