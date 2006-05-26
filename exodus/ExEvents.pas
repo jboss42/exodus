@@ -29,6 +29,7 @@ type
         evt_None,
         evt_Message,
         evt_Invite,
+        evt_AffilChange,
         evt_RosterItems,
         evt_OOB,
         evt_Version,
@@ -189,7 +190,7 @@ begin
         img_idx := 12;
         msg := e.str_content;
     end;
-    end;
+    end; //case
 
     tmp_jid.Free();
 
@@ -443,6 +444,21 @@ begin
         end
 
         // Look for various x-tags
+        else if (tag.QueryXPTag(XP_MUCADMINMSG) <> nil) then begin
+            //received an adnmin message from a room (change of affiliation)
+            //note this must come before invite handling as both
+            //share the same common check for muc#user 
+            {* <message from='room' to='me'>
+                    <body>affil change</body>
+                    <x xmlns='http://jabber.org/protocol/muc#user'>
+                        <status code='101'/>
+                    </x>
+               </message> *}
+            etype := evt_AffilChange;
+            from := tag.getAttribute('from');
+            str_content := _('Your affiliation with the room has changed.');
+            _data_list.Add(tag.GetBasicText('body'));
+        end
         else if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then begin
             // This is a MUC invite
             eType := evt_Invite;
