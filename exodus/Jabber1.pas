@@ -1015,7 +1015,7 @@ begin
     // accordingly.
     if ((not MainSession.Profile.WinLogin) and
         (MainSession.password = '') and
-        (MainSession.getAuthAgent().prompt_password)) then begin
+        ((MainSession.getAuthAgent() = nil) or (MainSession.getAuthAgent().prompt_password))) then begin
         pw := '';
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
             (pw = '')) then exit;
