@@ -305,7 +305,8 @@ const
 
     sNoSubjectHint = 'Click the button to change the room subject.';
     sNoSubject     = 'No room subject';
-
+    sMsgRosterItems = 'This message contains %d roster items.';
+    
 const
     MUC_OWNER = 'owner';
     MUC_ADMIN = 'admin';
@@ -2264,21 +2265,27 @@ end;
 procedure TfrmRoom.popRosterSendJIDClick(Sender: TObject);
 var
     rm: TRoomMember;
-    ri: TJabberRosterItem;
-    itms: TList;
+    b: WideString;
+    msg, x, item: TXMLTag;
 begin
+
   inherited;
     // Send my JID to this user
     if (lstRoster.Selected = nil) then exit;
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
-        ri := MainSession.Roster.Find(MainSession.BareJid);
-        itms := TList.Create();
-        itms.Add(ri);
-        jabberSendRosterItems(rm.jid, itms);
-        itms.Clear();
-        itms.Free();
+        msg := TXMLTag.Create('message');
+        msg.setAttribute('id', MainSession.generateID());
+        msg.setAttribute('to', rm.jid);
+        b := WideFormat(_(sMsgRosterItems), [1]);
+        b := b + Chr(13) + Chr(10) + MainSession.getDisplayUsername + ': ' + MainSession.BareJid;
+        x := msg.AddTag('x');
+        x.setAttribute('xmlns', XMLNS_XROSTER);
+        item := x.AddTag('item');
+        item.setAttribute('jid', MainSession.BareJid);
+        item.setAttribute('name', MainSession.getDisplayUsername);
+        jabberSendMsg(rm.jid, msg, x, b, '');
     end;
 end;
 
