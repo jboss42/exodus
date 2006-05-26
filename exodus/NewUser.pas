@@ -138,7 +138,7 @@ begin
     tbsFinish.TabVisible := false;
 
     btnBack.Enabled := false;
-    btnCancel.Enabled := false;
+    btnCancel.Enabled := true;
     Tabs.ActivePage := TabSheet1;
 
     // the default list is brandable
@@ -220,6 +220,7 @@ begin
         _runState();
     end;
     nus_error: begin
+        btnNext.Enabled := true;
         btnNext.Caption := _('Next >');
         if (MainSession.Active) then begin
             // we at least connected
@@ -531,8 +532,8 @@ begin
         lblBad.Visible := true;
         Tabs.ActivePage := tbsFinish;
         btnNext.Caption := _('Finish');
+        btnNext.Enabled := false;
         btnBack.Enabled := true;
-        btnCancel.Enabled := false;
 
         // make sure we don't try to reconnect underneath the hood:
         frmExodus.CancelConnect();
