@@ -1,10 +1,10 @@
 object frmPrefs: TfrmPrefs
   Left = 192
   Top = 266
-  Width = 466
-  Height = 462
   BorderWidth = 1
-  Caption = 'Exodus Options'
+  Caption = 'Options'
+  ClientHeight = 426
+  ClientWidth = 456
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
@@ -13,7 +13,6 @@ object frmPrefs: TfrmPrefs
   Font.Name = 'Arial'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -243,6 +242,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 46
     end
     object imgFonts: TImage
       Left = 0
@@ -437,6 +437,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 64
     end
     object imgS10n: TImage
       Left = 0
@@ -632,6 +633,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 66
     end
     object imgRoster: TImage
       Left = 0
@@ -826,6 +828,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 32
     end
     object imgSystem: TImage
       Left = 0
@@ -1020,6 +1023,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 36
     end
     object imgNotify: TImage
       Left = 0
@@ -1158,6 +1162,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 53
     end
     object imgAway: TImage
       Left = 0
@@ -1352,6 +1357,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 57
     end
     object imgKeywords: TImage
       Left = 0
@@ -1546,6 +1552,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 51
     end
     object imgBlockList: TImage
       Left = 0
@@ -1740,6 +1747,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 46
     end
     object imgCustompres: TImage
       Left = 0
@@ -1934,6 +1942,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 46
     end
     object imgMessages: TImage
       Left = 0
@@ -2128,6 +2137,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 50
     end
     object imgPlugins: TImage
       Left = 0
@@ -2266,6 +2276,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 34
     end
     object imgNetwork: TImage
       Left = 0
@@ -2641,6 +2652,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 67
     end
     object imgGroups: TImage
       Left = 0
@@ -2835,6 +2847,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 36
     end
     object imgLayouts: TImage
       Left = 0
@@ -3002,6 +3015,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 39
     end
     object lblNetwork: TTntLabel
       Left = 0
@@ -3015,6 +3029,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 41
     end
     object imgEmote: TImage
       Left = 0
@@ -8098,6 +8113,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitWidth = 49
     end
   end
   object PageControl1: TTntPageControl
@@ -8105,7 +8121,7 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 357
     Height = 389
-    ActivePage = tbsBlockList
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
@@ -8135,13 +8151,14 @@ object frmPrefs: TfrmPrefs
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 344
+          Width = 349
           Height = 28
           Align = alTop
           Caption = 
-            'Exodus can notify you when a keyword appears in chat room. Enter' +
-            ' in the keywords that you want Exodus to look for in messages.'
+            'You can be notify when a keyword appears in chat room. Enter in ' +
+            'the keywords that you want to look for in messages.'
           WordWrap = True
+          ExplicitWidth = 340
         end
         object chkRegex: TTntCheckBox
           Left = 5
@@ -8213,6 +8230,7 @@ object frmPrefs: TfrmPrefs
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
+          ExplicitWidth = 320
         end
       end
     end

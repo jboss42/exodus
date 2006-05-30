@@ -66,8 +66,9 @@ var
 
 const
     sNoUpdate = 'No new update available.';
-    sBadLocale = 'Exodus is set to use a language which is not available on your system. Resetting language to default.';
-    sNewLocale = 'You must exit exodus, and restart it before your new locale settings will take affect.';
+    sBadLocale = ' is set to use a language which is not available on your system. Resetting language to default.';
+    sNewLocale1 = 'You must exit ';
+    sNewLocale2 = ' and restart it before your new locale settings will take affect.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -76,7 +77,7 @@ implementation
 {$WARNINGS OFF}
 {$R *.dfm}
 uses
-    LocalUtils, JabberUtils, ExUtils,  GnuGetText,   
+    LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils;
 
@@ -167,7 +168,7 @@ begin
                 end;
 
                 if (i = -1) then begin
-                    MessageDlgW(_(sBadLocale), mtError, [mbOK], 0);
+                    MessageDlgW(getAppInfo().ID +  _(sBadLocale), mtError, [mbOK], 0);
                     cboLocale.ItemIndex := 0;
                 end
                 else begin
@@ -210,7 +211,7 @@ begin
 
         if (tmp <> _dirty_locale) then begin
             _dirty_locale := tmp;
-            MessageDlgW(_(sNewLocale), mtInformation, [mbOK], 0);
+            MessageDlgW(_(sNewLocale1) + getAppInfo().ID +  _(sNewLocale2), mtInformation, [mbOK], 0);
         end;
 
         setString('locale', tmp);
