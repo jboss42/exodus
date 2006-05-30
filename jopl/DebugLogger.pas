@@ -27,6 +27,8 @@ procedure StopDebugLogger();
 
 implementation
 uses
+    WideStrUtils,
+    XMLParser,
     SysUtils, Session;
 const
     MAX_BACKUPS = 5;
@@ -81,21 +83,57 @@ begin
     end;
 end;
 
+function getObfuscatedData(event : String; tag : TXMLTag; data : WideString) : WideString;
+const
+    PASSWORD_NAME : WideString = 'password'; //don't localize
+    XML_TAG       : WideString = '<';
+var
+    ptag        : TXMLTag;
+    ctags       : TXMLTagList;
+    xmlParser   : TXMLTagParser;
+begin
+    Result := data;
+    if ((event = '/data/send') or (event = '/data/recv')) then begin
+        //see if password is in string
+        //conatins some refernce to password and starts with <, making it liekely this is xml
+        if ((WStrPos(PWideChar(data), PWideChar(PASSWORD_NAME)) <> nil)  and (WStrPos(PWideChar(data), PWideChar(XML_TAG)) <> nil)) then begin
+            //attempt ot build xml tag from data, so we can manipluate it...
+            xmlParser := TXMLTagParser.Create();
+            try
+                xmlParser.ParseString(data, '');
+                ptag := xmlParser.popTag;
+                //get pass element
+                ctags := ptag.QueryRecursiveTags(PASSWORD_NAME, true);
+                if ((ctags.Count > 0) and (ctags[0].Data <> ''))then begin
+                    ctags[0].ClearCData();
+                    ctags[0].AddCData('*******');
+                end;
+                Result := ptag.XML;
+                ptag.Free();
+            finally
+                xmlParser.Free();
+            end;
+        end;
+    end;
+end;
+
 {---------------------------------------}
 procedure TDebugLogFile.DataCallback(event: string; tag: TXMLTag; data: Widestring);
 var
     line : Widestring;
     time: string;
+    tstr : WideString;
 begin
+    tstr := getObfuscatedData(event, tag, data);
     if (event = '/data/send') then begin
-        if (Trim(data) <> '') then
-            line := 'SENT: ' + data;
+        if (Trim(tstr) <> '') then
+            line := 'SENT: ' + tstr;
     end
     else if (event = '/data/debug') then begin
-        line := data;
+        line := tstr;
     end
     else
-        line := 'RECV: ' + data;
+        line := 'RECV: ' + tstr;
 
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
     line := '[' + time + ']  ' + line + ''#13#10;

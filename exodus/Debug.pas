@@ -23,6 +23,7 @@ interface
 
 uses
     Dockable, XMLTag,
+    XMLParser,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
     Buttons, TntStdCtrls, TntMenus;
@@ -69,6 +70,8 @@ type
     { Private declarations }
     _cb: integer;
     _scb: integer;
+    _xmlParser : TXMLTagParser;
+    
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -99,8 +102,10 @@ implementation
 
 {$R *.dfm}
 uses
-    RosterImages, 
+    WideStrUtils,
+    RosterImages,
     MsgDisplay, GnuGetText, Signals, Session, JabberUtils, ExUtils,  Jabber1;
+
 
 var
     frmDebug: TfrmDebug;
@@ -184,7 +189,7 @@ begin
     end
     else
         lblJID.Caption := _('Disconnected');
-
+    _xmlParser := TXMLTagParser.create();
 end;
 
 {---------------------------------------}
@@ -215,10 +220,45 @@ begin
 
 end;
 
+function getObfuscatedData(event : String; tag : TXMLTag; data : WideString) : WideString;
+const
+    PASSWORD_NAME : WideString = 'password'; //don't localize
+    XML_TAG       : WideString = '<';
+var
+    ptag        : TXMLTag;
+    ctags       : TXMLTagList;
+    xmlParser   : TXMLTagParser;
+begin
+    Result := data;
+    if ((event = '/data/send') or (event = '/data/recv')) then begin
+        //see if password is in string
+        //conatins some refernce to password and starts with <, making it liekely this is xml
+        if ((WStrPos(PWideChar(data), PWideChar(PASSWORD_NAME)) <> nil)  and (WStrPos(PWideChar(data), PWideChar(XML_TAG)) <> nil)) then begin
+            //attempt ot build xml tag from data, so we can manipluate it...
+            xmlParser := TXMLTagParser.Create();
+            try
+                xmlParser.ParseString(data, '');
+                ptag := xmlParser.popTag;
+                //get pass element
+                ctags := ptag.QueryRecursiveTags(PASSWORD_NAME, true);
+                if ((ctags.Count > 0) and (ctags[0].Data <> ''))then begin
+                    ctags[0].ClearCData();
+                    ctags[0].AddCData('*******');
+                end;
+                Result := ptag.XML;
+                ptag.Free();
+            finally
+                xmlParser.Free();
+            end;
+        end;
+    end;
+end;
+
 {---------------------------------------}
 procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: Widestring);
 var
     l, d: integer;
+    tstr : WideString;
 begin
     if (frmDebug = nil) then exit;
     if (not frmDebug.Visible) then exit;
@@ -228,16 +268,16 @@ begin
         for l := 1 to d do
             MsgDebug.Lines.Delete(0);
     end;
-
+    tstr := getObfuscatedData(event, tag, data);
     if (event = '/data/send') then begin
-        if (Trim(data) <> '') then
-            AddWideText('SENT: ' + data, clBlue);
+        if (Trim(tstr) <> '') then
+            AddWideText('SENT: ' + tstr, clBlue);
     end
     else if (event = '/data/debug') then begin
-        AddWideText(data, clRed);
+        AddWideText(tstr, clRed);
     end
     else
-        AddWideText('RECV: ' + data, clGreen);
+        AddWideText('RECV: ' + tstr, clGreen);
 end;
 
 {---------------------------------------}
