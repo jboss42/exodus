@@ -6,12 +6,15 @@ inherited frmPrefPresence: TfrmPrefPresence
   ClientWidth = 349
   OldCreateOrder = True
   OnDestroy = FormDestroy
+  ExplicitWidth = 361
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 349
     Caption = 'Presence Options'
     TabOrder = 4
+    ExplicitWidth = 349
   end
   object lstCustomPres: TTntListBox
     Left = 0
@@ -95,7 +98,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 4
       Width = 273
       Height = 17
-      Caption = 'Synchronize presence of multiple copies of Exodus'
+      Caption = 'Synchronize presence across multiple instances'
       Checked = True
       State = cbChecked
       TabOrder = 0
@@ -108,7 +111,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Style = csDropDownList
       ItemHeight = 13
       TabOrder = 2
-      Items.WideStrings = (
+      Items.Strings = (
         'Track all presence changes'
         'Show only last presence change'
         'Don'#39't show any presence changes')
@@ -207,7 +210,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       ItemHeight = 13
       TabOrder = 2
       OnChange = txtCPTitleChange
-      Items.WideStrings = (
+      Items.Strings = (
         'Free to Chat'
         'Available'
         'Away'

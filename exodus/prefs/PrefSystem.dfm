@@ -10,12 +10,12 @@ inherited frmPrefSystem: TfrmPrefSystem
   object lblLang: TTntLabel [0]
     Left = 8
     Top = 186
-    Width = 133
+    Width = 99
     Height = 13
-    Caption = 'Exodus language file to use:'
+    Caption = 'Language file to use:'
   end
   object lblLangScan: TTntLabel [1]
-    Left = 30
+    Left = 17
     Top = 226
     Width = 130
     Height = 13
@@ -37,8 +37,8 @@ inherited frmPrefSystem: TfrmPrefSystem
     ExplicitWidth = 307
   end
   object chkAutoUpdate: TTntCheckBox
-    Left = 8
-    Top = 161
+    Left = 9
+    Top = 157
     Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
@@ -62,7 +62,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkCloseMin: TTntCheckBox
     Left = 8
-    Top = 123
+    Top = 120
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
@@ -73,29 +73,29 @@ inherited frmPrefSystem: TfrmPrefSystem
     Top = 50
     Width = 233
     Height = 17
-    Caption = 'Run Exodus when windows starts'
+    Caption = 'Run when windows starts'
     TabOrder = 1
   end
   object chkOnTop: TTntCheckBox
-    Left = 0
+    Left = 8
     Top = 352
     Width = 169
     Height = 17
-    Caption = 'Exodus is always on top'
+    Caption = 'Always on top'
     TabOrder = 11
     Visible = False
   end
   object chkToolbox: TTntCheckBox
     Left = 8
-    Top = 105
+    Top = 103
     Width = 217
     Height = 17
-    Caption = 'Small Titlebar for Exodus window'
+    Caption = 'Small Titlebar for main window'
     TabOrder = 4
   end
   object btnUpdateCheck: TTntButton
     Left = 222
-    Top = 157
+    Top = 153
     Width = 75
     Height = 25
     Caption = 'Check Now'
@@ -105,10 +105,10 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkSingleInstance: TTntCheckBox
     Left = 8
-    Top = 142
+    Top = 138
     Width = 209
     Height = 17
-    Caption = 'Only allow a single instance of Exodus'
+    Caption = 'Only allow a single, running instance'
     TabOrder = 6
   end
   object chkStartMin: TTntCheckBox
@@ -120,7 +120,7 @@ inherited frmPrefSystem: TfrmPrefSystem
     TabOrder = 3
   end
   object cboLocale: TTntComboBox
-    Left = 29
+    Left = 8
     Top = 202
     Width = 188
     Height = 21
@@ -131,7 +131,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       'English (American)')
   end
   object txtDefaultNick: TTntEdit
-    Left = 29
+    Left = 8
     Top = 267
     Width = 188
     Height = 21
