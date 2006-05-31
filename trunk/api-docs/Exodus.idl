@@ -64,12 +64,12 @@ library Exodus
    interface IExodusMenuListener: IDispatch
   {
     /**
-        \brief This method is called when a registered menu item is clicked.
+        \brief Defines menu item selection event.
 
         This method is called when a registered menu item is clicked.
 
         \param menuID The id of the menu item that has been clicked.
-        \param xml The XML associated with the event.
+        \param xml The XML associated with the event, may be empty if menu context does not require additional information.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -189,7 +189,7 @@ library Exodus
     [
     id(0x00000007)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    HRESULT _stdcall XML([out, retval] BSTR * xml );
     /**
         \brief This method removes this roster item from the roster.
 
@@ -224,7 +224,7 @@ library Exodus
     propget, 
     id(0x0000000A)
     ]
-    HRESULT _stdcall nickname([out, retval] BSTR * value );
+    HRESULT _stdcall Nickname([out, retval] BSTR * value );
     /**
         \brief This method sets the nickname of this roster item.
 
@@ -238,20 +238,7 @@ library Exodus
     propput, 
     id(0x0000000A)
     ]
-    HRESULT _stdcall nickname([in] BSTR value );
-    /**
-        \brief This method gets the nickname of this roster item.
-
-        This method gets the nickname of this roster item.
-        
-        \param value Receives the new nickname.
-        \return \c HRESULT either \c S_OK or an error value.
-    **/
-    [
-    propget, 
-    id(0x0000000B)
-    ]
-    HRESULT _stdcall RawNickname([out, retval] BSTR * value );
+    HRESULT _stdcall Nickname([in] BSTR value );
     /**
         \brief This method gets the menu id associated with this roster item.
 
@@ -293,7 +280,7 @@ library Exodus
     propget, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall status([out, retval] BSTR * value );
+    HRESULT _stdcall Status([out, retval] BSTR * value );
     /**
         \brief This method sets the status of this roster item.
 
@@ -307,7 +294,7 @@ library Exodus
     propput, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall status([in] BSTR value );
+    HRESULT _stdcall Status([in] BSTR value );
     /**
         \brief This method returns the tooltip associated with this roster item.
 
@@ -347,7 +334,7 @@ library Exodus
     propget, 
     id(0x000000CC)
     ]
-    HRESULT _stdcall action([out, retval] BSTR * value );
+    HRESULT _stdcall Action([out, retval] BSTR * value );
     /**
         \brief Sets the double click action event name.
 
@@ -360,7 +347,7 @@ library Exodus
     propput, 
     id(0x000000CC)
     ]
-    HRESULT _stdcall action([in] BSTR value );
+    HRESULT _stdcall Action([in] BSTR value );
     /**
         \brief This method accesses the roster item's image index.
 
@@ -376,7 +363,7 @@ library Exodus
     propget, 
     id(0x000000CD)
     ]
-    HRESULT _stdcall imageIndex([out, retval] long * value );
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
     /**
         \brief This method sets the roster item's image index.
 
@@ -391,7 +378,7 @@ library Exodus
     propput, 
     id(0x000000CD)
     ]
-    HRESULT _stdcall imageIndex([in] long value );
+    HRESULT _stdcall ImageIndex([in] long value );
     /**
         \brief Allows the caller to determine if the roster item's caption is editable.
 
@@ -645,7 +632,7 @@ library Exodus
     propget,
     id(0x00000002)
     ]
-    HRESULT _stdcall status([out, retval] BSTR * value );
+    HRESULT _stdcall Status([out, retval] BSTR * value );
     /**
         \brief Sets the status of this presence.
 
@@ -660,7 +647,7 @@ library Exodus
     propput,
     id(0x00000002)
     ]
-    HRESULT _stdcall status([in] BSTR value );
+    HRESULT _stdcall Status([in] BSTR value );
     /**
         \brief Retrieves the value of the presence's show element.
 
@@ -716,7 +703,7 @@ library Exodus
     propget,
     id(0x00000004)
     ]
-    HRESULT _stdcall priority([out, retval] long * value );
+    HRESULT _stdcall Priority([out, retval] long * value );
     /**
         \brief Sets the priority of this presence.
 
@@ -731,7 +718,7 @@ library Exodus
     propput,
     id(0x00000004)
     ]
-    HRESULT _stdcall priority([in] long value );
+    HRESULT _stdcall Priority([in] long value );
     /**
         \brief Retrieves the error code for this presence.
 
@@ -785,7 +772,7 @@ library Exodus
     [
     id(0x00000006)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    HRESULT _stdcall XML([out, retval] BSTR * xml );
     /**
         \brief Determines if this presence packet affects subscription state.
 
@@ -1188,7 +1175,7 @@ library Exodus
     propget,
     id(0x00000004)
     ]
-    HRESULT _stdcall name([out, retval] BSTR * value );
+    HRESULT _stdcall Name([out, retval] BSTR * value );
     /**
         \brief Set the font family.
 
@@ -1209,7 +1196,7 @@ library Exodus
     propput,
     id(0x00000004)
     ]
-    HRESULT _stdcall name([in] BSTR value );
+    HRESULT _stdcall Name([in] BSTR value );
     /**
         \brief Get the font's pitch.
 
@@ -1336,7 +1323,7 @@ library Exodus
         \param value The control's name
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall name([out, retval] BSTR * value );
+    HRESULT _stdcall Name([out, retval] BSTR * value );
     [
     propput,
     id(0x00000001)
@@ -1358,7 +1345,7 @@ library Exodus
         \param value The new name of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall name([in] BSTR value );
+    HRESULT _stdcall Name([in] BSTR value );
     [
     propget,
     id(0x00000002)
@@ -1569,7 +1556,7 @@ library Exodus
         \param value The control's caption.
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall caption([out, retval] BSTR * value );
+    HRESULT _stdcall Caption([out, retval] BSTR * value );
     [
     propput,
     id(0x00000007)
@@ -1595,7 +1582,7 @@ library Exodus
         \param value The new caption.
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall caption([in] BSTR value );
+    HRESULT _stdcall Caption([in] BSTR value );
     [
     propget,
     id(0x00000008)
@@ -1810,7 +1797,6 @@ library Exodus
     propget,
     id(0x0000000E)
     ]
-    HRESULT _stdcall imageIndex([out, retval] long * value );
     /**
         \brief Get which image maintained by the parent menu appears next to the menu item.
         
@@ -1821,12 +1807,11 @@ library Exodus
         \param value Receives the image index.
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall imageIndex([out, retval] long * value );
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
     [
     propput,
     id(0x0000000E)
     ]
-    HRESULT _stdcall imageIndex([in] long value );
     /**
         \brief Set which image maintained by the parent menu appears next to the menu item.
         
@@ -1837,7 +1822,7 @@ library Exodus
         \param value Sets the image index.
         \return S_OK if successful, or an error value otherwise.
     **/
-    HRESULT _stdcall imageIndex([in] long value );
+    HRESULT _stdcall ImageIndex([in] long value );
     [
     propget,
     id(0x0000000F)
@@ -2202,7 +2187,7 @@ library Exodus
     propget,
     id(0x000000CB)
     ]
-    HRESULT _stdcall imageID([out, retval] BSTR * value );
+    HRESULT _stdcall ImageID([out, retval] BSTR * value );
     /**
         \brief Set the image for the button.
 
@@ -2215,7 +2200,7 @@ library Exodus
     propput,
     id(0x000000CB)
     ]
-    HRESULT _stdcall imageID([in] BSTR value );
+    HRESULT _stdcall ImageID([in] BSTR value );
     /**
         \brief Is the button enabled.
 
@@ -2331,7 +2316,7 @@ library Exodus
     propget,
     id(0x000000CC)
     ]
-    HRESULT _stdcall id([out, retval] BSTR * value );
+    HRESULT _stdcall ID([out, retval] BSTR * value );
     /**
         \brief Nickname associated with message to be logged.
 
@@ -2357,7 +2342,7 @@ library Exodus
     propget,
     id(0x000000CE)
     ]
-    HRESULT _stdcall body([out, retval] BSTR * value );
+    HRESULT _stdcall Body([out, retval] BSTR * value );
     /**
         \brief Conversation thread identifier.
 
@@ -2370,7 +2355,7 @@ library Exodus
     propget,
     id(0x000000CF)
     ]
-    HRESULT _stdcall thread([out, retval] BSTR * value );
+    HRESULT _stdcall Thread([out, retval] BSTR * value );
     /**
         \brief Subject of the conversation for which message is to be logged.
 
@@ -2383,7 +2368,7 @@ library Exodus
     propget,
     id(0x000000D0)
     ]
-    HRESULT _stdcall subject([out, retval] BSTR * value );
+    HRESULT _stdcall Subject([out, retval] BSTR * value );
     /**
         \brief Timestamp for message to be logged.
 
@@ -2422,7 +2407,7 @@ library Exodus
     propget,
     id(0x000000D3)
     ]
-    HRESULT _stdcall xml([out, retval] BSTR * value );
+    HRESULT _stdcall XML([out, retval] BSTR * value );
   };
 
   [
@@ -3280,8 +3265,8 @@ library Exodus
     ]
     HRESULT _stdcall RemovePresenceXML([in] BSTR id );
     /**
-        \brief Causes the given Windows message to generate Exodus events.
-        \depcreated This method is deprecated after v.0.9.1.
+        \brief <b>DEPRECATED</b> - Causes the given Windows message to generate Exodus events.
+        <b>DEPRECATED</b>
 
         This causes Exodus to track this Windows message id. When the message 
         is received Exodus fires a '/windows/msg' event containing the relevant
@@ -3755,7 +3740,7 @@ library Exodus
     propget,
     id(0x00000001)
     ]
-    HRESULT _stdcall jid([out, retval] BSTR * value );
+    HRESULT _stdcall JID([out, retval] BSTR * value );
     /**
         \brief Add a menu item to the window's context menu.
 
@@ -5168,7 +5153,7 @@ library Exodus
     propget,
     id(0x000000CD)
     ]
-    HRESULT _stdcall jid([out, retval] BSTR * value );
+    HRESULT _stdcall JID([out, retval] BSTR * value );
     /**
         \brief Text representation of the node associated with this entity.
 
@@ -5181,7 +5166,7 @@ library Exodus
     propget,
     id(0x000000CE)
     ]
-    HRESULT _stdcall node([out, retval] BSTR * value );
+    HRESULT _stdcall Node([out, retval] BSTR * value );
     /**
         \brief Category of entity.
 
@@ -5247,7 +5232,7 @@ library Exodus
     propget,
     id(0x000000D3)
     ]
-    HRESULT _stdcall feature([in] long index, [out, retval] BSTR * value );
+    HRESULT _stdcall Feature([in] long index, [out, retval] BSTR * value );
     /**
         \brief A count of the number of items in this entity.
 
