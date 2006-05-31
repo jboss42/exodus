@@ -59,7 +59,8 @@ type
     procedure setIM(im: TfrmMsgRecv);
     procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
-    procedure fireMsgKeyPress(Key: Char);
+    function  fireMsgKeyUp(key: Word; shift: TShiftState): boolean;
+    function  fireMsgKeyDown(key: Word; shift: TShiftState): boolean;
     function  fireBeforeMsg(var body: Widestring): boolean;
     function  fireAfterMsg(var body: WideString): Widestring;
     function  fireRecvMsg(body, xml: Widestring): boolean;
@@ -84,8 +85,8 @@ end;
 implementation
 
 uses
-    COMExControls, 
-    Controls, BaseMsgList, RTFMsgList, XMLTag, ComServ, Menus, SysUtils;
+    COMExControls, Controls, BaseMsgList, RTFMsgList,
+    XMLTag, ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -143,14 +144,51 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusChat.fireMsgKeyPress(Key: Char);
+function TExodusChat.fireMsgKeyUp(key: Word; shift: TShiftState): boolean;
 var
-    i: integer;
+    i, s: integer;
 begin
-    for i := 0 to _plugs.count - 1 do
-        //TChatPlugin(_plugs[i]).com.OnKeyUp(Key);
+    Result := false;
+
+    s := 0;
+    if (ssShift in shift) then
+        s := s or windows.MOD_SHIFT;
+
+    if (ssAlt in shift) then
+        s := s or windows.MOD_ALT;
+
+    if (ssCtrl in shift) then
+        s := s or windows.MOD_CONTROL;
+
+    for i := 0 to _plugs.Count - 1 do begin
+        Result := TChatPlugin(_plugs[i]).com.OnKeyUp(key, s);
+        if (Result = true) then exit;
+    end;
+
 end;
 
+{---------------------------------------}
+function TExodusChat.fireMsgKeyDown(key: Word; shift: TShiftState): boolean;
+var
+    i, s: integer;
+begin
+    Result := false;
+    s := 0;
+    if (ssShift in shift) then
+        s := s or windows.MOD_SHIFT;
+
+    if (ssAlt in shift) then
+        s := s or windows.MOD_ALT;
+
+    if (ssCtrl in shift) then
+        s := s or windows.MOD_CONTROL;
+
+    for i := 0 to _plugs.Count - 1 do begin
+        Result := TChatPlugin(_plugs[i]).com.OnKeyDown(key, s);
+        if (Result = true) then exit;
+    end;
+
+end;
 {---------------------------------------}
 function TExodusChat.fireBeforeMsg(var body: Widestring): boolean;
 var
