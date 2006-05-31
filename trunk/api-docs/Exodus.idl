@@ -129,7 +129,7 @@ library Exodus
         \brief This method is the setter for the subscription value.
 
         This method sets the subscription state for this roster item.  
-        \n\b Note: Call Update to send new roster item to the server.
+        \n\b Note: Call Update to send new roster item to the server and update the UI.
 
         \param value The new value of the subscription.
         \return \c HRESULT either \c S_OK or an error value.
@@ -193,7 +193,7 @@ library Exodus
     /**
         \brief This method removes this roster item from the roster.
 
-        This method removes the item from the roster and fires a /roster/remove event with a remove element payload.  The same as setting Subscription and calling Update.
+        This method removes the item from the roster and fires a /roster/remove event with a remove element payload.  The same as setting Subscription and calling Update (i.e. updates the UI and causes roster set proctol to be sent).
 
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -205,6 +205,9 @@ library Exodus
         \brief This method updates the roster item.
 
         This method fires a /roster/item event with a update element payload.
+        Calling this method will cause roster set protocol to be sent and will
+        result in a UI update.  There is no need to call FireChange when using
+        this function.
 
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -229,7 +232,7 @@ library Exodus
         \brief This method sets the nickname of this roster item.
 
         This method sets the nickname of this roster item.
-        \b Note: Call Update to send new roster item to the server.
+        \b Note: Call Update to send new roster item to the server and update the UI.
 
         \param value The new nickname.
         \return \c HRESULT either \c S_OK or an error value.
@@ -286,6 +289,8 @@ library Exodus
 
         This method sets the status of this roster item.
         \b Note this doesn't send protocol, only changes the value on this object.
+        Use Update to send roster set protocol and upate the server or FireChange
+        to only update the UI.
 
         \param  value The new status.
         \return \c HRESULT either \c S_OK or an error value.
@@ -298,7 +303,10 @@ library Exodus
     /**
         \brief This method returns the tooltip associated with this roster item.
 
-        This method returns the tooltip associated with this roster item.
+        This method returns the tooltip associated with this roster item.  The 
+        tooltip is updated on presence events.  If the plugin is overriding
+        the default text, keep current by listening for /presence events and
+        updating as needed.
         
         \param value Receives the tooltip text.
         \return \c HRESULT either \c S_OK or an error value.
@@ -311,7 +319,10 @@ library Exodus
     /**
         \brief This method sets the tooltip associated with this roster item.
 
-        This method sets the tooltip associated with this roster item.
+        This method sets the tooltip associated with this roster item. The 
+        tooltip is updated on presence events.  If the plugin is overriding
+        the default text, keep current by listening for /presence events and
+        updating as needed.  To immediately update the UI call FireChange.
         
         \param value The new tooltip.
         \return \c HRESULT either \c S_OK or an error value.
@@ -324,8 +335,8 @@ library Exodus
     /**
         \brief This method access the value of the double-click action.
 
-        The value of action is the name of the event fired when this roster
-        item is double clicked. Typically the value is '/session/gui/contact'.
+        The value of action is the name of the event fired when this roster item
+        is double clicked. 
 
         \param value Receives the value of action.
         \return \c HRESULT either \c S_OK or an error value.
@@ -338,7 +349,8 @@ library Exodus
     /**
         \brief Sets the double click action event name.
 
-        The value of action should be a valid event name. Typically it is '/session/gui/contact'.
+        The value of action is the name of the event fired when this roster item
+        is double clicked. 
 
         \param value The new value for action.
         \return \c HRESULT either \c S_OK or an error value.
@@ -370,6 +382,8 @@ library Exodus
         The image index determines the image displayed by this item in the roster.
         Normally this item is determined from mappings of show element values to 
         images kept by the IExodusRosterImages class - see IExodusRosterImages::Find.
+
+        Call FireChange to update the UI.
 
         \param value The new image index to be set.
         \return \c HRESULT either \c S_OK or an error value.
@@ -409,7 +423,8 @@ library Exodus
         \brief Fires a /roster/item event signaling a change to the roster item.
 
         This method should be called whenever a change is made to the roster
-        item that requires a UI update.
+        item that only requires a UI update.  Use Update when roster set protocol
+        should be sent.
     
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -444,12 +459,12 @@ library Exodus
     ]
     HRESULT _stdcall IsContact([in] VARIANT_BOOL value );
     /**
-        \brief Adds this roster item to the new group.
+        \brief Adds the new group to this roster item.
 
-        This method adds this item to the specified group.  Update should
-        be called after this method to notify the UI of the change.
+        This method adds the specified group to this item.  Call Update to send
+        roster set protocol and update the UI or FireChange to just update the UI.
 
-        \param grp The group to add this item to.
+        \param grp The group to add to this item.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -457,12 +472,12 @@ library Exodus
     ]
     HRESULT _stdcall AddGroup([in] BSTR grp );
     /**
-        \brief Removes this roster item from the named group.
+        \brief Removes the named group from this roster item.
 
-        Removes this roster item from the named group.
-        \b Note: Update should be called after this method to notify the UI the change.
+        Removes the named group from this roster item.  Call Update to send
+        roster set protocol and update the UI or FireChange to just update the UI.
 
-        \param grp The group to remove this item from.
+        \param grp The group to remove from this item.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -470,8 +485,9 @@ library Exodus
     ]
     HRESULT _stdcall RemoveGroup([in] BSTR grp );
     /**
-        \brief Updates any pending changes the groups this roster item belongs to.
+        \brief <b>UNSUPPORTED</b> - Updates any pending changes the groups this roster item belongs to.
         
+        <b>UNSUPPORTED</b>     
         This applies updates to the internal roster item's data store. It does
         not cause a UI update.
 
@@ -483,7 +499,7 @@ library Exodus
     HRESULT _stdcall SetCleanGroups( void );
     /**
         \brief Accesses the image prefix of this roster item.
-
+       
         The image prefix is prepended to the name of the show value set from 
         the item's presence to determine which image is selected for display.
         See IExodusRosterImages.
@@ -501,7 +517,7 @@ library Exodus
 
         The image prefix is prepended to the name of the show value set from 
         the item's presence to determine which image is selected for display.
-        See IExodusRosterImages.
+        See IExodusRosterImages.  Call FireChange to update the UI.
 
         \param value The new value for image prefix.
         \return \c HRESULT either \c S_OK or an error value.
@@ -512,9 +528,9 @@ library Exodus
     ]
     HRESULT _stdcall ImagePrefix([in] BSTR value );
     /**
-        \brief Sets the IsNative property - reserved for future use.
-       
-        This is reserved for future use.
+        \brief <b>DECPRECATED</b> - Gets the IsNative property.
+        
+        <b>DECPRECATED</b> -  Sets the IsNative property.
 
         \param value Receives the current value of this property.
         \return \c HRESULT either \c S_OK or an error value.
@@ -525,9 +541,9 @@ library Exodus
     ]
     HRESULT _stdcall IsNative([out, retval] VARIANT_BOOL * value );
     /**
-        \brief Sets the IsNative property - reserved for future use.
+        \brief <b>DECPRECATED</b> - Sets the IsNative property.
 
-        This is reserved for future use.
+        <b>DECPRECATED</b> -  Sets the IsNative property.
 
         \param value The new value for IsNative.
         \return \c HRESULT either \c S_OK or an error value.
@@ -618,14 +634,14 @@ library Exodus
     ]
     HRESULT _stdcall PresType([in] BSTR value );
     /**
-        \brief Retrieves the status of this presence.
+        \brief Gets the text displayed after the item's nickname.
 
-        This method retrieves the value of this presence's status element.  
-        Status is a natural language description of the show value (see Show). 
-        The status may be localized or custom (i.e. it is not standardized) and 
-        \e should not be nil - but this is NOT prevented.
+        This method gets the text displayed after the item's nickname.  The 
+        text defaults to presence status and will update on each presence 
+        event. If the plugin overrides this behavior, listen for /presence 
+        events and udpate as needed.
 
-        \param value Receives the status, blank, or possibly nil.
+        \param value Receives the item's status (blank, or possibly nil).
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -634,13 +650,15 @@ library Exodus
     ]
     HRESULT _stdcall Status([out, retval] BSTR * value );
     /**
-        \brief Sets the status of this presence.
+        \brief Sets the text displayed after the item's nickname.
 
-        Sets the status element's value. The value is a natural language 
-        description of the show value (see Show).  The value is free form but 
-        the best practice is to not set it to nil.
+        This method sets the text displayed after the item's nickname.  The 
+        text defaults to presence status and will update on each presence 
+        event. If the plugin overrides this behavior, listen for /presence 
+        events and udpate as needed.
 
-        \param value The new value of the presence's status.
+
+        \param value The new value of the item's status text.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -730,8 +748,7 @@ library Exodus
         \n \b Note: Exodus will also fire events when presence packets with an error 
         stanza are received:
             \li Error codes 500, 502, 504 - Exodus assumes this is an invalid 
-            roster item and the following events are fired:
-            '/session/error/presence' and '/presence/error'
+            roster item and the '/presence/error' event is fired.
            
            \li Error code 400, only with a blank from attribute, is considered 
            invisible packet bouncing and MainSession presence set to Available.
@@ -3771,8 +3788,9 @@ library Exodus
     /**
         \brief Registers a Plugin with the chat window.
 
-        Registers a plugin (IExodusChatPlugin) with the chat window.
-
+        Registers a plugin (IExodusChatPlugin) with the chat window. Store the
+        returned id to remove the plugin in the IExodusChatPlugin.OnClose event.
+        
         \param plugin The Plugin interface to be registered.
         \param id The ID assigned to this plugin.  Used for unregistering plugin.
         \return \c HRESULT either \c S_OK or an error value.
@@ -3867,6 +3885,7 @@ library Exodus
         \brief Send a message to the chat.
 
         This method sends a message to the chat room from the current user.
+        Adding a subject will change the subject of the room.
 
         \param body Body of the message to be sent.
         \param subject Subject of the message to be sent.
@@ -3944,8 +3963,9 @@ library Exodus
     ]
     HRESULT _stdcall CurrentNick([out, retval] BSTR * value );
     /**
-        \brief Get a handle to the interface for a chat window control.
-
+        \brief <b>UNSUPPORTED</b> - Get a handle to the interface for a chat window control.
+        
+        <b>UNSUPPORTED</b>
         This method will set the passed in pointer to a reference of the control named.
 
         \param name Name of the control desired.
@@ -4285,16 +4305,19 @@ library Exodus
     ]
     HRESULT _stdcall Fetch( void );
     /**
-        \brief Adds an item to the roster w/o optional subscription.
-
+        \brief <b>UNSUPPORTED</b> - Adds an item to the roster w/o optional subscription.
+        
+        <b>UNSUPPORTED</b>
         This method adds an item to the roster including sending an update event to the
         UI (i.e. the same as calling IExodusRosterItem.Update).  Depending on the value of
         the Subscribe parameter a subscription request is sent to the contact.
 
+        Note: If the group param is a subgroup the full path must be provided.
+
         \param jabberID The JID of the roster item to be added.
         \param nickname The name displayed by the UI for this JID.
         \param group The name of the group to add this roster item to.
-        \param subscribe True if a subscription should be sent to the contact.
+        \param subscribe True if a subscription should be sent to the contact (a roster set will always be sent).
         \param Item The roster item that was added or nil.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -4305,7 +4328,8 @@ library Exodus
     /**
         \brief Finds the JID in the roster.
         
-        Finds the JID in the roster.
+        Finds the JID in the roster.  The JID is typically the bare jid, but
+        can be the full jid as well.
 
         \param jabberID The JID of the contact to find.
         \param item The roster item that was found or nil.
@@ -4344,7 +4368,10 @@ library Exodus
         \brief Removes an item from the roster.
 
         This method doesn't update the server just removes the item from internal
-        roster representation.
+        roster representation.  The method should only be called on items added
+        with AddItem.
+        
+        This method does not update the UI.
 
         \param item the item to remove.
         \return \c HRESULT either \c S_OK or an error value.
@@ -4356,7 +4383,11 @@ library Exodus
     /**
         \brief Adds the specified group to the roster.
 
-        This method does not cause an update on the UI.
+        This method does not cause an update on the UI.  If an existing group
+        is found then it will be returned.  If an existing group is not found
+        then a new one is created.
+
+        Note: If the group param is a subgroup the full path must be provided.
 
         \param grp The name of the group to add.
         \param ret The \c IExodusRosterGroup that was created.
@@ -4371,6 +4402,8 @@ library Exodus
 
         This method finds the named group in the roster or returns nil if the 
         group doesn't exist.
+        
+        Note: If the group param is a subgroup the full path must be provided.
 
        \param grp The name of the group to find.
        \param ret This is the \c IExodusRosterGroup that was found or nil.
@@ -4383,7 +4416,11 @@ library Exodus
     /**
         \brief Removes a group from the roster.
 
-        This method does not update the server or the UI.
+        This method does not update the server or the UI.  This method should
+        only be called on groups created with AddGroup. Call Update to sent
+        roster set protocol and update the UI.
+        
+        Note: If the group param is a subgroup the full path must be provided.
 
         \param grp The \c IExodusRosterGroup to remove.
         \return \c HRESULT either \c S_OK or an error value.
@@ -4410,8 +4447,10 @@ library Exodus
 
         This method will can return nil if the index is greater than the actual
         number of roster groups. If the index is negative behavior is undefined.
+        
+        Note: If the group param is a subgroup the full path must be provided.
 
-        \param index The index of the desired group.
+        \param index The index of the desired group (must be >0).
         \param ret The desired \c IExodusRosterGroup or nil.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -4486,8 +4525,11 @@ library Exodus
     /**
         \brief Adds a new plugin-roster item to the roster.
 
-        These roster items are uniquely identified in their xml representation
-        by the namespace 'exodus:plugin-item'.
+        This method always creates a new roster item. The item is uniquely 
+        identified in their xml representation by the namespace 
+        'exodus:plugin-item'.
+
+        Note: Call Find first to determine if this JID already exists.
 
         \param jabberID The JID of the contact to be added.
         \param ret the \c IExodusRosterItem that was created.
