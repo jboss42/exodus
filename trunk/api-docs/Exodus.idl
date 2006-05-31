@@ -2,11 +2,11 @@
  *  \mainpage 
  *  
  *  \section sec_1 COM API
- *  The COM APIs to Exodus are documented for plugin devleopers. 
+ *  The COM APIs to Exodus are documented for plugin developers. 
  *  Plugin developers are free to use any language supporting COM.
  *
  *  \section sec_2 Delphi API
- *  Exodus itself is written in Delphi.  Class heirarchy is presented, but
+ *  Exodus itself is written in Delphi.  Class hierarchy is presented, but
  *  extended documentation is still a work in progress.
  * 
  *  \section sec_3 Event Documentation
@@ -284,7 +284,7 @@ library Exodus
     /**
         \brief This method accesses the status of this roster item.
 
-        This is the value of the staus element of the entities' presence.
+        This is the value of the status element of the entities' presence.
 
         \param value Receives the item's presence.
         \return \c HRESULT either \c S_OK or an error value.
@@ -367,7 +367,7 @@ library Exodus
         The image index determines the image displayed by this item in the roster. 
         The image index is determined from the value of the show element of this 
         item's presence.  The IExodusRosterImages class is responsible for maintaining 
-        mappings between the images and the show values - see IExodusRosterImages::Find.
+        mappings between the images and the show values - see IExodusRosterImages.Find.
 
         \param value Receives the value of the image's index.
         \return \c HRESULT either \c S_OK or an error value.
@@ -397,7 +397,7 @@ library Exodus
 
         A true value indicates the caption is editable.
 
-        \param value Recieves the value of the editable property.
+        \param value Receives the value of the editable property.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -406,7 +406,7 @@ library Exodus
     ]
     HRESULT _stdcall InlineEdit([out, retval] VARIANT_BOOL * value );
     /**
-        \brief Allows caller to mark the roster item's caption as readonly or writable.
+        \brief Allows caller to mark the roster item's caption as read-only or writable.
 
         A true value indicates the caption is editable.
 
@@ -419,7 +419,7 @@ library Exodus
     ]
     HRESULT _stdcall InlineEdit([in] VARIANT_BOOL value );
     /**
-        \brief Fires a /roster/item event signalling a change to the roster item.
+        \brief Fires a /roster/item event signaling a change to the roster item.
 
         This method should be called whenever a change is made to the roster
         item that requires a UI update.
@@ -495,7 +495,7 @@ library Exodus
     ]
     HRESULT _stdcall SetCleanGroups( void );
     /**
-        \brief Accesses the imageprefix of this roster item.
+        \brief Accesses the image prefix of this roster item.
 
         The image prefix is prepended to the name of the show value set from 
         the item's presence to determine which image is selected for display.
@@ -608,7 +608,7 @@ library Exodus
         \li probe
         \li error
 
-        \param value Recieves the type of this presence.
+        \param value Receives the type of this presence.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -619,7 +619,7 @@ library Exodus
     /**
         \brief Sets the presence type of this presence.
 
-        This method sets the type attribue of the presence packet. 
+        This method sets the type attribute of the presence packet. 
         See PresType(BSTR*) for more information.
 
         \param value The value of the new type attribute.
@@ -631,14 +631,14 @@ library Exodus
     ]
     HRESULT _stdcall PresType([in] BSTR value );
     /**
-        \brief Retreives the status of this presence.
+        \brief Retrieves the status of this presence.
 
         This method retrieves the value of this presence's status element.  
         Status is a natural language description of the show value (see Show). 
-        The status may be localized or custom (i.e. it is not standarized) and 
+        The status may be localized or custom (i.e. it is not standardized) and 
         \e should not be nil - but this is NOT prevented.
 
-        \param value Recieves the status, blank, or possibly nil.
+        \param value Receives the status, blank, or possibly nil.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -709,7 +709,7 @@ library Exodus
         -128 and +127.  Higher numbers indicate servers give more priority
         to this JID when routing stanzas.  The default is 0.
 
-        \param value Receives the priorty of this presence (-128 to +127).
+        \param value Receives the priority of this presence (-128 to +127).
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -718,13 +718,13 @@ library Exodus
     ]
     HRESULT _stdcall priority([out, retval] long * value );
     /**
-        \brief Sets the priorty of this presence.
+        \brief Sets the priority of this presence.
 
         Priority is an optional element and may be an integer between 
         -128 and +127.  Higher numbers indicate servers give more priority
         to this JID when routing stanzas.  The default is 0.
 
-        \param value the new priorty value (-128 to +127).
+        \param value the new priority value (-128 to +127).
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -807,7 +807,7 @@ library Exodus
 
         This method returns the JID from presence packet's to attribute. This 
         \e should not return nil, but the setter does NOT prevent this 
-        (see toJID(BSTR*)).
+        (see ToJID(BSTR*)).
 
         \param value Receives the JID this presence was directed to.
         \return \c HRESULT either \c S_OK or an error value.
@@ -836,7 +836,7 @@ library Exodus
 
         This method retrieves the JID that sent the presence packet. Determined
         by examining the from attribute of the presence packet.  This should
-        not be null or blank, but the setter does not prevent this (see fromJid(BSTR*)).
+        not be null or blank, but the setter does not prevent this (see FromJid(BSTR*)).
 
         \param value Receives the JID sending this presence: should not be blank or nil.
         \return \c HRESULT either \c S_OK or an error value.
@@ -954,9 +954,9 @@ library Exodus
    interface IExodusRosterImages: IDispatch
   {
     /**
-        \brief Loads a roster image from the filesystem.
+        \brief Loads a roster image from the file system.
 
-        This method will load a roster image from the filesystem.  This method
+        This method will load a roster image from the file system.  This method
         will not replace an existing id so use Remove first to override existing ids.
         The return value is the image's index in roster's image store.
 
@@ -987,7 +987,7 @@ library Exodus
     /**
         \brief Loads a roster image from a resource (such as a DLL).
 
-        This method will attempt to peform a LoadLibrary call on the specified 
+        This method will attempt to perform a LoadLibrary call on the specified 
         resource.  If successful, an attempt to load the named resource will be
         made. This method will not replace and existing id so user Remove first 
         to override existing ids.
@@ -1018,10 +1018,10 @@ library Exodus
     /**
         \brief Finds a roster image by id.
 
-        This method returns the index of of the specified image in the roster's
+        This method returns the index of the specified image in the roster's
         internal image store or -1 if the id wasn't found.
 
-        \param id A \c BSTR representing the ide of the image to find.
+        \param id A \c BSTR representing the id of the image to find.
         \param index The index of the image or -1.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -1134,7 +1134,7 @@ library Exodus
         Retrieve the height of the font in pixels.
 
         If \p value is
-        negative, it only specifys the font height and does not include
+        negative, it only specifies the font height and does not include
         the internal leading that appears at the top of each line of text.
         If \p value is positive, it includes the height of the characters
         plus the internal leading.
@@ -1241,7 +1241,7 @@ library Exodus
 
         Specify the font's pitch.
 
-        See Pitch(long * value) for additonal information.
+        See Pitch(long * value) for additional information.
 
         Setting the Pitch of a fixed-pitch font to variable or a
         variable-pitch font to fixed will cause window system to find what it
@@ -1330,7 +1330,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -1349,10 +1349,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
          
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -1384,8 +1384,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -1520,7 +1520,7 @@ library Exodus
     /**
         \brief Get whether the menu item starts a new column in the menu.
 
-        Retreive whether the menu item starts a new column in the menu.
+        Retrieve whether the menu item starts a new column in the menu.
 
 				Set Break to break a long menu into columns at the item described by this menu item. The value of Break indicates whether the menu is broken into columns, and if so, whether a bar appears between the columns of the parent menu.
         
@@ -1603,7 +1603,7 @@ library Exodus
     /**
         \brief Get whether a check mark should appear beside the Caption.
 
-        Retreive whether a check mark should appear beside the Caption.
+        Retrieve whether a check mark should appear beside the Caption.
 
 				Use Checked to allow a menu item to work like a check box. If Checked is true, the menu item appears checked. If Checked is false, the menu item remains unchecked.
         
@@ -1637,7 +1637,7 @@ library Exodus
     /**
         \brief Get whether the menu item is invoked when the parent item is double clicked.
 
-        Retreive whether the menu item is invoked when the parent item is double clicked.
+        Retrieve whether the menu item is invoked when the parent item is double clicked.
 
 				Set Default to specify whether a menu item is the default item in a submenu. Default menu items are executed when the parent item is double-clicked, allowing users to avoid navigating the submenus that contain them. 
 
@@ -1708,7 +1708,7 @@ library Exodus
     /**
         \brief Get the Identity of  the logical group to which the menu item belongs.
 
-        Retreive the Identity of  the logical group to which the menu item belongs.
+        Retrieve the Identity of  the logical group to which the menu item belongs.
 
 				Use GroupIndex to control how menus are merged. In applications that contain multiple forms, items from the menus of secondary forms can be merged into the application's main menu as those forms become active. MDI applications always merge the menus of child windows with the main menu of the parent window. 
 				
@@ -1746,7 +1746,7 @@ library Exodus
         \return S_OK if successful, or an error value otherwise.
         \see HelpType
     **/
-    HRESULT _stdcall HelpContext([out, retval] long * Vvlue );
+    HRESULT _stdcall HelpContext([out, retval] long * value );
     [
     propput,
     id(0x0000000C)
@@ -1834,7 +1834,7 @@ library Exodus
 
         Set ImageIndex to designate an image that should appear next to the caption when the menu item is drawn. On top-level menu items, ImageIndex specifies a zero-offset index into the Images property of the parent menu (TMenu or TPopupMenu). On submenu items, ImageIndex is the zero-offset index into the parent item's SubMenuImages property.
 
-        \param value Setsthe image index.
+        \param value Sets the image index.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall imageIndex([in] long value );
@@ -1923,7 +1923,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -1968,9 +1968,9 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusIQListener
-    \brief A Listening inteface specifically for tracking IQ requests.
+    \brief A Listening interface specifically for tracking IQ requests.
 
-    A Listening inteface specifically for tracking IQ requests.
+    A Listening interface specifically for tracking IQ requests.
   **/
 
    interface IExodusIQListener: IDispatch
@@ -2165,9 +2165,9 @@ library Exodus
     ]
     HRESULT _stdcall Visible([in] VARIANT_BOOL value );
     /**
-        \brief Retreive the button tooltip.
+        \brief Retrieve the button tooltip.
 
-        Retreive the button tooltip.
+        Retrieve the button tooltip.
 
         \param value Receives the current button tooltip.
         \return S_OK if successful, or an error value otherwise.
@@ -2191,9 +2191,9 @@ library Exodus
     ]
     HRESULT _stdcall Tooltip([in] BSTR value );
     /**
-        \brief Retreive the button ID.
+        \brief Retrieve the button ID.
 
-        Retreive the button ID.
+        Retrieve the button ID.
 
         \param value Receives the button ID.
         \return S_OK if successful, or an error value otherwise.
@@ -2272,9 +2272,9 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogMsg
-    \brief A data structure for logging messages to persistant storage.
+    \brief A data structure for logging messages to persistent storage.
 
-    A data structure containing all the data related to a message to be stored to persistant storage.
+    A data structure containing all the data related to a message to be stored to persistent storage.
     Used by IExodusLogger.
   **/
 
@@ -2552,7 +2552,7 @@ library Exodus
     ]
     HRESULT _stdcall Connected([out, retval] VARIANT_BOOL * value );
     /**
-        \brief Retreives the username portion of the profile's JID.
+        \brief Retrieves the username portion of the profile's JID.
 
         This method gets the username portion of the current profile's JID. Under 
         normal conditions, this return value is never nil or blank (as long as 
@@ -2571,7 +2571,7 @@ library Exodus
 
         This method gets the hostname portion of the current profile's JID.
 
-        \param value Recieves the hostname portion of the profile's JID.
+        \param value Receives the hostname portion of the profile's JID.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2697,7 +2697,7 @@ library Exodus
         This method causes the profile to be fetched and opens the profile 
         window for the given JID.
 
-        \param jid The JID whose profile will be dipslayed.
+        \param jid The JID whose profile will be displayed.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2724,11 +2724,11 @@ library Exodus
         \brief Adds a menu item to the Plugins-menu.
 
         A menu item is added to the Exodus Plugins-menu using the given caption. 
-        The method returns an ID which is used to by removePluginMenu.
+        The method returns an ID which is used to by RemovePluginMenu.
 
         \param caption The name of the menu item to be added.
         \param menuListener The object that will be notified when menu item is clicked (IExodusMenuListener.OnMenuItemClick).
-        \param menuID The id generated by Exodus - save to remove the menu item (see removePluginMenu).
+        \param menuID The id generated by Exodus - save to remove the menu item (see RemovePluginMenu).
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2738,7 +2738,7 @@ library Exodus
     /**
         \brief Removes a menu item from the Plugins-menu.
 
-        This method uses the ID returned when calling addPluginMenu to find and
+        This method uses the ID returned when calling AddPluginMenu to find and
         remove the menu item.  If the ID is not found no action occurs.
 
         \param menuID The id of the menu item to remove.
@@ -2784,7 +2784,7 @@ library Exodus
         This method generates a unique id. This id is typically used for 
         setting the id on IQ packets.
 
-        \param id Recieves the unique id.
+        \param id Receives the unique id.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2835,7 +2835,7 @@ library Exodus
 
         This method returns the resource associated with the current session JID.
 
-        \param value Recieves the resource of the session JID.
+        \param value Receives the resource of the session JID.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -2871,7 +2871,7 @@ library Exodus
     ]
     HRESULT _stdcall Priority([out, retval] long * value );
     /**
-        \brief Get's the status of the session's presence.
+        \brief Gets the status of the session's presence.
 
         This method returns the status of the main session's presence.
 
@@ -2884,7 +2884,7 @@ library Exodus
     ]
     HRESULT _stdcall PresenceStatus([out, retval] BSTR * value );
     /**
-        \brief Get's the show value of the session's presence.
+        \brief Gets the show value of the session's presence.
 
         This method returns the show value of the main session's presence.
         This is a machine readable value (see IExodusPresence.Show).
@@ -2912,7 +2912,7 @@ library Exodus
     ]
     HRESULT _stdcall IsPaused([out, retval] VARIANT_BOOL * value );
     /**
-        \brief Determine if the session's presence is set to invisble.
+        \brief Determine if the session's presence is set to invisible.
 
         This method returns True if the main session's presence has been
         set to invisible.
@@ -3062,7 +3062,7 @@ library Exodus
         enter or create a room and find or show a room window. 
         
         The send presence parameter determines if the room should be created if 
-        it doesn't exist.  If a new room is is created, plugins are notified via 
+        it doesn't exist.  If a new room is created, plugins are notified via 
         the IExodusPlugin.NewRoom callback.
        
         If a password is required but not supplied, then a popup dialog will prompt the user.
@@ -3110,7 +3110,7 @@ library Exodus
     /**
         \brief Creates the join room window.
 
-        This method shows the join room window prepopulated with the information 
+        This method shows the join room window pre-populated with the information 
         provided. If text conferencing is branded off this does nothing (brand_muc pref).
 
         \param roomJID The jid of the room to join (must not be nil).
@@ -3133,7 +3133,7 @@ library Exodus
     ]
     HRESULT _stdcall ShowPrefs( void );
     /**
-        \brief Shows the the custom presence dialog.
+        \brief Shows the custom presence dialog.
 
         This method causes the custom presence dialog to display.
         \return \c HRESULT either \c S_OK or an error value.
@@ -3267,9 +3267,9 @@ library Exodus
     ]
     HRESULT _stdcall RegisterPresenceXML([in] BSTR xml, [out, retval] BSTR * id );
     /**
-        \brief Allows plugins to remove static XML being appened to presence packets.
+        \brief Allows plugins to remove static XML being appended to presence packets.
 
-        This method allows plugins to remove static XML being appened to 
+        This method allows plugins to remove static XML being appended to 
         presence packets using it's registration id.
 
         \param id The id obtained when the XML was added using (registerPresenceXML).
@@ -3299,7 +3299,7 @@ library Exodus
 
         This method adds a context menu to the roster which is available 
         for all contacts.  The method returns an ID used to identify this item
-        in onMenu event processig and to remove the menu (see removeContactMenu).
+        in OnMenu event processing and to remove the menu (see RemoveContactMenu).
 
         \param caption The caption of the menu item.
          \param menuListener The object that will be notified when menu item is clicked (IExodusMenuListener.OnMenuItemClick).
@@ -3314,7 +3314,7 @@ library Exodus
         \brief Removes a context menu from the roster.
 
         This method removes the given menu from the roster using the id returned
-        from addContactMenu.
+        from AddContactMenu.
 
         \param menuID The id of the menu to be removed.
         \return \c HRESULT either \c S_OK or an error value.
@@ -3377,9 +3377,9 @@ library Exodus
     ]
     HRESULT _stdcall LocalIP([out, retval] BSTR * value );
     /**
-        \brief Register plugin as an authentication mechanmism.
+        \brief Register plugin as an authentication mechanism.
 
-        This method allows plugins providing authentiation mechanisms to register 
+        This method allows plugins providing authentication mechanisms to register 
         with the session object. This method \b must be called while the session 
         is disconnected. 
 
@@ -3396,7 +3396,7 @@ library Exodus
         Calling this method informs Exodus the plugin has or has not authenticated the session.
 
         \param authed True if the authentication succeeded.
-        \param xml - reseverd for future use.
+        \param xml - reserved for future use.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -3440,7 +3440,7 @@ library Exodus
 
         This method adds a menu item to the context menu for roster groups. The
         menu id returned should be used to identify events from this menu item 
-        or to remove the item (see removeGroupMenu).
+        or to remove the item (see RemoveGroupMenu).
 
         \param caption The name of the menu item.
         \param menuListener The object that will be notified when menu item is clicked (IExodusMenuListener.OnMenuItemClick).
@@ -3457,7 +3457,7 @@ library Exodus
         This method removes a context menu item from the roster's group 
         specific context menu.
 
-        \param menuID The id of the menu item to remove (see addGroupMenu).
+        \param menuID The id of the menu item to remove (see AddGroupMenu).
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -3529,7 +3529,7 @@ library Exodus
         interface allows plugins to add, load or find images in the roster's
         image cache.
 
-        \param value A IExodusRosterImages COM inteface.
+        \param value A IExodusRosterImages COM interface.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -3540,7 +3540,7 @@ library Exodus
     /**
         \brief Gets the disco entity cache COM interface.
 
-        This method returns the IExodusEntityCache interface. This inteface
+        This method returns the IExodusEntityCache interface. This interface
         allows plugins to find information in the disco cache or retrieve 
         disco information from entities.
 
@@ -3821,7 +3821,7 @@ library Exodus
         Ptr_MsgOutput = 3\n
 
         \param part What handle/pointer to return.
-        \param value Returned hanle/pointer as integer.
+        \param value Returned handle/pointer as integer.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -3976,7 +3976,7 @@ library Exodus
 
         Get the caption for the chat.
 
-        \paramr value Pointer to Caption value.
+        \param value Pointer to Caption value.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -4007,7 +4007,7 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusPlugin
-    \brief Basic inteface for plugins.
+    \brief Basic interface for plugins.
 
     IExodusPlugin is the core interface that is used by exodus, and MUST be implemented by all plugins.
   **/
@@ -4045,7 +4045,7 @@ library Exodus
     /**
         \brief Plugin is receiving a packet to process.
 
-        When a plugin registers to receive notifcations (by calling RegisterCallback), exodus will call this method for every packet or event which matches the provided xpath statement.
+        When a plugin registers to receive notifications (by calling RegisterCallback), exodus will call this method for every packet or event which matches the provided xpath statement.
 
         \param xpath The string matching the xpath expression the plugin previously registered for.
         \param event Event will almost always be the string "xml" or possibly "timeout".
@@ -4088,7 +4088,7 @@ library Exodus
     /**
         \brief A new IM is about to go out.
 
-        This event is fired whenever an IM message (not a chat or groupchat) is being sent from the system. This includes messages like room invites, and roster items being sent. Plugins are allowed to change the value of the Body and Subject paramaters if necessary.
+        This event is fired whenever an IM message (not a chat or groupchat) is being sent from the system. This includes messages like room invites, and roster items being sent. Plugins are allowed to change the value of the Body and Subject parameters if necessary.
         
         Plugins should return WELL-FORMED XML as a return value if that plugin needs to append additional elements into the message stanza. For example, a plugin could return: <x xmlns="foo">Some CDATA</x> and have that x tag be inserted into the outgoing message.
 
@@ -4152,7 +4152,7 @@ library Exodus
 
         The client is about to send this message to the Room or Contact.
         The plugin may evaluate the message and either modify the message by changing the body, or 
-        prevent the message from being sent by returning false (0) in the Allow paramerter.
+        prevent the message from being sent by returning false (0) in the Allow parameter.
 
         \param body Body of the message.
         \param allow Should this message be allowed to be sent.
@@ -4207,7 +4207,7 @@ library Exodus
 
         \param body The body of the new message.
         \param xml  The full message packet.
-        \param allow Indicates to IExodusController if other plugins should revceive this notification.
+        \param allow Indicates to IExodusController if other plugins should receive this notification.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -4229,7 +4229,7 @@ library Exodus
     /**
         \brief Called to notify the plugin a key has returned to the up state.
         
-        Called to notify the plugin a key has returned to the up state.  The shiftState indcates if any key modifiers are also pressed. The handled parameter can be set to true (1) to indicate the event has been handeled.
+        Called to notify the plugin a key has returned to the up state.  The shiftState indicates if any key modifiers are also pressed. The handled parameter can be set to true (1) to indicate the event has been handled.
 
         Values for shiftState can be:
         \li 0 - shift key
@@ -4241,7 +4241,7 @@ library Exodus
         \li 6 - mouse double click
 
         \param key The value of the key pressed.
-        \param shiftState Indicates if any key modifers are in effect (shift/control/alt).
+        \param shiftState Indicates if any key modifiers are in effect (shift/control/alt).
         \param handled Set to True (1) to prevent other handling of this event.
     **/
     [
@@ -4251,7 +4251,7 @@ library Exodus
     /**
         \brief Called to notify the plugin a key has been entered the depressed state.
         
-        Called to notify the plugin a key has entered to the down state.  The shiftState indcates if any key modifiers are also pressed. The handled parameter can be set to true (1) to indicate the event has been handeled.
+        Called to notify the plugin a key has entered to the down state.  The shiftState indicates if any key modifiers are also pressed. The handled parameter can be set to true (1) to indicate the event has been handled.
 
         Values for shiftState can be:
         \li 0 - shift key
@@ -4263,7 +4263,7 @@ library Exodus
         \li 6 - mouse double click
 
         \param key The value of the key pressed.
-        \param shiftState Indicates if any key modifers are in effect (shift/control/alt).
+        \param shiftState Indicates if any key modifiers are in effect (shift/control/alt).
         \param handled Set to True (1) to prevent other handling of this event.
     **/
     [
@@ -4283,7 +4283,7 @@ library Exodus
     \interface IExodusRoster
     \brief IExodusRoster encapsulates the roster and related activities.
      
-     Common roster mamangement functions are defined in this interface.
+     Common roster management functions are defined in this interface.
   **/
 
    interface IExodusRoster: IDispatch
@@ -4335,7 +4335,7 @@ library Exodus
 
         This method returns the roster item at the specified index or nil.
 
-        \param index The index of the roster item to retreive.
+        \param index The index of the roster item to retrieve.
         \param item The desired IExodusRosterItem or nil.
         \return \c HRESULT either \c S_OK or an error value.
     **/
@@ -4472,7 +4472,7 @@ library Exodus
         or to identify events from this context menu.
 
         \b Note: IF a context menu item is added using this method, it should 
-        be removed using removeContextMenuItem.
+        be removed using RemoveContextMenuItem.
 
         \param menuID The id of the menu to add this item to.
         \param caption The human readable name of this menu item exposed to the UI.
@@ -4488,7 +4488,7 @@ library Exodus
         \brief Removes a context menu item from a menu.
 
         The specified menu item id is removed from the specified menu.  The
-        menu item id used should be the one returned by addContextmenuItem.
+        menu item id used should be the one returned by AddContextmenuItem.
 
         \param menuID The id of the menu to add the item to.
         \param itemID The id of menu item to remove.
@@ -4572,7 +4572,7 @@ library Exodus
     ]
     HRESULT _stdcall Count([out, retval] long * value );
     /**
-        \brief Gets the last presence recieved.
+        \brief Gets the last presence received.
 
         Retrieves the last presence packet received or nil if none yet received.
 
@@ -4632,7 +4632,7 @@ library Exodus
         \brief Accesses property for displaying group when empty.
 
         When True this property will cause the roster to display this item even if
-        it's empty.  This property does not affect the existance of
+        it's empty.  This property does not affect the existence of
 
         \param value True if this group should be shown when empty.
         \return \c HRESULT either \c S_OK or an error value.
@@ -4678,7 +4678,7 @@ library Exodus
         "Unknown" and "Offline" groups have a value of 500 and "My Resources"
         group is set at 750.
 
-        \param value a relative (postive) numberic value.
+        \param value a relative (positive) numeric value.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -4726,11 +4726,11 @@ library Exodus
     ]
     HRESULT _stdcall DragTarget([out, retval] VARIANT_BOOL * value );
     /**
-        \brief Sets the property indicating if this is a valid drap traget.
+        \brief Sets the property indicating if this is a valid drag target.
 
         Set to True to allow the UI to send drop events to this group.
 
-        \param value new value for the drap target property.
+        \param value new value for the drag target property.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -4768,7 +4768,7 @@ library Exodus
     /**
         \brief Flag indicating group should auto-expand in roster.
 
-        A True value indcates this group should be auto-expanded in the roster
+        A True value indicates this group should be auto-expanded in the roster
         tree view.
 
         \param value Set to True to auto-expand the group.
@@ -4795,7 +4795,7 @@ library Exodus
     /**
         \brief Accesses the name of the group.
 
-        This accesses the name of the group dispalyed in the roster.
+        This accesses the name of the group displayed in the roster.
         
         \param text receives the name of the group.
         \return \c HRESULT either \c S_OK or an error value.
@@ -4846,7 +4846,7 @@ library Exodus
     /**
         \brief Determines if the group has no items/sub-groups.
 
-        A True result indcates this group has no JIDs or sub-groups.
+        A True result indicates this group has no JIDs or sub-groups.
 
         \param ret True if group has no items/sub-groups.
         \return \c HRESULT either \c S_OK or an error value.
@@ -4856,9 +4856,9 @@ library Exodus
     ]
     HRESULT _stdcall IsEmpty([out, retval] VARIANT_BOOL * ret );
     /**
-        \brief Gets a group by it's fullname.
+        \brief Gets a group by it's full name.
 
-        This method retreives a group by name (see FullName) from the roster. 
+        This method retrieves a group by name (see FullName) from the roster. 
         It may return nil if the group name isn't found.
 
         \param group_name The name of the group to get.
@@ -4872,7 +4872,7 @@ library Exodus
     /**
         \brief Adds a sub-group to this group.
 
-        This method adds a sub-group to the roster by fullname (see FullName). 
+        This method adds a sub-group to the roster by full name (see FullName). 
         Roster.Update should be called to save changes to the server.
         \n\b Note: This method will replace an existing group with the same name.
 
@@ -4951,9 +4951,9 @@ library Exodus
     ]
     HRESULT _stdcall Total([out, retval] long * value );
     /**
-        \brief Retrieves the fullname of this group including parent groups.
+        \brief Retrieves the full name of this group including parent groups.
 
-        The fullname contains the name of any parent groups the current group 
+        The full name contains the name of any parent groups the current group 
         may have.  Top level roster groups have no beginning separator. For
         example:
         \li 'My Group' is a top level folder
@@ -4990,7 +4990,7 @@ library Exodus
         performed.
 
         \param index The index representing the desired nest level.
-        \param value The group name (not fullname) found at index.
+        \param value The group name (not full name) found at index.
         \return \c HRESULT either \c S_OK or an error value.
     **/
     [
@@ -5100,7 +5100,7 @@ library Exodus
     \brief A representation of the disco info, features, and capabilities for various items in the system.
 
     A entity is a representation of the capabilities, features and disco info for a specific JID.
-    This could be info on the client used by a contact, or a server's capablities, etc.
+    This could be info on the client used by a contact, or a server's capabilities, etc.
   **/
 
    interface IExodusEntity: IDispatch
@@ -5235,9 +5235,9 @@ library Exodus
     ]
     HRESULT _stdcall FeatureCount([out, retval] long * value );
     /**
-        \brief Retreives feature value by index.
+        \brief Retrieves feature value by index.
 
-        Retreives feature value by zero based index.
+        Retrieves feature value by zero based index.
 
         \param index Zero based index of desired feature.
         \param value Receives requested feature.
@@ -5300,7 +5300,7 @@ library Exodus
 
         Get the type for an instance of an IExodusControl.
 
-        This method is a getter for the readonly property ControlType.
+        This method is a getter for the read-only property ControlType.
 
         \param value The ExodusControlTypes type of this control.
         \return HRESULT
@@ -5341,7 +5341,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -5360,10 +5360,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -5395,8 +5395,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -5443,9 +5443,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -5459,9 +5459,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -5469,7 +5469,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -5510,13 +5510,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -5525,9 +5525,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -5562,7 +5562,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -5681,7 +5681,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -5807,7 +5807,7 @@ library Exodus
         Gets the AllowGrayed property which indicates if control allowed to be in 
         grayed out state. Should be 1 if allowed 0 if not.
 
-        \param value Indicates if the greyed state is allowed (1) or not (0).
+        \param value Indicates if the grayed state is allowed (1) or not (0).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -5821,7 +5821,7 @@ library Exodus
         Sets the AllowGrayed property which indicates if control allowed to be in 
         grayed out state. Should be 1 if allowed 0 if not.
 
-        \param value New value indicating if greyed state is allowed (1) or not (0).
+        \param value New value indicating if grayed state is allowed (1) or not (0).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -6207,12 +6207,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -6265,12 +6265,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -6419,9 +6419,9 @@ library Exodus
         Similar to Checked, but detects the grayed state as well. value can be:
         \li 0   Unchecked
         \li 1   Checked
-        \li 2   Greyed
+        \li 2   Grayed
 
-        \param value Recieves the state of the checkbox (0, 1, 2).
+        \param value Receives the state of the checkbox (0, 1, 2).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -6437,7 +6437,7 @@ library Exodus
         value can be:
         \li 0   Unchecked
         \li 1   Checked
-        \li 2   Greyed
+        \li 2   Grayed
 
         \param value The new state of the checkbox (0, 1, 2).
         \return S_OK if successful, or an error value otherwise.
@@ -6528,7 +6528,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -6599,7 +6599,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -6618,10 +6618,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -6653,8 +6653,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -6672,7 +6672,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -6701,9 +6701,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -6717,9 +6717,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -6727,7 +6727,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -6768,13 +6768,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -6783,9 +6783,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -6820,7 +6820,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -6939,7 +6939,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -6982,13 +6982,13 @@ library Exodus
     **/
     HRESULT _stdcall HelpContext([in] long value );
     /**
-        \brief Gets the property indicating if text entered will autocomplete.
+        \brief Gets the property indicating if text entered will auto complete.
         
-        Gets the property indicating if text entered will autocomplete.  Text 
-        matching items in the combobox will autocomplete if this property is 
+        Gets the property indicating if text entered will auto complete.  Text 
+        matching items in the combo box will auto complete if this property is 
         set to 1.
 
-        \param value Recieves the value of this property (1 or 0).
+        \param value Receives the value of this property (1 or 0).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -6997,10 +6997,10 @@ library Exodus
     ]
     HRESULT _stdcall AutoComplete([out, retval] long * value );
     /**
-        \brief Sets the property indicating if text entered will autocomplete.
+        \brief Sets the property indicating if text entered will auto complete.
         
-        Sets the property indicating if text entered will autocomplete.  Text 
-        matching items in the combobox will autocomplete if this property is 
+        Sets the property indicating if text entered will auto complete.  Text 
+        matching items in the combo box will auto complete if this property is 
         set to 1.
 
         \param value The new value of this property (1 or 0).
@@ -7018,7 +7018,7 @@ library Exodus
         response to user keystrokes. A value of 1 indicates it will drop-down
         automatically. A value of 0 indicates it won't automatically drop-down.
 
-        \param value Recieves the value of the AutoDropdown property.
+        \param value Receives the value of the AutoDropdown property.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7045,9 +7045,9 @@ library Exodus
         \brief Gets property indicating if dropdown list auto-closes when item is selected.
         
         Gets the property indicating if dropdown list auto-closes when user selects 
-        an item. A value of 1 indicates the combobox will autoclose, and 0 means it won't.
+        an item. A value of 1 indicates the combo box will autoclose, and 0 means it won't.
 
-        \param value Recieves the value of the AutoCloseUp property (1 or 0).
+        \param value Receives the value of the AutoCloseUp property (1 or 0).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7059,7 +7059,7 @@ library Exodus
         \brief Sets property indicating if dropdown list auto-closes when item is selected.
         
         Sets the property indicating if dropdown list auto-closes when user selects 
-        an item. A value of 1 indicates the combobox will autoclose, and 0 means it won't.
+        an item. A value of 1 indicates the combo box will autoclose, and 0 means it won't.
 
         \param value The new value of the AutoCloseUp property (1 or 0).
         \return S_OK if successful, or an error value otherwise.
@@ -7072,7 +7072,7 @@ library Exodus
     /**
         \brief Get the cut of the inner bevel.
 
-        Retreive the cut of the inner bevel.
+        Retrieve the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -7118,7 +7118,7 @@ library Exodus
     /**
         \brief Get the control's bevel style.
 
-        Retreive the control's bevel style.
+        Retrieve the control's bevel style.
 
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
@@ -7294,7 +7294,7 @@ library Exodus
         \brief Gets the property indicating control forces text case.
 
         Use CharCase to force the text contents of the control into either upper 
-        or lower case.  Once converted the original case information cannont be
+        or lower case.  Once converted the original case information cannot be
         recovered.
 
         value are:
@@ -7314,7 +7314,7 @@ library Exodus
         \brief Sets the property indicating control forces text case.
 
         Use CharCase to force the text contents of the control into either upper 
-        or lower case.  Once converted the original case information cannont be
+        or lower case.  Once converted the original case information cannot be
         recovered.
 
         value can be:
@@ -7574,15 +7574,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -7605,15 +7605,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -7684,9 +7684,9 @@ library Exodus
     ]
     HRESULT _stdcall ItemHeight([out, retval] long * value );
     /**
-        \brief Sets the height of combobox list items in pixels.
+        \brief Sets the height of combo box list items in pixels.
 
-        This method sets the height of the combobox list items in pixels.
+        This method sets the height of the combo box list items in pixels.
         
        \b Note: The value of this property is only used if, and only if, the 
         Style property is set to 3 or 4 (the owner-draw settings).
@@ -7705,7 +7705,7 @@ library Exodus
         This method retrieves the currently selected item's index.  The first
         item in the list is item 0 and if no item is selected the value is -1.
 
-        \param value Receieves the index of the currently selected item or -1 if no selection.
+        \param value Receives the index of the currently selected item or -1 if no selection.
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -7814,12 +7814,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -7872,12 +7872,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -8202,7 +8202,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -8270,7 +8270,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -8289,10 +8289,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -8324,8 +8324,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -8343,7 +8343,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -8372,9 +8372,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -8388,9 +8388,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -8398,7 +8398,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -8439,13 +8439,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -8454,9 +8454,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -8491,7 +8491,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -8610,7 +8610,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -8729,7 +8729,7 @@ library Exodus
     /**
         \brief Get whether the control sizes itself automatically to accommodate its contents.
 
-        Retreive whether the control sizes itself automatically to accommodate its contents.
+        Retrieve whether the control sizes itself automatically to accommodate its contents.
 
 		Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
 				 
@@ -8763,7 +8763,7 @@ library Exodus
     /**
         \brief Gets the cut of the inner bevel.
 
-        Retreives the cut of the inner bevel.
+        Retrieves the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -8807,7 +8807,7 @@ library Exodus
     /**
         \brief Get the control's bevel style.
 
-        Retreive the control's bevel style.
+        Retrieve the control's bevel style.
 
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
@@ -8940,7 +8940,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -8979,7 +8979,7 @@ library Exodus
         \brief Gets the property indicating control forces text case.
 
         Use CharCase to force the text contents of the control into either upper 
-        or lower case.  Once converted the original case information cannont be
+        or lower case.  Once converted the original case information cannot be
         recovered.
 
         value can be:
@@ -8999,7 +8999,7 @@ library Exodus
         \brief Sets the property indicating control forces text case.
 
         Use CharCase to force the text contents of the control into either upper 
-        or lower case.  Once converted the original case information cannont be
+        or lower case.  Once converted the original case information cannot be
         recovered.
 
         value can be:
@@ -9227,7 +9227,7 @@ library Exodus
     /**
         \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
 
-        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+        Retrieve whether the visual indication of the selected text remains when focus shifts to another control.
 
 				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
 				 
@@ -9265,15 +9265,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -9296,15 +9296,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -9360,7 +9360,7 @@ library Exodus
    /**
         \brief Get the maximum number of characters the user can enter into the edit control.
 
-        Retreive the maximum number of characters the user can enter into the edit control.
+        Retrieve the maximum number of characters the user can enter into the edit control.
 
 		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
 				
@@ -9481,12 +9481,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -9539,12 +9539,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -9677,7 +9677,7 @@ library Exodus
     /**
         \brief Get whether the user can change the text of the edit control.
 
-        Retreive whether the user can change the text of the edit control.
+        Retrieve whether the user can change the text of the edit control.
 
 		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
  
@@ -9865,7 +9865,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -9881,7 +9881,7 @@ library Exodus
   ]
   /**
     \interface IExodusControlLabel
-    \brief <b>UNSUPPORTED</b> - A nonwindowed control that displays text on a form.
+    \brief <b>UNSUPPORTED</b> - A non-windowed control that displays text on a form.
 
     <b>UNSUPPORTED</b> 
 
@@ -9903,7 +9903,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -9922,10 +9922,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -9957,8 +9957,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -9976,7 +9976,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -10005,9 +10005,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -10021,9 +10021,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -10031,7 +10031,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -10072,13 +10072,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -10087,9 +10087,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -10124,7 +10124,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -10243,7 +10243,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -10288,7 +10288,7 @@ library Exodus
      /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -10380,7 +10380,7 @@ library Exodus
     /**
         \brief Get whether the control sizes itself automatically to accommodate its contents.
 
-        Retreive whether the control sizes itself automatically to accommodate its contents.
+        Retrieve whether the control sizes itself automatically to accommodate its contents.
 
 		Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
 				 
@@ -10739,12 +10739,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -10781,12 +10781,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -10886,7 +10886,7 @@ library Exodus
         \brief Determine how an ampersand is displayed in the label.
 
         This method determines how an ampersand is displayed in the label. When
-        set to true, any character preceeded by an ampersand appears underlined.
+        set to true, any character preceded by an ampersand appears underlined.
 
         Setting this property affects display only to enable accelerator key 
         behavior also see FocusControl.
@@ -10907,7 +10907,7 @@ library Exodus
         \brief Sets how an ampersand is displayed in the label.
 
         This method determines how an ampersand is displayed in the label. When
-        set to true, any character preceeded by an ampersand appears underlined.
+        set to true, any character preceded by an ampersand appears underlined.
 
         Setting this property affects display only to enable accelerator key 
         behavior also see FocusControl.
@@ -10916,7 +10916,7 @@ library Exodus
         \li 0 - false (an & is an &)
         \li 1 - true  (an & indicates an accelerator)
         
-        \param value Flag for & handling (0, 1 - indcates accelerator).
+        \param value Flag for & handling (0, 1 - indicates accelerator).
         \return S_OK if successful, or an error value otherwise.
     **/
     [
@@ -11065,7 +11065,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -11135,7 +11135,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -11154,10 +11154,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -11189,8 +11189,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -11208,7 +11208,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -11237,9 +11237,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -11253,9 +11253,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -11263,7 +11263,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -11304,13 +11304,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -11319,9 +11319,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -11356,7 +11356,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -11475,7 +11475,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -11628,7 +11628,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -11680,7 +11680,7 @@ library Exodus
     /**
         \brief Get the cut of the inner bevel.
 
-        Retreive the cut of the inner bevel.
+        Retrieve the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -11724,7 +11724,7 @@ library Exodus
     /**
         \brief Get the control's bevel style.
 
-        Retreive the control's bevel style.
+        Retrieve the control's bevel style.
 
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
@@ -11857,7 +11857,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -12115,7 +12115,7 @@ library Exodus
         \brief Get property indicating if user can select a range of items.
 
         This method gets the property indicating if user can select a range of 
-        items using the standard Windows methodolgies (i.e. using shift or 
+        items using the standard Windows methodologies (i.e. using shift or 
         control keys). This property works in conjunction with MultiSelect.  
         
         If both MultiSelect and ExtendedSelect are set to true then selecting 
@@ -12144,7 +12144,7 @@ library Exodus
         \brief Sets property indicating if user can select a range of items.
 
         This method sets the property indicating if user can select a range of 
-        items using the standard Windows methodolgies (i.e. using shift or 
+        items using the standard Windows methodologies (i.e. using shift or 
         control keys). This property works in conjunction with MultiSelect.  
         
         If both MultiSelect and ExtendedSelect are set to true then selecting 
@@ -12194,15 +12194,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -12225,15 +12225,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -12290,7 +12290,7 @@ library Exodus
         \brief Gets the property determining how the list box displays partial items.
 
         This method gets the property determining how the list box displays 
-        partial items.  This method has dependancies on the Style property.
+        partial items.  This method has dependencies on the Style property.
 
         If IntegralHeight is true (1) and Style is set to owner draw fixed (1),
         the list box height will always be a multiple of ItemHeight and partial 
@@ -12318,7 +12318,7 @@ library Exodus
         \brief Sets the property determining how the list box displays partial items.
 
         This method sets the property determining how the list box displays 
-        partial items.  This method has dependancies on the Style property.
+        partial items.  This method has dependencies on the Style property.
 
         If IntegralHeight is true (1) and Style is set to owner draw fixed (1),
         the list box height will always be a multiple of ItemHeight and partial 
@@ -12394,7 +12394,7 @@ library Exodus
         \brief Sets the value of a list box item by index.
 
         This method sets the value of a list box item by index.  index checking
-        is done and and if no action is taken if the index is out of bounds 
+        is done and if no action is taken if the index is out of bounds 
         (i.e. new items cannot be added to the list box with this method).
 
         \param index The index of the item to add.
@@ -12494,12 +12494,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -12552,12 +12552,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -12654,9 +12654,9 @@ library Exodus
     **/
     HRESULT _stdcall PopupMenu([out, retval] IExodusControlPopupMenu ** value /*Warning: unable to validate structure name: */ );
     /**
-        \brief Gets the width in pixels determing when horizontal scroll bars appear.
+        \brief Gets the width in pixels determining when horizontal scroll bars appear.
 
-        This method gets the width in pixels determing when horizontal scroll 
+        This method gets the width in pixels determining when horizontal scroll 
         bars appear. When ScrollWidth is greater than the size of the list box's
         client area (see ClientWidth) a horizontal scroll bar is displayed.
 
@@ -12669,9 +12669,9 @@ library Exodus
     ]
     HRESULT _stdcall ScrollWidth([out, retval] long * value );
     /**
-        \brief Sets the width in pixels determing when horizontal scroll bars appear.
+        \brief Sets the width in pixels determining when horizontal scroll bars appear.
 
-        This method sets the width in pixels determing when horizontal scroll 
+        This method sets the width in pixels determining when horizontal scroll 
         bars appear. When ScrollWidth is greater than the size of the list box's
         client area (see ClientWidth) a horizontal scroll bar is displayed.
 
@@ -12827,7 +12827,7 @@ library Exodus
         Gets the displayed dialog base units for each tab character in item strings.
         
 		\p value is in dialog base units and the default setting is 0. 0 
-        indicates the width will be specificed by Windows (i.e. 2 dialog base
+        indicates the width will be specified by Windows (i.e. 2 dialog base
         units).
 				
         \param value Receives the current TabWidth in dialog base units.
@@ -12844,7 +12844,7 @@ library Exodus
         Sets the displayed dialog base units for each tab character in item strings.
         
 		\p value is in dialog base units and the default setting is 0. 0 
-        indicates the width will be specificed by Windows (i.e. 2 dialog base
+        indicates the width will be specified by Windows (i.e. 2 dialog base
         units).
 				
         \param value The new value of TabWidth in dialog base units.
@@ -12880,7 +12880,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -12926,7 +12926,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -12945,10 +12945,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -12980,8 +12980,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -12999,7 +12999,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -13028,9 +13028,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -13044,9 +13044,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -13054,7 +13054,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -13095,13 +13095,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -13110,9 +13110,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -13147,7 +13147,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -13266,7 +13266,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -13315,7 +13315,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -13407,7 +13407,7 @@ library Exodus
     /**
         \brief Get whether the control sizes itself automatically to accommodate its contents.
 
-        Retreive whether the control sizes itself automatically to accommodate its contents.
+        Retrieve whether the control sizes itself automatically to accommodate its contents.
 
 		Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
 				 
@@ -13441,7 +13441,7 @@ library Exodus
     /**
         \brief Gets the cut of the inner bevel.
 
-        Retreives the cut of the inner bevel.
+        Retrieves the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -13534,7 +13534,7 @@ library Exodus
     /**
         \brief Get the width of the inner and outer bevels.
 
-        Retreive the width of the inner and outer bevels.
+        Retrieve the width of the inner and outer bevels.
 
 				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
 				 
@@ -13608,7 +13608,7 @@ library Exodus
     /**
         \brief Get the width of the control's border
 
-        Retreive the width of the control's border
+        Retrieve the width of the control's border
 
         Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
 				 
@@ -13642,7 +13642,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -13782,7 +13782,7 @@ library Exodus
     /**
         \brief Get whether the docking manager is used in drag-and-dock operations.
 
-        Retreive whether the docking manager is used in drag-and-dock operations.
+        Retrieve whether the docking manager is used in drag-and-dock operations.
 
         Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
 
@@ -13820,7 +13820,7 @@ library Exodus
     /**
         \brief Get whether the control can be the target of drag-and-dock operations.
 
-        Retreive whether the control can be the target of drag-and-dock operations.
+        Retrieve whether the control can be the target of drag-and-dock operations.
 
 		Set DockSite to true to allow other controls to be docked to this windowed control.
 				
@@ -13986,7 +13986,7 @@ library Exodus
     /**
         \brief Get how the panel repaints itself when it is resized.
 
-        Retreive how the panel repaints itself when it is resized.
+        Retrieve how the panel repaints itself when it is resized.
 
 				FullRepaint controls how the panel responds when it is resized. When FullRepaint is true, the entire panel, including the beveled border repaints when the size changes. When FullRepaint is false, only the area inside the beveled border repaints.
 				
@@ -14038,7 +14038,7 @@ library Exodus
     /**
         \brief Get whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
 
-        Retreive whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
+        Retrieve whether a panel that is used as a toolbar is replaced by a toolbar supplied by an OLE server.
 
 				Set the Locked property to false when the panel is used as a toolbar by a TOleContainer component. Any panels aligned to a TOleContainer are assumed to be replaceable toolbars unless the Locked property is true. Prevent the panel from being replaced by an OLE server's toolbar by setting the panel's Locked property to true.
 				
@@ -14149,12 +14149,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -14207,12 +14207,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -14473,7 +14473,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -14508,7 +14508,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -14527,10 +14527,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -14562,8 +14562,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -14816,7 +14816,7 @@ library Exodus
     /**
         \brief Set numeric ID for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords. If \p value is an empty string (zero length), no help topic is provided for this control.        
+        Supports context-sensitive help for applications that use topic keywords. If \p value is an empty string (zero length), no help topic is provided for this control.        
 				
         \param value The new help topic keyword.
         \return S_OK if successful, or an error value otherwise.
@@ -14978,7 +14978,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -14997,10 +14997,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -15032,8 +15032,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -15051,7 +15051,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -15080,9 +15080,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -15096,9 +15096,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -15106,7 +15106,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -15147,13 +15147,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -15162,9 +15162,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -15199,7 +15199,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -15318,7 +15318,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -15778,12 +15778,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -15836,12 +15836,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -16102,7 +16102,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -16173,7 +16173,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -16192,10 +16192,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -16227,8 +16227,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -16246,7 +16246,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -16275,9 +16275,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -16291,9 +16291,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -16301,7 +16301,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -16342,13 +16342,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -16357,9 +16357,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -16394,7 +16394,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -16513,7 +16513,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -16600,7 +16600,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -16692,7 +16692,7 @@ library Exodus
     /**
         \brief Get the cut of the inner bevel.
 
-        Retreive the cut of the inner bevel.
+        Retrieve the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -16787,7 +16787,7 @@ library Exodus
     /**
         \brief Get the control's bevel style.
 
-        Retreive the control's bevel style.
+        Retrieve the control's bevel style.
 
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
@@ -16831,7 +16831,7 @@ library Exodus
     /**
         \brief Get the width of the inner and outer bevels.
 
-        Retreive the width of the inner and outer bevels.
+        Retrieve the width of the inner and outer bevels.
 
 				Use BevelWidth to specify the width, in pixels, of the inner and outer bevels.
 				 
@@ -16905,7 +16905,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -16943,7 +16943,7 @@ library Exodus
     /**
         \brief Get the width of the control's border
 
-        Retreive the width of the control's border
+        Retrieve the width of the control's border
 
 				Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
 				 
@@ -17186,7 +17186,7 @@ library Exodus
     /**
         \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
 
-        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+        Retrieve whether the visual indication of the selected text remains when focus shifts to another control.
 
 				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
 				 
@@ -17220,7 +17220,7 @@ library Exodus
     /**
         \brief Get whether the scroll bars disappear when not needed.
 
-        Retreive whether the scroll bars disappear when not needed
+        Retrieve whether the scroll bars disappear when not needed
 
 				Use HideScrollBars to determine whether the scroll bars disappear from the edit control when the text appears completely within the edit window. Set HideScrollBars to false to prevent the scroll bars from flashing on and off when the contents of the rich edit control change.
 				 
@@ -17258,15 +17258,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is intercepted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -17289,15 +17289,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -17353,7 +17353,7 @@ library Exodus
     /**
         \brief Get how many lines of text there are in the control.
 
-        Retreive how many lines of text there are in the control.
+        Retrieve how many lines of text there are in the control.
 
         \param value Receives the number of lines of text.
         \return S_OK if successful, or an error value otherwise.
@@ -17366,9 +17366,9 @@ library Exodus
     /**
         \brief Get the individual lines of text in the rich text edit control.
 
-        Retreive the individual lines of text in the rich text edit control.
+        Retrieve the individual lines of text in the rich text edit control.
 
-				\param index Zero based index of which line to retreive.
+				\param index Zero based index of which line to retrieve.
 				\param value Returned String.
         \return S_OK if successful, or an error value otherwise.
     **/
@@ -17394,7 +17394,7 @@ library Exodus
     /**
         \brief Get the maximum number of characters the user can enter into the edit control.
 
-        Retreive the maximum number of characters the user can enter into the edit control.
+        Retrieve the maximum number of characters the user can enter into the edit control.
 
 		Use MaxLength to limit the number of characters that can be entered into the edit control. A value of 0 indicates that there is no application-defined limit on the length.
 				
@@ -17469,12 +17469,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -17527,12 +17527,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -17613,7 +17613,7 @@ library Exodus
     /**
         \brief Get whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
 
-        Retreive whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
+        Retrieve whether the rich edit control treats the text as plain text or rich text when streaming to or from a file.
 
 				To write the rich text in the control to a plain text file, set PlainText to true before streaming the text to a file. To ignore the rich text information encoded in a file, set PlainText to true before streaming the text to the control. To stream in the rich text attributes encoded in a file, or save the encoding of the rich text attributes to a file, set PlainText to false.
 				
@@ -17669,7 +17669,7 @@ library Exodus
     /**
         \brief Get whether the user can change the text of the edit control.
 
-        Retreive whether the user can change the text of the edit control.
+        Retrieve whether the user can change the text of the edit control.
 
 		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
  
@@ -17709,11 +17709,11 @@ library Exodus
 
         Gets property controlling whether the control has scroll bars.
 
-		Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+		Use ScrollBars to give a multi-line edit control horizontal or vertical scroll bars.
 				
 		\p value can be:
         \li 0 - none
-        \li 1 - horizonal scroll bars
+        \li 1 - horizontal scroll bars
         \li 2 - vertical scroll bars
         \li 3 - both scroll bars
 				
@@ -17730,11 +17730,11 @@ library Exodus
 
         Sets property controlling whether the control has scroll bars.
 
-        Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+        Use ScrollBars to give a multi-line edit control horizontal or vertical scroll bars.
 				
         \p value can be:
         \li 0 - none
-        \li 1 - horizonal scroll bars
+        \li 1 - horizontal scroll bars
         \li 2 - vertical scroll bars
         \li 3 - both scroll bars
 				
@@ -17869,7 +17869,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -17882,7 +17882,7 @@ library Exodus
     /**
         \brief Get whether the user can insert tab characters into the text.
 
-        Retreives property controlling whether the user can insert tab characters into the text.
+        Retrieves property controlling whether the user can insert tab characters into the text.
 
         Set WantTabs to true to allow users to enter tab characters into the text. Set WantTabs to false if you want the tab character to select the next control on the form instead.
 				
@@ -17916,7 +17916,7 @@ library Exodus
     /**
         \brief Get whether the user can insert return characters into the text.
 
-        Retreive whether the user can insert return characters into the text.
+        Retrieve whether the user can insert return characters into the text.
 
         Set WantReturns to true to allow users to enter return characters into the text. Set WantReturns to false to allow the form to handle return characters instead. 
 				
@@ -17956,7 +17956,7 @@ library Exodus
     /**
         \brief Get whether the edit control inserts soft carriage returns so text wraps at the right margin.
 
-        Retreive whether the edit control inserts soft carriage returns so text wraps at the right margin.
+        Retrieve whether the edit control inserts soft carriage returns so text wraps at the right margin.
 
 		Set WordWrap to true to make the edit control wrap text at the right margin so it fits in the client area. The wrapping is cosmetic only. The text does not include any return characters that were not explicitly entered. Set WordWrap to false to have the edit control show a separate line only where return characters were explicitly entered into the text.
  
@@ -18014,7 +18014,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -18033,10 +18033,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -18068,8 +18068,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -18087,7 +18087,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -18116,9 +18116,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -18132,9 +18132,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -18142,7 +18142,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -18183,13 +18183,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -18198,9 +18198,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -18235,7 +18235,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -18354,7 +18354,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -18798,12 +18798,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -19064,7 +19064,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -19130,7 +19130,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -19149,10 +19149,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -19184,8 +19184,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -19203,7 +19203,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -19232,9 +19232,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -19248,9 +19248,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -19258,7 +19258,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -19299,13 +19299,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -19314,9 +19314,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -19351,7 +19351,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -19470,7 +19470,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -19914,12 +19914,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -20180,7 +20180,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -20450,7 +20450,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -20469,10 +20469,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -20504,8 +20504,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -20545,7 +20545,7 @@ library Exodus
         This method gets the property determining if the accelerator keys for
         menu items can be automatically reset.  This method resets accelerator
         keys to avoid conflicts with items added at runtime.  Accelerator keys
-        for existing items will be preserved unless there is an unresolvable 
+        for existing items will be preserved unless there is an un-resolvable 
         conflict with a newly added item.
 
         value can be:
@@ -20566,7 +20566,7 @@ library Exodus
         This method sets the property determining if the accelerator keys for
         menu items can be automatically reset.  This method resets accelerator
         keys to avoid conflicts with items added at runtime.  Accelerator keys
-        for existing items will be preserved unless there is an unresolvable 
+        for existing items will be preserved unless there is an un-resolvable 
         conflict with a newly added item.
 
         value can be:
@@ -20811,7 +20811,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -20830,10 +20830,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -20865,8 +20865,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -20884,7 +20884,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -20913,9 +20913,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -20929,9 +20929,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -20939,7 +20939,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -20980,13 +20980,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -20995,9 +20995,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -21032,7 +21032,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -21151,7 +21151,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -21234,7 +21234,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -21326,7 +21326,7 @@ library Exodus
     /**
         \brief Get the cut of the inner bevel.
 
-        Retreive the cut of the inner bevel.
+        Retrieve the cut of the inner bevel.
 
 		Use BevelInner to specify whether the inner bevel has a raised, lowered, or flat look. 
 
@@ -21372,7 +21372,7 @@ library Exodus
     /**
         \brief Get the control's bevel style.
 
-        Retreive the control's bevel style.
+        Retrieve the control's bevel style.
 
 		Use BevelKind to modify the appearance of a bevel. BevelKind influences how sharply the bevel stands out.
  
@@ -21505,7 +21505,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -21752,7 +21752,7 @@ library Exodus
     /**
         \brief Get whether the visual indication of the selected text remains when focus shifts to another control.
 
-        Retreive whether the visual indication of the selected text remains when focus shifts to another control.
+        Retrieve whether the visual indication of the selected text remains when focus shifts to another control.
 
 				Set HideSelection to false when it is important to provide visual feedback of the selected portion of the text even when the edit control does not have focus. Set HideSelection to true to make the visual indication of selection appear only when the edit control has focus. HideSelection does not affect the actual value of the selection, only the visual indication. Always setting HideSelection to false can make forms containing many edit controls look busy.
 				 
@@ -21790,15 +21790,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -21821,15 +21821,15 @@ library Exodus
         is (Input Method Editor), Microsoft's solution to entering double-byte
         character sets with a standard keyboard (such as Chinese, Japanese, and 
         Korean).  This setting appears to control if IME is available for this control
-        as well as how keyboard input is interepted.
+        as well as how keyboard input is interpreted.
 
         \c value can be:
         \li 0  - disabled (user cannot enable IME)
         \li 1  - close
         \li 2  - open
         \li 3  - don't care
-        \li 4  - Single byte alphanumerics (SBC) (only for Korean/Japanese IME)
-        \li 5  - Alpha double byte alphanumerics (DBC) (only for Korean/Japanese IME)
+        \li 4  - Single byte alphanumeric (SBC) (only for Korean/Japanese IME)
+        \li 5  - Alpha double byte alphanumeric (DBC) (only for Korean/Japanese IME)
         \li 6  - Hiragana DBC (only Japanese IME)
         \li 7  - Katakana SBC (only Japanese IME)
         \li 8  - Katakana DBC (only Japanese IME)
@@ -22049,12 +22049,12 @@ library Exodus
     /**
         \brief Get where a control's color information come from
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         color.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentColor(long value) for additonal information. 
+        See ParentColor(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -22107,12 +22107,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -22211,7 +22211,7 @@ library Exodus
     /**
         \brief Get whether the user can change the text of the edit control.
 
-        Retreive whether the user can change the text of the edit control.
+        Retrieve whether the user can change the text of the edit control.
 
 		To restrict the edit control to display only, set the ReadOnly property to true. Set ReadOnly to false to allow the contents of the edit control to be edited.
  
@@ -22251,11 +22251,11 @@ library Exodus
 
         Gets property controlling whether the control has scroll bars.
 
-		Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+		Use ScrollBars to give a multi-line edit control horizontal or vertical scroll bars.
 				
 		\p value can be:
         \li 0 - none
-        \li 1 - horizonal scroll bars
+        \li 1 - horizontal scroll bars
         \li 2 - vertical scroll bars
         \li 3 - both scroll bars
 				
@@ -22272,11 +22272,11 @@ library Exodus
 
         Sets property controlling whether the control has scroll bars.
 
-        Use ScrollBars to give a multiline edit control horizontal or vertical scroll bars.
+        Use ScrollBars to give a multi-line edit control horizontal or vertical scroll bars.
 				
         \p value can be:
         \li 0 - none
-        \li 1 - horizonal scroll bars
+        \li 1 - horizontal scroll bars
         \li 2 - vertical scroll bars
         \li 3 - both scroll bars
 				
@@ -22415,7 +22415,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -22424,7 +22424,7 @@ library Exodus
     /**
         \brief Get whether the user can insert return characters into the text.
 
-        Retreive whether the user can insert return characters into the text.
+        Retrieve whether the user can insert return characters into the text.
 
         Set WantReturns to true to allow users to enter return characters into the text. Set WantReturns to false to allow the form to handle return characters instead. 
 				
@@ -22464,7 +22464,7 @@ library Exodus
     /**
         \brief Get whether the user can insert tab characters into the text.
 
-        Retreives property controlling whether the user can insert tab characters into the text.
+        Retrieves property controlling whether the user can insert tab characters into the text.
 
         Set WantTabs to true to allow users to enter tab characters into the text. Set WantTabs to false if you want the tab character to select the next control on the form instead.
 				
@@ -22563,7 +22563,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -22582,10 +22582,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -22617,8 +22617,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked property.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked property.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -22636,7 +22636,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -22665,9 +22665,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -22681,9 +22681,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -22691,7 +22691,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -22732,13 +22732,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -22747,9 +22747,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -22784,7 +22784,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -22903,7 +22903,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -22952,7 +22952,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -23044,7 +23044,7 @@ library Exodus
     /**
         \brief Get whether the control can be the target of drag-and-dock operations.
 
-        Retreive whether the control can be the target of drag-and-dock operations.
+        Retrieve whether the control can be the target of drag-and-dock operations.
 
 				Set DockSite to true to allow other controls to be docked to this windowed control.
 				
@@ -23375,12 +23375,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -23498,7 +23498,7 @@ library Exodus
     id(0x0000001B)
     ]
     /**
-        \brief Swhether rows of tabs stretch to fill the width of the control.
+        \brief Specifies whether rows of tabs stretch to fill the width of the control.
 
         Specifies whether rows of tabs stretch to fill the width of the control.
 
@@ -23889,7 +23889,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -23924,7 +23924,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -23943,10 +23943,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -23978,8 +23978,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -23997,7 +23997,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -24026,9 +24026,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -24042,9 +24042,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -24052,7 +24052,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -24093,13 +24093,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -24108,9 +24108,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -24145,7 +24145,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -24264,7 +24264,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -24722,12 +24722,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -25007,7 +25007,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -25022,7 +25022,7 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusToolbar
-    \brief Inteface to the Exodus Toolbar.
+    \brief Interface to the Exodus Toolbar.
     
     This is the interface to the Exodus toolbar.
   **/
@@ -25093,7 +25093,7 @@ library Exodus
 
         Retrieve the name of the control.
 
-        \c value must have at least 250 bytes allocated. Comparisions of
+        \c value must have at least 250 bytes allocated. Comparisons of
         control names should be case insensitive.
 
         \param value The control's name
@@ -25112,10 +25112,10 @@ library Exodus
         \note
         This is the name code uses when referencing
         the control and changing it at runtime could cause exceptions to
-        be thrown. Be very carefull when modifying the names of existing controls.
+        be thrown. Be very careful when modifying the names of existing controls.
 
         \c value must be a valid Pascal identifier. Only the
-        first 250 characters are significant and comparisions between
+        first 250 characters are significant and comparisons between
         names are case insensitive.
 
         \param value The new name of the control.
@@ -25147,8 +25147,8 @@ library Exodus
         Specify user data associated with a control.
 
         Each control has a 32 bit value associated with it that
-        may contain any data. Typical uses are as a pointer to additonal
-        information or for bitmasked properties.
+        may contain any data. Typical uses are as a pointer to additional
+        information or for bit masked properties.
 
         \param value The new user data for this control
         \return S_OK if successful, or an error value otherwise.
@@ -25166,7 +25166,7 @@ library Exodus
         \p value is in pixels.
         See Left(long value) for additional information.
 
-        \param value Left side poition of control
+        \param value Left side position of control
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Left([out, retval] long * value );
@@ -25195,9 +25195,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Get the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Get the vertical coordinate of the top edge of a control relative to its parent.
 
-        Retrieve the verticle coordinate of the top edge of a control relative to its parent.
+        Retrieve the vertical coordinate of the top edge of a control relative to its parent.
 
         \p value is in pixels.
         See Top(long value) for additional information.
@@ -25211,9 +25211,9 @@ library Exodus
     id(0x00000004)
     ]
     /**
-        \brief Set the verticle coordinate of the top edge of a control relative to its parent.
+        \brief Set the vertical coordinate of the top edge of a control relative to its parent.
 
-        Specify the verticle coordinate of the top edge of a control relative to its parent.
+        Specify the vertical coordinate of the top edge of a control relative to its parent.
 
         If the control is contained in another control, top (and left) coordinates
         are relative to the parent control. \n
@@ -25221,7 +25221,7 @@ library Exodus
 
         \p value is in pixels.
 
-        \param value New verticle position of top of control.
+        \param value New vertical position of top of control.
         \return S_OK if successful, or an error value otherwise.
         \see Left
     **/
@@ -25262,13 +25262,13 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief Get the verticle size of the control.
+        \brief Get the vertical size of the control.
 
-        Retrieve the verticle size of the control.
+        Retrieve the vertical size of the control.
 
         \p value is in pixels.
 
-        \param value The verticle size of the control.
+        \param value The vertical size of the control.
         \return S_OK if successful, or an error value otherwise.
     **/
     HRESULT _stdcall Height([out, retval] long * value );
@@ -25277,9 +25277,9 @@ library Exodus
     id(0x00000006)
     ]
     /**
-        \brief  Set the verticle size of the control.
+        \brief  Set the vertical size of the control.
 
-         Specify the verticle size of the control.
+         Specify the vertical size of the control.
 
          \p value is in pixels.
          \note For IExodusPageControl controls setting height has no effect.
@@ -25314,7 +25314,7 @@ library Exodus
         \brief Set the cursor displayed when mouse is within bounds of control.
 
         Specify the cursor displayed when the mouse pointer is within the control's
-        boundries.
+        boundaries.
 
         \p value is one of the enumerated cursor types defined by the currently
         loaded cursor set.
@@ -25433,7 +25433,7 @@ library Exodus
 
         Specify keyword for control's context-sensitive help topic.
 
-        Supports context-sensitive help for applications that use topic keyords.
+        Supports context-sensitive help for applications that use topic keywords.
         If \p value is an empty string (zero length), no help topic is
         provided for this control.
 
@@ -25478,7 +25478,7 @@ library Exodus
     /**
         \brief Get how the control aligns within its container (parent control).
 
-        Retreive how the control aligns within its container (parent control).
+        Retrieve how the control aligns within its container (parent control).
 
 		Use Align to align a control to the top, bottom, left, or right of a form or panel and have it remain there even if the size of the form, panel, or component that contains the control changes. When the parent is resized, an aligned control also resizes so that it continues to span the top, bottom, left, or right edge of the parent.
 				 
@@ -25528,9 +25528,9 @@ library Exodus
     ]
     HRESULT _stdcall Align([in] long value );
     /**
-        \brief Gets the property specifing if the form is translucent.
+        \brief Gets the property specifying if the form is translucent.
         
-        This method gets the property specifing if the form is translucent. When
+        This method gets the property specifying if the form is translucent. When
         set to true (1), use AlphaBlendValue to specify the degree of translucency.
 
         value can be:
@@ -25546,9 +25546,9 @@ library Exodus
     ]
     HRESULT _stdcall AlphaBlend([out, retval] long * value );
     /**
-        \brief Sets the property specifing if the form is translucent.
+        \brief Sets the property specifying if the form is translucent.
         
-        This method sets the property specifing if the form is translucent. When
+        This method sets the property specifying if the form is translucent. When
         set to true (1), use AlphaBlendValue to specify the degree of translucency.
 
         value can be:
@@ -25567,7 +25567,7 @@ library Exodus
         \brief Gets the degree of translucency of a translucent form.
 
         This method gets the degree of translucency of a translucent form (see 
-        AlphaBlend).  The value can be between 0 (clear) and 255 (opague). This
+        AlphaBlend).  The value can be between 0 (clear) and 255 (opaque). This
         property has no effect if AlphaBlend is set to 0 (false).
 
         \param value Receives the degree of translucency (0-255).
@@ -25582,7 +25582,7 @@ library Exodus
         \brief Sets the degree of translucency of a translucent form.
 
         This method sets the degree of translucency of a translucent form (see 
-        AlphaBlend).  The value can be between 0 (clear) and 255 (opague). This
+        AlphaBlend).  The value can be between 0 (clear) and 255 (opaque). This
         property has no effect if AlphaBlend is set to 0 (false).
 
         \param value Receives the degree of translucency (0-255).
@@ -25632,7 +25632,7 @@ library Exodus
     /**
         \brief Get whether the control sizes itself automatically to accommodate its contents.
 
-        Gets property specifing whether the control sizes itself automatically 
+        Gets property specifying whether the control sizes itself automatically 
         to accommodate its contents.
 
 		Use AutoSize to specify whether the control sizes itself automatically. When AutoSize is true, the control resizes automatically when its contents change.
@@ -25707,7 +25707,7 @@ library Exodus
     /**
         \brief Get whether the edit control has a single line border around the client area.
 
-        Retreive whether the edit control has a single line border around the client area.
+        Retrieve whether the edit control has a single line border around the client area.
 
 		Use BorderStyle to affect the sharpness with which the client area of the edit control stands out.
 				 
@@ -25745,7 +25745,7 @@ library Exodus
     /**
         \brief Get the width of the control's border
 
-        Retreive the width of the control's border
+        Retrieve the width of the control's border
 
 		Use BorderWidth to get or set the width of the control's border. Graphics or text drawn by the control is clipped to the area within the border.
 				 
@@ -25927,7 +25927,7 @@ library Exodus
         Note: TransparentColor does not work on all systems. The application must be running under Windows 2000 or better, with adequate hardware.
 
         value can be:
-        \li 0 - color is opague.
+        \li 0 - color is opaque.
         \li 1 - color is transparent.
        
         \param value Receives the value of the property (0 or 1).
@@ -25948,7 +25948,7 @@ library Exodus
         Note: TransparentColor does not work on all systems. The application must be running under Windows 2000 or better, with adequate hardware.
 
         value can be:
-        \li 0 - color is opague.
+        \li 0 - color is opaque.
         \li 1 - color is transparent.
        
         \param value The new value of the property (0 or 1).
@@ -26012,7 +26012,7 @@ library Exodus
     /**
         \brief Get whether the docking manager is used in drag-and-dock operations.
 
-        Retreive whether the docking manager is used in drag-and-dock operations.
+        Retrieve whether the docking manager is used in drag-and-dock operations.
 
         Use UseDockManager to get or set whether a docking manager is used in drag-and-dock operations. 
 
@@ -26048,10 +26048,10 @@ library Exodus
     ]
     HRESULT _stdcall UseDockManager([in] long value );
     /**
-        \brief Gets property specifing which monitor is used to display the form.
+        \brief Gets property specifying which monitor is used to display the form.
 
 
-        This method gets property specifing which monitor is used to display 
+        This method gets property specifying which monitor is used to display 
         the form.
 
         value can be:
@@ -26069,10 +26069,10 @@ library Exodus
     ]
     HRESULT _stdcall DefaultMonitor([out, retval] long * value );
     /**
-        \brief Sets property specifing which monitor is used to display the form.
+        \brief Sets property specifying which monitor is used to display the form.
 
 
-        This method sets property specifing which monitor is used to display 
+        This method sets property specifying which monitor is used to display 
         the form.
 
         value can be:
@@ -26092,7 +26092,7 @@ library Exodus
     /**
         \brief Get whether the control can be the target of drag-and-dock operations.
 
-        Retreive whether the control can be the target of drag-and-dock operations.
+        Retrieve whether the control can be the target of drag-and-dock operations.
 
 		Set DockSite to true to allow other controls to be docked to this windowed control.
 				
@@ -26228,12 +26228,12 @@ library Exodus
     /**
         \brief Is the control using its parent's font?
 
-        Retreive property indicating whether or not control should use its parent's
+        Retrieve property indicating whether or not control should use its parent's
         font.
 
         \p value will be either 0 (FALSE) or 1 (TRUE).
 
-        See ParentFont(long value) for additonal information. 
+        See ParentFont(long value) for additional information. 
 
         \param value Using parent's font?
         \return S_OK if successful, or an error value otherwise.
@@ -26346,7 +26346,7 @@ library Exodus
         \brief Gets the property indicating the form should receive keyboard events before the active control.
 
         This method gets the property indicating the form should receive keyboard
-        events before the active control.  If this propety is true (1), keyboard 
+        events before the active control.  If this property is true (1), keyboard 
         events occur on the form before the active control, if false the form does 
         not receive events.  value can be true (1) and false (0).
         
@@ -26365,7 +26365,7 @@ library Exodus
         \brief Sets the property indicating the form should receive keyboard events before the active control.
 
         This method sets the property indicating the form should receive keyboard
-        events before the active control.  If this propety is true (1), keyboard 
+        events before the active control.  If this property is true (1), keyboard 
         events occur on the form before the active control, if false the form does 
         not receive events.  value can be true (1) and false (0).
         
@@ -26563,9 +26563,9 @@ library Exodus
         \li 1 - Form appears as determined by the OS. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
         \li 2 - Form retains design time size, but the OS chooses the position. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
         \li 3 - Form appears in design time position, but OS chooses the size.
-        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systemsthe form can be moved so it fits on one monitor.
+        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systems the form can be moved so it fits on one monitor.
         \li 5 - Form retains the design time size, but is positioned in the center of the screen (no adjustments made for multi-monitor systems).
-        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used ona main form it acts like 4.
+        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used on a main form it acts like 4.
         \li 7 - Form retains the design time size, but is positioned in the center of the form specified by the Owner property. If Owner does not specify a form, acts like 6.
 
         \param value Receives the value of the property (0-7).
@@ -26585,9 +26585,9 @@ library Exodus
         \li 1 - Form appears as determined by the OS. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
         \li 2 - Form retains the design time size, but the OS chooses the position. Each time the application is run, the form moves down & to the right (does not apply to pop-up or child windows).
         \li 3 - Form appears in design time position, but OS chooses the size.
-        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systemsthe form can be moved so it fits on one monitor.
+        \li 4 - Form retains the design time size, but is positioned in the center of the screen. In multi-monitor systems the form can be moved so it fits on one monitor.
         \li 5 - Form retains the design time size, but is positioned in the center of the screen (no adjustments made for multi-monitor systems).
-        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used ona main form it acts like 4.
+        \li 6 - Form retains the design time size, but is positioned near the center of the application's main form (no adjustments are made for multi-monitor systems).  This should only be used with secondary forms, if used on a main form it acts like 4.
         \li 7 - Form retains the design time size, but is positioned in the center of the form specified by the Owner property. If Owner does not specify a form, acts like 6.
 
         \param value Receives the value of the property (0-7).
@@ -26604,7 +26604,7 @@ library Exodus
         This method gets the property representing the proportions of a printed 
         form.
         value can be:
-        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distored.
+        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distorted.
         \li 1 - The form is printed approximately the size appearing on screen.
         \li 2 - The form is printed using the screen proportions but in a size fitting the printed page.
 
@@ -26622,7 +26622,7 @@ library Exodus
         This method sets the property representing the proportions of a printed 
         form.
         value can be:
-        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distored.
+        \li 0 - No scaling done. The printed form and it's onscreen appearance may be distorted.
         \li 1 - The form is printed approximately the size appearing on screen.
         \li 2 - The form is printed using the screen proportions but in a size fitting the printed page.
 
@@ -26667,9 +26667,9 @@ library Exodus
     ]
     HRESULT _stdcall Scaled([in] long value );
     /**
-        \brief Gets the property specifing if a form snaps to the edge of the screen.
+        \brief Gets the property specifying if a form snaps to the edge of the screen.
 
-        This method gets the property specifing if a form snaps to the edge of 
+        This method gets the property specifying if a form snaps to the edge of 
         the screen when the form is moved at runtime.  To determine how close the 
         form needs be before snapping to the screen edges use SnapBuffer.
 
@@ -26682,9 +26682,9 @@ library Exodus
     ]
     HRESULT _stdcall ScreenSnap([out, retval] long * value );
     /**
-        \brief Sets the property specifing if a form snaps to the edge of the screen.
+        \brief Sets the property specifying if a form snaps to the edge of the screen.
 
-        This method sets the property specifing if a form snaps to the edge of 
+        This method sets the property specifying if a form snaps to the edge of 
         the screen when the form is moved at runtime.  To determine how close the 
         form needs be before snapping to the screen edges use SnapBuffer.
 
@@ -26743,9 +26743,9 @@ library Exodus
     **/
     HRESULT _stdcall ShowHint([in] long value );
     /**
-        \brief Gets the value specifing the distance for screen snap.
+        \brief Gets the value specifying the distance for screen snap.
 
-        This method gets the value specifing the distance for screen snap in 
+        This method gets the value specifying the distance for screen snap in 
         pixels (see ScreenSnap).
 
         \param value Receives the value of the property (in pixels).
@@ -26757,9 +26757,9 @@ library Exodus
     ]
     HRESULT _stdcall SnapBuffer([out, retval] long * value );
     /**
-        \brief Sets the value specifing the distance for screen snap.
+        \brief Sets the value specifying the distance for screen snap.
 
-        This method sets the value specifing the distance for screen snap in 
+        This method sets the value specifying the distance for screen snap in 
         pixels (see ScreenSnap).
 
         \param value The new value of the property (in pixels).
@@ -26795,7 +26795,7 @@ library Exodus
         Specify whether or not the control appears on screen.
 
         \p value must either be 0 (FALSE, invisible) or 1 (TRUE, visible). Any
-        other value will be ignored and visiblity will not change.
+        other value will be ignored and visibility will not change.
 
         \param value The new visibility state of the control.
         \return S_OK if successful, or an error value otherwise.
@@ -26838,7 +26838,7 @@ library Exodus
     /**
         \brief Gets the count of items in the form's menu.
 
-        This method gets the count of items inthe form'smenu.
+        This method gets the count of items in the form’s menu.
 
         \param value Receives the count of items in the form's menu.
         \return S_OK if successful, or an error value otherwise.
@@ -26872,7 +26872,7 @@ library Exodus
     oleautomation
   ]
   /**\interface IExodusLogger
-    \brief Inteface for logging of messages.
+    \brief Interface for logging of messages.
     
     This Interface defines methods for both adding and retrieving messages from a persistent store.
     Items are logged and retrieved via JID and optionally date.
@@ -26971,7 +26971,7 @@ library Exodus
     /**
         \brief <b>UNSUPPORTED</b> - Is message log retrieval by date supported.
 
-        <b>UNSUPPORTED</b> - Queres the plugin to determine if the plugin supports
+        <b>UNSUPPORTED</b> - Queries the plugin to determine if the plugin supports
         retrieving message logs by specific date.
 
         \param value True if message log retrieval by date is supported, False if not.
@@ -26985,3 +26985,4 @@ library Exodus
   };
 
 };
+
