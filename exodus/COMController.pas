@@ -55,7 +55,6 @@ type
       FullJID: WordBool); safecall;
     function getAgentService(const Server, Service: WideString): WideString;
       safecall;
-    procedure getAgentList(const Server: WideString); safecall;
     function generateID: WideString; safecall;
     function Get_IsInvisible: WordBool; safecall;
     function Get_IsPaused: WordBool; safecall;
@@ -997,12 +996,6 @@ begin
     if (e = nil) then
         exit;
     result := e.Jid.full;
-end;
-
-{---------------------------------------}
-procedure TExodusController.getAgentList(const Server: WideString);
-begin
-    // XXX: COM interface for agents/entities
 end;
 
 {---------------------------------------}
