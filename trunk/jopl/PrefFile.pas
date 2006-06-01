@@ -600,7 +600,7 @@ begin
         Result.AddObject(cp.title, cp);
     end;
 
-    Result.Sort();
+    //Result.Sort();
     ptags.Free();
 end;
 
