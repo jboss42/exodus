@@ -153,6 +153,9 @@ type
     procedure popCopyClick(Sender: TObject);
     procedure popCopyAllClick(Sender: TObject);
     procedure Print1Click(Sender: TObject);
+    procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -459,7 +462,8 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    TExodusChat(ComController).fireRecvMsg(body, xml);
+    if not (TExodusChat(ComController).fireRecvMsg(body, xml)) then
+        exit;
 
     // We are getting a msg
     if (tag.getAttribute('type') = 'groupchat') then
@@ -1484,6 +1488,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRoom.MsgOutKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    TExodusChat(ComController).fireMsgKeyUp(Key, Shift);
+    inherited;
+end;
+{---------------------------------------}
+procedure TfrmRoom.MsgOutKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    TExodusChat(ComController).fireMsgKeyUp(Key, Shift);
+    inherited;
+end;
+{---------------------------------------}
 procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
     tmps: Widestring;
@@ -1496,7 +1514,7 @@ begin
     if (Key = #0) then exit;
 
     // dispatch key-presses to Plugins
-    TExodusChat(ComController).fireMsgKeyPress(Key);
+    //TExodusChat(ComController).fireMsgKeyPress(Key);
 
     // Send the msg if they hit return
     if (Key = #09) then begin
@@ -1575,7 +1593,6 @@ begin
         _nick_idx := 0;
     end;
 end;
-
 {---------------------------------------}
 procedure TfrmRoom.btnCloseClick(Sender: TObject);
 begin

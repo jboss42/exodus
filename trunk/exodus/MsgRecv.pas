@@ -895,7 +895,7 @@ begin
     if (ComController = nil) then exit;
 
     // dispatch key-presses to Plugins
-    TExodusChat(ComController).fireMsgKeyPress(Key);
+    //TExodusChat(ComController).fireMsgKeyPress(Key);
     inherited;
 end;
 
