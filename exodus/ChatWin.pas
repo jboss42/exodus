@@ -59,7 +59,6 @@ type
     PrintDialog1: TPrintDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure doHistory(Sender: TObject);
     procedure doProfile(Sender: TObject);
     procedure doAddToRoster(Sender: TObject);
@@ -87,6 +86,9 @@ type
     procedure imgAvatarPaint(Sender: TObject);
     procedure imgAvatarClick(Sender: TObject);
     procedure PrintHistory1Click(Sender: TObject);
+    procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -674,7 +676,8 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    TExodusChat(chat_object.ComController).fireRecvMsg(body, xml);
+    if (not TExodusChat(chat_object.ComController).fireRecvMsg(body, xml)) then
+        exit;
 
     // make sure we are visible..
     if (not visible) then begin
@@ -854,15 +857,32 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
 begin
-    if (Key = #0) then exit;
+    //if (Key = #0) then exit;
     if (chat_object = nil) then exit;
 
     // dispatch key-presses to Plugins
-    TExodusChat(chat_object.ComController).fireMsgKeyPress(Key);
-
+    TExodusChat(chat_object.ComController).fireMsgKeyDown(Key, Shift);
     inherited;
+end;
+{---------------------------------------}
+ procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
+begin
+    if (Key = #0) then exit;
+    inherited;
+end;
+{---------------------------------------}
+procedure TfrmChat.MsgOutKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    //if (Key = #0) then exit;
+    if (chat_object = nil) then exit;
+    // dispatch key-presses to Plugins
+    TExodusChat(chat_object.ComController).fireMsgKeyUp(Key, Shift);
+    inherited;
+
 end;
 
 {---------------------------------------}
