@@ -193,7 +193,8 @@ begin
 
     // init the cmd line stuff
     cli_priority := -1;
-    cli_status := _('Available');
+    // SLK:  Why would we init the status?
+    //cli_status := _('Available');
     cli_show := '';
     jid := nil;
     invisible := false;

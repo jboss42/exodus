@@ -45,6 +45,7 @@ type
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure chkSaveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure txtTitleChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -139,6 +140,13 @@ end;
 
     Self.Close;
 end;
+{---------------------------------------}
+procedure TfrmCustomPres.txtTitleChange(Sender: TObject);
+begin
+    if (chkSave.Checked) then begin
+        frameButtons1.btnOK.Enabled := not (txtTitle.Text = '');
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmCustomPres.frameButtons1btnCancelClick(Sender: TObject);
@@ -156,6 +164,17 @@ begin
     txtTitle.Enabled := e;
     lblHotkey.Enabled := e;
     txtHotkey.Enabled := e;
+    
+    if (not e) then begin
+        frameButtons1.btnOK.Enabled := true;
+    end
+    else begin
+        if (txtTitle.Text = '') then
+            txtTitle.Text := txtStatus.Text;
+        txtTitle.SetFocus();
+        txtTitle.SelectAll();
+    end;
+
 end;
 
 {---------------------------------------}
