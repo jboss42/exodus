@@ -236,7 +236,6 @@ type
     _cur_go: TJabberGroup;          // current group object
     _cur_status: integer;           // current status for the current item
     _last_search: integer;          // last item found by search
-    _cur_show: Widestring;          // current pres <show> type
 
     _brand_muc: boolean;
     _brand_ft: boolean;
@@ -1619,8 +1618,10 @@ begin
     end;
 
     s := Lowercase(MainSession.Status);
-    if ((s <> '') and (s <> _cur_show)) then begin
-        _cur_show := s;
+    {SLK:  MainSession presence is not updated on disconnect,
+           so MainSession.Status will have last status value and
+           we don't want to display it for Offline show }
+    if ((s <> '') and (show <> 'offline')) then begin
         lblStatusLink.Caption := lblStatusLink.Caption + ' (' + MainSession.Status + ')';
     end;
 

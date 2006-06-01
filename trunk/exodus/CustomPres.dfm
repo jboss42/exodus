@@ -45,17 +45,25 @@ object frmCustomPres: TfrmCustomPres
     Width = 313
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 5
+    TabStop = True
+    ExplicitTop = 227
+    ExplicitWidth = 313
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 313
       Height = 34
+      ExplicitWidth = 313
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 313
+        ExplicitWidth = 313
       end
       inherited Panel1: TPanel
         Left = 153
         Height = 29
+        ExplicitLeft = 153
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -73,7 +81,7 @@ object frmCustomPres: TfrmCustomPres
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 0
-    Items.WideStrings = (
+    Items.Strings = (
       'Chat'
       'Available'
       'Away'
@@ -139,6 +147,7 @@ object frmCustomPres: TfrmCustomPres
       Height = 21
       Enabled = False
       TabOrder = 0
+      OnChange = txtTitleChange
     end
     object txtHotkey: THotKey
       Left = 80
