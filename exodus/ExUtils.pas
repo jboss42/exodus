@@ -54,7 +54,7 @@ procedure ClearAllRoomLogs();
 
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
-procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload
+procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload;
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
 procedure AssignUnicodeHighlight(f: TFont; font_size: short);
 procedure AssignUnicodeURL(f: TFont; font_size: short);
