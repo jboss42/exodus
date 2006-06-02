@@ -31,7 +31,7 @@
   <property name="runner" value="c:\program files\exodus"/>
 
   <property name="opts.delphi" 
-	    value='-LUvcl -LUrtl -B -Q -U"${delphi}\Lib" -U"${delphi}\Lib\Indy9" -GD -N.\output'/>
+	    value='-DINDY9 -LUvcl -LUrtl -B -Q -U"${delphi}\Lib" -U"${delphi}\Lib\Indy9" -GD -N.\output'/>
   <property name="opts.jcl" 
 	    value='-I"${JCL}" -U"${JCL}" -U"${JCL}\common" -U"${JCL}\vcl" -U"${JCL}\windows"'/>
 
@@ -96,26 +96,26 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
   </target>
 
   <target name="idlehooks" depends="check, clean">
-    <exec dir="exodus" executable="${dcc}">
+    <exec dir="exodus" executable="${dcc}" failonerror="true">
       <arg line="${opts.delphi}"/>
       <arg value="IdleHooks.dpr"/>
     </exec>
   </target>
 
   <target name="resources" depends="check">
-    <exec dir="exodus" executable="${rcc}">
+    <exec dir="exodus" executable="${rcc}" failonerror="true">
       <arg value="version.rc"/>
     </exec>
-    <exec dir="exodus" executable="${rcc}">
+    <exec dir="exodus" executable="${rcc}" failonerror="true">
       <arg value="xml.rc"/>
     </exec>
-    <exec dir="exodus" executable="${rcc}">
+    <exec dir="exodus" executable="${rcc}" failonerror="true">
       <arg value="iehtml.rc"/>
     </exec>
   </target>
 
   <target name="exodus" depends="resources">
-    <exec dir="exodus" executable="${dcc}">
+    <exec dir="exodus" executable="${dcc}" failonerror="true">
       <arg line='${opts.delphi}'/> 
       <arg line='${opts.jcl}'/>
       <arg value="-DExodus"/>
@@ -127,7 +127,11 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
   </target>
 
   <target name="gettext" depends="check">
-    <apply dir="exodus" executable="${dxgettext}" parallel="true" verbose="true">
+    <apply dir="exodus" 
+	   executable="${dxgettext}" 
+	   parallel="true" 
+	   verbose="true"
+	   failonerror="true">
       <fileset dir="exodus">
 	<include name="*.pas"/>
 	<include name="*.inc"/>
@@ -150,8 +154,11 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
 	<include name="*.dfm"/>
       </fileset>
     </apply>
-    <apply dir="exodus" executable="${msgfmt}" 
-	   dest="exodus/locale" verbose="true">
+    <apply dir="exodus" 
+	   executable="${msgfmt}" 
+	   dest="exodus/locale" 
+	   verbose="true"
+	   failonerror="true">
       <fileset dir="exodus/locale">
 	<include name="**/default.po"/>
       </fileset>
@@ -165,7 +172,7 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
   </target>
 
   <target name="msn" depends="check">
-    <exec dir="exodus/msn-emoticons" executable="${dcc}">
+    <exec dir="exodus/msn-emoticons" executable="${dcc}" failonerror="true">
       <arg line='${opts.delphi}'/>
       <arg value="-Noutput"/>
       <arg value="msn_emoticons.dpr"/>
@@ -173,7 +180,7 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
   </target>
 
   <target name="yahoo" depends="check">
-    <exec dir="exodus/yahoo-emoticons" executable="${dcc}">
+    <exec dir="exodus/yahoo-emoticons" executable="${dcc}" failonerror="true">
       <arg line='${opts.delphi}'/>
       <arg value="-Noutput"/>
       <arg value="yahoo_emoticons.dpr"/>
@@ -194,7 +201,7 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
       <property name="TNT" value="${TNT}"/>
       <property name="exodus" value="${basedir}"/>
       <property name="exodus.includes" 
-		value="-U${basedir}/jopl -U${basedir}/exodus/output"/>
+		value="-U${basedir}/exodus/output"/>
       <dirset dir="exodus/plugins" includes="*"/>
     </subant>
   </target>
@@ -206,7 +213,7 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
 	 includesfile="exodus/zipfiles.txt">
       <fileset dir="exodus/plugins" includes="*.dll"/>
     </zip>
-    <exec dir="exodus" executable="${NSIS}">
+    <exec dir="exodus" executable="${NSIS}" failonerror="true">
       <arg value="/v1"/>
       <arg value="/DDAILY"/>
       <arg value="exodus-new.nsi"/>
