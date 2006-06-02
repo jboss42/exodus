@@ -1575,6 +1575,7 @@ begin
         x.setAttribute('date_enabled', BoolToStr(Value.IsDateEnabled));
     end;
     MainSession.FireEvent('/session/logger', x);
+    x.Free();
 end;
 
 {---------------------------------------}
@@ -1596,6 +1597,7 @@ begin
         x.setAttribute('date_enabled', BoolToStr(Value.IsDateEnabled));
     end;
     MainSession.FireEvent('/session/room-logger', x);
+    x.Free();
 end;
 
 procedure TExodusController.AddStringlistValue(const Key, Value: WideString);
