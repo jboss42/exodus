@@ -42,6 +42,8 @@ type
         testaa: boolean;
         ssl_ok: boolean;
         test_menu: boolean;
+
+        constructor create();
     end;
 
 procedure PlayXMPPActions();
@@ -140,6 +142,19 @@ var
     _xmpp_action_list: TList;
 
 
+constructor TExStartParams.create();
+begin
+    inherited;
+    auto_login := false;
+    priority := 0;
+    show := '';
+    status := '';
+    debug := false;
+    minimized := false;
+    testaa := false;
+    ssl_ok := false;
+    test_menu := false;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
