@@ -165,7 +165,8 @@ begin
         cap := jid;
 
     // make sure this JID supports MUC
-    if ((ritem.tag <> nil) and
+    if ((ritem <> nil) and
+        (ritem.tag <> nil) and
         (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
 
         // if this person can not do offline msgs, and they are offline, bail
@@ -182,7 +183,10 @@ begin
 
     n := lstJIDS.Items.Add();
     n.Caption := cap;
-    n.SubItems.Add(ritem.Jid.getDisplayFull());
+    if ritem <> nil then
+        n.SubItems.Add(ritem.Jid.getDisplayFull())
+    else
+        n.SubItems.Add(jid);
 end;
 
 {---------------------------------------}

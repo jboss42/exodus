@@ -92,9 +92,9 @@ uses
     Avatar, NewUser, RosterImages,   
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
-    Browser, ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
+    Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
-    JabberUtils, ExUtils,  ExResponders, MsgDisplay,
+    JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger;
 
 const
@@ -558,20 +558,28 @@ var
     querytype: string;
     pairs: string;
 begin
-    tag := nil;
     querytype := '';
 
-    DebugMsg('Got URI: ' + uri);
+   DebugMsg('Got URI: ' + uri);
+
     if uri_regex.Exec(uri) then begin
+        // iauthxmpp  2@3
+        // ipathxmpp  6@7/9
+        // iquerytype 11
+        // ipair      12
+        // ifragment  14
+
         if (uri_regex.Match[2] <> '') and (uri_regex.Match[3] <> '') then begin
-            jid := TJabberID.Create(percentDecode(uri_regex.Match[2]),
-                                                  uri_regex.Match[3],
+            jid := TJabberID.Create(percentDecode(xmpp_nodeprep(uri_regex.Match[2])),
+                                                  xmpp_nameprep(uri_regex.Match[3]),
                                                   '');
             connect_node := TXMLTag.Create('connect');
         end;
 
         if uri_regex.Match[6] = '' then exit;
 
+        // Note: stringprep will be applied later.
+        // This is just to ensure structure is correct.
         target := TJabberID.Create(percentDecode(uri_regex.Match[6]),
                                    uri_regex.Match[7],
                                    percentDecode(uri_regex.Match[9]));
@@ -581,8 +589,8 @@ begin
         if querytype = '' then querytype := 'message';  // I guess.
     end
     else if im_regex.Exec(uri) then begin
-        target := TJabberID.Create(percentDecode(im_regex.Match[2], true),
-                                   im_regex.Match[3],
+        target := TJabberID.Create(xmpp_nodeprep(percentDecode(im_regex.Match[2], true)),
+                                   xmpp_nameprep(im_regex.Match[3]),
                                    '');
         if im_regex.Match[1] = 'im' then
             querytype := 'message'
@@ -594,24 +602,18 @@ begin
     else
         exit;
 
-    if querytype = 'message' then begin
-        tag := TXMLTag.Create('chat');
-        // todo: if there is a subject, do it as message, instead
-    end
-    else if querytype = 'subscribe' then begin
-        tag := TXMLTag.Create('subscribe');
-    end
-    else if querytype = 'join' then begin
-        tag := TXMLTag.Create('groupchat');
-    end
-    else if querytype = 'register' then begin
-        tag := TXMLTag.Create('register');
-    end
-    else if querytype = 'disco' then begin
-        tag := TXMLTag.Create('disco');
-    end;
+    tag := TXMLTag.Create(querytype);
 
     if tag <> nil then begin
+        if pairs <> '' then begin
+            if pair_regex.Exec(pairs) then begin
+                tag.AddBasicTag(pair_regex.Match[1], percentDecode(pair_regex.Match[2]));
+                while (pair_regex.ExecNext) do begin
+                    tag.AddBasicTag(pair_regex.Match[1], percentDecode(pair_regex.Match[2]));
+                end;
+            end;
+        end;
+
         tag.setAttribute('jid', target.full);
         _xmpp_action_list.Add(tag);
     end;
@@ -737,9 +739,14 @@ end;
 {---------------------------------------}
 procedure PlayXMPPActions();
 var
-    i : integer;
+    i,k : integer;
     node: TXMLTag;
-    jid: WideString;
+    j: WideString;
+    jid: TJabberID;
+    msgRcv: TfrmMsgRecv;
+    chatWin: TfrmChat;
+    tags: TXMLTagList;
+    jids: TWideStringList;
 begin
     if _xmpp_action_list.Count > 0 then begin
         SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
@@ -748,42 +755,55 @@ begin
 
     for i := 0 to _xmpp_action_list.Count - 1 do begin
         node := TXMLTag(_xmpp_action_list[i]);
-        jid := node.GetAttribute('jid');
-        if (node.Name = 'chat') then begin
-            if (jid <> '') then
-                StartChat(jid, '', true);
-        end
-        else if (node.Name = 'groupchat') then begin
-            if (jid <> '') then begin
-                StartRoom(jid, '');
+        j := node.GetAttribute('jid');
+        if j = '' then
+            continue;
+        jid := TJabberID.Create(j);
+
+        if (node.Name = 'message') then begin
+            if node.GetBasicText('type') = 'normal' then begin
+                msgRcv := StartMsg(jid.full);
+                msgRcv.txtSendSubject.Text := node.GetBasicText('subject');
+                msgRcv.txtMsg.Text := node.GetBasicText('body');
+            end
+            else begin
+                chatWin := StartChat(jid.jid, jid.resource, true);
+                chatWin.MsgOut.Text := node.GetBasicText('body');
             end;
+        end
+        else if (node.Name = 'chat') then begin
+            chatWin := StartChat(jid.jid, jid.resource, true);
+            chatWin.MsgOut.Text := node.GetBasicText('body');
+        end
+        else if (node.Name = 'join') then begin
+            StartRoom(jid.jid, jid.resource, node.GetBasicText('password'), True, True);
+        end
+        else if (node.Name = 'invite') then begin
+            StartRoom(jid.jid, jid.resource, node.GetBasicText('password'), True, True);
+            tags := node.QueryTags('jid');
+            if (tags.Count > 0) then begin
+                jids := TWideStringList.Create();
+                for k := 0 to tags.Count - 1 do
+                    jids.Add(tags.Tags[k].Data);
+                ShowInvite(jid.jid, jids);
+                jids.Free();
+            end;
+            tags.Free();
         end
         else if (node.Name = 'subscribe') then begin
-            if (jid <> '') then begin
-                ShowAddContact(jid);
-            end;
-        end
-        else if (node.Name = 'message') then begin
-            if (jid <> '') then begin
-                StartMsg(jid);
-            end;
+            ShowAddContact(jid);
         end
         else if (node.Name = 'vcard') then begin
-            if (jid <> '') then begin
-                ShowProfile(jid);
-            end;
+            ShowProfile(jid.jid);
         end
         else if (node.Name = 'register') then begin
-            if (jid <> '') then begin
-                StartServiceReg(jid);
-            end;
+            StartServiceReg(jid.full);
         end
         else if (node.Name = 'disco') then begin
-            if (jid <> '') then begin
-                ShowBrowser(jid);
-            end;
+            ShowBrowser(jid.full);
         end;
 
+        jid.Free();
         node.Free();
     end;
     _xmpp_action_list.Clear();
@@ -810,18 +830,22 @@ initialization
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     _xmpp_action_list := TList.Create();
     uri_regex := TRegExpr.Create();
+
+    // Test URIs:
+    // xmpp:romeo@montague.net?message;subject=Test%20Message;body=Here%27s%20a%20test%20message
+    // xmpp://juliet@capulet.net/romeo@montague.net/Home?message;subject=Test%20Message;body=Here%27s%20a%20test%20message
     with uri_regex do begin
         Expression := 'xmpp:' +
-                '(//([^@]+)@([^/?#]+)/?)?' +            // auth-xmpp  2@3
-                '((([^@]+)@)?([^/?#]+)(/([^?#]+))?)?' + // path-xmpp  6@7/9
-                '(\?([^&#]+)' +                         // querytype  11
-                '(&[^#]+)?)?' +                         // pair       12
-                '(#(\S+))?';                            // fragment   14
+                '(//([^@]+)@([^/?#]+)/?)?' +            // iauthxmpp  2@3
+                '((([^@]+)@)?([^/?#]+)(/([^?#]+))?)' +  // ipathxmpp  6@7/9
+                '(\?([^;#]+)' +                         // iquerytype 11
+                '(;[^#]+)?)?' +                         // ipair      12
+                '(#(\S+))?';                            // ifragment  14
         Compile();
     end;
     pair_regex := TRegExpr.Create();
     with pair_regex do begin
-        Expression := '&([^=]+)=([^&]+)';
+        Expression := ';([^=]+)=([^;]+)';
         Compile();
     end;
     im_regex := TRegExpr.Create();
