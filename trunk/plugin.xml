@@ -60,9 +60,9 @@
     <echo message='Making dll: ${base}'/>
     <echo message='opts: ${opts.delphi}'/>
     <echo message='opts: ${exodus.includes}'/>
-    <apply dir="." executable="${dcc}" verbose='true'>
-      <arg line='${opts.delphi}'/>
+    <apply dir="." executable="${dcc}" verbose='true' failonerror="true">
       <arg line="${exodus.includes}"/>
+      <arg line='${opts.delphi}'/>
       <arg value="-E.."/>
       <fileset refid="dpr"/>
     </apply>
