@@ -177,6 +177,7 @@ type
     _send_unavailable: boolean;
     _custom_pres: boolean;
     _pending_start: boolean;
+    _my_membership_role: WideString; // My membership to the room.
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -1047,6 +1048,7 @@ begin
         end
         else if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
+
             if (t <> nil) then begin
                 scode := t.GetAttribute('code');
                 if (scode = '303') then begin
@@ -1174,6 +1176,9 @@ begin
                     if (mtag <> nil) then showMsg(mtag);
                 end;
             end;
+
+            //hold onto my role
+            _my_membership_role := member.role;
 
             // check to see what my role is
             _send_unavailable := true;
@@ -1849,6 +1854,28 @@ begin
             popRosterBrowse.Enabled := true;
         end;
 
+        // If we have clicked on our own Nick, dis-allow various menu options.
+        if (rm.Nick = myNick) then begin
+            popRosterMsg.Enabled := false;
+            popRosterChat.Enabled := false;
+            popRosterSendJID.Enabled := false;
+            popRosterblock.Enabled := false;
+            popRosterSubscribe.Enabled := false;
+            popRosterVCard.Enabled := false;
+            popRosterBrowse.Enabled := false;
+            popKick.Enabled := false;
+            popBan.Enabled := false;
+            popVoice.Enabled := false;
+            popModerator.Enabled := false;
+            popAdministrator.Enabled := false;
+        end
+        else begin
+            popAdministrator.Enabled := popConfigure.Enabled;
+            popModerator.Enabled := (_my_membership_role = MUC_MOD) or popConfigure.Enabled;
+            popKick.Enabled := popModerator.Enabled;
+            popBan.Enabled := popModerator.Enabled;
+            popVoice.Enabled := popModerator.Enabled;
+        end;
     end;
     inherited;
 end;
