@@ -1,34 +1,42 @@
 inherited frmRoom: TfrmRoom
   Left = 252
   Top = 264
-  Width = 390
-  Height = 305
   Caption = 'Conference Room'
+  ClientHeight = 271
+  ClientWidth = 382
   OldCreateOrder = True
   OnClose = FormClose
+  ExplicitWidth = 390
+  ExplicitHeight = 305
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 243
+    Top = 239
     Width = 382
+    ExplicitTop = 243
+    ExplicitWidth = 382
   end
   inherited pnlMsgList: TPanel
     Top = 23
     Width = 382
-    Height = 220
+    Height = 216
     TabOrder = 1
+    ExplicitTop = 23
+    ExplicitWidth = 382
+    ExplicitHeight = 216
     object Splitter2: TSplitter
       Left = 270
       Top = 4
-      Height = 212
+      Height = 208
       Align = alRight
       ResizeStyle = rsUpdate
+      ExplicitHeight = 212
     end
     object Panel6: TPanel
       Left = 273
       Top = 4
       Width = 105
-      Height = 212
+      Height = 208
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -38,7 +46,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 210
+        Height = 206
         Align = alClient
         Columns = <
           item
@@ -71,9 +79,11 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 382
     TabOrder = 0
+    ExplicitTop = 243
+    ExplicitWidth = 382
     inherited MsgOut: TExRichEdit
       Width = 378
     end
@@ -82,6 +92,8 @@ inherited frmRoom: TfrmRoom
     Width = 382
     Height = 23
     BorderWidth = 1
+    ExplicitWidth = 382
+    ExplicitHeight = 23
     object btnClose: TSpeedButton
       Left = 356
       Top = 2
