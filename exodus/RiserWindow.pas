@@ -126,17 +126,17 @@ begin
     if ((clickForm <> nil) and (clickHandle = 0)) then
         singleToast._clickHandle := clickForm.Handle;
          
-    with singleToast.Label1 do begin
-        Top := 5;
-        Left := singleToast.Image1.Left + singleToast.Image1.Width + 2;
-        Width := singleToast.ClientWidth - Left - 5;
-        Caption := msg;
+    with singleToast do begin
+        Label1.Top := 5;
+        Label1.Left := Image1.Left + Image1.Width + 2;
+        Label1.Width := ClientWidth - Label1.Left - 5;
+        Label1.Caption := msg;
 
-        if (Width > (singleToast.ClientWidth - 55)) then
-            singleToast.ClientWidth := Width + 70;
+        if (Label1.Width > (ClientWidth - 55)) then
+            ClientWidth := Label1.Width + 70;
 
-        if (Height > (singleToast.ClientHeight + 15)) then
-            SingleToast.ClientHeight := Height + 15;
+        if (Label1.Height > (ClientHeight + 15)) then
+            ClientHeight := Label1.Height + 15;
     end;
     singleToast.Position();
 

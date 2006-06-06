@@ -20,9 +20,6 @@ object frmRiser: TfrmRiser
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
-  DesignSize = (
-    184
-    45)
   PixelsPerInch = 96
   TextHeight = 13
   object Shape1: TShape
@@ -78,7 +75,6 @@ object frmRiser: TfrmRiser
     Width = 98
     Height = 13
     Alignment = taCenter
-    Anchors = [akLeft, akTop, akRight]
     Caption = 'something really long'
     Transparent = True
     WordWrap = True
