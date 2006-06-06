@@ -132,7 +132,7 @@ const
 
     sNewGroup = 'New Roster Group';
     sNewGroupPrompt = 'Enter new group name below. ';
-    sNewGroupNested = 'To create a nested group, enter a name like foo%sbar.';
+    sNewGroupNested = 'To create a nested group, use a name like foo%sbar.';
     sNewGroupExists = 'This group already exists!';
 
 var
