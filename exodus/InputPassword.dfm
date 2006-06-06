@@ -48,6 +48,8 @@ object frmInputPass: TfrmInputPass
       ExplicitHeight = 32
       inherited Bevel1: TBevel
         Width = 267
+        ExplicitLeft = -3
+        ExplicitTop = -3
         ExplicitWidth = 267
       end
       inherited Panel1: TPanel
@@ -55,6 +57,9 @@ object frmInputPass: TfrmInputPass
         Height = 27
         ExplicitLeft = 107
         ExplicitHeight = 27
+        inherited btnOK: TTntButton
+          Enabled = False
+        end
       end
     end
   end
@@ -66,5 +71,6 @@ object frmInputPass: TfrmInputPass
     Anchors = [akLeft, akTop, akRight]
     PasswordChar = '*'
     TabOrder = 1
+    OnChange = txtPasswordOnChange
   end
 end
