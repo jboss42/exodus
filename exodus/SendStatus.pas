@@ -800,7 +800,7 @@ begin
     if (accept) then
         _state := send_offer_hosts
     else begin
-        lblStatus.Caption := WideFormat(_('Your file transfer was refused to %s'),
+        lblStatus.Caption := WideFormat(_('Your file transfer was refused by %s'),
             [_pkg.recipDisplay]);
         btnCancel.Caption := _('Close');
         _state := send_cancel;
