@@ -31,6 +31,7 @@ type
     txtPassword: TTntEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure txtPasswordOnChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -97,6 +98,14 @@ end;
 procedure TfrmInputPass.FormCreate(Sender: TObject);
 begin
     TranslateComponent(Self);
+end;
+
+procedure TfrmInputPass.txtPasswordOnChange(Sender: TObject);
+begin
+    if (Length(txtPassword.Text) > 0) then
+        frameButtons1.btnOK.Enabled := true
+    else
+        frameButtons1.btnOK.Enabled := false;
 end;
 
 end.
