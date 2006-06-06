@@ -980,9 +980,13 @@ begin
     if ((o is TJabberGroup) or
         ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
         Result := node_grp;
-        go := TJabberGroup(n.Data);
-        _cur_grp := go.FullName;
-        _cur_go := go;
+
+        if (o is TJabberGroup) then begin
+            go := TJabberGroup(n.Data);
+            _cur_grp := go.FullName;
+            _cur_go := go;
+        end;
+
     end
     else if (TObject(n.Data) is TJabberRosterItem) then begin
         Result := node_ritem;
