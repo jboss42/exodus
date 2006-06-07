@@ -122,7 +122,7 @@ begin
     if (mi.Name = 'mnuJoinRoom') then
         MainSession.FireEvent('/session/gui/conference', ri.tag)
     else if (mi.Name = 'mnuRemoveRoom') then begin
-        // XXX: remove bookmark
+        RemoveBookmark(ri.Jid.jid);
     end
     else if (mi.Name = 'mnuProperties') then
         MainSession.FireEvent('/session/gui/conference-props', ri.tag);
@@ -316,6 +316,7 @@ procedure TBookmarkManager.AddBookmark(sjid, name, nick: Widestring; auto_join: 
 var
     bm: TXMLTag;
     ri: TJabberRosterItem;
+    i:  Integer;
 begin
     {
     <conference name='Council of Oberon'
@@ -325,6 +326,10 @@ begin
         <password>titania</password>
     </conference>
     }
+    // Only need one bookmark to a given item
+    if (self.Find(sjid, i)) then
+        Exit;
+
     bm := TXMLTag.Create('conference');
     bm.setAttribute('xmlns', XMLNS_BM);
     bm.setAttribute('jid', sjid);
