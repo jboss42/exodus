@@ -11,12 +11,12 @@
  * 
  *  \section sec_3 Event Documentation
  *  Exodus is an event driven application. Click 
- *  <a href='..\events.html'>here</a> for a descriptive listing of 
+ *  <a href='events.html'>here</a> for a descriptive listing of
  *  Exodus events.
- * 
+ *
  *  \section sec_4 How to write a plugin
  *  Plugins can be written in any language that supports COM.  Click
- *  <a href='..\plugin.html'>here</a> to read the how-to for writing plugins.
+ *  <a href='newATLplugin.html'>here</a> to read the how-to for writing plugins.
 **/
 [
   uuid(37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8), 
