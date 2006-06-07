@@ -4,7 +4,7 @@ uses
   ComServ,
   ExHTMLLogger_TLB in 'ExHTMLLogger_TLB.pas',
   LoggerPlugin in 'LoggerPlugin.pas' {HTMLLogger: CoClass},
-  Prefs in 'Prefs.pas' {frmPrefs};
+  HtmlPrefs in 'HtmlPrefs.pas' {frmHtmlPrefs};
 
 exports
   DllGetClassObject,
