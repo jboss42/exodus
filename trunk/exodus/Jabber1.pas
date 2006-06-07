@@ -1022,7 +1022,11 @@ begin
         ((MainSession.getAuthAgent() = nil) or (MainSession.getAuthAgent().prompt_password))) then begin
         pw := '';
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
-            (pw = '')) then exit;
+            (pw = '')) then
+            begin
+                frmRosterWindow.ToggleGUI(gui_disconnected);
+                exit;
+            end;
         MainSession.Password := pw;
 
         // resave this password if we're supposed to
