@@ -856,6 +856,14 @@ begin
                 InvalidateRect(treeRoster.Handle, @grp_rect, true);
             end;
         end;
+    end
+    else if (event = '/roster/remove') then begin
+        // only care if this is a bookmark
+        if (ritem <> nil) then begin
+            if (ritem.Group[0] = g_bookmarks) then
+                RemoveItemNodes(ritem);
+                MainSession.roster.RemoveItem(ritem.Jid.jid);
+        end;
     end;
 end;
 
