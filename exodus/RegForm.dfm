@@ -5,6 +5,8 @@ inherited frmRegister: TfrmRegister
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
+  ExplicitWidth = 422
+  ExplicitHeight = 389
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -21,6 +23,10 @@ inherited frmRegister: TfrmRegister
   inherited Tabs: TPageControl
     ActivePage = TabSheet4
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 27
+      ExplicitWidth = 408
+      ExplicitHeight = 225
       object Label1: TTntLabel
         Left = 0
         Top = 0
@@ -124,7 +130,7 @@ inherited frmRegister: TfrmRegister
         AutoSize = False
         Caption = 
           'Your Registration to this service has been completed Successfull' +
-          'y. Press the '#39'Next'#39' button to Finish.'
+          'y. Press the '#39'Finish'#39' button to Finish.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
