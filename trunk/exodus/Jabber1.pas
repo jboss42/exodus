@@ -450,8 +450,6 @@ const
 
     sPasswordError = 'Error changing password.';
     sPasswordChanged = 'Password changed.';
-    sPasswordOldError = 'Old password is incorrect.';
-    sPasswordNewError = 'New password does not match.';
     sPasswordCaption = 'Password';
     sPasswordPrompt = 'Enter Password';
 
@@ -2635,15 +2633,6 @@ begin
     f := TfrmPassword.Create(self);
     if (f.ShowModal() = mrCancel) then
         exit;
-
-    if (f.txtOldPassword.Text <> MainSession.Password) then begin
-        MessageDlgW(_(sPasswordOldError), mtError, [mbOK], 0);
-        exit;
-    end;
-    if (f.txtNewPassword.Text <> f.txtConfirmPassword.Text) then begin
-        MessageDlgW(_(sPasswordNewError), mtError, [mbOK], 0);
-        exit;
-    end;
 
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback, 120);
     with iq do begin
