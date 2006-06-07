@@ -11,37 +11,39 @@ object frmPassword: TfrmPassword
   ParentFont = True
   OldCreateOrder = True
   Position = poScreenCenter
+  OnCloseQuery = frmOnCloseQuery
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
     Left = 8
     Top = 9
-    Width = 67
+    Width = 69
     Height = 13
     Caption = 'Old password:'
   end
   object Label2: TTntLabel
     Left = 8
     Top = 57
-    Width = 73
+    Width = 74
     Height = 13
     Caption = 'New password:'
   end
   object Label3: TTntLabel
     Left = 8
     Top = 105
-    Width = 109
+    Width = 113
     Height = 13
     Caption = 'Confirm new password:'
   end
   object txtOldPassword: TTntEdit
     Left = 8
-    Top = 27
+    Top = 30
     Width = 217
     Height = 21
-    PasswordCharW = '*'
+    PasswordChar = '*'
     TabOrder = 0
+    OnChange = OnChangeText
   end
   inline frameButtons1: TframeButtons
     Left = 0
@@ -49,17 +51,25 @@ object frmPassword: TfrmPassword
     Width = 233
     Height = 33
     Align = alBottom
-    AutoScroll = False
     TabOrder = 3
+    TabStop = True
+    ExplicitTop = 151
+    ExplicitWidth = 233
+    ExplicitHeight = 33
     inherited Panel2: TPanel
       Width = 233
       Height = 33
+      ExplicitWidth = 233
+      ExplicitHeight = 33
       inherited Bevel1: TBevel
         Width = 233
+        ExplicitWidth = 233
       end
       inherited Panel1: TPanel
         Left = 73
         Height = 28
+        ExplicitLeft = 73
+        ExplicitHeight = 28
       end
     end
   end
@@ -68,15 +78,17 @@ object frmPassword: TfrmPassword
     Top = 75
     Width = 217
     Height = 21
-    PasswordCharW = '*'
+    PasswordChar = '*'
     TabOrder = 1
+    OnChange = OnChangeText
   end
   object txtConfirmPassword: TTntEdit
     Left = 8
     Top = 123
     Width = 217
     Height = 21
-    PasswordCharW = '*'
+    PasswordChar = '*'
     TabOrder = 2
+    OnChange = OnChangeText
   end
 end
