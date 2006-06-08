@@ -522,7 +522,7 @@ begin
 
         // if this person can not do offline msgs, and they are offline, bail
         if ((not ritem.CanOffline) and (p = nil)) then begin
-            MessageDlgW(_('This contact can not receive offline messages.'), mtError,
+            MessageDlgW(_('This contact cannot receive offline messages.'), mtError,
                 [mbOK], 0);
             Result := false;
             exit;
