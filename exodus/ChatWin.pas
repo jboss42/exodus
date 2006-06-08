@@ -405,6 +405,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
+var
+    sc: TShortcut;
 begin
     AssignDefaultFont(Self.Font);
     AssignUnicodeURL(lblNick.Font, 12);
@@ -421,6 +423,10 @@ begin
     mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
     MsgOut.WordWrap := _wrap_input;
+
+    _esc := MainSession.Prefs.getBool('esc_close');
+    sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
+    ShortCutToKey(sc, _close_key, _close_shift);
 
     _mynick := MainSession.Prefs.getString('default_nick');
     if (_mynick = '') then

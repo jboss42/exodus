@@ -90,7 +90,7 @@
       <control name="trkChatMemory"/>
     </chat_memory>
     <esc_close value="1" control="chkEscClose"/>
-    <close_hotkey value="Alt + W"/>
+    <close_hotkey value="None" control="txtCloseHotkey"/>
     
     <!-- fonts and colors -->
     <font_name value="Arial"/>
