@@ -27,7 +27,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Chat, MsgList, Presence, Roster, Bookmarks, NodeItem,
+    JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -72,6 +72,7 @@ type
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
         _winSignal: TPacketSignal;
+        _chatSignal: TChatSignal;
 
         // other misc. flags
         _paused: boolean;
@@ -157,12 +158,14 @@ type
         function RegisterCallback(callback: TRosterEvent; xplite: string): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         function RegisterCallback(callback: TDataStringEvent): integer; overload;
+        function RegisterCallback(callback: TChatEvent): integer; overload;
         procedure UnRegisterCallback(index: integer);
 
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const data: WideString); overload;
+        procedure FireEvent(event: string; tag: TXMLTag; const controller: TChatController); overload;
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
@@ -263,11 +266,13 @@ begin
     _presSignal := TPresenceSignal.Create('/presence');
     _dataSignal := TStringSignal.Create('/data');
     _winSignal := TPacketSignal.Create('/windows');
+    _chatSignal := TChatSignal.Create('/chat');
     _dispatcher.AddSignal(_sessionSignal);
     _dispatcher.AddSignal(_rosterSignal);
     _dispatcher.AddSignal(_presSignal);
     _dispatcher.AddSignal(_dataSignal);
     _dispatcher.AddSignal(_winSignal);
+    _dispatcher.AddSignal(_chatSignal);
 
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();
@@ -876,6 +881,16 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberSession.RegisterCallback(callback: TChatEvent): integer;
+var
+    sl: TChatListener;
+begin
+    // add a callback to the data signal
+    sl := _chatSignal.addListener(callback);
+    Result := sl.cb_id;
+end;
+
+{---------------------------------------}
 procedure TJabberSession.FireEvent(event: string; tag: TXMLTag);
 begin
     // dispatch some basic signal
@@ -901,6 +916,13 @@ procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const data: Wide
 begin
     // dispatch a data event directly
     _dataSignal.Invoke(event, tag, data);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const controller: TChatController);
+begin
+    // dispatch a data event directly
+    _chatSignal.Invoke(event, tag, controller);
 end;
 
 {---------------------------------------}

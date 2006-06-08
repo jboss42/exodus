@@ -27,7 +27,7 @@ uses
     ExtCtrls,
     {$endif}
 
-    Unicode, XMLTag, JabberID, Contnrs,
+    Unicode, XMLTag, JabberID, Contnrs, Signals,
     SysUtils, Classes;
 
 type
@@ -52,7 +52,6 @@ type
         procedure timMemoryTimer(Sender: TObject);
     public
         msg_queue: TQueue;
-        ComController: TObject;
 
         constructor Create(sjid, sresource: Widestring);
         destructor Destroy; override;
@@ -82,12 +81,20 @@ type
         property RefCount: integer read _refs;
     end;
 
+    TChatEvent = procedure(event: string; tag: TXMLTag; controller: TChatController) of object;
+    TChatListener = class(TPacketListener)
+    public
+    end;
+
+    TChatSignal = class(TPacketSignal)
+    public
+        procedure Invoke(event: string; tag: TXMLTag; controller: TChatController = nil); overload;
+        function addListener(callback: TChatEvent): TChatListener; overload;
+    end;
+
 {---------------------------------------}
 implementation
 uses
-    {$ifdef Exodus}
-    COMChatController,
-    {$endif}
     PrefController,
     JabberConst, XMLUtils, Session, Chat,
     Forms, IdGlobal;
@@ -95,11 +102,45 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TChatController.Create(sjid, sresource: Widestring);
-{$ifdef Exodus}
+procedure TChatSignal.Invoke(event: string; tag: TXMLTag; controller: TChatController = nil);
 var
-    echat: TExodusChat;
-{$endif}
+    cl: TChatListener;
+    ce: TChatEvent;
+    i: integer;
+begin
+    //
+    inc(_invoking);
+    for i := 0 to Self.Count - 1 do begin
+        cl := TChatListener(Self.Objects[i]);
+        ce := TChatEvent(cl.Callback);
+        try
+            ce(event, tag, controller);
+        except
+            on e: Exception do
+                Dispatcher.handleException(Self, e, cl, event, tag);
+        end;
+    end;
+    dec(_invoking);
+
+    if (change_list.Count > 0) and (_invoking = 0) then
+        Self.processChangeList();
+end;
+
+function TChatSignal.addListener(callback: TChatEvent): TChatListener;
+var
+    l: TChatListener;
+begin
+    l := TChatListener.Create();
+    l.callback := TMethod(callback);
+    inherited addListener('', l);
+    Result := l;
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TChatController.Create(sjid, sresource: Widestring);
 begin
     // Create a new chat controller..
     // Setup msg callbacks, and either queue them,
@@ -121,13 +162,6 @@ begin
         self.SetJID(_jid + '/' + _resource)
     else
         self.SetJID(_jid);
-
-    {$ifdef Exodus}
-    echat := TExodusChat.Create();
-    echat.setChatSession(Self);
-    echat.ObjAddRef();
-    ComController := echat;
-    {$endif}
 end;
 
 {---------------------------------------}
@@ -167,15 +201,19 @@ end;
 
 {---------------------------------------}
 procedure TChatController.SetWindow(new_window: TObject);
+var
+    tag : TXMLTag;
 begin
     // this controller has a new window.
     // make sure to let the plugins know about it
     _window := new_window;
 
-    {$ifdef Exodus}
-    if ((COMController <> nil) and (new_window <> nil)) then
-        TExodusChat(COMController).fireNewWindow(TForm(new_window).Handle);
-    {$endif}
+    if (new_window <> nil) then begin
+        tag := TXMLTag.Create('chat');
+        tag.setAttribute('handle', IntToStr(TForm(new_window).Handle));
+        tag.setAttribute('jid', self._jid);
+        MainSession.FireEvent('/chat/window', tag, self);
+    end;
 end;
 
 {---------------------------------------}
@@ -193,7 +231,6 @@ begin
     end;
 
     // Free stuff
-    ComController.Free();
     _memory.Free();
     msg_queue.Free();
     inherited;
