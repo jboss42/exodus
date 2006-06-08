@@ -48,7 +48,7 @@ type
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
     lblClose: TTntLabel;
-    hkClose: THotKey;
+    txtCloseHotkey: THotKey;
     chkEscClose: TTntCheckBox;
     trkSnap: TTrackBar;
     trkChatMemory: TTrackBar;
