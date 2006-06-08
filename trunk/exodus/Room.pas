@@ -1496,6 +1496,7 @@ end;
 procedure TfrmRoom.MsgOutKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+    if (Key = 0) then exit;
     TExodusChat(ComController).fireMsgKeyUp(Key, Shift);
     inherited;
 end;
@@ -1503,6 +1504,7 @@ end;
 procedure TfrmRoom.MsgOutKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+    if (Key = 0) then exit;
     TExodusChat(ComController).fireMsgKeyUp(Key, Shift);
     inherited;
 end;
@@ -1517,9 +1519,6 @@ var
 begin
     inherited;
     if (Key = #0) then exit;
-
-    // dispatch key-presses to Plugins
-    //TExodusChat(ComController).fireMsgKeyPress(Key);
 
     // Send the msg if they hit return
     if (Key = #09) then begin
