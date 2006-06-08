@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Avatar, Chat, ChatController, JabberID, XMLTag, IQ, Unicode, NodeItem,
+    Avatar, Chat, ChatController, COMChatController, JabberID, XMLTag, IQ, Unicode, NodeItem,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage;
@@ -151,6 +151,7 @@ type
     { Public declarations }
     OtherNick: widestring;
     chat_object: TChatController;
+    com_controller: TExodusChat;
 
     procedure PlayQueue();
     procedure MessageEvent(tag: TXMLTag);
@@ -181,7 +182,7 @@ procedure CloseAllChats;
 implementation
 uses
     CapPresence, RosterImages, PrtRichEdit, RTFMsgList, BaseMsgList, 
-    CustomNotify, COMChatController, Debug, ExEvents,
+    CustomNotify, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
@@ -260,6 +261,10 @@ begin
         chat.stopTimer();
         win.chat_object := chat;
         win.chat_object.AddRef();
+        win.com_controller := TExodusChat.Create();
+        win.com_controller.setChatSession(chat);
+        win.com_controller.ObjAddRef();
+
         hist := TrimRight(chat.getHistory());
         DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
     end;
@@ -336,7 +341,7 @@ begin
     end;
 
     if (new_chat) then
-        ExCOMController.fireNewChat(sjid, TExodusChat(chat.ComController));
+        ExCOMController.fireNewChat(sjid, win.com_controller);
 
     Result := TfrmChat(chat.window);
 end;
@@ -682,7 +687,7 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    if (not TExodusChat(chat_object.ComController).fireRecvMsg(body, xml)) then
+    if (not com_controller.fireRecvMsg(body, xml)) then
         exit;
 
     // make sure we are visible..
@@ -809,8 +814,8 @@ begin
 
     // additional plugin madness
     if (fire_plugins) then begin
-        if (chat_object <> nil) then
-            add_xml := TExodusChat(chat_object.ComController).fireAfterMsg(body);
+        if (com_controller <> nil) then
+            add_xml := com_controller.fireAfterMsg(body);
         if (add_xml <> '') then
             mtag.addInsertedXML(add_xml);
     end;
@@ -834,8 +839,8 @@ var
 begin
     // plugin madness
     allowed := true;
-    if (chat_object <> nil) then
-        allowed := TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
+    if (com_controller <> nil) then
+        allowed := com_controller.fireBeforeMsg(txt);
 
     Result := allowed;
     if ((allowed = false) or (txt = '')) then exit;
@@ -866,11 +871,11 @@ end;
 procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    //if (Key = #0) then exit;
-    if (chat_object = nil) then exit;
+    if (Key = 0) then exit;
+    if (com_controller = nil) then exit;
 
     // dispatch key-presses to Plugins
-    TExodusChat(chat_object.ComController).fireMsgKeyDown(Key, Shift);
+    com_controller.fireMsgKeyDown(Key, Shift);
     inherited;
 end;
 {---------------------------------------}
@@ -883,10 +888,11 @@ end;
 procedure TfrmChat.MsgOutKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    //if (Key = #0) then exit;
-    if (chat_object = nil) then exit;
+    if (Key = 0) then exit;
+    if (com_controller = nil) then exit;
+
     // dispatch key-presses to Plugins
-    TExodusChat(chat_object.ComController).fireMsgKeyUp(Key, Shift);
+    com_controller.fireMsgKeyUp(Key, Shift);
     inherited;
 
 end;
@@ -1182,6 +1188,9 @@ begin
     if (chat_object <> nil) then
         freeChatObject();
 
+    if (com_controller <> nil) then
+        com_controller.Free();
+
     if (_jid <> nil) then
         FreeAndNil(_jid);
 
@@ -1433,8 +1442,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.pluginMenuClick(Sender: TObject);
 begin
-    if (chat_object <> nil) then
-        TExodusChat(chat_object.ComController).fireMenuClick(Sender);
+    if (com_controller <> nil) then
+        com_controller.fireMenuClick(Sender);
 end;
 
 {---------------------------------------}
