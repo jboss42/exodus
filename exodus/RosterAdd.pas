@@ -114,16 +114,22 @@ begin
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
 
+    {
     // DO NOT translate these!
     case (cboType.ItemIndex) of
     1: svc := 'msn';
     2: svc := 'yahoo';
     3: svc := 'aim';
-    4: svc := 'icq';
+    3: svc := 'icq';
     else
         svc := 'jabber';
     end;
+    }
 
+    //SLKSLKSLK
+    svc := 'jabber';
+
+    {
     // check to see if we need an entity info
     if (cboType.ItemIndex > 0) then begin
         // Adding a gateway'd user
@@ -138,6 +144,7 @@ begin
             doAdd();
     end
     else begin
+    }
         // Adding a normal Jabber user
         // check to see if we have an "@" sign
         tmp_jid := TJabberID.Create(sjid, false);
@@ -153,7 +160,7 @@ begin
             if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         doAdd();
         tmp_jid.Free();
-    end;
+    //end;
 end;
 
 {---------------------------------------}
@@ -187,9 +194,18 @@ begin
     URLLabel(lblAddGrp);
     MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
-    cboType.ItemIndex := 0;
+
     txtGateway.Text := MainSession.Server;
-    cboType.Enabled := MainSession.Prefs.getBool('brand_addcontact_gateways')
+    //cboType.Enabled := MainSession.Prefs.getBool('brand_addcontact_gateways');
+
+    //SLKSLKSLK
+    cboType.AddItem(_('Jabber'), nil);
+    if (MainSession.GetExtList().IndexOf('aim') <> -1) then begin
+        cboType.AddItem(_('AIM'), nil);
+    end;
+
+    cboType.ItemIndex := 0;
+
 end;
 
 {---------------------------------------}
@@ -221,10 +237,18 @@ procedure TfrmAdd.cboTypeChange(Sender: TObject);
 var
     en: boolean;
 begin
-    //
+    //SLKSLKSLK
+    {
+    if (cboType.
+    MainSession.GetExtList().IndexOf('aim') <> -1) then begin
+
+    end;
+    }
+    {
     en := (cboType.ItemIndex > 0);
     lblGateway.Enabled := en;
     txtGateway.Enabled := en;
+    }
 end;
 
 {---------------------------------------}
