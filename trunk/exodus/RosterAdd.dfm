@@ -96,17 +96,25 @@ object frmAdd: TfrmAdd
     Width = 251
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 3
+    TabStop = True
+    ExplicitTop = 180
+    ExplicitWidth = 251
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 251
       Height = 34
+      ExplicitWidth = 251
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 251
+        ExplicitWidth = 251
       end
       inherited Panel1: TPanel
         Left = 91
         Height = 29
+        ExplicitLeft = 91
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -125,12 +133,6 @@ object frmAdd: TfrmAdd
     ItemHeight = 13
     TabOrder = 4
     OnChange = cboTypeChange
-    Items.WideStrings = (
-      'Jabber'
-      'MSN'
-      'Yahoo'
-      'AIM'
-      'ICQ')
   end
   object txtGateway: TTntEdit
     Left = 94
