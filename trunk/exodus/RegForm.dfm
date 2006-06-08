@@ -20,8 +20,16 @@ inherited frmRegister: TfrmRegister
       OnClick = btnCancelClick
     end
   end
+  inherited Panel1: TPanel
+    inherited lblWizardDetails: TTntLabel
+      Width = 75
+      Height = 13
+      AutoSize = True
+      ExplicitWidth = 75
+      ExplicitHeight = 13
+    end
+  end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet4
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4
       ExplicitTop = 27
