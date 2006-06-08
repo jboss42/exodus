@@ -24,7 +24,7 @@ interface
 
 uses
     Exodus_TLB,
-    Session, ChatController, ChatWin, Chat, Room, MsgRecv, Unicode,
+    Session, ChatController, Chat, Room, MsgRecv, Unicode, XMLTag,
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
 type
@@ -50,6 +50,8 @@ type
     function GetControl(const Name: WideString): IExodusControl; safecall;
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
+    procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
+
     { Protected declarations }
 
   public
@@ -75,6 +77,7 @@ type
     _plugs: TList;
     _menu_items: TWidestringlist;
     _nextid: longint;
+    _ccbId: Integer;
   end;
 
   TChatPlugin = class
@@ -85,8 +88,8 @@ end;
 implementation
 
 uses
-    COMExControls, Controls, BaseMsgList, RTFMsgList,
-    XMLTag, ComServ, Menus, SysUtils;
+    COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList,
+    ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -405,6 +408,9 @@ begin
     end
     else
         Result := false;
+
+    if _plugs.Count = 0 then
+        MainSession.UnregisterCallback(_ccbId);
 end;
 
 {---------------------------------------}
@@ -417,6 +423,19 @@ begin
     cp.com := Plugin;
     Plugin._AddRef();
     Result := _plugs.Add(cp);
+    if _plugs.Count = 1 then
+        _ccbId := MainSession.RegisterCallback(ChatCallback);
+end;
+
+{---------------------------------------}
+procedure TExodusChat.ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
+begin
+    if controller <> _chat then
+        exit;
+
+    if event = '/chat/window' then begin
+         fireNewWindow(StrToInt(tag.GetAttribute('handle')));
+    end;
 end;
 
 {---------------------------------------}

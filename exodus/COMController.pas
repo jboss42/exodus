@@ -24,7 +24,7 @@ unit COMController;
 interface
 
 uses
-    ExtCtrls, 
+    ExtCtrls, ChatController,
     Presence, NodeItem, XMLParser, XMLTag, Unicode, Menus,
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
@@ -195,6 +195,7 @@ type
         procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
+        procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
         procedure Callback(event: string; tag: TXMLTag);
     end;
 
@@ -243,7 +244,7 @@ implementation
 uses
     DockContainer, Profile,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
-    Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
+    Chat, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
@@ -515,6 +516,8 @@ begin
         id := MainSession.RegisterCallback(Self.PresenceCallback)
     else if (LeftStr(xpath, Length('/data')) = '/data') then
         id := MainSession.RegisterCallback(Self.DataCallback)
+    else if (LeftStr(xpath, Length('/chat')) = '/chat') then
+        id := MainSession.RegisterCallback(Self.ChatCallback)
     else
         id := MainSession.RegisterCallback(Self.Callback, xpath);
 
@@ -588,6 +591,12 @@ begin
     end
     else
         Callback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TPluginProxy.ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
+begin
+    Callback(event, tag);
 end;
 
 {---------------------------------------}
