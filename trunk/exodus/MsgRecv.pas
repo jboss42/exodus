@@ -892,10 +892,6 @@ end;
 procedure TfrmMsgRecv.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
     if (Key = #0) then exit;
-    if (ComController = nil) then exit;
-
-    // dispatch key-presses to Plugins
-    //TExodusChat(ComController).fireMsgKeyPress(Key);
     inherited;
 end;
 
