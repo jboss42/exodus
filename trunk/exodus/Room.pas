@@ -1061,6 +1061,14 @@ begin
                             [tmp1, tmp2]));
                         ShowMsg(mtag);
                     end;
+
+                    // update their room jid and nick
+                    // doing this to avoid causing second enter message
+                    tmp1 := jid + '/' + tmp2;
+                    member.Nick := tmp2;
+                    member.jid := tmp1;
+                    _roster.Delete(i);
+                    _roster.AddObject(member.jid, member);
                 end
                 else if ((scode = '301') or (scode = '307')) then begin
                     itag := tag.QueryXPTag(xp_muc_reason);
@@ -1076,15 +1084,17 @@ begin
                 ShowMsg(mtag);
             end;
 
-            _roster.Delete(i);
-            i := _rlist.IndexOf(member);
-            if (i >= 0) then begin
-                _rlist.Delete(i);
-                _rlist.Sort(ItemCompare);
-                lstRoster.Items.Count := _rlist.Count;
-                lstRoster.Invalidate();
+            if (scode <> '303') then begin
+                _roster.Delete(i);
+                i := _rlist.IndexOf(member);
+                if (i >= 0) then begin
+                    _rlist.Delete(i);
+                    _rlist.Sort(ItemCompare);
+                    lstRoster.Items.Count := _rlist.Count;
+                    lstRoster.Invalidate();
+                end;
+                member.Free;
             end;
-            member.Free;
         end;
     end
     else begin
