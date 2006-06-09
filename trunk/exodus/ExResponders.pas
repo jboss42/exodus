@@ -232,27 +232,11 @@ begin
     // We got an exception during signal dispatching.
     MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
 
-    dir := '';
-    try
-        reg := TRegistry.Create;
-        try //finally free
-            with reg do begin
-                RootKey := HKEY_CURRENT_USER;
-                OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
-                if (ValueExists('Desktop')) then begin
-                    dir := ReadString('Desktop');
-                    dir := ReplaceEnvPaths(dir);
-                end;
-            end;
-        finally
-            reg.Free();
-        end;
-    except
-        dir := ExtractFilePath(Application.EXEName);
-    end;
-
+    // Put error logs in user dir, not on desktop anymore.
+    dir := getUserDir();
+   
     // Send the data to a file in dir
-    orig := dir + '\Exodus error log';
+    orig := dir + '\Error log';
     fname := orig + '.txt';
     i := 1;
     while (FileExists(fname)) do begin
@@ -309,6 +293,10 @@ begin
 
     e_data.SaveToFile(fname);
     e_data.Free();
+
+    //Halt execution.
+    Windows.ExitProcess(0);
+
 end;
 
 {---------------------------------------}
