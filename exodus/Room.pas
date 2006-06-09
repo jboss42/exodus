@@ -1959,8 +1959,12 @@ begin
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm = nil) then exit;
 
+
     tmp_jid := TJabberID.Create(rm.jid);
-    chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
+    if (Length(rm._real_jid.jid()) = 0) then
+        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick)
+    else
+        chat_win := StartChat(rm._real_jid.jid(), rm._real_jid.resource, true);
     if (chat_win <> nil) then begin
         if (chat_win.TabSheet <> nil) then
             frmExodus.Tabs.ActivePage := chat_win.TabSheet
