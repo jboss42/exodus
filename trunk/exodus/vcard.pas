@@ -99,6 +99,8 @@ type
     txtLast: TTntEdit;
     txtWeb: TTntEdit;
     btnPicClear: TTntButton;
+    txtMiddle: TTntEdit;
+    TntLabel2: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -205,6 +207,7 @@ begin
 
     with _vcard do begin
         txtFirst.Text := GivenName;
+        txtMiddle.Text := MiddleName;
         txtLast.Text := FamilyName;
         txtNick.Text := nick;
         txtPriEmail.Text := email;
@@ -265,6 +268,7 @@ begin
     // Save the vcard..
     with _vcard do begin
         GivenName := txtFirst.Text;
+        MiddleName := txtMiddle.Text;
         FamilyName := txtLast.Text;
         nick := txtNick.Text;
         email := txtPriEmail.Text;
