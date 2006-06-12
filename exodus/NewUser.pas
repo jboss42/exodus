@@ -77,6 +77,8 @@ type
     _xdata: boolean;
     _key: Widestring;
 
+    _errCode: integer;
+
     _connect_attempts: integer;
 
     procedure _runState();
@@ -106,6 +108,9 @@ uses
     GnuGetText, fTopLabel, JabberConst, Jabber1, RosterWindow,   
     WebGet, XMLParser, PrefController, Session, ExUtils;
 
+const
+    gGenericErr = 'Your Registration to this service has failed! Press Back and verify that all of the parameters have been filled in correctly. Press Cancel to close this wizard.';
+    g409Err     = 'Your Registration to this service had failed because this username already exists! Press Back and choose a new username.';
 {---------------------------------------}
 function ShowNewUserWizard(): integer;
 begin
@@ -220,6 +225,7 @@ begin
         _runState();
     end;
     nus_error: begin
+        _errCode := 0;
         btnNext.Enabled := true;
         btnNext.Caption := _('Next >');
         if (MainSession.Active) then begin
@@ -374,14 +380,20 @@ end;
 
 {---------------------------------------}
 procedure TfrmNewUser.RegSetCallback(event: string; tag: TXMLTag);
+var
+    errTag: TXMLTag;
 begin
     assert(_state = nus_set);
     _doneWait();
     _iq := nil;
 
-    if (event <> 'xml') or (tag.GetAttribute('type') <> 'result') then
+    if (event <> 'xml') or (tag.GetAttribute('type') <> 'result') then begin
         // XXX: display more info about error?
-        _state := nus_error
+        errTag := tag.GetFirstTag('error');
+        if (errTag <> nil) then
+            _errCode := StrToIntDef(errTag.GetAttribute('code'), 0);
+        _state := nus_error;
+    end
     else
         _state := nus_auth;
 
@@ -529,6 +541,10 @@ begin
 
     nus_error: begin
         lblOK.Visible := false;
+        if (_errCode = 409) then
+          lblBad.Caption := _(g409Err)
+        else
+          lblBad.Caption := _(gGenericErr);
         lblBad.Visible := true;
         Tabs.ActivePage := tbsFinish;
         btnNext.Caption := _('Finish');
