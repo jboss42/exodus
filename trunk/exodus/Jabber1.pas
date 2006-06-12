@@ -455,6 +455,7 @@ const
 
     sBrandingError = 'Branding error!';
     sQueryTypeError = 'Unknown query type: ';
+    sUserExistsErr = ''#13#10' ERROR: The username ''%s'' already exists.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -498,7 +499,6 @@ const
     ico_dnd_minus_one = 46;
     ico_chat_minus_one = 47;
     ico_xa_minus_one = 48;
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -1205,7 +1205,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
-    ssl, rtries: integer;
+    ssl, rtries, code: integer;
     msg : TMessage;
     exp: boolean;
     tmp: TXMLTag;
@@ -1285,7 +1285,11 @@ begin
             // try to find out a more detailed error message
             tmp := tag.GetFirstTag('error');
             if (tmp <> nil) then begin
-                m := m + ''#13#10' ERROR: ' + tmp.Data;
+                code := StrToIntDef(tmp.GetAttribute('code'), 0);
+                if (code = 409) then
+                    m := m + WideFormat(_(sUserExistsErr), [MainSession.Profile.Username])
+                else
+                    m := m + ''#13#10' ERROR: ' + tmp.Data;
             end;
         end;
 
