@@ -230,6 +230,7 @@ begin
 
     with _vcard do begin
         txtFirst.Text := GivenName;
+        txtMiddle.Text := MiddleName;
         txtLast.Text := FamilyName;
         txtPriEmail.Text := email;
         txtWeb.Text := url;
@@ -424,8 +425,22 @@ end;
 
 procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
 begin
-    if (txtFirst.Text <> '') or (txtLast.Text <> '') then
-        txtNick.Text := txtFirst.Text + ' ' + txtLast.Text;
+    if (txtFirst.Text <> '') or (txtLast.Text <> '') or (txtMiddle.Text <> '') then
+    begin
+        txtNick.Text := txtFirst.Text;
+
+        if (txtMiddle.Text <> '') then begin
+            if (txtNick.Text <> '') then
+                txtNick.Text := txtNick.Text + ' ';
+            txtNick.Text := txtNick.Text + txtMiddle.Text;
+        end;
+
+        if (txtLast.Text <> '') then begin
+            if (txtNick.Text <> '') then
+                txtNick.Text := txtNick.Text + ' ';
+            txtNick.Text := txtNick.Text + txtLast.Text;
+        end;
+    end
 end;
 
 procedure TfrmProfile.picBoxPaint(Sender: TObject);

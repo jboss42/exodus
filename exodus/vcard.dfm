@@ -1,9 +1,9 @@
 object frmVCard: TfrmVCard
   Left = 201
   Top = 119
-  Width = 450
-  Height = 360
   Caption = 'My Profile'
+  ClientHeight = 359
+  ClientWidth = 442
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -12,7 +12,6 @@ object frmVCard: TfrmVCard
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -21,22 +20,25 @@ object frmVCard: TfrmVCard
   object Splitter1: TSplitter
     Left = 153
     Top = 0
-    Height = 292
+    Height = 325
+    ExplicitHeight = 292
   end
   object PageControl1: TTntPageControl
     Left = 156
     Top = 0
     Width = 286
-    Height = 292
+    Height = 325
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
+    ExplicitHeight = 309
     object TabSheet1: TTntTabSheet
       Caption = 'General'
+      ExplicitHeight = 261
       object TntLabel1: TTntLabel
         Left = 4
-        Top = 124
+        Top = 144
         Width = 26
         Height = 13
         Cursor = crHandPoint
@@ -44,21 +46,21 @@ object frmVCard: TfrmVCard
       end
       object PaintBox1: TPaintBox
         Left = 56
-        Top = 161
+        Top = 178
         Width = 90
         Height = 90
         OnPaint = PaintBox1Paint
       end
       object Label2: TTntLabel
-        Left = 4
-        Top = 72
+        Left = 3
+        Top = 96
         Width = 25
         Height = 13
         Caption = 'Nick:'
       end
       object lblEmail: TTntLabel
         Left = 4
-        Top = 95
+        Top = 115
         Width = 28
         Height = 13
         Cursor = crHandPoint
@@ -73,76 +75,91 @@ object frmVCard: TfrmVCard
       end
       object Label5: TTntLabel
         Left = 2
-        Top = 38
+        Top = 64
         Width = 58
         Height = 13
         Caption = 'Last (Family)'
       end
       object lblURL: TTntLabel
         Left = 3
-        Top = 158
+        Top = 181
         Width = 36
         Height = 13
         Cursor = crHandPoint
         Caption = 'Picture:'
       end
+      object TntLabel2: TTntLabel
+        Left = 2
+        Top = 37
+        Width = 31
+        Height = 13
+        Caption = 'Middle'
+      end
       object btnPicBrowse: TTntButton
         Left = 171
-        Top = 156
+        Top = 176
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 5
+        TabOrder = 6
         OnClick = btnPicBrowseClick
       end
       object txtNick: TTntEdit
         Left = 56
-        Top = 69
-        Width = 187
-        Height = 21
-        TabOrder = 2
-      end
-      object txtPriEmail: TTntEdit
-        Left = 56
-        Top = 95
+        Top = 88
         Width = 187
         Height = 21
         TabOrder = 3
       end
+      object txtPriEmail: TTntEdit
+        Left = 56
+        Top = 115
+        Width = 187
+        Height = 21
+        TabOrder = 4
+      end
       object txtFirst: TTntEdit
         Left = 73
-        Top = 6
+        Top = 5
         Width = 168
         Height = 21
         TabOrder = 0
       end
       object txtLast: TTntEdit
         Left = 73
-        Top = 33
+        Top = 59
         Width = 169
         Height = 21
-        TabOrder = 1
+        TabOrder = 2
       end
       object txtWeb: TTntEdit
         Left = 56
-        Top = 121
+        Top = 141
         Width = 187
         Height = 21
-        TabOrder = 4
+        TabOrder = 5
       end
       object btnPicClear: TTntButton
         Left = 171
-        Top = 184
+        Top = 204
         Width = 75
         Height = 25
         Caption = 'Clear'
-        TabOrder = 6
+        TabOrder = 7
         OnClick = btnPicClearClick
+      end
+      object txtMiddle: TTntEdit
+        Left = 73
+        Top = 32
+        Width = 169
+        Height = 21
+        TabOrder = 1
       end
     end
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
+      ExplicitHeight = 261
       object Label12: TTntLabel
         Left = 4
         Top = 9
@@ -192,7 +209,7 @@ object frmVCard: TfrmVCard
         Height = 21
         ItemHeight = 13
         TabOrder = 0
-        Items.WideStrings = (
+        Items.Strings = (
           'Accounting/Finance'
           'Computer related (IS, MIS, DP)'
           'Computer related (WWW)'
@@ -244,6 +261,7 @@ object frmVCard: TfrmVCard
     object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
+      ExplicitHeight = 278
       object Label13: TTntLabel
         Left = 10
         Top = 139
@@ -294,7 +312,7 @@ object frmVCard: TfrmVCard
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.WideStrings = (
+        Items.Strings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -575,6 +593,7 @@ object frmVCard: TfrmVCard
     object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
+      ExplicitHeight = 278
       object Label22: TTntLabel
         Left = 10
         Top = 9
@@ -649,6 +668,7 @@ object frmVCard: TfrmVCard
     object TabSheet6: TTntTabSheet
       Caption = 'TabSheet6'
       ImageIndex = 5
+      ExplicitHeight = 278
       object Label15: TTntLabel
         Left = 10
         Top = 83
@@ -699,7 +719,7 @@ object frmVCard: TfrmVCard
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.WideStrings = (
+        Items.Strings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -980,21 +1000,29 @@ object frmVCard: TfrmVCard
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 292
+    Top = 325
     Width = 442
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 1
+    TabStop = True
+    ExplicitTop = 292
+    ExplicitWidth = 442
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 442
       Height = 34
+      ExplicitWidth = 442
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 442
+        ExplicitWidth = 442
       end
       inherited Panel1: TPanel
         Left = 282
         Height = 29
+        ExplicitLeft = 282
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -1008,19 +1036,20 @@ object frmVCard: TfrmVCard
     Left = 0
     Top = 0
     Width = 153
-    Height = 292
+    Height = 325
     Align = alLeft
     BevelWidth = 0
     Indent = 19
     TabOrder = 2
     OnClick = TreeView1Click
+    ExplicitHeight = 292
   end
   object OpenPic: TOpenPictureDialog
     Filter = 
       'All (*.jpg;*.jpeg;*.jpg;*.jpeg;*.gif, *.bmp)|*.jpg;*.jpeg;*.jpg;' +
       '*.jpeg;*.bmp;*.gif|JPEG Image File (*.jpg)|*.jpg;*jpeg;|GIF Imag' +
       'e (*.gif)|*.gif|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico'
-    Left = 328
-    Top = 243
+    Left = 335
+    Top = 265
   end
 end
