@@ -1,9 +1,9 @@
 object frmMsgRecv: TfrmMsgRecv
   Left = 253
   Top = 174
-  Width = 385
-  Height = 416
   Caption = 'Message'
+  ClientHeight = 382
+  ClientWidth = 377
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -22,15 +22,16 @@ object frmMsgRecv: TfrmMsgRecv
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 191
+    Top = 187
     Width = 377
     Height = 3
     Cursor = crVSplit
     Align = alBottom
+    ExplicitTop = 191
   end
   object pnlReply: TPanel
     Left = 0
-    Top = 194
+    Top = 190
     Width = 377
     Height = 192
     Align = alBottom
@@ -44,17 +45,26 @@ object frmMsgRecv: TfrmMsgRecv
       Width = 371
       Height = 34
       Align = alBottom
-      AutoScroll = False
       TabOrder = 1
+      TabStop = True
+      ExplicitLeft = 3
+      ExplicitTop = 155
+      ExplicitWidth = 371
+      ExplicitHeight = 34
       inherited Panel2: TPanel
         Width = 371
         Height = 34
+        ExplicitWidth = 371
+        ExplicitHeight = 34
         inherited Bevel1: TBevel
           Width = 371
+          ExplicitWidth = 371
         end
         inherited Panel1: TPanel
           Left = 211
           Height = 29
+          ExplicitLeft = 211
+          ExplicitHeight = 29
           inherited btnCancel: TTntButton [0]
             OnClick = frameButtons2btnCancelClick
           end
@@ -168,7 +178,7 @@ object frmMsgRecv: TfrmMsgRecv
     Left = 0
     Top = 76
     Width = 377
-    Height = 85
+    Height = 81
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -281,7 +291,7 @@ object frmMsgRecv: TfrmMsgRecv
       TabOrder = 0
       object pnlSendSubject: TPanel
         Left = 0
-        Top = 25
+        Top = 32
         Width = 336
         Height = 24
         Align = alTop
@@ -289,6 +299,7 @@ object frmMsgRecv: TfrmMsgRecv
         BorderWidth = 2
         TabOrder = 0
         Visible = False
+        ExplicitTop = 25
         object lblSubject1: TTntLabel
           Left = 2
           Top = 2
@@ -299,6 +310,7 @@ object frmMsgRecv: TfrmMsgRecv
           Color = clBtnFace
           ParentColor = False
           Layout = tlCenter
+          ExplicitHeight = 13
         end
         object txtSendSubject: TTntMemo
           Left = 44
@@ -313,13 +325,14 @@ object frmMsgRecv: TfrmMsgRecv
       end
       object pnlSubject: TPanel
         Left = 0
-        Top = 49
+        Top = 56
         Width = 336
         Height = 22
         Align = alTop
         BevelOuter = bvNone
         BorderWidth = 2
         TabOrder = 1
+        ExplicitTop = 49
         object txtSubject: TTntLabel
           Left = 45
           Top = 2
@@ -327,6 +340,8 @@ object frmMsgRecv: TfrmMsgRecv
           Height = 18
           Align = alClient
           Caption = 'txtSubject'
+          ExplicitWidth = 47
+          ExplicitHeight = 13
         end
         object lblSubject2: TTntStaticText
           Left = 2
@@ -338,51 +353,58 @@ object frmMsgRecv: TfrmMsgRecv
           Color = clBtnFace
           ParentColor = False
           TabOrder = 0
+          ExplicitLeft = 6
+          ExplicitTop = 3
         end
       end
       object pnlFrom: TPanel
         Left = 0
         Top = 0
         Width = 336
-        Height = 25
+        Height = 32
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         BorderWidth = 1
+        Caption = '`'
         TabOrder = 2
         object txtFrom: TTntLabel
           Left = 30
           Top = 1
           Width = 278
-          Height = 23
+          Height = 30
           Cursor = crHandPoint
           Align = alClient
           Caption = 'txtFrom'
           Color = clBtnFace
+          Constraints.MinHeight = 30
           ParentColor = False
           Transparent = True
           WordWrap = True
           OnClick = txtFromClick
+          ExplicitHeight = 27
         end
         object lblFrom: TTntLabel
           Left = 1
           Top = 1
           Width = 29
-          Height = 23
+          Height = 30
           Align = alLeft
           Caption = 'From: '
           Color = clBtnFace
           ParentColor = False
           Transparent = True
+          ExplicitHeight = 13
         end
         object Panel1: TPanel
           Left = 308
           Top = 1
           Width = 27
-          Height = 23
+          Height = 30
           Align = alRight
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitHeight = 23
           object btnClose: TSpeedButton
             Left = 2
             Top = 2
@@ -453,21 +475,29 @@ object frmMsgRecv: TfrmMsgRecv
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 161
+    Top = 157
     Width = 377
     Height = 30
     Align = alBottom
-    AutoScroll = False
     TabOrder = 3
+    TabStop = True
+    ExplicitTop = 157
+    ExplicitWidth = 377
+    ExplicitHeight = 30
     inherited Panel2: TPanel
       Width = 377
       Height = 30
+      ExplicitWidth = 377
+      ExplicitHeight = 30
       inherited Bevel1: TBevel
         Width = 377
+        ExplicitWidth = 377
       end
       inherited Panel1: TPanel
         Left = 217
         Height = 25
+        ExplicitLeft = 217
+        ExplicitHeight = 25
         inherited btnOK: TTntButton
           Caption = 'Reply'
           OnClick = frameButtons1btnOKClick
