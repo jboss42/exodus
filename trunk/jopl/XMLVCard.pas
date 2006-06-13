@@ -57,6 +57,7 @@ end;
     public
         GivenName: WideString;
         FamilyName: WideString;
+        MiddleName: WideString;
         nick: WideString;
         email: WideString;
         bday: WideString;
@@ -216,6 +217,7 @@ begin
 
     GivenName := '';
     FamilyName := '';
+    MiddleName := '';
     nick := '';
     email := '';
     bday := '';
@@ -289,6 +291,8 @@ begin
         if t2 <> nil then GivenName := t2.Data;
         t2 := t1.GetFirstTag('FAMILY');
         if t2 <> nil then FamilyName := t2.Data;
+        t2 := t1.GetFirstTag('MIDDLE');
+        if t2 <> nil then MiddleName := t2.Data;
     end;
 
     // Get Nick
@@ -374,6 +378,7 @@ begin
     t1 := vtag.AddTag('N');
     t1.AddBasicTag('GIVEN', GivenName);
     t1.AddBasicTag('FAMILY', FamilyName);
+    t1.AddBasicTag('MIDDLE', MiddleName);
 
     vtag.AddBasicTag('NICKNAME', nick);
 
