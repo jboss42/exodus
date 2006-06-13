@@ -48,11 +48,17 @@ type
     procedure lstEventsEnter(Sender: TObject);
   private
     { Private declarations }
-    _queue: TObjectList;
-    _cb: integer;
+    _queue          : TObjectList;
+    _updatechatCB   : integer;
+    _connectedCB    : Integer; //session connected callback ID
+    _disconnectedCB : Integer; //session disconnected callback ID
+
+    _currSpoolFile  : string; //current spool file we are reading/writing
+    _documentDir    : string; //path to My Documents/Exodus-Logs
+
     _loading: boolean;
     _sel: integer;
-    
+
     procedure SaveEvents();
     procedure LoadEvents();
     procedure removeItems();
@@ -60,6 +66,8 @@ type
     function FindColumnIndex(pHeader: pNMHdr): integer;
     function FindColumnWidth(pHeader: pNMHdr): integer;
 
+    procedure setSpoolPath(connected : boolean);
+    procedure ClearItems();
   protected
     procedure WMNotify(var Msg: TWMNotify); message WM_NOTIFY;
 
@@ -77,7 +85,8 @@ var
 
 const
     sNoSpoolDir = ' could not create or write to the spool directory specified in the options.';
-
+    sDefaultSpool = 'default_spool.xml';
+    
 function getMsgQueue: TfrmMsgQueue;
 
 {---------------------------------------}
@@ -92,6 +101,12 @@ uses
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
     JabberUtils, ExUtils,  MsgRecv, Session, PrefController;
+const
+    SE_UPDATE_CHAT = '/session/gui/update-chat';
+    SE_CONNECTED = '/session/connected';
+    SE_DISCONNECTED = '/session/disconnected';
+
+    CB_UNASSIGNED = -1; //unassigned callback ID 
 
 {---------------------------------------}
 function getMsgQueue: TfrmMsgQueue;
@@ -132,17 +147,25 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.SessionCallback(event: string; tag: TXMLTag);
 begin
-    if (event <> '/session/gui/update-chat') then exit;
-    if (tag = nil) then exit;
-
-    SaveEvents();
+    if (event = SE_CONNECTED) then begin
+        setSpoolPath(true);
+        ClearItems();
+        loadEvents();
+    end
+    else if (event = SE_DISCONNECTED) then begin
+        setSpoolPath(false);
+        ClearItems();
+        loadEvents();
+    end
+    else if ((event = SE_UPDATE_CHAT) and (tag <> nil)) then begin
+        SaveEvents();
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmMsgQueue.SaveEvents();
 var
     t, i, d: integer;
-    dir, fn: string;
     s, e: TXMLTag;
     event: TJabberEvent;
     ss: TStringList;
@@ -150,24 +173,8 @@ var
     tl: TXMLTagList;
 begin
     // save all of the events in the listview out to a file
-    // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
-    // fn := getUserDir() + 'spool.xml';
     if (MainSession = nil) then exit;
     if (_loading) then exit;
-    
-    fn := MainSession.Prefs.getString('spool_path');
-    dir := ExtractFilePath(fn);
-
-    if (dir = '') then
-        dir := ExtractFilePath(Application.EXEName);
-
-    if (not DirectoryExists(dir)) then begin
-        MkDir(dir);
-        if (not DirectoryExists(dir)) then begin
-            MessageDlgW(PrefController.getAppInfo.ID + (sNoSpoolDir), mtError, [mbOK], 0);
-            exit;
-        end;
-    end;
 
     s := TXMLTag.Create('spool');
     for i := 0 to _queue.Count - 1 do begin
@@ -200,18 +207,12 @@ begin
         end;
     end;
 
-    if ((FileExists(fn)) and (FileIsReadOnly(fn))) then begin
-        MessageDlgW(_('The file you specified to store queued messages is read only. Please specify another file'),
-            mtError, [mbOK], 0);
-        exit;
-    end;
-
     ss := TStringlist.Create();
     try
         ss.Add(UTF8Encode(s.xml));
-        ss.SaveToFile(fn);
+        ss.SaveToFile(_currSpoolFile);
     except
-        MessageDlgW(Format(_('There was an error trying to write to the file: %s'), [fn]),
+        MessageDlgW(Format(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
             mtError, [mbOK], 0);
     end;
 
@@ -227,20 +228,14 @@ var
     cur_e, s: TXMLTag;
     msgs, dtags, etags: TXMLTagList;
     e: TJabberEvent;
-    fn: string;
     c: TChatController;
 begin
-    // Load events from the spool file
-    // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
-    // fn := getUserDir() + 'spool.xml';
-    fn := MainSession.Prefs.getString('spool_path');
-
-    if (not FileExists(fn)) then exit;
+    if (not FileExists(_currSpoolFile)) then exit;
 
     _loading := true;
 
     p := TXMLTagParser.Create();
-    p.ParseFile(fn);
+    p.ParseFile(_currSpoolFile);
 
     if p.Count > 0 then begin
         s := p.popTag();
@@ -310,10 +305,14 @@ var
 begin
     inherited;
 
-    _cb := -1;
+    _updateChatCB := CB_UNASSIGNED;
+    _connectedCB  := CB_UNASSIGNED;
+    _disconnectedCB := CB_UNASSIGNED;
+    
     _loading := false;
     _queue := TObjectList.Create();
     _queue.OwnsObjects := true;
+    _documentDir := MainSession.Prefs.getString('log_path');
 
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
     txtMsg.Color := lstEvents.Color;
@@ -330,10 +329,17 @@ begin
         tmp := MainSession.Prefs.getInt('quecol_3');
         if (tmp <> 0) then Column[2].Width := tmp;
     end;
+    if (MainSession.Authenticated) then begin
+        setSpoolPath(true);
+    end
+    else begin
+        setSpoolPath(false);
+    end;
+    LoadEvents();
 
-    Self.LoadEvents();
-
-    _cb := MainSession.RegisterCallback(SessionCallback, '/session/gui');
+    _updateChatCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE_CHAT);
+    _connectedCB    := MainSession.RegisterCallback(SessionCallback, SE_CONNECTED);
+    _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
 end;
 
 {---------------------------------------}
@@ -451,12 +457,26 @@ end;
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    if ((_cb <> -1) and (MainSession <> nil)) then
-        MainSession.UnRegisterCallback(_cb);
+    if (mainSession <> nil)  then begin
+        if (_updateChatCB <>CB_UNASSIGNED) then
+            MainSession.UnRegisterCallback(_updateChatCB);
+        if (_connectedCB <>CB_UNASSIGNED) then
+            MainSession.UnRegisterCallback(_connectedCB);
+        if (_disconnectedCB <>CB_UNASSIGNED) then
+            MainSession.UnRegisterCallback(_disconnectedCB);
+    end;
     _queue.Free();
     Action := caFree;
     frmMsgQueue := nil;
     inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.ClearItems();
+begin
+    _queue.Clear();
+    lstEvents.items.Clear();
+    txtMsg.Clear();
 end;
 
 {---------------------------------------}
@@ -595,6 +615,24 @@ begin
   inherited;
     if ((lstEvents.ItemIndex = -1) and (lstEvents.Items.Count > 0)) then
         lstEVents.ItemIndex := 0;
+end;
+
+
+{---------------------------------------}
+{*
+    Set the path used for the spool file based on session. If disconnected, a
+    global spool.xml file is used (for offline events? not sure what would
+    ever be in a spool file when disconnected but might as well leave
+    the option open). If connected a jid_spool file will be used.
+*}
+procedure TfrmMsgQueue.setSpoolPath(connected : boolean);
+begin
+    if (connected) then begin
+        _currSpoolFile := _documentDir + '\' + MungeName(mainSession.BareJid) + '_spool.xml';
+    end
+    else begin
+        _currSpoolFile := _documentDir + '\' + sDefaultSpool;
+    end;
 end;
 
 end.
