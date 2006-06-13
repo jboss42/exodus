@@ -103,7 +103,7 @@ uses
     JabberUtils, ExUtils,  MsgRecv, Session, PrefController;
 const
     SE_UPDATE_CHAT = '/session/gui/update-chat';
-    SE_CONNECTED = '/session/connected';
+    SE_CONNECTED = '/session/authenticated';
     SE_DISCONNECTED = '/session/disconnected';
 
     CB_UNASSIGNED = -1; //unassigned callback ID 
@@ -586,7 +586,10 @@ procedure TfrmMsgQueue.lstEventsData(Sender: TObject; Item: TListItem);
 var
     e: TJabberEvent;
 begin
-  inherited;
+    inherited;
+    if (item.index >= _queue.Count) then
+        exit;
+
     e := TJabberEvent(_queue[item.Index]);
 
     item.Caption := e.caption;
