@@ -88,7 +88,7 @@ end;
 implementation
 
 uses
-    COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList,
+    COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
     ComServ, Menus, SysUtils;
 
 {---------------------------------------}
@@ -425,6 +425,9 @@ begin
     Result := _plugs.Add(cp);
     if _plugs.Count = 1 then
         _ccbId := MainSession.RegisterCallback(ChatCallback);
+
+    if (_chat.Window <> nil) then
+        fireNewWindow(TForm(_chat.Window).Handle );
 end;
 
 {---------------------------------------}
