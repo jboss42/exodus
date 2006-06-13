@@ -292,7 +292,7 @@ const
     sStatus_307  = '%s has been kicked from this room. %s';
 
     sStatus_401  = 'You supplied an invalid password to enter this room.';
-    sStatus_403  = 'You are on the ban list for this room.';
+    sStatus_403  = 'You are not allowed to enter this room because you are on the ban list.';
     sStatus_404  = 'The room is being created. Please try again later.';
     sStatus_405  = 'You are not allowed to create rooms.';
     sStatus_405a = 'You are not allowed to enter the room.';
@@ -1027,7 +1027,7 @@ begin
                 if (emsg = '') then
                     emsg := etag.Data();
                 if (emsg = '') then
-                    emsg := _('You are not allowed to join this room. The room could be password protected, or you could be on the ban list.');
+                    emsg := _(sStatus_403);
                 MessageDlgW(emsg, mtError, [mbOK], 0);
                 Self.Close();
                 exit;
