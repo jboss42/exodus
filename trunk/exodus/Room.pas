@@ -298,6 +298,7 @@ const
     sStatus_405a = 'You are not allowed to enter the room.';
     sStatus_407  = 'You are not on the member list for this room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
+    sStatus_413  = 'The room you were trying to enter is at maximum occupancy. Try again later.';
     sStatus_Unknown = 'The room has been destroyed for an unknown reason.';
 
     sEditVoice     = 'Edit Voice List';
@@ -1028,6 +1029,12 @@ begin
                 if (emsg = '') then
                     emsg := _('You are not allowed to join this room. The room could be password protected, or you could be on the ban list.');
                 MessageDlgW(emsg, mtError, [mbOK], 0);
+                Self.Close();
+                exit;
+            end
+            else if (ecode = '413') then begin
+                //Note:  This is the JINC code for max-occupants
+                MessageDlgW(_(sStatus_413), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
