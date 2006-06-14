@@ -128,30 +128,21 @@ correct version of fireEvent() for the event that you are firing.</p>
 	
 	<tr>
 		<td valign="top" width="265">/data/debug</td>
-		<td valign="top">
-		nil</td>
-		<td valign="top">
-		String</td>
-		<td valign="top">
-		Info to be shown in the debug window</td>
+		<td valign="top">nil</td>
+		<td valign="top">String</td>
+		<td valign="top">Info to be shown in the debug window</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/data/send</td>
-		<td valign="top">
-		nil</td>
-		<td valign="top">
-		String</td>
-		<td valign="top">
-		Data was sent</td>
+		<td valign="top">nil</td>
+		<td valign="top">String</td>
+		<td valign="top">Data was sent</td>
 	</tr>
 	<tr>
-		<td valign="top" width="265">/data/receive</td>
-		<td valign="top">
-		nil</td>
-		<td valign="top">
-		String</td>
-		<td valign="top">
-		Data was received</td>
+		<td valign="top" width="265">/data/recv</td>
+		<td valign="top">nil</td>
+		<td valign="top">String</td>
+		<td valign="top">Data was received</td>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/presence/available</td>
@@ -249,8 +240,7 @@ correct version of fireEvent() for the event that you are firing.</p>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/session/avatars</td>
-		<td valign="top">nil <font color="#800000"><i>(shouldn't this at least 
-		have the jid of the avatar?)</i></font></td>
+		<td valign="top">&lt;avatar jid='user@host'/&gt;</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">New avatar available</td>
 	</tr>
@@ -375,8 +365,7 @@ correct version of fireEvent() for the event that you are firing.</p>
 	</tr>
 	<tr>
 		<td valign="top" width="265">/session/logger</td>
-		<td valign="top">nil (<font color="#800000">should this have the new log 
-		state?</font>)</td>
+		<td valign="top">&lt;off/&gt; or &lt;on date_enabled='true|false'/&gt;</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">Logging has been enabled or disabled.</td>
 	</tr>
