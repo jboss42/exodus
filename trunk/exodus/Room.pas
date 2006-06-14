@@ -290,6 +290,7 @@ const
     sStatus_302  = 'This room has been destroyed.';
     sStatus_303  = '%s is now known as %s.';
     sStatus_307  = '%s has been kicked from this room. %s';
+    sStatus_322  = '%s is not a member of this room and has therefore been removed from this room.';
 
     sStatus_401  = 'You supplied an invalid password to enter this room.';
     sStatus_403  = 'You are not allowed to enter this room because you are on the ban list.';
@@ -1081,7 +1082,9 @@ begin
                     itag := tag.QueryXPTag(xp_muc_reason);
                     if (itag <> nil) then tmp1 := itag.Data else tmp1 := '';
                     if (scode = '301') then tmp2 := _(sStatus_301)
-                    else if (scode = '307') then tmp2 := _(sStatus_307);
+                    else if (scode = '307') then tmp2 := _(sStatus_307)
+                    else if (scode = '322') then tmp2 := _(sStatus_322);
+                         
                     mtag := newRoomMessage(WideFormat(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
                 end;
@@ -1280,6 +1283,7 @@ begin
     else if (scode = '302') then fmt := _(sStatus_302)
     else if (scode = '303') then fmt := _(sStatus_303)
     else if (scode = '307') then fmt := _(sStatus_307)
+    else if (scode = '322') then fmt := _(sStatus_322)         
     else if (scode = '403') then msg := _(sStatus_403)
     else if (scode = '405') then msg := _(sStatus_405)
     else if (scode = '407') then msg := _(sStatus_407)
@@ -2426,11 +2430,15 @@ begin
     end
     else if ((_passwd = '') and
         ((e.hasFeature('muc_passwordprotected')) or
-         (e.hasFeature('muc_password')))) then begin
+         (e.hasFeature('muc_password')) or
+         (e.hasFeature('muc-passwordprotected')) or
+         (e.hasFeature('muc-password')))) then begin
 
         // this room needs a passwd, and they didn't give us one..
-        if (InputQueryW(_('Password Prompt'), _('Room Password'), _passwd, true) = false) then
+        if (InputQueryW(e.Jid.jid, _('Room Password'), _passwd, true) = false) then begin
+            Self.Close;
             exit;
+        end;
     end;
 
     _pending_start := false;
