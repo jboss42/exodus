@@ -143,7 +143,7 @@ const
     sSmallKeys = 'Must have a larger number of poll keys.';
     sConnDetails = '%s Details';
     sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
-    sProfileResourcePassMatch = ' The resource you have provided matches your password.  Please re-enter a valid resource.';
+    sProfileResourcePassMatch = 'The resource you have provided matches your password.  Please re-enter a valid resource.';
     sResourceWork = 'Work';
     sResourceHome = 'Home';
     sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
