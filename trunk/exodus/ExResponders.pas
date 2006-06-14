@@ -149,7 +149,7 @@ const
     sLast = 'Last';
     sBrowse = 'Browse';
     sDisco = 'Disco';
-    sExceptionMsg = 'An error has occurred. An error log file will automatically be saved to your desktop. Use this file to submit a bug report at the website.';
+    sExceptionMsg = 'An error has occurred.  An error log file will be saved to your Hermes directory.';
     sConfirm = 'HTTP authentication';
     sConfirmationDialog = 'Accept authentication request from %s';
 
