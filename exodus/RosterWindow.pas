@@ -862,7 +862,6 @@ begin
         if (ritem <> nil) then begin
             if (ritem.Group[0] = g_bookmarks) then
                 RemoveItemNodes(ritem);
-                MainSession.roster.RemoveItem(ritem.Jid.jid);
         end;
     end;
 end;
