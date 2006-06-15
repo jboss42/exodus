@@ -177,6 +177,8 @@ type
     _send_unavailable: boolean;
     _custom_pres: boolean;
     _pending_start: boolean;
+    _pending_destroy: boolean;  // if user is destroying room
+
     _my_membership_role: WideString; // My membership to the room.
 
     // Stuff for nick completions
@@ -248,7 +250,8 @@ var
   xp_muc_status: TXPLite;
   xp_muc_item: TXPLite;
   xp_muc_reason: TXPLite;
-
+  xp_muc_destroy_reason: TXPLite;
+  
 const
     sRoom = '%s'; // Room';
     sNotifyKeyword = 'Keyword in ';
@@ -283,6 +286,8 @@ const
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
+    sRoomDestroyed = 'The room %s has been destroyed.';
+    sReason = 'Reason:';
     sDestroyRoomConfirm = 'Do you really want to destroy the room? All users will be removed.';
 
     sStatus_100  = 'This room is not anonymous';
@@ -968,8 +973,8 @@ var
     tmp_jid: TJabberID;
     i: integer;
     member: TRoomMember;
-    mtag, t, itag, xtag, etag: TXMLTag;
-    ecode, scode, tmp1, tmp2: Widestring;
+    mtag, t, itag, xtag, etag, drtag: TXMLTag;
+    ecode, scode, tmp1, tmp2, reason: Widestring;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
@@ -1051,6 +1056,21 @@ begin
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
                 ShowStatusCode(t);
+
+            if (not _pending_destroy) then begin
+                // Show destroy reason
+                tmp_jid := TJabberID.Create(from);
+
+                reason := WideFormat(_(sRoomDestroyed), [tmp_jid.user]);
+                drtag := tag.QueryXPTag(xp_muc_destroy_reason);
+                if ((drtag <> nil) and (drtag.Data <> '')) then begin
+                    reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
+                end;
+
+                MessageDlgW(reason, mtInformation, [mbOK], 0);
+                tmp_jid.Free();
+                _pending_destroy := false;
+            end;
             Self.Close();
             exit;
         end
@@ -1418,6 +1438,7 @@ begin
     _send_unavailable := false;
     _custom_pres := false;
     _pending_start := false;
+    _pending_destroy := false;
 
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
@@ -2210,6 +2231,7 @@ begin
     d := q.AddTag('destroy');
     // TODO: alt-jid goes onto <destroy jid="newroom@server">
     d.AddBasicTag('reason', reason);
+    _pending_destroy := true;
     MainSession.SendTag(iq);
 end;
 
@@ -2688,7 +2710,7 @@ initialization
     xp_muc_status := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/status');
     xp_muc_item := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/item');
     xp_muc_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/item/reason');
-
+    xp_muc_destroy_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/destroy/reason');
 finalization
     xp_muc_reason.Free();
     xp_muc_item.Free();
