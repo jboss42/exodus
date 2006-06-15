@@ -3,7 +3,7 @@ unit ChatWin;
     Copyright 2002, Peter Millard
 
     This file is part of Exodus.
-
+                                                                    f
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -94,6 +94,7 @@ type
     jid: widestring;        // jid of the person we are talking to
     _jid: TJabberID;        // JID object of jid
     _pcallback: integer;    // Presence Callback
+    _spcallback: integer;  // Self Presence Callback - for chats via a room
     _scallback: integer;    // Session callback
     _thread : string;       // thread for conversation
     _pres_img: integer;     // current index of the presence image
@@ -115,6 +116,7 @@ type
     _warn_busyclose: boolean;
 
     _destroying: boolean;
+    _isRoom:  boolean;      // true if this is a muc chat - a chat via a room
 
     _cur_ver: TJabberIQ;    // pending events
     _cur_time: TJabberIQ;
@@ -157,6 +159,7 @@ type
     procedure MessageEvent(tag: TXMLTag);
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
+    procedure doMucChat(tag: TXMLTag);
     procedure SetupResources();
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 
@@ -196,6 +199,7 @@ const
     sIsNow = 'is now';
     sAvailable = 'available';
     sOffline = 'offline';
+    sUnavailable = 'unavailable';
     sCloseBusy = 'This chat window is busy. Close anyways?';
     sChat = 'Chat';
     sAlreadySubscribed = 'You are already subscribed to this contact';
@@ -272,15 +276,24 @@ begin
     // Setup the properties of the window,
     // and hook it up to the chat controller.
     with TfrmChat(chat.window) do begin
+        _isRoom := IsRoom(sjid);
+        if (_isRoom) then begin
+            popAddContact.Enabled := false;
+            mnuProfile.Enabled    := false;
+            popResources.Enabled  := false;
+            mnuSendFile.Enabled   := false;
+            c1.Enabled            := false;
+            mnuBlock.Enabled      := false;
+            if (chat_nick = '') then begin
+                chat_nick := resource;  // OtherNick will be set to this
+            end;
+        end;
+
         _thread := chat.getThreadID();
         tmp_jid := TJabberID.Create(sjid);
         if (chat_nick = '') then begin
             ritem := MainSession.roster.Find(sjid);
             if (ritem = nil) then begin
-                // If not in our roster, check for a TC room
-                if (IsRoom(sjid)) then
-                    chat_nick := FindRoomNick(sjid + '/' + resource);
-
                 if (chat_nick = '') then
                     OtherNick := tmp_jid.user
                 else
@@ -288,7 +301,7 @@ begin
             end
             else begin
                 OtherNick := ritem.Text;
-                mnuSendFile.Enabled := ritem.IsNative;
+                mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
                 C1.Enabled := ritem.IsNative;
             end;
         end
@@ -370,6 +383,7 @@ begin
     inherited;
     _thread := '';
     _pcallback := -1;
+    _spcallback:= -1;
     _scallback := -1;
     OtherNick := '';
     _pres_img := RosterTreeImages.Find('unknown');
@@ -379,6 +393,7 @@ begin
     _msg_out := false;
     _jid := nil;
     _destroying := false;
+    _isRoom     := false;
     _res_menus := TWidestringlist.Create();
     _unknown_avatar := TBitmap.Create();
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
@@ -445,6 +460,9 @@ var
     p: TJabberPres;
     m: TMenuItem;
 begin
+    // resources not managed via chat window if this is a muc chat
+    if (_isRoom) then Exit;
+
     // Make sure we have menu items for all resources
     p := MainSession.ppdb.FindPres(_jid.jid, '');
     while (p <> nil) do begin
@@ -479,7 +497,8 @@ var
     a: TAvatar;
     //do_pres: boolean;
     //dp: TCapPresence;
-    n: Widestring;
+    n, s, nickjid: Widestring;
+    rm: TfrmRoom;
 begin
     Result := true;
     jid := cjid;
@@ -518,6 +537,18 @@ begin
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
 
+    // if this chat is via a room - watch for my exit/entry msgs
+    // to avoid causing messages of type error to be returned
+    if (_isRoom and (_spcallback = -1)) then begin
+        rm := FindRoom(_jid.jid);
+        if (rm <> nil) then begin
+            nickjid := Lowercase(rm.getJid + '/' + rm.mynick);
+            _mynick := rm.mynick;
+            _spcallback := MainSession.RegisterCallback(PresCallback,
+                '/packet/presence[@from="' + nickjid + '*"]');
+        end;
+    end;
+
     if (_scallback = -1) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 
@@ -540,10 +571,19 @@ begin
         end;
 
         // This person is in our roster
-        lblNick.Caption := ritem.Text;
-        Caption := ritem.Text;
         lblNick.Hint := _jid.getDisplayFull();
-        MsgList.setTitle(ritem.Text);
+        if (_isRoom) then begin
+            s := FindRoomNick(cjid);
+            s := ritem.Text + ' - ' + s;
+            lblNick.Caption := s;
+            Caption := s;
+            MsgList.setTitle(s);
+        end
+        else begin
+            lblNick.Caption := ritem.Text;
+            Caption := ritem.Text;
+            MsgList.setTitle(ritem.Text);
+        end;
         if (p = nil) then
             ChangePresImage(ritem, 'offline', 'offline')
         else
@@ -561,10 +601,18 @@ begin
         else
             n := _jid.getDisplayFull();
 
-        lblNick.Caption := n;
-        lblNick.Hint := cjid;
-        MsgList.setTitle(cjid);
-        Caption := n;
+        if (_isRoom) then begin
+            s := _jid.userDisplay + ' - ' + n;
+            lblNick.Caption := s;
+            Caption := s;
+            MsgList.setTitle(s);
+        end
+        else begin
+            lblNick.Caption := n;
+            lblNick.Hint := cjid;
+            MsgList.setTitle(cjid);
+            Caption := n;
+        end;
         if (p = nil) then
             ChangePresImage(nil, 'unknown', 'Unknown Presence')
         else
@@ -934,6 +982,7 @@ procedure TfrmChat.PresCallback(event: string; tag: TXMLTag);
 begin
     // display some presence packet
     if (event = 'xml') then begin
+        doMucChat(tag); // only matters if chatting via a room (_isRoom = true)
         showPres(tag);
         SetupResources();
     end;
@@ -981,6 +1030,41 @@ begin
     _old_img := _pres_img;
 
 end;
+
+{---------------------------------------}
+procedure TfrmChat.doMucChat(tag: TXMLTag);
+var
+    ptype: widestring;
+begin
+    if (not _isRoom) then Exit;
+
+    ptype :=  tag.GetAttribute('type');
+    if (AnsiSameText(sUnavailable, ptype)) then begin
+        msgOut.Enabled := false;
+
+        // One of the parties is unavailable due to change nick or room exit
+        // ... so make chat invalid.
+        if (MainSession <> nil) and (_pcallback <> -1) and
+            (_spcallback <> -1) and (_scallback <> -1) then begin
+            MainSession.UnRegisterCallback(_pcallback);
+            MainSession.UnRegisterCallback(_spcallback);
+            MainSession.UnRegisterCallback(_scallback);
+            _pcallback := -1;
+            _spcallback := -1;
+            _scallback  := -1;
+        end;
+
+        if (chat_object <> nil) then
+            freeChatObject;
+
+        if (com_controller <> nil) then begin
+          com_controller.setChatSession(nil);
+          com_controller.Free();
+          com_controller := nil;
+        end
+    end
+end;
+
 
 {---------------------------------------}
 procedure TfrmChat.showPres(tag: TXMLTag);
@@ -1180,8 +1264,12 @@ end;
 procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
     // Unregister the callbacks + stuff
-    if (MainSession <> nil) then begin
+    if (MainSession <> nil) and
+       (_pcallback <> -1) and
+       (_spcallback <> -1) and
+       (_scallback <> -1) then begin
         MainSession.UnRegisterCallback(_pcallback);
+        MainSession.UnRegisterCallback(_spcallback);
         MainSession.UnRegisterCallback(_scallback);
     end;
 
@@ -1370,7 +1458,7 @@ var
     s: String;
 begin
     if ((_warn_busyclose) and
-        ((timBusy.Enabled) or (MsgList.isComposing()))) then begin
+        (((timBusy.Enabled) or (MsgList.isComposing())) and msgOut.Enabled)) then begin
         if MessageDlgW(_(sCloseBusy), mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
             CanClose := false;
             exit;
