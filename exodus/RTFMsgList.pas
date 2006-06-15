@@ -149,6 +149,8 @@ begin
     // If typing starts on the MsgList, then bump it to the outgoing
     // text box.
     bc := TfrmBaseChat(_base);
+    if (not bc.MsgOut.Enabled) then
+        Exit;
 
     if (not bc.Visible) then exit;
 
