@@ -500,7 +500,6 @@ begin
             unf := getGroup(_('Unfiled'));
             assert(unf <> nil);
             unf.setPresence(ri.jid.jid, pres);
-            exit;
         end;
 
         // iterate over all groups for this user.
