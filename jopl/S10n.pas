@@ -50,7 +50,8 @@ var
     SubController: TSubController;
 
 const
-    sS10nDeny = 'The contact: %s did not grant your subscription request.'#13#10'This user may not exist.';
+    sS10nDeny  = 'The contact %s did not grant your subscription request.'#13#10'This user may not exist.';
+    sS10nUnsub = 'The contact %s has been removed from your contacts list at his/her request.';
 
 
 procedure SendSubscribe(sjid: string; Session: TJabberSession);
@@ -171,6 +172,7 @@ end;
 procedure TSubController.Subscribed(event: string; tag: TXMLTag);
 begin
     // getting a s10n ack
+
 end;
 
 {---------------------------------------}
@@ -184,15 +186,25 @@ procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
 var
     from: TJabberID;
     ritem: TJabberRosterItem;
+    dn: Widestring;
 begin
+    { Todo:  Move this UI code out of jopl.  Perhaps throw a
+             /session/gui/unsubscribed event and do it in GUIFactory? }
+             
     // getting a s10n denial or someone is revoking us
     from := TJabberID.Create(tag.getAttribute('from'));
     ritem := MainSession.roster.Find(from.jid);
-    if ((ritem <> nil) and (ritem.ask = 'subscribe')) then begin
-        // we are got denied by this person
-        MessageDlg(Format(sS10nDeny, [from.GetDisplayJID()]), mtInformation, [mbOK], 0);
-        ritem.remove();
+    if (ritem <> nil) then begin
+        if (ritem.ask = 'subscribe') then begin
+            // we are got denied by this person
+            MessageDlg(Format(sS10nDeny, [from.getDisplayJID()]), mtInformation, [mbOK], 0);
+            ritem.remove();
+        end
+        else begin
+            MessageDlg(Format(sS10nUnsub, [ritem.Text]), mtInformation, [mbOK], 0);
+        end;
     end;
+    
     from.Free();
 end;
 
