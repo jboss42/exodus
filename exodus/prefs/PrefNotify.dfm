@@ -5,6 +5,8 @@ inherited frmPrefNotify: TfrmPrefNotify
   ClientHeight = 346
   ClientWidth = 338
   OldCreateOrder = True
+  ExplicitWidth = 350
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   object lblConfigSounds: TTntLabel [0]
@@ -23,6 +25,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Width = 338
     Caption = 'Notification Options'
     TabOrder = 6
+    ExplicitWidth = 338
   end
   object chkNotify: TTntCheckListBox
     Left = 8
@@ -30,7 +33,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Width = 257
     Height = 97
     ItemHeight = 13
-    Items.WideStrings = (
+    Items.Strings = (
       'Contact is online'
       'Contact is offline'
       'New chat session'
@@ -60,9 +63,9 @@ inherited frmPrefNotify: TfrmPrefNotify
     Width = 249
     Height = 17
     Hint = 
-      'NOTE: Notifications always occur when Exodus is in the backgroun' +
-      'd.'
-    Caption = 'Perform notifications when I am using Exodus.'
+      'NOTE: Notifications always occur when the client is in the backg' +
+      'round.'
+    Caption = 'Perform notifications when using the client.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
@@ -72,7 +75,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Top = 82
     Width = 289
     Height = 17
-    Caption = 'Flash taskbar continuously until Exodus gets focus.'
+    Caption = 'Flash taskbar continuously until the client gets focus.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
