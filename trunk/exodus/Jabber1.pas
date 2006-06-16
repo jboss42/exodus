@@ -2173,7 +2173,7 @@ var
     name: string;
     len: dword;
     hw: HWINSTA;
-    w: HWND;
+    w,d: HWND;
     wSize: TRect;
     mon: TMonitor;
 begin
@@ -2202,14 +2202,18 @@ begin
     if name = 'Default' then begin  // NO I18N!
         // what about fullscreen mode, like PowerPoint shows?
         w := GetForegroundWindow();
-        Windows.GetClientRect(w, wSize);
-        mon := Screen.MonitorFromWindow(w, mdNearest);
-        if((mon.BoundsRect.Left = wSize.Left) and
-           (mon.BoundsRect.Right = wSize.Right) and
-           (mon.BoundsRect.Top = wSize.Top) and
-           (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
-           result := DT_FULLSCREEN;
-           exit;
+        d := FindWindow('Progman', nil);
+        if (w <> d) then begin
+            // Got a window and it is NOT the program manager (desktop).
+            Windows.GetClientRect(w, wSize);
+            mon := Screen.MonitorFromWindow(w, mdNearest);
+            if((mon.BoundsRect.Left = wSize.Left) and
+               (mon.BoundsRect.Right = wSize.Right) and
+               (mon.BoundsRect.Top = wSize.Top) and
+               (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
+               result := DT_FULLSCREEN;
+               exit;
+            end;
         end;
         result := DT_OPEN;
         exit;
