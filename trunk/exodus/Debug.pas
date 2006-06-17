@@ -70,7 +70,6 @@ type
     { Private declarations }
     _cb: integer;
     _scb: integer;
-    _xmlParser : TXMLTagParser;
     
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
@@ -189,7 +188,6 @@ begin
     end
     else
         lblJID.Caption := _('Disconnected');
-    _xmlParser := TXMLTagParser.create();
 end;
 
 {---------------------------------------}
@@ -223,33 +221,30 @@ end;
 function getObfuscatedData(event : String; tag : TXMLTag; data : WideString) : WideString;
 const
     PASSWORD_NAME : WideString = 'password'; //don't localize
-    XML_TAG       : WideString = '<';
+    PASSWORD_TAG  : string = '<password>';
 var
     ptag        : TXMLTag;
     ctags       : TXMLTagList;
     xmlParser   : TXMLTagParser;
 begin
     Result := data;
-    if ((event = '/data/send') or (event = '/data/recv')) then begin
-        //see if password is in string
-        //conatins some refernce to password and starts with <, making it liekely this is xml
-        if ((WStrPos(PWideChar(data), PWideChar(PASSWORD_NAME)) <> nil)  and (WStrPos(PWideChar(data), PWideChar(XML_TAG)) <> nil)) then begin
-            //attempt ot build xml tag from data, so we can manipluate it...
-            xmlParser := TXMLTagParser.Create();
-            try
-                xmlParser.ParseString(data, '');
-                ptag := xmlParser.popTag;
-                //get pass element
-                ctags := ptag.QueryRecursiveTags(PASSWORD_NAME, true);
-                if ((ctags.Count > 0) and (ctags[0].Data <> ''))then begin
-                    ctags[0].ClearCData();
-                    ctags[0].AddCData('*******');
-                end;
-                Result := ptag.XML;
-                ptag.Free();
-            finally
-                xmlParser.Free();
+    if (((event = '/data/send') or (event = '/data/recv')) and
+        (data <> '') and (AnsiPos(PASSWORD_TAG, data) <> 0)) then begin
+        //attempt ot build xml tag from data, so we can manipluate it...
+        xmlParser := TXMLTagParser.Create();
+        try
+            xmlParser.ParseString(data, '');
+            ptag := xmlParser.popTag;
+            //get pass element
+            ctags := ptag.QueryRecursiveTags(PASSWORD_NAME, true);
+            if ((ctags.Count > 0) and (ctags[0].Data <> ''))then begin
+                ctags[0].ClearCData();
+                ctags[0].AddCData('*******');
             end;
+            Result := ptag.XML;
+            ptag.Free();
+        finally
+            xmlParser.Free();
         end;
     end;
 end;
