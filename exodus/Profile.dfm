@@ -1,10 +1,10 @@
 object frmProfile: TfrmProfile
   Left = 368
   Top = 225
-  Width = 462
-  Height = 398
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
+  ClientHeight = 364
+  ClientWidth = 454
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -13,7 +13,6 @@ object frmProfile: TfrmProfile
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -167,12 +166,13 @@ object frmProfile: TfrmProfile
         Caption = 'Subscription Type'
         Columns = 4
         ItemIndex = 0
-        Items.WideStrings = (
+        Items.Strings = (
           'None'
           'To'
           'From'
           'Both')
         TabOrder = 2
+        OnClick = SubscriptionOnClick
       end
     end
     object TabSheet7: TTntTabSheet
@@ -350,7 +350,7 @@ object frmProfile: TfrmProfile
         Enabled = False
         ItemHeight = 13
         TabOrder = 1
-        Items.WideStrings = (
+        Items.Strings = (
           'Accounting/Finance'
           'Computer related (IS, MIS, DP)'
           'Computer related (WWW)'
@@ -498,7 +498,7 @@ object frmProfile: TfrmProfile
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.WideStrings = (
+        Items.Strings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -913,7 +913,7 @@ object frmProfile: TfrmProfile
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.WideStrings = (
+        Items.Strings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -1162,17 +1162,25 @@ object frmProfile: TfrmProfile
     Width = 454
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 1
+    TabStop = True
+    ExplicitTop = 330
+    ExplicitWidth = 454
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 454
       Height = 34
+      ExplicitWidth = 454
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 454
+        ExplicitWidth = 454
       end
       inherited Panel1: TPanel
         Left = 294
         Height = 29
+        ExplicitLeft = 294
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -1194,15 +1202,28 @@ object frmProfile: TfrmProfile
     TabOrder = 2
     OnChange = TreeView1Change
     OnClick = TreeView1Click
-    Items.Data = {
-      040000001E0000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
-      054261736963220000000000000000000000FFFFFFFFFFFFFFFF000000000000
-      0000095265736F75726365731F0000000000000000000000FFFFFFFFFFFFFFFF
-      00000000000000000647726F7570732D0000000000000000000000FFFFFFFFFF
-      FFFFFF000000000100000014506572736F6E616C20496E666F726D6174696F6E
-      200000000000000000000000FFFFFFFFFFFFFFFF000000000000000007416464
-      72657373290000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
-      10576F726B20496E666F726D6174696F6E200000000000000000000000FFFFFF
-      FFFFFFFFFF00000000000000000741646472657373}
+    Items.NodeData = {
+      0104000000230000000000000000000000FFFFFFFFFFFFFFFF00000000010000
+      0005420061007300690063002B0000000000000000000000FFFFFFFFFFFFFFFF
+      0000000000000000095200650073006F00750072006300650073002500000000
+      00000000000000FFFFFFFFFFFFFFFF000000000000000006470072006F007500
+      70007300410000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
+      1450006500720073006F006E0061006C00200049006E0066006F0072006D0061
+      00740069006F006E00270000000000000000000000FFFFFFFFFFFFFFFF000000
+      0000000000074100640064007200650073007300390000000000000000000000
+      FFFFFFFFFFFFFFFF00000000010000001057006F0072006B00200049006E0066
+      006F0072006D006100740069006F006E00270000000000000000000000FFFFFF
+      FFFFFFFFFF0000000000000000074100640064007200650073007300}
+    Items.Utf8Data = {
+      04000000210000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
+      08EFBBBF4261736963250000000000000000000000FFFFFFFFFFFFFFFF000000
+      00000000000CEFBBBF5265736F7572636573220000000000000000000000FFFF
+      FFFFFFFFFFFF000000000000000009EFBBBF47726F7570733000000000000000
+      00000000FFFFFFFFFFFFFFFF000000000100000017EFBBBF506572736F6E616C
+      20496E666F726D6174696F6E230000000000000000000000FFFFFFFFFFFFFFFF
+      00000000000000000AEFBBBF416464726573732C0000000000000000000000FF
+      FFFFFFFFFFFFFF000000000100000013EFBBBF576F726B20496E666F726D6174
+      696F6E230000000000000000000000FFFFFFFFFFFFFFFF00000000000000000A
+      EFBBBF41646472657373}
   end
 end
