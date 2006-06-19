@@ -259,6 +259,8 @@ begin
     TranslateComponent(Self);
     _subscribe_windows.Add(Self);
     _capscb := -1;
+    MainSession.Roster.AssignGroups(cboGroup.Items);
+    cboGroup.Text := MainSession.Prefs.getString('roster_default');
 end;
 
 {---------------------------------------}
