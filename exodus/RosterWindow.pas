@@ -2435,7 +2435,7 @@ procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; State: TCustomDrawState
     c1, c2: Widestring);
 var
     top_margin, lines, rr, maxr, ico, tw, th: integer;
-    nRect, xRect: TRect;
+    nRect, xRect, sRect: TRect;
     main_color, stat_color: TColor;
     is_grp: boolean;
     tmps: Widestring;
@@ -2538,6 +2538,16 @@ begin
                 Font.Size := Font.Size + 3;
                 SelectObject(treeRoster.Canvas.Handle, Font.Handle);
             end;
+        end
+        else if (not (cdsSelected in State)) then begin
+            { Sometimes the UI doesn't remove the "status"
+              Also have to check for selected to not select maxr }
+            sRect        := xRect;
+            sRect.Left   := xRect.Right;
+            sRect.Right  := maxr;
+            sRect.Top    := xRect.Top + 1;
+            sRect.Bottom := xRect.Bottom - 1;
+            FillRect(sRect);
         end;
 
         if (cdsSelected in State) then
