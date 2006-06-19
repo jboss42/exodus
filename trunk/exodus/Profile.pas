@@ -126,10 +126,12 @@ type
     procedure btnAddGroupClick(Sender: TObject);
     procedure btnUpdateNickClick(Sender: TObject);
     procedure picBoxPaint(Sender: TObject);
+    procedure SubscriptionOnClick(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
     _vcard: TXMLVCard;
+    _origSubIdx: integer;
   public
     { Public declarations }
     procedure vcard(event: string; tag: TXMLTag);
@@ -185,6 +187,8 @@ begin
                 GrpListBox.Checked[gi] := true;
             end;
         end;
+
+        _origSubIdx := optSubscrip.ItemIndex;
 
         // Show all the resources
         p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
@@ -310,6 +314,8 @@ begin
 
     for i := 0 to TreeView1.Items.Count - 1 do
         TreeView1.Items[i].Expand(true);
+
+    _origSubIdx := -1;
 
     MainSession.Prefs.RestorePosition(Self);
 end;
@@ -447,6 +453,14 @@ procedure TfrmProfile.picBoxPaint(Sender: TObject);
 begin
     if (_vcard = nil) or (_vcard.picture = nil) then exit;
     _vcard.Picture.Draw(picBox.Canvas);
+end;
+
+// soley here to disallow a change in subscription state -
+// a managed user is a happy user...
+procedure TfrmProfile.SubscriptionOnClick(Sender: TObject);
+begin
+    if (_origSubIdx >= 0) then
+      TTntRadioGroup(Sender).ItemIndex := _origSubIdx;
 end;
 
 end.
