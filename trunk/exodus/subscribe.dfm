@@ -83,7 +83,6 @@ object frmSubscribe: TfrmSubscribe
       Top = 44
       Width = 200
       Height = 21
-      Style = csDropDownList
       ItemHeight = 13
       Sorted = True
       TabOrder = 1
@@ -95,17 +94,25 @@ object frmSubscribe: TfrmSubscribe
     Width = 322
     Height = 36
     Align = alBottom
-    AutoScroll = False
     TabOrder = 2
+    TabStop = True
+    ExplicitTop = 182
+    ExplicitWidth = 322
+    ExplicitHeight = 36
     inherited Panel2: TPanel
       Width = 322
       Height = 36
+      ExplicitWidth = 322
+      ExplicitHeight = 36
       inherited Bevel1: TBevel
         Width = 322
+        ExplicitWidth = 322
       end
       inherited Panel1: TPanel
         Left = 162
         Height = 31
+        ExplicitLeft = 162
+        ExplicitHeight = 31
         inherited btnOK: TTntButton
           Caption = 'Accept'
           OnClick = frameButtons1btnOKClick
