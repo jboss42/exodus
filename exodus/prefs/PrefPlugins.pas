@@ -67,8 +67,8 @@ var
 implementation
 {$R *.dfm}
 uses
-    ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,  
-    GnuGetText, PathSelector, Registry, Session;
+    ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,
+    GnuGetText, PathSelector, Registry, Session, PrefController;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -223,7 +223,7 @@ begin
 
     reg := TRegistry.Create();
     reg.RootKey := HKEY_CURRENT_USER;
-    reg.OpenKey('\Software\Jabber\Exodus\Plugins', true);
+    reg.OpenKey('\Software\Jabber\' + PrefController.GetAppInfo().ID + '\Plugins', true);
     values := TStringList.Create();
     reg.GetValueNames(values);
     for i := 0 to values.Count - 1 do begin
