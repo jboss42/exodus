@@ -524,6 +524,7 @@ begin
     // if we don't have sound registry settings, then add them
     // sigh.  If we had an installer, that would be the place to
     // do this.
+    {** JJf moved to installer
     try
         reg := TRegistry.Create();
         reg.RootKey := HKEY_CURRENT_USER;
@@ -544,7 +545,7 @@ begin
     except
         // do nothing... just silently ignore
     end;
-
+    **}
     // create COM interfaces for plugins to use
     ExCOMController := TExodusController.Create();
     ExCOMRoster := TExodusRoster.Create();

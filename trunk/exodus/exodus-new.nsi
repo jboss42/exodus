@@ -630,6 +630,32 @@ WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\Application" "" "Exodus"
 WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\IfExec" "" "ignore"
 WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\Topic" "" "XMPPAction"
 
+    ;sound notification events
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_chatactivity" "" $(SN_Chatactivity)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_invite" "" $(SN_Invite)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_keyword" "" $(SN_Keyword)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_newchat" "" $(SN_Newchat)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_normalmsg" "" $(SN_Normalmsg)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_offline" "" $(SN_Offline)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_online" "" $(SN_Online)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_roomactivity" "" $(SN_Roomactivity)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_s10n" "" $(SN_S10n)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_oob" "" $(SN_OOB)
+    WriteRegStr HKCU "AppEvents\EventLabels\${PRODUCT}_notify_autoresponse" "" $(SN_AutoResponse)
+    ;sound schemes
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}" "" ${PRODUCT}
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_chatactivity" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_invite" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_keyword" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_newchat" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_normalmsg" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_offline" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_online" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_roomactivity" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_s10n" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_oob" "" ""
+    WriteRegStr HKCU "AppEvents\Schemes\Apps\${PRODUCT}\${PRODUCT}_notify_autoresponse" "" ""
+
 SectionEnd ; end the section
 
 /*
@@ -839,6 +865,22 @@ Section "Uninstall"
     DeleteRegKey HKCR "${XMPPFILE}"
     DeleteRegKey HKCR "${XMPP_MIME_KEY}"
     DeleteRegKey HKLM "${PRODUCT_UNINSTALL_KEY}"
+
+    ;sound notification keys
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_chatactivity"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_invite"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_keyword"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_newchat"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_normalmsg"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_offline"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_online"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_roomactivity"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_s10n"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_oob"
+    DeleteRegKey HKCU "AppEvents\EventLabels\${PRODUCT}_notify_autoresponse"
+
+    DeleteRegKey HKCU "AppEvents\Schemes\Apps\${PRODUCT}"
+    
 SectionEnd
 
 
