@@ -1264,13 +1264,17 @@ end;
 procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
     // Unregister the callbacks + stuff
-    if (MainSession <> nil) and
-       (_pcallback <> -1) and
-       (_spcallback <> -1) and
-       (_scallback <> -1) then begin
-        MainSession.UnRegisterCallback(_pcallback);
-        MainSession.UnRegisterCallback(_spcallback);
-        MainSession.UnRegisterCallback(_scallback);
+    if (MainSession <> nil) then begin
+        if (_pcallback <> -1) then
+            MainSession.UnRegisterCallback(_pcallback);
+        if(_spcallback <> -1) then
+            MainSession.UnRegisterCallback(_spcallback);
+        if (_scallback <> -1) then
+            MainSession.UnRegisterCallback(_scallback);
+
+        _pcallback  := -1;
+        _spcallback := -1;
+        _scallback  := -1;
     end;
 
     if (chat_object <> nil) then
