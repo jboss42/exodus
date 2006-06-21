@@ -811,8 +811,8 @@ begin
   { prepare output buffer }
   with fOutBuff do begin
     BufferType := SECBUFFER_TOKEN;
-    cbBuffer := Credentials.Package.MaxToken;
-    pvBuffer := AllocMem(cbBuffer);
+    cbBuffer := 0;
+    pvBuffer := nil;
   end;
   with fOutBuffDesc do begin
     ulVersion := SECBUFFER_VERSION;
@@ -843,7 +843,9 @@ begin
       with fOutBuff do
         SetString(aToPeerToken, PChar(pvBuffer), cbBuffer);
   finally
-    FreeMem(fOutBuff.pvBuffer);
+    if (fOutBuff.pvBuffer <> nil) then begin
+        g.FunctionTable.FreeContextBuffer(fOutBuff.pvBuffer);
+    end;
   end;
 end;
 
