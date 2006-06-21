@@ -213,7 +213,7 @@ begin
     _pkg := TSSPIKerbPackage.Create();
     _creds := TSSPIWinNTCredentials.Create(_pkg);
     _ctx := TSSPIClientConnectionContext.Create(_creds);
-    _ctx.RequestedFlags := ISC_REQ_MUTUAL_AUTH;
+    _ctx.RequestedFlags := ISC_REQ_MUTUAL_AUTH or ISC_REQ_ALLOCATE_MEMORY;
     _ctx.NetworkRep := true;
 end;
 
@@ -331,6 +331,5 @@ end;
 
 initialization
     RegisterJabberAuth('GSSAPI', KerbAuthFactory);
-
 
 end.
