@@ -1055,9 +1055,8 @@ begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
-                ShowStatusCode(t);
-
-            if (not _pending_destroy) then begin
+                ShowStatusCode(t)
+            else if (not _pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
 
@@ -1303,7 +1302,7 @@ begin
     else if (scode = '302') then fmt := _(sStatus_302)
     else if (scode = '303') then fmt := _(sStatus_303)
     else if (scode = '307') then fmt := _(sStatus_307)
-    else if (scode = '322') then fmt := _(sStatus_322)         
+    else if (scode = '322') then fmt := _(sStatus_322)
     else if (scode = '403') then msg := _(sStatus_403)
     else if (scode = '405') then msg := _(sStatus_405)
     else if (scode = '407') then msg := _(sStatus_407)
