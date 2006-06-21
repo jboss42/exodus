@@ -73,6 +73,7 @@ type
         procedure addRef();
         procedure Release();
         procedure TimedRelease();
+        procedure DisableChat();
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
@@ -197,6 +198,14 @@ begin
 
     _cb := MainSession.RegisterCallback(MsgCallback,
             '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
+end;
+
+procedure TChatController.DisableChat();
+begin
+    if (_cb >= 0) then
+        MainSession.UnRegisterCallback(_cb);
+    Self.unassignEvent();
+    StopTimer();
 end;
 
 {---------------------------------------}
