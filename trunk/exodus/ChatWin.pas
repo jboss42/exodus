@@ -159,7 +159,7 @@ type
     procedure MessageEvent(tag: TXMLTag);
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
-    procedure doMucChat(tag: TXMLTag);
+    procedure handleMUCPresence(tag: TXMLTag);
     procedure SetupResources();
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 
@@ -955,7 +955,8 @@ begin
 
         // this should make sure that hidden windows
         // just go away when we get disconnected.
-        if (not Visible) then Self.Free();
+       //if (not Visible) then Self.Free();
+        Self.Free()        ;
     end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
@@ -979,10 +980,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.PresCallback(event: string; tag: TXMLTag);
+var
+    ptype: widestring;
 begin
     // display some presence packet
     if (event = 'xml') then begin
-        doMucChat(tag); // only matters if chatting via a room (_isRoom = true)
+        handleMUCPresence(tag); // only matters if chatting via a room (_isRoom = true)
         showPres(tag);
         SetupResources();
     end;
@@ -1032,9 +1035,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.doMucChat(tag: TXMLTag);
+procedure TfrmChat.handleMucPresence(tag: TXMLTag);
 var
     ptype: widestring;
+    idx: integer;
 begin
     if (not _isRoom) then Exit;
 
@@ -1044,24 +1048,36 @@ begin
 
         // One of the parties is unavailable due to change nick or room exit
         // ... so make chat invalid.
-        if (MainSession <> nil) and (_pcallback <> -1) and
-            (_spcallback <> -1) and (_scallback <> -1) then begin
-            MainSession.UnRegisterCallback(_pcallback);
-            MainSession.UnRegisterCallback(_spcallback);
-            MainSession.UnRegisterCallback(_scallback);
-            _pcallback := -1;
-            _spcallback := -1;
-            _scallback  := -1;
+        if (MainSession <> nil) then begin
+            if (_pcallback <> -1) then begin
+                MainSession.UnRegisterCallback(_pcallback);
+                _pcallback := -1;
+            end;
+
+            if (_spcallback <> -1) then begin
+                MainSession.UnRegisterCallback(_spcallback);
+                _spcallback := -1;
+            end;
         end;
 
-        if (chat_object <> nil) then
-            freeChatObject;
+        idx := MainSession.ChatList.IndexOfObject(chat_object);
+        if (idx >= 0) then
+            MainSession.ChatList.Delete(idx);
+
+        // keep ChatController from getting new msgs
+        if (chat_object <> nil) then begin
+            chat_object.DisableChat();
+        end;
 
         if (com_controller <> nil) then begin
-          com_controller.setChatSession(nil);
-          com_controller.Free();
-          com_controller := nil;
-        end
+            com_controller.setChatSession(nil);
+            com_controller.Free();
+            com_controller := nil;
+        end;
+
+        // modify presnece image - right not make everyone offline
+        ChangePresImage(nil, 'offline', 'offline')
+
     end
 end;
 
