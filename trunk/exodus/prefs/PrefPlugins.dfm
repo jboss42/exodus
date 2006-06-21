@@ -5,18 +5,20 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   ClientHeight = 372
   ClientWidth = 353
   OldCreateOrder = True
+  ExplicitWidth = 365
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   object Label6: TTntLabel [0]
-    Left = 6
-    Top = 239
+    Left = 0
+    Top = 241
     Width = 191
     Height = 13
     Caption = 'Plugin Directory (automatically scanned):'
   end
   object lblPluginScan: TTntLabel [1]
-    Left = 16
-    Top = 284
+    Left = 0
+    Top = 287
     Width = 155
     Height = 13
     Cursor = crHandPoint
@@ -27,19 +29,21 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Width = 353
     Caption = 'Application Plugins'
     TabOrder = 6
+    ExplicitWidth = 353
   end
   object btnAddPlugin: TTntButton
-    Left = 6
-    Top = 200
+    Left = 116
+    Top = 205
     Width = 75
     Height = 25
     Caption = 'Add'
     Enabled = False
     TabOrder = 1
+    Visible = False
   end
   object btnConfigPlugin: TTntButton
-    Left = 90
-    Top = 200
+    Left = 0
+    Top = 205
     Width = 75
     Height = 25
     Caption = 'Configure'
@@ -48,23 +52,24 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     OnClick = btnConfigPluginClick
   end
   object btnRemovePlugin: TTntButton
-    Left = 174
-    Top = 200
+    Left = 203
+    Top = 205
     Width = 75
     Height = 25
     Caption = 'Remove'
     Enabled = False
     TabOrder = 3
+    Visible = False
   end
   object txtPluginDir: TTntEdit
-    Left = 8
+    Left = 0
     Top = 260
-    Width = 225
+    Width = 270
     Height = 21
     TabOrder = 4
   end
   object btnBrowsePluginPath: TTntButton
-    Left = 239
+    Left = 278
     Top = 258
     Width = 75
     Height = 25
