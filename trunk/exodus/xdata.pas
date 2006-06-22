@@ -685,7 +685,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.Cancel();
 var
-    r, x: TXMLTag;
+    r, x, q: TXMLTag;
 begin
     if ((_type = 'form') and (_to_jid <> '')) then begin
         if (not MainSession.Active) then begin
@@ -693,9 +693,10 @@ begin
                 mtError, [mbOK], 0);
             exit;
         end;
-        r := getResponseTag();
+        r := getResponseTag();  // creates <iq><query></iq> and all the fillings
         x := frameXData.cancel();
-        r.AddTag(x);
+        q := r.GetFirstTag('query');
+        q.AddTag(x);
         MainSession.SendTag(r);
     end;
     _responded := true;
