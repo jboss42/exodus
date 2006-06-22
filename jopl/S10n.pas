@@ -171,7 +171,16 @@ end;
 {---------------------------------------}
 procedure TSubController.Subscribed(event: string; tag: TXMLTag);
 begin
-    // getting a s10n ack
+    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "subscribed",
+    the user SHOULD acknowledge receipt of that subscription state notification
+    through either "affirming" it by sending a presence stanza of type
+    "subscribe" to the contact or "denying" it by sending a presence stanza
+    of type "unsubscribe" to the contact; this step does not necessarily
+    affect the subscription state, but instead lets the user's server
+    know that it MUST no longer send notification of the subscription
+    state change to the user }
+
+    SendSubscribe(tag.getAttribute('from'), MainSession);
 
 end;
 
@@ -204,7 +213,18 @@ begin
             MessageDlg(Format(sS10nUnsub, [ritem.Text]), mtInformation, [mbOK], 0);
         end;
     end;
-    
+
+    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "subscribed",
+    the user SHOULD acknowledge receipt of that subscription state notification
+    through either "affirming" it by sending a presence stanza of type
+    "subscribe" to the contact or "denying" it by sending a presence stanza
+    of type "unsubscribe" to the contact; this step does not necessarily
+    affect the subscription state, but instead lets the user's server
+    know that it MUST no longer send notification of the subscription
+    state change to the user }
+
+    SendUnSubscribe(from.full, MainSession);
+
     from.Free();
 end;
 
