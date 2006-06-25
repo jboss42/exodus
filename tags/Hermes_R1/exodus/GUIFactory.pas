@@ -229,7 +229,7 @@ begin
         // Subscription window
         sjid := tag.getAttribute('from');
         tmp_jid := TJabberID.Create(sjid);
-        sjid := tmp_jid.jid;
+        sjid := tmp_jid.getDisplayJID();
 
         ri := MainSession.Roster.Find(sjid);
 

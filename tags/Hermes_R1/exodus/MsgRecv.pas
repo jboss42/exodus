@@ -25,7 +25,7 @@ uses
     Unicode, Dockable, ExEvents, MsgController, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    Buttons, TntStdCtrls, Menus, TntMenus;
+    Buttons, TntStdCtrls, Menus, TntMenus, StrUtils;
 
 type
 
@@ -77,6 +77,7 @@ type
     mnuHistory: TTntMenuItem;
     popPaste: TTntMenuItem;
     popCopy: TTntMenuItem;
+    
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -391,7 +392,8 @@ begin
     setFrom(e.from);
     frameButtons1.btnOK.Enabled := true;
     frameButtons1.btnCancel.Enabled := true;
-    txtSubject.Caption := e.str_content;
+    txtSubject.Caption := AnsiReplaceStr (e.str_content, '&', '&&');
+    _base_JID := e.str_content;
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
 
@@ -535,13 +537,14 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnOKClick(Sender: TObject);
 var
-    jid: WideString;
+    jid: TJabberID;
 begin
     // Do something...
     if eType = evt_Invite then begin
         // join this grp... grp is in the subject
-        jid := txtSubject.Caption;
-        StartRoom(jid, '');
+        jid := TJabberID.Create(_base_jid, false);
+        StartRoom(jid.jid, '');
+        jid.Free();
         Self.Close();
     end
 
@@ -745,6 +748,7 @@ begin
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then begin
         txtFrom.Caption := ritem.Text + ' <' + tmp_jid.getDisplayFull() + '>';
+        txtFrom.Caption := AnsiReplaceText(txtFrom.Caption, '&', '&&');
         if (pnlSendSubject.Visible) then
             Self.Caption := _(sMessageTo) + ritem.Text
         else
