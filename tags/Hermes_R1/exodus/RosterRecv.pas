@@ -25,7 +25,7 @@ uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntComCtrls, TntExtCtrls;
+    TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID;
 
 type
   TfrmRosterRecv = class(TfrmDockable)
@@ -68,9 +68,12 @@ var
     i: integer;
     ri: TJabberRosterItem;
     n: TListItem;
+    from: TJabberID;
 begin
     // Fill up the GUI based on the event
-    txtFrom.Caption := e.from;
+    from := TJabberID.Create(e.from);
+    txtFrom.Caption := from.getDisplayFull();
+    from.Free();
     txtMsg.Lines.Text := e.str_content;
 
     for i := 0 to e.Data.Count - 1 do begin
@@ -78,7 +81,7 @@ begin
         if ((ri <> nil) and (ri is TJabberRosterItem)) then begin
             n := lvContacts.Items.Add();
             n.Caption := ri.Text;
-            n.SubItems.Add(ri.jid.full);
+            n.SubItems.Add(ri.jid.getDisplayFull());
             n.Checked := true;
         end;
     end;
@@ -104,6 +107,7 @@ var
     l: TListItem;
     nick, jid: string;
     ri: TJabberRosterItem;
+    jidObj: TJabberID;
 begin
   inherited;
     // Add the selected contacts, then close
@@ -111,13 +115,15 @@ begin
         l := lvContacts.Items[i];
         if (l.Checked) then begin
             // subscribe
-            jid := l.SubItems[0];
+            jidObj := TJabberID.Create(l.SubItems[0], false);
+            jid := jidObj.jid;
             nick := l.Caption;
 
             ri := MainSession.Roster.Find(jid);
             if (ri <> nil) then begin
                 if (ri.Subscription = 'to') or (ri.Subscription = 'both') then begin
                     DebugMsg('Roster item already in roster: ' + jid);
+                    jidObj.Free();
                     continue;
                 end;
             end;
@@ -135,6 +141,7 @@ begin
                 ri.AddGroup(cboGroup.Text);
                 SendSubscribe(jid, MainSession);
             end;
+            jidObj.Free();
         end;
     end;
     Self.Close();

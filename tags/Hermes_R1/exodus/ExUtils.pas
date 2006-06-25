@@ -616,7 +616,7 @@ begin
         item := x.AddTag('item');
         item.setAttribute('jid', ri.jid.full);
         item.setAttribute('name', ri.Text);
-        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.full;
+        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');
