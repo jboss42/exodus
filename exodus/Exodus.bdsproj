@@ -125,10 +125,10 @@
 			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
 			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;.\components\tntunicode</Directories>
+			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;.\components\tntunicode;.\components\jcl\source\common;.\components\jcl\source\windows</Directories>
 			<Directories Name="Packages">vcl;rtl</Directories>
 			<Directories Name="Conditionals">Exodus;INDY9;TRACE_EXCEPTIONS</Directories>
-			<Directories Name="DebugSourceDirs">C:\source\exodus\exodus\components;C:\source\exodus\exodus\components\tntUnicode</Directories>
+			<Directories Name="DebugSourceDirs">.\components\tntUnicode;.\components</Directories>
 			<Directories Name="UsePackages">True</Directories>
 		</Directories>
 		<Parameters>
