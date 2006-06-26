@@ -261,21 +261,13 @@ type
     _noMoveCheck: boolean;              // don't check form moves
     _tray_notify: boolean;              // boolean for flashing tray icon
     _edge_snap: integer;                // edge snap fuzziness
-    _auto_away: boolean;                // perform auto-away ops
-    _auto_away_interval: integer;
     _auto_login: boolean;
-    _last_tick: dword;                  // last tick when something happened
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
 
     // Various state flags
     _windows_ver: integer;
     _is_broadcast: boolean;             // Should this copy broadcast pres changes
-    _is_autoaway: boolean;              // Are we currently auto-away
-    _is_autoxa: boolean;                // Are we currently auto-xa
-    _last_show: Widestring;             // last show for restoring after auto-away
-    _last_status: Widestring;           // last status    (ditto)
-    _last_priority: integer;            // last priority  (ditto)
     _hidden: boolean;                   // are we minimized to the tray
     _was_max: boolean;                  // was the main window maximized before?
     _logoff: boolean;                   // are we logging off on purpose
@@ -287,13 +279,22 @@ type
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
 
-    // Stuff for the Autoaway DLL
+    // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
     _GetLastTick: TGetLastTick;         // function ptrs inside the lib
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
+
     _valid_aa: boolean;                 // do we have a valid auto-away setup?
     _GetLastInput: TGetLastInputFunc;
+    _is_autoaway: boolean;              // Are we currently auto-away
+    _is_autoxa: boolean;                // Are we currently auto-xa
+    _auto_away: boolean;                // perform auto-away ops
+    _auto_away_interval: integer;       //# of seconds between checks when moving from availabel state
+
+    _last_show: Widestring;             // last show for restoring after auto-away
+    _last_status: Widestring;           // last status    (ditto)
+    _last_priority: integer;            // last priority  (ditto)
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -1149,7 +1150,6 @@ begin
         end
         else
             DebugMsg(_(sAutoAwayFail));
-        _last_tick := GetTickCount();
     end
     else begin
         // Use the GetLastInputInfo API call
@@ -1478,9 +1478,12 @@ begin
         else if (MainSession.Show = 'xa') then
             SetTrayIcon(10);
 
-        // don't send message on autoaway or auto-return
-        if (_is_autoaway or _is_autoxa or _is_broadcast) then exit;
-
+        // don't send message on autoaway
+        if (_is_autoaway or _is_autoxa) then exit;
+        
+        //don't send message if auto-return
+        if (_is_broadcast) then exit;
+        
         // Send a windows msg so other copies of Exodus will change their
         // status to match ours.
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
@@ -2154,7 +2157,9 @@ var
 begin
     // Return the last tick count of activity
     Result := 0;
+    //if not (2k or xp)
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
+        //use idl dll
         if ((_idle_hooks <> 0) and (@_GetLastTick <> nil)) then
             Result := _GetLastTick();
     end
@@ -2249,6 +2254,8 @@ var
     dmsg: string;
     do_xa, do_dis: boolean;
     avail: boolean;
+    _last_tick: dword;  // last tick when something happened
+
 begin
     {
     Auto-away mad-ness......
@@ -2263,27 +2270,34 @@ begin
     tick count which had activity.
     }
 
+    //if we are not connected bail
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
 
     with MainSession.Prefs do begin
+        //_autoAway is set when prefs are updatecd
+        //if auto_away is enabled
         if ((_auto_away)) then begin
-
+            //if screen is locked, screensaver or full screen app the autoaway
             if screenStatus() > DT_OPEN then begin
+                //if not already autoaway, make it so
                 if not _is_autoaway then
                     SetAutoAway();
                 exit;
             end;
-            
+            //otherwise check to see if auto away should be triggered
             _last_tick := getLastTick();
-            if (_last_tick = 0) then exit;
-
+            if (_last_tick = 0) then exit; //might return 0 if library setup failed
+            //get number of seconds since last activity
             cur_idle := (GetTickCount() - _last_tick) div 1000;
+            //if we are testing auto-away (via the -a command line) then
+            //make mins = to seconds to speed things up, otherwise determine
+            //number of minutes since last input
             if (not ExStartup.testaa) then
                 mins := cur_idle div 60
             else
                 mins := cur_idle;
-
+            //of testing autoaway via the -a command line param, dump debug stmts
             if (ExStartup.testaa) then begin
                 if (not _is_autoaway) and (not _is_autoxa) then begin
                     dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
@@ -2292,30 +2306,36 @@ begin
                     DebugMsg(dmsg);
                 end;
             end;
-
+            //get autoway prefs
             away := getInt('away_time');
             xa := getInt('xa_time');
             dis := getInt('disconnect_time');
             do_xa := getBool('auto_xa');
             do_dis := getBool('auto_disconnect');
-
+            //are we in an availabel show state?
             avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
                 (MainSession.Show <> 'away');
-
+            //if we had activity within the last minute and are currently
+            //auto'd away, send available
             if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
                 // we are available again
                 SetAutoAvailable()
+            //if we have auto-discnnect enabled and last input > disconnect time
+            //and we are auto-etended away (hmm, thats seems wrong, you can have
+            //auto-disconnect without auto-extaway, but must have auto-away
             else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
                 // Disconnect us
                 _logoff := true;
                 PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
             end
+            // if auto-xa'd just exit, only state we could move to is
+            //available or disconnect handled above
             else if (_is_autoxa) then
-                // We are XA, but not ready to disconnect
                 exit
+            //if auto-away and auto-xa is enabled and idle time > xa time, go XA                
             else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then
-                // We are away, need to be xa
                 SetAutoXA()
+            //if available and auto-away enabled and idle time > away time, go away                
             else if ((mins >= away) and (not _is_autoaway) and (avail)) then
                 // We are avail, need to be away
                 SetAutoAway();
