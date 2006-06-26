@@ -86,11 +86,11 @@ const
     invite_accept = 2;
 
     // roster visible levels
-    show_offline = 0;
-    show_dnd = 1;
-    show_xa = 2;
-    show_away = 3;
-    show_available = 4;
+    show_offline = -1;
+    show_dnd = 0; // Must be zero to match prefs option for cboVisible
+    show_xa = 1;
+    show_away = 2;
+    show_available = 3;
 
     P_EXPANDED = 'expanded';
     P_SHOWONLINE = 'roster_only_online';

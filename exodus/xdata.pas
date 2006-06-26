@@ -25,7 +25,7 @@ uses
     Unicode, XMLTag,
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData;
+    Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID;
 
 type
 
@@ -152,6 +152,7 @@ var
     i, idx: integer;
     opt, ol, l: Widestring;
     xl: TXMLTagList;
+    jid: TJabberID;
 begin
     _owner := o;
     _opts := nil;
@@ -215,8 +216,15 @@ begin
             ScrollBars := ssVertical;
             Lines.Clear();
             xl := x.QueryTags('value');
-            for i := 0 to xl.Count - 1 do
-                Lines.Add(xl[i].Data);
+            for i := 0 to xl.Count - 1 do begin
+                if (t = 'jid-multi') then begin
+                    jid := TJabberID.Create(xl[i].Data);
+                    Lines.Add(jid.getDisplayFull());
+                    jid.Free();
+                end
+                else
+                    Lines.Add(xl[i].Data);
+            end;
             FreeAndNil(xl);
             WordWrap := false;
         end;
@@ -286,7 +294,13 @@ begin
         con.Parent := _owner;
         con.Visible := false;
         with TTntEdit(con) do begin
-            Text := d;
+            if (t = 'jid-single') then begin
+                jid := TJabberID.create(d);
+                Text := jid.getDisplayFull();
+                jid.Free();
+            end
+            else
+                Text := d;
             if (t = 'text-private') then
                 PasswordChar := '*';
         end;
@@ -338,6 +352,7 @@ function TXDataRow.GetXML(): TXMLTag;
 var
     f: TXMLTag;
     i, j: integer;
+    jid: TJabberID;
 begin
     // fetch data from controls into d params
     // and send back the <field/> element
@@ -362,13 +377,27 @@ begin
         f.AddBasicTag('value', d);
     end
 
-    else if ((t = 'text-multi') or (t = 'jid-multi')) then begin
+    else if (t = 'text-multi') then begin
         with TTntMemo(con) do begin
             if ((req) and (Lines.Count = 0)) then
                 valid := false
             else begin
                 for i := 0 to Lines.Count - 1 do
                     f.AddBasicTag('value', Lines[i]);
+            end;
+        end;
+    end
+
+    else if (t = 'jid-multi') then begin
+         with TTntMemo(con) do begin
+            if ((req) and (Lines.Count = 0)) then
+                valid := false
+            else begin
+                for i := 0 to Lines.Count - 1 do begin
+                    jid := TJabberID.Create(Lines[i], false);
+                    f.AddBasicTag('value', jid.full);
+                    jid.Free();
+                end;
             end;
         end;
     end
@@ -397,7 +426,13 @@ begin
         d := TTntEdit(con).Text;
         if ((req) and (d = '')) then
             valid := false;
-        f.AddBasicTag('value', d);
+        if (t = 'jid-single') then begin
+            jid := TJabberID.Create(d, false);
+            f.AddBasicTag('value', jid.full);
+            jid.Free();
+        end
+        else
+            f.AddBasicTag('value', d);
     end;
 
     Result := f;

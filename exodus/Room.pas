@@ -286,7 +286,7 @@ const
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
-    sRoomDestroyed = 'The room %s has been destroyed.';
+    sRoomDestroyed = 'The room ''%s'' has been destroyed.';
     sReason = 'Reason:';
     sDestroyRoomConfirm = 'Do you really want to destroy the room? All users will be removed.';
 
@@ -1060,7 +1060,7 @@ begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
 
-                reason := WideFormat(_(sRoomDestroyed), [tmp_jid.user]);
+                reason := WideFormat(_(sRoomDestroyed), [tmp_jid.userDisplay]);
                 drtag := tag.QueryXPTag(xp_muc_destroy_reason);
                 if ((drtag <> nil) and (drtag.Data <> '')) then begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;

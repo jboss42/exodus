@@ -103,6 +103,7 @@ type
     procedure reset();
     procedure FieldsCallback(event: string; tag: TXMLTag);
     procedure ItemsCallback(event: string; tag: TXMLTag);
+    function convertDisplayToJID(displayJID: widestring): widestring;
   public
     { Public declarations }
   end;
@@ -339,6 +340,7 @@ var
     col: TListColumn;
     ji: TJUDItem;
     fld, jid_fld: Widestring;
+    tmp: TJabberID;
     clist: TWideStringList;
     tmps: Widestring;
 begin
@@ -481,9 +483,14 @@ begin
                     tmps := cols[c].getAttribute('var');
                     cidx := clist.indexOf(tmps);
                     if (cidx > -1) then begin
-                        ji.cols[cidx] := cols[c].GetBasicText('value');
-                        if (tmps = jid_fld) then
-                            ji.jid := ji.cols[cidx];
+                        if (tmps = jid_fld) then begin
+                            tmp := TJabberID.Create(cols[c].GetBasicText('value'));
+                            ji.cols[cidx] := tmp.getDisplayJID();
+                            ji.jid := tmp.jid;
+                            tmp.Free();
+                        end
+                        else
+                            ji.cols[cidx] := cols[c].GetBasicText('value');
                     end;
                 end;
                 cols.Free();
@@ -596,21 +603,21 @@ var
         jid: TJabberID;
     begin
         // do the actual add stuff
-        ritem := MainSession.roster.Find(item.Caption);
+        jid := TJabberID.Create(item.caption, false); // item may be escaped
+        ritem := MainSession.roster.Find(jid.jid);
         if (ritem <> nil) then begin
             if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
                 exit;
         end;
 
         // add the item
-        jid := TJabberID.Create(item.caption);
         nick := '';
         if (nick_col >= 0) then
             nick := item.SubItems[nick_col];
 
-        if (nick = '') then nick := jid.user;
+        if (nick = '') then nick := jid.userDisplay;
 
-        MainSession.roster.AddItem(item.caption, nick, cboGroup.Text, true);
+        MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
         jid.Free();
         
     end;
@@ -656,11 +663,22 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmJUD.convertDisplayToJID(displayJID: widestring): widestring;
+var
+    jid: TJabberID;
+begin
+    Result := displayJID;
+    jid := TJabberID.Create(displayJID, false);
+    Result := jid.jid();
+    jid.Free();
+end;
+
+{---------------------------------------}
 procedure TfrmJUD.popProfileClick(Sender: TObject);
 begin
   inherited;
     // view the profile for the user
-    ShowProfile(lstContacts.Selected.Caption);
+    ShowProfile(convertDisplayToJID(lstContacts.Selected.Caption));
 end;
 
 {---------------------------------------}
@@ -668,7 +686,7 @@ procedure TfrmJUD.popChatClick(Sender: TObject);
 begin
   inherited;
     // Chat with this person
-    StartChat(lstContacts.Selected.Caption, '', true);
+    StartChat(convertDisplayToJID(lstContacts.Selected.Caption), '', true);
 end;
 
 {---------------------------------------}
@@ -676,7 +694,7 @@ procedure TfrmJUD.popMessageClick(Sender: TObject);
 begin
   inherited;
     // Send a message to this person
-    StartMsg(lstContacts.Selected.Caption);
+    StartMsg(convertDisplayToJID(lstContacts.Selected.Caption));
 end;
 
 {---------------------------------------}
