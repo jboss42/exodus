@@ -280,6 +280,7 @@ type
     _was_max: boolean;                  // was the main window maximized before?
     _logoff: boolean;                   // are we logging off on purpose
     _shutdown: boolean;                 // are we being shutdown
+    _windowsShutdown : boolean;         //received a WM_QueryEndSession or WM_EndSession windows' message
     _close_min: boolean;                // should the close btn minimize, not close
     _appclosing: boolean;               // is the entire app closing
     _new_tabindex: integer;             // new tab which was just docked
@@ -715,7 +716,9 @@ procedure TfrmExodus.WMQueryEndSession(var msg: TMessage);
 begin
     // Allow windows to shutdown
     _shutdown := true;
+    _windowsShutdown := true;
     msg.Result := 1;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -723,7 +726,8 @@ procedure TfrmExodus.WMEndSession(var msg: TMessage);
 begin
     // Kill the application
     _shutdown := true;
-    msg.Result := 0;
+    _windowsShutdown := true;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -755,7 +759,7 @@ var
     cmd : string;
 begin
     // We are getting a Windows Msg from the installer
-    if (not _shutdown) then begin
+    if (not _shutdown and not _windowsShutdown) then begin
         reg := TRegistry.Create();
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\' + getAppInfo().ID + '\Restart\' + IntToStr(Application.Handle), true);
@@ -882,6 +886,7 @@ begin
     _reconnect_tries := 0;
     _hidden := false;
     _shutdown := false;
+    _windowsShutdown := false;
     _close_min := MainSession.prefs.getBool('close_min');
 
     // Setup the IdleUI stuff..
@@ -1633,16 +1638,13 @@ begin
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
     // we'll close the form properly (xref _appclosing)
-    if (MainSession <> nil) then begin
-
-        if ((MainSession.Active) and (not _appclosing))then begin
-            _appclosing := true;
-            _logoff := true;
-            MainSession.Disconnect();
-            CanClose := false;
-            exit;
-        end;
-
+    if (MainSession <> nil) and (not _windowsShutdown) and
+       (MainSession.Active) and (not _appclosing)then begin
+        _appclosing := true;
+        _logoff := true;
+        MainSession.Disconnect();
+        CanClose := false;
+        exit;
     end;
 
     // Unhook the auto-away DLL
@@ -1701,9 +1703,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    // Free everything else
-    //TeardownSession();
-
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
