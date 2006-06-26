@@ -755,11 +755,12 @@ begin
             Self.Caption := _(sMessageFrom) + ritem.Text;
     end
     else begin
-        txtFrom.Caption := jid;
+        // not someone in our roster - still could be escaped jid
+        txtFrom.Caption := tmp_jid.getDisplayFull();
         if (pnlSendSubject.Visible) then
-            Self.Caption := _(sMessageTo) + jid
+            Self.Caption := _(sMessageTo) + tmp_jid.getDisplayFull()
         else
-            Self.Caption := _(sMessageFrom) + jid;
+            Self.Caption := _(sMessageFrom) + tmp_jid.getDisplayFull();
     end;
     tmp_jid.Free();
 end;

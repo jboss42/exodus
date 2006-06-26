@@ -295,7 +295,7 @@ begin
             ritem := MainSession.roster.Find(sjid);
             if (ritem = nil) then begin
                 if (chat_nick = '') then
-                    OtherNick := tmp_jid.user
+                    OtherNick := tmp_jid.userDisplay
                 else
                     OtherNick := chat_nick;
             end
