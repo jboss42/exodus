@@ -1197,22 +1197,19 @@ begin
     assert(_profile <> nil); //should not try to set authagent until profile is set
     assert(_stream = nil); //should not try to change authagent oncve connected
 
-    //if (not assigned(_auth_agent)) then begin
-        // Create the AuthAgent
-        if (profile.SSL_Cert <> '')  then
-            auth := CreateJabberAuth('EXTERNAL', Self)
-        else if (_profile.KerbAuth) then
-            auth := CreateJabberAuth('GSSAPI', Self)
-        else
-            auth := CreateJabberAuth('XMPP', Self);
+    // Create the AuthAgent
+    if (profile.SSL_Cert <> '')  then
+        auth := CreateJabberAuth('EXTERNAL', Self)
+    else if (_profile.KerbAuth) then
+        auth := CreateJabberAuth('GSSAPI', Self)
+    else
+        auth := CreateJabberAuth('XMPP', Self);
 
-        if (auth = nil) then
-            raise Exception.Create('No appropriate Auth Agent found.');
+    if (auth = nil) then
+        raise Exception.Create('No appropriate Auth Agent found.');
 
-        // set this auth agent as our current one
-        setAuthAgent(auth);
-    //end;
-    
+    // set this auth agent as our current one
+    setAuthAgent(auth);
 end;
 
 {---------------------------------------}
