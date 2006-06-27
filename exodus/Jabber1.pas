@@ -3334,12 +3334,12 @@ begin
     CloseDesktop(desk);
     // there's a null on the end.  Not sure why this worked before the -1.
     SetLength(name, len-1);
-
+{*
     if name = 'Default' then begin  // NO I18N!
         // what about fullscreen mode, like PowerPoint shows?
         w := GetForegroundWindow();
-//        d := FindWindow('Progman', nil);
-//        if (w <> d) then begin
+        d := FindWindow('Progman', nil);
+        if (w <> d) then begin
             // Got a window and it is NOT the program manager (desktop).
             Windows.GetClientRect(w, wSize);
             mon := Screen.MonitorFromWindow(w, mdNearest);
@@ -3350,11 +3350,11 @@ begin
                result := DT_FULLSCREEN;
                exit;
             end;
-//        end;
-//        result := DT_OPEN;
-//        exit;
+        end;
+        result := DT_OPEN;
+        exit;
     end;
-
+*}
     if name = 'Screen-saver' then begin
         result := DT_SCREENSAVER;
         exit;
