@@ -664,10 +664,15 @@ begin
             end
             else begin
                 // We aren't authd yet, check for StartTLS
-
-                if (_features.GetFirstTag('starttls') <> nil) then begin
-                    if (_stream.isSSLCapable()) then begin
-                        StartTLS();
+                if (not _ssl_on) then begin
+                    if (_features.GetFirstTag('starttls') <> nil) then begin
+                        if (_stream.isSSLCapable()) then begin
+                            StartTLS();
+                            exit;
+                        end;
+                    end;
+                    if (_profile.ssl = ssl_only_tls) then begin
+                        Self.FireEvent('/session/error/tls', nil);
                         exit;
                     end;
                 end;
