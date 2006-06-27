@@ -39,11 +39,12 @@ object frmHtmlPrefs: TfrmHtmlPrefs
   end
   object chkLogRooms: TTntCheckBox
     Left = 10
-    Top = 57
+    Top = 74
     Width = 287
     Height = 17
     Caption = 'Log conference rooms'
     TabOrder = 2
+    Visible = False
   end
   object btnLogClearAll: TTntButton
     Left = 12
@@ -56,7 +57,7 @@ object frmHtmlPrefs: TfrmHtmlPrefs
   end
   object chkLogRoster: TTntCheckBox
     Left = 10
-    Top = 80
+    Top = 52
     Width = 287
     Height = 17
     Caption = 'Only log messages from people in my roster'
