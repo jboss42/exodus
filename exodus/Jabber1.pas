@@ -288,7 +288,7 @@ type
     _GetLastInput: TGetLastInputFunc;
     _is_autoaway: boolean;              // Are we currently auto-away
     _is_autoxa: boolean;                // Are we currently auto-xa
-    _auto_away: boolean;                // perform auto-away ops
+
     _auto_away_interval: integer;       //# of seconds between checks when moving from availabel state
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
@@ -1365,7 +1365,7 @@ begin
             else
                 _edge_snap := -1;
             _close_min := getBool('close_min');
-            _auto_away := getBool('auto_away');
+
             use_emoticons := getBool('emoticons');
         end;
 
@@ -3296,6 +3296,7 @@ begin
             Result := _GetLastTick();
     end
     else begin
+        DebugMsg('getLastTick: using GetLastInput');
         // use GetLastInputInfo
         lii.cbSize := sizeof(tagLASTINPUTINFO);
         if (_GetLastInput(lii)) then
@@ -3309,6 +3310,9 @@ var
     name: string;
     len: dword;
     hw: HWINSTA;
+    w,d: HWND;
+    wSize: TRect;
+    mon: TMonitor;
 begin
     if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
         result := DT_UNKNOWN;
@@ -3333,12 +3337,13 @@ begin
     CloseDesktop(desk);
     // there's a null on the end.  Not sure why this worked before the -1.
     SetLength(name, len-1);
-{*
     if name = 'Default' then begin  // NO I18N!
+        DebugMsg('screenStatus: found Default, testing to see if full screen app');
         // what about fullscreen mode, like PowerPoint shows?
         w := GetForegroundWindow();
         d := FindWindow('Progman', nil);
         if (w <> d) then begin
+            DebugMsg('screenStatus: Default is not Progman, checking client rec');
             // Got a window and it is NOT the program manager (desktop).
             Windows.GetClientRect(w, wSize);
             mon := Screen.MonitorFromWindow(w, mdNearest);
@@ -3346,14 +3351,15 @@ begin
                (mon.BoundsRect.Right = wSize.Right) and
                (mon.BoundsRect.Top = wSize.Top) and
                (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
+               DebugMsg('screenStatus: Found full screen app');
                result := DT_FULLSCREEN;
                exit;
             end;
-        end;
+            DebugMsg('screenStatus: NOT full screen app');
+        end else DebugMsg('screenStatus: Not Progman');
         result := DT_OPEN;
         exit;
     end;
-*}
     DebugMsg('screenStatus:  name from GUOI: ' + name);
     if name = 'Screen-saver' then begin
         result := DT_SCREENSAVER;
@@ -3361,6 +3367,7 @@ begin
     end;
 
     if name = 'Winlogon' then begin
+        DebugMsg('screenStatus: found WinLogin, testing to see if user is logged');
 		hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
 		GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
 		CloseWindowStation(hw);
@@ -3375,7 +3382,7 @@ begin
 			result := DT_LOCKED;
         exit;
     end;
-
+    DebugMsg('screenStatus: defaulting to Unknown');
     result := DT_UNKNOWN;
 end;
 {---------------------------------------}
@@ -3405,81 +3412,117 @@ var
     do_xa, do_dis: boolean;
     avail: boolean;
     _last_tick: dword;      // last user input
-
+    _auto_away: boolean;                // perform auto-away ops
+    ss : integer;
 begin
+    debugMsg('OnTimer BEGIN');
+    try
+
     //if we are not connected bail
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
 
     with MainSession.Prefs do begin
-        //_autoAway is set when prefs are updatecd
-        //if auto_away is enabled
-        if ((_auto_away)) then begin
-            //if screen is locked, screensaver or full screen app the autoaway
-            if screenStatus() > DT_OPEN then begin
-                //if not already autoaway, make it so
-                if not _is_autoaway then
-                    SetAutoAway();
-                exit;
-            end;
-
-            //otherwise check to see if auto away should be triggered
-            _last_tick := getLastTick();
-            if (_last_tick = 0) then exit; //might return 0 if library setup failed
-            //get number of seconds since last activity
-            cur_idle := (GetTickCount() - _last_tick) div 1000;
-            //if we are testing auto-away (via the -a command line) then
-            //make mins = to seconds (to speed things up), otherwise determine
-            //number of minutes since last input
-            //if testing autoaway via the -a command line param, dump debug stmts
-            if (ExStartup.testaa) then begin
-                mins := cur_idle;
-                if (not _is_autoaway) and (not _is_autoxa) then begin
-                    dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
-                        SafeBoolStr(_is_autoxa) + ', ' +
-                        IntToStr(cur_idle ) + ' secs'#13#10;
-                    DebugMsg(dmsg);
-                end;
-            end
-            else begin
-                mins := cur_idle div 60
-            end;
-
-            //get autoway prefs
-            away := getInt('away_time');
-            xa := getInt('xa_time');
-            dis := getInt('disconnect_time');
-            do_xa := getBool('auto_xa');
-            do_dis := getBool('auto_disconnect');
-
-            //are we in an availabel show state?
-            avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
-                (MainSession.Show <> 'away');
-            //if we had activity within the last minute and are currently
-            //auto'd away, send available
-            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
-                // we are available again
-                SetAutoAvailable()
-            //if we have auto-discnnect enabled and last input > disconnect time
-            //and we are auto-etended away (hmm, thats seems wrong, you can have
-            //auto-disconnect without auto-extaway, but must have auto-away
-            else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
-                // Disconnect us
-                _logoff := true;
-                PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
-            end
-            // if auto-xa'd just exit, only state we could move to is
-            //available or disconnect handled above
-            else if (_is_autoxa) then
-                exit
-            //if auto-away and auto-xa is enabled and idle time > xa time, go XA
-            else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then
-                SetAutoXA()
-            //if available and auto-away enabled and idle time > away time, go away
-            else if ((mins >= away) and (not _is_autoaway) and (avail)) then
-                // We are avail, need to be away
+        _auto_away := getBool('auto_away');
+        //get autoway prefs
+        away := getInt('away_time');
+        xa := getInt('xa_time');
+        dis := getInt('disconnect_time');
+        do_xa := getBool('auto_xa');
+        do_dis := getBool('auto_disconnect');
+    end;
+    debugMsg('OnTimer prefs: _auto_away: ' + SafeBoolStr(_auto_away) + ', away time: ' + IntToStr(away) + ', xa time: ' + IntToStr(xa) + ', disconnect time: ' + IntToStr(dis) + ', xa enabled: ' + SafeBoolStr(do_xa) + ', disconnect enabled: ' + SafeBoolStr(do_dis));
+    debugMsg('OnTimer state: _is_autoaway: ' + SafeBoolStr(_is_autoaway) + ', _is_autoxa: ' + SafeBoolStr(_is_autoxa));
+    //_autoAway is set when prefs are updatecd
+    //if auto_away is enabled
+    if ((_auto_away)) then begin
+        ss := screenStatus();
+        debugMsg('OnTimer auto away enabled, screen status: ' + IntToStr(ss));
+        //if screen is locked, screensaver or full screen app the autoaway
+        if ss > DT_OPEN then begin
+            debugMsg('OnTimer screen status > DT_OPEN');
+            //if not already autoaway, make it so
+            if not _is_autoaway then begin
+                debugMsg('OnTimer not autoaway, calling SetAutoAway');
                 SetAutoAway();
+            end else debugMsg('OnTimer already autoaway');
+            debugMsg('OnTImer exiting');
+            exit;
+        end else debugMsg('OnTimer screen status <= DT_OPEN');
+        debugMsg('OnTimer getting last tick');
+        //otherwise check to see if auto away should be triggered
+        _last_tick := getLastTick();
+        debugMsg('OnTimer _last_tick: ' + IntToStr(_last_tick));
+        if (_last_tick = 0) then begin
+            debugMsg('OnTimer _last_tick == 0, exiting');
+        exit; //might return 0 if library setup failed
+        end else debugMsg('OnTimer _last_tick != 0');
+        debugMsg('OnTimer computing idle time');
+        //get number of seconds since last activity
+        cur_idle := (GetTickCount() - _last_tick) div 1000;
+        debugMsg('OnTimer cur_idle: ' + IntToStr(cur_idle));
+        //if we are testing auto-away (via the -a command line) then
+        //make mins = to seconds (to speed things up), otherwise determine
+        //number of minutes since last input
+        //if testing autoaway via the -a command line param, dump debug stmts
+        debugMsg('OnTimer converting idle to minutes');
+        if (ExStartup.testaa) then begin
+            debugMsg('OnTimer using test aa (-a param)');
+            mins := cur_idle;
+            if (not _is_autoaway) and (not _is_autoxa) then begin
+                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
+                    SafeBoolStr(_is_autoxa) + ', ' +
+                    IntToStr(cur_idle ) + ' secs'#13#10;
+                DebugMsg(dmsg);
+            end;
+        end
+        else begin
+            debugMsg('OnTimer not using debug aa');
+            mins := cur_idle div 60
         end;
+        debugMsg('OnTimer mins: ' + IntToStr(mins));
+        debugMsg('OnTimer determining current available state');
+        //are we in an availabel show state?
+        avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
+            (MainSession.Show <> 'away');
+        debugMsg('OnTimer avail: ' + SafeBoolStr(avail));
+        //if we had activity within the last minute and are currently
+        //auto'd away, send available
+        if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then begin
+            debugMsg('OnTimer mins == 0 and _is_autoaway or _is_autoxa, calling SetAvailable');
+            // we are available again
+            SetAutoAvailable()
+        //if we have auto-discnnect enabled and last input > disconnect time
+        //and we are auto-etended away (hmm, thats seems wrong, you can have
+        //auto-disconnect without auto-extaway, but must have auto-away
+        end
+        else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
+        debugMsg('OnTimer do_dis and mins > dis and _is_autoxa, logoff');
+            // Disconnect us
+            _logoff := true;
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        end
+        // if auto-xa'd just exit, only state we could move to is
+        //available or disconnect handled above
+        else if (_is_autoxa) then begin
+        debugMsg('OnTimer is already autoxa, exiting');
+            exit
+        end
+        //if auto-away and auto-xa is enabled and idle time > xa time, go XA
+        else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then begin
+            debugMsg('OnTImer do_xa and mins >= xa and _is_autoaway');
+
+            SetAutoXA()
+        end
+        //if available and auto-away enabled and idle time > away time, go away
+        else if ((mins >= away) and (not _is_autoaway) and (avail)) then begin
+            debugMsg('OnTimer mins >= away and not _is_autoaway and currently available');
+            // We are avail, need to be away
+            SetAutoAway();
+        end else debugMsg('OnTimer failed all conditions');
+    end else debugMsg('OnTimer autoaway not enabled');
+    finally
+        debugMsg('OnTimer END');
     end;
 end;
 
@@ -3491,16 +3534,19 @@ begin
     // set us to away
     DebugMsg(_(sSetAutoAway));
     Application.ProcessMessages;
-
+DebugMsg('SetAutoAway Mainsession.Pause');
     MainSession.Pause();
     if ((MainSession.Show = 'away') or
         (MainSession.Show = 'xa') or
-        (MainSession.Show = 'dnd')) then exit;
+        (MainSession.Show = 'dnd')) then begin
+            DebugMsg('SetAutoAway Already in away state, do nothing');
+        exit;
+    end;
 
     _last_show := MainSession.Show;
     _last_status := MainSession.Status;
     _last_priority := MainSession.Priority;
-
+    DebugMsg('SetAutoAway Setting cached last pres state: show: ' + _last_show + ', Status: ' + _last_status + ', priority: ' + IntToStr(_last_priority)); 
     // must be before SetPresence
     _is_autoaway := true;
 
@@ -3548,20 +3594,27 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SetAutoAvailable;
 begin
+debugMsg('SetAutoAvailable BEGIN');
     // reset our status to available
     DebugMsg(_(sSetAutoAvailable));
+    debugMsg('SetAutoAvailable disabling timer');
     timAutoAway.Enabled := false;
+    debugMsg('SetAutoAvailable computing interval: ' + IntToStr(_auto_away_interval * 1000));
     timAutoAway.Interval := _auto_away_interval * 1000;
+    debugMsg('SetAutoAvailable sertting status _last_show: ' + _last_show + ', _last_status: ' + _last_show + ', _last_priority: ' + IntToStr(_last_priority));
     MainSession.SetPresence(_last_show, _last_status, _last_priority);
-
+    debugMsg('SetAutoAvailable setting _is_autoaway, _isAutoXA to false');
     // must be *after* SetPresence
     _is_autoaway := false;
     _is_autoxa := false;
 
-    if (_valid_aa) then
+    if (_valid_aa) then begin
+        debugMsg('SetAutoAvailable enabling timer');
         timAutoAway.Enabled := true;
-
+    end else     debugMsg('SetAutoAvailable no good aa config, not setting enabling timer');
+        debugMsg('SetAutoAvailable playing back queued notifications');
     MainSession.Play();
+debugMsg('SetAutoAvailable END');
 end;
 
 
