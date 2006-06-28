@@ -351,7 +351,7 @@ end;
 {---------------------------------------}
 procedure DebugMsg(Message : string);
 begin
-    DebugMessage(Message);
+    //DebugMessage(Message);
     MainSession.FireEvent('/data/debug', nil, Message);
 end;
 
