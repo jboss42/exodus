@@ -3309,9 +3309,6 @@ var
     name: string;
     len: dword;
     hw: HWINSTA;
-    w,d: HWND;
-    wSize: TRect;
-    mon: TMonitor;
 begin
     if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
         result := DT_UNKNOWN;
