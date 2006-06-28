@@ -1367,13 +1367,11 @@ end;
 procedure TPrefController.SaveProfiles;
 var
     ptag: TXMLTag;
-    ptags: TXMLTagList;
     i: integer;
     cur_profile: TJabberProfile;
     prof_node: TXMLTag;
 begin
     prof_node := _pref_file.Profiles;
-    ptags := prof_node.QueryTags('profile');
 
     _pref_file.ClearProfiles();
 
@@ -1387,7 +1385,6 @@ begin
     end;
 
     Save();
-    ptags.Free;
 end;
 
 {---------------------------------------}
