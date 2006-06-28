@@ -171,7 +171,6 @@ var
     cli_status: string;
 
     profile: TJabberProfile;
-    reg: TRegistry;
 
     // some temps we use
     s, help_msg, tmp_locale: string;

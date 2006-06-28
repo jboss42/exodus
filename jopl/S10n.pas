@@ -195,7 +195,6 @@ procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
 var
     from: TJabberID;
     ritem: TJabberRosterItem;
-    dn: Widestring;
 begin
     { Todo:  Move this UI code out of jopl.  Perhaps throw a
              /session/gui/unsubscribed event and do it in GUIFactory? }

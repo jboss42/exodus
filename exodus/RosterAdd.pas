@@ -234,8 +234,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.cboTypeChange(Sender: TObject);
-var
-    en: boolean;
+//var
+//    en: boolean;
 begin
     //SLKSLKSLK
     {
