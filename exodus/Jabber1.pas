@@ -3318,6 +3318,7 @@ begin
     desk := OpenInputDesktop(0, False, MAXIMUM_ALLOWED);
     if desk = 0 then begin
         result := DT_LOCKED;
+        DebugMsg('screenStatus:  OpenInputDesktop = 0 - DT_LOCKED');
         exit;
     end;
 
@@ -3326,6 +3327,7 @@ begin
     if not GetUserObjectInformation(desk, UOI_NAME, PChar(name), len, len) then begin
         CloseDesktop(desk);
         result := DT_UNKNOWN;
+        DebugMsg('screenStatus: GetUserObjectInformation = false - DT_UNKNOWN');
         exit;
     end;
     CloseDesktop(desk);
@@ -3352,6 +3354,7 @@ begin
         exit;
     end;
 *}
+    DebugMsg('screenStatus:  name from GUOI: ' + name);
     if name = 'Screen-saver' then begin
         result := DT_SCREENSAVER;
         exit;
@@ -3516,6 +3519,9 @@ begin
         new_pri);
 
     timAutoAway.Interval := 1000;
+    DebugMsg('SetAutoAway values:  _last_show: ' + _last_show + ' _last_status: ' + _last_status +
+             ' _last_priority: ' + IntToStr(_last_priority) + ' _is_autoaway: ' + BoolToStr(_is_autoaway) + ' _is_autoxa: ' +
+             BoolToStr(_is_autoxa) + ' new_pri: ' + IntToStr(new_pri));
 end;
 
 {---------------------------------------}
@@ -3533,6 +3539,10 @@ begin
 
     if (timAutoAway.Interval > 1000) then
         timAutoAway.Interval := 1000;
+
+    DebugMsg('SetAutoXA values:  _last_show: ' + _last_show + ' _last_status: ' + _last_status +
+             ' _last_priority: ' + IntToStr(_last_priority) + ' _is_autoaway: ' + BoolToStr(_is_autoaway) + ' _is_autoxa: ' +
+             BoolToStr(_is_autoxa));
 end;
 
 {---------------------------------------}
