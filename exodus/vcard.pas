@@ -360,11 +360,10 @@ begin
         // check size of a
         d := a.Data;
         if (Length(d) > MAX_AVATAR_SIZE) then begin
-            if (MessageDlgW(_('Your avatar is larger than the recommended size. Continue?'),
-                mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
-                a.Free();
-                exit;
-            end;
+            a.Free();
+            MessageDlgW(_('This graphic is too large and could considerably degrade performance. Please choose another avatar.'),
+                mtError, [mbOk], 0);
+            exit;
         end;
 
         // a is valid
