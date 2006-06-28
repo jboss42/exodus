@@ -371,6 +371,7 @@ begin
             _vcard.Picture.Free();
         _vcard.Picture := a;
         a.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
+        PaintBox1.Repaint();  // ensures old picture is overwritten if bigger
     end;
 end;
 
