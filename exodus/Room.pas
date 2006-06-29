@@ -978,6 +978,7 @@ var
     member: TRoomMember;
     mtag, t, itag, xtag, etag, drtag: TXMLTag;
     ecode, scode, tmp1, tmp2, reason: Widestring;
+    e: TJabberEntity;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
@@ -1004,11 +1005,20 @@ begin
                     myNick := _old_nick;
             end
             else if (ecode = '401') then begin
-                MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
-                Self.Close();
-                tmp_jid := TJabberID.Create(from);
-                StartJoinRoom(tmp_jid, MyNick, '');
-                tmp_jid.Free();
+                e := jEntityCache.getByJid(Self.jid, '');
+                if ((e.hasFeature('muc_passwordprotected') or
+                     e.hasFeature('muc_password') or
+                     e.hasFeature('muc-passwordprotected')) or
+                     e.hasFeature('muc-password')) then begin
+                    // 401 error IS due to password so show password error
+                    MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
+                    Self.Close();
+                    tmp_jid := TJabberID.Create(from);
+                    StartJoinRoom(tmp_jid, MyNick, '');
+                    tmp_jid.Free();
+                    exit;
+                end;
+                // 401 is NOT due to password, just exit
                 exit;
             end
             else if (ecode = '404') then begin
