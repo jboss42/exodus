@@ -944,7 +944,8 @@ begin
         if (_custom_pres) then exit;
 
         // previously disconnected
-        if (_mcallback = -1) then begin
+        if ((_mcallback = -1) or
+            (_pending_start)) then begin
             MsgOut.Visible := true;
             MsgList.DisplayPresence(sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
