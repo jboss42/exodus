@@ -455,6 +455,7 @@ end;
 procedure TXDataRow.JidSelect(Sender: TObject);
 var
     fsel: TfrmSelContact;
+    jid: TJabberID;
 begin
     fsel := TfrmSelContact.Create(Application);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
@@ -462,10 +463,12 @@ begin
     frmExodus.PreModal(fsel);
 
     if (fsel.ShowModal = mrOK) then begin
+        jid := TJabberID.Create(fsel.GetSelectedJid());
         if (con is TTntEdit) then
-            TTntEdit(con).Text := fsel.GetSelectedJid()
+            TTntEdit(con).Text := jid.GetDisplayFull()
         else if (con is TTntMemo) then
-            TTntMemo(con).Lines.Add(fsel.GetSelectedJid());
+            TTntMemo(con).Lines.Add(jid.GetDisplayFull());
+        jid.Free();
     end;
 
     frmExodus.PostModal();
@@ -730,8 +733,14 @@ begin
         end;
         r := getResponseTag();  // creates <iq><query></iq> and all the fillings
         x := frameXData.cancel();
-        q := r.GetFirstTag('query');
-        q.AddTag(x);
+        if (r.Name = 'message') then
+            r.AddTag(x)
+        else begin
+            q := r.GetFirstTag('query');
+            if (q = nil) then Exit;
+            q.AddTag(x);
+        end;
+
         MainSession.SendTag(r);
     end;
     _responded := true;
