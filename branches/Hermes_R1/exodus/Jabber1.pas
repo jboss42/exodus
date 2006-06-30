@@ -272,7 +272,7 @@ type
     _was_max: boolean;                  // was the main window maximized before?
     _logoff: boolean;                   // are we logging off on purpose
     _shutdown: boolean;                 // are we being shutdown
-    _windowsShutdown : boolean;         //received a WM_QueryEndSession or WM_EndSession windows' message
+    _cleanupComplete : boolean;        //all close events have fired and app is ready to terminate
     _close_min: boolean;                // should the close btn minimize, not close
     _appclosing: boolean;               // is the entire app closing
     _new_tabindex: integer;             // new tab which was just docked
@@ -326,6 +326,15 @@ type
     function win32TrackerIndex(windows_msg: integer): integer;
 
     procedure _sendInitPresence();
+    {**
+     *  Cleanup objects, registered callbacks etc. Prepare for shutdown
+     **}
+    procedure cleanup();
+
+    {**
+     *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
+    **}
+    procedure waitForCleanup();
 
   protected
     // Hooks for the keyboard and the mouse
@@ -339,7 +348,7 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
-    procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
+    //procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
     procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
@@ -713,20 +722,11 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMQueryEndSession(var msg: TMessage);
 begin
-    // Allow windows to shutdown
     _shutdown := true;
-    _windowsShutdown := true;
+    inherited; //will eventually fire FormQueryClose event
+    //busywait until app has a chance to cleanup
+    waitForCleanup();
     msg.Result := 1;
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.WMEndSession(var msg: TMessage);
-begin
-    // Kill the application
-    _shutdown := true;
-    _windowsShutdown := true;
-    inherited;
 end;
 
 {---------------------------------------}
@@ -758,7 +758,7 @@ var
     cmd : string;
 begin
     // We are getting a Windows Msg from the installer
-    if (not _shutdown and not _windowsShutdown) then begin
+    if (not _shutdown) then begin
         reg := TRegistry.Create();
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\' + getAppInfo().ID + '\Restart\' + IntToStr(Application.Handle), true);
@@ -773,13 +773,13 @@ begin
 
         _shutdown := true;
         Self.Close;
+        waitForCleanup();
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.WMDisconnect(var msg: TMessage);
 begin
-    //
     MainSession.Disconnect();
 end;
 
@@ -885,7 +885,7 @@ begin
     _reconnect_tries := 0;
     _hidden := false;
     _shutdown := false;
-    _windowsShutdown := false;
+    _cleanupComplete := false;
     _close_min := MainSession.prefs.getBool('close_min');
 
     // Setup the IdleUI stuff..
@@ -1313,7 +1313,9 @@ begin
 
         _new_account := false;
         restoreMenus(false);
-
+        //if disconnect happened because of a close request, post a message
+        //so close can continue *after* every other listener has a chance
+        //to respond to session disconnect event.
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
@@ -1580,22 +1582,13 @@ begin
     end
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.FormCloseQuery(Sender: TObject;
-  var CanClose: Boolean);
+{**
+ *  Cleanup objects, registered callbacks etc. Prepare for shutdown
+**}
+procedure TfrmExodus.cleanup();
 begin
-    // If we are not already disconnected, then
-    // disconnect. Once we successfully disconnect,
-    // we'll close the form properly (xref _appclosing)
-    if (MainSession <> nil) and (not _windowsShutdown) and
-       (MainSession.Active) and (not _appclosing)then begin
-        _appclosing := true;
-        _logoff := true;
-        MainSession.Disconnect();
-        CanClose := false;
-        exit;
-    end;
-
+    //mainsession should never be nil here. It is created before this object
+    //and only destroyed on ExSession finalization.
     // Unhook the auto-away DLL
     if (_idle_hooks <> 0) then begin
         _StopHooks();
@@ -1626,32 +1619,19 @@ begin
 
     // Close whatever rooms we have
     CloseAllRooms();
+    CloseDebugForm();
+    CloseAllChats();
 
-    // If we have a session, close it up
-    // and all of the associated windows
-    if MainSession <> nil then begin
-        CloseDebugForm();
-        CloseAllChats();
+    // Unload all of the remaining plugins
+    UnloadPlugins();
 
-        // Unload all of the remaining plugins
-        UnloadPlugins();
-
-        // Unregister callbacks, etc.
-        MainSession.UnRegisterCallback(_sessioncb);
-        MainSession.Prefs.SavePosition(Self);
-    end;
+    // Unregister callbacks, etc.
+    MainSession.UnRegisterCallback(_sessioncb);
+    MainSession.Prefs.SavePosition(Self);
 
     // Clear our master icon list
     RosterTreeImages.Clear();
 
-    // give stuff a bit of time to shutdown
-    Application.ProcessMessages();
-    Application.ProcessMessages();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
@@ -1660,6 +1640,48 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
+
+    _cleanupComplete := true;
+end;
+
+{**
+ *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
+**}
+procedure TfrmExodus.waitForCleanup();
+begin
+    repeat
+        Application.ProcessMessages();
+    until (_cleanupComplete);
+end;
+
+{---------------------------------------}
+{**
+ *  Expect this method to be called twice when connected.
+ *  once for the initial close request, once when Close is called
+ *  in the WMCLoseApp message handler, which is posted by session/disconnect
+ *  event.
+**}
+procedure TfrmExodus.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+    //mainsession should never be nil here, it is created before this object
+    //and destroyed in ExSession finalization
+
+    // If we are not already disconnected, then
+    // disconnect. Once we successfully disconnect,
+    // we'll close the form properly (xref _appclosing)
+    if (MainSession.Active) and (not _appclosing)then begin
+        _appclosing := true;
+        _logoff := true;
+        MainSession.Disconnect();
+        CanClose := false;
+    end
+    else
+        cleanup();
+end;
+
+procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
     Action := caFree;
 end;
 
@@ -1987,8 +2009,6 @@ procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
     // Close the whole honkin' thing
     _shutdown := true;
-    CloseAllRooms();
-    CloseAllChats();
     Self.Close;
 end;
 
@@ -3459,7 +3479,7 @@ begin
         end else debugMsg('OnTimer _last_tick != 0');
         debugMsg('OnTimer computing idle time');
         //get number of seconds since last activity
-        cur_idle := (GetTickCount() - _last_tick) div 1000;
+        cur_idle := (Windows.GetTickCount() - _last_tick) div 1000;
         debugMsg('OnTimer cur_idle: ' + IntToStr(cur_idle));
         //if we are testing auto-away (via the -a command line) then
         //make mins = to seconds (to speed things up), otherwise determine
