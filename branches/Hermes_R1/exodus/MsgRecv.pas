@@ -77,6 +77,7 @@ type
     mnuHistory: TTntMenuItem;
     popPaste: TTntMenuItem;
     popCopy: TTntMenuItem;
+    MsgPanel: TPanel;
     
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -431,6 +432,7 @@ begin
     txtMsg.Visible := false;
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
+    Splitter1.Visible := true;
     ActiveControl := MsgOut;
     lblFrom.Caption := _(sTo);
     btnClose.Visible := Docked;
@@ -550,10 +552,11 @@ begin
 
     else begin
         // reply
-        Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
+        pnlReply.ClientHeight := Self.ClientHeight div 2;
         frameButtons1.btnOK.Enabled := false;
-        pnlReply.Visible := true;
         pnlReply.Align := alBottom;
+        pnlReply.Visible := true;
+        Splitter1.Visible := true;
         MsgOut.SetFocus;
     end;
 end;
@@ -612,6 +615,7 @@ begin
     end;
     recips.Clear();
     MsgOut.WideLines.Clear();
+    Splitter1.Visible := false;
     pnlReply.Visible := false;
     NextOrClose();
 end;
@@ -886,8 +890,8 @@ begin
     if (not txtMsg.Visible) then
         Self.Close
     else begin
-        Self.ClientHeight := Self.ClientHeight - pnlReply.Height + frameButtons1.Height + 3;
         frameButtons1.btnOK.Enabled := true;
+        Splitter1.Visible := false;
         pnlReply.Visible := false;
         frameButtons1.Align := alBottom;
     end;
