@@ -64,12 +64,12 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   object txtPluginDir: TTntEdit
     Left = 0
     Top = 260
-    Width = 270
+    Width = 265
     Height = 21
     TabOrder = 4
   end
   object btnBrowsePluginPath: TTntButton
-    Left = 278
+    Left = 271
     Top = 258
     Width = 75
     Height = 25

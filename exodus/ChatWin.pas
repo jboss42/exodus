@@ -228,6 +228,7 @@ begin
     new_chat := false;
     do_scroll := false;
     hist := '';
+    win := nil;
 
     // If we have an existing chat, we may just want to raise it
     // or redock it, etc...
@@ -295,7 +296,7 @@ begin
             ritem := MainSession.roster.Find(sjid);
             if (ritem = nil) then begin
                 if (chat_nick = '') then
-                    OtherNick := tmp_jid.user
+                    OtherNick := tmp_jid.userDisplay
                 else
                     OtherNick := chat_nick;
             end
@@ -353,8 +354,10 @@ begin
             _scrollBottom();
     end;
 
-    if (new_chat) then
+    if (new_chat) then begin
+        assert(win <> nil);
         ExCOMController.fireNewChat(sjid, win.com_controller);
+    end;
 
     Result := TfrmChat(chat.window);
 end;
@@ -980,8 +983,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.PresCallback(event: string; tag: TXMLTag);
-var
-    ptype: widestring;
 begin
     // display some presence packet
     if (event = 'xml') then begin

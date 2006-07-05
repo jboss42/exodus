@@ -222,7 +222,6 @@ procedure ExHandleException(e_data: TWidestringlist);
 var
     s, i: integer;
     msg, ver, orig, fname, dir: String;
-    reg: TRegistry;
     sig: TSignal;
     l: TSignalListener;
     {$ifdef TRACE_EXCEPTIONS}
