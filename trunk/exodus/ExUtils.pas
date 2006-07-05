@@ -52,6 +52,7 @@ procedure ShowRoomLog(jid: Widestring);
 procedure ClearRoomLog(jid: Widestring);
 procedure ClearAllRoomLogs();
 
+Procedure DebugMsgBox(msg : string);
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload;
@@ -348,10 +349,16 @@ begin
         result := fld;
 end;
 
+Procedure DebugMsgBox(msg : string);
+begin
+//    Application.MessageBox(PChar(msg), 'Debug');
+end;
+
 {---------------------------------------}
 procedure DebugMsg(Message : string);
 begin
-    DebugMessage(Message);
+//    DebugMessage(Message);
+    MainSession.FireEvent('/data/debug', nil, Message);
 end;
 
 {---------------------------------------}
@@ -616,7 +623,7 @@ begin
         item := x.AddTag('item');
         item.setAttribute('jid', ri.jid.full);
         item.setAttribute('name', ri.Text);
-        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.full;
+        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');

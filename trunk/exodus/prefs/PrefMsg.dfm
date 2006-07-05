@@ -5,6 +5,8 @@ inherited frmPrefMsg: TfrmPrefMsg
   ClientHeight = 300
   ClientWidth = 348
   OldCreateOrder = True
+  ExplicitWidth = 360
+  ExplicitHeight = 312
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimestampFmt: TTntLabel [0]
@@ -27,6 +29,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
+    Visible = False
   end
   object lblInviteOptions: TTntLabel [3]
     Left = 5
@@ -59,7 +62,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 4
-    Items.WideStrings = (
+    Items.Strings = (
       'Use default message handling'
       'Treat all messages as chats'
       'Put messages into existing chats')
@@ -70,6 +73,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 207
     Height = 21
     TabOrder = 6
+    Visible = False
   end
   object btnSpoolBrowse: TTntButton [8]
     Left = 243
@@ -78,6 +82,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 25
     Caption = 'Browse'
     TabOrder = 7
+    Visible = False
     OnClick = btnSpoolBrowseClick
   end
   object cboInviteOptions: TTntComboBox [9]
@@ -88,7 +93,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 5
-    Items.WideStrings = (
+    Items.Strings = (
       'Treat as a normal instant message'
       'Always popup the invitation'
       'Automatically join the room.')
@@ -109,7 +114,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     ItemHeight = 13
     TabOrder = 3
     Text = 'h:mm am/pm'
-    Items.WideStrings = (
+    Items.Strings = (
       'h:mm am/pm'
       'hh:mm'
       't'
@@ -119,6 +124,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 348
     Caption = 'Message Options'
     TabOrder = 8
+    ExplicitWidth = 348
   end
   object chkQueueDNDChats: TTntCheckBox
     Left = 5

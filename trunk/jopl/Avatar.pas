@@ -23,7 +23,7 @@ interface
 uses
     Session, IQ, PNGImage,
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
-    Types, SysUtils, Classes;
+    Types, SysUtils, Classes, Dialogs, GnuGetText;
 
 const
     MAX_AVATAR_SIZE = 15000;
@@ -173,6 +173,9 @@ var
     ext: string;
 begin
     Valid := false;
+
+    try
+
     ext := Lowercase(ExtractFileExt(filename));
     if (ext = '.gif') then begin
         _pic := TGifImage.Create();
@@ -203,6 +206,12 @@ begin
     end;
 
     _genData();
+
+    except
+      on invalid: EInvalidGraphic do begin
+          MessageDlgW(_('This grahpic cannot be loaded because it''s format isn''t supported. ' + chr(13) + chr(10) + '(Hint: Check that the file''s extension matches it''s type.)'),mtError, [mbOk], 0);
+      end;
+    end; // end try
 end;
 
 {---------------------------------------}

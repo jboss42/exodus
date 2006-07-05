@@ -28,7 +28,7 @@ uses
     S10n,
 
     // Delphi stuff
-    Registry, Classes, Dialogs, Forms, SysUtils, Windows;
+    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows;
 
 type
     TExStartParams = class
@@ -171,7 +171,6 @@ var
     cli_status: string;
 
     profile: TJabberProfile;
-    reg: TRegistry;
 
     // some temps we use
     s, help_msg, tmp_locale: string;
@@ -757,7 +756,7 @@ procedure PlayXMPPActions();
 var
     i,k : integer;
     node: TXMLTag;
-    j: WideString;
+    j, tmp: WideString;
     jid: TJabberID;
     msgRcv: TfrmMsgRecv;
     chatWin: TfrmChat;
@@ -779,7 +778,8 @@ begin
         if (node.Name = 'message') then begin
             if node.GetBasicText('type') = 'normal' then begin
                 msgRcv := StartMsg(jid.full);
-                msgRcv.txtSendSubject.Text := node.GetBasicText('subject');
+                tmp := node.GetBasicText('subject');
+                msgRcv.txtSendSubject.Text := AnsiReplaceStr (tmp, '&', '&&');
                 msgRcv.txtMsg.Text := node.GetBasicText('body');
             end
             else begin

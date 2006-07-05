@@ -286,7 +286,7 @@ const
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
-    sRoomDestroyed = 'The room %s has been destroyed.';
+    sRoomDestroyed = 'The room ''%s'' has been destroyed.';
     sReason = 'Reason:';
     sDestroyRoomConfirm = 'Do you really want to destroy the room? All users will be removed.';
 
@@ -594,13 +594,16 @@ begin
     msg.ID := MainSession.generateID();
 
     // additional plugin madness
-    mtag := msg.Tag;
+
 
     if (fire_plugins) then begin
         add_xml := TExodusChat(ComController).fireAfterMsg(body);
-        if (add_xml <> '') then
-            mtag.addInsertedXML(add_xml);
+        msg.Body := body;
     end;
+    mtag := msg.Tag;
+
+    if (add_xml <> '') then
+      mtag.addInsertedXML(add_xml);
 
     if (xml <> '') then
         mtag.AddInsertedXML(xml);
@@ -941,7 +944,8 @@ begin
         if (_custom_pres) then exit;
 
         // previously disconnected
-        if (_mcallback = -1) then begin
+        if ((_mcallback = -1) or
+            (_pending_start)) then begin
             MsgOut.Visible := true;
             MsgList.DisplayPresence(sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
@@ -975,6 +979,7 @@ var
     member: TRoomMember;
     mtag, t, itag, xtag, etag, drtag: TXMLTag;
     ecode, scode, tmp1, tmp2, reason: Widestring;
+    e: TJabberEntity;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
@@ -1001,11 +1006,20 @@ begin
                     myNick := _old_nick;
             end
             else if (ecode = '401') then begin
-                MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
-                Self.Close();
-                tmp_jid := TJabberID.Create(from);
-                StartJoinRoom(tmp_jid, MyNick, '');
-                tmp_jid.Free();
+                e := jEntityCache.getByJid(Self.jid, '');
+                if ((e.hasFeature('muc_passwordprotected') or
+                     e.hasFeature('muc_password') or
+                     e.hasFeature('muc-passwordprotected')) or
+                     e.hasFeature('muc-password')) then begin
+                    // 401 error IS due to password so show password error
+                    MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
+                    Self.Close();
+                    tmp_jid := TJabberID.Create(from);
+                    StartJoinRoom(tmp_jid, MyNick, '');
+                    tmp_jid.Free();
+                    exit;
+                end;
+                // 401 is NOT due to password, just exit
                 exit;
             end
             else if (ecode = '404') then begin
@@ -1055,12 +1069,13 @@ begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
-                ShowStatusCode(t)
-            else if (not _pending_destroy) then begin
+                ShowStatusCode(t);
+
+            if (not _pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
 
-                reason := WideFormat(_(sRoomDestroyed), [tmp_jid.user]);
+                reason := WideFormat(_(sRoomDestroyed), [tmp_jid.userDisplay]);
                 drtag := tag.QueryXPTag(xp_muc_destroy_reason);
                 if ((drtag <> nil) and (drtag.Data <> '')) then begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
@@ -1302,7 +1317,7 @@ begin
     else if (scode = '302') then fmt := _(sStatus_302)
     else if (scode = '303') then fmt := _(sStatus_303)
     else if (scode = '307') then fmt := _(sStatus_307)
-    else if (scode = '322') then fmt := _(sStatus_322)
+    else if (scode = '322') then fmt := _(sStatus_322)         
     else if (scode = '403') then msg := _(sStatus_403)
     else if (scode = '405') then msg := _(sStatus_405)
     else if (scode = '407') then msg := _(sStatus_407)

@@ -464,7 +464,9 @@ begin
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
             from := tmp_tag.QueryXPData('/x/invite@from');
-            str_content := tag.getAttribute('from');
+            cjid := TJabberID.Create(tag.getAttribute('from'));
+            str_content := cjid.getDisplayFull();
+            cjid.Free();
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
         end
 
@@ -472,7 +474,9 @@ begin
             // conference invite
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
-            str_content := tmp_tag.getAttribute('jid');
+            cjid := TJabberID.Create(tmp_tag.getAttribute('jid'));
+            str_content := cjid.getDisplayFull();
+            cjid.Free();
         end
 
         else if (tag.QueryXPTag(XP_JCFINVITE) <> nil) then begin
@@ -490,7 +494,7 @@ begin
             for j := 0 to i_tags.Count - 1 do begin
                 ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
                 MainSession.roster.parseItem(ri, i_tags[j]);
-                _data_list.AddObject(ri.jid.jid, ri);
+                _data_list.AddObject(ri.jid.getDisplayJID(), ri);
             end;
             i_tags.Free();
         end

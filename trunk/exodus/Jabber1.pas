@@ -261,38 +261,38 @@ type
     _noMoveCheck: boolean;              // don't check form moves
     _tray_notify: boolean;              // boolean for flashing tray icon
     _edge_snap: integer;                // edge snap fuzziness
-    _auto_away: boolean;                // perform auto-away ops
-    _auto_away_interval: integer;
     _auto_login: boolean;
-    _last_tick: dword;                  // last tick when something happened
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
 
     // Various state flags
     _windows_ver: integer;
     _is_broadcast: boolean;             // Should this copy broadcast pres changes
-    _is_autoaway: boolean;              // Are we currently auto-away
-    _is_autoxa: boolean;                // Are we currently auto-xa
-    _last_show: Widestring;             // last show for restoring after auto-away
-    _last_status: Widestring;           // last status    (ditto)
-    _last_priority: integer;            // last priority  (ditto)
     _hidden: boolean;                   // are we minimized to the tray
     _was_max: boolean;                  // was the main window maximized before?
     _logoff: boolean;                   // are we logging off on purpose
     _shutdown: boolean;                 // are we being shutdown
+    _cleanupComplete : boolean;        //all close events have fired and app is ready to terminate
     _close_min: boolean;                // should the close btn minimize, not close
     _appclosing: boolean;               // is the entire app closing
     _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
 
-    // Stuff for the Autoaway DLL
+    // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
     _GetLastTick: TGetLastTick;         // function ptrs inside the lib
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
     _valid_aa: boolean;                 // do we have a valid auto-away setup?
     _GetLastInput: TGetLastInputFunc;
+    _is_autoaway: boolean;              // Are we currently auto-away
+    _is_autoxa: boolean;                // Are we currently auto-xa
+
+    _auto_away_interval: integer;       //# of seconds between checks when moving from availabel state
+    _last_show: Widestring;             // last show for restoring after auto-away
+    _last_status: Widestring;           // last status    (ditto)
+    _last_priority: integer;            // last priority  (ditto)
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -326,6 +326,15 @@ type
     function win32TrackerIndex(windows_msg: integer): integer;
 
     procedure _sendInitPresence();
+    {**
+     *  Cleanup objects, registered callbacks etc. Prepare for shutdown
+     **}
+    procedure cleanup();
+
+    {**
+     *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
+    **}
+    procedure waitForCleanup();
 
   protected
     // Hooks for the keyboard and the mouse
@@ -339,7 +348,7 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
-    procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
+    //procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
     procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
@@ -713,17 +722,11 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMQueryEndSession(var msg: TMessage);
 begin
-    // Allow windows to shutdown
     _shutdown := true;
+    inherited; //will eventually fire FormQueryClose event
+    //busywait until app has a chance to cleanup
+    waitForCleanup();
     msg.Result := 1;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.WMEndSession(var msg: TMessage);
-begin
-    // Kill the application
-    _shutdown := true;
-    msg.Result := 0;
 end;
 
 {---------------------------------------}
@@ -770,13 +773,13 @@ begin
 
         _shutdown := true;
         Self.Close;
+        waitForCleanup();
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.WMDisconnect(var msg: TMessage);
 begin
-    //
     MainSession.Disconnect();
 end;
 
@@ -882,6 +885,7 @@ begin
     _reconnect_tries := 0;
     _hidden := false;
     _shutdown := false;
+    _cleanupComplete := false;
     _close_min := MainSession.prefs.getBool('close_min');
 
     // Setup the IdleUI stuff..
@@ -1111,59 +1115,6 @@ begin
     if (not MainSession.Active) then MainSession.Connect();
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.setupAutoAwayTimer();
-var
-    lii: TLastInputInfo;
-begin
-    // Setup the auto-away timer
-    // Note that for W2k and XP, we are just going to
-    // use the special API calls for getting inactivity.
-    // For other OS's we need to use the wicked nasty DLL
-    _valid_aa := false;
-    DebugMsg(_(sSetupAutoAway));
-    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
-        // Use the DLL
-        @_GetLastTick := nil;
-        @_InitHooks := nil;
-        @_StopHooks := nil;
-
-        _idle_hooks := LoadLibrary('IdleHooks.dll');
-        if (_idle_hooks <> 0) then begin
-            // start the hooks
-            @_GetLastTick := GetProcAddress(_idle_hooks, 'GetLastTick');
-            @_InitHooks := GetProcAddress(_idle_hooks, 'InitHooks');
-            @_StopHooks := GetProcAddress(_idle_hooks, 'StopHooks');
-
-            DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetLastTick)));
-            DebugMsg('_InitHooks = ' + IntToStr(integer(@_InitHooks)));
-            DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
-
-            _InitHooks();
-            _valid_aa := true;
-        end
-        else
-            DebugMsg(_(sAutoAwayFail));
-        _last_tick := GetTickCount();
-    end
-    else begin
-        // Use the GetLastInputInfo API call
-        // Use GetProcAddress so we can still run on Win95/98/ME/NT which
-        // don't have this function. If we just make the call, we end up
-        // depending on that API call.
-        @_GetLastInput := nil;
-        @_GetLastInput := GetProcAddress(GetModuleHandle('user32'), 'GetLastInputInfo');
-        if (@_GetLastInput <> nil) then begin
-            lii.cbSize := sizeof(tagLASTINPUTINFO);
-            if (_GetLastInput(lii)) then begin
-                DebugMsg(_(sAutoAwayWin32));
-                _valid_aa := true;
-            end;
-        end;
-        if (not _valid_aa) then
-            DebugMsg(_(sAutoAwayFailWin32));
-    end;
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.setTrayInfo(tip: string);
@@ -1362,7 +1313,9 @@ begin
 
         _new_account := false;
         restoreMenus(false);
-
+        //if disconnect happened because of a close request, post a message
+        //so close can continue *after* every other listener has a chance
+        //to respond to session disconnect event.
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
@@ -1414,7 +1367,7 @@ begin
             else
                 _edge_snap := -1;
             _close_min := getBool('close_min');
-            _auto_away := getBool('auto_away');
+
             use_emoticons := getBool('emoticons');
         end;
 
@@ -1473,9 +1426,12 @@ begin
         else if (MainSession.Show = 'xa') then
             SetTrayIcon(10);
 
-        // don't send message on autoaway or auto-return
-        if (_is_autoaway or _is_autoxa or _is_broadcast) then exit;
-
+        // don't send message on autoaway
+        if (_is_autoaway or _is_autoxa) then exit;
+        
+        //don't send message if auto-return
+        if (_is_broadcast) then exit;
+        
         // Send a windows msg so other copies of Exodus will change their
         // status to match ours.
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
@@ -1626,25 +1582,13 @@ begin
     end
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.FormCloseQuery(Sender: TObject;
-  var CanClose: Boolean);
+{**
+ *  Cleanup objects, registered callbacks etc. Prepare for shutdown
+**}
+procedure TfrmExodus.cleanup();
 begin
-    // If we are not already disconnected, then
-    // disconnect. Once we successfully disconnect,
-    // we'll close the form properly (xref _appclosing)
-    if (MainSession <> nil) then begin
-
-        if ((MainSession.Active) and (not _appclosing))then begin
-            _appclosing := true;
-            _logoff := true;
-            MainSession.Disconnect();
-            CanClose := false;
-            exit;
-        end;
-
-    end;
-
+    //mainsession should never be nil here. It is created before this object
+    //and only destroyed on ExSession finalization.
     // Unhook the auto-away DLL
     if (_idle_hooks <> 0) then begin
         _StopHooks();
@@ -1675,34 +1619,18 @@ begin
 
     // Close whatever rooms we have
     CloseAllRooms();
+    CloseDebugForm();
+    CloseAllChats();
 
-    // If we have a session, close it up
-    // and all of the associated windows
-    if MainSession <> nil then begin
-        CloseDebugForm();
-        CloseAllChats();
+    // Unload all of the remaining plugins
+    UnloadPlugins();
 
-        // Unload all of the remaining plugins
-        UnloadPlugins();
-
-        // Unregister callbacks, etc.
-        MainSession.UnRegisterCallback(_sessioncb);
-        MainSession.Prefs.SavePosition(Self);
-    end;
+    // Unregister callbacks, etc.
+    MainSession.UnRegisterCallback(_sessioncb);
+    MainSession.Prefs.SavePosition(Self);
 
     // Clear our master icon list
     RosterTreeImages.Clear();
-
-    // give stuff a bit of time to shutdown
-    Application.ProcessMessages();
-    Application.ProcessMessages();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-    // Free everything else
-    //TeardownSession();
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
@@ -1712,6 +1640,48 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
+
+    _cleanupComplete := true;
+end;
+
+{**
+ *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
+**}
+procedure TfrmExodus.waitForCleanup();
+begin
+    repeat
+        Application.ProcessMessages();
+    until (_cleanupComplete);
+end;
+
+{---------------------------------------}
+{**
+ *  Expect this method to be called twice when connected.
+ *  once for the initial close request, once when Close is called
+ *  in the WMCLoseApp message handler, which is posted by session/disconnect
+ *  event.
+**}
+procedure TfrmExodus.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+    //mainsession should never be nil here, it is created before this object
+    //and destroyed in ExSession finalization
+
+    // If we are not already disconnected, then
+    // disconnect. Once we successfully disconnect,
+    // we'll close the form properly (xref _appclosing)
+    if (MainSession.Active) and (not _appclosing)then begin
+        _appclosing := true;
+        _logoff := true;
+        MainSession.Disconnect();
+        CanClose := false;
+    end
+    else
+        cleanup();
+end;
+
+procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
     Action := caFree;
 end;
 
@@ -2039,8 +2009,6 @@ procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
     // Close the whole honkin' thing
     _shutdown := true;
-    CloseAllRooms();
-    CloseAllChats();
     Self.Close;
 end;
 
@@ -2146,256 +2114,6 @@ begin
     MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
     x.Free();
 
-end;
-
-{---------------------------------------}
-function TfrmExodus.getLastTick(): dword;
-var
-    lii: TLastInputInfo;
-begin
-    // Return the last tick count of activity
-    Result := 0;
-    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
-        if ((_idle_hooks <> 0) and (@_GetLastTick <> nil)) then
-            Result := _GetLastTick();
-    end
-    else begin
-        // use GetLastInputInfo
-        lii.cbSize := sizeof(tagLASTINPUTINFO);
-        if (_GetLastInput(lii)) then
-            Result := lii.dwTime;
-    end;
-end;
-
-function TfrmExodus.screenStatus(): integer;
-var
-    desk: HDESK;
-    name: string;
-    len: dword;
-    hw: HWINSTA;
-    w,d: HWND;
-    wSize: TRect;
-    mon: TMonitor;
-begin
-    if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
-        result := DT_UNKNOWN;
-        exit;
-    end;
-
-    desk := OpenInputDesktop(0, False, MAXIMUM_ALLOWED);
-    if desk = 0 then begin
-        result := DT_LOCKED;
-        exit;
-    end;
-
-    GetUserObjectInformation(desk, UOI_NAME, PChar(name), 0, len);
-    SetLength(name, len + 1);
-    if not GetUserObjectInformation(desk, UOI_NAME, PChar(name), len, len) then begin
-        CloseDesktop(desk);
-        result := DT_UNKNOWN;
-        exit;
-    end;
-    CloseDesktop(desk);
-    // there's a null on the end.  Not sure why this worked before the -1.
-    SetLength(name, len-1);
-
-    if name = 'Default' then begin  // NO I18N!
-        // what about fullscreen mode, like PowerPoint shows?
-        w := GetForegroundWindow();
-        d := FindWindow('Progman', nil);
-        if (w <> d) then begin
-            // Got a window and it is NOT the program manager (desktop).
-            Windows.GetClientRect(w, wSize);
-            mon := Screen.MonitorFromWindow(w, mdNearest);
-            if((mon.BoundsRect.Left = wSize.Left) and
-               (mon.BoundsRect.Right = wSize.Right) and
-               (mon.BoundsRect.Top = wSize.Top) and
-               (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
-               result := DT_FULLSCREEN;
-               exit;
-            end;
-        end;
-        result := DT_OPEN;
-        exit;
-    end;
-
-    if name = 'Screen-saver' then begin
-        result := DT_SCREENSAVER;
-        exit;
-    end;
-
-    if name = 'Winlogon' then begin
-		hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
-		GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
-		CloseWindowStation(hw);
-
-		// if no user is assosiated with winsta0, then no user is
-		// is logged on:
-		if len = 0 then
-			// no one is logged on:
-			result := DT_NO_LOG
-		else
-			// the station is locked
-			result := DT_LOCKED;
-        exit;
-    end;
-
-    result := DT_UNKNOWN;
-end;
-{---------------------------------------}
-procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
-var
-    mins, away, xa, dis: integer;
-    cur_idle: longword;
-    dmsg: string;
-    do_xa, do_dis: boolean;
-    avail: boolean;
-begin
-    {
-    Auto-away mad-ness......
-
-    Get the current idle time, and based on that, "do the right thing".
-
-    Note that we don't want to set a-away if we're already
-    away, XA, or DND.
-
-    getLasTick() uses either the idleHooks.dll or the appropriate
-    API call if they are available (w2k and xp) to get the last
-    tick count which had activity.
-    }
-
-    if (MainSession = nil) then exit;
-    if (not MainSession.Active) then exit;
-
-    with MainSession.Prefs do begin
-        if ((_auto_away)) then begin
-
-            if screenStatus() > DT_OPEN then begin
-                if not _is_autoaway then
-                    SetAutoAway();
-                exit;
-            end;
-            
-            _last_tick := getLastTick();
-            if (_last_tick = 0) then exit;
-
-            cur_idle := (GetTickCount() - _last_tick) div 1000;
-            if (not ExStartup.testaa) then
-                mins := cur_idle div 60
-            else
-                mins := cur_idle;
-
-            if (ExStartup.testaa) then begin
-                if (not _is_autoaway) and (not _is_autoxa) then begin
-                    dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
-                        SafeBoolStr(_is_autoxa) + ', ' +
-                        IntToStr(cur_idle ) + ' secs'#13#10;
-                    DebugMsg(dmsg);
-                end;
-            end;
-
-            away := getInt('away_time');
-            xa := getInt('xa_time');
-            dis := getInt('disconnect_time');
-            do_xa := getBool('auto_xa');
-            do_dis := getBool('auto_disconnect');
-
-            avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
-                (MainSession.Show <> 'away');
-
-            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
-                // we are available again
-                SetAutoAvailable()
-            else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
-                // Disconnect us
-                _logoff := true;
-                PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
-            end
-            else if (_is_autoxa) then
-                // We are XA, but not ready to disconnect
-                exit
-            else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then
-                // We are away, need to be xa
-                SetAutoXA()
-            else if ((mins >= away) and (not _is_autoaway) and (avail)) then
-                // We are avail, need to be away
-                SetAutoAway();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.SetAutoAway;
-var
-    new_pri: integer;
-begin
-    // set us to away
-    DebugMsg(_(sSetAutoAway));
-    Application.ProcessMessages;
-
-    MainSession.Pause();
-    if ((MainSession.Show = 'away') or
-        (MainSession.Show = 'xa') or
-        (MainSession.Show = 'dnd')) then exit;
-
-    _last_show := MainSession.Show;
-    _last_status := MainSession.Status;
-    _last_priority := MainSession.Priority;
-
-    // must be before SetPresence
-    _is_autoaway := true;
-
-    // If we aren't doing auto-xa, then just set the flag now.
-    if (not MainSession.Prefs.getBool('auto_xa')) then
-        _is_autoxa := true
-    else
-        _is_autoxa := false;
-
-    if MainSession.Prefs.getBool('aa_reduce_pri') then
-        new_pri := 0
-    else
-        new_pri := _last_priority;
-
-    MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
-        new_pri);
-
-    timAutoAway.Interval := 1000;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.SetAutoXA;
-begin
-    // set us to xa
-    DebugMsg(_(sSetAutoXA));
-
-    // must be before SetPresence
-    _is_autoaway := false;
-    _is_autoxa := true;
-
-    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
-        MainSession.Priority);
-
-    if (timAutoAway.Interval > 1000) then
-        timAutoAway.Interval := 1000;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.SetAutoAvailable;
-begin
-    // reset our status to available
-    DebugMsg(_(sSetAutoAvailable));
-    timAutoAway.Enabled := false;
-    timAutoAway.Interval := _auto_away_interval * 1000;
-    MainSession.SetPresence(_last_show, _last_status, _last_priority);
-
-    // must be *after* SetPresence
-    _is_autoaway := false;
-    _is_autoxa := false;
-
-    if (_valid_aa) then
-        timAutoAway.Enabled := true;
-
-    MainSession.Play();
 end;
 
 {---------------------------------------}
@@ -2585,17 +2303,6 @@ begin
     StopTrayAlert();
 end;
 
-{---------------------------------------}
-function TfrmExodus.IsAutoAway(): boolean;
-begin
-    Result := _is_autoaway;
-end;
-
-{---------------------------------------}
-function TfrmExodus.IsAutoXA(): boolean;
-begin
-    Result := _is_autoxa;
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
@@ -3526,10 +3233,416 @@ begin
     end
 end;
 
+{******************************************************************************
+ ***************************** Auto Away **************************************
+ *****************************************************************************}
+
+{---------------------------------------}
+procedure TfrmExodus.setupAutoAwayTimer();
+var
+    lii: TLastInputInfo;
+begin
+    // Setup the auto-away timer
+    // Note that for W2k and XP, we are just going to
+    // use the special API calls for getting inactivity.
+    // For other OS's we need to use the wicked nasty DLL
+    _valid_aa := false;
+    DebugMsg(_(sSetupAutoAway));
+    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
+        // Use the DLL
+        @_GetLastTick := nil;
+        @_InitHooks := nil;
+        @_StopHooks := nil;
+
+        _idle_hooks := LoadLibrary('IdleHooks.dll');
+        if (_idle_hooks <> 0) then begin
+            // start the hooks
+            @_GetLastTick := GetProcAddress(_idle_hooks, 'GetLastTick');
+            @_InitHooks := GetProcAddress(_idle_hooks, 'InitHooks');
+            @_StopHooks := GetProcAddress(_idle_hooks, 'StopHooks');
+
+            DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetLastTick)));
+            DebugMsg('_InitHooks = ' + IntToStr(integer(@_InitHooks)));
+            DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
+
+            _InitHooks();
+            _valid_aa := true;
+        end
+        else
+            DebugMsg(_(sAutoAwayFail));
+    end
+    else begin
+        // Use the GetLastInputInfo API call
+        // Use GetProcAddress so we can still run on Win95/98/ME/NT which
+        // don't have this function. If we just make the call, we end up
+        // depending on that API call.
+        @_GetLastInput := nil;
+        @_GetLastInput := GetProcAddress(GetModuleHandle('user32'), 'GetLastInputInfo');
+        if (@_GetLastInput <> nil) then begin
+            lii.cbSize := sizeof(tagLASTINPUTINFO);
+            if (_GetLastInput(lii)) then begin
+                DebugMsg(_(sAutoAwayWin32));
+                _valid_aa := true;
+            end;
+        end;
+        if (not _valid_aa) then
+            DebugMsg(_(sAutoAwayFailWin32));
+    end;
+end;
+ 
+ {---------------------------------------}
+function TfrmExodus.IsAutoAway(): boolean;
+begin
+    Result := _is_autoaway;
+end;
+
+{---------------------------------------}
+function TfrmExodus.IsAutoXA(): boolean;
+begin
+    Result := _is_autoxa;
+end;
+
+ {---------------------------------------}
+function TfrmExodus.getLastTick(): dword;
+var
+    lii: TLastInputInfo;
+begin
+    // Return the last tick count of activity
+    Result := 0;
+    //if not (2k or xp)
+    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
+        //use idl dll
+        if ((_idle_hooks <> 0) and (@_GetLastTick <> nil)) then
+            Result := _GetLastTick();
+    end
+    else begin
+        DebugMsg('getLastTick: using GetLastInput');
+        // use GetLastInputInfo
+        lii.cbSize := sizeof(tagLASTINPUTINFO);
+        if (_GetLastInput(lii)) then
+            Result := lii.dwTime;
+    end;
+end;
+
+function TfrmExodus.screenStatus(): integer;
+var
+    desk: HDESK;
+    name: string;
+    len: dword;
+    hw: HWINSTA;
+    w,d: HWND;
+    wSize: TRect;
+    mon: TMonitor;
+begin
+    if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
+        result := DT_UNKNOWN;
+        exit;
+    end;
+
+    desk := OpenInputDesktop(0, False, MAXIMUM_ALLOWED);
+    if desk = 0 then begin
+        result := DT_LOCKED;
+        DebugMsg('screenStatus:  OpenInputDesktop = 0 - DT_LOCKED');
+        exit;
+    end;
+
+    GetUserObjectInformation(desk, UOI_NAME, PChar(name), 0, len);
+    SetLength(name, len + 1);
+    if not GetUserObjectInformation(desk, UOI_NAME, PChar(name), len, len) then begin
+        CloseDesktop(desk);
+        result := DT_UNKNOWN;
+        DebugMsg('screenStatus: GetUserObjectInformation = false - DT_UNKNOWN');
+        exit;
+    end;
+    CloseDesktop(desk);
+    // there's a null on the end.  Not sure why this worked before the -1.
+    SetLength(name, len-1);
+    if name = 'Default' then begin  // NO I18N!
+        DebugMsg('screenStatus: found Default, testing to see if full screen app');
+        // what about fullscreen mode, like PowerPoint shows?
+        w := GetForegroundWindow();
+        d := FindWindow('Progman', nil);
+        if (w <> d) then begin
+            DebugMsg('screenStatus: Default is not Progman, checking client rec');
+            // Got a window and it is NOT the program manager (desktop).
+            Windows.GetClientRect(w, wSize);
+            mon := Screen.MonitorFromWindow(w, mdNearest);
+            if((mon.BoundsRect.Left = wSize.Left) and
+               (mon.BoundsRect.Right = wSize.Right) and
+               (mon.BoundsRect.Top = wSize.Top) and
+               (mon.BoundsRect.Bottom = wSize.Bottom)) then begin
+               DebugMsg('screenStatus: Found full screen app');
+               result := DT_FULLSCREEN;
+               exit;
+            end;
+            DebugMsg('screenStatus: NOT full screen app');
+        end else DebugMsg('screenStatus: Not Progman');
+        result := DT_OPEN;
+        exit;
+    end;
+    DebugMsg('screenStatus:  name from GUOI: ' + name);
+    if name = 'Screen-saver' then begin
+        result := DT_SCREENSAVER;
+        exit;
+    end;
+
+    if name = 'Winlogon' then begin
+        DebugMsg('screenStatus: found WinLogin, testing to see if user is logged');
+		hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
+		GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
+		CloseWindowStation(hw);
+
+		// if no user is assosiated with winsta0, then no user is
+		// is logged on:
+		if len = 0 then
+			// no one is logged on:
+			result := DT_NO_LOG
+		else
+			// the station is locked
+			result := DT_LOCKED;
+        exit;
+    end;
+    DebugMsg('screenStatus: defaulting to Unknown');
+    result := DT_UNKNOWN;
+end;
+{---------------------------------------}
+{**
+ * Autoaway timer OnTimer event.
+
+    Auto-away mad-ness......
+
+    Get the current idle time, and based on that, "do the right thing".
+
+    Note that we don't want to set a-away if we're already
+    away, XA, or DND.
+
+    getLasTick() uses either the idleHooks.dll or the appropriate
+    API call if they are available (w2k and xp) to get the last
+    tick count which had activity.
+
+ * Will fire once every 10 seconds when the user is authenticated and available
+ * Fires once every seconds when user is authenticated and not available.
+**}
+procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
+var
+    mins,                   //# of minutes since last input
+    away, xa, dis: integer; //prefs defining elapsed minute triggers
+    cur_idle: longword;
+    dmsg: string;
+    do_xa, do_dis: boolean;
+    avail: boolean;
+    _last_tick: dword;      // last user input
+    _auto_away: boolean;                // perform auto-away ops
+    ss : integer;
+begin
+    debugMsg('OnTimer BEGIN');
+    try
+
+    //if we are not connected bail
+    if (MainSession = nil) then exit;
+    if (not MainSession.Active) then exit;
+
+    with MainSession.Prefs do begin
+        _auto_away := getBool('auto_away');
+        //get autoway prefs
+        away := getInt('away_time');
+        xa := getInt('xa_time');
+        dis := getInt('disconnect_time');
+        do_xa := getBool('auto_xa');
+        do_dis := getBool('auto_disconnect');
+    end;
+    debugMsg('OnTimer prefs: _auto_away: ' + SafeBoolStr(_auto_away) + ', away time: ' + IntToStr(away) + ', xa time: ' + IntToStr(xa) + ', disconnect time: ' + IntToStr(dis) + ', xa enabled: ' + SafeBoolStr(do_xa) + ', disconnect enabled: ' + SafeBoolStr(do_dis));
+    debugMsg('OnTimer state: _is_autoaway: ' + SafeBoolStr(_is_autoaway) + ', _is_autoxa: ' + SafeBoolStr(_is_autoxa));
+    //_autoAway is set when prefs are updatecd
+    //if auto_away is enabled
+    if ((_auto_away)) then begin
+        ss := screenStatus();
+        debugMsg('OnTimer auto away enabled, screen status: ' + IntToStr(ss));
+        //if screen is locked, screensaver or full screen app the autoaway
+        if ss > DT_OPEN then begin
+            debugMsg('OnTimer screen status > DT_OPEN');
+            //if not already autoaway, make it so
+            if not _is_autoaway then begin
+                debugMsg('OnTimer not autoaway, calling SetAutoAway');
+                SetAutoAway();
+            end else debugMsg('OnTimer already autoaway');
+            debugMsg('OnTImer exiting');
+            exit;
+        end else debugMsg('OnTimer screen status <= DT_OPEN');
+        debugMsg('OnTimer getting last tick');
+        //otherwise check to see if auto away should be triggered
+        _last_tick := getLastTick();
+        debugMsg('OnTimer _last_tick: ' + IntToStr(_last_tick));
+        if (_last_tick = 0) then begin
+            debugMsg('OnTimer _last_tick == 0, exiting');
+        exit; //might return 0 if library setup failed
+        end else debugMsg('OnTimer _last_tick != 0');
+        debugMsg('OnTimer computing idle time');
+        //get number of seconds since last activity
+        cur_idle := (Windows.GetTickCount() - _last_tick) div 1000;
+        debugMsg('OnTimer cur_idle: ' + IntToStr(cur_idle));
+        //if we are testing auto-away (via the -a command line) then
+        //make mins = to seconds (to speed things up), otherwise determine
+        //number of minutes since last input
+        //if testing autoaway via the -a command line param, dump debug stmts
+        debugMsg('OnTimer converting idle to minutes');
+        if (ExStartup.testaa) then begin
+            debugMsg('OnTimer using test aa (-a param)');
+            mins := cur_idle;
+            if (not _is_autoaway) and (not _is_autoxa) then begin
+                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
+                    SafeBoolStr(_is_autoxa) + ', ' +
+                    IntToStr(cur_idle ) + ' secs'#13#10;
+                DebugMsg(dmsg);
+            end;
+        end
+        else begin
+            debugMsg('OnTimer not using debug aa');
+            mins := cur_idle div 60
+        end;
+        debugMsg('OnTimer mins: ' + IntToStr(mins));
+        debugMsg('OnTimer determining current available state');
+        //are we in an availabel show state?
+        avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
+            (MainSession.Show <> 'away');
+        debugMsg('OnTimer avail: ' + SafeBoolStr(avail));
+        //if we had activity within the last minute and are currently
+        //auto'd away, send available
+        if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then begin
+            debugMsg('OnTimer mins == 0 and _is_autoaway or _is_autoxa, calling SetAvailable');
+            // we are available again
+            SetAutoAvailable()
+        //if we have auto-discnnect enabled and last input > disconnect time
+        //and we are auto-etended away (hmm, thats seems wrong, you can have
+        //auto-disconnect without auto-extaway, but must have auto-away
+        end
+        else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
+        debugMsg('OnTimer do_dis and mins > dis and _is_autoxa, logoff');
+            // Disconnect us
+            _logoff := true;
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        end
+        // if auto-xa'd just exit, only state we could move to is
+        //available or disconnect handled above
+        else if (_is_autoxa) then begin
+        debugMsg('OnTimer is already autoxa, exiting');
+            exit
+        end
+        //if auto-away and auto-xa is enabled and idle time > xa time, go XA
+        else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then begin
+            debugMsg('OnTImer do_xa and mins >= xa and _is_autoaway');
+
+            SetAutoXA()
+        end
+        //if available and auto-away enabled and idle time > away time, go away
+        else if ((mins >= away) and (not _is_autoaway) and (avail)) then begin
+            debugMsg('OnTimer mins >= away and not _is_autoaway and currently available');
+            // We are avail, need to be away
+            SetAutoAway();
+        end else debugMsg('OnTimer failed all conditions');
+    end else debugMsg('OnTimer autoaway not enabled');
+    finally
+        debugMsg('OnTimer END');
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.SetAutoAway;
+var
+    new_pri: integer;
+begin
+    // set us to away
+    DebugMsg(_(sSetAutoAway));
+    Application.ProcessMessages;
+DebugMsg('SetAutoAway Mainsession.Pause');
+    MainSession.Pause();
+    if ((MainSession.Show = 'away') or
+        (MainSession.Show = 'xa') or
+        (MainSession.Show = 'dnd')) then begin
+            DebugMsg('SetAutoAway Already in away state, do nothing');
+        exit;
+    end;
+
+    _last_show := MainSession.Show;
+    _last_status := MainSession.Status;
+    _last_priority := MainSession.Priority;
+    DebugMsg('SetAutoAway Setting cached last pres state: show: ' + _last_show + ', Status: ' + _last_status + ', priority: ' + IntToStr(_last_priority)); 
+    // must be before SetPresence
+    _is_autoaway := true;
+
+    // If we aren't doing auto-xa, then just set the flag now.
+    if (not MainSession.Prefs.getBool('auto_xa')) then
+        _is_autoxa := true
+    else
+        _is_autoxa := false;
+
+    if MainSession.Prefs.getBool('aa_reduce_pri') then
+        new_pri := 0
+    else
+        new_pri := _last_priority;
+
+    MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
+        new_pri);
+
+    timAutoAway.Interval := 1000;
+    DebugMsg('SetAutoAway values:  _last_show: ' + _last_show + ' _last_status: ' + _last_status +
+             ' _last_priority: ' + IntToStr(_last_priority) + ' _is_autoaway: ' + BoolToStr(_is_autoaway) + ' _is_autoxa: ' +
+             BoolToStr(_is_autoxa) + ' new_pri: ' + IntToStr(new_pri));
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.SetAutoXA;
+begin
+    // set us to xa
+    DebugMsg(_(sSetAutoXA));
+
+    // must be before SetPresence
+    _is_autoaway := false;
+    _is_autoxa := true;
+
+    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
+        MainSession.Priority);
+
+    if (timAutoAway.Interval > 1000) then
+        timAutoAway.Interval := 1000;
+
+    DebugMsg('SetAutoXA values:  _last_show: ' + _last_show + ' _last_status: ' + _last_status +
+             ' _last_priority: ' + IntToStr(_last_priority) + ' _is_autoaway: ' + BoolToStr(_is_autoaway) + ' _is_autoxa: ' +
+             BoolToStr(_is_autoxa));
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.SetAutoAvailable;
+begin
+debugMsg('SetAutoAvailable BEGIN');
+    // reset our status to available
+    DebugMsg(_(sSetAutoAvailable));
+    debugMsg('SetAutoAvailable disabling timer');
+    timAutoAway.Enabled := false;
+    debugMsg('SetAutoAvailable computing interval: ' + IntToStr(_auto_away_interval * 1000));
+    timAutoAway.Interval := _auto_away_interval * 1000;
+    debugMsg('SetAutoAvailable sertting status _last_show: ' + _last_show + ', _last_status: ' + _last_show + ', _last_priority: ' + IntToStr(_last_priority));
+    MainSession.SetPresence(_last_show, _last_status, _last_priority);
+    debugMsg('SetAutoAvailable setting _is_autoaway, _isAutoXA to false');
+    // must be *after* SetPresence
+    _is_autoaway := false;
+    _is_autoxa := false;
+
+    if (_valid_aa) then begin
+        debugMsg('SetAutoAvailable enabling timer');
+        timAutoAway.Enabled := true;
+    end else     debugMsg('SetAutoAvailable no good aa config, not setting enabling timer');
+        debugMsg('SetAutoAvailable playing back queued notifications');
+    MainSession.Play();
+debugMsg('SetAutoAvailable END');
+end;
+
+
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
     //problems for branded clients
     //(for instance when Exodus and brand are both running). Ask Joe H.
+    //Joe H answered it is desirable for all Exodus based clients to  share presence
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     sShellRestart := RegisterWindowMessage('TaskbarCreated');

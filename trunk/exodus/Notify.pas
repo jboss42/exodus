@@ -254,7 +254,7 @@ begin
     end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then
-        PlaySound(pchar('EXODUS_' + sound_name), 0,
+        PlaySound(pchar(PrefController.getAppInfo().ID + '_' + sound_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 end;
 

@@ -426,8 +426,15 @@ begin
     if _plugs.Count = 1 then
         _ccbId := MainSession.RegisterCallback(ChatCallback);
 
-    if (_chat.Window <> nil) then
+    if (_chat <> nil ) then
+      begin
+       if (_chat.Window <> nil) then
         fireNewWindow(TForm(_chat.Window).Handle );
+      end;
+
+    if ( _room <> nil ) then
+      fireNewWindow(_room.Handle);
+
 end;
 
 {---------------------------------------}

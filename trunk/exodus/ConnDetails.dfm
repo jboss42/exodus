@@ -376,6 +376,7 @@ object frmConnDetails: TfrmConnDetails
         Style = csDropDownList
         ItemHeight = 13
         TabOrder = 5
+        OnChange = cboSocksTypeChange
         Items.Strings = (
           'None'
           'Version 4'
