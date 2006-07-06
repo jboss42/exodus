@@ -76,6 +76,7 @@ type
         procedure Release();
         procedure TimedRelease();
         procedure DisableChat();
+        procedure UnregisterSessionCB();
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
@@ -201,12 +202,6 @@ begin
 
     _cb := MainSession.RegisterCallback(MsgCallback,
             '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
-
-
-   if (_scallback >= 0) then
-      MainSession.UnRegisterCallback(_scallback);
-
-   _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 end;
 
 procedure TChatController.DisableChat();
@@ -247,10 +242,7 @@ begin
         if (idx >= 0) then
             MainSession.ChatList.Delete(idx);
 
-        if (_scallback >= 0) then begin
-            MainSession.UnRegisterCallback(_scallback);
-            _scallback := -1;
-        end;
+        Self.UnregisterSessionCB();
     end;
 
     // Free stuff
@@ -392,16 +384,24 @@ begin
 end;
 
 {---------------------------------------}
+//  This method should start a countdown to destroy the chat controller object.
+//  If there is no associated window, then it will register itself as a session
+//  listener and destroy itself when session disconnects.
 procedure TChatController.startTimer();
 begin
     _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
     _memory.Enabled := true;
+    if (_scallback = -1)  and (Self.Window = nil) then
+        _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 end;
 
 {---------------------------------------}
 procedure TChatController.stopTimer();
 begin
     _memory.Enabled := false;
+    // Only unregister session callback if control has been handed to a window
+    if (Self.Window <> nil) then
+        Self.UnregisterSessionCB();
 end;
 
 {---------------------------------------}
@@ -416,6 +416,14 @@ begin
     // remove the ChatController if the user disconnects
     if (event = '/session/disconnected') then
         Self.Free();
+end;
+
+procedure TChatController.UnregisterSessionCB();
+begin
+    if (_scallback >= 0) then begin
+        MainSession.UnRegisterCallback(_scallback);
+        _scallback := -1;
+    end;
 end;
 
 end.
