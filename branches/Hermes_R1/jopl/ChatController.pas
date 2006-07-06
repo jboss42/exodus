@@ -46,10 +46,12 @@ type
         _refs: integer;
         _queued: boolean;
         _threadid: Widestring;
+        _scallback: integer;    // Session callback
 
         procedure SetWindow(new_window: TObject);
     protected
         procedure timMemoryTimer(Sender: TObject);
+        procedure SessionCallback(event: string; tag: TXMLTag);
     public
         msg_queue: TQueue;
 
@@ -149,6 +151,7 @@ begin
     inherited Create();
 
     _cb := -1;
+    _scallback := -1;
     _jid := sjid;
     _resource := sresource;
     msg_queue := TQueue.Create();
@@ -198,6 +201,12 @@ begin
 
     _cb := MainSession.RegisterCallback(MsgCallback,
             '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
+
+
+   if (_scallback >= 0) then
+      MainSession.UnRegisterCallback(_scallback);
+
+   _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 end;
 
 procedure TChatController.DisableChat();
@@ -237,6 +246,11 @@ begin
         idx := MainSession.ChatList.IndexOfObject(Self);
         if (idx >= 0) then
             MainSession.ChatList.Delete(idx);
+
+        if (_scallback >= 0) then begin
+            MainSession.UnRegisterCallback(_scallback);
+            _scallback := -1;
+        end;
     end;
 
     // Free stuff
@@ -396,5 +410,12 @@ begin
     _event := nil;
 end;
 
+{---------------------------------------}
+procedure TChatController.SessionCallback(event: string; tag: TXMLTag);
+begin
+    // remove the ChatController if the user disconnects
+    if (event = '/session/disconnected') then
+        Self.Free();
+end;
 
 end.
