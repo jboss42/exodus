@@ -2881,7 +2881,7 @@ begin
         Tabs.ActivePage.ImageIndex := TfrmDockable(f).ImageIndex;
 
     if (f is TfrmBaseChat) then begin
-        if (TfrmBaseChat(f).MsgOut.Visible) then
+        if (TfrmBaseChat(f).MsgOut.Visible and TfrmBaseChat(f).MsgOut.Enabled) then
             TfrmBaseChat(f).MsgOut.SetFocus;
     end;
 end;
