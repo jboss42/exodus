@@ -3425,13 +3425,11 @@ end;
 **}
 procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
-    mins,                   //# of minutes since last input
-    away, xa, dis: integer; //prefs defining elapsed minute triggers
-    cur_idle: longword;
+    away, xa, dis: dword; //prefs defining elapsed minute triggers
     dmsg: string;
     do_xa, do_dis: boolean;
     avail: boolean;
-    _last_tick: dword;      // last user input
+    _last_tick, cur_idle, mins: dword;      // last user input
     _auto_away: boolean;                // perform auto-away ops
     ss : integer;
 begin
@@ -3479,8 +3477,12 @@ begin
         end else debugMsg('OnTimer _last_tick != 0');
         debugMsg('OnTimer computing idle time');
         //get number of seconds since last activity
-        cur_idle := (Windows.GetTickCount() - _last_tick) div 1000;
-        debugMsg('OnTimer cur_idle: ' + IntToStr(cur_idle));
+        cur_idle := Windows.GetTickCount();
+        debugMsg('current windows tick count: ' + IntToStr(cur_idle));
+        cur_idle := (cur_idle - _last_tick);
+        debugMsg('OnTimer cur_idle milliseconds: ' + IntToStr(cur_idle));
+        cur_idle := cur_idle div 1000;
+        debugMsg('OnTimer cur_idle seconds: ' + IntToStr(cur_idle));
         //if we are testing auto-away (via the -a command line) then
         //make mins = to seconds (to speed things up), otherwise determine
         //number of minutes since last input
