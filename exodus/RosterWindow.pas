@@ -558,6 +558,9 @@ begin
     AssignUnicodeURL(lblConnect.Font, 8);
     lblConnect.Color := pnlConnect.Color;
 
+    if (p.NewAccount) then
+      MainSession.NoAuth := false;
+
     MainSession.Prefs.setInt('profile_active', idx);
     MainSession.Prefs.SaveProfiles();
 
