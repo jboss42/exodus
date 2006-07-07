@@ -324,7 +324,7 @@ begin
     AssignDefaultFont(MsgOut.Font);
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 
-    Self.ClientHeight := 200;
+    Self.ClientHeight := 350;
     recips := TWideStringlist.Create();
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
 
@@ -430,9 +430,12 @@ begin
     pnlSendSubject.Visible := true;
     frameButtons1.Visible := false;
     txtMsg.Visible := false;
+    MsgPanel.Align := alTop;
+    MsgPanel.ClientHeight := pnlTop.ClientHeight;
+    pnlReply.ClientHeight := Self.ClientHeight - pnlTop.ClientHeight; 
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
-    Splitter1.Visible := true;
+    Splitter1.Visible := false;
     ActiveControl := MsgOut;
     lblFrom.Caption := _(sTo);
     btnClose.Visible := Docked;
