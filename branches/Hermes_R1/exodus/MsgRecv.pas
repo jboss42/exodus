@@ -761,6 +761,7 @@ begin
     else begin
         // not someone in our roster - still could be escaped jid
         txtFrom.Caption := tmp_jid.getDisplayFull();
+        txtFrom.Caption := AnsiReplaceText(txtFrom.Caption, '&', '&&');
         if (pnlSendSubject.Visible) then
             Self.Caption := _(sMessageTo) + tmp_jid.getDisplayFull()
         else
