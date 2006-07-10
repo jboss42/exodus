@@ -601,16 +601,16 @@ begin
         aniWait.Visible := false;
         lblCreate.Visible := true;
         lblNewUser.Visible := true;
-        pnlConnect.Visible := true;
-        pnlConnect.Align := alClient;
-        lblStatus.Caption := _(sDisconnected);
         lblConnect.Caption := _(sSignOn);
         lblConnect.Color := clWindow;
         lblCreate.Caption := _(sNewProfile);
-        lstProfiles.Visible := true;
-        imgSSL.Visible := false;
         lblConnect.Font.Color := clWindowText;
         lblConnect.Font.Style := [];
+        lstProfiles.Visible := true;
+        pnlConnect.Visible := true;
+        pnlConnect.Align := alClient;
+        lblStatus.Caption := _(sDisconnected);
+        imgSSL.Visible := false;
         AssignUnicodeFont(lblConnect.Font, 8);
     end
     else if (state = gui_connecting) then begin
@@ -1583,6 +1583,8 @@ begin
         inMessenger := false;
     end;
     Self.Align := alClient;
+    lstProfiles.Clear();
+    ShowProfiles();
     Docked := true;
     MainSession.dock_windows := Docked;
 
