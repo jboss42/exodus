@@ -224,11 +224,20 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.DoBrowse(jid: Widestring; refresh: boolean; node: Widestring);
+var
+    tmp: TJabberID;
 begin
     // Actually Browse to the JID entered in the address box
-    if (not isValidJID(jid)) then begin
-        MessageDlgW(_(sInvalidJID), mtError, [mbOK], 0);
-        exit;
+    if (not isValidJID(jid, true)) then begin
+        if (not isValidJID(jid, false)) then begin
+            MessageDlgW(_(sInvalidJID), mtError, [mbOK], 0);
+            exit;
+        end
+        else begin
+            tmp := TJabberID.Create(jid, false);
+            jid := tmp.full;
+            tmp.Free();
+        end;
     end;
 
     StartList;
@@ -370,6 +379,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.btnBackClick(Sender: TObject);
+var
+    jid: TJabberID;
 begin
     // Browse to the last JID
     if (_cur >= _history.count) then
@@ -383,8 +394,10 @@ begin
         exit;
     end;
 
+    jid := TJabberID.Create(_history[_cur]);
     btnFwd.Enabled := true;
-    cboJID.Text := _history[_cur];
+    cboJID.Text := jid.getDisplayFull();
+    jid.Free();
     cboNode.Text := _node_hist[_cur];
     DoBrowse(_history[_cur], false, _node_hist[_cur]);
     if _cur = 0 then btnBack.Enabled := false;
@@ -392,6 +405,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.btnFwdClick(Sender: TObject);
+var
+    jid: TJabberID;
 begin
     // Browse to the next JID in the history
     inc(_cur);
@@ -400,7 +415,9 @@ begin
         btnFwd.Enabled := false;
         exit;
     end;
-    cboJID.Text := _history[_cur];
+    jid := TJabberID.Create(_history[_cur]);
+    cboJID.Text := jid.GetDisplayFull();
+    jid.Free();
     cboNode.Text := _node_hist[_cur];
     btnBack.Enabled := true;
     DoBrowse(_history[_cur], false, _node_hist[_cur]);
@@ -411,11 +428,14 @@ end;
 procedure TfrmBrowse.vwBrowseClick(Sender: TObject);
 var
     itm: TTntListItem;
+    jid: TJabberID;
 begin
     // Browse to this object
     itm := vwBrowse.Selected;
     if itm <> nil then begin
-        cboJID.Text := itm.SubItems[0];
+        jid := TJabberID.Create(itm.SubItems[0]);
+        cboJID.Text := jid.getDisplayFull();
+        jid.Free();
         cboNode.Text := itm.SubItems[2];
         btnGOClick(Self);
     end;
@@ -519,7 +539,7 @@ begin
         mAddContact.Enabled := true
     else mAddContact.Enabled := false;
 
-    
+
 end;
 
 {---------------------------------------}
@@ -578,12 +598,15 @@ end;
 procedure TfrmBrowse.mBrowseClick(Sender: TObject);
 var
     itm: TTntListItem;
+    jid: TJabberID;
 begin
     // Browse to this JID
     itm := vwBrowse.Selected;
     if itm = nil then exit;
 
-    cboJID.Text := itm.SubItems[0];
+    jid := TJabberID.Create(itm.SubItems[0]);
+    cboJID.Text := jid.GetDisplayFull();
+    jid.Free();
     cboNode.Text := itm.SubItems[2];
     btnGoClick(Self);
 end;
@@ -766,7 +789,7 @@ begin
         if (b.name <> '') then
             caption := b.name
         else
-            caption := b.jid.full;
+            caption := b.jid.getDisplayFull();
 
         if (b.Tag = -1) then
             ImageIndex := 8
@@ -988,30 +1011,30 @@ end;
 procedure TfrmBrowse.mGetInfoClick(Sender: TObject);
 var
     itm: TTntListItem;
-    jid: WideString;
     node: WideString;
+    jid: TJabberID;
 begin
     inherited;
 
     itm := vwBrowse.Selected;
     if itm = nil then exit;
 
-    jid := itm.SubItems[0];
+    jid := TJabberID.Create(itm.SubItems[0]);
     node := itm.SubItems[2];
 
-    cboJID.Text := jid;
+    cboJID.Text := jid.getDisplayFull();
     cboNode.Text := node;
 
-    _ent := jEntityCache.getByJid(jid, node);
+    _ent := jEntityCache.getByJid(jid.full, node);
     if (_ent = nil) then
-        _ent := jEntityCache.fetch(jid, MainSession, true, node);
+        _ent := jEntityCache.fetch(jid.full, MainSession, true, node);
     if not _ent.hasInfo then begin
         _ent.getInfo(MainSession);
         _pendingInfo := true;
         exit;
     end;
         
-    PushJID(jid, node);
+    PushJID(jid.full, node);
 
     ShowDiscoInfo();
 end;
