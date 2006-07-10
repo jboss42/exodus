@@ -191,6 +191,10 @@ object frmConnDetails: TfrmConnDetails
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -241,6 +245,10 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -281,6 +289,10 @@ object frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -374,7 +386,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 190
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 5
         OnChange = cboSocksTypeChange
         Items.Strings = (
@@ -389,6 +401,10 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label1: TTntLabel
         Left = 1
         Top = 27
