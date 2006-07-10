@@ -461,7 +461,7 @@ begin
     _drag_op := false;
     _drop_copy := false;
 
-    frmExodus.pnlRoster.ShowHint := not _show_status;
+    frmExodus.getCurrentRosterPanel().ShowHint := not _show_status;
     aniWait.Filename := '';
     aniWait.ResName := 'Status';
     pnlConnect.Visible := true;
@@ -599,6 +599,8 @@ begin
         treeRoster.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
+        lblCreate.Visible := true;
+        lblNewUser.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
         lblStatus.Caption := _(sDisconnected);
@@ -606,8 +608,6 @@ begin
         lblConnect.Color := clWindow;
         lblCreate.Caption := _(sNewProfile);
         lstProfiles.Visible := true;
-        lblCreate.Visible := true;
-        lblNewUser.Visible := true;
         imgSSL.Visible := false;
         lblConnect.Font.Color := clWindowText;
         lblConnect.Font.Style := [];
