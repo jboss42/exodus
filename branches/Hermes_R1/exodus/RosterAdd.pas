@@ -215,18 +215,18 @@ var
     tmp_id: TJabberID;
 begin
     if (txtJID.Text = '') then exit;
-    tmp_id := TJabberID.Create(txtJID.Text);
+    tmp_id := TJabberID.Create(txtJID.Text, false);
 
     if ((cboType.ItemIndex = 0) and (tmp_id.user = '')) then begin
         new := txtJid.Text + '@' + MainSession.Profile.Server;
         tmp_id.Free();
-        tmp_id := TJabberID.Create(new);
+        tmp_id := TJabberID.Create(new, false);
         txtJid.Text := new;
     end;
 
     // add the nickname if it's not there.
     if (txtNickname.Text = '') then
-        txtNickname.Text := tmp_id.user;
+        txtNickname.Text := tmp_id.userDisplay;
 
     tmp_id.Free();
 
