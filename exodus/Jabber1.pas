@@ -314,6 +314,8 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
+    _currRosterPanel: TPanel; //what panel is roster being rendered in
+    
     procedure setupReconnect();
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
@@ -406,6 +408,10 @@ type
 
     procedure CloseDocked(frm: TForm);
 
+    {**
+     *  Get the panel the roster is being rendered in.
+    **}
+    function getCurrentRosterPanel() : TPanel;
   end;
 
 
@@ -1800,6 +1806,7 @@ begin
 
         // setup panels for the roster
         pnlRoster.Visible := true;
+        _currRosterPanel := pnlRoster;
         SplitterRight.Visible := (expanded);
         SplitterLeft.Visible := false;
         pnlLeft.Visible := false;
@@ -1822,6 +1829,7 @@ begin
 
         // setup panels for the roster
         pnlLeft.Visible := true;
+        _currRosterPanel := pnlLeft;
         SplitterLeft.Visible := (expanded);
         SplitterRight.Visible := false;
         pnlRoster.Visible := false;
@@ -3582,6 +3590,13 @@ begin
     MainSession.Play();
 end;
 
+{**
+*  Get the panel the roster is being rendered in.
+**}
+function TfrmExodus.getCurrentRosterPanel() : TPanel;
+begin
+    Result := _currRosterPanel;
+end;
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
