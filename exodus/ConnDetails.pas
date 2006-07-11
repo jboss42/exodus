@@ -116,7 +116,7 @@ type
     procedure SaveProfile(profile: TJabberProfile);
     procedure RestoreConn(profile: TJabberProfile);
     procedure SaveConn(profile: TJabberProfile);
-    procedure updateProfile();
+    function updateProfile(): boolean;
 
   public
     { Public declarations }
@@ -172,13 +172,14 @@ begin
     f.Free();
 end;
 
-procedure TfrmConnDetails.updateProfile();
+function TfrmConnDetails.updateProfile(): boolean;
 var
     valid: boolean;
     jid: Widestring;
     tj: TJabberID;
 begin
     // Validate the JID..
+    Result := true;
     jid := cboJabberID.Text + '/' + cboResource.Text;
     valid := true;
 
@@ -196,6 +197,7 @@ begin
 
     if (valid = false) then begin
         MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
+        Result := false;
         exit;
     end;
 
@@ -221,8 +223,10 @@ begin
         exit;
     end;
 
-    updateProfile();
-    ModalResult := mrOK;
+    if updateProfile() then
+        ModalResult := mrOK
+    else
+        Modalresult := mrNone;
 end;
 
 {---------------------------------------}
@@ -606,8 +610,17 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.btnConnectClick(Sender: TObject);
 begin
-    updateProfile();
-    ModalResult := mrYes;
+    // Check that resource does not match password
+    if (cboResource.Text = txtPassword.Text) then begin
+        MessageDlgW(_(sProfileResourcePassMatch), mtError, [mbOK], 0);
+        ModalResult := mrNone;
+        exit;
+    end;
+
+    if updateProfile() then
+        ModalResult := mrYes
+    else
+        ModalResult := mrNone;
 end;
 
 end.

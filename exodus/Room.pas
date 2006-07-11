@@ -517,6 +517,10 @@ begin
                 emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
                 if (emsg = '') then
                     emsg := etag.Data;
+                if (emsg = '') and
+                    (etag.GetAttribute('code') = '403') and
+                    (etag.GetAttribute('type') = 'auth') then
+                    emsg := _('Not authorized.');
                 if (emsg = '') then
                     emsg := _('Your message to the room bounced.');
                 Msg.Body := _('ERROR: ') + emsg;
