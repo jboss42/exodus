@@ -25,7 +25,7 @@ uses
     Unicode, Dockable, ExEvents, MsgController, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    Buttons, TntStdCtrls, Menus, TntMenus, StrUtils;
+    Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity;
 
 type
 
@@ -571,6 +571,7 @@ var
     x2, xml, txt, s: WideString;
     i: integer;
     mtag: TXMLTag;
+    ent: TJabberEntity;
 begin
     // Send the outgoing msg
     txt := getInputText(MsgOut);
@@ -588,34 +589,72 @@ begin
     else
         s := txtSubject.Caption;
 
-    // send to ALL recips
-    for i := 0 to recips.Count - 1 do begin
-        m := TJabberMessage.Create(recips[i], '', txt, s);
+    // Check for multicast service
+    ent := jEntityCache.getFirstFeature(XMLNS_ADDRESS);
+    if (ent = nil) then begin
+        //  send to ALL recips - no multicast service include
+        //  address element as hint to clients
+        for i := 0 to recips.Count - 1 do begin
+            m := TJabberMessage.Create(recips[i], '', txt, s);
 
-        // these must be set so that logging works right
-        m.ToJID := recips[i];
-        m.isMe := true;
-        m.Nick := MainSession.Prefs.getString('default_nick');
-        if (m.Nick = '') then m.Nick := MainSession.Username;
+            // these must be set so that logging works right
+            m.ToJID := recips[i];
+            m.AddRecipient(recips[i]); // Comptability hack
+            m.isMe := true;
+            m.Nick := MainSession.Prefs.getString('default_nick');
+            if (m.Nick = '') then m.Nick := MainSession.Username;
 
-        mtag := m.Tag;
+            mtag := m.Tag;
 
-        // plugin stuff
-        if (ComController <> nil) then
-            x2 := TExodusChat(ComController).fireAfterMsg(txt);
-        if (x2 <> '') then
-            mtag.addInsertedXML(x2);
+            // plugin stuff
+            if (ComController <> nil) then
+                x2 := TExodusChat(ComController).fireAfterMsg(txt);
+            if (x2 <> '') then
+                mtag.addInsertedXML(x2);
 
-        // add any x-tags from inside Exodus
-        if (xml <> '') then
+            // add any x-tags from inside Exodus
+            if (xml <> '') then
+                mtag.addInsertedXML(xml);
+
+            // log the msg
+            LogMessage(m);
+
+            jabberSendMsg(recips[i], mtag, _xtags, txt, s);
+            m.Free();
+        end;
+    end
+    else begin
+        // We have a multicast service - use it
+        m := TJabberMessage.Create(ent.Jid.jid, '', txt, s);
+
+        // add recipient <address> elements to the message
+        for i := 0 to recips.Count - 1 do begin
+            m.AddRecipient(recips[i]);
+        end;
+
+         m.isMe := true;
+         m.Nick := MainSession.Prefs.getString('default_nick');
+         if (m.Nick = '') then m.Nick := MainSession.Username;
+
+         mtag := m.Tag;
+
+         // plugin stuff
+         if (ComController <> nil) then
+             x2 := TExodusChat(ComController).fireAfterMsg(txt);
+         if (x2 <> '') then
+             mtag.addInsertedXML(x2);
+
+         // add any x-tags from inside Exodus
+         if (xml <> '') then
             mtag.addInsertedXML(xml);
 
-        // log the msg
-        LogMessage(m);
+         // log the msg
+         LogMessage(m);
 
-        jabberSendMsg(recips[i], mtag, _xtags, txt, s);
-        m.Free();
+         jabberSendMsg(ent.Jid.jid, mtag, _xtags, txt, s);
+         m.Free();
     end;
+
     recips.Clear();
     MsgOut.WideLines.Clear();
     Splitter1.Visible := false;

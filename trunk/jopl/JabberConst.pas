@@ -69,6 +69,7 @@ const
     XMLNS_XMPP_SASL  = 'urn:ietf:params:xml:ns:xmpp-sasl';
     XMLNS_COMMANDS   = 'http://jabber.org/protocol/commands';
     XMLNS_CAPS       = 'http://jabber.org/protocol/caps';
+    XMLNS_ADDRESS    = 'http://jabber.org/protocol/address';
 
 var
     XP_MSGXDATA: TXPLite;
