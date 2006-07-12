@@ -1073,9 +1073,8 @@ begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
             if (t <> nil) then
-                ShowStatusCode(t);
-
-            if (not _pending_destroy) then begin
+                ShowStatusCode(t)
+            else if (not _pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
 
