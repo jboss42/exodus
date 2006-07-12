@@ -20,12 +20,9 @@ unit JabberMsg;
 }
 
 interface
-
 uses
-    XmlTag,
-    SysUtils;
+    AddressList, XmlTag, SysUtils, JabberConst, Classes;
 type
-
     TJabberMessage = class
     private
         _toJID    : WideString;
@@ -42,6 +39,7 @@ type
         _isxdata  : boolean;
         _highlight: boolean;
         _tag      : TXMLTag;
+        _addresses: TJabberAddressList; // use optional (for JEP-33 support)
 
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -56,6 +54,9 @@ type
         constructor Create(mTag: TXMLTag); overload;
         constructor Create(cToJID, cMsgType, cBody, cSubject : WideString); overload;
         destructor Destroy; override;
+
+        // Use of this method optional for JEP-33 support
+        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');
 
         property Tag: TXMLTag read GetTag;
 
@@ -82,7 +83,7 @@ type
 implementation
 
 uses
-    JabberConst, XMLUtils;
+    XMLUtils;
 
 { TJabberMessage }
 
@@ -103,6 +104,7 @@ begin
     _time := Now();
     _highlight := false;
     _tag := nil;
+    _addresses := TJabberAddressList.Create();
 end;
 
 {---------------------------------------}
@@ -150,6 +152,12 @@ begin
             else
                 _time := Now();
         end;
+
+        t := GetFirstTag('addresses');
+        if (t <> nil) then begin
+            _addresses.Free();
+            _addresses := TJabberAddressList.Create(t);
+        end;
     end;
 end;
 
@@ -174,6 +182,11 @@ destructor TJabberMessage.Destroy;
 begin
     if (_tag <> nil) then
         _tag.Free();
+
+    if (_addresses <> nil) then begin
+        _addresses.Clear();
+        _addresses.Free();
+    end;
         
     inherited destroy;
 end;
@@ -200,11 +213,13 @@ begin
         if (_msg_type <> 'normal') then
             setAttribute('type', _msg_type);
         ClearTags;
+        // next statement for JEP 33 compliance
+        if (_addresses.Count >0) then
+            AddTag(_addresses.GetTag());
         if _thread <> '' then
             AddBasicTag('thread', _thread);
         if _subject <> '' then
             AddBasicTag('subject', _subject);
-
         raw_body := _body;
         if _action then raw_body := '/me ' + raw_body;
 
@@ -254,4 +269,9 @@ begin
         _thread := Value;
 end;
 
+{---------------------------------------}
+procedure TJabberMessage.AddRecipient(jid: WideString; addrType: WideString = 'to');
+begin
+    _addresses.AddAddress(jid, addrType);
+end;
 end.
