@@ -154,7 +154,7 @@ begin
                 // then we should subscribe back to them
                 if ((ritem = nil) or (ritem.ask <> 'subscribe')) then begin
                     dgrp := MainSession.Prefs.getString('roster_default');
-                    MainSession.Roster.AddItem(j.jid, j.userDisplay, dgrp, true);
+                    MainSession.Roster.AddItem(j.jid, j.user, dgrp, true);
                 end;
 
                 // we are in auto-approve mode, so approve it

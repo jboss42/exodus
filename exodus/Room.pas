@@ -208,8 +208,6 @@ type
     function newRoomMessage(body: Widestring): TXMLTag;
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
-    procedure _EnableSubjectButton();
-
 
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
@@ -492,7 +490,6 @@ var
     server: boolean;
     rm: TRoomMember;
     etag: TXMLTag;
-    e: TJabberEntity;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -520,10 +517,6 @@ begin
                 emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
                 if (emsg = '') then
                     emsg := etag.Data;
-                if (emsg = '') and
-                    (etag.GetAttribute('code') = '403') and
-                    (etag.GetAttribute('type') = 'auth') then
-                    emsg := _('Not authorized.');
                 if (emsg = '') then
                     emsg := _('Your message to the room bounced.');
                 Msg.Body := _('ERROR: ') + emsg;
@@ -533,21 +526,6 @@ begin
             DisplayMsg(Msg, MsgList);
             exit;
         end;
-
-        // Room config update?
-        etag := tag.GetFirstTag('x');
-        if (etag <> nil) and
-           (etag.GetAttribute('xmlns') = 'http://jabber.org/protocol/muc#user') then begin
-            etag := etag.GetFirstTag('status');
-            if (etag <> nil) and
-               (etag.GetAttribute('code') = '104') then begin
-                // We did get a room update notification.
-                // Need to disco.
-                e := jEntityCache.getByJid(Self.jid, '');
-                e.refresh(MainSession);
-            end;            
-        end;
-
     end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
@@ -1279,8 +1257,6 @@ begin
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
             if (MsgOut.Readonly) then MsgOut.Lines.Clear();
 
-            // Who can change subject
-            _EnableSubjectButton();
         end;
         RenderMember(member, tag);
     end;
@@ -2461,15 +2437,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
-    if (_pending_start = false) then begin
-        // Not starting so we don't want to send start presence.
-        // We probably have new disco info (like change of room config).
-        // Process that info
-
-        // Who can change subject?
-        _EnableSubjectButton();
-        exit;
-    end;
+    if (_pending_start = false) then exit;
     
     if (tag = nil) then begin
         // just try anyways
@@ -2739,44 +2707,6 @@ begin
 
     _real_jid := TJabberID.Create(jid);
 end;
-
-{---------------------------------------}
-procedure TfrmRoom._EnableSubjectButton();
-var
-    e: TJabberEntity;
-    enable: boolean;
-begin
-    // This code enables or disables the change subject button
-    // based on what the disco info tells us about premissions
-    // to change subject.
-    // If no disco info is available, enable and let
-    // error codes take care of preventing changing of subject.
-    enable := true;
-    e := jEntityCache.getByJid(Self.jid, '');
-    if (e = nil) then exit;
-
-    if (_my_membership_role = MUC_OWNER) or
-       (_my_membership_role = MUC_ADMIN) then
-            enable := true //always
-    else if (e.hasFeature('muc-subj-moderator')) or
-            (e.hasFeature('muc-subj-participant')) then
-        begin
-            // we have a specification as to who can change
-            if (e.hasFeature('muc-subj-moderator')) and
-               (_my_membership_role = MUC_MOD) then
-                enable := true
-            else if (e.hasFeature('muc-subj-participant')) and
-                    ( (_my_membership_role = MUC_MOD) or
-                      (_my_membership_role = MUC_MEMBER) or
-                      (_my_membership_role = MUC_PART) ) then
-                enable := true
-            else
-                enable := false;
-        end;
-
-    SpeedButton1.Enabled := enable;
-end;
-
 
 destructor TRoomMember.Destroy();
 begin

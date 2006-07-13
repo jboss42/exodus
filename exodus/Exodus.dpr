@@ -233,9 +233,7 @@ uses
   ExternalAuth in '..\jopl\ExternalAuth.pas',
   DebugLogger in '..\jopl\DebugLogger.pas',
   ExodusImageList in '..\jopl\ExodusImageList.pas',
-  PrefGraphics in '..\jopl\PrefGraphics.pas',
-  AddressList in '..\jopl\AddressList.pas';
-
+  PrefGraphics in '..\jopl\PrefGraphics.pas';
 {$R *.TLB}
 
 {$R *.RES}

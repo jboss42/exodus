@@ -461,7 +461,7 @@ begin
     _drag_op := false;
     _drop_copy := false;
 
-    frmExodus.getCurrentRosterPanel().ShowHint := not _show_status;
+    frmExodus.pnlRoster.ShowHint := not _show_status;
     aniWait.Filename := '';
     aniWait.ResName := 'Status';
     pnlConnect.Visible := true;
@@ -558,9 +558,6 @@ begin
     AssignUnicodeURL(lblConnect.Font, 8);
     lblConnect.Color := pnlConnect.Color;
 
-    if (p.NewAccount) then
-      MainSession.NoAuth := false;
-
     MainSession.Prefs.setInt('profile_active', idx);
     MainSession.Prefs.SaveProfiles();
 
@@ -599,18 +596,18 @@ begin
         treeRoster.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
-        lblCreate.Visible := true;
-        lblNewUser.Visible := true;
-        lblConnect.Caption := _(sSignOn);
-        lblConnect.Color := clWindow;
-        lblCreate.Caption := _(sNewProfile);
-        lblConnect.Font.Color := clWindowText;
-        lblConnect.Font.Style := [];
-        lstProfiles.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
         lblStatus.Caption := _(sDisconnected);
+        lblConnect.Caption := _(sSignOn);
+        lblConnect.Color := clWindow;
+        lblCreate.Caption := _(sNewProfile);
+        lstProfiles.Visible := true;
+        lblCreate.Visible := true;
+        lblNewUser.Visible := true;
         imgSSL.Visible := false;
+        lblConnect.Font.Color := clWindowText;
+        lblConnect.Font.Style := [];
         AssignUnicodeFont(lblConnect.Font, 8);
     end
     else if (state = gui_connecting) then begin
@@ -1583,8 +1580,6 @@ begin
         inMessenger := false;
     end;
     Self.Align := alClient;
-    lstProfiles.Clear();
-    ShowProfiles();
     Docked := true;
     MainSession.dock_windows := Docked;
 

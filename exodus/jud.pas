@@ -462,9 +462,7 @@ begin
                 ji := TJUDItem.Create();
                 ji.xdata := false;
                 cols := cur.ChildTags();
-                tmp := TJabberID.Create(cur.GetAttribute('jid'));
-                ji.jid := tmp.getDisplayJID();
-                tmp.Free();
+                ji.jid := cur.GetAttribute('jid');
                 ji.count := lstContacts.Columns.Count + 1;
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;

@@ -1,49 +1,43 @@
-	Section /o "ImportAIM" SEC_ExImportAIM
-	  AddSize 163
+
+      Section /o "ExImportAIM" SEC_ImportAIM
+	  AddSize 0
 	  Push "ExImportAIM"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExImportAIM.dll"
-	SectionEnd
-
-	Section /o "Aspell" SEC_ExAspell
-	  AddSize 118
+	  RegDll "\$INSTDIR\\plugins\\ExImportAIM.dll"
+      SectionEnd
+    
+      Section /o "ExAspell" SEC_Aspell
+	  AddSize 0
 	  Push "ExAspell"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExAspell.dll"
-	SectionEnd
-
-	Section /o "ImportICQ" SEC_ExImportICQ
-	  AddSize 197
-	  Push "ExImportICQ"
-	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExImportICQ.dll"
-	SectionEnd
-
-	Section /o "JabberStats" SEC_ExJabberStats
-	  AddSize 223
+	  RegDll "\$INSTDIR\\plugins\\ExAspell.dll"
+      SectionEnd
+    
+      Section /o "ExJabberStats" SEC_JabberStats
+	  AddSize 0
 	  Push "ExJabberStats"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExJabberStats.dll"
-	SectionEnd
-
-	Section /o "NetMeeting" SEC_ExNetMeeting
-	  AddSize 157
+	  RegDll "\$INSTDIR\\plugins\\ExJabberStats.dll"
+      SectionEnd
+    
+      Section /o "ExNetMeeting" SEC_NetMeeting
+	  AddSize 0
 	  Push "ExNetMeeting"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExNetMeeting.dll"
-	SectionEnd
-
-	Section /o "RosterTools" SEC_ExRosterTools
-	  AddSize 268
+	  RegDll "\$INSTDIR\\plugins\\ExNetMeeting.dll"
+      SectionEnd
+    
+      Section /o "ExRosterTools" SEC_RosterTools
+	  AddSize 0
 	  Push "ExRosterTools"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExRosterTools.dll"
-	SectionEnd
-
-	Section /o "SQLLogger" SEC_ExSQLLogger
-	  AddSize 364
+	  RegDll "\$INSTDIR\\plugins\\ExRosterTools.dll"
+      SectionEnd
+    
+      Section /o "ExSQLLogger" SEC_SQLLogger
+	  AddSize 0
 	  Push "ExSQLLogger"
 	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExSQLLogger.dll"
-	SectionEnd
-
+	  RegDll "\$INSTDIR\\plugins\\ExSQLLogger.dll"
+      SectionEnd
+    

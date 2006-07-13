@@ -131,13 +131,13 @@ begin
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem = nil) then
         ritem := MainSession.roster.Find(tmp_jid.full);
+    tmp_jid.Free();
 
     if (ritem <> nil) then
         e.Caption := ritem.Text
     else
-        e.Caption := tmp_jid.getDisplayJID();
+        e.Caption := e.from;
 
-    tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
     _queue.Add(e);
     lstEvents.Items.Count := lstEvents.Items.Count + 1;

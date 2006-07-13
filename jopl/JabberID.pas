@@ -3,7 +3,7 @@ unit JabberID;
     Copyright 2001, Peter Millard
 
     This file is part of Exodus.
-                                                           f
+
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -91,17 +91,8 @@ begin
     Result := false;
 
     tmps := jid;
-
-    if (isEscaped) then begin
-        // If escaped 1st / and @ are the resource and node separators
-        p1 := AnsiPos('@', jid);
-        p2 := AnsiPos('/', jid);
-    end
-    else begin
-        // If not escaped then 1st / after last @ is the separator
-        p1 := lastIndexOf(jid, '@');
-        p2 := lastIndexOf(jid, '/');
-    end;
+    p1 := lastIndexOf(jid, '@');
+    p2 := lastIndexOf(jid, '/');
 
     if (p1 >= 0) then part := 0 else part := 1;
 
@@ -226,16 +217,8 @@ begin
     _resource := '';
     _raw := jid;
 
-    if (isEscaped) then begin
-        // If escaped 1st / and @ are the resource and node separators
-        p1 := AnsiPos('@', _raw);
-        p2 := AnsiPos('/', _raw);
-    end
-    else begin
-        // If not escaped then 1st / after last @ is the separator
-        p1 := lastIndexOf(_raw, '@');
-        p2 := lastIndexOf(_raw, '/');
-    end;
+    p1 := lastIndexOf(_raw, '@');
+    p2 := lastIndexOf(_raw, '/');
 
     tmps := _raw;
     if ((p2 > 0) and (p2>p1)) then begin
