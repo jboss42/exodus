@@ -121,7 +121,7 @@ object frmRosterWindow: TfrmRosterWindow
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
     ParentCtl3D = False
     ParentShowHint = False
-    PopupMenu = popRoster
+    PopupMenu = popTransport
     ShowButtons = False
     ShowHint = True
     ShowLines = False
@@ -149,6 +149,7 @@ object frmRosterWindow: TfrmRosterWindow
     OnMouseMove = treeRosterMouseMove
     OnMouseUp = treeRosterMouseUp
     OnStartDrag = treeRosterStartDrag
+    ExplicitTop = 322
   end
   object StatBar: TStatusBar
     Left = 0
@@ -422,7 +423,6 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRename: TTntMenuItem
       Caption = 'Rename...'
-      ShortCut = 113
       OnClick = popRenameClick
     end
     object N1: TTntMenuItem
@@ -434,12 +434,10 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRemove: TTntMenuItem
       Caption = 'Remove'
-      ShortCut = 46
       OnClick = popRemoveClick
     end
     object popProperties: TTntMenuItem
       Caption = 'Properties...'
-      ShortCut = 121
       OnClick = popPropertiesClick
     end
     object N7: TTntMenuItem
