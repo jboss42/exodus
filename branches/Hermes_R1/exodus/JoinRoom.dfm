@@ -1,19 +1,23 @@
 inherited frmJoinRoom: TfrmJoinRoom
   Left = 249
   Top = 151
-  Height = 389
-  BorderStyle = bsSizeable
   Caption = 'Join Room'
+  ClientHeight = 357
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ExplicitWidth = 416
+  ExplicitHeight = 389
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 314
+    Top = 316
     TabOrder = 2
+    ExplicitTop = 314
+    ExplicitWidth = 408
     inherited Panel3: TPanel
+      ExplicitLeft = 151
       inherited btnBack: TTntButton
         OnClick = btnBackClick
       end
@@ -27,18 +31,26 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Panel1: TPanel
+    ExplicitWidth = 408
     inherited lblWizardTitle: TTntLabel
       Width = 150
       Caption = 'Join or Browse for a Room'
+      ExplicitWidth = 150
     end
     inherited lblWizardDetails: TTntLabel
       Caption = 'Specify or browse for a room to join or create.'
     end
   end
   inherited Tabs: TPageControl
-    Height = 254
+    Height = 256
     TabOrder = 0
+    ExplicitWidth = 408
+    ExplicitHeight = 254
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 27
+      ExplicitWidth = 400
+      ExplicitHeight = 223
       object Label2: TTntLabel
         Left = 25
         Top = 105
@@ -105,7 +117,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Top = 160
         Width = 190
         Height = 21
-        PasswordCharW = '*'
+        PasswordChar = '*'
         TabOrder = 5
       end
       object txtNick: TTntEdit
@@ -148,11 +160,13 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
+      ExplicitWidth = 400
+      ExplicitHeight = 223
       object lstRooms: TTntListView
         Left = 0
         Top = 56
         Width = 402
-        Height = 167
+        Height = 169
         Align = alClient
         Columns = <
           item
@@ -179,6 +193,8 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnDataFind = lstRoomsDataFind
         OnDblClick = lstRoomsDblClick
         OnKeyPress = lstRoomsKeyPress
+        ExplicitWidth = 400
+        ExplicitHeight = 167
       end
       object Panel2: TPanel
         Left = 0
@@ -188,6 +204,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 400
         object lblFetch: TTntLabel
           Left = 2
           Top = 4
@@ -211,7 +228,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Width = 262
           Height = 21
           Hint = 'Select the room server to use.'
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
