@@ -3301,7 +3301,26 @@ procedure TfrmRosterWindow.treeRosterKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 var
     msg: string;
+    Node: TTreeNode;
 begin
+    Node := treeRoster.Selected;
+
+    if (Node = nil) then exit;
+
+    if (TObject(Node.Data) is TJabberRosterItem) then begin
+        case Key of
+            VK_F2: popRenameClick(Sender);
+            VK_F10: popPropertiesClick(Sender);
+            VK_DELETE: popRemoveClick(Sender);
+        end;
+    end
+    else if (TObject(Node.Data) is TJabberGroup) then begin
+         case Key of
+            VK_F2: popGrpRenameClick(Sender);
+            VK_DELETE: popGrpRemoveClick(Sender);
+         end;
+    end;
+
     if (_drag_op) then begin
         _drop_copy := (ssCtrl in Shift);
         msg := 'onKeyDown: _drop_copy = ' + BoolToStr(_drop_copy);
