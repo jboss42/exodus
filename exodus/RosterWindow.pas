@@ -447,6 +447,7 @@ begin
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
     _online := nil;
+    _chat := nil;
     _away := nil;
     _xa := nil;
     _dnd := nil;
@@ -963,6 +964,15 @@ begin
     end;
 
     treeRoster.Items.EndUpdate;
+
+    //Reset members
+    _online := nil;
+    _chat := nil;
+    _away := nil;
+    _dnd  := nil;
+    _xa   := nil;
+
+
 end;
 
 {---------------------------------------}
@@ -1165,7 +1175,27 @@ begin
     go := TJabberGroup(node.Data);
     if (go = nil) then exit;
     go.Data := nil;
+
+    //Clean up the members
+    if (node = _online) then begin
+        _online := nil;
+    end
+    else if (node = _chat) then begin
+         _chat := nil;
+    end
+    else if (node = _away) then begin
+         _away := nil;
+    end
+    else if (node = _xa) then begin
+         _xa := nil;
+    end
+    else if (node = _dnd) then begin
+         _dnd := nil;
+    end;
+
+    //Free node
     node.Free();
+    
 end;
 
 {---------------------------------------}
@@ -1278,20 +1308,22 @@ begin
         and (ritem.isContact) and (is_transport = false)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(g_offline)
-
     else if ((_sort_roster) and (not is_transport) and (ritem.isContact)) then begin
         // We are sorting the roster by <show>
         if (p = nil) then begin
-            tmp_grps.Add(g_offline)
+            tmp_grps.Add(g_offline);
+        end
+        else if (p.Show = 'chat') then begin
+           tmp_grps.Add(g_chat);
         end
         else if (p.Show = 'away') then begin
-            tmp_grps.Add(g_away)
+            tmp_grps.Add(g_away);
         end
         else if (p.Show = 'xa') then begin
-            tmp_grps.Add(g_xa)
+            tmp_grps.Add(g_xa);
         end
         else if (p.Show = 'dnd') then begin
-            tmp_grps.Add(g_dnd)
+            tmp_grps.Add(g_dnd);
         end
         else begin
             tmp_grps.Add(g_online);
@@ -1321,8 +1353,9 @@ begin
             grp_node := cur_node.Parent;
             node_list.Delete(i);
             cur_node.Free();
-            if (grp_node.Count = 0) then
+            if (grp_node.Count = 0) then begin
                 RemoveGroupNode(grp_node);
+            end;
         end;
     end;
 
