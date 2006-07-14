@@ -39,6 +39,23 @@
   <property name="rcc" value="${delphi}/bin/brcc32.exe"/>
   <property name="dxgettext" value="${DX}/dxgettext.exe"/>
   <property name="msgfmt" value="${DX}/msgfmt.exe"/>
+  <property name="release_type" value="daily"/>
+  <property name="version_type" value="build"/>
+
+  <property name="svn" value="svn"/>
+  <property name="svn.user" value="reset in user.properies"/>
+  <property name="svn.prefix" value="svn+ssh"/>
+  <property name="svn.server" value="svn.jabberstudio.org"/>
+  <property name="svn.root" value="/var/projects/exodus/svn"/>
+  <property name="svn.userhost" value="${svn.user}@${svn.server}"/>
+  <property name="svn.path" value="${svn.prefix}://${svn.userhost}${svn.root}"/>
+
+  <property name="ssh" value="ssh"/>
+  <property name="scp" value="scp"/>
+  <property name="www.root" value="/var/projects/exodus"/>
+  <property name="www.stage" value="${www.root}/www/daily/stage"/>
+  <property name="ssh.stage" value="${svn.userhost}:${www.stage}"/>
+  <property name="genlog" value= "/var/projects/exodus/bin/genlog"/>
 
   <target name="check">
     <available property="has_dcc"  file="${dcc}"/>
@@ -201,7 +218,7 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
       <property name="TNT" value="${TNT}"/>
       <property name="exodus" value="${basedir}"/>
       <property name="exodus.includes" 
-		value="-U${basedir}/exodus/output"/>
+		value="-U${basedir}/exodus/output -U${basedir}/jopl"/>
       <dirset dir="exodus/plugins" includes="*"/>
     </subant>
   </target>
@@ -237,6 +254,63 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
     </copy>
     <exec executable="python">
       <arg value="restart.py"/>
+    </exec>
+  </target>
+
+  <target name="version">
+    <!-- move this into ant, out of perl -->
+    <exec dir="exodus" executable="perl" failonerror="true">
+      <arg value="version.pl"/>
+      <arg value="${version_type}"/>
+    </exec>    
+  </target>
+
+  <target name="stage">
+    <!-- TODO: deal with non-daily builds 
+    <exec dir="exodus" executable="${scp}" failonerror="true">
+      <arg value="setup.exe"/>
+      <arg value="Exodus.zip"/>
+      <arg value="plugins/*.zip"/>
+      <arg value="${ssh.stage}"/>
+    </exec> -->
+
+    <exec dir="exodus" executable="${ssh}" failonerror="true">
+      <arg value="${svn.userhost}"/>
+      <arg value='"cd ${www.stage}; chmod 664 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\; ${genlog} ${release_type}"'/>
+    </exec>
+  </target>
+
+  <target name="release" depends="clean, version, installer">
+    <echo>${release_type} build (version ${version_type})...</echo>
+    <script language="beanshell">
+      project.setProperty("release_type_uc", project.getProperty("release_type").toUpperCase());
+    </script>
+    <exec executable="${svn}" failonerror="true">
+      <arg value="ci"/>
+      <arg value="-m"/>
+      <arg value="${release_type} build"/>
+      <arg value="exodus/version.h"/>
+      <arg value="exodus/version.nsi"/>
+      <arg value="exodus/default.po"/>
+    </exec>
+    <exec executable="${svn}" failonerror="true">
+      <arg value="del"/>
+      <arg value="${svn.path}/tags/${release_type_uc}"/>
+      <arg value="-m"/>
+      <arg value="new ${release_type} build"/>
+    </exec>
+    <exec executable="${svn}" failonerror="true">
+      <arg value="update"/>
+    </exec>
+    <exec executable="${svn}" failonerror="true">
+      <arg value="cp"/>
+      <arg value="."/>
+      <arg value="${svn.path}/tags/${release_type_uc}"/>
+      <arg value="-m"/>
+      <arg value="new ${release_type} bvuild"/>
+    </exec>
+    <exec executable="${svn}" failonerror="true">
+      <arg value="update"/>
     </exec>
   </target>
 
