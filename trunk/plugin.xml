@@ -34,6 +34,11 @@
     <equals arg1="${bare}" arg2="HTMLLogger"/>
   </condition>
 
+  <condition property='ICQ.includes' value="-U${basedir}\ICQ\Component">
+    <equals arg1="${bare}" arg2="ImportICQ"/>
+  </condition>
+  <property name="ICQ.includes" value=""/>
+
   <condition property="make.dll">
     <and>
       <or>
@@ -59,9 +64,9 @@
   <target name="dll" if='make.dll'>
     <echo message='Making dll: ${base}'/>
     <echo message='opts: ${opts.delphi}'/>
-    <echo message='opts: ${exodus.includes}'/>
+    <echo message='opts: ${exodus.includes} ${ICQ.includes}'/>
     <apply dir="." executable="${dcc}" verbose='true' failonerror="true">
-      <arg line="${exodus.includes}"/>
+      <arg line="${exodus.includes} ${ICQ.includes}"/>
       <arg line='${opts.delphi}'/>
       <arg value="-E.."/>
       <fileset refid="dpr"/>
