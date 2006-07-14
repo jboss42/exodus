@@ -2835,6 +2835,7 @@ begin
     // do something here maybe
     if (timFlasher.Enabled) then
         timFlasher.Enabled := false;
+    StopTrayAlert();        
 end;
 
 {---------------------------------------}
@@ -3110,7 +3111,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormPaint(Sender: TObject);
 begin
-    StopTrayAlert();
+//    StopTrayAlert();
 end;
 
 {---------------------------------------}
