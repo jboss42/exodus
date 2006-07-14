@@ -192,7 +192,14 @@ var
     t, rh, i, new, w: integer;
     ro: TXDataRow;
 begin
-  inherited;
+    inherited;
+
+    { SLK:  Added this null check because sometimes we fall
+            into here before this form is rendered, although
+            I'm not sure exactly how or why. }
+    if (_rows = nil) then
+        exit;
+        
     // re-render fields, etc.
     w := ScrollBox1.ClientWidth - 20;
     w := w - BTN_W;         // allow for col #3
@@ -207,6 +214,7 @@ begin
     if (ScrollBox1.VertScrollBar.Position > 0) then
         ScrollBox1.ScrollBy(0, (-ScrollBox1.VertScrollBar.Range));
 
+
     t := 0;
     for i := 0 to _rows.Count - 1 do begin
         ro := TXDataRow(_rows[i]);
@@ -214,6 +222,7 @@ begin
         t := t + rh;
     end;
     ScrollBox1.Invalidate();
+
 
 end;
 
