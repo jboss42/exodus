@@ -590,7 +590,7 @@ begin
             setAttribute('jid', _session.Profile.getJabberID.full());
             setAttribute('name', _session.Username);
 
-            AddBasicTag('ns', XMLNS_SEARCH);
+            //AddBasicTag('ns', XMLNS_SEARCH);   no longer supported, will cause contact to show up in search
             AddBasicTag('ns', XMLNS_AGENTS);
 
             AddBasicTag('ns', XMLNS_IQOOB);
@@ -782,7 +782,7 @@ begin
     end
     else begin
         // no node or uri#ver
-        addFeature(q, XMLNS_SEARCH);
+//        addFeature(q, XMLNS_SEARCH); no longer supported, will cause contact to show up in search
         addFeature(q, XMLNS_AGENTS);
 
         addFeature(q, XMLNS_IQOOB);
