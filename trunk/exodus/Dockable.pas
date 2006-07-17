@@ -36,16 +36,17 @@ type
         Drag event.
 
         Override default event handlers to change when this form should accept
-        dragged objects. This is called from dock manager (tabs)
+        dragged objects. Fired by dock manager when user drags something over
+        tab.
     }
-    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);virtual;
+    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);virtual;
     {
         Drop event
 
         Override to handle objects dropped into form, specifically
         from dock manager (tabs)
     }
-    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
+    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
   private
     { Private declarations }
     _docked: boolean;
@@ -121,7 +122,7 @@ end;
     Override default event handlers to change when this form should accept
     dragged objects. This is called from dock manager (tabs)
 }
-procedure TfrmDockable.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+procedure TfrmDockable.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
     inherited;
@@ -135,7 +136,7 @@ end;
     Override to handle objects dropped into form, specifically
     from dock manager (tabs)
 }
-procedure TfrmDockable.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfrmDockable.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
     inherited;
     //implement in subclass

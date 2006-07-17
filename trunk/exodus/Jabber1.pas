@@ -2909,7 +2909,7 @@ begin
     if (dest_tab > -1) then begin
         form := getTabForm(Tabs.Pages[dest_tab]);
         if (form <> nil) then
-            TfrmDockable(form).DockableDragOver(Sender, Source, X, Y, State, Accept);
+            TfrmDockable(form).OnDockedDragOver(Sender, Source, X, Y, State, Accept);
     end;
 end;
 
@@ -2925,7 +2925,7 @@ begin
     if (dest_tab > -1) then begin
         form := getTabForm(Tabs.Pages[dest_tab]);
         if (form <> nil) then
-            TfrmDockable(form).DockableDragDrop(Sender, Source, X, Y);
+            TfrmDockable(form).OnDockedDragDrop(Sender, Source, X, Y);
     end;
 end;
 

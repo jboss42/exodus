@@ -17,8 +17,8 @@ object frmDockable: TfrmDockable
   ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDragDrop = DockableDragDrop
-  OnDragOver = DockableDragOver
+  OnDragDrop = OnDockedDragDrop
+  OnDragOver = OnDockedDragOver
   OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
