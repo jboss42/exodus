@@ -175,6 +175,13 @@ type
                                State: TDragState; var Accept: Boolean);override;
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
 
+    {
+        Event fired when Form receives activation while in docked state.
+
+        Fired by DockManager when tab is activated (brought to front)
+    }
+    procedure OnDockedActivate(Sender : TObject);override;
+    
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
     property LastImage: integer read _old_img;
@@ -1659,6 +1666,19 @@ begin
             MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel_contacts.Free();
     end;
+end;
+
+
+{
+    Event fired when Form receives activation while in docked state.
+
+    Fired by DockManager when tab is activated (brought to front)
+}
+procedure TfrmChat.OnDockedActivate(Sender : TObject);
+begin
+    inherited;
+    if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then
+        Self.tabSheet.ImageIndex := LastImage;
 end;
 
 end.
