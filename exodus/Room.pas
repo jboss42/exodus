@@ -237,9 +237,9 @@ type
     procedure DockForm; override;
     procedure FloatForm; override;
 
-    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);override;
-    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer);override;
+    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
   end;
 
 var
@@ -1501,8 +1501,8 @@ begin
 
     // Setup MsgList;
     MsgList.setContextMenu(popRoom);
-    MsgList.setDragOver(DockableDragOver);
-    MsgList.setDragDrop(DockableDragDrop);
+    MsgList.setDragOver(OnDockedDragOver);
+    MsgList.setDragDrop(OnDockedDragDrop);
 end;
 
 {---------------------------------------}
@@ -2670,14 +2670,14 @@ begin
     end;
 end;
 
-procedure TfrmRoom.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);
 begin
     inherited;
     Accept := (Source = frmRosterWindow.treeRoster);
 end;
 
-procedure TfrmRoom.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
     n: TTreeNode;
     ritem: TJabberRosterItem;

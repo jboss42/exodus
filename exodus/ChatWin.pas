@@ -171,9 +171,9 @@ type
 
     procedure pluginMenuClick(Sender: TObject); override;
 
-    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);override;
-    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer);override;
+    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
 
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
@@ -1638,14 +1638,14 @@ begin
     end;
 end;
 
-procedure TfrmChat.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
+procedure TfrmChat.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
+                                    State: TDragState; var Accept: Boolean);
 begin
     inherited;
     Accept := (Source = frmRosterWindow.treeRoster);
 end;
 
-procedure TfrmChat.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfrmChat.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
  sel_contacts: TList;
 begin
