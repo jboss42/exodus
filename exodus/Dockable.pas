@@ -76,6 +76,12 @@ type
     procedure FloatForm; virtual;
     procedure ShowDefault;
     procedure gotActivate; virtual;
+    {
+        Event fired when Form receives activation while in docked state.
+
+        Fired by DockManager when tab is activated (brought to front)
+    }
+    procedure OnDockedActivate(Sender : TObject);virtual;
 
 
     property Docked: boolean read _docked write _docked;
@@ -311,6 +317,19 @@ begin
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := ImageIndex;
     end;
+end;
+
+{
+    Event fired when Form receives activation while in docked state.
+
+    Fired by DockManager when tab is activated (brought to front)
+}
+procedure TfrmDockable.OnDockedActivate(Sender : TObject);
+begin
+    inherited;
+    //subclasses override to change activation behavior
+     if (Self.TabSheet <> nil) then
+        Self.TabSheet.ImageIndex := ImageIndex;
 end;
 
 end.

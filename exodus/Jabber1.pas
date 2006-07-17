@@ -527,14 +527,16 @@ uses
     COMToolbar, COMToolbarButton,
     NewUser, CommandWizard, Exodus_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
-    ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
+    ChatController,
+    ChatWin,
+    Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
-    PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager, Stringprep, SSLWarn,
+    PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
+    Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -1786,7 +1788,7 @@ var
     i, active_tab: integer;
     rpanel: TPanel;
     cc: TChatController;
-    cw: TfrmChat;
+    cw: TfrmDockable;
 begin
     // figure out the width of the msg queue
     event_w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
@@ -1904,7 +1906,7 @@ begin
         // make sure all invisible chat windows are undocked
         for i := 0 to MainSession.ChatList.Count - 1 do begin
             cc := TChatController(MainSession.ChatList.Objects[i]);
-            cw := TfrmChat(cc.window);
+            cw := TfrmDockable(cc.window);
             if ((cw <> nil) and (cw.Visible = false) and (cw.Docked)) then begin
                 cw.FloatForm();
             end;
@@ -2873,24 +2875,14 @@ begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage = nil) then exit;
 
-    f := getTabForm(Tabs.ActivePage);
-
-    if (f is TfrmChat) then begin
-        if (Tabs.ActivePage.ImageIndex = tab_notify) then
-            Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage
-    end
-    else if (f is TfrmRoom) then begin
-        Tabs.ActivePage.ImageIndex := RosterTreeImages.Find('conference');
-    end
-    else if ((Tabs.ActivePage = tbsRoster) and
+    //special case roster since its window management is handled here
+    if ((Tabs.ActivePage = tbsRoster) and
         (tbsRoster.ImageIndex <> RosterTreeImages.Find('multiple'))) then
         tbsRoster.ImageIndex := RosterTreeImages.Find('multiple')
-    else if (f is TfrmDockable) then
-        Tabs.ActivePage.ImageIndex := TfrmDockable(f).ImageIndex;
-
-    if (f is TfrmBaseChat) then begin
-        if (TfrmBaseChat(f).MsgOut.Visible and TfrmBaseChat(f).MsgOut.Enabled) then
-            TfrmBaseChat(f).MsgOut.SetFocus;
+    else begin
+        f := getTabForm(Tabs.ActivePage);
+        if ((f <> nil) and (f is TfrmDockable)) then
+            TfrmDockable(f).OnDockedActivate(Self);
     end;
 end;
 

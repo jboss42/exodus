@@ -457,7 +457,7 @@ begin
     
     if (f.TabSheet <> nil) then begin
         frmExodus.Tabs.ActivePage := f.TabSheet;
-        f.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
+        f.OnDockedActivate(f);
     end;
     
     Result := f;
@@ -1476,7 +1476,7 @@ begin
     _custom_pres := false;
     _pending_start := false;
     _pending_destroy := false;
-
+    ImageIndex := RosterTreeImages.Find('conference');
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
@@ -1976,7 +1976,7 @@ begin
 
     inherited;
     if (Docked and (Self.TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
+        Self.TabSheet.ImageIndex := ImageIndex;
 
     btnClose.Visible := Docked;
 
