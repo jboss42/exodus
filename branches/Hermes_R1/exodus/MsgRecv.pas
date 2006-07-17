@@ -343,8 +343,6 @@ begin
     echat.setIM(Self);
     echat.ObjAddRef();
     ComController := echat;
-
-    ExComController.populateMsgMenus(popContact, self.pluginMenuClick);
 end;
 
 {---------------------------------------}
@@ -756,6 +754,7 @@ var
     cp: TPoint;
 begin
   inherited;
+    ExComController.populateMsgMenus(popContact, self.pluginMenuClick);
     GetCursorPos(cp);
     popContact.popup(cp.x, cp.y);
 end;
