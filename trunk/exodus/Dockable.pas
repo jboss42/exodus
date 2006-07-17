@@ -27,12 +27,25 @@ uses
 
 type
   TDockNotify = procedure of object;
-
   TfrmDockable = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    {
+        Drag event.
+
+        Override default event handlers to change when this form should accept
+        dragged objects. This is called from dock manager (tabs)
+    }
+    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);virtual;
+    {
+        Drop event
+
+        Override to handle objects dropped into form, specifically
+        from dock manager (tabs)
+    }
+    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
   private
     { Private declarations }
     _docked: boolean;
@@ -58,13 +71,14 @@ type
     { Public declarations }
     TabSheet: TTntTabSheet;
     ImageIndex: integer;
-    
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
     procedure gotActivate; virtual;
 
+
     property Docked: boolean read _docked write _docked;
+
   end;
 
 var
@@ -101,6 +115,32 @@ begin
     _noMoveCheck := false;
 end;
 
+{
+    Drag event.
+
+    Override default event handlers to change when this form should accept
+    dragged objects. This is called from dock manager (tabs)
+}
+procedure TfrmDockable.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+    inherited;
+    Accept := false;
+    //implement in subclass
+end;
+
+{
+    Drop event
+
+    Override to handle objects dropped into form, specifically
+    from dock manager (tabs)
+}
+procedure TfrmDockable.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+    inherited;
+    //implement in subclass
+end;
+
 {---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
@@ -109,6 +149,7 @@ begin
         Self.OnDockStartChange();
 
     Self.SavePos();
+
     Self.ManualDock(frmExodus.Tabs);
     Self.Align := alClient;
     _docked := true;

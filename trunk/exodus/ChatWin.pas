@@ -171,9 +171,14 @@ type
 
     procedure pluginMenuClick(Sender: TObject); override;
 
+    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+                               State: TDragState; var Accept: Boolean);override;
+    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer);override;
+
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
     property LastImage: integer read _old_img;
+
   end;
 
 var
@@ -1630,6 +1635,29 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
+    end;
+end;
+
+procedure TfrmChat.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+    inherited;
+    Accept := (Source = frmRosterWindow.treeRoster);
+end;
+
+procedure TfrmChat.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+ sel_contacts: TList;
+begin
+    inherited;
+    if (Source = frmRosterWindow.treeRoster) then begin
+        // send roster items to this contact.
+        sel_contacts := frmRosterWindow.getSelectedContacts(false);
+        if (sel_contacts.count > 0) then
+            jabberSendRosterItems(TfrmChat(Self).getJid, sel_contacts)
+        else
+            MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
+        sel_contacts.Free();
     end;
 end;
 

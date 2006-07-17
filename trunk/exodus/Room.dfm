@@ -71,8 +71,8 @@ inherited frmRoom: TfrmRoom
         OnCustomDrawItem = lstRosterCustomDrawItem
         OnData = lstRosterData
         OnDblClick = lstRosterDblClick
-        OnDragDrop = lstRosterDragDrop
-        OnDragOver = lstRosterDragOver
+        OnDragDrop = DockableDragDrop
+        OnDragOver = DockableDragOver
         OnInfoTip = lstRosterInfoTip
         OnKeyPress = lstRosterKeyPress
       end
