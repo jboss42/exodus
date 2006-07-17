@@ -46,9 +46,6 @@ type
     txtMsg: TExRichEdit;
     MsgOut: TExRichEdit;
     popContact: TTntPopupMenu;
-    mnuVersionRequest: TMenuItem;
-    mnuTimeRequest: TMenuItem;
-    mnuLastActivity: TMenuItem;
     pnlTop: TPanel;
     pnlHeader: TPanel;
     pnlSendSubject: TPanel;
@@ -78,6 +75,9 @@ type
     popPaste: TTntMenuItem;
     popCopy: TTntMenuItem;
     MsgPanel: TPanel;
+    mnuLastActivity: TTntMenuItem;
+    mnuTimeRequest: TTntMenuItem;
+    mnuVersionRequest: TTntMenuItem;
     
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -343,6 +343,8 @@ begin
     echat.setIM(Self);
     echat.ObjAddRef();
     ComController := echat;
+
+    ExComController.populateMsgMenus(popContact, self.pluginMenuClick);
 end;
 
 {---------------------------------------}
@@ -361,11 +363,24 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.DisablePopup();
-var
-    i: integer;
+//var
+//    i: integer;
 begin
+    // Don't know why all of these are disabled.
+    // But, changed to individual disables from
+    // loop because loop was disabling plugin added menus.
+    mnuHistory.Enabled := false;
+    popClearHistory.Enabled := false;
+    mnuProfile.Enabled := false;
+    C1.Enabled := false;
+    mnuBlock.Enabled := false;
+    mnuSendFile.Enabled := false;
+    mnuResources.Enabled := false;
+
+{
     for i := 0 to popContact.Items.Count - 1 do
-        popContact.Items[i].Enabled := false;
+         popContact.Items[i].Enabled := false;
+}
 end;
 
 {---------------------------------------}
@@ -882,8 +897,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.pluginMenuClick(Sender: TObject);
+var
+    mi: TMenuItem;
+    subject: widestring;
+    body: widestring;
+    jid: widestring;
 begin
-    TExodusChat(ComController).fireMenuClick(Sender);
+    mi := TMenuItem(Sender);
+    jid := _base_jid;
+    subject := txtSubject.Caption;
+    body := txtMsg.WideText;
+    ExComController.fireMsgMenuClick(mi.Tag, jid, body, subject);
 end;
 
 {---------------------------------------}

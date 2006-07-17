@@ -1395,6 +1395,7 @@ begin
         mi.Tag := i;
         mi.OnClick := event;
         mi.Name := mc.id;
+        parent.Items.Add(mi);
     end;
 end;
 
