@@ -1,9 +1,9 @@
 object frmDockable: TfrmDockable
   Left = 524
   Top = 255
-  Width = 249
-  Height = 231
   Caption = 'frmDockable'
+  ClientHeight = 197
+  ClientWidth = 241
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   DragKind = dkDock
@@ -14,10 +14,11 @@ object frmDockable: TfrmDockable
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDefaultPosOnly
   ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDragDrop = DockableDragDrop
+  OnDragOver = DockableDragOver
   OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96

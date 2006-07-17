@@ -275,7 +275,7 @@ type
     _cleanupComplete : boolean;        //all close events have fired and app is ready to terminate
     _close_min: boolean;                // should the close btn minimize, not close
     _appclosing: boolean;               // is the entire app closing
-    _new_tabindex: integer;             // new tab which was just docked
+//    _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
 
@@ -803,7 +803,7 @@ begin
     Randomize();
     ActiveChat := nil;
     _docked_forms := TList.Create;
-    _new_tabindex := -1;
+//    _new_tabindex := -1;
     _auto_login := false;
 
     // Do translation magic
@@ -2500,7 +2500,7 @@ begin
     if (Source.Control is TfrmDockable) then begin
         TfrmDockable(Source.Control).Docked := true;
         TfrmDockable(Source.Control).TabSheet := TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]);
-        _new_tabindex := Tabs.PageCount;
+//        _new_tabindex := Tabs.PageCount;
         _docked_forms.Add(TfrmDockable(Source.Control));
     end;
 end;
@@ -2901,14 +2901,15 @@ var
     form: TForm;
     dest_tab: integer;
 begin
+    inherited;
     // drag if the source is the roster,
     // and the target is a conf room tab
     Accept := false;
     dest_tab := Tabs.IndexOfTabAt(X,Y);
     if (dest_tab > -1) then begin
         form := getTabForm(Tabs.Pages[dest_tab]);
-        Accept := ((Source = frmRosterWindow.treeRoster) and
-                   ((form is TfrmRoom) or (form is TfrmChat)));
+        if (form <> nil) then
+            TfrmDockable(form).DockableDragOver(Sender, Source, X, Y, State, Accept);
     end;
 end;
 
@@ -2917,33 +2918,14 @@ procedure TfrmExodus.TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
     dest_tab: integer;
     form: TForm;
-    sel_contacts: TList;
 begin
+    inherited;
     // dropping something on a tab.
     dest_tab := Tabs.IndexOfTabAt(X,Y);
     if (dest_tab > -1) then begin
         form := getTabForm(Tabs.Pages[dest_tab]);
-        if (form <> nil) then begin
-            if ((form is TfrmRoom) and (Source = frmRosterWindow.treeRoster)) then begin
-                // fire up an invite for this room using the selected contacts
-                sel_contacts := frmRosterWindow.getSelectedContacts(true);
-                if (sel_contacts.count > 0) then
-                    ShowInvite(TfrmRoom(form).getJid, sel_contacts)
-                else
-                    MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
-                sel_contacts.Free();
-            end
-
-            else if ((form is TfrmChat) and (Source = frmRosterWindow.treeRoster)) then begin
-                // send roster items to this contact.
-                sel_contacts := frmRosterWindow.getSelectedContacts(false);
-                if (sel_contacts.count > 0) then
-                    jabberSendRosterItems(TfrmChat(form).getJid, sel_contacts)
-                else
-                    MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
-                sel_contacts.Free();
-            end;
-        end;
+        if (form <> nil) then
+            TfrmDockable(form).DockableDragDrop(Sender, Source, X, Y);
     end;
 end;
 

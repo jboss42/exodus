@@ -125,9 +125,6 @@ type
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure lstRosterDblClick(Sender: TObject);
-    procedure lstRosterDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure lstRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure lstRosterInfoTip(Sender: TObject; Item: TListItem;
       var InfoTip: String);
     procedure popConfigureClick(Sender: TObject);
@@ -209,8 +206,6 @@ type
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
     procedure _EnableSubjectButton();
-
-
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -241,6 +236,10 @@ type
 
     procedure DockForm; override;
     procedure FloatForm; override;
+
+    procedure DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+                               State: TDragState; var Accept: Boolean);override;
+    procedure DockableDragDrop(Sender, Source: TObject; X, Y: Integer);override;
   end;
 
 var
@@ -533,7 +532,7 @@ begin
             DisplayMsg(Msg, MsgList);
             exit;
         end;
-
+        
         // Room config update?
         etag := tag.GetFirstTag('x');
         if (etag <> nil) and
@@ -545,7 +544,7 @@ begin
                 // Need to disco.
                 e := jEntityCache.getByJid(Self.jid, '');
                 e.refresh(MainSession);
-            end;            
+            end;
         end;
 
     end
@@ -1278,7 +1277,7 @@ begin
             // Voice stuff
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
             if (MsgOut.Readonly) then MsgOut.Lines.Clear();
-
+            
             // Who can change subject
             _EnableSubjectButton();
         end;
@@ -1502,8 +1501,8 @@ begin
 
     // Setup MsgList;
     MsgList.setContextMenu(popRoom);
-    MsgList.setDragOver(lstRosterDragOver);
-    MsgList.setDragDrop(lstRosterDragDrop);
+    MsgList.setDragOver(DockableDragOver);
+    MsgList.setDragDrop(DockableDragDrop);
 end;
 
 {---------------------------------------}
@@ -2046,49 +2045,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.lstRosterDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  inherited;
-    // drag over
-    Accept := (Source = frmRosterWindow.treeRoster);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.lstRosterDragDrop(Sender, Source: TObject; X,
-  Y: Integer);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
-    i: integer;
-    jids: TList;
-    o: TObject;
-begin
-  inherited;
-    // drag drop
-    if (Source = frmRosterWindow.treeRoster) then begin
-        // We want to invite someone into this TC room
-        jids := TList.Create();
-        with frmRosterWindow.treeRoster do begin
-            for i := 0 to SelectionCount - 1 do begin
-                n := Selections[i];
-                o := TObject(n.Data);
-                assert(o <> nil);
-
-                if (o is TJabberRosterItem) then begin
-                    ritem := TJabberRosterItem(n.Data);
-                    jids.Add(ritem);
-                end
-                else if (o is TJabberGroup) then begin
-                    TJabberGroup(o).getRosterItems(jids, true);
-                end;
-            end;
-        end;
-        ShowInvite(Self.jid, jids);
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem;
   var InfoTip: String);
 var
@@ -2470,7 +2426,7 @@ begin
         _EnableSubjectButton();
         exit;
     end;
-    
+        
     if (tag = nil) then begin
         // just try anyways
         sendStartPresence();
@@ -2711,6 +2667,45 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
+    end;
+end;
+
+procedure TfrmRoom.DockableDragOver(Sender, Source: TObject; X, Y: Integer;
+                               State: TDragState; var Accept: Boolean);
+begin
+    inherited;
+    Accept := (Source = frmRosterWindow.treeRoster);
+end;
+
+procedure TfrmRoom.DockableDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    i: integer;
+    jids: TList;
+    o: TObject;
+begin
+  inherited;
+    // drag drop
+    if (Source = frmRosterWindow.treeRoster) then begin
+        // We want to invite someone into this TC room
+        jids := TList.Create();
+        with frmRosterWindow.treeRoster do begin
+            for i := 0 to SelectionCount - 1 do begin
+                n := Selections[i];
+                o := TObject(n.Data);
+                assert(o <> nil);
+
+                if (o is TJabberRosterItem) then begin
+                    ritem := TJabberRosterItem(n.Data);
+                    jids.Add(ritem);
+                end
+                else if (o is TJabberGroup) then begin
+                    TJabberGroup(o).getRosterItems(jids, true);
+                end;
+            end;
+        end;
+        ShowInvite(Self.jid, jids);
     end;
 end;
 
