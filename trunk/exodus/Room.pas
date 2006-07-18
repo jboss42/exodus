@@ -456,7 +456,7 @@ begin
     f.Show;
     
     if (f.TabSheet <> nil) then begin
-        frmExodus.BringDockedToFront(f);
+        frmExodus.BringDockedToTop(f);
     end;
     
     Result := f;
@@ -802,7 +802,7 @@ begin
         chat_win := StartChat(self.jid, nick, true, nick);
         if (chat_win <> nil) then begin
             if (chat_win.TabSheet <> nil) then
-                frmExodus.BringDockedToFront(chat_win)
+                frmExodus.BringDockedToTop(chat_win)
             else
                 chat_win.Show();
         end;
@@ -2035,7 +2035,7 @@ begin
         chat_win := StartChat(rm._real_jid.jid(), rm._real_jid.resource, true);
     if (chat_win <> nil) then begin
         if (chat_win.TabSheet <> nil) then
-            frmExodus.BringDockedToFront(chat_win)
+            frmExodus.BringDockedToTop(chat_win)
         else
             chat_win.Show();
     end;

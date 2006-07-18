@@ -414,7 +414,15 @@ type
         If form is currently docked, make it the active tab.
         Fires OnDockedActivate event in TfrmDockable
     }
-    procedure BringDockedToFront(form: TfrmDockable);
+    procedure BringDockedToTop(form: TfrmDockable);
+
+    {
+        Get the currently top docked form.
+
+        May return nil if topmost docked form is not TfrmDockable(????) or
+        nothing is docked.  
+    }
+    function getTopDocked() : TfrmDockable;
 
     {**
      *  Get the panel the roster is being rendered in.
@@ -3586,11 +3594,30 @@ end;
     If form is currently docked, make it the active tab.
     Fires OnDockedActivate event in TfrmDockable
 }
-procedure TfrmExodus.BringDockedToFront(form: TfrmDockable);
+procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
 begin
     if ((form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
         Self.Tabs.ActivePage := form.TabSheet;
         form.OnDockedActivate(Self);
+    end;
+end;
+
+{
+    Get the currently top docked form.
+
+    May return nil if topmost docked form is not TfrmDockable(????) or
+    nothing is docked.
+}
+function TfrmExodus.getTopDocked() : TfrmDockable;
+var
+    top : TForm;
+begin
+    Result := nil;
+    try
+        top := getTabForm(Self.Tabs.ActivePage);
+        if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then
+            Result := TfrmDockable(top);
+    finally
     end;
 end;
 

@@ -137,8 +137,8 @@ begin
 
                 if ((MainSession.Prefs.getBool('expanded')) and
                     (win.TabSheet <> nil) and
-                    (frmExodus.Tabs.ActivePage <> win.TabSheet)) then begin
-                    frmExodus.BringDockedToFront(win);
+                    (frmExodus.getTopDocked() <> win)) then begin
+                    frmExodus.BringDockedToTop(win);
                 end;
                 // make sure to put the cursor in the outbound text entry box
                 win.MsgOut.SetFocus();

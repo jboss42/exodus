@@ -254,7 +254,7 @@ begin
                 if (not win.Visible) then
                     win.ShowDefault()
                 else if (win.TabSheet <> nil) then
-                    frmExodus.BringDockedToFront(win);
+                    frmExodus.BringDockedToTop(win);
             end
             else
                 win.ShowDefault();
@@ -347,7 +347,7 @@ begin
         exp := MainSession.Prefs.getBool('expanded');
         if ((show_window) and (Application.Active)) then begin
             Show();
-            if (((exp) and (frmExodus.Tabs.ActivePage = TfrmChat(chat.window).TabSheet)) or
+            if (((exp) and (frmExodus.getTopDocked() = chat.window)) or
                 (exp = false)) then begin
                 if (TfrmChat(chat.window).Visible) then
                     TfrmChat(chat.window).SetFocus();
