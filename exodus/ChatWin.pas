@@ -1044,7 +1044,7 @@ begin
     if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
         Self.TabSheet.ImageIndex := _pres_img;
     _old_img := _pres_img;
-
+    ImageIndex := _pres_img;
 end;
 
 {---------------------------------------}
@@ -1677,8 +1677,9 @@ end;
 procedure TfrmChat.OnDockedActivate(Sender : TObject);
 begin
     inherited;
-    if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then
-        Self.tabSheet.ImageIndex := LastImage;
+    if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then begin
+        Self.tabSheet.ImageIndex := ImageIndex;
+    end;
 end;
 
 end.

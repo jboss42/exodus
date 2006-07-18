@@ -137,9 +137,10 @@ begin
 
                 if ((MainSession.Prefs.getBool('expanded')) and
                     (win.TabSheet <> nil) and
-                    (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
+                    (frmExodus.Tabs.ActivePage <> win.TabSheet)) then begin
                     frmExodus.Tabs.ActivePage := win.TabSheet;
-
+                    win.OnDockedActivate(Self);
+                end;
                 // make sure to put the cursor in the outbound text entry box
                 win.MsgOut.SetFocus();
             end;
