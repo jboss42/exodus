@@ -25,7 +25,7 @@ uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry, SelContact, Emote, NodeItem, 
-
+    Dockable,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -408,6 +408,14 @@ type
 
     procedure CloseDocked(frm: TForm);
 
+    {
+        Bring the given docked form to the front of the tab list
+
+        If form is currently docked, make it the active tab.
+        Fires OnDockedActivate event in TfrmDockable
+    }
+    procedure BringDockedToFront(form: TfrmDockable);
+
     {**
      *  Get the panel the roster is being rendered in.
     **}
@@ -529,7 +537,7 @@ uses
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController,
     ChatWin,
-    Debug, Dockable, DNSUtils, Entity,
+    Debug, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
@@ -3570,6 +3578,20 @@ end;
 function TfrmExodus.getCurrentRosterPanel() : TPanel;
 begin
     Result := _currRosterPanel;
+end;
+
+{
+    Bring the given docked form to the front of the tab list
+
+    If form is currently docked, make it the active tab.
+    Fires OnDockedActivate event in TfrmDockable
+}
+procedure TfrmExodus.BringDockedToFront(form: TfrmDockable);
+begin
+    if ((form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
+        Self.Tabs.ActivePage := form.TabSheet;
+        form.OnDockedActivate(Self);
+    end;
 end;
 
 initialization
