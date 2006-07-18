@@ -156,7 +156,7 @@ begin
     f.reset();
 
     if f.TabSheet <> nil then
-        frmExodus.Tabs.ActivePage := f.TabSheet
+        frmExodus.BringDockedToFront(f)
     else
         f.Show();
 

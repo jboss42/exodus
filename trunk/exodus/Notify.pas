@@ -239,7 +239,7 @@ begin
             d := TfrmDockable(w);
             if (d.Docked) then begin
                 frmExodus.doRestore();
-                frmExodus.Tabs.ActivePage := d.TabSheet;
+                frmExodus.BringDockedToFront(d);
                 w := frmExodus;
             end;
         end

@@ -120,7 +120,7 @@ begin
         frmDebug.ShowDefault();
 
     if (frmDebug.Docked) then
-        frmExodus.Tabs.ActivePage := frmDebug.TabSheet
+        frmExodus.BringDockedToFront(frmDebug)
     else
         frmDebug.Show();
 end;

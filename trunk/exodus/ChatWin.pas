@@ -254,7 +254,7 @@ begin
                 if (not win.Visible) then
                     win.ShowDefault()
                 else if (win.TabSheet <> nil) then
-                    frmExodus.Tabs.ActivePage := win.TabSheet;
+                    frmExodus.BringDockedToFront(win);
             end
             else
                 win.ShowDefault();

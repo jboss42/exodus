@@ -244,7 +244,7 @@ begin
         // focus on the new tab if we are on the roster.
         if ((not Application.Active) or
             (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then begin
-            frmExodus.Tabs.ActivePage := TabSheet;
+            frmExodus.BringDockedToFront(Self);
         end;
     end
     else begin
