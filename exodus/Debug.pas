@@ -120,7 +120,7 @@ begin
         frmDebug.ShowDefault();
 
     if (frmDebug.Docked) then
-        frmExodus.BringDockedToFront(frmDebug)
+        frmExodus.BringDockedToTop(frmDebug)
     else
         frmDebug.Show();
 end;

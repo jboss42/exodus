@@ -115,7 +115,7 @@ begin
     regform.jid := jid;
     regform.Start();
     if regform.TabSheet <> nil then
-        frmExodus.BringDockedToFront(regform)
+        frmExodus.BringDockedToTop(regform)
     else
         regform.Show();
 end;

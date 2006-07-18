@@ -156,7 +156,7 @@ begin
     f.reset();
 
     if f.TabSheet <> nil then
-        frmExodus.BringDockedToFront(f)
+        frmExodus.BringDockedToTop(f)
     else
         f.Show();
 
