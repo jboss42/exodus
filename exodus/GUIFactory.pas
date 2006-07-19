@@ -135,7 +135,7 @@ begin
                 if (not win.Docked) then
                     win.BringToFront();
 
-                if ((MainSession.Prefs.getBool('expanded')) and
+                if ((Jabber1.GetDockState() <> dsForbidden) and
                     (win.TabSheet <> nil) and
                     (frmExodus.getTopDocked() <> win)) then begin
                     frmExodus.BringDockedToTop(win);

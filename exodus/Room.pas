@@ -427,7 +427,7 @@ begin
             f.sendStartPresence();
 
         f.Caption := tmp_jid.userDisplay;
-        if (MainSession.Prefs.getBool('expanded')) then begin
+        if (Jabber1.GetDockState() <> dsForbidden) then begin
             f.DockForm;
         end;
 

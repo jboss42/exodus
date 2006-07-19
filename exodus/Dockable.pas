@@ -231,7 +231,7 @@ end;
 procedure TfrmDockable.ShowDefault;
 begin
     // show this form using the default behavior
-    if MainSession.Prefs.getBool('expanded') then begin
+    if (Jabber1.GetDockState() <> dsForbidden) then begin
         if (TabSheet = nil) then begin
             // dock the form
             Self.DockForm();
