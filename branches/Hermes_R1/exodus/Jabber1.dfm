@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 385
+  ClientHeight = 405
   ClientWidth = 231
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -30,7 +30,7 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 31
-    Height = 354
+    Height = 374
     OnMoved = SplitterRightMoved
     ExplicitTop = 33
     ExplicitHeight = 332
@@ -39,7 +39,7 @@ object frmExodus: TfrmExodus
     Left = 60
     Top = 31
     Width = 171
-    Height = 354
+    Height = 374
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -52,6 +52,7 @@ object frmExodus: TfrmExodus
     MultiLine = True
     ParentFont = False
     PopupMenu = popTabs
+    RaggedRight = True
     TabOrder = 0
     OnChange = TabsChange
     OnDockDrop = TabsDockDrop
@@ -71,7 +72,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 325
+        Height = 345
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
         ExplicitHeight = 303
@@ -80,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 325
+        Height = 345
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -93,7 +94,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 55
-        Height = 325
+        Height = 345
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -187,7 +188,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 354
+    Height = 374
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
