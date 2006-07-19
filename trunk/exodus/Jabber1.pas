@@ -430,12 +430,43 @@ type
     function getCurrentRosterPanel() : TPanel;
   end;
 
+  {
+      Dock states, allowed -> docking/undocking , required -> dock only, forbidden -> undock only
+  }
+  TDockStates = (dsAllowed, dsRequired, dsForbidden);
 
 procedure StartTrayAlert();
 procedure StopTrayAlert();
 
 function ExodusGMHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
 function ExodusCWPHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+
+{
+    get the current docking state.
+
+    Dock state may be dsAllowed -> forms may be docked or undocked
+                      dsRequired -> dockable forms MUST dock, may not be undocked
+                      dsForbidden -> dockable forms cannot dock, must be undocked
+    Dock state is based on the "expanded" preference to indicate docking is allowed
+    and the "dock-locked" preference.
+    
+    (expanded && dock-locked --> dsRequired, expanded && !dock-locked --> dsAllowed,
+     !expanded --> dsForbidden)
+}
+function getDockState() : TDockStates;
+
+{
+    Is the roster currently embedded in the Messenger tab?
+
+    This function will return true if the roster should be embedded whenever
+    the messenger tab is docked. Will return false if roster should never be
+    embedded. Will return true if roster is currently embedded in a docked
+    messenger tab *and* if it *should* be embedded when the messenger tab is
+    undocked or not shown. Essentially this is a GUI hint to the roster rendering
+    code.
+}
+function isEmbeddedRoster() : boolean;
+  
 
 var
     frmExodus: TfrmExodus;
@@ -557,6 +588,44 @@ uses
     XMLUtils, XMLParser;
 
 {$R *.DFM}
+
+{
+    get the current docking state.
+
+    Dock state may be dsAllowed -> forms may be docked or undocked
+                      dsRequired -> dockable forms MUST dock, may not be undocked
+                      dsForbidden -> dockable forms cannot dock, must be undocked
+    Dock state is based on the "expanded" and "dock_locked" preference.
+
+    (expanded && dock_locked --> dsRequired, expanded && !dock_locked --> dsAllowed,
+     !expanded --> dsForbidden)
+}
+function getDockState() : TDockStates;
+begin
+    Result := dsAllowed;
+    if (MainSession <> nil) then  begin
+        if (not MainSession.Prefs.getBool('expanded')) then
+            Result := dsForbidden
+        else if (MainSession.Prefs.getBool('dock_locked')) then
+            Result := dsRequired;
+    end;
+end;
+
+{
+    Is the roster currently embedded in the Messenger tab?
+
+    This function will return true if the roster should be embedded whenever
+    the messenger tab is docked. Will return false if roster should never be
+    embedded. Will return true if roster is currently embedded in a docked
+    messenger tab *and* if it *should* be embedded when the messenger tab is
+    undocked or not shown. Essentially this is a GUI hint to the roster rendering
+    code.
+}
+function isEmbeddedRoster() : boolean;
+begin
+    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
+end;
+
 
 {---------------------------------------}
 procedure TfrmExodus.CreateParams(var Params: TCreateParams);
@@ -897,7 +966,7 @@ begin
     Tabs.ActivePage := tbsRoster;
     restoreMenus(false);
     restoreToolbar();
-    pnlRight.Visible := MainSession.Prefs.getBool('expanded');
+    pnlRight.Visible := (Jabber1.GetDockState() <> dsForbidden);
     Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
     restoreRoster();
 
@@ -987,6 +1056,13 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Startup;
 begin
+    //show the initial roster quickly
+    if (isEmbeddedRoster()) then
+        frmRosterWindow.DockRoster(pnlRoster)
+    else
+        frmRosterWindow.DockRoster(pnlLeft);
+    frmRosterWindow.Show;
+
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
         InitPlugins();
@@ -1000,7 +1076,7 @@ begin
     end;
 
     // Create and dock the MsgQueue if we're in expanded mode
-    if (MainSession.Prefs.getBool('expanded')) then begin
+    if (Jabber1.GetDockState() <> dsForbidden) then begin
         _expanded := true;
         getMsgQueue();
         frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
@@ -1426,7 +1502,7 @@ begin
         restoreToolbar();
         restoreAlpha();
 
-        exp := MainSession.Prefs.getBool('expanded');
+        exp := (Jabber1.GetDockState() <> dsForbidden);
         tbsRoster.TabVisible := exp;
         if ((_expanded <> exp) and (tag = nil)) then begin
             _expanded := exp;
@@ -1724,7 +1800,7 @@ begin
 
     if MainSession.Active then begin
         frmRosterWindow.SessionCallback('/session/prefs', nil);
-        if ((MainSession.Prefs.getBool('expanded')) and
+        if ((Jabber1.GetDockState() <> dsForbidden) and
             (Tabs.ActivePage <> tbsRoster)) then
             Tabs.ActivePage := tbsRoster;
     end;
@@ -1778,7 +1854,7 @@ begin
         w := MainSession.Prefs.getInt('event_width');
         Self.ClientWidth := Self.ClientWidth + w - delta;
         restoreRoster();
-    end      
+    end
     else begin
         // we are compressed now
         w := pnlRight.Width;
@@ -1799,7 +1875,7 @@ end;
 procedure TfrmExodus.restoreRoster();
 var
     docked: TfrmDockable;
-    expanded, messenger: boolean;
+    expanded: boolean;
     roster_w, event_w: integer;
     i, active_tab: integer;
     rpanel: TPanel;
@@ -1816,12 +1892,8 @@ begin
     end;
 
     // make sure the roster is docked in the appropriate place.
-    messenger := MainSession.Prefs.getBool('roster_messenger');
-    expanded := MainSession.Prefs.getBool('expanded');
-    if (messenger) then begin
-        if ((frmRosterWindow <> nil) and (not frmRosterWindow.inMessenger)) then
-            frmRosterWindow.DockRoster();
-
+    expanded := (Jabber1.GetDockState() <> dsForbidden);
+    if (isEmbeddedRoster()) then begin
         // setup panels for the roster
         pnlRoster.Visible := true;
         _currRosterPanel := pnlRoster;
@@ -1840,19 +1912,17 @@ begin
         else begin
             pnlRoster.Align := alClient;
         end;
+        
+        if (frmRosterWindow <> nil) then
+            frmRosterWindow.DockRoster(pnlRoster);
     end
     else begin
-        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
-            frmRosterWindow.DockRoster();
-
         // setup panels for the roster
         pnlLeft.Visible := true;
         _currRosterPanel := pnlLeft;
         SplitterLeft.Visible := (expanded);
         SplitterRight.Visible := false;
         pnlRoster.Visible := false;
-        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
-            frmRosterWindow.DockRoster();
         pnlRoster.Width := 0;
         pnlLeft.Width := roster_w;
 
@@ -1865,6 +1935,8 @@ begin
         else begin
             pnlLeft.Align := alClient;
         end;
+        if (frmRosterWindow <> nil) then
+            frmRosterWindow.DockRoster(pnlLeft);
     end;
 
     // Show or hide the MsgQueue
@@ -2422,7 +2494,7 @@ begin
     // If we are expaned, and not showing the roster tab,
     // and the current tab has a chat window, then
     // call the chat window's AcceptFiles() method.
-    if ((MainSession.Prefs.getBool('expanded')) and
+    if ((Jabber1.GetDockState() <> dsForbidden) and
         (Tabs.ActivePage <> tbsRoster)) then begin
         f := getTabForm(Tabs.ActivePage);
         if (f is TfrmChat) then begin

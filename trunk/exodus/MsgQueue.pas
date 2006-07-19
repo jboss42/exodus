@@ -573,7 +573,7 @@ begin
     inherited;
     if (MainSession = nil) then
         lstEvents.Items.Clear
-    else if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
+    else if (Jabber1.GetDockState() <> dsForbidden) and (not Docked) then begin
         CanClose := false;
         exit;
     end

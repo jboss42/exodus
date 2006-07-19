@@ -271,9 +271,6 @@ begin
   Application.CreateForm(TFloatImage, FloatImage);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
 
-  frmRosterWindow.DockRoster;
-  frmRosterWindow.Show;
-
   frmExodus.Startup();
   Application.Run;
 

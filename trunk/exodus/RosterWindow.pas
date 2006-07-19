@@ -304,7 +304,7 @@ type
     { Public declarations }
     DockOffset: longint;
     Docked: boolean;
-    inMessenger: boolean;
+//    inMessenger: boolean;
 
     function getNodeType(node: TTreeNode = nil): integer;
 
@@ -312,7 +312,9 @@ type
     procedure FindAgain;
     procedure ClearNodes;
     procedure Redraw;
-    procedure DockRoster;
+//    procedure DockRoster;overload;
+    procedure DockRoster(dockSite : TWinControl);
+
     procedure ShowPresence(show: Widestring);
 
     procedure updateReconnect(secs: integer);
@@ -326,6 +328,18 @@ type
     property CurGroup: Widestring read _cur_grp;
   end;
 
+{
+    Is the roster currently embedded in the Messenger tab?
+
+    This function will return true if the roster should be embedded whenever
+    the messenger tab is docked. Will return false if roster should never be
+    embedded. Will return true if roster is currently embedded in a docked
+    messenger tab *and* if it *should* be embedded when the messenger tab is
+    undocked or not shown. Essentially this is a GUI hint to the roster rendering
+    code.
+}
+function isEmbeddedRoster() : boolean;
+  
 var
   frmRosterWindow: TfrmRosterWindow;
 
@@ -334,6 +348,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
+    Debug,
     fProfile, ConnDetails, NewUser, RosterImages,  
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
@@ -399,6 +414,21 @@ begin
     away.Caption := _(sRosterAway);
     xa.Caption := _(sRosterXA);
     dnd.Caption := _(sRosterDND);
+end;
+
+{
+    Is the roster currently embedded in the Messenger tab?
+
+    This function will return true if the roster should be embedded whenever
+    the messenger tab is docked. Will return false if roster should never be
+    embedded. Will return true if roster is currently embedded in a docked
+    messenger tab *and* if it *should* be embedded when the messenger tab is
+    undocked or not shown. Essentially this is a GUI hint to the roster rendering
+    code.
+}
+function isEmbeddedRoster() : boolean;
+begin
+    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
 end;
 
 {---------------------------------------}
@@ -1569,29 +1599,32 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TfrmRosterWindow.DockRoster;
+procedure TfrmRosterWindow.DockRoster(dockSite : TWinControl);
 begin
-    // dock the window to the main form
     StatBar.Visible := false;
-    if (MainSession.Prefs.GetBool('roster_messenger')) then begin
-        Self.ManualDock(frmExodus.pnlRoster, nil, alClient);
-        inMessenger := true;
-    end
-    else begin
-        Self.ManualDock(frmExodus.pnlLeft, nil, alClient);
-        inMessenger := false;
-    end;
+    Self.ManualDock(dockSite, nil, alClient);
     Self.Align := alClient;
     lstProfiles.Clear();
     ShowProfiles();
     Docked := true;
     MainSession.dock_windows := Docked;
-
     _drop.DropEvent := onURLDrop;
     _drop.start(treeRoster);
 end;
 
+{---------------------------------------}
+{replaced with above
+procedure TfrmRosterWindow.DockRoster;
+begin
+    // dock the window to the main form
+    if (isEmbeddedRoster()) then begin
+        DockRoster(frmExodus.pnlRoster);
+    end
+    else begin
+        DockRoster(frmExodus.pnlLeft);
+    end;
+end;
+}
 {---------------------------------------}
 procedure TfrmRosterWindow.FormResize(Sender: TObject);
 begin
