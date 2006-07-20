@@ -41,6 +41,10 @@ uses
 
 function getCOMControl(o: TObject): IExodusControl;
 begin
+    if (o = nil) then begin
+        Result := nil;
+        exit;
+    end;
     if (o is TFont) then begin 
         Result := IExodusControl(TExControlFont.Create(TFont(o)));
         exit;
