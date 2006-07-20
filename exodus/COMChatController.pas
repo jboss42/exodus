@@ -589,31 +589,33 @@ begin
         Result := _room.myNick;
 end;
 
+function FindComponentNested(ARoot: TComponent; const AName: WideString): TComponent;
+{Finding a component in an owner tree}
+var
+  i: Integer;
+begin
+  Result := ARoot.FindComponent(AName);
+  if Result <> nil then exit;
+  for i := 0 to ARoot.ComponentCount - 1 do  begin
+    Result := FindComponentNested(ARoot.Components[i], AName);
+    if Result <> nil then exit;
+  end;
+end;
+
 {---------------------------------------}
 function TExodusChat.GetControl(const Name: WideString): IExodusControl;
-var
-    i: IExodusControl;
-    comp : TComponent;
 begin
-    i := nil;
-    result := nil;
     try
-        if (_chat <> nil) then begin
-            comp := TfrmChat(_chat.window).FindComponent(Name);
-            if comp <> nil then
-                i := getCOMControl(comp);
-        end
-        else if (_room <> nil) then begin
-            comp := _room.FindComponent(Name);
-            if (comp <> nil) then
-                i := getCOMControl(comp);
-        end;
+        if (_chat <> nil) then
+            Result := getCOMControl(FindComponentNested(TComponent(_chat.window), Name))
+        else if (_room <> nil) then
+            Result := getCOMControl(FindComponentNested(_room, Name))
+        else
+            Result := nil;            
     except
         on EComponentError do
             Result := nil;
     end;
-
-    Result := i;
 end;
 
 {---------------------------------------}
