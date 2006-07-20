@@ -5,6 +5,8 @@ inherited frmPrefRoster: TfrmPrefRoster
   ClientHeight = 349
   ClientWidth = 342
   OldCreateOrder = True
+  ExplicitWidth = 354
+  ExplicitHeight = 361
   PixelsPerInch = 96
   TextHeight = 13
   object lblDblClick: TTntLabel [0]
@@ -61,7 +63,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 5
-    Items.WideStrings = (
+    Items.Strings = (
       'A new one to one chat window'
       'An instant message window'
       'A new or existing chat window')
@@ -97,8 +99,9 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   inherited pnlHeader: TTntPanel
     Width = 342
-    Caption = 'Roster Options'
+    Caption = 'Roster Item Options'
     TabOrder = 8
+    ExplicitWidth = 342
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
