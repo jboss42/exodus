@@ -5,6 +5,8 @@ inherited frmPrefFont: TfrmPrefFont
   ClientHeight = 283
   ClientWidth = 421
   OldCreateOrder = True
+  ExplicitWidth = 433
+  ExplicitHeight = 295
   PixelsPerInch = 96
   TextHeight = 13
   object lblRoster: TTntLabel [0]
@@ -23,14 +25,14 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object Label24: TTntLabel [2]
     Left = 8
-    Top = 186
+    Top = 194
     Width = 88
     Height = 13
     Caption = 'Background Color:'
   end
   object Label25: TTntLabel [3]
     Left = 8
-    Top = 210
+    Top = 218
     Width = 51
     Height = 13
     Caption = 'Font Color:'
@@ -44,14 +46,14 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object lblColor: TTntLabel [5]
     Left = 8
-    Top = 168
+    Top = 176
     Width = 69
     Height = 13
     Caption = 'Element Name'
   end
   object clrBoxBG: TColorBox [6]
     Left = 135
-    Top = 183
+    Top = 191
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -64,7 +66,7 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object clrBoxFont: TColorBox [7]
     Left = 135
-    Top = 207
+    Top = 215
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -77,7 +79,7 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object btnFont: TTntButton [8]
     Left = 135
-    Top = 234
+    Top = 242
     Width = 90
     Height = 25
     Caption = 'Change Font'
@@ -88,7 +90,7 @@ inherited frmPrefFont: TfrmPrefFont
     Left = 136
     Top = 72
     Width = 225
-    Height = 91
+    Height = 97
     AutoURLDetect = adNone
     CustomURLs = <
       item
@@ -184,12 +186,13 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 421
     Caption = 'Fonts and Colors'
     TabOrder = 5
+    ExplicitWidth = 421
   end
   object colorRoster: TTntTreeView
     Left = 8
     Top = 72
     Width = 121
-    Height = 90
+    Height = 97
     BevelWidth = 0
     Indent = 19
     ReadOnly = True
