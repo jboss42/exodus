@@ -1439,7 +1439,10 @@ begin
 
         cur_node.Text := String(tmps);
         cur_node.Data := ritem;
+        if (ritem.Ask = 'subscribe') then
+            ritem.setPresenceImage('pending');
         cur_node.ImageIndex := ritem.ImageIndex;
+
         cur_node.SelectedIndex := ritem.ImageIndex;
 
         // only invalid if we're not doing a full roster draw.
@@ -1448,8 +1451,10 @@ begin
             node_rect := cur_node.DisplayRect(false);
 
             // invalidate just the rect which contains our node
-            if (cur_node.IsVisible) then
+            if (cur_node.IsVisible) then begin
                 InvalidateRect(treeRoster.Handle, @node_rect, false);
+                treeRoster.Repaint();
+            end;
 
             // if we showing grp counts, then invalidate the grp rect as well.
             if ((_group_counts) and (grp_node.isVisible)) then
@@ -2433,8 +2438,11 @@ begin
                 c1 := _cur_ritem.jid.Full;
 
             if (_cur_ritem.IsContact) then begin
-                if (_cur_ritem.ask = 'subscribe') then
+                if (_cur_ritem.ask = 'subscribe') then begin
                     c1 := c1 + _(sRosterPending);
+                    //_cur_ritem.ImageIndex := _cur_ritem.getPresenceImage('pending')
+                    _cur_ritem.setPresenceImage('dnd');
+                end;
 
                 p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
                 if ((p <> nil) and (_show_status)) then begin

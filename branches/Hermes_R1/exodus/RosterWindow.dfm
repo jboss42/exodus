@@ -149,7 +149,6 @@ object frmRosterWindow: TfrmRosterWindow
     OnMouseMove = treeRosterMouseMove
     OnMouseUp = treeRosterMouseUp
     OnStartDrag = treeRosterStartDrag
-    ExplicitTop = 322
   end
   object StatBar: TStatusBar
     Left = 0
