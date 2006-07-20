@@ -604,14 +604,19 @@ end;
 
 {---------------------------------------}
 function TExodusChat.GetControl(const Name: WideString): IExodusControl;
+var
+    c : TComponent;
 begin
     try
         if (_chat <> nil) then
-            Result := getCOMControl(FindComponentNested(TComponent(_chat.window), Name))
+            c := TComponent(_chat.Window)
         else if (_room <> nil) then
-            Result := getCOMControl(FindComponentNested(_room, Name))
+            c := _room;
+        //see if the control we want is actually the form
+        if SameText(c.Name, Name) then
+            Result := getCOMControl(c)
         else
-            Result := nil;            
+            result := getCOMControl(FindComponentNested(c, Name))
     except
         on EComponentError do
             Result := nil;
