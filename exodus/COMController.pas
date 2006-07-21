@@ -76,8 +76,8 @@ type
     procedure SetPrefAsString(const Key, Value: WideString); safecall;
     function FindChat(const JabberID, resource: WideString): Integer; safecall;
     procedure StartInstantMsg(const JabberID: WideString); safecall;
-    procedure StartRoom(const RoomJID, nickname, Password: WideString;
-      SendPresence: WordBool); safecall;
+    procedure StartRoom(const roomJID, Nickname, password: WideString; sendPresence,
+      defaultConfig: WordBool); safecall;
     procedure StartSearch(const SearchJID: WideString); safecall;
     procedure ShowJoinRoom(const RoomJID, nickname, Password: WideString); safecall;
     procedure StartBrowser(const BrowseJID: WideString); safecall;
@@ -1144,10 +1144,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.StartRoom(const RoomJID, nickname,
-  Password: WideString; SendPresence: WordBool);
+procedure TExodusController.StartRoom(const roomJID, Nickname,
+  password: WideString; sendPresence, defaultConfig: WordBool);
 begin
-    Room.startRoom(RoomJID, Nickname, Password, SendPresence);
+    Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig);
 end;
 
 {---------------------------------------}
