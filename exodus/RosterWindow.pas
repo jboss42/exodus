@@ -3009,6 +3009,10 @@ procedure TfrmRosterWindow.popRenameClick(Sender: TObject);
 var
     ri: TJabberRosterItem;
     nick: Widestring;
+    chatwin: TfrmChat;
+    chatcontrol: TChatController;
+    i: integer;
+    p: TJabberPres;
 begin
     // Do this since the treeview doesn't use WideStrings for
     // processing of Editing events
@@ -3022,6 +3026,19 @@ begin
 
     nick := ri.Text;
     if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
+        p := MainSession.ppdb.FindPres(ri.jid.getDisplayJID(), '');
+        while (p <> nil) do begin
+            chatcontrol := MainSession.ChatList.FindChat(ri.Jid.getDisplayJID(),
+                                                         p.fromJID.resource, '');
+            if (chatcontrol <> nil) then begin
+                chatwin := TfrmChat(chatcontrol.Window);
+                if (chatwin <> nil) then begin
+                    chatwin.lblNick.Caption := nick;
+                    chatwin.Caption := nick;
+                end;
+            end;
+            p := MainSession.ppdb.NextPres(p);
+        end;
         ri.Text := nick;
         ri.update();
     end;
