@@ -25,7 +25,8 @@ uses
     Unicode, Dockable, ExEvents, MsgController, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity;
+    Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity,
+    TntSysUtils;
 
 type
 
@@ -393,7 +394,7 @@ begin
     setFrom(e.from);
     frameButtons1.btnOK.Enabled := true;
     frameButtons1.btnCancel.Enabled := true;
-    txtSubject.Caption := AnsiReplaceStr (e.str_content, '&', '&&');
+    txtSubject.Caption := Tnt_WideStringReplace(e.str_content, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
     _base_JID := e.str_content;
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
@@ -794,7 +795,7 @@ begin
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem <> nil) then begin
         txtFrom.Caption := ritem.Text + ' <' + tmp_jid.getDisplayFull() + '>';
-        txtFrom.Caption := AnsiReplaceText(txtFrom.Caption, '&', '&&');
+        txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
         if (pnlSendSubject.Visible) then
             Self.Caption := _(sMessageTo) + ritem.Text
         else
@@ -803,7 +804,7 @@ begin
     else begin
         // not someone in our roster - still could be escaped jid
         txtFrom.Caption := tmp_jid.getDisplayFull();
-        txtFrom.Caption := AnsiReplaceText(txtFrom.Caption, '&', '&&');
+        txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
         if (pnlSendSubject.Visible) then
             Self.Caption := _(sMessageTo) + tmp_jid.getDisplayFull()
         else

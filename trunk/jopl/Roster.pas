@@ -38,7 +38,7 @@ type
     TRosterSignal = class(TPacketSignal)
     public
         procedure Invoke(event: string; tag: TXMLTag; ritem: TJabberRosterItem = nil); overload;
-        function addListener(callback: TRosterEvent; xplite: string): TRosterListener; overload;
+        function addListener(callback: TRosterEvent; xplite: Widestring): TRosterListener; overload;
     end;
 
     TJabberRoster = class(TWideStringList)
@@ -51,12 +51,12 @@ type
         _ico_blocked: integer;
         _ico_unknown: integer;
 
-        procedure ParseFullRoster(event: string; tag: TXMLTag);
-        procedure Callback(event: string; tag: TXMLTag);
-        procedure UpdateCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
-        procedure RemoveCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
-        procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
-        procedure PrefsCallback(event: string; tag: TXMLTag);
+        procedure ParseFullRoster(event: String; tag: TXMLTag);
+        procedure Callback(event: String; tag: TXMLTag);
+        procedure UpdateCallback(event: String; tag: TXMLTag; ritem: TJabberRosterItem);
+        procedure RemoveCallback(event: String; tag: TXMLTag; ritem: TJabberRosterItem);
+        procedure presCallback(event: String; tag: TXMLTag; pres: TJabberPres);
+        procedure PrefsCallback(event: String; tag: TXMLTag);
 
         procedure checkGroups(ri: TJabberRosterItem);
 
@@ -109,14 +109,14 @@ type
 
     TRosterAddItem = class
     private
-        jid: string;
-        grp: string;
-        nick: string;
+        jid: Widestring;
+        grp: Widestring;
+        nick: Widestring;
         do_subscribe: boolean;
 
-        procedure AddCallback(event: string; tag: TXMLTag);
+        procedure AddCallback(event: String; tag: TXMLTag);
     public
-        constructor Create(sjid, nickname, group: string; subscribe: boolean);
+        constructor Create(sjid, nickname, group: Widestring; subscribe: boolean);
     end;
 
 {---------------------------------------}
@@ -244,7 +244,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.PrefsCallback(event: string; tag: TXMLTag);
+procedure TJabberRoster.PrefsCallback(event: String; tag: TXMLTag);
 var
     offline_grp: boolean;
     go: TJabberGroup;
@@ -315,7 +315,7 @@ end;
 
 
 {---------------------------------------}
-procedure TJabberRoster.Callback(event: string; tag: TXMLTag);
+procedure TJabberRoster.Callback(event: String; tag: TXMLTag);
 var
     q: TXMLTag;
     ritems: TXMLTagList;
@@ -361,7 +361,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.UpdateCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+procedure TJabberRoster.UpdateCallback(event: String; tag: TXMLTag; ritem: TJabberRosterItem);
 var
     ri: TJabberRosterItem;
     tagitem, item, iq: TXMLTag;
@@ -398,7 +398,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.RemoveCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+procedure TJabberRoster.RemoveCallback(event: String; tag: TXMLTag; ritem: TJabberRosterItem);
 var
     ri: TJabberRosterItem;
     tagitem, item, iq: TXMLTag;
@@ -423,7 +423,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+procedure TJabberRoster.presCallback(event: String; tag: TXMLTag; pres: TJabberPres);
 var
     is_me: boolean;
     ri: TJabberRosterItem;
@@ -892,7 +892,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TRosterAddItem.Create(sjid, nickname, group: string; subscribe: boolean);
+constructor TRosterAddItem.Create(sjid, nickname, group: Widestring; subscribe: boolean);
 var
     iq: TJabberIQ;
 begin
@@ -918,9 +918,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TRosterAddItem.AddCallback(event: string; tag: TXMLTag);
+procedure TRosterAddItem.AddCallback(event: String; tag: TXMLTag);
 var
-    iq_type: string;
+    iq_type: Widestring;
 begin
     // callback for the roster add.
     if (tag <> nil) then begin
@@ -935,10 +935,10 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function TRosterSignal.addListener(callback: TRosterEvent; xplite: string): TRosterListener;
+function TRosterSignal.addListener(callback: TRosterEvent; xplite: Widestring): TRosterListener;
 var
     l: TRosterListener;
-    xps: string;
+    xps: Widestring;
 begin
     l := TRosterListener.Create();
     l.callback := TMethod(callback);

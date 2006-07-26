@@ -25,10 +25,10 @@ uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, TntExtCtrls;
+    TntComCtrls, TntExtCtrls, TntForms;
 
 type
-  TfrmConnDetails = class(TForm)
+  TfrmConnDetails = class(TTntForm)
     PageControl1: TTntPageControl;
     tbsSocket: TTntTabSheet;
     tbsHttp: TTntTabSheet;

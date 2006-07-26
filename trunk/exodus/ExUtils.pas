@@ -23,7 +23,8 @@ interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
     TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, NodeItem,  
-    JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
+    JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows,
+    TntSysUtils;
 
 const
     cWIN_95 = 1;             { Windows version constants}
@@ -64,7 +65,7 @@ procedure URLLabel(lbl: TTntLabel); overload;
 
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 
-function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil): TJabberIQ;
+function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent = nil): TJabberIQ;
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): Widestring;
 function GetPresenceAtom(status: string): ATOM;
@@ -552,7 +553,7 @@ begin
 end;
 
 {---------------------------------------}
-function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent): TJabberIQ;
+function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent): TJabberIQ;
 var
     iq: TJabberIQ;
 begin
@@ -592,7 +593,7 @@ begin
     if (value = '') then
         Result := ''
     else begin
-        tmps := AnsiReplaceText(value, ''#13, '');
+        tmps := Tnt_WideStringReplace(value, ''#13, '',[rfReplaceAll, rfIgnoreCase]);
         ins_list := TWideStringList.Create();
         split(tmps, ins_list, #10);
         tmps := '';
