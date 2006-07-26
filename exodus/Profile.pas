@@ -140,7 +140,7 @@ type
 var
   frmProfile: TfrmProfile;
 
-function ShowProfile(jid: string): TfrmProfile;
+function ShowProfile(jid: Widestring): TfrmProfile;
 
 implementation
 
@@ -152,7 +152,7 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function ShowProfile(jid: string): TfrmProfile;
+function ShowProfile(jid: Widestring): TfrmProfile;
 var
     tmp_jid: TJabberID;
     ritem: TJabberRosterItem;

@@ -149,7 +149,7 @@ begin
         // check to see if we have an "@" sign
         tmp_jid := TJabberID.Create(sjid, false);
         sjid := tmp_jid.jid;
-        if (Lowercase(sjid) = Lowercase(MainSession.Profile.getJabberID().jid())) then begin
+        if (WideLowercase(sjid) = WideLowercase(MainSession.Profile.getJabberID().jid())) then begin
             MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);
             exit;
         end;
@@ -265,7 +265,7 @@ begin
         Self.Close;
     end
     else begin
-        a := gw_ent.getItemByFeature(Lowercase(svc));
+        a := gw_ent.getItemByFeature(WideLowercase(svc));
         if (a <> nil) then begin
             // we have this type of svc..
             j := '';

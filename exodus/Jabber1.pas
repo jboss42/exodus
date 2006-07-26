@@ -31,7 +31,8 @@ uses
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
-    IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze;
+    IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
+    TntForms;
 
 const
     RECONNECT_RETRIES = 3;
@@ -74,7 +75,7 @@ type
     TStopHooks = procedure; stdcall;
 
 type
-  TfrmExodus = class(TForm)
+  TfrmExodus = class(TTntForm)
     Tabs: TTntPageControl;
     tbsRoster: TTntTabSheet;
     pnlRoster: TPanel;

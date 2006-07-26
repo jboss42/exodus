@@ -28,7 +28,7 @@ uses
     S10n,
 
     // Delphi stuff
-    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows;
+    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils;
 
 type
     TExStartParams = class
@@ -781,7 +781,7 @@ begin
             if node.GetBasicText('type') = 'normal' then begin
                 msgRcv := StartMsg(jid.full);
                 tmp := node.GetBasicText('subject');
-                msgRcv.txtSendSubject.Text := AnsiReplaceStr (tmp, '&', '&&');
+                msgRcv.txtSendSubject.Text := Tnt_WideStringReplace(tmp, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
                 msgRcv.txtMsg.Text := node.GetBasicText('body');
             end
             else begin

@@ -23,11 +23,11 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs, ExtCtrls, TntComCtrls;
+    ComCtrls, Dialogs, ExtCtrls, TntComCtrls, TntForms;
 
 type
   TDockNotify = procedure of object;
-  TfrmDockable = class(TForm)
+  TfrmDockable = class(TTntForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
@@ -266,7 +266,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 var
-    m: String;
+    m: Widestring;
 begin
     if ((not _top) and
         ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin

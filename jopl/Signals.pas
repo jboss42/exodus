@@ -170,7 +170,7 @@ type
         _len_event: integer;
     public
         constructor Create(my_event: string; next_sig: string = '');
-        function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
+        function addListener(xplite: Widestring; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
 
@@ -538,10 +538,10 @@ begin
 end;
 
 {---------------------------------------}
-function TPacketSignal.addListener(xplite: string; callback: TPacketEvent): TPacketListener;
+function TPacketSignal.addListener(xplite: Widestring; callback: TPacketEvent): TPacketListener;
 var
     l: TPacketListener;
-    xps: string;
+    xps: Widestring;
 begin
     // create a new PacketListener for this signal
     l := TPacketListener.Create;

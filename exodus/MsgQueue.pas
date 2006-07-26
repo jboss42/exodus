@@ -53,8 +53,8 @@ type
     _connectedCB    : Integer; //session connected callback ID
     _disconnectedCB : Integer; //session disconnected callback ID
 
-    _currSpoolFile  : string; //current spool file we are reading/writing
-    _documentDir    : string; //path to My Documents/Exodus-Logs
+    _currSpoolFile  : Widestring; //current spool file we are reading/writing
+    _documentDir    : Widestring; //path to My Documents/Exodus-Logs
 
     _loading: boolean;
     _sel: integer;
@@ -212,7 +212,7 @@ begin
         ss.Add(UTF8Encode(s.xml));
         ss.SaveToFile(_currSpoolFile);
     except
-        MessageDlgW(Format(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
+        MessageDlgW(WideFormat(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
             mtError, [mbOK], 0);
     end;
 
@@ -592,7 +592,7 @@ begin
 
     e := TJabberEvent(_queue[item.Index]);
 
-    item.Caption := e.caption;
+    TTntListItem(item).Caption := e.caption;
     item.ImageIndex := e.img_idx;
     item.SubItems.Add(DateTimeToStr(e.edate));
     item.SubItems.Add(e.msg);         // Subject

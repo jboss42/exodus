@@ -6,7 +6,6 @@ unit Room;
 
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
     Exodus is distributed in the hope that it will be useful,
@@ -25,7 +24,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID;
+    JabberID, TntSysUtils, TntWideStrUtils;
 
 type
   TMemberNode = TTntListItem;
@@ -125,8 +124,7 @@ type
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure lstRosterDblClick(Sender: TObject);
-    procedure lstRosterInfoTip(Sender: TObject; Item: TListItem;
-      var InfoTip: String);
+    procedure lstRosterInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
     procedure popConfigureClick(Sender: TObject);
     procedure popKickClick(Sender: TObject);
     procedure popVoiceClick(Sender: TObject);
@@ -579,8 +577,8 @@ begin
             lblSubject.Caption := _(sNoSubject);
         end
         else begin
-            lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
-            lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
+            lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
+            lblSubject.Caption := Tnt_WideStringReplace(_subject, '&', '&&',[rfReplaceAll, rfIgnoreCase]);
             Msg.Body := _(sRoomSubjChange) + Msg.Subject;
             DisplayMsg(Msg, MsgList);
         end;
@@ -1621,7 +1619,7 @@ begin
                 MsgOut.SelLength := Length(prefix);
             end;
 
-            prefix := Trim(lowercase(prefix));
+            prefix := Trim(WideLowerCase(prefix));
             _nick_prefix := prefix;
             _nick_idx := 0;
         end
@@ -1642,7 +1640,7 @@ begin
                 if nick[1] = '@' then nick := Copy(nick, 2, length(nick) - 1);
                 if nick[1] = '+' then nick := Copy(nick, 2, length(nick) - 1);
 
-                if Pos(_nick_prefix, Lowercase(nick)) = 1 then with MsgOut do begin
+                if WideTextPos(_nick_prefix, WideLowercase(nick)) = 1 then with MsgOut do begin
                     _nick_idx := i + 1;
                     if _nick_start <= 0 then
                         WideSelText := nick + ': '
@@ -1730,7 +1728,7 @@ begin
     // check room roster for this nick already
     for i := 0 to _roster.Count - 1 do begin
         rm := TRoomMember(_roster.Objects[i]);
-        if (AnsiCompareText(rm.Nick, new_nick) = 0) then begin
+        if (WideLowerCase(rm.Nick) = WideLowerCase(new_nick)) then begin
             // they match
             MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
             exit;
@@ -2025,7 +2023,8 @@ begin
     if (lstRoster.Selected = nil) then exit;
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
-    if (rm = nil) or (AnsiSameText(rm.Nick,mynick)) then exit;
+    if (rm = nil) or (WideLowerCase(rm.Nick) = WideLowerCase(mynick)) then exit;
+
 
 
     tmp_jid := TJabberID.Create(rm.jid);
@@ -2044,10 +2043,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem;
-  var InfoTip: String);
+procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
 var
-    tmps: string;
+    tmps: Widestring;
     m: TRoomMember;
 begin
   inherited;
@@ -2403,7 +2401,7 @@ begin
     s1 := m1.Nick;
     s2 := m2.Nick;
 
-    Result := AnsiCompareText(s1, s2);
+    Result := AnsiCompareText(s1,s2);
 end;
 
 {---------------------------------------}

@@ -550,14 +550,14 @@ begin
     // setup the callbacks if we don't have them already
     if (_pcallback = -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
-            '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
+            '/packet/presence[@from="' + WideLowerCase(cjid) + '*"]');
 
     // if this chat is via a room - watch for my exit/entry msgs
     // to avoid causing messages of type error to be returned
     if (_isRoom and (_spcallback = -1)) then begin
         rm := FindRoom(_jid.jid);
         if (rm <> nil) then begin
-            nickjid := Lowercase(rm.getJid + '/' + rm.mynick);
+            nickjid := WideLowerCase(rm.getJid + '/' + rm.mynick);
             _mynick := rm.mynick;
             _spcallback := MainSession.RegisterCallback(PresCallback,
                 '/packet/presence[@from="' + nickjid + '*"]');

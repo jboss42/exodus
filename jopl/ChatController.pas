@@ -199,9 +199,8 @@ begin
     // Then re-register for messages for the new jid
     if (_cb >= 0) then
         MainSession.UnRegisterCallback(_cb);
-
     _cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
+            '/packet/message[@type="chat"][@from="' + XPLiteEscape(WideLowerCase(sjid)) + '*"]');
 end;
 
 procedure TChatController.DisableChat();

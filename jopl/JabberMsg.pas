@@ -127,7 +127,7 @@ begin
         if t <> nil then begin
             _body := t.Data;
             // check for actions
-            if (Lowercase(Copy(_body, 1, 4)) = '/me ') then begin
+            if (WideLowerCase(Copy(_body, 1, 4)) = '/me ') then begin
                 _action := true;
                 Delete(_body, 1, 4);
             end;

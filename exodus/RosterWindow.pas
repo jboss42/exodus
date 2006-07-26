@@ -39,7 +39,6 @@ const
 type
 
   TfrmRosterWindow = class(TForm)
-    treeRoster: TTreeView;
     popRoster: TTntPopupMenu;
     StatBar: TStatusBar;
     popStatus: TTntPopupMenu;
@@ -126,6 +125,7 @@ type
     RenameProfile1: TTntMenuItem;
     DeleteProfile1: TTntMenuItem;
     lstProfiles: TTntListView;
+    treeRoster: TTntTreeView;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -216,13 +216,13 @@ type
     _task_collapsed: boolean;
     _show_status: boolean;          // show inline status foo (bar) ?
     _status_color: TColor;          // inline status font color
-    _change_node: TTreeNode;        // the current node being changed
+    _change_node: TTntTreeNode;        // the current node being changed
 
-    _online: TTreeNode;             // Special group nodes
-    _chat: TTreeNode;
-    _away: TTreeNode;
-    _xa: TTreeNode;
-    _dnd: TTreeNode;
+    _online: TTntTreeNode;             // Special group nodes
+    _chat: TTntTreeNode;
+    _away: TTntTreeNode;
+    _xa: TTntTreeNode;
+    _dnd: TTntTreeNode;
 
     _online_go: TJabberGroup;
     _chat_go: TJabberGroup;
@@ -283,13 +283,13 @@ type
     procedure ResetPanels;
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
-    procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);
-    procedure InvalidateGrps(node: TTreeNode);
-    procedure ExpandGrpNode(n: TTreeNode);
-    procedure DrawAvatar(Node: TTreeNode; a: TAvatar);
+    procedure DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState; c1, c2: Widestring);
+    procedure InvalidateGrps(node: TTntTreeNode);
+    procedure ExpandGrpNode(n: TTntTreeNode);
+    procedure DrawAvatar(Node: TTntTreeNode; a: TAvatar);
     procedure DoLogin(idx: integer);
     
-    function GetSpecialGroup(var node: TTreeNode; var grp: TJabberGroup; caption: Widestring): TTreeNode;
+    function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -306,7 +306,7 @@ type
     Docked: boolean;
 //    inMessenger: boolean;
 
-    function getNodeType(node: TTreeNode = nil): integer;
+    function getNodeType(node: TTntTreeNode = nil): integer;
 
     procedure StartFind;
     procedure FindAgain;
@@ -321,7 +321,7 @@ type
     procedure ShowProfiles();
     procedure ToggleGUI(state: integer);
 
-    function RenderGroup(grp: TJabberGroup): TTreeNode;
+    function RenderGroup(grp: TJabberGroup): TTntTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
 
     property CurRosterItem: TJabberRosterItem read _cur_ritem;
@@ -840,7 +840,7 @@ end;
 procedure TfrmRosterWindow.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
 var
     go: TJabberGroup;
-    grp_node: TTreeNode;
+    grp_node: TTntTreeNode;
     grp_rect: TRect;
     p: TJabberPres;
 begin
@@ -878,7 +878,7 @@ begin
         if (tag.Name = 'group') then begin
             go := MainSession.roster.getGroup(tag.GetAttribute('name'));
             if (go <> nil) then begin
-                grp_node := TTreeNode(go.Data);
+                grp_node := TTntTreeNode(go.Data);
                 if (grp_node = nil) then begin
                     grp_node := RenderGroup(go);
                     go.Data := grp_node;
@@ -900,9 +900,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.ExpandGrpNode(n: TTreeNode);
+procedure TfrmRosterWindow.ExpandGrpNode(n: TTntTreeNode);
 var
-    p: TTreeNode;
+    p: TTntTreeNode;
     pi: TJabberNodeItem;
     p_grp: Widestring;
 begin
@@ -928,7 +928,7 @@ end;
 procedure TfrmRosterWindow.ExpandNodes;
 var
     i: integer;
-    n: TTreeNode;
+    n: TTntTreeNode;
     ni: TJabberNodeItem;
     cur_grp: Widestring;
 begin
@@ -996,10 +996,10 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.getNodeType(Node: TTreeNode): integer;
+function TfrmRosterWindow.getNodeType(Node: TTntTreeNode): integer;
 var
     o: TObject;
-    n: TTreeNode;
+    n: TTntTreeNode;
     go: TJabberGroup;
 begin
     // return the type of node this is..
@@ -1046,7 +1046,7 @@ function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
 var
     c, i: integer;
     ri: TJabberRosterItem;
-    node: TTreeNode;
+    node: TTntTreeNode;
     ntype: integer;
 begin
     // return a list of the selected roster items
@@ -1203,7 +1203,7 @@ procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
 var
     i, g: integer;
     cur_grp, tmps: Widestring;
-    top_item, cur_node, grp_node, n: TTreeNode;
+    top_item, cur_node, grp_node, n: TTntTreeNode;
     node_list, tmp_grps: TWideStringlist;
     is_blocked: boolean;
     is_transport: boolean;
@@ -1346,7 +1346,7 @@ begin
     // This takes care of changing grps, or going to the offline grp
     for i := node_list.Count - 1 downto 0 do begin
         cur_grp  := node_list[i];
-        cur_node := TTreeNode(node_list.Objects[i]);
+        cur_node := TTntTreeNode(node_list.Objects[i]);
         if (tmp_grps.IndexOf(cur_grp) < 0) then begin
             grp_node := cur_node.Parent;
             node_list.Delete(i);
@@ -1403,7 +1403,7 @@ begin
 
             // Make sure we have a node for this grp and keep
             // a pointer to the node in the Roster's grp list
-            grp_node := TTreeNode(go.Data);
+            grp_node := TTntTreeNode(go.Data);
             if (grp_node = nil) then begin
                 grp_node := RenderGroup(go);
             end;
@@ -1424,7 +1424,7 @@ begin
         // find the node for this grp
         i := node_list.indexOf(cur_grp);
         if (i >= 0) then begin
-            n := TTreeNode(node_list.Objects[i]);
+            n := TTntTreeNode(node_list.Objects[i]);
             cur_node := n;
         end;
 
@@ -1470,7 +1470,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.GetSpecialGroup(var node: TTreeNode; var grp: TJabberGroup; caption: Widestring): TTreeNode;
+function TfrmRosterWindow.GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
 begin
     if (node = nil) then begin
         node := treeRoster.Items.AddChild(nil, caption);
@@ -1484,9 +1484,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.InvalidateGrps(node: TTreeNode);
+procedure TfrmRosterWindow.InvalidateGrps(node: TTntTreeNode);
 var
-    n: TTreeNode;
+    n: TTntTreeNode;
     grp_rect: TRect;
 begin
     // invalidate all grp nodes above this roster item
@@ -1499,10 +1499,10 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTreeNode;
+function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTntTreeNode;
 var
     n: integer;
-    p, grp_node: TTreeNode;
+    p, grp_node: TTntTreeNode;
     sep, path, part, cur_grp: Widestring;
     sub: TJabberGroup;
 begin
@@ -1526,7 +1526,7 @@ begin
         end
         else begin
             sub := MainSession.Roster.addGroup(path);
-            grp_node := TTreeNode(sub.Data);
+            grp_node := TTntTreeNode(sub.Data);
             if (grp_node = nil) then begin
                 grp_node := treeRoster.Items.AddChild(p, part);
                 grp_node.Data := sub;
@@ -1561,7 +1561,7 @@ end;
 procedure TfrmRosterWindow.treeRosterMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 var
-    Node : TTreeNode;
+    Node : TTntTreeNode;
     ri  : TJabberRosterItem;
 begin
     // Handle the changing of the treeview Hints
@@ -1666,7 +1666,7 @@ begin
         ChangeStatusImage(RosterTreeImages.Find('available'));
     end;
 
-    s := Lowercase(MainSession.Status);
+    s := WideLowercase(MainSession.Status);
     {SLK:  MainSession presence is not updated on disconnect,
            so MainSession.Status will have last status value and
            we don't want to display it for Offline show }
@@ -1776,7 +1776,7 @@ procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
 var
     msg: string;
     al, ar: integer;
-    n: TTreeNode;
+    n: TTntTreeNode;
 begin
     // check to see if we're hitting a button
     n := treeRoster.GetNodeAt(X, Y);
@@ -1895,7 +1895,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popRemoveClick(Sender: TObject);
 var
-    n: TTreeNode;
+    n: TTntTreeNode;
     g: Widestring;
     go: TJabberGroup;
 begin
@@ -1920,7 +1920,7 @@ var
     i,j: integer;
     ritem: TJabberRosterItem;
     sep, d_grp: Widestring;
-    s_node, d_node: TTreeNode;
+    s_node, d_node: TTntTreeNode;
     go, s_grp: TJabberGroup;
     items: TList;
 begin
@@ -2006,7 +2006,7 @@ end;
 procedure TfrmRosterWindow.treeRosterDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 var
-    s_node, d_node: TTreeNode;
+    s_node, d_node: TTntTreeNode;
     go: TJabberGroup;
     i: integer;
 begin
@@ -2078,7 +2078,7 @@ var
     offline, native, me, o, e: boolean;
     b, u: boolean;
     i, r: integer;
-    n: TTreeNode;
+    n: TTntTreeNode;
     ri: TJabberRosterItem;
     pri: TJabberPres;
     slist: TList;
@@ -2221,7 +2221,7 @@ end;
 procedure TfrmRosterWindow.popHistoryClick(Sender: TObject);
 var
     nt: integer;
-    n: TTreeNode;
+    n: TTntTreeNode;
     ritem: TJabberRosterItem;
 begin
     // Show history for this user
@@ -2269,7 +2269,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendFileClick(Sender: TObject);
 var
-    node: TTreeNode;
+    node: TTntTreeNode;
 begin
     node := treeRoster.Selected;
     if node = nil then exit;
@@ -2343,7 +2343,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendSubscribeClick(Sender: TObject);
 var
-    node: TTreeNode;
+    node: TTntTreeNode;
 begin
     // send subscribe to this person
     node := treeRoster.Selected;
@@ -2383,7 +2383,7 @@ begin
             // If we aren't showing pres, then just show the total
             c1 := go.getText();
             c2 := '(' + IntToStr(Node.Count) + ')';
-            DrawNodeText(Node, State, c1, c2);
+            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
         end
         else begin
             // Otherwise, show online/total for presence enabled grps
@@ -2392,7 +2392,7 @@ begin
                 c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')'
             else
                 c2 := '';
-            DrawNodeText(Node, State, c1, c2);
+            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
         end;
         DefaultDraw := false;
     end
@@ -2401,7 +2401,7 @@ begin
         treeRoster.Canvas.Font.Style := [];
         if (not Node.isVisible) then exit;
 
-        ntype := getNodeType(Node);
+        ntype := getNodeType(TTnTTreeNode(Node));
         if (_avatars) then
             DefaultDraw := false
         else if (ntype = node_transport) then begin
@@ -2421,7 +2421,7 @@ begin
 
         if (ntype = node_transport) then begin
             c1 := _cur_ritem.Text;
-            DrawNodeText(Node, State, c1, c2);
+            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
         end
         else if (_cur_ritem <> nil) then begin
             c1 := _cur_ritem.Text;
@@ -2443,19 +2443,19 @@ begin
                 end;
             end;
 
-            DrawNodeText(Node, State, c1, c2);
+            DrawNodeText(TTnTTreeNode(Node), State, c1, c2);
             if (_avatars) then begin
                 a := Avatars.Find(_cur_ritem.jid.jid);
                 if (a <> nil) then
                     // draw the avatar
-                    DrawAvatar(Node, a);
+                    DrawAvatar(TTnTTreeNode(Node), a);
             end;
         end;
     end;
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.DrawAvatar(Node: TTreeNode; a: TAvatar);
+procedure TfrmRosterWindow.DrawAvatar(Node: TTntTreeNode; a: TAvatar);
 var
     r: TRect;
 begin
@@ -2469,7 +2469,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; State: TCustomDrawState;
+procedure TfrmRosterWindow.DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState;
     c1, c2: Widestring);
 var
     top_margin, lines, rr, maxr, ico, tw, th: integer;
@@ -2640,7 +2640,7 @@ begin
         go := _cur_go;
         if (go.isEmpty()) then begin
             // just remove the node, and remove it from the roster
-            TTreeNode(go.Data).Free();
+            TTntTreeNode(go.Data).Free();
             MainSession.roster.removeGroup(go);
         end
         else
@@ -2913,7 +2913,7 @@ var
     ntype: integer;
 begin
     // user is trying to change a node caption
-    ntype := getNodeType(Node);
+    ntype := getNodeType(TTntTreeNode(Node));
     if (ntype = node_ritem) then
         AllowEdit := _cur_ritem.InlineEdit
     else
@@ -2927,7 +2927,7 @@ var
     update: TXMLTag;
 begin
     // user is done editing a node's text
-    assert(getNodeType(Node) = node_ritem);
+    assert(getNodeType(TTnTTreeNode(Node)) = node_ritem);
 
     _cur_ritem.Text := S;
     update := TXMLTag.Create('update');
@@ -2940,10 +2940,10 @@ end;
 procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
   Node: TTreeNode);
 begin
-    _change_node := Node;
+    _change_node := TTnTTreeNode(Node);
     if (Node <> nil) then begin
         _last_search := Node.AbsoluteIndex;
-        if (getNodeType(Node) = node_ritem) then begin
+        if (getNodeType(TTnTTreeNode(Node)) = node_ritem) then begin
             MainSession.Roster.ActiveItem := TJabberRosterItem(Node.Data);
             exit;
         end;
@@ -3011,7 +3011,6 @@ var
     nick: Widestring;
     chatwin: TfrmChat;
     chatcontrol: TChatController;
-    i: integer;
     p: TJabberPres;
 begin
     // Do this since the treeview doesn't use WideStrings for
@@ -3115,7 +3114,7 @@ end;
 procedure TfrmRosterWindow.onURLDrop(p: TPoint; url: Widestring);
 var
     tp: TPoint;
-    n: TTreeNode;
+    n: TTntTreeNode;
     i, nt: integer;
     r: TList;
     jl: TWidestringlist;
@@ -3213,11 +3212,11 @@ procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
 var
     i:         integer;
     ri:        TJabberRosterItem;
-    node:      TTreeNode;
+    node:      TTntTreeNode;
     comp:      WideString;
     search:    WideString;
 begin
-    search := Lowercase(txtFind.Text);
+    search := WideLowercase(txtFind.Text);
     if (search = '') then begin
         exit;
     end;
@@ -3227,9 +3226,9 @@ begin
         if (not (TObject(node.Data) is TJabberRosterItem)) then continue;
         ri := TJabberRosterItem(node.Data);
         if radNick.Checked then
-            comp := Lowercase(ri.Text)
+            comp := WideLowercase(ri.Text)
         else
-            comp := Lowercase(ri.jid.jid);
+            comp := WideLowercase(ri.jid.jid);
 
         if Pos(search, comp) > 0 then begin
             treeRoster.Select(node, []);
