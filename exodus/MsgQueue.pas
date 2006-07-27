@@ -53,8 +53,8 @@ type
     _connectedCB    : Integer; //session connected callback ID
     _disconnectedCB : Integer; //session disconnected callback ID
 
-    _currSpoolFile  : Widestring; //current spool file we are reading/writing
-    _documentDir    : Widestring; //path to My Documents/Exodus-Logs
+    _currSpoolFile  : string; //current spool file we are reading/writing
+    _documentDir    : string; //path to My Documents/Exodus-Logs
 
     _loading: boolean;
     _sel: integer;
@@ -131,13 +131,13 @@ begin
     ritem := MainSession.roster.Find(tmp_jid.jid);
     if (ritem = nil) then
         ritem := MainSession.roster.Find(tmp_jid.full);
+    tmp_jid.Free();
 
     if (ritem <> nil) then
         e.Caption := ritem.Text
     else
-        e.Caption := tmp_jid.getDisplayJID();
+        e.Caption := e.from;
 
-    tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
     _queue.Add(e);
     lstEvents.Items.Count := lstEvents.Items.Count + 1;
@@ -212,7 +212,7 @@ begin
         ss.Add(UTF8Encode(s.xml));
         ss.SaveToFile(_currSpoolFile);
     except
-        MessageDlgW(WideFormat(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
+        MessageDlgW(Format(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
             mtError, [mbOK], 0);
     end;
 
@@ -573,7 +573,7 @@ begin
     inherited;
     if (MainSession = nil) then
         lstEvents.Items.Clear
-    else if (Jabber1.GetDockState() <> dsForbidden) and (not Docked) then begin
+    else if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
         CanClose := false;
         exit;
     end
@@ -592,7 +592,7 @@ begin
 
     e := TJabberEvent(_queue[item.Index]);
 
-    TTntListItem(item).Caption := e.caption;
+    item.Caption := e.caption;
     item.ImageIndex := e.img_idx;
     item.SubItems.Add(DateTimeToStr(e.edate));
     item.SubItems.Add(e.msg);         // Subject

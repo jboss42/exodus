@@ -6,6 +6,7 @@ unit Room;
 
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
     Exodus is distributed in the hope that it will be useful,
@@ -24,7 +25,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils;
+    JabberID;
 
 type
   TMemberNode = TTntListItem;
@@ -124,7 +125,11 @@ type
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure lstRosterDblClick(Sender: TObject);
-    procedure lstRosterInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+    procedure lstRosterDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure lstRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure lstRosterInfoTip(Sender: TObject; Item: TListItem;
+      var InfoTip: String);
     procedure popConfigureClick(Sender: TObject);
     procedure popKickClick(Sender: TObject);
     procedure popVoiceClick(Sender: TObject);
@@ -203,7 +208,7 @@ type
     function newRoomMessage(body: Widestring): TXMLTag;
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
-    procedure _EnableSubjectButton();
+
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -234,10 +239,6 @@ type
 
     procedure DockForm; override;
     procedure FloatForm; override;
-
-    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);override;
-    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
   end;
 
 var
@@ -425,7 +426,7 @@ begin
             f.sendStartPresence();
 
         f.Caption := tmp_jid.userDisplay;
-        if (Jabber1.GetDockState() <> dsForbidden) then begin
+        if (MainSession.Prefs.getBool('expanded')) then begin
             f.DockForm;
         end;
 
@@ -454,7 +455,8 @@ begin
     f.Show;
     
     if (f.TabSheet <> nil) then begin
-        frmExodus.BringDockedToTop(f);
+        frmExodus.Tabs.ActivePage := f.TabSheet;
+        f.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
     end;
     
     Result := f;
@@ -488,7 +490,6 @@ var
     server: boolean;
     rm: TRoomMember;
     etag: TXMLTag;
-    e: TJabberEntity;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -516,10 +517,6 @@ begin
                 emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
                 if (emsg = '') then
                     emsg := etag.Data;
-                if (emsg = '') and
-                    (etag.GetAttribute('code') = '403') and
-                    (etag.GetAttribute('type') = 'auth') then
-                    emsg := _('Not authorized.');
                 if (emsg = '') then
                     emsg := _('Your message to the room bounced.');
                 Msg.Body := _('ERROR: ') + emsg;
@@ -529,21 +526,6 @@ begin
             DisplayMsg(Msg, MsgList);
             exit;
         end;
-        
-        // Room config update?
-        etag := tag.GetFirstTag('x');
-        if (etag <> nil) and
-           (etag.GetAttribute('xmlns') = 'http://jabber.org/protocol/muc#user') then begin
-            etag := etag.GetFirstTag('status');
-            if (etag <> nil) and
-               (etag.GetAttribute('code') = '104') then begin
-                // We did get a room update notification.
-                // Need to disco.
-                e := jEntityCache.getByJid(Self.jid, '');
-                e.refresh(MainSession);
-            end;
-        end;
-
     end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
@@ -577,8 +559,8 @@ begin
             lblSubject.Caption := _(sNoSubject);
         end
         else begin
-            lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
-            lblSubject.Caption := Tnt_WideStringReplace(_subject, '&', '&&',[rfReplaceAll, rfIgnoreCase]);
+            lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
+            lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
             Msg.Body := _(sRoomSubjChange) + Msg.Subject;
             DisplayMsg(Msg, MsgList);
         end;
@@ -800,7 +782,7 @@ begin
         chat_win := StartChat(self.jid, nick, true, nick);
         if (chat_win <> nil) then begin
             if (chat_win.TabSheet <> nil) then
-                frmExodus.BringDockedToTop(chat_win)
+                frmExodus.Tabs.ActivePage := chat_win.TabSheet
             else
                 chat_win.Show();
         end;
@@ -1274,9 +1256,7 @@ begin
             // Voice stuff
             MsgOut.ReadOnly := (member.role = MUC_VISITOR);
             if (MsgOut.Readonly) then MsgOut.Lines.Clear();
-            
-            // Who can change subject
-            _EnableSubjectButton();
+
         end;
         RenderMember(member, tag);
     end;
@@ -1473,7 +1453,7 @@ begin
     _custom_pres := false;
     _pending_start := false;
     _pending_destroy := false;
-    ImageIndex := RosterTreeImages.Find('conference');
+
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
@@ -1498,8 +1478,8 @@ begin
 
     // Setup MsgList;
     MsgList.setContextMenu(popRoom);
-    MsgList.setDragOver(OnDockedDragOver);
-    MsgList.setDragDrop(OnDockedDragDrop);
+    MsgList.setDragOver(lstRosterDragOver);
+    MsgList.setDragDrop(lstRosterDragDrop);
 end;
 
 {---------------------------------------}
@@ -1619,7 +1599,7 @@ begin
                 MsgOut.SelLength := Length(prefix);
             end;
 
-            prefix := Trim(WideLowerCase(prefix));
+            prefix := Trim(lowercase(prefix));
             _nick_prefix := prefix;
             _nick_idx := 0;
         end
@@ -1640,7 +1620,7 @@ begin
                 if nick[1] = '@' then nick := Copy(nick, 2, length(nick) - 1);
                 if nick[1] = '+' then nick := Copy(nick, 2, length(nick) - 1);
 
-                if WideTextPos(_nick_prefix, WideLowercase(nick)) = 1 then with MsgOut do begin
+                if Pos(_nick_prefix, Lowercase(nick)) = 1 then with MsgOut do begin
                     _nick_idx := i + 1;
                     if _nick_start <= 0 then
                         WideSelText := nick + ': '
@@ -1728,7 +1708,7 @@ begin
     // check room roster for this nick already
     for i := 0 to _roster.Count - 1 do begin
         rm := TRoomMember(_roster.Objects[i]);
-        if (WideLowerCase(rm.Nick) = WideLowerCase(new_nick)) then begin
+        if (AnsiCompareText(rm.Nick, new_nick) = 0) then begin
             // they match
             MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
             exit;
@@ -1973,7 +1953,7 @@ begin
 
     inherited;
     if (Docked and (Self.TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := ImageIndex;
+        Self.TabSheet.ImageIndex := RosterTreeImages.Find('conference');
 
     btnClose.Visible := Docked;
 
@@ -2023,8 +2003,7 @@ begin
     if (lstRoster.Selected = nil) then exit;
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
-    if (rm = nil) or (WideLowerCase(rm.Nick) = WideLowerCase(mynick)) then exit;
-
+    if (rm = nil) or (AnsiSameText(rm.Nick,mynick)) then exit;
 
 
     tmp_jid := TJabberID.Create(rm.jid);
@@ -2034,7 +2013,7 @@ begin
         chat_win := StartChat(rm._real_jid.jid(), rm._real_jid.resource, true);
     if (chat_win <> nil) then begin
         if (chat_win.TabSheet <> nil) then
-            frmExodus.BringDockedToTop(chat_win)
+            frmExodus.Tabs.ActivePage := chat_win.TabSheet
         else
             chat_win.Show();
     end;
@@ -2043,9 +2022,53 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+procedure TfrmRoom.lstRosterDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+    // drag over
+    Accept := (Source = frmRosterWindow.treeRoster);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
 var
-    tmps: Widestring;
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+    i: integer;
+    jids: TList;
+    o: TObject;
+begin
+  inherited;
+    // drag drop
+    if (Source = frmRosterWindow.treeRoster) then begin
+        // We want to invite someone into this TC room
+        jids := TList.Create();
+        with frmRosterWindow.treeRoster do begin
+            for i := 0 to SelectionCount - 1 do begin
+                n := Selections[i];
+                o := TObject(n.Data);
+                assert(o <> nil);
+
+                if (o is TJabberRosterItem) then begin
+                    ritem := TJabberRosterItem(n.Data);
+                    jids.Add(ritem);
+                end
+                else if (o is TJabberGroup) then begin
+                    TJabberGroup(o).getRosterItems(jids, true);
+                end;
+            end;
+        end;
+        ShowInvite(Self.jid, jids);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem;
+  var InfoTip: String);
+var
+    tmps: string;
     m: TRoomMember;
 begin
   inherited;
@@ -2401,7 +2424,7 @@ begin
     s1 := m1.Nick;
     s2 := m2.Nick;
 
-    Result := AnsiCompareText(s1,s2);
+    Result := AnsiCompareText(s1, s2);
 end;
 
 {---------------------------------------}
@@ -2414,16 +2437,8 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
-    if (_pending_start = false) then begin
-        // Not starting so we don't want to send start presence.
-        // We probably have new disco info (like change of room config).
-        // Process that info
-
-        // Who can change subject?
-        _EnableSubjectButton();
-        exit;
-    end;
-        
+    if (_pending_start = false) then exit;
+    
     if (tag = nil) then begin
         // just try anyways
         sendStartPresence();
@@ -2667,45 +2682,6 @@ begin
     end;
 end;
 
-procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);
-begin
-    inherited;
-    Accept := (Source = frmRosterWindow.treeRoster);
-end;
-
-procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
-    i: integer;
-    jids: TList;
-    o: TObject;
-begin
-  inherited;
-    // drag drop
-    if (Source = frmRosterWindow.treeRoster) then begin
-        // We want to invite someone into this TC room
-        jids := TList.Create();
-        with frmRosterWindow.treeRoster do begin
-            for i := 0 to SelectionCount - 1 do begin
-                n := Selections[i];
-                o := TObject(n.Data);
-                assert(o <> nil);
-
-                if (o is TJabberRosterItem) then begin
-                    ritem := TJabberRosterItem(n.Data);
-                    jids.Add(ritem);
-                end
-                else if (o is TJabberGroup) then begin
-                    TJabberGroup(o).getRosterItems(jids, true);
-                end;
-            end;
-        end;
-        ShowInvite(Self.jid, jids);
-    end;
-end;
-
 function TRoomMember.getRealJID(): WideString;
 begin
     Result := '';
@@ -2731,44 +2707,6 @@ begin
 
     _real_jid := TJabberID.Create(jid);
 end;
-
-{---------------------------------------}
-procedure TfrmRoom._EnableSubjectButton();
-var
-    e: TJabberEntity;
-    enable: boolean;
-begin
-    // This code enables or disables the change subject button
-    // based on what the disco info tells us about premissions
-    // to change subject.
-    // If no disco info is available, enable and let
-    // error codes take care of preventing changing of subject.
-    enable := true;
-    e := jEntityCache.getByJid(Self.jid, '');
-    if (e = nil) then exit;
-
-    if (_my_membership_role = MUC_OWNER) or
-       (_my_membership_role = MUC_ADMIN) then
-            enable := true //always
-    else if (e.hasFeature('muc-subj-moderator')) or
-            (e.hasFeature('muc-subj-participant')) then
-        begin
-            // we have a specification as to who can change
-            if (e.hasFeature('muc-subj-moderator')) and
-               (_my_membership_role = MUC_MOD) then
-                enable := true
-            else if (e.hasFeature('muc-subj-participant')) and
-                    ( (_my_membership_role = MUC_MOD) or
-                      (_my_membership_role = MUC_MEMBER) or
-                      (_my_membership_role = MUC_PART) ) then
-                enable := true
-            else
-                enable := false;
-        end;
-
-    SpeedButton1.Enabled := enable;
-end;
-
 
 destructor TRoomMember.Destroy();
 begin

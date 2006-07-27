@@ -46,12 +46,10 @@ type
         _refs: integer;
         _queued: boolean;
         _threadid: Widestring;
-        _scallback: integer;    // Session callback
 
         procedure SetWindow(new_window: TObject);
     protected
         procedure timMemoryTimer(Sender: TObject);
-        procedure SessionCallback(event: string; tag: TXMLTag);
     public
         msg_queue: TQueue;
 
@@ -76,7 +74,6 @@ type
         procedure Release();
         procedure TimedRelease();
         procedure DisableChat();
-        procedure UnregisterSessionCB();
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
@@ -152,7 +149,6 @@ begin
     inherited Create();
 
     _cb := -1;
-    _scallback := -1;
     _jid := sjid;
     _resource := sresource;
     msg_queue := TQueue.Create();
@@ -199,8 +195,9 @@ begin
     // Then re-register for messages for the new jid
     if (_cb >= 0) then
         MainSession.UnRegisterCallback(_cb);
+
     _cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@type="chat"][@from="' + XPLiteEscape(WideLowerCase(sjid)) + '*"]');
+            '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
 end;
 
 procedure TChatController.DisableChat();
@@ -240,8 +237,6 @@ begin
         idx := MainSession.ChatList.IndexOfObject(Self);
         if (idx >= 0) then
             MainSession.ChatList.Delete(idx);
-
-        Self.UnregisterSessionCB();
     end;
 
     // Free stuff
@@ -383,24 +378,16 @@ begin
 end;
 
 {---------------------------------------}
-//  This method should start a countdown to destroy the chat controller object.
-//  If there is no associated window, then it will register itself as a session
-//  listener and destroy itself when session disconnects.
 procedure TChatController.startTimer();
 begin
     _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
     _memory.Enabled := true;
-    if (_scallback = -1)  and (Self.Window = nil) then
-        _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 end;
 
 {---------------------------------------}
 procedure TChatController.stopTimer();
 begin
     _memory.Enabled := false;
-    // Only unregister session callback if control has been handed to a window
-    if (Self.Window <> nil) then
-        Self.UnregisterSessionCB();
 end;
 
 {---------------------------------------}
@@ -409,20 +396,5 @@ begin
     _event := nil;
 end;
 
-{---------------------------------------}
-procedure TChatController.SessionCallback(event: string; tag: TXMLTag);
-begin
-    // remove the ChatController if the user disconnects
-    if (event = '/session/disconnected') then
-        Self.Free();
-end;
-
-procedure TChatController.UnregisterSessionCB();
-begin
-    if (_scallback >= 0) then begin
-        MainSession.UnRegisterCallback(_scallback);
-        _scallback := -1;
-    end;
-end;
 
 end.

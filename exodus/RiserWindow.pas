@@ -300,7 +300,7 @@ begin
     // ok, try and raise the window
     if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
         if Docked then begin
-            frmExodus.BringDockedToTop(TfrmDockable(_clickForm));
+            frmExodus.Tabs.ActivePage := TabSheet;
             if (frmExodus.isMinimized()) then
                 frmExodus.trayShowClick(nil);
             frmExodus.Show();

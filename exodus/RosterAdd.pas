@@ -149,7 +149,7 @@ begin
         // check to see if we have an "@" sign
         tmp_jid := TJabberID.Create(sjid, false);
         sjid := tmp_jid.jid;
-        if (WideLowercase(sjid) = WideLowercase(MainSession.Profile.getJabberID().jid())) then begin
+        if (Lowercase(sjid) = Lowercase(MainSession.Profile.getJabberID().jid())) then begin
             MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);
             exit;
         end;
@@ -215,18 +215,18 @@ var
     tmp_id: TJabberID;
 begin
     if (txtJID.Text = '') then exit;
-    tmp_id := TJabberID.Create(txtJID.Text, false);
+    tmp_id := TJabberID.Create(txtJID.Text);
 
     if ((cboType.ItemIndex = 0) and (tmp_id.user = '')) then begin
         new := txtJid.Text + '@' + MainSession.Profile.Server;
         tmp_id.Free();
-        tmp_id := TJabberID.Create(new, false);
+        tmp_id := TJabberID.Create(new);
         txtJid.Text := new;
     end;
 
     // add the nickname if it's not there.
     if (txtNickname.Text = '') then
-        txtNickname.Text := tmp_id.userDisplay;
+        txtNickname.Text := tmp_id.user;
 
     tmp_id.Free();
 
@@ -265,7 +265,7 @@ begin
         Self.Close;
     end
     else begin
-        a := gw_ent.getItemByFeature(WideLowercase(svc));
+        a := gw_ent.getItemByFeature(Lowercase(svc));
         if (a <> nil) then begin
             // we have this type of svc..
             j := '';

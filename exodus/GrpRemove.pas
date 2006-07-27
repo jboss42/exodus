@@ -95,7 +95,7 @@ procedure TfrmGrpRemove.frameButtons1btnOKClick(Sender: TObject);
 var
     iq: TXMLTag;
     i, act: integer;
-    cur_jid: Widestring;
+    cur_jid: string;
     ri: TJabberRosterItem;
 begin
     if ((cur_grp <> '') and (ct_list.Count = 0)) then

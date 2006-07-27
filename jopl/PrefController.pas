@@ -185,7 +185,7 @@ type
         Poll: integer;
         NumPollKeys: integer;
 
-        constructor Create(prof_name: Widestring; prefs: TPrefController);
+        constructor Create(prof_name: string; prefs: TPrefController);
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -211,11 +211,11 @@ type
         _pref_file: TPrefFile;
         _server_file: TPrefFile;
 
-        _profiles: TWideStringList;
+        _profiles: TStringList;
         _updating: boolean;
 
         procedure Save;
-        procedure ServerPrefsCallback(event: String; tag: TXMLTag);
+        procedure ServerPrefsCallback(event: string; tag: TXMLTag);
 
         function getDynamicDefault(pkey: Widestring): Widestring;
 
@@ -298,7 +298,7 @@ type
 
 //        function getXMLTag(name: Widestring): TXMLTag;
 
-        property Profiles: TWideStringList read _profiles write _profiles;
+        property Profiles: TStringlist read _profiles write _profiles;
         property Filename: WideString read _pref_filename;
 end;
     {**
@@ -679,7 +679,7 @@ begin
         setupDefaultPresence();
 
     _server_file := nil;
-    _profiles := TWideStringList.Create;
+    _profiles := TStringList.Create;
     _updating := false;
 
     getDefaultPos();
@@ -1459,7 +1459,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.ServerPrefsCallback(event: String; tag: TXMLTag);
+procedure TPrefController.ServerPrefsCallback(event: string; tag: TXMLTag);
 var
     node : TXMLTag;
 begin
@@ -1624,7 +1624,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TJabberProfile.Create(prof_name : Widestring; prefs: TPrefController);
+constructor TJabberProfile.Create(prof_name : string; prefs: TPrefController);
 begin
     inherited Create;
 

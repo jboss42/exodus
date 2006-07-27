@@ -135,11 +135,11 @@ begin
                 if (not win.Docked) then
                     win.BringToFront();
 
-                if ((Jabber1.GetDockState() <> dsForbidden) and
+                if ((MainSession.Prefs.getBool('expanded')) and
                     (win.TabSheet <> nil) and
-                    (frmExodus.getTopDocked() <> win)) then begin
-                    frmExodus.BringDockedToTop(win);
-                end;
+                    (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
+                    frmExodus.Tabs.ActivePage := win.TabSheet;
+
                 // make sure to put the cursor in the outbound text entry box
                 win.MsgOut.SetFocus();
             end;

@@ -98,14 +98,6 @@ type
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
     procedure gotActivate; override;
     property MsgList: TfBaseMsgList read getMsgList;
-
-    {
-        Event fired when Form receives activation while in docked state.
-
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);override;
-
   end;
 
 var
@@ -436,18 +428,6 @@ end;
 function TfrmBaseChat.getMsgList(): TfBaseMsgList;
 begin
     Result := TfBaseMsgList(_msgframe);
-end;
-
-{
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmBaseChat.OnDockedActivate(Sender : TObject);
-begin
-    inherited;
-    if (MsgOut.Visible and MsgOut.Enabled) then
-        MsgOut.SetFocus();
 end;
 
 end.

@@ -28,7 +28,7 @@ uses
     S10n,
 
     // Delphi stuff
-    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils;
+    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows;
 
 type
     TExStartParams = class
@@ -102,7 +102,6 @@ uses
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
     sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
-    sCmdFileLog =   ' -l '#9#9' : log debug output to file'#13#10;
     sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
     sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
     sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
@@ -297,7 +296,6 @@ begin
         // show the help message
         help_msg := _(sCommandLine);
         help_msg := help_msg + _(sCmdDebug);
-        help_msg := help_msg + _(sCmdFileLog);
         help_msg := help_msg + _(sCmdMinimized);
         help_msg := help_msg + _(sCmdInvisible);
         help_msg := help_msg + _(sCmdHelp);
@@ -781,7 +779,7 @@ begin
             if node.GetBasicText('type') = 'normal' then begin
                 msgRcv := StartMsg(jid.full);
                 tmp := node.GetBasicText('subject');
-                msgRcv.txtSendSubject.Text := Tnt_WideStringReplace(tmp, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+                msgRcv.txtSendSubject.Text := AnsiReplaceStr (tmp, '&', '&&');
                 msgRcv.txtMsg.Text := node.GetBasicText('body');
             end
             else begin

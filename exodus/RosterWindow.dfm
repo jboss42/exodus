@@ -101,6 +101,55 @@ object frmRosterWindow: TfrmRosterWindow
       TabStop = True
     end
   end
+  object treeRoster: TTreeView
+    Left = 0
+    Top = 321
+    Width = 194
+    Height = 130
+    Cursor = crArrow
+    Hint = 'Roster Hint'
+    Align = alClient
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    ChangeDelay = 30
+    Ctl3D = True
+    DragMode = dmAutomatic
+    HideSelection = False
+    Images = frmExodus.ImageList2
+    Indent = 19
+    MultiSelect = True
+    MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
+    ParentCtl3D = False
+    ParentShowHint = False
+    PopupMenu = popRoster
+    ShowButtons = False
+    ShowHint = True
+    ShowLines = False
+    ShowRoot = False
+    SortType = stData
+    TabOrder = 0
+    ToolTips = False
+    Visible = False
+    OnChange = treeRosterChange
+    OnCollapsed = treeRosterCollapsed
+    OnCompare = treeRosterCompare
+    OnContextPopup = treeRosterContextPopup
+    OnCustomDrawItem = treeRosterCustomDrawItem
+    OnDblClick = treeRosterDblClick
+    OnDragDrop = treeRosterDragDrop
+    OnDragOver = treeRosterDragOver
+    OnEdited = treeRosterEdited
+    OnEditing = treeRosterEditing
+    OnEndDrag = treeRosterEndDrag
+    OnExit = treeRosterExit
+    OnExpanded = treeRosterExpanded
+    OnKeyDown = treeRosterKeyDown
+    OnKeyPress = treeRosterKeyPress
+    OnMouseDown = treeRosterMouseDown
+    OnMouseMove = treeRosterMouseMove
+    OnMouseUp = treeRosterMouseUp
+    OnStartDrag = treeRosterStartDrag
+  end
   object StatBar: TStatusBar
     Left = 0
     Top = 485
@@ -186,13 +235,14 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 13
+        Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
+        ExplicitHeight = 13
       end
     end
   end
@@ -307,54 +357,6 @@ object frmRosterWindow: TfrmRosterWindow
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
     end
-  end
-  object treeRoster: TTntTreeView
-    Left = 0
-    Top = 321
-    Width = 194
-    Height = 130
-    Cursor = crArrow
-    Hint = 'Roster Hint'
-    Align = alClient
-    BevelInner = bvNone
-    BevelOuter = bvNone
-    ChangeDelay = 30
-    Ctl3D = True
-    DragMode = dmAutomatic
-    HideSelection = False
-    Images = frmExodus.ImageList2
-    Indent = 19
-    MultiSelect = True
-    MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
-    ParentCtl3D = False
-    ParentShowHint = False
-    PopupMenu = popRoster
-    ShowButtons = False
-    ShowHint = True
-    ShowLines = False
-    ShowRoot = False
-    SortType = stData
-    TabOrder = 0
-    ToolTips = False
-    Visible = False
-    OnChange = treeRosterChange
-    OnCollapsed = treeRosterCollapsed
-    OnCompare = treeRosterCompare
-    OnContextPopup = treeRosterContextPopup
-    OnCustomDrawItem = treeRosterCustomDrawItem
-    OnDblClick = treeRosterDblClick
-    OnDragDrop = treeRosterDragDrop
-    OnDragOver = treeRosterDragOver
-    OnEditing = treeRosterEditing
-    OnEndDrag = treeRosterEndDrag
-    OnExit = treeRosterExit
-    OnExpanded = treeRosterExpanded
-    OnKeyDown = treeRosterKeyDown
-    OnKeyPress = treeRosterKeyPress
-    OnMouseDown = treeRosterMouseDown
-    OnMouseMove = treeRosterMouseMove
-    OnMouseUp = treeRosterMouseUp
-    OnStartDrag = treeRosterStartDrag
   end
   object popRoster: TTntPopupMenu
     AutoHotkeys = maManual

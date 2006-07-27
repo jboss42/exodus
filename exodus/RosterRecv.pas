@@ -105,7 +105,7 @@ procedure TfrmRosterRecv.frameButtons1btnOKClick(Sender: TObject);
 var
     i: integer;
     l: TListItem;
-    nick, jid: Widestring;
+    nick, jid: string;
     ri: TJabberRosterItem;
     jidObj: TJabberID;
 begin

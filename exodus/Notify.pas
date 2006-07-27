@@ -177,10 +177,10 @@ begin
     // Get the appropriate active form
     tw := nil;
     if (w = frmExodus) then
-        tw := frmExodus.getTopDocked()
+        tw := frmExodus.getTabForm(frmExodus.Tabs.ActivePage)
     else if (w is TfrmDockable) then begin
         if TfrmDockable(w).Docked then
-            tw := frmExodus.getTopDocked();
+            tw := frmExodus.getTabForm(frmExodus.Tabs.ActivePage);
     end;
     active_win := getActiveWindow();
     if (active_win = frmExodus.Handle) and (tw <> nil) then
@@ -212,7 +212,7 @@ begin
             // it's a dockable window
             d := TfrmDockable(w);
             if d.Docked then begin
-                if (frmExodus.getTopDocked() <> d) then begin
+                if frmExodus.Tabs.ActivePage <> d.TabSheet then begin
                     d.TabSheet.ImageIndex := tab_notify;
                     frmExodus.Tabs.Repaint();
                 end;
@@ -239,7 +239,7 @@ begin
             d := TfrmDockable(w);
             if (d.Docked) then begin
                 frmExodus.doRestore();
-                frmExodus.BringDockedToTop(d);
+                frmExodus.Tabs.ActivePage := d.TabSheet;
                 w := frmExodus;
             end;
         end

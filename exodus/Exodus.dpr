@@ -233,9 +233,7 @@ uses
   ExternalAuth in '..\jopl\ExternalAuth.pas',
   DebugLogger in '..\jopl\DebugLogger.pas',
   ExodusImageList in '..\jopl\ExodusImageList.pas',
-  PrefGraphics in '..\jopl\PrefGraphics.pas',
-  AddressList in '..\jopl\AddressList.pas';
-
+  PrefGraphics in '..\jopl\PrefGraphics.pas';
 {$R *.TLB}
 
 {$R *.RES}
@@ -270,6 +268,9 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
+
+  frmRosterWindow.DockRoster;
+  frmRosterWindow.Show;
 
   frmExodus.Startup();
   Application.Run;

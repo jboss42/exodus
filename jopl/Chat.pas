@@ -29,10 +29,10 @@ uses
     {$endif}
     ChatController, XMLTag,
     JabberID,
-    SysUtils, Classes, Unicode;
+    SysUtils, Classes;
 
 type
-    TJabberChatList = class(TWideStringList)
+    TJabberChatList = class(TStringList)
     private
         _s: TObject;
         _callback: integer;
@@ -42,8 +42,8 @@ type
 
         procedure SetSession(s: TObject);
 
-        function FindChat(sjid, sresource, sthread: Widestring): TChatController;
-        function AddChat(sjid, sresource: Widestring): TChatController; overload;
+        function FindChat(sjid, sresource, sthread: string): TChatController;
+        function AddChat(sjid, sresource: string): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
     end;
@@ -82,7 +82,7 @@ end;
 {---------------------------------------}
 procedure TJabberChatList.MsgCallback(event: string; tag: TXMLTag);
 var
-    fjid: Widestring;
+    fjid: string;
     tmp_jid: TJabberID;
     c: TChatController;
     idx1, idx2, mt: integer;
@@ -135,7 +135,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberChatList.FindChat(sjid, sresource, sthread: widestring): TChatController;
+function TJabberChatList.FindChat(sjid, sresource, sthread: string): TChatController;
 var
     full: string;
     i: integer;
@@ -185,7 +185,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberChatList.AddChat(sjid, sresource: Widestring): TChatController;
+function TJabberChatList.AddChat(sjid, sresource: string): TChatController;
 begin
     //
     Result := TChatController.Create(sjid, sresource);

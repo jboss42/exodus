@@ -154,8 +154,8 @@ type
         procedure AddExtension(ext: WideString; feature: WideString);
         procedure RemoveExtension(ext: WideString);
 
-        function RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer; overload;
-        function RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer; overload;
+        function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
+        function RegisterCallback(callback: TRosterEvent; xplite: string): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         function RegisterCallback(callback: TDataStringEvent): integer; overload;
         function RegisterCallback(callback: TChatEvent): integer; overload;
@@ -814,13 +814,13 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer;
+function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer;
 var
     p, i: integer;
     l: TSignalListener;
     pk: TPacketListener;
     sig: TBasicSignal;
-    tok1: Widestring;
+    tok1: string;
 begin
     // add this callback to the packet signal
     Result := -1;
@@ -856,7 +856,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer;
+function TJabberSession.RegisterCallback(callback: TRosterEvent; xplite: string): integer;
 var
     l: TRosterListener;
 begin

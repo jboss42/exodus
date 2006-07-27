@@ -171,21 +171,9 @@ type
 
     procedure pluginMenuClick(Sender: TObject); override;
 
-    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);override;
-    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
-
-    {
-        Event fired when Form receives activation while in docked state.
-
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);override;
-    
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
     property LastImage: integer read _old_img;
-
   end;
 
 var
@@ -254,7 +242,7 @@ begin
                 if (not win.Visible) then
                     win.ShowDefault()
                 else if (win.TabSheet <> nil) then
-                    frmExodus.BringDockedToTop(win);
+                    frmExodus.Tabs.ActivePage := win.TabSheet;
             end
             else
                 win.ShowDefault();
@@ -344,10 +332,10 @@ begin
             Position := poDefaultPosOnly;
 
         ShowDefault();
-        exp := (Jabber1.GetDockState() <> dsForbidden);
+        exp := MainSession.Prefs.getBool('expanded');
         if ((show_window) and (Application.Active)) then begin
             Show();
-            if (((exp) and (frmExodus.getTopDocked() = chat.window)) or
+            if (((exp) and (frmExodus.Tabs.ActivePage = TfrmChat(chat.window).TabSheet)) or
                 (exp = false)) then begin
                 if (TfrmChat(chat.window).Visible) then
                     TfrmChat(chat.window).SetFocus();
@@ -550,14 +538,14 @@ begin
     // setup the callbacks if we don't have them already
     if (_pcallback = -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
-            '/packet/presence[@from="' + WideLowerCase(cjid) + '*"]');
+            '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
 
     // if this chat is via a room - watch for my exit/entry msgs
     // to avoid causing messages of type error to be returned
     if (_isRoom and (_spcallback = -1)) then begin
         rm := FindRoom(_jid.jid);
         if (rm <> nil) then begin
-            nickjid := WideLowerCase(rm.getJid + '/' + rm.mynick);
+            nickjid := Lowercase(rm.getJid + '/' + rm.mynick);
             _mynick := rm.mynick;
             _spcallback := MainSession.RegisterCallback(PresCallback,
                 '/packet/presence[@from="' + nickjid + '*"]');
@@ -1044,7 +1032,7 @@ begin
     if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
         Self.TabSheet.ImageIndex := _pres_img;
     _old_img := _pres_img;
-    ImageIndex := _pres_img;
+
 end;
 
 {---------------------------------------}
@@ -1642,43 +1630,6 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
-    end;
-end;
-
-procedure TfrmChat.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                                    State: TDragState; var Accept: Boolean);
-begin
-    inherited;
-    Accept := (Source = frmRosterWindow.treeRoster);
-end;
-
-procedure TfrmChat.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
- sel_contacts: TList;
-begin
-    inherited;
-    if (Source = frmRosterWindow.treeRoster) then begin
-        // send roster items to this contact.
-        sel_contacts := frmRosterWindow.getSelectedContacts(false);
-        if (sel_contacts.count > 0) then
-            jabberSendRosterItems(TfrmChat(Self).getJid, sel_contacts)
-        else
-            MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
-        sel_contacts.Free();
-    end;
-end;
-
-
-{
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmChat.OnDockedActivate(Sender : TObject);
-begin
-    inherited;
-    if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then begin
-        Self.tabSheet.ImageIndex := ImageIndex;
     end;
 end;
 

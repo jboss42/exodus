@@ -50,7 +50,7 @@ type
     public
         Namespace: string;
         iqType: string;
-        toJid: Widestring;
+        toJid: string;
         qTag: TXMLTag;
 
         constructor Create(session: TJabberSession;

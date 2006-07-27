@@ -3,7 +3,7 @@ unit JabberID;
     Copyright 2001, Peter Millard
 
     This file is part of Exodus.
-                                                           f
+
     Exodus is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -22,7 +22,7 @@ unit JabberID;
 interface
 
 uses
-    SysUtils, StrUtils, Classes, TntSysUtils;
+    SysUtils, StrUtils, Classes;
 
 type
     TJabberID = class
@@ -91,17 +91,8 @@ begin
     Result := false;
 
     tmps := jid;
-
-    if (isEscaped) then begin
-        // If escaped 1st / and @ are the resource and node separators
-        p1 := WideTextPos('@', jid);
-        p2 := WideTextPos('/', jid);
-    end
-    else begin
-        // If not escaped then 1st / after last @ is the separator
-        p1 := lastIndexOf(jid, '@');
-        p2 := lastIndexOf(jid, '/');
-    end;
+    p1 := lastIndexOf(jid, '@');
+    p2 := lastIndexOf(jid, '/');
 
     if (p1 >= 0) then part := 0 else part := 1;
 
@@ -226,16 +217,8 @@ begin
     _resource := '';
     _raw := jid;
 
-    if (isEscaped) then begin
-        // If escaped 1st / and @ are the resource and node separators
-        p1 := WideTextPos('@', _raw);
-        p2 := WideTextPos('/', _raw);
-    end
-    else begin
-        // If not escaped then 1st / after last @ is the separator
-        p1 := lastIndexOf(_raw, '@');
-        p2 := lastIndexOf(_raw, '/');
-    end;
+    p1 := lastIndexOf(_raw, '@');
+    p2 := lastIndexOf(_raw, '/');
 
     tmps := _raw;
     if ((p2 > 0) and (p2>p1)) then begin
@@ -294,19 +277,17 @@ end;
 class function TJabberID.applyJEP106(unescapedUser: widestring): widestring;
 var
     escapedUser: widestring;
-    options       : TReplaceFlags;
 begin
-   options := [rfReplaceAll, rfIgnoreCase];
-   escapedUser := Tnt_WideStringReplace(unescapedUser, '\', '\5C', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, ' ', '\20', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '"', '\22', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '&', '\26', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '''', '\27', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '/', '\2F', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, ':', '\3A', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '<', '\3C', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '>', '\3E', options);
-   escapedUser := Tnt_WideStringReplace(escapedUser, '@', '\40', options);
+   escapedUser := AnsiReplaceText(unescapedUser, '\', '\5C');
+   escapedUser := AnsiReplaceText(escapedUser, ' ', '\20');
+   escapedUser := AnsiReplaceText(escapedUser, '"', '\22');
+   escapedUser := AnsiReplaceText(escapedUser, '&', '\26');
+   escapedUser := AnsiReplaceText(escapedUser, '''', '\27');
+   escapedUser := AnsiReplaceText(escapedUser, '/', '\2F');
+   escapedUser := AnsiReplaceText(escapedUser, ':', '\3A');
+   escapedUser := AnsiReplaceText(escapedUser, '<', '\3C');
+   escapedUser := AnsiReplaceText(escapedUser, '>', '\3E');
+   escapedUser := AnsiReplaceText(escapedUser, '@', '\40');
    Result := escapedUser;
 end;
 
@@ -314,19 +295,18 @@ end;
 class function TJabberID.removeJEP106(escapedUser: widestring): widestring;
 var
     unescapedUser: widestring;
-    options       : TReplaceFlags;
 begin
-   options := [rfReplaceAll, rfIgnoreCase];
-   unescapedUser := Tnt_WideStringReplace(escapedUser, '\20', ' ', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\22', '"', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\26', '&', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\27', '''', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\2F', '/', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\3A', ':', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\3C', '<', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\3E', '>', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\40', '@', options);
-   unescapedUser := Tnt_WideStringReplace(unescapedUser, '\5C', '\', options);
+
+   unescapedUser := AnsiReplaceText(escapedUser, '\20', ' ');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\22', '"');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\26', '&');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\27', '''');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\2F', '/');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\3A', ':');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\3C', '<');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\3E', '>');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\40', '@');
+   unescapedUser := AnsiReplaceText(unescapedUser, '\5C', '\');
    Result := unescapedUser;
 end;
 

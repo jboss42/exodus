@@ -23,30 +23,16 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs, ExtCtrls, TntComCtrls, TntForms;
+    ComCtrls, Dialogs, ExtCtrls, TntComCtrls;
 
 type
   TDockNotify = procedure of object;
-  TfrmDockable = class(TTntForm)
+
+  TfrmDockable = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
-    {
-        Drag event.
-
-        Override default event handlers to change when this form should accept
-        dragged objects. Fired by dock manager when user drags something over
-        tab.
-    }
-    procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);virtual;
-    {
-        Drop event
-
-        Override to handle objects dropped into form, specifically
-        from dock manager (tabs)
-    }
-    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
   private
     { Private declarations }
     _docked: boolean;
@@ -72,20 +58,13 @@ type
     { Public declarations }
     TabSheet: TTntTabSheet;
     ImageIndex: integer;
+    
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
     procedure gotActivate; virtual;
-    {
-        Event fired when Form receives activation while in docked state.
-
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);virtual;
-
 
     property Docked: boolean read _docked write _docked;
-
   end;
 
 var
@@ -122,32 +101,6 @@ begin
     _noMoveCheck := false;
 end;
 
-{
-    Drag event.
-
-    Override default event handlers to change when this form should accept
-    dragged objects. This is called from dock manager (tabs)
-}
-procedure TfrmDockable.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
-begin
-    inherited;
-    Accept := false;
-    //implement in subclass
-end;
-
-{
-    Drop event
-
-    Override to handle objects dropped into form, specifically
-    from dock manager (tabs)
-}
-procedure TfrmDockable.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-begin
-    inherited;
-    //implement in subclass
-end;
-
 {---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
@@ -156,7 +109,6 @@ begin
         Self.OnDockStartChange();
 
     Self.SavePos();
-
     Self.ManualDock(frmExodus.Tabs);
     Self.Align := alClient;
     _docked := true;
@@ -231,7 +183,7 @@ end;
 procedure TfrmDockable.ShowDefault;
 begin
     // show this form using the default behavior
-    if (Jabber1.GetDockState() <> dsForbidden) then begin
+    if MainSession.Prefs.getBool('expanded') then begin
         if (TabSheet = nil) then begin
             // dock the form
             Self.DockForm();
@@ -244,7 +196,7 @@ begin
         // focus on the new tab if we are on the roster.
         if ((not Application.Active) or
             (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then begin
-            frmExodus.BringDockedToTop(Self);
+            frmExodus.Tabs.ActivePage := TabSheet;
         end;
     end
     else begin
@@ -266,7 +218,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 var
-    m: Widestring;
+    m: String;
 begin
     if ((not _top) and
         ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
@@ -317,19 +269,6 @@ begin
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := ImageIndex;
     end;
-end;
-
-{
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmDockable.OnDockedActivate(Sender : TObject);
-begin
-    inherited;
-    //subclasses override to change activation behavior
-     if (Self.TabSheet <> nil) then
-        Self.TabSheet.ImageIndex := ImageIndex;
 end;
 
 end.

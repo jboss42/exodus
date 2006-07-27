@@ -23,7 +23,7 @@ interface
 
 uses
     XMLTag, Session, Unicode, 
-    SysUtils, Classes, JabberUtils;
+    SysUtils, Classes;
 
 type
     TSubController = class
@@ -54,10 +54,10 @@ const
     sS10nUnsub = 'The contact %s has been removed from your contacts list at his/her request.';
 
 
-procedure SendSubscribe(sjid: Widestring; Session: TJabberSession);
-procedure SendSubscribed(sjid: Widestring; Session: TJabberSession);
-procedure SendUnSubscribe(sjid: Widestring; Session: TJabberSession);
-procedure SendUnSubscribed(sjid: Widestring; Session: TJabberSession);
+procedure SendSubscribe(sjid: string; Session: TJabberSession);
+procedure SendSubscribed(sjid: string; Session: TJabberSession);
+procedure SendUnSubscribe(sjid: string; Session: TJabberSession);
+procedure SendUnSubscribed(sjid: string; Session: TJabberSession);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -154,7 +154,7 @@ begin
                 // then we should subscribe back to them
                 if ((ritem = nil) or (ritem.ask <> 'subscribe')) then begin
                     dgrp := MainSession.Prefs.getString('roster_default');
-                    MainSession.Roster.AddItem(j.jid, j.userDisplay, dgrp, true);
+                    MainSession.Roster.AddItem(j.jid, j.user, dgrp, true);
                 end;
 
                 // we are in auto-approve mode, so approve it
@@ -205,11 +205,11 @@ begin
     if (ritem <> nil) then begin
         if (ritem.ask = 'subscribe') then begin
             // we are got denied by this person
-            MessageDlgW(WideFormat(sS10nDeny, [from.getDisplayJID()]), mtInformation, [mbOK], 0);
+            MessageDlg(Format(sS10nDeny, [from.getDisplayJID()]), mtInformation, [mbOK], 0);
             ritem.remove();
         end
         else begin
-            MessageDlgW(WideFormat(sS10nUnsub, [ritem.Text]), mtInformation, [mbOK], 0);
+            MessageDlg(Format(sS10nUnsub, [ritem.Text]), mtInformation, [mbOK], 0);
         end;
     end;
 
@@ -230,7 +230,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure SendSubscribe(sjid: Widestring; Session: TJabberSession);
+procedure SendSubscribe(sjid: string; Session: TJabberSession);
 var
     p: TJabberPres;
     j: TJabberID;
@@ -243,7 +243,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure SendSubscribed(sjid: Widestring; Session: TJabberSession);
+procedure SendSubscribed(sjid: string; Session: TJabberSession);
 var
     p: TJabberPres;
     j: TJabberID;
@@ -256,7 +256,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure SendUnSubscribe(sjid: Widestring; Session: TJabberSession);
+procedure SendUnSubscribe(sjid: string; Session: TJabberSession);
 var
     p: TJabberPres;
     j: TJabberID;
@@ -269,7 +269,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure SendUnSubscribed(sjid: Widestring; Session: TJabberSession);
+procedure SendUnSubscribed(sjid: string; Session: TJabberSession);
 var
     p: TJabberPres;
     j: TJabberID;
