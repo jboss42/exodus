@@ -236,6 +236,8 @@ type
         function getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
         function getControl(pkey: Widestring): Widestring;
         function getPref(cname: Widestring): Widestring;
+        function getStringlistCount(pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
+        function getStringlistValue(pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
 
         // setters
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
@@ -245,6 +247,7 @@ type
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
 
         procedure AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
+        procedure RemoveStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
         
 {$ifdef Exodus}
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
@@ -904,6 +907,17 @@ begin
     setString(pkey, IntToStr(pvalue), server_side);
 end;
 {---------------------------------------}
+function TPrefController.getStringlistCount(pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
+var
+    uf: TPrefFile;
+begin
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+    Result := uf.getStringlistCount(pkey);
+end;
+{---------------------------------------}
 procedure TPrefController.AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
@@ -914,6 +928,29 @@ begin
         uf := _server_file;
 
     uf.AddStringListValue(pkey, value);
+    Save();
+end;
+{---------------------------------------}
+function TPrefController.getStringlistValue(pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
+var
+    uf: TPrefFile;
+begin
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+    Result := uf.getStringListValue(pkey, index);
+end;
+{---------------------------------------}
+procedure TPrefController.RemoveStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+    uf.RemoveStringListValue(pkey, value);
     Save();
 end;
 {---------------------------------------}
