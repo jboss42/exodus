@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 7/20/2006 4:29:21 PM from Type Library described below.
+// File generated on 7/31/2006 3:14:51 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -46,7 +46,7 @@ const
 
   LIBID_Exodus: TGUID = '{37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}';
 
-  IID_IExodusController: TGUID = '{4D811220-DA1B-4475-8B70-8D2B856BBB52}';
+  IID_IExodusController: TGUID = '{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}';
   CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
   IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
@@ -259,10 +259,10 @@ type
 // *********************************************************************//
 // Interface: IExodusController
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {4D811220-DA1B-4475-8B70-8D2B856BBB52}
+// GUID:      {E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}
 // *********************************************************************//
   IExodusController = interface(IDispatch)
-    ['{4D811220-DA1B-4475-8B70-8D2B856BBB52}']
+    ['{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}']
     function Get_Connected: WordBool; safecall;
     function Get_Username: WideString; safecall;
     function Get_Server: WideString; safecall;
@@ -350,6 +350,9 @@ type
     procedure Set_RoomLogger(const value: IExodusLogger); safecall;
     procedure AddStringlistValue(const key: WideString; const value: WideString); safecall;
     procedure RemoveMessageMenu(const menuID: WideString); safecall;
+    function GetStringlistCount(const key: WideString): Integer; safecall;
+    function GetStringlistValue(const key: WideString; index: Integer): WideString; safecall;
+    procedure RemoveStringlistValue(const key: WideString; const value: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -373,10 +376,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusControllerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {4D811220-DA1B-4475-8B70-8D2B856BBB52}
+// GUID:      {E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}
 // *********************************************************************//
   IExodusControllerDisp = dispinterface
-    ['{4D811220-DA1B-4475-8B70-8D2B856BBB52}']
+    ['{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}']
     property Connected: WordBool readonly dispid 1;
     property Username: WideString readonly dispid 2;
     property Server: WideString readonly dispid 3;
@@ -462,6 +465,9 @@ type
     property RoomLogger: IExodusLogger dispid 216;
     procedure AddStringlistValue(const key: WideString; const value: WideString); dispid 217;
     procedure RemoveMessageMenu(const menuID: WideString); dispid 218;
+    function GetStringlistCount(const key: WideString): Integer; dispid 219;
+    function GetStringlistValue(const key: WideString; index: Integer): WideString; dispid 220;
+    procedure RemoveStringlistValue(const key: WideString; const value: WideString); dispid 221;
   end;
 
 // *********************************************************************//

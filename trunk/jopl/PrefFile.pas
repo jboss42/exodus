@@ -66,6 +66,8 @@ type
         procedure setString(pkey: Widestring; val: Widestring);
         function GetStringlistCount(pkey: Widestring): integer;
         procedure AddStringlistValue(pkey, value: Widestring);
+        function GetStringlistValue(pkey: Widestring; index: Integer): WideString;
+        procedure RemoveStringlistValue(pkey, value: Widestring);
 {$ifdef Exodus}
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings); overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings); overload;
@@ -478,6 +480,7 @@ begin
 
     s.Free;
 end;
+
 {---------------------------------------}
 procedure TPrefFile.AddStringlistValue(pkey, value: Widestring);
 var
@@ -503,6 +506,49 @@ begin
 
     if ((add = true) and (value <> '')) then
         t.AddBasicTag('s', value);
+    s.Free;
+end;
+
+{---------------------------------------}
+function TPrefFile.GetStringlistValue(pkey: Widestring; index: Integer): WideString;
+var
+    t   : TXMLTag;
+    s   : TXMLTagList;
+
+begin
+    t := _pref.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    s := t.QueryTags('s');
+    if (index < s.Count) then
+        Result := s.Tags[index].Data;
+
+    s.Free;
+end;
+
+{---------------------------------------}
+procedure TPrefFile.RemoveStringlistValue(pkey, value: Widestring);
+var
+    t   : TXMLTag;
+    s   : TXMLTagList;
+    i   : Integer;
+begin
+    _dirty := true;
+    t := _pref.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    s := t.QueryTags('s');
+    for i := 0 to s.Count - 1 do begin
+        if s.Tags[i].Data = value then begin
+            t.RemoveTag(s.Tags[i]);
+            s.Free;
+            s := t.QueryTags('s');
+            if (s.Count = 0) then
+                _pref.RemoveTag(t);
+            break;
+        end;
+    end;
+
     s.Free;
 end;
 

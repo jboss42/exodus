@@ -963,7 +963,7 @@ library Exodus
   typedef BSTR * PWideString1;
 
   [
-    uuid(4D811220-DA1B-4475-8B70-8D2B856BBB52), 
+    uuid(E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
     dual, 
@@ -1334,6 +1334,18 @@ library Exodus
     helpstring("Remove an item from the message context menu")
     ]
     HRESULT _stdcall RemoveMessageMenu([in] BSTR menuID );
+    [
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall GetStringlistCount([in] BSTR key, [out, retval] long * value );
+    [
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall GetStringlistValue([in] BSTR key, [in] long index, [out, retval] BSTR * value );
+    [
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall RemoveStringlistValue([in] BSTR key, [in] BSTR value );
   };
 
   [
@@ -7757,7 +7769,7 @@ library Exodus
   };
 
   [
-    uuid(98B21105-E964-4A58-AD6E-2B61B9F2ECA8), 
+    uuid(C57C2CC6-7ADB-4F48-A75E-65F794092AE3), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPlugin Object"), 
     dual, 
