@@ -133,6 +133,10 @@ type
     procedure Set_RoomLogger(const Value: IExodusLogger); safecall;
     procedure AddStringlistValue(const Key, Value: WideString); safecall;
     procedure RemoveMessageMenu(const menuID: WideString); safecall;
+    function GetStringlistCount(const key: WideString): Integer; safecall;
+    function GetStringlistValue(const key: WideString; index: Integer): WideString;
+      safecall;
+    procedure RemoveStringlistValue(const key, value: WideString); safecall;
 
     { Protected declarations }
   private
@@ -1641,6 +1645,25 @@ begin
         _msg_menus.Delete(idx);
         mc.Free();
     end;
+end;
+
+function TExodusController.GetStringlistCount(const key: WideString): Integer;
+begin
+    Result := MainSession.Prefs.getStringlistCount(key);
+
+end;
+
+function TExodusController.GetStringlistValue(const key: WideString;
+  index: Integer): WideString;
+begin
+    Result := MainSession.Prefs.getStringlistValue(key, index);
+
+end;
+
+procedure TExodusController.RemoveStringlistValue(const key, value: WideString);
+begin
+    MainSession.Prefs.RemoveStringlistValue(key, value);
+
 end;
 
 initialization
