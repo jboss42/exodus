@@ -468,7 +468,7 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    if not (TExodusChat(ComController).fireRecvMsg(body, xml)) then
+    if not (TExodusChat(ComController).fireBeforeRecvMsg(body, xml)) then
         exit;
 
     // We are getting a msg
@@ -476,6 +476,8 @@ begin
         ShowMsg(tag)
     else if (tag.getAttribute('type') = 'error') then
         ShowMsg(tag);
+
+    TExodusChat(ComController).fireAfterRecvMsg(body);
 end;
 
 {---------------------------------------}
