@@ -519,7 +519,8 @@ begin
                 if (emsg = '') then
                     emsg := etag.Data;
                 if (emsg = '') and
-                    (etag.GetAttribute('code') = '403') and
+                    ((etag.GetAttribute('code') = '403') or
+                     (etag.GetAttribute('code') = '401')) and
                     (etag.GetAttribute('type') = 'auth') then
                     emsg := _('Not authorized.');
                 if (emsg = '') then
