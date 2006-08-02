@@ -65,7 +65,8 @@ type
     function  fireMsgKeyDown(key: Word; shift: TShiftState): boolean;
     function  fireBeforeMsg(var body: Widestring): boolean;
     function  fireAfterMsg(var body: WideString): Widestring;
-    function  fireRecvMsg(body, xml: Widestring): boolean;
+    function  fireBeforeRecvMsg(body, xml: Widestring): boolean;
+    procedure fireAfterRecvMsg(body: Widestring);
     procedure fireMenuClick(Sender: TObject);
     procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
@@ -217,7 +218,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.fireRecvMsg(body, xml: Widestring): boolean;
+function TExodusChat.fireBeforeRecvMsg(body, xml: Widestring): boolean;
 var
     i: integer;
 begin
@@ -225,6 +226,16 @@ begin
     for i := 0 to _plugs.Count - 1 do begin
         Result := TChatPlugin(_plugs[i]).com.OnBeforeRecvMessage(body, xml);
         if (Result = false) then exit;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.fireAfterRecvMsg(body: Widestring);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do begin
+        TChatPlugin(_plugs[i]).com.OnAfterRecvMessage(body);
     end;
 end;
 

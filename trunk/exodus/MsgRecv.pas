@@ -861,7 +861,8 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    TExodusChat(ComController).fireRecvMsg(body, xml);
+    TExodusChat(ComController).fireBeforeRecvMsg(body, xml);
+    TExodusChat(ComController).fireAfterRecvMsg(body);
 end;
 
 {---------------------------------------}

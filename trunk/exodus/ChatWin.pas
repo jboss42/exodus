@@ -750,7 +750,7 @@ begin
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
-    if (not com_controller.fireRecvMsg(body, xml)) then
+    if (not com_controller.fireBeforeRecvMsg(body, xml)) then
         exit;
 
     // make sure we are visible..
@@ -766,7 +766,8 @@ begin
             _thread := tagThread.Data;
             chat_object.setThreadID(_thread);
         end;
-   end;
+    end;
+    com_controller.fireAfterRecvMsg(body);
 end;
 
 {---------------------------------------}
