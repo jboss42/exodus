@@ -720,6 +720,7 @@ begin
 
     if (ptype = 'unavailable') then begin
         _send_unavailable := false;
+        TExodusChat(ComController).fireClose();
         Self.Close();
     end;
 end;
@@ -1584,7 +1585,7 @@ procedure TfrmRoom.MsgOutKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     if (Key = 0) then exit;
-    TExodusChat(ComController).fireMsgKeyUp(Key, Shift);
+    TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
     inherited;
 end;
 {---------------------------------------}
