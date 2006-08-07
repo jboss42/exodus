@@ -194,7 +194,7 @@ begin
 
     tmp_jid.Free();
 
-    if (Jabber1.GetDockState() <> dsForbidden) then begin
+    if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
         if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
             (e.eType = evt_Invite)) then begin

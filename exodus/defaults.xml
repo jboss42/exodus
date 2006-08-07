@@ -311,6 +311,7 @@
     <browse_view value="0"></browse_view>
 
     <event_width value="315"></event_width>
+    <roster_width value="100"></roster_width>
     <fade_limit value="100"></fade_limit>
     <profile_active value="0"></profile_active>
     <wrap_input value="1"></wrap_input>

@@ -344,7 +344,7 @@ begin
             Position := poDefaultPosOnly;
 
         ShowDefault();
-        exp := (Jabber1.GetDockState() <> dsForbidden);
+        exp := (Jabber1.getAllowedDockState() <> adsForbidden);
         if ((show_window) and (Application.Active)) then begin
             Show();
             if (((exp) and (frmExodus.getTopDocked() = chat.window)) or

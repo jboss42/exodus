@@ -25,15 +25,23 @@ uses
     Jabber1, ExEvents, XMLTag, Contnrs, Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
-    ExRichEdit, Menus, TntComCtrls, TntMenus;
+    ExRichEdit, Menus, TntComCtrls, TntMenus, TntStdCtrls, Buttons;
 
 type
+  {
+    JJF added roster rendering for "PGM" layout.
+  }
   TfrmMsgQueue = class(TfrmDockable)
-    lstEvents: TTntListView;
-    Splitter1: TSplitter;
-    txtMsg: TExRichEdit;
     PopupMenu1: TTntPopupMenu;
     D1: TTntMenuItem;
+    pnlRoster: TPanel;
+    pnlMsgQueue: TPanel;
+    Splitter1: TSplitter;
+    lstEvents: TTntListView;
+    txtMsg: TExRichEdit;
+    splitRoster: TSplitter;
+    pnlButton: TPanel;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -46,6 +54,9 @@ type
     procedure txtMsgURLClick(Sender: TObject; URL: String);
     procedure D1Click(Sender: TObject);
     procedure lstEventsEnter(Sender: TObject);
+    procedure pnlRosterResize(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     _queue          : TObjectList;
@@ -74,6 +85,19 @@ type
   published
     procedure SessionCallback(event: string; tag: TXMLTag);
 
+    {
+        Render the roster
+
+        Embed the roster if not already showing
+    }
+    procedure ShowRoster();
+
+    {
+        Hide the roster
+
+        Hide the roster and clear state if rendering it.
+    }
+    procedure HideRoster();
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
@@ -97,6 +121,7 @@ implementation
 {$R *.dfm}
 
 uses
+    RosterWindow, //for roster rendering
     MsgList, MsgController, ChatWin, ChatController,
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
@@ -106,7 +131,7 @@ const
     SE_CONNECTED = '/session/authenticated';
     SE_DISCONNECTED = '/session/disconnected';
 
-    CB_UNASSIGNED = -1; //unassigned callback ID 
+    CB_UNASSIGNED = -1; //unassigned callback ID
 
 {---------------------------------------}
 function getMsgQueue: TfrmMsgQueue;
@@ -342,6 +367,11 @@ begin
     _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
 end;
 
+procedure TfrmMsgQueue.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+    inherited;
+end;
+
 {---------------------------------------}
 procedure TfrmMsgQueue.WMNotify(var Msg: TWMNotify);
 var
@@ -472,6 +502,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmMsgQueue.btnCloseClick(Sender: TObject);
+begin
+    inherited;
+    Self.Close();
+end;
+
 procedure TfrmMsgQueue.ClearItems();
 begin
     _queue.Clear();
@@ -566,19 +602,19 @@ begin
 
 end;
 
+procedure TfrmMsgQueue.pnlRosterResize(Sender: TObject);
+begin
+    inherited;
+    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
+        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+end;
+
 {---------------------------------------}
 procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-    if (MainSession = nil) then
-        lstEvents.Items.Clear
-    else if (Jabber1.GetDockState() <> dsForbidden) and (not Docked) then begin
-        CanClose := false;
-        exit;
-    end
-    else
-        lstEvents.Items.Clear;
+    lstEvents.Items.Clear
 end;
 
 {---------------------------------------}
@@ -635,6 +671,36 @@ begin
     end
     else begin
         _currSpoolFile := _documentDir + '\' + sDefaultSpool;
+    end;
+end;
+
+{
+    Render the roster
+
+    Embed the roster if not already showing
+}
+procedure TfrmMsgQueue.ShowRoster();
+begin
+    if (not pnlRoster.Visible) then begin
+        pnlRoster.Visible := true;
+        splitRoster.Visible := true;
+        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+        pnlMsgQueue.Align := alClient;
+        RosterWindow.DockRoster(pnlRoster);
+    end;
+end;
+
+{
+    Hide the roster
+
+    Hide the roster and clear state if rendering it.
+}
+procedure TfrmMsgQueue.HideRoster();
+begin
+    if (pnlRoster.Visible) then begin
+        pnlRoster.Visible := false;
+        splitRoster.Visible := false;
+        pnlMsgQueue.Align := alClient; //fill it all
     end;
 end;
 

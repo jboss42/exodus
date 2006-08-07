@@ -27,6 +27,20 @@ uses
 
 type
   TDockNotify = procedure of object;
+  {
+    Dockable forms may be docked/undocked either through drag -n- dock operations
+    or programatically through their DockForm/FloatForm methods. Because there
+    are two different paths that result in this state change One set of events
+    has been defined that will fire in either case.
+
+    OnDockStartChange will be fired when either the OnStartDock event is fired
+    immediately before any dock change is requested programactically. Subclasses
+    should use the Docked (possibly Visible) property to check their current state
+    And assume the property will be toggled after this event has fired.
+
+    OnDockEndChange will fire when the OnEndDock event has been fired or after the
+    form has been programatically docked/floated.
+  }
   TfrmDockable = class(TTntForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -86,6 +100,7 @@ type
 
     property Docked: boolean read _docked write _docked;
 
+    property FloatPos: TRect read _pos;
   end;
 
 var
@@ -156,11 +171,9 @@ begin
         Self.OnDockStartChange();
 
     Self.SavePos();
-
-    Self.ManualDock(frmExodus.Tabs);
+    Self.TabSheet := frmExodus.OpenDocked(self);
     Self.Align := alClient;
     _docked := true;
-    Self.TabSheet := TTntTabSheet(frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1]);
 
     if (Self.TabSheet <> nil) then
         Self.TabSheet.ImageIndex := ImageIndex;;
@@ -194,7 +207,7 @@ begin
     if Assigned(_onDockStartChange) then
         Self.OnDockStartChange();
     Self.CheckPos();
-    Self.ManualFloat(_pos);
+    frmExodus.FloatDocked(Self);
     _docked := false;
     Self.TabSheet := nil;
     if Assigned(_onDockEndChange) then
@@ -231,21 +244,15 @@ end;
 procedure TfrmDockable.ShowDefault;
 begin
     // show this form using the default behavior
-    if (Jabber1.GetDockState() <> dsForbidden) then begin
+    if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
         if (TabSheet = nil) then begin
             // dock the form
             Self.DockForm();
             Self.Show();
-        end;
-
-        // always make sure we are visible
-        Self.Visible := true;
-
-        // focus on the new tab if we are on the roster.
-        if ((not Application.Active) or
-            (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then begin
+            Self.Visible := true;
+        end
+        else
             frmExodus.BringDockedToTop(Self);
-        end;
     end
     else begin
         if (frmExodus.isMinimized()) then
@@ -305,21 +312,25 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormResize(Sender: TObject);
 begin
+    savePos();
     if ((MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
 end;
 
 {---------------------------------------}
+{
+    Event fired at the end of a drag -n- dock operation
+
+    Will also fire when a tab change takes place
+}
 procedure TfrmDockable.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
-    if (Target <> frmExodus.Tabs) then exit;
-
-    if Self.TabSheet <> nil then begin
-        Self.TabSheet.ImageIndex := ImageIndex;
-    end;
+    //impl in subclasses
 end;
 
+
 {
+
     Event fired when Form receives activation while in docked state.
 
     Fired by DockManager when tab is activated (brought to front)

@@ -1,9 +1,9 @@
 object frmDebug: TfrmDebug
   Left = 318
   Top = 199
-  Width = 408
-  Height = 414
   Caption = 'Debug'
+  ClientHeight = 380
+  ClientWidth = 400
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   DragKind = dkDock
@@ -14,18 +14,16 @@ object frmDebug: TfrmDebug
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDefaultPosOnly
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
-  OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
   object Panel2: TPanel
     Left = 0
     Top = 25
     Width = 400
-    Height = 359
+    Height = 355
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -33,17 +31,18 @@ object frmDebug: TfrmDebug
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 4
-      Top = 310
+      Top = 306
       Width = 392
       Height = 5
       Cursor = crVSplit
       Align = alBottom
+      ExplicitTop = 310
     end
     object MsgDebug: TExRichEdit
       Left = 4
       Top = 4
       Width = 392
-      Height = 306
+      Height = 302
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -137,7 +136,7 @@ object frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 315
+      Top = 311
       Width = 392
       Height = 40
       Align = alBottom

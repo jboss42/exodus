@@ -339,7 +339,22 @@ type
     code.
 }
 function isEmbeddedRoster() : boolean;
-  
+
+{
+    If a roster instance exists, dock it in the given docksite
+}
+procedure DockRoster(docksite : TWinControl);
+
+{
+    Get the singleton ibnstance of the roster
+}
+function GetRosterWindow() : TfrmRosterWindow;
+
+{
+    Free the singleton roster
+}
+procedure CloseRosterWindow();
+
 var
   frmRosterWindow: TfrmRosterWindow;
 
@@ -431,6 +446,37 @@ begin
     Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
 end;
 
+{
+    If a roster instance exists, dock it in the given docksite
+}
+procedure DockRoster(docksite : TWinControl);
+begin
+    if (frmRosterWindow <> nil) then
+        frmRosterWindow.DockRoster(docksite);
+end;
+
+{
+    Get the singleton ibnstance of the roster
+}
+function GetRosterWindow() : TfrmRosterWindow;
+begin
+    if (frmRosterWindow = nil) then
+        frmRosterWindow := TfrmRosterWindow.Create(Application);
+    Result := frmRosterWindow;
+end;
+
+{
+    Free the singleton roster
+}
+procedure CloseRosterWindow();
+begin
+    if (frmRosterWindow <> nil) then begin
+        frmRosterWindow.ClearNodes(); //?? hmmm
+        frmRosterWindow.Close();
+        frmRosterWindow := nil;
+    end;
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -491,7 +537,7 @@ begin
     _drag_op := false;
     _drop_copy := false;
 
-    frmExodus.getCurrentRosterPanel().ShowHint := not _show_status;
+//    frmExodus.getCurrentRosterPanel().ShowHint := not _show_status;
     aniWait.Filename := '';
     aniWait.ResName := 'Status';
     pnlConnect.Visible := true;
@@ -764,7 +810,7 @@ begin
         _show_unsub := MainSession.Prefs.getBool('roster_show_unsub');
         _avatars := MainSession.Prefs.getBool('roster_avatars');
 
-        frmExodus.pnlRoster.ShowHint := not _show_status;
+//todo JJF MUST FIX THIS        frmExodus.pnlRoster.ShowHint := not _show_status;
 
         BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
 
@@ -846,7 +892,7 @@ var
 begin
     // callback from the session
     if event = '/roster/start' then begin
-        frmExodus.tabs.ActivePage := frmExodus.tbsRoster;
+//        frmExodus.tabs.ActivePage := frmExodus.tbsRoster;
         _FullRoster := true;
         treeRoster.Items.BeginUpdate;
         // Don't clear the nodes here so mod_groups works ok..

@@ -425,7 +425,7 @@ begin
             f.sendStartPresence();
 
         f.Caption := tmp_jid.userDisplay;
-        if (Jabber1.GetDockState() <> dsForbidden) then begin
+        if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
             f.DockForm;
         end;
 
