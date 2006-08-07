@@ -115,8 +115,8 @@ const
     P_COLOR_ACTION = 'color_action';
     P_COLOR_SERVER = 'color_server';
 
-    P_EVENT_WIDTH = 'event_width';
-
+    P_TAB_WIDTH    = 'event_width';
+    P_ROSTER_WIDTH = 'roster_width';
 type
     TPrefMapValue = class
     private

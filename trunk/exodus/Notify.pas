@@ -186,7 +186,7 @@ begin
     if (active_win = frmExodus.Handle) and (tw <> nil) then
         active_win := tw.Handle;
 
-    // if we are not notifying for the active window,
+    // if we are not notifying for the active winsdow,
     // and this is active, bail.
     if ((not MainSession.prefs.getBool('notify_active_win')) and (w.Handle = active_win)) then
         exit;
@@ -203,8 +203,8 @@ begin
         // flash or show img
         if (w = frmExodus) then begin
             // The window is the main window
-            if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
-                frmExodus.tbsRoster.ImageIndex := tab_notify;
+//JJF Fix this!            if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
+//                frmExodus.tbsRoster.ImageIndex := tab_notify;
             if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
                 frmExodus.Flash();
         end

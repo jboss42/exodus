@@ -372,7 +372,7 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.btnCloseClick(Sender: TObject);
 begin
-  inherited;
+    inherited;
     Self.Close;
 end;
 

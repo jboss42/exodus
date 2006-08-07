@@ -3,10 +3,12 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 385
+  ClientHeight = 425
   ClientWidth = 231
   Color = clBtnFace
+  UseDockManager = True
   DefaultMonitor = dmDesktop
+  DockSite = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -22,86 +24,23 @@ object frmExodus: TfrmExodus
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnDockDrop = FormDockDrop
   OnPaint = FormPaint
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object SplitterLeft: TSplitter
-    Left = 57
+  object splitRoster: TSplitter
+    Left = 83
     Top = 31
-    Height = 354
-    OnMoved = SplitterRightMoved
+    Width = 5
+    Height = 394
+    AutoSnap = False
+    Beveled = True
+    MinSize = 1
+    ResizeStyle = rsUpdate
+    ExplicitLeft = 80
     ExplicitTop = 33
-    ExplicitHeight = 332
-  end
-  object Tabs: TTntPageControl
-    Left = 60
-    Top = 31
-    Width = 171
-    Height = 354
-    ActivePage = tbsRoster
-    Align = alClient
-    DockSite = True
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clBlack
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    Images = ImageList2
-    MultiLine = True
-    ParentFont = False
-    PopupMenu = popTabs
-    TabOrder = 0
-    OnChange = TabsChange
-    OnDockDrop = TabsDockDrop
-    OnDragDrop = TabsDragDrop
-    OnDragOver = TabsDragOver
-    OnMouseDown = TabsMouseDown
-    OnUnDock = TabsUnDock
-    object tbsRoster: TTntTabSheet
-      Caption = 'Messenger'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ImageIndex = 7
-      ParentFont = False
-      object SplitterRight: TSplitter
-        Left = 105
-        Top = 0
-        Height = 325
-        ResizeStyle = rsUpdate
-        OnMoved = SplitterRightMoved
-        ExplicitHeight = 303
-      end
-      object pnlRoster: TPanel
-        Left = 0
-        Top = 0
-        Width = 105
-        Height = 325
-        Align = alLeft
-        BevelOuter = bvNone
-        BorderWidth = 1
-        UseDockManager = False
-        DragCursor = crDefault
-        DragKind = dkDock
-        TabOrder = 0
-      end
-      object pnlRight: TPanel
-        Left = 108
-        Top = 0
-        Width = 55
-        Height = 325
-        Align = alClient
-        BevelOuter = bvNone
-        Caption = 'THIS IS PNLRIGHT'
-        DragCursor = crDefault
-        DragKind = dkDock
-        TabOrder = 1
-      end
-    end
   end
   object Toolbar: TCoolBar
     Left = 0
@@ -183,15 +122,61 @@ object frmExodus: TfrmExodus
       end
     end
   end
-  object pnlLeft: TPanel
+  object pnlRoster: TPanel
     Left = 0
     Top = 31
-    Width = 57
-    Height = 354
+    Width = 83
+    Height = 394
     Align = alLeft
+    AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 1
+    Caption = 'PNLROSTER'
+    UseDockManager = False
+    TabOrder = 1
+    Visible = False
+    OnDockDrop = FormDockDrop
+    OnResize = pnlRosterResize
+  end
+  object pnlDock: TPanel
+    Left = 88
+    Top = 31
+    Width = 143
+    Height = 394
+    Align = alClient
+    AutoSize = True
+    BevelOuter = bvNone
+    Caption = 'pnlDock'
     TabOrder = 2
+    Visible = False
+    object Tabs: TTntPageControl
+      Left = 0
+      Top = 0
+      Width = 143
+      Height = 394
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      Align = alClient
+      DockSite = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      Images = ImageList2
+      MultiLine = True
+      ParentFont = False
+      PopupMenu = popTabs
+      TabOrder = 0
+      OnChange = TabsChange
+      OnDockDrop = TabsDockDrop
+      OnDragDrop = TabsDragDrop
+      OnDragOver = TabsDragOver
+      OnMouseDown = TabsMouseDown
+      OnUnDock = TabsUnDock
+    end
   end
   object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual

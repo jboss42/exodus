@@ -132,7 +132,7 @@
 			<Directories Name="UsePackages">True</Directories>
 		</Directories>
 		<Parameters>
-			<Parameters Name="RunParams">-d -c debug.xml</Parameters>
+			<Parameters Name="RunParams">-c debug.xml</Parameters>
 			<Parameters Name="HostApplication"></Parameters>
 			<Parameters Name="Launcher"></Parameters>
 			<Parameters Name="UseLauncher">False</Parameters>

@@ -91,7 +91,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, NewUser, RosterImages,   
+    Avatar, NewUser, RosterImages, RosterWindow,   
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
@@ -564,6 +564,8 @@ begin
     // Setup our avatar cache
     Avatars.setSession(MainSession);
 
+    //create a roster early so all other windows can get east access
+    RosterWindow.GetRosterWindow();
     Result := true;
 end;
 
