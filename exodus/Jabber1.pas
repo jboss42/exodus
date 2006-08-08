@@ -3451,7 +3451,7 @@ function TfrmExodus.getTabForm(tab: TTabSheet): TForm;
 begin
     // Get an associated form for a specific tabsheet
     Result := nil;
-    if (tab.ControlCount = 1) then begin
+    if ((tab <> nil) and (tab.ControlCount = 1)) then begin
         if (tab.Controls[0] is TForm) then begin
             Result := TForm(tab.Controls[0]);
             exit;
