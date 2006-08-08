@@ -259,6 +259,7 @@ type
     procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
     procedure pnlRosterResize(Sender: TObject);
+    procedure splitRosterMoved(Sender: TObject);
 
   private
     { Private declarations }
@@ -413,6 +414,14 @@ type
         Adjust layout so only roster panel is shown
     }
     procedure layoutRosterOnly();
+
+    {
+        Save the current roster and dock panel widths.
+
+        Depending on current state...
+    }
+    procedure saveRosterDockWidths();
+
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
@@ -1093,8 +1102,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Startup;
+var
+    tab_w, roster_w: integer;
 begin
     //show the initial roster quickly
+    // figure out the width of the msg queue
+    tab_w := MainSession.Prefs.getInt(P_TAB_WIDTH);
+    roster_w := MainSession.Prefs.getInt(P_ROSTER_WIDTH);
+    //set to defaults if we don't have widths
+    if ((tab_w <= 0) or (roster_w <= 0)) then begin
+        tab_w := 2 * (Self.ClientWidth div 3);
+        roster_w := Self.ClientWidth - tab_w - 3;
+        MainSession.Prefs.setInt(P_TAB_WIDTH, tab_w);
+        MainSession.Prefs.setInt(P_ROSTER_WIDTH, roster_w);
+    end;
+
     updateLayoutPrefChange();
     RosterWindow.GetRosterWindow().Show;
 
@@ -1934,6 +1956,12 @@ procedure TfrmExodus.ShowXML1Click(Sender: TObject);
 begin
     // show the debug window if it's hidden
     ShowDebugForm();
+end;
+
+procedure TfrmExodus.splitRosterMoved(Sender: TObject);
+begin
+    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
+        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {---------------------------------------}
@@ -3632,8 +3660,8 @@ end;
 procedure TfrmExodus.pnlRosterResize(Sender: TObject);
 begin
     inherited;
-    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
-        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+//    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
+//        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {tab context menus}
@@ -3668,7 +3696,7 @@ end;
 }
 procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
 begin
-    if ((Self.Tabs.ControlCount > 0) and (form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
+    if ((Self.Tabs.PageCount > 0) and (form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
         Self.Tabs.ActivePage := form.TabSheet;
         form.OnDockedActivate(Self);
     end;
@@ -3707,8 +3735,8 @@ begin
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
+    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
-    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 0);
 end;
 
 {************************************ layout **********************************}
@@ -3724,28 +3752,25 @@ var
     tf: TfrmDockable;
     embedDocked : TfrmDockable;
     dockAllowed, embedRoster: boolean;
-    roster_w, tab_w: integer;
     ts: TTabSheet;
+    newState: TDockStates;
 begin
     if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
-    // figure out the width of the msg queue
-    tab_w := MainSession.Prefs.getInt(P_TAB_WIDTH);
-    roster_w := MainSession.Prefs.getInt(P_ROSTER_WIDTH);
-    //set to defaults if we don't have widths
-    if ((tab_w <= 0) or (roster_w <= 0)) then begin
-        tab_w := 2 * (Self.ClientWidth div 3);
-        roster_w := Self.ClientWidth - tab_w - splitRoster.Width;
-        MainSession.Prefs.setInt(P_TAB_WIDTH, tab_w);
-        MainSession.Prefs.setInt(P_ROSTER_WIDTH, roster_w);
-    end;
-
     // make sure the roster is docked in the appropriate place.
     dockAllowed := (Jabber1.getAllowedDockState() <> adsForbidden);
     embedRoster := useEmbeddedRoster();
     embedDocked := FindFirstRosterEmbedingDockable();
 
-    if (not dockAllowed) then begin
+    if ((not dockAllowed) or (Tabs.PageCount = 0)) then
+        newState := dsRosterOnly
+    else if (embedRoster and (embedDocked <> nil)) then
+        newState := dsDockOnly
+    else
+        newState := dsRosterDock;
+
+    if (newState = dsRosterOnly) then begin
         layoutRosterOnly();
+        RosterWindow.DockRoster(pnlRoster);
         //undock any forms currently docked
         ts := Tabs.FindNextPage(nil, true, false);
         while (ts <> nil) do begin
@@ -3753,24 +3778,19 @@ begin
             tf.FloatForm();
             ts := Tabs.FindNextPage(nil, true, false);
         end;
-        Self.DockSite := false;
-        RosterWindow.DockRoster(pnlRoster);
+        if (embedDocked <> nil) then
+            TfrmMsgQueue(embedDocked).HideRoster();
+        Self.DockSite := dockAllowed;
     end
-    else begin //docking allowed
-        Self.DockSite := true; //this will be changed in one of the "layout" methods if need be
-        if (embedRoster and (embedDocked <> nil)) then begin
-            //pgm mode enabled and an embedable dockable is docked...
-            layoutDockOnly();
-            TfrmMsgQueue(embedDocked).ShowRoster();
-        end
-        else begin
-            if (Tabs.PageCount > 0) then
-                layoutRosterDock()
-            else
-                layoutRosterOnly();
-            //show roster in pnlRoster
-            RosterWindow.DockRoster(pnlRoster);
-        end;
+    else if (newState = dsDockOnly) then begin
+        layoutDockOnly();
+        TfrmMsgQueue(embedDocked).ShowRoster();
+    end
+    else begin //dsrosterdock
+        layoutRosterDock();
+        if (embedDocked <> nil) then
+            TfrmMsgQueue(embedDocked).HideRoster();
+        RosterWindow.DockRoster(pnlRoster);
     end;
 end;
 
@@ -3843,15 +3863,14 @@ end;
 }
 procedure TfrmExodus.layoutDockOnly();
 begin
+    saveRosterDockWidths();
     if (DockState <> dsDockOnly) then begin
-        pnlROster.Visible := false;
         splitRoster.Visible := false;
-        pnlDock.Visible := false;
-
+        pnlRoster.Visible := false;
         pnlDock.Align := alClient;
         pnlDock.Visible := true;
-        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + splitRoster.Width + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
-        
+        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
+
         _currDockState := dsDockOnly;
         Self.DockSite := false;
         Tabs.DockSite := true;
@@ -3863,37 +3882,38 @@ end;
 }
 procedure TfrmExodus.layoutRosterDock();
 begin
+    saveRosterDockWidths();
     if (DockState <> dsRosterDock) then begin
         _noMoveCheck := true;
         //this is a mess. To get splitter working with the correct control
-        //we need to hide/de-align/set their relative positions/size them and show them 
+        //we need to hide/de-align/set their relative positions/size them and show them
+        splitRoster.Visible := false; //hide this first or will expand and throw widths off
         pnlRoster.Visible := false;
-        splitRoster.Visible := false;
         pnlDock.Visible := false;
 
         pnlRoster.Align := alNone;
         splitRoster.Align := alNone;
         pnlDock.Align := alNone;
 
-        //roster autosizing is neccessary to get splitter aligned with the
-        //correct control. JJF doesn't know why though...
 
         pnlRoster.Left := 0;
         splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
-        pnlDock.Left := splitRoster.BoundsRect.Right + 1;
-
-        pnlRoster.autoSize := true;
-        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + splitRoster.Width + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
-        pnlRoster.autoSize := false;
-        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+        pnlDock.Left := pnlRoster.BoundsRect.Right + 4;
 
         pnlRoster.Align := alLeft;
-        splitRoster.Align := alLeft;
-        pnlDock.Align := alClient;
-
         pnlRoster.Visible := true;
+        splitRoster.Align := alLeft;
+        splitRoster.Width := 3;
         splitRoster.Visible := true;
+        pnlDock.Align := alClient;
         pnlDock.Visible := true;
+        
+        //roster autosizing is neccessary to get splitter aligned with the
+        //correct control. JJF doesn't know why though...
+//        pnlRoster.autoSize := true;
+        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
+//        pnlRoster.autoSize := false;
+        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
 
         _noMoveCheck := false;
         _currDockState := dsRosterDock;
@@ -3908,15 +3928,10 @@ end;
 procedure TfrmExodus.layoutRosterOnly();
 begin
     //if tabs were being shown, save tab size
+    saveRosterDockWidths();
     if (DockState <> dsRosterOnly) then begin
-        //save tab size if moving from a state where it was shown
-        if (DockState = dsDockOnly) then //roster rendered in tab, adjust size
-            MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width - MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) - splitRoster.Width)
-        else if (DockState = dsRosterDock) then
-            MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width);
-
+        splitRoster.Visible := false; //hide first or will expand and throw widsths off
         pnlRoster.Visible := false;
-        splitRoster.Visible := false;
         pnlDock.Visible := false;
 
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
@@ -3926,6 +3941,23 @@ begin
         _currDockState := dsRosterOnly;
         Self.DockSite := true;
         Tabs.DockSite := false;
+    end;
+end;
+
+{
+    Save the current roster and dock panel widths.
+
+    Depending on current state...
+}
+procedure TfrmExodus.saveRosterDockWidths();
+begin
+    if (DockState = dsRosterOnly) then
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
+    else if (DockState = dsRosterDock) then begin
+        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width);
+    end else if (DockState = dsDockOnly) then begin
+        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width - MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) - 3);
     end;
 end;
 
