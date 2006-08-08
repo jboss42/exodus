@@ -3775,7 +3775,7 @@ begin
         ts := Tabs.FindNextPage(nil, true, false);
         while (ts <> nil) do begin
             tf := TfrmDockable(GetTabForm(ts));
-            tf.FloatForm();
+            tf.ManualFloat(tf.FloatPos);
             ts := Tabs.FindNextPage(nil, true, false);
         end;
         if (embedDocked <> nil) then
