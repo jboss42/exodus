@@ -23,6 +23,7 @@ object frmMsgQueue: TfrmMsgQueue
     Top = 0
     Height = 276
     ResizeStyle = rsUpdate
+    OnMoved = splitRosterMoved
     ExplicitLeft = 125
     ExplicitTop = 1
   end
@@ -35,7 +36,6 @@ object frmMsgQueue: TfrmMsgQueue
     Caption = 'pnlRoster'
     TabOrder = 0
     Visible = False
-    OnResize = pnlRosterResize
   end
   object pnlMsgQueue: TPanel
     Left = 133
@@ -195,8 +195,6 @@ object frmMsgQueue: TfrmMsgQueue
       BevelEdges = []
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 3
-      ExplicitTop = 0
       DesignSize = (
         311
         25)
