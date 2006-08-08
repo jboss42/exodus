@@ -3668,7 +3668,7 @@ end;
 }
 procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
 begin
-    if ((form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
+    if ((Self.Tabs.ControlCount > 0) and (form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
         Self.Tabs.ActivePage := form.TabSheet;
         form.OnDockedActivate(Self);
     end;
@@ -3757,6 +3757,7 @@ begin
         RosterWindow.DockRoster(pnlRoster);
     end
     else begin //docking allowed
+        Self.DockSite := true; //this will be changed in one of the "layout" methods if need be
         if (embedRoster and (embedDocked <> nil)) then begin
             //pgm mode enabled and an embedable dockable is docked...
             layoutDockOnly();
@@ -3770,7 +3771,6 @@ begin
             //show roster in pnlRoster
             RosterWindow.DockRoster(pnlRoster);
         end;
-        Self.DockSite := true;
     end;
 end;
 
