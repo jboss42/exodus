@@ -39,6 +39,7 @@ object frmExodus: TfrmExodus
     Beveled = True
     MinSize = 1
     ResizeStyle = rsUpdate
+    OnMoved = splitRosterMoved
     ExplicitLeft = 80
     ExplicitTop = 33
   end
