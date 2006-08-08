@@ -54,9 +54,9 @@ type
     procedure txtMsgURLClick(Sender: TObject; URL: String);
     procedure D1Click(Sender: TObject);
     procedure lstEventsEnter(Sender: TObject);
-    procedure pnlRosterResize(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure splitRosterMoved(Sender: TObject);
   private
     { Private declarations }
     _queue          : TObjectList;
@@ -370,6 +370,7 @@ end;
 procedure TfrmMsgQueue.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
+
 end;
 
 {---------------------------------------}
@@ -602,19 +603,12 @@ begin
 
 end;
 
-procedure TfrmMsgQueue.pnlRosterResize(Sender: TObject);
-begin
-    inherited;
-    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
-        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
-end;
-
 {---------------------------------------}
 procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-    lstEvents.Items.Clear
+    lstEvents.Items.Clear;
 end;
 
 {---------------------------------------}
@@ -681,13 +675,35 @@ end;
 }
 procedure TfrmMsgQueue.ShowRoster();
 begin
-    if (not pnlRoster.Visible) then begin
+        //this is a mess. To get splitter working with the correct control
+        //we need to hide/de-align/set their relative positions/size them and show them 
+        pnlRoster.Visible := false;
+        splitRoster.Visible := false;
+
+        pnlRoster.Align := alNone;
+        splitRoster.Align := alNone;
+        pnlMsgQueue.Align := alNone;
+
+        pnlRoster.Left := 0;
+        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
+        pnlMsgQueue.Left := splitRoster.BoundsRect.Right + 1;
+
+        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+
+        pnlRoster.Align := alLeft;
+        splitRoster.Align := alLeft;
+        pnlMsgQueue.Align := alClient;
+
         pnlRoster.Visible := true;
         splitRoster.Visible := true;
-        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-        pnlMsgQueue.Align := alClient;
         RosterWindow.DockRoster(pnlRoster);
-    end;
+end;
+
+procedure TfrmMsgQueue.splitRosterMoved(Sender: TObject);
+begin
+  inherited;
+    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
+        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {
