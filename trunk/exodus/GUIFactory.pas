@@ -91,7 +91,6 @@ var
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
     q: TfrmMsgQueue;
-    dda: widestring;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
