@@ -261,6 +261,14 @@ type
     procedure pnlRosterResize(Sender: TObject);
     procedure splitRosterMoved(Sender: TObject);
 
+    {
+        Event fired when programaticvally undocking
+
+        Does not update the layout of the dock manager. This method is used
+        when undocking tabs while updating the layout (see updateLayoutPrefChange)
+    }
+    procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
+                                       NewTarget: TWinControl; var Allow: Boolean);
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -422,6 +430,14 @@ type
     }
     procedure saveRosterDockWidths();
 
+    {
+        Undock all docked forms.
+
+        Prevents tab change, onundock events from firing. Does not update
+        layout.
+    }
+    procedure undockAllForms();
+    
 published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
@@ -3614,6 +3630,31 @@ begin
         CloseDocked(TForm(Client));
 end;
 
+{
+    Event fired when programaticvally undocking 
+
+    Does not update the layout of the dock manager. This method is used
+    when undocking tabs while updating the layout (see updateLayoutPrefChange)
+}
+procedure TfrmExodus.TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
+  NewTarget: TWinControl; var Allow: Boolean);
+var
+    frm: TfrmDockable;
+    idx: Integer;  
+begin
+    // check to see if the tab is a frmDockable
+    Allow := true;
+    if (Client is TfrmDockable) then begin
+        frm := TfrmDockable(frm);
+        frm.Docked := false;
+        frm.TabSheet := nil;
+        idx := _docked_forms.IndexOf(TfrmDockable(frm));
+        if (idx >= 0) then
+            _docked_forms.Delete(idx);
+    end;
+end;
+
+
 {---------------------------------------}
 {
     Event fired when the user has dropped a TfrmDockable on to Tabs.
@@ -3703,10 +3744,10 @@ begin
 end;
 
 {---------------------------------------}
+
+
 {
     Cleanup the TTabSheet associated with frm.
-
-
 }
 procedure TfrmExodus.CloseDocked(frm: TForm);
 var
@@ -3772,12 +3813,7 @@ begin
         layoutRosterOnly();
         RosterWindow.DockRoster(pnlRoster);
         //undock any forms currently docked
-        ts := Tabs.FindNextPage(nil, true, false);
-        while (ts <> nil) do begin
-            tf := TfrmDockable(GetTabForm(ts));
-            tf.ManualFloat(tf.FloatPos);
-            ts := Tabs.FindNextPage(nil, true, false);
-        end;
+        undockAllForms();
         if (embedDocked <> nil) then
             TfrmMsgQueue(embedDocked).HideRoster();
         Self.DockSite := dockAllowed;
@@ -3961,6 +3997,32 @@ begin
     end;
 end;
 
+{
+    Undock all docked forms.
+
+    Prevents tab change, onundock events from firing. Does not update
+    layout.
+}
+procedure TfrmExodus.undockAllForms();
+var
+    tf: TfrmDockable;
+    ts: TTabSheet;
+begin
+    ts := Tabs.FindNextPage(nil, true, false);
+    if (ts <> nil) then begin
+        //stop layout update events
+        tabs.OnUnDock := Self.TabsUnDockNoLayoutChange;
+        tabs.OnChange := nil;
+        while (ts <> nil) do begin
+            tf := TfrmDockable(GetTabForm(ts));
+            tf.ManualFloat(tf.FloatPos);
+            ts := Tabs.FindNextPage(nil, true, false);
+        end;
+        //enable layout update events
+        tabs.OnUnDock := Self.TabsUnDock;
+        tabs.OnChange := Self.TabsChange;
+    end;
+end;
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
