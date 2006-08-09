@@ -463,7 +463,8 @@ begin
     sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
     ShortCutToKey(sc, _close_key, _close_shift);
 
-    _mynick := MainSession.Prefs.getString('default_nick');
+    if (not MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+        _mynick := MainSession.Prefs.getString('default_nick');
     if (_mynick = '') then
         _mynick := MainSession.Profile.getDisplayUsername();
 end;

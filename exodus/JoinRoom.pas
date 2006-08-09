@@ -49,6 +49,7 @@ type
     TntLabel1: TTntLabel;
     Bevel3: TBevel;
     aniWait: TAnimate;
+    chkUseRegisteredNickname: TTntCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -118,6 +119,12 @@ begin
     with jr do begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
+            txtNick.Text := MainSession.Profile.getDisplayUsername();
+            txtNick.Enabled := False;
+            chkUseRegisteredNickname.Enabled := False;
+            chkUseRegisteredNickname.Checked := False;
+        end;
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Prefs.getString('default_nick');
         if (txtNick.Text = '') then
@@ -210,6 +217,7 @@ begin
     else
         optSpecify.Checked := true;
     chkDefaultConfig.Checked := MainSession.Prefs.getBool('tc_default_config');
+    chkUseRegisteredNickname.Checked := MainSession.Prefs.getBool('tc_use_reg_nick');
     optSpecifyClick(Self);
 end;
 
@@ -240,6 +248,7 @@ var
     rjid: Widestring;
     rmjid: TJabberID;
     li: TTntListItem;
+    registered_nick: boolean;
 begin
     if ((Tabs.ActivePage = tabSheet1) and (optBrowse.Checked)) then begin
         // change tabs if they selected browse
@@ -277,7 +286,8 @@ begin
 
     pass := Trim(txtPassword.Text);
     dconfig := chkDefaultConfig.Checked;
-    StartRoom(rjid, txtNick.Text, pass, true, dconfig);
+    registered_nick := chkUseRegisteredNickname.Checked;
+    StartRoom(rjid, txtNick.Text, pass, true, dconfig, registered_nick);
 
     with MainSession.Prefs do begin
         setString('tc_lastroom', txtRoom.Text);
@@ -285,6 +295,7 @@ begin
         setString('tc_lastnick', txtNick.Text);
         setBool('tc_browse', optBrowse.Checked);
         setBool('tc_default_config', dconfig);
+        setBool('tc_use_reg_nick', registered_nick);
     end;
     Self.Close;
     exit;

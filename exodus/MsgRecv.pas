@@ -549,7 +549,7 @@ begin
     if eType = evt_Invite then begin
         // join this grp... grp is in the subject
         jid := TJabberID.Create(_base_jid, false);
-        StartRoom(jid.jid, '');
+        StartRoom(jid.jid, '', '', True, False, True);
         jid.Free();
         Self.Close();
     end

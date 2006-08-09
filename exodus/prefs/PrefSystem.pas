@@ -272,6 +272,10 @@ procedure TfrmPrefSystem.FormCreate(Sender: TObject);
 begin
   inherited;
     AssignUnicodeURL(lblLangScan.Font, 8);
+    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
+        txtDefaultNick.Visible := False;
+        lblDefaultNick.Visible := False;
+    end;
 end;
 
 end.

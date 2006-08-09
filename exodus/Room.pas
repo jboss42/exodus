@@ -211,10 +211,12 @@ type
     procedure ConfigCallback(event: string; Tag: TXMLTag);
     procedure EntityCallback(event: string; tag: TXMLTag);
     procedure autoConfigCallback(event: string; tag: TXMLTag);
-
+    procedure roomuserCallback(event: string; tag: TXMLTag);
+    
   public
     { Public declarations }
     mynick: Widestring;
+    useRegisteredNick: boolean;
     COMController: TObject;
 
     procedure SendMsg; override;
@@ -334,7 +336,7 @@ const
 function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid: Widestring; rnick: Widestring = '';
     Password: WideString = ''; send_presence: boolean = true;
-    default_config: boolean = false): TfrmRoom;
+    default_config: boolean = false; use_registered_nick: boolean = false): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
@@ -388,7 +390,7 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 function StartRoom(rjid: Widestring; rnick, Password: Widestring;
-    send_presence, default_config: boolean): TfrmRoom;
+    send_presence, default_config, use_registered_nick: boolean): TfrmRoom;
 var
     f: TfrmRoom;
     tmp_jid: TJabberID;
@@ -401,7 +403,9 @@ begin
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
 
     // Find out nick..
-    if (rnick = '') then begin
+    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+        n := MainSession.Profile.getDisplayUsername()
+    else if (rnick = '') then begin
         n := MainSession.Prefs.getString('default_nick');
         if (n = '') then n := MainSession.Profile.getDisplayUsername();
     end
@@ -416,6 +420,12 @@ begin
         // create a new room
         f := TfrmRoom.Create(Application);
         f.SetJID(rjid);
+
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+            f.useRegisteredNick := false
+        else
+            f.useRegisteredNick := use_registered_nick;
+            
         f.MyNick := n;
         tmp_jid := TJabberID.Create(rjid);
         f.SetPassword(Password);
@@ -794,7 +804,8 @@ begin
     else if (cmd = '/nick') then begin
         // change nickname
         if (rest = '') then exit;
-        changeNick(rest);
+        if (not MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+            changeNick(rest);
         Result := true;
     end
     else if ((cmd = '/chat') or (cmd = '/query')) then begin
@@ -981,6 +992,22 @@ begin
         if (tag <> nil) then tmps := tag.Data() else tmps := '';
         _sendPresence('unavailable', tmps);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.roomuserCallback(event: string; tag: TXMLTag);
+var
+    q, ident: TXMLTag;
+begin
+    // we got back a response to our roomuser_item request.
+    // we need to process it and then send start presence to room.
+    useRegisteredNick := false;
+    if (tag.GetAttribute('type') = 'result') then begin
+        q := tag.GetFirstTag('query');
+        ident := q.GetFirstTag('identity');
+        MyNick := ident.GetAttribute('name');
+    end;
+    sendStartPresence();
 end;
 
 {---------------------------------------}
@@ -1480,7 +1507,7 @@ begin
     ImageIndex := RosterTreeImages.Find('conference');
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
-
+    
     AssignUnicodeFont(lblSubject.Font, 8);
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
@@ -1504,6 +1531,9 @@ begin
     MsgList.setContextMenu(popRoom);
     MsgList.setDragOver(OnDockedDragOver);
     MsgList.setDragDrop(OnDockedDragDrop);
+
+    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+        popNick.Enabled := False;
 end;
 
 {---------------------------------------}
@@ -1778,7 +1808,7 @@ begin
     bm_name := tmp_jid.getDisplayJID();
 
     if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
-        MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false);
+        MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false, false);
     end;
 end;
 
@@ -2445,6 +2475,8 @@ procedure TfrmRoom.sendStartPresence();
 var
     e: TJabberEntity;
     p : TJabberPres;
+    iq: TJabberIQ;
+    cb: TPacketEvent;
 begin
     e := jEntityCache.getByJid(Self.jid, '');
     if ((e = nil) or (not e.hasInfo)) then begin
@@ -2464,6 +2496,20 @@ begin
             Self.Close;
             exit;
         end;
+    end
+    else if ((useRegisteredNick) and
+             (e.hasFeature('muc_membersonly') or
+             e.hasFeature('muc-members-only'))) then begin
+        cb := Self.roomuserCallback;
+        iq := TJabberIQ.Create(MainSession, MainSession.generateID(), cb, 10);
+        with iq do begin
+            toJid := jid;
+            iqType := 'get';
+            Namespace := XMLNS_DISCOINFO;
+            qTag.setAttribute('node', 'x-roomuser-item');
+        end;
+        iq.Send();
+        exit;
     end;
 
     _pending_start := false;

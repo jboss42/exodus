@@ -51,7 +51,7 @@ type
 
         procedure SaveBookmarks();
 
-        procedure AddBookmark(sjid, name, nick: Widestring; auto_join: boolean);
+        procedure AddBookmark(sjid, name, nick: Widestring; auto_join, use_reg_nick: boolean);
         procedure RemoveBookmark(sjid: Widestring);
         function  FindBookmark(sjid: Widestring): TXMLTag;
         procedure parseItem(tag: TXMLTag; ri: TJabberRosterItem);
@@ -312,7 +312,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TBookmarkManager.AddBookmark(sjid, name, nick: Widestring; auto_join: boolean);
+procedure TBookmarkManager.AddBookmark(sjid, name, nick: Widestring; auto_join, use_reg_nick: boolean);
 var
     bm: TXMLTag;
     ri: TJabberRosterItem;
@@ -338,6 +338,12 @@ begin
         bm.setAttribute('autojoin', 'true')
     else
         bm.setAttribute('autojoin', 'false');
+
+    if (use_reg_nick) then
+        bm.setAttribute('reg_nick', 'true')
+    else
+        bm.setAttribute('reg_nick', 'false');
+
     bm.AddBasicTag('nick', nick);
 
     AddObject(sjid, bm);

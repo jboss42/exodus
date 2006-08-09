@@ -83,5 +83,8 @@ this much help.
   <brand_ad_url></brand_ad_url>
   <!-- The URL to check for auto-update of branding.xml file. -->
   <branding_url></branding_url>
+  
+  <!-- Should the nickname be limited to the display name. Use a value='1' for Nickname lockdown -->
+  <brand_prevent_change_nick value="0"/>
 
 </brand>

@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 8/1/2006 12:08:36 PM from Type Library described below.
+// File generated on 8/9/2006 8:25:36 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -46,7 +46,7 @@ const
 
   LIBID_Exodus: TGUID = '{37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}';
 
-  IID_IExodusController: TGUID = '{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}';
+  IID_IExodusController: TGUID = '{347D8B62-E489-4D99-BDED-6DC964CB2BEE}';
   CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
   IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
@@ -99,7 +99,7 @@ const
   CLASS_ExodusLogMsg: TGUID = '{740743C0-7BEF-48E8-BD05-1470047F03CA}';
   IID_IExodusLogListener: TGUID = '{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}';
   CLASS_ExodusLogListener: TGUID = '{98ED888A-0569-4E5B-8933-36EBF08812B4}';
-  IID_IExodusPlugin: TGUID = '{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}';
+  IID_IExodusPlugin: TGUID = '{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -259,10 +259,10 @@ type
 // *********************************************************************//
 // Interface: IExodusController
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}
+// GUID:      {347D8B62-E489-4D99-BDED-6DC964CB2BEE}
 // *********************************************************************//
   IExodusController = interface(IDispatch)
-    ['{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}']
+    ['{347D8B62-E489-4D99-BDED-6DC964CB2BEE}']
     function Get_Connected: WordBool; safecall;
     function Get_Username: WideString; safecall;
     function Get_Server: WideString; safecall;
@@ -302,7 +302,8 @@ type
     function FindChat(const JabberID: WideString; const Resource: WideString): Integer; safecall;
     procedure StartSearch(const searchJID: WideString); safecall;
     procedure StartRoom(const roomJID: WideString; const Nickname: WideString; 
-                        const password: WideString; sendPresence: WordBool; defaultConfig: WordBool); safecall;
+                        const password: WideString; sendPresence: WordBool; 
+                        defaultConfig: WordBool; useRegisteredNickname: WordBool); safecall;
     procedure StartInstantMsg(const JabberID: WideString); safecall;
     procedure StartBrowser(const browseJID: WideString); safecall;
     procedure ShowJoinRoom(const roomJID: WideString; const Nickname: WideString; 
@@ -376,10 +377,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusControllerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}
+// GUID:      {347D8B62-E489-4D99-BDED-6DC964CB2BEE}
 // *********************************************************************//
   IExodusControllerDisp = dispinterface
-    ['{E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C}']
+    ['{347D8B62-E489-4D99-BDED-6DC964CB2BEE}']
     property Connected: WordBool readonly dispid 1;
     property Username: WideString readonly dispid 2;
     property Server: WideString readonly dispid 3;
@@ -419,7 +420,8 @@ type
     function FindChat(const JabberID: WideString; const Resource: WideString): Integer; dispid 40;
     procedure StartSearch(const searchJID: WideString); dispid 41;
     procedure StartRoom(const roomJID: WideString; const Nickname: WideString; 
-                        const password: WideString; sendPresence: WordBool; defaultConfig: WordBool); dispid 42;
+                        const password: WideString; sendPresence: WordBool; 
+                        defaultConfig: WordBool; useRegisteredNickname: WordBool); dispid 42;
     procedure StartInstantMsg(const JabberID: WideString); dispid 43;
     procedure StartBrowser(const browseJID: WideString); dispid 44;
     procedure ShowJoinRoom(const roomJID: WideString; const Nickname: WideString; 
@@ -4007,10 +4009,10 @@ type
 // *********************************************************************//
 // Interface: IExodusPlugin
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// GUID:      {B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
-    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
+    ['{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}']
     procedure Startup(const exodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); safecall;
@@ -4025,10 +4027,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusPluginDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {98B21105-E964-4A58-AD6E-2B61B9F2ECA8}
+// GUID:      {B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
-    ['{98B21105-E964-4A58-AD6E-2B61B9F2ECA8}']
+    ['{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}']
     procedure Startup(const exodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); dispid 3;

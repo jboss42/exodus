@@ -91,6 +91,7 @@ var
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
     q: TfrmMsgQueue;
+    dda: widestring;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
@@ -98,7 +99,7 @@ begin
     end
     else if (event = '/session/gui/conference') then begin
         room := StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
-            tag.GetBasicText('password'));
+            tag.GetBasicText('password'), true, false, (tag.GetAttribute('reg_nick') = 'true'));
 
         // make sure it's not minimized
         if (room.WindowState <> wsNormal) then
