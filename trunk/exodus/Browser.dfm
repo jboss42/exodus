@@ -1,9 +1,9 @@
 object frmBrowse: TfrmBrowse
   Left = 253
   Top = 551
-  Width = 430
-  Height = 425
   Caption = 'Jabber Browser'
+  ClientHeight = 391
+  ClientWidth = 422
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   DragKind = dkDock
@@ -86,6 +86,7 @@ object frmBrowse: TfrmBrowse
         Height = 13
         Align = alTop
         Caption = 'Indentities:'
+        ExplicitWidth = 51
       end
       object Splitter1: TSplitter
         Left = 4
@@ -102,6 +103,7 @@ object frmBrowse: TfrmBrowse
         Height = 13
         Align = alTop
         Caption = 'Features:'
+        ExplicitWidth = 44
       end
       object vwInfo: TTntListView
         Left = 4
@@ -206,10 +208,8 @@ object frmBrowse: TfrmBrowse
         Height = 22
         AutoSize = True
         DisabledImages = DisToolbar
-        EdgeBorders = []
         EdgeInner = esNone
         EdgeOuter = esNone
-        Flat = True
         Images = Toolbar
         ParentShowHint = False
         ShowHint = True
@@ -360,6 +360,8 @@ object frmBrowse: TfrmBrowse
         Align = alClient
         Caption = 'Jabber Address'
         Layout = tlCenter
+        ExplicitWidth = 73
+        ExplicitHeight = 13
       end
     end
     object cboJID: TTntComboBox
@@ -402,6 +404,8 @@ object frmBrowse: TfrmBrowse
         Align = alClient
         Caption = 'Node Identifier'
         Layout = tlCenter
+        ExplicitWidth = 69
+        ExplicitHeight = 13
       end
     end
     object cboNode: TTntComboBox
@@ -3083,7 +3087,7 @@ object frmBrowse: TfrmBrowse
     Left = 7
     Top = 301
     Bitmap = {
-      494C010109000E00040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010109000E00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3615,13 +3619,14 @@ object frmBrowse: TfrmBrowse
       0001C003FFFFFFFF0001C003FDFFFFBF0001C003F9FFFF9F0831C003F1FFFF8F
       1001C003E003C0072A798001C003C00301018001C003C0030279C003E003C007
       0001E003F1FFFF8F21F1F003F9FFFF9F0001F803FDFFFFBF0001FC23FFFFFFFF
-      0001FE63FFFFFFFF0001FFFFFFFFFFFF}
+      0001FE63FFFFFFFF0001FFFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object DisToolbar: TImageList
     Left = 38
     Top = 301
     Bitmap = {
-      494C010109000E00040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010109000E00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -4153,7 +4158,8 @@ object frmBrowse: TfrmBrowse
       0001DC3BFFFFFFFF7B0DDC3BFDFFFFBF601DDC3BF9FFFF9F5E3DDC3BF5FFFFAF
       3F7DDC3BEC03C0373F7D9FF9DFFBDFFB3F7D8FF1DFFBDFFB3F7DC7E3EC03C037
       5EFDE3C3F5FFFFAF61FDF183F9FFFF9F7BFDF803FDFFFFBF0001FC23FFFFFFFF
-      0001FE63FFFFFFFF0001FFFFFFFFFFFF}
+      0001FE63FFFFFFFF0001FFFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object popHistory: TTntPopupMenu
     Left = 42

@@ -963,7 +963,7 @@ library Exodus
   typedef BSTR * PWideString1;
 
   [
-    uuid(E8B87CD6-E9B7-49A1-9668-0BB405EF0C5C), 
+    uuid(347D8B62-E489-4D99-BDED-6DC964CB2BEE), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
     dual, 
@@ -1134,7 +1134,7 @@ library Exodus
     [
     id(0x0000002A)
     ]
-    HRESULT _stdcall StartRoom([in] BSTR roomJID, [in] BSTR Nickname, [in] BSTR password, [in] VARIANT_BOOL sendPresence, [in] VARIANT_BOOL defaultConfig );
+    HRESULT _stdcall StartRoom([in] BSTR roomJID, [in] BSTR Nickname, [in] BSTR password, [in] VARIANT_BOOL sendPresence, [in] VARIANT_BOOL defaultConfig, [in] VARIANT_BOOL useRegisteredNickname );
     [
     id(0x0000002B)
     ]
@@ -7769,7 +7769,7 @@ library Exodus
   };
 
   [
-    uuid(C57C2CC6-7ADB-4F48-A75E-65F794092AE3), 
+    uuid(B16F38F6-D390-4FF6-AEF9-DF8E5912B45F), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPlugin Object"), 
     dual, 

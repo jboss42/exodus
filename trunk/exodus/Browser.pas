@@ -639,7 +639,7 @@ begin
     if (tmpjid.user = '') then
         StartJoinRoom(tmpjid, '', '')
     else
-        StartRoom(cjid, '');
+        StartRoom(cjid, '', '', True, False, True);
     tmpjid.Free();
 end;
 

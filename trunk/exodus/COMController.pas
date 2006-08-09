@@ -77,7 +77,7 @@ type
     function FindChat(const JabberID, resource: WideString): Integer; safecall;
     procedure StartInstantMsg(const JabberID: WideString); safecall;
     procedure StartRoom(const roomJID, Nickname, password: WideString; sendPresence,
-      defaultConfig: WordBool); safecall;
+      defaultConfig, useRegisteredNickname: WordBool); safecall;
     procedure StartSearch(const SearchJID: WideString); safecall;
     procedure ShowJoinRoom(const RoomJID, nickname, Password: WideString); safecall;
     procedure StartBrowser(const BrowseJID: WideString); safecall;
@@ -1149,9 +1149,10 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.StartRoom(const roomJID, Nickname,
-  password: WideString; sendPresence, defaultConfig: WordBool);
+  password: WideString; sendPresence, defaultConfig,
+  useRegisteredNickname: WordBool);
 begin
-    Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig);
+    Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig, useRegisteredNickname);
 end;
 
 {---------------------------------------}

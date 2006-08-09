@@ -1,10 +1,10 @@
 object frmBookmark: TfrmBookmark
   Left = 275
   Top = 185
-  Width = 346
-  Height = 216
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Bookmark Properties'
+  ClientHeight = 203
+  ClientWidth = 338
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -48,21 +48,29 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 148
+    Top = 169
     Width = 338
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 169
+    ExplicitWidth = 338
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 338
       Height = 34
+      ExplicitWidth = 338
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 338
+        ExplicitWidth = 338
       end
       inherited Panel1: TPanel
         Left = 178
         Height = 29
+        ExplicitLeft = 178
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -80,7 +88,7 @@ object frmBookmark: TfrmBookmark
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 1
-    Items.WideStrings = (
+    Items.Strings = (
       'Conference Room')
   end
   object txtName: TTntEdit
@@ -106,10 +114,18 @@ object frmBookmark: TfrmBookmark
   end
   object chkAutoJoin: TTntCheckBox
     Left = 145
-    Top = 120
+    Top = 143
     Width = 97
     Height = 17
     Caption = 'Join on login'
+    TabOrder = 6
+  end
+  object chkRegisteredNick: TTntCheckBox
+    Left = 145
+    Top = 120
+    Width = 168
+    Height = 17
+    Caption = 'Use registered nickname.'
     TabOrder = 5
   end
 end

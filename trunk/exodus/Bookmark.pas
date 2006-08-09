@@ -37,6 +37,7 @@ type
     Label4: TTntLabel;
     txtNick: TTntEdit;
     chkAutoJoin: TTntCheckBox;
+    chkRegisteredNick: TTntCheckBox;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -97,6 +98,7 @@ begin
             txtName.Text := bm.GetAttribute('name');
             chkAutoJoin.Checked := (bm.GetAttribute('autojoin') = 'true');
             txtNick.Text := bm.GetBasicText('nick');
+            chkRegisteredNick.Checked := (bm.GetAttribute('reg_nick') = 'true');
         end;
         tmp.Free();
         Show();
@@ -123,7 +125,7 @@ begin
     jid := TJabberID.Create(txtJid.Text, false);
     if (new) then begin
         MainSession.Bookmarks.AddBookmark(jid.jid(), txtName.Text,
-            txtNick.Text, chkAutoJoin.Checked);
+            txtNick.Text, chkAutoJoin.Checked, chkRegisteredNick.Checked);
     end
     else begin
         bm := MainSession.Bookmarks.FindBookmark(jid.jid());
@@ -133,6 +135,10 @@ begin
             bm.setAttribute('autojoin', 'true')
         else
             bm.setAttribute('autojoin', 'false');
+        if chkRegisteredNick.Checked then
+            bm.setAttribute('reg_nick', 'true')
+        else
+            bm.setAttribute('reg_nick', 'false');
 
         nick := bm.GetFirstTag('nick');
         if nick = nil then
@@ -168,6 +174,10 @@ procedure TfrmBookmark.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
+    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
+        txtNick.Enabled := false;
+        chkRegisteredNick.Enabled := false;
+    end;
 end;
 
 end.
