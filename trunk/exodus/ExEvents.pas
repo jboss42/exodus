@@ -127,7 +127,6 @@ procedure RenderEvent(e: TJabberEvent);
 var
     msg: string;
     img_idx: integer;
-    mqueue: TfrmMsgQueue;
     tmp_jid: TJabberID;
     m, xml, etag: TXMLTag;
     mc: TMsgController;
@@ -195,6 +194,9 @@ begin
     tmp_jid.Free();
 
     if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
+        if (not getMsgQueue().Visible) then begin
+            getMsgQueue().ShowDefault();
+        end;
         getMsgQueue().LogEvent(e, msg, img_idx);
         if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
             (e.eType = evt_Invite)) then begin
@@ -209,18 +211,12 @@ begin
         // OR we always want to use the msg queue
         // OR it's a queued chat event
         // so display it in the msg queue, not live
-        mqueue := getMsgQueue();
-
-        if (not mqueue.Visible) then with mqueue do begin
-            if (frmExodus.isMinimized()) then
-                ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else
-                ShowWindow(Handle, SW_SHOWNOACTIVATE);
-            Visible := true;
+        if (not getMsgQueue().Visible) then begin
+            getMsgQueue().ShowDefault();
         end;
 
         // Note that LogEvent takes ownership of e
-        mqueue.LogEvent(e, msg, img_idx);
+        getMsgQueue().LogEvent(e, msg, img_idx);
     end
 
     else begin
