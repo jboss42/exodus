@@ -3910,9 +3910,9 @@ begin
         
         //roster autosizing is neccessary to get splitter aligned with the
         //correct control. JJF doesn't know why though...
-//        pnlRoster.autoSize := true;
+        pnlRoster.autoSize := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
-//        pnlRoster.autoSize := false;
+        pnlRoster.autoSize := false;
         pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
 
         _noMoveCheck := false;
