@@ -1,8 +1,8 @@
 object frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  Width = 363
-  Height = 294
+  ClientHeight = 260
+  ClientWidth = 355
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -13,7 +13,6 @@ object frmBaseChat: TfrmBaseChat
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13

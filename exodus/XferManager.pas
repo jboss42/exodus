@@ -100,7 +100,6 @@ type
     procedure tcpServerDisconnect(AThread: TIdPeerThread);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure btnCloseClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure OpenDialog1CanClose(Sender: TObject; var CanClose: Boolean);
@@ -124,9 +123,6 @@ type
 
   public
     { Public declarations }
-    procedure DockForm; override;
-    procedure FloatForm; override;
-
     procedure SendFile(pkg: TFileXferPkg);
     procedure RecvFile(pkg: TFileXferPkg);
 
@@ -134,6 +130,23 @@ type
     procedure killFrame(frame: TFrame);
     procedure ServeStream(spkg: TStreamPkg);
     procedure UnServeStream(hash: string);
+
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
+
   end;
 
 var
@@ -463,6 +476,7 @@ begin
     pnlCaption.Font.Color := clHighlightText;
     pnlCaption.Font.Size := 10;
     pnlCaption.Font.Style := [fsBold];
+    Self.ImageIndex := -1;
 end;
 
 {---------------------------------------}
@@ -808,34 +822,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmXferManager.DockForm;
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{---------------------------------------}
-procedure TfrmXferManager.FloatForm;
-begin
-    inherited;
-    btnClose.Visible := false;
-end;
-
-{---------------------------------------}
 procedure TfrmXferManager.FormResize(Sender: TObject);
 begin
   inherited;
     btnClose.Left := Panel1.Width - btnClose.Width - 2;
     pnlCaption.Width := btnClose.Left - 5;
-end;
-
-{---------------------------------------}
-procedure TfrmXferManager.FormEndDock(Sender, Target: TObject; X,
-  Y: Integer);
-begin
-  inherited;
-    btnClose.Visible := Docked;
-    if ((Docked) and (TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
 end;
 
 {---------------------------------------}
@@ -851,6 +842,30 @@ begin
         else if (o is TfRecvStatus) then
             TfRecvStatus(o).kill();
     end;
+end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmXferManager.OnDocked();
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmXferManager.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
 end;
 
 {---------------------------------------}
@@ -902,6 +917,7 @@ function  TFileXferPkg.getRecip(): Widestring;
 begin
     Result := recipient;
 end;
+
 
 initialization
     xfer_lock := TCriticalSection.Create();

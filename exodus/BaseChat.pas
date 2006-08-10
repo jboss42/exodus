@@ -67,7 +67,6 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure timWinFlashTimer(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
 
   private
     { Private declarations }
@@ -105,6 +104,22 @@ type
         Fired by DockManager when tab is activated (brought to front)
     }
     procedure OnDockedActivate(Sender : TObject);override;
+
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
 
   end;
 
@@ -421,18 +436,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    if (Target = nil) then exit;
-
-    inherited;
-    if timWinFlash.Enabled then
-        timWinFlash.Enabled := false;
-    MsgList.refresh();
-end;
-
-
-{---------------------------------------}
 function TfrmBaseChat.getMsgList(): TfBaseMsgList;
 begin
     Result := TfBaseMsgList(_msgframe);
@@ -450,4 +453,33 @@ begin
         MsgOut.SetFocus();
 end;
 
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmBaseChat.OnDocked();
+begin
+    inherited;
+    if timWinFlash.Enabled then
+        timWinFlash.Enabled := false;
+    MsgList.refresh();
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmBaseChat.OnFloat();
+begin
+    inherited;
+    if timWinFlash.Enabled then
+        timWinFlash.Enabled := false;
+    MsgList.refresh();
+end;
+
 end.
+

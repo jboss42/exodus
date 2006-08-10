@@ -90,7 +90,6 @@ type
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnCloseClick(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure mnuHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure mnuProfileClick(Sender: TObject);
@@ -150,6 +149,22 @@ type
     function getObject(): TObject;
     procedure MessageEvent(tag: TXMLTag);
 
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
+    
     property Controller: TExMsgController read _controller;
 
   end;
@@ -687,13 +702,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmMsgRecv.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-  inherited;
-    btnClose.Visible := Docked;
-end;
-
-{---------------------------------------}
 procedure TfrmMsgRecv.mnuHistoryClick(Sender: TObject);
 begin
   inherited;
@@ -959,6 +967,30 @@ begin
         _events.Free();
 
   inherited;
+end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmMsgRecv.OnDocked();
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmMsgRecv.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
 end;
 
 end.

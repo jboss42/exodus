@@ -19,7 +19,6 @@ object frmDockable: TfrmDockable
   OnCreate = FormCreate
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
-  OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13

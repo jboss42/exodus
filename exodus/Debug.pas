@@ -56,7 +56,6 @@ type
     procedure popMsgClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure WordWrap1Click(Sender: TObject);
     procedure Clear1Click(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
@@ -70,21 +69,32 @@ type
     { Private declarations }
     _cb: integer;
     _scb: integer;
-    
+
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
 
-    procedure DockForm; override;
-    procedure FloatForm; override;
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
 
   end;
 
 procedure ShowDebugForm();
-procedure DockDebugForm();
-procedure FloatDebugForm();
 procedure CloseDebugForm();
 procedure DebugMessage(txt: Widestring);
 
@@ -129,25 +139,6 @@ end;
 function isDebugShowing(): boolean;
 begin
     Result := (frmDebug <> nil);
-end;
-
-{---------------------------------------}
-procedure DockDebugForm();
-begin
-    if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
-        frmDebug.DockForm;
-        frmDebug.Show;
-    end;
-end;
-
-{---------------------------------------}
-procedure FloatDebugForm();
-begin
-    // make sure debug window is hidden and undocked
-    if ((frmDebug <> nil) and (frmDebug.Docked)) then begin
-        frmDebug.Hide;
-        frmDebug.FloatForm;
-    end;
 end;
 
 {---------------------------------------}
@@ -377,27 +368,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.DockForm;
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.FloatForm;
-begin
-    inherited;
-    btnClose.Visible := false;
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    inherited;
-    btnClose.Visible := Docked;
-end;
-
-{---------------------------------------}
 procedure TfrmDebug.WordWrap1Click(Sender: TObject);
 begin
   inherited;
@@ -506,5 +476,30 @@ begin
 
     // do something here to activate the appropriate tab
 end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmDebug.OnDocked();
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmDebug.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
+end;
+
 
 end.

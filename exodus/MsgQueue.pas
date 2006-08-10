@@ -55,7 +55,6 @@ type
     procedure D1Click(Sender: TObject);
     procedure lstEventsEnter(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure splitRosterMoved(Sender: TObject);
   private
     { Private declarations }
@@ -102,6 +101,23 @@ type
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
     procedure RemoveItem(i: integer);
+
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
+
   end;
 
 var
@@ -365,12 +381,8 @@ begin
     _updateChatCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE_CHAT);
     _connectedCB    := MainSession.RegisterCallback(SessionCallback, SE_CONNECTED);
     _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
-end;
 
-procedure TfrmMsgQueue.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    inherited;
-
+    btnClose.Visible := false;
 end;
 
 {---------------------------------------}
@@ -718,6 +730,31 @@ begin
         splitRoster.Visible := false;
         pnlMsgQueue.Align := alClient; //fill it all
     end;
+end;
+
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmMsgQueue.OnDocked();
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmMsgQueue.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
 end;
 
 end.

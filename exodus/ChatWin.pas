@@ -69,7 +69,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure CTCPClick(Sender: TObject);
     procedure mnuBlockClick(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure mnuSaveClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -166,8 +165,6 @@ type
     procedure SendMsg; override;
     function  SetJID(cjid: widestring): boolean;
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
-    procedure DockForm; override;
-    procedure FloatForm; override;
 
     procedure pluginMenuClick(Sender: TObject); override;
 
@@ -181,7 +178,23 @@ type
         Fired by DockManager when tab is activated (brought to front)
     }
     procedure OnDockedActivate(Sender : TObject);override;
-    
+
+        {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
+
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
     property LastImage: integer read _old_img;
@@ -1395,55 +1408,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.DockForm;
-var
-    ritem: TJabberRosterItem;
-begin
-    inherited;
-    btnClose.Visible := true;
-    DragAcceptFiles( Handle, False );
-
-    ritem := MainSession.Roster.Find(_jid.jid);
-    if (ritem = nil) then
-        ritem := MainSession.Roster.FInd(_jid.full);
-        
-    ChangePresImage(ritem, _show, _status);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FloatForm;
-begin
-    inherited;
-    btnClose.Visible := false;
-    DragAcceptFiles(Handle, True);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-var
-    ritem: TJabberRosterItem;
-begin
-    if (target = nil) then exit;
-
-    inherited;
-
-    btnClose.Visible := Docked;
-    if ((Docked) and (TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := _old_img;
-
-    DragAcceptFiles(Handle, not Docked);
-
-    // scroll the MsgView to the bottom.
-    _scrollBottom();
-    Self.Refresh();
-
-    ritem := MainSession.Roster.Find(_jid.jid);
-    if (ritem = nil) then
-        ritem := MainSession.Roster.Find(_jid.full);
-    ChangePresImage(ritem, _show, _status);
-end;
-
-{---------------------------------------}
 procedure TfrmChat.mnuSaveClick(Sender: TObject);
 begin
   inherited;
@@ -1682,6 +1646,47 @@ begin
     if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then begin
         Self.tabSheet.ImageIndex := ImageIndex;
     end;
+end;
+
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmChat.OnDocked();
+var
+    ritem: TJabberRosterItem;
+begin
+    inherited;
+    btnClose.Visible := true;
+    DragAcceptFiles( Handle, False );
+
+    ritem := MainSession.Roster.Find(_jid.jid);
+    if (ritem = nil) then
+        ritem := MainSession.Roster.FInd(_jid.full);
+        
+    ChangePresImage(ritem, _show, _status);
+
+    Self.TabSheet.ImageIndex := _old_img;
+
+    // scroll the MsgView to the bottom.
+    _scrollBottom();
+    Self.Refresh();
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmChat.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
+    DragAcceptFiles(Handle, True);
 end;
 
 end.

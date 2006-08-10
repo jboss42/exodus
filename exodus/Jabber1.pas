@@ -258,7 +258,6 @@ type
     procedure mnuDisconnectClick(Sender: TObject);
     procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
-    procedure pnlRosterResize(Sender: TObject);
     procedure splitRosterMoved(Sender: TObject);
 
     {
@@ -3618,16 +3617,16 @@ end;
 {---------------------------------------}
 {
     Event fired when user drags a TfrmDockable off of Tabs.
-
-
 }
 procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-    if (Client is TForm) then
+    if (Client is TfrmDockable) then begin
         CloseDocked(TForm(Client));
+        TfrmDockable(Client).OnFloat();
+    end;
 end;
 
 {
@@ -3648,6 +3647,7 @@ begin
         frm := TfrmDockable(frm);
         frm.Docked := false;
         frm.TabSheet := nil;
+        frm.OnFloat();
         idx := _docked_forms.IndexOf(TfrmDockable(frm));
         if (idx >= 0) then
             _docked_forms.Delete(idx);
@@ -3675,6 +3675,7 @@ begin
         if (Source.Control is TfrmMsgQueue) then begin
             TfrmDockable(Source.Control).TabSheet.PageIndex := 0;
         end;
+        TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
     end;
 end;
@@ -3682,27 +3683,14 @@ end;
 {---------------------------------------}
 {
     Event fired when a TfrmDockable has been dropped onto frmExodus.
-
-
 }
 procedure TfrmExodus.FormDockDrop(Sender: TObject; Source: TDragDockObject;
   X, Y: Integer);
 begin
     if (Source.Control is TfrmDockable) then begin
         // We got a new form dropped on us.
-        TfrmDockable(Source.Control).DockForm();
+        OpenDocked(TfrmDockable(Source.Control));
     end;
-end;
-
-
-{
-    Pretty much right there in the name. Save new roster size.
-}
-procedure TfrmExodus.pnlRosterResize(Sender: TObject);
-begin
-    inherited;
-//    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
-//        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {tab context menus}
@@ -3778,6 +3766,9 @@ begin
         _docked_forms.Delete(idx);
     updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
+    frm.Docked := false;
+    frm.TabSheet := nil;
+    frm.OnFloat();
 end;
 
 {************************************ layout **********************************}
@@ -3790,10 +3781,8 @@ end;
 }
 procedure TfrmExodus.updateLayoutPrefChange();
 var
-    tf: TfrmDockable;
     embedDocked : TfrmDockable;
     dockAllowed, embedRoster: boolean;
-    ts: TTabSheet;
     newState: TDockStates;
 begin
     if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
@@ -3973,7 +3962,7 @@ begin
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         pnlRoster.Align := alClient;
         pnlRoster.Visible := true;
-        
+
         _currDockState := dsRosterOnly;
         Self.DockSite := true;
         Tabs.DockSite := false;
@@ -4007,15 +3996,25 @@ procedure TfrmExodus.undockAllForms();
 var
     tf: TfrmDockable;
     ts: TTabSheet;
+    idx: integer;
 begin
     ts := Tabs.FindNextPage(nil, true, false);
     if (ts <> nil) then begin
         //stop layout update events
-        tabs.OnUnDock := Self.TabsUnDockNoLayoutChange;
+        tabs.OnUnDock := nil;
         tabs.OnChange := nil;
         while (ts <> nil) do begin
             tf := TfrmDockable(GetTabForm(ts));
-            tf.ManualFloat(tf.FloatPos);
+            if (tf <> nil) then begin
+                tf.ManualFloat(tf.FloatPos);
+                tf.Docked := false;
+                tf.TabSheet := nil;
+                idx := _docked_forms.IndexOf(tf);
+                if (idx >= 0) then
+                    _docked_forms.Delete(idx);
+
+                tf.OnFloat();
+            end;
             ts := Tabs.FindNextPage(nil, true, false);
         end;
         //enable layout update events

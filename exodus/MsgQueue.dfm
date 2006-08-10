@@ -15,7 +15,6 @@ object frmMsgQueue: TfrmMsgQueue
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
   object splitRoster: TSplitter

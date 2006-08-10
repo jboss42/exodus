@@ -119,7 +119,6 @@ type
     procedure mnuOnTopClick(Sender: TObject);
     procedure popRosterBlockClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure popRoomRosterPopup(Sender: TObject);
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
@@ -234,12 +233,26 @@ type
     property isMUCRoom: boolean read _isMUC;
     property UseDefaultConfig: boolean read _default_config write _default_config;
 
-    procedure DockForm; override;
-    procedure FloatForm; override;
-
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);override;
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
+
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
+
   end;
 
 var
@@ -435,9 +448,6 @@ begin
             f.sendStartPresence();
 
         f.Caption := tmp_jid.userDisplay;
-        if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
-            f.DockForm;
-        end;
 
 
         // setup prefs
@@ -461,12 +471,8 @@ begin
         tmp_jid.Free();
     end;
 
-    f.Show;
-    
-    if (f.TabSheet <> nil) then begin
-        frmExodus.BringDockedToTop(f);
-    end;
-    
+    f.ShowDefault();
+
     Result := f;
 end;
 
@@ -2001,22 +2007,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    if (target = nil) then exit;
-
-    inherited;
-    if (Docked and (Self.TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := ImageIndex;
-
-    btnClose.Visible := Docked;
-
-    // scroll the MsgView to the bottom.
-    _scrollBottom();
-    Self.Refresh();
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.popShowHistoryClick(Sender: TObject);
 begin
     inherited;
@@ -2028,20 +2018,6 @@ procedure TfrmRoom.popClearHistoryClick(Sender: TObject);
 begin
     inherited;
     ClearRoomLog(Self.jid);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.DockForm;
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.FloatForm;
-begin
-    inherited;
-    btnClose.Visible := false;
 end;
 
 {---------------------------------------}
@@ -2755,6 +2731,39 @@ begin
         ShowInvite(Self.jid, jids);
     end;
 end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmRoom.OnDocked();
+begin
+    inherited;
+    btnClose.Visible := true;
+
+    _scrollBottom();
+    Self.Refresh();
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmRoom.OnFloat();
+begin
+    inherited;
+    btnClose.Visible := false;
+
+    _scrollBottom();
+    Self.Refresh();
+end;
+
+
+
 
 function TRoomMember.getRealJID(): WideString;
 begin

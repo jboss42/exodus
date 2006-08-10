@@ -137,7 +137,6 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
-    OnResize = pnlRosterResize
   end
   object pnlDock: TPanel
     Left = 88
