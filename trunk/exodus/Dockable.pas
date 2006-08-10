@@ -32,20 +32,11 @@ type
     or programatically through their DockForm/FloatForm methods. Because there
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
-
-    OnDockStartChange will be fired when either the OnStartDock event is fired
-    immediately before any dock change is requested programactically. Subclasses
-    should use the Docked (possibly Visible) property to check their current state
-    And assume the property will be toggled after this event has fired.
-
-    OnDockEndChange will fire when the OnEndDock event has been fired or after the
-    form has been programatically docked/floated.
   }
   TfrmDockable = class(TTntForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     {
         Drag event.
 
@@ -68,9 +59,6 @@ type
     _noMoveCheck: boolean;
     _top: boolean;
 
-    _onDockStartChange: TDockNotify;
-    _onDockEndChange: TDockNotify;
-
     procedure CheckPos();
     procedure SavePos();
 
@@ -79,9 +67,51 @@ type
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
-  published
-    property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
-    property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
+
+    {
+        Get the preference key associated with this window.
+
+        Default implementation is to return a munged profile&classname (all XML illgal
+        characters escaped). Classes should override to change pref (for instance
+        chat windows might save based on munged profile&jid).
+
+    function GetPreferenceKey() : WideString;
+
+    {
+        Event fired when form should restore its persisted state.
+
+        Default uses GetPreferenceKey to get pref containing this
+        window's state information.
+
+        prefTag is an xml tag
+            <state>
+                <position h="" w="" l="" t=""/>
+                <docked>true|false</docked>
+            </state>
+
+        This event is fired when the form is created.
+
+    procedure OnRestoreState(prefTag : TXMLTag);
+
+    {
+        Event fired when form should persist its position and other state
+        information.
+
+        Default uses GetPreferenceKey to determine where window positions and
+        dock state are persisted.
+
+        OnPersistState is passed an xml tag (<state/>) that should be used to
+        store state. For instance after the default OnPersistState handler is called
+        prefTag will be
+            <state>
+                <position h="" w="" t="" l="" />
+                <docked>true|false</docked>
+            </state>
+
+        This event is fired during the OnCloseQuery event.
+    
+    procedure OnPersistState(prefTag : TXMLTag);
+    }
   public
     { Public declarations }
     TabSheet: TTntTabSheet;
@@ -97,6 +127,21 @@ type
     }
     procedure OnDockedActivate(Sender : TObject);virtual;
 
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();virtual;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();virtual;
 
     property Docked: boolean read _docked write _docked;
 
@@ -166,20 +211,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
-    // dock the window to the main form
-    if Assigned(_onDockStartChange) then
-        Self.OnDockStartChange();
-
-    Self.SavePos();
     Self.TabSheet := frmExodus.OpenDocked(self);
-    Self.Align := alClient;
-    _docked := true;
-
-    if (Self.TabSheet <> nil) then
-        Self.TabSheet.ImageIndex := ImageIndex;;
-
-    if Assigned(_onDockEndChange) then
-        Self.OnDockEndChange();
 end;
 
 {---------------------------------------}
@@ -204,14 +236,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FloatForm;
 begin
-    if Assigned(_onDockStartChange) then
-        Self.OnDockStartChange();
-    Self.CheckPos();
     frmExodus.FloatDocked(Self);
-    _docked := false;
-    Self.TabSheet := nil;
-    if Assigned(_onDockEndChange) then
-        Self.OnDockEndChange();
 end;
 
 {---------------------------------------}
@@ -261,7 +286,6 @@ begin
             ShowWindow(Handle, SW_SHOWNOACTIVATE);
         Self.Visible := true;
     end;
-
 end;
 
 {---------------------------------------}
@@ -319,17 +343,6 @@ end;
 
 {---------------------------------------}
 {
-    Event fired at the end of a drag -n- dock operation
-
-    Will also fire when a tab change takes place
-}
-procedure TfrmDockable.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    //impl in subclasses
-end;
-
-
-{
 
     Event fired when Form receives activation while in docked state.
 
@@ -341,6 +354,29 @@ begin
     //subclasses override to change activation behavior
      if (Self.TabSheet <> nil) then
         Self.TabSheet.ImageIndex := ImageIndex;
+end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmDockable.OnDocked();
+begin
+    Self.Align := alClient;
+    Self.TabSheet.ImageIndex := Self.ImageIndex;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmDockable.OnFloat();
+begin
+
 end;
 
 end.

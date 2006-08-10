@@ -1,11 +1,12 @@
 inherited frmXferManager: TfrmXferManager
   Left = 251
   Top = 229
-  Width = 444
   Caption = 'File Transfer Manager'
+  ClientWidth = 436
   OldCreateOrder = True
   OnClose = FormClose
   OnDestroy = FormDestroy
+  ExplicitWidth = 444
   PixelsPerInch = 96
   TextHeight = 13
   object box: TScrollBox

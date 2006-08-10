@@ -82,11 +82,10 @@ object frmBrowse: TfrmBrowse
       object lblIdentity: TTntLabel
         Left = 4
         Top = 4
-        Width = 62
+        Width = 51
         Height = 13
         Align = alTop
         Caption = 'Indentities:'
-        ExplicitWidth = 51
       end
       object Splitter1: TSplitter
         Left = 4
@@ -99,11 +98,10 @@ object frmBrowse: TfrmBrowse
       object lblFeatures: TTntLabel
         Left = 4
         Top = 140
-        Width = 62
+        Width = 44
         Height = 13
         Align = alTop
         Caption = 'Features:'
-        ExplicitWidth = 44
       end
       object vwInfo: TTntListView
         Left = 4
@@ -355,13 +353,11 @@ object frmBrowse: TfrmBrowse
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 88
-        Height = 29
+        Width = 73
+        Height = 13
         Align = alClient
         Caption = 'Jabber Address'
         Layout = tlCenter
-        ExplicitWidth = 73
-        ExplicitHeight = 13
       end
     end
     object cboJID: TTntComboBox
@@ -370,7 +366,7 @@ object frmBrowse: TfrmBrowse
       Width = 225
       Height = 21
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 13
+      ItemHeight = 0
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end
@@ -399,13 +395,11 @@ object frmBrowse: TfrmBrowse
       object TntLabel2: TTntLabel
         Left = 0
         Top = 0
-        Width = 88
-        Height = 29
+        Width = 69
+        Height = 13
         Align = alClient
         Caption = 'Node Identifier'
         Layout = tlCenter
-        ExplicitWidth = 69
-        ExplicitHeight = 13
       end
     end
     object cboNode: TTntComboBox
@@ -414,7 +408,7 @@ object frmBrowse: TfrmBrowse
       Width = 225
       Height = 21
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 13
+      ItemHeight = 0
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end

@@ -156,8 +156,21 @@ type
     { Public declarations }
     procedure GoJID(jid: Widestring; refresh: boolean; node: Widestring = '');
 
-    procedure DockForm; override;
-    procedure FloatForm; override;
+    {
+        Event fired when docking is complete.
+
+        Docked property will be true, tabsheet will be assigned. This event
+        is fired after all other docking events are complete.
+    }
+    procedure OnDocked();override;
+
+    {
+        Event fired when a float (undock) is complete.
+
+        Docked property will be false, tabsheet will be nil. This event
+        is fired after all other floating events are complete.
+    }
+    procedure OnFloat();override;
 
   end;
 
@@ -889,20 +902,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.DockForm;
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.FloatForm;
-begin
-    inherited;
-    btnClose.Visible := false;
-end;
-
-{---------------------------------------}
 procedure TfrmBrowse.FormDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
@@ -1058,6 +1057,28 @@ procedure TfrmBrowse.btnInfoClick(Sender: TObject);
 begin
     PushJid(_ent.Jid.full, _ent.Node);
     ShowDiscoInfo();
+end;
+
+{
+    Event fired when docking is complete.
+
+    Docked property will be true, tabsheet will be assigned. This event
+    is fired after all other docking events are complete.
+}
+procedure TfrmBrowse.OnDocked();
+begin
+    btnClose.Visible := true;
+end;
+
+{
+    Event fired when a float (undock) is complete.
+
+    Docked property will be false, tabsheet will be nil. This event
+    is fired after all other floating events are complete.
+}
+procedure TfrmBrowse.OnFloat();
+begin
+    btnClose.Visible := false;
 end;
 
 end.

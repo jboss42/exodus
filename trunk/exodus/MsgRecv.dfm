@@ -16,7 +16,6 @@ object frmMsgRecv: TfrmMsgRecv
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -348,12 +347,13 @@ object frmMsgRecv: TfrmMsgRecv
             Left = 2
             Top = 2
             Width = 42
-            Height = 13
+            Height = 20
             Align = alLeft
             Caption = 'Subject: '
             Color = clBtnFace
             ParentColor = False
             Layout = tlCenter
+            ExplicitHeight = 13
           end
           object txtSendSubject: TTntMemo
             Left = 44
@@ -378,21 +378,24 @@ object frmMsgRecv: TfrmMsgRecv
           object txtSubject: TTntLabel
             Left = 45
             Top = 2
-            Width = 47
-            Height = 13
+            Width = 287
+            Height = 18
             Align = alClient
             Caption = 'txtSubject'
+            ExplicitWidth = 47
+            ExplicitHeight = 13
           end
           object lblSubject2: TTntStaticText
             Left = 2
             Top = 2
             Width = 43
-            Height = 17
+            Height = 18
             Align = alLeft
             Caption = 'Subject:'
             Color = clBtnFace
             ParentColor = False
             TabOrder = 0
+            ExplicitHeight = 17
           end
         end
         object pnlFrom: TPanel
@@ -409,7 +412,7 @@ object frmMsgRecv: TfrmMsgRecv
           object txtFrom: TTntLabel
             Left = 30
             Top = 1
-            Width = 34
+            Width = 276
             Height = 30
             Cursor = crHandPoint
             Align = alClient
@@ -420,17 +423,19 @@ object frmMsgRecv: TfrmMsgRecv
             Transparent = True
             WordWrap = True
             OnClick = txtFromClick
+            ExplicitWidth = 34
           end
           object lblFrom: TTntLabel
             Left = 1
             Top = 1
             Width = 29
-            Height = 13
+            Height = 30
             Align = alLeft
             Caption = 'From: '
             Color = clBtnFace
             ParentColor = False
             Transparent = True
+            ExplicitHeight = 13
           end
           object Panel1: TPanel
             Left = 306
