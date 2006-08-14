@@ -1,9 +1,9 @@
 object frmRosterRecv: TfrmRosterRecv
   Left = 228
   Top = 192
-  Width = 382
-  Height = 321
   Caption = 'Receiving Contacts'
+  ClientHeight = 287
+  ClientWidth = 374
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -30,17 +30,25 @@ object frmRosterRecv: TfrmRosterRecv
     Width = 374
     Height = 34
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 253
+    ExplicitWidth = 374
+    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 374
       Height = 34
+      ExplicitWidth = 374
+      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 374
+        ExplicitWidth = 374
       end
       inherited Panel1: TPanel
         Left = 214
         Height = 29
+        ExplicitLeft = 214
+        ExplicitHeight = 29
         inherited btnOK: TTntButton
           Caption = 'Add Contacts'
           OnClick = frameButtons1btnOKClick
@@ -77,6 +85,7 @@ object frmRosterRecv: TfrmRosterRecv
       ParentColor = False
       ParentFont = False
       TabOrder = 0
+      ExplicitHeight = 17
     end
     object txtFrom: TTntStaticText
       Left = 53
@@ -94,6 +103,8 @@ object frmRosterRecv: TfrmRosterRecv
       ParentColor = False
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 32
+      ExplicitHeight = 17
     end
   end
   object txtMsg: TExRichEdit
@@ -205,6 +216,7 @@ object frmRosterRecv: TfrmRosterRecv
         Caption = 'Jabber ID'
         Width = 150
       end>
+    SmallImages = frmExodus.ImageList2
     TabOrder = 3
     ViewStyle = vsReport
   end

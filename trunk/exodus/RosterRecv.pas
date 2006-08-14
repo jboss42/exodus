@@ -25,7 +25,7 @@ uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID;
+    TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID, XMLTag, StrUtils, Unicode;
 
 type
   TfrmRosterRecv = class(TfrmDockable)
@@ -65,10 +65,12 @@ uses
 {---------------------------------------}
 procedure TfrmRosterRecv.Restore(e: TJabberEvent);
 var
-    i: integer;
+    i, j: integer;
     ri: TJabberRosterItem;
     n: TListItem;
     from: TJabberID;
+    noi, noi_label, noi_image_prefix: Widestring;
+    offset: Cardinal;
 begin
     // Fill up the GUI based on the event
     from := TJabberID.Create(e.from);
@@ -83,6 +85,19 @@ begin
             n.Caption := ri.Text;
             n.SubItems.Add(ri.jid.getDisplayFull());
             n.Checked := true;
+            if (ri.Tag.GetAttribute('noi') <> '') then begin
+                for j:= 0 to MainSession.Prefs.getStringlistCount('recv_contact_image_prefix') - 1 do begin
+                    noi := MainSession.Prefs.getStringlistValue('recv_contact_image_prefix', j);
+                    offset := Pos('=', noi);
+                    if (offset > 0) then begin
+                        noi_label :=  Trim(LeftStr(noi, offset - 1));
+                        noi_image_prefix := Trim(RightStr(noi, StrLenW(PWideChar(noi)) - offset));
+                        if (noi_label = ri.Tag.GetAttribute('noi')) then
+                            ri.ImagePrefix := noi_image_prefix;
+                    end;
+                end;
+            end;
+            n.ImageIndex := ri.getPresenceImage('available');
         end;
     end;
 
