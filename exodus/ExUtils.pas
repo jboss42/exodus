@@ -607,10 +607,12 @@ end;
 {---------------------------------------}
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 var
-    i: integer;
+    i,j : integer;
     b: WideString;
     msg, x, item: TXMLTag;
     ri: TJabberRosterItem;
+    noi, noi_domain, noi_parameter: Widestring;
+    offset: integer;
 begin
     msg := TXMLTag.Create('message');
     msg.setAttribute('id', MainSession.generateID());
@@ -624,6 +626,16 @@ begin
         item := x.AddTag('item');
         item.setAttribute('jid', ri.jid.full);
         item.setAttribute('name', ri.Text);
+        for j := 0 to MainSession.Prefs.getStringlistCount('send_contact_noi') - 1 do begin
+            noi_parameter := MainSession.Prefs.getStringlistValue('send_contact_noi', j);
+            offset := Pos('=', noi_parameter);
+            if (offset > 0) then begin
+                noi_domain := Trim(LeftStr(noi_parameter, offset -1));
+                noi := Trim(RightStr(noi_parameter, StrLenW(PWideChar(noi_parameter)) - offset));
+                if (noi_domain = ri.jid.domain) then
+                    item.setAttribute('noi', noi);
+            end;
+        end;
         b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
     end;
 
