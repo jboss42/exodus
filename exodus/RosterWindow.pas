@@ -1492,7 +1492,7 @@ begin
 
             // invalidate just the rect which contains our node
             if (cur_node.IsVisible) then
-                InvalidateRect(treeRoster.Handle, @node_rect, false);
+                InvalidateRect(treeRoster.Handle, @node_rect, true);
 
             // if we showing grp counts, then invalidate the grp rect as well.
             if ((_group_counts) and (grp_node.isVisible)) then
