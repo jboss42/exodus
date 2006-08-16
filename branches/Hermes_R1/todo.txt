@@ -15,3 +15,4 @@ Nested Groups nits
 - Groups as children of Offline, with "opposite" counters (parent offline
     group can use total number of contacts as the /total)
 
+- remove Hermes_R1 branch
