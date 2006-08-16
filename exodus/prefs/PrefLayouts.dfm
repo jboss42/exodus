@@ -5,6 +5,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   ClientHeight = 424
   ClientWidth = 355
   OldCreateOrder = True
+  ExplicitWidth = 367
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   object lblPreview: TTntLabel [0]
@@ -1137,8 +1139,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     Height = 41
     AutoSize = False
     Caption = 
-      'Main window shows only the roster. Other windows are opened sepe' +
-      'ratly and are never docked.'
+      'Main window shows only the roster. Other windows are opened sepa' +
+      'rately and are never docked.'
     WordWrap = True
   end
   object cboView: TTntComboBox [5]
@@ -1150,7 +1152,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     ItemHeight = 13
     TabOrder = 1
     OnChange = cboViewChange
-    Items.WideStrings = (
+    Items.Strings = (
       'Show small roster and never dock'
       'Dock windows. Roster is always visible'
       'Dock windows and use tabs')
@@ -1159,6 +1161,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     Width = 355
     Caption = 'Window Layouts'
     TabOrder = 2
+    ExplicitWidth = 355
   end
   object chkStacked: TTntCheckBox
     Left = 4
