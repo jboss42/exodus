@@ -240,6 +240,8 @@ begin
             if (d.Docked) then begin
                 frmExodus.doRestore();
                 frmExodus.BringDockedToTop(d);
+                //invoke the onchange event so tab is updated correctly
+                frmExodus.Tabs.onChange(nil);
                 w := frmExodus;
             end;
         end
