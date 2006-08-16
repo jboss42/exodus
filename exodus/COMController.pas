@@ -231,8 +231,7 @@ type
 
 
 // Forward declares for plugin utils
-function CheckPluginDll(dll : WideString; var libname: Widestring;
-    var obname: Widestring; var doc: Widestring): boolean;
+function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
 function LoadPlugin(com_name: string): boolean;
 
 procedure InitPlugins();
@@ -295,24 +294,40 @@ begin
     ok.Free();
 end;
 
+function TrimVersion(const S: string): string;
+var
+  P: PChar;
+begin
+  Result := S;
+  P := AnsiLastChar(Result);
+  while (Length(Result) > 0) and (P^ in ['0'..'9', '.']) do
+  begin
+    SetLength(Result, P - PChar(Result));
+    P := AnsiLastChar(Result);
+  end;
+end;
+
 {---------------------------------------}
-function CheckPluginDll(dll : WideString; var libname: Widestring;
-    var obname: Widestring; var doc: Widestring): boolean;
+function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
 var
     lib : ITypeLib;
     i, j : integer;
     tinfo, iface : ITypeInfo;
     tattr, iattr: PTypeAttr;
+    libname, obname, docos: WideString;
     r: cardinal;
+    iunk: IUnknown;
+    tplug: IExodusPlugin;
 begin
     // load the .dll.  This SHOULD register the bloody thing if it's not, but that
     // doesn't seem to work for me.
     Result := false;
     try
+        RegisterComServer(dll); //force registration
         OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
-        OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
     except
         on EOleSysError do exit;
+        on EOSError do exit; //unregisterable dll
     end;
 
     // for each type in the project
@@ -326,40 +341,96 @@ begin
         except
             on EOleSysError do exit;
         end;
-        // is this a coclass?
-        if (tattr.typekind <> TKIND_COCLASS) then continue;
+        try
+            // is this a coclass?
+            if (tattr.typekind <> TKIND_COCLASS) then continue;
 
-        // for each interface that the coclass implements
-        for j := 0 to tattr.cImplTypes - 1 do begin
-            // get the type info for the interface
-            try
-                OleCheck(tinfo.GetRefTypeOfImplType(j, r));
-                OleCheck(tinfo.GetRefTypeInfo(r, iface));
-
-                // get the attributes of the interface
-                OleCheck(iface.GetTypeAttr(iattr));
-            except
-                on EOleSysError do continue;
-            end;
-
-            // is this the IExodusPlugin interface?
-            if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin)) then begin
-                // oho!  it IS.  Get the name of this coclass, so we can show
-                // what we did.  Get the doc string, just to show off.
+            // for each interface that the coclass implements
+            for j := 0 to tattr.cImplTypes - 1 do begin
+                // get the type info for the interface
                 try
-                    OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
-                    // SysFreeString of obname and doc needed?  In C, yes, but here?
-                    Result := true;
-                    break;
-                except
-                    on EOleSysError do exit;
-                end;
+                    OleCheck(tinfo.GetRefTypeOfImplType(j, r));
+                    OleCheck(tinfo.GetRefTypeInfo(r, iface));
 
+                    // get the attributes of the interface
+                    OleCheck(iface.GetTypeAttr(iattr));
+                except
+                    on EOleSysError do continue;
+                end;
+                try
+                    // is this the IExodusPlugin interface?
+                    if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin)) then begin
+                        // oho!  it IS.  Get the name of this coclass, so we can show
+                        // what we did.  Get the doc string, just to show off.
+                        try
+                            //get class name that implements IExodusPlugin
+                            //this *requires* the plugin to be registered but addresses
+                            //some issue in VS 2003, 2005 plugins where libname
+                            //is not neccessarily what gets registered.
+                            progID := ClassIDToProgID(tattr.guid);
+                            //progID could contain version info, classlib.classname.version. Strip off
+                            //version if it is there
+                            progID := TrimVersion(progID);
+                        except
+                            //well, that failed. Probably not registered.
+                            //Try to dummy up the progID by using info from type lib documentation
+                            //this is essentially how Exodus has always done it.
+                            OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
+                            OleCheck(tinfo.GetDocumentation(-1, @obname, nil, nil, nil));
+                            progID := libname + '.' + obname;
+                        end;
+                        //finally get docos
+                        try
+                            OleCheck(tinfo.GetDocumentation(-1, nil, @docos, nil, nil));
+                            doc := docos;
+                            // SysFreeString of obname and doc needed?  In C, yes, but here?
+                            //JJF 8/16/06 Yeah, this feels like its leaking. See todo below
+                            Result := true;
+                            exit;
+                        except
+                            on EOleSysError do exit;
+                        end;
+                    end;
+                finally
+                    iface.ReleaseTypeAttr(iattr);
+                end;
+            end; //for each implemented interface
+
+            //VS 2003, 2005 plugins don't neccessarily put that they
+            //implement IExodusPlugin in their type libs. As a secondary
+            //discovery method, try loading the class and seeinging
+            //if it does in fact implement IExodusPlugin. This will only
+            //work correctly if the library has been registered.
+            try
+                iunk := CreateComObject(tattr.guid);
+                try
+                    //see if iunk is an IExodusPlugin. Throws exception if not
+                    tplug := (iunk as IExodusPlugin);
+                    //type cast above will throw exception if not IExodusPlugin
+                    //nil check here is to force the compiler to generate the
+                    //typecast code.
+                    if (tplug <> nil) then begin
+                        //found one, get progID, docs
+                        progID := ClassIDToProgID(tattr.guid);
+                        //progID could contain version info, classlib.classname.version. Strip off
+                        //version if it is there
+                        progID := TrimVersion(progID);
+                        OleCheck(tinfo.GetDocumentation(-1, nil, @doc, nil, nil));
+                        Result := true;
+                        exit;
+                    end;
+                finally
+                    //free iunk interface? must read up on this
+                    //todo JJF figure out when interfaces need to be released!
+                end;
+            except
+                //eat any exceptions. These would be thrown when creating
+                //object or if object is not IExodusPlugin
             end;
-            iface.ReleaseTypeAttr(iattr);
+        finally
+            tinfo.ReleaseTypeAttr(tattr);
         end;
-        tinfo.ReleaseTypeAttr(tattr);
-    end;
+    end; //for each type in lib
 end;
 
 
@@ -474,6 +545,8 @@ begin
     // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
     // or else bad things can happen here... assume that mem is getting
     // cleared.
+    // JJF 8/14/06 This needs to be addressed or we'll be leaving a bunch of refs
+    //todo JJF get definitive answer to when COM objects should be released!
     for i := plugs.Count - 1 downto 0 do begin
         pp := TPlugin(plugs.Objects[i]);
         plugs.Delete(i);

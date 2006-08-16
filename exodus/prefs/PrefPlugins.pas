@@ -197,7 +197,7 @@ var
     sr: TSearchRec;
     idx: integer;
     item: TTntListItem;
-    dll, libname, obname, doc: WideString;
+    dll, progID, doc: WideString;
     reg: TRegistry;
     values: TStrings;
     i: integer;
@@ -207,9 +207,9 @@ begin
     if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
         repeat
             dll := dir + '\' + sr.Name;
-            if (CheckPluginDll(dll, libname, obname, doc)) then begin
+            if (CheckPluginDll(dll, progID, doc)) then begin
                 item := lstPlugins.Items.Add();
-                item.Caption := libname + '.' + obname;
+                item.Caption := progID;
                 item.SubItems.Add(doc);
                 item.SubItems.Add(dll);
 
