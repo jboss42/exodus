@@ -1466,13 +1466,23 @@ var
     mc: TMenuContainer;
     mi: TMenuItem;
 begin
+
+    for i := 0 to parent.Items.Count - 1 do begin
+        mi := parent.Items[i];
+        if (LeftStr(mi.Name, 9) = 'msg_menu_') then begin
+            parent.Items.Delete(i);
+            mi.Free();
+        end;
+    end;
+
     for i := 0 to _msg_menus.Count - 1 do begin
         mc := TMenuContainer(_msg_menus.Objects[i]);
         mi := TMenuItem.Create(parent.Owner);
+        mi.Name := mc.id;
         mi.Caption := mc.caption;
         mi.Tag := i;
         mi.OnClick := event;
-        mi.Name := mc.id;
+        parent.Items.Add(mi);
     end;
 end;
 
@@ -1693,8 +1703,22 @@ begin
 end;
 
 procedure TExodusController.RemoveMessageMenu(const menuID: WideString);
+var
+    i, idx: integer;
+    mc: TMenuContainer;
 begin
-
+    idx := -1;
+    for i := 0 to _msg_menus.Count - 1 do begin
+        mc := TMenuContainer(_msg_menus.Objects[i]);
+        if (mc.id = menuID) then
+            idx := i;
+    end;
+    
+    if (idx >= 0) then begin
+        mc := TMenuContainer(_msg_menus.Objects[idx]);
+        _msg_menus.Delete(idx);
+        mc.Free();
+    end;
 end;
 
 function TExodusController.GetStringlistCount(const key: WideString): Integer;
