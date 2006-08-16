@@ -172,6 +172,7 @@ type
     _custom_pres: boolean;
     _pending_start: boolean;
     _pending_destroy: boolean;  // if user is destroying room
+    _passwd_from_join_room: boolean; //was the password supplied by the Join Room DLG.
 
     _my_membership_role: WideString; // My membership to the room.
 
@@ -1066,13 +1067,40 @@ begin
                      e.hasFeature('muc_password') or
                      e.hasFeature('muc-passwordprotected')) or
                      e.hasFeature('muc-password')) then begin
-                    // 401 error IS due to password so show password error
-                    MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
-                    Self.Close();
-                    tmp_jid := TJabberID.Create(from);
-                    StartJoinRoom(tmp_jid, MyNick, '');
-                    tmp_jid.Free();
-                    exit;
+                    if (_passwd = '') then begin
+                        // this room needs a passwd, and they didn't give us one..
+                        if (InputQueryW(e.Jid.jid, _('Room Password'), _passwd, true) = false) then begin
+                            // Cancel selected, just close
+                            Self.Close;
+                        end
+                        else begin
+                            // Try new password.
+                            _passwd_from_join_room := false;
+                            sendStartPresence();
+                        end;
+                        exit;
+                    end
+                    else begin
+                        // 401 error IS due to bad password so show password error
+                        MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
+                        if (_passwd_from_join_room) then begin
+                            Self.Close();
+                            tmp_jid := TJabberID.Create(from);
+                            StartJoinRoom(tmp_jid, MyNick, '');
+                            tmp_jid.Free();
+                        end
+                        else begin
+                            if (InputQueryW(e.Jid.jid, _('Room Password'), _passwd, true) = false) then begin
+                                // Cancel selected, just close
+                                Self.Close;
+                            end
+                            else begin
+                                // Try new password.
+                                sendStartPresence();
+                            end;
+                        end;
+                        exit;
+                    end;
                 end;
                 // 401 is NOT due to password, just exit
                 exit;
@@ -1510,6 +1538,7 @@ begin
     _custom_pres := false;
     _pending_start := false;
     _pending_destroy := false;
+    _passwd_from_join_room := true;
     ImageIndex := RosterTreeImages.Find('conference');
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
@@ -2460,18 +2489,6 @@ begin
         _pending_start := true;
         jEntityCache.discoInfo(self.jid, MainSession, '', ROOM_TIMEOUT);
         exit;
-    end
-    else if ((_passwd = '') and
-        ((e.hasFeature('muc_passwordprotected')) or
-         (e.hasFeature('muc_password')) or
-         (e.hasFeature('muc-passwordprotected')) or
-         (e.hasFeature('muc-password')))) then begin
-
-        // this room needs a passwd, and they didn't give us one..
-        if (InputQueryW(e.Jid.jid, _('Room Password'), _passwd, true) = false) then begin
-            Self.Close;
-            exit;
-        end;
     end
     else if ((useRegisteredNick) and
              (e.hasFeature('muc_membersonly') or
