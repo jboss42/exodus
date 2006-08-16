@@ -9,7 +9,8 @@ type
     private
         _filename : Widestring;
         _logfile  : TextFile;
-        _cb: integer;
+        _cb       : Integer;
+        _isLogging : Boolean;
         procedure Init();
         procedure RotateLog();
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
@@ -41,24 +42,57 @@ end;
 
 {---------------------------------------}
 procedure TDebugLogFile.Init();
+var
+    handle: Integer;
+    time: String;
 begin
+    
     if (FileExists(_filename)) then begin
-        // Rotate the log backups
         RotateLog();
     end;
+        
+    try
+        AssignFile(_logfile, _filename);
+        try
+            Rewrite(_logfile);
+        except
+            on e: EInOutError do begin
+                DateTimeToString(time, 'hhmmss', Now());
+                _filename := _filename + '.' + time;
+                try
+                    // Attempt rename of log file with timestamp
+                    AssignFile(_logfile, _filename);
+                    Rewrite(_logfile);
+                except
+                    // Attempt failed, no file logging
+                    _isLogging := false;
+                    exit;
+                end;
+            end
+            else begin
+                // Some other IO error.  
+                _isLogging := false;
+                exit;
+            end;
+        end;
+    except
+        _isLogging := false;
+        exit;
+    end;
 
-    AssignFile(_logfile, _filename);
-    Rewrite(_logfile);
-
+    _isLogging := true;
+     
     // Attach callbacks
     _cb := MainSession.RegisterCallback(DataCallback);
-    
+
 end;
 {---------------------------------------}
 destructor TDebugLogFile.Destroy();
 begin
-    MainSession.UnRegisterCallback(_cb);
-    CloseFile(_logfile);
+    if (_isLogging) then begin
+        MainSession.UnRegisterCallback(_cb);
+        CloseFile(_logfile);
+    end;
 end;
 {---------------------------------------}
 procedure TDebugLogFile.RotateLog();
