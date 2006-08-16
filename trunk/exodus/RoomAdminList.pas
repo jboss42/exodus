@@ -188,6 +188,7 @@ var
     i: integer;
     item, q, iq: TXMLTag;
     li: TTntListItem;
+    nick: TWideStrings;
 begin
     // check for no changes
     if ((_adds.Count = 0) and (_dels.Count = 0)) then begin
@@ -209,7 +210,12 @@ begin
     // Take all the "dels" off the list
     for i := 0 to _dels.Count - 1 do begin
         item := q.AddTag('item');
-        item.setAttribute('jid', _dels[i]);
+        if (not role) then
+            item.setAttribute('jid', _dels[i])
+        else begin
+            nick := TWideStrings(_dels.Objects[i]);
+            item.SetAttribute('nick', nick[0]);
+        end;
         if (role) then
             item.setAttribute('role', offList)
         else
@@ -219,7 +225,8 @@ begin
     // Put all the "adds" on the list
     for i := 0 to _adds.Count - 1 do begin
         item := q.AddTag('item');
-        item.setAttribute('jid', _adds[i]);
+        if (not role) then        
+            item.setAttribute('jid', _adds[i]);
         li := TTntListItem(_adds.Objects[i]);
         if (li.Caption <> '') then
             item.SetAttribute('nick', li.Caption);
@@ -357,6 +364,7 @@ var
     j: Widestring;
     idx, i: integer;
     itemJID: TJabberID;
+    nick: TWideStrings;
 begin
     // Remove these folks from the list
     for i := lstItems.Items.Count - 1 downto 0 do begin
@@ -366,8 +374,12 @@ begin
             idx := _adds.IndexOf(j);
             if (idx >= 0) then
                 _adds.Delete(idx)
-            else
-                _dels.Add(j);
+            else begin
+                nick := TWideStringList.Create();
+                nick.Add(lstItems.Items[i].Caption);
+                _dels.AddObject(j, nick);
+            end;
+
             lstItems.Items.Delete(i);
         end;
     end;
