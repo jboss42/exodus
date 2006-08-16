@@ -443,6 +443,8 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor TJabberRosterItem.Create(id: Widestring);
+var
+    dude: Widestring;
 begin
     inherited Create();
     _grps := TWideStringList.Create;
@@ -455,7 +457,7 @@ begin
     IsNative := true;
     CanOffline := true;
     InlineEdit := false;
-    Removed := false;
+    Removed := false;                             
 
     // initialize to default icons
     // TODO: get default icon set prefix from prefs
@@ -566,7 +568,7 @@ end;
 {---------------------------------------}
 procedure TJabberRosterItem.setImagePrefix(prefix: Widestring);
 var
-    offline, away, xa, dnd, chat, online: integer;
+    offline, away, xa, dnd, chat, online, pending: integer;
 begin
     // set the prefix and cache the images
     _img_prefix := prefix;
@@ -577,11 +579,13 @@ begin
     dnd := RosterTreeImages.Find(_img_prefix + 'dnd');
     chat := RosterTreeImages.Find(_img_prefix + 'chat');
     online := RosterTreeImages.Find(_img_prefix + 'available');
+    pending := RosterTreeImages.Find(_img_prefix + 'pending');
 
     // make sure we got images
     // TODO: get default icon prefix from prefs
     if ((offline = -1) or (away = -1) or (xa = -1) or
-        (dnd = -1) or (chat = -1) or (online = -1)) then begin
+        (dnd = -1) or (chat = -1) or (online = -1) or
+        (pending = -1)) then begin
         // XXX: log failure to get all images
         // TODO: default image prefix from prefs
         _img_prefix := '';
@@ -611,6 +615,8 @@ begin
         Result := RosterTreeImages.Find(_img_prefix + 'dnd')
     else if (show = 'chat') then
         Result := RosterTreeImages.Find(_img_prefix + 'chat')
+    else if (show = 'pending') then
+        Result := RosterTreeImages.Find(_img_prefix + 'pending')
     else
         Result := RosterTreeImages.Find(_img_prefix + 'available');
 end;

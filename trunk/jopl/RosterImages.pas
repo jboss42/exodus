@@ -173,6 +173,8 @@ const
     RI_BROWSER_INDEX        : Integer = 67;
     RI_BROWSERDIS_KEY       : WideString = 'browser_disabled';
     RI_BROWSERDIS_INDEX     : Integer = 68;
+    RI_PENDING_KEY          : WideString = 'pending';
+    RI_PENDING_INDEX        : Integer = 69;
 {$ENDIF}
 
 var
@@ -255,6 +257,7 @@ begin
     _ids.Insert(RI_SEARCHDIS_INDEX, RI_SEARCHDIS_KEY);
     _ids.Insert(RI_BROWSER_INDEX, RI_BROWSER_KEY);
     _ids.Insert(RI_BROWSERDIS_INDEX, RI_BROWSERDIS_KEY);
+    _ids.Insert(RI_PENDING_INDEX, RI_PENDING_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

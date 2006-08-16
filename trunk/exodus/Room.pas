@@ -526,7 +526,10 @@ begin
         else
             Msg.Nick := '';
         tmp_jid.Free();
-        Msg.IsMe := false;
+        if (Msg.Nick = MyNick) then
+            Msg.IsMe := true
+        else
+            Msg.IsMe := false;
         server := true;
 
         if (tag.getAttribute('type') = 'error') then begin
