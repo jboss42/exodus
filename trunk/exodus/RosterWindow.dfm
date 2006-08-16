@@ -421,7 +421,6 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRename: TTntMenuItem
       Caption = 'Rename...'
-      ShortCut = 113
       OnClick = popRenameClick
     end
     object N1: TTntMenuItem
@@ -433,12 +432,10 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRemove: TTntMenuItem
       Caption = 'Remove'
-      ShortCut = 46
       OnClick = popRemoveClick
     end
     object popProperties: TTntMenuItem
       Caption = 'Properties...'
-      ShortCut = 121
       OnClick = popPropertiesClick
     end
     object N7: TTntMenuItem
