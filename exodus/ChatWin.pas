@@ -1004,6 +1004,7 @@ begin
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
             freeChatObject();
+            Self.Close();
         end;
     end;
 end;

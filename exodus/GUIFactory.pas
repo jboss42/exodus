@@ -164,10 +164,12 @@ begin
         else begin
             // New Chat Window
             tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
-            if (chat <> nil) then
-                DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                     chat.Othernick, RosterTreeImages.Find('contact'));
+            if (not MainSession.IsBlocked(tmp_jid)) then begin
+                chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
+                if (chat <> nil) then
+                    DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                         chat.Othernick, RosterTreeImages.Find('contact'));
+            end;
             tmp_jid.Free;
         end;
     end
