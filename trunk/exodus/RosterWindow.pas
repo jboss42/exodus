@@ -2832,6 +2832,10 @@ begin
             RemoveItemNodes(ri)
         else begin
             p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+            if (p = nil) then
+                ri.setPresenceImage('offline_blocked')
+            else
+                ri.setPresenceImage('online_blocked');
             RenderNode(ri, p);
         end;
     end;
@@ -2858,6 +2862,10 @@ begin
         ri := TJabberRosterItem(recips[i]);
         MainSession.UnBlock(ri.jid);
         p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+        if (p = nil) then
+            ri.setPresenceImage('offline')
+        else
+            ri.setPresenceImage(p.Show);
         RenderNode(ri, p);
     end;
 

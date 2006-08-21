@@ -567,6 +567,7 @@ end;
 procedure TJabberRosterItem.setImagePrefix(prefix: Widestring);
 var
     offline, away, xa, dnd, chat, online, pending: integer;
+    online_blocked, offline_blocked: integer;
 begin
     // set the prefix and cache the images
     _img_prefix := prefix;
@@ -578,12 +579,15 @@ begin
     chat := RosterTreeImages.Find(_img_prefix + 'chat');
     online := RosterTreeImages.Find(_img_prefix + 'available');
     pending := RosterTreeImages.Find(_img_prefix + 'pending');
+    online_blocked := RosterTreeImages.Find(_img_prefix + 'online_blocked');
+    offline_blocked := RosterTreeImages.Find(_img_prefix + 'offline_blocked');
 
     // make sure we got images
     // TODO: get default icon prefix from prefs
     if ((offline = -1) or (away = -1) or (xa = -1) or
         (dnd = -1) or (chat = -1) or (online = -1) or
-        (pending = -1)) then begin
+        (pending = -1) or (online_blocked = -1) or
+        (offline_blocked = -1)) then begin
         // XXX: log failure to get all images
         // TODO: default image prefix from prefs
         _img_prefix := '';
@@ -615,6 +619,10 @@ begin
         Result := RosterTreeImages.Find(_img_prefix + 'chat')
     else if (show = 'pending') then
         Result := RosterTreeImages.Find(_img_prefix + 'pending')
+    else if (show = 'online_blocked') then
+        Result := RosterTreeImages.Find(_img_prefix + 'online_blocked')
+    else if (show = 'offline_blocked') then
+        Result := RosterTreeImages.Find(_img_prefix + 'offline_blocked')
     else
         Result := RosterTreeImages.Find(_img_prefix + 'available');
 end;
