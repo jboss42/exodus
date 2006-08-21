@@ -553,7 +553,7 @@ function TExodusChat.Get_CurrentThreadID: WideString;
 begin
     //
     if (_chat <> nil) then
-        Result := TfrmChat(_chat.window).CurrentThread
+        Result := TfrmChat(_chat.window).GetThread()
     else
         Result := '';
 end;

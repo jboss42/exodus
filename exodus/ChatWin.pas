@@ -95,7 +95,6 @@ type
     _pcallback: integer;    // Presence Callback
     _spcallback: integer;  // Self Presence Callback - for chats via a room
     _scallback: integer;    // Session callback
-    _thread : string;       // thread for conversation
     _pres_img: integer;     // current index of the presence image
     _msg_out: boolean;
     _res_menus: TWidestringlist;
@@ -104,10 +103,8 @@ type
     _flash_ticks: integer;
     _cur_img: integer;
     _old_img: integer;
-    {
-    _old_hint: string;
-    }
-    _last_id: string;
+
+    //_last_id: string;
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
@@ -141,8 +138,6 @@ type
     function  _sendMsg(txt: Widestring): boolean;
     procedure _sendComposing(id: Widestring);
 
-    function GetThread: String;
-
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -156,6 +151,7 @@ type
 
     procedure PlayQueue();
     procedure MessageEvent(tag: TXMLTag);
+    procedure SendMessageEvent(tag: TXMLTag);
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
     procedure handleMUCPresence(tag: TXMLTag);
@@ -165,9 +161,7 @@ type
     procedure SendMsg; override;
     function  SetJID(cjid: widestring): boolean;
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
-
-    procedure pluginMenuClick(Sender: TObject); override;
-
+    
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);override;
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
@@ -195,10 +189,12 @@ type
     }
     procedure OnFloat();override;
 
-    property getJid: Widestring read jid;
-    property CurrentThread: string read _thread;
-    property LastImage: integer read _old_img;
+    function GetThread: Widestring;
 
+    procedure pluginMenuClick(Sender: TObject); override;
+
+    property getJid: Widestring read jid;
+    property LastImage: integer read _old_img;
   end;
 
 var
@@ -225,7 +221,7 @@ const
     sAvailable = 'available';
     sOffline = 'offline';
     sUnavailable = 'unavailable';
-    sCloseBusy = 'This chat window is busy. Close anyways?';
+    sCloseBusy = 'This chat window is busy. Close anyway?';
     sChat = 'Chat';
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sMsgLocalTime = 'Local Time: ';
@@ -235,6 +231,7 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+//Find or create a chat controller/window for the jid/resource
 function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 var
     r, m: integer;
@@ -315,7 +312,6 @@ begin
             end;
         end;
 
-        _thread := chat.getThreadID();
         tmp_jid := TJabberID.Create(sjid);
         if (chat_nick = '') then begin
             ritem := MainSession.roster.Find(sjid);
@@ -349,16 +345,19 @@ begin
 
         SetupResources();
 
+        //Assign incoming message event
         chat.OnMessage := MessageEvent;
+        //Assign outgoing message event
+        chat.OnSendMessage := SendMessageEvent;
 
         // handle setting position for this window
         if (not MainSession.Prefs.RestorePosition(TfrmChat(chat.window),
             MungeName(Caption))) then
             Position := poDefaultPosOnly;
 
-        ShowDefault();
         exp := (Jabber1.getAllowedDockState() <> adsForbidden);
         if ((show_window) and (Application.Active)) then begin
+            ShowDefault(); //Only show if requested and active
             Show();
             if (((exp) and (frmExodus.getTopDocked() = chat.window)) or
                 (exp = false)) then begin
@@ -409,14 +408,12 @@ end;
 procedure TfrmChat.FormCreate(Sender: TObject);
 begin
     inherited;
-    _thread := '';
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
     OtherNick := '';
     _pres_img := RosterTreeImages.Find('unknown');
     _check_event := false;
-    _last_id := '';
     _reply_id := '';
     _msg_out := false;
     _jid := nil;
@@ -475,7 +472,6 @@ begin
     _esc := MainSession.Prefs.getBool('esc_close');
     sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
     ShortCutToKey(sc, _close_key, _close_shift);
-
     if (not MainSession.Prefs.getBool('brand_prevent_change_nick')) then
         _mynick := MainSession.Prefs.getString('default_nick');
     if (_mynick = '') then
@@ -668,22 +664,6 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmChat.GetThread: String;
-Var
-    seed: string;
-begin
-    if _thread <> '' then exit;
-
-    seed := FormatDateTime('MMDDYYYYHHMM',now);
-    seed := seed + jid + MainSession.Username + MainSession.Server;
-
-    // hash the seed to get the thread
-    _thread := Sha1Hash(seed);
-    chat_object.setThreadID(_thread);
-    Result := _thread;
-end;
-
-{---------------------------------------}
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
@@ -706,6 +686,7 @@ begin
 end;
 
 {---------------------------------------}
+//Handle incoming messages
 procedure TfrmChat.MessageEvent(tag: TXMLTag);
 var
     xml, body: Widestring;
@@ -732,7 +713,7 @@ begin
         etag := tag.QueryXPTag(XP_MSGXEVENT);
         if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
             // we got a composing a message
-            if (etag.GetBasicText('id') = _last_id) then begin
+            if (etag.GetBasicText('id') = chat_object.LastMsgId) then begin
                 _flash_ticks := 0;
 
                 // Setup the cache'd old versions in ChangePresImage
@@ -749,7 +730,7 @@ begin
 
                 exit;
             end
-            else if (etag.GetFirstTag('id') <> nil) then
+            else if (etag.GetFirstTag('id') <> nil) then //Got an empty id
                 MsgList.HideComposing();
         end;
     end;
@@ -773,15 +754,45 @@ begin
     end;
 
     showMsg(tag);
-    if _thread = '' then begin
-        // cache thread from message
+    if GetThread() = '' then begin
+        //Get thread from message
         tagThread := tag.GetFirstTag('thread');
         if tagThread <> nil then begin
-            _thread := tagThread.Data;
-            chat_object.setThreadID(_thread);
+            chat_object.setThreadID(tagThread.Data);
         end;
+   end;
+   com_controller.fireAfterRecvMsg(body);
+end;
+
+{---------------------------------------}
+//Handle outgoing messages
+procedure TfrmChat.SendMessageEvent(tag: TXMLTag);
+var
+  send_allowed: boolean;
+  body: Widestring;
+  xml: Widestring;
+begin
+  send_allowed := true;
+  body := tag.GetBasicText('body');
+
+  if (tag.QueryXPTag(XP_MSGDELAY) = nil) then begin
+    //If not a delayed message (previously sent), send and then display
+
+    if (com_controller <> nil) then //Do plugin before message logic
+      send_allowed := com_controller.fireBeforeMsg(body);
+
+    if (send_allowed) then begin
+      if (com_controller <> nil) then //Do plugin after message logic
+        xml := com_controller.fireAfterMsg(body);
+
+      if (xml <> '') then
+        tag.addInsertedXml(xml);
+
+      MainSession.SendTag(TXMLTag.Create(tag));
     end;
-    com_controller.fireAfterRecvMsg(body);
+  end;
+
+  showMsg(tag); //Render
 end;
 
 {---------------------------------------}
@@ -813,19 +824,8 @@ begin
 
     _check_event := false;
     MsgList.HideComposing();
-
-    Msg := TJabberMessage.Create(tag);
-    Msg.Nick := OtherNick;
-    Msg.IsMe := false;
-
-    if (Msg.Thread = '') then begin
-        if (_thread <> '') then
-            Msg.Thread := _thread
-        else begin
-            _thread := GetThread();
-            Msg.Thread := _thread;
-        end;
-    end;
+    
+    Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
 
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin
@@ -838,8 +838,11 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
+        //Notify
         DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick,
             RosterTreeImages.Find('contact'), 'notify_chatactivity');
+
+        //Render
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
@@ -862,68 +865,19 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SendRawMessage(body, subject, xml: Widestring;
     fire_plugins: boolean);
-var
-    add_xml: WideString;
-    msg: TJabberMessage;
-    mtag: TXMLTag;
 begin
-    if _thread = '' then begin   //get thread from message
-        _thread := GetThread;
-    end;
-
     // send the msg
     // XXX: PGM: is this your trim?  What should we do with messages that
     // start with $#D, etc.?
-    msg := TJabberMessage.Create(jid, 'chat', Trim(body), '');
-    msg.thread := _thread;
-    msg.nick := _mynick;
-    msg.isMe := true;
-
-    _last_id := MainSession.generateID();
+    chat_object.SendMsg(Trim(body),subject,xml,true);
     _check_event := true;
-    msg.id := _last_id;
-
-    // put in the composing stuff
-    mtag := msg.Tag;
-    with mtag.AddTag('x') do begin
-        setAttribute('xmlns', XMLNS_XEVENT);
-        AddTag('composing');
-    end;
-
-    // additional plugin madness
-    if (fire_plugins) then begin
-        if (com_controller <> nil) then
-            add_xml := com_controller.fireAfterMsg(body);
-        if (add_xml <> '') then
-            mtag.addInsertedXML(add_xml);
-    end;
-
-    // add any xml passed to us
-    if (xml <> '') then mtag.addInsertedXML(xml);
-
-    MainSession.SendTag(mtag);
-    DisplayMsg(Msg, MsgList);
-
-    // log the msg
-    LogMessage(Msg);
-
-    Msg.Free();
 end;
 
 {---------------------------------------}
 function TfrmChat._sendMsg(txt: Widestring): boolean;
-var
-    allowed: boolean;
 begin
-    // plugin madness
-    allowed := true;
-    if (com_controller <> nil) then
-        allowed := com_controller.fireBeforeMsg(txt);
-
-    Result := allowed;
-    if ((allowed = false) or (txt = '')) then exit;
-
-    sendRawMessage(txt, '', '', true);
+      sendRawMessage(txt,'','',true);
+      result := true;
 end;
 
 {---------------------------------------}
@@ -931,7 +885,8 @@ procedure TfrmChat.SendMsg;
 var
     txt: Widestring;
 begin
-    // Send the actual message out
+    // Get the text from the UI
+    // and send the actual message out
     txt := getInputText(MsgOut);
     if (txt = '/clear') then begin
       Clear1Click(self);
@@ -1060,7 +1015,7 @@ begin
     if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
         Self.TabSheet.ImageIndex := _pres_img;
     _old_img := _pres_img;
-    ImageIndex := _pres_img;
+
 end;
 
 {---------------------------------------}
@@ -1612,8 +1567,19 @@ begin
     end;
 end;
 
+{---------------------------------------}
+//Get thread from controller
+function TFrmChat.GetThread(): Widestring;
+begin
+  result := '';
+
+  if (chat_object <> nil) then
+    result := chat_object.getThreadID();
+end;
+
 procedure TfrmChat.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                     State: TDragState; var Accept: Boolean);
+
 begin
     inherited;
     Accept := (Source = frmRosterWindow.treeRoster);
