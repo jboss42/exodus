@@ -71,7 +71,8 @@ uses
     {$endif}
     Presence,
     JabberID,
-    NodeItem, Roster;
+    NodeItem, Roster,
+    PrefController;
 
 {---------------------------------------}
 Constructor TSubController.Create;
@@ -111,6 +112,7 @@ procedure TSubController.Subscribe(event: string; tag: TXMLTag);
 var
     j: TJabberID;
     incoming: integer;
+    add_to_roster: boolean;
     prompt: boolean;
     ritem: TJabberRosterItem;
     dgrp: Widestring;
@@ -124,13 +126,14 @@ begin
 
     // deal w/ normal subscription requests
     else begin
-        incoming := MainSession.Prefs.getInt('s10n_auto_accept');
+        incoming := MainSession.Prefs.getInt(PrefController.P_SUB_AUTO);
+        add_to_roster := MainSession.Prefs.getBool(PrefController.P_SUB_AUTO_ADD);
         ritem := MainSession.roster.Find(j.jid);
 
         prompt := false; // auto-accept all
-        if (incoming = 0) then // auto-accept from none
+        if (incoming = PrefController.s10n_ask) then // auto-accept from none
             prompt := true
-        else if (incoming = 1) then begin // auto-accept from roster
+        else if (incoming = PrefController.s10n_auto_roster) then begin // auto-accept from roster
             if (ritem = nil) then
                 prompt := true
             else begin
@@ -139,7 +142,7 @@ begin
                     prompt := true;
             end;
         end
-        else if (incoming = 3) then begin // auto-deny all
+        else if (incoming = s10n_auto_deny_all) then begin // auto-deny all
             SendUnsubscribed(j.jid, MainSession);
             exit;
         end;
@@ -152,7 +155,8 @@ begin
 
                 // if we didn't ask for this subscription,
                 // then we should subscribe back to them
-                if ((ritem = nil) or (ritem.ask <> 'subscribe')) then begin
+                // if add_to_roster
+                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and (add_to_roster)) then begin
                     dgrp := MainSession.Prefs.getString('roster_default');
                     MainSession.Roster.AddItem(j.jid, j.userDisplay, dgrp, true);
                 end;
