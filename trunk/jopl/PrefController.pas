@@ -42,10 +42,11 @@ uses
     Classes, SysUtils, PrefFile;
 
 const
-    s10n_ask = 0;
-    s10n_auto_roster = 1;
-    s10n_auto_all = 2;
-
+    s10n_ask = 0; //Ask for all incoming requests
+    s10n_auto_roster = 1; //Accept incoming requests from jids on roster
+    s10n_auto_all = 2; //Auto accept all requests
+    s10n_auto_deny_all = 3; //Auto deny all requests
+    
     conn_normal = 0;
     conn_http = 1;
 
@@ -100,6 +101,7 @@ const
     P_AUTOUPDATE = 'auto_updates';
     P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
+    P_SUB_AUTO_ADD = 's10n_auto_add';
 
     P_FONT_NAME = 'font_name';
     P_FONT_SIZE = 'font_size';
