@@ -99,6 +99,20 @@ function promptNewGroup: TJabberGroup;
 
 function IsUnicodeEnabled(): boolean;
 
+{
+    Write a message to stdout.
+}
+procedure OutputDebugMsg(Message : String);
+
+{
+    Execute the given exe with the given params
+
+    Uses ShellExecuteEx to launch the exe and wiats for the program to terminate.
+    @Return The exit code of the process. If ShellExecuteEx could not launch
+            the process returns WAIT_FAILED (max DWORD)
+}
+function ExecAndWait(const ExecuteFile, ParamString : string): Cardinal;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -358,11 +372,19 @@ end;
 {---------------------------------------}
 procedure DebugMsg(Message : string);
 begin
-//    DebugMessage(Message);
     MainSession.FireEvent('/data/debug', nil, Message);
 end;
 
+{
+    Write a message to stdout.
+}
+procedure OutputDebugMsg(Message : String);
+begin
+    OutputDebugString(PChar(Message));
+end;
+
 {---------------------------------------}
+
 procedure URLLabel(lbl: TLabel);
 begin
     AssignUnicodeURL(lbl.Font, 8);
@@ -1122,6 +1144,41 @@ begin
         Result := true
     else
         Result := false;
+end;
+
+{
+    Execute the given exe with the given params
+
+    Uses ShellExecuteEx to launch the exe and wiats for the program to terminate.
+    @Return The exit code of the process. If ShellExecuteEx could not launch
+            the process returns WAIT_FAILED (max DWORD)
+}
+function ExecAndWait(const ExecuteFile, ParamString : string): Cardinal;
+var
+    SEInfo: TShellExecuteInfo;
+    ExitCode: DWORD;
+begin
+    try
+        FillChar(SEInfo, SizeOf(SEInfo), 0);
+        SEInfo.cbSize := SizeOf(TShellExecuteInfo);
+        with SEInfo do begin
+            fMask := SEE_MASK_NOCLOSEPROCESS;
+            Wnd := Application.Handle;
+            lpFile := PChar(ExecuteFile);
+            lpParameters := PChar(ParamString);
+            nShow := SW_HIDE;
+        end;
+        if ShellExecuteEx(@SEInfo) then begin
+            repeat
+                Application.ProcessMessages;
+                GetExitCodeProcess(SEInfo.hProcess, ExitCode);
+            until (ExitCode <> STILL_ACTIVE) or Application.Terminated;
+            Result:= ExitCode;
+        end
+        else Result:=WAIT_FAILED;
+    Except
+        Result := WAIT_FAILED;
+    end;
 end;
 
 {---------------------------------------}

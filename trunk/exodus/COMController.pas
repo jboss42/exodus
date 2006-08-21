@@ -251,7 +251,7 @@ uses
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, ComServ;
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, ComServ;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -323,11 +323,14 @@ begin
     // doesn't seem to work for me.
     Result := false;
     try
-        RegisterComServer(dll); //force registration
+        if (ExUtils.ExecAndWait('regsvr32','/s ' + dll) = 0) then begin //silent registration
+            ExUtils.DebugMsg(_('DLL in plugin directory could not be registered. Try to register using regsvr32 for more information. ') + dll);
+            exit;
+        end;
         OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
     except
         on EOleSysError do exit;
-        on EOSError do exit; //unregisterable dll
+        on Exception do exit; //probably problems registering the dll
     end;
 
     // for each type in the project
@@ -396,7 +399,7 @@ begin
                 end;
             end; //for each implemented interface
 
-            //VS 2003, 2005 plugins don't neccessarily put that they
+            //ATL 2003, 2005 plugins don't neccessarily put that they
             //implement IExodusPlugin in their type libs. As a secondary
             //discovery method, try loading the class and seeinging
             //if it does in fact implement IExodusPlugin. This will only
