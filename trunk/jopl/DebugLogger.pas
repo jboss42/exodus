@@ -43,7 +43,6 @@ end;
 {---------------------------------------}
 procedure TDebugLogFile.Init();
 var
-    handle: Integer;
     time: String;
 begin
     
