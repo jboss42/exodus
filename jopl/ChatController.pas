@@ -38,7 +38,7 @@ type
     private
         _jid: Widestring;
         _resource: Widestring;
-        _cb: integer;
+        _msg_cb: integer;
         _event: TChatMessageEvent;
         _history: Widestring;
         _memory: TTimer;
@@ -76,7 +76,11 @@ type
         procedure Release();
         procedure TimedRelease();
         procedure DisableChat();
+
+        procedure RegisterSessionCB();
         procedure UnregisterSessionCB();
+        procedure RegisterMsgCB();
+        procedure UnregisterMsgCB();
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
@@ -151,8 +155,9 @@ begin
     // or send them to the event handler
     inherited Create();
 
-    _cb := -1;
+    _msg_cb := -1;
     _scallback := -1;
+    
     _jid := sjid;
     _resource := sresource;
     msg_queue := TQueue.Create();
@@ -195,18 +200,13 @@ end;
 {---------------------------------------}
 procedure TChatController.SetJID(sjid: Widestring);
 begin
-    // If we already have a callback, then unregister
-    // Then re-register for messages for the new jid
-    if (_cb >= 0) then
-        MainSession.UnRegisterCallback(_cb);
-    _cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@type="chat"][@from="' + XPLiteEscape(WideLowerCase(sjid)) + '*"]');
+    RegisterSessionCB();
+    RegisterMsgCB();
 end;
 
 procedure TChatController.DisableChat();
 begin
-    if (_cb >= 0) then
-        MainSession.UnRegisterCallback(_cb);
+    UnRegisterMsgCB();
     Self.unassignEvent();
     StopTimer();
 end;
@@ -235,8 +235,7 @@ var
 begin
     // Unregister the callback and remove us from the chat list.
     if (MainSession <> nil) then begin
-        if (_cb >= 0) then
-            MainSession.UnRegisterCallback(_cb);
+        UnRegisterMsgCB();
         idx := MainSession.ChatList.IndexOfObject(Self);
         if (idx >= 0) then
             MainSession.ChatList.Delete(idx);
@@ -378,7 +377,7 @@ begin
         stopTimer();
         exit;
     end;
-    
+
     if (_refs = 0) then Self.Free();
 end;
 
@@ -390,8 +389,9 @@ procedure TChatController.startTimer();
 begin
     _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
     _memory.Enabled := true;
-    if (_scallback = -1)  and (Self.Window = nil) then
-        _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+    RegisterSessionCB();
+    if (Self.Window = nil) then
+        RegisterSessionCB();
 end;
 
 {---------------------------------------}
@@ -417,12 +417,37 @@ begin
         Self.Free();
 end;
 
+{---------------------------------------}
+procedure TChatController.RegisterSessionCB();
+begin
+  UnRegisterSessionCB();
+  _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+end;
+
 procedure TChatController.UnregisterSessionCB();
 begin
     if (_scallback >= 0) then begin
         MainSession.UnRegisterCallback(_scallback);
         _scallback := -1;
     end;
+end;
+
+{---------------------------------------}
+//Listen for incoming messages that belong to this chat
+procedure TChatController.RegisterMsgCB();
+begin
+  UnRegisterMsgCB();
+  _msg_cb := MainSession.RegisterCallback(MsgCallback,
+            '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(Self.JID)) + '*"]');
+end;
+
+{---------------------------------------}
+procedure TChatController.UnregisterMsgCB();
+begin
+  if (_msg_cb >= 0) then begin
+    MainSession.UnRegisterCallback(_msg_cb);
+    _msg_cb := -1;
+  end;
 end;
 
 end.

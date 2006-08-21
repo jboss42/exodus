@@ -443,8 +443,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor TJabberRosterItem.Create(id: Widestring);
-var
-    dude: Widestring;
 begin
     inherited Create();
     _grps := TWideStringList.Create;
