@@ -20,9 +20,13 @@ unit JabberMsg;
 }
 
 interface
+
 uses
-    AddressList, XmlTag, SysUtils, JabberConst, Classes;
+    AddressList,
+    XmlTag,
+    SysUtils;
 type
+
     TJabberMessage = class
     private
         _toJID    : WideString;
@@ -39,8 +43,10 @@ type
         _isxdata  : boolean;
         _highlight: boolean;
         _tag      : TXMLTag;
+        _xml      : Widestring;
+        _composing: boolean;
         _addresses: TJabberAddressList; // use optional (for JEP-33 support)
-
+        
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
         procedure SetThread(const Value: WideString);
@@ -56,8 +62,7 @@ type
         destructor Destroy; override;
 
         // Use of this method optional for JEP-33 support
-        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');
-
+        procedure AddRecipient(jid: WideString; addrType: WideString = 'to');        
         property Tag: TXMLTag read GetTag;
 
         property ToJID : WideString read _toJID write _toJID;
@@ -74,6 +79,8 @@ type
         property Time: TDateTime read _time write _time;
         property isXdata: boolean read _isxdata;
         property highlight: boolean read _highlight write _highlight;
+        property XML: Widestring read _xml write _xml;
+        property Composing: boolean read _composing write _composing;
   end;
 
 
@@ -83,7 +90,7 @@ type
 implementation
 
 uses
-    XMLUtils;
+    JabberConst, XMLUtils;
 
 { TJabberMessage }
 
@@ -127,7 +134,7 @@ begin
         if t <> nil then begin
             _body := t.Data;
             // check for actions
-            if (WideLowerCase(Copy(_body, 1, 4)) = '/me ') then begin
+            if (WideLowercase(Copy(_body, 1, 4)) = '/me ') then begin
                 _action := true;
                 Delete(_body, 1, 4);
             end;
@@ -152,6 +159,11 @@ begin
             else
                 _time := Now();
         end;
+
+        //Check for composing event
+        t := QueryXPTag(XP_MSGCOMPOSING);
+        if (t <> nil) then
+          _composing := true;
 
         t := GetFirstTag('addresses');
         if (t <> nil) then begin
@@ -182,12 +194,10 @@ destructor TJabberMessage.Destroy;
 begin
     if (_tag <> nil) then
         _tag.Free();
-
     if (_addresses <> nil) then begin
         _addresses.Clear();
         _addresses.Free();
-    end;
-        
+    end;        
     inherited destroy;
 end;
 
@@ -195,6 +205,7 @@ end;
 function TJabberMessage.GetTag: TXMLTag;
 var
     raw_body: WideString;
+    mtag: TXMLTag;
 begin
     // I made the _tag form allocate the same way, so that we can always free
     // or not. /hildjj
@@ -209,6 +220,7 @@ begin
     with Result do begin
         Name := 'message';
         setAttribute('to', _toJID);
+        setattribute('from', _fromJID);
         setAttribute('id', _id);
         if (_msg_type <> 'normal') then
             setAttribute('type', _msg_type);
@@ -220,10 +232,21 @@ begin
             AddBasicTag('thread', _thread);
         if _subject <> '' then
             AddBasicTag('subject', _subject);
+
         raw_body := _body;
         if _action then raw_body := '/me ' + raw_body;
 
         AddBasicTag('body', raw_body);
+
+        if (_composing) then begin
+          //Add composing event
+          mtag := Result.AddTag('x');
+          mtag.setAttribute('xmlns', XMLNS_XEVENT);
+          mtag.AddTag('composing');
+        end;
+
+        if (_xml <> '') then
+          addInsertedXML(_xml);
     end;
 
     _tag := TXMLTag.Create(result);
@@ -274,4 +297,5 @@ procedure TJabberMessage.AddRecipient(jid: WideString; addrType: WideString = 't
 begin
     _addresses.AddAddress(jid, addrType);
 end;
+
 end.
