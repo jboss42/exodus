@@ -45,6 +45,7 @@ type
     TntLabel1: TTntLabel;
     txtDisconnectTime: TTntEdit;
     spnDisconnect: TUpDown;
+    chkAwayAutoResponse: TTntCheckBox;
     procedure chkAutoAwayClick(Sender: TObject);
   private
     { Private declarations }

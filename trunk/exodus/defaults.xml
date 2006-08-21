@@ -33,6 +33,7 @@
     <xa_status control="txtXA">
       <control name="lblXAStatus"/>
     </xa_status>
+    <away_auto_response value="0" control="chkAwayAutoResponse"/>
 
     <!-- Roster Options -->                    	
     <roster_show_unsub value="0" control="chkShowUnsubs"/>
@@ -207,6 +208,7 @@
     
     <!-- Subscription Options -->
     <s10n_auto_accept value="0" control="optIncomingS10n"/>
+    <s10n_auto_add value="true" control="chkIncomingS10nAdd"/>
     
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath">

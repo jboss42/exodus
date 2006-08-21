@@ -25,6 +25,8 @@ uses
     XMLTag, JabberID, Signals, Unicode,
     Contnrs, SysUtils, classes;
 
+function DecodeShowDisplayValue(show: Widestring): Widestring;
+
 type
     TJabberCustomPres = class
     private
@@ -119,6 +121,24 @@ uses
     Dialogs,
     {$endif}
     Entity, EntityCache, Session, XMLStream, XMLUtils;
+
+//Decode the basic XMPP presence <show> values as nicer strings for UI
+//TODO: Support Internationalization
+function DecodeShowDisplayValue(show: Widestring): Widestring;
+begin
+    if (show = '') then
+      result := 'Available'
+    else if (show = 'chat') then
+      result := 'Free to Chat'
+    else if (show = 'away') then
+      result := 'Away'
+    else if (show = 'xa') then
+      result := 'Extended Away'
+    else if (show = 'dnd') then
+      result := 'Do not Disturb'
+    else
+      result := show;
+end;
 
 {---------------------------------------}
 constructor TJabberPres.Create;
