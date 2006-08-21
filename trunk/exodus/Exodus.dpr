@@ -235,7 +235,7 @@ uses
   ExodusImageList in '..\jopl\ExodusImageList.pas',
   PrefGraphics in '..\jopl\PrefGraphics.pas',
   AddressList in '..\jopl\AddressList.pas',
-  StatePrefForm in 'StatePrefForm.pas' {frmStatefull};
+  Keywords in 'Keywords.pas';
 
 {$R *.TLB}
 
@@ -270,7 +270,6 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
-  Application.CreateForm(TfrmStatefull, frmStatefull);
   frmExodus.Startup();
   Application.Run;
 
