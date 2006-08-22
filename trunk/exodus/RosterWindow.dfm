@@ -245,8 +245,6 @@ object frmRosterWindow: TfrmRosterWindow
       Alignment = taCenter
       AutoSize = False
       Caption = 'Click a profile to connect'
-      Color = clWindow
-      ParentColor = False
       Transparent = False
       Layout = tlCenter
       WordWrap = True
@@ -297,6 +295,7 @@ object frmRosterWindow: TfrmRosterWindow
         01500000000200000001000000FFFFFFFFFFFFFFFF0000000000000000095000
         72006F00660069006C0065002000310001000000FFFFFFFFFFFFFFFF00000000
         0000000009500072006F00660069006C00650020003200}
+      ParentColor = True
       ParentShowHint = False
       PopupMenu = popProfiles
       ShowHint = True
@@ -307,6 +306,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnDblClick = lblConnectClick
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
+      ExplicitTop = 98
     end
   end
   object treeRoster: TTntTreeView
