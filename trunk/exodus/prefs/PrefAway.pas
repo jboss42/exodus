@@ -68,6 +68,7 @@ uses
 procedure TfrmPrefAway.LoadPrefs();
 begin
     inherited;
+    doEnables();
 end;
 
 procedure TfrmPrefAway.SavePrefs();
