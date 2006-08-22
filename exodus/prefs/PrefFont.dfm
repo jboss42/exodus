@@ -25,14 +25,14 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object Label24: TTntLabel [2]
     Left = 8
-    Top = 194
+    Top = 208
     Width = 88
     Height = 13
     Caption = 'Background Color:'
   end
   object Label25: TTntLabel [3]
     Left = 8
-    Top = 218
+    Top = 232
     Width = 51
     Height = 13
     Caption = 'Font Color:'
@@ -46,14 +46,14 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object lblColor: TTntLabel [5]
     Left = 8
-    Top = 176
+    Top = 190
     Width = 69
     Height = 13
     Caption = 'Element Name'
   end
   object clrBoxBG: TColorBox [6]
     Left = 135
-    Top = 191
+    Top = 205
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -66,7 +66,7 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object clrBoxFont: TColorBox [7]
     Left = 135
-    Top = 215
+    Top = 229
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -79,7 +79,7 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object btnFont: TTntButton [8]
     Left = 135
-    Top = 242
+    Top = 256
     Width = 90
     Height = 25
     Caption = 'Change Font'
@@ -89,8 +89,8 @@ inherited frmPrefFont: TfrmPrefFont
   object colorChat: TExRichEdit [9]
     Left = 136
     Top = 72
-    Width = 225
-    Height = 97
+    Width = 241
+    Height = 113
     AutoURLDetect = adNone
     CustomURLs = <
       item
@@ -174,6 +174,7 @@ inherited frmPrefFont: TfrmPrefFont
     URLColor = clBlue
     URLCursor = crHandPoint
     WordWrap = False
+    OnMouseDown = colorChatMouseDown
     OnSelectionChange = colorChatSelectionChange
     InputFormat = ifRTF
     OutputFormat = ofRTF
@@ -192,7 +193,7 @@ inherited frmPrefFont: TfrmPrefFont
     Left = 8
     Top = 72
     Width = 121
-    Height = 97
+    Height = 112
     BevelWidth = 0
     Indent = 19
     ReadOnly = True

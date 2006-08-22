@@ -25,9 +25,10 @@ uses
     ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls, Messages, Windows, SysUtils;
 
-function RTFColor(color_pref: string) : string;
+function RTFColor(color_pref: integer) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
-procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_server, color_action, color_me, color_other, font_color: integer) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 
 {---------------------------------------}
@@ -50,11 +51,11 @@ begin
 end;
 
 {---------------------------------------}
-function RTFColor(color_pref: string) : string;
+function RTFColor(color_pref: integer) : string;
 var
     color: TColor;
 begin
-    color := TColor(MainSession.Prefs.getInt(color_pref));
+    color := TColor(color_pref);
     result :=
         '\red'   + IntToStr(color and clRed) +
         '\green' + IntToStr((color and clLime) shr 8) +
@@ -64,6 +65,21 @@ end;
 
 {---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
+begin
+    DisplayRTFMsg(RichEdit,
+                  Msg,
+                  AutoScroll,
+                  MainSession.Prefs.getInt('color_time'),
+                  MainSession.Prefs.getInt('color_server'),
+                  MainSession.Prefs.getInt('color_action'),
+                  MainSession.Prefs.getInt('color_me'),
+                  MainSession.Prefs.getInt('color_other'),
+                  MainSession.Prefs.getInt('font_color'));
+end;
+
+{---------------------------------------}
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean;
+                        color_time, color_server, color_action, color_me, color_other, font_color: integer);
 var
     len, fvl: integer;
     txt, body: WideString;
@@ -76,12 +92,12 @@ begin
     is_scrolling := RichEdit.isScrolling;
 
     txt := '{\rtf1 {\colortbl;'  +
-        RTFColor('color_time')   + // \cf1
-        RTFColor('color_server') + // \cf2
-        RTFColor('color_action') + // \cf3
-        RTFColor('color_me')     + // \cf4
-        RTFColor('color_other')  + // \cf5
-        RTFColor('font_color')   + // \cf6
+        RTFColor(color_time)   + // \cf1
+        RTFColor(color_server) + // \cf2
+        RTFColor(color_action) + // \cf3
+        RTFColor(color_me)     + // \cf4
+        RTFColor(color_other)  + // \cf5
+        RTFColor(font_color)   + // \cf6
         '}\uc1';
 
     if (MainSession.Prefs.getBool('timestamp')) then begin

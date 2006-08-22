@@ -679,7 +679,6 @@ begin
         lblCreate.Visible := true;
         lblNewUser.Visible := true;
         lblConnect.Caption := _(sSignOn);
-        lblConnect.Color := clWindow;
         lblCreate.Caption := _(sNewProfile);
         lblConnect.Font.Color := clWindowText;
         lblConnect.Font.Style := [];
