@@ -235,7 +235,8 @@ uses
   ExodusImageList in '..\jopl\ExodusImageList.pas',
   PrefGraphics in '..\jopl\PrefGraphics.pas',
   AddressList in '..\jopl\AddressList.pas',
-  Keywords in 'Keywords.pas';
+  Keywords in 'Keywords.pas',
+  COMBookmarkManager in 'COMBookmarkManager.pas';
 
 {$R *.TLB}
 
