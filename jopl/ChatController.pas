@@ -89,7 +89,7 @@ type
         procedure Release();
         procedure TimedRelease();
         procedure DisableChat();
-        procedure RegisterSessionCB();
+        procedure RegisterSessionCB(event: widestring);
         procedure RegisterMsgCB();
         procedure RegisterSendMsgCB();
         procedure UnregisterSessionCB();
@@ -216,7 +216,7 @@ end;
 {---------------------------------------}
 procedure TChatController.SetJID(sjid: Widestring);
 begin
-    RegisterSessionCB();
+    RegisterSessionCB('/session/presence');
     RegisterMsgCB();
     RegisterSendMsgCB();
 end;
@@ -593,7 +593,7 @@ begin
     _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
     _memory.Enabled := true;
     if (Self.Window = nil) then
-        RegisterSessionCB();
+        RegisterSessionCB('/session');
 end;
 
 {---------------------------------------}
@@ -601,8 +601,10 @@ procedure TChatController.stopTimer();
 begin
     _memory.Enabled := false;
     // Only unregister session callback if control has been handed to a window
-    if (Self.Window <> nil) then
-        Self.UnregisterSessionCB();
+    if (Self.Window <> nil) then begin
+        UnregisterSessionCB();
+        RegisterSessionCB('/session/presence');
+    end;
 end;
 
 {---------------------------------------}
@@ -631,10 +633,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TChatController.RegisterSessionCB();
+procedure TChatController.RegisterSessionCB(event: widestring);
 begin
   UnRegisterSessionCB();
-  _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+  _scallback := MainSession.RegisterCallback(SessionCallback, event);
 end;
 
 {---------------------------------------}
