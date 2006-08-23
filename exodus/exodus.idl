@@ -959,11 +959,42 @@ library Exodus
     [default] interface IExodusLogListener;
   };
 
+  [
+    uuid(E40D85F3-9E0D-4368-89D0-C4298315CD30), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusBookmarkManager: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddBookmark([in] BSTR JabberID, [in] BSTR bmName, [in] BSTR Nickname, [in] VARIANT_BOOL AutoJoin, [in] VARIANT_BOOL UseRegisteredNick );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall RemoveBookmark([in] BSTR JabberID );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall FindBookmark([in] BSTR JabberID, [out, retval] BSTR * Result );
+  };
+
   
   typedef BSTR * PWideString1;
 
   [
-    uuid(347D8B62-E489-4D99-BDED-6DC964CB2BEE), 
+    uuid(EEEE7D8D-0C7E-4DF1-B556-CFDAD2893123), 
+    version(1.0)
+  ]
+  coclass ExodusBookmarkManager
+  {
+    [default] interface IExodusBookmarkManager;
+  };
+
+  [
+    uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
     dual, 
@@ -1346,6 +1377,11 @@ library Exodus
     id(0x000000DD)
     ]
     HRESULT _stdcall RemoveStringlistValue([in] BSTR key, [in] BSTR value );
+    [
+    propget, 
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall BookmarkManager([out, retval] IExodusBookmarkManager ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -7769,7 +7805,7 @@ library Exodus
   };
 
   [
-    uuid(B16F38F6-D390-4FF6-AEF9-DF8E5912B45F), 
+    uuid(6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPlugin Object"), 
     dual, 

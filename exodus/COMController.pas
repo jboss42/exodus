@@ -137,6 +137,7 @@ type
     function GetStringlistValue(const key: WideString; index: Integer): WideString;
       safecall;
     procedure RemoveStringlistValue(const key, value: WideString); safecall;
+    function Get_BookmarkManager: IExodusBookmarkManager; safecall;
 
     { Protected declarations }
   private
@@ -1739,6 +1740,13 @@ procedure TExodusController.RemoveStringlistValue(const key, value: WideString);
 begin
     MainSession.Prefs.RemoveStringlistValue(key, value);
 end;
+
+function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
+begin
+    ExCOMBookmarkManager.ObjAddRef();
+    Result := ExCOMBookmarkManager;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

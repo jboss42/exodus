@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 8/9/2006 8:25:36 AM from Type Library described below.
+// File generated on 8/23/2006 4:10:52 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -46,7 +46,7 @@ const
 
   LIBID_Exodus: TGUID = '{37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}';
 
-  IID_IExodusController: TGUID = '{347D8B62-E489-4D99-BDED-6DC964CB2BEE}';
+  IID_IExodusController: TGUID = '{A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}';
   CLASS_exodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
   IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
@@ -99,7 +99,9 @@ const
   CLASS_ExodusLogMsg: TGUID = '{740743C0-7BEF-48E8-BD05-1470047F03CA}';
   IID_IExodusLogListener: TGUID = '{6D58A577-6BC4-4B1C-B5F8-759B94136B0A}';
   CLASS_ExodusLogListener: TGUID = '{98ED888A-0569-4E5B-8933-36EBF08812B4}';
-  IID_IExodusPlugin: TGUID = '{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}';
+  IID_IExodusPlugin: TGUID = '{6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}';
+  IID_IExodusBookmarkManager: TGUID = '{E40D85F3-9E0D-4368-89D0-C4298315CD30}';
+  CLASS_ExodusBookmarkManager: TGUID = '{EEEE7D8D-0C7E-4DF1-B556-CFDAD2893123}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -229,6 +231,8 @@ type
   IExodusLogListenerDisp = dispinterface;
   IExodusPlugin = interface;
   IExodusPluginDisp = dispinterface;
+  IExodusBookmarkManager = interface;
+  IExodusBookmarkManagerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -248,6 +252,7 @@ type
   ExodusToolbarButton = IExodusToolbarButton;
   ExodusLogMsg = IExodusLogMsg;
   ExodusLogListener = IExodusLogListener;
+  ExodusBookmarkManager = IExodusBookmarkManager;
 
 
 // *********************************************************************//
@@ -259,10 +264,10 @@ type
 // *********************************************************************//
 // Interface: IExodusController
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {347D8B62-E489-4D99-BDED-6DC964CB2BEE}
+// GUID:      {A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}
 // *********************************************************************//
   IExodusController = interface(IDispatch)
-    ['{347D8B62-E489-4D99-BDED-6DC964CB2BEE}']
+    ['{A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}']
     function Get_Connected: WordBool; safecall;
     function Get_Username: WideString; safecall;
     function Get_Server: WideString; safecall;
@@ -354,6 +359,7 @@ type
     function GetStringlistCount(const key: WideString): Integer; safecall;
     function GetStringlistValue(const key: WideString; index: Integer): WideString; safecall;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); safecall;
+    function Get_BookmarkManager: IExodusBookmarkManager; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -372,15 +378,16 @@ type
     property Toolbar: IExodusToolbar read Get_Toolbar;
     property ContactLogger: IExodusLogger read Get_ContactLogger write Set_ContactLogger;
     property RoomLogger: IExodusLogger read Get_RoomLogger write Set_RoomLogger;
+    property BookmarkManager: IExodusBookmarkManager read Get_BookmarkManager;
   end;
 
 // *********************************************************************//
 // DispIntf:  IExodusControllerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {347D8B62-E489-4D99-BDED-6DC964CB2BEE}
+// GUID:      {A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}
 // *********************************************************************//
   IExodusControllerDisp = dispinterface
-    ['{347D8B62-E489-4D99-BDED-6DC964CB2BEE}']
+    ['{A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C}']
     property Connected: WordBool readonly dispid 1;
     property Username: WideString readonly dispid 2;
     property Server: WideString readonly dispid 3;
@@ -470,6 +477,7 @@ type
     function GetStringlistCount(const key: WideString): Integer; dispid 219;
     function GetStringlistValue(const key: WideString; index: Integer): WideString; dispid 220;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); dispid 221;
+    property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
   end;
 
 // *********************************************************************//
@@ -4009,10 +4017,10 @@ type
 // *********************************************************************//
 // Interface: IExodusPlugin
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}
+// GUID:      {6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
-    ['{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}']
+    ['{6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}']
     procedure Startup(const exodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); safecall;
@@ -4027,10 +4035,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusPluginDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}
+// GUID:      {6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
-    ['{B16F38F6-D390-4FF6-AEF9-DF8E5912B45F}']
+    ['{6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}']
     procedure Startup(const exodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); dispid 3;
@@ -4040,6 +4048,34 @@ type
                    const xTags: WideString): WideString; dispid 8;
     procedure Configure; dispid 12;
     procedure NewOutgoingIM(const JID: WideString; const instantMsg: IExodusChat); dispid 203;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusBookmarkManager
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {E40D85F3-9E0D-4368-89D0-C4298315CD30}
+// *********************************************************************//
+  IExodusBookmarkManager = interface(IDispatch)
+    ['{E40D85F3-9E0D-4368-89D0-C4298315CD30}']
+    procedure AddBookmark(const JabberID: WideString; const bmName: WideString; 
+                          const Nickname: WideString; AutoJoin: WordBool; 
+                          UseRegisteredNick: WordBool); safecall;
+    procedure RemoveBookmark(const JabberID: WideString); safecall;
+    function FindBookmark(const JabberID: WideString): WideString; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusBookmarkManagerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {E40D85F3-9E0D-4368-89D0-C4298315CD30}
+// *********************************************************************//
+  IExodusBookmarkManagerDisp = dispinterface
+    ['{E40D85F3-9E0D-4368-89D0-C4298315CD30}']
+    procedure AddBookmark(const JabberID: WideString; const bmName: WideString; 
+                          const Nickname: WideString; AutoJoin: WordBool; 
+                          UseRegisteredNick: WordBool); dispid 201;
+    procedure RemoveBookmark(const JabberID: WideString); dispid 202;
+    function FindBookmark(const JabberID: WideString): WideString; dispid 203;
   end;
 
 // *********************************************************************//
@@ -4210,6 +4246,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusLogListener;
   end;
 
+// *********************************************************************//
+// The Class CoExodusBookmarkManager provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusBookmarkManager exposed by              
+// the CoClass ExodusBookmarkManager. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusBookmarkManager = class
+    class function Create: IExodusBookmarkManager;
+    class function CreateRemote(const MachineName: string): IExodusBookmarkManager;
+  end;
+
 implementation
 
 uses ComObj;
@@ -4352,6 +4400,16 @@ end;
 class function CoExodusLogListener.CreateRemote(const MachineName: string): IExodusLogListener;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusLogListener) as IExodusLogListener;
+end;
+
+class function CoExodusBookmarkManager.Create: IExodusBookmarkManager;
+begin
+  Result := CreateComObject(CLASS_ExodusBookmarkManager) as IExodusBookmarkManager;
+end;
+
+class function CoExodusBookmarkManager.CreateRemote(const MachineName: string): IExodusBookmarkManager;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusBookmarkManager) as IExodusBookmarkManager;
 end;
 
 end.
