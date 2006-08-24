@@ -28,6 +28,7 @@ uses
 type
   TfrmPrefSubscription = class(TfrmPrefPanel)
     optIncomingS10n: TTntRadioGroup;
+    chkIncomingS10nAdd: TTntCheckBox;
   private
     { Private declarations }
   public
@@ -47,15 +48,11 @@ uses
 procedure TfrmPrefSubscription.LoadPrefs();
 begin
     inherited;
-
-    //optIncomingS10n.ItemIndex := MainSession.Prefs.getInt('s10n_auto_accept');
 end;
 
 procedure TfrmPrefSubscription.SavePrefs();
 begin
     inherited;
-    
-    //MainSession.Prefs.setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
 end;
 
 
