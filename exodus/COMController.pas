@@ -324,7 +324,7 @@ begin
     // doesn't seem to work for me.
     Result := false;
     try
-        if (ExUtils.ExecAndWait('regsvr32','/s ' + dll) = 0) then begin //silent registration
+        if (ExUtils.ExecAndWait('regsvr32','/s ' + dll) <> 0) then begin //silent registration
             ExUtils.DebugMsg(_('DLL in plugin directory could not be registered. Try to register using regsvr32 for more information. ') + dll);
             exit;
         end;
