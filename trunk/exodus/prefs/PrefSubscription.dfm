@@ -2,14 +2,17 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   Left = 250
   Top = 222
   Caption = 'frmPrefSubscription'
-  ClientHeight = 173
+  ClientHeight = 180
   ClientWidth = 324
   OldCreateOrder = True
+  ExplicitWidth = 336
+  ExplicitHeight = 192
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 324
     Caption = 'Subscription Options'
+    ExplicitWidth = 324
   end
   object optIncomingS10n: TTntRadioGroup
     Left = 8
@@ -23,5 +26,13 @@ inherited frmPrefSubscription: TfrmPrefSubscription
       'Auto-Accept all requests'
       'Auto-Deny all requests')
     TabOrder = 1
+  end
+  object chkIncomingS10nAdd: TTntCheckBox
+    Left = 16
+    Top = 159
+    Width = 300
+    Height = 17
+    Caption = 'Add requestor to default roster group when accepted'
+    TabOrder = 2
   end
 end
