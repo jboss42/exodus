@@ -122,10 +122,10 @@
 		</Linker>
 		<Directories>
 			<Directories Name="OutputDir">..\</Directories>
-			<Directories Name="UnitOutputDir"></Directories>
+			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
-			<Directories Name="PackageDCPOutputDir"></Directories>
-			<Directories Name="SearchPath">..\..;D:\src\exodus\jopl;..\..\..\jopl;..\..\components\tntunicode;..\..\prefs;..\..\output</Directories>
+			<Directories Name="PackageDCPOutputDir">.\output</Directories>
+			<Directories Name="SearchPath">..\..;..\..\..\jopl;..\..\components\tntunicode;..\..\prefs;..\..\output</Directories>
 			<Directories Name="Packages"></Directories>
 			<Directories Name="Conditionals">Indy9</Directories>
 			<Directories Name="DebugSourceDirs"></Directories>

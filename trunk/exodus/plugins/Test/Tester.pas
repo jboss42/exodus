@@ -5,7 +5,7 @@ unit Tester;
 interface
 
 uses
-    XMLParser, 
+    XMLParser,
     ComObj, ActiveX, Exodus_TLB, TestPlugin_TLB, StdVcl;
 
 type
@@ -29,9 +29,9 @@ type
     _exodus: IExodusController;
     _session: integer;
     _roster: integer;
-    _menu_id: Widestring;
-    _menu1: Widestring;
-    _menu2: Widestring;
+//    _menu_id: Widestring;
+//    _menu1: Widestring;
+//    _menu2: Widestring;
     _parser: TXMLTagParser;
 
   end;
@@ -39,7 +39,7 @@ type
 implementation
 
 uses
-    TesterIQCallback, XMLTag, Graphics, Dialogs, ComServ;
+    XMLTag, Graphics, Dialogs, ComServ;
 
 function TTesterPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
@@ -142,7 +142,7 @@ begin
     _exodus := ExodusController;
     _session := _exodus.RegisterCallback('/session', Self);
     _roster := _exodus.RegisterCallback('/roster/item', Self);
-
+{
     _exodus.Roster.AddContextMenu('Tester_menu1');
 
     _menu_id := _exodus.Roster.addContextMenuItem('Tester_menu1', 'Foobar',
@@ -150,7 +150,7 @@ begin
 
     _menu1 := _exodus.addPluginMenu('Test TrackIQ', Self);
     _menu2 := _exodus.addPluginMenu('Test FireEvent', Self);
-
+}
     (*
     bmp := TBitamp.Create();
     bmp.LoadFromFile();
@@ -167,12 +167,17 @@ begin
 end;
 
 //IExodusMenuListener
+//JJF 8/25/06 We lost the type lib for TTesterIQCallback somewhere, commenting
+//out for right now to get good compiles
 procedure TTesterPlugin.OnMenuItemClick(const menuID : WideString; const xml : WideString);
-var
+{var
+
     cb: TTesterIQCallback;
     iqid, txml: Widestring;
     jid: string;
+}
 begin
+{
     if (menuID = _menu1) then begin
         // test TrackIQ()
         jid := 'pgmillard@jabber.org';
@@ -186,6 +191,7 @@ begin
         // test FireEvent()
         _exodus.FireEvent('/data/debug', '', 'Some debug message');
     end;
+    }
 end;
 
 initialization

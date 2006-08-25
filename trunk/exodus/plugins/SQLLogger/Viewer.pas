@@ -123,9 +123,12 @@ var
 implementation
 
 uses
-    SQLUtils, SQLPlugin, XMLUtils, DateUtils;
+    SQLUtils, SQLPlugin,
+    DateUtils;
 
 {$R *.dfm}
+
+{---------------------------------------}
 
 {---------------------------------------}
 {---------------------------------------}

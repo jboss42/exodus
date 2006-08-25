@@ -24,8 +24,10 @@ unit SQLPlugin;
 interface
 
 uses
-    XMLParser, XMLTag, JabberMsg, SQLiteTable,
-    Exodus_TLB, ComObj, ActiveX, ExSQLLogger_TLB, StdVcl;
+    ComObj, ActiveX, StdVcl,
+    SQLiteTable,
+    Exodus_TLB,
+    ExSQLLogger_TLB;
 
 type
   TSQLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger, IExodusMenuListener)
@@ -104,11 +106,14 @@ const
     F1_TYPE = 9;
     F1_OUT = 10;
 
+
 implementation
 
 uses
-    Viewer, XMLUtils, SQLUtils, Controls, Forms,   
-    SysUtils, Dialogs, JabberUtils, JabberID, ComServ;
+    ComServ, Controls, Forms, SysUtils, Dialogs,
+    Viewer,
+    SQLUtils,
+    JabberID;
 
 const
     SCHEMA_VER = 1;
@@ -160,7 +165,7 @@ begin
     // otherwise, error
     if (DirectoryExists(_path) = false) then begin
         MessageDlgW('Could not locale the log path: ' + _path,
-            mtError, [mbOK], 0);
+            mtError, [mbOK]);
         exit;
     end;
 
@@ -169,7 +174,7 @@ begin
     if (_db = nil) then begin
         // uh oh..
         MessageDlgW('Could not locate or create the log database: ' + _fn,
-            mtError, [mbOK], 0);
+            mtError, [mbOK]);
         exit;
     end;
 
@@ -200,7 +205,7 @@ begin
         tmp := _db.getTable('SELECT name from sqlite_master where name="jlogs";');
         if (tmp.RowCount = 0) then begin
             MessageDlgW('SQL Logging plugin was unable to initialize the database.',
-                mtError, [mbOK], 0);
+                mtError, [mbOK]);
             tmp.Free();
             _db.Free();
             _db := nil;
@@ -225,7 +230,7 @@ begin
         ver := SafeInt(tmp.Fields[0]);
         _mid := tmp.Fields[1];
         if (ver < SCHEMA_VER) then begin
-            MessageDlgW('SCHEMA VERSION is incorrect!', mtError, [mbOK], 0);
+            MessageDlgW('SCHEMA VERSION is incorrect!', mtError, [mbOK]);
             _db.Free();
             _db := nil;
             exit;

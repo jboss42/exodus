@@ -117,13 +117,15 @@
 			<Linker Name="MaxStackSize">1048576</Linker>
 			<Linker Name="ImageBase">4194304</Linker>
 			<Linker Name="ExeDescription"></Linker>
+			<Linker Name="AutoRegisterTLB">False</Linker>
+			<Linker Name="AutoGenImportAssembly">False</Linker>
 		</Linker>
 		<Directories>
 			<Directories Name="OutputDir">..\</Directories>
 			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
 			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">..\..</Directories>
+			<Directories Name="SearchPath">..\..\components\tntunicode</Directories>
 			<Directories Name="Packages">vcl;rtl;vclshlctrls</Directories>
 			<Directories Name="Conditionals">Indy9</Directories>
 			<Directories Name="DebugSourceDirs"></Directories>
