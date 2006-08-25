@@ -25,8 +25,10 @@ unit LoggerPlugin;
 interface
 
 uses
-    XMLParser, XMLTag, JabberMsg, Graphics,
-    Exodus_TLB, ComObj, ActiveX, ExHTMLLogger_TLB, StdVcl;
+    ComObj, ActiveX, Graphics, StdVcl,
+    Exodus_TLB,
+    ExHTMLLogger_TLB;
+
 
 type
   THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
@@ -85,9 +87,14 @@ type
 {---------------------------------------}
 implementation
 uses
+    Controls, ShellAPI, Dialogs,
+    SysUtils, Classes, ComServ,
+    StrUtils,Windows,
+
     HtmlPrefs,
-    JabberUtils, XMLUtils, Windows, IdGlobal, StrUtils,
-    Controls, ShellAPI, Dialogs, SysUtils, Classes, JabberID, ComServ;
+    HtmlUtils,
+    IdGlobal,
+    JabberID;
 
 const
     sNoHistory = 'There is no history file for this contact.';
@@ -344,7 +351,7 @@ begin
     // Show the log, or ask the user to turn on logging
     fn := _path + '\' + MungeName(jid) + '.html';
     if (not FileExists(fn)) then begin
-        MessageDlgW('There is no history for this contact.', mtError, [mbOK], 0, 'HTML Logger Plugin');
+        MessageDlgW('There is no history for this contact.', mtError, [mbOK]);
         exit;
     end;
 
@@ -357,7 +364,7 @@ var
     fn: string;
 begin
     if (MessageDlgW(WideFormat(sConfirmClearLog, [jid]),
-        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+        mtConfirmation, [mbOK,mbCancel]) = mrCancel) then
         exit;
 
     fn := _path;
@@ -368,12 +375,12 @@ begin
     fn := fn + MungeName(jid) + '.html';
     if FileExists(fn) then begin
         if (DeleteFile(PChar(fn))) then
-            MessageDlgW(sHistoryDeleted, mtInformation, [mbOK], 0)
+            MessageDlgW(sHistoryDeleted, mtInformation, [mbOK])
         else
-            MessageDlgW(sHistoryError, mtError, [mbCancel], 0);
+            MessageDlgW(sHistoryError, mtError, [mbCancel]);
     end
     else
-        MessageDlgW(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
+        MessageDlgW(sHistoryNone, mtWarning, [mbOK,mbCancel]);
 end;
 
 {---------------------------------------}
@@ -382,7 +389,7 @@ var
     cmd, fn: string;
 begin
     if (MessageDlgW(sConfirmClearAllLogs,
-        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then exit;
+        mtConfirmation, [mbOK,mbCancel]) = mrCancel) then exit;
 
     fn := _path;
     if (AnsiRightStr(fn, 1) <> '\') then
@@ -392,7 +399,7 @@ begin
     cmd := 'del "' + fn + '*.html"';
     ShellExecute(0, PChar(cmd), nil, nil, nil, SW_HIDE);
 
-    MessageDlgW(sFilesDeleted, mtInformation, [mbOK], 0);
+    MessageDlgW(sFilesDeleted, mtInformation, [mbOK]);
 end;
 
 

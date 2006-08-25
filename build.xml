@@ -24,8 +24,8 @@
   <property file='user.properties'/>
 
   <property name="delphi" value="C:/Program Files/Borland/BDS/4.0"/>
-  <property name="TNT" value="c:\src\exodus\exodus\components\tntUnicode"/>
-  <property name="JCL" value="C:\src\exodus\exodus\components\jcl\source"/>
+  <property name="TNT" value="C:\source\exodus\exodus\components\tntunicode"/>
+  <property name="JCL" value="C:\source\exodus\exodus\components\jcl\source"/>
   <property name="DX" value="C:\Program Files\dxgettext"/>
   <property name="NSIS" value="c:\program files\NSIS\makensis.exe"/>
   <property name="runner" value="c:\program files\exodus"/>
@@ -57,9 +57,16 @@
   <property name="ssh.stage" value="${svn.userhost}:${www.stage}"/>
   <property name="genlog" value= "/var/projects/exodus/bin/genlog"/>
 
+  <condition property="has_TNT">
+    <or>
+      <available file="${TNT}/TntControls.dcu"/>
+      <available file="${TNT}/TntControls.pas"/>
+    </or>
+  </condition>
+
+
   <target name="check">
     <available property="has_dcc"  file="${dcc}"/>
-    <available property="has_TNT"  file="${TNT}/TntControls.dcu"/>
     <available property="has_JCL"  file="${JCL}/windows/JclDebug.pas"/>
     <available property="has_DX"   file="${dxgettext}"/>
     <available property="has_NSIS" file="${NSIS}"/>
