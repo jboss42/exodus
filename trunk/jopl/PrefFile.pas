@@ -58,18 +58,22 @@ type
 
         procedure save();
 
+        {
+            Does this file have the given preference?
+
+            @param pkey the preference we are looking for
+            @returns true if the given pref key exists
+        }
+        function hasPref(pkey: WideString): boolean;
+        
         // Generic get & sets
         function getString(pkey: Widestring): Widestring;
         function getState(pkey: Widestring): TPrefState;
         function getControl(pkey: Widestring): Widestring;
         function getPref(control: Widestring): Widestring;
         procedure setString(pkey: Widestring; val: Widestring);
-        function GetStringlistCount(pkey: Widestring): integer;
-        procedure AddStringlistValue(pkey, value: Widestring);
-        function GetStringlistValue(pkey: Widestring; index: Integer): WideString;
-        procedure RemoveStringlistValue(pkey, value: Widestring);
 {$ifdef Exodus}
-        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings); overload;
+        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings); overload;
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean; overload;
         function fillStringlist(pkey: Widestring; sl: TTntStrings): boolean; overload;
@@ -344,6 +348,17 @@ begin
     fs.Free();
 end;
 
+{
+    Does this file have the given preference?
+
+    @param pkey the preference we are looking for
+    @returns true if the given pref key exists
+}
+function TPrefFile.hasPref(pkey: WideString): boolean;
+begin
+    Result := (_pref.GetFirstTag(pkey) <> nil);
+end;
+
 {---------------------------------------}
 function TPrefFile.getString(pkey: Widestring): Widestring;
 var
@@ -464,93 +479,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-function TPrefFile.getStringlistCount(pkey: Widestring): Integer;
-var
-    t: TXMLTag;
-    s: TXMLTagList;
-
-begin
-    Result := 0;
-    t := _pref.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    s := t.QueryTags('s');
-    Result := s.Count;
-
-    s.Free;
-end;
-
-{---------------------------------------}
-procedure TPrefFile.AddStringlistValue(pkey, value: Widestring);
-var
-    t   : TXMLTag;
-    s   : TXMLTagList;
-    i   : Integer;
-    add : Boolean;
-
-begin
-    _dirty := true;
-    add    := true;
-    t := _pref.GetFirstTag(pkey);
-    if (t = nil) then
-        t := _pref.AddTag(pkey);
-
-    s := t.QueryTags('s');
-    for i := 0 to s.Count - 1 do begin
-        if s.Tags[i].Data = value then begin
-            add := false;
-            break;
-        end;
-    end;
-
-    if ((add = true) and (value <> '')) then
-        t.AddBasicTag('s', value);
-    s.Free;
-end;
-
-{---------------------------------------}
-function TPrefFile.GetStringlistValue(pkey: Widestring; index: Integer): WideString;
-var
-    t   : TXMLTag;
-    s   : TXMLTagList;
-
-begin
-    t := _pref.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    s := t.QueryTags('s');
-    if (index < s.Count) then
-        Result := s.Tags[index].Data;
-
-    s.Free;
-end;
-
-{---------------------------------------}
-procedure TPrefFile.RemoveStringlistValue(pkey, value: Widestring);
-var
-    t   : TXMLTag;
-    s   : TXMLTagList;
-    i   : Integer;
-begin
-    _dirty := true;
-    t := _pref.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    s := t.QueryTags('s');
-    for i := 0 to s.Count - 1 do begin
-        if s.Tags[i].Data = value then begin
-            t.RemoveTag(s.Tags[i]);
-            s.Free;
-            s := t.QueryTags('s');
-            if (s.Count = 0) then
-                _pref.RemoveTag(t);
-            break;
-        end;
-    end;
-
-    s.Free;
-end;
 
 {$ifdef Exodus}
 {---------------------------------------}
