@@ -309,7 +309,43 @@
     <brand_registration value="1"/>
     <brand_browser value="1"/>
     <brand_vcard value="1"></brand_vcard>
+    
+    <!-- add roster network prefs.
+        Theis brandable pref defines networks that will show in the
+        Add to Roster dialog. The pref is a tuple of display name, network type
+        and type specific data. tuple looks like this
+        <delim>display name<delim>transport|in-network<delim>data<delim>
+        <delim> can be any non xml reserved character.
+        display name cannot be empty or the tuple is ignored.
 
+        Types recognized by Exodus are "transport" and "in-network", any other
+        type will cause the tuple to be ignored.
+        A transport is a gateway, the type specific data asscoiated with this
+        type is the disco id of the transport (MSN -> msn etc). Exdous will
+        attempt to disco a server for the transport and force registration etc.
+        in-network means xmpp is used for subscription, with no additional
+        requirements. The extra data asociated with this type is an autocompletion
+        domain. For instance, the Jinc AIM "gateway" is implemented as part of
+        s2s, not a gateway. The user simply s10n with foo@aol.com.
+
+        The Jabber network is assumed and treated as in-network with an
+        autocompletion of the users domain.
+
+        All parts of the tuple must be defined or the entire thing is ignored.
+
+    -->
+    <brand_networks>
+        <s>|MSN|transport|msn|</s>
+        <s>|Yahoo|transport|yahoo|</s>
+        <s>|AIM|transport|aim|</s>
+        <s>|ICQ|transport|icq|</s>
+    </brand_network_names>
+
+    <!-- end roster network prefs -->
+
+    <!-- use JID autocompletion where possible -->
+    <brand_auto_complete_jids value="1"/>
+    
     <browse_view value="0"></browse_view>
 
     <event_width value="315"></event_width>

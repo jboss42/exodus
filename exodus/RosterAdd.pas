@@ -26,8 +26,31 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, TntStdCtrls;
 
+const
+    P_BRAND_NETWORKS= 'brand_networks';
+
+    NT_TRANSPORT    = 'transport';
+    NT_IN_NETWORK   = 'in-network';
+
 type
-  TfrmAdd = class(TForm)
+    TNetworkInfo = class
+    public
+        name: WideString;
+        nType: WideString;
+        transFeat: WideString;
+        acName: WideString;
+        acJID: TJabberID;
+        constructor create(name, nType, tdata: WideString);overload;
+        constructor create(prefStr: WideString);overload;
+        destructor destroy();override;
+
+        procedure init(name, nType, tData: WideString);
+        function isValidAutoComplete() : boolean;
+        function isValid() : boolean;
+        function isInNetwork() : boolean;
+    end;
+
+TfrmAdd = class(TForm)
     Label1: TTntLabel;
     txtJID: TTntEdit;
     Label2: TTntLabel;
@@ -51,13 +74,16 @@ type
     { Private declarations }
     cb: integer;
     gw_ent: TJabberEntity;
-    svc, gw, sjid, snick, sgrp: Widestring;
+    gw, sjid, snick, sgrp: Widestring;
+    addInfo : TNetworkInfo;
+    
     procedure doAdd;
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
   end;
+
 
 var
   frmAdd: TfrmAdd;
@@ -70,15 +96,98 @@ procedure ShowAddContact(contact: Widestring); overload;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, JabberUtils, ExUtils,  NodeItem,
-    GnuGetText, Jabber1, Presence, Session;
+    InputPassword, ExSession, JabberUtils, ExUtils,  PrefController, NodeItem,
+    GnuGetText, Jabber1, Presence, Session, Unicode;
 
 const
     sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
     sResourceSpec = 'Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?';
     sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
     sNotAddMyself = 'You can not add yourself to your roster.';
+
 {$R *.DFM}
+function autoComplete() : boolean;
+begin
+    Result := MainSession.Prefs.getBool(PrefController.P_AUTO_COMPLETE_JIDS);
+end;
+
+constructor TNetworkInfo.create(name, nType, tdata: WideString);
+begin
+    inherited create;
+    init(name, nType, tData);
+end;
+
+constructor TNetworkInfo.create(prefStr: WideString);
+var
+    tstr, nameStr, typeStr, dataStr: WideString;
+    delim: WideChar;
+    nextDelim: integer;
+    p: PWideChar;
+begin
+    inherited create;
+    //parse pref, should be |name|type|data| tuples
+    delim := prefStr[1];
+    tstr := Copy(prefStr, 2, Length(prefStr));
+    nextDelim := Pos(delim, tstr);
+    nameStr := Copy(tstr, 1, nextDelim - 1);
+    tstr := Copy(tstr, nextDelim + 1, Length(tstr));
+    nextDelim := Pos(delim, tstr);
+    typeStr := Copy(tstr, 1, nextDelim - 1);
+    tstr := Copy(tstr, nextDelim + 1, Length(tstr));
+    nextDelim := Pos(delim, tstr);
+    dataStr := Copy(tstr, 1, nextDelim - 1);
+    
+    init(nameStr, typeStr, dataStr);
+end;
+
+
+destructor TNetworkInfo.destroy();
+begin
+    if (acJID <> nil) then
+        acJID.Free();
+end;
+
+procedure TNetworkInfo.init(name, nType, tData: WideString);
+begin
+    Self.name := name;
+    Self.nType := nType;
+    if (NT_TRANSPORT = Self.nType) then begin
+        Self.transFeat := tData;
+    end
+    else begin
+        Self.acName := tdata;
+        Self.acJID := nil;
+        if (Length(Self.acName) > 0) then begin
+            //construct jid of auto completion domain name. First assume escaped
+            acJID := TJabberID.create(acName, true);
+            if (not acJID.isValid) then begin
+                //try with not escaped
+                acJID.Free();
+                acJID := TJabberID.create(acName, false);
+                //null if not valid
+                if (not acJID.isValid) then begin
+                    acJId.Free();
+                    acJID := nil;
+                end;
+            end;
+        end;
+    end;
+end;
+
+function TNetworkInfo.isValidAutoComplete() : boolean;
+begin
+    result := ((acJID <> nil) and acJID.isValid);
+end;
+
+function TNetworkInfo.isValid() : boolean;
+begin
+    result := (Length(name) > 0) and (Length(nType) > 0);
+end;
+
+function TNetworkInfo.isInNetwork() : boolean;
+begin
+    Result := (nType = NT_IN_NETWORK); 
+end;
 
 {---------------------------------------}
 procedure ShowAddContact(contact: TJabberID);
@@ -113,40 +222,9 @@ begin
     sjid := txtJID.Text;
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
+    addInfo := TNetworkInfo(cboType.Items.Objects[cboType.ItemIndex]);
 
-    {
-    // DO NOT translate these!
-    case (cboType.ItemIndex) of
-    1: svc := 'msn';
-    2: svc := 'yahoo';
-    3: svc := 'aim';
-    3: svc := 'icq';
-    else
-        svc := 'jabber';
-    end;
-    }
-
-    //SLKSLKSLK
-    svc := 'jabber';
-
-    {
-    // check to see if we need an entity info
-    if (cboType.ItemIndex > 0) then begin
-        // Adding a gateway'd user
-        gw := txtGateway.Text;
-        gw_ent := jEntityCache.getByJid(gw);
-        if (gw_ent = nil) then begin
-            cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/items');
-            gw_ent := jEntityCache.fetch(gw, MainSession);
-            self.Hide();
-        end
-        else
-            doAdd();
-    end
-    else begin
-    }
-        // Adding a normal Jabber user
-        // check to see if we have an "@" sign
+    if (addInfo.isInNetwork()) then begin
         tmp_jid := TJabberID.Create(sjid, false);
         sjid := tmp_jid.jid;
         if (WideLowercase(sjid) = WideLowercase(MainSession.Profile.getJabberID().jid())) then begin
@@ -160,7 +238,19 @@ begin
             if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         doAdd();
         tmp_jid.Free();
-    //end;
+    end
+    else begin
+        // Adding a gateway'd user
+        gw := txtGateway.Text;
+        gw_ent := jEntityCache.getByJid(gw);
+        if (gw_ent = nil) then begin
+            cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/items');
+            gw_ent := jEntityCache.fetch(gw, MainSession);
+            self.Hide();
+        end
+        else
+            doAdd();
+    end;
 end;
 
 {---------------------------------------}
@@ -188,6 +278,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.FormCreate(Sender: TObject);
+var
+    i, nNetworks: Integer;
+    tinfo : TNetworkInfo;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
@@ -196,32 +289,49 @@ begin
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
     txtGateway.Text := MainSession.Server;
-    //cboType.Enabled := MainSession.Prefs.getBool('brand_addcontact_gateways');
-
-    //SLKSLKSLK
-    cboType.AddItem(_('Jabber'), nil);
-    if (MainSession.GetExtList().IndexOf('aim') <> -1) then begin
-        cboType.AddItem(_('AIM'), nil);
+    //walk prefs list of networks
+    tInfo := TNetworkInfo.create(_('Jabber'), NT_IN_NETWORK, MainSession.Profile.getJabberID().domain);
+    cboType.AddItem(tInfo.name, tInfo);
+    nNetworks := MainSession.Prefs.getStringlistCount(P_BRAND_NETWORKS);
+    for i := 0 to (nNetworks -1) do begin
+        tInfo := TNetworkInfo.create(MainSession.Prefs.getStringlistValue(P_BRAND_NETWORKS, i));
+        if (tInfo.isValid()) then begin
+            cboType.AddItem(_(tInfo.name), tInfo);        
+        end;
     end;
-
     cboType.ItemIndex := 0;
-
 end;
 
 {---------------------------------------}
 procedure TfrmAdd.txtJIDExit(Sender: TObject);
 var
-    new: Widestring;
-    tmp_id: TJabberID;
+    tmp_id, ti2: TJabberID;
+    tinfo : TNetworkInfo;
 begin
     if (txtJID.Text = '') then exit;
-    tmp_id := TJabberID.Create(txtJID.Text, false);
-
-    if ((cboType.ItemIndex = 0) and (tmp_id.user = '')) then begin
-        new := txtJid.Text + '@' + MainSession.Profile.Server;
-        tmp_id.Free();
-        tmp_id := TJabberID.Create(new, false);
-        txtJid.Text := new;
+    tmp_id := TJabberID.Create(txtJID.Text, false); //assume unescaped
+    //autocomplete
+    tinfo := TNetworkInfo(cboType.Items.Objects[cboType.ItemIndex]);
+    if (not tmp_id.isValid or (tmp_id.user = '')) then begin //need to fixup JID?
+    //JID doesn't seem to handle username@ correctly. That should be an escapeable
+        if (autoComplete() and tinfo.isValidAutoComplete()) then begin
+            //if its not valid, we could have an unparsable username (like user@)
+            if (not tmp_id.isValid) then
+                ti2 := TJabberID.Create(tmp_id.jid + '@' + tinfo.acJID.domain, false)
+            else //jid parsed to a domain. Assume the user meant this to be a node
+                ti2 := TJabberID.Create(tmp_id.domain, tinfo.acJID.domain, tmp_id.resource);
+            txtJid.Text := ti2.getDisplayJID();
+            tmp_id.Free();
+            tmp_id := ti2;
+        end
+        else begin
+            if (not tmp_id.isValid) then //if its not valid, we could have an unparsable username (like user@)
+                ti2 := TJabberID.Create(tmp_id.jid + '@foo', false)
+            else //jid parsed to a domain. Assume the user meant this to be a node
+                ti2 := TJabberID.Create(tmp_id.domain, 'foo', tmp_id.resource);
+            tmp_id.Free();
+            tmp_id := ti2;
+        end;
     end;
 
     // add the nickname if it's not there.
@@ -229,26 +339,16 @@ begin
         txtNickname.Text := tmp_id.userDisplay;
 
     tmp_id.Free();
-
 end;
 
 {---------------------------------------}
 procedure TfrmAdd.cboTypeChange(Sender: TObject);
-//var
-//    en: boolean;
+var
+    tinfo : TNetworkInfo;
 begin
-    //SLKSLKSLK
-    {
-    if (cboType.
-    MainSession.GetExtList().IndexOf('aim') <> -1) then begin
-
-    end;
-    }
-    {
-    en := (cboType.ItemIndex > 0);
-    lblGateway.Enabled := en;
-    txtGateway.Enabled := en;
-    }
+    tinfo := TNetworkInfo(cboType.Items.Objects[cboType.ItemIndex]);
+    lblGateway.Enabled := not tInfo.isInNetwork();
+    txtGateway.Enabled := not tInfo.isInNetwork();
 end;
 
 {---------------------------------------}
@@ -260,12 +360,12 @@ var
 begin
     // check to see if there is an agent for this type
     // of contact type
-    if (svc = 'jabber') then begin
+    if (AddInfo.isInNetwork()) then begin
         MainSession.Roster.AddItem(sjid, snick, sgrp, true);
         Self.Close;
     end
     else begin
-        a := gw_ent.getItemByFeature(WideLowercase(svc));
+        a := gw_ent.getItemByFeature(WideLowercase(AddInfo.transFeat));
         if (a <> nil) then begin
             // we have this type of svc..
             j := '';

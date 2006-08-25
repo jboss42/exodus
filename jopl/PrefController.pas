@@ -102,6 +102,7 @@ const
     P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
     P_SUB_AUTO_ADD = 's10n_auto_add';
+    P_AUTO_COMPLETE_JIDS = 'brand_auto_complete_jids';
 
     P_FONT_NAME = 'font_name';
     P_FONT_SIZE = 'font_size';
@@ -364,6 +365,7 @@ uses
     {$endif}
     {$ifdef Exodus}
     GnuGetText,
+//    ExUtils,
     {$endif}
     PrefGraphics, //graphics handling for prefs
     JabberConst, StrUtils, Stringprep,
@@ -391,6 +393,27 @@ begin
         Result := psReadWrite;
 end;
 
+function lockedDown(prefs : TPrefFile; pkey : WideString) : boolean;
+var
+    t : TPrefState;
+begin
+    t := prefs.getState(pkey);
+    result := (t = psReadOnly) or (t = psInvisible);
+end;
+
+function getBestFile(userFile : TPrefFile; pkey : WideString) : TPrefFile;
+begin
+    if (lockedDown(s_default_file, pkey)) then
+        Result := s_default_file
+    else if (lockedDown(s_brand_file, pkey)) then
+        Result := s_brand_file
+    else if (userFile.hasPref(pkey)) then
+        Result := userFile
+    else if (s_brand_file.hasPref(pkey)) then
+        Result := s_brand_file
+    else
+        Result := s_default_file;
+end;
 
 {---------------------------------------}
 {** Attempt to get pref from branding prefs. If it is not there or
@@ -400,33 +423,10 @@ end;
 **}
 function getBrandingOrDefaultPref(pkey : WideString) : WideString;
 var
-    defaultPrefState  : TPrefState;
-    brandingPrefState : TPrefState;
-    defaultValue      : WideString;
-    brandingValue     : WideString;
+    uf : TPrefFile;
 begin
-    defaultPrefState := s_default_file.getState(pkey);
-    defaultValue := s_default_file.getString(pkey);
-    if ((defaultPrefState = psReadOnly) or (defaultPrefState = psInvisible)) then begin
-        // default isn't over-ridable, even by branding.  This can happen
-        // if the admin compiles in the defaults.
-        Result := defaultValue;
-        exit;
-    end;
-
-    brandingValue := s_brand_file.getString(pkey);
-    brandingPrefState := s_brand_file.getState(pkey);
-    if ((brandingPrefState = psReadOnly) or (brandingPrefState = psInvisible)) then begin
-        Result := brandingValue;
-        exit;
-    end;
-
-    if (brandingValue <> '') then
-        Result := brandingValue
-    else if (defaultValue <> '') then
-        Result := defaultValue
-    else
-        Result := '';
+    uf := getBestFile(s_brand_file, pkey);
+    Result := uf.getString(pKey);
 end;
 
 function TApplicationInfo.GetID() : String;
@@ -738,23 +738,15 @@ begin
     // TODO: save server prefs
 end;
 
-function allowOverride(prefs : TPrefFile; pkey : WideString) : boolean;
-var
-    t : TPrefState;
-begin
-    t := prefs.getState(pkey);
-    result := (t <> psReadOnly) and (t <> psInvisible);
-end;
 
 {---------------------------------------}
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
     uf: TPrefFile;
-    dv, bv, uv: Widestring;
+    uv: Widestring;
 //    ds, bs: TPrefState;
 begin
     Result := '';
-
     // TODO: what SHOULD we do if we get a server-side pref request, and we
     // haven't gotten any server prefs yet?
     if ((server_side <> pkServer) or (_server_file = nil)) then
@@ -762,37 +754,10 @@ begin
     else
         uf := _server_file;
 
-//    ds := s_default_file.getState(pkey);
-    dv := s_default_file.getString(pkey);
-    if (not allowOverride(s_default_file, pkey)) then begin
-        // default isn't over-ridable, even by branding.  This can happen
-        // if the admin compiles in the defaults.
-        if (dv <> '') then
-            Result := dv
-        else
-            Result := Self.getDynamicDefault(pkey); 
-        exit;
-    end;
-
-    bv := s_brand_file.getString(pkey);
-//    bs := s_brand_file.getState(pkey);
-    if (not allowOverride(s_brand_file, pkey)) then begin
-        if (bv <> '') then
-            Result := bv
-        else if (dv <> '') then
-            Result := dv
-        else
-            Result := Self.getDynamicDefault(pkey);
-        exit;
-    end;
-
+    uf := getBestFile(uf, pkey);
     uv := uf.getString(pkey);
     if (uv <> '') then
         Result := uv
-    else if (bv <> '') then
-        Result := bv
-    else if (dv <> '') then
-        Result := dv
     else
         Result := getDynamicDefault(pkey);
 end;
@@ -912,55 +877,77 @@ end;
 {---------------------------------------}
 function TPrefController.getStringlistCount(pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
 var
-    uf: TPrefFile;
+    ts: TWideStringList;
 begin
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    Result := uf.getStringlistCount(pkey);
+    ts := TWideStringList.Create();
+    try
+        fillStringList(pkey, ts, server_side);
+        Result := ts.Count;
+    finally
+        ts.Free();
+    end;
 end;
 
 {---------------------------------------}
+{
+    Anytime the string list is modified in part, we need to make sure the user
+    pref file has the latest version of the string list, no matter where we got it
+    from. For instance, if the string list does not yet exist in the user pref file
+    and we do a getStringListCount, *that* string list may have some from the
+    branding file. Now we want to add to it so we need to make sure
+    the user pref file has a copy of the one from the branding file.
+    Utlimately this means we *must* deal with string lists as an atomic data
+    structure, even when using methods that pull pieces out.
+}
 procedure TPrefController.AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
 var
-    uf: TPrefFile;
+    ts: TWideStringList;
 begin
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    uf.AddStringListValue(pkey, value);
-    Save();
+    ts := TWideStringList.Create();
+    try
+        fillStringList(pkey, ts, server_side);
+        //now modify the string list and save it to prefs
+        if (ts.IndexOf(value) = -1) then
+            ts.Add(value);
+        setStringList(pkey, ts, server_side);
+        Save();
+    finally
+        ts.Free();
+    end;
 end;
 
 {---------------------------------------}
 function TPrefController.getStringlistValue(pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
 var
-    uf: TPrefFile;
+    ts: TWideStringList;
 begin
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    Result := uf.getStringListValue(pkey, index);
+    ts := TWideStringList.Create();
+    try
+        fillStringList(pkey, ts, server_side);
+        if (index < ts.Count) then
+            Result := ts[index]
+        else Result := '';
+    finally
+        ts.Free();
+    end;
 end;
 
 {---------------------------------------}
 procedure TPrefController.RemoveStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
 var
-    uf: TPrefFile;
+    ts: TWideStringList;
 begin
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    uf.RemoveStringListValue(pkey, value);
-    Save();
+    ts := TWideStringList.Create();
+    try
+        fillStringList(pkey, ts, server_side);
+        //now modify the string list and save it to prefs
+        if (ts.IndexOf(value) > -1) then
+            ts.Delete(ts.IndexOf(value));
+        setStringList(pkey, ts, server_side);
+        Save();
+    finally
+        ts.Free();
+    end;
 end;
 
 {---------------------------------------}
@@ -975,28 +962,42 @@ begin
     else
         uf := _server_file;
 
-    if (not uf.fillStringlist(pkey, sl)) then begin
-        if (not s_brand_file.fillStringlist(pkey, sl)) then
-            s_default_file.fillStringlist(pkey, sl);
-    end;
+    uf := getBestFile(uf, pKey);
+    uf.fillStringlist(pkey, sl);
 end;
 
 {---------------------------------------}
 {$ifdef Exodus}
+procedure WideToTnT(ins: TWideStrings; outs: TTntStrings);
+var
+    i : integer;
+begin
+    outs.Clear();
+    for i := 0 to ins.Count -1 do begin
+        outs.Add(ins[i])
+    end;
+end;
+
+procedure TnTToWide(ins: TTntStrings; outs: TWideStrings);
+var
+    i : integer;
+begin
+    outs.Clear();
+    for i := 0 to ins.Count -1 do begin
+        outs.Add(ins[i])
+    end;
+end;
+
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
 var
-    uf: TPrefFile;
+    tsl : TWideStringList;
 begin
-    // TODO: what SHOULD we do if we get a server-side pref request, and we
-    // haven't gotten any server prefs yet?
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    if (not uf.fillStringlist(pkey, sl)) then begin
-        if (not s_brand_file.fillStringlist(pkey, sl)) then
-            s_default_file.fillStringlist(pkey, sl);
+    tsl := TWideStringList.Create();
+    try
+        fillStringList(pkey, tsl, server_side);
+        WideToTnT(tsl, sl);
+    finally
+        tsl.Free();
     end;
 end;
 {$endif}
@@ -1020,32 +1021,18 @@ end;
 {$ifdef Exodus}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
 var
-    uf: TPrefFile;
+    tsl : TWideStringList;
 begin
-   // TODO: see getString()
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
-
-    uf.setStringList(pkey, pvalue);
-    Save();
+    tsl := TWideStringList.Create();
+    try
+        TntToWide(pvalue,tsl);
+        setStringList(pkey, tsl, server_side);
+    finally
+        tsl.Free();
+    end;
 end;
 {$endif}
 
-function getBestFile(userFile : TPrefFile; pkey : WideString) : TPrefFile;
-begin
-    if (not allowOverride(s_default_file, pkey)) then
-        Result := s_default_file
-    else if (not allowOverride(s_brand_file, pkey)) then
-        Result := s_brand_file
-    else if (userFile.getXMLPref(pKey) <> nil) then
-        Result := userFile
-    else if (s_brand_file.getXMLPref(pKey) <> nil) then
-        Result := s_brand_file
-    else
-        Result := s_default_file
-end;
 {**
     Get/set the xml child of a pref.
 **}
@@ -1068,14 +1055,12 @@ procedure TPrefController.setXMLPref(pkey : WideString; value : TXMLTag; server_
 var
     uf: TPrefFile;
 begin
-   // TODO: see getString()
-    if (allowOverride(s_default_file, pkey) and allowOverride(s_brand_file, pkey)) then begin
-        if ((server_side <> pkServer) or (_server_file = nil)) then
-            uf := _pref_file
-        else
-            uf := _server_file;
-        uf.setXMLPref(pkey, value);
-    end;
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+    uf.setXMLPref(pkey, value);
+    Save();
 end;
 
 
@@ -1955,7 +1940,8 @@ begin
 end;
 
 initialization
-    s_default_file := TPrefFile.CreateFromResource('defaults');
+//    s_default_file := TPrefFile.CreateFromResource('defaults');
+    s_default_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'defaults.xml');
     s_brand_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'branding.xml');
     cachedAppInfo := TApplicationInfo.create();
     s_Graphics := TPrefGraphic.Create();
