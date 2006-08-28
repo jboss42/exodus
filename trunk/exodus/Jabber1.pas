@@ -181,6 +181,7 @@ type
     bigImages: TImageList;
     pnlDock: TPanel;
     Tabs: TTntPageControl;
+    mnuChatToolbar: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -268,6 +269,7 @@ type
     }
     procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
                                        NewTarget: TWinControl; var Allow: Boolean);
+    procedure mnuChatToolbarClick(Sender: TObject);
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -2836,6 +2838,19 @@ begin
         MessageDlgW(_(sBrandingError), mtWarning, [mbOK], 0);
 
     url_list.Free();
+end;
+
+procedure TfrmExodus.mnuChatToolbarClick(Sender: TObject);
+var
+    tempbool: boolean;
+begin
+    // toggle toolbar on/off
+    tempbool := true;
+    tempbool := MainSession.Prefs.getBool('chat_toolbar');
+    tempbool := not tempbool;
+    mnuChatToolbar.Checked := tempbool;
+    MainSession.Prefs.setBool('chat_toolbar', tempbool);
+    MainSession.FireEvent('/session/prefs', nil);
 end;
 
 {---------------------------------------}
