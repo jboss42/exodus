@@ -12,26 +12,39 @@ unit ExNetMeeting_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 9:43:20 AM from Type Library described below.
+// File generated on 8/24/2006 1:42:09 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\NetMeeting\ExNetMeeting.tlb (1)
+// Type Lib: ExNetMeeting.tlb (1)
 // LIBID: {E6B4D6BB-6346-4D99-92BD-BAA6213E4FDB}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExNetMeeting Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
+//   (1) v1.0 Exodus, (C:\Projects\Devel\Clients\Hermes\bin\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
+// Errors:
+//   Error creating palette bitmap of (TExNetmeetingPlugin) : No Server registered for this CoClass
 // ************************************************************************ //
+// *************************************************************************//
+// NOTE:                                                                      
+// Items guarded by $IFDEF_LIVE_SERVER_AT_DESIGN_TIME are used by properties  
+// which return objects that may need to be explicitly created via a function 
+// call prior to any access via the property. These items have been disabled  
+// in order to prevent accidental use from within the object inspector. You   
+// may enable them by defining LIVE_SERVER_AT_DESIGN_TIME or by selectively   
+// removing them from the $IFDEF blocks. However, such items must still be    
+// programmatically created via a method of the appropriate CoClass before    
+// they can be used.                                                          
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
 {$VARPROPSETTER ON}
 interface
 
-uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, OleServer, StdVCL, Variants;
   
+
 
 // *********************************************************************//
 // GUIDS declared in the TypeLibrary. Following prefixes are used:        
@@ -69,6 +82,78 @@ type
     class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
 
+
+// *********************************************************************//
+// OLE Server Proxy class declaration
+// Server Object    : TExNetmeetingPlugin
+// Help String      : 
+// Default Interface: IExodusPlugin
+// Def. Intf. DISP? : No
+// Event   Interface: 
+// TypeFlags        : (2) CanCreate
+// *********************************************************************//
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  TExNetmeetingPluginProperties= class;
+{$ENDIF}
+  TExNetmeetingPlugin = class(TOleServer)
+  private
+    FIntf: IExodusPlugin;
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+    FProps: TExNetmeetingPluginProperties;
+    function GetServerProperties: TExNetmeetingPluginProperties;
+{$ENDIF}
+    function GetDefaultInterface: IExodusPlugin;
+  protected
+    procedure InitServerData; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
+    procedure Connect; override;
+    procedure ConnectTo(svrIntf: IExodusPlugin);
+    procedure Disconnect; override;
+    procedure Startup(const exodusController: IExodusController);
+    procedure Shutdown;
+    procedure Process(const xpath: WideString; const event: WideString; const XML: WideString);
+    procedure NewChat(const JID: WideString; const chat: IExodusChat);
+    procedure NewRoom(const JID: WideString; const room: IExodusChat);
+    function NewIM(const JID: WideString; var Body: WideString; var Subject: WideString; 
+                   const xTags: WideString): WideString;
+    procedure Configure;
+    procedure NewOutgoingIM(const JID: WideString; const instantMsg: IExodusChat);
+    property DefaultInterface: IExodusPlugin read GetDefaultInterface;
+  published
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+    property Server: TExNetmeetingPluginProperties read GetServerProperties;
+{$ENDIF}
+  end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+// *********************************************************************//
+// OLE Server Properties Proxy Class
+// Server Object    : TExNetmeetingPlugin
+// (This object is used by the IDE's Property Inspector to allow editing
+//  of the properties of this server)
+// *********************************************************************//
+ TExNetmeetingPluginProperties = class(TPersistent)
+  private
+    FServer:    TExNetmeetingPlugin;
+    function    GetDefaultInterface: IExodusPlugin;
+    constructor Create(AServer: TExNetmeetingPlugin);
+  protected
+  public
+    property DefaultInterface: IExodusPlugin read GetDefaultInterface;
+  published
+  end;
+{$ENDIF}
+
+
+procedure Register;
+
+resourcestring
+  dtlServerPage = 'Servers';
+
+  dtlOcxPage = 'ActiveX';
+
 implementation
 
 uses ComObj;
@@ -81,6 +166,135 @@ end;
 class function CoExNetmeetingPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExNetmeetingPlugin) as IExodusPlugin;
+end;
+
+procedure TExNetmeetingPlugin.InitServerData;
+const
+  CServerData: TServerData = (
+    ClassID:   '{D44676BB-8F88-4A46-8981-4FFCE436AF76}';
+    IntfIID:   '{6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}';
+    EventIID:  '';
+    LicenseKey: nil;
+    Version: 500);
+begin
+  ServerData := @CServerData;
+end;
+
+procedure TExNetmeetingPlugin.Connect;
+var
+  punk: IUnknown;
+begin
+  if FIntf = nil then
+  begin
+    punk := GetServer;
+    Fintf:= punk as IExodusPlugin;
+  end;
+end;
+
+procedure TExNetmeetingPlugin.ConnectTo(svrIntf: IExodusPlugin);
+begin
+  Disconnect;
+  FIntf := svrIntf;
+end;
+
+procedure TExNetmeetingPlugin.DisConnect;
+begin
+  if Fintf <> nil then
+  begin
+    FIntf := nil;
+  end;
+end;
+
+function TExNetmeetingPlugin.GetDefaultInterface: IExodusPlugin;
+begin
+  if FIntf = nil then
+    Connect;
+  Assert(FIntf <> nil, 'DefaultInterface is NULL. Component is not connected to Server. You must call ''Connect'' or ''ConnectTo'' before this operation');
+  Result := FIntf;
+end;
+
+constructor TExNetmeetingPlugin.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  FProps := TExNetmeetingPluginProperties.Create(Self);
+{$ENDIF}
+end;
+
+destructor TExNetmeetingPlugin.Destroy;
+begin
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  FProps.Free;
+{$ENDIF}
+  inherited Destroy;
+end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+function TExNetmeetingPlugin.GetServerProperties: TExNetmeetingPluginProperties;
+begin
+  Result := FProps;
+end;
+{$ENDIF}
+
+procedure TExNetmeetingPlugin.Startup(const exodusController: IExodusController);
+begin
+  DefaultInterface.Startup(exodusController);
+end;
+
+procedure TExNetmeetingPlugin.Shutdown;
+begin
+  DefaultInterface.Shutdown;
+end;
+
+procedure TExNetmeetingPlugin.Process(const xpath: WideString; const event: WideString; 
+                                      const XML: WideString);
+begin
+  DefaultInterface.Process(xpath, event, XML);
+end;
+
+procedure TExNetmeetingPlugin.NewChat(const JID: WideString; const chat: IExodusChat);
+begin
+  DefaultInterface.NewChat(JID, chat);
+end;
+
+procedure TExNetmeetingPlugin.NewRoom(const JID: WideString; const room: IExodusChat);
+begin
+  DefaultInterface.NewRoom(JID, room);
+end;
+
+function TExNetmeetingPlugin.NewIM(const JID: WideString; var Body: WideString; 
+                                   var Subject: WideString; const xTags: WideString): WideString;
+begin
+  Result := DefaultInterface.NewIM(JID, Body, Subject, xTags);
+end;
+
+procedure TExNetmeetingPlugin.Configure;
+begin
+  DefaultInterface.Configure;
+end;
+
+procedure TExNetmeetingPlugin.NewOutgoingIM(const JID: WideString; const instantMsg: IExodusChat);
+begin
+  DefaultInterface.NewOutgoingIM(JID, instantMsg);
+end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+constructor TExNetmeetingPluginProperties.Create(AServer: TExNetmeetingPlugin);
+begin
+  inherited Create;
+  FServer := AServer;
+end;
+
+function TExNetmeetingPluginProperties.GetDefaultInterface: IExodusPlugin;
+begin
+  Result := FServer.DefaultInterface;
+end;
+
+{$ENDIF}
+
+procedure Register;
+begin
+  RegisterComponents(dtlServerPage, [TExNetmeetingPlugin]);
 end;
 
 end.

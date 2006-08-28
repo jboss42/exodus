@@ -15,7 +15,7 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 235
+    Top = 234
     Width = 383
     ExplicitTop = 239
     ExplicitWidth = 383
@@ -23,10 +23,10 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Top = 32
     Width = 383
-    Height = 203
+    Height = 173
     ExplicitTop = 32
     ExplicitWidth = 383
-    ExplicitHeight = 203
+    ExplicitHeight = 173
   end
   inherited pnlInput: TPanel
     Top = 239
@@ -101,6 +101,10 @@ inherited frmChat: TfrmChat
         TabOrder = 0
       end
     end
+  end
+  inherited tbMsgOutToolbar: TTntToolBar
+    Top = 205
+    Width = 383
   end
   object popContact: TTntPopupMenu [5]
     Left = 16

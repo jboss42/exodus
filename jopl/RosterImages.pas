@@ -175,6 +175,22 @@ const
     RI_BROWSERDIS_INDEX     : Integer = 68;
     RI_PENDING_KEY          : WideString = 'pending';
     RI_PENDING_INDEX        : Integer = 69;
+    RI_CHAT_TOOLBAR_BOLD_KEY        : WideString = 'chat_toolbar_bold';
+    RI_CHAT_TOOLBAR_BOLD_INDEX      : Integer = 70;
+    RI_CHAT_TOOLBAR_UNDERLINE_KEY   : WideString = 'chat_toolbar_underline';
+    RI_CHAT_TOOLBAR_UNDERLINE_INDEX : Integer = 71;
+    RI_CHAT_TOOLBAR_ITALICS_KEY     : WideString = 'chat_toolbar_italics';
+    RI_CHAT_TOOLBAR_ITALICS_INDEX   : Integer = 72;
+    RI_CHAT_TOOLBAR_CUT_KEY         : WideString = 'chat_toolbar_cut';
+    RI_CHAT_TOOLBAR_CUT_INDEX       : Integer = 73;
+    RI_CHAT_TOOLBAR_COPY_KEY        : WideString = 'chat_toolbar_copy';
+    RI_CHAT_TOOLBAR_COPY_INDEX      : Integer = 74;
+    RI_CHAT_TOOLBAR_PASTE_KEY       : WideString = 'chat_toolbar_paste';
+    RI_CHAT_TOOLBAR_PASTE_INDEX     : Integer = 75;
+    RI_CHAT_TOOLBAR_EMOTICONS_KEY   : WideString = 'chat_toolbar_emoticons';
+    RI_CHAT_TOOLBAR_EMOTICONS_INDEX : Integer = 76;
+    RI_CHAT_TOOLBAR_HOTKEYS_KEY     : WideString = 'chat_toolbar_hotkeys';
+    RI_CHAT_TOOLBAR_HOTKEYS_INDEX   : Integer = 77;
 {$ENDIF}
 
 var
@@ -258,6 +274,14 @@ begin
     _ids.Insert(RI_BROWSER_INDEX, RI_BROWSER_KEY);
     _ids.Insert(RI_BROWSERDIS_INDEX, RI_BROWSERDIS_KEY);
     _ids.Insert(RI_PENDING_INDEX, RI_PENDING_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_BOLD_INDEX, RI_CHAT_TOOLBAR_BOLD_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_UNDERLINE_INDEX, RI_CHAT_TOOLBAR_UNDERLINE_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_ITALICS_INDEX, RI_CHAT_TOOLBAR_ITALICS_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_CUT_INDEX, RI_CHAT_TOOLBAR_CUT_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_COPY_INDEX, RI_CHAT_TOOLBAR_COPY_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_PASTE_INDEX, RI_CHAT_TOOLBAR_PASTE_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_EMOTICONS_INDEX,RI_CHAT_TOOLBAR_EMOTICONS_KEY);
+    _ids.Insert(RI_CHAT_TOOLBAR_HOTKEYS_INDEX, RI_CHAT_TOOLBAR_HOTKEYS_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

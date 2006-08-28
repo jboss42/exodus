@@ -25,7 +25,7 @@ uses
     Emote, Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntMenus, Unicode;
+    TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -50,6 +50,16 @@ type
     Copy3: TTntMenuItem;
     Copy2: TTntMenuItem;
     Splitter1: TSplitter;
+    tbMsgOutToolbar: TTntToolBar;
+    ChatToolbarButtonBold: TTntToolButton;
+    ChatToolbarButtonUnderline: TTntToolButton;
+    ChatToolbarButtonItalics: TTntToolButton;
+    ChatToolbarButtonSeperator1: TTntToolButton;
+    ChatToolbarButtonCut: TTntToolButton;
+    ChatToolbarButtonCopy: TTntToolButton;
+    ChatToolbarButtonPaste: TTntToolButton;
+    ChatToolbarButtonSeperator2: TTntToolButton;
+    ChatToolbarButtonEmoticons: TTntToolButton;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -82,6 +92,7 @@ type
     _close_key: Word;               // Normal Hot-key to use to close
     _close_shift: TShiftState;
     _msgframe: TObject;
+    _session_chat_toolbar_callback: integer;
 
     procedure _scrollBottom();
     function getMsgList(): TfBaseMsgList;
@@ -97,6 +108,7 @@ type
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
     procedure gotActivate; override;
     property MsgList: TfBaseMsgList read getMsgList;
+    procedure OnSessionCallback(event: string; tag: TXMLTag);
 
     {
         Event fired when Form receives activation while in docked state.
@@ -334,11 +346,23 @@ begin
     end;
 
     _scroll := true;
+
+    tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
+
+    _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.OnSessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/prefs') then
+        tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
+    MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();

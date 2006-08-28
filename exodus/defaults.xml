@@ -242,6 +242,7 @@
     
     <!-- unfiled -->
     <toolbar value="1" />
+    <chat_toolbar value="1" />
     <always_lang value="0"></always_lang>       
     <brand_ad ></brand_ad>
     <brand_ad_url ></brand_ad_url>
