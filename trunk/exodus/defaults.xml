@@ -340,7 +340,7 @@
         <s>|Yahoo|transport|yahoo|</s>
         <s>|AIM|transport|aim|</s>
         <s>|ICQ|transport|icq|</s>
-    </brand_network_names>
+    </brand_networks>
 
     <!-- end roster network prefs -->
 
