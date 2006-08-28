@@ -790,10 +790,10 @@ begin
         tag.addInsertedXml(xml);
 
       MainSession.SendTag(TXMLTag.Create(tag));
+      showMsg(tag); 
     end;
   end;
 
-  showMsg(tag); //Render
 end;
 
 {---------------------------------------}
