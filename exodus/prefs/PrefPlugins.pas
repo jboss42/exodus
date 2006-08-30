@@ -44,7 +44,7 @@ type
   private
     { Private declarations }
 
-    procedure loadPlugins();
+    procedure scanPlugins();
     procedure savePlugins();
     procedure scanPluginDir(selected: TWidestringList);
 
@@ -85,7 +85,7 @@ begin
             dir := ExtractFilePath(Application.ExeName) + 'plugins';
 
         txtPluginDir.Text := dir;
-        loadPlugins();
+        scanPlugins();
      end;
 end;
 
@@ -100,7 +100,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefPlugins.loadPlugins();
+procedure TfrmPrefPlugins.scanPlugins();
 var
     sl: TWidestringList;
 begin
@@ -250,7 +250,7 @@ begin
     if (browsePath(p)) then begin
         if (p <> txtPluginDir.Text) then begin
             txtPluginDir.Text := p;
-            loadPlugins();
+            scanPlugins();
         end;
     end;
 end;
@@ -259,7 +259,7 @@ end;
 procedure TfrmPrefPlugins.lblPluginScanClick(Sender: TObject);
 begin
   inherited;
-    loadPlugins();
+    scanPlugins();
 end;
 
 {---------------------------------------}
