@@ -233,7 +233,7 @@ type
 
 // Forward declares for plugin utils
 function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
-function LoadPlugin(com_name: string): boolean;
+function LoadPlugin(com_name: string; var errorStr: WideString): boolean;
 
 procedure InitPlugins();
 procedure UnloadPlugins();
@@ -259,8 +259,13 @@ const
     sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
     sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
     sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
+    sPluginErrNoLib  = 'A library containing (%s) could not be found.';
+    sPluginErrNoReg  = 'The library containing (%s) could not be registered.';
+    sPluginNotCOM    = 'The library (%s) does not support COM';
 
 
+type
+    TRegProc = function: HResult; stdcall;
 var
     proxies: TStringList;
 
@@ -271,6 +276,7 @@ procedure InitPlugins();
 var
     s, ok: TWideStringlist;
     i: integer;
+    errorStr: WideString;
 begin
     // load all of the plugins listed in the prefs
     s := TWideStringlist.Create();
@@ -278,9 +284,9 @@ begin
     MainSession.Prefs.fillStringList('plugin_selected', s);
 
     for i := 0 to s.count - 1 do begin
-        if (LoadPlugin(s[i]) = false) then begin
+        if (not LoadPlugin(s[i], errorStr)) then begin
             // remove from list?
-            if (MessageDlgW(_(sPluginRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+            if (MessageDlgW(errorStr + #13#10#13#10 + _(sPluginRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
                 ok.Add(s[i]);
         end
         else
@@ -308,7 +314,80 @@ begin
   end;
 end;
 
+
+function isRegistered(guid : TGUID): boolean;overload;
+begin
+    try
+        ClassIDToProgID(guid);
+        Result := true;
+    except
+        Result := false;
+    end;
+end;
+
+function isRegistered(progID : String): boolean;overload;
+begin
+    try
+        ProgIDToClassID(PChar(progID));
+        Result := true;
+    except
+        Result := false;
+    end;
+end;
+
+function registerPlugin(dll: WideString) : boolean;
+var
+    LibHandle: THandle;
+    RegProc: TRegProc;
+    tstr : String;
+begin
+    Result := false;
+    tstr := dll;
+    try
+        LibHandle := LoadLibrary(PChar(tstr));
+        if (LibHandle <> 0) then begin
+            try
+                @RegProc := GetProcAddress(LibHandle, 'DllRegisterServer');
+                if (RegProc() = 0) then
+                    Result := true;
+            finally
+                FreeLibrary(LibHandle);
+            end;
+        end;
+    except
+    end;
+end;
+
+function unregisterPlugin(dll: WideString) : boolean;
+var
+    LibHandle: THandle;
+    RegProc: TRegProc;
+    tstr : String;
+begin
+    Result := false;
+    tstr := dll;
+    try
+        LibHandle := LoadLibrary(PChar(tstr));
+        if (LibHandle <> 0) then begin
+            try
+                @RegProc := GetProcAddress(LibHandle, 'DllUnregisterServer');
+                if (RegProc() = 0) then
+                    Result := true;
+            finally
+                FreeLibrary(LibHandle);
+            end;
+        end;
+    except
+    end;
+end;
+
 {---------------------------------------}
+{
+    try to get a progid from the given DLL
+
+    Will leave the registration state of a plugin unchanged. Will temporarily
+    register plugins to the the prog ID associated with the plugin co-class.
+}
 function CheckPluginDll(dll : WideString; var progID: Widestring; var doc: Widestring): boolean;
 var
     lib : ITypeLib;
@@ -319,16 +398,12 @@ var
     r: cardinal;
     iunk: IUnknown;
     tplug: IExodusPlugin;
+    inReg: boolean;
 begin
-    // load the .dll.  This SHOULD register the bloody thing if it's not, but that
-    // doesn't seem to work for me.
+
     Result := false;
     try
-        if (ExUtils.ExecAndWait('regsvr32','/s ' + dll) <> 0) then begin //silent registration
-            ExUtils.DebugMsg(_('DLL in plugin directory could not be registered. Try to register using regsvr32 for more information. ') + dll);
-            exit;
-        end;
-        OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
+        OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_NONE, lib));
     except
         on EOleSysError do exit;
         on Exception do exit; //probably problems registering the dll
@@ -339,7 +414,6 @@ begin
         // get the info about the type
         try
             OleCheck(lib.GetTypeInfo(i, tinfo));
-
             // get attributes of the type
             OleCheck(tinfo.GetTypeAttr(tattr));
         except
@@ -366,17 +440,26 @@ begin
                     if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin)) then begin
                         // oho!  it IS.  Get the name of this coclass, so we can show
                         // what we did.  Get the doc string, just to show off.
+                        //get current registration state
+                        inReg := isRegistered(tattr.guid);
                         try
-                            //get class name that implements IExodusPlugin
-                            //this *requires* the plugin to be registered but addresses
-                            //some issue in VS 2003, 2005 plugins where libname
-                            //is not neccessarily what gets registered.
-                            progID := ClassIDToProgID(tattr.guid);
-                            //progID could contain version info, classlib.classname.version. Strip off
-                            //version if it is there
-                            progID := TrimVersion(progID);
+                            //temporarily register to get progid
+                            if (not inReg) then
+                                registerPlugin(dll);
+                            try
+                                //get class name that implements IExodusPlugin
+                                //this *requires* the plugin to be registered but addresses
+                                //some issue in VS 2003, 2005 plugins where libname
+                                //is not neccessarily what gets registered.
+                                //progID could contain version info, classlib.classname.version. Strip off
+                                //version if it is there
+                                progID := TrimVersion(ClassIDToProgID(tattr.guid));
+                            finally
+                                if (not inReg) then
+                                    unregisterPlugin(dll);
+                            end;
                         except
-                            //well, that failed. Probably not registered.
+                            //well, that failed. Probably not registerable
                             //Try to dummy up the progID by using info from type lib documentation
                             //this is essentially how Exodus has always done it.
                             OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
@@ -388,7 +471,6 @@ begin
                             OleCheck(tinfo.GetDocumentation(-1, nil, @docos, nil, nil));
                             doc := docos;
                             // SysFreeString of obname and doc needed?  In C, yes, but here?
-                            //JJF 8/16/06 Yeah, this feels like its leaking. See todo below
                             Result := true;
                             exit;
                         except
@@ -406,8 +488,13 @@ begin
             //if it does in fact implement IExodusPlugin. This will only
             //work correctly if the library has been registered.
             try
-                iunk := CreateComObject(tattr.guid);
+                //see if class is registered
+                inReg := isRegistered(tattr.guid);
+
+                if (not inReg) then
+                    registerPlugin(dll);
                 try
+                    iunk := CreateComObject(tattr.guid);
                     //see if iunk is an IExodusPlugin. Throws exception if not
                     tplug := (iunk as IExodusPlugin);
                     //type cast above will throw exception if not IExodusPlugin
@@ -415,17 +502,17 @@ begin
                     //typecast code.
                     if (tplug <> nil) then begin
                         //found one, get progID, docs
-                        progID := ClassIDToProgID(tattr.guid);
                         //progID could contain version info, classlib.classname.version. Strip off
                         //version if it is there
-                        progID := TrimVersion(progID);
+                        progID := TrimVersion(ClassIDToProgID(tattr.guid));
                         OleCheck(tinfo.GetDocumentation(-1, nil, @doc, nil, nil));
                         Result := true;
                         exit;
                     end;
                 finally
-                    //free iunk interface? must read up on this
-                    //todo JJF figure out when interfaces need to be released!
+                    iunk := nil;
+                    if (not inReg) then
+                        unregisterPlugin(dll);
                 end;
             except
                 //eat any exceptions. These would be thrown when creating
@@ -437,51 +524,93 @@ begin
     end; //for each type in lib
 end;
 
+function scanPluginsForProgID(dir: WideString; progID: string; var dll: WideString) : boolean;
+var
+    sr: TSearchRec;
+    doc: WideString;
+    tdll: WideString;
+    tpi: WideString;
+begin
+    Result := false;
+    if (not DirectoryExists(dir)) then exit;
+    if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
+        repeat
+            tdll := dir + '\' + sr.Name;
+            if (CheckPluginDll(tdll, tpi, doc) and (tpi = progID)) then begin
+                dll := tdll;
+                Result := true
+            end;
+        until ((FindNext(sr) <> 0) or Result);
+        FindClose(sr);
+    end;
+end;
 
 {---------------------------------------}
-function LoadPlugin(com_name: string): boolean;
+function LoadPlugin(com_name: string; var errorStr: WideString): boolean;
 var
     idisp: IDispatch;
     plugin: IExodusPlugin;
     p: TPlugin;
     msg: Widestring;
+    inReg: boolean;
+    dll: WideString;
+    dir: WideString;
+    reged: boolean;
 begin
     // Fire up an instance of the specified COM object
     Result := false;
     if (plugs.indexof(com_name) > -1) then exit;
 
+    reged := false;
     try
-        idisp := CreateOleObject(com_name);
-    except
-        on EOleSysError do begin
-            msg := WideFormat(_(sPluginErrCreate), [com_name]);
-            MessageDlgW(msg, mtError, [mbOK], 0);
+        if (not isRegistered(com_name)) then begin
+            //scan plugin directory and see if there is a lib with this object
+            dir := MainSession.Prefs.getString('plugin_dir');
+            if (not scanPluginsForProgID(dir, com_name, dll)) then begin
+                errorStr := WideFormat(_(sPluginErrNoLib), [com_name]);
+                exit;
+            end;
+            reged := registerPlugin(dll);
+            if (not reged) then begin
+                errorStr := WideFormat(_(sPluginErrNoReg), [com_name]);
+                exit;
+            end;
+        end;
+
+        try
+            idisp := CreateOleObject(com_name);
+        except
+            on EOleSysError do begin
+                errorStr := WideFormat(_(sPluginErrCreate), [com_name]);
+                exit;
+            end;
+        end;
+
+        try
+            plugin := IUnknown(idisp) as IExodusPlugin;
+        except
+            on EIntfCastError do begin
+                errorStr := WideFormat(_(sPluginErrNoIntf), [com_name]);
+                exit;
+            end;
+        end;
+
+        p := TPlugin.Create();
+        p.com := plugin;
+        plugs.AddObject(com_name, p);
+        try
+            p.com.Startup(ExComController);
+        except
+            //hmm, fails startup but is left in loaded list
+            errorStr := WideFormat(_(sPluginErrInit), [com_name]);
             exit;
         end;
+        Result := true;
+    finally
+        //cleanup if we hit an error case
+        if (reged and not Result) then
+            unregisterPlugin(dll);
     end;
-
-    try
-        plugin := IUnknown(idisp) as IExodusPlugin;
-    except
-        on EIntfCastError do begin
-            msg := WideFormat(_(sPluginErrNoIntf), [com_name]);
-            MessageDlgW(msg, mtError, [mbOK], 0);
-            exit;
-        end;
-    end;
-
-    p := TPlugin.Create();
-    p.com := plugin;
-    plugs.AddObject(com_name, p);
-    try
-        p.com.Startup(ExComController);
-    except
-        msg := WideFormat(_(sPluginErrInit), [com_name]);
-        MessageDlgW(msg, mtError, [mbOK], 0);
-        exit;
-    end;
-
-    Result := true;
 end;
 
 {---------------------------------------}
@@ -489,16 +618,18 @@ procedure ConfigurePlugin(com_name: string);
 var
     idx: integer;
     p: TPlugin;
+    errorStr: WideString;
+    loaded: boolean;
 begin
     //
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        LoadPlugin(com_name);
+        loaded := LoadPlugin(com_name, errorStr);
         idx := plugs.IndexOf(com_name);
     end;
 
     if (idx < 0) then begin
-        MessageDlgW(_('Plugin could not be initialized or configured.'),
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
             mtError, [mbOK], 0);
         exit;
     end;
@@ -513,14 +644,17 @@ var
     i, idx: integer;
     loaded: TStringlist;
     p: TPlugin;
+    errorStr: WideString;
 begin
     // load all plugins listed, if they are not already loaded.
     loaded := TStringlist.Create();
     for i := 0 to sl.Count -1  do begin
         idx := plugs.IndexOf(sl[i]);
-        if (idx < 0) then
-            LoadPlugin(sl[i]);
-        loaded.Add(sl[i]);
+        if (idx < 0) then begin
+            if (not LoadPlugin(sl[i], errorStr)) then
+                MessageDlgW(errorStr, mtError, [mbOK], 0);
+            loaded.Add(sl[i]);
+        end;
     end;
 
     // unload any plugins not in the loaded list
@@ -549,7 +683,7 @@ begin
     // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
     // or else bad things can happen here... assume that mem is getting
     // cleared.
-    // JJF 8/14/06 This needs to be addressed or we'll be leaving a bunch of refs
+    // JJF 8/14/06 This needs to be addressed
     //todo JJF get definitive answer to when COM objects should be released!
     for i := plugs.Count - 1 downto 0 do begin
         pp := TPlugin(plugs.Objects[i]);
