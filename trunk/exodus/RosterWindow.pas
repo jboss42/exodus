@@ -403,6 +403,7 @@ const
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
     sRosterPending = ' (Pending)';
+    sGrpAlreadyExists = 'Group %s already exists.  Do you wish to incorporate contacts into existing group?';
 
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
@@ -2689,8 +2690,8 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
 var
-    go: TJabberGroup;
-    old_grp, new_grp: WideString;
+    go, grp_exists: TJabberGroup;
+    old_grp, new_grp, grp_exists_msg: WideString;
     i: integer;
     ri: TJabberRosterItem;
 begin
@@ -2703,6 +2704,14 @@ begin
         old_grp := go.FullName;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin
+            grp_exists := MainSession.Roster.getGroup(new_grp);
+            if (grp_exists <> nil) then begin
+                grp_exists_msg := _(sGrpAlreadyExists);
+                grp_exists_msg := WideFormat(grp_exists_msg, [new_grp]);
+                if (MessageDlgW(grp_exists_msg, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+                    exit;
+            end;
+
             for i := 0 to MainSession.Roster.Count - 1 do begin
                 ri := MainSession.Roster.Items[i];
                 if (ri.IsInGroup(old_grp)) then begin
