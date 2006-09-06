@@ -454,7 +454,10 @@ begin
   result := TJabberMessage.Create();
   result.MsgType := 'chat';
   result.FromJID := MainSession.Jid;
-  result.ToJID := Self.JID;
+  if ( _resource <> '' ) then
+    result.ToJID := Self.JID + '/' + _resource
+  else
+  	result.ToJID := Self.JID;
   result.isMe := true;
   result.Nick := MainSession.Prefs.getString('default_nick');
   if (result.Nick = '') then
