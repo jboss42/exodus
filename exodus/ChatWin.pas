@@ -842,6 +842,8 @@ begin
         //Notify
         DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick,
             RosterTreeImages.Find('contact'), 'notify_chatactivity');
+        if (Msg.isMe = false ) and ( _isRoom ) then
+          Msg.Nick := OtherNick;
 
         //Render
         DisplayMsg(Msg, MsgList);
