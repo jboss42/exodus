@@ -564,7 +564,9 @@ begin
                 // We did get a room update notification.
                 // Need to disco.
                 e := jEntityCache.getByJid(Self.jid, '');
-                e.refresh(MainSession);
+                // e can be null, not doing this check can cause crashes
+                if ( e <> nil ) then
+                	e.refresh(MainSession);
             end;
         end;
 
@@ -2729,6 +2731,11 @@ procedure TfrmRoom.OnDocked();
 begin
     inherited;
     btnClose.Visible := true;
+    // Set the ActivePage to the active tab
+    if ( Self.TabSheet <> nil ) then begin
+      frmExodus.Tabs.ActivePage := Self.TabSheet;
+      Self.TabSheet.ImageIndex := ico_conf;
+    end;
 
     _scrollBottom();
     Self.Refresh();
