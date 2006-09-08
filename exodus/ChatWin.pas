@@ -1612,9 +1612,8 @@ end;
 }
 procedure TfrmChat.OnDockedActivate(Sender : TObject);
 begin
-    inherited;
     if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then begin
-        Self.tabSheet.ImageIndex := ImageIndex;
+        Self.tabSheet.ImageIndex := _pres_img;
     end;
 end;
 

@@ -105,6 +105,8 @@ inherited frmChat: TfrmChat
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 205
     Width = 383
+    ExplicitTop = 205
+    ExplicitWidth = 383
   end
   object popContact: TTntPopupMenu [5]
     Left = 16
