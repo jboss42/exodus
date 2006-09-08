@@ -442,6 +442,7 @@ begin
         _iq.Send();
     end
     else begin
+        _iq.qTag.Name := 'vCard';
         _iq.Namespace := 'vcard-temp';
         _iq.toJid := tmpjid.jid;
         _iq.Send();
