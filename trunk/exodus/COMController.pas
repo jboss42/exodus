@@ -653,8 +653,8 @@ begin
         if (idx < 0) then begin
             if (not LoadPlugin(sl[i], errorStr)) then
                 MessageDlgW(errorStr, mtError, [mbOK], 0);
-            loaded.Add(sl[i]);
         end;
+        loaded.Add(sl[i]);
     end;
 
     // unload any plugins not in the loaded list
@@ -1057,7 +1057,7 @@ var
     pp: TPluginProxy;
 begin
     pp := TPluginProxy.Create(xpath, callback);
-    Result := pp.proxy_idx;
+    Result := pp.id;
 end;
 
 {---------------------------------------}

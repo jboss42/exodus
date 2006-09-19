@@ -25,7 +25,7 @@ interface
 
 uses
     Unicode, TntClasses, Menus, TntMenus,
-    ComObj, ActiveX, Exodus_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB, StdVcl, Classes;
 
 type
 
@@ -54,6 +54,7 @@ type
     { Protected declarations }
 
   private
+    _predefined_menus: TWidestringlist;
     _menus: TWidestringlist;
     _items: Twidestringlist;
 
@@ -65,6 +66,8 @@ type
     destructor Destroy(); override;
 
     function findContextMenu(id: Widestring): TTntPopupMenu;
+    procedure AddPredefinedMenu(name: Widestring; menu: TTntPopupMenu);
+    procedure RemovePredefinedMenu(name: Widestring; menu: TTntPopupMenu);
 
   end;
 
@@ -75,11 +78,13 @@ implementation
 
 uses
     XMLTag, StrUtils, SysUtils, XMLUtils, COMRosterGroup,
-    COMRosterItem, NodeItem, Roster, JabberID, Session, Jabber1, ComServ;
+    COMRosterItem, NodeItem, Roster, JabberID, Session,
+    Jabber1, ComServ,RosterWindow;
 
 {---------------------------------------}
 constructor TExodusRoster.Create();
 begin
+    _predefined_menus := TWidestringlist.Create();
     _menus := TWidestringlist.Create();
     _items := TWidestringlist.Create();
 end;
@@ -87,32 +92,106 @@ end;
 {---------------------------------------}
 destructor TExodusRoster.Destroy();
 begin
+    ClearStringListObjects(_predefined_menus);
     ClearStringListObjects(_items);
     ClearStringListObjects(_menus);
     _items.Clear();
     _items.Free();
     _menus.Clear();
     _menus.Free();
+    _predefined_menus.Clear();
+    _predefined_menus.Free();
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.AddPredefinedMenu(name: Widestring; menu: TTntPopupMenu);
+var
+    idx: integer;
+begin
+    // used to add the GUI defined menus from RosterWindow.pas
+    if (menu = nil) or
+       (name = '') then exit;
+
+    idx := _menus.IndexOf(name);
+    if (idx >= 0) then exit;
+
+    _predefined_menus.Add(name);
+    _menus.AddObject(name, menu);
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.RemovePredefinedMenu(name: Widestring; menu: TTntPopupMenu);
+var
+    idx, predefined_idx: integer;
+    i: Integer;
+    temp_stringlist: TWidestringList;
+    temp_string: string;
+begin
+    if (name = '') then exit;
+
+    idx := _menus.IndexOf(name);
+    if (idx >= 0) then begin
+        // exists
+        predefined_idx := _predefined_menus.IndexOf(name);
+        if (predefined_idx >=0) then begin
+            // is a predefined so we can remove
+
+            // Make sure there are no items left on menu
+            // Not doing this causes a crash if item is left on predefined
+            // popup menu.
+            if (_items.Count > 0) then begin
+                temp_stringlist := TWidestringList.Create();
+                for i := 0 to menu.items.Count - 1 do begin
+                    temp_string := LeftStr(menu.Items[i].Name, Length('pluginContext_item'));
+                    if (temp_string = 'pluginContext_item') then
+                        temp_stringlist.Add(menu.Items[i].Name);
+                end;
+                if (temp_stringlist.Count > 0) then begin
+                    for i := 0 to temp_stringlist.Count - 1 do begin
+                        Self.removeContextMenuItem(name, temp_stringlist.Strings[i]);
+                    end;
+                end;
+                temp_stringlist.Free();
+            end;
+
+            // do actual remove
+            _predefined_menus.Delete(predefined_idx);
+            _menus.Delete(idx);
+        end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.MenuClick(Sender: TObject);
 var
     idx: integer;
+{$IFDEF OLD_MENU_EVENTS}
     ri: TJabberRosterItem;
-{$IFNDEF OLD_MENU_EVENTS}
+{$ELSE}
     mi : TTnTMenuItem;
+    sel: TList;
+    resultset, newtag: TXMLTag;
+    i: integer;
 {$ENDIF}
 begin
     idx := _items.IndexOfObject(Sender);
     if (idx >= 0) then begin
-        ri := MainSession.Roster.ActiveItem;
-        assert(ri <> nil);
 {$IFDEF OLD_MENU_EVENTS}
+        ri := MainSession.Roster.ActiveItem;
         MainSession.FireEvent(_items[idx], ri.Tag);
 {$ELSE}
         mi := TTntMenuItem(_items.Objects[idx]);
-        IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, ri.Tag.XML);
+        resultset:= TXMLTag.Create('selected_roster_list'); //freed by
+        sel := frmRosterWindow.getSelectedContacts(false);
+        if (sel.Count > 0) then begin
+            for i := 0 to sel.Count - 1 do begin
+                newtag := TXMLTag.Create(TJabberRosterItem(sel[i]).Tag);
+                resultset.AddTag(newtag);
+            end;
+            IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, resultset.XML);
+        end;
+        resultset.Free();
+        sel.Free();
 {$ENDIF}
     end;
 end;
@@ -304,10 +383,14 @@ end;
 {---------------------------------------}
 procedure TExodusRoster.removeContextMenu(const id: WideString);
 var
-    i, midx, idx: integer;
+    i, midx, idx, pidx: integer;
     menu: TTntPopupMenu;
     item: TTntMenuItem;
 begin
+    // Cannot remove predefined menus.
+    pidx := _predefined_menus.IndexOf(id);
+    if (pidx >= 0) then exit;
+
     idx := _menus.IndexOf(id);
     if (idx = -1) then exit;
 
@@ -341,7 +424,7 @@ begin
 
     for i := 0 to menu.Items.Count - 1 do begin
         item := TTntMenuItem(menu.Items[i]);
-        if (item.Name = menu_id) then begin
+        if (item.Name = item_id) then begin
             menu.Items.Delete(i);
             midx := _items.IndexOfObject(item);
             assert(midx <> -1);

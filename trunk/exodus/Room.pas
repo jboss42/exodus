@@ -24,7 +24,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils;
+    JabberID, TntSysUtils, TntWideStrUtils, ToolWin;
 
 type
   TMemberNode = TTntListItem;

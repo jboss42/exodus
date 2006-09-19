@@ -126,6 +126,12 @@ type
     DeleteProfile1: TTntMenuItem;
     lstProfiles: TTntListView;
     treeRoster: TTntTreeView;
+    N9: TTntMenuItem;
+    N10: TTntMenuItem;
+    N11: TTntMenuItem;
+    N12: TTntMenuItem;
+    N13: TTntMenuItem;
+    N14: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -208,6 +214,7 @@ type
     procedure lstProfilesKeyPress(Sender: TObject; var Key: Char);
     procedure lstProfilesInfoTip(Sender: TObject; Item: TListItem;
       var InfoTip: String);
+    procedure RenameProfile1Click(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -374,8 +381,11 @@ uses
 
 const
     sRemoveBookmark = 'Remove this bookmark?';
+
     sRenameGrp = 'Rename group';
     sRenameGrpPrompt = 'New group name:';
+    sGrpAlreadyExists = 'Group %s already exists.  Do you wish to incorporate contacts into existing group?';
+
     sNoContactsSel = 'You must select one or more contacts.';
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
@@ -403,7 +413,10 @@ const
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
     sRosterPending = ' (Pending)';
-    sGrpAlreadyExists = 'Group %s already exists.  Do you wish to incorporate contacts into existing group?';
+
+    sRenameProfile = 'Rename profile';
+    sRenameProfilePrompt = 'New profile name:';
+    sProfileAlreadyExists = 'Profile %s already exists.';
 
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
@@ -414,6 +427,15 @@ const
     sProfileNew = 'Untitled Profile';
     sProfileCreate = 'New Profile';
     sProfileNamePrompt = 'Enter Profile Name';
+
+    // predefined popup names
+    sPredefinedActions = 'Actions';
+    sPredefinedBookmark = 'Bookmark';
+    sPredefinedGroup = 'Group';
+    sPredefinedProfiles = 'Profiles';
+    sPredefinedRoster = 'Roster';
+    sPredefinedStatus = 'Status';
+    sPredefinedTransport = 'Transport';
 
 
     MIN_WIDTH = 150;
@@ -574,12 +596,30 @@ begin
 
     _caps_xp := TXPLite.Create('/presence/c[xmlns="http://jabber.org/protocol/caps"]');
     _client_bmp := TBitmap.Create();
+
+    // Add predefined menus to stringlist.
+    ExCOMRoster.AddPredefinedMenu(sPredefinedActions, popActions);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedGroup, popGroup);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedProfiles, popProfiles);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedRoster, popRoster);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedStatus, popStatus);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedTransport, popTransport);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    // Remove predefinded menus.
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedActions, popActions);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedGroup, popGroup);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedProfiles, popProfiles);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedRoster, popRoster);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedStatus, popStatus);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedTransport, popTransport);
+
     Action := caFree;
     frmRosterWindow := nil;
 end;
@@ -1583,6 +1623,47 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.RenameProfile1Click(Sender: TObject);
+var
+    go: TTntListItem;
+    profile_exists: boolean;
+    old_profile, new_profile, profile_exists_msg: WideString;
+    i: integer;
+    ri: TJabberRosterItem;
+    profile: TJabberProfile;
+begin
+    // Rename some profile.
+    go := lstProfiles.Selected;
+    if (go = nil) then exit;
+
+    new_profile := go.Caption;
+    if (InputQueryW(_(sRenameProfile), _(sRenameProfilePrompt), new_profile)) then begin
+        old_profile := go.Caption;
+        new_profile := Trim(new_profile);
+        if (new_profile <> old_profile) then begin
+            profile_exists := false;
+            for i := 0 to lstProfiles.Items.Count - 1 do begin
+                if (lstProfiles.Items[i].Caption = new_profile) then begin
+                    profile_exists := true;
+                end;
+            end;
+
+            if (profile_exists) then begin
+                profile_exists_msg := _(sProfileAlreadyExists);
+                profile_exists_msg := WideFormat(profile_exists_msg, [new_profile]);
+                MessageDlgW(profile_exists_msg, mtConfirmation, [mbOK], 0);
+                exit;
+            end;
+
+            profile := TJabberProfile(MainSession.Prefs.Profiles.Objects[lstProfiles.ItemIndex]);
+            profile.Name := new_profile;
+            MainSession.Prefs.SaveProfiles();
+            MainSession.Prefs.LoadProfiles();
+            ShowProfiles();
+        end;
+    end;
+end;
+
 function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTntTreeNode;
 var
     n: integer;
