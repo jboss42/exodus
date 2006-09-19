@@ -11,7 +11,7 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 239
+    Top = 238
     Width = 382
     ExplicitTop = 243
     ExplicitWidth = 382
@@ -19,8 +19,8 @@ inherited frmRoom: TfrmRoom
   inherited pnlMsgList: TPanel
     Top = 23
     Width = 382
-    Height = 216
-    TabOrder = 1
+    Height = 186
+    TabOrder = 2
     ExplicitTop = 23
     ExplicitWidth = 382
     ExplicitHeight = 216
@@ -156,6 +156,10 @@ inherited frmRoom: TfrmRoom
         OnClick = lblSubjectURLClick
       end
     end
+  end
+  inherited tbMsgOutToolbar: TTntToolBar
+    Top = 209
+    Width = 382
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual

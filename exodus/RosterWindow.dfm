@@ -271,6 +271,7 @@ object frmRosterWindow: TfrmRosterWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      ExplicitTop = 6
       object aniWait: TAnimate
         Left = 48
         Top = 3
@@ -306,7 +307,6 @@ object frmRosterWindow: TfrmRosterWindow
       OnDblClick = lblConnectClick
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
-      ExplicitTop = 98
     end
   end
   object treeRoster: TTntTreeView
@@ -485,6 +485,9 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Custom ...'
       OnClick = presCustomClick
     end
+    object N11: TTntMenuItem
+      Caption = '-'
+    end
   end
   object ImageList2: TImageList
     BkColor = clWhite
@@ -643,6 +646,9 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Add Group'
       OnClick = popAddGroupClick
     end
+    object N9: TTntMenuItem
+      Caption = '-'
+    end
   end
   object popGroup: TTntPopupMenu
     AutoHotkeys = maManual
@@ -697,6 +703,9 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'New Group'
       OnClick = popAddGroupClick
     end
+    object N12: TTntMenuItem
+      Caption = '-'
+    end
   end
   object popBookmark: TTntPopupMenu
     AutoHotkeys = maManual
@@ -717,6 +726,9 @@ object frmRosterWindow: TfrmRosterWindow
     object Properties1: TTntMenuItem
       Caption = 'Properties'
       OnClick = popPropertiesClick
+    end
+    object N13: TTntMenuItem
+      Caption = '-'
     end
   end
   object popTransport: TTntPopupMenu
@@ -746,6 +758,9 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Remove'
       OnClick = popTransUnRegisterClick
     end
+    object N14: TTntMenuItem
+      Caption = '-'
+    end
   end
   object autoScroll: TTimer
     Enabled = False
@@ -763,10 +778,14 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object RenameProfile1: TTntMenuItem
       Caption = 'Rename Profile'
+      OnClick = RenameProfile1Click
     end
     object DeleteProfile1: TTntMenuItem
       Caption = 'Delete Profile'
       OnClick = lblDeleteClick
+    end
+    object N10: TTntMenuItem
+      Caption = '-'
     end
   end
 end
