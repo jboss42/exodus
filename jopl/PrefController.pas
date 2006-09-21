@@ -1957,8 +1957,11 @@ begin
 end;
 
 initialization
-//    s_default_file := TPrefFile.CreateFromResource('defaults');
+{$IFDEF DEFAULTS_FROM_FILE}
     s_default_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'defaults.xml');
+{$ELSE}
+    s_default_file := TPrefFile.CreateFromResource('defaults');
+{$ENDIF}
     s_brand_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'branding.xml');
     cachedAppInfo := TApplicationInfo.create();
     s_Graphics := TPrefGraphic.Create();
