@@ -126,13 +126,7 @@ begin
     // Singleton factory
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(Application);
-    if (not frmDebug.Visible) then
-        frmDebug.ShowDefault();
-
-    if (frmDebug.Docked) then
-        frmExodus.BringDockedToTop(frmDebug)
-    else
-        frmDebug.Show();
+    frmDebug.ShowDefault();
 end;
 
 {---------------------------------------}

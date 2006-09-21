@@ -41,6 +41,7 @@ type
         _pos      : TXMLTag;
         _prof     : TXMLTag;
         _bms      : TXMLTag;
+        _windowState: TXMLTag; //<window_state/>
         _filename : Widestring;
         _ctrlHash : TWideStringList;
         _dirty    : boolean;
@@ -96,7 +97,15 @@ type
         procedure removeAllPresence();
 
         // misc.
+        //setDirty --> Tag returned will be modified by the caller. Tag returned
+        //is a reference to the cache this file is keeping.
         function getPositionTag(pkey: WideString; setDirty: boolean = false): TXMLTag;
+
+        //get the xml tag for the given key.
+        function getWindowStateTag(pKey: WideString; var stateTag: TXMLTag): boolean;
+        //set the xml tag for the given key.
+        procedure setWindowStateTag(pKey: WideString; stateTag: TXMLTag);
+
         procedure clearProfiles();
         procedure SaveBookmarks(tag: TXMLTag);
 
@@ -123,7 +132,7 @@ const
     PROF    = 'profiles';         // DO NOT LOCALIZE
     PREF    = 'prefs';            // DO NOT LOCALIZE
     BMS     = 'local-bookmarks';  // DO NOT LOCALIZE
-
+    WINDOWSTATE   = 'window-state';            //ditto
 {---------------------------------------}
 constructor TPrefFile.Create(tag: TXMLTag);
 begin
@@ -182,44 +191,31 @@ var
     i, j: integer;
     c: Widestring;
     sl: TWideStringList;
+
+    function gettag(tagname: WideString): TXMLTag;
+    begin
+        Result := _root.GetFirstTag(tagname);
+        if (Result = nil) then
+            Result := _root.AddTag(tagname);
+    end;
+
 begin
     _dirty := false;
     _need_default_pres := false;
     _ctrlHash := TWideStringList.Create();
-    //_ctrlHash.Sorted := true;
-    //_ctrlHash.Duplicates := dupIgnore;
-
+    
     if (_root = nil) then begin
         // nothing there yet.
         _root := TXmlTag.Create(ROOT);
         _root.setAttribute(VER, VER_NUM);
-        _pref := _root.AddTag(PREF);
-        _pres := _root.AddTag(PRES);
-        _pos  := _root.AddTag(POS);
-        _prof := _root.AddTag(PROF);
-        _bms  := _root.AddTag(BMS);
-        exit;
     end;
 
-    _pref := _root.GetFirstTag(PREF);
-    if (_pref = nil) then
-        _pref := _root.AddTag(PREF);
-
-    _pres := _root.GetFirstTag(PRES);
-    if (_pres = nil) then
-        _pres := _root.AddTag(PRES);
-
-    _pos := _root.GetFirstTag(POS);
-    if (_pos = nil) then
-        _pos := _root.AddTag(POS);
-
-    _prof := _root.GetFirstTag(PROF);
-    if (_prof = nil) then
-        _prof := _root.AddTag(PROF);
-
-    _bms := _root.GetFirstTag(BMS);
-    if (_bms = nil) then
-        _bms := _root.AddTag(BMS);
+    _pref   := gettag(PREF);
+    _pres   := gettag(PRES);
+    _pos    := gettag(POS);
+    _prof   := gettag(PROF);
+    _bms    := gettag(BMS);
+    _windowState := gettag(WINDOWSTATE);
 
     // If the format changes again, also check VER_NUM.
     if (_root.getAttribute(VER) = '') then begin
@@ -276,6 +272,7 @@ begin
         save();
     end;
 
+    //walk prefs anbd create an index of associated controls
     s := _pref.ChildTags();
     for i := 0 to s.Count - 1 do begin
         t := s.Tags[i];
@@ -683,6 +680,44 @@ begin
 
     t.ClearTags();
     t.AddTag(TXMLTag.Create(value));
+end;
+
+
+//get the xml tag for the given key.
+function TPrefFile.getWindowStateTag(pKey: WideString; var stateTag: TXMLTag): boolean;
+var
+    tt: TXMLTag;
+    pt:TXMLTag;
+begin
+    stateTag := _windowState.GetFirstTag(pkey);
+    Result := (stateTag <> nil);
+    if (not Result) then begin
+        stateTag := TXMLTag.Create(pkey);
+        //check to see if there is a position tag for this key. If so
+        //use it as the default for this key
+        pt := getPositionTag(pkey, false);
+        if (pt <> nil) then begin
+            tt := stateTag.AddTag('pos');
+            tt.setAttribute('h', pt.GetAttribute('height'));
+            tt.setAttribute('l', pt.GetAttribute('left'));
+            tt.setAttribute('t', pt.GetAttribute('topt'));
+            tt.setAttribute('w', pt.GetAttribute('width'));
+        end;
+    end
+    else
+        stateTag := TXMLTag.Create(stateTag); //copy
+end;
+
+//set the xml tag for the given key.
+procedure TPrefFile.setWindowStateTag(pKey: WideString; stateTag: TXMLTag);
+var
+    tt: TXMLTag;
+begin
+    tt := _windowState.GetFirstTag(pkey);
+    if (tt <> nil) then
+        _windowState.RemoveTag(tt);
+    _windowState.AddTag(TXMLTag.Create(stateTag));
+    _dirty := true;
 end;
 
 end.

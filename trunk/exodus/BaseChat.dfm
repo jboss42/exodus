@@ -1,19 +1,11 @@
-object frmBaseChat: TfrmBaseChat
+inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
   ClientHeight = 260
   ClientWidth = 355
-  Color = clBtnFace
-  DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnResize = FormResize
+  ExplicitWidth = 363
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter

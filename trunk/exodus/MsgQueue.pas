@@ -154,7 +154,7 @@ function getMsgQueue: TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-
+    frmMsgQueue.ShowDefault();
     Result := frmMsgQueue;
 end;
 

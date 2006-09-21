@@ -8,7 +8,6 @@ inherited frmChat: TfrmChat
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   OnClose = FormClose
-  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   ExplicitWidth = 391
   ExplicitHeight = 301

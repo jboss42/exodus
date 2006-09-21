@@ -2665,7 +2665,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
-    getMsgQueue.Show();
+    getMsgQueue();
 end;
 
 {---------------------------------------}

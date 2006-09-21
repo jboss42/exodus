@@ -2,11 +2,11 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   Left = 257
   Top = 156
   Caption = 'frmPrefDialogs'
-  ClientHeight = 360
+  ClientHeight = 373
   ClientWidth = 294
   OldCreateOrder = True
   ExplicitWidth = 306
-  ExplicitHeight = 372
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   object lblMem1: TTntLabel [0]
@@ -19,9 +19,9 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   object lblMem2: TTntLabel [1]
     Left = 8
     Top = 213
-    Width = 244
+    Width = 241
     Height = 13
-    Caption = 'Use 0 minutes to destroy chat windows immediately.'
+    Caption = 'Use 0 minutes to destroy chat windows immediately'
   end
   object lblToastDuration: TTntLabel [2]
     Left = 39
@@ -167,7 +167,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Top = 256
     Width = 305
     Height = 17
-    Caption = 'Warn when trying to close busy chat windows.'
+    Caption = 'Warn when trying to close busy chat windows'
     TabOrder = 16
   end
   object txtToastDuration: TTntEdit [16]
@@ -179,7 +179,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object txtChatMemory: TTntEdit [17]
     Left = 168
-    Top = 229
+    Top = 228
     Width = 49
     Height = 21
     TabOrder = 14
@@ -199,7 +199,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object txtCloseHotkey: THotKey [19]
     Left = 32
-    Top = 318
+    Top = 320
     Width = 145
     Height = 19
     HotKey = 57431
@@ -209,10 +209,10 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object chkEscClose: TTntCheckBox [20]
     Left = 8
-    Top = 279
+    Top = 276
     Width = 297
     Height = 17
-    Caption = 'Use ESC key to close chat windows.'
+    Caption = 'Use ESC key to close chat windows'
     TabOrder = 17
   end
   object trkSnap: TTrackBar [21]
@@ -250,5 +250,13 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Caption = 'Window Options'
     TabOrder = 19
     ExplicitWidth = 294
+  end
+  object chkSaveWindowState: TTntCheckBox
+    Left = 8
+    Top = 345
+    Width = 169
+    Height = 17
+    Caption = 'Save window positions'
+    TabOrder = 20
   end
 end

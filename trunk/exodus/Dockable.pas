@@ -23,7 +23,8 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs, ExtCtrls, TntComCtrls, TntForms;
+    ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
+    XMLTag;
 
 type
   TDockNotify = procedure of object;
@@ -33,10 +34,9 @@ type
     are two different paths that result in this state change One set of events
     has been defined that will fire in either case.
   }
-  TfrmDockable = class(TTntForm)
+  TfrmDockable = class(TfrmState)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure FormResize(Sender: TObject);
     {
         Drag event.
 
@@ -55,12 +55,10 @@ type
   private
     { Private declarations }
     _docked: boolean;
-    _pos: TRect;
-    _noMoveCheck: boolean;
     _top: boolean;
-
-    procedure CheckPos();
-    procedure SavePos();
+    _dockChanging: boolean;
+    _initiallyDocked: boolean;
+    _bringToFront: boolean;
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -68,57 +66,47 @@ type
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
 
-    {
-        Get the preference key associated with this window.
-
-        Default implementation is to return a munged profile&classname (all XML illgal
-        characters escaped). Classes should override to change pref (for instance
-        chat windows might save based on munged profile&jid).
-
-    function GetPreferenceKey() : WideString;
-
-    {
+   {
         Event fired when form should restore its persisted state.
 
         Default uses GetPreferenceKey to get pref containing this
         window's state information.
 
         prefTag is an xml tag
-            <state>
+            <windowstatekey>
                 <position h="" w="" l="" t=""/>
                 <docked>true|false</docked>
-            </state>
+            </windowstatekey>
 
         This event is fired when the form is created.
-
-    procedure OnRestoreState(prefTag : TXMLTag);
+    }
+    procedure OnRestoreWindowState(windowState : TXMLTag);override;
 
     {
         Event fired when form should persist its position and other state
         information.
 
-        Default uses GetPreferenceKey to determine where window positions and
-        dock state are persisted.
+        Default uses GetWindowStateKey to determine actual key persisted
 
-        OnPersistState is passed an xml tag (<state/>) that should be used to
+        OnPersistState is passed an xml tag (<windowstatekey/>) that should be used to
         store state. For instance after the default OnPersistState handler is called
         prefTag will be
-            <state>
+            <windowstatekey>
                 <position h="" w="" t="" l="" />
                 <docked>true|false</docked>
-            </state>
+            </windowstatekey>
 
         This event is fired during the OnCloseQuery event.
-    
-    procedure OnPersistState(prefTag : TXMLTag);
     }
+    procedure OnPersistWindowState(windowState : TXMLTag);override;
+
   public
     { Public declarations }
     TabSheet: TTntTabSheet;
     ImageIndex: integer;
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
-    procedure ShowDefault;
+    procedure ShowDefault;override;
     procedure gotActivate; virtual;
     {
         Event fired when Form receives activation while in docked state.
@@ -145,7 +133,7 @@ type
 
     property Docked: boolean read _docked write _docked;
 
-    property FloatPos: TRect read _pos;
+    property FloatPos: TRect read getPosition;
   end;
 
 var
@@ -162,24 +150,12 @@ uses
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     ImageIndex := 43;
-
     _docked := false;
-    _noMoveCheck := true;
-
-    // do translation magic
-    AssignUnicodeFont(Self);
-    TranslateComponent(Self);
-
-    if (Self is TfrmChat) then
-        // do nothing
-    else
-        MainSession.Prefs.RestorePosition(Self);
-
+    _dockChanging := false;
+    _initiallyDocked := false;
+    _bringToFront := false;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
-
-    Self.SavePos();
-
-    _noMoveCheck := false;
+    inherited;
 end;
 
 {
@@ -211,48 +187,26 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
+    _dockChanging := true;
     Self.TabSheet := frmExodus.OpenDocked(self);
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.CheckPos();
-begin
-    if (_pos.Right - _pos.Left) <= 100 then
-        _pos.Right := _pos.Left + 150;
-
-    if (_pos.Bottom - _pos.Top) <= 100 then
-        _pos.Bottom := _pos.Top + 150;
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.SavePos();
-begin
-    _pos.Left := Self.Left;
-    _pos.Right := Self.Left + Self.Width;
-    _pos.Top := Self.Top;
-    _pos.Bottom := Self.Top + Self.Height;
+    _dockChanging := false;
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.FloatForm;
 begin
+    _dockChanging := true;
     frmExodus.FloatDocked(Self);
+    _dockChanging := false;
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if ((not _docked) and (MainSession <> nil)) then begin
-        if (Self is TfrmChat) then
-            MainSession.Prefs.SavePosition(Self, MungeName(Self.Caption))
-        else
-            MainSession.Prefs.SavePosition(Self);
-    end
-    else
+    if (_docked) then 
         frmExodus.CloseDocked(Self);
-
-    CanClose := true;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -267,25 +221,29 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockable.ShowDefault;
+var
+    ads: TAllowedDockStates;
 begin
-    // show this form using the default behavior
-    if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
-        if (TabSheet = nil) then begin
-            // dock the form
-            Self.DockForm();
-            Self.Show();
-            Self.Visible := true;
-        end
+    if (self.Visible) then begin
+        if (Self.TabSheet <> nil) then
+            frmExodus.BringDockedToTop(Self)
         else
-            frmExodus.BringDockedToTop(Self);
+            inherited;
     end
     else begin
-        if (frmExodus.isMinimized()) then
-            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-        else
-            ShowWindow(Handle, SW_SHOWNOACTIVATE);
-        Self.Visible := true;
+        RestoreWindowState();
+        ads := Jabber1.getAllowedDockState();
+        // show this form using the default behavior
+        if ((ads = adsRequired) or ((ads <> adsForbidden) and _initiallyDocked)) then begin
+            Self.DockForm();
+            frmExodus.BringDockedToTop(Self);
+        end
+        else begin
+            inherited; //let base class show window
+            Self.OnFloat(); //fire float event so windows can fix up
+        end;
     end;
+    Self.Show();
 end;
 
 {---------------------------------------}
@@ -302,13 +260,14 @@ begin
     if ((not _top) and
         ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
         // we are getting clicked..
-        m := 'frmDockable.WMActivate ' + Self.Caption;
+        m := Self.className + '.WMActivate ' + Self.Caption;
         OutputDebugString(PChar(m));
 
         _top := true;
-        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-            Self.Width, Self.Height, HWND_TOP);
+        _bringToFront := true;
+        SetWindowPos(Self.Handle, 0,0,0,0,0, HWND_TOP or SWP_NOSIZE or SWP_NOMOVE);
         _top := false;
+        _bringToFront := false;
 
         StopTrayAlert();
         gotActivate();
@@ -320,7 +279,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
 begin
-    //
+
     if (not _top) then
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 
@@ -331,14 +290,6 @@ end;
 procedure TfrmDockable.gotActivate();
 begin
     // implement this in sub-classes.
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.FormResize(Sender: TObject);
-begin
-    savePos();
-    if ((MainSession <> nil)) then
-        MainSession.Prefs.SavePosition(Self);
 end;
 
 {---------------------------------------}
@@ -368,15 +319,27 @@ begin
     Self.TabSheet.ImageIndex := Self.ImageIndex;
 end;
 
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
 procedure TfrmDockable.OnFloat();
 begin
 
+end;
+
+procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
+begin
+    inherited;
+    _initiallyDocked := (windowState.GetFirstTag('docked') <> nil);
+end;
+
+procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
+var
+    dtag: TXMLTag;
+begin
+    dtag := windowState.GetFirstTag('docked');
+    if (not Floating and (dtag = nil)) then
+        windowState.AddTag('docked')
+    else if (Floating and (dtag <> nil)) then
+        windowState.RemoveTag(dtag);
+    inherited;
 end;
 
 end.

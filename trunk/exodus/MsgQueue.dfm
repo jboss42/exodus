@@ -1,20 +1,11 @@
-object frmMsgQueue: TfrmMsgQueue
+inherited frmMsgQueue: TfrmMsgQueue
   Left = 247
   Top = 194
   Caption = 'Events'
   ClientHeight = 276
   ClientWidth = 446
-  Color = clBtnFace
-  DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = True
   OnClose = FormClose
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object splitRoster: TSplitter
