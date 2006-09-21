@@ -1,9 +1,9 @@
-object frmInvalidRoster: TfrmInvalidRoster
+inherited frmInvalidRoster: TfrmInvalidRoster
   Left = 223
   Top = 127
-  Width = 322
-  Height = 271
   Caption = 'Invalid Roster Items'
+  ClientHeight = 237
+  ClientWidth = 314
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -22,17 +22,25 @@ object frmInvalidRoster: TfrmInvalidRoster
     Width = 314
     Height = 32
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 205
+    ExplicitWidth = 314
+    ExplicitHeight = 32
     inherited Panel2: TPanel
       Width = 314
       Height = 32
+      ExplicitWidth = 314
+      ExplicitHeight = 32
       inherited Bevel1: TBevel
         Width = 314
+        ExplicitWidth = 314
       end
       inherited Panel1: TPanel
         Left = 154
         Height = 27
+        ExplicitLeft = 154
+        ExplicitHeight = 27
         inherited btnOK: TTntButton
           Caption = 'Remove'
           Default = False

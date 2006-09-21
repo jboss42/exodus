@@ -1,22 +1,13 @@
-object frmDebug: TfrmDebug
+inherited frmDebug: TfrmDebug
   Left = 318
   Top = 199
   Caption = 'Debug'
   ClientHeight = 380
   ClientWidth = 400
-  Color = clBtnFace
-  DefaultMonitor = dmDesktop
-  DragKind = dkDock
-  DragMode = dmAutomatic
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   OnActivate = FormActivate
   OnClose = FormClose
-  OnCreate = FormCreate
+  ExplicitWidth = 408
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object Panel2: TPanel

@@ -194,9 +194,6 @@ begin
     tmp_jid.Free();
 
     if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
-        if (not getMsgQueue().Visible) then begin
-            getMsgQueue().ShowDefault();
-        end;
         getMsgQueue().LogEvent(e, msg, img_idx);
         if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
             (e.eType = evt_Invite)) then begin
@@ -211,10 +208,6 @@ begin
         // OR we always want to use the msg queue
         // OR it's a queued chat event
         // so display it in the msg queue, not live
-        if (not getMsgQueue().Visible) then begin
-            getMsgQueue().ShowDefault();
-        end;
-
         // Note that LogEvent takes ownership of e
         getMsgQueue().LogEvent(e, msg, img_idx);
     end

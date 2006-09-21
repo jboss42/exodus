@@ -1,4 +1,4 @@
-object frmDockWizard: TfrmDockWizard
+inherited frmDockWizard: TfrmDockWizard
   Left = 250
   Top = 141
   BorderStyle = bsDialog

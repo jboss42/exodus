@@ -139,11 +139,19 @@ type
     function  _sendMsg(txt: Widestring): boolean;
     procedure _sendComposing(id: Widestring);
 
+  protected
+    {
+        Get the window state associated with this window.
+
+        Default implementation is to return a munged classname (all XML illgal
+        characters escaped). Classes should override to change pref (for instance
+        chat windows might save based on munged profile&jid).
+    }
+    function GetWindowStateKey() : WideString;override;
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
-
   public
     { Public declarations }
     OtherNick: widestring;
@@ -164,8 +172,8 @@ type
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);override;
-    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
+                               State: TDragState; var Accept: Boolean);
+    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 
     {
         Event fired when Form receives activation while in docked state.
@@ -243,7 +251,7 @@ var
     ritem: TJabberRosterItem;
     new_chat: boolean;
     do_scroll: boolean;
-    exp: boolean;
+//    exp: boolean;
     hist: string;
 begin
     // either show an existing chat or start one.
@@ -261,14 +269,7 @@ begin
     if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
         win := TfrmChat(chat.window);
         if (win <> nil) then begin
-            if (win.Docked) then begin
-                if (not win.Visible) then
-                    win.ShowDefault()
-                else if (win.TabSheet <> nil) then
-                    frmExodus.BringDockedToTop(win);
-            end
-            else
-                win.ShowDefault();
+            win.ShowDefault();
             Result := win;
             exit;
         end;
@@ -351,20 +352,8 @@ begin
         //Assign outgoing message event
         chat.OnSendMessage := SendMessageEvent;
 
-        // handle setting position for this window
-        if (not MainSession.Prefs.RestorePosition(TfrmChat(chat.window),
-            MungeName(Caption))) then
-            Position := poDefaultPosOnly;
-
-        exp := (Jabber1.getAllowedDockState() <> adsForbidden);
         if ((show_window) and (Application.Active)) then begin
             ShowDefault(); //Only show if requested and active
-            Show();
-            if (((exp) and (frmExodus.getTopDocked() = chat.window)) or
-                (exp = false)) then begin
-                if (TfrmChat(chat.window).Visible) then
-                    TfrmChat(chat.window).SetFocus();
-            end;
         end;
 
         if (hist <> '') then begin
@@ -399,7 +388,7 @@ begin
             Delete(i);
             if c <> nil then begin
                 if c.window <> nil then
-                    TfrmChat(c.window).Free();
+                    TfrmChat(c.window).Close();
             end;
         end;
     end;
@@ -442,12 +431,18 @@ begin
 
 end;
 
+function TfrmChat.GetWindowStateKey() : WideString;
+begin
+    Result := inherited GetWindowStateKey() + '-' + MungeName(jid);
+end;
+
 {---------------------------------------}
 procedure TfrmChat.setupMenus();
 begin
     mnuHistory.Enabled := (ExCOMController.ContactLogger <> nil);
     popClearHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 end;
+
 
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();

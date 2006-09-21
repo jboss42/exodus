@@ -1,4 +1,4 @@
-object frmRosterRecv: TfrmRosterRecv
+inherited frmRosterRecv: TfrmRosterRecv
   Left = 228
   Top = 192
   Caption = 'Receiving Contacts'

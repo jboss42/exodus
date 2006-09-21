@@ -178,7 +178,6 @@ begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
         q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
-        if (not q.visible) then q.ShowDefault();
     end
 
     else if (event = '/session/gui/msgevent') then begin

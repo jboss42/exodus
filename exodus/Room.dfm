@@ -23,11 +23,11 @@ inherited frmRoom: TfrmRoom
     TabOrder = 2
     ExplicitTop = 23
     ExplicitWidth = 382
-    ExplicitHeight = 216
+    ExplicitHeight = 186
     object Splitter2: TSplitter
       Left = 270
       Top = 4
-      Height = 208
+      Height = 178
       Align = alRight
       ResizeStyle = rsUpdate
       ExplicitHeight = 212
@@ -36,7 +36,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 208
+      Height = 178
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -46,7 +46,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 206
+        Height = 176
         Align = alClient
         Columns = <
           item

@@ -204,6 +204,15 @@ type
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
     procedure _EnableSubjectButton();
+  protected
+    {
+        Get the window state associated with this window.
+
+        Default implementation is to return a munged classname (all XML illgal
+        characters escaped). Classes should override to change pref (for instance
+        chat windows might save based on munged profile&jid).
+    }
+    function GetWindowStateKey() : WideString;override;
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -476,6 +485,11 @@ begin
     f.ShowDefault();
 
     Result := f;
+end;
+
+function TfrmRoom.GetWindowStateKey() : WideString;
+begin
+    Result := inherited GetWindowStateKey() + '-' + MungeName(Self.jid);
 end;
 
 {---------------------------------------}

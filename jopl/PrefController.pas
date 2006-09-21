@@ -282,6 +282,9 @@ type
         procedure CheckPositions(form: TForm; t, l, w, h: integer);
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
+        //Form state
+        procedure setWindowState(pkey: WideString; stateVal: TXMLTag);
+        function  getWindowState(pKey: WideString; var stateVal: TXMLTag): boolean;
 
         // HTTP Proxy stuff
         procedure setProxy(http: TIdHttp);
@@ -1133,6 +1136,20 @@ begin
     Result := _pref_node.GetFirstTag(name);
 end;
 }
+
+
+//Form state
+{---------------------------------------}
+procedure TPrefController.setWindowState(pkey: WideString; stateVal: TXMLTag);
+begin
+    _pref_file.setWindowStateTag(pkey, stateVal);
+end;
+
+{---------------------------------------}
+function  TPrefController.getWindowState(pKey: WideString; var stateVal: TXMLTag): boolean;
+begin
+    Result := _pref_file.getWindowStateTag(pkey, stateVal);
+end;
 
 {---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm);
