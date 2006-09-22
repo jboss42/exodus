@@ -1098,6 +1098,8 @@ procedure TExodusController.StartChat(const jid, resource,
 begin
     // start chat
     ChatWin.StartChat(jid, resource, true, nickname);
+    // force window to front
+    frmExodus.doRestore();
 end;
 
 {---------------------------------------}
