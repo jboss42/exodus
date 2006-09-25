@@ -22,13 +22,16 @@ unit BaseChat;
 interface
 
 uses
-    Emote, Dockable, ActiveX, ComObj, BaseMsgList,
+    Prefs, Emote, Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag;
+    TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils;
 
 const
     WM_THROB = WM_USER + 5400;
+
+    sPref_Hotkeys_Keys = 'hotkeys_keys';
+    sPref_Hotkeys_Text = 'hotkeys_text';
 
 type
 
@@ -60,6 +63,10 @@ type
     ChatToolbarButtonPaste: TTntToolButton;
     ChatToolbarButtonSeperator2: TTntToolButton;
     ChatToolbarButtonEmoticons: TTntToolButton;
+    ChatToolbarButtonHotkeys: TTntToolButton;
+    popHotkeys: TTntPopupMenu;
+    popHotkeys_sep1: TTntMenuItem;
+    Customize1: TTntMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -77,12 +84,22 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure timWinFlashTimer(Sender: TObject);
+    procedure BoldClick(Sender: TObject);
+    procedure UnderlineClick(Sender: TObject);
+    procedure ItalicsClick(Sender: TObject);
+    procedure ChatToolbarButtonHotkeysClick(Sender: TObject);
+    procedure OnHotkeysClick(Sender: TObject);
+    procedure Customize1Click(Sender: TObject);
+    procedure MsgOutOnEnter(Sender: TObject);
 
   private
     { Private declarations }
     _msgHistory : TWideStringList;
     _pending : WideString;
     _lastMsg : integer;
+    _hotkey_menu_items : TWideStringList;
+    _hotkeys_keys_stringlist : TWideStringList;
+    _hotkeys_text_stringlist : TWideStringList;
 
   protected
     _embed_returns: boolean;        // Put CR/LF's into message
@@ -257,9 +274,19 @@ begin
         inherited;
 end;
 
+procedure TfrmBaseChat.MsgOutOnEnter(Sender: TObject);
+begin
+    _hotkeys_keys_stringlist.Clear();
+    _hotkeys_text_stringlist.Clear();
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+end;
+
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
+var
+    hotkeyidx: integer;
 begin
     if (Key = 0) then exit;
 
@@ -290,6 +317,26 @@ begin
     // magic debug key sequence Ctrl-Shift-H to dump the HTML or RTF to debug.
     else if ((chr(Key) = 'H') and  (Shift = [ssCtrl, ssShift])) then begin
         DebugMsg(getMsgList.getHistory());
+    end
+    else if ((Key >= VK_F1) and (Key <= VK_F12) and (Shift <> [ssCtrl, ssShift])) then begin
+        case Key of
+            VK_F1: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F01');
+            VK_F2: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F02');
+            VK_F3: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F03');
+            VK_F4: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F04');
+            VK_F5: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F05');
+            VK_F6: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F06');
+            VK_F7: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F07');
+            VK_F8: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F08');
+            VK_F9: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F09');
+            VK_F10: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F10');
+            VK_F11: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F11');
+            VK_F12: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F12');
+            else
+                hotkeyidx := -1;
+        end;
+        if (hotkeyidx >= 0) then
+            MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
     end;
 end;
 
@@ -311,6 +358,14 @@ var
     sc: TShortcut;
 begin
     AutoScroll := true;
+
+    _hotkey_menu_items := TWideStringList.Create();
+    _hotkeys_keys_stringlist := TWideStringList.Create();
+    _hotkeys_text_stringlist := TWideStringList.Create();
+
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+
 
     _msgHistory := TWideStringList.Create();
     _pending := '';
@@ -355,13 +410,22 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.OnSessionCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/prefs') then
+    if (event = '/session/prefs') then begin
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
+        _hotkeys_keys_stringlist.Clear();
+        _hotkeys_text_stringlist.Clear();
+        MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
+        MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
+    _hotkey_menu_items.Free();
+    _hotkeys_keys_stringlist.Free();
+    _hotkeys_text_stringlist.Free();
+
     MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
@@ -385,7 +449,66 @@ begin
     MsgList.CopyAll();
 end;
 
+procedure TfrmBaseChat.Customize1Click(Sender: TObject);
+begin
+    Prefs.StartPrefs(pref_hotkeys);
+end;
+
 {---------------------------------------}
+procedure TfrmBaseChat.BoldClick(Sender: TObject);
+begin
+  inherited;
+
+  if (Length(MsgOut.SelText) = 0) then
+    MsgOut.SelText := '*'
+  else
+    MsgOut.SelText := '*' + MsgOut.SelText + '*';
+
+end;
+
+procedure TfrmBaseChat.ChatToolbarButtonHotkeysClick(Sender: TObject);
+var
+    i, l, t: integer;
+    m: TTntMenuItem;
+begin
+    // cleanup old items
+    for i := 0 to _hotkey_menu_items.Count - 1 do begin
+        if (_hotkey_menu_items.Objects[i] <> nil) then begin
+            popHotkeys.Items.Delete(0);
+            _hotkey_menu_items.Objects[i] := nil;
+        end;
+    end;
+    _hotkey_menu_items.Clear();
+    _hotkeys_keys_stringlist.Clear();
+    _hotkeys_text_stringlist.Clear();
+
+    // get the strings from prefs
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
+    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+
+    // Should the button be displayed.
+    if (_hotkeys_keys_stringlist.Count > 0) then begin
+        ChatToolbarButtonHotkeys.Visible := true;
+
+        // add strings to popup
+        for i := _hotkeys_keys_stringlist.Count - 1 downto 0 do begin
+            m := TTntMenuItem.Create(Self);
+            m.Caption := _hotkeys_text_stringlist.Strings[i] + Tabulator
+                        + _hotkeys_keys_stringlist.Strings[i];
+            m.OnClick := Self.OnHotkeysClick;
+            popHotkeys.Items.Insert(0, m);
+            _hotkey_menu_items.AddObject(m.Caption, m);
+        end;
+
+        // show popup
+        l := ChatToolbarButtonHotkeys.ClientOrigin.x;
+        t := Self.Top + Self.ClientHeight - 10;
+        popHotkeys.Popup(l, t);
+    end
+    else
+        ChatToolbarButtonHotkeys.Visible := false;
+end;
+
 procedure TfrmBaseChat.Clear1Click(Sender: TObject);
 begin
     inherited;
@@ -412,6 +535,12 @@ procedure TfrmBaseChat.HideEmoticons();
 begin
     if frmEmoticons.Visible then
         frmEmoticons.Hide();
+end;
+
+procedure TfrmBaseChat.ItalicsClick(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}
@@ -442,6 +571,17 @@ begin
     // Flash the window
     OutputDebugString('timWinFlashTimer');
     FlashWindow(Self.Handle, true);
+end;
+
+procedure TfrmBaseChat.UnderlineClick(Sender: TObject);
+begin
+  inherited;
+
+  if (Length(MsgOut.SelText) = 0) then
+    MsgOut.SelText := '_'
+  else
+    MsgOut.SelText := '_' + MsgOut.SelText + '_';
+
 end;
 
 {---------------------------------------}
@@ -503,6 +643,18 @@ begin
     if timWinFlash.Enabled then
         timWinFlash.Enabled := false;
     MsgList.refresh();
+end;
+
+procedure TfrmBaseChat.OnHotkeysClick(Sender: TObject);
+var
+    idx: integer;
+    mi: TTntMenuItem;
+begin
+    idx := _hotkey_menu_items.IndexOfObject(Sender);
+    if (idx <> -1) then begin
+        MsgOut.SelText := _hotkeys_text_stringlist.Strings[
+                                    _hotkeys_text_stringlist.Count - 1 - idx];
+    end;
 end;
 
 end.

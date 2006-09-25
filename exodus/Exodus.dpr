@@ -236,7 +236,10 @@ uses
   PrefGraphics in '..\jopl\PrefGraphics.pas',
   AddressList in '..\jopl\AddressList.pas',
   Keywords in 'Keywords.pas',
-  COMBookmarkManager in 'COMBookmarkManager.pas';
+  COMBookmarkManager in 'COMBookmarkManager.pas',
+  StateForm in 'StateForm.pas' {frmState: TTntForm},
+  PrefHotkeys in 'prefs\PrefHotkeys.pas' {frmPrefHotkeys},
+  ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys};
 
 {$R *.TLB}
 
@@ -271,6 +274,9 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
+  Application.CreateForm(TfrmState, frmState);
+  Application.CreateForm(TfrmModifyHotkeys, frmModifyHotkeys);
+  Application.CreateForm(TfrmModifyHotkeys, frmModifyHotkeys);
   frmExodus.Startup();
   Application.Run;
 

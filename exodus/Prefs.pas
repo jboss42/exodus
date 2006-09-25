@@ -25,7 +25,7 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork, PrefGroups, PrefLayouts, PrefEmote,        
+    PrefNetwork, PrefGroups, PrefLayouts, PrefEmote, PrefHotkeys,
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -72,7 +72,6 @@ type
     chkRegex: TTntCheckBox;
     imgMessages: TImage;
     lblMessages: TTntLabel;
-    imgPlugins: TImage;
     lblPlugins: TTntLabel;
     imgNetwork: TImage;
     imgTransfer: TImage;
@@ -91,6 +90,9 @@ type
     lblEmote: TTntLabel;
     Panel4: TPanel;
     lblBlockIns: TTntLabel;
+    imgHotkeys: TImage;
+    imgPlugins: TImage;
+    lblHotkeys: TTntLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -120,6 +122,7 @@ type
     _xfer: TfrmPrefTransfer;
     _network: TfrmPrefNetwork;
     _layouts: TfrmPrefLayouts;
+    _hotkeys: TfrmPrefHotkeys;
 
   public
     { Public declarations }
@@ -148,6 +151,7 @@ const
     pref_pres = 'presence';
     pref_network = 'network';
     pref_plugins = 'plugins';
+    pref_hotkeys = 'hotkeys';
 
 
 procedure StartPrefs(start_page: string = '');
@@ -190,7 +194,9 @@ begin
         else if (start_page = pref_block) then l := f.lblBlocklist
         else if (start_page = pref_pres) then l := f.lblCustomPres
         else if (start_page = pref_network) then l := f.lblNetwork
-        else if (start_page = pref_plugins) then l := f.lblPlugins;
+        else if (start_page = pref_plugins) then l := f.lblPlugins
+        else if (start_page = pref_hotkeys) then l := f.lblHotkeys;
+             
 
         if (l <> nil) then begin
             f._cur_label := l;
@@ -271,6 +277,9 @@ begin
         if (_network <> nil) then
             _network.SavePrefs();
 
+        if (_hotkeys <> nil) then
+            _hotkeys.SavePrefs();
+
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
@@ -337,6 +346,7 @@ begin
     _plugs := nil;
     _xfer := nil;
     _network := nil;
+    _hotkeys := nil;
 
     MainSession.Prefs.RestorePosition(Self);
 
@@ -529,6 +539,15 @@ begin
         PageControl1.ActivePage := tbsBlockList;
         toggleSelector(lblBlocklist);
     end
+    else if ((Sender = imgHotkeys) or (Sender = lblHotkeys)) then begin
+        toggleSelector(lblHotkeys);
+        if (_hotkeys <> nil) then
+            f := _hotkeys
+        else begin
+            _hotkeys := TfrmPrefHotkeys.Create(Self);
+            f := _hotkeys;
+        end;
+    end
     else
         exit;
 
@@ -574,6 +593,7 @@ begin
     _plugs.Free();
     _xfer.Free();
     _network.Free();
+    _hotkeys.Free();
 end;
 
 {---------------------------------------}
