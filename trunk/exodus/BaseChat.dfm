@@ -131,6 +131,7 @@ inherited frmBaseChat: TfrmBaseChat
       URLCursor = crHandPoint
       WantTabs = True
       WordWrap = False
+      OnEnter = MsgOutOnEnter
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
@@ -168,14 +169,14 @@ inherited frmBaseChat: TfrmBaseChat
       Top = 0
       Caption = 'Bold'
       ImageIndex = 70
-      Visible = False
+      OnClick = BoldClick
     end
     object ChatToolbarButtonUnderline: TTntToolButton
       Left = 25
       Top = 0
       Caption = 'Underline'
       ImageIndex = 71
-      Visible = False
+      OnClick = UnderlineClick
     end
     object ChatToolbarButtonItalics: TTntToolButton
       Left = 50
@@ -183,6 +184,7 @@ inherited frmBaseChat: TfrmBaseChat
       Caption = 'Italics'
       ImageIndex = 72
       Visible = False
+      OnClick = ItalicsClick
     end
     object ChatToolbarButtonSeperator1: TTntToolButton
       Left = 75
@@ -190,7 +192,6 @@ inherited frmBaseChat: TfrmBaseChat
       Width = 8
       Caption = 'ChatToolbarButtonSeperator1'
       Style = tbsSeparator
-      Visible = False
     end
     object ChatToolbarButtonCut: TTntToolButton
       Left = 83
@@ -226,6 +227,14 @@ inherited frmBaseChat: TfrmBaseChat
       Caption = 'Emoticons'
       ImageIndex = 76
       OnClick = Emoticons1Click
+    end
+    object ChatToolbarButtonHotkeys: TTntToolButton
+      Left = 191
+      Top = 0
+      Caption = 'Hotkeys'
+      ImageIndex = 77
+      PopupMenu = popHotkeys
+      OnClick = ChatToolbarButtonHotkeysClick
     end
   end
   object popMsgList: TTntPopupMenu
@@ -277,5 +286,16 @@ inherited frmBaseChat: TfrmBaseChat
     OnTimer = timWinFlashTimer
     Left = 16
     Top = 88
+  end
+  object popHotkeys: TTntPopupMenu
+    Left = 80
+    Top = 120
+    object popHotkeys_sep1: TTntMenuItem
+      Caption = '-'
+    end
+    object Customize1: TTntMenuItem
+      Caption = 'Customize...'
+      OnClick = Customize1Click
+    end
   end
 end

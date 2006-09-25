@@ -76,9 +76,9 @@ type
     popPaste: TTntMenuItem;
     popCopy: TTntMenuItem;
     MsgPanel: TPanel;
-    mnuLastActivity: TTntMenuItem;
-    mnuTimeRequest: TTntMenuItem;
-    mnuVersionRequest: TTntMenuItem;
+    mnuLastActivity: TMenuItem;
+    mnuTimeRequest: TMenuItem;
+    mnuVersionRequest: TMenuItem;
     
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
