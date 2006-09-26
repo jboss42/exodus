@@ -123,8 +123,10 @@
     <event_width value="400"/>
     <roster_width value="215"/>
 
-    <restore_window_state value="0" control="chkSaveWindowState"/>
+    <restore_window_state value="1" control="chkSaveWindowState"/>
     <restore_desktop value="0" control="chkRestoreDesktop"/>
+
+    <start_docked value="1"/>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
