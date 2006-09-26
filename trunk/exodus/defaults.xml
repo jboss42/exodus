@@ -119,8 +119,13 @@
     <dock_locked value="0"/>
     <roster_messenger value="1"/>
     <stacked_tabs value="1"/>
-    <restore_window_state value="1" control="chkSaveWindowState"/>
 
+    <event_width value="400"/>
+    <roster_width value="215"/>
+
+    <restore_window_state value="0" control="chkSaveWindowState"/>
+    <restore_desktop value="0" control="chkRestoreDesktop"/>
+    
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
     <timestamp_format value="t" control="txtTimestampFmt">
@@ -313,7 +318,7 @@
     <brand_vcard value="1"></brand_vcard>
     
     <!-- add roster network prefs.
-        Theis brandable pref defines networks that will show in the
+        This brandable pref defines networks that will show in the
         Add to Roster dialog. The pref is a tuple of display name, network type
         and type specific data. tuple looks like this
         <delim>display name<delim>transport|in-network<delim>data<delim>
@@ -350,8 +355,6 @@
     
     <browse_view value="0"></browse_view>
 
-    <event_width value="315"></event_width>
-    <roster_width value="100"></roster_width>
     <fade_limit value="100"></fade_limit>
     <profile_active value="0"></profile_active>
     <wrap_input value="1"></wrap_input>

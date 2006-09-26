@@ -41,7 +41,8 @@ type
         _pos      : TXMLTag;
         _prof     : TXMLTag;
         _bms      : TXMLTag;
-        _windowState: TXMLTag; //<window_state/>
+        _ws       : TXMLTag;
+        
         _filename : Widestring;
         _ctrlHash : TWideStringList;
         _dirty    : boolean;
@@ -86,7 +87,7 @@ type
             Get/set the xml child of a pref.
         **}
         function getXMLPref(pkey : WideString) : TXMLTag;
-        procedure setXMLPref(pkey : WideString; value : TXMLTag);
+        procedure setXMLPref(value : TXMLTag);
         // Custom pres
         function findPresenceTag(pkey: Widestring): TXMLTag;
         function getAllPresence(): TWidestringList;
@@ -101,11 +102,29 @@ type
         //is a reference to the cache this file is keeping.
         function getPositionTag(pkey: WideString; setDirty: boolean = false): TXMLTag;
 
-        //get the xml tag for the given key.
-        function getWindowStateTag(pKey: WideString; var stateTag: TXMLTag): boolean;
-        //set the xml tag for the given key.
-        procedure setWindowStateTag(pKey: WideString; stateTag: TXMLTag);
+        {
+            Retrieves the given root tag.
 
+            Checks the top level children of the <exodus> node for rootName and
+            returns a <b>copy</b> of it. Returns nil if node could not be found.
+
+            @param rootName - node name for top level child of <exodus> tag.
+            @param rootTag [out] the node or nil if it does not exist.
+            @return true of node existed, else false.
+        }
+        function getRoot(rootName: WideString; var rootTag: TXMLTag): boolean;
+
+        {
+            Replaces the top level <exodus/> child with the given node.
+
+            Sets the dirty flag on success. returns true if the child already
+            exists (true replacement) and frees the current child and copies
+            the new child into root.
+
+            @param rootTag - child to replace
+            @return
+        }
+        function setRoot(rootTag: TXMLTag): boolean;
         procedure clearProfiles();
         procedure SaveBookmarks(tag: TXMLTag);
 
@@ -115,6 +134,9 @@ type
         property Profiles : TXMLTag read _prof;
         property Bookmarks : TXMLTag read _bms;
 end;
+
+const
+    WINDOWSTATE = 'ws';            //ditto
 
 implementation
 
@@ -132,7 +154,9 @@ const
     PROF    = 'profiles';         // DO NOT LOCALIZE
     PREF    = 'prefs';            // DO NOT LOCALIZE
     BMS     = 'local-bookmarks';  // DO NOT LOCALIZE
-    WINDOWSTATE   = 'window-state';            //ditto
+    STATES  = 'states';
+    AUTO_OPEN = 'auto-open'; 
+
 {---------------------------------------}
 constructor TPrefFile.Create(tag: TXMLTag);
 begin
@@ -184,26 +208,45 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefFile.getRoot(rootName: WideString; var rootTag: TXMLTag): boolean;
+begin
+    rootTag := TXMLTag.create(_root.GetFirstTag(rootName));
+    Result := (rootTag <> nil);
+end;
+
+{---------------------------------------}
+function TPrefFile.setRoot(rootTag: TXMLTag): boolean;
+var
+    tt: TXMLTag;
+begin
+    tt := _root.GetFirstTag(rootTag.Name);
+    Result := true;
+    if (tt <> nil) then
+        _root.RemoveTag(tt);
+    _root.AddTag(TXMLTag.Create(rootTag));
+    _dirty := true;
+end;
+
+{---------------------------------------}
 procedure TPrefFile.init();
 var
-    t,fs: TXMLTag;
+    t,t3,fs: TXMLTag;
     s, cs: TXMLTagList;
     i, j: integer;
     c: Widestring;
     sl: TWideStringList;
 
-    function gettag(tagname: WideString): TXMLTag;
+    function gettag(tagname: WideString): TXMLTag;overload;
     begin
         Result := _root.GetFirstTag(tagname);
         if (Result = nil) then
             Result := _root.AddTag(tagname);
     end;
-
 begin
     _dirty := false;
     _need_default_pres := false;
     _ctrlHash := TWideStringList.Create();
-    
+
     if (_root = nil) then begin
         // nothing there yet.
         _root := TXmlTag.Create(ROOT);
@@ -215,7 +258,7 @@ begin
     _pos    := gettag(POS);
     _prof   := gettag(PROF);
     _bms    := gettag(BMS);
-    _windowState := gettag(WINDOWSTATE);
+    _ws     := gettag(WINDOWSTATE);
 
     // If the format changes again, also check VER_NUM.
     if (_root.getAttribute(VER) = '') then begin
@@ -246,6 +289,7 @@ begin
                 (t.Name <> POS) and
                 (t.Name <> PROF) and
                 (t.Name <> BMS) and
+                (t.Name <> WINDOWSTATE) and
                 (t.Name <> PREF)) then begin  // in case there was a custom_pres
 
                 // if there are s's inside, leave them.  otherwise, pull
@@ -294,6 +338,20 @@ begin
         end;
         cs.Free;
     end;
+    //if _ws has no children, copy over pos entries
+    if (_ws.ChildCount = 0) then begin
+        t := _ws.AddTag('state');
+        for i := 0 to _pos.ChildCount - 1 do begin
+            t3 := t.AddTag(_pos.ChildTags[i].Name);
+            t3 := t3.AddTag('pos');
+            t3.setAttribute('h', _pos.ChildTags[i].GetAttribute('height'));
+            t3.setAttribute('w', _pos.ChildTags[i].GetAttribute('width'));
+            t3.setAttribute('t', _pos.ChildTags[i].GetAttribute('top'));
+            t3.setAttribute('l', _pos.ChildTags[i].GetAttribute('left'));
+        end;
+        _dirty := true;
+    end;
+    
     s.Free();
 end;
 
@@ -656,67 +714,22 @@ end;
 function TPrefFile.getXMLPref(pkey : WideString) : TXMLTag;
 var
     t: TXMLTag;
-    m: TXMLTagList;
-    i: integer;
 begin
-    Result := nil;
     t := _pref.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    Result := TXMLTag.Create('xmlpref');
-    m := t.ChildTags();
-    for i := 0 to m.Count - 1 do begin
-        Result.AddTag(TXMLTag.Create(m[i]));
-    end;
-    m.Free();
+    if (t = nil) then
+        Result := nil
+    else
+        Result := TXMLTag.Create(t);
 end;
 
-procedure TPrefFile.setXMLPref(pkey : WideString; value : TXMLTag);
+procedure TPrefFile.setXMLPref(value : TXMLTag);
 var
     t: TXMLTag;
 begin
-    t := _pref.GetFirstTag(pkey);
-    if (t = nil) then exit;
-
-    t.ClearTags();
-    t.AddTag(TXMLTag.Create(value));
-end;
-
-
-//get the xml tag for the given key.
-function TPrefFile.getWindowStateTag(pKey: WideString; var stateTag: TXMLTag): boolean;
-var
-    tt: TXMLTag;
-    pt:TXMLTag;
-begin
-    stateTag := _windowState.GetFirstTag(pkey);
-    Result := (stateTag <> nil);
-    if (not Result) then begin
-        stateTag := TXMLTag.Create(pkey);
-        //check to see if there is a position tag for this key. If so
-        //use it as the default for this key
-        pt := getPositionTag(pkey, false);
-        if (pt <> nil) then begin
-            tt := stateTag.AddTag('pos');
-            tt.setAttribute('h', pt.GetAttribute('height'));
-            tt.setAttribute('l', pt.GetAttribute('left'));
-            tt.setAttribute('t', pt.GetAttribute('topt'));
-            tt.setAttribute('w', pt.GetAttribute('width'));
-        end;
-    end
-    else
-        stateTag := TXMLTag.Create(stateTag); //copy
-end;
-
-//set the xml tag for the given key.
-procedure TPrefFile.setWindowStateTag(pKey: WideString; stateTag: TXMLTag);
-var
-    tt: TXMLTag;
-begin
-    tt := _windowState.GetFirstTag(pkey);
-    if (tt <> nil) then
-        _windowState.RemoveTag(tt);
-    _windowState.AddTag(TXMLTag.Create(stateTag));
+    t := _pref.GetFirstTag(value.Name);
+    if (t <> nil) then
+        _pref.removeTag(t);
+    _pref.addTag(TXMLTag.Create(value));
     _dirty := true;
 end;
 

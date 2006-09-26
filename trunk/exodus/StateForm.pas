@@ -36,12 +36,97 @@ const
     DEFAULT_MIN_HEIGHT = 480;
 
 type
-  TPos = record
-      Height: integer;
-      Width: integer;
-      Left: integer;
-      Top: Integer;
-  end;
+
+    {
+        Encapsulates event handling for auto-open events.
+
+        A stateform may be auto-opened when a particular event is fired. Unlike
+        regular Exodus events these events are triggered directly by user actions.
+        Currently two events are defined. Each event is paired with a
+        mirrored event.
+
+        The user selected sign off. (user is authenticated)
+        The user exited the program. (user startup Exodus)
+
+        State forms persist enough information when exiting/disconnecting to
+        re-open the window in its exact state when startup/authenticated.
+
+        This class handles walking the stateforms and persiting auto-open info
+        and walking the peristed list and reopening the forms.
+
+        Persisted xml is ultimately stored in USER_HOME/App data/Exodus/Exodus.xml
+        but is accessed through the PrefController. The window data is not
+        stored as a pref but under a <window_state> root (@see defaults.xml).
+        The DOM looks like:
+        <exodus>
+            <prefs>
+            ...
+            </prefs>
+            <ws>
+                <state>
+                    <TfrmRoom-Default_Profile-jm-client-dev_conference.corp.jabber.com dock="t" pos_h="480" pos_l="27" pos_t="22" pos_w="640" ws="n" />
+                </state>
+                <auto-open>
+                    <event-authed-Default_Profile>
+                        <TfrmChat jid="jinxtest2@jabber.com" />
+                    </event-authed-Default_Profile>
+                    <event-startup>
+                        <TfrmDebug />
+                        <TfrmMsgQueue />
+                    </event-startup>
+                </auto-open>
+            </ws>
+        </exodus>
+    }
+    TAutoOpenEventManager = class
+    public
+        {
+            Persist or load state forms as appropriate.
+
+            The following are recognized auto-open events:
+                disconnected - the user chose to disconnect (sign off).
+                    All session dependant windows will be closing (but haven't
+                    yet). Session dependant windows should persist when this event
+                    is fired.
+                shutdown - The user is exiting the program. Non-session dependant
+                    windows will be closing. Non-session dependant windows should
+                    persist when this event is fired.
+                startup - Exodus is starting up (That will make the COM server
+                    exodus just that much more interesting!). Non-session windows
+                    should re-open themselves when given appropriate persisted
+                    information.
+                authed - The user is now authenticated. Session windows
+                    should re-open themselves when given appropriate persisted
+                    information.
+
+            Querying the forms for persisted state is implemented by iterating
+            over the Screen.Forms property and invoking GetAutoOpenInfo.
+            Auto-opening iterates over the list of persisted forms and calls
+            the class method
+        }
+        class procedure onAutoOpenEvent(event: Widestring);
+    end;
+
+    {helper class that abstracts window states prefs and uses profiles as part
+     of the keys. If the useProfiles flag is true, these methods will use the
+     current profile if authenticated. If not authenticated or useprofile = false
+     pkey is looked for off the appropriate root.
+     }
+    TStateFormPrefsHelper = class
+    public
+        {wrappers around TPrefController methods, these introduce profiles to prefs}
+        procedure setWindowState(windowState: TXMLTag);
+        function  getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
+        procedure setAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
+        function  getAutoOpenEvent(event: Widestring; var aoWindows: TXMLTagList; Profile: WideString=''): boolean;
+    end;
+
+    TPos = record
+        Height: integer;
+        Width: integer;
+        Left: integer;
+        Top: Integer;
+    end;
 
   {
     A state form is one that will save state information on close and restore
@@ -63,9 +148,7 @@ type
      _programaticChange: boolean;
      _windowState: TWindowState; //min max or normal
      _stateRestored: boolean;
-
     procedure NormalizePos(); //
-    function isGoodPos(pos: TPos): Boolean;
     procedure CenterOnMonitor(var pos: TPos);
   protected
     {
@@ -100,7 +183,7 @@ type
         prefTag is an xml tag
             <windowstatekey>
                 <position h="" w="" l="" t=""/>
-                <docked>true|false</docked>
+                <docked/>
             </windowstatekey>
 
         This event is fired when the form is created.
@@ -129,32 +212,305 @@ type
     }
     function getPosition(): TRect;
 
-  public
     {
         Restore window state.
+
+        override to use default profile (non-session forms)
     }
-    procedure RestoreWindowState();
+    procedure RestoreWindowState();virtual;
 
     {
         Perists window state
+
+        override to use default profile (non-session forms)
     }
-    procedure PersistWindowState();
+    procedure PersistWindowState();virtual;
+     
+  published
+    {
+        Use the given persisted information to open a form as if the
+        user had done it.
+
+        This method will only be called with info specific to this class.
+        TfrmRoom will only be called with a <TfrmRoom> DOM etc.
+
+        Subclasses should override this method to open forms. The default
+        implementation does nothing.
+        
+        @param autoOpenInfo Persisted opening information
+    }
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); virtual;
+
+    {
+        Get a DOM used later to auto-open the form.
+
+        Two events are currently defined:
+            disconnected - all session forms are about to close and should persist
+            shutdown - all non-sessions forms are about to close and should persist.
+
+        DOM must have a root element named "classname". The root element is
+        later used to find the appropriate class method factory.
+
+        Classes can specify whether or not this auto open info should be persisted
+        for the current profile only or for no profile.
+
+        Subclasses should override this method to persist their auto-open info.
+        For instance, TfrmChat may return <TfrmChat j='foo@bar"/>. If form does
+        not handle a particular event (debug form when disconnected event is fired)
+        nil should be returned. The default implementation returns nil.
+
+        @param event
+        @param useProfile - should this open be associated with the current profile?
+        @returns an DOM of persisted auto-open info or nil if not implementing.
+            Freeing this tag is the responibility of the caller.
+    }
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;virtual;
   end;
 
 var
   frmState: TfrmState;
+
 
 implementation
 
 {$R *.dfm}
 
 uses
+    debug,
+    room,
+    ChatWin,
+    msgqueue,
+
+    unicode,
     jabber1,
     types,
     Session,
     GnuGetText,
     ExUtils,
     XMLUtils;
+
+class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
+var
+    i: integer;
+    wTag: TXMLTag;
+    profileList: TXMLtagList;
+    defaultList: TXMLTagList;
+    useProfile: boolean;
+    discovered: TWideStringList;
+    AClass: TPersistentClass;
+    prefHelper: TStateFormPrefsHelper;
+
+    function toggleEvent(event: widestring): WideString;
+    begin
+        if (event = 'disconnected') then
+            Result := 'authed'
+        else //if (event = 'shutdown') then
+            Result := 'startup'
+    end;
+
+    //should eb able to use the RTII method below but it not working
+    procedure AutoOpenFactory(autoOpenInfo: TXMLTag);
+    var
+        cName: WideString;
+    begin
+        cName := autoOpenInfo.Name;
+        if (cname = 'TfrmDebug') then
+            TfrmDebug.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmRoom') then
+            TfrmRoom.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmChat') then
+            TfrmChat.AutoOpenFactory(autoOpenInfo)
+        else if (cName = 'TfrmMsgQueue') then
+            TfrmMsgQueue.AutoOpenFactory(autoOpenInfo);
+    end;
+
+    procedure OpenWindow(autoOpenInfo: TXMLTag);
+    begin
+        if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
+            AClass := TPersistentClass(discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)])
+        else begin
+            AClass := getClass(autoOpenInfo.Name);
+            discovered.AddObject(autoOpenInfo.Name, TObject(AClass)); //could be nil but that's OK
+        end;
+        if ((AClass <> nil) and AClass.InheritsFrom(TfrmState)) then
+            AutoOpenFactory(autoOpenInfo);
+//            TfrmState(AClass).AutoOpenFactory(wTag);
+    end;
+begin
+    prefHelper := TStateFormPrefsHelper.create();
+    if ((event='disconnected') or (event='shutdown')) then begin
+        defaultList := TXMLTagList.Create();
+        profileList := TXMLTagList.Create();
+
+        //walk open forms and get auto-open tags from them
+        for i := 0 to Screen.FormCount - 1 do begin
+            if (Screen.Forms[i].InheritsFrom(TfrmState)) then begin
+                wTag := TfrmState(Screen.Forms[i]).GetAutoOpenInfo(event, useProfile);
+                if (wTag <> nil) then begin
+                    if (useProfile) then
+                        profileList.add(wTag)
+                    else
+                        defaultList.add(wTag)
+                end;
+            end;
+        end;
+        prefHelper.setAutoOpenEvent(toggleEvent(event), profileList, MainSession.Profile.Name);
+        prefHelper.setAutoOpenEvent(toggleEvent(event), defaultList);
+    end
+    else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
+        discovered := TWideStringList.create();
+
+        if (prefHelper.getAutoOpenEvent(event, profileList, MainSession.Profile.Name)) then
+            for i := 0 to profileList.Count - 1 do
+                OpenWindow(profileList[i]);
+
+        if (prefHelper.getAutoOpenEvent(event, defaultList)) then
+            for i := 0 to defaultList.Count - 1 do
+                OpenWindow(defaultList[i]);
+    end;
+end;
+
+ {wrappers around TPrefController methods, these introduce profiles to prefs}
+procedure TStateFormPrefsHelper.setWindowState(windowState: TXMLTag);
+var
+    rootTag: TXMLTag;
+    sTag: TXMLTag;
+    wTag:TXMLTag;
+begin
+    if (not mainSession.Prefs.getRoot('ws', roottag)) then
+        rootTag := TXMLtag.create('ws');
+
+    sTag := rootTag.GetFirstTag('state');
+    if (stag = nil) then
+        sTag := rootTag.AddTag('state');
+    wTag := sTag.GetFirstTag(windowState.Name);
+    if (wTag <> nil) then
+        sTag.RemoveTag(wTag);
+
+    sTag.AddTag(TXMLTag.create(windowState)); //addtag adds a reference
+    MainSession.Prefs.SetRoot(rootTag);
+    rootTag.Free();
+end;
+
+function  TStateFormPrefsHelper.getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
+var
+    rootTag: TXMLTag;
+    wsTag: TXMLTag;
+begin
+    Result := false;
+    windowState := nil;
+    if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
+
+    wsTag := rootTag.GetFirstTag('state');
+    if (wsTag = nil) then exit;
+    
+    windowState := wsTag.GetFirstTag(pKey);
+    Result := (windowState <> nil);
+end;
+
+procedure TStateFormPrefsHelper.SetAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
+var
+    rootTag: TXMLTag;
+    aoTag: TXMLTag;
+    eTag: TXMLTag;
+    i: integer;
+    tstr: WideString;
+begin
+    if (not mainSession.Prefs.getRoot('ws', roottag)) then exit;
+    aoTag := rootTag.GetFirstTag('auto-open');
+    if (aoTag = nil) then
+        aoTag := rootTag.AddTag('auto-open');
+    tstr := 'event-' + event;
+    if (Profile <> '') then
+        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+    //replace if tag already exists...
+    eTag := aoTag.GetFirstTag(tstr);
+    if (eTag <> nil) then
+        aoTag.RemoveTag(eTag);
+    if (aoWindows.Count > 0) then begin
+        eTag := aoTag.AddTag(tstr);
+        for i := 0 to aoWindows.Count - 1 do
+            eTag.AddTag(aoWindows[i]);
+    end;
+    MainSession.Prefs.setRoot(rootTag);
+    rootTag.Free();
+end;
+
+function  TStateFormPrefsHelper.getAutoOpenEvent(event: Widestring; var aoWindows: TXMLTagList; Profile: WideString=''): boolean;
+var
+    rootTag: TXMLTag;
+    AOTag: TXMLTag;
+    eTag: TXMLTag;
+    i: integer;
+    tstr: wideString;
+begin
+    Result := false;
+    aoWindows := nil;
+    if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
+    aoTag := rootTag.GetFirstTag('auto-open');
+    if (aoTag = nil) then exit;
+    
+    tstr := 'event-' + event;
+    if (Profile <> '') then
+        tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+    eTag := aoTag.GetFirstTag(tstr);
+    if (eTag = nil) then exit;
+    aoWindows := TXMLTagList.Create();
+    for i := 0 to eTag.ChildCount - 1 do
+        aoWindows.Add(TXMLTag.Create(eTag.ChildTags[i]));
+    Result := aoWindows.Count > 0;
+    if (not Result) then begin
+        aoWindows.Free();
+        aoWindows := nil;
+    end;
+end;
+
+{
+    Use the given persisted information to open a form as if the
+    user had done it.
+
+    This method will only be called with info specific to this class.
+    TfrmRoom will only be called with a <TfrmRoom> DOM etc.
+
+    Subclasses should override this method to open forms. The default
+    implementation does nothing.
+
+    @param autoOpenInfo Persisted opening information
+}
+class procedure TfrmState.AutoOpenFactory(autoOpenInfo: TXMLTag);
+begin
+    //nop
+end;
+
+{
+    Get a DOM used later to auto-open the form.
+
+    Two events are currently defined:
+        disconnected - all session forms are about to close and should persist
+        shutdown - all non-sessions forms are about to close and should persist.
+
+    DOM must have a root element named "classname". The root element is
+    later used to find the appropriate class method factory.
+
+    Classes can specify whether or not this auto open info should be persisted
+    for the current profile only or for no profile.
+
+    Subclasses should override this method to persist their auto-open info.
+    For instance, TfrmChat may return <TfrmChat j='foo@bar"/>. If form does
+    not handle a particular event (debug form when disconnected event is fired)
+    nil should be returned. The default implementation returns nil.
+
+    @param event
+    @returns an DOM of persisted auto-open info or nil if not implementing.
+        Freeing this tag is the responibility of the caller.
+
+    //todo jjf remove useProfile flag from this method once prefs are profile aware        
+}
+function TfrmState.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
+begin
+    Result := nil;
+    useProfile := false;
+end;
 
 procedure TfrmState.CenterOnMonitor(var pos: TPos);
 var
@@ -183,11 +539,12 @@ begin
     _programaticChange := false;
 end;
 
+
 function sToWindowState(s : string): TWindowState;
 begin
-    if (s = 'min') then
+    if (s = 'm') then
         Result := wsMinimized
-    else if (s = 'max') then
+    else if (s = 'x') then
         Result := wsMaximized
     else Result := wsNormal;
 end;
@@ -195,10 +552,10 @@ end;
 function wsToString(ws : TWindowState): string;
 begin
     if (ws = wsMinimized) then
-        Result := 'min'
+        Result := 'm'
     else if (ws = wsMaximized) then
-        Result := 'max'
-    else Result := 'normal'
+        Result := 'x'
+    else Result := 'n'
 end;
 
 function b2s(b:boolean): String;
@@ -253,28 +610,33 @@ end;
 procedure TfrmState.RestoreWindowState();
 var
     stateTag: TXMLTag;
+    prefHelper: TStateFormPrefsHelper;
 begin
+    prefHelper := TStateFormPrefsHelper.create();
     if (not _stateRestored) then begin
-        if (MainSession.Prefs.getBool('restore_window_state')) then
-            MainSession.Prefs.getWindowState(GetWindowStateKey(), stateTag)
-        else //if not persisting, use defaults
+        if (not MainSession.Prefs.getBool('restore_window_state') or
+           (not prefHelper.getWindowState(GetWindowStateKey(), stateTag))) then
             stateTag := TXMLTag.create(GetWindowStateKey());
-        Self.OnRestoreWindowState(stateTag);
 OutputDebugMsg('Restored window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
+        Self.OnRestoreWindowState(stateTag);
         stateTag.Free();
         _stateRestored := true;
     end;
+    prefHelper.free();
 end;
 
 procedure TfrmState.PersistWindowState();
 var
     stateTag: TXMLTag;
+    prefHelper: TStateFormPrefsHelper;
 begin
+    prefHelper := TStateFormPrefsHelper.create();
     stateTag := TXMLTag.Create(getWindowStateKey());
     Self.OnPersistWindowState(stateTag);
-    MainSession.Prefs.setWindowState(getWindowStateKey(), stateTag);
+    prefHelper.setWindowState(stateTag);
 OutputDebugMsg('Persisting window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
     stateTag.Free();
+    prefHelper.free();
 end;
 
 {
@@ -323,25 +685,19 @@ end;
     window's state information.
 
     prefTag is an xml tag
-        <windowstatekey>
-            <position h="" w="" l="" t=""/>
-            <docked>true|false</docked>
-        </windowstatekey>
+        <windowstatekey pos_h='' pos_w='' pos_l='' pos_t='' dock='t' ws='n|m|x'/>
 
     This event is fired when the form is created.
 }
 procedure TfrmState.OnRestoreWindowState(windowState : TXMLTag);
-var
-    pt: TXMLTag;
 begin
     _persistPos := true;
     //center on parent
-    pt := windowState.GetFirstTag('pos');
-    if (pt <> nil) then begin
-        _pos.Left := SafeInt(pt.getAttribute('l'));
-        _pos.Top := SafeInt(pt.getAttribute('t'));
-        _pos.height := SafeInt(pt.getAttribute('h'));
-        _pos.width := SafeInt(pt.getAttribute('w'));
+    if (windowState.GetAttribute('pos_w') <> '') then begin
+        _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
+        _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
+        _pos.height := SafeInt(windowState.getAttribute('pos_h'));
+        _pos.width := SafeInt(windowState.getAttribute('pos_w'));
     end
     else begin
         _pos.Left := 0;
@@ -357,8 +713,8 @@ begin
     normalizePos();
     //setwiondowpos sets the undocked dimensions of window.
     SetWindowPos(Self.Handle, 0, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOOWNERZORDER);
-    //add minimized, maximized or restored
-    _windowState := sToWindowState(windowState.GetBasicText('ws'));
+    //minimized, maximized or restored
+    _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
 {
@@ -380,42 +736,24 @@ end;
 procedure TfrmState.OnPersistWindowState(windowState : TXMLTag);
 var
     tp : TPos;
-    ptag: TXMLTag;
-    tstr: string;
 begin
     if (_persistPos) then
         tp := _pos
     else
         tp := _origPos;
-    ptag := windowState.GetFirstTag('pos');
-    if (ptag = nil) then
-        ptag := windowState.AddTag('pos');
-    ptag.setAttribute('h', IntToStr(tp.height));
-    ptag.setAttribute('w', IntToStr(tp.width));
-    ptag.setAttribute('t', IntToStr(tp.Top));
-    ptag.setAttribute('l', IntToStr(tp.Left));
-    //add min/max/restored (see Self.WindowState)
-    tstr := '0';
-    if (Self.WindowState = wsMinimized) then
-        tstr := '1'
-    else if (Self.WindowState = wsMaximized) then
-        tstr := '2';
-    windowState.AddBasicTag('ws', wsToString(_windowState));
-end;
-
-{---------------------------------------}
-function TfrmState.isGoodPos(pos: TPos) : boolean;
-begin
-    Result := (pos.Width >= Self.Constraints.MinWidth) and (pos.Height >= Self.Constraints.MinHeight);
+    windowState.setAttribute('pos_h', IntToStr(tp.height));
+    windowState.setAttribute('pos_w', IntToStr(tp.width));
+    windowState.setAttribute('pos_t', IntToStr(tp.Top));
+    windowState.setAttribute('pos_l', IntToStr(tp.Left));
+    //min/max/restored (see Self.WindowState)
+    windowState.setAttribute('ws', wsToString(_windowState));
 end;
 
 procedure TfrmState.NormalizePos();
 var
     ok: boolean;
     dtop: TRect;
-    mon: TMonitor;
     cp: TPoint;
-    vwidth, vht, i: integer;
 begin
 
     // Netmeeting hack

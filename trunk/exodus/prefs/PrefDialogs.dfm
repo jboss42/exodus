@@ -2,11 +2,11 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   Left = 257
   Top = 156
   Caption = 'frmPrefDialogs'
-  ClientHeight = 373
+  ClientHeight = 384
   ClientWidth = 294
   OldCreateOrder = True
   ExplicitWidth = 306
-  ExplicitHeight = 385
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object lblMem1: TTntLabel [0]
@@ -32,7 +32,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object lblClose: TTntLabel [3]
     Left = 8
-    Top = 301
+    Top = 296
     Width = 234
     Height = 13
     Caption = 'Use this hotkey sequence to close chat windows:'
@@ -188,7 +188,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object spnChatMemory: TTntUpDown [18]
     Left = 217
-    Top = 229
+    Top = 228
     Width = 16
     Height = 21
     Associate = txtChatMemory
@@ -199,7 +199,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object txtCloseHotkey: THotKey [19]
     Left = 32
-    Top = 320
+    Top = 315
     Width = 145
     Height = 19
     HotKey = 57431
@@ -253,10 +253,18 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   object chkSaveWindowState: TTntCheckBox
     Left = 8
-    Top = 345
+    Top = 337
     Width = 169
     Height = 17
     Caption = 'Save window positions'
     TabOrder = 20
+  end
+  object chkRestoreDesktop: TTntCheckBox
+    Left = 8
+    Top = 355
+    Width = 97
+    Height = 17
+    Caption = 'Restore desktop'
+    TabOrder = 21
   end
 end

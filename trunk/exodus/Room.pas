@@ -167,6 +167,7 @@ type
     _passwd: WideString;        // Room password
     _disconTime: TDateTime;     // Date/Time that we last got disconnected, local TZ
     _default_config: boolean;   // auto-accept the default room configuration.
+    _sent_initial_presence:boolean;//did we send presence on creation? (used for room presistence)
     _subject: WideString;
     _send_unavailable: boolean;
     _custom_pres: boolean;
@@ -221,7 +222,10 @@ type
     procedure EntityCallback(event: string; tag: TXMLTag);
     procedure autoConfigCallback(event: string; tag: TXMLTag);
     procedure roomuserCallback(event: string; tag: TXMLTag);
-    
+
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
+
   public
     { Public declarations }
     mynick: Widestring;
@@ -262,7 +266,6 @@ type
         is fired after all other floating events are complete.
     }
     procedure OnFloat();override;
-
   end;
 
 var
@@ -363,6 +366,7 @@ function StartRoom(rjid: Widestring; rnick: Widestring = '';
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
+
 
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
@@ -487,9 +491,45 @@ begin
     Result := f;
 end;
 
+class procedure TfrmRoom.AutoOpenFactory(autoOpenInfo: TXMLTag);
+begin
+    StartRoom(autoOpenInfo.getAttribute('j'), {jid}
+              autoOpenInfo.getAttribute('n'), {nick}
+              autoOpenInfo.getAttribute('p'), {password}
+              autoOpenInfo.GetAttribute('sp') = 't', {send presence on creation}
+              autoOpenInfo.GetAttribute('dc') = 't', {use default config}
+              autoOpenInfo.GetAttribute('rn') = 't'); {use registered nickname}
+
+end;
+
+function TfrmRoom.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
+var
+ bm: TXMLTag;
+begin
+    //don't auto-open rooms we have bookmoarked for join on login
+    bm := MainSession.Bookmarks.FindBookmark(getJID);
+    if ((event = 'disconnected') and ((bm = nil) or (bm.GetAttribute('autojoin') <> 'true'))) then begin
+        //check to see if this room is bokmarked and join on startup
+        Result := TXMLTag.Create(Self.classname);
+        Result.setAttribute('j', getJID);
+        Result.setAttribute('n', mynick);
+        if (_passwd <> '') then
+            Result.setAttribute('p', _passwd);
+        if (_sent_initial_presence) then
+            Result.setAttribute('sp', 't');
+//        if (_default_config) then
+            Result.setAttribute('dc', 't'); //if config is needed, just open
+        if (useRegisteredNick) then
+            Result.setAttribute('rn', 't');
+        useProfile := true;
+    end
+    else Result := inherited GetAutoOpenInfo(event, useProfile);
+end;
+
 function TfrmRoom.GetWindowStateKey() : WideString;
 begin
-    Result := inherited GetWindowStateKey() + '-' + MungeName(Self.jid);
+    //todo jjf remove profile from this state key once prefs are profile aware
+    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
 end;
 
 {---------------------------------------}
@@ -2770,9 +2810,6 @@ begin
     Self.Refresh();
 end;
 
-
-
-
 function TRoomMember.getRealJID(): WideString;
 begin
     Result := '';
@@ -2854,6 +2891,8 @@ initialization
     xp_muc_item := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/item');
     xp_muc_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/item/reason');
     xp_muc_destroy_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/destroy/reason');
+
+    Classes.RegisterClass(TfrmRoom); //auto-open RTII
 finalization
     xp_muc_reason.Free();
     xp_muc_item.Free();

@@ -75,6 +75,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
+  protected
+    //don't presist position, not sure why this is derived from dockable
+    procedure RestoreWindowState();override;
+    procedure PersistWindowState();override;
   private
     { Private declarations }
     _packet: Widestring;
@@ -620,6 +624,17 @@ begin
     Action := caFree;
     if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
+end;
+
+//don't presist position, not sure why this is derived from dockable
+procedure TfrmXData.RestoreWindowState();
+begin
+    //nop
+end;
+
+procedure TfrmXData.PersistWindowState();
+begin
+    //nop
 end;
 
 {---------------------------------------}
