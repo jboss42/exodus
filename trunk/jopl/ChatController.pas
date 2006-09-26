@@ -392,8 +392,6 @@ var
   send_allowed: boolean;
   jid: TJabberID;
 begin
-  chat_win := nil;
-  send_allowed := true;
   body := tag.GetBasicText('body');
   jid := TJabberID.Create(Self.JID);
 

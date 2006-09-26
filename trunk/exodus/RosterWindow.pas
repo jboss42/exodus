@@ -1629,7 +1629,6 @@ var
     profile_exists: boolean;
     old_profile, new_profile, profile_exists_msg: WideString;
     i: integer;
-    ri: TJabberRosterItem;
     profile: TJabberProfile;
 begin
     // Rename some profile.

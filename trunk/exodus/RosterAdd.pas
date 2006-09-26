@@ -42,7 +42,7 @@ type
         acJID: TJabberID;
         constructor create(name, nType, tdata: WideString);overload;
         constructor create(prefStr: WideString);overload;
-        destructor destroy();override;
+        destructor Destroy();override;
 
         procedure init(name, nType, tData: WideString);
         function isValidAutoComplete() : boolean;
@@ -122,7 +122,6 @@ var
     tstr, nameStr, typeStr, dataStr: WideString;
     delim: WideChar;
     nextDelim: integer;
-    p: PWideChar;
 begin
     inherited create;
     //parse pref, should be |name|type|data| tuples
