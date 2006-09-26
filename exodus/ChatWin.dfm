@@ -8,7 +8,6 @@ inherited frmChat: TfrmChat
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   OnClose = FormClose
-  OnShow = FormShow
   ExplicitWidth = 391
   ExplicitHeight = 301
   PixelsPerInch = 96
@@ -71,7 +70,7 @@ inherited frmChat: TfrmChat
         Left = 43
         Top = 0
         Width = 48
-        Height = 28
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Nickname'
@@ -79,7 +78,6 @@ inherited frmChat: TfrmChat
         ShowHint = True
         Layout = tlCenter
         OnClick = lblJIDClick
-        ExplicitHeight = 13
       end
       object imgAvatar: TPaintBox
         Left = 0
