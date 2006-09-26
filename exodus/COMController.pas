@@ -551,8 +551,6 @@ var
     idisp: IDispatch;
     plugin: IExodusPlugin;
     p: TPlugin;
-    msg: Widestring;
-    inReg: boolean;
     dll: WideString;
     dir: WideString;
     reged: boolean;
@@ -619,12 +617,11 @@ var
     idx: integer;
     p: TPlugin;
     errorStr: WideString;
-    loaded: boolean;
 begin
     //
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
-        loaded := LoadPlugin(com_name, errorStr);
+        LoadPlugin(com_name, errorStr);
         idx := plugs.IndexOf(com_name);
     end;
 

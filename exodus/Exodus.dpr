@@ -274,9 +274,6 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
-  Application.CreateForm(TfrmState, frmState);
-  Application.CreateForm(TfrmModifyHotkeys, frmModifyHotkeys);
-  Application.CreateForm(TfrmModifyHotkeys, frmModifyHotkeys);
   frmExodus.Startup();
   Application.Run;
 
