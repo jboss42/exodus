@@ -6,6 +6,7 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 382
   OldCreateOrder = True
   OnClose = FormClose
+  OnResize = FormResize
   ExplicitWidth = 390
   ExplicitHeight = 305
   PixelsPerInch = 96
@@ -160,6 +161,8 @@ inherited frmRoom: TfrmRoom
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 209
     Width = 382
+    ExplicitTop = 209
+    ExplicitWidth = 382
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual
