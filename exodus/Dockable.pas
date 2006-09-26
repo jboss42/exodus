@@ -121,7 +121,7 @@ begin
     ImageIndex := 43;
     _docked := false;
     _dockChanging := false;
-    _initiallyDocked := false;
+    _initiallyDocked := true;
     _bringToFront := false;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     inherited;
@@ -203,7 +203,7 @@ begin
         RestoreWindowState();
         ads := Jabber1.getAllowedDockState();
         // show this form using the default behavior
-        if ((ads = adsRequired) or ((ads <> adsForbidden) and _initiallyDocked)) then begin
+        if (_initiallyDocked) then begin
             Self.DockForm();
             frmExodus.BringDockedToTop(Self);
         end
@@ -294,17 +294,24 @@ begin
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
+var
+    ads: TAllowedDockStates;
+    tstr: widestring;
 begin
     inherited;
-    _initiallyDocked := (windowState.GetAttribute('dock') = 't');
+    ads := Jabber1.getAllowedDockState();
+    tstr := windowState.GetAttribute('dock');
+    if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
+        tstr := 't';
+    _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
 begin
     if (not Floating) then
         windowState.setAttribute('dock', 't')
-    else 
-        windowState.removeAttribute('dock');
+    else
+        windowState.setAttribute('dock', 'f');
     inherited;
 end;
 
