@@ -7,18 +7,20 @@ inherited frmXferManager: TfrmXferManager
   OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 444
+  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
   object box: TScrollBox
     Left = 0
     Top = 33
     Width = 436
-    Height = 164
+    Height = 134
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
+    OnResize = FormResize
   end
   object Panel1: TPanel
     Left = 0
