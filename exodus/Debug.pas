@@ -73,6 +73,9 @@ type
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
+  published
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
 
@@ -151,9 +154,15 @@ begin
     frmDebug.AddWideText(txt, clRed);
 end;
 
+class procedure TfrmDebug.AutoOpenFactory(autoOpenInfo: TXMLTag);
+begin
+    ShowDebugForm();
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+
 procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
@@ -173,6 +182,15 @@ begin
     end
     else
         lblJID.Caption := _('Disconnected');
+end;
+
+function TfrmDebug.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
+begin
+    if (event = 'shutdown') then begin
+        Result := TXMLtag.Create(Self.ClassName);
+        useProfile := false;
+    end
+    else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
 {---------------------------------------}
@@ -495,5 +513,6 @@ begin
     btnClose.Visible := false;
 end;
 
-
+initialization
+    Classes.RegisterClass(TfrmDebug);
 end.

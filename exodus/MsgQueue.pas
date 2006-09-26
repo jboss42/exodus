@@ -80,7 +80,6 @@ type
     procedure ClearItems();
   protected
     procedure WMNotify(var Msg: TWMNotify); message WM_NOTIFY;
-
   published
     procedure SessionCallback(event: string; tag: TXMLTag);
 
@@ -97,6 +96,9 @@ type
         Hide the roster and clear state if rendering it.
     }
     procedure HideRoster();
+
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag);override;
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
@@ -117,7 +119,6 @@ type
         is fired after all other floating events are complete.
     }
     procedure OnFloat();override;
-
   end;
 
 var
@@ -128,7 +129,7 @@ const
     sDefaultSpool = 'default_spool.xml';
     
 function getMsgQueue: TfrmMsgQueue;
-
+function isMsgQueueShowing(): boolean;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -156,6 +157,25 @@ begin
         frmMsgQueue := TfrmMsgQueue.Create(Application);
     frmMsgQueue.ShowDefault();
     Result := frmMsgQueue;
+end;
+
+function isMsgQueueShowing(): boolean;
+begin
+    Result := (frmMsgQueue <> nil) and frmMsgQueue.Visible;
+end;
+
+class procedure TfrmMsgQueue.AutoOpenFactory(autoOpenInfo: TXMLTag);
+begin
+    getMsgQueue();
+end;
+
+function TfrmMsgQueue.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
+begin
+    if (event = 'shutdown') then begin
+        Result := TXMLtag.Create(Self.ClassName);
+        useProfile := false;
+    end
+    else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
 {---------------------------------------}
@@ -756,5 +776,8 @@ begin
     inherited;
     btnClose.Visible := false;
 end;
+
+initialization
+    Classes.RegisterClass(TfrmMsgQueue);
 
 end.

@@ -260,7 +260,7 @@ type
             Get/set the xml child of a pref.
         **}
         function getXMLPref(pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
-        procedure setXMLPref(pkey : WideString; value : TXMLTag; server_side: TPrefKind = pkClient);
+        procedure setXMLPref(value : TXMLTag; server_side: TPrefKind = pkClient);
 
         function getImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient) : boolean;
         procedure setImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient);
@@ -282,9 +282,33 @@ type
         procedure CheckPositions(form: TForm; t, l, w, h: integer);
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
-        //Form state
-        procedure setWindowState(pkey: WideString; stateVal: TXMLTag);
-        function  getWindowState(pKey: WideString; var stateVal: TXMLTag): boolean;
+
+        {
+            Retrieves the given root tag.
+
+            Checks the top level children of the <exodus> node for rootName and
+            returns a <b>copy</b> of it. Returns nil if node could not be found.
+            Only uses user pref file, branding and defaults are not accessable.
+            Including server stuff for now, not sure about its access.
+
+            @param rootName - node name for top level child of <exodus> tag.
+            @param rootTag [out] the node or nil if it does not exist.
+            @return true of node existed, else false.
+        }
+        function getRoot(rootName: WideString; var rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
+
+        {
+            Replaces the top level <exodus/> child with the given node.
+
+            Sets the dirty flag on success. returns true if the child already
+            exists (true replacement) and frees the current child, copies
+            the new child into root.
+
+            @param rootTag - child to replace
+            @return
+        }
+        function setRoot(rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
+
 
         // HTTP Proxy stuff
         procedure setProxy(http: TIdHttp);
@@ -741,6 +765,15 @@ begin
     // TODO: save server prefs
 end;
 
+function TPrefController.getRoot(rootName: WideString; var rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
+begin
+    Result := _pref_file.getRoot(rootName, rootTag);
+end;
+
+function TPrefController.setRoot(rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
+begin
+    Result := _pref_file.setRoot(rootTag);
+end;
 
 {---------------------------------------}
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
@@ -1054,7 +1087,7 @@ begin
     result := uf.getXMLPref(pKey);
 end;
 
-procedure TPrefController.setXMLPref(pkey : WideString; value : TXMLTag; server_side: TPrefKind = pkClient);
+procedure TPrefController.setXMLPref(value: TXMLTag; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
 begin
@@ -1062,7 +1095,7 @@ begin
         uf := _pref_file
     else
         uf := _server_file;
-    uf.setXMLPref(pkey, value);
+    uf.setXMLPref(value);
     Save();
 end;
 
@@ -1139,18 +1172,6 @@ end;
 
 
 //Form state
-{---------------------------------------}
-procedure TPrefController.setWindowState(pkey: WideString; stateVal: TXMLTag);
-begin
-    _pref_file.setWindowStateTag(pkey, stateVal);
-end;
-
-{---------------------------------------}
-function  TPrefController.getWindowState(pKey: WideString; var stateVal: TXMLTag): boolean;
-begin
-    Result := _pref_file.getWindowStateTag(pkey, stateVal);
-end;
-
 {---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm);
 var

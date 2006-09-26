@@ -66,38 +66,7 @@ type
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
 
-   {
-        Event fired when form should restore its persisted state.
-
-        Default uses GetPreferenceKey to get pref containing this
-        window's state information.
-
-        prefTag is an xml tag
-            <windowstatekey>
-                <position h="" w="" l="" t=""/>
-                <docked>true|false</docked>
-            </windowstatekey>
-
-        This event is fired when the form is created.
-    }
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
-
-    {
-        Event fired when form should persist its position and other state
-        information.
-
-        Default uses GetWindowStateKey to determine actual key persisted
-
-        OnPersistState is passed an xml tag (<windowstatekey/>) that should be used to
-        store state. For instance after the default OnPersistState handler is called
-        prefTag will be
-            <windowstatekey>
-                <position h="" w="" t="" l="" />
-                <docked>true|false</docked>
-            </windowstatekey>
-
-        This event is fired during the OnCloseQuery event.
-    }
     procedure OnPersistWindowState(windowState : TXMLTag);override;
 
   public
@@ -255,7 +224,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 var
-    m: Widestring;
+    m: string;
 begin
     if ((not _top) and
         ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
@@ -327,18 +296,15 @@ end;
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 begin
     inherited;
-    _initiallyDocked := (windowState.GetFirstTag('docked') <> nil);
+    _initiallyDocked := (windowState.GetAttribute('dock') = 't');
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
-var
-    dtag: TXMLTag;
 begin
-    dtag := windowState.GetFirstTag('docked');
-    if (not Floating and (dtag = nil)) then
-        windowState.AddTag('docked')
-    else if (Floating and (dtag <> nil)) then
-        windowState.RemoveTag(dtag);
+    if (not Floating) then
+        windowState.setAttribute('dock', 't')
+    else 
+        windowState.removeAttribute('dock');
     inherited;
 end;
 

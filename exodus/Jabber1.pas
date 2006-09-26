@@ -353,7 +353,6 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
-
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -678,7 +677,7 @@ implementation
 uses
 
     // XXX: ZipMstr
-
+    StateForm,
     RosterImages,
     ExodusImageList,
     COMToolbar, COMToolbarButton,
@@ -710,6 +709,8 @@ begin
         WndParent := GetDesktopWindow();
     end;
 end;
+
+
 
 {---------------------------------------}
 procedure TfrmExodus.Flash();
@@ -1150,7 +1151,7 @@ begin
     end;
 
     _expanded := false;
-
+    TAutoOpenEventManager.onAutoOpenEvent('startup');
     // auto-login if enabled, otherwise, show the login window
     // Note that we use a Windows Msg to do this to show the login
     // window async since it's a modal dialog.
@@ -1460,7 +1461,7 @@ begin
             end;
             _new_account := false;
         end;
-
+        TAutoOpenEventManager.onAutoOpenEvent('authed');
         // Play any pending XMPP actions
         PlayXMPPActions();
     end
@@ -1565,7 +1566,8 @@ begin
         setTrayIcon(_tray_icon_idx);
 
         // do gui stuff
-        updateLayoutPrefChange();
+        if ((tag = nil) or (tag.Name <> 'startup')) then
+            updateLayoutPrefChange();
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
@@ -1749,6 +1751,8 @@ begin
     //mainsession should never be nil here. It is created before this object
     //and only destroyed on ExSession finalization.
     // Unhook the auto-away DLL
+    StateForm.TAutoOpenEventManager.onAutoOpenEvent('shutdown');
+
     if (_idle_hooks <> 0) then begin
         _StopHooks();
         _idle_hooks := 0;
@@ -1769,10 +1773,10 @@ begin
         frmMsgQueue.lstEvents.Items.Clear; //?? why clear before close?
         frmMsgQueue.Close;
     end;
-
     // Close the roster window
     RosterWindow.CloseRosterWindow();
     // Close whatever rooms we have
+
     CloseAllRooms();
     CloseDebugForm();
     CloseAllChats();
@@ -1828,6 +1832,7 @@ begin
     if (MainSession.Active) and (not _appclosing)then begin
         _appclosing := true;
         _logoff := true;
+        TAutoOpenEventManager.onAutoOpenEvent('disconnected');
         MainSession.Disconnect();
         CanClose := false;
     end
@@ -2845,7 +2850,6 @@ var
     tempbool: boolean;
 begin
     // toggle toolbar on/off
-    tempbool := true;
     tempbool := MainSession.Prefs.getBool('chat_toolbar');
     tempbool := not tempbool;
     mnuChatToolbar.Checked := tempbool;
@@ -3016,6 +3020,7 @@ procedure TfrmExodus.mnuDisconnectClick(Sender: TObject);
 begin
     if MainSession.Active then begin
         _logoff := true;
+        TAutoOpenEventManager.onAutoOpenEvent('disconnected');
         CloseAllRooms();
         CloseAllChats();
         MainSession.Disconnect();

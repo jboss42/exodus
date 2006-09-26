@@ -76,7 +76,6 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure FormShow(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
     procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -152,6 +151,9 @@ type
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
+
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
   public
     { Public declarations }
     OtherNick: widestring;
@@ -172,8 +174,8 @@ type
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     
     procedure OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
-                               State: TDragState; var Accept: Boolean);
-    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
+                               State: TDragState; var Accept: Boolean);override;
+    procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
 
     {
         Event fired when Form receives activation while in docked state.
@@ -209,7 +211,8 @@ type
 var
   frmChat: TfrmChat;
 
-function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
+function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;overload;
+
 procedure CloseAllChats;
 
 implementation
@@ -431,9 +434,25 @@ begin
 
 end;
 
+class procedure TfrmChat.AutoOpenFactory(autoOpenInfo: TXMLTag);
+begin
+    StartChat(autoOpenInfo.getAttribute('jid'), '', true);
+end;
+
+function TfrmChat.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
+begin
+    if ((event = 'disconnected') and (Self.Visible)) then begin
+        Result := TXMLtag.Create(Self.ClassName);
+        Result.setattribute('jid', jid);
+        useProfile := true;
+    end
+    else Result := inherited GetAutoOpenInfo(event, useProfile);
+end;
+
 function TfrmChat.GetWindowStateKey() : WideString;
 begin
-    Result := inherited GetWindowStateKey() + '-' + MungeName(jid);
+    //todo jjf remove profile from this state key once prefs are profile aware
+    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
 end;
 
 {---------------------------------------}
@@ -442,7 +461,6 @@ begin
     mnuHistory.Enabled := (ExCOMController.ContactLogger <> nil);
     popClearHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 end;
-
 
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
@@ -938,8 +956,11 @@ begin
 
         // this should make sure that hidden windows
         // just go away when we get disconnected.
-       //if (not Visible) then Self.Free();
-        Self.Free()        ;
+        //if (not Visible) then Self.Free();
+        if (self.Visible) then
+            Self.Close()
+        else
+            Self.Free();
     end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
@@ -1417,7 +1438,6 @@ begin
             exit;
         end;
     end;
-
     // Cancel our composing event
     if (_sent_composing) then
         _sendComposing('');
@@ -1439,14 +1459,7 @@ begin
         DebugMsg('(close) chat refcount: ' + IntToStr(chat_object.RefCount));
         chat_object := nil;
     end;
-
     inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FormShow(Sender: TObject);
-begin
-  inherited;
 end;
 
 {---------------------------------------}
@@ -1652,5 +1665,8 @@ begin
     btnClose.Visible := false;
     DragAcceptFiles(Handle, True);
 end;
+
+initialization
+    Classes.RegisterClass(TfrmChat);
 
 end.
