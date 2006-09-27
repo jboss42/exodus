@@ -215,6 +215,8 @@ type
     procedure lstProfilesInfoTip(Sender: TObject; Item: TListItem;
       var InfoTip: String);
     procedure RenameProfile1Click(Sender: TObject);
+    procedure lstProfilesSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -3564,6 +3566,23 @@ procedure TfrmRosterWindow.lstProfilesKeyPress(Sender: TObject;
   var Key: Char);
 begin
     if Key = Chr(13) then lblConnectClick(Self);
+end;
+
+procedure TfrmRosterWindow.lstProfilesSelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+begin
+    if (lstProfiles.Selected <> nil) then begin
+        frmExodus.mnuDeleteProfile1.Enabled := true;
+        frmExodus.mnuModifyProfile1.Enabled := true;
+        frmExodus.mnuRenameProfile1.Enabled := true;
+        frmExodus.mnuConnect.Enabled := true;
+    end
+    else begin
+        frmExodus.mnuDeleteProfile1.Enabled := false;
+        frmExodus.mnuModifyProfile1.Enabled := false;
+        frmExodus.mnuRenameProfile1.Enabled := false;
+        frmExodus.mnuConnect.Enabled := false;
+    end;
 end;
 
 procedure TfrmRosterWindow.lstProfilesInfoTip(Sender: TObject;

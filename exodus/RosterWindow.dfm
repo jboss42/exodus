@@ -271,7 +271,6 @@ object frmRosterWindow: TfrmRosterWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitTop = 6
       object aniWait: TAnimate
         Left = 48
         Top = 3
@@ -307,6 +306,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnDblClick = lblConnectClick
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
+      OnSelectItem = lstProfilesSelectItem
     end
   end
   object treeRoster: TTntTreeView
