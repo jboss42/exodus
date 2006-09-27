@@ -133,7 +133,7 @@ begin
             // other person's msgs
             txt := txt + '\cf5 ';
 
-        txt := txt + '<' + EscapeRTF(Msg.nick) + '>\cf6 ';
+        txt := txt + '<' + EscapeRTF(Msg.nick) + '>\cf6  ';
 
         //Parse emoticons and/or escape RTF chars
         if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then

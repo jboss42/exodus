@@ -10,6 +10,7 @@ inherited frmPrefEmote: TfrmPrefEmote
   inherited pnlHeader: TTntPanel
     Width = 365
     Caption = 'Emoticon Options'
+    ExplicitWidth = 365
   end
   object Panel1: TPanel
     Left = 0
@@ -25,6 +26,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Width = 300
       Height = 17
       Caption = 'Auto detect Emoticons in messages'
+      Enabled = False
       TabOrder = 0
       OnClick = chkEmoticonsClick
     end

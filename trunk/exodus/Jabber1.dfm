@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 445
+  ClientHeight = 565
   ClientWidth = 231
   Color = clBtnFace
   UseDockManager = True
@@ -34,7 +34,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 414
+    Height = 534
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -128,7 +128,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 414
+    Height = 534
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -138,24 +138,25 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
-    ExplicitHeight = 394
+    ExplicitHeight = 514
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
     Width = 143
-    Height = 414
+    Height = 534
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 514
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
       Width = 143
-      Height = 414
+      Height = 534
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -178,6 +179,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 514
     end
   end
   object MainMenu1: TTntMainMenu
@@ -185,256 +187,577 @@ object frmExodus: TfrmExodus
     Images = ImageList2
     Left = 47
     Top = 74
-    object Exodus1: TTntMenuItem
-      Caption = '&Exodus'
-      object Test1: TTntMenuItem
-        Caption = 'Test'
-        Visible = False
-        OnClick = Test1Click
+    object File1: TTntMenuItem
+      Caption = 'File'
+      object Old1: TTntMenuItem
+        Caption = 'Old Menus'
+        object Exodus1: TTntMenuItem
+          Caption = '&Exodus'
+          object Test1: TTntMenuItem
+            Caption = 'Test'
+            Visible = False
+            OnClick = Test1Click
+          end
+          object mnuDisconnect: TTntMenuItem
+            Caption = 'Sign &Off'
+            Enabled = False
+            ShortCut = 16504
+            OnClick = mnuDisconnectClick
+          end
+          object N7: TTntMenuItem
+            Caption = '-'
+          end
+          object View1: TTntMenuItem
+            Caption = '&View'
+            object mnuOnline: TTntMenuItem
+              Caption = 'Show &Only Online'
+              ShortCut = 16503
+              OnClick = btnOnlineRosterClick
+            end
+            object mnuToolbar: TTntMenuItem
+              Caption = 'Show Toolbar'
+              OnClick = mnuToolbarClick
+            end
+            object mnuChatToolbar: TTntMenuItem
+              Caption = 'Show Chat Toolbar'
+              Checked = True
+              OnClick = mnuChatToolbarClick
+            end
+            object mnuStatBar: TTntMenuItem
+              Caption = 'Show Status Bar'
+              Visible = False
+            end
+            object mnuExpanded: TTntMenuItem
+              Caption = 'Dock Windows'
+              Checked = True
+              Visible = False
+            end
+            object ShowEventsWindow1: TTntMenuItem
+              Caption = 'Instant Messages'
+              OnClick = ShowEventsWindow1Click
+            end
+            object ShowXML1: TTntMenuItem
+              Caption = 'Show Debug XML'
+              ShortCut = 16507
+              OnClick = ShowXML1Click
+            end
+          end
+          object ClearMessages1: TTntMenuItem
+            Caption = 'Clear &Instant Messages'
+            ShortCut = 16430
+            OnClick = ClearMessages1Click
+          end
+          object N14: TTntMenuItem
+            Caption = '-'
+          end
+          object mnuMessage: TTntMenuItem
+            Caption = 'Send Instant &Message'
+            ShortCut = 16500
+            OnClick = mnuMessageClick
+          end
+          object mnuChat: TTntMenuItem
+            Caption = 'Start &Chat'
+            ShortCut = 16501
+            OnClick = mnuChatClick
+          end
+          object mnuConference: TTntMenuItem
+            Caption = '&Join a Chat Room'
+            ShortCut = 16502
+            OnClick = mnuConferenceClick
+          end
+          object mnuRegisterService: TTntMenuItem
+            Caption = '&Register with a Service'
+            OnClick = mnuRegisterServiceClick
+          end
+          object N9: TTntMenuItem
+            Caption = '-'
+          end
+          object Exit2: TTntMenuItem
+            Caption = 'E&xit'
+            ShortCut = 16465
+            OnClick = Exit2Click
+          end
+        end
+        object Tools1: TTntMenuItem
+          Caption = '&Tools'
+          object mnuContacts: TTntMenuItem
+            Caption = '&Contacts'
+            object AddPerson1: TTntMenuItem
+              Caption = '&Add Contact'
+              ShortCut = 16462
+              OnClick = btnAddContactClick
+            end
+            object mnuSearch: TTntMenuItem
+              Caption = '&Search for a Contact'
+              ShortCut = 16467
+              OnClick = mnuSearchClick
+            end
+            object RemovePerson1: TTntMenuItem
+              Caption = '&Remove a Contact'
+              OnClick = btnDelPersonClick
+            end
+            object MessageHistory2: TTntMenuItem
+              Caption = 'Contact'#39's Message &History'
+              ShortCut = 16456
+              OnClick = MessageHistory2Click
+            end
+            object Properties2: TTntMenuItem
+              Caption = 'Contact &Properties'
+              ShortCut = 16505
+              OnClick = Properties2Click
+            end
+            object N10: TTntMenuItem
+              Caption = '-'
+            end
+            object mnuFind: TTntMenuItem
+              Caption = '&Find Contact in Roster'
+              ShortCut = 16454
+              OnClick = mnuFindClick
+            end
+            object mnuFindAgain: TTntMenuItem
+              Caption = 'Fin&d Contact Again'
+              ShortCut = 16498
+              OnClick = mnuFindAgainClick
+            end
+            object NewGroup2: TTntMenuItem
+              Caption = 'Add Roster &Group'
+              OnClick = NewGroup2Click
+            end
+            object N8: TTntMenuItem
+              Caption = '-'
+            end
+            object SubscribetoPresence2: TTntMenuItem
+              Caption = 'Su&bscribe to Presence'
+            end
+          end
+          object mnuPresence: TTntMenuItem
+            AutoHotkeys = maManual
+            Caption = '&Presence'
+            object presOnline: TTntMenuItem
+              Caption = 'Available'
+              ImageIndex = 1
+              OnClick = presDNDClick
+            end
+            object presChat: TTntMenuItem
+              Tag = 1
+              Caption = 'Free to Chat'
+              ImageIndex = 4
+              OnClick = presDNDClick
+            end
+            object presAway: TTntMenuItem
+              Tag = 2
+              Caption = 'Away'
+              ImageIndex = 2
+              OnClick = presDNDClick
+            end
+            object presXA: TTntMenuItem
+              Tag = 3
+              Caption = 'Xtended Away'
+              ImageIndex = 10
+              OnClick = presDNDClick
+            end
+            object presDND: TTntMenuItem
+              Tag = 4
+              Caption = 'Do Not Disturb'
+              ImageIndex = 3
+              OnClick = presDNDClick
+            end
+            object N11: TTntMenuItem
+              Tag = 99
+              Caption = '-'
+            end
+            object Custom3: TTntMenuItem
+              Tag = 99
+              Caption = 'Custom'
+              ShortCut = 16464
+              OnClick = presCustomClick
+            end
+            object presToggle: TTntMenuItem
+              Tag = 99
+              Caption = 'Toggle'
+              ShortCut = 16468
+              OnClick = presToggleClick
+            end
+          end
+          object N2: TTntMenuItem
+            Caption = '-'
+          end
+          object mnuRegistration: TTntMenuItem
+            Caption = 'Edit My &Registration'
+            OnClick = mnuRegistrationClick
+          end
+          object mnuMyVCard: TTntMenuItem
+            Caption = 'Edit My Profile, Avatar'
+            OnClick = mnuMyVCardClick
+          end
+          object mnuPassword: TTntMenuItem
+            Caption = 'Change My &Password'
+            OnClick = mnuPasswordClick
+          end
+          object N3: TTntMenuItem
+            Caption = '-'
+          end
+          object mnuVCard: TTntMenuItem
+            Caption = '&Lookup a vCard'
+            OnClick = mnuVCardClick
+          end
+          object mnuBookmark: TTntMenuItem
+            Caption = 'Add a Boo&kmark'
+            OnClick = mnuBookmarkClick
+          end
+          object mnuBrowser: TTntMenuItem
+            Caption = 'Jabber &Browser'
+            ShortCut = 16506
+            OnClick = mnuBrowserClick
+          end
+          object mnuServer: TTntMenuItem
+            Caption = 'Server Info'
+            object mnuVersion: TTntMenuItem
+              Caption = 'Version '
+              OnClick = mnuVersionClick
+            end
+            object mnuTime: TTntMenuItem
+              Caption = 'Time'
+              OnClick = mnuVersionClick
+            end
+            object mnuServerVCard: TTntMenuItem
+              Caption = 'vCard'
+              Visible = False
+            end
+          end
+          object mnuPlugins: TTntMenuItem
+            Caption = 'Plu&gins'
+            object mnuPluginOpts: TTntMenuItem
+              Caption = 'Options ...'
+              OnClick = mnuPluginOptsClick
+            end
+            object N15: TTntMenuItem
+              Caption = '-'
+            end
+          end
+          object N1: TTntMenuItem
+            Caption = '-'
+          end
+          object Preferences1: TTntMenuItem
+            Caption = '&Options...'
+            ShortCut = 16499
+            OnClick = Preferences1Click
+          end
+        end
       end
-      object mnuDisconnect: TTntMenuItem
-        Caption = 'Sign &Off'
-        ShortCut = 120
+      object mnuConnect: TTntMenuItem
+        Caption = 'Connect'
+        Enabled = False
+        OnClick = mnuConnectClick
+      end
+      object mnuDisconnect1: TTntMenuItem
+        Caption = 'Disconnect'
+        Visible = False
         OnClick = mnuDisconnectClick
       end
-      object N7: TTntMenuItem
-        Caption = '-'
-      end
-      object View1: TTntMenuItem
-        Caption = '&View'
-        object mnuOnline: TTntMenuItem
-          Caption = 'Show &Only Online'
-          ShortCut = 119
-          OnClick = btnOnlineRosterClick
-        end
-        object mnuToolbar: TTntMenuItem
-          Caption = 'Show Toolbar'
-          OnClick = mnuToolbarClick
-        end
-        object mnuChatToolbar: TTntMenuItem
-          Caption = 'Show Chat Toolbar'
-          Checked = True
-          OnClick = mnuChatToolbarClick
-        end
-        object mnuStatBar: TTntMenuItem
-          Caption = 'Show Status Bar'
-          Visible = False
-        end
-        object mnuExpanded: TTntMenuItem
-          Caption = 'Dock Windows'
-          Checked = True
-          Visible = False
-        end
-        object ShowEventsWindow1: TTntMenuItem
-          Caption = 'Instant Messages'
-          OnClick = ShowEventsWindow1Click
-        end
-        object ShowXML1: TTntMenuItem
-          Caption = 'Show Debug XML'
-          ShortCut = 123
-          OnClick = ShowXML1Click
-        end
-      end
-      object ClearMessages1: TTntMenuItem
-        Caption = 'Clear &Instant Messages'
-        ShortCut = 16430
-        OnClick = ClearMessages1Click
-      end
-      object N14: TTntMenuItem
-        Caption = '-'
-      end
-      object mnuMessage: TTntMenuItem
-        Caption = 'Send Instant &Message'
-        ShortCut = 116
-        OnClick = mnuMessageClick
-      end
-      object mnuChat: TTntMenuItem
-        Caption = 'Start &Chat'
-        ShortCut = 117
-        OnClick = mnuChatClick
-      end
-      object mnuConference: TTntMenuItem
-        Caption = '&Join a Chat Room'
-        ShortCut = 118
-        OnClick = mnuConferenceClick
-      end
-      object mnuRegisterService: TTntMenuItem
-        Caption = '&Register with a Service'
-        OnClick = mnuRegisterServiceClick
-      end
-      object N9: TTntMenuItem
-        Caption = '-'
-      end
-      object Exit2: TTntMenuItem
-        Caption = 'E&xit'
-        ShortCut = 16465
-        OnClick = Exit2Click
-      end
-    end
-    object Tools1: TTntMenuItem
-      Caption = '&Tools'
-      object mnuContacts: TTntMenuItem
-        Caption = '&Contacts'
-        object AddPerson1: TTntMenuItem
-          Caption = '&Add Contact'
-          ShortCut = 16462
-          OnClick = btnAddContactClick
-        end
-        object mnuSearch: TTntMenuItem
-          Caption = '&Search for a Contact'
-          ShortCut = 16467
-          OnClick = mnuSearchClick
-        end
-        object RemovePerson1: TTntMenuItem
-          Caption = '&Remove a Contact'
-          OnClick = btnDelPersonClick
-        end
-        object MessageHistory2: TTntMenuItem
-          Caption = 'Contact'#39's Message &History'
-          ShortCut = 16456
-          OnClick = MessageHistory2Click
-        end
-        object Properties2: TTntMenuItem
-          Caption = 'Contact &Properties'
-          ShortCut = 121
-          OnClick = Properties2Click
-        end
-        object N10: TTntMenuItem
-          Caption = '-'
-        end
-        object mnuFind: TTntMenuItem
-          Caption = '&Find Contact in Roster'
-          ShortCut = 16454
-          OnClick = mnuFindClick
-        end
-        object mnuFindAgain: TTntMenuItem
-          Caption = 'Fin&d Contact Again'
-          ShortCut = 114
-          OnClick = mnuFindAgainClick
-        end
-        object NewGroup2: TTntMenuItem
-          Caption = 'Add Roster &Group'
-          OnClick = NewGroup2Click
-        end
-        object N8: TTntMenuItem
-          Caption = '-'
-        end
-        object SubscribetoPresence2: TTntMenuItem
-          Caption = 'Su&bscribe to Presence'
-        end
-      end
-      object mnuPresence: TTntMenuItem
+      object mnuMyStatus: TTntMenuItem
         AutoHotkeys = maManual
-        Caption = '&Presence'
-        object presOnline: TTntMenuItem
+        Caption = 'My Status'
+        Enabled = False
+        object mnuAvailable: TTntMenuItem
           Caption = 'Available'
           ImageIndex = 1
           OnClick = presDNDClick
         end
-        object presChat: TTntMenuItem
+        object mnuFreeToChat: TTntMenuItem
           Tag = 1
-          Caption = 'Free to Chat'
+          Caption = 'Free To Chat'
           ImageIndex = 4
-          OnClick = presDNDClick
         end
-        object presAway: TTntMenuItem
+        object mnuAway: TTntMenuItem
           Tag = 2
           Caption = 'Away'
           ImageIndex = 2
           OnClick = presDNDClick
         end
-        object presXA: TTntMenuItem
+        object mnuXtendedAway: TTntMenuItem
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
-          OnClick = presDNDClick
         end
-        object presDND: TTntMenuItem
+        object mnuDonotdisturb: TTntMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
           ImageIndex = 3
           OnClick = presDNDClick
         end
-        object N11: TTntMenuItem
+        object N6: TTntMenuItem
           Tag = 99
           Caption = '-'
         end
-        object Custom3: TTntMenuItem
+        object Invisible1: TTntMenuItem
           Tag = 99
-          Caption = 'Custom'
-          ShortCut = 16464
-          OnClick = presCustomClick
-        end
-        object presToggle: TTntMenuItem
-          Tag = 99
-          Caption = 'Toggle'
-          ShortCut = 16468
-          OnClick = presToggleClick
-        end
-      end
-      object N2: TTntMenuItem
-        Caption = '-'
-      end
-      object mnuRegistration: TTntMenuItem
-        Caption = 'Edit My &Registration'
-        OnClick = mnuRegistrationClick
-      end
-      object mnuMyVCard: TTntMenuItem
-        Caption = 'Edit My Profile, Avatar'
-        OnClick = mnuMyVCardClick
-      end
-      object mnuPassword: TTntMenuItem
-        Caption = 'Change My &Password'
-        OnClick = mnuPasswordClick
-      end
-      object N3: TTntMenuItem
-        Caption = '-'
-      end
-      object mnuVCard: TTntMenuItem
-        Caption = '&Lookup a vCard'
-        OnClick = mnuVCardClick
-      end
-      object mnuBookmark: TTntMenuItem
-        Caption = 'Add a Boo&kmark'
-        OnClick = mnuBookmarkClick
-      end
-      object mnuBrowser: TTntMenuItem
-        Caption = 'Jabber &Browser'
-        ShortCut = 122
-        OnClick = mnuBrowserClick
-      end
-      object mnuServer: TTntMenuItem
-        Caption = 'Server Info'
-        object mnuVersion: TTntMenuItem
-          Caption = 'Version '
-          OnClick = mnuVersionClick
-        end
-        object mnuTime: TTntMenuItem
-          Caption = 'Time'
-          OnClick = mnuVersionClick
-        end
-        object mnuServerVCard: TTntMenuItem
-          Caption = 'vCard'
+          Caption = 'Invisible'
           Visible = False
         end
       end
-      object mnuPlugins: TTntMenuItem
-        Caption = 'Plu&gins'
-        object mnuPluginOpts: TTntMenuItem
-          Caption = 'Options ...'
+      object mnuMyProfiles: TTntMenuItem
+        Caption = 'My Profiles'
+        object mnuCreateNewProfile1: TTntMenuItem
+          Caption = 'Create New Profile...'
+          OnClick = mnuCreateNewProfile1Click
+        end
+        object mnuModifyProfile1: TTntMenuItem
+          Caption = 'Modify Profile...'
+          Enabled = False
+          OnClick = mnuModifyProfile1Click
+        end
+        object mnuRenameProfile1: TTntMenuItem
+          Caption = 'Rename Profile...'
+          Enabled = False
+          OnClick = mnuRenameProfile1Click
+        end
+        object mnuDeleteProfile1: TTntMenuItem
+          Caption = 'Delete Profile'
+          Enabled = False
+          OnClick = mnuDeleteProfile1Click
+        end
+      end
+      object Exit1: TTntMenuItem
+        Caption = 'Exit'
+        OnClick = Exit2Click
+      end
+    end
+    object People: TTntMenuItem
+      Caption = 'People'
+      Enabled = False
+      object mnuSearch1: TTntMenuItem
+        Caption = 'Search...'
+        OnClick = mnuSearchClick
+      end
+      object Contacts1: TTntMenuItem
+        Caption = 'Contacts'
+        object mnuAddContact1: TTntMenuItem
+          Caption = 'Add Contact...'
+          OnClick = btnAddContactClick
+        end
+        object mnuRenameContact1: TTntMenuItem
+          Caption = 'Rename Contact...'
+          OnClick = mnuRenameContact1Click
+        end
+        object mnuContactProperties1: TTntMenuItem
+          Caption = 'Contact Properties...'
+          OnClick = Properties2Click
+        end
+        object mnuDeleteContact1: TTntMenuItem
+          Caption = 'Delete Contact'
+          OnClick = btnDelPersonClick
+        end
+        object mnuBlockContact1: TTntMenuItem
+          Caption = 'Block Contact'
+          OnClick = mnuBlockContact1Click
+        end
+        object mnuFindContactinRoster1: TTntMenuItem
+          Caption = 'Find Contact in Roster'
+          OnClick = mnuFindClick
+        end
+        object SendFile1: TTntMenuItem
+          Caption = 'Send File...'
+        end
+        object mnuSendMessage1: TTntMenuItem
+          Caption = 'Send Message...'
+          OnClick = mnuMessageClick
+        end
+        object mnuViewHistory1: TTntMenuItem
+          Caption = 'View History'
+          OnClick = MessageHistory2Click
+        end
+      end
+      object mnuGroup1: TTntMenuItem
+        Caption = 'Groups'
+        object mnuAddNewRoster1: TTntMenuItem
+          Caption = 'Add New Group...'
+          OnClick = mnuAddNewRoster1Click
+        end
+        object mnuRenameGroup1: TTntMenuItem
+          Caption = 'Rename Group...'
+          OnClick = mnuRenameGroup1Click
+        end
+        object mnuDeleteGroup1: TTntMenuItem
+          Caption = 'Delete Group'
+          OnClick = mnuDeleteGroup1Click
+        end
+        object N13: TTntMenuItem
+          Caption = '-'
+        end
+        object mnuAddContacttoGroup1: TTntMenuItem
+          Caption = 'Add Contact to Group...'
+          OnClick = btnAddContactClick
+        end
+        object mnuRemoveContactfromGroup1: TTntMenuItem
+          Caption = 'Remove Contact from Group...'
+          OnClick = btnDelPersonClick
+        end
+        object mnuView2: TTntMenuItem
+          Caption = 'View'
+          Visible = False
+          object mnuAll1: TTntMenuItem
+            Caption = 'All'
+          end
+          object mnuOnlineOnly1: TTntMenuItem
+            Caption = 'Online Only'
+            OnClick = btnOnlineRosterClick
+          end
+          object mnuBlockedContacts1: TTntMenuItem
+            Caption = 'Blocked Contacts'
+          end
+          object mnuAllRooms1: TTntMenuItem
+            Caption = 'All Rooms'
+          end
+          object mnuAllChats1: TTntMenuItem
+            Caption = 'All Chats'
+          end
+        end
+      end
+      object mnuConference1: TTntMenuItem
+        Caption = 'Conference'
+        object mnuInviteContacttoConference1: TTntMenuItem
+          Caption = 'Invite to Conference...'
+          OnClick = mnuInviteContacttoConference1Click
+        end
+        object mnuOpenNewConferenceRoom1: TTntMenuItem
+          Caption = 'Join/Create New Conference Room...'
+          OnClick = mnuConferenceClick
+        end
+        object mnuSearchforConferenceRoom1: TTntMenuItem
+          Caption = 'Search for Conferenece Room...'
+          OnClick = mnuSearchClick
+        end
+        object mnuCloseConferenceRoom1: TTntMenuItem
+          Caption = 'Close Conference Room'
+          Visible = False
+        end
+        object N16: TTntMenuItem
+          Caption = '-'
+          Visible = False
+        end
+        object mnuInvitePeopletoConferenceRoom1: TTntMenuItem
+          Caption = 'Invite People to Conference Room...'
+          Visible = False
+        end
+        object mnuRemovePeopleFromConferenceRoom1: TTntMenuItem
+          Caption = 'Remove People From Conference Room...'
+          Visible = False
+        end
+        object mnuBlockPeopleFromConferenceRoom1: TTntMenuItem
+          Caption = 'Block People From Conference Room...'
+          Visible = False
+        end
+        object mnuRenamePeopleFromConferenceRoom1: TTntMenuItem
+          Caption = 'Rename People From Conference Room...'
+          Visible = False
+        end
+        object mnuViewHistory2: TTntMenuItem
+          Caption = 'View History'
+          Visible = False
+        end
+      end
+    end
+    object Options1: TTntMenuItem
+      Caption = 'Options'
+      OnClick = Options1Click
+      object mnuPassword1: TTntMenuItem
+        Caption = 'Password'
+        Enabled = False
+        object mnuChangePassword1: TTntMenuItem
+          Caption = 'Change Password...'
+          OnClick = mnuPasswordClick
+        end
+      end
+      object mnuRegistration1: TTntMenuItem
+        Caption = 'Registration'
+        Enabled = False
+        object mnuEditRegistration1: TTntMenuItem
+          Caption = 'Edit Registration...'
+          OnClick = mnuRegistrationClick
+        end
+        object mnuEditAvatar1: TTntMenuItem
+          Caption = 'Edit Profile, Avatar...'
+          OnClick = mnuMyVCardClick
+        end
+      end
+      object mnuEnableHTMLLinks1: TTntMenuItem
+        Caption = 'Enable HTML Links'
+        Enabled = False
+        Visible = False
+      end
+      object mnuEnableEmoticonDisplays1: TTntMenuItem
+        Caption = 'Enable Emoticon Displays'
+        OnClick = mnuEnableEmoticonDisplays1Click
+      end
+      object mnuEnablenotificationsall1: TTntMenuItem
+        Caption = 'Enable Notifications (all)'
+        Enabled = False
+        Visible = False
+      end
+      object mnuEnableStartupWithWindows1: TTntMenuItem
+        Caption = 'Enable Startup With Windows'
+        OnClick = mnuEnableStartupWithWindows1Click
+      end
+      object mnuFont1: TTntMenuItem
+        Caption = 'Fonts, Colors...'
+        OnClick = mnuFont1Click
+      end
+      object mnuNotifications1: TTntMenuItem
+        Caption = 'Notifications'
+        object mnuNewMessage1: TTntMenuItem
+          Caption = 'New Message'
+          OnClick = mnuNewMessage1Click
+        end
+        object mnuContactOnline1: TTntMenuItem
+          Caption = 'Contact Online'
+          OnClick = mnuContactOnline1Click
+        end
+        object mnuContactOffline1: TTntMenuItem
+          Caption = 'Contact Offline'
+          OnClick = mnuContactOffline1Click
+        end
+      end
+      object mnuPlugins1: TTntMenuItem
+        Caption = 'Plug-ins'
+        object Options3: TTntMenuItem
+          Caption = 'Options...'
           OnClick = mnuPluginOptsClick
         end
-        object N15: TTntMenuItem
+        object N18: TTntMenuItem
           Caption = '-'
         end
       end
-      object N1: TTntMenuItem
+      object N17: TTntMenuItem
         Caption = '-'
       end
-      object Preferences1: TTntMenuItem
-        Caption = '&Options...'
-        ShortCut = 115
+      object Options2: TTntMenuItem
+        Caption = 'Options...'
         OnClick = Preferences1Click
+      end
+    end
+    object Windows1: TTntMenuItem
+      Caption = 'Windows'
+      object mnuCloseAll1: TTntMenuItem
+        Caption = 'Close All'
+        OnClick = mnuCloseAll1Click
+      end
+      object mnuList1: TTntMenuItem
+        Caption = 'List'
+        Enabled = False
+        Visible = False
+      end
+      object mnuLayout1: TTntMenuItem
+        Caption = 'Layout...'
+        OnClick = mnuLayout1Click
+      end
+      object mnuMinimizetoSystemTray1: TTntMenuItem
+        Caption = 'Minimize to System Tray'
+        OnClick = mnuMinimizetoSystemTray1Click
+      end
+      object mnuMinimizetoTaskBar1: TTntMenuItem
+        Caption = 'Minimize to Task Bar'
+        Visible = False
       end
     end
     object Help1: TTntMenuItem
