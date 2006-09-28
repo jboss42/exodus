@@ -185,84 +185,90 @@ type
     mnuChatToolbar: TTntMenuItem;
     File1: TTntMenuItem;
     People: TTntMenuItem;
-    Options1: TTntMenuItem;
+    Options: TTntMenuItem;
     Windows1: TTntMenuItem;
-    mnuConnect: TTntMenuItem;
-    mnuDisconnect1: TTntMenuItem;
-    mnuMyStatus: TTntMenuItem;
-    mnuAvailable: TTntMenuItem;
-    mnuAway: TTntMenuItem;
-    mnuDonotdisturb: TTntMenuItem;
-    mnuMyProfiles: TTntMenuItem;
-    mnuCreateNewProfile1: TTntMenuItem;
-    mnuDeleteProfile1: TTntMenuItem;
-    mnuModifyProfile1: TTntMenuItem;
-    Exit1: TTntMenuItem;
-    mnuSearch1: TTntMenuItem;
-    Contacts1: TTntMenuItem;
-    mnuAddContact1: TTntMenuItem;
-    mnuDeleteContact1: TTntMenuItem;
-    mnuContactProperties1: TTntMenuItem;
-    mnuRenameContact1: TTntMenuItem;
-    mnuSendMessage1: TTntMenuItem;
-    mnuBlockContact1: TTntMenuItem;
-    mnuFindContactinRoster1: TTntMenuItem;
-    mnuViewHistory1: TTntMenuItem;
-    mnuGroup1: TTntMenuItem;
-    mnuAddNewRoster1: TTntMenuItem;
-    mnuDeleteGroup1: TTntMenuItem;
-    mnuRenameGroup1: TTntMenuItem;
+    mnuFile_Connect: TTntMenuItem;
+    mnuFile_Disconnect: TTntMenuItem;
+    mnuFile_MyStatus: TTntMenuItem;
+    mnuFile_MyStatus_Available: TTntMenuItem;
+    mnuFile_MyStatus_Away: TTntMenuItem;
+    mnuFile_MyStatus_Donotdisturb: TTntMenuItem;
+    mnuFile_MyProfiles: TTntMenuItem;
+    mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem;
+    mnuFile_MyProfiles_DeleteProfile: TTntMenuItem;
+    mnuFile_MyProfiles_ModifyProfile: TTntMenuItem;
+    File_Exit: TTntMenuItem;
+    mnuPeople_Search: TTntMenuItem;
+    mnuPeople_Contacts: TTntMenuItem;
+    mnuPeople_Contacts_AddContact: TTntMenuItem;
+    mnuPeople_Contacts_DeleteContact: TTntMenuItem;
+    mnuPeople_Contacts_ContactProperties: TTntMenuItem;
+    mnuPeople_Contacts_RenameContact: TTntMenuItem;
+    mnuPeople_Contacts_SendMessage: TTntMenuItem;
+    mnuPeople_Contacts_BlockContact: TTntMenuItem;
+    mnuPeople_Contacts_FindContactinRoster: TTntMenuItem;
+    mnuPeople_Contacts_ViewHistory: TTntMenuItem;
+    mnuPeople_Group: TTntMenuItem;
+    mnuPeople_Group_AddNewRoster: TTntMenuItem;
+    mnuPeople_Group_DeleteGroup: TTntMenuItem;
+    mnuPeople_Group_RenameGroup: TTntMenuItem;
     N13: TTntMenuItem;
-    mnuAddContacttoGroup1: TTntMenuItem;
-    mnuRemoveContactfromGroup1: TTntMenuItem;
-    mnuView2: TTntMenuItem;
-    mnuAll1: TTntMenuItem;
-    mnuOnlineOnly1: TTntMenuItem;
-    mnuBlockedContacts1: TTntMenuItem;
-    mnuAllRooms1: TTntMenuItem;
-    mnuAllChats1: TTntMenuItem;
-    mnuConference1: TTntMenuItem;
-    mnuInviteContacttoConference1: TTntMenuItem;
-    mnuOpenNewConferenceRoom1: TTntMenuItem;
-    mnuCloseConferenceRoom1: TTntMenuItem;
-    mnuSearchforConferenceRoom1: TTntMenuItem;
+    mnuPeople_Group_AddContacttoGroup: TTntMenuItem;
+    mnuPeople_Group_RemoveContactfromGroup: TTntMenuItem;
+    mnuPeople_Group_View: TTntMenuItem;
+    mnuPeople_Group_View_All: TTntMenuItem;
+    mnuPeople_Group_View_OnlineOnly: TTntMenuItem;
+    mnuPeople_Group_View_BlockedContacts: TTntMenuItem;
+    mnuPeople_Group_View_AllRooms: TTntMenuItem;
+    mnuPeople_Group_View_AllChats: TTntMenuItem;
+    mnuPeople_Conference: TTntMenuItem;
+    mnuPeople_Conference_InviteContacttoConference: TTntMenuItem;
+    mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem;
     N16: TTntMenuItem;
-    mnuInvitePeopletoConferenceRoom1: TTntMenuItem;
-    mnuRemovePeopleFromConferenceRoom1: TTntMenuItem;
-    mnuBlockPeopleFromConferenceRoom1: TTntMenuItem;
-    mnuRenamePeopleFromConferenceRoom1: TTntMenuItem;
-    mnuViewHistory2: TTntMenuItem;
-    mnuPassword1: TTntMenuItem;
-    mnuChangePassword1: TTntMenuItem;
-    mnuRegistration1: TTntMenuItem;
-    mnuEditRegistration1: TTntMenuItem;
-    mnuEditAvatar1: TTntMenuItem;
-    mnuEnableHTMLLinks1: TTntMenuItem;
-    mnuEnableEmoticonDisplays1: TTntMenuItem;
-    mnuEnablenotificationsall1: TTntMenuItem;
-    mnuEnableStartupWithWindows1: TTntMenuItem;
-    mnuFont1: TTntMenuItem;
-    mnuNotifications1: TTntMenuItem;
-    mnuNewMessage1: TTntMenuItem;
-    mnuContactOnline1: TTntMenuItem;
-    mnuContactOffline1: TTntMenuItem;
-    mnuPlugins1: TTntMenuItem;
-    mnuCloseAll1: TTntMenuItem;
-    mnuList1: TTntMenuItem;
-    mnuLayout1: TTntMenuItem;
-    mnuMinimizetoSystemTray1: TTntMenuItem;
-    mnuMinimizetoTaskBar1: TTntMenuItem;
-    mnuRenameProfile1: TTntMenuItem;
+    mnuPeople_Conference_InvitePeopletoConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_RemovePeopleFromConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_BlockPeopleFromConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_RenamePeopleFromConferenceRoom: TTntMenuItem;
+    mnuPeople_Conference_ViewHistory: TTntMenuItem;
+    mnuOptions_Password: TTntMenuItem;
+    mnuOptions_Password_ChangePassword: TTntMenuItem;
+    mnuOptions_Registration: TTntMenuItem;
+    mnuOptions_Registration_EditRegistration: TTntMenuItem;
+    mnuOptions_Registration_EditAvatar: TTntMenuItem;
+    mnuOptions_EnableHTMLLinks: TTntMenuItem;
+    mnuOptions_EnableEmoticonDisplays: TTntMenuItem;
+    mnuOptions_Enablenotificationsall: TTntMenuItem;
+    mnuOptions_EnableStartupWithWindows: TTntMenuItem;
+    mnuOptions_Font: TTntMenuItem;
+    mnuOptions_Notifications: TTntMenuItem;
+    mnuOptions_Notifications_NewMessage: TTntMenuItem;
+    mnuOptions_Notifications_ContactOnline: TTntMenuItem;
+    mnuOptions_Notifications_ContactOffline: TTntMenuItem;
+    mnuOptions_Plugins: TTntMenuItem;
+    mnuWindows_CloseAll: TTntMenuItem;
+    mnuWindows_List1: TTntMenuItem;
+    mnuWindows_Layout: TTntMenuItem;
+    mnuWindows_MinimizetoSystemTray: TTntMenuItem;
+    mnuWindows_MinimizetoTaskBar: TTntMenuItem;
+    mnuFile_MyProfiles_RenameProfile: TTntMenuItem;
     N17: TTntMenuItem;
-    Options2: TTntMenuItem;
-    Options3: TTntMenuItem;
+    mnuOptions_Options: TTntMenuItem;
+    mnuOptions_Plugins_Options: TTntMenuItem;
     N18: TTntMenuItem;
     Old1: TTntMenuItem;
-    SendFile1: TTntMenuItem;
-    mnuFreeToChat: TTntMenuItem;
-    mnuXtendedAway: TTntMenuItem;
-    Invisible1: TTntMenuItem;
+    mnuPeople_Contacts_SendFile: TTntMenuItem;
+    mnuFile_MyStatus_FreeToChat: TTntMenuItem;
+    mnuFile_MyStatus_XtendedAway: TTntMenuItem;
+    mnuFile_MyStatus_Invisible: TTntMenuItem;
     N6: TTntMenuItem;
+    btnOptions: TToolButton;
+    btnSendFile: TToolButton;
+    ToolButtonSep1: TToolButton;
+    btnConnect: TToolButton;
+    ToolButtonSep2: TToolButton;
+    btnDisconnect: TToolButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -351,30 +357,31 @@ type
     procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
                                        NewTarget: TWinControl; var Allow: Boolean);
     procedure mnuChatToolbarClick(Sender: TObject);
-    procedure mnuDeleteProfile1Click(Sender: TObject);
-    procedure mnuModifyProfile1Click(Sender: TObject);
-    procedure mnuRenameProfile1Click(Sender: TObject);
-    procedure mnuCreateNewProfile1Click(Sender: TObject);
+    procedure mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
+    procedure mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
+    procedure mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
+    procedure mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
     procedure StatusClick(Sender: TObject);
-    procedure mnuBlockContact1Click(Sender: TObject);
-    procedure mnuFont1Click(Sender: TObject);
-    procedure mnuEnableEmoticonDisplays1Click(Sender: TObject);
-    procedure mnuEnableStartupWithWindows1Click(Sender: TObject);
-    procedure Options1Click(Sender: TObject);
-    procedure mnuNewMessage1Click(Sender: TObject);
-    procedure mnuContactOnline1Click(Sender: TObject);
-    procedure mnuContactOffline1Click(Sender: TObject);
-    procedure mnuCloseAll1Click(Sender: TObject);
-    procedure mnuMinimizetoSystemTray1Click(Sender: TObject);
-    procedure mnuRenameContact1Click(Sender: TObject);
-    procedure mnuAddNewRoster1Click(Sender: TObject);
-    procedure mnuDeleteGroup1Click(Sender: TObject);
-    procedure mnuRenameGroup1Click(Sender: TObject);
-    procedure mnuInviteContacttoConference1Click(Sender: TObject);
+    procedure mnuPeople_Contacts_BlockContactClick(Sender: TObject);
+    procedure mnuOptions_FontClick(Sender: TObject);
+    procedure mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
+    procedure mnuOptions_EnableStartupWithWindowsClick(Sender: TObject);
+    procedure OptionsClick(Sender: TObject);
+    procedure mnuOptions_Notifications_NewMessageClick(Sender: TObject);
+    procedure mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
+    procedure mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
+    procedure mnuWindows_CloseAllClick(Sender: TObject);
+    procedure mnuWindows_MinimizetoSystemTrayClick(Sender: TObject);
+    procedure mnuPeople_Contacts_RenameContactClick(Sender: TObject);
+    procedure mnuPeople_Group_AddNewRosterClick(Sender: TObject);
+    procedure mnuPeople_Group_DeleteGroupClick(Sender: TObject);
+    procedure mnuPeople_Group_RenameGroupClick(Sender: TObject);
+    procedure mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
     procedure mnuOpenNewConferenceRoom1Click(Sender: TObject);
-    procedure mnuConnectClick(Sender: TObject);
-    procedure mnuLayout1Click(Sender: TObject);
+    procedure mnuFile_ConnectClick(Sender: TObject);
+    procedure mnuWindows_LayoutClick(Sender: TObject);
     procedure mnuMinimizetoTaskBar1Click(Sender: TObject);
+    procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -811,7 +818,7 @@ uses
 
 
 {---------------------------------------}
-procedure TfrmExodus.mnuCreateNewProfile1Click(Sender: TObject);
+procedure TfrmExodus.mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
 begin
     frmRosterWindow.lblCreateClick(Sender);
 end;
@@ -1149,7 +1156,9 @@ begin
 
     // Make sure presence menus have unified captions
     setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
-    setRosterMenuCaptions(mnuAvailable, mnuFreeToChat, mnuAway, mnuXtendedAway, mnuDoNotDisturb); //???dda
+    setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
+                            mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
+                            mnuFile_MyStatus_DoNotDisturb); //???dda
     setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
         trayPresXA, trayPresDND);
 
@@ -1442,6 +1451,11 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.mnuPeople_Contacts_SendFileClick(Sender: TObject);
+begin
+    frmRosterWindow.popSendFile.Click();
+end;
+
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     ssl, rtries, code: integer;
@@ -1853,22 +1867,36 @@ begin
 
 
     // File Menu
-    mnuConnect.Visible := not enable;
-    mnuDisconnect1.Visible := enable;
-    mnuMyStatus.Enabled := enable;
+    mnuFile_Connect.Visible := not enable;
+    mnuFile_Disconnect.Visible := enable;
+    mnuFile_MyStatus.Enabled := enable;
+    mnuFile_MyProfiles.Enabled := not enable;
+
     // Build the custom presence menus.
     if (enable) then begin
-        BuildPresMenus(mnuMyStatus, presOnlineClick);
+        BuildPresMenus(mnuFile_MyStatus, presOnlineClick);
         BuildPresMenus(trayPresence, presOnlineClick);
     end;
-    mnuMyProfiles.Enabled := not enable;
+
+    // deal with connect tool bar buttons.
+    // done this way to try and avoid tool bar size "bouncing"
+    if (enable) then begin
+        btnConnect.Visible := not enable;
+        btnDisconnect.Visible := enable;
+    end
+    else begin
+        btnDisconnect.Visible := enable;
+        btnConnect.Visible := not enable;
+    end;
+
 
     // People Menu
     People.Enabled := enable;
+    btnSendFile.Enabled := enable;
 
     // Options Menu
-    mnuPassword1.Enabled := enable;
-    mnuRegistration1.Enabled := enable;
+    mnuOptions_Password.Enabled := enable;
+    mnuOptions_Registration.Enabled := enable;
 
     //Windows Menu
 end;
@@ -2029,29 +2057,31 @@ begin
     StartJoinRoom();
 end;
 
-procedure TfrmExodus.mnuConnectClick(Sender: TObject);
+procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
 begin
     frmRosterWindow.lblConnectClick(Sender);
 end;
 
-procedure TfrmExodus.mnuContactOffline1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
 begin
-    if (mnuContactOffline1.Checked) then
+    if (mnuOptions_Notifications_ContactOffline.Checked) then
         MainSession.Prefs.setInt('notify_offline', 0)
     else
         MainSession.Prefs.setInt('notify_offline', 1);
 
-    mnuContactOffline1.Checked := not mnuContactOffline1.Checked;
+    mnuOptions_Notifications_ContactOffline.Checked :=
+                        not mnuOptions_Notifications_ContactOffline.Checked;
 end;
 
-procedure TfrmExodus.mnuContactOnline1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
 begin
-    if (mnuContactOnline1.Checked) then
+    if (mnuOptions_Notifications_ContactOnline.Checked) then
         MainSession.Prefs.setInt('notify_online', 0)
     else
         MainSession.Prefs.setInt('notify_online', 1);
 
-    mnuContactOnline1.Checked := not mnuContactOnline1.Checked;
+    mnuOptions_Notifications_ContactOnline.Checked :=
+                        not mnuOptions_Notifications_ContactOnline.Checked;
 end;
 
 {---------------------------------------}
@@ -2238,14 +2268,15 @@ begin
     ShowMyProfile();
 end;
 
-procedure TfrmExodus.mnuNewMessage1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_Notifications_NewMessageClick(Sender: TObject);
 begin
-    if (mnuNewMessage1.Checked) then
+    if (mnuOptions_Notifications_NewMessage.Checked) then
         MainSession.Prefs.setInt('notify_normalmsg', 0)
     else
         MainSession.Prefs.setInt('notify_normalmsg', 1);
 
-    mnuNewMessage1.Checked := not mnuNewMessage1.Checked;
+    mnuOptions_Notifications_NewMessage.Checked :=
+                                not mnuOptions_Notifications_NewMessage.Checked;
 end;
 
 procedure TfrmExodus.mnuOpenNewConferenceRoom1Click(Sender: TObject);
@@ -2348,12 +2379,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.mnuAddNewRoster1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Group_AddNewRosterClick(Sender: TObject);
 begin
     frmRosterWindow.popAddGroup.Click();
 end;
 
-procedure TfrmExodus.mnuBlockContact1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Contacts_BlockContactClick(Sender: TObject);
 begin
     frmRosterWindow.popBlock.Click();
 end;
@@ -2421,7 +2452,7 @@ begin
         jabberSendCTCP(MainSession.Server, XMLNS_TIME);
 end;
 
-procedure TfrmExodus.mnuModifyProfile1Click(Sender: TObject);
+procedure TfrmExodus.mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
 begin
     frmRosterWindow.ModifyProfile1.Click();
 end;
@@ -2590,7 +2621,7 @@ begin
     end;
 end;
 
-procedure TfrmExodus.mnuMinimizetoSystemTray1Click(Sender: TObject);
+procedure TfrmExodus.mnuWindows_MinimizetoSystemTrayClick(Sender: TObject);
 begin
     Self.Hide();
     _hidden := true;
@@ -2859,12 +2890,12 @@ begin
         inherited;
 end;
 
-procedure TfrmExodus.mnuDeleteGroup1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Group_DeleteGroupClick(Sender: TObject);
 begin
     frmRosterWindow.popGrpRemove.Click();
 end;
 
-procedure TfrmExodus.mnuDeleteProfile1Click(Sender: TObject);
+procedure TfrmExodus.mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
 begin
     frmRosterWindow.DeleteProfile1.Click();
 end;
@@ -3086,7 +3117,7 @@ begin
     MainSession.FireEvent('/session/prefs', nil);
 end;
 
-procedure TfrmExodus.mnuCloseAll1Click(Sender: TObject);
+procedure TfrmExodus.mnuWindows_CloseAllClick(Sender: TObject);
 begin
     MainSession.FireEvent('/session/close-all-windows', nil);
 end;
@@ -3196,17 +3227,17 @@ begin
     frmRosterWindow.StartFind();
 end;
 
-procedure TfrmExodus.mnuFont1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_FontClick(Sender: TObject);
 begin
     Prefs.StartPrefs(pref_fonts);
 end;
 
-procedure TfrmExodus.mnuInviteContacttoConference1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
 begin
     frmRosterWindow.popGrpInvite.Click();
 end;
 
-procedure TfrmExodus.mnuLayout1Click(Sender: TObject);
+procedure TfrmExodus.mnuWindows_LayoutClick(Sender: TObject);
 begin
     StartPrefs(pref_layout);
 end;
@@ -3250,17 +3281,17 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.mnuRenameContact1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Contacts_RenameContactClick(Sender: TObject);
 begin
     frmRosterWindow.RenameProfile1.Click();
 end;
 
-procedure TfrmExodus.mnuRenameGroup1Click(Sender: TObject);
+procedure TfrmExodus.mnuPeople_Group_RenameGroupClick(Sender: TObject);
 begin
     frmRosterWindow.popGrpRename.Click();
 end;
 
-procedure TfrmExodus.mnuRenameProfile1Click(Sender: TObject);
+procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
 begin
     frmRosterWindow.RenameProfile1.Click();
 end;
@@ -3291,17 +3322,18 @@ begin
     end
 end;
 
-procedure TfrmExodus.mnuEnableEmoticonDisplays1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
 begin
-    if (mnuEnableEmoticonDisplays1.Checked) then
+    if (mnuOptions_EnableEmoticonDisplays.Checked) then
         MainSession.Prefs.setBool('emoticons', false)
     else
         MainSession.Prefs.setBool('emoticons', true);
 
-    mnuEnableEmoticonDisplays1.Checked := not mnuEnableEmoticonDisplays1.Checked;
+    mnuOptions_EnableEmoticonDisplays.Checked :=
+                                not mnuOptions_EnableEmoticonDisplays.Checked;
 end;
 
-procedure TfrmExodus.mnuEnableStartupWithWindows1Click(Sender: TObject);
+procedure TfrmExodus.mnuOptions_EnableStartupWithWindowsClick(Sender: TObject);
 var
     reg: TRegistry;
     cmd: Widestring;
@@ -3312,7 +3344,7 @@ begin
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey(RUN_ONCE, true);
 
-        if (mnuEnableStartupWithWindows1.Checked) then begin
+        if (mnuOptions_EnableStartupWithWindows.Checked) then begin
             if (reg.ValueExists(PrefController.getAppInfo.ID)) then begin
                 reg.DeleteValue(PrefController.getAppInfo.ID);
                 MainSession.Prefs.setBool('auto_start', false);
@@ -3330,7 +3362,8 @@ begin
         reg.Free();
     end;
 
-    mnuEnableStartupWithWindows1.Checked := not mnuEnableStartupWithWindows1.Checked;
+    mnuOptions_EnableStartupWithWindows.Checked :=
+                            not mnuOptions_EnableStartupWithWindows.Checked;
 end;
 
 {******************************************************************************
@@ -4352,18 +4385,18 @@ begin
     end;
 end;
 
-procedure TfrmExodus.Options1Click(Sender: TObject);
+procedure TfrmExodus.OptionsClick(Sender: TObject);
 begin
     OptionsMenuItemsChecks();
 end;
 
 procedure TfrmExodus.OptionsMenuItemsChecks();
 begin
-    mnuEnableEmoticonDisplays1.Checked := MainSession.Prefs.getBool('emoticons');
-    mnuEnableStartupWithWindows1.Checked := MainSession.Prefs.getBool('auto_start');
-    mnuContactOnline1.Checked := MainSession.Prefs.getBool('notify_online');
-    mnuContactOffline1.Checked := MainSession.Prefs.getBool('notify_offline');
-    mnuNewMessage1.Checked := MainSession.Prefs.getBool('notify_normalmsg');
+    mnuOptions_EnableEmoticonDisplays.Checked := MainSession.Prefs.getBool('emoticons');
+    mnuOptions_EnableStartupWithWindows.Checked := MainSession.Prefs.getBool('auto_start');
+    mnuOptions_Notifications_ContactOnline.Checked := MainSession.Prefs.getBool('notify_online');
+    mnuOptions_Notifications_ContactOffline.Checked := MainSession.Prefs.getBool('notify_offline');
+    mnuOptions_Notifications_NewMessage.Checked := MainSession.Prefs.getBool('notify_normalmsg');
 end;
 
 

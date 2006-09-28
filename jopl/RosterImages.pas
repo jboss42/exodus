@@ -191,6 +191,12 @@ const
     RI_CHAT_TOOLBAR_EMOTICONS_INDEX : Integer = 76;
     RI_CHAT_TOOLBAR_HOTKEYS_KEY     : WideString = 'chat_toolbar_hotkeys';
     RI_CHAT_TOOLBAR_HOTKEYS_INDEX   : Integer = 77;
+    RI_PREFS_KEY            : WideString = 'prefs';
+    RI_PREFS_INDEX          : Integer = 78;
+    RI_DISCONNECT_KEY       : Widestring = 'disconnect';
+    RI_DISCONNECT_INDEX     : Integer = 79;
+    RI_CONNECT_KEY          : Widestring = 'connect';
+    RI_CONNECT_INDEX        : Integer = 80;
 {$ENDIF}
 
 var
@@ -282,6 +288,10 @@ begin
     _ids.Insert(RI_CHAT_TOOLBAR_PASTE_INDEX, RI_CHAT_TOOLBAR_PASTE_KEY);
     _ids.Insert(RI_CHAT_TOOLBAR_EMOTICONS_INDEX,RI_CHAT_TOOLBAR_EMOTICONS_KEY);
     _ids.Insert(RI_CHAT_TOOLBAR_HOTKEYS_INDEX, RI_CHAT_TOOLBAR_HOTKEYS_KEY);
+    _ids.Insert(RI_PREFS_INDEX, RI_PREFS_KEY);
+    _ids.Insert(RI_DISCONNECT_INDEX, RI_DISCONNECT_KEY);
+    _ids.Insert(RI_CONNECT_INDEX, RI_CONNECT_KEY);
+
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

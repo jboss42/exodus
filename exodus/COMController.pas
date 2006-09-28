@@ -1120,8 +1120,8 @@ var
 begin
     // add a new TMenuItem to the Plugins menu
     mi := TMenuItem.Create(frmExodus);
-    frmExodus.mnuPlugins.Add(mi);  
-    frmExodus.mnuPlugins1.Add(mi); //???dda
+//    frmExodus.mnuPlugins.Add(mi); //???dda
+    frmExodus.mnuOptions_Plugins.Add(mi); 
     mi.Caption := caption;
     mi.OnClick := frmExodus.mnuPluginDummyClick; //calls fireMenuClick
     inc(_nextid);

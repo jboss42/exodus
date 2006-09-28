@@ -3572,16 +3572,18 @@ procedure TfrmRosterWindow.lstProfilesSelectItem(Sender: TObject;
   Item: TListItem; Selected: Boolean);
 begin
     if (lstProfiles.Selected <> nil) then begin
-        frmExodus.mnuDeleteProfile1.Enabled := true;
-        frmExodus.mnuModifyProfile1.Enabled := true;
-        frmExodus.mnuRenameProfile1.Enabled := true;
-        frmExodus.mnuConnect.Enabled := true;
+        frmExodus.mnuFile_MyProfiles_DeleteProfile.Enabled := true;
+        frmExodus.mnuFile_MyProfiles_ModifyProfile.Enabled := true;
+        frmExodus.mnuFile_MyProfiles_RenameProfile.Enabled := true;
+        frmExodus.mnuFile_Connect.Enabled := true;
+        frmExodus.btnConnect.Enabled := true;
     end
     else begin
-        frmExodus.mnuDeleteProfile1.Enabled := false;
-        frmExodus.mnuModifyProfile1.Enabled := false;
-        frmExodus.mnuRenameProfile1.Enabled := false;
-        frmExodus.mnuConnect.Enabled := false;
+        frmExodus.mnuFile_MyProfiles_DeleteProfile.Enabled := false;
+        frmExodus.mnuFile_MyProfiles_ModifyProfile.Enabled := false;
+        frmExodus.mnuFile_MyProfiles_RenameProfile.Enabled := false;
+        frmExodus.mnuFile_Connect.Enabled := false;
+        frmExodus.btnConnect.Enabled := false;
     end;
 end;
 
