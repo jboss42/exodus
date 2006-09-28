@@ -883,16 +883,18 @@ end;
 constructor TExodusController.Create();
 begin
     inherited Create();
-    _menu_items := TWidestringList.Create();
-    _roster_menus := Twidestringlist.Create();
-    _msg_menus := TWidestringlist.Create();
-    _nextid := 0;
-    _parser := TXMLTagParser.Create();
 end;
 
 {---------------------------------------}
 procedure TExodusController.Initialize();
 begin
+    inherited Initialize();
+    _menu_items := TWidestringList.Create();
+    _roster_menus := Twidestringlist.Create();
+    _msg_menus := TWidestringlist.Create();
+    _nextid := 0;
+    _parser := TXMLTagParser.Create();
+    
     (*
     // XXX: Joe: figure out this OLE stuff please so it doesn't core on exit
 
