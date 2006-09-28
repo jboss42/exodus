@@ -269,6 +269,11 @@ type
     btnConnect: TToolButton;
     ToolButtonSep2: TToolButton;
     btnDisconnect: TToolButton;
+    mnuWindows_View: TTntMenuItem;
+    mnuWindows_View_ShowToolbar: TTntMenuItem;
+    mnuWindows_View_ShowChatToolbar: TTntMenuItem;
+    mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
+    mnuWindows_View_ShowDebugXML: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -380,7 +385,6 @@ type
     procedure mnuOpenNewConferenceRoom1Click(Sender: TObject);
     procedure mnuFile_ConnectClick(Sender: TObject);
     procedure mnuWindows_LayoutClick(Sender: TObject);
-    procedure mnuMinimizetoTaskBar1Click(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
 
   private
@@ -1792,6 +1796,7 @@ begin
         mnuOnline.Checked := btnOnlineRoster.Down;
         Toolbar.Visible := getBool('toolbar');
         mnuToolbar.Checked := Toolbar.Visible;
+        mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     end;
 end;
 
@@ -2290,6 +2295,7 @@ begin
     // toggle toolbar on/off
     Toolbar.Visible := not Toolbar.Visible;
     mnuToolbar.Checked := Toolbar.Visible;
+    mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible; //???dda
     MainSession.Prefs.setBool('toolbar', Toolbar.Visible);
 end;
 
@@ -2625,11 +2631,6 @@ procedure TfrmExodus.mnuWindows_MinimizetoSystemTrayClick(Sender: TObject);
 begin
     Self.Hide();
     _hidden := true;
-end;
-
-procedure TfrmExodus.mnuMinimizetoTaskBar1Click(Sender: TObject);
-begin
-
 end;
 
 {---------------------------------------}
@@ -3113,6 +3114,7 @@ begin
     tempbool := MainSession.Prefs.getBool('chat_toolbar');
     tempbool := not tempbool;
     mnuChatToolbar.Checked := tempbool;
+    mnuWindows_View_ShowChatToolbar.Checked := tempbool; //???dda
     MainSession.Prefs.setBool('chat_toolbar', tempbool);
     MainSession.FireEvent('/session/prefs', nil);
 end;

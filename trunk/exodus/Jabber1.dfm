@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 605
+  ClientHeight = 625
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -34,7 +34,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 574
+    Height = 594
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -146,7 +146,6 @@ object frmExodus: TfrmExodus
         Hint = 'Send File'
         Caption = 'Send File'
         ImageIndex = 8
-        OnClick = mnuPeople_Contacts_SendFileClick
       end
       object btnBrowser: TToolButton
         Left = 169
@@ -179,7 +178,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 574
+    Height = 594
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -189,23 +188,25 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
+    ExplicitHeight = 574
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
     Width = 229
-    Height = 574
+    Height = 594
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 574
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
       Width = 229
-      Height = 574
+      Height = 594
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -228,6 +229,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 574
     end
   end
   object MainMenu1: TTntMainMenu
@@ -236,9 +238,9 @@ object frmExodus: TfrmExodus
     Left = 47
     Top = 74
     object File1: TTntMenuItem
-      Caption = 'File'
+      Caption = '&File'
       object Old1: TTntMenuItem
-        Caption = 'Old Menus'
+        Caption = '&Old Menus'
         object Exodus1: TTntMenuItem
           Caption = '&Exodus'
           object Test1: TTntMenuItem
@@ -494,18 +496,18 @@ object frmExodus: TfrmExodus
         end
       end
       object mnuFile_Connect: TTntMenuItem
-        Caption = 'Connect'
+        Caption = '&Connect'
         Enabled = False
         OnClick = mnuFile_ConnectClick
       end
       object mnuFile_Disconnect: TTntMenuItem
-        Caption = 'Disconnect'
+        Caption = 'Dis&connect'
         Visible = False
         OnClick = mnuDisconnectClick
       end
       object mnuFile_MyStatus: TTntMenuItem
         AutoHotkeys = maManual
-        Caption = 'My Status'
+        Caption = 'My &Status'
         Enabled = False
         object mnuFile_MyStatus_Available: TTntMenuItem
           Caption = 'Available'
@@ -545,7 +547,7 @@ object frmExodus: TfrmExodus
         end
       end
       object mnuFile_MyProfiles: TTntMenuItem
-        Caption = 'My Profiles'
+        Caption = 'My &Profiles'
         object mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem
           Caption = 'Create New Profile...'
           OnClick = mnuFile_MyProfiles_CreateNewProfileClick
@@ -567,118 +569,117 @@ object frmExodus: TfrmExodus
         end
       end
       object File_Exit: TTntMenuItem
-        Caption = 'Exit'
+        Caption = 'E&xit'
         OnClick = Exit2Click
       end
     end
     object People: TTntMenuItem
-      Caption = 'People'
+      Caption = '&People'
       Enabled = False
       object mnuPeople_Search: TTntMenuItem
-        Caption = 'Search...'
+        Caption = '&Search...'
         OnClick = mnuSearchClick
       end
       object mnuPeople_Contacts: TTntMenuItem
-        Caption = 'Contacts'
+        Caption = '&Contacts'
         object mnuPeople_Contacts_AddContact: TTntMenuItem
-          Caption = 'Add Contact...'
+          Caption = '&Add Contact...'
           OnClick = btnAddContactClick
         end
         object mnuPeople_Contacts_RenameContact: TTntMenuItem
-          Caption = 'Rename Contact...'
+          Caption = '&Rename Contact...'
           OnClick = mnuPeople_Contacts_RenameContactClick
         end
         object mnuPeople_Contacts_ContactProperties: TTntMenuItem
-          Caption = 'Contact Properties...'
+          Caption = 'Contact &Properties...'
           OnClick = Properties2Click
         end
         object mnuPeople_Contacts_DeleteContact: TTntMenuItem
-          Caption = 'Delete Contact'
+          Caption = '&Delete Contact'
           OnClick = btnDelPersonClick
         end
         object mnuPeople_Contacts_BlockContact: TTntMenuItem
-          Caption = 'Block Contact'
+          Caption = '&Block Contact'
           OnClick = mnuPeople_Contacts_BlockContactClick
         end
         object mnuPeople_Contacts_FindContactinRoster: TTntMenuItem
-          Caption = 'Find Contact in Roster'
+          Caption = '&Find Contact in Roster'
           OnClick = mnuFindClick
         end
         object mnuPeople_Contacts_SendFile: TTntMenuItem
-          Caption = 'Send File...'
-          OnClick = mnuPeople_Contacts_SendFileClick
+          Caption = '&Send File...'
         end
         object mnuPeople_Contacts_SendMessage: TTntMenuItem
-          Caption = 'Send Message...'
+          Caption = 'Send &Message...'
           OnClick = mnuMessageClick
         end
         object mnuPeople_Contacts_ViewHistory: TTntMenuItem
-          Caption = 'View History'
+          Caption = 'View &History'
           OnClick = MessageHistory2Click
         end
       end
       object mnuPeople_Group: TTntMenuItem
-        Caption = 'Groups'
+        Caption = '&Groups'
         object mnuPeople_Group_AddNewRoster: TTntMenuItem
-          Caption = 'Add New Group...'
+          Caption = 'Add &New Group...'
           OnClick = mnuPeople_Group_AddNewRosterClick
         end
         object mnuPeople_Group_RenameGroup: TTntMenuItem
-          Caption = 'Rename Group...'
+          Caption = '&Rename Group...'
           OnClick = mnuPeople_Group_RenameGroupClick
         end
         object mnuPeople_Group_DeleteGroup: TTntMenuItem
-          Caption = 'Delete Group'
+          Caption = '&Delete Group'
           OnClick = mnuPeople_Group_DeleteGroupClick
         end
         object N13: TTntMenuItem
           Caption = '-'
         end
         object mnuPeople_Group_AddContacttoGroup: TTntMenuItem
-          Caption = 'Add Contact to Group...'
+          Caption = '&Add Contact to Group...'
           OnClick = btnAddContactClick
         end
         object mnuPeople_Group_RemoveContactfromGroup: TTntMenuItem
-          Caption = 'Remove Contact from Group...'
+          Caption = 'Remo&ve Contact from Group...'
           OnClick = btnDelPersonClick
         end
         object mnuPeople_Group_View: TTntMenuItem
-          Caption = 'View'
+          Caption = '&View'
           Visible = False
           object mnuPeople_Group_View_All: TTntMenuItem
-            Caption = 'All'
+            Caption = '&All'
           end
           object mnuPeople_Group_View_OnlineOnly: TTntMenuItem
-            Caption = 'Online Only'
+            Caption = '&Online Only'
             OnClick = btnOnlineRosterClick
           end
           object mnuPeople_Group_View_BlockedContacts: TTntMenuItem
-            Caption = 'Blocked Contacts'
+            Caption = '&Blocked Contacts'
           end
           object mnuPeople_Group_View_AllRooms: TTntMenuItem
-            Caption = 'All Rooms'
+            Caption = 'All &Rooms'
           end
           object mnuPeople_Group_View_AllChats: TTntMenuItem
-            Caption = 'All Chats'
+            Caption = 'All &Chats'
           end
         end
       end
       object mnuPeople_Conference: TTntMenuItem
-        Caption = 'Conference'
+        Caption = 'C&onference'
         object mnuPeople_Conference_InviteContacttoConference: TTntMenuItem
-          Caption = 'Invite to Conference...'
+          Caption = '&Invite to Conference...'
           OnClick = mnuPeople_Conference_InviteContacttoConferenceClick
         end
         object mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem
-          Caption = 'Join/Create New Conference Room...'
+          Caption = '&Join/Create New Conference Room...'
           OnClick = mnuConferenceClick
         end
         object mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem
-          Caption = 'Search for Conferenece Room...'
+          Caption = '&Search for Conferenece Room...'
           OnClick = mnuSearchClick
         end
         object mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem
-          Caption = 'Close Conference Room'
+          Caption = '&Close Conference Room'
           Visible = False
         end
         object N16: TTntMenuItem
@@ -708,35 +709,35 @@ object frmExodus: TfrmExodus
       end
     end
     object Options: TTntMenuItem
-      Caption = 'Options'
+      Caption = '&Options'
       OnClick = OptionsClick
-      object mnuOptions_Registration: TTntMenuItem
-        Caption = 'Registration'
-        Enabled = False
-        object mnuOptions_Registration_EditRegistration: TTntMenuItem
-          Caption = 'Edit Registration...'
-          OnClick = mnuRegistrationClick
-        end
-        object mnuOptions_Registration_EditAvatar: TTntMenuItem
-          Caption = 'Edit Profile, Avatar...'
-          OnClick = mnuMyVCardClick
-        end
-      end
       object mnuOptions_Password: TTntMenuItem
-        Caption = 'Password'
+        Caption = '&Password'
         Enabled = False
         object mnuOptions_Password_ChangePassword: TTntMenuItem
-          Caption = 'Change Password...'
+          Caption = '&Change Password...'
           OnClick = mnuPasswordClick
         end
       end
+      object mnuOptions_Registration: TTntMenuItem
+        Caption = '&Registration'
+        Enabled = False
+        object mnuOptions_Registration_EditRegistration: TTntMenuItem
+          Caption = 'Edit &Registration...'
+          OnClick = mnuRegistrationClick
+        end
+        object mnuOptions_Registration_EditAvatar: TTntMenuItem
+          Caption = 'Edit &Profile, Avatar...'
+          OnClick = mnuMyVCardClick
+        end
+      end
       object mnuOptions_EnableHTMLLinks: TTntMenuItem
-        Caption = 'Enable HTML Links'
+        Caption = 'Enable &HTML Links'
         Enabled = False
         Visible = False
       end
       object mnuOptions_EnableEmoticonDisplays: TTntMenuItem
-        Caption = 'Enable Emoticon Displays'
+        Caption = 'Enable &Emoticon Displays'
         OnClick = mnuOptions_EnableEmoticonDisplaysClick
       end
       object mnuOptions_Enablenotificationsall: TTntMenuItem
@@ -745,32 +746,32 @@ object frmExodus: TfrmExodus
         Visible = False
       end
       object mnuOptions_EnableStartupWithWindows: TTntMenuItem
-        Caption = 'Enable Startup With Windows'
+        Caption = 'Enable &Startup With Windows'
         OnClick = mnuOptions_EnableStartupWithWindowsClick
       end
       object mnuOptions_Font: TTntMenuItem
-        Caption = 'Fonts, Colors...'
+        Caption = '&Fonts, Colors...'
         OnClick = mnuOptions_FontClick
       end
       object mnuOptions_Notifications: TTntMenuItem
-        Caption = 'Notifications'
+        Caption = '&Notifications'
         object mnuOptions_Notifications_NewMessage: TTntMenuItem
-          Caption = 'New Message'
+          Caption = '&New Message'
           OnClick = mnuOptions_Notifications_NewMessageClick
         end
         object mnuOptions_Notifications_ContactOnline: TTntMenuItem
-          Caption = 'Contact Online'
+          Caption = 'Contact &Online'
           OnClick = mnuOptions_Notifications_ContactOnlineClick
         end
         object mnuOptions_Notifications_ContactOffline: TTntMenuItem
-          Caption = 'Contact Offline'
+          Caption = 'Contact O&ffline'
           OnClick = mnuOptions_Notifications_ContactOfflineClick
         end
       end
       object mnuOptions_Plugins: TTntMenuItem
-        Caption = 'Plug-ins'
+        Caption = '&Plug-ins'
         object mnuOptions_Plugins_Options: TTntMenuItem
-          Caption = 'Options...'
+          Caption = '&Options...'
           OnClick = mnuPluginOptsClick
         end
         object N18: TTntMenuItem
@@ -781,14 +782,34 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuOptions_Options: TTntMenuItem
-        Caption = 'Options...'
+        Caption = '&Options...'
         OnClick = Preferences1Click
       end
     end
     object Windows1: TTntMenuItem
-      Caption = 'Windows'
+      Caption = '&Windows'
+      object mnuWindows_View: TTntMenuItem
+        Caption = '&View'
+        object mnuWindows_View_ShowToolbar: TTntMenuItem
+          Caption = 'Show &Toolbar'
+          OnClick = mnuToolbarClick
+        end
+        object mnuWindows_View_ShowChatToolbar: TTntMenuItem
+          Caption = 'Show &Chat Toolbar'
+          Checked = True
+          OnClick = mnuChatToolbarClick
+        end
+        object mnuWindows_View_ShowInstantMessages1: TTntMenuItem
+          Caption = 'Show Instant &Messages'
+          OnClick = ShowEventsWindow1Click
+        end
+        object mnuWindows_View_ShowDebugXML: TTntMenuItem
+          Caption = 'Show &Debug XML'
+          OnClick = ShowXML1Click
+        end
+      end
       object mnuWindows_CloseAll: TTntMenuItem
-        Caption = 'Close All'
+        Caption = '&Close All'
         OnClick = mnuWindows_CloseAllClick
       end
       object mnuWindows_List1: TTntMenuItem
@@ -797,15 +818,15 @@ object frmExodus: TfrmExodus
         Visible = False
       end
       object mnuWindows_Layout: TTntMenuItem
-        Caption = 'Layout...'
+        Caption = '&Layout...'
         OnClick = mnuWindows_LayoutClick
       end
       object mnuWindows_MinimizetoSystemTray: TTntMenuItem
-        Caption = 'Minimize to System Tray'
+        Caption = '&Minimize to System Tray'
         OnClick = mnuWindows_MinimizetoSystemTrayClick
       end
       object mnuWindows_MinimizetoTaskBar: TTntMenuItem
-        Caption = 'Minimize to Task Bar'
+        Caption = 'Minimize to Task &Bar'
         Visible = False
       end
     end
@@ -815,7 +836,7 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object About1: TTntMenuItem
-        Caption = 'About'
+        Caption = '&About'
         OnClick = About1Click
       end
     end
