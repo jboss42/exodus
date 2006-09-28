@@ -474,8 +474,9 @@ end;
 
 procedure TfrmBaseChat.ChatToolbarButtonHotkeysClick(Sender: TObject);
 var
-    i, l, t: integer;
+    i: integer;
     m: TTntMenuItem;
+    cp: TPoint;
 begin
     // cleanup old items
     for i := 0 to _hotkey_menu_items.Count - 1 do begin
@@ -494,8 +495,6 @@ begin
 
     // Should the button be displayed.
     if (_hotkeys_keys_stringlist.Count > 0) then begin
-        ChatToolbarButtonHotkeys.Visible := true;
-
         // add strings to popup
         for i := _hotkeys_keys_stringlist.Count - 1 downto 0 do begin
             m := TTntMenuItem.Create(Self);
@@ -505,14 +504,11 @@ begin
             popHotkeys.Items.Insert(0, m);
             _hotkey_menu_items.AddObject(m.Caption, m);
         end;
+    end;
 
-        // show popup
-        l := ChatToolbarButtonHotkeys.ClientOrigin.x;
-        t := Self.Top + Self.ClientHeight - 10;
-        popHotkeys.Popup(l, t);
-    end
-    else
-        ChatToolbarButtonHotkeys.Visible := false;
+    // show popup
+    GetCursorPos(cp);
+    popHotkeys.Popup(cp.x, cp.y);
 end;
 
 procedure TfrmBaseChat.Clear1Click(Sender: TObject);
