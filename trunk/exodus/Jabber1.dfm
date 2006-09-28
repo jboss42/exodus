@@ -3,8 +3,8 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 565
-  ClientWidth = 231
+  ClientHeight = 605
+  ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -34,7 +34,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 534
+    Height = 574
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -47,7 +47,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 231
+    Width = 317
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -56,12 +56,13 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 227
+        Width = 313
       end>
+    Constraints.MaxHeight = 31
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 119
+      Width = 227
       Height = 27
       Align = alNone
       AutoSize = True
@@ -73,8 +74,34 @@ object frmExodus: TfrmExodus
       Images = ImageList2
       TabOrder = 0
       Transparent = True
-      object btnOnlineRoster: TToolButton
+      object btnConnect: TToolButton
         Left = 0
+        Top = 0
+        Hint = 'Connect'
+        Caption = 'Connect'
+        Enabled = False
+        ImageIndex = 80
+        OnClick = mnuFile_ConnectClick
+      end
+      object btnDisconnect: TToolButton
+        Left = 23
+        Top = 0
+        Hint = 'Disconnect'
+        Caption = 'Disconnect'
+        ImageIndex = 79
+        Visible = False
+        OnClick = mnuDisconnectClick
+      end
+      object ToolButtonSep2: TToolButton
+        Left = 46
+        Top = 0
+        Width = 8
+        Caption = 'ToolButtonSep2'
+        ImageIndex = 81
+        Style = tbsSeparator
+      end
+      object btnOnlineRoster: TToolButton
+        Left = 54
         Top = 0
         Hint = 'View Online/All'
         AllowAllUp = True
@@ -84,7 +111,7 @@ object frmExodus: TfrmExodus
         OnClick = btnOnlineRosterClick
       end
       object btnAddContact: TToolButton
-        Left = 23
+        Left = 77
         Top = 0
         Hint = 'Add Contact'
         AllowAllUp = True
@@ -94,7 +121,7 @@ object frmExodus: TfrmExodus
         OnClick = btnAddContactClick
       end
       object btnRoom: TToolButton
-        Left = 46
+        Left = 100
         Top = 0
         Hint = 'Join a conference'
         AllowAllUp = True
@@ -104,7 +131,7 @@ object frmExodus: TfrmExodus
         OnClick = mnuConferenceClick
       end
       object btnFind: TToolButton
-        Left = 69
+        Left = 123
         Top = 0
         Hint = 'Search for Contacts'
         AllowAllUp = True
@@ -113,8 +140,16 @@ object frmExodus: TfrmExodus
         ImageIndex = 65
         OnClick = mnuSearchClick
       end
+      object btnSendFile: TToolButton
+        Left = 146
+        Top = 0
+        Hint = 'Send File'
+        Caption = 'Send File'
+        ImageIndex = 8
+        OnClick = mnuPeople_Contacts_SendFileClick
+      end
       object btnBrowser: TToolButton
-        Left = 92
+        Left = 169
         Top = 0
         Hint = 'Jabber Browser'
         AllowAllUp = True
@@ -122,13 +157,29 @@ object frmExodus: TfrmExodus
         ImageIndex = 67
         OnClick = mnuBrowserClick
       end
+      object ToolButtonSep1: TToolButton
+        Left = 192
+        Top = 0
+        Width = 8
+        Caption = 'ToolButtonSep1'
+        ImageIndex = 79
+        Style = tbsSeparator
+      end
+      object btnOptions: TToolButton
+        Left = 200
+        Top = 0
+        Hint = 'Options'
+        Caption = 'Options'
+        ImageIndex = 78
+        OnClick = Preferences1Click
+      end
     end
   end
   object pnlRoster: TPanel
     Left = 0
     Top = 31
     Width = 83
-    Height = 534
+    Height = 574
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -138,25 +189,23 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
-    ExplicitHeight = 514
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
-    Width = 143
-    Height = 534
+    Width = 229
+    Height = 574
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
-    ExplicitHeight = 514
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
-      Width = 143
-      Height = 534
+      Width = 229
+      Height = 574
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -179,7 +228,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 514
     end
   end
   object MainMenu1: TTntMainMenu
@@ -201,7 +249,7 @@ object frmExodus: TfrmExodus
           object mnuDisconnect: TTntMenuItem
             Caption = 'Sign &Off'
             Enabled = False
-            ShortCut = 16504
+            ShortCut = 8312
             OnClick = mnuDisconnectClick
           end
           object N7: TTntMenuItem
@@ -211,7 +259,7 @@ object frmExodus: TfrmExodus
             Caption = '&View'
             object mnuOnline: TTntMenuItem
               Caption = 'Show &Only Online'
-              ShortCut = 16503
+              ShortCut = 8311
               OnClick = btnOnlineRosterClick
             end
             object mnuToolbar: TTntMenuItem
@@ -238,7 +286,7 @@ object frmExodus: TfrmExodus
             end
             object ShowXML1: TTntMenuItem
               Caption = 'Show Debug XML'
-              ShortCut = 16507
+              ShortCut = 8315
               OnClick = ShowXML1Click
             end
           end
@@ -252,17 +300,17 @@ object frmExodus: TfrmExodus
           end
           object mnuMessage: TTntMenuItem
             Caption = 'Send Instant &Message'
-            ShortCut = 16500
+            ShortCut = 8308
             OnClick = mnuMessageClick
           end
           object mnuChat: TTntMenuItem
             Caption = 'Start &Chat'
-            ShortCut = 16501
+            ShortCut = 8309
             OnClick = mnuChatClick
           end
           object mnuConference: TTntMenuItem
             Caption = '&Join a Chat Room'
-            ShortCut = 16502
+            ShortCut = 8310
             OnClick = mnuConferenceClick
           end
           object mnuRegisterService: TTntMenuItem
@@ -303,7 +351,7 @@ object frmExodus: TfrmExodus
             end
             object Properties2: TTntMenuItem
               Caption = 'Contact &Properties'
-              ShortCut = 16505
+              ShortCut = 8313
               OnClick = Properties2Click
             end
             object N10: TTntMenuItem
@@ -316,7 +364,7 @@ object frmExodus: TfrmExodus
             end
             object mnuFindAgain: TTntMenuItem
               Caption = 'Fin&d Contact Again'
-              ShortCut = 16498
+              ShortCut = 8306
               OnClick = mnuFindAgainClick
             end
             object NewGroup2: TTntMenuItem
@@ -407,7 +455,7 @@ object frmExodus: TfrmExodus
           end
           object mnuBrowser: TTntMenuItem
             Caption = 'Jabber &Browser'
-            ShortCut = 16506
+            ShortCut = 8314
             OnClick = mnuBrowserClick
           end
           object mnuServer: TTntMenuItem
@@ -440,47 +488,47 @@ object frmExodus: TfrmExodus
           end
           object Preferences1: TTntMenuItem
             Caption = '&Options...'
-            ShortCut = 16499
+            ShortCut = 8307
             OnClick = Preferences1Click
           end
         end
       end
-      object mnuConnect: TTntMenuItem
+      object mnuFile_Connect: TTntMenuItem
         Caption = 'Connect'
         Enabled = False
-        OnClick = mnuConnectClick
+        OnClick = mnuFile_ConnectClick
       end
-      object mnuDisconnect1: TTntMenuItem
+      object mnuFile_Disconnect: TTntMenuItem
         Caption = 'Disconnect'
         Visible = False
         OnClick = mnuDisconnectClick
       end
-      object mnuMyStatus: TTntMenuItem
+      object mnuFile_MyStatus: TTntMenuItem
         AutoHotkeys = maManual
         Caption = 'My Status'
         Enabled = False
-        object mnuAvailable: TTntMenuItem
+        object mnuFile_MyStatus_Available: TTntMenuItem
           Caption = 'Available'
           ImageIndex = 1
           OnClick = presDNDClick
         end
-        object mnuFreeToChat: TTntMenuItem
+        object mnuFile_MyStatus_FreeToChat: TTntMenuItem
           Tag = 1
           Caption = 'Free To Chat'
           ImageIndex = 4
         end
-        object mnuAway: TTntMenuItem
+        object mnuFile_MyStatus_Away: TTntMenuItem
           Tag = 2
           Caption = 'Away'
           ImageIndex = 2
           OnClick = presDNDClick
         end
-        object mnuXtendedAway: TTntMenuItem
+        object mnuFile_MyStatus_XtendedAway: TTntMenuItem
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
         end
-        object mnuDonotdisturb: TTntMenuItem
+        object mnuFile_MyStatus_Donotdisturb: TTntMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
           ImageIndex = 3
@@ -490,35 +538,35 @@ object frmExodus: TfrmExodus
           Tag = 99
           Caption = '-'
         end
-        object Invisible1: TTntMenuItem
+        object mnuFile_MyStatus_Invisible: TTntMenuItem
           Tag = 99
           Caption = 'Invisible'
           Visible = False
         end
       end
-      object mnuMyProfiles: TTntMenuItem
+      object mnuFile_MyProfiles: TTntMenuItem
         Caption = 'My Profiles'
-        object mnuCreateNewProfile1: TTntMenuItem
+        object mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem
           Caption = 'Create New Profile...'
-          OnClick = mnuCreateNewProfile1Click
+          OnClick = mnuFile_MyProfiles_CreateNewProfileClick
         end
-        object mnuModifyProfile1: TTntMenuItem
+        object mnuFile_MyProfiles_ModifyProfile: TTntMenuItem
           Caption = 'Modify Profile...'
           Enabled = False
-          OnClick = mnuModifyProfile1Click
+          OnClick = mnuFile_MyProfiles_ModifyProfileClick
         end
-        object mnuRenameProfile1: TTntMenuItem
+        object mnuFile_MyProfiles_RenameProfile: TTntMenuItem
           Caption = 'Rename Profile...'
           Enabled = False
-          OnClick = mnuRenameProfile1Click
+          OnClick = mnuFile_MyProfiles_RenameProfileClick
         end
-        object mnuDeleteProfile1: TTntMenuItem
+        object mnuFile_MyProfiles_DeleteProfile: TTntMenuItem
           Caption = 'Delete Profile'
           Enabled = False
-          OnClick = mnuDeleteProfile1Click
+          OnClick = mnuFile_MyProfiles_DeleteProfileClick
         end
       end
-      object Exit1: TTntMenuItem
+      object File_Exit: TTntMenuItem
         Caption = 'Exit'
         OnClick = Exit2Click
       end
@@ -526,109 +574,110 @@ object frmExodus: TfrmExodus
     object People: TTntMenuItem
       Caption = 'People'
       Enabled = False
-      object mnuSearch1: TTntMenuItem
+      object mnuPeople_Search: TTntMenuItem
         Caption = 'Search...'
         OnClick = mnuSearchClick
       end
-      object Contacts1: TTntMenuItem
+      object mnuPeople_Contacts: TTntMenuItem
         Caption = 'Contacts'
-        object mnuAddContact1: TTntMenuItem
+        object mnuPeople_Contacts_AddContact: TTntMenuItem
           Caption = 'Add Contact...'
           OnClick = btnAddContactClick
         end
-        object mnuRenameContact1: TTntMenuItem
+        object mnuPeople_Contacts_RenameContact: TTntMenuItem
           Caption = 'Rename Contact...'
-          OnClick = mnuRenameContact1Click
+          OnClick = mnuPeople_Contacts_RenameContactClick
         end
-        object mnuContactProperties1: TTntMenuItem
+        object mnuPeople_Contacts_ContactProperties: TTntMenuItem
           Caption = 'Contact Properties...'
           OnClick = Properties2Click
         end
-        object mnuDeleteContact1: TTntMenuItem
+        object mnuPeople_Contacts_DeleteContact: TTntMenuItem
           Caption = 'Delete Contact'
           OnClick = btnDelPersonClick
         end
-        object mnuBlockContact1: TTntMenuItem
+        object mnuPeople_Contacts_BlockContact: TTntMenuItem
           Caption = 'Block Contact'
-          OnClick = mnuBlockContact1Click
+          OnClick = mnuPeople_Contacts_BlockContactClick
         end
-        object mnuFindContactinRoster1: TTntMenuItem
+        object mnuPeople_Contacts_FindContactinRoster: TTntMenuItem
           Caption = 'Find Contact in Roster'
           OnClick = mnuFindClick
         end
-        object SendFile1: TTntMenuItem
+        object mnuPeople_Contacts_SendFile: TTntMenuItem
           Caption = 'Send File...'
+          OnClick = mnuPeople_Contacts_SendFileClick
         end
-        object mnuSendMessage1: TTntMenuItem
+        object mnuPeople_Contacts_SendMessage: TTntMenuItem
           Caption = 'Send Message...'
           OnClick = mnuMessageClick
         end
-        object mnuViewHistory1: TTntMenuItem
+        object mnuPeople_Contacts_ViewHistory: TTntMenuItem
           Caption = 'View History'
           OnClick = MessageHistory2Click
         end
       end
-      object mnuGroup1: TTntMenuItem
+      object mnuPeople_Group: TTntMenuItem
         Caption = 'Groups'
-        object mnuAddNewRoster1: TTntMenuItem
+        object mnuPeople_Group_AddNewRoster: TTntMenuItem
           Caption = 'Add New Group...'
-          OnClick = mnuAddNewRoster1Click
+          OnClick = mnuPeople_Group_AddNewRosterClick
         end
-        object mnuRenameGroup1: TTntMenuItem
+        object mnuPeople_Group_RenameGroup: TTntMenuItem
           Caption = 'Rename Group...'
-          OnClick = mnuRenameGroup1Click
+          OnClick = mnuPeople_Group_RenameGroupClick
         end
-        object mnuDeleteGroup1: TTntMenuItem
+        object mnuPeople_Group_DeleteGroup: TTntMenuItem
           Caption = 'Delete Group'
-          OnClick = mnuDeleteGroup1Click
+          OnClick = mnuPeople_Group_DeleteGroupClick
         end
         object N13: TTntMenuItem
           Caption = '-'
         end
-        object mnuAddContacttoGroup1: TTntMenuItem
+        object mnuPeople_Group_AddContacttoGroup: TTntMenuItem
           Caption = 'Add Contact to Group...'
           OnClick = btnAddContactClick
         end
-        object mnuRemoveContactfromGroup1: TTntMenuItem
+        object mnuPeople_Group_RemoveContactfromGroup: TTntMenuItem
           Caption = 'Remove Contact from Group...'
           OnClick = btnDelPersonClick
         end
-        object mnuView2: TTntMenuItem
+        object mnuPeople_Group_View: TTntMenuItem
           Caption = 'View'
           Visible = False
-          object mnuAll1: TTntMenuItem
+          object mnuPeople_Group_View_All: TTntMenuItem
             Caption = 'All'
           end
-          object mnuOnlineOnly1: TTntMenuItem
+          object mnuPeople_Group_View_OnlineOnly: TTntMenuItem
             Caption = 'Online Only'
             OnClick = btnOnlineRosterClick
           end
-          object mnuBlockedContacts1: TTntMenuItem
+          object mnuPeople_Group_View_BlockedContacts: TTntMenuItem
             Caption = 'Blocked Contacts'
           end
-          object mnuAllRooms1: TTntMenuItem
+          object mnuPeople_Group_View_AllRooms: TTntMenuItem
             Caption = 'All Rooms'
           end
-          object mnuAllChats1: TTntMenuItem
+          object mnuPeople_Group_View_AllChats: TTntMenuItem
             Caption = 'All Chats'
           end
         end
       end
-      object mnuConference1: TTntMenuItem
+      object mnuPeople_Conference: TTntMenuItem
         Caption = 'Conference'
-        object mnuInviteContacttoConference1: TTntMenuItem
+        object mnuPeople_Conference_InviteContacttoConference: TTntMenuItem
           Caption = 'Invite to Conference...'
-          OnClick = mnuInviteContacttoConference1Click
+          OnClick = mnuPeople_Conference_InviteContacttoConferenceClick
         end
-        object mnuOpenNewConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem
           Caption = 'Join/Create New Conference Room...'
           OnClick = mnuConferenceClick
         end
-        object mnuSearchforConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem
           Caption = 'Search for Conferenece Room...'
           OnClick = mnuSearchClick
         end
-        object mnuCloseConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem
           Caption = 'Close Conference Room'
           Visible = False
         end
@@ -636,91 +685,91 @@ object frmExodus: TfrmExodus
           Caption = '-'
           Visible = False
         end
-        object mnuInvitePeopletoConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_InvitePeopletoConferenceRoom: TTntMenuItem
           Caption = 'Invite People to Conference Room...'
           Visible = False
         end
-        object mnuRemovePeopleFromConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_RemovePeopleFromConferenceRoom: TTntMenuItem
           Caption = 'Remove People From Conference Room...'
           Visible = False
         end
-        object mnuBlockPeopleFromConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_BlockPeopleFromConferenceRoom: TTntMenuItem
           Caption = 'Block People From Conference Room...'
           Visible = False
         end
-        object mnuRenamePeopleFromConferenceRoom1: TTntMenuItem
+        object mnuPeople_Conference_RenamePeopleFromConferenceRoom: TTntMenuItem
           Caption = 'Rename People From Conference Room...'
           Visible = False
         end
-        object mnuViewHistory2: TTntMenuItem
+        object mnuPeople_Conference_ViewHistory: TTntMenuItem
           Caption = 'View History'
           Visible = False
         end
       end
     end
-    object Options1: TTntMenuItem
+    object Options: TTntMenuItem
       Caption = 'Options'
-      OnClick = Options1Click
-      object mnuPassword1: TTntMenuItem
-        Caption = 'Password'
-        Enabled = False
-        object mnuChangePassword1: TTntMenuItem
-          Caption = 'Change Password...'
-          OnClick = mnuPasswordClick
-        end
-      end
-      object mnuRegistration1: TTntMenuItem
+      OnClick = OptionsClick
+      object mnuOptions_Registration: TTntMenuItem
         Caption = 'Registration'
         Enabled = False
-        object mnuEditRegistration1: TTntMenuItem
+        object mnuOptions_Registration_EditRegistration: TTntMenuItem
           Caption = 'Edit Registration...'
           OnClick = mnuRegistrationClick
         end
-        object mnuEditAvatar1: TTntMenuItem
+        object mnuOptions_Registration_EditAvatar: TTntMenuItem
           Caption = 'Edit Profile, Avatar...'
           OnClick = mnuMyVCardClick
         end
       end
-      object mnuEnableHTMLLinks1: TTntMenuItem
+      object mnuOptions_Password: TTntMenuItem
+        Caption = 'Password'
+        Enabled = False
+        object mnuOptions_Password_ChangePassword: TTntMenuItem
+          Caption = 'Change Password...'
+          OnClick = mnuPasswordClick
+        end
+      end
+      object mnuOptions_EnableHTMLLinks: TTntMenuItem
         Caption = 'Enable HTML Links'
         Enabled = False
         Visible = False
       end
-      object mnuEnableEmoticonDisplays1: TTntMenuItem
+      object mnuOptions_EnableEmoticonDisplays: TTntMenuItem
         Caption = 'Enable Emoticon Displays'
-        OnClick = mnuEnableEmoticonDisplays1Click
+        OnClick = mnuOptions_EnableEmoticonDisplaysClick
       end
-      object mnuEnablenotificationsall1: TTntMenuItem
+      object mnuOptions_Enablenotificationsall: TTntMenuItem
         Caption = 'Enable Notifications (all)'
         Enabled = False
         Visible = False
       end
-      object mnuEnableStartupWithWindows1: TTntMenuItem
+      object mnuOptions_EnableStartupWithWindows: TTntMenuItem
         Caption = 'Enable Startup With Windows'
-        OnClick = mnuEnableStartupWithWindows1Click
+        OnClick = mnuOptions_EnableStartupWithWindowsClick
       end
-      object mnuFont1: TTntMenuItem
+      object mnuOptions_Font: TTntMenuItem
         Caption = 'Fonts, Colors...'
-        OnClick = mnuFont1Click
+        OnClick = mnuOptions_FontClick
       end
-      object mnuNotifications1: TTntMenuItem
+      object mnuOptions_Notifications: TTntMenuItem
         Caption = 'Notifications'
-        object mnuNewMessage1: TTntMenuItem
+        object mnuOptions_Notifications_NewMessage: TTntMenuItem
           Caption = 'New Message'
-          OnClick = mnuNewMessage1Click
+          OnClick = mnuOptions_Notifications_NewMessageClick
         end
-        object mnuContactOnline1: TTntMenuItem
+        object mnuOptions_Notifications_ContactOnline: TTntMenuItem
           Caption = 'Contact Online'
-          OnClick = mnuContactOnline1Click
+          OnClick = mnuOptions_Notifications_ContactOnlineClick
         end
-        object mnuContactOffline1: TTntMenuItem
+        object mnuOptions_Notifications_ContactOffline: TTntMenuItem
           Caption = 'Contact Offline'
-          OnClick = mnuContactOffline1Click
+          OnClick = mnuOptions_Notifications_ContactOfflineClick
         end
       end
-      object mnuPlugins1: TTntMenuItem
+      object mnuOptions_Plugins: TTntMenuItem
         Caption = 'Plug-ins'
-        object Options3: TTntMenuItem
+        object mnuOptions_Plugins_Options: TTntMenuItem
           Caption = 'Options...'
           OnClick = mnuPluginOptsClick
         end
@@ -731,31 +780,31 @@ object frmExodus: TfrmExodus
       object N17: TTntMenuItem
         Caption = '-'
       end
-      object Options2: TTntMenuItem
+      object mnuOptions_Options: TTntMenuItem
         Caption = 'Options...'
         OnClick = Preferences1Click
       end
     end
     object Windows1: TTntMenuItem
       Caption = 'Windows'
-      object mnuCloseAll1: TTntMenuItem
+      object mnuWindows_CloseAll: TTntMenuItem
         Caption = 'Close All'
-        OnClick = mnuCloseAll1Click
+        OnClick = mnuWindows_CloseAllClick
       end
-      object mnuList1: TTntMenuItem
+      object mnuWindows_List1: TTntMenuItem
         Caption = 'List'
         Enabled = False
         Visible = False
       end
-      object mnuLayout1: TTntMenuItem
+      object mnuWindows_Layout: TTntMenuItem
         Caption = 'Layout...'
-        OnClick = mnuLayout1Click
+        OnClick = mnuWindows_LayoutClick
       end
-      object mnuMinimizetoSystemTray1: TTntMenuItem
+      object mnuWindows_MinimizetoSystemTray: TTntMenuItem
         Caption = 'Minimize to System Tray'
-        OnClick = mnuMinimizetoSystemTray1Click
+        OnClick = mnuWindows_MinimizetoSystemTrayClick
       end
-      object mnuMinimizetoTaskBar1: TTntMenuItem
+      object mnuWindows_MinimizetoTaskBar: TTntMenuItem
         Caption = 'Minimize to Task Bar'
         Visible = False
       end
@@ -776,127 +825,255 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 74
     Bitmap = {
-      494C01014E004F00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
-      0000000000003600000028000000400000004001000001002000000000000040
+      494C010151005400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      0000000000003600000028000000400000005001000001002000000000000050
       0100000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000FFFF0000FFFF0000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000FFFF0000FFFF0000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000808080000000000000FFFF0000FFFF0000000000808080000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080808000808080000000000000FFFF0000FFFF0000000000808080008080
+      8000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080808000808080000000000000FFFF0000FFFF0000000000808080008080
+      8000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000808080000000000000FFFF0000FFFF0000000000808080000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000FFFF0000FFFF0000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000FFFF0000FFFF0000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FDFDFD00FAFAFA00F7F7
       F700F5F5F500F2F2F200F2F2F200F2F2F200F2F2F200F2F2F200F2F2F200F5F5
-      F500F7F7F700FAFAFA00FDFDFD00000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      F500F7F7F700FAFAFA00FDFDFD0000000000874A2056874A20FF874A20FF874A
+      20FF874A20440000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000056A8CC0027AFE5004BBCE9004BBCE90027AFE50058A9CC000000
       000000000000000000000000000000000000FDFDFD00F7F7F700E7E7E700D7D7
       D700C7C7C700C5C5C500C5C5C500C5C5C500C5C5C500C5C5C500C5C5C500C7C7
-      C700D7D7D700E7E7E700F7F7F700FDFDFD000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      C700D7D7D700E7E7E700F7F7F700FDFDFD00874A20FFBEA592FFB89C86FFB89C
+      86FF874A20FF874A20440000000000000000000000000000000000000000858A
+      8881858A88D3858A888100000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000049A7CE0050C9F10079E0FB009DEDFE009DEDFE0079E0FB0050C9F10056A8
       CC0000000000000000000000000000000000FAFAFA00E7E7E700CACACA008484
       8400727272006F6F6F006F6F6F006F6F6F006F6F6F006F6F6F006F6F6F007272
-      720084848400CACACA00E7E7E700FAFAFA000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      720084848400CACACA00E7E7E700FAFAFA00874A20FFCCBBADFFA7917DFFB595
+      7AFFAE8B72FF874A20FF874A2044000000000000000000000000858A884C858A
+      88FF9EA1A0FF858A88FF00000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000001FC3
       F3002DD9FE00185C78001A5C760047A1B80049A2B90020657F0015516D0034DA
       FD0023C3F200000000000000000000000000F7F7F700D7D7D700666666006666
       6600666666006666660066666600666666006666660066666600666666006666
-      66005959590084848400D7D7D700F7F7F7000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      66005959590084848400D7D7D700F7F7F700874A20FFCCBBADFFA48D78FFA28A
+      74FFB4957AFFB3937CFF874A20FF0000000000000000858A884C858A88FFD2D3
+      D4FFC2C3C4FF858A88FF00000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000000000000000000000000000000000048ADD80011D4
       FE001185A60031BCDB0046DEFE0055DFFE0055DFFE004EDEFE0039CAEA000E6A
       890011D4FE0051B1D9000000000000000000F5F5F50066666600999999009999
       9900999999009999990099999900999999009999990099999900999999009999
-      99008080800072727200C7C7C700F5F5F5000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      99008080800072727200C7C7C700F5F5F500874A2030874A20FFD4C8BDFFA48D
+      78FFA48D78FFBEA592FF874A20FF00000000858A884C858A88FFE2E3E4FFC2C4
+      C6FF858A88FF858A888100000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000051B1D90010BDF000014A
       680001D1FD0011D4FE0011D4FE0021D7FE0021D7FE0011D4FE0021D7FE000CD3
       FE00015D7C0011BBEF0063BCE10000000000F2F2F2006666660099999900B2B2
       B200B2B2B200B2B2B200B2B2B200B2B2B200B2B2B200B2B2B200B2B2B200B2B2
-      B200808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      B200808080006F6F6F00C5C5C500F2F2F20000000000874A2019874A20FFCCBB
+      ADFFCCBBADFFB3937CFF874A20FF858A8881858A88FFD3D3D4FFBDBEBFFF858A
+      88FF858A884C0000000200000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000000000000000000000000002AB0E50001D1FD00018B
       B10001D1FD000CD3FE000CD3FE0011D4FE0011D4FE0011D4FE000CD3FE0001D1
       FD0001B0D70001D1FD002AB0E50000000000F2F2F2006666660099999900B2B2
       B200CFCFCF00D1D1D100D4D4D400D6D6D600D8D8D800DBDBDB00DDDDDD00CCCC
-      CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000874A2019874A
+      20FF874A20FF874A20FF85837DFFAAADADFFC8C9CAFFBDBEBFFF858A88FF858A
+      884C000000000000000000000000000000000000000000000000000000000000
+      00000000000000FFFF000000000000000000000000000000000000FFFF000000
       0000000000000000000000000000000000000000000019B1E80001D1FD0001D1
       FD000CD3FE0001D1FD0001D1FD0001D1FD0001D1FD0001D1FD0001D1FD0001D1
       FD0001D1FD0001D1FD0019B1E80000000000F2F2F2006666660099999900B2B2
       B200D2D2D200D4D4D400D7D7D700D9D9D900DBDBDB00DEDEDE00E0E0E000CCCC
       CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B5B7B8FF858A88FFB7B8B9FF858A88FF858A884C0000
+      0002000000000000000000000000000000000000000000000000000000000000
+      00000000000000FFFF000000000000000000000000000000000000FFFF000000
       0000000000000000000000000000000000000000000019B1E80001D1FD0001D1
       FD0001D1FD00017DA0000185A90001D1FD0001D1FD00046A8C000CACD10011D4
       FE000CD3FE0001D1FD0019B1E80000000000F2F2F20066666600999999002626
       2600D1D1D100D7D7D700DADADA0026262600DCDCDC00E1E1E100E3E3E300CCCC
-      CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000027AFE5002CD3FA0001D1
+      CC00808080006F6F6F00C5C5C500F2F2F20000000000858A884C858A88FF858A
+      88FF858A88FF858A88FFD0D1D2FFA3A4A4FF858A88FF858A8881000000000000
+      0000000000000000000000000000000000000000000000000000000000008080
+      80000000000000FFFF000000000000000000000000000000000000FFFF000000
+      0000808080000000000000000000000000000000000027AFE5002CD3FA0001D1
       FD000CD3FE00012E5000012E50003CDCFE003CDCFE00012E5000013050003CDC
       FE003CDCFE0039D5FA0027AFE50000000000F2F2F20066666600999999002626
       2600DADADA00DADADA00DCDCDC0026262600E4E4E400E4E4E400E6E6E600CCCC
-      CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000000000006CC6EB0041C8F10034DA
+      CC00808080006F6F6F00C5C5C500F2F2F200858A884C858A88FFF3F3F3FEEFF0
+      F0FFEDEEEEFEEAECECFEB6B9BAFF858A88FF858A884C858A88FF858A884C0000
+      0000000000000000000000000000000000000000000000000000808080008080
+      80000000000000FFFF000000000000000000000000000000000000FFFF000000
+      000080808000808080000000000000000000000000006CC6EB0041C8F10034DA
       FD0021D7FE00012E5000012E500055DFFE0056E0FE00012E50000130500055DF
       FE0056E0FE0041C8F10072C8EC0000000000F2F2F20066666600999999002626
       260026262600E7E7E700E7E7E70026262600E7E7E700E7E7E700E9E9E900CCCC
-      CC00808080006F6F6F00C5C5C500F2F2F2000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000000000000000000066C3EC008EE9
+      CC00808080006F6F6F00C5C5C500F2F2F200858A88FFF5F6F6FEA9ACABFF858A
+      88FFF7F7F7FFE2E3E5FFAAADADFFECEEEE8100000000858A884C858A88FF858A
+      884C000000000000000000000000000000000000000000000000808080008080
+      80000000000000FFFF000000000000000000000000000000000000FFFF000000
+      000080808000808080000000000000000000000000000000000066C3EC008EE9
       FD0093EBFE004D8BA1005595AA0093EBFE0093EBFE003A728A0071BED20093EB
       FE0093EBFE006CC6EB000000000000000000F5F5F50066666600999999002626
       2600DDDDDD00DDDDDD00E9E9E90026262600E9E9E900E9E9E900ECECEC00CCCC
-      CC008080800072727200C7C7C700F5F5F5000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000007ED8
+      CC008080800072727200C7C7C700F5F5F500858A884C858A88FF00000000858A
+      884C858A88FFFAFAFAFF858A88FF000000000000000000000000858A884C858A
+      88FF878C8AFF0000004C00000000000000000000000000000000000000008080
+      80000000000000FFFF000000000000000000000000000000000000FFFF000000
+      0000808080000000000000000000000000000000000000000000000000007ED8
       F500AAEFFE00AAEFFE00AAEFFE00AAEFFE00AAEFFE00AAEFFE00AAEFFE00AAEF
       FE007ED7F500000000000000000000000000F7F7F70066666600999999002626
       26002626260026262600DBDBDB0026262600ECECEC00ECECEC00EDEDED00CCCC
       CC008080800084848400D7D7D700F7F7F7000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      0000858A88FFEEF0F0FF858A88FF00000000000000000000000000000000858A
+      88FFF0F0F0FF858A88FF0000004C000000000000000000000000000000000000
+      00000000000000FFFF000000000000000000000000000000000000FFFF000000
       0000000000000000000000000000000000000000000000000000000000000000
       00006CC6EB008BD7F200C7EFFB00DBF8FE00DBF8FE00C7EFFB008BD7F2006CC6
       EB0000000000000000000000000000000000FAFAFA006666660099999900B2B2
       B200CCCCCC00CCCCCC00CCCCCC00CCCCCC00CCCCCC00CCCCCC00CCCCCC00CCCC
-      CC0080808000CACACA00E7E7E700FAFAFA000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      CC0080808000CACACA00E7E7E700FAFAFA00000000000000000000000000858A
+      88FFE9EBECFF858A88FF858A884C000000000000000000000000000000000000
+      004C858A88FFEEEFEFFC858A88FF000000000000000000000000000000000000
+      00000000000000FFFF000000000000000000000000000000000000FFFF000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000007FCDEE0027AFE50066C3EC0066C3EC0027AFE5007FCDEE000000
       000000000000000000000000000000000000FDFDFD00F7F7F700808080008080
       8000808080008080800080808000808080008080800080808000808080008080
-      8000D7D7D700E7E7E700F7F7F700FDFDFD000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
+      8000D7D7D700E7E7E700F7F7F700FDFDFD00000000000000000000000000858A
+      884C858A88FF858A884C00000000000000000000000000000000000000000000
+      00000000004C858A88FF858A884C000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3339,12 +3516,16 @@ object frmExodus: TfrmExodus
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000949CD6004A63C600425ACE004A5ABD00ADB5CE000000
       000000000000000000000000000000000000424D3E000000000000003E000000
-      2800000040000000400100000100010000000000000A00000000000000000000
-      000000000000000000000000FFFFFF00FFFF800100000000F81F000000000000
-      F00F000000000000E007000000000000C0030000000000008001000000000000
-      8001000000000000800100000000000080010000000000008001000000000000
-      8001000000000000C003000000000000E007000000000000F00F000000000000
-      F81F000000000000FFFF800100000000FFFFFFFFFFFFFFFFFFFFF3FFFFFFFC00
+      2800000040000000500100000100010000000000800A00000000000000000000
+      000000000000000000000000FFFFFF00F7EF000000000000F3CF000000000000
+      8181000000000000F3CF000000000000F7EF000000000000FC3F000000000000
+      FC3F000000000000F81F000000000000F00F0000000000000000000000000000
+      0000000000000000F00F000000000000F81F000000000000FC3F000000000000
+      FC3F000000000000FFFF000000000000FFFF800107FFEFF7F81F000003E3CFF3
+      F00F000001C38001E00700000183CFF3C00300000103EFF7800100008003F18F
+      80010000C00FF18F80010000FC0FE18780010000803FC18380010000001F0180
+      80010000008F0180C003000021C3C183E0070000F1E1E187F00F0000E1E1F18F
+      F81F0000E3F1F18FFFFF8001FFFFFFFFFFFFFFFFFFFFFFFFFFFFF3FFFFFFFC00
       FFFFED9FFC0181FEFFFFED6FFDFD0102E07FED6FFD0501FEF8FFF16F01FD0110
       F8FFFD1F7D0501F5FC7FFC7F41FD01F3FC7FFEFF7D210003FE3FFC7F41EB0003
       FE3FFC7F7DE70003FF1FF93F480F0003FE0FFBBF7AFF0003FFFFFBBF79FF8007
