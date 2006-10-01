@@ -152,13 +152,8 @@ begin
     // populate the drop down box based on our entity cache
     f.cboJID.Items.Clear();
     jEntityCache.getByFeature(FEAT_SEARCH, f.cboJID.Items);
-    f.ShowDefault();
     f.reset();
-
-    if f.TabSheet <> nil then
-        frmExodus.BringDockedToTop(f)
-    else
-        f.Show();
+    f.ShowDefault();
 
     // either get the fields right away,
     // or pre-select the first item
