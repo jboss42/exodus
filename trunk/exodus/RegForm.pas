@@ -114,10 +114,6 @@ begin
     regform := TfrmRegister.Create(Application);
     regform.jid := jid;
     regform.Start();
-    if regform.TabSheet <> nil then
-        frmExodus.BringDockedToTop(regform)
-    else
-        regform.Show();
 end;
 
 {---------------------------------------}

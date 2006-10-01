@@ -1,44 +1,39 @@
-object frmSubscribe: TfrmSubscribe
+inherited frmSubscribe: TfrmSubscribe
   Left = 250
   Top = 165
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 3
   Caption = 'Subscription Request'
-  ClientHeight = 218
-  ClientWidth = 322
-  Color = clBtnFace
-  DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
+  ClientHeight = 215
+  ClientWidth = 328
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ExplicitWidth = 340
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
     Left = 0
     Top = 35
-    Width = 322
+    Width = 328
     Height = 26
     Align = alTop
     Caption = 
       'This person or agent would like to see your online presence and ' +
       'add you to their roster.'
     WordWrap = True
+    ExplicitWidth = 325
   end
   object Bevel1: TBevel
     Left = 0
     Top = 33
-    Width = 322
+    Width = 328
     Height = 2
     Align = alTop
+    ExplicitWidth = 322
   end
   object chkSubscribe: TTntCheckBox
     Left = 8
@@ -90,28 +85,28 @@ object frmSubscribe: TfrmSubscribe
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 182
-    Width = 322
+    Top = 179
+    Width = 328
     Height = 36
     Align = alBottom
     TabOrder = 2
     TabStop = True
-    ExplicitTop = 182
-    ExplicitWidth = 322
+    ExplicitTop = 179
+    ExplicitWidth = 328
     ExplicitHeight = 36
     inherited Panel2: TPanel
-      Width = 322
+      Width = 328
       Height = 36
-      ExplicitWidth = 322
+      ExplicitWidth = 328
       ExplicitHeight = 36
       inherited Bevel1: TBevel
-        Width = 322
+        Width = 328
         ExplicitWidth = 322
       end
       inherited Panel1: TPanel
-        Left = 162
+        Left = 168
         Height = 31
-        ExplicitLeft = 162
+        ExplicitLeft = 168
         ExplicitHeight = 31
         inherited btnOK: TTntButton
           Caption = 'Accept'
@@ -127,7 +122,7 @@ object frmSubscribe: TfrmSubscribe
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 322
+    Width = 328
     Height = 33
     Align = alTop
     BevelOuter = bvNone
@@ -144,7 +139,7 @@ object frmSubscribe: TfrmSubscribe
     object lblJID: TTntLabel
       Left = 33
       Top = 0
-      Width = 289
+      Width = 295
       Height = 33
       Cursor = crHandPoint
       Align = alClient
@@ -159,6 +154,7 @@ object frmSubscribe: TfrmSubscribe
       Transparent = False
       Layout = tlCenter
       OnClick = lblJIDClick
+      ExplicitWidth = 289
     end
   end
   object PopupMenu1: TTntPopupMenu

@@ -22,12 +22,13 @@ unit Subscribe;
 interface
 
 uses
+    StateForm,
     XMLTag, NodeItem, JabberID,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus;
 
 type
-  TfrmSubscribe = class(TForm)
+  TfrmSubscribe = class(TfrmState)
     Label1: TTntLabel;
     chkSubscribe: TTntCheckBox;
     boxAdd: TGroupBox;
@@ -255,6 +256,7 @@ end;
 {---------------------------------------}
 procedure TfrmSubscribe.FormCreate(Sender: TObject);
 begin
+    inherited;
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
     _subscribe_windows.Add(Self);
