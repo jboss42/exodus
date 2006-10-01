@@ -39,6 +39,7 @@ type
     chkToast: TTntCheckBox;
     chkTrayNotify: TTntCheckBox;
     chkFront: TTntCheckBox;
+    chkFlashTabInfinite: TTntCheckBox;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);

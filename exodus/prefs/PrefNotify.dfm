@@ -30,7 +30,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   end
   object chkNotify: TTntCheckListBox
     Left = 8
-    Top = 112
+    Top = 120
     Width = 257
     Height = 97
     ItemHeight = 13
@@ -66,7 +66,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Hint = 
       'NOTE: Notifications always occur when the client is in the backg' +
       'round.'
-    Caption = 'Perform notifications when using the client.'
+    Caption = 'Perform notifications when using the client'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
@@ -74,9 +74,9 @@ inherited frmPrefNotify: TfrmPrefNotify
   object chkFlashInfinite: TTntCheckBox
     Left = 8
     Top = 82
-    Width = 289
+    Width = 281
     Height = 17
-    Caption = 'Flash taskbar continuously until the client gets focus.'
+    Caption = 'Flash taskbar continuously until the client gets focus'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
@@ -86,12 +86,12 @@ inherited frmPrefNotify: TfrmPrefNotify
     Top = 65
     Width = 281
     Height = 17
-    Caption = 'Perform notifications for the window I'#39'm typing in.'
+    Caption = 'Perform notifications for the window I'#39'm typing in'
     TabOrder = 2
   end
   object optNotify: TTntGroupBox
     Left = 8
-    Top = 216
+    Top = 223
     Width = 257
     Height = 103
     Caption = 'Notify Options'
@@ -132,5 +132,13 @@ inherited frmPrefNotify: TfrmPrefNotify
       TabOrder = 3
       OnClick = chkToastClick
     end
+  end
+  object chkFlashTabInfinite: TTntCheckBox
+    Left = 8
+    Top = 98
+    Width = 229
+    Height = 17
+    Caption = 'Flash taskbar until all notified tabs are seen'
+    TabOrder = 7
   end
 end
