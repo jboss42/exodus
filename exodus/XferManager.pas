@@ -31,7 +31,7 @@ uses
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs;
+    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs, ComCtrls, ToolWin;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -85,10 +85,9 @@ type
     httpServer: TIdHTTPServer;
     box: TScrollBox;
     tcpServer: TIdTCPServer;
-    Panel1: TPanel;
-    btnClose: TSpeedButton;
-    pnlCaption: TTntPanel;
     OpenDialog1: TOpenDialog;
+    Panel1: TPanel;
+    pnlCaption: TTntPanel;
     procedure FormCreate(Sender: TObject);
     procedure httpServerCommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
@@ -99,8 +98,6 @@ type
     procedure tcpServerExecute(AThread: TIdPeerThread);
     procedure tcpServerDisconnect(AThread: TIdPeerThread);
     procedure FormDestroy(Sender: TObject);
-    procedure FormResize(Sender: TObject);
-    procedure btnCloseClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure OpenDialog1CanClose(Sender: TObject; var CanClose: Boolean);
 
@@ -130,23 +127,6 @@ type
     procedure killFrame(frame: TFrame);
     procedure ServeStream(spkg: TStreamPkg);
     procedure UnServeStream(hash: string);
-
-    {
-        Event fired when docking is complete.
-
-        Docked property will be true, tabsheet will be assigned. This event
-        is fired after all other docking events are complete.
-    }
-    procedure OnDocked();override;
-
-    {
-        Event fired when a float (undock) is complete.
-
-        Docked property will be false, tabsheet will be nil. This event
-        is fired after all other floating events are complete.
-    }
-    procedure OnFloat();override;
-
   end;
 
 var
@@ -794,7 +774,6 @@ begin
         tcpServer.Active := false;
 end;
 
-{---------------------------------------}
 procedure TfrmXferManager.ClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
@@ -819,53 +798,6 @@ begin
         MainSession.UnRegisterCallback(_cb);
         _cb := -1;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmXferManager.FormResize(Sender: TObject);
-begin
-  inherited;
-    btnClose.Left := Panel1.Width - btnClose.Width - 2;
-    pnlCaption.Width := btnClose.Left - 5;
-end;
-
-{---------------------------------------}
-procedure TfrmXferManager.btnCloseClick(Sender: TObject);
-var
-    i: integer;
-    o: TObject;
-begin
-    for i := 0 to box.ControlCount - 1 do begin
-        o := TObject(box.Controls[i]);
-        if (o is TfSendStatus) then
-            TfSendStatus(o).kill()
-        else if (o is TfRecvStatus) then
-            TfRecvStatus(o).kill();
-    end;
-end;
-
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
-procedure TfrmXferManager.OnDocked();
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
-procedure TfrmXferManager.OnFloat();
-begin
-    inherited;
-    btnClose.Visible := false;
 end;
 
 {---------------------------------------}

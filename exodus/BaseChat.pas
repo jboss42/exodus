@@ -25,7 +25,8 @@ uses
     Prefs, Emote, Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils;
+    TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
+  Buttons;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -38,7 +39,6 @@ type
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
     pnlInput: TPanel;
-    Panel1: TPanel;
     popMsgList: TTntPopupMenu;
     popOut: TTntPopupMenu;
     MsgOut: TExRichEdit;
@@ -66,6 +66,7 @@ type
     popHotkeys: TTntPopupMenu;
     popHotkeys_sep1: TTntMenuItem;
     Customize1: TTntMenuItem;
+    pnlChatTop: TPanel;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);

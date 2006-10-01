@@ -6,22 +6,34 @@ inherited frmMsgQueue: TfrmMsgQueue
   ClientWidth = 446
   OldCreateOrder = True
   OnClose = FormClose
+  ExplicitWidth = 454
+  ExplicitHeight = 310
   PixelsPerInch = 96
   TextHeight = 13
-  object splitRoster: TSplitter
+  object splitRoster: TSplitter [0]
     Left = 130
-    Top = 0
-    Height = 276
+    Top = 32
+    Height = 244
     ResizeStyle = rsUpdate
     OnMoved = splitRosterMoved
     ExplicitLeft = 125
     ExplicitTop = 1
+    ExplicitHeight = 276
+  end
+  inherited pnlDockTop: TPanel
+    Width = 446
+    TabOrder = 2
+    ExplicitWidth = 446
+    inherited tbDockBar: TToolBar
+      Left = 397
+      ExplicitLeft = 397
+    end
   end
   object pnlRoster: TPanel
     Left = 0
-    Top = 0
+    Top = 32
     Width = 130
-    Height = 276
+    Height = 244
     Align = alLeft
     Caption = 'pnlRoster'
     TabOrder = 0
@@ -29,15 +41,15 @@ inherited frmMsgQueue: TfrmMsgQueue
   end
   object pnlMsgQueue: TPanel
     Left = 133
-    Top = 0
+    Top = 32
     Width = 313
-    Height = 276
+    Height = 244
     Align = alClient
     Caption = 'pnlMsgQueue'
     TabOrder = 1
     object Splitter1: TSplitter
       Left = 1
-      Top = 121
+      Top = 96
       Width = 311
       Height = 4
       Cursor = crVSplit
@@ -48,7 +60,7 @@ inherited frmMsgQueue: TfrmMsgQueue
     end
     object lstEvents: TTntListView
       Left = 1
-      Top = 26
+      Top = 1
       Width = 311
       Height = 95
       Align = alTop
@@ -79,12 +91,13 @@ inherited frmMsgQueue: TfrmMsgQueue
       OnDblClick = lstEventsDblClick
       OnEnter = lstEventsEnter
       OnKeyDown = lstEventsKeyDown
+      ExplicitTop = 26
     end
     object txtMsg: TExRichEdit
       Left = 1
-      Top = 125
+      Top = 100
       Width = 311
-      Height = 150
+      Height = 143
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -175,35 +188,6 @@ inherited frmMsgQueue: TfrmMsgQueue
       PlainRTF = False
       UndoLimit = 0
       AllowInPlace = False
-    end
-    object pnlButton: TPanel
-      Left = 1
-      Top = 1
-      Width = 311
-      Height = 25
-      Align = alTop
-      BevelEdges = []
-      BevelOuter = bvNone
-      TabOrder = 2
-      DesignSize = (
-        311
-        25)
-      object btnClose: TSpeedButton
-        Left = 288
-        Top = 2
-        Width = 23
-        Height = 20
-        Anchors = [akTop, akRight]
-        Caption = 'X'
-        Flat = True
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        OnClick = btnCloseClick
-      end
     end
   end
   object PopupMenu1: TTntPopupMenu

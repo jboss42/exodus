@@ -40,8 +40,6 @@ type
     lstEvents: TTntListView;
     txtMsg: TExRichEdit;
     splitRoster: TSplitter;
-    pnlButton: TPanel;
-    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -103,22 +101,6 @@ type
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
     procedure RemoveItem(i: integer);
-
-    {
-        Event fired when docking is complete.
-
-        Docked property will be true, tabsheet will be assigned. This event
-        is fired after all other docking events are complete.
-    }
-    procedure OnDocked();override;
-
-    {
-        Event fired when a float (undock) is complete.
-
-        Docked property will be false, tabsheet will be nil. This event
-        is fired after all other floating events are complete.
-    }
-    procedure OnFloat();override;
   end;
 
 var
@@ -412,8 +394,6 @@ begin
     _updateChatCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE_CHAT);
     _connectedCB    := MainSession.RegisterCallback(SessionCallback, SE_CONNECTED);
     _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
-
-    btnClose.Visible := false;
 end;
 
 {---------------------------------------}
@@ -763,31 +743,6 @@ begin
         splitRoster.Visible := false;
         pnlMsgQueue.Align := alClient; //fill it all
     end;
-end;
-
-
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
-procedure TfrmMsgQueue.OnDocked();
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
-procedure TfrmMsgQueue.OnFloat();
-begin
-    inherited;
-    btnClose.Visible := false;
 end;
 
 initialization

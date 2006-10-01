@@ -9,19 +9,58 @@ inherited frmDebug: TfrmDebug
   ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlDockTop: TPanel
+    Width = 400
+    TabOrder = 1
+    ExplicitWidth = 400
+    inherited tbDockBar: TToolBar
+      Left = 351
+      ExplicitLeft = 351
+    end
+    object pnlTop: TPanel
+      Left = 0
+      Top = 0
+      Width = 348
+      Height = 32
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitTop = 32
+      ExplicitWidth = 400
+      ExplicitHeight = 25
+      object lblJID: TTntLabel
+        Left = 71
+        Top = 9
+        Width = 72
+        Height = 13
+        Cursor = crHandPoint
+        Caption = '(Disconnected)'
+        OnClick = lblJIDClick
+      end
+      object lblLabel: TTntLabel
+        Left = 6
+        Top = 9
+        Width = 62
+        Height = 13
+        Caption = 'Current JID:  '
+      end
+    end
+  end
   object Panel2: TPanel
     Left = 0
-    Top = 25
+    Top = 32
     Width = 400
-    Height = 355
+    Height = 348
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
     TabOrder = 0
+    ExplicitTop = 57
+    ExplicitHeight = 323
     object Splitter1: TSplitter
       Left = 4
-      Top = 306
+      Top = 299
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -32,7 +71,7 @@ inherited frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 302
+      Height = 295
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -126,7 +165,7 @@ inherited frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 311
+      Top = 304
       Width = 392
       Height = 40
       Align = alBottom
@@ -219,50 +258,6 @@ inherited frmDebug: TfrmDebug
       PlainRTF = False
       UndoLimit = 0
       AllowInPlace = False
-    end
-  end
-  object pnlTop: TPanel
-    Left = 0
-    Top = 0
-    Width = 400
-    Height = 25
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 1
-    DesignSize = (
-      400
-      25)
-    object btnClose: TSpeedButton
-      Left = 375
-      Top = 2
-      Width = 23
-      Height = 20
-      Anchors = [akTop, akRight]
-      Caption = 'X'
-      Flat = True
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      OnClick = btnCloseClick
-    end
-    object lblJID: TTntLabel
-      Left = 71
-      Top = 6
-      Width = 72
-      Height = 13
-      Cursor = crHandPoint
-      Caption = '(Disconnected)'
-      OnClick = lblJIDClick
-    end
-    object lblLabel: TTntLabel
-      Left = 6
-      Top = 6
-      Width = 62
-      Height = 13
-      Caption = 'Current JID:  '
     end
   end
   object PopupMenu1: TTntPopupMenu

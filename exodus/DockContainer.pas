@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Dockable, ExtCtrls;
+  Dialogs, Dockable, ExtCtrls, ComCtrls, ToolWin;
 
 type
   TfrmDockContainer = class(TfrmDockable)

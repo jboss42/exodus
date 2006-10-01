@@ -39,8 +39,6 @@ type
     StatBar: TStatusBar;
     vwBrowse: TTntListView;
     popContext: TTntPopupMenu;
-    pnlTop: TTntPanel;
-    btnClose: TSpeedButton;
     List1: TTntMenuItem;
     SmallIcons1: TTntMenuItem;
     LargeIcons1: TTntMenuItem;
@@ -56,16 +54,6 @@ type
     mBookmark: TTntMenuItem;
     mBrowseNew: TTntMenuItem;
     mBrowse: TTntMenuItem;
-    CoolBar1: TCoolBar;
-    tlbToolBar: TToolBar;
-    btnBack: TToolButton;
-    btnFwd: TToolButton;
-    ToolButton2: TToolButton;
-    btnHome: TToolButton;
-    ToolButton1: TToolButton;
-    btnBookmark: TToolButton;
-    ToolButton3: TToolButton;
-    btnNode: TToolButton;
     pnlJid: TPanel;
     pnlJidID: TTntPanel;
     cboJID: TTntComboBox;
@@ -85,6 +73,17 @@ type
     lsFeatures: TTntListBox;
     mGetInfo: TMenuItem;
     vwInfo: TTntListView;
+    pnlTop: TTntPanel;
+    CoolBar1: TCoolBar;
+    tlbToolBar: TToolBar;
+    btnBack: TToolButton;
+    btnFwd: TToolButton;
+    ToolButton2: TToolButton;
+    btnHome: TToolButton;
+    ToolButton1: TToolButton;
+    btnBookmark: TToolButton;
+    ToolButton3: TToolButton;
+    btnNode: TToolButton;
     btnInfo: TToolButton;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
@@ -155,23 +154,6 @@ type
   public
     { Public declarations }
     procedure GoJID(jid: Widestring; refresh: boolean; node: Widestring = '');
-
-    {
-        Event fired when docking is complete.
-
-        Docked property will be true, tabsheet will be assigned. This event
-        is fired after all other docking events are complete.
-    }
-    procedure OnDocked();override;
-
-    {
-        Event fired when a float (undock) is complete.
-
-        Docked property will be false, tabsheet will be nil. This event
-        is fired after all other floating events are complete.
-    }
-    procedure OnFloat();override;
-
   end;
 
 var
@@ -320,13 +302,7 @@ begin
     cboNode.Width := cboJid.Width;
     btnGo.Left := cboJid.Width + cboJid.Left + 1;
     btnRefresh.Left := btnGo.Width + btnGo.Left + 1;
-    if (btnClose.Visible) then begin
-        btnClose.Left := btnRefresh.Left;
-        Coolbar1.Width := btnClose.Left - 5;
-    end
-    else begin
-        Coolbar1.Width := pnlTop.ClientWidth - 1;
-    end;
+    Coolbar1.Width := pnlTop.ClientWidth - 1;
 end;
 
 {---------------------------------------}
@@ -903,7 +879,7 @@ procedure TfrmBrowse.FormDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
   inherited;
-    btnClose.Visible := Docked;
+//    btnClose.Visible := Docked;
 end;
 
 {---------------------------------------}
@@ -1054,30 +1030,6 @@ procedure TfrmBrowse.btnInfoClick(Sender: TObject);
 begin
     PushJid(_ent.Jid.full, _ent.Node);
     ShowDiscoInfo();
-end;
-
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
-procedure TfrmBrowse.OnDocked();
-begin
-    btnClose.Visible := true;
-    inherited;
-end;
-
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
-procedure TfrmBrowse.OnFloat();
-begin
-    btnClose.Visible := false;
-    inherited;
 end;
 
 end.

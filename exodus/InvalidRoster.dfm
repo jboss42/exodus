@@ -5,8 +5,17 @@ inherited frmInvalidRoster: TfrmInvalidRoster
   ClientHeight = 237
   ClientWidth = 314
   OnClose = FormClose
+  ExplicitWidth = 322
+  ExplicitHeight = 271
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlDockTop: TPanel
+    Width = 314
+    TabOrder = 2
+    inherited tbDockBar: TToolBar
+      Left = 265
+    end
+  end
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 205
@@ -47,9 +56,9 @@ inherited frmInvalidRoster: TfrmInvalidRoster
   end
   object ListView1: TTntListView
     Left = 0
-    Top = 0
+    Top = 32
     Width = 314
-    Height = 205
+    Height = 173
     Align = alClient
     Checkboxes = True
     Columns = <

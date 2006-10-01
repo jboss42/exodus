@@ -2,62 +2,64 @@ inherited frmXferManager: TfrmXferManager
   Left = 251
   Top = 229
   Caption = 'File Transfer Manager'
-  ClientWidth = 436
+  ClientWidth = 455
   OldCreateOrder = True
   OnClose = FormClose
   OnDestroy = FormDestroy
-  ExplicitWidth = 444
-  ExplicitHeight = 201
+  ExplicitWidth = 463
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlDockTop: TPanel
+    Width = 455
+    TabOrder = 1
+    ExplicitWidth = 436
+    inherited tbDockBar: TToolBar
+      Left = 406
+      ExplicitLeft = 387
+    end
+    object Panel1: TPanel
+      Left = 0
+      Top = 0
+      Width = 403
+      Height = 32
+      Align = alClient
+      BevelOuter = bvNone
+      BorderWidth = 5
+      TabOrder = 1
+      ExplicitTop = -1
+      ExplicitWidth = 436
+      ExplicitHeight = 33
+      object pnlCaption: TTntPanel
+        Left = 5
+        Top = 5
+        Width = 393
+        Height = 22
+        Align = alClient
+        BevelOuter = bvLowered
+        Caption = 'File Transfers'
+        Color = clHighlight
+        ParentBackground = False
+        TabOrder = 0
+        ExplicitLeft = 3
+        ExplicitTop = 4
+        ExplicitWidth = 403
+        ExplicitHeight = 26
+      end
+    end
+  end
   object box: TScrollBox
     Left = 0
-    Top = 33
-    Width = 436
-    Height = 134
+    Top = 32
+    Width = 455
+    Height = 135
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
-    OnResize = FormResize
-  end
-  object Panel1: TPanel
-    Left = 0
-    Top = 0
-    Width = 436
-    Height = 33
-    Align = alTop
-    BevelOuter = bvNone
-    BorderWidth = 5
-    TabOrder = 1
-    object btnClose: TSpeedButton
-      Left = 410
-      Top = 5
-      Width = 23
-      Height = 21
-      Caption = 'X'
-      Flat = True
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      OnClick = btnCloseClick
-    end
-    object pnlCaption: TTntPanel
-      Left = 3
-      Top = 4
-      Width = 403
-      Height = 26
-      BevelOuter = bvLowered
-      Caption = 'File Transfers'
-      Color = clHighlight
-      ParentBackground = False
-      TabOrder = 0
-    end
+    ExplicitTop = 65
+    ExplicitWidth = 436
+    ExplicitHeight = 102
   end
   object httpServer: TIdHTTPServer
     Bindings = <>

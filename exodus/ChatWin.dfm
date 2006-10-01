@@ -8,7 +8,6 @@ inherited frmChat: TfrmChat
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   OnClose = FormClose
-  OnResize = FormResize
   ExplicitWidth = 391
   ExplicitHeight = 301
   PixelsPerInch = 96
@@ -19,13 +18,70 @@ inherited frmChat: TfrmChat
     ExplicitTop = 239
     ExplicitWidth = 383
   end
+  inherited pnlDockTop: TPanel
+    Width = 383
+    ExplicitWidth = 383
+    inherited tbDockBar: TToolBar
+      Left = 334
+      ExplicitLeft = 334
+    end
+    inherited pnlChatTop: TPanel
+      Width = 331
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 331
+      ExplicitHeight = 32
+      object pnlJID: TPanel
+        Left = 0
+        Top = 0
+        Width = 351
+        Height = 32
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitLeft = -20
+        object lblNick: TTntLabel
+          Left = 43
+          Top = 0
+          Width = 48
+          Height = 32
+          Cursor = crHandPoint
+          Align = alLeft
+          Caption = 'Nickname'
+          ParentShowHint = False
+          ShowHint = True
+          Layout = tlCenter
+          OnClick = lblJIDClick
+          ExplicitHeight = 13
+        end
+        object imgAvatar: TPaintBox
+          Left = 0
+          Top = 0
+          Width = 35
+          Height = 32
+          Align = alLeft
+          OnClick = imgAvatarClick
+          OnPaint = imgAvatarPaint
+          ExplicitHeight = 28
+        end
+        object Panel3: TPanel
+          Left = 35
+          Top = 0
+          Width = 8
+          Height = 32
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 0
+        end
+      end
+    end
+  end
   inherited pnlMsgList: TPanel
-    Top = 32
     Width = 383
     Height = 173
-    ExplicitTop = 32
+    ExplicitTop = 64
     ExplicitWidth = 383
-    ExplicitHeight = 173
+    ExplicitHeight = 141
   end
   inherited pnlInput: TPanel
     Top = 239
@@ -38,75 +94,31 @@ inherited frmChat: TfrmChat
       OnChange = MsgOutChange
     end
   end
-  inherited Panel1: TPanel
-    Width = 383
-    Height = 32
-    ExplicitWidth = 383
-    ExplicitHeight = 32
-    object btnClose: TSpeedButton
-      Left = 354
-      Top = 2
-      Width = 23
-      Height = 21
-      Caption = 'X'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      OnClick = btnCloseClick
-      OnMouseDown = btnCloseMouseDown
-    end
-    object pnlJID: TPanel
-      Left = 2
-      Top = 2
-      Width = 351
-      Height = 28
-      Align = alLeft
-      BevelOuter = bvNone
-      TabOrder = 0
-      object lblNick: TTntLabel
-        Left = 43
-        Top = 0
-        Width = 48
-        Height = 13
-        Cursor = crHandPoint
-        Align = alLeft
-        Caption = 'Nickname'
-        ParentShowHint = False
-        ShowHint = True
-        Layout = tlCenter
-        OnClick = lblJIDClick
-      end
-      object imgAvatar: TPaintBox
-        Left = 0
-        Top = 0
-        Width = 35
-        Height = 28
-        Align = alLeft
-        OnClick = imgAvatarClick
-        OnPaint = imgAvatarPaint
-      end
-      object Panel3: TPanel
-        Left = 35
-        Top = 0
-        Width = 8
-        Height = 28
-        Align = alLeft
-        BevelOuter = bvNone
-        TabOrder = 0
-      end
-    end
-  end
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 205
     Width = 383
     ExplicitTop = 205
     ExplicitWidth = 383
   end
-  object popContact: TTntPopupMenu [5]
+  object SaveDialog1: TSaveDialog [5]
+    DefaultExt = 'html'
+    Filter = 'RTF Files|*.rtf|All Files|*.*'
+    Left = 48
+    Top = 184
+  end
+  object timBusy: TTimer
+    Enabled = False
+    Interval = 800
+    OnTimer = timBusyTimer
+    Left = 48
+    Top = 152
+  end
+  object PrintDialog1: TPrintDialog
+    Options = [poSelection]
+    Left = 80
+    Top = 184
+  end
+  object popContact: TTntPopupMenu
     Left = 16
     Top = 152
     object mnuSave: TTntMenuItem
@@ -185,23 +197,5 @@ inherited frmChat: TfrmChat
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
     end
-  end
-  object SaveDialog1: TSaveDialog [6]
-    DefaultExt = 'html'
-    Filter = 'RTF Files|*.rtf|All Files|*.*'
-    Left = 48
-    Top = 184
-  end
-  object timBusy: TTimer
-    Enabled = False
-    Interval = 800
-    OnTimer = timBusyTimer
-    Left = 48
-    Top = 152
-  end
-  object PrintDialog1: TPrintDialog
-    Options = [poSelection]
-    Left = 80
-    Top = 184
   end
 end

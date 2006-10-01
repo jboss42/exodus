@@ -25,20 +25,21 @@ uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID, XMLTag, StrUtils, Unicode;
+    TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID, XMLTag, StrUtils, Unicode,
+  ToolWin;
 
 type
   TfrmRosterRecv = class(TfrmDockable)
     frameButtons1: TframeButtons;
-    pnlFrom: TTntPanel;
-    StaticText1: TTntStaticText;
-    txtFrom: TTntStaticText;
     txtMsg: TExRichEdit;
     Splitter1: TSplitter;
     lvContacts: TTntListView;
     Panel1: TTntPanel;
     Label2: TTntLabel;
     cboGroup: TTntComboBox;
+    pnlFrom: TTntPanel;
+    StaticText1: TTntStaticText;
+    txtFrom: TTntStaticText;
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);

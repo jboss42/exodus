@@ -3,11 +3,14 @@ inherited frmDockContainer: TfrmDockContainer
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlDockTop: TPanel
+    TabOrder = 1
+  end
   object Panel1: TPanel
     Left = 0
-    Top = 0
-    Width = 241
-    Height = 201
+    Top = 32
+    Width = 204
+    Height = 135
     Align = alClient
     BevelInner = bvLowered
     BevelOuter = bvLowered
