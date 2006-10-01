@@ -4,16 +4,7 @@ inherited frmRosterRecv: TfrmRosterRecv
   Caption = 'Receiving Contacts'
   ClientHeight = 287
   ClientWidth = 374
-  Color = clBtnFace
-  DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -73,7 +64,7 @@ inherited frmRosterRecv: TfrmRosterRecv
       Left = 2
       Top = 2
       Width = 51
-      Height = 18
+      Height = 17
       Align = alLeft
       Caption = 'From:    '
       Color = clBtnFace
@@ -85,13 +76,12 @@ inherited frmRosterRecv: TfrmRosterRecv
       ParentColor = False
       ParentFont = False
       TabOrder = 0
-      ExplicitHeight = 17
     end
     object txtFrom: TTntStaticText
       Left = 53
       Top = 2
-      Width = 319
-      Height = 18
+      Width = 32
+      Height = 17
       Align = alClient
       Caption = '<JID>'
       Color = clBtnFace
@@ -103,8 +93,6 @@ inherited frmRosterRecv: TfrmRosterRecv
       ParentColor = False
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 32
-      ExplicitHeight = 17
     end
   end
   object txtMsg: TExRichEdit
@@ -244,7 +232,7 @@ inherited frmRosterRecv: TfrmRosterRecv
       Width = 209
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      ItemHeight = 13
+      ItemHeight = 0
       Sorted = True
       TabOrder = 0
     end
