@@ -84,8 +84,7 @@ var
     r, i: integer;
     sjid: Widestring;
     tmp_jid: TJabberID;
-    win, chat: TfrmChat;
-    room: TfrmRoom;
+    chat: TfrmChat;
     sub: TfrmSubscribe;
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
@@ -97,75 +96,46 @@ begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
     end
     else if (event = '/session/gui/conference') then begin
-        room := StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
+        StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
             tag.GetBasicText('password'), true, false, (tag.GetAttribute('reg_nick') = 'true'));
-
-        // make sure it's not minimized
-        if (room.WindowState <> wsNormal) then
-            room.WindowState := wsNormal;
-
-        // make sure it's visible
-        room.Show();
-
-        // make sure its in front
-        if (not room.Docked) then
-            room.BringToFront();
     end
     else if (event = '/session/gui/contact') then begin
         // new outgoing message/chat window
         tmp_jid := TJabberID.Create(tag.getAttribute('jid'));
 
         r := MainSession.Prefs.getInt(P_CHAT);
-
+        //0 -> A new one to one chat window
+        //1 -> An instant message window
+        //2 -> A new or existing chat window
         if ((r = 0) or (r = 2)) then begin
             if (tmp_jid.resource <> '') then
-                win := StartChat(tmp_jid.jid, tmp_jid.resource, true)
+                StartChat(tmp_jid.jid, tmp_jid.resource, true)
             else
-                win := StartChat(tmp_jid.jid, '', true);
-
-            if (win <> nil) then begin
-                // make sure it's not minimized
-                if (win.WindowState <> wsNormal) then
-                    win.WindowState := wsNormal;
-
-                // make sure it's visible
-                win.Show();
-
-                // make sure it's in front
-                if (not win.Docked) then
-                    win.BringToFront();
-
-                if ((Jabber1.getAllowedDockState() <> adsForbidden) and
-                    (win.TabSheet <> nil) and
-                    (frmExodus.getTopDocked() <> win)) then begin
-                    frmExodus.BringDockedToTop(win);
-                end;
-                // make sure to put the cursor in the outbound text entry box
-                win.MsgOut.SetFocus();
-            end;
+                StartChat(tmp_jid.jid, '', true);
         end
-        else if (r = 1) then
+        else if (r = 1) then 
             StartMsg(tmp_jid.jid);
 
         tmp_jid.Free();
-
     end
     else if (event = '/session/gui/chat') then begin
         // if we are DND, or this is an offline msg, then possibly queue it,
         // depending on prefs.
-        if (((MainSession.Prefs.getBool('queue_dnd_chats')) and
-             (MainSession.Show = 'dnd')) or
-            ((MainSession.Prefs.getBool('queue_offline')) and
-             (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
+        if ((MainSession.Prefs.getBool('queue_dnd_chats') and
+            (MainSession.Show = 'dnd')) or
+           (MainSession.Prefs.getBool('queue_offline') and
+            (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
             // queue the chat window
             e := CreateJabberEvent(tag);
             RenderEvent(e);
+            e.Free();
         end
         else begin
             // New Chat Window
             tmp_jid := TJabberID.Create(tag.getAttribute('from'));
             if (not MainSession.IsBlocked(tmp_jid)) then begin
-                chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
+                //show window but don't bring it to front. Let notifications do that
+                chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
                 if (chat <> nil) then
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
                          chat.Othernick, RosterTreeImages.Find('contact'));
@@ -178,12 +148,14 @@ begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
         q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
+        e.Free();
     end
 
     else if (event = '/session/gui/msgevent') then begin
         // New Msg-Event style window
         e := CreateJabberEvent(tag);
         RenderEvent(e);
+        e.Free();
     end
 
     else if (event = '/session/gui/no-inband-reg') then begin
@@ -246,10 +218,10 @@ begin
 
         sub := TfrmSubscribe.Create(Application);
         sub.setup(tmp_jid, ri, tag);
-        DoNotify(nil, 'notify_s10n',
+        sub.ShowDefault(false);
+        DoNotify(sub, 'notify_s10n',
                  'Subscription from ' + sjid, RosterTreeImages.Find('key'));
         tmp_jid.Free();
-        sub.Show;
     end;
 end;
 

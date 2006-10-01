@@ -4,7 +4,6 @@ inherited frmDebug: TfrmDebug
   Caption = 'Debug'
   ClientHeight = 380
   ClientWidth = 400
-  OnActivate = FormActivate
   OnClose = FormClose
   ExplicitWidth = 408
   ExplicitHeight = 414

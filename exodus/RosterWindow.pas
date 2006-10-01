@@ -23,6 +23,7 @@ interface
 
 uses
     JabberID, GraphUtil,
+    Dockable,
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
@@ -321,8 +322,16 @@ type
     procedure FindAgain;
     procedure ClearNodes;
     procedure Redraw;
+
 //    procedure DockRoster;overload;
     procedure DockRoster(dockSite : TWinControl);
+
+    {
+        Returns the first parent derived from TForm.
+
+        @returns the first TForm parent or nil if not docked
+    }
+    function  GetDockParent(): TForm;
 
     procedure ShowPresence(show: Widestring);
 
@@ -373,12 +382,12 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 implementation
 uses
     Debug,
-    fProfile, ConnDetails, NewUser, RosterImages,  
+    fProfile, ConnDetails, NewUser, RosterImages,
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
-    IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1, 
+    IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
     Transports, Session, StrUtils;
 
 const
@@ -1779,6 +1788,12 @@ begin
 end;
 
 {---------------------------------------}
+function  TfrmRosterWindow.GetDockParent(): TForm;
+begin
+    Result := ExUtils.GetParentForm(Self);
+end;
+
+{---------------------------------------}
 {replaced with above
 procedure TfrmRosterWindow.DockRoster;
 begin
@@ -2402,23 +2417,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popChatClick(Sender: TObject);
-var
-    nt: integer;
-    win: TfrmChat;
 begin
     // chat w/ contact
-    nt := getNodeType();
-    if (nt = node_ritem) then begin
-        if (_cur_ritem.Jid.resource <> '') then
-            win := StartChat(_cur_ritem.jid.jid, _cur_ritem.Jid.resource,
-                true)
-        else
-            win := StartChat(_cur_ritem.jid.jid, '', true);
-
-        if (win <> nil) then
-            win.Show();
-
-    end;
+    if (getNodeType() = node_ritem) then
+        StartChat(_cur_ritem.jid.jid, _cur_ritem.Jid.resource, true)
 end;
 
 {---------------------------------------}

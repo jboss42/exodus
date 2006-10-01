@@ -172,7 +172,7 @@ type
 var
   frmMsgRecv: TfrmMsgRecv;
 
-procedure StartRecvMsg(e: TJabberEvent);
+function StartRecvMsg(e: TJabberEvent): TfrmMsgRecv;
 
 function StartMsg(msg_jid: WideString): TfrmMsgRecv;
 function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
@@ -198,41 +198,29 @@ uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
     XferManager, GnuGetText, 
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
-    RosterWindow, RemoveContact, RosterRecv, Room, NodeItem, Roster,
+    RosterWindow, RemoveContact, Room, NodeItem, Roster,
     Presence, Session, Jabber1;
 
 {$R *.DFM}
 
 {---------------------------------------}
-procedure StartRecvMsg(e: TJabberEvent);
+function StartRecvMsg(e: TJabberEvent): TfrmMsgRecv;
 var
     c: TMsgController;
-    fmsg: TfrmMsgRecv;
-    fcts: TfrmRosterRecv;
 begin
     // display this msg in a new window
-    case e.eType of
-    evt_RosterItems: begin
-        // roster items
-        fcts := TfrmRosterRecv.Create(Application);
-        fcts.Restore(e);
+    c := MainSession.MsgList.FindJid(e.from);
+    if (c = nil) then begin
+        Result := TfrmMsgRecv.Create(Application);
+        Result.cid := MainSession.MsgList.AddController(e.from, Result.Controller);
+        Result.DisplayEvent(e);
+        Result.sizeHeaders();
+        Result.ShowDefault();
     end
     else begin
-        // other things
-        c := MainSession.MsgList.FindJid(e.from);
-        if (c = nil) then begin
-            fmsg := TfrmMsgRecv.Create(Application);
-            fmsg.cid := MainSession.MsgList.AddController(e.from, fmsg.Controller);
-            fmsg.DisplayEvent(e);
-            fmsg.sizeHeaders();
-            fmsg.ShowDefault();
-            e.Free();
-        end
-        else begin
-            fmsg := TfrmMsgRecv(c.Data);
-            fmsg.PushEvent(e);
-        end;
-    end;
+        Result := TfrmMsgRecv(c.Data);
+        Result.ShowDefault(); //bring the message window to front
+        Result.PushEvent(e);
     end;
 end;
 
@@ -289,7 +277,7 @@ begin
         SetupResources();
         setFrom(msg_jid);
         sizeHeaders();
-        ShowDefault;
+        ShowDefault();
         btnClose.Visible := Docked;
         FormResize(nil);
         if (txtSendSubject.Showing) then
@@ -321,6 +309,7 @@ var
     s: Widestring;
     echat: TExodusChat;
 begin
+    inherited;
     // pre-fill parts of the header grid
     AssignUnicodeFont(Self);
     AssignUnicodeURL(txtFrom.Font, 8);
@@ -549,17 +538,20 @@ var
     e: TJabberEvent;
 begin
     recips.Free();
-
     // make sure the queue is clear
     while (_events.Count > 0) do begin
         e := TJabberEvent(_events.Pop);
         e.Free();
     end;
 
+    //JJF hmm, if cid is just an index into the MsgList list, this probably
+    //won't work right (ie another msg form is open before this one and closed
+    //after this one is opened but before it closes)
     if ((cid <> -1) and (MainSession <> nil) and (cid < MainSession.MsgList.Count)) then
         MainSession.MsgList.Delete(cid);
 
     Action := caFree;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -880,6 +872,7 @@ begin
 
     LogMsgEvent(e);
 
+    e.Free();
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
@@ -891,7 +884,10 @@ end;
 procedure TfrmMsgRecv.PushEvent(e: TJabberEvent);
 begin
     // Make sure we don't get dups
-    _events.Push(e);
+    //JJF well, there is no dup checking so I'm assuming this is unimplemented
+    //so... Modifying so a copy of e gets pushed. Makes caller responisble
+    //for free...
+    _events.Push(TJabberEvent.create(e));
     frameButtons1.btnCancel.Caption := _(sBtnNext)
 end;
 
@@ -992,24 +988,14 @@ begin
   inherited;
 end;
 
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
+{---------------------------------------}
 procedure TfrmMsgRecv.OnDocked();
 begin
     inherited;
     btnClose.Visible := true;
 end;
 
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
+{---------------------------------------}
 procedure TfrmMsgRecv.OnFloat();
 begin
     inherited;

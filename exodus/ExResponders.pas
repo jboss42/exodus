@@ -138,6 +138,7 @@ uses
     IdException, JclDebug, JclHookExcept, TypInfo,
     {$endif}
 
+    MsgQueue,
     RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
@@ -329,6 +330,7 @@ procedure TVersionResponder.iqCallback(event: string; tag: TXMLTag);
 var
     r: TXMLTag;
     app, win: string;
+    f: TForm;
 begin
     // respond w/ our version info
     {
@@ -342,8 +344,14 @@ begin
     </query></iq>
     }
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-
-    DoNotify(nil, 'notify_autoresponse',
+    //direct notify at the message queue if showing, otherwise the main window
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+        
+    DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sVersion),
                                           getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -381,6 +389,7 @@ var
     tzi: TTimeZoneInformation;
     utc: TDateTime;
     res: integer;
+    f: TForm;
 begin
     // Respond to time queries
     {
@@ -395,7 +404,13 @@ begin
     }
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
-    DoNotify(nil, 'notify_autoresponse',
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+
+    DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sTime),
                                           getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -434,10 +449,17 @@ procedure TLastResponder.iqCallback(event: string; tag: TXMLTag);
 var
     idle: dword;
     r: TXMLTag;
+    f: TForm;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
-    DoNotify(nil, 'notify_autoresponse',
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+
+    DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                                           getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -470,10 +492,17 @@ procedure TConfirmationResponder.iqCallback(event: string; tag: TXMLTag);
 var
     x, r: TXMLTag;
     url: WideString;
+    f: TForm;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
-    DoNotify(nil, 'notify_autoresponse',
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+
+    DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                 getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -513,6 +542,7 @@ end;
 procedure TAvatarResponder.iqCallback(event: string; tag: TXMLTag);
 var
     x, r: TXMLTag;
+    f: TForm;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
@@ -528,7 +558,13 @@ begin
         _session.SendTag(r);
     end
     else begin
-        DoNotify(nil, 'notify_autoresponse',
+        f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//        if (IsMsgQueueShowing()) then
+//            f := GetMsgQueue(false);
+
+        DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                 getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -570,10 +606,17 @@ procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
 var
     i: integer;
     r: TXMLTag;
+    f: TForm;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
-    DoNotify(nil, 'notify_autoresponse',
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+
+    DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
                                           getNick(tag.getAttribute('from'))]),
              RosterTreeImages.Find('info'));
@@ -668,6 +711,7 @@ var
     di: TDiscoItem;
     i: integer;
     n, r, q: TXMLTag;
+    f: TForm;
 begin
     // return an empty result set.
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -687,8 +731,13 @@ begin
             n.setAttribute('jid', di.JID);
         end;
     end;
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
 
-    DoNotify(nil, 'notify_autoresponse',
+    DoNotify(f, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
         RosterTreeImages.Find('info'));
@@ -717,6 +766,7 @@ var
     uri, ext: WideString;
     extension : TWideStringList;
     error: boolean;
+    f: TForm;
 begin
     // return info results
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -825,8 +875,13 @@ begin
         end;
     end;
 
+    f := nil;
+//JJF if requests ever generate actual events, route notify to msg queue,
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
 
-    DoNotify(nil, 'notify_autoresponse',
+    DoNotify(f, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
         RosterTreeImages.Find('info'));

@@ -100,21 +100,20 @@ var
 begin
     // factory for GUI
     // kick and ban get here.. because of status codes
-    e := CreateJabberEvent(tag);
 
     // check to see if we're already in the room.
-    if (room_list.IndexOf(e.str_content) >= 0) then begin
-        e.Free();
-        exit;
+    if (room_list.IndexOf(e.str_content) <  0) then begin
+        e := CreateJabberEvent(tag);
+        try
+            if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then
+                // auto-join the room
+                StartRoom(e.str_content, '', '', True, False, True)
+            else
+                RenderEvent(e);
+        finally
+            e.Free();
+        end;
     end;
-
-    if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
-        // auto-join the room
-        StartRoom(e.str_content, '', '', True, False, True);
-        e.Free();
-    end
-    else
-        RenderEvent(e);
 end;
 
 {---------------------------------------}

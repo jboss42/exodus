@@ -42,7 +42,6 @@ type
     popMsgList: TTntPopupMenu;
     popOut: TTntPopupMenu;
     MsgOut: TExRichEdit;
-    timWinFlash: TTimer;
     Clear1: TTntMenuItem;
     CopyAll1: TTntMenuItem;
     Copy1: TTntMenuItem;
@@ -83,7 +82,6 @@ type
     procedure Copy3Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure timWinFlashTimer(Sender: TObject);
     procedure BoldClick(Sender: TObject);
     procedure UnderlineClick(Sender: TObject);
     procedure ItalicsClick(Sender: TObject);
@@ -122,18 +120,9 @@ type
     procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
-    procedure Flash;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
-    procedure gotActivate; override;
     property MsgList: TfBaseMsgList read getMsgList;
     procedure OnSessionCallback(event: string; tag: TXMLTag);
-
-    {
-        Event fired when Form receives activation while in docked state.
-
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);override;
 
     {
         Event fired when docking is complete.
@@ -151,6 +140,7 @@ type
     }
     procedure OnFloat();override;
 
+    procedure gotActivate();override;
   end;
 
 var
@@ -213,15 +203,6 @@ begin
     if ((l > 0) and (MsgOut.Text[l] <> ' ')) then
         MsgOut.SelText := ' ';
     MsgOut.SelText := etxt;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.gotActivate;
-begin
-    OutputDebugString('frmBaseChat.gotActivate');
-    if (timWinFlash.Enabled) then
-        timWinFlash.Enabled := false;
-    frmExodus.ActiveChat := Self;
 end;
 
 {---------------------------------------}
@@ -290,13 +271,11 @@ var
     hotkeyidx: integer;
 begin
     if (Key = 0) then exit;
-
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
-        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
+        GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
-
     // handle close window/tab hotkeys
     else if ((Key = _close_key) and (Shift = _close_shift)) then
         Self.Close()
@@ -338,7 +317,8 @@ begin
         end;
         if (hotkeyidx >= 0) then
             MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
-    end;
+    end
+    else inherited;
 end;
 
 {---------------------------------------}
@@ -353,6 +333,15 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmBaseChat.gotActivate();
+begin
+    inherited;
+    frmExodus.ActiveChat := Self;
+
+    if (MsgOut.Visible and MsgOut.Enabled) then
+        MsgOut.SetFocus();
+end;
+
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
     ht: integer;
@@ -567,13 +556,6 @@ begin
     MsgList.ScrollToBottom();
 end;
 
-{---------------------------------------}
-procedure TfrmBaseChat.timWinFlashTimer(Sender: TObject);
-begin
-    // Flash the window
-    OutputDebugString('timWinFlashTimer');
-    FlashWindow(Self.Handle, true);
-end;
 
 procedure TfrmBaseChat.UnderlineClick(Sender: TObject);
 begin
@@ -587,36 +569,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.Flash;
-begin
-    if Self.Active then exit;
-
-    OutputDebugString('Flash');
-    if MainSession.Prefs.getBool('notify_flasher') then begin
-        timWinFlash.Enabled := true;
-    end
-    else begin
-        timWinFlash.Enabled := false;
-        timWinFlashTimer(Self);
-    end;
-end;
-
-{---------------------------------------}
 function TfrmBaseChat.getMsgList(): TfBaseMsgList;
 begin
     Result := TfBaseMsgList(_msgframe);
-end;
-
-{
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmBaseChat.OnDockedActivate(Sender : TObject);
-begin
-    inherited;
-    if (MsgOut.Visible and MsgOut.Enabled) then
-        MsgOut.SetFocus();
 end;
 
 {
@@ -628,8 +583,6 @@ end;
 procedure TfrmBaseChat.OnDocked();
 begin
     inherited;
-    if timWinFlash.Enabled then
-        timWinFlash.Enabled := false;
     MsgList.refresh();
 end;
 
@@ -642,15 +595,12 @@ end;
 procedure TfrmBaseChat.OnFloat();
 begin
     inherited;
-    if timWinFlash.Enabled then
-        timWinFlash.Enabled := false;
     MsgList.refresh();
 end;
 
 procedure TfrmBaseChat.OnHotkeysClick(Sender: TObject);
 var
     idx: integer;
-    mi: TTntMenuItem;
 begin
     idx := _hotkey_menu_items.IndexOfObject(Sender);
     if (idx <> -1) then begin

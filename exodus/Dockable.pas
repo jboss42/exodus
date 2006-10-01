@@ -26,6 +26,8 @@ uses
     ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
     XMLTag;
 
+
+    
 type
   TDockNotify = procedure of object;
   {
@@ -52,37 +54,33 @@ type
         from dock manager (tabs)
     }
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     _docked: boolean;
-    _top: boolean;
-    _dockChanging: boolean;
-    _initiallyDocked: boolean;
-    _bringToFront: boolean;
+    _initiallyDocked: boolean;  //start docked?
+    _initiallyTop: boolean;     //start on top?
 
+    _normalImageIndex: integer;//image shown when not notifying
+    _notifyImageIndex: integer;//image shown when notifying
+
+    function  getImageIndex(): Integer;
+    procedure setImageIndex(idx: integer);
   protected
-    procedure CreateParams(var Params: TCreateParams); override;
-    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
-    procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
-    procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
-
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
 
+    procedure OnFlash();override;
+
+    property NormalImageIndex: integer read _normalImageIndex write _normalImageIndex;
+    property NotifyImageIndex: integer read _notifyImageIndex write _notifyImageIndex;
+
   public
     { Public declarations }
-    TabSheet: TTntTabSheet;
-    ImageIndex: integer;
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
-    procedure ShowDefault;override;
-    procedure gotActivate; virtual;
-    {
-        Event fired when Form receives activation while in docked state.
 
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);virtual;
+    procedure ShowDefault(bringtofront:boolean=true);override;
 
     {
         Event fired when docking is complete.
@@ -100,9 +98,32 @@ type
     }
     procedure OnFloat();virtual;
 
+    {
+        A notification event has occurred.
+
+        notifyEvents is a bitmap flag of what events should fire.
+    }
+    procedure OnNotify(notifyEvents: integer);override;
+
+    procedure gotActivate();override;
+
     property Docked: boolean read _docked write _docked;
 
     property FloatPos: TRect read getPosition;
+
+    {
+        Index into the TRosterImages list for image mapping
+
+        ImageIndex controls what image appears on a tab for a docked
+        form. @see jopl/RosterImages for complete image map
+
+        Base class will use either normalImageIndex (not notifying) or
+        notifyImageIndex when this property is read. When this property
+        is set, normalImageIndex is set and dock manager refreshTab is
+        called.
+    }
+    property ImageIndex: Integer read getImageIndex write setImageIndex;
+
   end;
 
 var
@@ -113,26 +134,37 @@ implementation
 {$R *.dfm}
 
 uses
+    PrefController,
+    RosterImages,
     XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
-    ImageIndex := 43;
+    _normalImageIndex := RosterImages.RI_APPIMAGE_INDEX;
+    _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
+
     _docked := false;
-    _dockChanging := false;
     _initiallyDocked := true;
-    _bringToFront := false;
+
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     inherited;
 end;
 
-{
-    Drag event.
+procedure TfrmDockable.setImageIndex(idx: integer);
+begin
+    _normalImageIndex := idx;
+    GetDockManager().UpdateDocked(self);
+end;
 
-    Override default event handlers to change when this form should accept
-    dragged objects. This is called from dock manager (tabs)
-}
+function TfrmDockable.getImageIndex(): Integer;
+begin
+    if (isNotifying and (GetDockmanager().getTopDocked() <> Self)) then
+        Result := _notifyImageIndex
+    else
+        Result := _normalImageIndex;
+end;
+
 procedure TfrmDockable.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
@@ -141,12 +173,6 @@ begin
     //implement in subclass
 end;
 
-{
-    Drop event
-
-    Override to handle objects dropped into form, specifically
-    from dock manager (tabs)
-}
 procedure TfrmDockable.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
     inherited;
@@ -156,141 +182,81 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
-    _dockChanging := true;
-    Self.TabSheet := frmExodus.OpenDocked(self);
-    _dockChanging := false;
+    GetDockManager().OpenDocked(self);
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.FloatForm;
 begin
-    _dockChanging := true;
-    frmExodus.FloatDocked(Self);
-    _dockChanging := false;
+    GetDockManager().FloatDocked(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.gotActivate();
+begin
+    inherited;
+
+    if (Docked) then begin
+        OutputDebugMsg('TfrmDockable.gotActivate calling UpdateDocked: ImageIndex: ' + IntToStr(ImageIndex));
+        GetDockManager().UpdateDocked(Self);
+        GetDockManager().OnNotify(Self, notify_flash); //STOp flashing (no longer isNotifying)
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if (_docked) then 
-        frmExodus.CloseDocked(Self);
+    if (_docked) then
+        GetDockManager().CloseDocked(Self);
     inherited;
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.CreateParams(var Params: TCreateParams);
-begin
-    // Make each window appear on the task bar.
-    inherited CreateParams(Params);
-    with Params do begin
-        ExStyle := ExStyle or WS_EX_APPWINDOW;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.ShowDefault;
-var
-    ads: TAllowedDockStates;
+procedure TfrmDockable.ShowDefault(bringtofront:boolean);
 begin
     if (self.Visible) then begin
-        if (Self.TabSheet <> nil) then
-            frmExodus.BringDockedToTop(Self)
+        if (Docked and bringtofront) then
+            GetDockManager().BringDockedToTop(Self)
         else
             inherited;
     end
     else begin
         RestoreWindowState();
-        ads := Jabber1.getAllowedDockState();
         // show this form using the default behavior
         if (_initiallyDocked) then begin
             Self.DockForm();
-            frmExodus.BringDockedToTop(Self);
+            Self.Show(); //show before trying to bring to front
+            if (bringtofront or _initiallyTop) then
+                GetDockManager().BringDockedToTop(Self);
         end
         else begin
             inherited; //let base class show window
             Self.OnFloat(); //fire float event so windows can fix up
         end;
     end;
-    Self.Show();
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.WMDisplayChange(var msg: TMessage);
+procedure TfrmDockable.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
 begin
-    checkAndCenterForm(Self);
+  inherited;
+    // handle Ctrl-Tab to switch tabs
+    if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
+        GetDockManager().SelectNext(not (ssShift in Shift));
+        Key := 0;
+    end
 end;
 
-{---------------------------------------}
-procedure TfrmDockable.WMActivate(var msg: TMessage);
-var
-    m: string;
-begin
-    if ((not _top) and
-        ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
-        // we are getting clicked..
-        m := Self.className + '.WMActivate ' + Self.Caption;
-        OutputDebugString(PChar(m));
-
-        _top := true;
-        _bringToFront := true;
-        SetWindowPos(Self.Handle, 0,0,0,0,0, HWND_TOP or SWP_NOSIZE or SWP_NOMOVE);
-        _top := false;
-        _bringToFront := false;
-
-        StopTrayAlert();
-        gotActivate();
-    end;
-
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
-begin
-
-    if (not _top) then
-        msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
-
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.gotActivate();
-begin
-    // implement this in sub-classes.
-end;
-
-{---------------------------------------}
-{
-
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmDockable.OnDockedActivate(Sender : TObject);
-begin
-    inherited;
-    //subclasses override to change activation behavior
-     if (Self.TabSheet <> nil) then
-        Self.TabSheet.ImageIndex := ImageIndex;
-end;
-
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
 procedure TfrmDockable.OnDocked();
 begin
     Self.Align := alClient;
-    Self.TabSheet.ImageIndex := Self.ImageIndex;
 end;
 
 procedure TfrmDockable.OnFloat();
 begin
-
+    //nop
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
@@ -304,15 +270,45 @@ begin
     if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
         tstr := 't';
     _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
+    _initiallyTop := (windowState.GetAttribute('lasttop') = 't');
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
 begin
-    if (not Floating) then
-        windowState.setAttribute('dock', 't')
+    if (not Floating) then begin
+        windowState.setAttribute('dock', 't');
+        if (GetDockManager().getTopDocked = Self) then
+            windowState.setAttribute('lasttop', 't');
+    end
     else
         windowState.setAttribute('dock', 'f');
     inherited;
+end;
+
+procedure TfrmDockable.OnNotify(notifyEvents: integer);
+begin
+    if (Docked) then begin
+        //if form is docked, all we need to do is update our presentation
+        if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+            isNotifying := true;
+            GetDockManager().UpdateDocked(Self);
+        end;
+
+        if ((notifyEvents and PrefController.notify_front) > 0) then
+            GetDockManager().BringDockedToTop(Self);
+
+        //let dock manager have a shot at these events...
+        //not sure this is right...
+        GetDockManager().OnNotify(Self, notifyEvents);
+    end;
+    inherited; //inherited will handle floating window notifications
+end;
+
+procedure TfrmDockable.OnFlash();
+begin
+    //could implement flashing tabs here
+    if (not Docked) then
+        inherited;
 end;
 
 end.

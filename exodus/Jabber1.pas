@@ -77,10 +77,79 @@ type
     {
       Dock states
     }
-  TDockStates = (dsRosterOnly, dsDockOnly, dsRosterDock, dsUninitialized);
-type
+    TDockStates = (dsRosterOnly, dsDockOnly, dsRosterDock, dsUninitialized);
 
-  TfrmExodus = class(TTntForm)
+    IExodusDockManager = interface
+    {
+        Close the tab for the given form.
+
+        Adjust layout as needed
+    }
+    procedure CloseDocked(frm: TfrmDockable);
+
+    {
+        Open a tab and dock the given form
+
+        Adjust the layout as needed (none docked, embedded roster etc)
+    }
+    function OpenDocked(frm : TfrmDockable) : TTntTabSheet;
+
+    {
+        Float the given form.
+
+        Adjust layout as needed
+    }
+    procedure FloatDocked(frm : TfrmDockable);
+
+    {
+        Get the current docksite for the main window.
+
+        Pretty much the window itself but this absctraction
+        should allow us to have a free floting dock manager
+    }
+    function GetDockSite() : TWinControl;
+
+    {
+        Bring the given docked form to the front of the tab list
+
+        If form is currently docked, make it the active tab.
+        Sets focus to the new tab
+    }
+    procedure BringDockedToTop(form: TfrmDockable);
+
+    {
+        Get the currently top docked form.
+
+        May return nil if topmost docked form is not TfrmDockable(????) or
+        nothing is docked.
+    }
+    function getTopDocked() : TfrmDockable;
+
+    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
+
+    function OnNotify(frm: TForm; notifyEvents: integer): boolean;
+
+
+    {
+        frm has had some kind of state change and its presentation needs to
+        be updated.
+
+        form may have changed tab icon, notification state.  
+    }
+    procedure UpdateDocked(frm: TfrmDockable);
+
+    {
+        Bring the dock manager to front.
+
+        Restore if minimized and bring to top of z-order. Don't take focus
+    }
+    procedure BringToFront();
+
+    function isActive(): boolean;
+  end;
+
+
+  TfrmExodus = class(TTntForm, IExodusDockManager)
     MainMenu1: TTntMainMenu;
     ImageList2: TImageList;
     timFlasher: TTimer;
@@ -362,6 +431,8 @@ type
     procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
                                        NewTarget: TWinControl; var Allow: Boolean);
     procedure mnuChatToolbarClick(Sender: TObject);
+    procedure TabsContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
@@ -470,6 +541,12 @@ type
      *  Busywait until cleanupmethod is complete by checking _cleanupComplete flag
     **}
     procedure waitForCleanup();
+
+    {
+        Forces a focus to the active tabs's docked form
+    }
+    procedure focusActiveTab();
+
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -482,7 +559,6 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
-    //procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
     procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
@@ -492,6 +568,8 @@ type
     procedure WMPowerChange(var msg: TMessage); message WM_POWERBROADCAST;
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
+
+    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -604,7 +682,7 @@ published
 
         Adjust layout as needed
     }
-    procedure CloseDocked(frm: TForm);
+    procedure CloseDocked(frm: TfrmDockable);
 
     {
         Open a tab and dock the given form
@@ -633,7 +711,7 @@ published
         Bring the given docked form to the front of the tab list
 
         If form is currently docked, make it the active tab.
-        Fires OnDockedActivate event in TfrmDockable
+        Sets focus to the new tab
     }
     procedure BringDockedToTop(form: TfrmDockable);
 
@@ -644,6 +722,42 @@ published
         nothing is docked.
     }
     function getTopDocked() : TfrmDockable;
+
+    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
+
+    {
+        Do notifyEvents notification events in the context of frm.
+
+        If frm is nil, dock manager should handle what notification
+        events it knows about (flash, bring to front).
+
+        If the form is not TfrmDockable, check to see if it is the
+        roster window and notify either the form it embedded in (PGM mode)
+        or treat as dock manager notification.
+
+        If frm is TfrmDockable and docked handle as follows
+
+            if notify_docked_flasher pref is true and notifyEvents has flash,
+            dock manager must keep flashing until every notified docked form
+            has gained focus.
+
+            If not true and notifyEvents has flash, flash minimum times
+
+    }
+    function OnNotify(frm: TForm; notifyEvents: integer): boolean;
+
+
+    {
+        frm has had some kind of state change and its presentation needs to
+        be updated.
+
+        form may have changed tab icon, notification state.  
+    }
+    procedure UpdateDocked(frm: TfrmDockable);
+
+    procedure BringToFront();
+
+    function isActive(): boolean;
 
     {
         Find the first docked form that is can render a roster
@@ -671,6 +785,8 @@ procedure StopTrayAlert();
 
 function ExodusGMHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
 function ExodusCWPHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+
+function getDockManager(): IExodusDockManager;
 
 {
     get the current docking state.
@@ -820,6 +936,10 @@ uses
 
 {$R *.DFM}
 
+function getDockManager(): IExodusDockManager;
+begin
+    Result := frmExodus;
+end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
@@ -842,13 +962,16 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Flash();
 begin
+    If (Self.Active) then begin
+        timFlasher.Enabled := false;
+        exit; //0.9.1.0 behavior
+    end;
     // flash window
     if (_hidden) then begin
         Self.WindowState := wsMinimized;
         //Self.Visible := true;
         ShowWindow(Handle, SW_SHOWMINNOACTIVE);
     end;
-
     if MainSession.Prefs.getBool('notify_flasher') then begin
         timFlasher.Enabled := true;
     end
@@ -1077,6 +1200,19 @@ begin
     MainSession.Disconnect();
 end;
 
+ procedure TfrmExodus.WMActivate(var msg: TMessage);
+ var
+    f: TfrmDockable;
+ begin
+    if (Msg.WParamLo <> WA_INACTIVE) then begin
+        outputdebugMsg('TfrmExodus.WMActivate');
+        //jjf hmmm this will need to be abstracted better to move out of TfrmExodus
+        f := getTopDocked();
+        if ((f <> nil) and f.IsNotifying) then
+            f.gotActivate();
+    end;
+    inherited;
+ end;
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
@@ -1585,7 +1721,6 @@ begin
         // 7. check for new version
         Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
-//        Tabs.ActivePage := tbsRoster;
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
         InitUpdateBranding();
@@ -1598,7 +1733,6 @@ begin
             end;
             _new_account := false;
         end;
-        TAutoOpenEventManager.onAutoOpenEvent('authed');
         // Play any pending XMPP actions
         PlayXMPPActions();
     end
@@ -1761,7 +1895,8 @@ begin
     else
         MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
     _is_broadcast := false;
-
+    //re-load authed desktop
+    TAutoOpenEventManager.onAutoOpenEvent('authed');
 end;
 
 {---------------------------------------}
@@ -1892,7 +2027,7 @@ begin
     else begin
         btnDisconnect.Visible := enable;
         btnConnect.Visible := not enable;
-    end;
+end;
 
 
     // People Menu
@@ -2425,6 +2560,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
+    outputdebugmsg('EXOUDS.FormActivate');
     if (timFlasher.Enabled) then
         timFlasher.Enabled := false;
 
@@ -2988,8 +3124,9 @@ var
 begin
      _tray_notify := not _tray_notify;
      if (_tray_notify) then begin
-        iconNum := _tray_icon_idx + 33;
-        if (iconNum > 38) then iconNum := 38;
+        iconNum := _tray_icon_idx + RosterImages.RI_OFFLINEATTN_INDEX;
+        if (iconNum > RosterImages.RI_XAATTN_INDEX) then
+            iconNum := RosterImages.RI_XAATTN_INDEX;
     end
      else
          iconNum := _tray_icon_idx;
@@ -3722,6 +3859,8 @@ end;
 *******************************************************************************}
 
 {***************************** helper methods**********************************}
+
+
 {
     get the "allowed" docking state.
 
@@ -3770,6 +3909,21 @@ begin
     Result := (f is TfrmMsgQueue);
 end;
 
+procedure TfrmExodus.focusActiveTab();
+var
+    f: TForm;
+begin
+    // Don't show any notification images on the current tab
+    if (Tabs.ActivePage = nil) then exit;
+
+    f := getTabForm(Tabs.ActivePage);
+    if (f <> nil) then
+        if (f.InheritsFrom(TfrmDockable)) then
+            TfrmDockable(f).gotActivate()
+        else
+            f.SetFocus();
+end;
+
 
 {
     Get the currently top docked form.
@@ -3788,6 +3942,11 @@ begin
             Result := TfrmDockable(top);
     finally
     end;
+end;
+
+procedure TfrmExodus.SelectNext(goforward: boolean; visibleOnly:boolean=false);
+begin
+    Tabs.SelectNextPage(goforward, visibleonly);
 end;
 
 {
@@ -3915,18 +4074,23 @@ end;
     Event fired when a tab selection change occurs. May be fired by user selection
     or by changig the activepage property
 
-    Fires OnDockedActivate event of TfrmDockable
+    Sets focus to the new tab
 }
 procedure TfrmExodus.TabsChange(Sender: TObject);
-var
-    f: TForm;
 begin
-    // Don't show any notification images on the current tab
-    if (Tabs.ActivePage = nil) then exit;
+    outputdebugmsg('TfrmExodus.Tabs.OnChange');
 
-    f := getTabForm(Tabs.ActivePage);
-    if ((f <> nil) and (f is TfrmDockable)) then
-        TfrmDockable(f).OnDockedActivate(Self);
+    focusActiveTab();
+end;
+
+procedure TfrmExodus.TabsContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+    //a hack. Tabs.OnChange doesn't seem to fire when right clicking tab.
+    inherited;
+    outputdebugmsg('TfrmExodus.Tabs.ONcONTEXTmENU');
+
+    focusActiveTab();
 end;
 
 {---------------------------------------}
@@ -3986,7 +4150,7 @@ begin
     // check to see if the tab is a frmDockable
     Allow := true;
     if (Client is TfrmDockable) then begin
-        CloseDocked(TForm(Client));
+        CloseDocked(TfrmDockable(Client));
         TfrmDockable(Client).OnFloat();
     end;
 end;
@@ -4006,9 +4170,8 @@ begin
     // check to see if the tab is a frmDockable
     Allow := true;
     if (Client is TfrmDockable) then begin
-        frm := TfrmDockable(frm);
+        frm := TfrmDockable(client);
         frm.Docked := false;
-        frm.TabSheet := nil;
         frm.OnFloat();
         idx := _docked_forms.IndexOf(TfrmDockable(frm));
         if (idx >= 0) then
@@ -4032,10 +4195,10 @@ begin
     if (Source.Control is TfrmDockable) then begin
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
-        TfrmDockable(Source.Control).TabSheet := TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]);
+        TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         //msg queue is always first tab
         if (Source.Control is TfrmMsgQueue) then begin
-            TfrmDockable(Source.Control).TabSheet.PageIndex := 0;
+            TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).PageIndex := 0;
         end;
         TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
@@ -4083,13 +4246,18 @@ end;
     Bring the given docked form to the front of the tab list
 
     If form is currently docked, make it the active tab.
-    Fires OnDockedActivate event in TfrmDockable
+    Sets focus to the new tab
 }
 procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
+var
+    tsheet: TTntTabSheet;
 begin
-    if ((Self.Tabs.PageCount > 0) and (form.TabSheet <> nil) and (Self.Tabs.ActivePage <> form.TabSheet)) then begin
-        Self.Tabs.ActivePage := form.TabSheet;
-        form.OnDockedActivate(Self);
+    if (Self.Tabs.PageCount > 0) then begin
+        tsheet := GetTabSheet(form);
+        if (tsheet <> nil) then begin
+            Self.Tabs.ActivePage := tsheet;
+            form.gotActivate();
+        end;
     end;
 end;
 
@@ -4099,14 +4267,13 @@ end;
 {
     Cleanup the TTabSheet associated with frm.
 }
-procedure TfrmExodus.CloseDocked(frm: TForm);
+procedure TfrmExodus.CloseDocked(frm: TfrmDockable);
 var
     idx: integer;
 begin
-    TfrmDockable(frm).Docked := false;
-    TfrmDockable(frm).TabSheet := nil;
-    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
-    idx := _docked_forms.IndexOf(TfrmDockable(frm));
+    frm.Docked := false;
+    updateLayoutDockChange(frm, false, tabs.PageCount = 1);
+    idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
 end;
@@ -4131,8 +4298,17 @@ begin
     updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
     frm.Docked := false;
-    frm.TabSheet := nil;
     frm.OnFloat();
+end;
+
+
+procedure TfrmExodus.UpdateDocked(frm: TfrmDockable);
+var
+    tsheet: TTntTabSheet;
+begin
+    tsheet := GetTabSheet(frm);
+    if (tsheet <> nil) then
+        tsheet.ImageIndex := frm.ImageIndex;
 end;
 
 {************************************ layout **********************************}
@@ -4372,7 +4548,6 @@ begin
             if (tf <> nil) then begin
                 tf.ManualFloat(tf.FloatPos);
                 tf.Docked := false;
-                tf.TabSheet := nil;
                 idx := _docked_forms.IndexOf(tf);
                 if (idx >= 0) then
                     _docked_forms.Delete(idx);
@@ -4385,6 +4560,36 @@ begin
         tabs.OnUnDock := Self.TabsUnDock;
         tabs.OnChange := Self.TabsChange;
     end;
+end;
+
+function TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer): boolean;
+begin
+    //if any window in app is active and this was a docked window that was
+    //notified and we don't want current window notified, eat it
+    if ((frm <> nil) and frm.InheritsFrom(TfrmDockable) and TfrmDockable(frm).Docked and
+        not MainSession.prefs.getBool('notify_active_win') and Application.Active) then
+        exit;
+    //notifying dock manager directly
+     if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+        Self.Flash();
+     end;
+    if ((notifyEvents and notify_front) > 0) then begin
+        Self.doRestore();
+        ShowWindow(Self.Handle, SW_SHOWNORMAL);
+        ForceForegroundWindow(Self.Handle);
+    end;
+end;
+
+function TfrmExodus.isActive(): boolean;
+begin
+    Result := Self.Active;
+end;
+
+procedure TfrmExodus.BringToFront();
+begin
+    Self.doRestore();
+    ShowWindow(Self.Handle, SW_SHOWNORMAL);
+    ForceForegroundWindow(Self.Handle);
 end;
 
 procedure TfrmExodus.OptionsClick(Sender: TObject);

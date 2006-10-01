@@ -280,13 +280,6 @@ inherited frmBaseChat: TfrmBaseChat
       Caption = '-'
     end
   end
-  object timWinFlash: TTimer
-    Enabled = False
-    Interval = 500
-    OnTimer = timWinFlashTimer
-    Left = 16
-    Top = 88
-  end
   object popHotkeys: TTntPopupMenu
     Left = 80
     Top = 120
