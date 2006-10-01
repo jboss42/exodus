@@ -203,10 +203,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 begin
     Result := TfrmBrowse.Create(Application);
     Application.CreateForm(TfrmBrowse, Result);
-    Result.ShowDefault();
-
-    if Result.TabSheet <> nil then
-        frmExodus.BringDockedToTop(Result);
+    Result.ShowDefault(true);
 
     if (jid = '') then
         Result.GoJID(MainSession.Server, false)
@@ -1068,6 +1065,7 @@ end;
 procedure TfrmBrowse.OnDocked();
 begin
     btnClose.Visible := true;
+    inherited;
 end;
 
 {
@@ -1079,6 +1077,7 @@ end;
 procedure TfrmBrowse.OnFloat();
 begin
     btnClose.Visible := false;
+    inherited;
 end;
 
 end.
