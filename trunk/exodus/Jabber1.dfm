@@ -201,7 +201,6 @@ object frmExodus: TfrmExodus
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
-    ExplicitHeight = 574
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
@@ -224,12 +223,12 @@ object frmExodus: TfrmExodus
       PopupMenu = popTabs
       TabOrder = 0
       OnChange = TabsChange
+      OnContextPopup = TabsContextPopup
       OnDockDrop = TabsDockDrop
       OnDragDrop = TabsDragDrop
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 574
     end
   end
   object MainMenu1: TTntMainMenu

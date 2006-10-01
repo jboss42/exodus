@@ -127,8 +127,9 @@ var
 const
     sNoSpoolDir = ' could not create or write to the spool directory specified in the options.';
     sDefaultSpool = 'default_spool.xml';
-    
-function getMsgQueue: TfrmMsgQueue;
+
+function showMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
+function getMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
 function isMsgQueueShowing(): boolean;
 {---------------------------------------}
 {---------------------------------------}
@@ -151,11 +152,17 @@ const
     CB_UNASSIGNED = -1; //unassigned callback ID
 
 {---------------------------------------}
-function getMsgQueue: TfrmMsgQueue;
+function showMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
+begin
+    Result := getMsgQueue(bringToFront);
+end;
+
+{---------------------------------------}
+function getMsgQueue(bringToFront: boolean): TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-    frmMsgQueue.ShowDefault();
+    frmMsgQueue.ShowDefault(bringToFront);
     Result := frmMsgQueue;
 end;
 
@@ -166,7 +173,7 @@ end;
 
 class procedure TfrmMsgQueue.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
-    getMsgQueue();
+    getMsgQueue(false); //open but don't bring to front
 end;
 
 function TfrmMsgQueue.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
@@ -200,7 +207,11 @@ begin
 
     tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
-    _queue.Add(e);
+    //JJF NB probably used a refernce here for optimizations, however I
+    //have since found 3 bugs related to this ref (probably introduced
+    //by jinc or myself for that matter). Simplifies maintenance to
+    //have the caller maintain its own ownership of the ref.
+    _queue.Add(TJabberEvent.create(e));
     lstEvents.Items.Count := lstEvents.Items.Count + 1;
     SaveEvents();
 end;
@@ -499,7 +510,7 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.lstEventsDblClick(Sender: TObject);
 var
-    e, edup: TJabberEvent;
+    e: TJabberEvent;
 begin
     if (lstEvents.SelCount <= 0) then exit;
     if (MainSession = nil) then exit;
@@ -511,8 +522,7 @@ begin
         StartChat(e.from_jid.jid, e.from_jid.resource, true);
     end
     else begin
-        edup := TJabberEvent.Create(e);
-        StartRecvMsg(edup);
+        StartRecvMsg(e);
     end;
 end;
 
@@ -528,7 +538,7 @@ begin
         if (_disconnectedCB <>CB_UNASSIGNED) then
             MainSession.UnRegisterCallback(_disconnectedCB);
     end;
-    _queue.Free();
+    _queue.Free(); //owns refs, frees them here
     Action := caFree;
     frmMsgQueue := nil;
     inherited;
@@ -543,6 +553,9 @@ end;
 
 procedure TfrmMsgQueue.ClearItems();
 begin
+    if (isNotifying) then
+        isNotifying := false;
+
     _queue.Clear();
     lstEvents.items.Clear();
     txtMsg.Clear();

@@ -64,7 +64,6 @@ type
     procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
@@ -129,7 +128,7 @@ begin
     // Singleton factory
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(Application);
-    frmDebug.ShowDefault();
+    frmDebug.ShowDefault(true);
 end;
 
 {---------------------------------------}
@@ -168,7 +167,7 @@ begin
     // make sure the output is showing..
     inherited;
 
-    ImageIndex := RosterTreeImages.Find('filter');
+    NormalImageIndex := RosterTreeImages.Find('filter');
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;
@@ -468,7 +467,7 @@ begin
 
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
-        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
+        GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
 
@@ -478,15 +477,6 @@ begin
         btnSendRawClick(Self);
     end;
 
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.FormActivate(Sender: TObject);
-begin
-  inherited;
-    if (not Docked) then exit;
-
-    // do something here to activate the appropriate tab
 end;
 
 {

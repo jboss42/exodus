@@ -344,7 +344,7 @@ const
     sNoSubjectHint = 'Click the button to change the room subject.';
     sNoSubject     = 'No room subject';
     sMsgRosterItems = 'This message contains %d roster items.';
-    
+
 const
     MUC_OWNER = 'owner';
     MUC_ADMIN = 'admin';
@@ -358,11 +358,14 @@ const
 
     ROOM_TIMEOUT = 3;
 
-
+    NOTIFY_ROOM_ACTIVITY = 0;
+    NOTIFY_KEYWORD = 1;
+    
 function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid: Widestring; rnick: Widestring = '';
     Password: WideString = ''; send_presence: boolean = true;
-    default_config: boolean = false; use_registered_nick: boolean = false): TfrmRoom;
+    default_config: boolean = false; use_registered_nick: boolean = false;
+    bring_to_front:boolean=true): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
@@ -418,7 +421,8 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 function StartRoom(rjid: Widestring; rnick, Password: Widestring;
-    send_presence, default_config, use_registered_nick: boolean): TfrmRoom;
+    send_presence, default_config, use_registered_nick: boolean;
+    bring_to_front:boolean): TfrmRoom;
 var
     f: TfrmRoom;
     tmp_jid: TJabberID;
@@ -429,22 +433,21 @@ begin
 
     // Make sure we have TC..
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
-
-    // Find out nick..
-    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
-        n := MainSession.Profile.getDisplayUsername()
-    else if (rnick = '') then begin
-        n := MainSession.Prefs.getString('default_nick');
-        if (n = '') then n := MainSession.Profile.getDisplayUsername();
-    end
-    else
-        n := rnick;
-
     // is there already a room window?
     i := room_list.IndexOf(rjid);
     if (i >= 0) then
         f := TfrmRoom(room_list.Objects[i])
     else begin
+        // Find out nick..
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+            n := MainSession.Profile.getDisplayUsername()
+        else if (rnick = '') then begin
+            n := MainSession.Prefs.getString('default_nick');
+            if (n = '') then n := MainSession.Profile.getDisplayUsername();
+        end
+        else
+            n := rnick;
+
         // create a new room
         f := TfrmRoom.Create(Application);
         f.SetJID(rjid);
@@ -486,7 +489,7 @@ begin
         tmp_jid.Free();
     end;
 
-    f.ShowDefault();
+    f.ShowDefault(bring_to_front);
 
     Result := f;
 end;
@@ -498,8 +501,8 @@ begin
               autoOpenInfo.getAttribute('p'), {password}
               autoOpenInfo.GetAttribute('sp') = 't', {send presence on creation}
               autoOpenInfo.GetAttribute('dc') = 't', {use default config}
-              autoOpenInfo.GetAttribute('rn') = 't'); {use registered nickname}
-
+              autoOpenInfo.GetAttribute('rn') = 't', {use registered nickname}
+              false); //don't bring these to front
 end;
 
 function TfrmRoom.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
@@ -639,13 +642,13 @@ begin
     if ((not server) and (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
-            DoNotify(Self, _notify[1],
+            DoNotify(Self, _notify[NOTIFY_KEYWORD],
                      _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
                      RosterTreeImages.Find('conference'), 'notify_keyword');
             Msg.highlight := true;
         end
         else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) then
-            DoNotify(Self, _notify[0],
+            DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
                      _(sNotifyActivity) + Self.Caption,
                      RosterTreeImages.Find('conference'), 'notify_roomactivity');
     end;
@@ -812,7 +815,6 @@ var
     i, c: integer;
     j: TJabberID;
     s: TXMLTag;
-    chat_win: TfrmChat;
 begin
     // check for various / commands
     result := false;
@@ -879,13 +881,7 @@ begin
         // chat with this user
         nick := _selectNick(wsl);
         if (nick = '') then exit;
-        chat_win := StartChat(self.jid, nick, true, nick);
-        if (chat_win <> nil) then begin
-            if (chat_win.TabSheet <> nil) then
-                frmExodus.BringDockedToTop(chat_win)
-            else
-                chat_win.Show();
-        end;
+        StartChat(self.jid, nick, true, nick);
         Result := true;
     end
     else if (cmd = '/msg') then begin
@@ -1123,10 +1119,11 @@ begin
             end
             else if (ecode = '401') then begin
                 e := jEntityCache.getByJid(Self.jid, '');
-                if ((e.hasFeature('muc_passwordprotected') or
+                if ((e <> nil) and
+                    ((e.hasFeature('muc_passwordprotected') or
                      e.hasFeature('muc_password') or
                      e.hasFeature('muc-passwordprotected')) or
-                     e.hasFeature('muc-password')) then begin
+                     e.hasFeature('muc-password'))) then begin
                     if (_passwd = '') then begin
                         // this room needs a passwd, and they didn't give us one..
                         if (InputQueryW(e.Jid.jid, _('Room Password'), _passwd, true) = false) then begin
@@ -1598,16 +1595,18 @@ begin
     _pending_start := false;
     _pending_destroy := false;
     _passwd_from_join_room := true;
-    ImageIndex := RosterTreeImages.Find('conference');
-    _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
-    _notify[1] := MainSession.Prefs.getInt('notify_keyword');
+
+    ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
+
+    _notify[NOTIFY_ROOM_ACTIVITY] := MainSession.Prefs.getInt('notify_roomactivity');
+    _notify[NOTIFY_KEYWORD] := MainSession.Prefs.getInt('notify_keyword');
     
     AssignUnicodeFont(lblSubject.Font, 8);
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
     _subject := '';
 
-    if (_notify[1] <> 0) then
+    if (_notify[NOTIFY_KEYWORD] <> 0) then
         setupKeywords();
 
     MyNick := '';
@@ -2080,7 +2079,6 @@ procedure TfrmRoom.lstRosterDblClick(Sender: TObject);
 var
     rm: TRoomMember;
     tmp_jid: TJabberID;
-    chat_win: TfrmChat;
 begin
   inherited;
     // start chat w/ room participant
@@ -2089,21 +2087,12 @@ begin
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm = nil) or (WideLowerCase(rm.Nick) = WideLowerCase(mynick)) then exit;
-
-
-
+    
     tmp_jid := TJabberID.Create(rm.jid);
     if (Length(rm._real_jid.jid()) = 0) then
-        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick)
+        StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick)
     else
-        chat_win := StartChat(rm._real_jid.jid(), rm._real_jid.resource, true);
-    if (chat_win <> nil) then begin
-        if (chat_win.TabSheet <> nil) then
-            frmExodus.BringDockedToTop(chat_win)
-        else
-            chat_win.Show();
-    end;
-
+        StartChat(rm._real_jid.jid(), rm._real_jid.resource, true);
     tmp_jid.Free();
 end;
 
@@ -2357,14 +2346,14 @@ begin
 
     f.addItem('Room activity');
     f.addItem('Keywords');
-    f.setVal(0, _notify[0]);
-    f.setVal(1, _notify[1]);
+    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY]);
+    f.setVal(1, _notify[NOTIFY_KEYWORD]);
 
     if (f.ShowModal) = mrOK then begin
-        _notify[0] := f.getVal(0);
-        _notify[1] := f.getVal(1);
+        _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);
+        _notify[NOTIFY_KEYWORD] := f.getVal(1);
 
-        if ((_notify[1] <> 0) and (_keywords = nil)) then
+        if ((_notify[NOTIFY_KEYWORD] <> 0) and (_keywords = nil)) then
             setupKeywords();
     end;
 
@@ -2786,10 +2775,6 @@ begin
     inherited;
     btnClose.Visible := true;
     // Set the ActivePage to the active tab
-    if ( Self.TabSheet <> nil ) then begin
-      frmExodus.Tabs.ActivePage := Self.TabSheet;
-      Self.TabSheet.ImageIndex := ico_conf;
-    end;
 
     _scrollBottom();
     Self.Refresh();

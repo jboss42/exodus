@@ -23,7 +23,7 @@ inherited frmChat: TfrmChat
     Top = 32
     Width = 383
     Height = 173
-    ExplicitTop = 29
+    ExplicitTop = 32
     ExplicitWidth = 383
     ExplicitHeight = 173
   end
@@ -71,7 +71,7 @@ inherited frmChat: TfrmChat
         Left = 43
         Top = 0
         Width = 48
-        Height = 28
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Nickname'
@@ -79,7 +79,6 @@ inherited frmChat: TfrmChat
         ShowHint = True
         Layout = tlCenter
         OnClick = lblJIDClick
-        ExplicitHeight = 13
       end
       object imgAvatar: TPaintBox
         Left = 0

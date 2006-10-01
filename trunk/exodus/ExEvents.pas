@@ -83,7 +83,11 @@ function ParseLastEvent(iq: TXMLTag): Widestring;
 implementation
 uses
     // Exodus/JOPL stuff
-    RosterImages, GnuGetText,
+    RosterImages,
+    Forms,
+    StateForm,
+    RosterRecv,
+    GnuGetText,
     JabberUtils, ExUtils,  JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
     MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
 
@@ -129,97 +133,99 @@ var
     img_idx: integer;
     tmp_jid: TJabberID;
     m, xml, etag: TXMLTag;
-    mc: TMsgController;
+    notify: boolean;
+    notifyMsg: WideString;
+    notifyType: WideString;
+    notifyFrm: TfrmState;
+    frmMsg: TfrmMsgQueue;
+    frmRosterRecv: TfrmRosterRecv;
 begin
+    notify := false;
     // create a listview item for this event
     tmp_jid := TJabberID.Create(e.from);
     case e.etype of
-    evt_Time: begin
-        img_idx := 12;
-        msg := e.str_content;
-    end;
-
-    evt_Chat: begin
-        img_idx := 23;
-        msg := e.str_content;
-        DoNotify(nil, 'notify_newchat',
-            _('Chat with ') + tmp_jid.getDisplayJID(), img_idx);
-    end;
-
-    evt_Message: begin
-        if (e.error) then
-            img_idx := RosterTreeImages.Find('error')
-        else
-            img_idx := RosterTreeImages.Find('newsitem');
-            
-        msg := e.str_content;
-        DoNotify(nil, 'notify_normalmsg',
-                 _(sMsgMessage) + tmp_jid.getDisplayJID(), img_idx);
-
-        xml := e.tag;
-        if (xml <> nil) then begin
-            // check for displayed events
-            etag := xml.QueryXPTag(XP_MSGXEVENT);
-            if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
-                if (etag.GetFirstTag('displayed') <> nil) then begin
-                    // send back a displayed event
-                    m := generateEventMsg(xml, 'displayed');
-                    MainSession.SendTag(m);
-                end;
-            end;
-
-            // log the msg if we're logging.
-            LogMsgEvent(e);
+        evt_Chat: begin
+            img_idx := 23;
+            msg := e.str_content;
+            notify := true;
+            notifyMsg := _('Chat with ') + tmp_jid.getDisplayJID();
+            notifyType := 'notify_newchat';
         end;
-    end;
 
-    evt_Invite: begin
-        img_idx := 21;
-        msg := e.str_content;
-        DoNotify(nil, 'notify_invite',
-                 _(sMsgInvite) + tmp_jid.getDisplayJID(), img_idx);
-    end;
+        evt_Message: begin
+            if (e.error) then
+                img_idx := RosterTreeImages.Find('error')
+            else
+                img_idx := RosterTreeImages.Find('newsitem');
 
-    evt_RosterItems: begin
-        img_idx := 26;
-        msg := e.str_content;
-    end;
+            msg := e.str_content;
 
-    else begin
-        img_idx := 12;
-        msg := e.str_content;
-    end;
+            notify := true;
+            notifyMsg := _(sMsgMessage) + tmp_jid.getDisplayJID();
+            notifyType := 'notify_normalmsg';
+
+            xml := e.tag;
+            if (xml <> nil) then begin
+                // check for displayed events
+                etag := xml.QueryXPTag(XP_MSGXEVENT);
+                if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
+                    if (etag.GetFirstTag('displayed') <> nil) then begin
+                        // send back a displayed event
+                        m := generateEventMsg(xml, 'displayed');
+                        MainSession.SendTag(m);
+                    end;
+                end;
+
+                // log the msg if we're logging.
+                LogMsgEvent(e);
+            end;
+        end;
+
+        evt_Invite: begin
+            img_idx := 21;
+            msg := e.str_content;
+            notify := true;
+            notifyMsg := _(sMsgInvite) + tmp_jid.getDisplayJID();
+            notifyType := 'notify_invite';
+        end;
+
+        evt_RosterItems: begin
+            frmRosterRecv := TfrmRosterRecv.Create(Application);
+            frmRosterRecv.Restore(e);
+            frmRosterRecv.ShowDefault();
+            exit;
+        end;
+
+        else begin
+            img_idx := 12;
+            msg := e.str_content;
+        end;
     end; //case
 
     tmp_jid.Free();
 
-    if (Jabber1.getAllowedDockState() <> adsForbidden) then begin
-        getMsgQueue().LogEvent(e, msg, img_idx);
-        if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
-            (e.eType = evt_Invite)) then begin
-            StartRecvMsg(e);
-        end;
-    end
-
-    else if ((e.delayed) or
-        (MainSession.Prefs.getBool('msg_queue')) or
+    //add event to message queue if any of:
+    //  already showing
+    //  offline message
+    //  queued chat
+    //  preference to use msg queue for all messages
+    if (MsgQueue.isMsgQueueShowing() or e.delayed or
+        MainSession.Prefs.getBool('msg_queue') or
         (e.eType = evt_Chat)) then begin
-        // we are collapsed, but this event was delayed (offline'd)
-        // OR we always want to use the msg queue
-        // OR it's a queued chat event
-        // so display it in the msg queue, not live
-        // Note that LogEvent takes ownership of e
-        getMsgQueue().LogEvent(e, msg, img_idx);
-    end
+        frmMsg := ShowMsgQueue(false);
+        frmMsg.LogEvent(e, msg, img_idx); 
+        //invites may still be popped up, even in the messages show up here
+        if ((e.eType = evt_Invite) and
+            (MainSession.Prefs.getInt('invite_treatment') = invite_popup)) then begin
+            notifyFrm := StartRecvMsg(e);
+        end
+        else notifyFrm := frmMsg;
 
-    else begin
-        // we are collapsed, just display in regular popup windows
-        mc := MainSession.MsgList.FindJid(e.from);
-        if (mc <> nil) then
-            TfrmMsgRecv(mc.Data).PushEvent(e)
-        else
-            StartRecvMsg(e);
-    end;
+    end
+    else notifyFrm := StartRecvMsg(e);
+
+    if (notify) then
+        DoNotify(notifyFrm, notifyType, notifyMsg, img_idx);
 end;
 
 {---------------------------------------}

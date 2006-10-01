@@ -95,16 +95,12 @@ type
     _pcallback: integer;    // Presence Callback
     _spcallback: integer;  // Self Presence Callback - for chats via a room
     _scallback: integer;    // Session callback
-    _pres_img: integer;     // current index of the presence image
     _msg_out: boolean;
     _res_menus: TWidestringlist;
 
     // Stuff for composing events
     _flash_ticks: integer;
-    _cur_img: integer;
-    _old_img: integer;
 
-    //_last_id: string;
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
@@ -177,14 +173,7 @@ type
                                State: TDragState; var Accept: Boolean);override;
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);override;
 
-    {
-        Event fired when Form receives activation while in docked state.
-
-        Fired by DockManager when tab is activated (brought to front)
-    }
-    procedure OnDockedActivate(Sender : TObject);override;
-
-        {
+   {
         Event fired when docking is complete.
 
         Docked property will be true, tabsheet will be assigned. This event
@@ -205,14 +194,19 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
 
     property getJid: Widestring read jid;
-    property LastImage: integer read _old_img;
   end;
 
 var
   frmChat: TfrmChat;
 
-function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;overload;
-
+//Find or create a chat controller/window for the jid/resource
+//show_window = false -> window is not displayed, true->window displayed
+//bring_to_front = true -> window brought to top of zorder and takes focus
+function StartChat(sjid, resource: widestring;
+                   show_window: boolean;
+                   chat_nick: widestring='';
+                   bring_to_front:boolean=true): TfrmChat;
+                   
 procedure CloseAllChats;
 
 implementation
@@ -238,13 +232,20 @@ const
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sMsgLocalTime = 'Local Time: ';
 
-{$R *.dfm}   
+    NOTIFY_CHAT_ACTIVITY = 0;
+
+{$R *.dfm}
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 //Find or create a chat controller/window for the jid/resource
-function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
+//show_window = false -> window is not displayed, true->window displayed
+//bring_to_front = true -> window brought to top of zorder and takes focus
+function StartChat(sjid, resource: widestring;
+                   show_window: boolean;
+                   chat_nick: widestring;
+                   bring_to_front:boolean): TfrmChat;
 var
     r, m: integer;
     chat: TChatController;
@@ -271,8 +272,8 @@ begin
 
     if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
         win := TfrmChat(chat.window);
-        if (win <> nil) then begin
-            win.ShowDefault();
+        if (win <> nil) then begin //ignore showwindow param, bring window to front
+            win.ShowDefault(bring_to_front);
             Result := win;
             exit;
         end;
@@ -354,10 +355,8 @@ begin
         chat.OnMessage := MessageEvent;
         //Assign outgoing message event
         chat.OnSendMessage := SendMessageEvent;
-
-        if ((show_window) and (Application.Active)) then begin
-            ShowDefault(); //Only show if requested and active
-        end;
+        if (show_window) then
+            ShowDefault(bring_to_front);
 
         if (hist <> '') then begin
             MsgList.populate(hist);
@@ -405,7 +404,7 @@ begin
     _spcallback:= -1;
     _scallback := -1;
     OtherNick := '';
-    _pres_img := RosterTreeImages.Find('unknown');
+
     _check_event := false;
     _reply_id := '';
     _msg_out := false;
@@ -416,7 +415,7 @@ begin
     _unknown_avatar := TBitmap.Create();
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
 
-    _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
+    _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
 
     SetupPrefs();
     SetupMenus();
@@ -436,14 +435,15 @@ end;
 
 class procedure TfrmChat.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
-    StartChat(autoOpenInfo.getAttribute('jid'), '', true);
+    //don't bring these to front
+    StartChat(autoOpenInfo.getAttribute('jid'), '', true, '', false);
 end;
 
 function TfrmChat.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
     if ((event = 'disconnected') and (Self.Visible)) then begin
         Result := TXMLtag.Create(Self.ClassName);
-        Result.setattribute('jid', jid);
+        Result.setattribute('jid', _jid.jid);
         useProfile := true;
     end
     else Result := inherited GetAutoOpenInfo(event, useProfile);
@@ -677,7 +677,6 @@ begin
         MainSession.ChatList[i] := cjid;
 end;
 
-{---------------------------------------}
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
@@ -731,7 +730,7 @@ begin
                 _flash_ticks := 0;
 
                 // Setup the cache'd old versions in ChangePresImage
-                _cur_img := _pres_img;
+//                _cur_img := _pres_img;
                 MsgList.DisplayComposing('-- ' + OtherNick + _(' is replying --'));
 
                 {
@@ -764,7 +763,7 @@ begin
 
     // make sure we are visible..
     if (not visible) then begin
-        ShowDefault();
+        ShowDefault(false);
     end;
 
     showMsg(tag);
@@ -853,7 +852,7 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick,
+        DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + OtherNick,
             RosterTreeImages.Find('contact'), 'notify_chatactivity');
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := OtherNick;
@@ -997,44 +996,43 @@ end;
 {---------------------------------------}
 procedure TfrmChat.ChangePresImage(ritem: TJabberRosterItem; show: WideString; status: WideString);
 var
-    h: Widestring;
+    nickHint: Widestring;
+    newPresIdx: integer;
 begin
     // Change the bulb
     if (ritem = nil) then begin
         // TODO: get image prefix from prefs
         if (show = _('offline')) then
-            _pres_img := RosterTreeImages.Find('offline')
+            newPresIdx := RosterTreeImages.Find('offline')
         else if (show = _('unknown')) then
-            _pres_img := RosterTreeImages.Find('unknown')
+            newPresIdx := RosterTreeImages.Find('unknown')
         else if (show = _('away')) then
-            _pres_img := RosterTreeImages.Find('away')
+            newPresIdx := RosterTreeImages.Find('away')
         else if (show = _('xa')) then
-            _pres_img := RosterTreeImages.Find('xa')
+            newPresIdx := RosterTreeImages.Find('xa')
         else if (show = _('dnd')) then
-            _pres_img := RosterTreeImages.Find('dnd')
+            newPresIdx := RosterTreeImages.Find('dnd')
         else if (show = _('chat')) then
-            _pres_img := RosterTreeImages.Find('chat')
+            newPresIdx := RosterTreeImages.Find('chat')
         else
-            _pres_img := RosterTreeImages.Find('available')
+            newPresIdx := RosterTreeImages.Find('available')
     end
     else begin
         // Always use the image from the roster item
-        _pres_img := ritem.getPresenceImage(show);
+        newPresIdx := ritem.getPresenceImage(show);
     end;
 
     _show := show;
     _status := status;
 
-    h := show;
-    if (status <> '') then h := h + ', ' + status;
-    h := h + ' <' + _jid.getDisplayFull() + '>';
-    lblNick.Hint := h;
+    nickHint := show;
+    if (status <> '') then nickHint := nickHint + ', ' + status;
+    nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
+    lblNick.Hint := nickHint;
 
-    RosterTreeImages.GetIcon(_pres_img, Self.Icon);
-    if ((Docked) and (Self.TabSheet.ImageIndex <> tab_notify)) then
-        Self.TabSheet.ImageIndex := _pres_img;
-    _old_img := _pres_img;
+    RosterTreeImages.GetIcon(newPresIdx, Self.Icon);
 
+    Self.ImageIndex := newPresIdx;
 end;
 
 {---------------------------------------}
@@ -1478,9 +1476,9 @@ begin
     f := TfrmCustomNotify.Create(Application);
 
     f.addItem('Chat activity');
-    f.setVal(0, _notify[0]);
+    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY]);
     if (f.ShowModal) = mrOK then begin
-        _notify[0] := f.getVal(0);
+        _notify[NOTIFY_CHAT_ACTIVITY] := f.getVal(0);
     end;
 
     f.Free();
@@ -1612,20 +1610,6 @@ begin
     end;
 end;
 
-
-{
-    Event fired when Form receives activation while in docked state.
-
-    Fired by DockManager when tab is activated (brought to front)
-}
-procedure TfrmChat.OnDockedActivate(Sender : TObject);
-begin
-    if ((Self.tabSheet <> nil) and (Self.tabSheet.ImageIndex = tab_notify)) then begin
-        Self.tabSheet.ImageIndex := _pres_img;
-    end;
-end;
-
-
 {
     Event fired when docking is complete.
 
@@ -1633,21 +1617,10 @@ end;
     is fired after all other docking events are complete.
 }
 procedure TfrmChat.OnDocked();
-var
-    ritem: TJabberRosterItem;
 begin
     inherited;
     btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
-
-    ritem := MainSession.Roster.Find(_jid.jid);
-    if (ritem = nil) then
-        ritem := MainSession.Roster.FInd(_jid.full);
-        
-    ChangePresImage(ritem, _show, _status);
-
-    Self.TabSheet.ImageIndex := _old_img;
-
     // scroll the MsgView to the bottom.
     _scrollBottom();
     Self.Refresh();
@@ -1664,6 +1637,8 @@ begin
     inherited;
     btnClose.Visible := false;
     DragAcceptFiles(Handle, True);
+    _scrollBottom();
+    Self.Refresh();
 end;
 
 initialization

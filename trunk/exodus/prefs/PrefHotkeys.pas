@@ -130,7 +130,6 @@ procedure TfrmPrefHotkeys.btnModifyHotkeysClick(Sender: TObject);
 var
     dlg: TfrmModifyHotkeys;
     i: Integer;
-    item: TTntListItem;
 begin
     dlg := TfrmModifyHotkeys.Create(Self);
 

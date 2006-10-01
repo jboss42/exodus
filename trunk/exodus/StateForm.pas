@@ -23,6 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls,
   XMLTag,  //JOPL XML
   TntForms; //Unicode form
 
@@ -32,9 +33,7 @@ const
     WS_MAXIMIZED = 2;
     WS_TRAY = 3;
 
-    DEFAULT_MIN_WIDTH = 640;
-    DEFAULT_MIN_HEIGHT = 480;
-
+    FLASH_TIMER_INTERVAL = 500;
 type
 
     {
@@ -137,7 +136,9 @@ type
   }
   TfrmState = class(TTntForm)
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
-    procedure sfWMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
+    procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
+    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
+    procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -145,25 +146,20 @@ type
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
      _origPos: TPos;      //position we last loaded/saved to prefs
-     _programaticChange: boolean;
      _windowState: TWindowState; //min max or normal
      _stateRestored: boolean;
+     _skipWindowPosHandling: boolean;
+     _isNotifying: boolean; //is this form handling some notify event (like flashing)?
+     _flasher: TTimer;
+     
     procedure NormalizePos(); //
     procedure CenterOnMonitor(var pos: TPos);
+
+    procedure setNotifying(newNotifyingState: boolean);
+
+    procedure OnFlashTim(Sender: TObject);
   protected
-    {
-        Show the window in its default configuration.
-
-        The default implementation is to show the window in its last floating
-        position. Override this method to change (ie dock instead of float)
-    }
-    procedure ShowDefault;virtual;
-
-
-    {
-        Get the minimum width (x) and height(y) this form should display as.
-    }
-    function getDefaultSize(): TPoint;
+     procedure CreateParams(var Params: TCreateParams); override;
 
     {
         Get the window state associated with this window.
@@ -208,10 +204,7 @@ type
     }
     procedure OnPersistWindowState(windowState : TXMLTag);virtual;
 
-    {
-    }
     function getPosition(): TRect;
-
     {
         Restore window state.
 
@@ -225,7 +218,34 @@ type
         override to use default profile (non-session forms)
     }
     procedure PersistWindowState();virtual;
-     
+
+    {
+        Event fired when the form should handle flash notification
+    }
+    procedure OnFlash();virtual;
+
+  public
+    {
+        Show the window in its default configuration.
+
+        The default implementation is to show the window in its last floating
+        position. Override this method to change (ie dock instead of float)
+    }
+    procedure ShowDefault(bringtofront:boolean=true);virtual;
+
+    procedure gotActivate(); virtual;
+    {
+        A notification event has occurred.
+
+        notifyEvents is a bitmap flag of what events should fire.
+        StateForm will assume it is a floating window and will
+        recognize
+            notify_flash - flash the taskbar
+            notify_front - bring wiindow to front and take focus
+
+        @param notifyEvents - bitmapped flag of events to execute
+    }
+    procedure OnNotify(notifyEvents: integer);virtual;
   published
     {
         Use the given persisted information to open a form as if the
@@ -265,6 +285,16 @@ type
             Freeing this tag is the responibility of the caller.
     }
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;virtual;
+
+   {
+        Is this form currently notifying the user.
+
+        This flag will be true if the form is handling some received
+        notification event. Is set to false when the form stops
+        notifying. Typically when the form receives focus.
+    }
+    property IsNotifying: boolean read _isNotifying write setNotifying;
+
   end;
 
 var
@@ -276,6 +306,7 @@ implementation
 {$R *.dfm}
 
 uses
+    PrefController,
     debug,
     room,
     ChatWin,
@@ -449,7 +480,7 @@ begin
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
     aoTag := rootTag.GetFirstTag('auto-open');
     if (aoTag = nil) then exit;
-    
+
     tstr := 'event-' + event;
     if (Profile <> '') then
         tstr := tstr + '-' + XMLUtils.MungeName(Profile);
@@ -465,53 +496,28 @@ begin
     end;
 end;
 
-{
-    Use the given persisted information to open a form as if the
-    user had done it.
-
-    This method will only be called with info specific to this class.
-    TfrmRoom will only be called with a <TfrmRoom> DOM etc.
-
-    Subclasses should override this method to open forms. The default
-    implementation does nothing.
-
-    @param autoOpenInfo Persisted opening information
-}
+{---------------------------------------}
 class procedure TfrmState.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
     //nop
 end;
 
-{
-    Get a DOM used later to auto-open the form.
-
-    Two events are currently defined:
-        disconnected - all session forms are about to close and should persist
-        shutdown - all non-sessions forms are about to close and should persist.
-
-    DOM must have a root element named "classname". The root element is
-    later used to find the appropriate class method factory.
-
-    Classes can specify whether or not this auto open info should be persisted
-    for the current profile only or for no profile.
-
-    Subclasses should override this method to persist their auto-open info.
-    For instance, TfrmChat may return <TfrmChat j='foo@bar"/>. If form does
-    not handle a particular event (debug form when disconnected event is fired)
-    nil should be returned. The default implementation returns nil.
-
-    @param event
-    @returns an DOM of persisted auto-open info or nil if not implementing.
-        Freeing this tag is the responibility of the caller.
-
-    //todo jjf remove useProfile flag from this method once prefs are profile aware        
-}
+{---------------------------------------}
 function TfrmState.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
     Result := nil;
     useProfile := false;
 end;
 
+{---------------------------------------}
+procedure TfrmState.setNotifying(newNotifyingState: boolean);
+begin
+//perhaps update if state changed?
+//    if (_isNotifying <> newNotifyingState) then begin
+        _isNotifying := newNotifyingState;
+end;
+
+{---------------------------------------}
 procedure TfrmState.CenterOnMonitor(var pos: TPos);
 var
     dtop: TRect;
@@ -529,6 +535,18 @@ begin
 end;
 
 { TfrmState }
+
+{---------------------------------------}
+procedure TfrmState.CreateParams(var Params: TCreateParams);
+begin
+    // Make each window appear on the task bar.
+    inherited CreateParams(Params);
+    with Params do begin
+        ExStyle := ExStyle or WS_EX_APPWINDOW;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmState.FormCreate(Sender: TObject);
 begin
     _stateRestored := false;
@@ -536,10 +554,16 @@ begin
     // do translation magic
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    _programaticChange := false;
+    _skipWindowPosHandling := false;
+
+    _flasher := TTimer.Create(Application);
+    _flasher.Enabled := false;
+    _flasher.Interval := FLASH_TIMER_INTERVAL;
+    _flasher.OnTimer := OnFlashTim;
 end;
 
 
+{---------------------------------------}
 function sToWindowState(s : string): TWindowState;
 begin
     if (s = 'm') then
@@ -565,7 +589,9 @@ begin
     else
         Result := 'false';
 end;
-procedure TfrmState.sfWMSysCommand(var msg: TWmSysCommand);
+
+{---------------------------------------}
+procedure TfrmState.WMSysCommand(var msg: TWmSysCommand);
 begin
     case (msg.CmdType and $FFF0) of
         SC_MINIMIZE: begin
@@ -579,18 +605,43 @@ begin
         end;
     end;
 OutputDebugMsg('wmssyscommande: new state: ' + wsToString(_windowState));
-
     inherited;
 end;
+
+{---------------------------------------}
+procedure TfrmState.WMActivate(var msg: TMessage);
+begin
+outputdebugmsg('TfrmState.WMActivate got WMActivate: ' + IntToStr(Msg.WParamLo));
+    if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
+        // we are getting activated
+        _skipWindowPosHandling := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _skipWindowPosHandling := false;
+
+        //this is going to be a problem if tray should flash
+        //until *all* notified windows become active
+        StopTrayAlert();
+        gotActivate();
+    end;
+    inherited;
+end;
+
 {---------------------------------------}
 procedure TfrmState.WMWindowPosChange(var msg: TWMWindowPosChanging);
-var
-    inCreate: boolean;
 begin
+    //only allow window to come to top if activating. Don't bring it
+    //to front if resizing in code somewhere.
+    if (not _skipWindowPosHandling) then
+        msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
+
     inherited;
-    inCreate := (fsCreating in Self.FormState);
-// OutputDebugMsg('TfrmState.WMWindowPosChanged. _programaticChange: ' + b2s(_programaticChange) + ', Floating: ' + b2s(Floating) +', inCreate: ' + b2s(inCreate));
-    if (not _programaticChange and Self.Floating and not inCreate and (_windowState = wsNormal)) then begin
+    
+    //save state if not
+    //  floating
+    //  not creating the form
+    //  in normal window state
+    if (not _skipWindowPosHandling and Self.Floating and (not (fsCreating in Self.FormState)) and (_windowState = wsNormal)) then begin
         _pos.Left := Self.Left;
         _pos.width := Self.Width;
         _pos.Top := Self.Top;
@@ -599,6 +650,15 @@ begin
 OutputDebugMsg('WMWindowPosChange: updated position to: l:' + IntToStr(_pos.left) + ', t:' + IntToStr(_pos.Top) + ', h:' + IntToStr(_pos.Height) + ', w:' + IntToStr(_pos.Width));
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmState.WMDisplayChange(var msg: TMessage);
+begin
+    //check to make sure this is a floating window, if docked let parent deal
+    if (Self.Floating) then
+        checkAndCenterForm(Self);
+end;
+
 
 {
     Restore position and window state.
@@ -645,25 +705,33 @@ end;
     The default implementation is to show the window in its last floating
     position. Override this method to change (ie dock instead of float)
 }
-procedure TfrmState.ShowDefault;
+procedure TfrmState.ShowDefault(bringtofront:boolean);
 begin
     if (not Self.Visible) then begin
         RestoreWindowState();
-        if (_windowState = wsMinimized) then begin
-            //sc command message handler moves current _windowState to _lastState
-            ShowWindow(Handle, SW_SHOWMINNOACTIVE);
-        end
-        else if (_windowState = wsMaximized) then begin
-            ShowWindow(Handle, SW_MAXIMIZE);
-        end
-        else begin
+        if (_windowState = wsMinimized) then
+            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+        else if (_windowState = wsMaximized) then
+            ShowWindow(Handle, SW_MAXIMIZE)
+        else if(bringtofront) then
+            ShowWindow(Handle, SW_SHOWNORMAL)
+        else
             ShowWindow(Handle, SW_SHOWNOACTIVATE);
-        end;
     end
-    else if (frmExodus.isMinimized()) then
+    else if (frmExodus.isMinimized() and not bringtofront) then
         ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+    else if(bringtofront) then
+        ShowWindow(Handle, SW_SHOWNORMAL)
     else
         ShowWindow(Handle, SW_SHOWNOACTIVATE);
+    Self.Show();        
+end;
+
+procedure TfrmState.gotActivate();
+begin
+    _flasher.enabled := false;
+    isNotifying := false;
+    OutputDebugMsg(Self.ClassName +  '.gotActivate');
 end;
 
 {
@@ -696,14 +764,20 @@ begin
     if (windowState.GetAttribute('pos_w') <> '') then begin
         _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
         _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
-        _pos.height := SafeInt(windowState.getAttribute('pos_h'));
-        _pos.width := SafeInt(windowState.getAttribute('pos_w'));
+        //if window is fixed size, don't try to overwrite
+        if (Self.BorderStyle = bsSizeable) then begin
+            _pos.height := SafeInt(windowState.getAttribute('pos_h'));
+            _pos.width := SafeInt(windowState.getAttribute('pos_w'));
+        end else begin
+            _pos.height := Self.Height;
+            _pos.width := Self.Width
+        end;
     end
     else begin
         _pos.Left := 0;
         _pos.Top := 0;
-        _pos.Width := Self.getDefaultSize.X;
-        _pos.Height := Self.getDefaultSize.Y;
+        _pos.Width := Self.Width;
+        _pos.Height := Self.Height;
         CenterOnMonitor(_pos);
     end;
     _origPos.Left := _pos.Left;
@@ -712,7 +786,9 @@ begin
     _origPos.height := _pos.height;
     normalizePos();
     //setwiondowpos sets the undocked dimensions of window.
+    _skipWindowPosHandling := true;
     SetWindowPos(Self.Handle, 0, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOOWNERZORDER);
+    _skipWindowPosHandling := false;
     //minimized, maximized or restored
     _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
@@ -791,13 +867,36 @@ begin
     Result := Bounds(_pos.Left, _pos.Top, _pos.Width, _pos.Height);
 end;
 
-{
-    Get the minimum width (x) and height(y) this form should display as.
-}
-function TfrmState.getDefaultSize(): TPoint;
+procedure TfrmState.OnFlash();
 begin
-    Result.X := DEFAULT_MIN_WIDTH;
-    Result.Y := DEFAULT_MIN_HEIGHT;
+    FlashWindow(Self.Handle, true)
+end;
+
+procedure TfrmState.OnFlashTim(Sender: TObject);
+begin
+    if (not Self.Active and isNotifying and MainSession.prefs.GetBool('notify_flasher')) then
+        onFlash()
+    else
+        _flasher.Enabled := false;  //stop flashing
+end;
+
+procedure TfrmState.OnNotify(notifyEvents: integer);
+begin
+     if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+        isNotifying := true;
+        OnFlash(); //flash once
+        _flasher.Enabled := true; //OnFlash will handle rest
+     end;
+
+     if ((notifyEvents and notify_front) > 0) then begin
+        if (not Self.Visible or (Self.WindowState = wsMinimized)) then begin
+            Self.Visible := true;
+            Self.WindowState := wsNormal;
+            Self.Show();
+        end;
+        ShowWindow(Self.Handle, SW_SHOWNORMAL);
+        ForceForegroundWindow(Self.Handle);
+     end;
 end;
 
 end.
