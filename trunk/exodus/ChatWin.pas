@@ -25,15 +25,12 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls,
-  ToolWin;
+  ToolWin, ImgList;
 
 type
   TfrmChat = class(TfrmBaseChat)
     popContact: TTntPopupMenu;
     SaveDialog1: TSaveDialog;
-    btnClose: TSpeedButton;
-    pnlJID: TPanel;
-    lblNick: TTntLabel;
     timBusy: TTimer;
     mnuWordwrap: TTntMenuItem;
     mnuReturns: TTntMenuItem;
@@ -51,13 +48,15 @@ type
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
-    Panel3: TPanel;
-    imgAvatar: TPaintBox;
     PrintHistory1: TTntMenuItem;
     mnuLastActivity: TTntMenuItem;
     mnuTimeRequest: TTntMenuItem;
     mnuVersionRequest: TTntMenuItem;
     PrintDialog1: TPrintDialog;
+    pnlJID: TPanel;
+    lblNick: TTntLabel;
+    imgAvatar: TPaintBox;
+    Panel3: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure doHistory(Sender: TObject);
@@ -545,7 +544,7 @@ begin
 
     _jid := TJabberID.Create(cjid);
     _avatar := nil;
-    Panel1.ClientHeight := 28;
+    pnlDockTop.ClientHeight := 28;
 
     // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
@@ -561,8 +560,7 @@ begin
                 end
                 else
                     imgAvatar.Width := _avatar.Width;
-
-                Panel1.ClientHeight := m + 1;
+                pnlDockTop.ClientHeight := m + 1;
             end;
         end
     end
@@ -1406,9 +1404,6 @@ end;
 procedure TfrmChat.FormResize(Sender: TObject);
 begin
   inherited;
-    // make the close btn be right justified..
-    btnClose.Left := Panel1.Width - btnClose.Width - 2;
-    pnlJID.Width := Panel1.Width - btnClose.Width - 5;
 end;
 
 {---------------------------------------}
@@ -1619,7 +1614,6 @@ end;
 procedure TfrmChat.OnDocked();
 begin
     inherited;
-    btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
     // scroll the MsgView to the bottom.
     _scrollBottom();
@@ -1635,7 +1629,6 @@ end;
 procedure TfrmChat.OnFloat();
 begin
     inherited;
-    btnClose.Visible := false;
     DragAcceptFiles(Handle, True);
     _scrollBottom();
     Self.Refresh();

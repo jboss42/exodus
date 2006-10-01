@@ -23,7 +23,8 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls, TntMenus;
+    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls, TntMenus,
+  ToolWin;
 
 type
   TfrmInvalidRoster = class(TfrmDockable)

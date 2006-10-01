@@ -26,7 +26,7 @@ uses
     XMLParser,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-    Buttons, TntStdCtrls, TntMenus;
+    Buttons, TntStdCtrls, TntMenus, ToolWin;
 
 type
   TfrmDebug = class(TfrmDockable)
@@ -34,11 +34,7 @@ type
     Splitter1: TSplitter;
     PopupMenu1: TTntPopupMenu;
     MsgDebug: TExRichEdit;
-    pnlTop: TPanel;
-    btnClose: TSpeedButton;
-    lblJID: TTntLabel;
     FindDialog1: TFindDialog;
-    lblLabel: TTntLabel;
     MemoSend: TExRichEdit;
     popPres: TTntMenuItem;
     popIQSet: TTntMenuItem;
@@ -49,6 +45,9 @@ type
     Find1: TTntMenuItem;
     SendXML1: TTntMenuItem;
     Clear1: TTntMenuItem;
+    pnlTop: TPanel;
+    lblJID: TTntLabel;
+    lblLabel: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
@@ -77,23 +76,6 @@ type
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
-
-    {
-        Event fired when docking is complete.
-
-        Docked property will be true, tabsheet will be assigned. This event
-        is fired after all other docking events are complete.
-    }
-    procedure OnDocked();override;
-
-    {
-        Event fired when a float (undock) is complete.
-
-        Docked property will be false, tabsheet will be nil. This event
-        is fired after all other floating events are complete.
-    }
-    procedure OnFloat();override;
-
   end;
 
 procedure ShowDebugForm();
@@ -477,30 +459,6 @@ begin
         btnSendRawClick(Self);
     end;
 
-end;
-
-{
-    Event fired when docking is complete.
-
-    Docked property will be true, tabsheet will be assigned. This event
-    is fired after all other docking events are complete.
-}
-procedure TfrmDebug.OnDocked();
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{
-    Event fired when a float (undock) is complete.
-
-    Docked property will be false, tabsheet will be nil. This event
-    is fired after all other floating events are complete.
-}
-procedure TfrmDebug.OnFloat();
-begin
-    inherited;
-    btnClose.Visible := false;
 end;
 
 initialization

@@ -6,7 +6,6 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 382
   OldCreateOrder = True
   OnClose = FormClose
-  OnResize = FormResize
   ExplicitWidth = 390
   ExplicitHeight = 305
   PixelsPerInch = 96
@@ -17,18 +16,80 @@ inherited frmRoom: TfrmRoom
     ExplicitTop = 243
     ExplicitWidth = 382
   end
-  inherited pnlMsgList: TPanel
-    Top = 23
+  inherited pnlDockTop: TPanel
     Width = 382
-    Height = 186
-    TabOrder = 2
-    ExplicitTop = 23
     ExplicitWidth = 382
-    ExplicitHeight = 186
+    inherited tbDockBar: TToolBar
+      Left = 333
+      ExplicitLeft = 333
+    end
+    inherited pnlChatTop: TPanel
+      Width = 330
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 330
+      ExplicitHeight = 32
+      object pnlSubj: TPanel
+        Left = 0
+        Top = 0
+        Width = 352
+        Height = 32
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitLeft = -22
+        object lblSubject: TTntLabel
+          Left = 27
+          Top = 5
+          Width = 289
+          Height = 21
+          AutoSize = False
+          Caption = ' lblSubject'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          Layout = tlCenter
+        end
+        object SpeedButton1: TSpeedButton
+          Left = 1
+          Top = 6
+          Width = 20
+          Height = 20
+          Hint = 'Edit Subject'
+          Flat = True
+          Glyph.Data = {
+            F6000000424DF600000000000000760000002800000010000000100000000100
+            04000000000080000000120B0000120B00001000000010000000000000000000
+            8000008000000080800080000000800080008080000080808000C0C0C0000000
+            FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
+            DADAAD77777777777777D000000000000007A0FBFBFBFB00FB07D0BFBFBFBF08
+            0F07A0F0F0F0FB0B8007D0BFBFB00F000007A0FBFBF0B0FBFB07D0BFBFB0B0BF
+            BF07A0FBFBF0BB0BFB07D0BFBFB0BB0FBF07A00000000BB0000DDADADADA0BB0
+            DADAADADADADA0000DADDADADADAD0110ADAADADADADAD00ADAD}
+          ParentShowHint = False
+          ShowHint = True
+          Transparent = False
+          OnClick = lblSubjectURLClick
+        end
+      end
+    end
+  end
+  inherited pnlMsgList: TPanel
+    Width = 382
+    Height = 177
+    TabOrder = 2
+    ExplicitTop = 55
+    ExplicitWidth = 382
+    ExplicitHeight = 154
     object Splitter2: TSplitter
       Left = 270
       Top = 4
-      Height = 178
+      Height = 169
       Align = alRight
       ResizeStyle = rsUpdate
       ExplicitHeight = 212
@@ -37,17 +98,18 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 178
+      Height = 169
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
       Caption = '`'
       TabOrder = 0
+      ExplicitHeight = 146
       object lstRoster: TTntListView
         Left = 1
         Top = 1
         Width = 103
-        Height = 176
+        Height = 167
         Align = alClient
         Columns = <
           item
@@ -76,6 +138,7 @@ inherited frmRoom: TfrmRoom
         OnDragOver = OnDockedDragOver
         OnInfoTip = lstRosterInfoTip
         OnKeyPress = lstRosterKeyPress
+        ExplicitHeight = 144
       end
     end
   end
@@ -87,75 +150,6 @@ inherited frmRoom: TfrmRoom
     ExplicitWidth = 382
     inherited MsgOut: TExRichEdit
       Width = 378
-    end
-  end
-  inherited Panel1: TPanel
-    Width = 382
-    Height = 23
-    BorderWidth = 1
-    ExplicitWidth = 382
-    ExplicitHeight = 23
-    object btnClose: TSpeedButton
-      Left = 356
-      Top = 2
-      Width = 23
-      Height = 20
-      Caption = 'X'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      OnClick = btnCloseClick
-    end
-    object pnlSubj: TPanel
-      Left = 1
-      Top = 1
-      Width = 352
-      Height = 21
-      Align = alLeft
-      BevelOuter = bvNone
-      TabOrder = 0
-      object lblSubject: TTntLabel
-        Left = 24
-        Top = 0
-        Width = 289
-        Height = 21
-        AutoSize = False
-        Caption = ' lblSubject'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
-        Layout = tlCenter
-      end
-      object SpeedButton1: TSpeedButton
-        Left = 1
-        Top = 1
-        Width = 20
-        Height = 20
-        Hint = 'Edit Subject'
-        Flat = True
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          04000000000080000000120B0000120B00001000000010000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
-          DADAAD77777777777777D000000000000007A0FBFBFBFB00FB07D0BFBFBFBF08
-          0F07A0F0F0F0FB0B8007D0BFBFB00F000007A0FBFBF0B0FBFB07D0BFBFB0B0BF
-          BF07A0FBFBF0BB0BFB07D0BFBFB0BB0FBF07A00000000BB0000DDADADADA0BB0
-          DADAADADADADA0000DADDADADADAD0110ADAADADADADAD00ADAD}
-        ParentShowHint = False
-        ShowHint = True
-        Transparent = False
-        OnClick = lblSubjectURLClick
-      end
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar

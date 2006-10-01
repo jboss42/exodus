@@ -24,7 +24,8 @@ interface
 uses
     Dockable,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls, ToolWin,
+  ImgList;
 
 type
   TfrmDockWizard = class(TfrmDockable)
@@ -33,13 +34,13 @@ type
     btnBack: TTntButton;
     btnNext: TTntButton;
     btnCancel: TTntButton;
+    Tabs: TPageControl;
+    TabSheet1: TTabSheet;
     Panel1: TPanel;
     Bevel2: TBevel;
     lblWizardTitle: TTntLabel;
     lblWizardDetails: TTntLabel;
     Image1: TImage;
-    Tabs: TPageControl;
-    TabSheet1: TTabSheet;
   private
     { Private declarations }
   public

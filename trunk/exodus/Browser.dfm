@@ -8,22 +8,170 @@ inherited frmBrowse: TfrmBrowse
   OnDestroy = FormDestroy
   OnDragOver = FormDragOver
   OnResize = ResizeAddressBar
+  ExplicitWidth = 430
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlDockTop: TPanel
+    Width = 422
+    TabOrder = 1
+    ExplicitWidth = 422
+    inherited tbDockBar: TToolBar
+      Left = 373
+      ExplicitLeft = 373
+    end
+    object pnlTop: TTntPanel
+      Left = 0
+      Top = 0
+      Width = 370
+      Height = 32
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitTop = 32
+      ExplicitWidth = 422
+      ExplicitHeight = 22
+      object CoolBar1: TCoolBar
+        Left = 0
+        Top = 0
+        Width = 370
+        Height = 32
+        Align = alClient
+        BandMaximize = bmNone
+        Bands = <
+          item
+            Control = tlbToolBar
+            HorizontalOnly = True
+            ImageIndex = -1
+            MinHeight = 22
+            Width = 370
+          end>
+        EdgeBorders = []
+        EdgeInner = esNone
+        EdgeOuter = esNone
+        ExplicitWidth = 249
+        ExplicitHeight = 22
+        object tlbToolBar: TToolBar
+          Left = 9
+          Top = 0
+          Width = 357
+          Height = 22
+          AutoSize = True
+          DisabledImages = DisToolbar
+          EdgeInner = esNone
+          EdgeOuter = esNone
+          Images = Toolbar
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          Wrapable = False
+          object btnBack: TToolButton
+            Left = 0
+            Top = 0
+            Hint = 'Previous JID'
+            AllowAllUp = True
+            AutoSize = True
+            Caption = 'Back'
+            DropdownMenu = popHistory
+            ImageIndex = 2
+            Style = tbsDropDown
+            OnClick = btnBackClick
+          end
+          object btnFwd: TToolButton
+            Left = 36
+            Top = 0
+            Hint = 'Next JID'
+            AllowAllUp = True
+            Caption = 'btnFwd'
+            ImageIndex = 3
+            OnClick = btnFwdClick
+          end
+          object ToolButton2: TToolButton
+            Left = 59
+            Top = 0
+            Width = 13
+            AllowAllUp = True
+            Caption = 'ToolButton2'
+            ImageIndex = 3
+            Style = tbsSeparator
+          end
+          object btnHome: TToolButton
+            Left = 72
+            Top = 0
+            Hint = 'Home'
+            AllowAllUp = True
+            Caption = 'btnHome'
+            ImageIndex = 1
+            OnClick = btnHomeClick
+          end
+          object ToolButton1: TToolButton
+            Left = 95
+            Top = 0
+            Hint = 'Change Views'
+            AllowAllUp = True
+            Caption = 'ToolButton1'
+            DropdownMenu = popViewStyle
+            ImageIndex = 0
+            Style = tbsDropDown
+          end
+          object btnBookmark: TToolButton
+            Left = 131
+            Top = 0
+            Hint = 'Add a Bookmark'
+            AllowAllUp = True
+            Caption = 'btnBookmark'
+            ImageIndex = 4
+            OnClick = mBookmarkClick
+          end
+          object ToolButton3: TToolButton
+            Left = 154
+            Top = 0
+            Hint = 'Get properties for all items in this window'
+            AllowAllUp = True
+            Caption = 'btnProps'
+            ImageIndex = 6
+            OnClick = ToolButton3Click
+          end
+          object btnNode: TToolButton
+            Left = 177
+            Top = 0
+            Hint = 'Show Node Identifier'
+            AllowAllUp = True
+            AutoSize = True
+            Caption = 'btnNode'
+            ImageIndex = 7
+            OnClick = btnNodeClick
+          end
+          object btnInfo: TToolButton
+            Left = 200
+            Top = 0
+            Hint = 'Get identity and features'
+            AllowAllUp = True
+            AutoSize = True
+            Caption = 'Information'
+            ImageIndex = 8
+            OnClick = btnInfoClick
+          end
+        end
+      end
+    end
+  end
   object Panel3: TTntPanel
     Left = 0
-    Top = 84
+    Top = 94
     Width = 422
-    Height = 287
+    Height = 277
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 0
+    ExplicitTop = 116
+    ExplicitHeight = 255
     object vwBrowse: TTntListView
       Left = 73
       Top = 3
       Width = 346
-      Height = 281
+      Height = 271
       Align = alClient
       Columns = <
         item
@@ -56,17 +204,19 @@ inherited frmBrowse: TfrmBrowse
       OnColumnClick = vwBrowseColumnClick
       OnData = vwBrowseData
       OnResize = vwBrowseResize
+      ExplicitHeight = 249
     end
     object pnlInfo: TTntPanel
       Left = 3
       Top = 3
       Width = 70
-      Height = 281
+      Height = 271
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
       TabOrder = 1
       Visible = False
+      ExplicitHeight = 249
       object lblIdentity: TTntLabel
         Left = 4
         Top = 4
@@ -122,10 +272,11 @@ inherited frmBrowse: TfrmBrowse
         Left = 4
         Top = 153
         Width = 62
-        Height = 124
+        Height = 114
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
+        ExplicitHeight = 92
       end
     end
   end
@@ -147,161 +298,16 @@ inherited frmBrowse: TfrmBrowse
         Width = 50
       end>
   end
-  object pnlTop: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 422
-    Height = 22
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 2
-    object btnClose: TSpeedButton
-      Left = 346
-      Top = 2
-      Width = 23
-      Height = 20
-      Caption = 'X'
-      Flat = True
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      OnClick = btnCloseClick
-    end
-    object CoolBar1: TCoolBar
-      Left = 0
-      Top = 0
-      Width = 249
-      Height = 22
-      Align = alLeft
-      BandMaximize = bmNone
-      Bands = <
-        item
-          Control = tlbToolBar
-          HorizontalOnly = True
-          ImageIndex = -1
-          MinHeight = 22
-          Width = 249
-        end>
-      EdgeBorders = []
-      EdgeInner = esNone
-      EdgeOuter = esNone
-      object tlbToolBar: TToolBar
-        Left = 9
-        Top = 0
-        Width = 236
-        Height = 22
-        AutoSize = True
-        DisabledImages = DisToolbar
-        EdgeInner = esNone
-        EdgeOuter = esNone
-        Images = Toolbar
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 0
-        Wrapable = False
-        object btnBack: TToolButton
-          Left = 0
-          Top = 0
-          Hint = 'Previous JID'
-          AllowAllUp = True
-          AutoSize = True
-          Caption = 'Back'
-          DropdownMenu = popHistory
-          ImageIndex = 2
-          Style = tbsDropDown
-          OnClick = btnBackClick
-        end
-        object btnFwd: TToolButton
-          Left = 36
-          Top = 0
-          Hint = 'Next JID'
-          AllowAllUp = True
-          Caption = 'btnFwd'
-          ImageIndex = 3
-          OnClick = btnFwdClick
-        end
-        object ToolButton2: TToolButton
-          Left = 59
-          Top = 0
-          Width = 13
-          AllowAllUp = True
-          Caption = 'ToolButton2'
-          ImageIndex = 3
-          Style = tbsSeparator
-        end
-        object btnHome: TToolButton
-          Left = 72
-          Top = 0
-          Hint = 'Home'
-          AllowAllUp = True
-          Caption = 'btnHome'
-          ImageIndex = 1
-          OnClick = btnHomeClick
-        end
-        object ToolButton1: TToolButton
-          Left = 95
-          Top = 0
-          Hint = 'Change Views'
-          AllowAllUp = True
-          Caption = 'ToolButton1'
-          DropdownMenu = popViewStyle
-          ImageIndex = 0
-          Style = tbsDropDown
-        end
-        object btnBookmark: TToolButton
-          Left = 131
-          Top = 0
-          Hint = 'Add a Bookmark'
-          AllowAllUp = True
-          Caption = 'btnBookmark'
-          ImageIndex = 4
-          OnClick = mBookmarkClick
-        end
-        object ToolButton3: TToolButton
-          Left = 154
-          Top = 0
-          Hint = 'Get properties for all items in this window'
-          AllowAllUp = True
-          Caption = 'btnProps'
-          ImageIndex = 6
-          OnClick = ToolButton3Click
-        end
-        object btnNode: TToolButton
-          Left = 177
-          Top = 0
-          Hint = 'Show Node Identifier'
-          AllowAllUp = True
-          AutoSize = True
-          Caption = 'btnNode'
-          ImageIndex = 7
-          OnClick = btnNodeClick
-        end
-        object btnInfo: TToolButton
-          Left = 200
-          Top = 0
-          Hint = 'Get identity and features'
-          AllowAllUp = True
-          AutoSize = True
-          Caption = 'Information'
-          ImageIndex = 8
-          OnClick = btnInfoClick
-        end
-      end
-    end
-  end
   object pnlJid: TPanel
     Left = 0
-    Top = 22
+    Top = 32
     Width = 422
     Height = 31
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
-    TabOrder = 3
+    TabOrder = 2
+    ExplicitTop = 54
     DesignSize = (
       422
       31)
@@ -365,13 +371,14 @@ inherited frmBrowse: TfrmBrowse
   end
   object pnlNode: TPanel
     Left = 0
-    Top = 53
+    Top = 63
     Width = 422
     Height = 31
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
-    TabOrder = 4
+    TabOrder = 3
+    ExplicitTop = 85
     DesignSize = (
       422
       31)

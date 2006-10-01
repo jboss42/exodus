@@ -24,7 +24,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils, ToolWin;
+    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList;
 
 type
   TMemberNode = TTntListItem;
@@ -55,10 +55,7 @@ type
     Splitter2: TSplitter;
     popRoom: TTntPopupMenu;
     popRoomRoster: TTntPopupMenu;
-    pnlSubj: TPanel;
-    btnClose: TSpeedButton;
     lstRoster: TTntListView;
-    lblSubject: TTntLabel;
     dlgSave: TSaveDialog;
     N6: TTntMenuItem;
     popClose: TTntMenuItem;
@@ -99,12 +96,14 @@ type
     popRosterVCard: TTntMenuItem;
     N7: TTntMenuItem;
     popRosterBrowse: TTntMenuItem;
-    SpeedButton1: TSpeedButton;
     popCopy: TTntMenuItem;
     popCopyAll: TTntMenuItem;
     N8: TTntMenuItem;
     Print1: TTntMenuItem;
     PrintDialog1: TPrintDialog;
+    pnlSubj: TPanel;
+    lblSubject: TTntLabel;
+    SpeedButton1: TSpeedButton;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -118,7 +117,6 @@ type
     procedure popInviteClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
     procedure popRosterBlockClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure popRoomRosterPopup(Sender: TObject);
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
@@ -2050,17 +2048,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.FormResize(Sender: TObject);
-begin
-  inherited;
-    // make the close btn right justified, and resize
-    // the text box for the subject
-    btnClose.Left := Panel1.Width - btnClose.Width - 2;
-    lblSubject.Width := btnClose.Left - lblSubject.Left - 10;
-    pnlSubj.Width := Panel1.Width - btnClose.Width - 5;
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.popShowHistoryClick(Sender: TObject);
 begin
     inherited;
@@ -2773,9 +2760,6 @@ end;
 procedure TfrmRoom.OnDocked();
 begin
     inherited;
-    btnClose.Visible := true;
-    // Set the ActivePage to the active tab
-
     _scrollBottom();
     Self.Refresh();
 end;
@@ -2789,8 +2773,6 @@ end;
 procedure TfrmRoom.OnFloat();
 begin
     inherited;
-    btnClose.Visible := false;
-
     _scrollBottom();
     Self.Refresh();
 end;

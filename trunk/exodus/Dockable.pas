@@ -24,12 +24,31 @@ interface
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
-    XMLTag;
+    XMLTag, ToolWin, ImgList, buttonFrame, Buttons;
 
 
-    
 type
   TDockNotify = procedure of object;
+
+  TDockbarButton = class
+  private
+    _button: TToolButton;
+    _callback: TDockNotify;
+
+    function getImageIndex(): integer;
+    procedure setImageIndex(ii: integer);
+
+    procedure OnClickEvent(Sender: TObject);
+  protected
+    constructor create(button: TToolButton);
+  public
+    procedure setEvent(event: TDockNotify);
+    destructor Destroy();override;
+  published
+    property ImageIndex: integer read getImageIndex write setImageIndex;
+  end;
+
+
   {
     Dockable forms may be docked/undocked either through drag -n- dock operations
     or programatically through their DockForm/FloatForm methods. Because there
@@ -37,6 +56,10 @@ type
     has been defined that will fire in either case.
   }
   TfrmDockable = class(TfrmState)
+    pnlDockTop: TPanel;
+    tbDockBar: TToolBar;
+    btnDockToggle: TToolButton;
+    btnCloseDock: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     {
@@ -55,6 +78,8 @@ type
     }
     procedure OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer); virtual;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnCloseDockClick(Sender: TObject);
+    procedure btnDockToggleClick(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -75,6 +100,10 @@ type
     property NormalImageIndex: integer read _normalImageIndex write _normalImageIndex;
     property NotifyImageIndex: integer read _notifyImageIndex write _notifyImageIndex;
 
+    procedure showDockbar(show: boolean);
+    procedure showTopbar(show: boolean);
+    procedure showCloseButton(show: boolean);
+    procedure showDockToggleButton(show: boolean);
   public
     { Public declarations }
     procedure DockForm; virtual;
@@ -107,6 +136,10 @@ type
 
     procedure gotActivate();override;
 
+    function  addDockbarButton(): TDockbarButton;
+    procedure removeDockbarButton(button: TDockbarButton);
+
+
     property Docked: boolean read _docked write _docked;
 
     property FloatPos: TRect read getPosition;
@@ -138,12 +171,48 @@ uses
     RosterImages,
     XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
+constructor TDockbarButton.create(button: TToolButton);
+begin
+    inherited create();
+    _button := button;
+    _button.OnClick := OnClickEvent;
+    _callback := nil;
+end;
+
+function TDockbarButton.getImageIndex(): integer;
+begin
+    Result := _button.ImageIndex;
+end;
+
+procedure TDockbarButton.setImageIndex(ii: integer);
+begin
+    _button.ImageIndex := ii;
+end;
+
+procedure TDockbarButton.OnClickEvent(Sender: TObject);
+begin
+    if (Assigned(_callback)) then
+        _callback();
+end;
+
+procedure TDockbarButton.setEvent(event: TDockNotify);
+begin
+    _callback := event;
+end;
+
+destructor TDockbarButton.Destroy();
+begin
+    _button.free();
+    inherited;
+end;
+
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     _normalImageIndex := RosterImages.RI_APPIMAGE_INDEX;
     _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
-
+    btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
+    btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     _docked := false;
     _initiallyDocked := true;
 
@@ -180,6 +249,22 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmDockable.btnCloseDockClick(Sender: TObject);
+begin
+    inherited;
+    Self.Close();
+end;
+
+procedure TfrmDockable.btnDockToggleClick(Sender: TObject);
+begin
+    inherited;
+    if (Docked) then
+        FloatForm()
+    else
+        DockForm();
+
+end;
+
 procedure TfrmDockable.DockForm;
 begin
     GetDockManager().OpenDocked(self);
@@ -252,11 +337,14 @@ end;
 procedure TfrmDockable.OnDocked();
 begin
     Self.Align := alClient;
+    btnCloseDock.Visible := true;
+    btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
 end;
 
 procedure TfrmDockable.OnFloat();
 begin
-    //nop
+    btnCloseDock.Visible := false;
+    btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
@@ -309,6 +397,41 @@ begin
     //could implement flashing tabs here
     if (not Docked) then
         inherited;
+end;
+
+
+function  TfrmDockable.addDockbarButton(): TDockbarButton;
+var
+    button: TToolButton;
+begin
+    button := TToolButton.Create(nil);
+    button.Parent := tbDockbar;
+    Result := TDockbarButton.create(button);
+end;
+
+procedure TfrmDockable.removeDockbarButton(button: TDockbarButton);
+begin
+    button._button.Parent := nil;
+end;
+
+procedure TfrmDockable.showDockbar(show: boolean);
+begin
+    tbDockBar.Visible := show;
+end;
+
+procedure TfrmDockable.showTopbar(show: boolean);
+begin
+    pnlDockTop.Visible := show;
+end;
+
+procedure TfrmDockable.showCloseButton(show: boolean);
+begin
+    btnCloseDock.Visible := show;
+end;
+
+procedure TfrmDockable.showDockToggleButton(show: boolean);
+begin
+    btnDockToggle.Visible := show;
 end;
 
 end.

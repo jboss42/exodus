@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity,
-    TntSysUtils;
+    TntSysUtils, ToolWin;
 
 type
 
@@ -55,15 +55,8 @@ type
     pnlSubject: TPanel;
     txtSubject: TTntLabel;
     lblSubject2: TTntStaticText;
-    pnlFrom: TPanel;
-    pnlError: TPanel;
-    Image1: TImage;
     frameButtons1: TframeButtons;
     popClipboard: TTntPopupMenu;
-    txtFrom: TTntLabel;
-    lblFrom: TTntLabel;
-    Panel1: TPanel;
-    btnClose: TSpeedButton;
     N2: TTntMenuItem;
     mnuResources: TTntMenuItem;
     N1: TTntMenuItem;
@@ -79,6 +72,11 @@ type
     mnuLastActivity: TMenuItem;
     mnuTimeRequest: TMenuItem;
     mnuVersionRequest: TMenuItem;
+    pnlTop2: TPanel;
+    lblFrom: TTntLabel;
+    txtFrom: TTntLabel;
+    pnlError: TPanel;
+    Image1: TImage;
     
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -148,25 +146,7 @@ type
     // TMsgController
     function getObject(): TObject;
     procedure MessageEvent(tag: TXMLTag);
-
-    {
-        Event fired when docking is complete.
-
-        Docked property will be true, tabsheet will be assigned. This event
-        is fired after all other docking events are complete.
-    }
-    procedure OnDocked();override;
-
-    {
-        Event fired when a float (undock) is complete.
-
-        Docked property will be false, tabsheet will be nil. This event
-        is fired after all other floating events are complete.
-    }
-    procedure OnFloat();override;
-    
     property Controller: TExMsgController read _controller;
-
   end;
 
 var
@@ -254,7 +234,6 @@ begin
 
         sizeHeaders();
         ShowDefault;
-        btnClose.Visible := Docked;
         FormResize(nil);
     end;
 end;
@@ -278,8 +257,6 @@ begin
         setFrom(msg_jid);
         sizeHeaders();
         ShowDefault();
-        btnClose.Visible := Docked;
-        FormResize(nil);
         if (txtSendSubject.Showing) then
             txtSendSubject.SetFocus();
     end;
@@ -436,9 +413,6 @@ begin
         frameButtons1.btnOK.Visible := (eType = evt_Message);
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
-    btnClose.Visible := Docked;
-    FormResize(nil);
-
 end;
 
 {---------------------------------------}
@@ -456,8 +430,6 @@ begin
     Splitter1.Visible := false;
     ActiveControl := MsgOut;
     lblFrom.Caption := _(sTo);
-    btnClose.Visible := Docked;
-
     pnlTop.Height := pnlSendSubject.Top + pnlSendSubject.Height + 3;
 end;
 
@@ -987,20 +959,5 @@ begin
 
   inherited;
 end;
-
-{---------------------------------------}
-procedure TfrmMsgRecv.OnDocked();
-begin
-    inherited;
-    btnClose.Visible := true;
-end;
-
-{---------------------------------------}
-procedure TfrmMsgRecv.OnFloat();
-begin
-    inherited;
-    btnClose.Visible := false;
-end;
-
 end.
 

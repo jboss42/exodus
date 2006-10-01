@@ -8,7 +8,7 @@ inherited frmBaseChat: TfrmBaseChat
   ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
+  object Splitter1: TSplitter [0]
     Left = 0
     Top = 227
     Width = 355
@@ -20,15 +20,39 @@ inherited frmBaseChat: TfrmBaseChat
     OnMoved = Splitter1Moved
     ExplicitTop = 192
   end
+  inherited pnlDockTop: TPanel
+    Width = 355
+    TabOrder = 3
+    ExplicitWidth = 355
+    inherited tbDockBar: TToolBar
+      Left = 306
+      ExplicitLeft = 306
+    end
+    object pnlChatTop: TPanel
+      Left = 0
+      Top = 0
+      Width = 303
+      Height = 32
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = 50
+      ExplicitTop = 3
+      ExplicitWidth = 185
+      ExplicitHeight = 41
+    end
+  end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 22
+    Top = 32
     Width = 355
-    Height = 176
+    Height = 166
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 0
+    ExplicitTop = 72
+    ExplicitHeight = 126
   end
   object pnlInput: TPanel
     Left = 0
@@ -143,16 +167,6 @@ inherited frmBaseChat: TfrmBaseChat
       UndoLimit = 0
       AllowInPlace = False
     end
-  end
-  object Panel1: TPanel
-    Left = 0
-    Top = 0
-    Width = 355
-    Height = 22
-    Align = alTop
-    BevelOuter = bvNone
-    BorderWidth = 2
-    TabOrder = 3
   end
   object tbMsgOutToolbar: TTntToolBar
     Left = 0

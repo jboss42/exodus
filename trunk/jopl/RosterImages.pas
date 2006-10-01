@@ -197,6 +197,12 @@ const
     RI_DISCONNECT_INDEX     : Integer = 79;
     RI_CONNECT_KEY          : Widestring = 'connect';
     RI_CONNECT_INDEX        : Integer = 80;
+    RI_DOCK_KEY             : WideString = 'dock';
+    RI_DOCK_INDEX           : Integer = 81;
+    RI_UNDOCK_KEY           : Widestring = 'undock';
+    RI_UNDOCK_INDEX         : Integer = 82;
+    RI_CLOSETAB_KEY         : Widestring = 'closetab';
+    RI_CLOSETAB_INDEX       : Integer = 83;
 {$ENDIF}
 
 var
@@ -291,7 +297,9 @@ begin
     _ids.Insert(RI_PREFS_INDEX, RI_PREFS_KEY);
     _ids.Insert(RI_DISCONNECT_INDEX, RI_DISCONNECT_KEY);
     _ids.Insert(RI_CONNECT_INDEX, RI_CONNECT_KEY);
-
+    _ids.Insert(RI_DOCK_INDEX, RI_DOCK_KEY);
+    _ids.Insert(RI_UNDOCK_INDEX, RI_UNDOCK_KEY);
+    _ids.Insert(RI_CLOSETAB_INDEX, RI_CLOSETAB_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
