@@ -113,6 +113,13 @@ procedure OutputDebugMsg(Message : String);
 }
 function ExecAndWait(const ExecuteFile, ParamString : string): Cardinal;
 
+{
+    Get the first parent of c that is derived from TForm
+
+    @return the first Form parent or nil if floating
+}
+function GetParentForm(c: TWinControl): TForm;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -1179,6 +1186,16 @@ begin
     Except
         Result := WAIT_FAILED;
     end;
+end;
+
+{---------------------------------------}
+function GetParentForm(c: TWinControl): TForm;
+begin
+    if ((c = nil) or c.Floating or (c.Parent = nil)) then
+        Result := nil
+    else if (c.parent.inheritsFrom(TForm)) then
+        Result := TForm(c.parent)
+    else Result := GetParentForm(c.Parent);
 end;
 
 {---------------------------------------}
