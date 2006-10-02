@@ -195,7 +195,7 @@
     <!-- flash taskbar until form receives focus, if flase, flashes N times and stops --> 
     <notify_flasher value="1" control="chkFlashInfinite"/>
     <!-- flash dock manager taskbar until all notified tabs have been seen -->
-    <notify_docked_flasher value="1" control="chkFlashTabInfinite"/>
+    <notify_docked_flasher value="0" control="chkFlashTabInfinite"/>
     <!-- actually flash the tab's image until no longer notifying -->
     <notify_tab_flasher value="1"/> <!-- control="chkFlashTabInfinite"/> -->
 
