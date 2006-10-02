@@ -4,7 +4,6 @@ inherited frmPrefNotify: TfrmPrefNotify
   Caption = 'frmPrefNotify'
   ClientHeight = 346
   ClientWidth = 338
-  Enabled = False
   OldCreateOrder = True
   ExplicitWidth = 350
   ExplicitHeight = 358

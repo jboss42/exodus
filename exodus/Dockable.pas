@@ -37,15 +37,17 @@ type
 
     function getImageIndex(): integer;
     procedure setImageIndex(ii: integer);
-
+    function getHint(): WideString;
+    procedure setHint(hint: Widestring);
     procedure OnClickEvent(Sender: TObject);
   protected
-    constructor create(button: TToolButton);
   public
-    procedure setEvent(event: TDockNotify);
+    constructor create();
     destructor Destroy();override;
   published
+    property Hint: WideString read getHint write setHint;
     property ImageIndex: integer read getImageIndex write setImageIndex;
+    property OnClick: TDockNotify read _callback write _callback;
   end;
 
 
@@ -136,7 +138,7 @@ type
 
     procedure gotActivate();override;
 
-    function  addDockbarButton(): TDockbarButton;
+    procedure  addDockbarButton(button: TDockbarButton);
     procedure removeDockbarButton(button: TDockbarButton);
 
 
@@ -171,10 +173,10 @@ uses
     RosterImages,
     XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
-constructor TDockbarButton.create(button: TToolButton);
+constructor TDockbarButton.create();
 begin
     inherited create();
-    _button := button;
+    _button := TToolButton.create(nil);
     _button.OnClick := OnClickEvent;
     _callback := nil;
 end;
@@ -189,19 +191,25 @@ begin
     _button.ImageIndex := ii;
 end;
 
+function TDockbarButton.getHint(): WideString;
+begin
+    Result := _button.Hint;
+end;
+
+procedure TDockbarButton.setHint(hint: Widestring);
+begin
+    _button.Hint := hint;
+end;
+
 procedure TDockbarButton.OnClickEvent(Sender: TObject);
 begin
     if (Assigned(_callback)) then
         _callback();
 end;
 
-procedure TDockbarButton.setEvent(event: TDockNotify);
-begin
-    _callback := event;
-end;
-
 destructor TDockbarButton.Destroy();
 begin
+    _button.Parent := nil;
     _button.free();
     inherited;
 end;
@@ -399,14 +407,9 @@ begin
         inherited;
 end;
 
-
-function  TfrmDockable.addDockbarButton(): TDockbarButton;
-var
-    button: TToolButton;
+procedure TfrmDockable.addDockbarButton(button: TDockbarButton);
 begin
-    button := TToolButton.Create(nil);
-    button.Parent := tbDockbar;
-    Result := TDockbarButton.create(button);
+    button._button.Parent := tbDockbar;
 end;
 
 procedure TfrmDockable.removeDockbarButton(button: TDockbarButton);

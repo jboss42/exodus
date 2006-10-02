@@ -497,7 +497,7 @@ begin
     StartRoom(autoOpenInfo.getAttribute('j'), {jid}
               autoOpenInfo.getAttribute('n'), {nick}
               autoOpenInfo.getAttribute('p'), {password}
-              autoOpenInfo.GetAttribute('sp') = 't', {send presence on creation}
+              true, //autoOpenInfo.GetAttribute('sp') = 't', {send presence on creation}
               autoOpenInfo.GetAttribute('dc') = 't', {use default config}
               autoOpenInfo.GetAttribute('rn') = 't', {use registered nickname}
               false); //don't bring these to front
