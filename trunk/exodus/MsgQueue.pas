@@ -189,11 +189,7 @@ begin
 
     tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
-    //JJF NB probably used a refernce here for optimizations, however I
-    //have since found 3 bugs related to this ref (probably introduced
-    //by jinc or myself for that matter). Simplifies maintenance to
-    //have the caller maintain its own ownership of the ref.
-    _queue.Add(TJabberEvent.create(e));
+    _queue.Add(e);
     lstEvents.Items.Count := lstEvents.Items.Count + 1;
     SaveEvents();
 end;
@@ -365,7 +361,7 @@ begin
     
     _loading := false;
     _queue := TObjectList.Create();
-    _queue.OwnsObjects := true;
+    _queue.OwnsObjects := true; //frees on remove, delete, destruction etc
     _documentDir := MainSession.Prefs.getString('log_path');
 
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
@@ -496,14 +492,7 @@ begin
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
 
-    e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
-    if (e.eType = evt_Chat) then begin
-        // startChat will automatically play the queue of msgs
-        StartChat(e.from_jid.jid, e.from_jid.resource, true);
-    end
-    else begin
-        StartRecvMsg(e);
-    end;
+    StartRecvMsg(TJabberEvent(_queue.Items[lstEvents.Selected.Index]));
 end;
 
 {---------------------------------------}
@@ -536,7 +525,7 @@ begin
     if (isNotifying) then
         isNotifying := false;
 
-    _queue.Clear();
+    _queue.Clear(); //frees references
     lstEvents.items.Clear();
     txtMsg.Clear();
 end;
@@ -544,7 +533,7 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.RemoveItem(i: integer);
 begin
-    _queue.Delete(i);
+    _queue.Delete(i); //frees reference
     lstEvents.Items.Count := _queue.Count;
     if (_queue.Count = 0) then begin
         lstEvents.Items.Clear();
@@ -574,7 +563,7 @@ begin
     else begin
         for i := lstEvents.Items.Count-1 downto 0 do begin
             if (lstEvents.Items[i].Selected) then begin
-                _queue.Delete(i);
+                _queue.Delete(i); //frees reference
                 lstEvents.Items.Count := lstEvents.Items.Count - 1;
                 first := i;
             end;
@@ -585,7 +574,7 @@ begin
 
     if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
         lstEvents.ItemIndex := first;
-        e := TJabberEvent(_queue[first]);
+        e := TJabberEvent(_queue[first]); //e is reference
         if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
     end

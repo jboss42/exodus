@@ -41,7 +41,6 @@ type
     private
         _data_list: TWideStringlist;
         _tag: TXMLTag;
-
     public
         Timestamp: TDateTime;
         eType: TJabberEventType;
@@ -117,13 +116,10 @@ var
 
 {---------------------------------------}
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
-var
-    e: TJabberEvent;
 begin
     // Create a new event based on this tag.
-    e := TJabberEvent.Create;
-    e.Parse(tag);
-    Result := e;
+    Result := TJabberEvent.Create;
+    Result.Parse(tag);
 end;
 
 {---------------------------------------}
@@ -190,9 +186,8 @@ begin
         end;
 
         evt_RosterItems: begin
-            frmRosterRecv := TfrmRosterRecv.Create(Application);
-            frmRosterRecv.Restore(e);
-            frmRosterRecv.ShowDefault();
+            StartRecvMsg(e);
+            e.Free();//msg queue does not own this, need to cleanup
             exit;
         end;
 
@@ -213,7 +208,7 @@ begin
         MainSession.Prefs.getBool('msg_queue') or
         (e.eType = evt_Chat)) then begin
         frmMsg := ShowMsgQueue(false);
-        frmMsg.LogEvent(e, msg, img_idx); 
+        frmMsg.LogEvent(e, msg, img_idx); //e now referenced by frmMsg, don't free
         //invites may still be popped up, even in the messages show up here
         if ((e.eType = evt_Invite) and
             (MainSession.Prefs.getInt('invite_treatment') = invite_popup)) then begin
@@ -222,7 +217,10 @@ begin
         else notifyFrm := frmMsg;
 
     end
-    else notifyFrm := StartRecvMsg(e);
+    else begin
+        notifyFrm := StartRecvMsg(e);
+        e.Free(); //msgqueue does not own this, need to cleanup
+    end;
 
     if (notify) then
         DoNotify(notifyFrm, notifyType, notifyMsg, img_idx);
@@ -338,6 +336,8 @@ begin
 end;
 
 constructor TJabberEvent.Create(evt: TJabberEvent);
+var
+    c: TChatController;
 begin
     inherited Create();
 
@@ -358,8 +358,13 @@ begin
     caption := evt.caption;
     error := evt.error;
     _data_list.Assign(evt.Data);
+    //chats should not be created in this way, but for completeness sake...
+    if ((eType = evt_Chat) and (from_jid <> nil) and (MainSession <> nil)) then begin
+        c := MainSession.ChatList.FindChat(from_jid.jid, from_jid.resource, '');
+        assert(c <> nil);
+        c.addref();
+    end;
 end;
-
 
 {---------------------------------------}
 destructor TJabberEvent.destroy;
@@ -371,7 +376,6 @@ begin
         if (c <> nil) then
             c.Release();
     end;
-
     ClearStringListObjects(_data_list);
     _data_list.Free();
 
