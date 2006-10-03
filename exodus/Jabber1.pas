@@ -2058,7 +2058,7 @@ begin
         else begin
             e := CreateJabberEvent(tag);
             e.elapsed_time := SafeInt(tag.GetAttribute('iq_elapsed_time'));
-            RenderEvent(e);
+            RenderEvent(e); //msg queue now own event, don't free
         end;
     end
 end;

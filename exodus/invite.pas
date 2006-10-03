@@ -102,17 +102,15 @@ begin
     // kick and ban get here.. because of status codes
 
     // check to see if we're already in the room.
+    e := CreateJabberEvent(tag);
     if (room_list.IndexOf(e.str_content) <  0) then begin
-        e := CreateJabberEvent(tag);
-        try
-            if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then
-                // auto-join the room
-                StartRoom(e.str_content, '', '', True, False, True)
-            else
-                RenderEvent(e);
-        finally
+        if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
+            // auto-join the room
+            StartRoom(e.str_content, '', '', True, False, True);
             e.Free();
-        end;
+        end
+        else //msg queue now own event, don't free
+            RenderEvent(e);
     end;
 end;
 

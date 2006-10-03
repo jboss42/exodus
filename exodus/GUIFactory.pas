@@ -125,10 +125,8 @@ begin
             (MainSession.Show = 'dnd')) or
            (MainSession.Prefs.getBool('queue_offline') and
             (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
-            // queue the chat window
-            e := CreateJabberEvent(tag);
-            RenderEvent(e);
-            e.Free();
+            // queue the chat window. Event now owned by msg queue, don't free
+            RenderEvent(CreateJabberEvent(tag));
         end
         else begin
             // New Chat Window
@@ -147,15 +145,14 @@ begin
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
+        //event is now referenced by msg queue. do not free
         q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
-        e.Free();
     end
 
     else if (event = '/session/gui/msgevent') then begin
         // New Msg-Event style window
-        e := CreateJabberEvent(tag);
-        RenderEvent(e);
-        e.Free();
+        //event is now referenced by msg queue. do not free
+        RenderEvent(CreateJabberEvent(tag));
     end
 
     else if (event = '/session/gui/no-inband-reg') then begin

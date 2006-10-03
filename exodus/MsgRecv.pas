@@ -175,8 +175,10 @@ const
 {---------------------------------------}
 implementation
 uses
+    RosterRecv,
+    chatWin,
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
-    XferManager, GnuGetText, 
+    XferManager, GnuGetText,
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
     RosterWindow, RemoveContact, Room, NodeItem, Roster,
     Presence, Session, Jabber1;
@@ -187,20 +189,33 @@ uses
 function StartRecvMsg(e: TJabberEvent): TfrmMsgRecv;
 var
     c: TMsgController;
+    frmRosterRecv : TfrmRosterRecv;
 begin
-    // display this msg in a new window
-    c := MainSession.MsgList.FindJid(e.from);
-    if (c = nil) then begin
-        Result := TfrmMsgRecv.Create(Application);
-        Result.cid := MainSession.MsgList.AddController(e.from, Result.Controller);
-        Result.DisplayEvent(e);
-        Result.sizeHeaders();
-        Result.ShowDefault();
+    if (e = nil) then exit;
+    if (e.eType = evt_RosterItems) then begin
+        frmRosterRecv := TfrmRosterRecv.Create(Application);
+        frmRosterRecv.Restore(e);
+        frmRosterRecv.ShowDefault();
+    end
+    else if (e.eType = evt_Chat) then begin
+        // startChat will automatically play the queue of msgs
+        StartChat(e.from_jid.jid, e.from_jid.resource, true);
     end
     else begin
-        Result := TfrmMsgRecv(c.Data);
-        Result.ShowDefault(); //bring the message window to front
-        Result.PushEvent(e);
+        // display this msg in a new window
+        c := MainSession.MsgList.FindJid(e.from);
+        if (c = nil) then begin
+            Result := TfrmMsgRecv.Create(Application);
+            Result.cid := MainSession.MsgList.AddController(e.from, Result.Controller);
+            Result.DisplayEvent(e);
+            Result.sizeHeaders();
+            Result.ShowDefault();
+        end
+        else begin
+            Result := TfrmMsgRecv(c.Data);
+            Result.ShowDefault(); //bring the message window to front
+            Result.PushEvent(e);
+        end;
     end;
 end;
 
@@ -859,6 +874,7 @@ begin
     //JJF well, there is no dup checking so I'm assuming this is unimplemented
     //so... Modifying so a copy of e gets pushed. Makes caller responisble
     //for free...
+    //These windows could be open after user deletes event from msg queue
     _events.Push(TJabberEvent.create(e));
     frameButtons1.btnCancel.Caption := _(sBtnNext)
 end;
