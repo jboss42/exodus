@@ -491,8 +491,13 @@ begin
     if (lstEvents.SelCount <= 0) then exit;
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
-
-    StartRecvMsg(TJabberEvent(_queue.Items[lstEvents.Selected.Index]));
+    e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
+    if (e.eType = evt_Chat) then begin
+        // startChat will automatically play the queue of msgs
+        StartChat(e.from_jid.jid, e.from_jid.resource, true);
+        RemoveItem(lstEvents.Selected.Index);
+    end else
+        StartRecvMsg(e);
 end;
 
 {---------------------------------------}
