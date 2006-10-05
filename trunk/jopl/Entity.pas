@@ -687,19 +687,18 @@ end;
 procedure TJabberEntity._processLegacyFeatures();
 begin
     // check for some legacy stuff..
-    if (_feats.IndexOf(XMLNS_SEARCH) >= 0) then _feats.Add(FEAT_SEARCH);
-    if (_feats.IndexOf(XMLNS_REGISTER) >= 0) then _feats.Add(FEAT_REGISTER);
-    if (_feats.IndexOf(XMLNS_MUC) >= 0) then _feats.Add(FEAT_GROUPCHAT);
-    if (_feats.IndexOf('gc-1.0') >= 0) then _feats.Add(FEAT_GROUPCHAT);
-    if (_cat = 'conference') then
+    if ((_feats.IndexOf(XMLNS_SEARCH) >= 0) and (_feats.indexOf(FEAT_SEARCH) = -1)) then _feats.Add(FEAT_SEARCH);
+    if ((_feats.IndexOf(XMLNS_REGISTER) >= 0)  and (_feats.indexOf(FEAT_REGISTER) = -1))then _feats.Add(FEAT_REGISTER);
+    if ((_feats.IndexOf(XMLNS_MUC) >= 0)  and (_feats.indexOf(FEAT_GROUPCHAT) = -1))then _feats.Add(FEAT_GROUPCHAT);
+    if ((_feats.IndexOf('gc-1.0') >= 0)  and (_feats.indexOf(FEAT_GROUPCHAT) = -1))then _feats.Add(FEAT_GROUPCHAT);
+    if ((_cat = 'conference') and (_feats.indexOf(FEAT_GROUPCHAT) = -1)) then
         _feats.Add(FEAT_GROUPCHAT);
 
     // this is for transports.
-    if (_cat_type = FEAT_AIM) then _feats.Add(FEAT_AIM)
-    else if (_cat_type = FEAT_MSN) then _feats.Add(FEAT_MSN)
-    else if (_cat_type = FEAT_ICQ) then _feats.Add(FEAT_ICQ)
-    else if (_cat_type = FEAT_YAHOO) then _feats.Add(FEAT_YAHOO)
-    else if (_feats.IndexOf('jabber:iq:gateway') >= 0) then _feats.Add(_cat_type);
+    if ((_feats.indexOf(_cat_type) = -1) and
+        ((_cat_type = FEAT_AIM) or (_cat_type = FEAT_MSN) or
+         (_cat_type = FEAT_ICQ) or (_cat_type = FEAT_YAHOO) or
+         (_feats.IndexOf('jabber:iq:gateway') >= 0))) then _feats.Add(_cat_type);
 end;
 
 {---------------------------------------}
