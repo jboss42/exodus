@@ -181,7 +181,7 @@ procedure TfrmPrefHotkeys.btnRemoveHotkeysClick(Sender: TObject);
 begin
     btnAddHotkeys.Enabled := true;
     _set_usedkeys(lstHotkeys.Selected.Caption, false);
-    lstHotkeys.DeleteSelected;
+    lstHotkeys.Selected.Delete();
 end;
 
 procedure TfrmPrefHotkeys.LoadPrefs();
