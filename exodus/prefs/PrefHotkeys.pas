@@ -40,6 +40,7 @@ type
       Selected: Boolean);
     procedure btnAddHotkeysClick(Sender: TObject);
     procedure btnModifyHotkeysClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
 
@@ -184,6 +185,19 @@ begin
     lstHotkeys.Selected.Delete();
 end;
 
+procedure TfrmPrefHotkeys.FormDestroy(Sender: TObject);
+begin
+  inherited;
+
+    if (_hotkeys_keys <> nil) then
+        _hotkeys_keys.Free();
+    if (_hotkeys_text <> nil) then
+        _hotkeys_text.Free();
+
+    _hotkeys_keys := nil;
+    _hotkeys_text := nil;
+end;
+
 procedure TfrmPrefHotkeys.LoadPrefs();
 var
     i: integer;
@@ -246,12 +260,6 @@ begin
     end;
     MainSession.Prefs.setStringlist('hotkeys_keys', _hotkeys_keys);
     MainSession.Prefs.setStringlist('hotkeys_text', _hotkeys_text);
-
-    _hotkeys_keys.Free();
-    _hotkeys_text.Free();
-
-    _hotkeys_keys := nil;
-    _hotkeys_text := nil;
 end;
 
 procedure TfrmPrefHotkeys._set_usedkeys(hotkey: Widestring; value: boolean);
