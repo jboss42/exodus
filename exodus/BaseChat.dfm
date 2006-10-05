@@ -36,10 +36,6 @@ inherited frmBaseChat: TfrmBaseChat
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 50
-      ExplicitTop = 3
-      ExplicitWidth = 185
-      ExplicitHeight = 41
     end
   end
   object pnlMsgList: TPanel
@@ -51,8 +47,6 @@ inherited frmBaseChat: TfrmBaseChat
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 0
-    ExplicitTop = 72
-    ExplicitHeight = 126
   end
   object pnlInput: TPanel
     Left = 0
@@ -181,6 +175,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonBold: TTntToolButton
       Left = 0
       Top = 0
+      Hint = 'Bold'
       Caption = 'Bold'
       ImageIndex = 70
       OnClick = BoldClick
@@ -188,6 +183,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonUnderline: TTntToolButton
       Left = 25
       Top = 0
+      Hint = 'Underline'
       Caption = 'Underline'
       ImageIndex = 71
       OnClick = UnderlineClick
@@ -195,6 +191,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonItalics: TTntToolButton
       Left = 50
       Top = 0
+      Hint = 'Italics'
       Caption = 'Italics'
       ImageIndex = 72
       Visible = False
@@ -210,6 +207,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonCut: TTntToolButton
       Left = 83
       Top = 0
+      Hint = 'Cut'
       Caption = 'Cut'
       ImageIndex = 73
       OnClick = Copy2Click
@@ -217,6 +215,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonCopy: TTntToolButton
       Left = 108
       Top = 0
+      Hint = 'Copy'
       Caption = 'Copy'
       ImageIndex = 74
       OnClick = Copy3Click
@@ -224,6 +223,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonPaste: TTntToolButton
       Left = 133
       Top = 0
+      Hint = 'Paste'
       Caption = 'Paste'
       ImageIndex = 75
       OnClick = Paste1Click
@@ -238,6 +238,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonEmoticons: TTntToolButton
       Left = 166
       Top = 0
+      Hint = 'Emoticons'
       Caption = 'Emoticons'
       ImageIndex = 76
       OnClick = Emoticons1Click
@@ -245,6 +246,7 @@ inherited frmBaseChat: TfrmBaseChat
     object ChatToolbarButtonHotkeys: TTntToolButton
       Left = 191
       Top = 0
+      Hint = 'Hotkeys'
       Caption = 'Hotkeys'
       ImageIndex = 77
       PopupMenu = popHotkeys
