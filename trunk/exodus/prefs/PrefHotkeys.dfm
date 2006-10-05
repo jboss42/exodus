@@ -5,6 +5,7 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
   ClientHeight = 384
   ClientWidth = 307
   OldCreateOrder = True
+  OnDestroy = FormDestroy
   ExplicitWidth = 319
   ExplicitHeight = 396
   PixelsPerInch = 96
