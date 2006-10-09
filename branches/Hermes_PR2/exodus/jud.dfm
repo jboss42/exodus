@@ -40,31 +40,11 @@ inherited frmJud: TfrmJud
       ExplicitLeft = 327
     end
   end
-  inherited Panel1: TPanel
-    Width = 409
-    ExplicitWidth = 409
-    inherited Bevel2: TBevel
-      Width = 409
-      ExplicitWidth = 409
-    end
-    inherited lblWizardTitle: TTntLabel
-      Width = 126
-      Caption = 'Jabber Search Wizard'
-      ExplicitWidth = 126
-    end
-    inherited lblWizardDetails: TTntLabel
-      Caption = ''
-    end
-    inherited Image1: TImage
-      Left = 368
-      ExplicitLeft = 368
-    end
-  end
   inherited Tabs: TPageControl
     Width = 409
-    Height = 254
+    Height = 261
     ExplicitWidth = 409
-    ExplicitHeight = 254
+    ExplicitHeight = 261
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -197,7 +177,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 0
         Width = 401
-        Height = 164
+        Height = 171
         Align = alClient
         Columns = <
           item
@@ -249,6 +229,33 @@ inherited frmJud: TfrmJud
             ExplicitHeight = 215
           end
         end
+      end
+    end
+  end
+  inherited pnlDockTop: TPanel
+    Width = 409
+    ExplicitWidth = 409
+    inherited tbDockBar: TToolBar
+      Left = 360
+    end
+    inherited Panel1: TPanel
+      Width = 357
+      ExplicitWidth = 357
+      inherited Bevel2: TBevel
+        Width = 357
+        ExplicitWidth = 409
+      end
+      inherited lblWizardTitle: TTntLabel
+        Width = 126
+        Caption = 'Jabber Search Wizard'
+        ExplicitWidth = 126
+      end
+      inherited lblWizardDetails: TTntLabel
+        Caption = ''
+      end
+      inherited Image1: TImage
+        Left = 316
+        ExplicitLeft = 368
       end
     end
   end
