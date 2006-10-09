@@ -258,7 +258,12 @@
     <!-- unfiled -->
     <toolbar value="1" />
     <chat_toolbar value="1" />
-    <always_lang value="0"></always_lang>       
+    <always_lang value="0"></always_lang>
+    <!-- Only show searchable jids that have no node. Default value is false,
+         all searchable jids are shown.
+        This option is never exposed to the user -->
+    <search_component_only value="0"/>
+    
     <brand_ad ></brand_ad>
     <brand_ad_url ></brand_ad_url>
     <!-- application ID is different than caption. It is used for

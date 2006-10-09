@@ -132,7 +132,9 @@ uses
     ChatWin, MsgRecv, Entity, EntityCache,
     InputPassword, NodeItem, GnuGetText, 
     JabberConst, Profile, Roster, JabberID, fGeneric,
-    Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel, Jabber1;
+    Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel,
+    TntClasses,
+    Jabber1;
 
 var
     cur_sort: integer;
@@ -144,6 +146,9 @@ var
 function StartSearch(sjid: string): TfrmJUD;
 var
     f: TfrmJUD;
+    sl: TTntStrings;
+    i: integer;
+    j: TJabberID;
 begin
     // Start a new search
     // create a new room
@@ -151,7 +156,18 @@ begin
 
     // populate the drop down box based on our entity cache
     f.cboJID.Items.Clear();
-    jEntityCache.getByFeature(FEAT_SEARCH, f.cboJID.Items);
+    sl := TTntStringList.create();
+    jEntityCache.getByFeature(FEAT_SEARCH, sl);
+    If (MainSession.Prefs.getBool('search_component_only')) then begin
+        for i := 0 to sl.Count -1 do begin
+            j := TJabberID.Create(sl[i]);
+            if (j.user = '') then
+                f.cboJID.Items.Add(sl[i]);
+            j.Free();
+        end;
+    end
+    else  f.cboJID.Items.AddStrings(sl);
+
     f.reset();
     f.ShowDefault();
 
