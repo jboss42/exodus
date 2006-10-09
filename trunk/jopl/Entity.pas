@@ -104,6 +104,7 @@ type
         procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
         procedure _finishWalk(jso: TObject);
         procedure _finishBrowse(jso: TObject);
+
     public
         Tag: integer;
         Data: TObject;
@@ -123,11 +124,12 @@ type
         procedure ClearReferences();
 
         function hasFeature(f: Widestring; allowCached: boolean = false): boolean;
+
         function hasIdentity(category, disco_type: Widestring): boolean;
 
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function getItemByFeature(f: Widestring): TJabberEntity;
-        
+
         property Parent: TJabberEntity read _parent;
         property Jid: TJabberID read _jid;
         property Node: Widestring read _node;
@@ -149,9 +151,10 @@ type
 
         property IdentityCount: Integer read _getIdentityCount;
         property Identities[Index: integer]: TDiscoIdentity read _getIdentity;
-        
+
         property fallbackProtocols: boolean read _fallback write _fallback;
         property timeout: integer read _timeout write _timeout;
+
     end;
 
     TJabberEntityProcess = class(TThread)
@@ -175,7 +178,6 @@ uses
     {$ifdef Win32}
     Windows,
     {$endif}
-    ExUtils,
     EntityCache, JabberConst, XMLUtils;
 
 const
@@ -282,17 +284,18 @@ var
     i: integer;
     r: TJabberEntity;
 begin
+    //Don't handle top level caps cached entities, they have no valid JID.
     if ((_type = ent_cached_disco) and (not allowCached)) then
         Result := false
     else begin
         Result := (_feats.IndexOf(f) >= 0);
-
         // if we didn't find it directly, check our references
         if (not Result) then begin
             for i := 0 to _refs.Count - 1 do begin
                 r := TJabberEntity(_refs[i]);
+                //go ahead and check caps cache entities here
+                //they are a child of a jid only entity
                 Result := r.hasFeature(f, true);
-    //                Result := r.hasFeature(f);
                 if (Result) then begin
                     break;
                 end;
@@ -579,8 +582,8 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.refresh(js: TJabberSession);
 begin
-    if (_iq <> nil) then exit;
-    if (_type = ent_cached_disco) then exit;
+    if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
+
     _has_info := false;
     _has_items := false;
     _type := ent_unknown;
@@ -603,7 +606,6 @@ procedure TJabberEntity.AddReference(e: TJabberEntity);
 var
     idx: integer;
 begin
-//    DebugMsg('Adding ' + e.DiscoID + ' as a reference to ' + DiscoID);
     idx := _refs.IndexOf(e);
     if (idx = -1) then
         _refs.Add(e);
@@ -614,7 +616,6 @@ procedure TJabberEntity.RemoveReference(e: TJabberEntity);
 var
     idx: integer;
 begin
-//    DebugMsg('Removing ' + e.DiscoID + ' as a reference from ' + DiscoID);
     idx := _refs.IndexOf(e);
     if (idx >= 0) then
         _refs.Delete(idx);
@@ -623,7 +624,6 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.ClearReferences();
 begin
-//    DebugMsg('Clearing all references from ' + DiscoID);
     _refs.Clear();
 end;
 
@@ -1074,7 +1074,7 @@ begin
         else begin
             _has_info := true;
             _has_items := true;
-        end;
+        end;        
         exit;
     end;
 
@@ -1111,6 +1111,7 @@ begin
     t.Free();
 
 end;
+
 
 function TJabberEntity.toString(): WideString;
 var

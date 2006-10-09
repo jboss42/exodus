@@ -61,8 +61,10 @@ type
         {$else}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList);
         {$endif}
-        
+
         procedure getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
+
+        function toString(): widestring;
 
         function indexOf(e: TJabberEntity): integer;
 
