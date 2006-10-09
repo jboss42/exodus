@@ -61,8 +61,10 @@ type
         {$else}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList);
         {$endif}
-        
+
         procedure getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
+
+        function toString(): widestring;
 
         function indexOf(e: TJabberEntity): integer;
         property Entities[index: integer]: TJabberEntity read _getEntity;
@@ -475,6 +477,15 @@ begin
 end;
 {$endif}
 
+function TJabberEntityCache.toString(): widestring;
+var
+    c: integer;
+begin
+    Result := 'Entity Cache.' + #13#10 + 'Entity Count: ' + intToStr(_cache.Count) + #13#10 + '  Entities:' + #13#10;
+    for c := 0 to _cache.Count - 1 do begin
+        Result := Result + #13#10 + '***** Entity#' + IntToStr(c) + ' *****' + #13#10 + TJabberEntity(_cache.Objects[c]).toString();
+    end;
+end;
 
 initialization
     jEntityCache := TJabberEntityCache.Create();

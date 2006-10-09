@@ -62,6 +62,8 @@ type
         procedure Clear();
         procedure Save(filename: Widestring = '');
         procedure Load(filename: Widestring = '');
+
+        function toString(): widestring;
     end;
 
 var
@@ -118,7 +120,7 @@ begin
     _js := js;
     assert(js is TJabberSession);
     TJabberSession(js).RegisterCallback(PresCallback,
-        '/packet/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
+        '/packet/presence[@type!="error"]/c[@xmlns="' + XMLNS_CAPS + '"]');
     TJabberSession(js).RegisterCallback(SessionCallback, '/session');
 end;
 
@@ -200,7 +202,7 @@ begin
 
         if (e.hasInfo) then begin
             iq := cache.AddTag('iq');
-            iq.setAttribute('from', e.Jid.full);
+            iq.setAttribute('from', 'caps-cache');
             iq.setAttribute('capid', _cache[c]);
 
             q := iq.AddTagNS('query', XMLNS_DISCOINFO);
@@ -260,11 +262,11 @@ begin
     for i := 0 to iqs.Count - 1 do begin
         iq := iqs.Tags[i];
         capid := iq.GetAttribute('capid');
-        from := iq.GetAttribute('from');
+        from := 'caps-cache';
         if ((capid <> '') and (from <> '')) then begin
             e := jEntityCache.getByJid(from, capid);
             if (e = nil) then begin
-                e := TJabberEntity.Create(TJabberID.Create(from), capid);
+                e := TJabberEntity.Create(TJabberID.Create(from), capid, ent_cached_disco);
                 jEntityCache.Add(from, e);
             end;
             e.LoadInfo(iq);
@@ -391,6 +393,16 @@ begin
     caps.setAttribute('capid', capid);
     MainSession.FireEvent('/session/caps', caps);
     caps.Free();
+end;
+
+function TJabberCapsCache.toString(): widestring;
+var
+    c: integer;
+begin
+    Result := 'Caps Cache.' + #13#10 + 'Enity Count: ' + intToStr(_cache.Count) + #13#10 + 'Entities:' + #13#10;
+    for c := 0 to _cache.Count - 1 do begin
+        Result := Result + #13#10 + '***** Entity#' + IntToStr(c) + ' *****' + #13#10 + TJabberEntity(_cache.Objects[c]).toString();
+    end;
 end;
 
 initialization
