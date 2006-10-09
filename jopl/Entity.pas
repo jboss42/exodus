@@ -46,7 +46,7 @@ const
 
 type
 
-    TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents);
+    TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents, ent_cached_disco);
 
     // This class is designed to gather information about a host.
     // It first tries disco, then falls back on browse, and finally agents.
@@ -109,7 +109,7 @@ type
         Tag: integer;
         Data: TObject;
         
-        constructor Create(jid: TJabberID; node: Widestring = '');
+        constructor Create(jid: TJabberID; node: Widestring = ''; etype: TJabberEntityType = ent_unknown);
         destructor Destroy; override;
 
         procedure getInfo(js: TJabberSession);
@@ -123,7 +123,8 @@ type
         procedure RemoveReference(e: TJabberEntity);
         procedure ClearReferences();
 
-        function hasFeature(f: Widestring): boolean;
+        function hasFeature(f: Widestring; allowCached: boolean = false): boolean;
+
         function hasIdentity(category, disco_type: Widestring): boolean;
 
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
@@ -137,6 +138,8 @@ type
         property CatType: Widestring read _cat_type;
         property Name: Widestring read _name;
 
+        function toString(): WideString;
+        
         property hasItems: boolean read _has_items;
         property hasInfo: boolean read _has_info;
 
@@ -148,7 +151,7 @@ type
 
         property IdentityCount: Integer read _getIdentityCount;
         property Identities[Index: integer]: TDiscoIdentity read _getIdentity;
-        
+
         property fallbackProtocols: boolean read _fallback write _fallback;
         property timeout: integer read _timeout write _timeout;
 
@@ -224,7 +227,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TJabberEntity.Create(jid: TJabberID; node: Widestring);
+constructor TJabberEntity.Create(jid: TJabberID; node: Widestring; etype: TJabberEntityType);
 begin
     _parent := nil;
     _jid := jid;
@@ -232,7 +235,7 @@ begin
     _name := '';
     _feats := TWidestringlist.Create();
     _refs := TList.Create();
-    _type := ent_unknown;
+    _type := etype;
     _has_info := false;
     _has_items := false;
 
@@ -276,22 +279,29 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntity.hasFeature(f: Widestring): boolean;
+function TJabberEntity.hasFeature(f: Widestring; allowCached: boolean): boolean;
 var
     i: integer;
     r: TJabberEntity;
 begin
-    Result := (_feats.IndexOf(f) >= 0);
-
-    // if we didn't find it directly, check our references
-    if (not Result) then begin
-        for i := 0 to _refs.Count - 1 do begin
-            r := TJabberEntity(_refs[i]);
-            Result := r.hasFeature(f);
-            if (Result) then exit;
+    //Don't handle top level caps cached entities, they have no valid JID.
+    if ((_type = ent_cached_disco) and (not allowCached)) then
+        Result := false
+    else begin
+        Result := (_feats.IndexOf(f) >= 0);
+        // if we didn't find it directly, check our references
+        if (not Result) then begin
+            for i := 0 to _refs.Count - 1 do begin
+                r := TJabberEntity(_refs[i]);
+                //go ahead and check caps cache entities here
+                //they are a child of a jid only entity
+                Result := r.hasFeature(f, true);
+                if (Result) then begin
+                    break;
+                end;
+            end;
         end;
     end;
-
 end;
 
 {---------------------------------------}
@@ -572,7 +582,7 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.refresh(js: TJabberSession);
 begin
-    if (_iq <> nil) then exit;
+    if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
 
     _has_info := false;
     _has_items := false;
@@ -1100,6 +1110,45 @@ begin
     end;
     t.Free();
 
+end;
+
+
+function TJabberEntity.toString(): WideString;
+var
+    i: integer;
+    di: TDiscoIdentity;
+    tstr: widestring;
+begin
+    tstr := _node;
+    if (tstr = '') then
+        tstr := '<NULL>';
+    tstr := 'JID:' + JID.full + ':NODE' + tstr;
+    Result := tstr + #13#10;
+    if (hasInfo) then begin
+        Result := Result + 'Identity Count: ' + IntToStr(IdentityCount) + #13#10;
+        Result := Result + 'Identities:' + #13#10;
+        for i := 0 to IdentityCount - 1 do begin
+            di := Identities[i];
+            Result := Result + '  Category: ' + di.Category + ', Type: ' + di.DiscoType + #13#10;
+        end;
+        Result := Result + 'Feature Count: ' + IntToStr(FeatureCount) + #13#10;
+        Result := Result + 'Features:' + #13#10;
+        for i := 0 to FeatureCount - 1 do begin
+            Result := Result + '  ' + Features[i] + #13#10;
+        end;
+    end
+    else begin
+        Result := Result + 'No DISCO#INFO' + #13#10;
+    end;
+    //references
+    Result := Result + 'Reference Count: ' + intToStr(_refs.count) + #13#10;
+    for i := 0 to _refs.Count - 1 do  begin
+        tstr := TJabberEntity(_refs[i]).Node;
+        if (tstr = '') then
+            tstr := '<NULL>';
+        tstr := 'JID:' + TJabberEntity(_refs[i]).Jid.full + ':NODE:' + tstr;
+        Result := Result + '  Reference#' + inttoStr(i) +  ' DiscoID: ' + tstr + #13#10;
+    end;
 end;
 
 end.
