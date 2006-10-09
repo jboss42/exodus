@@ -8,6 +8,7 @@ inherited frmJud: TfrmJud
   OnClose = FormClose
   OnResize = FormResize
   ExplicitWidth = 417
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -40,50 +41,29 @@ inherited frmJud: TfrmJud
       ExplicitLeft = 327
     end
   end
-  inherited Panel1: TPanel
-    Width = 409
-    ExplicitWidth = 409
-    inherited Bevel2: TBevel
-      Width = 409
-      ExplicitWidth = 409
-    end
-    inherited lblWizardTitle: TTntLabel
-      Width = 126
-      Caption = 'Jabber Search Wizard'
-      ExplicitWidth = 126
-    end
-    inherited lblWizardDetails: TTntLabel
-      Caption = ''
-    end
-    inherited Image1: TImage
-      Left = 368
-      ExplicitLeft = 368
-    end
-  end
   inherited Tabs: TPageControl
     Width = 409
-    Height = 254
+    Height = 261
     ExplicitWidth = 409
     ExplicitHeight = 254
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 365
         Height = 13
         Align = alTop
         Caption = 
           'Select the user database or enter in the Jabber ID of the search' +
           ' agent to use:'
         WordWrap = True
-        ExplicitWidth = 365
       end
       object cboJID: TTntComboBox
         Left = 16
         Top = 33
         Width = 233
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         Sorted = True
         TabOrder = 0
       end
@@ -197,7 +177,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 0
         Width = 401
-        Height = 164
+        Height = 171
         Align = alClient
         Columns = <
           item
@@ -249,6 +229,29 @@ inherited frmJud: TfrmJud
             ExplicitHeight = 215
           end
         end
+      end
+    end
+  end
+  inherited pnlDockTop: TPanel
+    Width = 409
+    inherited Panel1: TPanel
+      Width = 409
+      ExplicitWidth = 409
+      inherited Bevel2: TBevel
+        Width = 409
+        ExplicitWidth = 409
+      end
+      inherited lblWizardTitle: TTntLabel
+        Width = 126
+        Caption = 'Jabber Search Wizard'
+        ExplicitWidth = 126
+      end
+      inherited lblWizardDetails: TTntLabel
+        Caption = ''
+      end
+      inherited Image1: TImage
+        Left = 368
+        ExplicitLeft = 368
       end
     end
   end
