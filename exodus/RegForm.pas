@@ -25,7 +25,7 @@ uses
     IQ, XMLTag, fLeftLabel, Presence, Entity,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls,
-    TntExtCtrls;
+    TntExtCtrls, ToolWin;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
