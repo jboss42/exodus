@@ -79,7 +79,6 @@ implementation
 
 uses
     PrefController, XMLParser,
-    ExUtils,
     DiscoIdentity, JabberUtils, JabberID, EntityCache, JabberConst, Session;
 
 {---------------------------------------}
@@ -122,8 +121,6 @@ begin
     assert(js is TJabberSession);
     TJabberSession(js).RegisterCallback(PresCallback,
         '/packet/presence[@type!="error"]/c[@xmlns="' + XMLNS_CAPS + '"]');
-//    TJabberSession(js).RegisterCallback(PresCallback,
-//        '/packet/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
     TJabberSession(js).RegisterCallback(SessionCallback, '/session');
 end;
 
@@ -205,7 +202,6 @@ begin
 
         if (e.hasInfo) then begin
             iq := cache.AddTag('iq');
-//            iq.setAttribute('from', e.Jid.full);
             iq.setAttribute('from', 'caps-cache');
             iq.setAttribute('capid', _cache[c]);
 
@@ -266,12 +262,10 @@ begin
     for i := 0 to iqs.Count - 1 do begin
         iq := iqs.Tags[i];
         capid := iq.GetAttribute('capid');
-//        from := iq.GetAttribute('from');
         from := 'caps-cache';
         if ((capid <> '') and (from <> '')) then begin
             e := jEntityCache.getByJid(from, capid);
             if (e = nil) then begin
-//                e := TJabberEntity.Create(TJabberID.Create(from), capid);
                 e := TJabberEntity.Create(TJabberID.Create(from), capid, ent_cached_disco);
                 jEntityCache.Add(from, e);
             end;
@@ -279,12 +273,11 @@ begin
             _cache.AddObject(capid, e);
         end;
     end;
-//    ExUtils.DebugMsg('******************** Caps cache after LOAD ******************' + #13#10 + Self.toString());
-//    ExUtils.DebugMsg('******************** Entity cache after caps LOAD ******************' + #13#10 + jEntityCache.toString());
 
     iqs.Free();
     cache.Free();
     parser.Free();
+
 end;
 
 {---------------------------------------}
@@ -367,9 +360,9 @@ begin
     end;
 
     cache := getCache(capid, from);
-
     e.AddReference(cache);
     has_info := checkInfo(cache, cid, from);
+
     exts := c.GetAttribute('ext');
     if (exts <> '') then begin
         ids := TWidestringlist.Create();
@@ -382,9 +375,6 @@ begin
         end;
         ids.Free();
     end;
-
-//    ExUtils.DebugMsg('******************** Caps cache after PRES CALLBACK ******************' + #13#10 + Self.toString());
-//    ExUtils.DebugMsg('******************** Entity cache after caps PRES CALLBACK ******************' + #13#10 + jEntityCache.toString());
 
     if (has_info) then
         fireCaps(from.full, cid);
