@@ -24,7 +24,7 @@ uses
     IQ, XMLTag, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
-    TntExtCtrls, Menus, Wizard, TntMenus, fXData;
+    TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin;
 
 type
 
