@@ -4578,11 +4578,6 @@ var
 begin
     //frm=nil -> dock manager itself should handle the notification
     //frm <> nil -> dock manager should check notfy state of frm when responding to events
-    if ((notifyEvents and notify_front) > 0) then begin
-        Self.doRestore();
-        ShowWindow(Self.Handle, SW_SHOWNORMAL);
-        ForceForegroundWindow(Self.Handle);
-    end;
 
     dockNotifying := false;
     if ((frm <> nil) and frm.InheritsFrom(TfrmDockable)) then begin
@@ -4599,6 +4594,12 @@ begin
 
         if ((notifyEvents and PrefController.notify_flash) > 0) then begin
             Self.Flash();
+        end;
+        
+        if ((notifyEvents and notify_front) > 0) then begin
+            Self.doRestore();
+            ShowWindow(Self.Handle, SW_SHOWNORMAL);
+            ForceForegroundWindow(Self.Handle);
         end;
     end;
     updateNextNotifyButton();
