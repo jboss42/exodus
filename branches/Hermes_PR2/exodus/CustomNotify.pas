@@ -34,6 +34,7 @@ type
     chkFlash: TTntCheckBox;
     chkToast: TTntCheckBox;
     chkTrayNotify: TTntCheckBox;
+    chkFront: TTntCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
     procedure chkToastClick(Sender: TObject);
@@ -107,16 +108,19 @@ begin
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
     chkTrayNotify.Enabled := e;
+    chkFront.Checked := e;
 
     if chkToast.Enabled then begin
         chkToast.Checked := ((_vals[i] and notify_toast) > 0);
         chkFlash.Checked := ((_vals[i] and notify_flash) > 0);
         chkTrayNotify.Checked := ((_vals[i] and notify_tray) > 0);
+        chkFront.Checked := ((_vals[i] and notify_front) > 0);
     end
     else begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
         chkTrayNotify.Checked := false;
+        chkFront.Checked := false;
         _vals[i] := 0;
     end;
 
@@ -140,6 +144,7 @@ begin
     if (chkToast.Checked) then _vals[i] := _vals[i] + notify_toast;
     if (chkFlash.Checked) then _vals[i] := _vals[i] + notify_flash;
     if (chkTrayNotify.Checked) then _vals[i] := _vals[i] + notify_tray;
+    if (chkFront.Checked) then _vals[i] := _vals[i] + notify_front;
 
 end;
 
