@@ -4,7 +4,7 @@
 {the library. It's now using the new ZLIB version, 1.1.4      }
 {Note: The .obj files must be located in the subdirectory \obj}
 
-unit pngzlib;
+unit zlibpas;
 
 interface
 
@@ -45,9 +45,7 @@ function deflate(var strm: TZStreamRec; flush: Integer): Integer; forward;
 function deflateEnd(var strm: TZStreamRec): Integer; forward;
 
 const
-  zlib_version = '1.1.4';
-
-function adler32(adler: Integer; buf: PChar; len: Integer): Integer;
+  zlib_version = '1.2.3';
 
 
 const
@@ -97,36 +95,19 @@ const
 
 implementation
 
+{$L obj\adler32.obj}
 {$L obj\deflate.obj}
-{$L obj\trees.obj}
+{$L obj\infback.obj}
+{$L obj\inffast.obj}
 {$L obj\inflate.obj}
 {$L obj\inftrees.obj}
-{$L obj\adler32.obj}
-{$L obj\infblock.obj}
-{$L obj\infcodes.obj}
-{$L obj\infutil.obj}
-{$L obj\inffast.obj}
+{$L obj\trees.obj}
+{$L obj\compress.obj}
+{$L obj\crc32.obj}
 
-procedure _tr_init; external;
-procedure _tr_tally; external;
-procedure _tr_flush_block; external;
-procedure _tr_align; external;
-procedure _tr_stored_block; external;
-function adler32; external;
-procedure inflate_blocks_new; external;
-procedure inflate_blocks; external;
-procedure inflate_blocks_reset; external;
-procedure inflate_blocks_free; external;
-procedure inflate_set_dictionary; external;
-procedure inflate_trees_bits; external;
-procedure inflate_trees_dynamic; external;
-procedure inflate_trees_fixed; external;
-procedure inflate_codes_new; external;
-procedure inflate_codes; external;
-procedure inflate_codes_free; external;
-procedure _inflate_mask; external;
-procedure inflate_flush; external;
-procedure inflate_fast; external;
+
+
+function adler32(adler: LongInt; const buf: PChar; len: Integer): LongInt; external;
 
 procedure _memset(P: Pointer; B: Byte; count: Integer);cdecl;
 begin
@@ -164,6 +145,12 @@ begin
 end;
 
 end.
+
+
+
+
+
+
 
 
 

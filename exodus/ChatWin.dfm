@@ -30,7 +30,6 @@ inherited frmChat: TfrmChat
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 331
-      ExplicitHeight = 32
       object pnlJID: TPanel
         Left = 0
         Top = 0
@@ -39,7 +38,6 @@ inherited frmChat: TfrmChat
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -20
         object lblNick: TTntLabel
           Left = 43
           Top = 0
@@ -62,7 +60,8 @@ inherited frmChat: TfrmChat
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-          ExplicitHeight = 28
+          ExplicitLeft = 2
+          ExplicitTop = -6
         end
         object Panel3: TPanel
           Left = 35
@@ -79,9 +78,8 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Width = 383
     Height = 173
-    ExplicitTop = 64
     ExplicitWidth = 383
-    ExplicitHeight = 141
+    ExplicitHeight = 173
   end
   inherited pnlInput: TPanel
     Top = 239
