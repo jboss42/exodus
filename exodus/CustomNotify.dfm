@@ -1,10 +1,10 @@
 object frmCustomNotify: TfrmCustomNotify
   Left = 240
   Top = 208
-  Width = 334
-  Height = 298
   BorderWidth = 4
   Caption = 'Custom Notification Options'
+  ClientHeight = 265
+  ClientWidth = 318
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object frmCustomNotify: TfrmCustomNotify
   TextHeight = 13
   object lblDefault: TTntLabel
     Left = 16
-    Top = 192
+    Top = 215
     Width = 146
     Height = 13
     Cursor = crHandPoint
@@ -37,21 +37,33 @@ object frmCustomNotify: TfrmCustomNotify
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 226
+    Top = 235
     Width = 318
     Height = 30
     Align = alBottom
-    AutoScroll = False
     TabOrder = 2
+    TabStop = True
+    ExplicitTop = 226
+    ExplicitWidth = 318
+    ExplicitHeight = 30
     inherited Panel2: TPanel
       Width = 318
       Height = 30
+      ExplicitWidth = 318
+      ExplicitHeight = 30
       inherited Bevel1: TBevel
         Width = 318
+        Height = 1
+        ExplicitTop = -1
+        ExplicitWidth = 318
+        ExplicitHeight = 1
       end
       inherited Panel1: TPanel
         Left = 158
-        Height = 25
+        Top = 1
+        Height = 29
+        ExplicitLeft = 158
+        ExplicitHeight = 25
       end
     end
   end
@@ -59,7 +71,7 @@ object frmCustomNotify: TfrmCustomNotify
     Left = 16
     Top = 85
     Width = 257
-    Height = 97
+    Height = 124
     Caption = 'Notify Options'
     TabOrder = 1
     object chkFlash: TTntCheckBox
@@ -87,6 +99,15 @@ object frmCustomNotify: TfrmCustomNotify
       Height = 17
       Caption = 'Flash tray icon'
       TabOrder = 2
+      OnClick = chkToastClick
+    end
+    object chkFront: TTntCheckBox
+      Left = 8
+      Top = 94
+      Width = 241
+      Height = 17
+      Caption = 'Bring window to front'
+      TabOrder = 3
       OnClick = chkToastClick
     end
   end
