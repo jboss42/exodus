@@ -49,6 +49,7 @@ type
     procedure btnPrevClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     cur_iq: TJabberIQ;
     cur_stage: RegFormStage;
@@ -119,6 +120,7 @@ end;
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);
 begin
+    inherited;
     TranslateComponent(Self);
 
     // Hide all the tabs and make the welcome tab visible
@@ -474,6 +476,12 @@ begin
         MainSession.UnRegisterCallback(pres_cb);
 
     Action := caFree;
+end;
+
+procedure TfrmRegister.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}
