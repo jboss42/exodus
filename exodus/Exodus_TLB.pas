@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 10/1/2006 12:33:42 AM from Type Library described below.
+// File generated on 10/9/2006 6:22:42 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
@@ -102,6 +102,8 @@ const
   IID_IExodusPlugin: TGUID = '{6D6CCD11-2FAA-4CCB-92CA-CAB14A3BE234}';
   IID_IExodusBookmarkManager: TGUID = '{E40D85F3-9E0D-4368-89D0-C4298315CD30}';
   CLASS_ExodusBookmarkManager: TGUID = '{EEEE7D8D-0C7E-4DF1-B556-CFDAD2893123}';
+  IID_IExodusToolbarControl: TGUID = '{B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}';
+  CLASS_ExodusToolbarControl: TGUID = '{6AB0CC3F-2AF5-460B-B76C-1A4E807BA152}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -233,6 +235,8 @@ type
   IExodusPluginDisp = dispinterface;
   IExodusBookmarkManager = interface;
   IExodusBookmarkManagerDisp = dispinterface;
+  IExodusToolbarControl = interface;
+  IExodusToolbarControlDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -253,6 +257,7 @@ type
   ExodusLogMsg = IExodusLogMsg;
   ExodusLogListener = IExodusLogListener;
   ExodusBookmarkManager = IExodusBookmarkManager;
+  ExodusToolbarControl = IExodusToolbarControl;
 
 
 // *********************************************************************//
@@ -3624,6 +3629,7 @@ type
     function Get_Count: Integer; safecall;
     function GetButton(index: Integer): IExodusToolbarButton; safecall;
     function AddButton(const ImageID: WideString): IExodusToolbarButton; safecall;
+    function AddControl(const ID: WideString): IExodusToolbarControl; safecall;
     property Count: Integer read Get_Count;
   end;
 
@@ -3637,6 +3643,7 @@ type
     property Count: Integer readonly dispid 201;
     function GetButton(index: Integer): IExodusToolbarButton; dispid 202;
     function AddButton(const ImageID: WideString): IExodusToolbarButton; dispid 203;
+    function AddControl(const ID: WideString): IExodusToolbarControl; dispid 204;
   end;
 
 // *********************************************************************//
@@ -4079,6 +4086,32 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusToolbarControl
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}
+// *********************************************************************//
+  IExodusToolbarControl = interface(IDispatch)
+    ['{B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}']
+    function Get_Visible: WordBool; safecall;
+    procedure Set_Visible(value: WordBool); safecall;
+    function Get_Enabled: WordBool; safecall;
+    procedure Set_Enabled(value: WordBool); safecall;
+    property Visible: WordBool read Get_Visible write Set_Visible;
+    property Enabled: WordBool read Get_Enabled write Set_Enabled;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusToolbarControlDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}
+// *********************************************************************//
+  IExodusToolbarControlDisp = dispinterface
+    ['{B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}']
+    property Visible: WordBool dispid 201;
+    property Enabled: WordBool dispid 202;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -4258,6 +4291,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusBookmarkManager;
   end;
 
+// *********************************************************************//
+// The Class CoExodusToolbarControl provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusToolbarControl exposed by              
+// the CoClass ExodusToolbarControl. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusToolbarControl = class
+    class function Create: IExodusToolbarControl;
+    class function CreateRemote(const MachineName: string): IExodusToolbarControl;
+  end;
+
 implementation
 
 uses ComObj;
@@ -4410,6 +4455,16 @@ end;
 class function CoExodusBookmarkManager.CreateRemote(const MachineName: string): IExodusBookmarkManager;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusBookmarkManager) as IExodusBookmarkManager;
+end;
+
+class function CoExodusToolbarControl.Create: IExodusToolbarControl;
+begin
+  Result := CreateComObject(CLASS_ExodusToolbarControl) as IExodusToolbarControl;
+end;
+
+class function CoExodusToolbarControl.CreateRemote(const MachineName: string): IExodusToolbarControl;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusToolbarControl) as IExodusToolbarControl;
 end;
 
 end.
