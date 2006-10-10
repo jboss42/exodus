@@ -4279,6 +4279,10 @@ var
     idx: integer;
 begin
     frm.Docked := false;
+    if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
+        frm.removeDockbarButton(_nextNotifyButton);
+    end;
+
     updateLayoutDockChange(frm, false, tabs.PageCount = 1);
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then

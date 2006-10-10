@@ -34,6 +34,7 @@ type
   private
     _button: TToolButton;
     _callback: TDockNotify;
+    _parentForm: TForm;
 
     function getImageIndex(): integer;
     procedure setImageIndex(ii: integer);
@@ -48,6 +49,7 @@ type
     property Hint: WideString read getHint write setHint;
     property ImageIndex: integer read getImageIndex write setImageIndex;
     property OnClick: TDockNotify read _callback write _callback;
+    property Parent: TForm read _parentForm;
   end;
 
 
@@ -179,6 +181,7 @@ begin
     _button := TToolButton.create(nil);
     _button.OnClick := OnClickEvent;
     _callback := nil;
+    _parentForm := nil;
 end;
 
 function TDockbarButton.getImageIndex(): integer;
@@ -209,6 +212,7 @@ end;
 
 destructor TDockbarButton.Destroy();
 begin
+    _parentForm := nil;
     _button.Parent := nil;
     _button.free();
     inherited;
@@ -410,11 +414,13 @@ end;
 procedure TfrmDockable.addDockbarButton(button: TDockbarButton);
 begin
     button._button.Parent := tbDockbar;
+    button._parentForm := Self;
 end;
 
 procedure TfrmDockable.removeDockbarButton(button: TDockbarButton);
 begin
     button._button.Parent := nil;
+    button._parentForm := nil;
 end;
 
 procedure TfrmDockable.showDockbar(show: boolean);
