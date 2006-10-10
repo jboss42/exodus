@@ -68,8 +68,6 @@ type
 
         function indexOf(e: TJabberEntity): integer;
 
-        function toString(): widestring;
-        
         property Entities[index: integer]: TJabberEntity read _getEntity;
     end;
 
