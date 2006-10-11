@@ -279,7 +279,6 @@ procedure TAvatar.Draw(c: TCanvas; r: TRect);
 var
     aspect: single;
     rw, rh, pw, ph: integer;
-    temppic: TGraphic;
 begin
     if (_pic = nil) then exit;
 
