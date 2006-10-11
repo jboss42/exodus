@@ -1,0 +1,22 @@
+Exodus 3rd Party Libraries/Icons/etc
+------------------------------------
+
+1. Preference Icons
+		a. Preference Icons used with permission from collections of "Foood". http://www.foood.net
+		b. www.foood.net is now http://www.iconaholic.com/
+2. TCP/IP
+		a. Most TCP/IP done via Indy which comes as part of Delphi Stuido 2006
+		b. TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.
+3.  SAX XML
+		a. SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
+4. Unicode
+		a. Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
+5. RichEdit
+		a. RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
+6. TnTControls
+		a. http://www.tntware.com/
+7. JEDI Tools
+		a. http://www.delphi-jedi.org/
+8. PNG code
+		a. http://pngdelphi.sourceforge.net/
+
