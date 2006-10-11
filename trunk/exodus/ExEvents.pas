@@ -134,7 +134,6 @@ var
     notifyType: WideString;
     notifyFrm: TfrmState;
     frmMsg: TfrmMsgQueue;
-    frmRosterRecv: TfrmRosterRecv;
 begin
     notify := false;
     // create a listview item for this event
