@@ -47,7 +47,7 @@ var
   frmPrefLayouts: TfrmPrefLayouts;
 
 const
-    sViewSimple = 'The main window shows only the roster. Other windows are opened in seperate windows and never docked';
+    sViewSimple = 'The main window shows only the roster. Other windows are opened in separate windows and never docked';
     sViewShare = 'The main window always shows the roster. Other windows are docked using a tabbed interface to the main window.';
     sViewExpanded = 'The main window shows the roster. Other windows are docked using a tabbed interface to the main window.';
 
