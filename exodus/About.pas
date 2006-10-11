@@ -63,6 +63,7 @@ const
     sAbout4 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
     sAbout5 = 'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).';
     sAbout6 = 'RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>';
+    sAbout7 = 'PNG Delphi is Copyright (c) 2006, Gustavo Huffenbacher Daud. http://pngdelphi.sourceforge.net';
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -97,6 +98,8 @@ begin
     InfoBox.WideLines.Add(_(sAbout5));
     InfoBox.WideLines.Add('');
     InfoBox.WideLines.Add(_(sAbout6));
+    InfoBox.WideLines.Add('');
+    InfoBox.WideLines.Add(_(sAbout7));
     InfoBox.WideLines.Add('');
 
     additional := TWideStringList.Create();
