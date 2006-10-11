@@ -187,7 +187,6 @@ uses
   xdata in 'xdata.pas' {frmXData},
   fXData in 'fXData.pas' {frameXData: TFrame},
   NewUser in 'NewUser.pas' {frmNewUser},
-  pngzlib in '..\jopl\png\pngzlib.pas',
   pngimage in '..\jopl\png\pngimage.pas',
   pnglang in '..\jopl\png\pnglang.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
@@ -239,7 +238,8 @@ uses
   COMBookmarkManager in 'COMBookmarkManager.pas',
   StateForm in 'StateForm.pas' {frmState: TTntForm},
   PrefHotkeys in 'prefs\PrefHotkeys.pas' {frmPrefHotkeys},
-  ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys};
+  ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys},
+  zlibpas in '..\jopl\png\zlibpas.pas';
 
 {$R *.TLB}
 
