@@ -296,7 +296,7 @@ begin
     if (Docked) then begin
         OutputDebugMsg('TfrmDockable.gotActivate calling UpdateDocked: ImageIndex: ' + IntToStr(ImageIndex));
         GetDockManager().UpdateDocked(Self);
-        GetDockManager().OnNotify(Self, notify_flash); //STOp flashing (no longer isNotifying)
+        //GetDockManager().OnNotify(Self, notify_flash); //STOp flashing (no longer isNotifying)
     end;
 end;
 
@@ -324,8 +324,13 @@ begin
         if (_initiallyDocked) then begin
             Self.DockForm();
             Self.Show(); //show before trying to bring to front
-            if (bringtofront or _initiallyTop) then
+            if (_initiallyTop) then
                 GetDockManager().BringDockedToTop(Self);
+            if (bringtofront) then
+               GetDockManager().BringDockedToTop(Self)
+            else
+               Self.Deactivate;
+
         end
         else begin
             inherited; //let base class show window
