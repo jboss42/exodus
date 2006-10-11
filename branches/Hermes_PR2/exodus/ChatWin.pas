@@ -977,7 +977,10 @@ begin
             freeChatObject();
             Self.Close();
         end;
-    end;
+    end
+    else if (event = '/session/avatars') then
+        imgAvatar.Refresh();
+
 end;
 
 {---------------------------------------}
