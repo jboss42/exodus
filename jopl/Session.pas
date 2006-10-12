@@ -180,10 +180,14 @@ type
         function getDisplayUsername(): widestring;
 
         procedure Block(jid : TJabberID);
-        procedure UnBlock(jid : TJabberID);
+        procedure UnBlock(jid : TJabberID);     
 
         procedure addAvailJid(jid: Widestring);
         procedure removeAvailJid(jid: Widestring);
+
+        // Added by SIG for setting default nickname.
+        procedure SetDefaultNickname();
+        procedure vcardCallback(event: string; tag: TXMLTag);
 
         // Account information
         property Username: WideString read GetUsername write SetUsername;
@@ -232,7 +236,7 @@ uses
     {$endif}
     EntityCache, CapsCache, 
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence;
+    JabberConst, CapPresence, XMLVCard;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
@@ -766,6 +770,8 @@ begin
     _first_pres := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
     Prefs.FetchServerPrefs();
+    // Added by SIG - set Default Nickname
+    SetDefaultNickname();
 end;
 
 {---------------------------------------}
@@ -1345,6 +1351,43 @@ end;
 function TJabberSession.getDisplayUsername(): widestring;
 begin
     Result := Profile.getJabberID.userDisplay;
+end;
+
+
+{------------- Added by SIG to support setting default nick name---}
+{------------------------------------}
+procedure TJabberSession.SetDefaultNickname();
+var
+  vciq: TJabberIQ;
+  default_nick: WideString;
+begin
+   default_nick := Prefs.getString('default_nick');
+    if ( default_nick = '' ) then
+    begin
+      vciq := TJabberIQ.Create(Self,generateID(),vcardCallback);
+      vciq.qTag.Name := 'VCARD';
+      vciq.Namespace := 'vcard-temp';
+      vciq.iqType := 'get';
+      vciq.toJid := Username + '@' + Server;
+      vciq.Send();
+    end;
+
+end;
+
+{------------------------------------}
+procedure TJabberSession.vcardCallback(event: string; tag: TXMLTag);
+var
+  vcard: TXMLVCard;
+  default_nick: WideString;
+begin
+
+   if (event <> 'xml') then exit;
+   vcard := TXMLVCard.Create;
+   vcard.parse(tag);
+   default_nick := vcard.FamilyName + ', ' + vcard.GivenName;
+   Prefs.setString('default_nick',default_nick);
+   vcard.Free();
+
 end;
 
 end.
