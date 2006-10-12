@@ -219,6 +219,7 @@ object frmExodus: TfrmExodus
       MultiLine = True
       ParentFont = False
       PopupMenu = popTabs
+      RaggedRight = True
       TabOrder = 0
       OnChange = TabsChange
       OnContextPopup = TabsContextPopup
