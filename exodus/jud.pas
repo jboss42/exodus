@@ -54,7 +54,7 @@ type
     lblAddGrp: TTntLabel;
     lstContacts: TTntListView;
     PopupMenu1: TTntPopupMenu;
-    Button1: TButton;
+    btnContacts: TButton;
     popMessage: TTntMenuItem;
     popChat: TTntMenuItem;
     N1: TTntMenuItem;
@@ -63,6 +63,10 @@ type
     lblCount: TTntLabel;
     TabXData: TTabSheet;
     xdataBox: TframeXData;
+    btnChat: TButton;
+    btnBroadcastMsg: TButton;
+    procedure btnBroadcastMsgClick(Sender: TObject);
+    procedure OnChatClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -116,6 +120,8 @@ const
     sJUDStart = 'Start';
     sJUDStop = 'Stop';
     sJUDErrorContacting = 'Could not contact the search agent.';
+    sJUDErrorSendMessage = 'You cannot send message to yourself';
+    sJUDErrorChat = 'You cannot start chat with yourself';
     sJUDTimeout = 'The search timed out.';
     sJUDEmpty = 'No Results were found.';
     sJUDAdd = 'Add Contacts';
@@ -832,6 +838,25 @@ begin
     end;
 end;
 
+procedure TfrmJud.OnChatClick(Sender: TObject);
+var
+  i: integer;
+begin
+ inherited;
+ if (lstContacts.SelCount > 0) then begin
+     for i := 0 to lstContacts.Items.Count - 1 do begin
+       if lstContacts.Items[i].Selected then begin
+          if lstContacts.Items[i].Caption = MainSession.BareJid then begin
+             //Can't chat with yourself
+             MessageDlgW(_(sJUDErrorChat), mtError, [mbOK], 0);
+             continue
+          end;
+       end;
+       StartChat(convertDisplayToJID(lstContacts.Items[i].Caption), '', true)
+     end;
+ end;
+end;
+
 {---------------------------------------}
 procedure TfrmJUD.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -842,6 +867,34 @@ end;
 
 
 {---------------------------------------}
+procedure TfrmJud.btnBroadcastMsgClick(Sender: TObject);
+var
+  i: integer;
+  jidList: TWideStringList;
+begin
+ inherited;
+ // Only process if contacts selected
+ if (lstContacts.SelCount > 0) then begin
+     // Construct the list
+     jidList := TWideStringlist.Create();
+     for i := 0 to lstContacts.Items.Count - 1 do begin
+       if lstContacts.Items[i].Selected then begin
+          if lstContacts.Items[i].Caption = MainSession.BareJid then begin
+             //Add code to display message
+             MessageDlgW(_(sJUDErrorSendMessage), mtError, [mbOK], 0);
+             continue
+          end
+          else
+             jidList.Add(convertDisplayToJID(lstContacts.Items[i].Caption))
+       end;
+     end;
+     //Broadcast message and cleanup
+     BroadcastMsg(jidList);
+     jidList.Free();
+ end;
+end;
+
+
 procedure TfrmJUD.btnCancelClick(Sender: TObject);
 begin
   inherited;
