@@ -150,7 +150,7 @@ const
     sLast = 'Last';
     sBrowse = 'Browse';
     sDisco = 'Disco';
-    sExceptionMsg = 'An error has occurred.  An error log file will be saved to your Hermes directory.';
+    sExceptionMsg = 'An error has occurred.  An error log file will be saved to %s.';
     sConfirm = 'HTTP authentication';
     sConfirmationDialog = 'Accept authentication request from %s';
 
@@ -223,14 +223,14 @@ procedure ExHandleException(e_data: TWidestringlist);
 var
     s, i: integer;
     msg, ver, orig, fname, dir: String;
+    excMessage : WideString;
     sig: TSignal;
     l: TSignalListener;
     {$ifdef TRACE_EXCEPTIONS}
     sl: TStringlist;
     {$endif}
 begin
-    // We got an exception during signal dispatching.
-    MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
+
 
     // Put error logs in user dir, not on desktop anymore.
     dir := getUserDir();
@@ -290,7 +290,10 @@ begin
     e_data.Add('---------------------------------------');
     {$endif}
 
-
+    // We got an exception during signal dispatching.
+    //MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
+    excMessage := WideFormat(_(sExceptionMsg), [fname]);
+    MessageDlgW(excMessage, mtError, [mbOK], 0);
     e_data.SaveToFile(fname);
     e_data.Free();
 
