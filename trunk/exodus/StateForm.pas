@@ -230,6 +230,8 @@ type
 
         The default implementation is to show the window in its last floating
         position. Override this method to change (ie dock instead of float)
+        
+        @param bringtofront bring the window to the top of the zorder
     }
     procedure ShowDefault(bringtofront:boolean=true);virtual;
 
@@ -611,18 +613,14 @@ end;
 {---------------------------------------}
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
-outputdebugmsg('TfrmState.WMActivate got WMActivate: ' + IntToStr(Msg.WParamLo));
     if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
         // we are getting activated
         _skipWindowPosHandling := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _skipWindowPosHandling := false;
-
-        //this is going to be a problem if tray should flash
-        //until *all* notified windows become active
-        StopTrayAlert();
-        gotActivate();
+        if (self.Visible) then
+            gotActivate();
     end;
     inherited;
 end;
@@ -713,22 +711,30 @@ begin
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
         else if (_windowState = wsMaximized) then
             ShowWindow(Handle, SW_MAXIMIZE)
-        else if(bringtofront) then
-            ShowWindow(Handle, SW_SHOWNORMAL)
+        else if(bringtofront) then begin
+            ShowWindow(Handle, SW_SHOWNORMAL);
+            Self.BringToFront;
+        end
         else
-            ShowWindow(Handle, SW_SHOWNOACTIVATE);
+            SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+        Self.Visible := true;
     end
     else if (frmExodus.isMinimized() and not bringtofront) then
         ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-    else if(bringtofront) then
-        ShowWindow(Handle, SW_SHOWNORMAL)
-    else
-        ShowWindow(Handle, SW_SHOWNOACTIVATE);
-    Self.Show();        
+    else if(not bringtofront) then
+        ShowWindow(Handle, SW_SHOWNOACTIVATE)
+    else begin
+        ShowWindow(Handle, SW_SHOWNORMAL);
+        Self.BringToFront;
+    end;
 end;
 
 procedure TfrmState.gotActivate();
 begin
+    //this is going to be a problem if tray should flash
+    //until *all* notified windows become active
+    StopTrayAlert();
+
     _flasher.enabled := false;
     isNotifying := false;
     OutputDebugMsg(Self.ClassName +  '.gotActivate');
@@ -787,7 +793,7 @@ begin
     normalizePos();
     //setwiondowpos sets the undocked dimensions of window.
     _skipWindowPosHandling := true;
-    SetWindowPos(Self.Handle, 0, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOOWNERZORDER);
+    SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
     _skipWindowPosHandling := false;
     //minimized, maximized or restored
     _windowState := sToWindowState(windowState.GetAttribute('ws'));
@@ -882,20 +888,14 @@ end;
 
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
-     if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+     if (Self.Floating and ((notifyEvents and notify_front) > 0)) then begin
+        ShowWindow(Self.Handle, SW_SHOWNORMAL);
+        Self.bringtofront();
+     end
+     else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
         isNotifying := true;
         OnFlash(); //flash once
         _flasher.Enabled := true; //OnFlash will handle rest
-     end;
-
-     if ((notifyEvents and notify_front) > 0) then begin
-        if (not Self.Visible or (Self.WindowState = wsMinimized)) then begin
-            Self.Visible := true;
-            Self.WindowState := wsNormal;
-            Self.Show();
-        end;
-        ShowWindow(Self.Handle, SW_SHOWNORMAL);
-        ForceForegroundWindow(Self.Handle);
      end;
 end;
 

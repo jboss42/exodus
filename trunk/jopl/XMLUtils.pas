@@ -393,7 +393,7 @@ begin
     for i := 0 to Length(str) - 1 do begin
         c := str[i + 1];
         if ( (c='@') or (c=':') or (c='|') or (c='<') or
-        (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') ) then
+        (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') or (c=',')) then
             fn := fn + '_'
         else if (c > Chr(122)) then
             fn := fn + '_'
