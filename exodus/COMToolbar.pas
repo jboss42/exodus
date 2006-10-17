@@ -26,7 +26,7 @@ interface
 uses
   Classes, windows, ComObj, Messages, Controls, ActiveX, Exodus_TLB,
   StdVcl, COMToolbarButton, PLUGINCONTROLLib_TLB, JclStrHashMap
-  ,Forms, Dialogs, StdCtrls, ComCtrls, SysUtils  ;
+  ,Forms, Dialogs, StdCtrls, ComCtrls, SysUtils, strutils  ;
 
 type
   TExodusToolbar = class(TAutoObject, IExodusToolbar)
@@ -55,17 +55,32 @@ function TExodusToolbar.addButton(
 var
     idx, old_left: integer;
     btn: TToolButton;
+    g: TGUID;
+    guid: string;
 begin
-    with frmExodus do
+    with frmExodus do begin
+        Toolbar1.AutoSize := false;
         old_left := Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Left +
-            Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Width;
-    btn := TToolButton.Create(frmExodus);
-    btn.Parent := frmExodus.ToolBar1;
-    btn.Left := old_left + 1;
+                        Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Width;
+        btn := TToolButton.Create(frmExodus);
+        btn.Top := Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Top;
+        btn.Left := old_left + 1;
+        ToolBar1.Width := Toolbar1.Width +
+                            Toolbar1.Buttons[Toolbar1.ButtonCount - 1].Width + 1;
+        btn.Parent := ToolBar1;
+        Toolbar1.AutoSize := true;
+    end;
 
     idx := RosterTreeImages.Find(ImageID);
     if (idx >= 0) then
         btn.ImageIndex := idx;
+
+    CreateGUID(g);
+    guid := GUIDToString(g);
+    guid := AnsiMidStr(guid, 2, length(guid) - 2);
+    guid := AnsiReplaceStr(guid, '-', '_');
+    btn.Name := 'toolbar_button_' + guid;
+
 
     Result := TExodusToolbarButton.Create(btn);
 end;
