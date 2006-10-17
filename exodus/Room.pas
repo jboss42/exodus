@@ -645,7 +645,7 @@ begin
                      RosterTreeImages.Find('conference'), 'notify_keyword');
             Msg.highlight := true;
         end
-        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) then
+        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (Msg.Tag.QueryXPTag(XP_MSGDELAY) = nil) then
             DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
                      _(sNotifyActivity) + Self.Caption,
                      RosterTreeImages.Find('conference'), 'notify_roomactivity');
