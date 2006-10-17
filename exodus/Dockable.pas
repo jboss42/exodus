@@ -344,11 +344,24 @@ begin
     end
 end;
 
+function visibleButtonCount(bar: TToolBar): integer;
+var
+    i : integer;
+begin
+    Result := 0;
+    for i := 0 to bar.ButtonCount - 1 do begin
+        if (bar.Buttons[i].Visible) then
+            inc(Result);
+    end;
+end;
+
 procedure TfrmDockable.OnDocked();
 begin
     Self.Align := alClient;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
+    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsRequired);
+    pnlDockTop.Visible := true;
 end;
 
 procedure TfrmDockable.OnFloat();
@@ -356,6 +369,9 @@ begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
+    //hide top panel if no toolbar buttons are showing and no subclass has
+    //added a child component (pnlDockTop.ControlCount = 1 -> only toolbar)
+    pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or (visibleButtonCount(tbDockbar) > 0);
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);

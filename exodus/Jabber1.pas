@@ -1613,6 +1613,7 @@ var
     tmp: TXMLTag;
     fp, m: Widestring;
     fps: TWidestringlist;
+    i: integer;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1847,8 +1848,19 @@ begin
         setTrayIcon(_tray_icon_idx);
 
         // do gui stuff
-        if ((tag = nil) or (tag.Name <> 'startup')) then
+        if ((tag = nil) or (tag.Name <> 'startup')) then begin
             updateLayoutPrefChange();
+            //This is gross. For all TfrmDockable windows, call the onDock or onFloat
+            //events, allowing the windows to update preferences.
+            for i := 0 to Screen.FormCount - 1 do begin
+                if (Screen.Forms[i].InheritsFrom(TfrmDockable)) then begin
+                    if (TfrmDockable(Screen.Forms[i]).Docked) then
+                        TfrmDockable(Screen.Forms[i]).OnDocked()
+                    else
+                        TfrmDockable(Screen.Forms[i]).OnFloat()
+                end;
+            end;
+        end;
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
