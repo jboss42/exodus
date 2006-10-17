@@ -1035,8 +1035,6 @@ begin
     nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
     lblNick.Hint := nickHint;
 
-    RosterTreeImages.GetIcon(newPresIdx, Self.Icon);
-
     Self.ImageIndex := newPresIdx;
 end;
 
