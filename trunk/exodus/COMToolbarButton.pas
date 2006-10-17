@@ -11,6 +11,7 @@ type
   TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton)
   private
     _button: TToolButton;
+    _menu_listener: IExodusMenuListener;
 
   public
     constructor Create(btn: TToolButton);
@@ -24,6 +25,11 @@ type
     procedure Set_Visible(Value: WordBool); safecall;
     function Get_Enabled: WordBool; safecall;
     procedure Set_Enabled(Value: WordBool); safecall;
+    function Get_MenuListener: IExodusMenuListener; safecall;
+    procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
+
+  published
+    procedure OnClick(Sender: TObject);
 
   end;
 
@@ -35,6 +41,7 @@ uses
 constructor TExodusToolbarButton.Create(btn: TToolButton);
 begin
     _button := btn;
+    _button.OnClick := Self.OnClick;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
@@ -79,6 +86,23 @@ end;
 procedure TExodusToolbarButton.Set_Enabled(Value: WordBool);
 begin
     _button.Enabled := Value;
+end;
+
+function TExodusToolbarButton.Get_MenuListener: IExodusMenuListener;
+begin
+    Result := _menu_listener;
+end;
+
+procedure TExodusToolbarButton.Set_MenuListener(
+  const Value: IExodusMenuListener);
+begin
+    _menu_listener := Value;
+end;
+
+procedure TExodusToolbarButton.OnClick(Sender: TObject);
+begin
+    if (_menu_listener <> nil) then
+        _menu_listener.OnMenuItemClick(_button.Name, '');
 end;
 
 initialization

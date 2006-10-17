@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 10/9/2006 6:22:42 PM from Type Library described below.
+// File generated on 10/16/2006 3:24:16 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -286,7 +286,7 @@ type
                         const Nickname: WideString); safecall;
     procedure GetProfile(const JID: WideString); safecall;
     function CreateDockableWindow(const Caption: WideString): Integer; safecall;
-    function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddPluginMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
     procedure RemovePluginMenu(const menuID: WideString); safecall;
     procedure MonitorImplicitRegJID(const JabberID: WideString; fullJID: WordBool); safecall;
     function GetAgentService(const Server: WideString; const service: WideString): WideString; safecall;
@@ -331,7 +331,7 @@ type
     function RegisterPresenceXML(const XML: WideString): WideString; safecall;
     procedure RemovePresenceXML(const ID: WideString); safecall;
     procedure TrackWindowsMsg(message: Integer); safecall;
-    function AddContactMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddContactMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveContactMenu(const menuID: WideString); safecall;
     function GetActiveContact: WideString; safecall;
     function GetActiveGroup: WideString; safecall;
@@ -341,8 +341,8 @@ type
     procedure SetAuthenticated(authed: WordBool; const XML: WideString); safecall;
     procedure SetAuthJID(const Username: WideString; const host: WideString; 
                          const Resource: WideString); safecall;
-    function AddMessageMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
-    function AddGroupMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddMessageMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
+    function AddGroupMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveGroupMenu(const menuID: WideString); safecall;
     procedure RegisterWithService(const JabberID: WideString); safecall;
     procedure ShowAddContact(const JID: WideString); safecall;
@@ -406,7 +406,7 @@ type
                         const Nickname: WideString); dispid 12;
     procedure GetProfile(const JID: WideString); dispid 13;
     function CreateDockableWindow(const Caption: WideString): Integer; dispid 16;
-    function AddPluginMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 14;
+    function AddPluginMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 14;
     procedure RemovePluginMenu(const menuID: WideString); dispid 15;
     procedure MonitorImplicitRegJID(const JabberID: WideString; fullJID: WordBool); dispid 17;
     function GetAgentService(const Server: WideString; const service: WideString): WideString; dispid 19;
@@ -451,7 +451,7 @@ type
     function RegisterPresenceXML(const XML: WideString): WideString; dispid 57;
     procedure RemovePresenceXML(const ID: WideString); dispid 58;
     procedure TrackWindowsMsg(message: Integer); dispid 59;
-    function AddContactMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 60;
+    function AddContactMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 60;
     procedure RemoveContactMenu(const menuID: WideString); dispid 61;
     function GetActiveContact: WideString; dispid 62;
     function GetActiveGroup: WideString; dispid 63;
@@ -461,8 +461,8 @@ type
     procedure SetAuthenticated(authed: WordBool; const XML: WideString); dispid 67;
     procedure SetAuthJID(const Username: WideString; const host: WideString; 
                          const Resource: WideString); dispid 68;
-    function AddMessageMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 201;
-    function AddGroupMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 202;
+    function AddMessageMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 201;
+    function AddGroupMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 202;
     procedure RemoveGroupMenu(const menuID: WideString); dispid 203;
     procedure RegisterWithService(const JabberID: WideString); dispid 204;
     procedure ShowAddContact(const JID: WideString); dispid 205;
@@ -493,14 +493,14 @@ type
   IExodusChat = interface(IDispatch)
     ['{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}']
     function Get_JID: WideString; safecall;
-    function AddContextMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
     function RegisterPlugin(const plugin: IExodusChatPlugin): Integer; safecall;
     function UnRegisterPlugin(ID: Integer): WordBool; safecall;
     function GetMagicInt(part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const menuID: WideString); safecall;
     procedure AddMsgOut(const value: WideString); safecall;
-    function AddMsgOutMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
+    function AddMsgOutMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveMsgOutMenu(const menuID: WideString); safecall;
     procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); safecall;
     function Get_CurrentThreadID: WideString; safecall;
@@ -527,14 +527,14 @@ type
   IExodusChatDisp = dispinterface
     ['{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}']
     property JID: WideString readonly dispid 1;
-    function AddContextMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 2;
+    function AddContextMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 2;
     property MsgOutText: WideString readonly dispid 4;
     function RegisterPlugin(const plugin: IExodusChatPlugin): Integer; dispid 3;
     function UnRegisterPlugin(ID: Integer): WordBool; dispid 5;
     function GetMagicInt(part: ChatParts): Integer; dispid 6;
     procedure RemoveContextMenu(const menuID: WideString); dispid 7;
     procedure AddMsgOut(const value: WideString); dispid 201;
-    function AddMsgOutMenu(const Caption: WideString; const menuListener: IExodusMenuListener): WideString; dispid 202;
+    function AddMsgOutMenu(const Caption: WideString; const MenuListener: IExodusMenuListener): WideString; dispid 202;
     procedure RemoveMsgOutMenu(const menuID: WideString); dispid 203;
     procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); dispid 204;
     property CurrentThreadID: WideString readonly dispid 205;
@@ -623,7 +623,7 @@ type
     function AddContextMenu(const ID: WideString): WordBool; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
-                                const menuListener: IExodusMenuListener): WideString; safecall;
+                                const MenuListener: IExodusMenuListener): WideString; safecall;
     procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); safecall;
     function AddItem(const JabberID: WideString): IExodusRosterItem; safecall;
     property GroupsCount: Integer read Get_GroupsCount;
@@ -651,7 +651,7 @@ type
     function AddContextMenu(const ID: WideString): WordBool; dispid 208;
     procedure RemoveContextMenu(const ID: WideString); dispid 209;
     function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
-                                const menuListener: IExodusMenuListener): WideString; dispid 210;
+                                const MenuListener: IExodusMenuListener): WideString; dispid 210;
     procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); dispid 211;
     function AddItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
   end;
@@ -3661,10 +3661,13 @@ type
     procedure Set_ImageID(const value: WideString); safecall;
     function Get_Enabled: WordBool; safecall;
     procedure Set_Enabled(value: WordBool); safecall;
+    function Get_MenuListener: IExodusMenuListener; safecall;
+    procedure Set_MenuListener(const value: IExodusMenuListener); safecall;
     property Visible: WordBool read Get_Visible write Set_Visible;
     property Tooltip: WideString read Get_Tooltip write Set_Tooltip;
     property ImageID: WideString read Get_ImageID write Set_ImageID;
     property Enabled: WordBool read Get_Enabled write Set_Enabled;
+    property MenuListener: IExodusMenuListener read Get_MenuListener write Set_MenuListener;
   end;
 
 // *********************************************************************//
@@ -3678,6 +3681,7 @@ type
     property Tooltip: WideString dispid 202;
     property ImageID: WideString dispid 203;
     property Enabled: WordBool dispid 204;
+    property MenuListener: IExodusMenuListener dispid 205;
   end;
 
 // *********************************************************************//

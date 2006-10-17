@@ -2032,7 +2032,7 @@ begin
     else begin
         btnDisconnect.Visible := enable;
         btnConnect.Visible := not enable;
-end;
+    end;
 
 
     // People Menu
