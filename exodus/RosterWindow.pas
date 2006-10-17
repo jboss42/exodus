@@ -395,8 +395,9 @@ const
 
     sRenameGrp = 'Rename group';
     sRenameGrpPrompt = 'New group name:';
-    sGrpAlreadyExists = 'Group %s already exists.  Do you wish to incorporate contacts into existing group?';
-
+    sGrpAlreadyExists = 'Group %s already exists.';
+    sSpecialGroup = 'Can not rename special group %s.';
+    sSpecialGroupRmv = 'Can not remove special group %s.';
     sNoContactsSel = 'You must select one or more contacts.';
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
@@ -2775,7 +2776,7 @@ end;
 procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
 var
     go, grp_exists: TJabberGroup;
-    old_grp, new_grp, grp_exists_msg: WideString;
+    old_grp, new_grp, grp_exists_msg, special_grp_msg: WideString;
     i: integer;
     ri: TJabberRosterItem;
 begin
@@ -2788,13 +2789,26 @@ begin
         old_grp := go.FullName;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin
+            //If new group name is empty treat it as 'Unfiled'
+            if (new_grp = '') then
+              new_grp := g_unfiled;
+            // We should not let the user rename special groups
+            if  ((old_grp = g_unfiled) or (old_grp = g_offline) or (old_grp = g_bookmarks)) then begin
+                special_grp_msg := _(sSpecialGroup);
+                special_grp_msg := WideFormat(special_grp_msg, [old_grp]);
+                MessageDlgW(special_grp_msg, mtError, [mbOK], 0);
+                exit;
+            end;
+
             grp_exists := MainSession.Roster.getGroup(new_grp);
+            // Do not allow renaming to the group that already exists
             if (grp_exists <> nil) then begin
                 grp_exists_msg := _(sGrpAlreadyExists);
                 grp_exists_msg := WideFormat(grp_exists_msg, [new_grp]);
-                if (MessageDlgW(grp_exists_msg, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
-                    exit;
+                MessageDlgW(grp_exists_msg, mtError, [mbOK], 0);
+                exit;
             end;
+
 
             for i := 0 to MainSession.Roster.Count - 1 do begin
                 ri := MainSession.Roster.Items[i];
@@ -2805,7 +2819,7 @@ begin
                 end;
             end;
         end;
-    end;
+     end;
 end;
 
 {---------------------------------------}
@@ -2813,12 +2827,22 @@ procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
     go: TJabberGroup;
     recips: TList;
+    special_grp_rmv_msg : WideString;
 begin
     // Remove the grp..
     if (treeRoster.SelectionCount = 1) then begin
         go := _cur_go;
+        //Do not allow to remove offline group
+        //Bookmarks and Unfiled will not show up emtpy
+        if (go.FullName = g_offline) then begin
+            special_grp_rmv_msg := _(sSpecialGroupRmv);
+            special_grp_rmv_msg := WideFormat(special_grp_rmv_msg, [go.FullName]);
+            MessageDlgW(special_grp_rmv_msg, mtError, [mbOK], 0);
+            exit;
+        end;
+
         if (go.isEmpty()) then begin
-            // just remove the node, and remove it from the roster
+            // just remove the node, ad remove it from the roster
             TTntTreeNode(go.Data).Free();
             MainSession.roster.removeGroup(go);
         end
