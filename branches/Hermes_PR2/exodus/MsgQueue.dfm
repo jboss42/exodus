@@ -1,7 +1,7 @@
 inherited frmMsgQueue: TfrmMsgQueue
   Left = 247
   Top = 194
-  Caption = 'Events'
+  Caption = 'Messages'
   ClientHeight = 276
   ClientWidth = 446
   OldCreateOrder = True
@@ -91,7 +91,6 @@ inherited frmMsgQueue: TfrmMsgQueue
       OnDblClick = lstEventsDblClick
       OnEnter = lstEventsEnter
       OnKeyDown = lstEventsKeyDown
-      ExplicitTop = 26
     end
     object txtMsg: TExRichEdit
       Left = 1
