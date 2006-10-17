@@ -550,7 +550,10 @@ begin
         tmps := '';
         while (p <> nil) do begin
             if (tmps <> '') then tmps := tmps + ''#13#10;
-            tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
+            if (p.Status = '') then
+              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(p.show)
+            else
+              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
             p := TJabberSession(_js).ppdb.NextPres(p);
         end;
         ri.Tooltip := tmps;
