@@ -619,11 +619,8 @@ begin
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _skipWindowPosHandling := false;
-
-        //this is going to be a problem if tray should flash
-        //until *all* notified windows become active
-        StopTrayAlert();
-        gotActivate();
+        if (self.Visible) then
+            gotActivate();
     end;
     inherited;
 end;
@@ -720,18 +717,24 @@ begin
         end
         else
             SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
-        Self.Visible := true;   
+        Self.Visible := true;
     end
     else if (frmExodus.isMinimized() and not bringtofront) then
         ShowWindow(Handle, SW_SHOWMINNOACTIVE)
     else if(not bringtofront) then
         ShowWindow(Handle, SW_SHOWNOACTIVATE)
-    else
-        ShowWindow(Handle, SW_SHOWNORMAL)
+    else begin
+        ShowWindow(Handle, SW_SHOWNORMAL);
+        Self.BringToFront;
+    end;
 end;
 
 procedure TfrmState.gotActivate();
 begin
+    //this is going to be a problem if tray should flash
+    //until *all* notified windows become active
+    StopTrayAlert();
+
     _flasher.enabled := false;
     isNotifying := false;
     OutputDebugMsg(Self.ClassName +  '.gotActivate');
@@ -885,15 +888,14 @@ end;
 
 procedure TfrmState.OnNotify(notifyEvents: integer);
 begin
-     if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+     if (Self.Floating and ((notifyEvents and notify_front) > 0)) then begin
+        ShowWindow(Self.Handle, SW_SHOWNORMAL);
+        Self.bringtofront();
+     end
+     else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
         isNotifying := true;
         OnFlash(); //flash once
         _flasher.Enabled := true; //OnFlash will handle rest
-     end;
-
-     if ((notifyEvents and notify_front) > 0) then begin
-        ShowWindow(Self.Handle, SW_SHOWNORMAL);
-        Self.Show();
      end;
 end;
 

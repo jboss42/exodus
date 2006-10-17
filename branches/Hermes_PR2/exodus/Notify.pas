@@ -196,19 +196,12 @@ begin
         end;
     end;
 
-    if ((notify and notify_tray) > 0) then
-        // Flash the tray icon
-        StartTrayAlert();
-
     if ((notify and notify_toast) > 0) then
-        // Show toast
-        ShowRiserWindow(win, msg, icon);
+        ShowRiserWindow(win, msg, icon); // Show toast
 
-    if (win = nil) then
-        GetDockManager().OnNotify(nil, notify)
-    else if (win is TfrmState) then
+    if (win is TfrmState) then
         TfrmState(win).OnNotify(notify)
-    else begin  //handle flash and front ourselves
+    else if (win <> nil) then begin  //handle flash and front ourselves
         if ((notify and notify_flash) > 0) then
             FlashWindow(win.Handle, true);
         if ((notify and notify_front) > 0) then begin
@@ -220,6 +213,7 @@ begin
         ForceForegroundWindow(win.Handle);
         end;
     end;
+    GetDockManager().OnNotify(win, notify);
 
 {    if ((notify and notify_flash) > 0) then begin
         // flash or show img
