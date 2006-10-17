@@ -3082,10 +3082,6 @@ end;
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
     checkFlash();
-    // do something here maybe
-//    if (timFlasher.Enabled) then
-
-//        timFlasher.Enabled := false;
     StopTrayAlert();        
 end;
 
@@ -4294,6 +4290,7 @@ begin
     updateLayoutDockChange(frm, true, tabs.PageCount = 0);
     frm.ManualDock(Tabs); //fires TabsDockDrop event
     Result := GetTabSheet(frm);
+    frm.Visible := true;
 end;
 
 
@@ -4309,6 +4306,7 @@ begin
     updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
     frm.Docked := false;
+    frm.Visible := true;
     frm.OnFloat();
 end;
 

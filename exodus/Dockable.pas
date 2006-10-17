@@ -88,7 +88,6 @@ type
     { Private declarations }
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
-    _initiallyTop: boolean;     //start on top?
 
     _normalImageIndex: integer;//image shown when not notifying
     _notifyImageIndex: integer;//image shown when notifying
@@ -312,25 +311,15 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.ShowDefault(bringtofront:boolean);
 begin
-    if (self.Visible) then begin
-        if (Docked and bringtofront) then
-            GetDockManager().BringDockedToTop(Self)
-        else
-            inherited;
-    end
+    if (self.Visible and Docked and bringtofront) then
+        GetDockManager().BringDockedToTop(Self)
     else begin
         RestoreWindowState();
         // show this form using the default behavior
-        if (_initiallyDocked) then begin
+        if (not self.Visible and _initiallyDocked) then begin
             Self.DockForm();
-            Self.Show(); //show before trying to bring to front
-            if (_initiallyTop) then
-                GetDockManager().BringDockedToTop(Self);
             if (bringtofront) then
-               GetDockManager().BringDockedToTop(Self)
-            else
-               Self.Deactivate;
-
+               GetDockManager().BringDockedToTop(Self);
         end
         else begin
             inherited; //let base class show window
@@ -375,7 +364,6 @@ begin
     if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
         tstr := 't';
     _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
-    _initiallyTop := (windowState.GetAttribute('lasttop') = 't');
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
