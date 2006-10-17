@@ -149,7 +149,7 @@ begin
     // make sure the output is showing..
     inherited;
 
-    NormalImageIndex := RosterTreeImages.Find('filter');
+    ImageIndex := RosterTreeImages.Find('filter');
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;

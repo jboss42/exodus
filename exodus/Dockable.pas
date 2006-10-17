@@ -88,7 +88,6 @@ type
     { Private declarations }
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
-    _initiallyTop: boolean;     //start on top?
 
     _normalImageIndex: integer;//image shown when not notifying
     _notifyImageIndex: integer;//image shown when notifying
@@ -235,6 +234,7 @@ end;
 procedure TfrmDockable.setImageIndex(idx: integer);
 begin
     _normalImageIndex := idx;
+    RosterTreeImages.GetIcon(idx, Self.Icon);
     GetDockManager().UpdateDocked(self);
 end;
 
@@ -296,7 +296,6 @@ begin
     if (Docked) then begin
         OutputDebugMsg('TfrmDockable.gotActivate calling UpdateDocked: ImageIndex: ' + IntToStr(ImageIndex));
         GetDockManager().UpdateDocked(Self);
-        //GetDockManager().OnNotify(Self, notify_flash); //STOp flashing (no longer isNotifying)
     end;
 end;
 
@@ -312,25 +311,19 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.ShowDefault(bringtofront:boolean);
 begin
-    if (self.Visible) then begin
-        if (Docked and bringtofront) then
-            GetDockManager().BringDockedToTop(Self)
-        else
-            inherited;
+    if (self.Visible and Docked) then begin
+        if (bringtofront) then
+            GetDockManager().BringDockedToTop(Self);
     end
+    else if (Self.Visible) then
+        inherited
     else begin
         RestoreWindowState();
         // show this form using the default behavior
-        if (_initiallyDocked) then begin
+        if (not self.Visible and _initiallyDocked) then begin
             Self.DockForm();
-            Self.Show(); //show before trying to bring to front
-            if (_initiallyTop) then
-                GetDockManager().BringDockedToTop(Self);
             if (bringtofront) then
-               GetDockManager().BringDockedToTop(Self)
-            else
-               Self.Deactivate;
-
+               GetDockManager().BringDockedToTop(Self);
         end
         else begin
             inherited; //let base class show window
@@ -362,6 +355,7 @@ procedure TfrmDockable.OnFloat();
 begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
+    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
@@ -375,16 +369,12 @@ begin
     if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
         tstr := 't';
     _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
-    _initiallyTop := (windowState.GetAttribute('lasttop') = 't');
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
 begin
-    if (not Floating) then begin
-        windowState.setAttribute('dock', 't');
-        if (GetDockManager().getTopDocked = Self) then
-            windowState.setAttribute('lasttop', 't');
-    end
+    if (not Floating) then
+        windowState.setAttribute('dock', 't')
     else
         windowState.setAttribute('dock', 'f');
     inherited;
@@ -393,18 +383,13 @@ end;
 procedure TfrmDockable.OnNotify(notifyEvents: integer);
 begin
     if (Docked) then begin
+        if ((notifyEvents and PrefController.notify_front) > 0) then
+            GetDockManager().BringDockedToTop(Self)
         //if form is docked, all we need to do is update our presentation
-        if ((notifyEvents and PrefController.notify_flash) > 0) then begin
+        else if ((notifyEvents and PrefController.notify_flash) > 0) then begin
             isNotifying := true;
             GetDockManager().UpdateDocked(Self);
         end;
-
-        if ((notifyEvents and PrefController.notify_front) > 0) then
-            GetDockManager().BringDockedToTop(Self);
-
-        //let dock manager have a shot at these events...
-        //not sure this is right...
-        GetDockManager().OnNotify(Self, notifyEvents);
     end;
     inherited; //inherited will handle floating window notifications
 end;

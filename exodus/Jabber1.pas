@@ -467,7 +467,6 @@ type
     _auto_login: boolean;
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
-    _anyDockedNotifying: boolean;       //are any docked forms flashing/notifying?
     _nextNotifyButton: TDockbarButton;
     // Various state flags
     _windows_ver: integer;
@@ -975,7 +974,7 @@ begin
     // flash window
     if (_hidden) then begin
         Self.WindowState := wsMinimized;
-        //Self.Visible := true;
+        Self.Visible := true;
         ShowWindow(Handle, SW_SHOWMINNOACTIVE);
     end;
     if MainSession.Prefs.getBool('notify_flasher') then begin
@@ -1074,7 +1073,8 @@ begin
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
-        ShowWindow(Handle, SW_HIDE);
+        Self.Visible := false;
+//        ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
     SC_RESTORE: begin
@@ -1084,7 +1084,8 @@ begin
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
-            ShowWindow(Handle, SW_HIDE);
+            Self.Visible := false;
+//            ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
         end
         else
@@ -1106,14 +1107,15 @@ begin
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
         if (_hidden) then begin
             // restore our app
-            doRestore();
-            SetForegroundWindow(Self.Handle);
+            bringToFront();
+            _hidden := false;
             msg.Result := 0;
         end
         else begin
             // minimize our app
             _hidden := true;
-            ShowWindow(Handle, SW_HIDE);
+            Self.Visible := false;
+//            ShowWindow(Handle, SW_HIDE);
             PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
         end;
     end
@@ -1210,8 +1212,11 @@ end;
  var
     f: TfrmDockable;
  begin
+
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         outputdebugMsg('TfrmExodus.WMActivate');
+        checkFlash();
+        StopTrayAlert();
         f := getTopDocked();
         if ((f <> nil) and f.IsNotifying) then
             f.gotActivate();
@@ -1340,10 +1345,10 @@ begin
 
     // If we are supposed to be hidden, make it so.
     if (ExStartup.minimized) then begin
-        Self.Visible := false;
-        _hidden := true;
-        Self.WindowState := wsMinimized;
-        ShowWindow(Self.Handle, SW_HIDE);
+//        Self.Visible := false;
+//        _hidden := true;
+//        Self.WindowState := wsMinimized;
+//        ShowWindow(Self.Handle, SW_HIDE);
         SendMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
     end
     else
@@ -2565,9 +2570,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    outputdebugmsg('EXOUDS.FormActivate');
-
-
     if (frmRosterWindow <> nil) then
         frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
@@ -3082,10 +3084,6 @@ end;
 procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
     checkFlash();
-    // do something here maybe
-//    if (timFlasher.Enabled) then
-
-//        timFlasher.Enabled := false;
     StopTrayAlert();        
 end;
 
@@ -3305,7 +3303,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormPaint(Sender: TObject);
 begin
-//    StopTrayAlert();
 end;
 
 {---------------------------------------}
@@ -4262,9 +4259,9 @@ begin
         tsheet := GetTabSheet(form);
         if (tsheet <> nil) then begin
             Self.Tabs.ActivePage := tsheet;
-            form.gotActivate();
+            if (Self.Visible) then //focus if we can
+                form.gotActivate();
         end;
-
     end;
 end;
 
@@ -4294,6 +4291,7 @@ begin
     updateLayoutDockChange(frm, true, tabs.PageCount = 0);
     frm.ManualDock(Tabs); //fires TabsDockDrop event
     Result := GetTabSheet(frm);
+    frm.Visible := true;
 end;
 
 
@@ -4309,6 +4307,7 @@ begin
     updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
     frm.Docked := false;
+    frm.Visible := true;
     frm.OnFloat();
 end;
 
@@ -4320,7 +4319,6 @@ begin
     tsheet := GetTabSheet(frm);
     if (tsheet <> nil) then
         tsheet.ImageIndex := frm.ImageIndex;
-    _anyDockedNotifying := (getNextDockedNotifying(tsheet) <> nil);
     checkFlash();
     updateNextNotifyButton();
 end;
@@ -4577,34 +4575,20 @@ begin
 end;
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
-var
-    dockNotifying: boolean;
 begin
-     if ((notifyEvents and PrefController.notify_flash) > 0) then begin
-         Self.Flash();
-     end;
-     
-     if ((notifyEvents and notify_front) > 0) then begin
-         Self.doRestore();
-         ShowWindow(Self.Handle, SW_SHOWNORMAL);
-         ForceForegroundWindow(Self.Handle);
-     end;
+    //if dockmanager is being notified directly or the given form is docked
+    //handle bring to front and flash
+    if ((frm = nil) or (frm = Self) or
+        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
+        if ((notifyEvents and notify_front) > 0) then
+            bringToFront()
+        else if ((notifyEvents and notify_flash) > 0) then
+            Self.Flash();
+    end;
+    //tray notifications are always directed and dockmanager
+    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
+        StartTrayAlert();
 
-    //frm=nil -> dock manager itself should handle the notification
-    //frm <> nil -> dock manager should check notfy state of frm when responding to events
-    dockNotifying := false;
-    if ((frm <> nil) and frm.InheritsFrom(TfrmDockable)) then begin
-        //set anyNotifying flag
-        _anyDockedNotifying := (getNextDockedNotifying(Self.Tabs.ActivePage) <> nil);
-        dockNotifying := TfrmDockable(frm).Docked and TfrmDockable(frm).IsNotifying;
-    end;
-    if (dockNotifying or (frm = nil)) then begin
-        //if any window in app is active and this was a docked window that was
-        //notified and we don't want dock manager to notify
-        if (Application.Active and
-            not MainSession.prefs.getBool('notify_active_win')) then
-            exit;
-    end;
     updateNextNotifyButton();
 end;
 
@@ -4617,6 +4601,7 @@ procedure TfrmExodus.BringToFront();
 begin
     Self.doRestore();
     ShowWindow(Self.Handle, SW_SHOWNORMAL);
+    Self.Visible := true;
     ForceForegroundWindow(Self.Handle);
 end;
 
@@ -4658,7 +4643,7 @@ procedure TfrmExodus.updateNextNotifyButton();
 var
     f: TfrmDockable;
 begin
-    if (_anyDockedNotifying) then begin
+    if ((getNextDockedNotifying(Tabs.ActivePage) <> nil)) then begin
         f := Self.getTopDocked();
         if (f <> nil) then begin
             if (_nextNotifyButton = nil) then begin
@@ -4678,10 +4663,10 @@ end;
 
 procedure TfrmExodus.checkFlash();
 begin
-if (timFlasher.Enabled and
-   (not MainSession.Prefs.getBool('notify_docked_flasher') or
-    not _anyDockedNotifying)) then
-    timFlasher.Enabled := false;
+    if (timFlasher.Enabled and
+       (not MainSession.Prefs.getBool('notify_docked_flasher') or
+       (getNextDockedNotifying(Tabs.ActivePage) = nil))) then
+        timFlasher.Enabled := false;
 end;
 
 procedure TfrmExodus.OnNextNotifyClick();

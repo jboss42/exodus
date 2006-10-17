@@ -354,8 +354,10 @@ begin
         chat.OnMessage := MessageEvent;
         //Assign outgoing message event
         chat.OnSendMessage := SendMessageEvent;
+
         if (show_window) then
             ShowDefault(bring_to_front);
+        Application.ProcessMessages();
 
         if (hist <> '') then begin
             MsgList.populate(hist);
@@ -367,6 +369,7 @@ begin
         // scroll to the bottom..
         if (do_scroll) then
             _scrollBottom();
+
     end;
 
     if (new_chat) then begin
@@ -451,7 +454,7 @@ end;
 function TfrmChat.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
-    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
+    Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self._jid.jid);
 end;
 
 {---------------------------------------}
@@ -761,6 +764,7 @@ begin
 
     // make sure we are visible..
     if (not visible) then begin
+outputdebugmsg('Chat is not visible but we received a message. Showing');    
         ShowDefault(false);
     end;
 
@@ -1030,8 +1034,6 @@ begin
     if (status <> '') then nickHint := nickHint + ', ' + status;
     nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
     lblNick.Hint := nickHint;
-
-    RosterTreeImages.GetIcon(newPresIdx, Self.Icon);
 
     Self.ImageIndex := newPresIdx;
 end;

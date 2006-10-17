@@ -25,7 +25,6 @@ object frmExodus: TfrmExodus
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDockDrop = FormDockDrop
-  OnPaint = FormPaint
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96

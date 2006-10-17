@@ -181,36 +181,27 @@ procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
 begin
     //bail if paused
     if (MainSession.IsPaused) then exit;
-    //If "bring to front" notification selected, skip the following section
-    // and perform notification code following this section
-    if ((notify and notify_front) = 0) then begin
-        // Flash the tray icon
-      if (Application.Active) then begin
+    //check "notify if app active" and "notify if window active" prefs.
+    if (Application.Active) then begin
         //check active app notify
         if (not MainSession.prefs.getBool('notify_active')) then exit;
         //check active form notify
         if (not MainSession.prefs.getBool('notify_active_win')) then begin
-            if (win = nil) then exit; //if notify directed at mainwindow, any active child means main window is active
-            if (win.Active) then exit;
+            //if notify directed at dock manager (win = nil) and
+            //any active child means main window is active (Application.Active)
+            if (win = nil) then exit;
+            if (GetForegroundWindow() = win.handle) then exit;
             //if dock manager is active and win is top docked, it is active
             if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
         end;
-      end;
     end;
 
-    if ((notify and notify_tray) > 0) then
-        // Flash the tray icon
-        StartTrayAlert();
-
     if ((notify and notify_toast) > 0) then
-        // Show toast
-        ShowRiserWindow(win, msg, icon);
+        ShowRiserWindow(win, msg, icon); // Show toast
 
-    if (win = nil) then
-        GetDockManager().OnNotify(nil, notify)
-    else if (win is TfrmState) then
+    if (win is TfrmState) then
         TfrmState(win).OnNotify(notify)
-    else begin  //handle flash and front ourselves
+    else if (win <> nil) then begin  //handle flash and front ourselves
         if ((notify and notify_flash) > 0) then
             FlashWindow(win.Handle, true);
         if ((notify and notify_front) > 0) then begin
@@ -222,6 +213,7 @@ begin
         ForceForegroundWindow(win.Handle);
         end;
     end;
+    GetDockManager().OnNotify(win, notify);
 
 {    if ((notify and notify_flash) > 0) then begin
         // flash or show img
