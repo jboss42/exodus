@@ -914,7 +914,6 @@ end;
 procedure TfrmMsgRecv.popClipboardPopup(Sender: TObject);
 begin
   inherited;
-    popPaste.Enabled := (Self.ActiveControl = MsgOut);
 end;
 
 {---------------------------------------}
