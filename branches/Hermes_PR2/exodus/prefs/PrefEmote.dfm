@@ -5,6 +5,8 @@ inherited frmPrefEmote: TfrmPrefEmote
   ClientHeight = 326
   ClientWidth = 365
   OldCreateOrder = True
+  ExplicitWidth = 377
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
@@ -26,7 +28,6 @@ inherited frmPrefEmote: TfrmPrefEmote
       Width = 300
       Height = 17
       Caption = 'Auto detect Emoticons in messages'
-      Enabled = False
       TabOrder = 0
       OnClick = chkEmoticonsClick
     end
