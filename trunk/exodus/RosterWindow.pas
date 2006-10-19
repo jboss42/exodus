@@ -992,8 +992,10 @@ begin
     else if (event = '/roster/remove') then begin
         // only care if this is a bookmark
         if (ritem <> nil) then begin
-            if (ritem.Group[0] = g_bookmarks) then
+            if (ritem.Group[0] = g_bookmarks) then begin
                 RemoveItemNodes(ritem);
+                MainSession.roster.RemoveItem(ritem.Text);
+            end
         end;
     end;
 end;
