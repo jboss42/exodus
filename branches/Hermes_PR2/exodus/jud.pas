@@ -851,8 +851,8 @@ begin
              MessageDlgW(_(sJUDErrorChat), mtError, [mbOK], 0);
              continue
           end;
+          StartChat(convertDisplayToJID(lstContacts.Items[i].Caption), '', true)
        end;
-       StartChat(convertDisplayToJID(lstContacts.Items[i].Caption), '', true)
      end;
  end;
 end;
