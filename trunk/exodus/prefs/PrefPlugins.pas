@@ -130,56 +130,19 @@ var
     sl: TWidestringlist;
     fl: TWidestringlist;
 
-    // stuff for reg
-    LibHandle: THandle;
-    RegProc: TRegProc;
-    dllname: String;
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();
     fl := TWidestringlist.Create();
-    LibHandle := 0;
 
+    //All we need to do here is to build the list of selected plug-ins
+    //ReloadPlugins code will take care of registering new plug-ins
     for i := 0 to lstPlugins.Items.Count - 1 do begin
         item := lstPlugins.Items[i];
 
         if (item.Checked) then begin
             // save the Classname
             sl.Add(item.Caption);
-
-            // try to register it??
-            // From the TRegSvr example.
-            try
-                dllname := String(item.SubItems[1]);
-                if dllname = sExternalLibrary then continue;
-                fl.Add(item.SubItems[1]);
-                LibHandle := LoadLibrary(PChar(dllname));
-            except
-                LibHandle := 0;
-            end;
-            
-            if LibHandle = 0 then begin
-                MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
-                continue;
-            end;
-
-
-            try
-                @RegProc := GetProcAddress(LibHandle, 'DllRegisterServer');
-                if @RegProc = Nil then begin
-                    MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
-                    continue;
-                end;
-
-                if RegProc <> 0 then begin
-                    MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
-                    continue;
-                end;
-
-            finally
-                FreeLibrary(LibHandle);
-            end;
-
         end;
     end;
 
