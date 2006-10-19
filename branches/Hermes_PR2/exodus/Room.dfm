@@ -25,10 +25,7 @@ inherited frmRoom: TfrmRoom
     end
     inherited pnlChatTop: TPanel
       Width = 330
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 330
-      ExplicitHeight = 32
       object pnlSubj: TPanel
         Left = 0
         Top = 0
@@ -37,7 +34,6 @@ inherited frmRoom: TfrmRoom
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -22
         object lblSubject: TTntLabel
           Left = 27
           Top = 5
@@ -83,9 +79,8 @@ inherited frmRoom: TfrmRoom
     Width = 382
     Height = 177
     TabOrder = 2
-    ExplicitTop = 55
     ExplicitWidth = 382
-    ExplicitHeight = 154
+    ExplicitHeight = 177
     object Splitter2: TSplitter
       Left = 270
       Top = 4
@@ -104,7 +99,6 @@ inherited frmRoom: TfrmRoom
       BorderWidth = 1
       Caption = '`'
       TabOrder = 0
-      ExplicitHeight = 146
       object lstRoster: TTntListView
         Left = 1
         Top = 1
@@ -138,7 +132,6 @@ inherited frmRoom: TfrmRoom
         OnDragOver = OnDockedDragOver
         OnInfoTip = lstRosterInfoTip
         OnKeyPress = lstRosterKeyPress
-        ExplicitHeight = 144
       end
     end
   end
@@ -186,14 +179,6 @@ inherited frmRoom: TfrmRoom
     object popClear: TTntMenuItem
       Caption = 'Clear Window'
       OnClick = popClearClick
-    end
-    object popShowHistory: TTntMenuItem
-      Caption = 'Show History'
-      OnClick = popShowHistoryClick
-    end
-    object popClearHistory: TTntMenuItem
-      Caption = 'Clear History'
-      OnClick = popClearHistoryClick
     end
     object popBookmark: TTntMenuItem
       Caption = 'Bookmark Room...'
