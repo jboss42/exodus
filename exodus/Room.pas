@@ -69,8 +69,6 @@ type
     popInvite: TTntMenuItem;
     popRegister: TTntMenuItem;
     popBookmark: TTntMenuItem;
-    popClearHistory: TTntMenuItem;
-    popShowHistory: TTntMenuItem;
     popClear: TTntMenuItem;
     popAdministrator: TTntMenuItem;
     popModerator: TTntMenuItem;
