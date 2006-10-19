@@ -510,6 +510,7 @@ begin
                         exit;
                     end;
                 finally
+                    tplug := nil;
                     iunk := nil;
                     if (not inReg) then
                         unregisterPlugin(dll);
@@ -1080,7 +1081,6 @@ begin
     idx := proxies.indexOf(IntToStr(callback_id));
     if (idx <> -1) then begin
         TPluginProxy(proxies.Objects[idx]).Free;
-        proxies.Delete(idx);
     end;
 end;
 
