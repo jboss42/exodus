@@ -17,21 +17,24 @@ object fRecvStatus: TfRecvStatus
     object lblFile: TTntLabel
       Left = 2
       Top = 20
-      Width = 26
-      Height = 13
+      Width = 491
+      Height = 18
       Align = alClient
       Caption = 'lblFile'
       Transparent = False
       Layout = tlCenter
+      ExplicitWidth = 26
+      ExplicitHeight = 13
     end
     object lblFrom: TTntLabel
       Left = 2
       Top = 7
-      Width = 34
+      Width = 491
       Height = 13
       Align = alTop
       Caption = 'lblFrom'
       Transparent = False
+      ExplicitWidth = 34
     end
     object Bevel3: TBevel
       Left = 2
@@ -62,10 +65,11 @@ object fRecvStatus: TfRecvStatus
     object lblStatus: TTntLabel
       Left = 7
       Top = 7
-      Width = 43
+      Width = 312
       Height = 13
       Align = alTop
       Caption = 'Status...'
+      ExplicitWidth = 43
     end
     object Bar1: TProgressBar
       Left = 7
