@@ -1008,7 +1008,9 @@ end;
 procedure TfrmExodus.WMSize(var msg: TMessage);
 begin
     // Windows-M and "Show Desktop" use this to hide all windows
-    if ((msg.WParam = SIZE_MINIMIZED) and (not _hidden)) then begin
+    if (_noMoveCheck) then
+        inherited
+    else if ((msg.WParam = SIZE_MINIMIZED) and (not _hidden)) then begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
         msg.Result := 0;
@@ -1435,7 +1437,7 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
-            ShowDebugForm();
+            ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
             // snag default profile, etc..
@@ -4288,11 +4290,12 @@ var
     idx: integer;
 begin
     frm.Docked := false;
+//    frm.Visible := false;
     if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
         frm.removeDockbarButton(_nextNotifyButton);
     end;
 
-    updateLayoutDockChange(frm, false, tabs.PageCount = 1);
+    updateLayoutDockChange(frm, false, tabs.VisibleDockClientCount = 1);
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
@@ -4300,7 +4303,7 @@ end;
 
 function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
 begin
-    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
+    updateLayoutDockChange(frm, true, tabs.VisibleDockClientCount = 0);
     frm.ManualDock(Tabs); //fires TabsDockDrop event
     Result := GetTabSheet(frm);
     frm.Visible := true;
@@ -4316,7 +4319,7 @@ begin
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
-    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
+    updateLayoutDockChange(TfrmDockable(frm), false, tabs.VisibleDockClientCount = 1);
     frm.ManualFloat(frm.FloatPos);
     frm.Docked := false;
     frm.Visible := true;
