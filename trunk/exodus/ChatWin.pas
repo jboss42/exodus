@@ -390,9 +390,9 @@ begin
         for i := Count - 1 downto 0 do begin
             c := TChatController(Objects[i]);
             Delete(i);
-            if c <> nil then begin
-                if c.window <> nil then
-                    TfrmChat(c.window).Close();
+            if ((c <> nil) and (c.window <> nil)) then begin
+                TfrmChat(c.window).Close();
+                Application.ProcessMessages();
             end;
         end;
     end;
