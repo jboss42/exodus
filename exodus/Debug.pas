@@ -78,7 +78,7 @@ type
     procedure AddWideText(txt: WideString; txt_color: TColor);
   end;
 
-procedure ShowDebugForm();
+procedure ShowDebugForm(bringToFront: boolean=true);
 procedure CloseDebugForm();
 procedure DebugMessage(txt: Widestring);
 
@@ -105,12 +105,12 @@ var
 
 
 {---------------------------------------}
-procedure ShowDebugForm();
+procedure ShowDebugForm(bringToFront: boolean);
 begin
     // Singleton factory
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(Application);
-    frmDebug.ShowDefault(true);
+    frmDebug.ShowDefault(bringToFront);
 end;
 
 {---------------------------------------}
@@ -137,7 +137,7 @@ end;
 
 class procedure TfrmDebug.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
-    ShowDebugForm();
+    ShowDebugForm(false);
 end;
 
 {---------------------------------------}

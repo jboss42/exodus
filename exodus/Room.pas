@@ -185,7 +185,7 @@ type
     function _countPossibleNicks(tmps: Widestring): integer;
     function _selectNick(wsl: TWidestringlist): Widestring;
 
-    procedure _sendPresence(ptype, msg: Widestring);
+    procedure _sendPresence(ptype, msg: Widestring; fireClose: boolean=true);
 
     procedure SetJID(sjid: Widestring);
     procedure SetPassword(pass: WideString);
@@ -778,7 +778,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom._sendPresence(ptype, msg: Widestring);
+procedure TfrmRoom._sendPresence(ptype, msg: Widestring; fireClose: boolean);
+
 var
     p: TJabberPres;
 begin
@@ -797,7 +798,8 @@ begin
     if (ptype = 'unavailable') then begin
         _send_unavailable := false;
         TExodusChat(ComController).fireClose();
-        Self.Close();
+        if (fireClose) then
+            Self.Close();
     end;
 end;
 
@@ -1901,8 +1903,9 @@ var
     f: TfrmRoom;
 begin
     for i := 0 to room_list.Count - 1 do begin
-        f := TfrmRoom(room_list.Objects[i]);
+        f := TfrmRoom(room_list.Objects[0]); //rooms removed from list during close
         f.Close();
+        Application.ProcessMessages();
     end;
     room_list.Clear();
 end;
@@ -2295,7 +2298,7 @@ begin
     end;
 
     if ((MainSession <> nil) and (MainSession.Active) and (_send_unavailable)) then begin
-        _sendPresence('unavailable', '');
+        _sendPresence('unavailable', '', false);
     end;
 
     _keywords.Free;
