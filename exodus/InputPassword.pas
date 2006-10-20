@@ -101,9 +101,11 @@ begin
 end;
 
 procedure TfrmInputPass.txtPasswordOnChange(Sender: TObject);
+var
+    txt: string;
 begin
-    txtPassword.Text := Trim(txtPassword.Text);
-    if (Length(txtPassword.Text) > 0) then
+    txt := Trim(txtPassword.Text);
+    if (Length(txt) > 0) then
         frameButtons1.btnOK.Enabled := true
     else
         frameButtons1.btnOK.Enabled := false;
