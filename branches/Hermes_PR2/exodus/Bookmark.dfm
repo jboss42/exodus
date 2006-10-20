@@ -103,6 +103,7 @@ object frmBookmark: TfrmBookmark
     Top = 62
     Width = 145
     Height = 21
+    ReadOnly = True
     TabOrder = 3
   end
   object txtNick: TTntEdit
