@@ -930,7 +930,7 @@ begin
 
 
     end
-    else if (event = '/session/adimage/off') then begin
+    else if ((event = '/session/adimage/off') and Self.Visible) then begin
         imgAd.Visible := false;
     end;
 end;
