@@ -103,6 +103,7 @@ type
         _http: TIdHTTP;
         _client: TIdTCPClient;
         _stream: TFileStream;
+        _filename: string;
         _form: TfRecvStatus;
         _pos_max: longint;
         _pos: longint;
@@ -136,6 +137,7 @@ type
 
         property http: TIdHttp read _http write setHttp;
         property stream: TFileStream read _stream write _stream;
+        property filename: string read _filename write _filename;
         property form: TfRecvStatus read _form write _form;
         property url: String read _url write _url;
         property method: String read _method write _method;
@@ -216,9 +218,11 @@ begin
                 try
                     _client.Connect();
                 except
-                    // If we can't connect.. we don't want to free the stream
-                    // since we will try again. If we succeed then free it.
-                    _stream := nil;
+                    // We failed to connect.  Need to free the stream
+                    // to unlock file.  Then need to remove file or
+                    // it remains in the filesystem with 0 byte file.
+                    FreeAndNil(_stream);
+                    DeleteFile(_filename);
                     SendMessage(_form.Handle, WM_RECV_SIDISCONN, 0, 0);
                     exit;
                 end;
@@ -502,6 +506,7 @@ begin
     _thread.form := Self;
     _thread.client := tcpClient;
     _thread.stream := _stream;
+    _thread.filename := _filename;
     _thread.method := 'si';
     _thread.size := _size;
     _thread.Resume();
