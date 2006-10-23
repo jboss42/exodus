@@ -1059,6 +1059,7 @@ end;
 procedure TfrmRoom.roomuserCallback(event: string; tag: TXMLTag);
 var
     q, ident: TXMLTag;
+    tempnick: Widestring;
 begin
     // we got back a response to our roomuser_item request.
     // we need to process it and then send start presence to room.
@@ -1066,7 +1067,10 @@ begin
     if (tag.GetAttribute('type') = 'result') then begin
         q := tag.GetFirstTag('query');
         ident := q.GetFirstTag('identity');
-        MyNick := ident.GetAttribute('name');
+        // It is possible to get back a blank nick which is bad. 
+        tempnick := ident.GetAttribute('name');
+        if (Length(tempnick) > 0) then
+            MyNick := tempnick;
     end;
     sendStartPresence();
 end;
