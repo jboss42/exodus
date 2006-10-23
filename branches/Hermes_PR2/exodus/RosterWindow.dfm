@@ -186,14 +186,13 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 20
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end
@@ -301,13 +300,12 @@ object frmRosterWindow: TfrmRosterWindow
       ShowHint = True
       SmallImages = frmExodus.ImageList2
       TabOrder = 1
-      ViewStyle = vsSmallIcon
+      ViewStyle = vsList
       OnClick = lblConnectClick
       OnDblClick = lblConnectClick
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
-      ExplicitTop = 98
     end
   end
   object treeRoster: TTntTreeView
