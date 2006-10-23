@@ -579,15 +579,34 @@ var
 begin
     if chkWinLogin.Checked then begin
         txtPassword.Enabled := false;
+        Label10.Enabled := false;
         chkRegister.Checked := false;
         chkRegister.Enabled := false;
+        chkKerberos.Enabled := false;
+        chkKerberos.Checked := true;
+        chkSavePasswd.Enabled := false;
+        cboJabberID.Enabled := false;
+        lblUsername.Enabled := false;
+        Label13.Enabled := false;
+        lblServerList.Enabled := false;
+        txtRealm.Enabled := false;
+        TntLabel2.Enabled := false;
         p := pos('@', cboJabberID.Text);
         if (p <> -1) then
             cboJabberID.Text := MidStr(cboJabberID.Text, p+1, length(cboJabberID.Text));
     end
     else begin
         txtPassword.Enabled := true;
+        Label10.Enabled := true;
         chkRegister.Enabled := true;
+        chkKerberos.Enabled := true;
+        chkSavePasswd.Enabled := true;
+        cboJabberID.Enabled := true;
+        lblUsername.Enabled := true;
+        Label13.Enabled := true;
+        lblServerList.Enabled := true;
+        txtRealm.Enabled := true;
+        TntLabel2.Enabled := true;
     end;
 
     if not txtPassword.Enabled then

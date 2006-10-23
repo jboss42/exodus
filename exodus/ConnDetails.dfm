@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 170
   ActiveControl = cboJabberID
   Caption = 'Connection Details'
-  ClientHeight = 326
+  ClientHeight = 322
   ClientWidth = 402
   Color = clBtnFace
   Constraints.MinWidth = 410
@@ -22,13 +22,15 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 402
-    Height = 293
+    Height = 289
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 293
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
+      ExplicitHeight = 265
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
@@ -191,10 +193,7 @@ object frmConnDetails: TfrmConnDetails
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 265
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -245,10 +244,7 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 265
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -289,10 +285,7 @@ object frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 265
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -386,7 +379,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 190
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 5
         OnChange = cboSocksTypeChange
         Items.Strings = (
@@ -401,10 +394,7 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 265
       object Label1: TTntLabel
         Left = 1
         Top = 27
@@ -438,7 +428,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 201
+        Top = 197
         Width = 390
         Height = 60
         Align = alBottom
@@ -484,13 +474,14 @@ object frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 293
+    Top = 289
     Width = 402
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
+    ExplicitTop = 293
     object Panel1: TPanel
       Left = 159
       Top = 4
