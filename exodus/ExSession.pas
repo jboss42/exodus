@@ -813,7 +813,7 @@ begin
             tags.Free();
         end
         else if (node.Name = 'subscribe') then begin
-            ShowAddContact(jid);
+            ShowAddContact(jid.jid);
         end
         else if (node.Name = 'vcard') then begin
             ShowProfile(jid.jid);
