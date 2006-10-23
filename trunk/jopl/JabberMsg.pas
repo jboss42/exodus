@@ -220,7 +220,9 @@ begin
     with Result do begin
         Name := 'message';
         setAttribute('to', _toJID);
-        setattribute('from', _fromJID);
+        // prevent sending from='' 
+        if (Length(_fromJID) > 0) then
+            setattribute('from', _fromJID);
         setAttribute('id', _id);
         if (_msg_type <> 'normal') then
             setAttribute('type', _msg_type);
