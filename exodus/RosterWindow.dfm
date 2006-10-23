@@ -289,7 +289,10 @@ object frmRosterWindow: TfrmRosterWindow
       Height = 137
       Align = alClient
       BorderStyle = bsNone
-      Columns = <>
+      Columns = <
+        item
+          AutoSize = True
+        end>
       HotTrackStyles = [htHandPoint, htUnderlineHot]
       Items.ItemData = {
         01500000000200000001000000FFFFFFFFFFFFFFFF0000000000000000095000
@@ -298,10 +301,11 @@ object frmRosterWindow: TfrmRosterWindow
       ParentColor = True
       ParentShowHint = False
       PopupMenu = popProfiles
-      ShowHint = True
+      ShowColumnHeaders = False
+      ShowHint = False
       SmallImages = frmExodus.ImageList2
       TabOrder = 1
-      ViewStyle = vsSmallIcon
+      ViewStyle = vsReport
       OnClick = lblConnectClick
       OnDblClick = lblConnectClick
       OnInfoTip = lstProfilesInfoTip
