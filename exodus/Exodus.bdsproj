@@ -125,14 +125,14 @@
 			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
 			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;.\components\tntunicode;.\components\jcl\source\common;.\components\jcl\source\windows</Directories>
+			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;C:\Projects\exodus\exodus\components\tntUnicode;C:\Projects\exodus\exodus\components\jcl\source;c:\projects\exodus\exodus\components\jcl\lib\d10</Directories>
 			<Directories Name="Packages">vcl;rtl</Directories>
 			<Directories Name="Conditionals">Exodus;INDY9;TRACE_EXCEPTIONS</Directories>
-			<Directories Name="DebugSourceDirs">.\components\tntUnicode;.\components</Directories>
+			<Directories Name="DebugSourceDirs">c:\src\exodus\exodus\components\;D:\src\Indy\Source\</Directories>
 			<Directories Name="UsePackages">True</Directories>
 		</Directories>
 		<Parameters>
-			<Parameters Name="RunParams">-d -l</Parameters>
+			<Parameters Name="RunParams">-c debug.xml</Parameters>
 			<Parameters Name="HostApplication"></Parameters>
 			<Parameters Name="Launcher"></Parameters>
 			<Parameters Name="UseLauncher">False</Parameters>
