@@ -2112,8 +2112,6 @@ begin
         frmMsgQueue.lstEvents.Items.Clear; //?? why clear before close?
         frmMsgQueue.Close;
     end;
-    // Close the roster window
-    RosterWindow.CloseRosterWindow();
     // Close whatever rooms we have
 
     CloseAllRooms();
@@ -2138,6 +2136,10 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
+
+    // Close the roster window
+    RosterWindow.CloseRosterWindow();
+
 
     _cleanupComplete := true;
 end;
@@ -4290,7 +4292,6 @@ var
     idx: integer;
 begin
     frm.Docked := false;
-//    frm.Visible := false;
     if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
         frm.removeDockbarButton(_nextNotifyButton);
     end;
@@ -4308,9 +4309,6 @@ begin
     Result := GetTabSheet(frm);
     frm.Visible := true;
 end;
-
-
-
 
 procedure TfrmExodus.FloatDocked(frm : TfrmDockable);
 var
@@ -4429,6 +4427,7 @@ begin
     else exit;
 
     if (newState <> oldState) then begin
+        _noMoveCheck := true;
         if (newState = dsDockOnly) then begin
             layoutDockOnly();
             if (embedForm) then
@@ -4446,7 +4445,8 @@ begin
                     TfrmMsgQueue(frm).HideRoster();
             end;
             RosterWindow.DockRoster(pnlRoster);
-        end
+        end;
+        _noMoveCheck := false;
     end;
 end;
 
@@ -4457,6 +4457,7 @@ procedure TfrmExodus.layoutDockOnly();
 begin
     saveRosterDockWidths();
     if (DockState <> dsDockOnly) then begin
+        _noMoveCheck := true;
         splitRoster.Visible := false;
         pnlRoster.Visible := false;
         pnlDock.Align := alClient;
@@ -4466,6 +4467,7 @@ begin
         _currDockState := dsDockOnly;
         Self.DockSite := false;
         Tabs.DockSite := true;
+        _noMoveCheck := false;
     end;
 end;
 
@@ -4499,7 +4501,7 @@ begin
         splitRoster.Visible := true;
         pnlDock.Align := alClient;
         pnlDock.Visible := true;
-        
+
         //roster autosizing is neccessary to get splitter aligned with the
         //correct control. JJF doesn't know why though...
         pnlRoster.autoSize := true;
