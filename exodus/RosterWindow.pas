@@ -1343,7 +1343,7 @@ var
     plevel: integer;
     go: TJabberGroup;
 begin
-    // Render a specific roster item, with the given presence info.
+    // Render a specific roster item, with the givenode_listn presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
     if (is_blocked) then begin
         if MainSession.Prefs.getBool('roster_hide_block') then exit;
@@ -1781,9 +1781,10 @@ procedure TfrmRosterWindow.DockRoster(dockSite : TWinControl);
 begin
     StatBar.Visible := false;
     Self.ManualDock(dockSite, nil, alClient);
+    Application.processMessages();
     Self.Align := alClient;
-    lstProfiles.Clear();
-    ShowProfiles();
+//    lstProfiles.Clear();
+//    ShowProfiles();
     Docked := true;
     MainSession.dock_windows := Docked;
     _drop.DropEvent := onURLDrop;
