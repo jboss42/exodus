@@ -1133,15 +1133,15 @@ begin
     end
 
     else if (Msg.LParam = WM_MOUSEMOVE) then begin
-        DebugMsg('Move');
+//        DebugMsg('Move');
     end
 
     else if (Msg.LParam = WM_MOUSELAST) then begin
-        DebugMsg('Out');
+//        DebugMsg('Out');
     end
 
     else begin
-        DebugMsg('other');
+//        DebugMsg('other');
     end;
 
 end;
@@ -1216,7 +1216,7 @@ end;
  begin
 
     if (Msg.WParamLo <> WA_INACTIVE) then begin
-        outputdebugMsg('TfrmExodus.WMActivate');
+//        outputdebugMsg('TfrmExodus.WMActivate');
         checkFlash();
         StopTrayAlert();
         f := getTopDocked();
@@ -4097,7 +4097,7 @@ end;
 }
 procedure TfrmExodus.TabsChange(Sender: TObject);
 begin
-    outputdebugmsg('TfrmExodus.Tabs.OnChange');
+//    outputdebugmsg('TfrmExodus.Tabs.OnChange');
 
     focusActiveTab();
 end;
@@ -4107,7 +4107,7 @@ procedure TfrmExodus.TabsContextPopup(Sender: TObject; MousePos: TPoint;
 begin
     //a hack. Tabs.OnChange doesn't seem to fire when right clicking tab.
     inherited;
-    outputdebugmsg('TfrmExodus.Tabs.ONcONTEXTmENU');
+//    outputdebugmsg('TfrmExodus.Tabs.ONcONTEXTmENU');
 
     focusActiveTab();
 end;
