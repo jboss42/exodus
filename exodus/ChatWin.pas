@@ -475,10 +475,6 @@ begin
     AssignUnicodeURL(lblNick.Font, 12);
 
     // setup prefs
-    MsgList.setupPrefs();
-    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-    MsgOut.Font.Assign(Self.Font);
-
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
     _warn_busyclose := MainSession.Prefs.getBool('warn_closebusy');

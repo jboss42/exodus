@@ -41,6 +41,8 @@ type
     lblColor: TTntLabel;
     colorRoster: TTntTreeView;
     OpenDialog1: TOpenDialog;
+    chkRTEnabled: TTntCheckBox;
+    chkIgnoreFont: TTntCheckBox;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -51,6 +53,7 @@ type
     procedure colorChatSelectionChange(Sender: TObject);
     procedure colorChatMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure chkRTEnabledClick(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -149,6 +152,7 @@ begin
         clrBoxBG.Selected := TColor(_color_bg);
         clrBoxFont.Selected := TColor(_font_color);
     end;
+    Self.chkIgnoreFont.Enabled := Self.chkRTEnabled.Checked;
 end;
 
 {---------------------------------------}
@@ -370,6 +374,12 @@ begin
     btnCSSBrowse.Enabled := (idx = 1);
     btnCSSEdit.Enabled := (idx = 1);
     }
+end;
+
+procedure TfrmPrefFont.chkRTEnabledClick(Sender: TObject);
+begin
+    inherited;
+    chkIgnoreFont.Enabled := chkRTEnabled.Checked;
 end;
 
 {---------------------------------------}

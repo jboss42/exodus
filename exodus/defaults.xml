@@ -113,6 +113,10 @@
     <roster_font_charset value="1"/>
     <msglist_type value="0" control="cboMsgList"/>
     <ie_css value="" control="cboIEStylesheet"/>
+
+    <!-- Rich text -->
+    <richtext_enabled value="1" control="chkRTEnabled"/>
+    <richtext_ignore_font value="1" control="chkIgnoreFont"/>
     
     <!-- Layouts -->
     <expanded value="0"/>
