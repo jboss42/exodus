@@ -27,8 +27,6 @@ inherited frmChat: TfrmChat
     end
     inherited pnlChatTop: TPanel
       Width = 331
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 331
       object pnlJID: TPanel
         Left = 0
@@ -60,8 +58,7 @@ inherited frmChat: TfrmChat
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-          ExplicitLeft = 2
-          ExplicitTop = -6
+          ExplicitHeight = 28
         end
         object Panel3: TPanel
           Left = 35
@@ -103,6 +100,12 @@ inherited frmChat: TfrmChat
     Filter = 'RTF Files|*.rtf|All Files|*.*'
     Left = 48
     Top = 184
+  end
+  inherited popMsgList: TTntPopupMenu
+    object Print1: TTntMenuItem
+      Caption = 'Print...'
+      OnClick = Print1Click
+    end
   end
   object timBusy: TTimer
     Enabled = False
