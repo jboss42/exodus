@@ -47,6 +47,8 @@ end;
         home: boolean;
         voice: boolean;
         fax: boolean;
+        pager: boolean;
+        cell: boolean;
         number: WideString;
 
         procedure Parse(tag: TXMLTag);
@@ -74,8 +76,12 @@ end;
 
         HomePhone: TXMLVCardTel;
         HomeFax: TXMLVCardTel;
+        HomePager: TXMLVCardTel;
+        HomeCell: TXMLVCardTel;
         WorkPhone: TXMLVCardTel;
         WorkFax: TXMLVCardTel;
+        WorkPager: TXMLVCardTel;
+        WorkCell: TXMLVCardTel;
 
         Picture: TAvatar;
 
@@ -141,18 +147,12 @@ procedure TXMLVCardAddress.fillTag(tag: TXMLTag);
 begin
     //
     tag.Name := 'ADR';
-    if Street <> '' then
-        tag.AddBasicTag('STREET', Street);
-    if ExtAdr <> '' then
-        tag.AddBasictag('EXTADD', ExtAdr);
-    if Locality <> '' then
-        tag.AddBasicTag('LOCALITY', Locality);
-    if Region <> '' then
-        tag.AddBasicTag('REGION', Region);
-    if PCode <> '' then
-        tag.AddBasicTag('PCODE', PCode);
-    if Country <> '' then
-        tag.AddBasicTag('COUNTRY', Country);
+    tag.AddBasicTag('STREET', Street);
+    tag.AddBasictag('EXTADD', ExtAdr);
+    tag.AddBasicTag('LOCALITY', Locality);
+    tag.AddBasicTag('REGION', Region);
+    tag.AddBasicTag('PCODE', PCode);
+    tag.AddBasicTag('COUNTRY', Country);
 
     if work then tag.AddTag('WORK');
     if home then tag.AddTag('HOME');
@@ -170,6 +170,8 @@ begin
     home := false;
     fax := false;
     voice := false;
+    pager := false;
+    cell := false;
     number := '';
 
     if tag.GetFirstTag('WORK') <> nil then
@@ -179,8 +181,11 @@ begin
 
     if tag.GetFirstTag('VOICE') <> nil then
         voice := true
+    else if tag.GetFirstTag('FAX') <> nil then
+        fax := true
     else
-        fax := true;
+        pager := true ;
+
 
     n := tag.GetFirstTag('NUMBER');
     if (n = nil) then begin
@@ -202,8 +207,10 @@ begin
     if home then tag.AddTag('HOME');
     if voice then
         tag.AddTag('VOICE')
+    else if fax then
+        tag.AddTag('FAX')
     else
-        tag.AddTag('FAX');
+        tag.AddTag('PAGER');
 
     tag.AddBasicTag('NUMBER', number);
 end;
@@ -233,19 +240,35 @@ begin
 
     HomePhone := TXMLVCardTel.Create();
     with HomePhone do begin
-        home := true; work := false; voice := true; fax := false;
+        home := true; work := false; voice := true; fax := false; pager := false; cell := false;
     end;
     HomeFax := TXMLVCardTel.Create();
     with HomeFax do begin
-        home := true; work := false; voice := false; fax := true;
+        home := true; work := false; voice := false; fax := true; pager := false; cell := false;
+    end;
+    HomePager := TXMLVCardTel.Create();
+    with HomePager do begin
+        home := true; work := false; voice := false; fax := false; pager := true; cell := false;
+    end;
+    HomeCell := TXMLVCardTel.Create();
+    with HomeCell do begin
+        home := true; work := false; voice := false; fax := false; pager := false; cell := true;
     end;
     WorkPhone := TXMLVCardTel.Create();
     with WorkPhone do begin
-        home := false; work := true; voice := true; fax := false;
+        home := false; work := true; voice := true; fax := false; pager := false; cell := false;
     end;
     WorkFax := TXMLVCardTel.Create();
     with WorkFax do begin
-        home := false; work := true; voice := false; fax := true;
+        home := false; work := true; voice := false; fax := true;  pager := false; cell := false;
+    end;
+    WorkPager := TXMLVCardTel.Create();
+    with WorkPager do begin
+        home := false; work := true; voice := false; fax := false;  pager := true; cell := false;
+    end;
+    WorkCell := TXMLVCardTel.Create();
+    with WorkCell do begin
+        home := false; work := true; voice := false; fax := false;  pager := false; cell := true;
     end;
 end;
 
@@ -257,9 +280,13 @@ begin
 
     HomePhone.Free;
     HomeFax.Free;
+    HomePager.Free;
+    HomeCell.Free;
     WorkPhone.Free;
     WorkFax.Free;
-
+    WorkPager.Free;
+    WorkCell.Free;
+    
     inherited destroy;
 end;
 
@@ -351,12 +378,16 @@ begin
         if (t.work) then begin
             if t.fax then
                 WorkFax.parse(tags[i])
+            else if t.pager then
+                WorkPager.parse(tags[i])
             else
                 WorkPhone.Parse(tags[i]);
         end
         else begin
             if t.fax then
                 HomeFax.Parse(tags[i])
+            else if t.pager then
+                HomePager.Parse(tags[i])
             else
                 HomePhone.Parse(tags[i]);
         end;
@@ -364,6 +395,11 @@ begin
     end;
     tags.Free();
 
+    t1 := vtag.GetFirstTag('HOMECELL');
+    if t1 <> nil then HomeCell.number := t1.Data;
+    
+    t1 := vtag.GetFirstTag('WORKCELL');
+    if t1 <> nil then WorkCell.number := t1.Data;
 end;
 
 {---------------------------------------}
@@ -406,10 +442,16 @@ begin
     t1 := vtag.AddTag('TEL');
     HomeFax.fillTag(t1);
     t1 := vtag.AddTag('TEL');
+    HomePager.fillTag(t1);
+    t1 := vtag.AddTag('TEL');
     WorkPhone.fillTag(t1);
     t1 := vtag.AddTag('TEL');
     WorkFax.fillTag(t1);
-
+    t1 := vtag.AddTag('TEL');
+    WorkPager.fillTag(t1);
+    vtag.AddBasicTag('WORKCELL', WorkCell.number);
+    vtag.AddBasicTag('HOMECELL', HomeCell.number);
+    
     // Serialize the photo
     if ((Picture <> nil) and (Picture.Valid)) then begin
         t1 := vtag.AddTag('PHOTO');
