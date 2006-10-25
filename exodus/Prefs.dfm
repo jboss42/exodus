@@ -1748,7 +1748,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 644
       ExplicitWidth = 46
     end
     object imgCustompres: TImage
@@ -1945,7 +1944,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 691
       ExplicitWidth = 46
     end
     object imgMessages: TImage
@@ -2155,8 +2153,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitLeft = -1
-      ExplicitTop = 324
+      ExplicitWidth = 34
     end
     object imgNetwork: TImage
       Left = 0
@@ -2910,8 +2907,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitLeft = -1
-      ExplicitTop = 310
+      ExplicitWidth = 41
     end
     object imgEmote: TImage
       Left = 0
@@ -8175,7 +8171,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 183
       ExplicitWidth = 39
     end
   end
@@ -8202,8 +8197,6 @@ object frmPrefs: TfrmPrefs
         Height = 243
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 113
       end
       object Panel2: TPanel
         Left = 0
@@ -8220,10 +8213,10 @@ object frmPrefs: TfrmPrefs
           Height = 28
           Align = alTop
           Caption = 
-            'You can be notify when a keyword appears in chat room. Enter in ' +
-            'the keywords that you want to look for in messages.'
+            'You can be notified when a keyword appears in chat room. Enter i' +
+            'n the keywords that you want to look for in messages.'
           WordWrap = True
-          ExplicitWidth = 340
+          ExplicitWidth = 348
         end
         object chkRegex: TTntCheckBox
           Left = 5
