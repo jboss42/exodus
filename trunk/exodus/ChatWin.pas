@@ -57,6 +57,7 @@ type
     lblNick: TTntLabel;
     imgAvatar: TPaintBox;
     Panel3: TPanel;
+    Print1: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure doHistory(Sender: TObject);
@@ -87,6 +88,7 @@ type
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
+    procedure Print1Click(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1554,6 +1556,11 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmChat.Print1Click(Sender: TObject);
+begin
+ PrintHistory1Click(Sender);
+end;
+
 procedure TfrmChat.PrintHistory1Click(Sender: TObject);
 var
     cap: Widestring;
