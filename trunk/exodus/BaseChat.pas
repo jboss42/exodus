@@ -83,13 +83,18 @@ type
     procedure Copy3Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure BoldClick(Sender: TObject);
-    procedure UnderlineClick(Sender: TObject);
+    procedure PlainTextBoldClick(Sender: TObject);
+    procedure RichTextBoldClick(Sender: TObject);
+    
+    procedure PlainTextUnderlineClick(Sender: TObject);
+    procedure RichTextUnderlineClick(Sender: TObject);
+    
     procedure ItalicsClick(Sender: TObject);
     procedure ChatToolbarButtonHotkeysClick(Sender: TObject);
     procedure OnHotkeysClick(Sender: TObject);
     procedure Customize1Click(Sender: TObject);
     procedure MsgOutOnEnter(Sender: TObject);
+    procedure MsgOutSelectionChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -99,7 +104,7 @@ type
     _hotkey_menu_items : TWideStringList;
     _hotkeys_keys_stringlist : TWideStringList;
     _hotkeys_text_stringlist : TWideStringList;
-
+    _rtEnabled: boolean; 
   protected
     _embed_returns: boolean;        // Put CR/LF's into message
     _wrap_input: boolean;           // Wrap text input
@@ -114,6 +119,15 @@ type
     procedure _scrollBottom();
     function getMsgList(): TfBaseMsgList;
 
+    {
+        Update the toolbar button states depending on MsgOut font.
+    }
+    procedure updateToolbarState();
+
+    {
+        Update tool bar state based on prefs.
+    }
+    procedure updateFromPrefs();
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -152,6 +166,17 @@ implementation
 {$R *.dfm}
 uses
     RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1, ExUtils;
+
+const
+    PREF_RT_ENABLED = 'richtext_enabled';
+    PREF_RT_IGNOREFONT = 'richtext_ignore_font';
+    PREF_FONT_NAME = 'font_name';
+    PREF_FONT_SIZE = 'font_size';
+    PREF_FONT_COLOR = 'font_color';
+    PREF_FONT_BOLD = 'font_bold';
+    PREF_FONT_ITALIC = 'font_italic';
+    PREF_FONT_UNDERLINE = 'font_underline';
+    PREF_BACKGROUND_COLOR = 'color_bg';
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -265,6 +290,13 @@ begin
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 end;
 
+procedure TfrmBaseChat.MsgOutSelectionChange(Sender: TObject);
+begin
+    inherited;
+    //set the toolbar button state depending on selection/caret
+    updateToolbarState();
+end;
+
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
@@ -319,6 +351,23 @@ begin
         if (hotkeyidx >= 0) then
             MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
     end
+    //click toolbar buttons
+    else if ((Shift = [ssCtrl]) and ((chr(Key) = 'B') or (chr(Key) = 'U'))) then begin
+        if (chr(Key) = 'B') then begin
+            ChatToolbarButtonBold.Down := not ChatToolbarButtonBold.Down;
+            ChatToolbarButtonBold.Click();
+        end
+        else begin
+            ChatToolbarButtonUnderline.Down := not ChatToolbarButtonUnderline.Down;
+            ChatToolbarButtonUnderline.Click();
+        end;
+        Key := 0;
+    end
+    else if ((Shift = [ssCtrl]) and (chr(Key) = 'I') and _rtEnabled) then begin
+        ChatToolbarButtonItalics.Down := not ChatToolbarButtonItalics.Down;
+        ChatToolbarButtonItalics.click();
+        Key := 0;
+    end
     else inherited;
 end;
 
@@ -330,6 +379,7 @@ begin
     _pending := '';
 
     MsgOut.Lines.Clear();
+    UpdateToolbarState();
     MsgOut.SetFocus;
 end;
 
@@ -349,7 +399,7 @@ var
     sc: TShortcut;
 begin
     AutoScroll := true;
-
+    _rtEnabled := false;
     _hotkey_menu_items := TWideStringList.Create();
     _hotkeys_keys_stringlist := TWideStringList.Create();
     _hotkeys_text_stringlist := TWideStringList.Create();
@@ -397,6 +447,8 @@ begin
 
     _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
     _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
+
+    updateFromPrefs();
 end;
 
 {---------------------------------------}
@@ -408,6 +460,7 @@ begin
         _hotkeys_text_stringlist.Clear();
         MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
+        updateFromPrefs();
     end
     else if (event = '/session/close-all-windows') then begin
         Self.Close();
@@ -450,16 +503,19 @@ begin
     Prefs.StartPrefs(pref_hotkeys);
 end;
 
-{---------------------------------------}
-procedure TfrmBaseChat.BoldClick(Sender: TObject);
+procedure TfrmBaseChat.RichTextBoldClick(Sender: TObject);
 begin
-  inherited;
-
-  if (Length(MsgOut.SelText) = 0) then
-    MsgOut.SelText := '*'
-  else
-    MsgOut.SelText := '*' + MsgOut.SelText + '*';
-
+    inherited;
+    msgOut.SelAttributes.Bold := ChatToolbarButtonBold.Down;
+end;
+{---------------------------------------}
+procedure TfrmBaseChat.PlainTextBoldClick(Sender: TObject);
+begin
+    inherited;
+    if (Length(MsgOut.SelText) = 0) then
+        MsgOut.SelText := '*'
+    else
+        MsgOut.SelText := '*' + MsgOut.SelText + '*';
 end;
 
 procedure TfrmBaseChat.ChatToolbarButtonHotkeysClick(Sender: TObject);
@@ -531,14 +587,14 @@ end;
 
 procedure TfrmBaseChat.ItalicsClick(Sender: TObject);
 begin
-  inherited;
-
+    inherited;
+    msgOut.SelAttributes.Italic := ChatToolbarButtonItalics.Down;
 end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Copy2Click(Sender: TObject);
 begin
-  inherited;
+    inherited;
     MsgOut.CopyToClipboard();
     MsgOut.SelText := '';
 end;
@@ -546,7 +602,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.Copy3Click(Sender: TObject);
 begin
-  inherited;
+    inherited;
     MsgOut.CopyToClipboard();
 end;
 
@@ -557,8 +613,18 @@ begin
     MsgList.ScrollToBottom();
 end;
 
+procedure TfrmBaseChat.RichTextUnderlineClick(Sender: TObject);
+begin
+    inherited;
+    if (ChatToolbarButtonUnderline.Down) then begin
+        msgOut.SelAttributes.UnderlineType := ultSingle;
+    end
+    else begin
+        msgOut.SelAttributes.UnderlineType := ultNone;
+    end;
+end;
 
-procedure TfrmBaseChat.UnderlineClick(Sender: TObject);
+procedure TfrmBaseChat.PlainTextUnderlineClick(Sender: TObject);
 begin
   inherited;
 
@@ -608,6 +674,47 @@ begin
         MsgOut.SelText := _hotkeys_text_stringlist.Strings[
                                     _hotkeys_text_stringlist.Count - 1 - idx];
     end;
+end;
+
+{
+    Update the toolbar button states depending on MsgOut font.
+}
+procedure TfrmBaseChat.updateToolbarState();
+begin
+    ChatToolbarButtonBold.Down := _rtEnabled and MsgOut.SelAttributes.Bold;
+    ChatToolbarButtonItalics.Down := _rtEnabled and MsgOut.SelAttributes.Italic;
+    ChatToolbarButtonUnderline.Down := _rtEnabled and (MsgOut.SelAttributes.UnderlineType <> ultNone);
+end;
+
+{
+    Update tool bar state based on prefs.
+}
+procedure TfrmBaseChat.updateFromPrefs();
+begin
+    with (Mainsession.Prefs) do begin
+        _rtEnabled := getBool(PREF_RT_ENABLED);
+        ChatToolbarButtonItalics.visible := _rtEnabled;
+        if (_rtEnabled) then begin
+            ChatToolbarButtonBold.Style := tbsCheck;
+            ChatToolbarButtonBold.OnClick := RichTextBoldClick;
+            ChatToolbarButtonUnderline.Style := tbsCheck;
+            ChatToolbarButtonUnderline.OnClick := RichTextUnderlineClick;
+        end
+        else begin
+            ChatToolbarButtonBold.Style := tbsButton;
+            ChatToolbarButtonBold.OnClick := PlainTextBoldClick;
+            ChatToolbarButtonUnderline.Style := tbsButton;
+            ChatToolbarButtonUnderline.OnClick := PlainTextUnderlineClick;
+            //drop all previous formatting since we are loosing rich text
+            MsgOut.DefAttributes.Bold := false;
+            MsgOut.DefAttributes.Italic := false;
+            MsgOut.DefAttributes.UnderlineType := ultNone;
+        end;
+    end;
+    AssignDefaultFont(Self.Font);
+    MsgList.setupPrefs();
+    //msgout will pickup parent font by default, but we need to change bg color
+    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 end;
 
 end.

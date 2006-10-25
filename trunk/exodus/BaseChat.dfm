@@ -153,6 +153,7 @@ inherited frmBaseChat: TfrmBaseChat
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
+      OnSelectionChange = MsgOutSelectionChange
       AutoVerbMenu = False
       InputFormat = ifUnicode
       OutputFormat = ofUnicode
@@ -176,24 +177,30 @@ inherited frmBaseChat: TfrmBaseChat
       Left = 0
       Top = 0
       Hint = 'Bold'
+      AllowAllUp = True
       Caption = 'Bold'
       ImageIndex = 70
-      OnClick = BoldClick
+      Style = tbsCheck
+      OnClick = PlainTextBoldClick
     end
     object ChatToolbarButtonUnderline: TTntToolButton
       Left = 25
       Top = 0
       Hint = 'Underline'
+      AllowAllUp = True
       Caption = 'Underline'
       ImageIndex = 71
-      OnClick = UnderlineClick
+      Style = tbsCheck
+      OnClick = PlainTextUnderlineClick
     end
     object ChatToolbarButtonItalics: TTntToolButton
       Left = 50
       Top = 0
       Hint = 'Italics'
+      AllowAllUp = True
       Caption = 'Italics'
       ImageIndex = 72
+      Style = tbsCheck
       Visible = False
       OnClick = ItalicsClick
     end

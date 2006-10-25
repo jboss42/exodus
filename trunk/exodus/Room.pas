@@ -462,14 +462,10 @@ begin
             f.sendStartPresence();
 
         f.Caption := tmp_jid.userDisplay;
-
-
+        
         // setup prefs
         with f do begin
-            MsgList.setupPrefs();
-            MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-            AssignDefaultFont(MsgOut.Font);
-            lstRoster.Color := MsgOut.Color;
+            lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
             lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
             lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
             lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');

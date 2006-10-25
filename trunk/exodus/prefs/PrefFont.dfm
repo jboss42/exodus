@@ -2,11 +2,12 @@ inherited frmPrefFont: TfrmPrefFont
   Left = 320
   Top = 256
   Caption = 'frmPrefFont'
-  ClientHeight = 283
-  ClientWidth = 421
+  ClientHeight = 329
+  ClientWidth = 410
   OldCreateOrder = True
-  ExplicitWidth = 433
-  ExplicitHeight = 295
+  ShowHint = True
+  ExplicitWidth = 422
+  ExplicitHeight = 341
   PixelsPerInch = 96
   TextHeight = 13
   object lblRoster: TTntLabel [0]
@@ -52,7 +53,7 @@ inherited frmPrefFont: TfrmPrefFont
     Caption = 'Element Name'
   end
   object clrBoxBG: TColorBox [6]
-    Left = 135
+    Left = 136
     Top = 205
     Width = 170
     Height = 22
@@ -65,7 +66,7 @@ inherited frmPrefFont: TfrmPrefFont
     OnChange = clrBoxBGChange
   end
   object clrBoxFont: TColorBox [7]
-    Left = 135
+    Left = 136
     Top = 229
     Width = 170
     Height = 22
@@ -78,7 +79,7 @@ inherited frmPrefFont: TfrmPrefFont
     OnChange = clrBoxFontChange
   end
   object btnFont: TTntButton [8]
-    Left = 135
+    Left = 136
     Top = 256
     Width = 90
     Height = 25
@@ -184,10 +185,10 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 421
+    Width = 410
     Caption = 'Fonts and Colors'
     TabOrder = 5
-    ExplicitWidth = 421
+    ExplicitWidth = 410
   end
   object colorRoster: TTntTreeView
     Left = 8
@@ -201,6 +202,27 @@ inherited frmPrefFont: TfrmPrefFont
     ShowLines = False
     TabOrder = 0
     OnMouseDown = colorRosterMouseDown
+  end
+  object chkRTEnabled: TTntCheckBox
+    Left = 136
+    Top = 287
+    Width = 194
+    Height = 17
+    Hint = 'Send rich text messages '
+    Caption = 'Send and display rich text messages '
+    TabOrder = 6
+    OnClick = chkRTEnabledClick
+  end
+  object chkIgnoreFont: TTntCheckBox
+    Left = 157
+    Top = 306
+    Width = 206
+    Height = 17
+    Hint = 
+      'Ignore message font family and font size when displaying message' +
+      's'
+    Caption = 'Use my font when displaying messages'
+    TabOrder = 7
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
