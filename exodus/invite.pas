@@ -97,16 +97,18 @@ end;
 procedure showRecvInvite(tag: TXMLTag);
 var
     e: TJabberEvent;
+    from: Widestring;
 begin
     // factory for GUI
     // kick and ban get here.. because of status codes
 
     // check to see if we're already in the room.
     e := CreateJabberEvent(tag);
-    if (room_list.IndexOf(e.str_content) <  0) then begin
+    from := tag.getAttribute('from');
+    if (room_list.IndexOf(from) <  0) then begin
         if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
             // auto-join the room
-            StartRoom(e.str_content, '', '', True, False, True);
+            StartRoom(from, '', '', True, False, True);
             e.Free();
         end
         else //msg queue now own event, don't free
