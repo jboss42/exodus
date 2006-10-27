@@ -2058,6 +2058,7 @@ begin
 
     // deal with connect tool bar buttons.
     // done this way to try and avoid tool bar size "bouncing"
+    Toolbar1.AutoSize := false;
     if (enable) then begin
         btnConnect.Visible := not enable;
         btnDisconnect.Visible := enable;
@@ -2066,6 +2067,7 @@ begin
         btnDisconnect.Visible := enable;
         btnConnect.Visible := not enable;
     end;
+    Toolbar1.AutoSize := true;
 
 
     // People Menu

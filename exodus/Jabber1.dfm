@@ -57,6 +57,7 @@ object frmExodus: TfrmExodus
         MinHeight = 27
         Width = 313
       end>
+    ExplicitTop = -3
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
