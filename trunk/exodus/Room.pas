@@ -1179,12 +1179,21 @@ begin
                 exit;
             end
             else if (ecode = '407') then begin
-                if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
-                    t := TXMLTag.Create('register');
-                    t.setAttribute('jid', Self.jid);
-                    MainSession.FireEvent('/session/register', t);
-                    t.Free();
-                end;
+                e := jEntityCache.getByJid(Self.jid, '');
+                //If can't join, first check if we are allowed to regiter
+                if  (e <> nil) then begin
+                  if (e.hasFeature('muc-members-openreg') or e.hasFeature('muc-openreg')) then begin
+                    if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                      t := TXMLTag.Create('register');
+                      t.setAttribute('jid', Self.jid);
+                      MainSession.FireEvent('/session/register', t);
+                      t.Free();
+                    end;
+                  end
+                  else
+                    //If can't register, can't enter
+                    MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0)
+                  end;
                 Self.Close();
                 exit;
             end
