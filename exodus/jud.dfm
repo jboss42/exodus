@@ -211,6 +211,7 @@ inherited frmJud: TfrmJud
         OnColumnClick = lstContactsColumnClick
         OnContextPopup = lstContactsContextPopup
         OnData = lstContactsData
+        OnSelectItem = lstContactsSelectItem
       end
     end
     object TabXData: TTabSheet

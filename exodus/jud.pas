@@ -89,6 +89,8 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure lstContactsSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     { Private declarations }
     virtlist: TObjectList;
@@ -226,6 +228,9 @@ begin
     TabSheet4.TabVisible := false;
     TabXData.TabVisible := false;
     Tabs.ActivePage := TabSheet1;
+    btnContacts.Enabled := false;
+    btnChat.Enabled := false;
+    btnBroadcastMsg.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -576,6 +581,9 @@ begin
 
     else begin
     end;
+    btnContacts.Enabled := false;
+    btnChat.Enabled := false;
+    btnBroadcastMsg.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -836,6 +844,22 @@ begin
         until (f or (i = StartIndex));
         if (f) then Index := i - 1;
     end;
+end;
+
+procedure TfrmJud.lstContactsSelectItem(Sender: TObject; Item: TListItem;
+  Selected: Boolean);
+begin
+  inherited;
+     if (lstContacts.SelCount > 0) then begin
+         btnContacts.Enabled := true;
+         btnChat.Enabled := true;
+         btnBroadcastMsg.Enabled := true;
+     end
+     else begin
+         btnContacts.Enabled := false;
+         btnChat.Enabled := false;
+         btnBroadcastMsg.Enabled := false;
+     end;
 end;
 
 procedure TfrmJud.OnChatClick(Sender: TObject);
