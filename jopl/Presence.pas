@@ -91,7 +91,6 @@ type
         _last_pres: TJabberPres;
 
         function FindPresSpec(sjid, resource: Widestring): TJabberPres;
-        procedure DeletePres(p: TJabberPres);
         procedure AddPres(p: TJabberPres);
         function  GetPresList(sjid: WideString): TWideStringList;
         
@@ -106,8 +105,8 @@ type
 
         function FindPres(sjid, resource: WideString): TJabberPres;
         function NextPres(last: TJabberPres): TJabberPres;
-
         property LastPres: TJabberPres read _last_pres;
+        procedure DeletePres(p: TJabberPres);
     end;
 
 {---------------------------------------}
