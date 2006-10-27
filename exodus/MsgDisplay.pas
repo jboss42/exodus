@@ -29,6 +29,7 @@ function RTFColor(color_pref: integer) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_server, color_action, color_me, color_other, font_color: integer) overload;
+procedure DisplayXHTMLMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 
 {---------------------------------------}
@@ -36,9 +37,9 @@ function RTFEncodeKeywords(txt: Widestring) : Widestring;
 {---------------------------------------}
 implementation
 uses
-
+    JabberConst,
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLUtils, Session, Keywords;
+    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -212,6 +213,26 @@ begin
   end;
 
   result := result + Copy(txt,pos,length(txt)-pos+1); //Append the remaining chunk
+end;
+
+
+procedure DisplayXHTMLMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
+var
+    ttag: TXMLTag;
+begin
+    ttag := Msg.Tag.GetFirstTag('html');
+    if ((ttag <> nil) and (ttag.getAttribute('xmlns') = XMLNS_XHTMLIM)) then begin
+        DisplayRTFMsg(RichEdit, Msg, AutoScroll);
+        RichEdit.SelStart := Length(RichEdit.Lines.Text);
+        RichEdit.SelLength := 0;
+        RichEdit.Paragraph.Alignment := taLeft;
+        RichEdit.SelAttributes.BackColor := RichEdit.Color;
+        RichEdit.RTFSelText := ttag.XML;
+        RichEdit.ScrollToBottom();
+    end
+    else begin
+        DisplayRTFMsg(RichEdit, Msg, AutoScroll);
+    end;
 end;
 
 end.

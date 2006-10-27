@@ -73,7 +73,8 @@ var
 implementation
 
 uses
-    Emote, 
+    Emote,
+    XMLTag, 
     JabberUtils, ExUtils,  Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
 
 {$R *.dfm}
@@ -209,7 +210,12 @@ end;
 procedure TfRTFMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 begin
     _presence_last := false;
-    DisplayRTFMsg(MsgList, Msg, AutoScroll);
+    if (MainSession.Prefs.GetBool('richtext_enabled')) then begin
+        DisplayXHTMLMsg(MsgList, Msg, AutoScroll);
+    end
+    else begin
+        DisplayRTFMsg(MsgList, Msg, AutoScroll);
+    end;
 end;
 
 {---------------------------------------}

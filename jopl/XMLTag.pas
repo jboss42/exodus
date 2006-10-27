@@ -677,6 +677,8 @@ begin
 
     for i := 0 to xml._AttrList.Count - 1 do
         Self.setAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
+    //copy xml buff as well        
+    _xml_buff := xml._xml_buff;        
 end;
 
 {------------------------------------------------------------------------------}

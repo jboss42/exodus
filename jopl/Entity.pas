@@ -709,6 +709,14 @@ begin
         ((_cat_type = FEAT_AIM) or (_cat_type = FEAT_MSN) or
          (_cat_type = FEAT_ICQ) or (_cat_type = FEAT_YAHOO) or
          (_feats.IndexOf('jabber:iq:gateway') >= 0))) then _feats.Add(_cat_type);
+
+    if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then begin
+        //JM fixup test only *remove*
+        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
+            _feats.Add(XMLNS_XHTMLIM);
+        if (_feats.IndexOf(XMLNS_MUC) = -1) then
+            _feats.Add(XMLNS_MUC);
+    end;
 end;
 
 {---------------------------------------}

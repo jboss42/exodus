@@ -71,6 +71,8 @@ const
     XMLNS_CAPS       = 'http://jabber.org/protocol/caps';
     XMLNS_ADDRESS    = 'http://jabber.org/protocol/address';
 
+    XMLNS_XHTMLIM    = 'http://jabber.org/protocol/xhtml-im';
+    XMLNS_XHTML      = 'http://www.w3.org/1999/xhtml';
 var
     XP_MSGXDATA: TXPLite;
     XP_MUCINVITE: TXPLite;

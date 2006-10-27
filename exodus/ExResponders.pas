@@ -614,7 +614,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
+//JJF TODO need to fix this
 //for now, just notify the "dock manager" (notify to nil)
 //    if (IsMsgQueueShowing()) then
 //        f := GetMsgQueue(false);
@@ -636,7 +636,6 @@ begin
             setAttribute('jid', _session.Profile.getJabberID.full());
             setAttribute('name', _session.Username);
 
-            //AddBasicTag('ns', XMLNS_SEARCH);   no longer supported, will cause contact to show up in search
             AddBasicTag('ns', XMLNS_AGENTS);
 
             AddBasicTag('ns', XMLNS_IQOOB);
@@ -658,6 +657,9 @@ begin
 
             for i := 0 to Namespaces.Count - 1 do
                 AddBasicTag('ns', Namespaces[i]);
+            //if currently sending/displaying rich text include the NS
+            if (MainSession.Prefs.getBool('richtext_enabled')) then
+                AddBasicTag('ns', XMLNS_XHTMLIM);
         end;
     end;
     _session.SendTag(r);
@@ -861,6 +863,10 @@ begin
         addFeature(q, XMLNS_SI);
         addFeature(q, XMLNS_FTPROFILE);
         addFeature(q, XMLNS_BYTESTREAMS);
+
+        //if currently sending/displaying rich text include the NS
+        if (MainSession.Prefs.getBool('richtext_enabled')) then
+            addFeature(q, XMLNS_XHTMLIM);
 
         if (node = '') then begin
             with q.AddTag('identity') do begin

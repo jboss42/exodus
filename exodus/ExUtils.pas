@@ -72,6 +72,7 @@ function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
 function getMemoText(memo: TMemo): WideString;
 function getInputText(Input: TExRichEdit): Widestring;
+function getInputXHTML(Input: TExRichEdit): TXMLTag;
 function ForceForegroundWindow(hwnd: THandle): boolean;
 
 function trimNewLines(value: WideString): WideString;
@@ -669,6 +670,18 @@ begin
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');
+end;
+
+function getInputXHTML(Input: TExRichEdit): TXMLTag;
+var
+    ttag: TXMLTag;
+begin
+//    <html xmlns='http://jabber.org/protocol/xhtml-im'><body xmlns='http://www.w3.org/1999/xhtml'><span></span></body></html>
+    //convert rich text to xhtml-im
+    Result := TXMLTag.Create('html');
+    Result.setAttribute('xmlns', XMLNS_XHTMLIM);
+    ttag := Result.AddTagNS('body', XMLNS_XHTML);
+    ttag.AddBasicTag('span', getInputText(Input));
 end;
 
 {---------------------------------------}

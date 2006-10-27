@@ -53,7 +53,6 @@ type
     procedure colorChatSelectionChange(Sender: TObject);
     procedure colorChatMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure chkRTEnabledClick(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -93,12 +92,16 @@ const
 implementation
 {$R *.dfm}
 uses
-    ShellAPI, JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils;
+    ShellAPI,
+    PrefFile,
+    PrefController,
+    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
 var
     n: TTntTreeNode;
+    s: TPrefState;
 begin
     inherited;
 
@@ -152,8 +155,10 @@ begin
         clrBoxBG.Selected := TColor(_color_bg);
         clrBoxFont.Selected := TColor(_font_color);
         //kind of a dbl check of the prefs. if rt is not enabled,
-        //ignore font *should* have a state='hidden' and value = true 
-        if (not getBool('richtext_enabled')) then begin
+        //ignore font *should* have a state='hidden' and value = true
+         s := PrefController.getPrefState('richtext_enabled');
+        if (not getBool('richtext_enabled') and
+           ((s = psInvisible) or (s = psReadOnly))) then begin
             chkIgnoreFont.Visible := false;
             chkIgnoreFont.Checked := true;  //ovrride whatever value is there
         end;
@@ -379,12 +384,6 @@ begin
     btnCSSBrowse.Enabled := (idx = 1);
     btnCSSEdit.Enabled := (idx = 1);
     }
-end;
-
-procedure TfrmPrefFont.chkRTEnabledClick(Sender: TObject);
-begin
-    inherited;
-    chkIgnoreFont.Enabled := chkRTEnabled.Checked;
 end;
 
 {---------------------------------------}
