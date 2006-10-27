@@ -24,7 +24,7 @@ uses
     Avatar, Chat, ChatController, COMChatController, JabberID, XMLTag, IQ, Unicode, NodeItem,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-    RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls,
+    RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
   ToolWin, ImgList;
 
 type
@@ -132,7 +132,7 @@ type
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
-    function  _sendMsg(txt: Widestring): boolean;
+    function  _sendMsg(txt: Widestring; xml: Widestring = ''): boolean;
     procedure _sendComposing(id: Widestring);
 
   protected
@@ -218,7 +218,9 @@ uses
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
     JabberMsg, Roster, Session, XMLUtils,
-    ShellAPI, RosterWindow, Emoticons;
+    ShellAPI, RosterWindow, Emoticons,
+    Entity,
+    EntityCache;
 
 const
     sReplying = ' is replying.';
@@ -889,16 +891,32 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmChat._sendMsg(txt: Widestring): boolean;
+function TfrmChat._sendMsg(txt: Widestring; xml: Widestring): boolean;
 begin
-      sendRawMessage(txt,'','',true);
+      sendRawMessage(txt,'',xml,true);
       result := true;
+end;
+
+function getBestCapsEntity(jid: TJabberID): TJabberEntity;
+var
+    p: TJabberPres;
+begin
+    Result := jEntityCache.getByJid(jid.full, '');
+    if (Result = nil) then begin
+        //try it with the first entry in the ppdb
+        p := MainSession.ppdb.FindPres(jid.jid, jid.resource);
+        if (p <> nil) then
+            Result := jEntityCache.getByJid(p.fromJid.full, '');
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
     txt: Widestring;
+    xhtml: TXMLTag;
+    xml: Widestring;
+    e: TJabberEntity;
 begin
     // Get the text from the UI
     // and send the actual message out
@@ -908,8 +926,19 @@ begin
       MsgOut.Clear();
       exit;
     end;
-
-    if (_sendMsg(txt)) then begin
+    xml := '';
+    if (MainSession.Prefs.getBool('richtext_enabled')) then begin
+        //see if client we are chatting with supports xhtml-im before sending it
+        e := getBestCapsEntity(Self._jid);
+        //if we don't have info, assume they support. No entity probably means
+        //we started this chat and haven't locked into a resource yet.
+        if ((e = nil) or e.hasFeature(XMLNS_XHTMLIM)) then begin
+            xhtml := getInputXHTML(MsgOut);
+            if (xhtml <> nil) then
+                xml := xhtml.XML;
+        end;
+    end;
+    if (_sendMsg(txt, xml)) then begin
         _sent_composing := false;
         inherited;
     end;

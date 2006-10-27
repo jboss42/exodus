@@ -606,7 +606,7 @@ begin
         // Room config update?
         etag := tag.GetFirstTag('x');
         if (etag <> nil) and
-           (etag.GetAttribute('xmlns') = 'http://jabber.org/protocol/muc#user') then begin
+           (etag.GetAttribute('xmlns') = XMLNS_MUCUSER) then begin
             etag := etag.GetFirstTag('status');
             if (etag <> nil) and
                (etag.GetAttribute('code') = '104') then begin
@@ -710,6 +710,9 @@ procedure TfrmRoom.SendMsg;
 var
     allowed: boolean;
     txt: Widestring;
+    xhtml: TXMLTag;
+    xml: Widestring;
+
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
@@ -724,7 +727,12 @@ begin
             exit;
     end;
 
-    SendRawMessage(txt, '', '', true);
+    xhtml := getInputXHTML(MsgOut);
+    xml := '';
+    if (xhtml <> nil) then
+        xml := xhtml.XML;
+    
+    SendRawMessage(txt, '', xml, true);
 
     inherited;
 end;

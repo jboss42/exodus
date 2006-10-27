@@ -1616,6 +1616,7 @@ var
     fp, m: Widestring;
     fps: TWidestringlist;
     i: integer;
+    extExists, RTEnabled: boolean;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1862,13 +1863,26 @@ begin
                         TfrmDockable(Screen.Forms[i]).OnFloat()
                 end;
             end;
+
         end;
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
-        Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs')
+        Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
+        //add or remove xhtml-im caps feature based on pref. Push presence if
+        //cpas ext modified.
+        extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
+        RTEnabled := MainSession.Prefs.getBool('richtext_enabled');
+        if (extExists <> RTEnabled) then begin
+            if (not RTEnabled) then
+                MainSession.RemoveExtension('xhtml-im')
+            else
+                MainSession.AddExtension('xhtml-im', XMLNS_XHTMLIM);
+            //send presence if not starting up
+            if ((tag = nil) or (tag.Name <> 'startup')) then
+                MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
+        end;
     end
-
     else if (event = '/session/presence') then begin
         // Our presence was changed.. reflect that in the tray icon
         if (MainSession.Show = '') then

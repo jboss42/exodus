@@ -83,18 +83,14 @@ type
     procedure Copy3Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure PlainTextBoldClick(Sender: TObject);
-    procedure RichTextBoldClick(Sender: TObject);
-    
-    procedure PlainTextUnderlineClick(Sender: TObject);
-    procedure RichTextUnderlineClick(Sender: TObject);
-    
     procedure ItalicsClick(Sender: TObject);
     procedure ChatToolbarButtonHotkeysClick(Sender: TObject);
     procedure OnHotkeysClick(Sender: TObject);
     procedure Customize1Click(Sender: TObject);
     procedure MsgOutOnEnter(Sender: TObject);
     procedure MsgOutSelectionChange(Sender: TObject);
+    procedure ChatToolbarButtonBoldClick(Sender: TObject);
+    procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -352,7 +348,8 @@ begin
             MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
     end
     //click toolbar buttons
-    else if ((Shift = [ssCtrl]) and ((chr(Key) = 'B') or (chr(Key) = 'U'))) then begin
+    else if ((_rtEnabled) and
+             ((Shift = [ssCtrl]) and ((chr(Key) = 'B') or (chr(Key) = 'U')))) then begin
         if (chr(Key) = 'B') then begin
             ChatToolbarButtonBold.Down := not ChatToolbarButtonBold.Down;
             ChatToolbarButtonBold.Click();
@@ -503,19 +500,11 @@ begin
     Prefs.StartPrefs(pref_hotkeys);
 end;
 
-procedure TfrmBaseChat.RichTextBoldClick(Sender: TObject);
+{---------------------------------------}
+procedure TfrmBaseChat.ChatToolbarButtonBoldClick(Sender: TObject);
 begin
     inherited;
     msgOut.SelAttributes.Bold := ChatToolbarButtonBold.Down;
-end;
-{---------------------------------------}
-procedure TfrmBaseChat.PlainTextBoldClick(Sender: TObject);
-begin
-    inherited;
-    if (Length(MsgOut.SelText) = 0) then
-        MsgOut.SelText := '*'
-    else
-        MsgOut.SelText := '*' + MsgOut.SelText + '*';
 end;
 
 procedure TfrmBaseChat.ChatToolbarButtonHotkeysClick(Sender: TObject);
@@ -555,6 +544,17 @@ begin
     // show popup
     GetCursorPos(cp);
     popHotkeys.Popup(cp.x, cp.y);
+end;
+
+procedure TfrmBaseChat.ChatToolbarButtonUnderlineClick(Sender: TObject);
+begin
+  inherited;
+    if (ChatToolbarButtonUnderline.Down) then begin
+        msgOut.SelAttributes.UnderlineType := ultSingle;
+    end
+    else begin
+        msgOut.SelAttributes.UnderlineType := ultNone;
+    end;
 end;
 
 procedure TfrmBaseChat.Clear1Click(Sender: TObject);
@@ -611,28 +611,6 @@ procedure TfrmBaseChat._scrollBottom();
 begin
     OutputDebugString('_scrollBottom');
     MsgList.ScrollToBottom();
-end;
-
-procedure TfrmBaseChat.RichTextUnderlineClick(Sender: TObject);
-begin
-    inherited;
-    if (ChatToolbarButtonUnderline.Down) then begin
-        msgOut.SelAttributes.UnderlineType := ultSingle;
-    end
-    else begin
-        msgOut.SelAttributes.UnderlineType := ultNone;
-    end;
-end;
-
-procedure TfrmBaseChat.PlainTextUnderlineClick(Sender: TObject);
-begin
-  inherited;
-
-  if (Length(MsgOut.SelText) = 0) then
-    MsgOut.SelText := '_'
-  else
-    MsgOut.SelText := '_' + MsgOut.SelText + '_';
-
 end;
 
 {---------------------------------------}
@@ -694,17 +672,10 @@ begin
     with (Mainsession.Prefs) do begin
         _rtEnabled := getBool(PREF_RT_ENABLED);
         ChatToolbarButtonItalics.visible := _rtEnabled;
-        if (_rtEnabled) then begin
-            ChatToolbarButtonBold.Style := tbsCheck;
-            ChatToolbarButtonBold.OnClick := RichTextBoldClick;
-            ChatToolbarButtonUnderline.Style := tbsCheck;
-            ChatToolbarButtonUnderline.OnClick := RichTextUnderlineClick;
-        end
-        else begin
-            ChatToolbarButtonBold.Style := tbsButton;
-            ChatToolbarButtonBold.OnClick := PlainTextBoldClick;
-            ChatToolbarButtonUnderline.Style := tbsButton;
-            ChatToolbarButtonUnderline.OnClick := PlainTextUnderlineClick;
+        ChatToolbarButtonBold.visible := _rtEnabled;
+        ChatToolbarButtonUnderline.visible := _rtEnabled;
+        ChatToolbarButtonSeperator1.visible := _rtEnabled;
+        if (not _rtEnabled) then begin
             //drop all previous formatting since we are loosing rich text
             MsgOut.DefAttributes.Bold := false;
             MsgOut.DefAttributes.Italic := false;

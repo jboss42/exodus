@@ -181,7 +181,7 @@ inherited frmBaseChat: TfrmBaseChat
       Caption = 'Bold'
       ImageIndex = 70
       Style = tbsCheck
-      OnClick = PlainTextBoldClick
+      OnClick = ChatToolbarButtonBoldClick
     end
     object ChatToolbarButtonUnderline: TTntToolButton
       Left = 25
@@ -191,7 +191,7 @@ inherited frmBaseChat: TfrmBaseChat
       Caption = 'Underline'
       ImageIndex = 71
       Style = tbsCheck
-      OnClick = PlainTextUnderlineClick
+      OnClick = ChatToolbarButtonUnderlineClick
     end
     object ChatToolbarButtonItalics: TTntToolButton
       Left = 50

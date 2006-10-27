@@ -188,7 +188,7 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 389
     Caption = 'Fonts and Colors'
     TabOrder = 5
-    ExplicitWidth = 410
+    ExplicitWidth = 389
   end
   object colorRoster: TTntTreeView
     Left = 8
@@ -206,12 +206,12 @@ inherited frmPrefFont: TfrmPrefFont
   object chkIgnoreFont: TTntCheckBox
     Left = 136
     Top = 287
-    Width = 209
+    Width = 241
     Height = 17
     Hint = 
       'Ignore message font family and font size when displaying message' +
       's'
-    Caption = 'Use my font when displaying messages'
+    Caption = 'Always use my font for message display'
     TabOrder = 6
   end
   object chkRTEnabled: TTntCheckBox
@@ -221,7 +221,6 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 17
     Caption = 'Send and display rich text messages'
     TabOrder = 7
-    OnClick = chkRTEnabledClick
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
