@@ -2,12 +2,12 @@ inherited frmPrefFont: TfrmPrefFont
   Left = 320
   Top = 256
   Caption = 'frmPrefFont'
-  ClientHeight = 329
-  ClientWidth = 410
+  ClientHeight = 325
+  ClientWidth = 389
   OldCreateOrder = True
   ShowHint = True
-  ExplicitWidth = 422
-  ExplicitHeight = 341
+  ExplicitWidth = 401
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   object lblRoster: TTntLabel [0]
@@ -185,7 +185,7 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 410
+    Width = 389
     Caption = 'Fonts and Colors'
     TabOrder = 5
     ExplicitWidth = 410
@@ -203,26 +203,25 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 0
     OnMouseDown = colorRosterMouseDown
   end
-  object chkRTEnabled: TTntCheckBox
+  object chkIgnoreFont: TTntCheckBox
     Left = 136
     Top = 287
-    Width = 194
-    Height = 17
-    Hint = 'Send rich text messages '
-    Caption = 'Send and display rich text messages '
-    TabOrder = 6
-    OnClick = chkRTEnabledClick
-  end
-  object chkIgnoreFont: TTntCheckBox
-    Left = 157
-    Top = 306
-    Width = 206
+    Width = 209
     Height = 17
     Hint = 
       'Ignore message font family and font size when displaying message' +
       's'
     Caption = 'Use my font when displaying messages'
+    TabOrder = 6
+  end
+  object chkRTEnabled: TTntCheckBox
+    Left = 136
+    Top = 306
+    Width = 197
+    Height = 17
+    Caption = 'Send and display rich text messages'
     TabOrder = 7
+    OnClick = chkRTEnabledClick
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

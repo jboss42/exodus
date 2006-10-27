@@ -41,8 +41,8 @@ type
     lblColor: TTntLabel;
     colorRoster: TTntTreeView;
     OpenDialog1: TOpenDialog;
-    chkRTEnabled: TTntCheckBox;
     chkIgnoreFont: TTntCheckBox;
+    chkRTEnabled: TTntCheckBox;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -151,8 +151,13 @@ begin
         btnFont.Enabled := true;
         clrBoxBG.Selected := TColor(_color_bg);
         clrBoxFont.Selected := TColor(_font_color);
+        //kind of a dbl check of the prefs. if rt is not enabled,
+        //ignore font *should* have a state='hidden' and value = true 
+        if (not getBool('richtext_enabled')) then begin
+            chkIgnoreFont.Visible := false;
+            chkIgnoreFont.Checked := true;  //ovrride whatever value is there
+        end;
     end;
-    Self.chkIgnoreFont.Enabled := Self.chkRTEnabled.Checked;
 end;
 
 {---------------------------------------}
