@@ -186,14 +186,13 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 20
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end
@@ -294,10 +293,6 @@ object frmRosterWindow: TfrmRosterWindow
           AutoSize = True
         end>
       HotTrackStyles = [htHandPoint, htUnderlineHot]
-      Items.ItemData = {
-        01500000000200000001000000FFFFFFFFFFFFFFFF0000000000000000095000
-        72006F00660069006C0065002000310001000000FFFFFFFFFFFFFFFF00000000
-        0000000009500072006F00660069006C00650020003200}
       ParentColor = True
       ParentShowHint = False
       PopupMenu = popProfiles
@@ -311,7 +306,6 @@ object frmRosterWindow: TfrmRosterWindow
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
-      ExplicitTop = 98
     end
   end
   object treeRoster: TTntTreeView
