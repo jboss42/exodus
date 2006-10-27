@@ -124,7 +124,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    RosterImages, GnuGetText, JabberConst, iq, s10n, XMLUtils, Session;
+    RosterImages, GnuGetText, JabberConst, iq, s10n, XMLUtils, Session, EntityCache;
 
 const
     sGrpBookmarks = 'Bookmarks';
@@ -324,6 +324,8 @@ var
     tmp_jid: TJabberID;
     iq_type, j: Widestring;
     s: TJabberSession;
+    pr: TJabberPres;
+    pres_found: Boolean;
 begin
     // callback from the session
     s := TJabberSession(_js);
@@ -354,6 +356,18 @@ begin
             idx := Self.indexOfObject(ri);
             ri.Free;
             Self.Delete(idx);
+            //Remove presence from PPDB for all resources
+            tmp_jid := TJabberID.Create(ritems[i].getAttribute('jid'));
+            pres_found := true;
+            while (pres_found) do begin
+              pr := s.ppdb.FindPres(tmp_jid.full, '');
+              if (pr <> nil) then
+                 s.ppdb.DeletePres(pr)
+              else
+                 pres_found := false;
+            end;
+            jEntityCache.RemoveJid(tmp_jid.jid);
+            jEntityCache.RemoveJid(tmp_jid.full);
         end;
     end;
 
