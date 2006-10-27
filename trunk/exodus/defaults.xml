@@ -115,7 +115,7 @@
     <ie_css value="" control="cboIEStylesheet"/>
 
     <!-- Rich text -->
-    <richtext_enabled value="1" control="chkRTEnabled"/>
+    <richtext_enabled value="0" control="chkRTEnabled" state="inv"/>
     <richtext_ignore_font value="1" control="chkIgnoreFont"/>
     
     <!-- Layouts -->
