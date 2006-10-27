@@ -2322,7 +2322,15 @@ begin
             popProperties.Enabled := true;
             popSendFile.Enabled := (o) and (native) and
                 (MainSession.Profile.ConnectionType = conn_normal);
-            popInvite.Enabled := (native);
+            if (room.room_list.Count > 0) then begin
+                popInvite.Enabled := (native);
+                popGrpInvite.Enabled := true;
+            end
+            else begin
+                popInvite.Enabled := false;
+                popGrpInvite.Enabled := false;
+            end;
+
             popPresence.Enabled := (e and (not me));
 //            popClientInfo.Enabled := true;
             popClientInfo.Enabled := (native);
@@ -3596,6 +3604,7 @@ procedure TfrmRosterWindow.lstProfilesKeyPress(Sender: TObject;
 begin
     if Key = Chr(13) then lblConnectClick(Self);
 end;
+
 
 procedure TfrmRosterWindow.lstProfilesSelectItem(Sender: TObject;
   Item: TListItem; Selected: Boolean);

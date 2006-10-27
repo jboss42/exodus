@@ -52,6 +52,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAddClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure cboRoomChange(Sender: TObject);
+    procedure lstJIDSChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure lstJIDSDeletion(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
     _selector: TfrmSelContact;
@@ -289,6 +293,25 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmInvite.lstJIDSChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+    if ((Length(Trim(cboRoom.Text)) > 0) and
+        (lstJIDS.items.Count > 0)) then
+        frameButtons1.btnOK.Enabled:= true
+    else
+        frameButtons1.btnOK.Enabled := false;
+end;
+
+procedure TfrmInvite.lstJIDSDeletion(Sender: TObject; Item: TListItem);
+begin
+    if ((Length(Trim(cboRoom.Text)) > 0) and
+        (lstJIDS.items.Count > 1)) then
+        frameButtons1.btnOK.Enabled:= true
+    else
+        frameButtons1.btnOK.Enabled := false;
+end;
+
 procedure TfrmInvite.lstJIDSDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
@@ -328,6 +351,15 @@ begin
         if lstJIDS.Items[i].Selected then
             lstJIDS.Items.Delete(i);
     end;
+end;
+
+procedure TfrmInvite.cboRoomChange(Sender: TObject);
+begin
+    if ((Length(Trim(cboRoom.Text)) > 0)and
+        (lstJIDS.items.Count > 0)) then
+        frameButtons1.btnOK.Enabled:= true
+    else
+        frameButtons1.btnOK.Enabled := false;
 end;
 
 {---------------------------------------}

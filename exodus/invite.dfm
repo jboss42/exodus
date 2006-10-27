@@ -46,6 +46,7 @@ object frmInvite: TfrmInvite
         ExplicitWidth = 164
         ExplicitHeight = 29
         inherited btnOK: TTntButton
+          Enabled = False
           OnClick = frameButtons1btnOKClick
         end
         inherited btnCancel: TTntButton
@@ -91,6 +92,8 @@ object frmInvite: TfrmInvite
       SortType = stBoth
       TabOrder = 0
       ViewStyle = vsReport
+      OnChange = lstJIDSChange
+      OnDeletion = lstJIDSDeletion
       OnDragDrop = lstJIDSDragDrop
       OnDragOver = lstJIDSDragOver
     end
@@ -170,8 +173,10 @@ object frmInvite: TfrmInvite
           Top = 4
           Width = 214
           Height = 21
+          Style = csDropDownList
           ItemHeight = 13
           TabOrder = 0
+          OnChange = cboRoomChange
         end
       end
     end
