@@ -1201,7 +1201,7 @@ var
     auth: TJabberAuth;
 begin
     assert(_profile <> nil); //should not try to set authagent until profile is set
-    assert(_stream = nil); //should not try to change authagent oncve connected
+    assert(_stream = nil); //should not try to change authagent once connected
 
     // Create the AuthAgent
     if (profile.SSL_Cert <> '')  then
