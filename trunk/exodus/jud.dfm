@@ -4,6 +4,7 @@ inherited frmJud: TfrmJud
   Caption = 'Jabber Search'
   ClientHeight = 355
   ClientWidth = 553
+  KeyPreview = True
   OldCreateOrder = True
   OnClose = FormClose
   OnResize = FormResize
@@ -43,11 +44,11 @@ inherited frmJud: TfrmJud
   inherited Tabs: TPageControl
     Width = 553
     Height = 261
-    ActivePage = TabSheet4
     ExplicitTop = 53
     ExplicitWidth = 553
     ExplicitHeight = 261
     inherited TabSheet1: TTabSheet
+      OnEnter = TabSheet1Enter
       ExplicitLeft = 4
       ExplicitTop = 27
       ExplicitWidth = 545
