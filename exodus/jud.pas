@@ -25,7 +25,8 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
     TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin;
-
+const
+   WM_FIELDS_UPDATED = WM_USER + 6000;
 type
 
   TJUDItem = class
@@ -91,6 +92,14 @@ type
     procedure FormResize(Sender: TObject);
     procedure lstContactsSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
+
+    procedure TabSheet1Enter(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
+  protected
+    procedure WMFieldsUpdated(var msg: TMessage); message WM_FIELDS_UPDATED;
+    procedure NextEnabled();
+
   private
     { Private declarations }
     virtlist: TObjectList;
@@ -110,6 +119,8 @@ type
     procedure FieldsCallback(event: string; tag: TXMLTag);
     procedure ItemsCallback(event: string; tag: TXMLTag);
     function convertDisplayToJID(displayJID: widestring): widestring;
+
+
   public
     { Public declarations }
   end;
@@ -128,6 +139,7 @@ const
     sJUDEmpty = 'No Results were found.';
     sJUDAdd = 'Add Contacts';
     sJUDCount = '%d items found.';
+
 
 function StartSearch(sjid: string): TfrmJUD;
 function ItemCompare(Item1, Item2: Pointer): integer;
@@ -233,6 +245,17 @@ begin
     btnBroadcastMsg.Enabled := false;
 end;
 
+
+procedure TfrmJud.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  //Just need to send a message to ourseflves to check
+  //if controls are empty after key down event is processed
+  //by the control
+  PostMessage(Self.Handle, WM_FIELDS_UPDATED, 0, 0);
+end;
+
 {---------------------------------------}
 procedure TfrmJUD.getFields;
 begin
@@ -308,6 +331,56 @@ begin
     end;
 end;
 
+
+procedure TfrmJud.TabSheet1Enter(Sender: TObject);
+begin
+  inherited;
+  btnNext.Enabled := true;
+end;
+
+
+procedure TfrmJud.WMFieldsUpdated(var msg: TMessage);
+begin
+  NextEnabled();
+end;
+
+procedure TfrmJud.NextEnabled();
+var
+ i, j: Integer;
+ c: TControl;
+ row: TXDataRow;
+begin
+  inherited;
+  if ((Tabs.ActivePage = TabXData) or (Tabs.ActivePage = TabFields)) then begin
+    btnNext.Enabled := false;
+    //Iterate through all edit controls and see if any characters entered
+    for i := 0 to Tabs.ActivePage.ControlCount - 1 do begin
+      c := Tabs.ActivePage.Controls[i];
+      if (c is TframeTopLabel) then begin
+        if (Trim(TframeTopLabel(c).txtData.Text) <> '') then begin
+          btnNext.Enabled := true;
+          exit;
+        end;
+      end // If TframeTopLabel
+      else begin
+        if (c is TframeXData) then begin
+          for j := 0 to TframeXData(c).Rows.Count - 1 do begin
+            row := TXDataRow(TframeXData(c).Rows[j]);
+            if (row.con is TTntEdit) then begin
+              if (Trim(TTntEdit(row.con).Text) <> '') then begin
+                btnNext.Enabled := true;
+                exit;
+              end;
+            end; //if TTntEdit
+          end;  // end for loop for rows
+        end; // if TFrameXData
+      end; //els TframeTopLable
+    end; // End for loop
+  end; //Active page
+end;
+
+
+
 {---------------------------------------}
 procedure TfrmJUD.FieldsCallback(event: string; tag: TXMLTag);
 var
@@ -319,7 +392,7 @@ begin
     cur_iq := nil;
     aniWait.Active := false;
     btnBack.Enabled := true;
-    btnNext.Enabled := true;
+    btnNext.Enabled := false;
 
     if (event <> 'xml') then begin
         // timeout

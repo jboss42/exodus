@@ -46,6 +46,7 @@ type
     function cancel(): TXMLTag;
     function getUsername(): Widestring;
     function getPassword(): Widestring;
+    property Rows:  TList read _rows;
   end;
 
 implementation
