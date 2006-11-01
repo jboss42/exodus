@@ -300,6 +300,7 @@ type
     procedure DoLogin(idx: integer);
     
     function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
+    procedure SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1209,24 +1210,28 @@ begin
         if (_online <> nil) then begin
             assert(_online_go <> nil);
             MainSession.roster.removeGroup(_online_go);
+            _online_go := nil;
             _online.Free();
             _online := nil;
         end;
         if (_chat <> nil) then begin
             assert(_chat_go <> nil);
             Mainsession.roster.removeGroup(_chat_go);
+            _chat_go := nil;
             _chat.Free();
             _chat := nil;
         end;
         if (_xa <> nil) then begin
             assert(_xa_go <> nil);
             Mainsession.roster.removeGroup(_xa_go);
+            _xa_go := nil;
             _xa.Free();
             _xa := nil;
         end;
         if (_dnd <> nil) then begin
             assert(_dnd_go <> nil);
             Mainsession.roster.removeGroup(_dnd_go);
+            _dnd_go := nil;
             _dnd.Free();
             _dnd := nil;
         end;
@@ -1325,7 +1330,7 @@ begin
 
     //Free node
     node.Free();
-    
+
 end;
 
 {---------------------------------------}
@@ -1506,31 +1511,37 @@ begin
         // it at all times (if it exists).
         if (cur_grp = g_online) then begin
             _online := GetSpecialGroup(_online, _online_go, g_online);
+            SetJidInPresenceGroup(_online_go, ritem.Jid);
             resort := true;
             grp_node := _online;
         end
         else if (cur_grp = g_chat) then begin
             _chat := GetSpecialGroup(_chat, _chat_go, g_chat);
+            SetJidInPresenceGroup(_chat_go, ritem.Jid);
             resort := true;
             grp_node := _chat;
         end
         else if (cur_grp = g_away) then begin
             _away := GetSpecialGroup(_away, _away_go, g_away);
+            SetJidInPresenceGroup(_away_go, ritem.Jid);
             resort := true;
             grp_node := _away;
         end
         else if (cur_grp = g_xa) then begin
             _xa := GetSpecialGroup(_xa, _xa_go, g_xa);
+            SetJidInPresenceGroup(_xa_go, ritem.Jid);
             resort := true;
             grp_node := _xa;
         end
         else if (cur_grp = g_dnd) then begin
             _dnd := GetSpecialGroup(_dnd, _dnd_go, g_dnd);
+            SetJidInPresenceGroup(_dnd_go, ritem.Jid);
             resort := true;
             grp_node := _dnd;
         end
 
         else begin
+            SetJidInPresenceGroup(nil, ritem.Jid);
             // Make sure the grp exists
             go := MainSession.Roster.addGroup(cur_grp);
 
@@ -1619,6 +1630,24 @@ begin
     end;
 
     Result := node;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
+begin
+    if (_online_go <> nil) then
+        _online_go.removeJid(Jid);
+    if (_chat_go <> nil) then
+        _chat_go.removeJid(Jid);
+    if (_away_go <> nil) then
+        _away_go.removeJid(Jid);
+    if (_xa_go <> nil) then
+        _xa_go.removeJid(Jid);
+    if (_dnd_go <> nil) then
+        _dnd_go.removeJid(Jid);
+
+    if (grp <> nil) then
+        grp.AddJid(Jid);
 end;
 
 {---------------------------------------}
@@ -2559,7 +2588,8 @@ begin
         if (Win32Platform <> Ver_Platform_Win32_Windows) then
             treeRoster.Canvas.Font.Style := [fsBold];
 
-        if (not go.ShowPresence) then begin
+        if ((not go.ShowPresence) or
+            (_sort_roster)) then begin
             // If we aren't showing pres, then just show the total
             c1 := go.getText();
             c2 := '(' + IntToStr(Node.Count) + ')';
