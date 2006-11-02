@@ -866,6 +866,7 @@ end;
 procedure TfrmState.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
     PersistWindowState();
+    _flasher.Enabled := false;  //stop flashing
 end;
 
 function TfrmState.getPosition(): TRect;
