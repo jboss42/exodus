@@ -206,7 +206,10 @@ begin
     if (MsgQueue.isMsgQueueShowing() or e.delayed or
         MainSession.Prefs.getBool('msg_queue') or
         (e.eType = evt_Chat)) then begin
-        frmMsg := ShowMsgQueue(false);
+        if (not frmExodus.visible) then
+            frmMsg := ShowMsgQueue(false, 'f')
+        else frmMsg := ShowMsgQueue(false);
+        
         frmMsg.LogEvent(e, msg, img_idx); //e now referenced by frmMsg, don't free
         //invites may still be popped up, even in the messages show up here
         if ((e.eType = evt_Invite) and
@@ -244,8 +247,7 @@ begin
     LogMessage(m);
     m.Free();
 end;
-
-
+                                                                                              
 {---------------------------------------}
 function getTaskBarRect: TRect;
 var

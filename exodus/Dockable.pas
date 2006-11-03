@@ -88,7 +88,6 @@ type
     { Private declarations }
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
-
     _normalImageIndex: integer;//image shown when not notifying
     _notifyImageIndex: integer;//image shown when notifying
 
@@ -112,7 +111,7 @@ type
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
 
-    procedure ShowDefault(bringtofront:boolean=true);override;
+    procedure ShowDefault(bringtofront:boolean=true; dockOverride: string = 'n');override;
 
     {
         Event fired when docking is complete.
@@ -226,7 +225,6 @@ begin
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     _docked := false;
     _initiallyDocked := true;
-
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     inherited;
 end;
@@ -309,7 +307,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.ShowDefault(bringtofront:boolean);
+procedure TfrmDockable.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     if (self.Visible and Docked) then begin
         if (bringtofront) then
@@ -320,7 +318,7 @@ begin
     else begin
         RestoreWindowState();
         // show this form using the default behavior
-        if (not self.Visible and _initiallyDocked) then begin
+        if (not self.Visible and _initiallyDocked and (dockOverride <> 'f')) then begin
             Self.DockForm();
             if (bringtofront) then
                GetDockManager().BringDockedToTop(Self);

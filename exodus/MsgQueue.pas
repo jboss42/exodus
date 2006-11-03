@@ -110,8 +110,8 @@ const
     sNoSpoolDir = ' could not create or write to the spool directory specified in the options.';
     sDefaultSpool = 'default_spool.xml';
 
-function showMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
-function getMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
+function showMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
+function getMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
 function isMsgQueueShowing(): boolean;
 {---------------------------------------}
 {---------------------------------------}
@@ -134,17 +134,17 @@ const
     CB_UNASSIGNED = -1; //unassigned callback ID
 
 {---------------------------------------}
-function showMsgQueue(bringToFront: boolean=true): TfrmMsgQueue;
+function showMsgQueue(bringToFront: boolean; dockOverride: string): TfrmMsgQueue;
 begin
-    Result := getMsgQueue(bringToFront);
+    Result := getMsgQueue(bringToFront, dockOverride);
 end;
 
 {---------------------------------------}
-function getMsgQueue(bringToFront: boolean): TfrmMsgQueue;
+function getMsgQueue(bringToFront: boolean; dockOverride: string): TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-    frmMsgQueue.ShowDefault(bringToFront);
+    frmMsgQueue.ShowDefault(bringToFront, dockOverride);
     Result := frmMsgQueue;
 end;
 
@@ -695,10 +695,9 @@ end;
 procedure TfrmMsgQueue.ShowRoster();
 begin
         //this is a mess. To get splitter working with the correct control
-        //we need to hide/de-align/set their relative positions/size them and show them 
+        //we need to hide/de-align/set their relative positions/size them and show them
         pnlRoster.Visible := false;
         splitRoster.Visible := false;
-
         pnlRoster.Align := alNone;
         splitRoster.Align := alNone;
         pnlMsgQueue.Align := alNone;

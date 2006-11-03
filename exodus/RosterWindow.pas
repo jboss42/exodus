@@ -1808,16 +1808,18 @@ end;
 
 procedure TfrmRosterWindow.DockRoster(dockSite : TWinControl);
 begin
-    StatBar.Visible := false;
-    Self.ManualDock(dockSite, nil, alClient);
-    Application.processMessages();
-    Self.Align := alClient;
-//    lstProfiles.Clear();
-//    ShowProfiles();
-    Docked := true;
-    MainSession.dock_windows := Docked;
-    _drop.DropEvent := onURLDrop;
-    _drop.start(treeRoster);
+    if (dockSite <> Self.Parent) then begin
+        StatBar.Visible := false;
+        Self.ManualDock(dockSite, nil, alClient);
+        Application.processMessages();
+        Self.Align := alClient;
+    //    lstProfiles.Clear();
+    //    ShowProfiles();
+        Docked := true;
+        MainSession.dock_windows := Docked;
+        _drop.DropEvent := onURLDrop;
+        _drop.start(treeRoster);
+    end;
 end;
 
 {---------------------------------------}
