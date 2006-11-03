@@ -1075,8 +1075,8 @@ begin
     SC_MINIMIZE: begin
         _hidden := true;
         _was_max := (Self.WindowState = wsMaximized);
-        Self.Visible := false;
-//        ShowWindow(Handle, SW_HIDE);
+//        Self.Visible := false;
+        ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
     SC_RESTORE: begin
@@ -1086,8 +1086,8 @@ begin
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
-            Self.Visible := false;
-//            ShowWindow(Handle, SW_HIDE);
+//            Self.Visible := false;
+            ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
         end
         else
@@ -3958,6 +3958,7 @@ var
 begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage = nil) then exit;
+    if (not Self.Visible or not Self.Enabled) then exit;
 
     f := getTabForm(Tabs.ActivePage);
     if (f <> nil) then
