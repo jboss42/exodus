@@ -233,7 +233,7 @@ type
         
         @param bringtofront bring the window to the top of the zorder
     }
-    procedure ShowDefault(bringtofront:boolean=true);virtual;
+    procedure ShowDefault(bringtofront:boolean=true; dockOverride: string = 'n');virtual;
 
     procedure gotActivate(); virtual;
     {
@@ -703,7 +703,7 @@ end;
     The default implementation is to show the window in its last floating
     position. Override this method to change (ie dock instead of float)
 }
-procedure TfrmState.ShowDefault(bringtofront:boolean);
+procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     if (not Self.Visible) then begin
         RestoreWindowState();
