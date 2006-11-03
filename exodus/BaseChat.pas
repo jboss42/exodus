@@ -411,6 +411,7 @@ begin
     end
     else if (event = '/session/close-all-windows') then begin
         Self.Close();
+        Application.ProcessMessages();
     end;
 end;
 
