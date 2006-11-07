@@ -146,23 +146,19 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'This is a new account'
         TabOrder = 7
       end
-      object txtPriority: TTntEdit
+      object txtPriority: TExNumericEdit
         Left = 100
         Top = 143
         Width = 46
-        Height = 21
+        Height = 25
+        BevelOuter = bvNone
         TabOrder = 4
         Text = '0'
-      end
-      object spnPriority: TUpDown
-        Left = 146
-        Top = 143
-        Width = 16
-        Height = 21
-        Associate = txtPriority
-        Min = -1
-        Max = 128
-        TabOrder = 5
+        Min = -128
+        Max = 127
+        DesignSize = (
+          46
+          25)
       end
       object chkWinLogin: TTntCheckBox
         Left = 100

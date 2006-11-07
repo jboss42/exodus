@@ -217,30 +217,23 @@ inherited frmPrefPresence: TfrmPrefPresence
         'Xtended Away'
         'Do Not Disturb')
     end
-    object txtCPPriority: TTntEdit
+    object txtCPPriority: TExNumericEdit
       Left = 88
       Top = 93
       Width = 74
-      Height = 21
+      Height = 25
       Hint = 'Priority of -1 uses current priority.'
+      BevelOuter = bvNone
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
       Text = '0'
-      OnChange = txtCPTitleChange
-    end
-    object spnPriority: TTntUpDown
-      Left = 162
-      Top = 93
-      Width = 12
-      Height = 21
-      Hint = 'Priority of -1 uses current priority.'
-      Associate = txtCPPriority
-      Min = -1
+      Min = -128
       Max = 127
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
+      OnChange = txtCPTitleChange
+      DesignSize = (
+        74
+        25)
     end
     object txtCPHotkey: THotKey
       Left = 88

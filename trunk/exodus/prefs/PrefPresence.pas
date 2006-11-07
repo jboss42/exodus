@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
-  TntComCtrls, TntExtCtrls;
+  TntComCtrls, TntExtCtrls, ExNumericEdit;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
@@ -49,8 +49,7 @@ type
     txtCPTitle: TTntEdit;
     txtCPStatus: TTntEdit;
     cboCPType: TTntComboBox;
-    txtCPPriority: TTntEdit;
-    spnPriority: TTntUpDown;
+    txtCPPriority: TExNumericEdit;
     txtCPHotkey: THotKey;
     chkRoomJoins: TTntCheckBox;
     procedure FormDestroy(Sender: TObject);

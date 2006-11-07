@@ -25,7 +25,7 @@ uses
     Menus,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls, TntStdCtrls,
-    TntComCtrls, TntExtCtrls;
+    TntComCtrls, TntExtCtrls, ExNumericEdit;
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
@@ -34,19 +34,15 @@ type
     lblToastDuration: TTntLabel;
     chkRosterAlpha: TTntCheckBox;
     trkRosterAlpha: TTrackBar;
-    txtRosterAlpha: TTntEdit;
-    spnRosterAlpha: TTntUpDown;
+    txtRosterAlpha: TExNumericEdit;
     chkToastAlpha: TTntCheckBox;
     trkToastAlpha: TTrackBar;
-    txtToastAlpha: TTntEdit;
-    spnToastAlpha: TTntUpDown;
+    txtToastAlpha: TExNumericEdit;
     chkSnap: TTntCheckBox;
-    txtSnap: TTntEdit;
-    spnSnap: TTntUpDown;
+    txtSnap: TExNumericEdit;
     chkBusy: TTntCheckBox;
     txtToastDuration: TTntEdit;
-    txtChatMemory: TTntEdit;
-    spnChatMemory: TTntUpDown;
+    txtChatMemory: TExNumericEdit;
     lblClose: TTntLabel;
     txtCloseHotkey: THotKey;
     chkEscClose: TTntCheckBox;
@@ -100,7 +96,6 @@ procedure TfrmPrefDialogs.chkRosterAlphaClick(Sender: TObject);
 begin
   inherited;
     trkRosterAlpha.Enabled := chkRosterAlpha.Checked;
-    spnRosterAlpha.Enabled := chkRosterAlpha.Checked;
     txtRosterAlpha.Enabled := chkRosterAlpha.Checked;
 
 end;
@@ -109,26 +104,24 @@ procedure TfrmPrefDialogs.chkToastAlphaClick(Sender: TObject);
 begin
   inherited;
     trkToastAlpha.Enabled := chkToastAlpha.Checked;
-    spnToastAlpha.Enabled := chkToastAlpha.Checked;
     txtToastAlpha.Enabled := chkToastAlpha.Checked;
 end;
 
 procedure TfrmPrefDialogs.trkRosterAlphaChange(Sender: TObject);
 begin
   inherited;
-    spnRosterAlpha.Position := trkRosterAlpha.Position;
+    txtRosterAlpha.Text := IntToStr(trkRosterAlpha.Position);
 end;
 
 procedure TfrmPrefDialogs.trkToastAlphaChange(Sender: TObject);
 begin
   inherited;
-    spnToastAlpha.Position := trkToastAlpha.Position;
+    txtToastAlpha.Text := IntToStr(trkToastAlpha.Position);
 end;
 
 procedure TfrmPrefDialogs.chkSnapClick(Sender: TObject);
 begin
   inherited;
-    spnSnap.Enabled := chkSnap.Checked;
     txtSnap.Enabled := chkSnap.Checked;
     trkSnap.Enabled := chkSnap.Checked;
 end;
@@ -155,13 +148,13 @@ end;
 procedure TfrmPrefDialogs.trkSnapChange(Sender: TObject);
 begin
   inherited;
-    spnSnap.Position := trkSnap.Position;
+    txtSnap.Text := IntToStr(trkSnap.Position);
 end;
 
 procedure TfrmPrefDialogs.trkChatMemoryChange(Sender: TObject);
 begin
   inherited;
-    spnChatMemory.Position := trkChatMemory.Position;
+    txtChatMemory.Text := IntToStr(trkChatMemory.Position);
 end;
 
 procedure TfrmPrefDialogs.txtSnapChange(Sender: TObject);
