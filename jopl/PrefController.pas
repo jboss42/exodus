@@ -205,7 +205,7 @@ type
 
     end;
 
-    TPrefKind = (pkClient, pkServer);
+    TPrefKind = (pkClient, pkServer, pkDefault);
 
     TPrefController = class
     private
@@ -437,6 +437,14 @@ begin
     else if (userFile.hasPref(pkey)) then
         Result := userFile
     else if (s_brand_file.hasPref(pkey)) then
+        Result := s_brand_file
+    else
+        Result := s_default_file;
+end;
+
+function getDefaultFile(pkey : WideString) : TPrefFile;
+begin
+    if (s_brand_file.hasPref(pkey)) then
         Result := s_brand_file
     else
         Result := s_default_file;
@@ -785,12 +793,16 @@ begin
     Result := '';
     // TODO: what SHOULD we do if we get a server-side pref request, and we
     // haven't gotten any server prefs yet?
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
 
-    uf := getBestFile(uf, pkey);
+        uf := getBestFile(uf, pkey);
+    end;
     uv := uf.getString(pkey);
     if (uv <> '') then
         Result := uv
@@ -993,12 +1005,16 @@ var
 begin
     // TODO: what SHOULD we do if we get a server-side pref request, and we
     // haven't gotten any server prefs yet?
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
 
-    uf := getBestFile(uf, pKey);
+        uf := getBestFile(uf, pKey);
+    end;
     uf.fillStringlist(pkey, sl);
 end;
 
@@ -1076,14 +1092,17 @@ function TPrefController.getXMLPref(pkey : WideString; server_side: TPrefKind = 
 var
     uf: TPrefFile;
 begin
-   // TODO: see getString()
-    if ((server_side <> pkServer) or (_server_file = nil)) then
-        uf := _pref_file
-    else
-        uf := _server_file;
+    // TODO: see getString()
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
 
-    uf := getBestFile(uf, pkey);
-
+        uf := getBestFile(uf, pkey);
+    end;
     result := uf.getXMLPref(pKey);
 end;
 
