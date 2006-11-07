@@ -48,7 +48,8 @@ implementation
 
 uses
     Menus, StdCtrls, ComCtrls, TntComCtrls, TntStdCtrls,
-    Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils;
+    Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils,
+    ExNumericEdit;
 
 procedure TfrmPrefPanel.LoadPrefs();
 begin
@@ -86,6 +87,8 @@ begin
             TCheckBox(c).Checked := SafeBool(sval)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             TUpDown(c).Position := SafeInt(sval)
+        else if (c.inheritsFrom(TExNumericEdit)) then
+            TExNumericEdit(c).Text := sval
         else if (c.inheritsFrom(TTntComboBox)) then begin
             if (TTntComboBox(c).Style = csDropDown) then
                 TTntComboBox(c).Text := sval
@@ -148,6 +151,8 @@ begin
             MainSession.Prefs.setBool(p, TCheckBox(c).Checked)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             MainSession.Prefs.setInt(p, TUpDown(c).Position)
+        else if (c.inheritsFrom(TExNumericEdit)) then
+            MainSession.Prefs.setInt(p, StrToInt(TExNumericEdit(c).Text))
         else if (c.inheritsFrom(TTntComboBox)) then begin
             if (TTntComboBox(c).Style = csDropDown) then
                 MainSession.Prefs.setString(p, TTntComboBox(c).Text)

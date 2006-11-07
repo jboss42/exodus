@@ -44,117 +44,102 @@ inherited frmPrefAway: TfrmPrefAway
     Height = 13
     Caption = 'Minutes to wait before Disconnecting:'
   end
-  object txtAwayTime: TTntEdit [5]
+  object txtAwayTime: TExNumericEdit [5]
     Left = 232
     Top = 119
-    Width = 33
-    Height = 21
-    TabOrder = 4
+    Width = 49
+    Height = 25
+    BevelOuter = bvNone
+    TabOrder = 2
     Text = '5'
-  end
-  object spnAway: TUpDown [6]
-    Left = 265
-    Top = 119
-    Width = 16
-    Height = 21
-    Associate = txtAwayTime
     Min = 1
     Max = 600
-    Position = 5
-    TabOrder = 5
+    DesignSize = (
+      49
+      25)
   end
-  object txtXATime: TTntEdit [7]
+  inherited pnlHeader: TTntPanel
+    Width = 300
+    Caption = 'Auto Away Options'
+    TabOrder = 7
+    ExplicitWidth = 300
+  end
+  object txtXATime: TExNumericEdit
     Left = 232
     Top = 143
-    Width = 33
-    Height = 21
-    TabOrder = 6
+    Width = 49
+    Height = 25
+    BevelOuter = bvNone
+    TabOrder = 1
     Text = '30'
-  end
-  object spnXA: TUpDown [8]
-    Left = 265
-    Top = 143
-    Width = 16
-    Height = 21
-    Associate = txtXATime
     Min = 1
     Max = 600
-    Position = 30
-    TabOrder = 7
+    DesignSize = (
+      49
+      25)
   end
-  object chkAutoAway: TTntCheckBox [9]
+  object chkAutoAway: TTntCheckBox
     Left = 8
     Top = 32
     Width = 270
     Height = 17
     Caption = 'Enable Auto Away'
-    TabOrder = 0
+    TabOrder = 3
     OnClick = chkAutoAwayClick
   end
-  object txtAway: TTntEdit [10]
+  object txtAway: TTntEdit
     Left = 80
     Top = 199
     Width = 201
     Height = 21
     TabOrder = 10
   end
-  object txtXA: TTntEdit [11]
+  object txtXA: TTntEdit
     Left = 80
     Top = 223
     Width = 201
     Height = 21
-    TabOrder = 11
+    TabOrder = 8
   end
-  object chkAAReducePri: TTntCheckBox [12]
+  object chkAAReducePri: TTntCheckBox
     Left = 8
     Top = 81
     Width = 273
     Height = 17
     Caption = 'Reduce priority to 0 during auto-away.'
-    TabOrder = 3
+    TabOrder = 6
   end
-  object chkAutoXA: TTntCheckBox [13]
+  object chkAutoXA: TTntCheckBox
     Left = 8
     Top = 48
     Width = 270
     Height = 17
     Caption = 'Enable Auto Extended Away'
-    TabOrder = 1
+    TabOrder = 4
     OnClick = chkAutoAwayClick
   end
-  object chkAutoDisconnect: TTntCheckBox [14]
+  object chkAutoDisconnect: TTntCheckBox
     Left = 8
     Top = 64
     Width = 270
     Height = 17
     Caption = 'Enable Auto Disconnect'
-    TabOrder = 2
+    TabOrder = 5
     OnClick = chkAutoAwayClick
   end
-  object txtDisconnectTime: TTntEdit [15]
+  object txtDisconnectTime: TExNumericEdit
     Left = 232
     Top = 167
-    Width = 33
-    Height = 21
-    TabOrder = 8
+    Width = 49
+    Height = 25
+    BevelOuter = bvNone
+    TabOrder = 0
     Text = '60'
-  end
-  object spnDisconnect: TUpDown [16]
-    Left = 265
-    Top = 167
-    Width = 16
-    Height = 21
-    Associate = txtDisconnectTime
     Min = 1
     Max = 600
-    Position = 60
-    TabOrder = 9
-  end
-  inherited pnlHeader: TTntPanel
-    Width = 300
-    Caption = 'Auto Away Options'
-    TabOrder = 12
-    ExplicitWidth = 300
+    DesignSize = (
+      49
+      25)
   end
   object chkAwayAutoResponse: TTntCheckBox
     Left = 8
@@ -162,6 +147,6 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 273
     Height = 17
     Caption = 'Send auto response message when away'
-    TabOrder = 13
+    TabOrder = 9
   end
 end

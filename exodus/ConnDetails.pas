@@ -25,7 +25,7 @@ uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, TntExtCtrls, TntForms;
+    TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit;
 
 type
   TfrmConnDetails = class(TTntForm)
@@ -70,8 +70,7 @@ type
     optSSL: TTntRadioGroup;
     cboSocksType: TTntComboBox;
     Label6: TTntLabel;
-    txtPriority: TTntEdit;
-    spnPriority: TUpDown;
+    txtPriority: TExNumericEdit;
     chkSRV: TTntCheckBox;
     boxHost: TTntGroupBox;
     Label4: TTntLabel;
@@ -364,7 +363,7 @@ begin
         end;
         optSSL.ItemIndex := ssl;
         chkPolling.Checked := (ConnectionType = conn_http);
-        spnPriority.Position := Priority;
+        txtPriority.Text := IntToStr(Priority);
         txtSSLCert.Text := SSL_Cert;
         chkSRV.Checked := srv;
     end;
@@ -382,7 +381,7 @@ begin
             ConnectionType := conn_http
         else
             ConnectionType := conn_normal;
-        Priority := spnPriority.Position;
+        Priority := StrToInt(txtPriority.Text);
         SSL_Cert := txtSSLCert.Text;
     end;
 end;

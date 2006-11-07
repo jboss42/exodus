@@ -24,14 +24,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
-  TntExtCtrls;
+  TntExtCtrls, ExNumericEdit;
 
 type
   TfrmPrefAway = class(TfrmPrefPanel)
-    txtAwayTime: TTntEdit;
-    spnAway: TUpDown;
-    txtXATime: TTntEdit;
-    spnXA: TUpDown;
+    txtAwayTime: TExNumericEdit;
+    txtXATime: TExNumericEdit;
     Label2: TTntLabel;
     Label3: TTntLabel;
     lblAwayStatus: TTntLabel;
@@ -43,8 +41,7 @@ type
     chkAutoXA: TTntCheckBox;
     chkAutoDisconnect: TTntCheckBox;
     TntLabel1: TTntLabel;
-    txtDisconnectTime: TTntEdit;
-    spnDisconnect: TUpDown;
+    txtDisconnectTime: TExNumericEdit;
     chkAwayAutoResponse: TTntCheckBox;
     procedure chkAutoAwayClick(Sender: TObject);
   private
@@ -108,9 +105,6 @@ begin
     txtDisconnectTime.Enabled := dis;
     txtAway.Enabled := e and (not aro);
     txtXA.Enabled := xa and (not xro);
-    spnAway.Enabled := e;
-    spnXA.Enabled := xa;
-    spnDisconnect.Enabled := dis;
 end;
 
 

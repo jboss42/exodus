@@ -43,7 +43,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 209
     Height = 17
     Caption = 'Use Alpha Blending for Roster'
-    TabOrder = 0
+    TabOrder = 8
     OnClick = chkRosterAlphaClick
   end
   object trkRosterAlpha: TTrackBar [5]
@@ -57,43 +57,43 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 15
     Frequency = 15
     Position = 255
-    TabOrder = 1
+    TabOrder = 4
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkRosterAlphaChange
   end
-  object txtRosterAlpha: TTntEdit [6]
+  object txtRosterAlpha: TExNumericEdit [6]
     Left = 168
     Top = 54
-    Width = 49
-    Height = 21
+    Width = 57
+    Height = 25
+    BevelOuter = bvNone
     Enabled = False
-    TabOrder = 2
+    TabOrder = 3
     Text = '255'
-    OnChange = txtRosterAlphaChange
-  end
-  object spnRosterAlpha: TTntUpDown [7]
-    Left = 217
-    Top = 54
-    Width = 16
-    Height = 21
-    Associate = txtRosterAlpha
-    Enabled = False
     Min = 10
     Max = 255
-    Position = 255
-    TabOrder = 3
+    OnChange = txtRosterAlphaChange
+    DesignSize = (
+      57
+      25)
   end
-  object chkToastAlpha: TTntCheckBox [8]
+  inherited pnlHeader: TTntPanel
+    Width = 294
+    Caption = 'Window Options'
+    TabOrder = 5
+    ExplicitWidth = 294
+  end
+  object chkToastAlpha: TTntCheckBox
     Left = 8
     Top = 80
     Width = 273
     Height = 17
     Caption = 'Use Alpha Blending for Toast Notifications'
-    TabOrder = 4
+    TabOrder = 6
     OnClick = chkToastAlphaClick
   end
-  object trkToastAlpha: TTrackBar [9]
+  object trkToastAlpha: TTrackBar
     Left = 32
     Top = 104
     Width = 137
@@ -104,100 +104,83 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 15
     Frequency = 15
     Position = 255
-    TabOrder = 5
+    TabOrder = 7
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkToastAlphaChange
   end
-  object txtToastAlpha: TTntEdit [10]
+  object txtToastAlpha: TExNumericEdit
     Left = 168
     Top = 102
-    Width = 49
-    Height = 21
+    Width = 57
+    Height = 25
+    BevelOuter = bvNone
     Enabled = False
-    TabOrder = 6
+    TabOrder = 2
     Text = '255'
-    OnChange = txtToastAlphaChange
-  end
-  object spnToastAlpha: TTntUpDown [11]
-    Left = 217
-    Top = 102
-    Width = 16
-    Height = 21
-    Associate = txtToastAlpha
-    Enabled = False
     Min = 10
     Max = 255
-    Position = 255
-    TabOrder = 7
+    OnChange = txtToastAlphaChange
+    DesignSize = (
+      57
+      25)
   end
-  object chkSnap: TTntCheckBox [12]
+  object chkSnap: TTntCheckBox
     Left = 8
     Top = 152
     Width = 273
     Height = 17
     Caption = 'Make the main window snap to screen edges'
-    TabOrder = 9
+    TabOrder = 10
     OnClick = chkSnapClick
   end
-  object txtSnap: TTntEdit [13]
+  object txtSnap: TExNumericEdit
     Left = 168
     Top = 174
-    Width = 49
-    Height = 21
+    Width = 57
+    Height = 25
+    BevelOuter = bvNone
     Enabled = False
-    TabOrder = 11
+    TabOrder = 1
     Text = '15'
-    OnChange = txtSnapChange
-  end
-  object spnSnap: TTntUpDown [14]
-    Left = 217
-    Top = 174
-    Width = 16
-    Height = 21
-    Associate = txtSnap
-    Enabled = False
     Min = 10
     Max = 120
-    Position = 15
-    TabOrder = 12
+    OnChange = txtSnapChange
+    DesignSize = (
+      57
+      25)
   end
-  object chkBusy: TTntCheckBox [15]
+  object chkBusy: TTntCheckBox
     Left = 8
     Top = 256
     Width = 305
     Height = 17
     Caption = 'Warn when trying to close busy chat windows'
-    TabOrder = 16
+    TabOrder = 15
   end
-  object txtToastDuration: TTntEdit [16]
+  object txtToastDuration: TTntEdit
     Left = 168
     Top = 127
     Width = 49
     Height = 21
-    TabOrder = 8
+    TabOrder = 9
   end
-  object txtChatMemory: TTntEdit [17]
+  object txtChatMemory: TExNumericEdit
     Left = 168
     Top = 228
-    Width = 49
-    Height = 21
-    TabOrder = 14
+    Width = 57
+    Height = 25
+    BevelOuter = bvNone
+    TabOrder = 0
     Text = '60'
-    OnChange = txtChatMemoryChange
-  end
-  object spnChatMemory: TTntUpDown [18]
-    Left = 217
-    Top = 228
-    Width = 16
-    Height = 21
-    Associate = txtChatMemory
+    Min = 0
     Max = 360
-    Increment = 5
-    Position = 60
-    TabOrder = 15
+    OnChange = txtChatMemoryChange
+    DesignSize = (
+      57
+      25)
   end
-  object txtCloseHotkey: THotKey [19]
+  object txtCloseHotkey: THotKey
     Left = 32
     Top = 315
     Width = 145
@@ -205,9 +188,9 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     HotKey = 57431
     InvalidKeys = []
     Modifiers = [hkShift, hkCtrl, hkAlt]
-    TabOrder = 18
+    TabOrder = 13
   end
-  object chkEscClose: TTntCheckBox [20]
+  object chkEscClose: TTntCheckBox
     Left = 8
     Top = 276
     Width = 297
@@ -215,7 +198,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Caption = 'Use ESC key to close chat windows'
     TabOrder = 17
   end
-  object trkSnap: TTrackBar [21]
+  object trkSnap: TTrackBar
     Left = 30
     Top = 176
     Width = 137
@@ -226,12 +209,12 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 15
     Frequency = 15
     Position = 15
-    TabOrder = 10
+    TabOrder = 11
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkSnapChange
   end
-  object trkChatMemory: TTrackBar [22]
+  object trkChatMemory: TTrackBar
     Left = 30
     Top = 230
     Width = 137
@@ -240,16 +223,10 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 15
     Frequency = 15
     Position = 60
-    TabOrder = 13
+    TabOrder = 12
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkChatMemoryChange
-  end
-  inherited pnlHeader: TTntPanel
-    Width = 294
-    Caption = 'Window Options'
-    TabOrder = 19
-    ExplicitWidth = 294
   end
   object chkSaveWindowState: TTntCheckBox
     Left = 8
@@ -257,7 +234,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 169
     Height = 17
     Caption = 'Save window positions'
-    TabOrder = 20
+    TabOrder = 14
   end
   object chkRestoreDesktop: TTntCheckBox
     Left = 8
@@ -265,6 +242,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 97
     Height = 17
     Caption = 'Restore desktop'
-    TabOrder = 21
+    TabOrder = 16
   end
 end

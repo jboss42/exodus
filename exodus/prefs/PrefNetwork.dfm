@@ -5,12 +5,15 @@ inherited frmPrefNetwork: TfrmPrefNetwork
   ClientHeight = 326
   ClientWidth = 343
   OldCreateOrder = True
+  ExplicitWidth = 355
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 343
     Caption = 'Connection Options'
     TabOrder = 2
+    ExplicitWidth = 343
   end
   object GroupBox1: TTntGroupBox
     Left = 3
@@ -43,38 +46,33 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Time is in seconds. Use 0 for a random time period.'
       Transparent = False
     end
-    object txtAttempts: TTntEdit
+    object txtAttempts: TExNumericEdit
       Left = 200
       Top = 16
-      Width = 33
-      Height = 21
+      Width = 49
+      Height = 25
+      BevelOuter = bvNone
+      TabOrder = 1
+      Text = '0'
+      Min = 0
+      Max = 1000000
+      DesignSize = (
+        49
+        25)
+    end
+    object txtTime: TExNumericEdit
+      Left = 200
+      Top = 48
+      Width = 49
+      Height = 25
+      BevelOuter = bvNone
       TabOrder = 0
       Text = '0'
-    end
-    object spnAttempts: TUpDown
-      Left = 233
-      Top = 16
-      Width = 16
-      Height = 21
-      Associate = txtAttempts
-      TabOrder = 1
-    end
-    object txtTime: TTntEdit
-      Left = 200
-      Top = 48
-      Width = 33
-      Height = 21
-      TabOrder = 2
-      Text = '0'
-    end
-    object spnTime: TUpDown
-      Left = 233
-      Top = 48
-      Width = 16
-      Height = 21
-      Associate = txtTime
+      Min = 0
       Max = 3600
-      TabOrder = 3
+      DesignSize = (
+        49
+        25)
     end
   end
   object GroupBox2: TTntGroupBox
@@ -180,7 +178,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       ItemHeight = 13
       TabOrder = 0
       OnChange = cboProxyApproachChange
-      Items.WideStrings = (
+      Items.Strings = (
         'Use IE Settings'
         'No HTTP Proxy'
         'Custom HTTP Proxy')

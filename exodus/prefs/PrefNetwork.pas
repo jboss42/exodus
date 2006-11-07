@@ -23,7 +23,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
-  TntExtCtrls;
+  TntExtCtrls, ExNumericEdit;
 
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
@@ -31,10 +31,8 @@ type
     lblAttempts: TTntLabel;
     lblTime: TTntLabel;
     lblTime2: TTntLabel;
-    txtAttempts: TTntEdit;
-    spnAttempts: TUpDown;
-    txtTime: TTntEdit;
-    spnTime: TUpDown;
+    txtAttempts: TExNumericEdit;
+    txtTime: TExNumericEdit;
     GroupBox2: TTntGroupBox;
     lblProxyHost: TTntLabel;
     lblProxyPort: TTntLabel;
@@ -73,7 +71,7 @@ uses
 procedure TfrmPrefNetwork.LoadPrefs();
 begin
     inherited;
-    if (spnAttempts.Position < 0) then spnAttempts.Position := 3;
+    if (StrToInt(txtAttempts.Text) < 0) then txtAttempts.Text := '3';
     cboProxyApproachChange(Self);
     chkProxyAuthClick(Self);
 end;
