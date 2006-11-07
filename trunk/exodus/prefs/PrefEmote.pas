@@ -180,7 +180,6 @@ begin
     if (MessageDlgW(_('Reset emoticon sets back to defaults?'), mtConfirmation,
         [mbYes, mbNo], 0) = mrNo) then exit;
     lstEmotes.Items.Clear();
-    lstEmotes.Items.Add('JincEmoticons.dll');
     lstEmotes.Items.Add('msn_emoticons.dll');
     lstEmotes.Items.Add('yahoo_emoticons.dll');
 end;
