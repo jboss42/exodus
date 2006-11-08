@@ -105,7 +105,7 @@ implementation
 uses
     NodeItem, EntityCache, fGeneric, 
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, JabberUtils, ExUtils, 
-    Jabber1;
+    Jabber1, Room;
 
 {---------------------------------------}
 procedure StartServiceReg(jid: Widestring);
@@ -115,6 +115,7 @@ begin
     regform := TfrmRegister.Create(Application);
     regform.jid := jid;
     regform.Start();
+    
 end;
 
 {---------------------------------------}
@@ -455,8 +456,12 @@ begin
         btnBack.Enabled := false;
     end
 
-    else if (tabs.ActivePage = TabSheet4) then
-        Self.Close();
+    else if (tabs.ActivePage = TabSheet4) then begin
+        if (Self.entity <> nil) then
+          if (Self.entity.Category = 'conference') then
+            StartRoom(Self.jid, '', '', True, False, True);
+        Self.Close();    
+    end;
 end;
 
 {---------------------------------------}
