@@ -103,7 +103,10 @@ begin
 
         if (TryEncodeDate(yw, mw, dw, rdate)) then begin
             rdate := rdate + StrToTime(ts);
-            Result := rdate - TimeZoneBias();
+            //Do not need to subtract time zone since it was not added by
+            //DateTimeToJabber when the message was sent
+            //Result := rdate - TimeZoneBias();
+            Result := rdate;
         end
         else
             Result := Now();
