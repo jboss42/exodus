@@ -2651,8 +2651,7 @@ begin
             if (_cur_ritem.IsContact) then begin
                 if (_cur_ritem.ask = 'subscribe') then begin
                     c1 := c1 + _(sRosterPending);
-                    //_cur_ritem.ImageIndex := _cur_ritem.getPresenceImage('pending')
-                    _cur_ritem.setPresenceImage('dnd');
+                    _cur_ritem.setPresenceImage('pending');
                 end;
 
                 p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
