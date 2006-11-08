@@ -2754,7 +2754,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
-    //
+    if (not _cleanupComplete) then
+        cleanup();
 end;
 
 {---------------------------------------}

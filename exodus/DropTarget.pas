@@ -37,7 +37,7 @@ type
 
 implementation
 
-uses SysUtils, ComServ;
+uses SysUtils, ComServ, Classes;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -75,7 +75,8 @@ function TExDropTarget.stop(): HRESULT;
 begin
     if (_control <> nil) then begin
         Result := CoLockObjectExternal(Self, false, false);
-        if (Result = S_OK) then
+        if ((Result = S_OK) and
+            (not (csDestroying in _control.ComponentState))) then
             Result := RevokeDragDrop(_control.handle);
         _control := nil;
         end
