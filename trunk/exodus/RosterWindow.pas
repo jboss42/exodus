@@ -633,6 +633,10 @@ begin
     ExCOMRoster.RemovePredefinedMenu(sPredefinedStatus, popStatus);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedTransport, popTransport);
 
+    // Stop being a Drag and Drop target.
+    _drop.stop();
+    _drop := nil;
+
     Action := caFree;
     frmRosterWindow := nil;
 end;
@@ -3421,8 +3425,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.FormDestroy(Sender: TObject);
 begin
-    _drop.stop();
-    _drop := nil;
+    //
 end;
 
 {---------------------------------------}
