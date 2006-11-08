@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 625
+  ClientHeight = 645
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -33,7 +33,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 594
+    Height = 614
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -57,7 +57,6 @@ object frmExodus: TfrmExodus
         MinHeight = 27
         Width = 313
       end>
-    ExplicitTop = -3
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
@@ -177,12 +176,11 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 594
+    Height = 614
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 1
-    Caption = 'PNLROSTER'
     UseDockManager = False
     TabOrder = 1
     Visible = False
@@ -192,7 +190,7 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 31
     Width = 229
-    Height = 594
+    Height = 614
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
@@ -203,7 +201,7 @@ object frmExodus: TfrmExodus
       Left = 0
       Top = 0
       Width = 229
-      Height = 594
+      Height = 614
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
