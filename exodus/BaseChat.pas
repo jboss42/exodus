@@ -207,9 +207,37 @@ end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
+var
+    r: TRect;
+    m, w, h, l, t: integer;
+    cp: TPoint;
 begin
-    inherited;
-    SetToolbarWindowPos(Sender, frmEmoticons);
+  inherited;
+    // Show the emoticons form
+    GetCaretPos(cp);
+    l := MsgOut.ClientOrigin.x + cp.X;
+    m := Screen.MonitorFromWindow(Self.Handle).MonitorNum;
+
+    r := Screen.Monitors[m].WorkAreaRect;
+    w := Abs(r.Right - r.Left);
+    h := Abs(r.Bottom - r.Top);
+
+    if ((l + frmEmoticons.Width) > w) then
+        l := w - frmEmoticons.Width - 5;
+
+    frmEmoticons.Left := l + 10;
+
+    if (Self.Docked) then begin
+        t := frmExodus.Top + frmExodus.ClientHeight - 10;
+    end
+    else begin
+        t := Self.Top + Self.ClientHeight - 10;
+    end;
+
+    if ((t + frmEmoticons.Height) > h) then
+        t := h - frmEmoticons.Height;
+
+    frmEmoticons.Top := t;
     frmEmoticons.ChatWindow := Self;
     frmEmoticons.Show;
 end;
