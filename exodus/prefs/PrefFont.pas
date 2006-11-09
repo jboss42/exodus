@@ -41,8 +41,11 @@ type
     lblColor: TTntLabel;
     colorRoster: TTntTreeView;
     OpenDialog1: TOpenDialog;
-    chkIgnoreFont: TTntCheckBox;
     chkRTEnabled: TTntCheckBox;
+    gbIgnoredFontStyles: TTntGroupBox;
+    chkIgnoreFontFamily: TTntCheckBox;
+    chkIgnoreFontSize: TTntCheckBox;
+    chkIgnoreFontColor: TTntCheckBox;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -102,6 +105,7 @@ procedure TfrmPrefFont.LoadPrefs();
 var
     n: TTntTreeNode;
     s: TPrefState;
+    tstr: WideString;
 begin
     inherited;
 
@@ -154,19 +158,29 @@ begin
         btnFont.Enabled := true;
         clrBoxBG.Selected := TColor(_color_bg);
         clrBoxFont.Selected := TColor(_font_color);
+        tstr := GetString('richtext_ignored_font_styles');
+
         //kind of a dbl check of the prefs. if rt is not enabled,
         //ignore font *should* have a state='hidden' and value = true
-         s := PrefController.getPrefState('richtext_enabled');
+        s := PrefController.getPrefState('richtext_enabled');
+        chkIgnoreFontFamily.Checked := Pos('font-family;', tstr) > 0;
+        chkIgnoreFontSize.Checked := Pos('font-size;', tstr) > 0;
+        chkIgnoreFontColor.Checked := Pos('color;', tstr) > 0;
+
         if (not getBool('richtext_enabled') and
            ((s = psInvisible) or (s = psReadOnly))) then begin
-            chkIgnoreFont.Visible := false;
-            chkIgnoreFont.Checked := true;  //ovrride whatever value is there
+            gbIgnoredFontStyles.visible := false;
+            chkIgnoreFontFamily.Checked := true;
+            chkIgnoreFontSize.Checked := true;
+            chkIgnoreFontColor.Checked := true;
         end;
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmPrefFont.SavePrefs();
+var
+    tstr: WideString;
 begin
     inherited;
 
@@ -179,6 +193,15 @@ begin
     MainSession.Prefs.setInt('color_bg', _color_bg);
     MainSession.Prefs.setInt('roster_bg', _roster_bg);
     MainSession.Prefs.setInt('roster_font_color', _roster_font_color);
+    tstr := '';
+    if (chkIgnoreFontFamily.Checked) then
+        tstr := tstr + 'font-family;';
+    if (chkIgnoreFontSize.Checked) then
+        tstr := tstr + 'font-size;';
+    if (chkIgnoreFontColor.Checked) then
+        tstr := tstr + 'color;';
+
+    MainSession.Prefs.setString('richtext_ignored_font_styles', tstr);
 end;
 
 

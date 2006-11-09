@@ -203,6 +203,8 @@ const
     RI_UNDOCK_INDEX         : Integer = 82;
     RI_CLOSETAB_KEY         : Widestring = 'closetab';
     RI_CLOSETAB_INDEX       : Integer = 83;
+    RI_CHATBAR_COLORS_KEY   : Widestring = 'chatbar_colors';
+    RI_CHATBAR_COLORS_INDEX : Integer = 84;
 {$ENDIF}
 
 var
@@ -300,6 +302,7 @@ begin
     _ids.Insert(RI_DOCK_INDEX, RI_DOCK_KEY);
     _ids.Insert(RI_UNDOCK_INDEX, RI_UNDOCK_KEY);
     _ids.Insert(RI_CLOSETAB_INDEX, RI_CLOSETAB_KEY);
+    _ids.Insert(RI_CHATBAR_COLORS_INDEX, RI_CHATBAR_COLORS_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

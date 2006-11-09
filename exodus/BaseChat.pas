@@ -35,7 +35,6 @@ const
     sPref_Hotkeys_Text = 'hotkeys_text';
 
 type
-
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
     pnlInput: TPanel;
@@ -67,6 +66,7 @@ type
     popHotkeys_sep1: TTntMenuItem;
     Customize1: TTntMenuItem;
     pnlChatTop: TPanel;
+    ChatToolbarButtonColors: TTntToolButton;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -91,6 +91,7 @@ type
     procedure MsgOutSelectionChange(Sender: TObject);
     procedure ChatToolbarButtonBoldClick(Sender: TObject);
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
+    procedure ChatToolbarButtonColorsClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -100,7 +101,7 @@ type
     _hotkey_menu_items : TWideStringList;
     _hotkeys_keys_stringlist : TWideStringList;
     _hotkeys_text_stringlist : TWideStringList;
-    _rtEnabled: boolean; 
+    _rtEnabled: boolean;
   protected
     _embed_returns: boolean;        // Put CR/LF's into message
     _wrap_input: boolean;           // Wrap text input
@@ -113,6 +114,13 @@ type
     _session_close_all_callback: integer;
 
     procedure _scrollBottom();
+   {
+        Set the left and top properties of the given form.
+
+        L,T based on current caret position.
+    }
+    procedure SetToolbarWindowPos(Sender: TObject; form: TForm);
+
     function getMsgList(): TfBaseMsgList;
 
     {
@@ -127,6 +135,7 @@ type
   public
     { Public declarations }
     AutoScroll: boolean;
+
 
     procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
@@ -152,6 +161,8 @@ type
     procedure OnFloat();override;
 
     procedure gotActivate();override;
+
+    procedure OnColorSelect(selColor: TColor);
   end;
 
 var
@@ -161,7 +172,11 @@ implementation
 
 {$R *.dfm}
 uses
-    RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1, ExUtils;
+    RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI,
+    Emoticons,
+    ToolbarColorSelect,
+    Jabber1,
+    ExUtils;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -174,39 +189,27 @@ const
     PREF_FONT_UNDERLINE = 'font_underline';
     PREF_BACKGROUND_COLOR = 'color_bg';
 
-{---------------------------------------}
-procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
-var
-    r: TRect;
-    m, w, h, l, t: integer;
-    cp: TPoint;
+{
+    Set the left and top properties of the given form.
+
+    L,T based on current caret position.
+}
+procedure TfrmBaseChat.SetToolbarWindowPos(Sender: TObject; form: TForm);
 begin
   inherited;
-    // Show the emoticons form
-    GetCaretPos(cp);
-    l := MsgOut.ClientOrigin.x + cp.X;
-    m := Screen.MonitorFromWindow(Self.Handle).MonitorNum;
-
-    r := Screen.Monitors[m].WorkAreaRect;
-    w := Abs(r.Right - r.Left);
-    h := Abs(r.Bottom - r.Top);
-
-    if ((l + frmEmoticons.Width) > w) then
-        l := w - frmEmoticons.Width - 5;
-
-    frmEmoticons.Left := l + 10;
-
-    if (Self.Docked) then begin
-        t := frmExodus.Top + frmExodus.ClientHeight - 10;
-    end
-    else begin
-        t := Self.Top + Self.ClientHeight - 10;
+    if (Sender.InheritsFrom(TControl)) then begin
+        form.Left := TControl(Sender).ClientOrigin.X;
+        form.Top := TControl(Sender).ClientOrigin.Y + TControl(Sender).Height + 5;
     end;
 
-    if ((t + frmEmoticons.Height) > h) then
-        t := h - frmEmoticons.Height;
+    form.MakeFullyVisible();
+end;
 
-    frmEmoticons.Top := t;
+{---------------------------------------}
+procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
+begin
+    inherited;
+    SetToolbarWindowPos(Sender, frmEmoticons);
     frmEmoticons.ChatWindow := Self;
     frmEmoticons.Show;
 end;
@@ -508,6 +511,16 @@ begin
     msgOut.SelAttributes.Bold := ChatToolbarButtonBold.Down;
 end;
 
+procedure TfrmBaseChat.ChatToolbarButtonColorsClick(Sender: TObject);
+var
+    fColor: TForm;
+begin
+    inherited;
+    fColor := getToolbarColorSelect(self, MsgOut.Font.Color);
+    SetToolbarWindowPos(Sender, fColor);
+    fColor.Show();
+end;
+
 procedure TfrmBaseChat.ChatToolbarButtonHotkeysClick(Sender: TObject);
 var
     i: integer;
@@ -675,6 +688,7 @@ begin
         ChatToolbarButtonItalics.visible := _rtEnabled;
         ChatToolbarButtonBold.visible := _rtEnabled;
         ChatToolbarButtonUnderline.visible := _rtEnabled;
+        ChatToolbarButtonColors.visible := _rtEnabled;
         ChatToolbarButtonSeperator1.visible := _rtEnabled;
         if (not _rtEnabled) then begin
             //drop all previous formatting since we are loosing rich text
@@ -687,6 +701,11 @@ begin
     MsgList.setupPrefs();
     //msgout will pickup parent font by default, but we need to change bg color
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+end;
+
+procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
+begin
+    MsgOut.SelAttributes.Color := selColor;
 end;
 
 end.
