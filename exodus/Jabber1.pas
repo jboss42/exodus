@@ -2485,7 +2485,8 @@ begin
     // Add a roster grp.
     go := promptNewGroup();
     if (go = nil) then exit;
-
+    if (go.Data <> nil) then exit;
+    
     with frmRosterWindow do begin
         RenderGroup(go);
         treeRoster.AlphaSort(true);
