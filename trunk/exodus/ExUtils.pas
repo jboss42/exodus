@@ -1082,8 +1082,12 @@ begin
     // add the new grp.
     go := MainSession.Roster.getGroup(new_grp);
     if (go <> nil) then begin
-        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
-        Result := nil;
+       if (go.Data <> nil) then begin
+         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+         Result := nil;
+       end
+       else
+         Result := go;
     end
     else begin
         // add the new grp.
