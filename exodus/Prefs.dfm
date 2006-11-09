@@ -3,7 +3,7 @@ object frmPrefs: TfrmPrefs
   Top = 266
   BorderWidth = 1
   Caption = 'Options'
-  ClientHeight = 426
+  ClientHeight = 477
   ClientWidth = 456
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -23,7 +23,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 99
-    Height = 389
+    Height = 440
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
@@ -31,6 +31,7 @@ object frmPrefs: TfrmPrefs
     TabOrder = 0
     TabStop = True
     OnMouseMove = OffBoxMouseMove
+    ExplicitHeight = 389
     object Shape2: TShape
       Left = 0
       Top = 260
@@ -8178,7 +8179,7 @@ object frmPrefs: TfrmPrefs
     Left = 99
     Top = 0
     Width = 357
-    Height = 389
+    Height = 440
     ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
@@ -8186,17 +8187,20 @@ object frmPrefs: TfrmPrefs
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
+    ExplicitHeight = 389
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       OnMouseMove = OffBoxMouseMove
+      ExplicitHeight = 357
       object memKeywords: TTntMemo
         Left = 0
         Top = 114
         Width = 349
-        Height = 243
+        Height = 294
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 243
       end
       object Panel2: TPanel
         Left = 0
@@ -8243,13 +8247,15 @@ object frmPrefs: TfrmPrefs
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
+      ExplicitHeight = 357
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
         Width = 349
-        Height = 268
+        Height = 319
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 268
       end
       object pnlBlocked: TTntPanel
         Left = 0
@@ -8295,13 +8301,14 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 389
+    Top = 440
     Width = 456
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
+    ExplicitTop = 389
     object Bevel1: TBevel
       Left = 1
       Top = 1
