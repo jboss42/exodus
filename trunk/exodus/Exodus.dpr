@@ -239,7 +239,9 @@ uses
   StateForm in 'StateForm.pas' {frmState: TTntForm},
   PrefHotkeys in 'prefs\PrefHotkeys.pas' {frmPrefHotkeys},
   ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys},
-  zlibpas in '..\jopl\png\zlibpas.pas';
+  zlibpas in '..\jopl\png\zlibpas.pas',
+  RT_XIMConversion in 'RT_XIMConversion.pas',
+  ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect};
 
 {$R *.TLB}
 

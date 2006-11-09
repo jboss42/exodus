@@ -125,7 +125,7 @@
 			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
 			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;C:\Projects\exodus\exodus\components\tntUnicode;C:\Projects\exodus\exodus\components\jcl\source;c:\projects\exodus\exodus\components\jcl\lib\d10</Directories>
+			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;C:\Projects\exodus\exodus\components\tntUnicode;C:\Projects\exodus\exodus\components\jcl\source;c:\projects\exodus\exodus\components\jcl\lib\d10;.\components\tntUnicode;.\components\jcl\source</Directories>
 			<Directories Name="Packages">vcl;rtl</Directories>
 			<Directories Name="Conditionals">Exodus;INDY9;TRACE_EXCEPTIONS</Directories>
 			<Directories Name="DebugSourceDirs">c:\src\exodus\exodus\components\;D:\src\Indy\Source\</Directories>

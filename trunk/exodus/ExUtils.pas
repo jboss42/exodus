@@ -129,7 +129,9 @@ uses
     Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
     IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
     XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
-    JabberConst, MsgDisplay, Debug;
+    JabberConst, MsgDisplay,
+    RT_XIMConversion,
+    Debug;
 
 type
     TAtom = class
@@ -673,15 +675,9 @@ begin
 end;
 
 function getInputXHTML(Input: TExRichEdit): TXMLTag;
-var
-    ttag: TXMLTag;
 begin
-//    <html xmlns='http://jabber.org/protocol/xhtml-im'><body xmlns='http://www.w3.org/1999/xhtml'><span></span></body></html>
     //convert rich text to xhtml-im
-    Result := TXMLTag.Create('html');
-    Result.setAttribute('xmlns', XMLNS_XHTMLIM);
-    ttag := Result.AddTagNS('body', XMLNS_XHTML);
-    ttag.AddBasicTag('span', getInputText(Input));
+    Result := RTToXIM(input);
 end;
 
 {---------------------------------------}

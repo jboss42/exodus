@@ -210,12 +210,7 @@ end;
 procedure TfRTFMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 begin
     _presence_last := false;
-    if (MainSession.Prefs.GetBool('richtext_enabled')) then begin
-        DisplayXHTMLMsg(MsgList, Msg, AutoScroll);
-    end
-    else begin
-        DisplayRTFMsg(MsgList, Msg, AutoScroll);
-    end;
+    DisplayRTFMsg(MsgList, Msg, AutoScroll);
 end;
 
 {---------------------------------------}

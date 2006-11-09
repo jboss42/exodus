@@ -198,21 +198,29 @@ inherited frmBaseChat: TfrmBaseChat
       Top = 0
       Hint = 'Italics'
       AllowAllUp = True
-      Caption = 'Italics'
+      Caption = 'Color'
       ImageIndex = 72
       Style = tbsCheck
       Visible = False
       OnClick = ItalicsClick
     end
-    object ChatToolbarButtonSeperator1: TTntToolButton
+    object ChatToolbarButtonColors: TTntToolButton
       Left = 75
+      Top = 0
+      AllowAllUp = True
+      Caption = 'Color'
+      ImageIndex = 84
+      OnClick = ChatToolbarButtonColorsClick
+    end
+    object ChatToolbarButtonSeperator1: TTntToolButton
+      Left = 100
       Top = 0
       Width = 8
       Caption = 'ChatToolbarButtonSeperator1'
       Style = tbsSeparator
     end
     object ChatToolbarButtonCut: TTntToolButton
-      Left = 83
+      Left = 108
       Top = 0
       Hint = 'Cut'
       Caption = 'Cut'
@@ -220,7 +228,7 @@ inherited frmBaseChat: TfrmBaseChat
       OnClick = Copy2Click
     end
     object ChatToolbarButtonCopy: TTntToolButton
-      Left = 108
+      Left = 133
       Top = 0
       Hint = 'Copy'
       Caption = 'Copy'
@@ -228,7 +236,7 @@ inherited frmBaseChat: TfrmBaseChat
       OnClick = Copy3Click
     end
     object ChatToolbarButtonPaste: TTntToolButton
-      Left = 133
+      Left = 158
       Top = 0
       Hint = 'Paste'
       Caption = 'Paste'
@@ -236,14 +244,14 @@ inherited frmBaseChat: TfrmBaseChat
       OnClick = Paste1Click
     end
     object ChatToolbarButtonSeperator2: TTntToolButton
-      Left = 158
+      Left = 183
       Top = 0
       Width = 8
       Caption = 'ChatToolbarButtonSeperator2'
       Style = tbsSeparator
     end
     object ChatToolbarButtonEmoticons: TTntToolButton
-      Left = 166
+      Left = 191
       Top = 0
       Hint = 'Emoticons'
       Caption = 'Emoticons'
@@ -251,7 +259,7 @@ inherited frmBaseChat: TfrmBaseChat
       OnClick = Emoticons1Click
     end
     object ChatToolbarButtonHotkeys: TTntToolButton
-      Left = 191
+      Left = 216
       Top = 0
       Hint = 'Hotkeys'
       Caption = 'Hotkeys'

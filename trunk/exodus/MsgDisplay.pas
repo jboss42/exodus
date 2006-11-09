@@ -29,7 +29,6 @@ function RTFColor(color_pref: integer) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_server, color_action, color_me, color_other, font_color: integer) overload;
-procedure DisplayXHTMLMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 
 {---------------------------------------}
@@ -38,6 +37,8 @@ function RTFEncodeKeywords(txt: Widestring) : Widestring;
 implementation
 uses
     JabberConst,
+    XMLParser,
+    RT_XIMConversion,
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
     ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords;
 
@@ -78,6 +79,35 @@ begin
                   MainSession.Prefs.getInt('font_color'));
 end;
 
+function getXIMTag(msg: TJabberMessage): TXMLTag;
+var
+    fooTag: TXMLTag;
+    _parser: TXMLTagParser;
+begin
+    fooTag := Msg.Tag;
+    Result := fooTag.GetFirstTag('html');
+    if ((Result = nil) or (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then begin
+        //check XML attrib of message to see if there is any additional
+        //children that haven't made it inot tag yet...
+        if (fooTag.XML <> '') and (Pos('<html', fooTag.XML) > 0) then begin
+            _parser := TXMLTagParser.Create();
+            _parser.Clear();
+            _parser.ParseString(fooTag.XML, '');
+            if (_parser.Count > 0) then begin
+                fooTag.Free();
+                fooTag := _parser.popTag();
+                Result := fooTag.GetFirstTag('html');
+            end;
+            _parser.Free();
+        end;
+    end;
+    if ((Result <> nil) and (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then
+        Result := nil;
+    if (Result <> nil) then
+        Result := TXMLTag.Create(Result);
+    fooTag.Free();        
+end;
+
 {---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean;
                         color_time, color_server, color_action, color_me, color_other, font_color: integer);
@@ -86,6 +116,7 @@ var
     txt, body: WideString;
     at_bottom: boolean;
     is_scrolling: boolean;
+    ximTag: TXMLTag;
 begin
     // add the message to the richedit control
     fvl := RichEdit.FirstVisibleLine;
@@ -119,7 +150,7 @@ begin
     end;
 
     len := Length(Msg.Body);
-    
+
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         txt := txt + '\cf2  ' + EscapeRTF(Msg.Body);
@@ -133,23 +164,26 @@ begin
         else
             // other person's msgs
             txt := txt + '\cf5 ';
-
         txt := txt + '<' + EscapeRTF(Msg.nick) + '>\cf6  ';
+        //check to see if xhtmlim is supported and supplied
+        ximTag := nil;
+        if (MainSession.Prefs.getBool('richtext_enabled')) then
+            ximTag := getXIMTag(Msg);
+        if (ximTag = nil) then begin
+            //Parse emoticons and/or escape RTF chars
+            if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then
+              body := ProcessRTFEmoticons(Msg.Body)
+            else
+              body := EscapeRTF(Msg.Body);
 
-        //Parse emoticons and/or escape RTF chars
-        if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then
-          body := ProcessRTFEmoticons(Msg.Body)
-        else
-          body := EscapeRTF(Msg.Body);
+            // Format keywords
+            if (Msg.Highlight) then
+              body := RTFEncodeKeywords(body);
 
-        // Format keywords
-        if (Msg.Highlight) then
-          body := RTFEncodeKeywords(body);
-
-        //Append body
-        txt := txt + body;
+            //Append body
+            txt := txt + body;
+        end;
     end
-
     else begin
         // This is an action
         txt := txt + '\cf3  * ' + Msg.Nick + ' ';
@@ -159,13 +193,27 @@ begin
             txt := txt + EscapeRTF(Msg.Body);
     end;
 
-    txt := txt + '\cf6\par }';
+    txt := txt + '\cf6 }';
 
     RichEdit.SelStart := Length(RichEdit.Lines.Text);
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
     RichEdit.RTFSelText := txt;
+
+    if (ximTag <> nil) then begin
+        //if this is our messages, don't eat font style props
+        if (Msg.isMe) then
+            txt := ''
+        else txt := MainSession.Prefs.getString('richtext_ignored_font_styles');
+
+        XIMToRT(richedit, ximTag, txt);
+        ximTag.Free();
+    end;
+    
+    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+    RichEdit.SelLength := 0;
+    RichEdit.RTFSelText := '{\rtf1 \par }';
 
     // AutoScroll the window
     if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then begin
@@ -174,8 +222,6 @@ begin
     else begin
         RichEdit.Line := fvl;
     end;
-
-
 end;
 
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
@@ -213,26 +259,6 @@ begin
   end;
 
   result := result + Copy(txt,pos,length(txt)-pos+1); //Append the remaining chunk
-end;
-
-
-procedure DisplayXHTMLMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
-var
-    ttag: TXMLTag;
-begin
-    ttag := Msg.Tag.GetFirstTag('html');
-    if ((ttag <> nil) and (ttag.getAttribute('xmlns') = XMLNS_XHTMLIM)) then begin
-        DisplayRTFMsg(RichEdit, Msg, AutoScroll);
-        RichEdit.SelStart := Length(RichEdit.Lines.Text);
-        RichEdit.SelLength := 0;
-        RichEdit.Paragraph.Alignment := taLeft;
-        RichEdit.SelAttributes.BackColor := RichEdit.Color;
-        RichEdit.RTFSelText := ttag.XML;
-        RichEdit.ScrollToBottom();
-    end
-    else begin
-        DisplayRTFMsg(RichEdit, Msg, AutoScroll);
-    end;
 end;
 
 end.
