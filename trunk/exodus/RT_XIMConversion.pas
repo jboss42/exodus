@@ -489,7 +489,7 @@ function cleanTags(xhtmlTag: TXMLTag; ignoredFontStyles: WideString): TXMLTag;
 var
     tTag: TXMLTag;
 begin
-DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML);
+DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML, true);
     if (xhtmlTag.Name = 'body') then
         ttag := xhtmlTag
     else ttag := xhtmlTag.getFirstTag('body');
@@ -499,7 +499,7 @@ DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML);
     //change any enclosing "p" tag to span to keep our line formatting
     if ((ttag <> nil) and (Result.ChildTags[0] = ttag)) then
         ttag.Name := 'span';
-DebugMsg('cleaned: ' + Result.XML);
+DebugMsg('cleaned: ' + Result.XML, true);
 end;
 
 
