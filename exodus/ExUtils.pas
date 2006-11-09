@@ -54,7 +54,7 @@ procedure ClearRoomLog(jid: Widestring);
 procedure ClearAllRoomLogs();
 
 Procedure DebugMsgBox(msg : string);
-procedure DebugMsg(Message : string);
+procedure DebugMsg(Message : string; debugModeOnly: boolean = false);
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload;
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
@@ -380,9 +380,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure DebugMsg(Message : string);
+procedure DebugMsg(Message : string; debugModeOnly: boolean = false);
 begin
-    MainSession.FireEvent('/data/debug', nil, Message);
+    if ((not debugModeOnly) or ExSession.ExStartup.debug) then
+        MainSession.FireEvent('/data/debug', nil, Message);
 end;
 
 {
