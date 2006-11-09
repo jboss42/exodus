@@ -193,7 +193,7 @@ begin
     MainSession.Prefs.setInt('color_bg', _color_bg);
     MainSession.Prefs.setInt('roster_bg', _roster_bg);
     MainSession.Prefs.setInt('roster_font_color', _roster_font_color);
-    tstr := '';
+    tstr := ' ';
     if (chkIgnoreFontFamily.Checked) then
         tstr := tstr + 'font-family;';
     if (chkIgnoreFontSize.Checked) then
