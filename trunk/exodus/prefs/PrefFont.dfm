@@ -2,12 +2,12 @@ inherited frmPrefFont: TfrmPrefFont
   Left = 320
   Top = 256
   Caption = 'frmPrefFont'
-  ClientHeight = 407
-  ClientWidth = 379
+  ClientHeight = 401
+  ClientWidth = 383
   OldCreateOrder = True
   ShowHint = True
-  ExplicitWidth = 391
-  ExplicitHeight = 419
+  ExplicitWidth = 395
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   object lblRoster: TTntLabel [0]
@@ -185,10 +185,10 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 379
+    Width = 383
     Caption = 'Fonts and Colors'
     TabOrder = 5
-    ExplicitWidth = 389
+    ExplicitWidth = 379
   end
   object colorRoster: TTntTreeView
     Left = 8
@@ -214,10 +214,12 @@ inherited frmPrefFont: TfrmPrefFont
   object gbIgnoredFontStyles: TTntGroupBox
     Left = 8
     Top = 310
-    Width = 369
+    Width = 373
     Height = 85
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Ignore these font properties when displaying messages'
     TabOrder = 7
+    ExplicitWidth = 369
     object chkIgnoreFontFamily: TTntCheckBox
       Left = 6
       Top = 18
