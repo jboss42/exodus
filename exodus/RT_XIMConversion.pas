@@ -495,9 +495,10 @@ DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML);
     else ttag := xhtmlTag.getFirstTag('body');
     Result := TXMLtag.create(ttag); //copy for cleaning
     filterTags(Result, ignoredFontStyles);
+    tTag := Result.GetFirstTag('p');
     //change any enclosing "p" tag to span to keep our line formatting
-    if (Result.ChildCount = 1) and (Result.ChildTags[0].Name = 'p') then
-        Result.ChildTags[0].Name := 'span';
+    if ((ttag <> nil) and (Result.ChildTags[0] = ttag)) then
+        ttag.Name := 'span';
 DebugMsg('cleaned: ' + Result.XML);
 end;
 
