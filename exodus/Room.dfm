@@ -181,11 +181,11 @@ inherited frmRoom: TfrmRoom
       OnClick = popClearClick
     end
     object popBookmark: TTntMenuItem
-      Caption = 'Bookmark Room...'
+      Caption = 'Bookmark Conference Room...'
       OnClick = popBookmarkClick
     end
     object popRegister: TTntMenuItem
-      Caption = 'Register with Room...'
+      Caption = 'Register with Conference Room...'
       OnClick = popRegisterClick
     end
     object popInvite: TTntMenuItem
@@ -234,11 +234,11 @@ inherited frmRoom: TfrmRoom
         Caption = '-'
       end
       object popConfigure: TTntMenuItem
-        Caption = 'Configure Room'
+        Caption = 'Configure Conference Room'
         OnClick = popConfigureClick
       end
       object popDestroy: TTntMenuItem
-        Caption = 'Destroy Room'
+        Caption = 'Destroy Conference Room'
         OnClick = popDestroyClick
       end
     end
@@ -290,7 +290,7 @@ inherited frmRoom: TfrmRoom
       Caption = '-'
     end
     object popRosterSubscribe: TTntMenuItem
-      Caption = 'Add contact to my roster'
+      Caption = 'Add contact to my contact list'
       Enabled = False
       OnClick = popRosterSubscribeClick
     end
@@ -338,7 +338,7 @@ inherited frmRoom: TfrmRoom
     Filter = 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'
     FilterIndex = 0
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    Title = 'Save Room Contents'
+    Title = 'Save Conference Room Contents'
     Left = 49
     Top = 89
   end

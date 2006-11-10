@@ -39,7 +39,7 @@ object frmImport: TfrmImport
     Top = 176
     Width = 247
     Height = 13
-    Caption = 'Select the contacts to import into your Jabber Roster'
+    Caption = 'Select the contacts to import into your Jabber Contact List'
   end
   object ListView1: TListView
     Left = 8

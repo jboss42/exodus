@@ -131,7 +131,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 39
       Width = 273
       Height = 17
-      Caption = 'Show enter and leave messages in room windows.'
+      Caption = 'Show enter and leave messages in conference room windows.'
       Checked = True
       State = cbChecked
       TabOrder = 3

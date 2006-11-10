@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 645
+  ClientHeight = 665
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -33,7 +33,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 614
+    Height = 634
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -176,7 +176,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 614
+    Height = 634
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -185,23 +185,25 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
+    ExplicitHeight = 614
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
     Width = 229
-    Height = 614
+    Height = 634
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 614
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
       Width = 229
-      Height = 614
+      Height = 634
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -226,6 +228,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 614
     end
   end
   object MainMenu1: TTntMainMenu
@@ -307,7 +310,7 @@ object frmExodus: TfrmExodus
             OnClick = mnuChatClick
           end
           object mnuConference: TTntMenuItem
-            Caption = '&Join a Chat Room'
+            Caption = '&Join a Conference Room'
             ShortCut = 8310
             OnClick = mnuConferenceClick
           end
@@ -356,7 +359,7 @@ object frmExodus: TfrmExodus
               Caption = '-'
             end
             object mnuFind: TTntMenuItem
-              Caption = '&Find Contact in Roster'
+              Caption = '&Find Contact in Contact List'
               ShortCut = 16454
               OnClick = mnuFindClick
             end
@@ -366,7 +369,7 @@ object frmExodus: TfrmExodus
               OnClick = mnuFindAgainClick
             end
             object NewGroup2: TTntMenuItem
-              Caption = 'Add Roster &Group'
+              Caption = 'Add Contact List &Group'
               OnClick = NewGroup2Click
             end
             object N8: TTntMenuItem
@@ -599,7 +602,7 @@ object frmExodus: TfrmExodus
           OnClick = mnuPeople_Contacts_BlockContactClick
         end
         object mnuPeople_Contacts_FindContactinRoster: TTntMenuItem
-          Caption = '&Find Contact in Roster'
+          Caption = '&Find Contact in Contact List'
           OnClick = mnuFindClick
         end
         object mnuPeople_Contacts_SendFile: TTntMenuItem
@@ -653,7 +656,7 @@ object frmExodus: TfrmExodus
             Caption = '&Blocked Contacts'
           end
           object mnuPeople_Group_View_AllRooms: TTntMenuItem
-            Caption = 'All &Rooms'
+            Caption = 'All Conference &Rooms'
           end
           object mnuPeople_Group_View_AllChats: TTntMenuItem
             Caption = 'All &Chats'
@@ -663,7 +666,7 @@ object frmExodus: TfrmExodus
       object mnuPeople_Conference: TTntMenuItem
         Caption = 'C&onference'
         object mnuPeople_Conference_InviteContacttoConference: TTntMenuItem
-          Caption = '&Invite to Conference...'
+          Caption = '&Invite to Conference Room...'
           OnClick = mnuPeople_Conference_InviteContacttoConferenceClick
         end
         object mnuPeople_Conference_OpenNewConferenceRoom: TTntMenuItem
@@ -778,7 +781,7 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuOptions_Options: TTntMenuItem
-        Caption = '&Options...'
+        Caption = '&Settings...'
         OnClick = Preferences1Click
       end
     end
@@ -842,7 +845,7 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 74
     Bitmap = {
-      494C010155005900040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010155005900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007001000001002000000000000070
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3882,7 +3885,8 @@ object frmExodus: TfrmExodus
       E03FE03FE01FE03FE00FE01FE00FE00FE007E00FE007E007E003E007C003E003
       C003C003C003C003C001C003C001C001C001C001C001C001C001C001C001C001
       C001C001C001C001C001C001C003C001E003E003E003E003E007E003F007E003
-      F00FF007F80FF007FC1FF80FFE3FFC1F}
+      F00FF007F80FF007FC1FF80FFE3FFC1F00000000000000000000000000000000
+      000000000000}
   end
   object timFlasher: TTimer
     Enabled = False

@@ -4193,7 +4193,7 @@ inherited frmBrowse: TfrmBrowse
       OnClick = mBrowseNewClick
     end
     object mBookmark: TTntMenuItem
-      Caption = 'Add Bookmark to Roster'
+      Caption = 'Add Bookmark to Contact List'
       OnClick = mBookmarkClick
     end
     object mGetInfo: TMenuItem

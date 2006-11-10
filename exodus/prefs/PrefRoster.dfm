@@ -73,7 +73,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Top = 103
     Width = 337
     Height = 17
-    Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
+    Caption = 'Allow Unicode characters in the contact list (requires 2000, ME, XP).'
     TabOrder = 4
   end
   object chkInlineStatus: TTntCheckBox [8]
@@ -81,7 +81,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Top = 190
     Width = 241
     Height = 17
-    Caption = 'Show contact status in the roster'
+    Caption = 'Show contact status in the contact list'
     TabOrder = 6
     OnClick = chkInlineStatusClick
   end
@@ -99,7 +99,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   inherited pnlHeader: TTntPanel
     Width = 342
-    Caption = 'Roster Item Options'
+    Caption = 'Contact List Item Options'
     TabOrder = 8
     ExplicitWidth = 342
   end
@@ -124,7 +124,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Top = 120
     Width = 337
     Height = 17
-    Caption = 'Show Avatars in the roster'
+    Caption = 'Show Avatars in the contact list'
     TabOrder = 11
   end
 end

@@ -42,7 +42,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Top = 32
     Width = 209
     Height = 17
-    Caption = 'Use Alpha Blending for Roster'
+    Caption = 'Use Alpha Blending for Contact List'
     TabOrder = 8
     OnClick = chkRosterAlphaClick
   end

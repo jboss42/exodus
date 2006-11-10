@@ -3,7 +3,7 @@ object frmRosterWindow: TfrmRosterWindow
   Top = 186
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
-  Caption = 'Roster - Exodus'
+  Caption = 'contact list - Exodus'
   ClientHeight = 506
   ClientWidth = 194
   Color = clBtnFace
@@ -314,7 +314,7 @@ object frmRosterWindow: TfrmRosterWindow
     Width = 194
     Height = 130
     Cursor = crArrow
-    Hint = 'Roster Hint'
+    Hint = 'Contact List Hint'
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone

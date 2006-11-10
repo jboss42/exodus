@@ -36,7 +36,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Top = 201
     Width = 198
     Height = 13
-    Caption = 'When I get invited to a chat room, do this:'
+    Caption = 'When I get invited to a conference room, do this:'
   end
   object chkTimestamp: TTntCheckBox [4]
     Left = 5
@@ -96,14 +96,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     Items.Strings = (
       'Treat as a normal instant message'
       'Always popup the invitation'
-      'Automatically join the room.')
+      'Automatically join the conference room.')
   end
   object chkBlockNonRoster: TTntCheckBox [10]
     Left = 5
     Top = 44
     Width = 300
     Height = 17
-    Caption = 'Block messages from people not on my roster'
+    Caption = 'Block messages from people not on my contact list'
     TabOrder = 1
   end
   object txtTimestampFmt: TTntComboBox [11]

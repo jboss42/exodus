@@ -67,13 +67,13 @@ uses
 
 const
     sSoundChatactivity = 'Activity in a chat window';
-    sSoundInvite = 'Invited to a room';
-    sSoundKeyword = 'Keyword in a room';
+    sSoundInvite = 'Invited to a conference room';
+    sSoundKeyword = 'Keyword in a conference room';
     sSoundNewchat = 'New conversation';
     sSoundNormalmsg = 'Received a normal message';
     sSoundOffline = 'Contact went offline';
     sSoundOnline = 'Contact came online';
-    sSoundRoomactivity = 'Activity in a room';
+    sSoundRoomactivity = 'Activity in a conference room';
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';

@@ -520,6 +520,11 @@ type
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+    procedure SaveBands();
+    procedure RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+
     procedure setupReconnect();
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
@@ -923,7 +928,7 @@ uses
     StateForm,
     RosterImages,
     ExodusImageList,
-    COMToolbar, COMToolbarButton,
+    COMToolbar, COMToolbarButton, COMToolbarControl,
     NewUser, CommandWizard, Exodus_TLB, Notify,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController,
@@ -1420,7 +1425,12 @@ begin
 
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
+    begin
         InitPlugins();
+        // Check for required plugins - SIG
+      //if ( IsRequiredPluginsSelected() = false ) then
+      //  StartPrefs(pref_plugins);
+    end;
 
     // If they had logging turned on, warn them that they need to
     // enable a logging plugin now.
@@ -1448,6 +1458,9 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+    RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -1971,6 +1984,9 @@ begin
         mnuToolbar.Checked := Toolbar.Visible;
         mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     end;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+    Toolbar1.Wrapable := false;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2103,6 +2119,10 @@ end;
 **}
 procedure TfrmExodus.cleanup();
 begin
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+    SaveBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+
     //mainsession should never be nil here. It is created before this object
     //and only destroyed on ExSession finalization.
     // Unhook the auto-away DLL
@@ -2408,11 +2428,161 @@ begin
 end;
 
 {---------------------------------------}
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+procedure TfrmExodus.SaveBands();
+var I, ID: Integer;
+    aFile: TWideStringList;
+    function Value(v: Integer; ID: Integer; Key: String): String; overload;
+    begin
+      Result := Format('%d-%s=%d', [ID, Key, v])
+    end;
+    function Value(v: String; ID: Integer; Key: String): String; overload;
+    begin
+      Result := Format('%d-%s=%s', [ID, Key, v])
+    end;
+    function Value(b: Boolean; ID: Integer; Key: String): String; overload;
+    begin
+      if b then
+        Result := Format('%d-%s=true', [ID, Key])
+      else
+        Result := Format('%d-%s=false', [ID, Key]);
+    end;
+begin
+  I := 0; ID := 0; 
+  aFile := TWideStringList.Create;
+
+  { Parse all available coolbands } 
+  while I=I do // Make this an endless loop 
+  begin 
+    try 
+      ID := Toolbar.Bands.Items[I].ID;
+    except 
+      on EListError do 
+      begin 
+        MainSession.Prefs.setStringlist('bands', aFile);
+        aFile.Free;
+        exit;
+      end; 
+    end; 
+
+    { Write it's properties to file - Set } 
+    aFile.Add(Value(Toolbar.Bands.Items[I].Text, ID, 'Name'));
+
+    aFile.Add(Value(Toolbar.Bands.Items[I].Index, ID, 'Index'));
+    aFile.Add(Value(Toolbar.Bands.Items[I].Width, ID, 'Width'));
+
+    aFile.Add(Value(Toolbar.Bands.Items[I].Break, ID, 'Break'));
+    aFile.Add(Value(Toolbar.Bands.Items[I].FixedSize, ID, 'FixedSize'));
+    aFile.Add(Value(Toolbar.Bands.Items[I].HorizontalOnly, ID, 'HorizontalOnly'));
+    aFile.Add(Value(Toolbar.Bands.Items[I].Visible, ID, 'Visible'));
+
+    outputdebugMsg(PAnsiChar(Format('Save-Band:%s, Index:%d, Width:%d, Break:%d, Control.Width:%d',
+                                      [Toolbar.Bands.Items[I].Text
+                                      ,Toolbar.Bands.Items[I].Index
+                                      ,Toolbar.Bands.Items[I].Width
+                                      ,Integer(Toolbar.Bands.Items[I].Break)
+                                      ,Toolbar.Bands.Items[I].Control.Width
+                                      ])));
+
+    I := I+1;
+  end;
+end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+{---------------------------------------}
+procedure TfrmExodus.RestoreBands();
+var I, ID, Value : Integer;
+    aFile: TWideStringList;
+    bValue: Boolean;
+    function IsValid(ID: Integer; Key: String; Out V: Integer): boolean;  overload;
+    var sValue : String;
+    begin
+      try
+        sValue := aFile.Values[IntToStr(ID)+'-'+Key];
+        if Length(sValue)>0 then begin
+          V := StrToInt(sValue);
+          Result := true;
+        end else
+          Result := false;
+      except
+        Result := false;
+      end;
+    end;
+    function IsValid(ID: Integer; Key: String; Out V: Boolean): boolean;  overload;
+    var sValue : String;
+    begin
+      try
+        sValue := aFile.Values[IntToStr(ID)+'-'+Key];
+        if Length(sValue)>0 then begin
+          Result := true;
+          if CompareText(sValue, 'false')=0 then
+            V := false
+          else if CompareText(sValue, 'true')=0 then
+            V := true
+          else
+            Result := false;
+        end else
+          Result := false;
+      except
+          Result := false;
+      end;
+    end;
+begin
+  I := 0; ID := 0;
+  aFile := TWideStringList.Create;
+
+  try
+    MainSession.Prefs.fillStringlist('bands', aFile);
+
+    { Parse all available Tcoolband (s), ttoolbar }
+    while I=I do
+    begin
+      try
+        ID := Toolbar.Bands.Items[I].ID;
+      except
+        on EListError do Exit;
+      end;
+
+      { Restore properties from file - Get }
+      if IsValid (ID, 'Index', Value) then
+        Toolbar.Bands.Items[I].Index := Value ;
+      if IsValid (ID, 'Width', Value) then
+        Toolbar.Bands.Items[I].Width := Value;
+
+      Toolbar.Bands.Items[I].MinWidth := Toolbar.Bands.Items[I].Control.Width;
+
+      if IsValid (ID, 'Break', bValue) then
+        Toolbar.Bands.Items[I].Break := bValue;
+      if IsValid (ID, 'FixedSize', bValue) then
+        Toolbar.Bands.Items[I].FixedSize := bValue;
+      if IsValid (ID, 'HorizontalOnly', bValue) then
+        Toolbar.Bands.Items[I].HorizontalOnly := bValue;
+      if IsValid (ID, 'Visible', bValue) then
+        Toolbar.Bands.Items[I].Visible := bValue;
+
+      outputdebugMsg(PAnsiChar(Format('Restore-Band:%s, Index:%d, Width:%d, Break:%d, Control.Width:%d',
+                                      [Toolbar.Bands.Items[I].Text
+                                      ,Toolbar.Bands.Items[I].Index
+                                      ,Toolbar.Bands.Items[I].Width
+                                      ,Integer(Toolbar.Bands.Items[I].Break)
+                                      ,Toolbar.Bands.Items[I].Control.Width
+                                      ])));
+      I := I+1;
+    end;
+  except
+      OutputDebugString(PAnsiChar('Exception in Restore'));
+  end;
+end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+
+{--------------------------------------}
 procedure TfrmExodus.About1Click(Sender: TObject);
 begin
     // Show some about dialog box
     frmAbout := TfrmAbout.Create(Application);
     frmAbout.ShowModal();
+    SaveBands();
 end;
 
 {---------------------------------------}

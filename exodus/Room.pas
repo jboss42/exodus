@@ -280,10 +280,10 @@ const
     sNotifyKeyword = 'Keyword in ';
     sNotifyActivity = 'Activity in ';
     sRoomSubjChange = '/me has changed the subject to: ';
-    sRoomSubjPrompt = 'Change room subject';
+    sRoomSubjPrompt = 'Change conference room subject';
     sRoomNewSubj = 'New subject';
     sRoomNewNick = 'New nickname';
-    sRoomBMPrompt = 'Bookmark Room';
+    sRoomBMPrompt = 'Bookmark Conference Room';
     sRoomNewBookmark = 'Enter bookmark name:';
     sBlocked = 'Blocked';
     sBlock = 'Block';
@@ -292,7 +292,7 @@ const
     sReconnected = 'Reconnected.';
 
 
-    sDestroyRoom = 'Destroy Room';
+    sDestroyRoom = 'Destroy Conferene Room';
     sKickReason = 'Kick Reason';
     sBanReason = 'Ban Reason';
     sDestroyReason = 'Destroy Reason';
@@ -309,26 +309,26 @@ const
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
-    sRoomDestroyed = 'The room ''%s'' has been destroyed.';
+    sRoomDestroyed = 'The conference room ''%s'' has been destroyed.';
     sReason = 'Reason:';
-    sDestroyRoomConfirm = 'Do you really want to destroy the room? All users will be removed.';
+    sDestroyRoomConfirm = 'Do you really want to destroy the conference room? All users will be removed.';
 
-    sStatus_100  = 'This room is not anonymous';
-    sStatus_301  = '%s has been banned from this room. %s';
-    sStatus_302  = 'This room has been destroyed.';
+    sStatus_100  = 'This conference room is not anonymous';
+    sStatus_301  = '%s has been banned from this conference room. %s';
+    sStatus_302  = 'This conference room has been destroyed.';
     sStatus_303  = '%s is now known as %s.';
-    sStatus_307  = '%s has been kicked from this room. %s';
-    sStatus_322  = '%s is not a member of this room and has therefore been removed from this room.';
+    sStatus_307  = '%s has been kicked from this conference room. %s';
+    sStatus_322  = '%s is not a member of this conference room and has therefore been removed from this conference room.';
 
     sStatus_401  = 'You supplied an invalid password to enter this room.';
-    sStatus_403  = 'You are not allowed to enter this room because you are on the ban list.';
-    sStatus_404  = 'The room is being created. Please try again later.';
-    sStatus_405  = 'You are not allowed to create rooms.';
-    sStatus_405a = 'You are not allowed to enter the room.';
-    sStatus_407  = 'You are not on the member list for this room. Try and register?';
+    sStatus_403  = 'You are not allowed to enter this conference room because you are on the ban list.';
+    sStatus_404  = 'The conference room is being created. Please try again later.';
+    sStatus_405  = 'You are not allowed to create conference rooms.';
+    sStatus_405a = 'You are not allowed to enter the conference room.';
+    sStatus_407  = 'You are not on the member list for this conference room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
-    sStatus_413  = 'The room you were trying to enter is at maximum occupancy. Try again later.';
-    sStatus_Unknown = 'The room has been destroyed for an unknown reason.';
+    sStatus_413  = 'The conference room you were trying to enter is at maximum occupancy. Try again later.';
+    sStatus_Unknown = 'The conference room has been destroyed for an unknown reason.';
 
     sEditVoice     = 'Edit Voice List';
     sEditBan       = 'Edit Ban List';
@@ -338,7 +338,7 @@ const
     sEditModerator = 'Edit Moderator List';
 
     sNoSubjectHint = 'Click the button to change the room subject.';
-    sNoSubject     = 'No room subject';
+    sNoSubject     = 'No conference room subject';
     sMsgRosterItems = 'This message contains %d roster items.';
 
 const

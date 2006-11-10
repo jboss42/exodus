@@ -222,7 +222,7 @@ inherited frmNewUser: TfrmNewUser
         AutoSize = False
         Caption = 
           'Your Registration to this service has been completed Successfull' +
-          'y. You can now add contacts to your Roster by selecting Tools | ' +
+          'y. You can now add contacts to your Contact List by selecting Tools | ' +
           'Contacts from the main menu.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText

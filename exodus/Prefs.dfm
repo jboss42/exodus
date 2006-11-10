@@ -2,7 +2,7 @@ object frmPrefs: TfrmPrefs
   Left = 192
   Top = 266
   BorderWidth = 1
-  Caption = 'Options'
+  Caption = 'Settings'
   ClientHeight = 477
   ClientWidth = 456
   Color = clBtnFace
@@ -824,7 +824,7 @@ object frmPrefs: TfrmPrefs
       Height = 14
       Align = alTop
       Alignment = taCenter
-      Caption = 'Roster'
+      Caption = 'Contact List'
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -8217,7 +8217,7 @@ object frmPrefs: TfrmPrefs
           Height = 28
           Align = alTop
           Caption = 
-            'You can be notified when a keyword appears in chat room. Enter i' +
+            'You can be notified when a keyword appears in conference room. Enter i' +
             'n the keywords that you want to look for in messages.'
           WordWrap = True
           ExplicitWidth = 348

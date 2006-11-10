@@ -23,7 +23,7 @@ inherited frmSubscribe: TfrmSubscribe
     Align = alTop
     Caption = 
       'This person or agent would like to see your online presence and ' +
-      'add you to their roster.'
+      'add you to their contact list.'
     WordWrap = True
     ExplicitWidth = 325
   end
@@ -40,7 +40,7 @@ inherited frmSubscribe: TfrmSubscribe
     Top = 69
     Width = 217
     Height = 17
-    Caption = 'Add this person to my roster'
+    Caption = 'Add this person to my contact list'
     Checked = True
     State = cbChecked
     TabOrder = 0

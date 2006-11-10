@@ -1139,7 +1139,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     Height = 41
     AutoSize = False
     Caption = 
-      'Main window shows only the roster. Other windows are opened sepa' +
+      'Main window shows only the contact list. Other windows are opened sepa' +
       'rately and are never docked.'
     WordWrap = True
   end
@@ -1153,8 +1153,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     TabOrder = 1
     OnChange = cboViewChange
     Items.Strings = (
-      'Show small roster and never dock'
-      'Dock windows. Roster is always visible'
+      'Show small contact list and never dock'
+      'Dock windows. Contact list is always visible'
       'Dock windows and use tabs')
   end
   inherited pnlHeader: TTntPanel

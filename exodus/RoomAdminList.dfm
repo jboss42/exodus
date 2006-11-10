@@ -1,10 +1,10 @@
 object frmRoomAdminList: TfrmRoomAdminList
   Left = 209
   Top = 156
-  Width = 394
-  Height = 261
   BorderWidth = 3
-  Caption = 'Room List Modifier'
+  Caption = 'Conference Room List Modifier'
+  ClientHeight = 221
+  ClientWidth = 380
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -24,17 +24,25 @@ object frmRoomAdminList: TfrmRoomAdminList
     Width = 380
     Height = 30
     Align = alBottom
-    AutoScroll = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 191
+    ExplicitWidth = 380
+    ExplicitHeight = 30
     inherited Panel2: TPanel
       Width = 380
       Height = 30
+      ExplicitWidth = 380
+      ExplicitHeight = 30
       inherited Bevel1: TBevel
         Width = 380
+        ExplicitWidth = 380
       end
       inherited Panel1: TPanel
         Left = 220
         Height = 25
+        ExplicitLeft = 220
+        ExplicitHeight = 25
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
