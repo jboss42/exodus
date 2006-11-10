@@ -12,10 +12,10 @@ inherited frmXferManager: TfrmXferManager
   inherited pnlDockTop: TPanel
     Width = 455
     TabOrder = 1
-    ExplicitWidth = 436
+    ExplicitWidth = 455
     inherited tbDockBar: TToolBar
       Left = 406
-      ExplicitLeft = 387
+      ExplicitLeft = 406
     end
     object Panel1: TPanel
       Left = 0
@@ -26,9 +26,6 @@ inherited frmXferManager: TfrmXferManager
       BevelOuter = bvNone
       BorderWidth = 5
       TabOrder = 1
-      ExplicitTop = -1
-      ExplicitWidth = 436
-      ExplicitHeight = 33
       object pnlCaption: TTntPanel
         Left = 5
         Top = 5
@@ -40,10 +37,6 @@ inherited frmXferManager: TfrmXferManager
         Color = clHighlight
         ParentBackground = False
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = 4
-        ExplicitWidth = 403
-        ExplicitHeight = 26
       end
     end
   end
@@ -57,9 +50,6 @@ inherited frmXferManager: TfrmXferManager
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
-    ExplicitTop = 65
-    ExplicitWidth = 436
-    ExplicitHeight = 102
   end
   object httpServer: TIdHTTPServer
     Bindings = <>

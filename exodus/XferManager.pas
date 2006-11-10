@@ -197,11 +197,14 @@ begin
     if (fn <> '') then
         StartFileSend(jid, fn)
     else begin
+        xfer_lock.Acquire();
         if not getXferManager().OpenDialog1.Execute then begin
             if (getXferManager().box.ControlCount = 0) then
                 getXferManager().Close();
+            xfer_lock.Release();
             exit;
         end;
+        xfer_lock.Release();
         for f := 0 to getXferManager().OpenDialog1.Files.Count - 1 do
             StartFileSend(jid, getXferManager().OpenDialog1.Files[f]);
     end;
@@ -741,8 +744,10 @@ begin
     // Write the file.
     AThread.Connection.WriteStream(spkg.stream, true, false);
     FreeAndNil(spkg.stream);
+    xfer_lock.Acquire();
     killFrame(spkg.frame);
-                                
+    xfer_lock.Release();
+
     AThread.Connection.Disconnect();
 end;
 
