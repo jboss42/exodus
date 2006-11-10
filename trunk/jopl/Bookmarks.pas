@@ -82,7 +82,7 @@ begin
 
     mi := TTntMenuItem.Create(_menu);
     mi.Name := 'mnuJoinRoom';
-    mi.Caption := _('Join Room');
+    mi.Caption := _('Join Conference Room');
     mi.OnClick := Self.MenuClick;
     _menu.Items.Add(mi);
 

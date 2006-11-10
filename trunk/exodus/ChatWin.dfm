@@ -153,7 +153,7 @@ inherited frmChat: TfrmChat
       OnClick = mnuSendFileClick
     end
     object popAddContact: TTntMenuItem
-      Caption = 'Add to roster ...'
+      Caption = 'Add to Contact List ...'
       OnClick = doAddToRoster
     end
     object mnuProfile: TTntMenuItem

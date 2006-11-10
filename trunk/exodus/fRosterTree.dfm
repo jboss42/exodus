@@ -10,7 +10,7 @@ object frameTreeRoster: TframeTreeRoster
     Width = 172
     Height = 272
     Cursor = crArrow
-    Hint = 'Roster Hint'
+    Hint = 'Contact List Hint'
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone

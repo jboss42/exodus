@@ -60,7 +60,7 @@ object frmHtmlPrefs: TfrmHtmlPrefs
     Top = 52
     Width = 287
     Height = 17
-    Caption = 'Only log messages from people in my roster'
+    Caption = 'Only log messages from people in my contact list'
     TabOrder = 4
   end
   object TntButton1: TTntButton

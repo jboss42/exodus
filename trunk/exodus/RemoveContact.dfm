@@ -68,7 +68,7 @@ object frmRemove: TfrmRemove
     Top = 48
     Width = 233
     Height = 17
-    Caption = 'Remove this contact from my roster.'
+    Caption = 'Remove this contact from my contact list.'
     Checked = True
     TabOrder = 3
     TabStop = True
@@ -79,7 +79,7 @@ object frmRemove: TfrmRemove
     Top = 72
     Width = 217
     Height = 17
-    Caption = 'Remove this person from my roster.'
+    Caption = 'Remove this person from my contact list.'
     Checked = True
     State = cbChecked
     TabOrder = 4
@@ -89,7 +89,7 @@ object frmRemove: TfrmRemove
     Top = 96
     Width = 265
     Height = 17
-    Caption = 'Force this person to remove me from their roster'
+    Caption = 'Force this person to remove me from their contact list'
     Checked = True
     State = cbChecked
     TabOrder = 5

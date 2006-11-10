@@ -22,7 +22,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     Caption = 'Incoming Behavior'
     Items.WideStrings = (
       'Ask me for all requests'
-      'Auto-Accept requests from people in my roster.'
+      'Auto-Accept requests from people in my contact list.'
       'Auto-Accept all requests'
       'Auto-Deny all requests')
     TabOrder = 1
@@ -32,7 +32,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     Top = 159
     Width = 300
     Height = 17
-    Caption = 'Add requestor to default roster group when accepted'
+    Caption = 'Add requestor to default contact list group when accepted'
     TabOrder = 2
   end
 end

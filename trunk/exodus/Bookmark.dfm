@@ -44,7 +44,7 @@ object frmBookmark: TfrmBookmark
     Top = 95
     Width = 82
     Height = 13
-    Caption = 'Room Nickname:'
+    Caption = 'Conference Room Nickname:'
   end
   inline frameButtons1: TframeButtons
     Left = 0

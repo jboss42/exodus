@@ -84,8 +84,8 @@ uses
 
 const
     sConfRoom = 'Conference Room:';
-    sInviteBody = 'You have been invited to the %s room.';
-    sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
+    sInviteBody = 'You have been invited to the %s conference room.';
+    sInvalidRoomJID = 'The Conference Room Address you entered is invalid. It must be valid Jabber ID.';
 
 {$R *.dfm}
 

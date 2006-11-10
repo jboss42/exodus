@@ -1,7 +1,7 @@
 inherited frmInvalidRoster: TfrmInvalidRoster
   Left = 223
   Top = 127
-  Caption = 'Invalid Roster Items'
+  Caption = 'Invalid Contact List Items'
   ClientHeight = 237
   ClientWidth = 314
   OnClose = FormClose

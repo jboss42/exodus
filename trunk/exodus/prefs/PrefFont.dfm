@@ -15,7 +15,7 @@ inherited frmPrefFont: TfrmPrefFont
     Top = 56
     Width = 73
     Height = 13
-    Caption = 'Roster Window'
+    Caption = 'Contact List Window'
   end
   object lblChat: TTntLabel [1]
     Left = 136

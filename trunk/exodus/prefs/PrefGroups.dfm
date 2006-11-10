@@ -74,7 +74,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Top = 48
     Width = 200
     Height = 17
-    Caption = 'Collapse all roster groups initially.'
+    Caption = 'Collapse all contact list groups initially.'
     TabOrder = 1
   end
   object chkGroupCounts: TTntCheckBox [8]
@@ -82,7 +82,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Top = 64
     Width = 217
     Height = 17
-    Caption = 'Show group counts in roster (eg, 5/10)'
+    Caption = 'Show group counts in contact list (eg, 5/10)'
     TabOrder = 2
   end
   object chkOfflineGrp: TTntCheckBox [9]

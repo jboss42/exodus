@@ -156,7 +156,7 @@ begin
 
     if ((tag.Name <> 'iq') or
         (tag.getAttribute('type') = 'error')) then begin
-        MessageDlgW(_('There was an error fetching this room list.'),
+        MessageDlgW(_('There was an error fetching this conference room list.'),
             mtError, [mbOK], 0);
         Self.Close;
         exit;

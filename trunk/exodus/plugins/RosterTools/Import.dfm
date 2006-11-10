@@ -2,7 +2,7 @@ object frmImport: TfrmImport
   Left = 231
   Top = 165
   BorderWidth = 4
-  Caption = 'Import Jabber Roster'
+  Caption = 'Import Jabber Contact List'
   ClientHeight = 287
   ClientWidth = 401
   Color = clBtnFace
@@ -82,7 +82,7 @@ object frmImport: TfrmImport
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'xml'
-    Filter = 'Roster Files|*.xml|All Files|*.*'
+    Filter = 'Contact List Files|*.xml|All Files|*.*'
     Left = 40
     Top = 264
   end
