@@ -87,6 +87,7 @@ var
     XP_XDELIVER: TXPLite;
     XP_XDISPLAY: TXPLite;
     XP_XROSTER: TXPLite;
+    XP_XHTMLIM: TXPLite;
 
     REGEX_URL: TRegExpr;
     REGEX_CRLF: TRegExpr;
@@ -107,6 +108,7 @@ initialization
     XP_XDELIVER := TXPLIte.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
     XP_XROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
+    XP_XHTMLIM := TXPLite.Create('/message/html[@xmlns="' + XMLNS_XHTMLIM + '"]');
 
     REGEX_URL := TRegExpr.Create();
     // http://foo, you see
@@ -128,7 +130,8 @@ finalization
     XP_CONFINVITE.Free();
     XP_MUCINVITE.Free();
     XP_MSGXDATA.Free();
-
+    XP_XHTMLIM.Free();
+    
     REGEX_URL.Free();
     REGEX_CRLF.Free();    
 end.
