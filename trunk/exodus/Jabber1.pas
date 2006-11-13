@@ -3258,21 +3258,26 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.timReconnectTimer(Sender: TObject);
 begin
-    // It is possible to have the reconnect timer running
-    // when the old sesion has not been de-activated.  This
-    // could happen when the connection was lost but a chat window
-    // has a dialog box open (specifically an "active chat" is asking
-    // permission to shutdown).  If we try to reconnect in this state,
-    // we get an assert.
-    if (not MainSession.Active) then begin
-        // try to reconnect...
-        inc(_reconnect_cur);
-        if (_reconnect_cur >= _reconnect_interval) then begin
-            timReconnect.Enabled := false;
-            DoConnect();
-        end
-        else begin
-            frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
+    // It is possible for the timer to be running when
+    // exit is called. This can cause a crash when started
+    // as a COM object (not standard EXE).
+    if (not _shutdown) then begin
+        // It is possible to have the reconnect timer running
+        // when the old sesion has not been de-activated.  This
+        // could happen when the connection was lost but a chat window
+        // has a dialog box open (specifically an "active chat" is asking
+        // permission to shutdown).  If we try to reconnect in this state,
+        // we get an assert.
+        if (not MainSession.Active) then begin
+            // try to reconnect...
+            inc(_reconnect_cur);
+            if (_reconnect_cur >= _reconnect_interval) then begin
+                timReconnect.Enabled := false;
+                DoConnect();
+            end
+            else begin
+                frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
+            end;
         end;
     end;
 end;
