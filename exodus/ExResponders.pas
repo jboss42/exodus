@@ -658,8 +658,10 @@ begin
             for i := 0 to Namespaces.Count - 1 do
                 AddBasicTag('ns', Namespaces[i]);
             //if currently sending/displaying rich text include the NS
+            {
             if (MainSession.Prefs.getBool('richtext_enabled')) then
                 AddBasicTag('ns', XMLNS_XHTMLIM);
+                }
         end;
     end;
     _session.SendTag(r);
@@ -865,9 +867,10 @@ begin
         addFeature(q, XMLNS_BYTESTREAMS);
 
         //if currently sending/displaying rich text include the NS
+        {
         if (MainSession.Prefs.getBool('richtext_enabled')) then
             addFeature(q, XMLNS_XHTMLIM);
-
+        }
         if (node = '') then begin
             with q.AddTag('identity') do begin
                 setAttribute('category', 'user');
