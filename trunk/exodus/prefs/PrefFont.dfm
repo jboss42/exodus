@@ -188,7 +188,7 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 383
     Caption = 'Fonts and Colors'
     TabOrder = 5
-    ExplicitWidth = 379
+    ExplicitWidth = 383
   end
   object colorRoster: TTntTreeView
     Left = 8
@@ -208,41 +208,45 @@ inherited frmPrefFont: TfrmPrefFont
     Top = 287
     Width = 197
     Height = 17
-    Caption = 'Send and display rich text messages'
+    Hint = 'Send and display messages with different fonts, colors etc.'
+    Caption = 'Use formatted messages'
     TabOrder = 6
+    OnClick = chkRTEnabledClick
   end
-  object gbIgnoredFontStyles: TTntGroupBox
+  object gbAllowedFontStyles: TTntGroupBox
     Left = 8
-    Top = 310
-    Width = 373
+    Top = 305
+    Width = 218
     Height = 85
-    Anchors = [akLeft, akTop, akRight]
-    Caption = 'Ignore these font properties when displaying messages'
+    Caption = 'Messages may include:'
+    Enabled = False
     TabOrder = 7
-    ExplicitWidth = 369
-    object chkIgnoreFontFamily: TTntCheckBox
+    object chkAllowFontFamily: TTntCheckBox
       Left = 6
       Top = 18
       Width = 97
       Height = 17
-      Caption = 'Font Family'
+      Caption = 'Multiple fonts'
       TabOrder = 0
+      OnClick = chkAllowFontFamilyClick
     end
-    object chkIgnoreFontSize: TTntCheckBox
+    object chkAllowFontSize: TTntCheckBox
       Left = 6
       Top = 39
-      Width = 97
+      Width = 116
       Height = 17
-      Caption = 'Size'
+      Caption = 'Different sized text'
       TabOrder = 1
+      OnClick = chkAllowFontFamilyClick
     end
-    object chkIgnoreFontColor: TTntCheckBox
+    object chkAllowFontColor: TTntCheckBox
       Left = 6
       Top = 61
-      Width = 97
+      Width = 127
       Height = 17
-      Caption = 'Color'
+      Caption = 'Different colored text'
       TabOrder = 2
+      OnClick = chkAllowFontFamilyClick
     end
   end
   object FontDialog1: TFontDialog

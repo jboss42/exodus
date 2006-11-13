@@ -42,10 +42,10 @@ type
     colorRoster: TTntTreeView;
     OpenDialog1: TOpenDialog;
     chkRTEnabled: TTntCheckBox;
-    gbIgnoredFontStyles: TTntGroupBox;
-    chkIgnoreFontFamily: TTntCheckBox;
-    chkIgnoreFontSize: TTntCheckBox;
-    chkIgnoreFontColor: TTntCheckBox;
+    gbAllowedFontStyles: TTntGroupBox;
+    chkAllowFontFamily: TTntCheckBox;
+    chkAllowFontSize: TTntCheckBox;
+    chkAllowFontColor: TTntCheckBox;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -56,6 +56,8 @@ type
     procedure colorChatSelectionChange(Sender: TObject);
     procedure colorChatMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure chkRTEnabledClick(Sender: TObject);
+    procedure chkAllowFontFamilyClick(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -72,9 +74,12 @@ type
     _color_bg: integer;
     _roster_bg: integer;
     _roster_font_color: integer;
+    _lastAllowFont: boolean;
+    _lastAllowSize: boolean;
+    _lastAllowColor: boolean;
 
     procedure redrawChat();
-
+    procedure loadAllowedFontProps();
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -107,7 +112,12 @@ var
     s: TPrefState;
     tstr: WideString;
 begin
-    inherited;
+    tstr := MainSession.Prefs.getString('richtext_ignored_font_styles');
+    _lastAllowFont := Pos('font-family;', tstr) = 0;
+    _lastAllowSize := Pos('font-size;', tstr) = 0;
+    _lastAllowColor := Pos('color;', tstr) = 0;
+
+    inherited; //ingherited will set rtenabled, which will end up using _last* vars
 
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
@@ -158,21 +168,14 @@ begin
         btnFont.Enabled := true;
         clrBoxBG.Selected := TColor(_color_bg);
         clrBoxFont.Selected := TColor(_font_color);
-        tstr := GetString('richtext_ignored_font_styles');
 
-        //kind of a dbl check of the prefs. if rt is not enabled,
-        //ignore font *should* have a state='hidden' and value = true
+        //don't show font props if rt is disabl;ed and locked down
         s := PrefController.getPrefState('richtext_enabled');
-        chkIgnoreFontFamily.Checked := Pos('font-family;', tstr) > 0;
-        chkIgnoreFontSize.Checked := Pos('font-size;', tstr) > 0;
-        chkIgnoreFontColor.Checked := Pos('color;', tstr) > 0;
-
-        if (not getBool('richtext_enabled') and
-           ((s = psInvisible) or (s = psReadOnly))) then begin
-            gbIgnoredFontStyles.visible := false;
-            chkIgnoreFontFamily.Checked := true;
-            chkIgnoreFontSize.Checked := true;
-            chkIgnoreFontColor.Checked := true;
+        if ((not GetBool('richtext_enabled')) and ((s = psInvisible) or ( s = psReadOnly))) then begin
+            chkAllowFontFamily.visible := false;
+            chkAllowFontSize.visible := false;
+            chkAllowFontColor.visible := false;
+            gbAllowedFontStyles.visible := false;
         end;
     end;
 end;
@@ -194,14 +197,44 @@ begin
     MainSession.Prefs.setInt('roster_bg', _roster_bg);
     MainSession.Prefs.setInt('roster_font_color', _roster_font_color);
     tstr := ' ';
-    if (chkIgnoreFontFamily.Checked) then
+    if (not _lastAllowFont) then
         tstr := tstr + 'font-family;';
-    if (chkIgnoreFontSize.Checked) then
+    if (not _lastAllowSize) then
         tstr := tstr + 'font-size;';
-    if (chkIgnoreFontColor.Checked) then
+    if (not _lastAllowColor) then
         tstr := tstr + 'color;';
-
     MainSession.Prefs.setString('richtext_ignored_font_styles', tstr);
+end;
+
+procedure TfrmPrefFont.loadAllowedFontProps();
+var
+    s: TprefState;
+begin
+    if (chkRTEnabled.Checked) then begin
+        s := PrefController.getPrefState('richtext_ignored_font_styles');
+
+        chkAllowFontFamily.visible := (s <> psInvisible);
+        chkAllowFontFamily.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontSize.visible := (s <> psInvisible);
+        chkAllowFontSize.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontColor.visible := (s <> psInvisible);
+        chkAllowFontColor.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        gbAllowedFontStyles.visible := (s <> psInvisible);
+        gbAllowedFontStyles.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        
+        chkAllowFontFamily.Checked := _lastAllowFont;
+        chkAllowFontSize.Checked := _lastAllowSize;
+        chkAllowFontColor.Checked := _lastAllowColor;
+    end
+    else begin
+        gbAllowedFontStyles.enabled := false;
+        chkAllowFontFamily.enabled := false;
+        chkAllowFontSize.enabled := false;
+        chkAllowFontColor.enabled := false;
+        chkAllowFontFamily.Checked := false;
+        chkAllowFontSize.Checked := false;
+        chkAllowFontColor.Checked := false;
+    end;
 end;
 
 
@@ -407,6 +440,25 @@ begin
     btnCSSBrowse.Enabled := (idx = 1);
     btnCSSEdit.Enabled := (idx = 1);
     }
+end;
+
+procedure TfrmPrefFont.chkAllowFontFamilyClick(Sender: TObject);
+begin
+    inherited;
+    if (sender.InheritsFrom(TWinControl) and (TWinControl(Sender).Enabled)) then begin
+        if (sender = chkAllowFontFamily) then
+            _lastAllowFont := chkAllowFontFamily.Checked
+        else if (sender = chkAllowFontSize) then
+            _lastAllowSize := chkAllowFontSize.Checked
+        else if (sender = chkAllowFontColor) then
+            _lastAllowColor := chkAllowFontColor.Checked;
+    end;
+end;
+
+procedure TfrmPrefFont.chkRTEnabledClick(Sender: TObject);
+begin
+    inherited;
+    loadAllowedFontProps();
 end;
 
 {---------------------------------------}
