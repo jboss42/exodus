@@ -128,13 +128,19 @@ type
     _status: Widestring;
     _show: Widestring;
 
+    //received a message with an xhtml-im element. This allows us to implement
+    //option JEP-71 requirement for xhmtl-im support discovery.
+    _receivedXIMNode: boolean; //true if we have received a xhtml-im message
+    _receivedMessage: boolean; //true if we have received at least one message
+    _supportsXIM: boolean;     //true if caps advertises support
+
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
     function  _sendMsg(txt: Widestring; xml: Widestring = ''): boolean;
     procedure _sendComposing(id: Widestring);
-
+    function isToXIMEnabled(tag: TXMLTag): boolean; //is the to of this message xhtml-im enabled?
   protected
     {
         Get the window state associated with this window.
@@ -220,6 +226,7 @@ uses
     JabberMsg, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons,
     Entity,
+    XMLParser,
     EntityCache;
 
 const
@@ -423,6 +430,10 @@ begin
 
     _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
 
+    _receivedXIMNode := false;
+    _receivedMessage := false;
+    _supportsXIM := false;
+
     SetupPrefs();
     SetupMenus();
 
@@ -542,6 +553,11 @@ var
     rm: TfrmRoom;
 begin
     Result := true;
+
+    _receivedXIMNode := false;
+    _receivedMessage := false;
+    _supportsXIM := false;
+    
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
 
@@ -573,7 +589,7 @@ begin
     end;
 
     // setup the callbacks if we don't have them already
-    if (_pcallback = -1) then
+    if (_pcallback <> -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + WideLowerCase(cjid) + '*"]');
 
@@ -776,7 +792,78 @@ outputdebugmsg('Chat is not visible but we received a message. Showing');
             chat_object.setThreadID(tagThread.Data);
         end;
    end;
+   //did this message have an xhtml-im node?
+    _receivedMessage := true;
+    _receivedXIMNode := (tag.QueryXPTag(XP_XHTMLIM) <> nil);
+
    com_controller.fireAfterRecvMsg(body);
+end;
+
+function getBestCapsEntity(jid: TJabberID): TJabberEntity;
+var
+    p: TJabberPres;
+begin
+    Result := jEntityCache.getByJid(jid.full, '');
+    if (Result = nil) then begin
+        //try it with the first entry in the ppdb
+        p := MainSession.ppdb.FindPres(jid.jid, jid.resource);
+        if (p <> nil) then
+            Result := jEntityCache.getByJid(p.fromJid.full, '');
+    end;
+end;
+
+
+{
+    Check to see if to jid supports xhtml-im by checking the client cache
+    if its in the cache
+        if jid supports it return true
+        if jid was supporting it but is not now, return false
+        if we have received a message with an xhtml-im node, return true
+        if we have never received a message from this to, return true
+    if not in the cache
+        if we have received a message with an xhtml-im node, return true
+        if we have never received a message from this to, return true
+    return false
+}
+function TfrmChat.isToXIMEnabled(tag: TXMLTag): boolean;
+var
+    e: TJabberEntity;
+    toStr: WideString;
+    toJID: TJabberID;
+begin
+    Result := false;
+    if (MainSession.Prefs.getBool('richtext_enabled')) then begin
+        Result := _receivedXIMNode or (not _receivedMessage);
+        toStr := tag.GetAttribute('to');
+        if (toStr = '') then exit;
+        toJID := TJabberID.Create(toStr);
+        e := getBestCapsEntity(toJID);
+        if (e <> nil) then begin
+            if (e.hasFeature(XMLNS_XHTMLIM)) then begin
+                _supportsXIM := true;
+                Result := true;
+            end
+            else if (_supportsXIM) then begin
+                Result := false;
+                _supportsXIM := false;
+                _receivedXIMNode := false; //keep us from sending anythign else
+            end;
+        end
+    end;
+end;
+
+function reparseTag(oldTag: TXMLTag): TXMLTag;
+var
+    _parser: TXMLTagParser;
+
+begin
+    Result := nil;
+    _parser := TXMLTagParser.Create();
+    _parser.Clear();
+    _parser.ParseString(oldTag.XML, '');
+    if (_parser.Count > 0) then
+        Result := _parser.popTag();
+    _parser.Free();
 end;
 
 {---------------------------------------}
@@ -786,6 +873,8 @@ var
   send_allowed: boolean;
   body: Widestring;
   xml: Widestring;
+  ttag: TXMLTag;
+  newTag: TXMLTag;
 begin
   send_allowed := true;
   body := tag.GetBasicText('body');
@@ -803,8 +892,20 @@ begin
       if (xml <> '') then
         tag.addInsertedXml(xml);
 
-      MainSession.SendTag(TXMLTag.Create(tag));
-      showMsg(tag); 
+      //plaugins have had their shot, make a new message tag from the old,
+      //so extra xml will actually exist as tags.
+      newTag := reparseTag(tag);
+      showMsg(newTag);
+
+      //remove xhtml-im elements if needed now that the message has been shown.
+      if (not isToXIMEnabled(newTag)) then begin
+        //
+        ttag := newTag.QueryXPTag(XP_XHTMLIM);
+        if (ttag <> nil) then
+            newTag.RemoveTag(ttag);
+      end;
+
+      MainSession.SendTag(TXMLTag.Create(newTag));
     end;
   end;
 
@@ -839,7 +940,7 @@ begin
 
     _check_event := false;
     MsgList.HideComposing();
-    
+
     Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
 
     // only display + notify if we have something to display :)
@@ -897,19 +998,6 @@ begin
       result := true;
 end;
 
-function getBestCapsEntity(jid: TJabberID): TJabberEntity;
-var
-    p: TJabberPres;
-begin
-    Result := jEntityCache.getByJid(jid.full, '');
-    if (Result = nil) then begin
-        //try it with the first entry in the ppdb
-        p := MainSession.ppdb.FindPres(jid.jid, jid.resource);
-        if (p <> nil) then
-            Result := jEntityCache.getByJid(p.fromJid.full, '');
-    end;
-end;
-
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
@@ -927,17 +1015,10 @@ begin
       exit;
     end;
     xml := '';
-    if (MainSession.Prefs.getBool('richtext_enabled')) then begin
-        //see if client we are chatting with supports xhtml-im before sending it
-        e := getBestCapsEntity(Self._jid);
-        //if we don't have info, assume they support. No entity probably means
-        //we started this chat and haven't locked into a resource yet.
-        if ((e = nil) or e.hasFeature(XMLNS_XHTMLIM)) then begin
-            xhtml := getInputXHTML(MsgOut);
-            if (xhtml <> nil) then
-                xml := xhtml.XML;
-        end;
-    end;
+    xhtml := getInputXHTML(MsgOut);
+    if (xhtml <> nil) then
+        xml := xhtml.XML;
+        
     if (_sendMsg(txt, xml)) then begin
         _sent_composing := false;
         inherited;
@@ -1142,24 +1223,26 @@ begin
         show := tag.GetBasicText('show');
         status := tag.GetBasicText('status');
     end;
-
+    //process if show or status has changed. Ignore things like caps updates
     j.Free();
-    ChangePresImage(ritem, show, status);
+    if ((_show <> show) or (_status <> status)) then begin
+        ChangePresImage(ritem, show, status);
 
-    if (status = '') then
-        txt := show
-    else
-        txt := status;
+        if (status = '') then
+            txt := show
+        else
+            txt := status;
 
-    if (txt = '') then
-        txt := _(sAvailable);
+        if (txt = '') then
+            txt := _(sAvailable);
 
-    if (MainSession.Prefs.getBool('timestamp')) then
-        ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now)
-    else
-        ts := '';
+        if (MainSession.Prefs.getBool('timestamp')) then
+            ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now)
+        else
+            ts := '';
 
-    MsgList.DisplayPresence(jid + ' ' + _(sIsNow) + ' ' + txt, ts);
+        MsgList.DisplayPresence(jid + ' ' + _(sIsNow) + ' ' + txt, ts);
+    end;
 end;
 
 {---------------------------------------}
