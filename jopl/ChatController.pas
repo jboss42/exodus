@@ -378,7 +378,7 @@ end;
 //Initiate an outgoing message for this chat
 procedure TChatController.SendMsg(tag: TXMLTag);
 begin
-  SendMsgCallback('/packet/message@chat=''chat''@to=''' + XPLiteEscape(Lowercase(Self.JID)) + '''',tag);
+  SendMsgCallback('/packet/message@chat=''chat''@to=''' + XPLiteEscape(WideLowercase(Self.JID)) + '''',tag);
 end;
 
 {---------------------------------------}
