@@ -712,8 +712,9 @@ begin
 
     if (Pos('http://jm.jabber.com/caps#3', Self._node) <> 0) then begin
         //JM fixup test only *remove*
-        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
+{        if (_feats.IndexOf(XMLNS_XHTMLIM) = -1) then
             _feats.Add(XMLNS_XHTMLIM);
+}            
         if (_feats.IndexOf(XMLNS_MUC) = -1) then
             _feats.Add(XMLNS_MUC);
     end;
