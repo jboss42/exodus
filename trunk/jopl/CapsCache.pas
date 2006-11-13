@@ -359,6 +359,8 @@ begin
         jEntityCache.Add(from.full, e);
     end;
 
+    e.ClearReferences(); //refs will be rebuilt here
+
     cache := getCache(capid, from);
     e.AddReference(cache);
     has_info := checkInfo(cache, cid, from);
