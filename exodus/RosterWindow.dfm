@@ -485,6 +485,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = presCustomClick
     end
     object N11: TTntMenuItem
+      Tag = 99
       Caption = '-'
     end
   end
