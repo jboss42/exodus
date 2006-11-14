@@ -180,7 +180,6 @@ uses
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
-    PREF_RT_IGNOREFONT = 'richtext_ignore_font';
     PREF_FONT_NAME = 'font_name';
     PREF_FONT_SIZE = 'font_size';
     PREF_FONT_COLOR = 'font_color';
