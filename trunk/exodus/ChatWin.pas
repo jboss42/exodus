@@ -1010,7 +1010,6 @@ var
     txt: Widestring;
     xhtml: TXMLTag;
     xml: Widestring;
-    e: TJabberEntity;
 begin
     // Get the text from the UI
     // and send the actual message out
