@@ -16,7 +16,7 @@ uses
       populate the given rt with the given xhtml-im.
       Starts at current selection point and populates the rt with cdata, changing
       selection font as needed. }
-    function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString = ''): boolean;
+    function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString = ''; plaintext: WideString = ''): boolean;
 
 implementation
 uses
@@ -25,8 +25,14 @@ uses
     XMLCData,
     ExUtils,
     RichEdit2,
-    JabberConst;
+    JabberConst,
+    Session,
+    Emote;
 
+const
+    NBSP: WideChar = #160;
+
+    
 {  Bunch of helper functions }
 
 {--------------------------------------}
@@ -36,6 +42,25 @@ begin
     if (ch = #0) then
         Result := ''
     else Result := ch;
+end;
+
+function escapeCData(inStr: WideString): WideString;
+begin
+    Result := '';
+    //replace significant white space with NBSP
+    if (Length(instr) > 0) then begin
+        if (instr[1] = ' ') then
+            Result := NBSP
+        else
+            Result := instr[1];
+        Result := Result + Copy(InStr, 2, Length(InStr) - 2);
+        if (Length(inStr) <> 1) then begin
+            if (instr[Length(inStr)] = ' ') then
+                Result := Result + NBSP
+            else
+                Result := Result + instr[Length(InStr)];
+        end;
+    end
 end;
 
 function getRGBStr(c: TColor): WideString;
@@ -130,7 +155,7 @@ begin
     if (fsUnderline in s.Style) then
         d.UnderlineType := ultSingle
     else
-        d.UnderlineType := ultNone;        
+        d.UnderlineType := ultNone;
 end;
 
 {--------------------------------------}
@@ -283,7 +308,7 @@ begin
             if (not isEqual(testFont, currFont)) then begin
                 //differing fonts, change tag
                 if (currCData <> '') then
-                    currTag.AddCData(currCData)
+                    currTag.AddCData(escapeCData(currCData))
                 else if ((currTag <> outerTag) and (currTag.ChildCount = 0)) then
                     outerTag.RemoveTag(currTag); //empty tag
 
@@ -298,7 +323,7 @@ begin
         inc(currSelPos); //newline
     until (lineIdx = rtSource.WideLines.Count);
     if (currCData <> '') then
-        currTag.AddCData(currCData);
+        currTag.AddCData(escapeCData(currCData));
   finally
     rtSource.Lines.EndUpdate;
     currFont.Free;
@@ -502,17 +527,89 @@ DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML, true);
 DebugMsg('cleaned: ' + Result.XML, true);
 end;
 
+{---------------------------------------}
+procedure ReplaceEmoticons(rtDest: TExRichEdit; matchingStr: WideString);
+var
+    m: boolean;
+    ms: Widestring;
+    rtf: string;
+    lm: integer;
+    currFont: TFont;
+Begin
+    m := emoticon_regex.Exec(matchingStr);
+    lm := 0;
+    currFont := TFont.Create();
+    AssignFont(currFont, rtDest.SelAttributes);
+    while(m) do begin
+        lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
+        rtDest.SelStart := Length(rtDest.WideLines.Text);
+        rtDest.SelLength := 0;
+        rtDest.WideSelText := emoticon_regex.Match[1]; //text before emoticon
 
-procedure handleNode(rtDest: TexRichEdit; node: TXMLTag);
+        rtDest.SelStart := Length(rtDest.WideLines.Text);
+        rtDest.SelLength := 0;
+
+        // we have a match
+        rtf := '';
+        // Grab the match text and look it up in our emoticon list
+        ms := emoticon_regex.Match[2];
+        if (ms <> '') then begin
+            rtf := EmoticonList.getRTF(ms);
+        end;
+
+        // if we have a legal emoticon object, insert it..
+        // otherwise insert the matched text
+        if (rtf <> '') then begin
+            rtDest.RTFSelText := rtf;
+        end
+        else
+            rtDest.WideSelText := ms;
+
+        rtDest.SelStart := Length(rtDest.WideLines.Text);
+        rtDest.SelLength := 0;
+        assignTextAttribute(rtDest.SelAttributes, currFont); //
+
+        rtDest.WideSelText := emoticon_regex.Match[6];
+
+        // Search for the next emoticon
+        m := emoticon_regex.ExecNext();
+
+        // do a sanity check here, probably because the regex prolly isn't
+        // _REALLY_ widestr compliant
+        if (m) then begin
+            if (length(matchingStr) < emoticon_regex.MatchPos[0]) then
+                m := false;
+        end;
+    end;
+    if (lm <= length(matchingStr)) then begin
+        // we have a remainder
+        rtDest.SelStart := Length(rtDest.WideLines.Text);
+        rtDest.SelLength := 0;
+
+        rtDest.WideSelText := Copy(matchingStr, lm, length(matchingStr) - lm + 1);
+    end;
+    currFont.Free();
+end;
+
+procedure handleCData(rtDest: TExRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
+begin
+    rtDest.SelStart := Length(rtDest.WideLines.Text);
+    rtDest.SelLength := 0;
+    //check to see if we found an emoticon
+    if (handleEmoticons) then
+        ReplaceEmoticons(rtDest, TXMLCData(node).Data)
+    else
+        rtDest.WideSelText := TXMLCData(node).Data;
+end;
+
+procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
 var
     newFont: TFont;
     currFont: TFont;
     idx: Integer;
 begin
     if (node.NodeType = xml_CDATA)then begin
-        rtDest.SelStart := Length(rtDest.WideLines.Text);
-        rtDest.SelLength := 0;
-        rtDest.WideSelText := TXMLCData(node).Data;
+        handleCData(rtDest, node, handleEmoticons);
     end
     else if (node.NodeType = xml_tag) then begin
         if (node.Name = 'a') then begin
@@ -544,7 +641,7 @@ begin
                 //iterate over our children
                 for idx := 0 to node.Nodes.Count - 1 do begin
                     assignTextAttribute(rtDest.SelAttributes, currFont);
-                    handleNode(rtDest, TXMLTag(node.Nodes[idx]));
+                    handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons);
                 end;
                 //post process
                 if (node.Name = 'p') then begin
@@ -559,15 +656,22 @@ begin
     end;
 end;
 
-function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString): boolean;
+function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString = ''; plaintext: WideString = ''): boolean;
 var
     cleanedTag: TXMLtag;
     idx: integer;
     origSelFont: TFont;
     defFont: TFont;
+    foundEmoticon: boolean;
+    tstr : WideString;
 begin
     if (xhtmlTag = nil) then exit;
+    tstr := xhtmlTag.Data;
     cleanedTag := cleanTags(xhtmlTag, ignoredFontStyles);
+    foundEmoticon := (plainText <> '') and
+                      MainSession.Prefs.getBool('emoticons') and
+                      emoticon_regex.Exec(plaintext);
+                      
     origSelFont := TFont.Create;
     defFont := TFont.Create;
     try
@@ -576,7 +680,7 @@ begin
         //iterate over our children
         for idx := 0 to cleanedTag.Nodes.Count - 1 do begin
             AssignTextAttribute(rtDest.SelAttributes, defFont);
-            handleNode(rtDest, TXMLTag(cleanedTag.Nodes[idx]));
+            handleNode(rtDest, TXMLTag(cleanedTag.Nodes[idx]), foundEmoticon)
         end;
 
         AssignTextAttribute(rtDest.SelAttributes, origSelFont);
@@ -586,6 +690,7 @@ begin
         cleanedTag.Free();
     end;
 end;
+
 
 
 end.
