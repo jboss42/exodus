@@ -16,7 +16,15 @@ uses
       populate the given rt with the given xhtml-im.
       Starts at current selection point and populates the rt with cdata, changing
       selection font as needed. }
-    function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString = ''; plaintext: WideString = ''): boolean;
+    function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString = ''; ignoreFontProps: boolean = true): boolean;
+
+    {
+    Remove any tags, attributes and style properties we do not handle.
+
+    "Ignores" as specified by JEP-71, by moving any cdata in an unknown tag
+    to its parent.
+    }
+    function cleanXIMTag(xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
 
 implementation
 uses
@@ -172,14 +180,13 @@ begin
     if (fsUnderline in f.style) then begin
         Result := Result + 'text-decoration:underline;';
     end;
-    if (Result <> '') then
-        Setlength(Result, Length(Result) - 1);
 end;
 
 {--------------------------------------}
 function getFontStyle(f: TFont): WideString;
 begin
     Result := 'font-size:' + getRelativeSize(f.Size) + ';';
+    Result := Result + 'ex-font-size:' + IntToStr(f.Size) + ';';
     Result := Result + 'font-family:' + f.Name + ';';
     Result := Result + 'color:' + getRGBStr(f.Color) + ';';
 end;
@@ -198,7 +205,7 @@ end;
     Get a style attribute for the differences between the two fonts.
 
     These styles have a parent child relationship, what sytle differences exist
-    a child span tag have to its parent.
+    between a child span tag and its parent.
 }
 Function getDiffedStyle(childFont, parentFont: TFont): WideString;
 begin
@@ -208,8 +215,10 @@ begin
         Result := '';
         if (childFont.Name <> parentFont.Name) then
             Result := Result + 'font-family:' + childFont.Name + ';';
-        if (childFont.Size <> parentFont.Size) then
+        if (childFont.Size <> parentFont.Size) then begin
             Result := Result + 'font-size:' + getRelativeSize(childFont.Size) + ';';
+            Result := Result + 'ex-font-size:' + IntToStr(childFont.Size) + ';';
+        end;
         if (childFont.Color <> parentFont.Color) then
             Result := Result + 'color:' + getRGBStr(childFont.Color) + ';';
         if (childFont.Style <> parentFont.style) then begin
@@ -229,9 +238,6 @@ begin
             else if ((not(fsUnderline in childFont.Style)) and (fsUnderline in parentFont.Style)) then
                 Result := Result + 'text-decoration:none;';
         end;
-
-        if (Result <> '') then
-            Setlength(Result, Length(Result) - 1); //eat ;
     end;
 end;
 
@@ -255,7 +261,11 @@ begin
         Result.free();
         Result := root;
     end
-    else root.AddTag(Result).setAttribute('style', tstr);
+    else begin
+        if (tstr[Length(tstr)] = ';') then
+            setLength(tstr, Length(tstr) - 1);
+        root.AddTag(Result).setAttribute('style', tstr);
+    end;
 end;
 
 
@@ -269,7 +279,7 @@ var
   currTag: TXMLTag;
   currCData: WideString;
   lineIdx: Integer;
-
+  tstr: WideString;
 begin
     Result := TXMLTag.Create('html');
     Result.setAttribute('xmlns', XMLNS_XHTMLIM);
@@ -286,7 +296,12 @@ begin
   try
     assignFont(defaultFont, rtSource.DefAttributes);
     assignFont(currFont, rtSource.DefAttributes);
-    outerTag.setAttribute('style', getStyleAttrib(defaultFont));
+    
+    tstr :=  getStyleAttrib(defaultFont);
+    if (tstr[Length(tstr)] = ';') then
+        setLength(tstr, Length(tstr) - 1);
+
+    outerTag.setAttribute('style', tstr);
     currTag := outerTag;
     currSelPos := 0;
     currCData := '';
@@ -341,6 +356,9 @@ const
                                                 'font-weight',
                                                 'font-style',
                                                 'text-decoration');
+    proprietaryStyleProps: array[0..0] of WideString = ('ex-font-size');
+    proprietaryIgnoredStyleProps: array[0..0] of WideString = ('');
+
 type
     TslObject = class
         str: WideString;
@@ -386,8 +404,10 @@ var
     idx: integer;
     oneValue : WideString;
     oneProp: WideString;
+    exSizeExists: boolean;
 begin
     Result := nil;
+    exSizeExists := false;
     styleProps := node.GetAttribute('style');
     if (styleProps <> '') then begin
         Result := TFont.Create;
@@ -402,8 +422,12 @@ begin
             if (oneProp = 'font-family') then begin
                 Result.Name := oneValue;
             end
-            else if (oneProp = 'font-size') then begin
+            else if (not exSizeExists) and (oneProp = 'font-size') then begin
                 Result.Size := getPointSize(oneValue);
+            end
+            else if (oneProp = 'ex-font-size') then begin
+                exSizeExists := true;
+                Result.Size := StrToInt(oneValue);
             end
             else if (oneProp = 'color') then begin
                 Result.Color := GetColor(oneValue);
@@ -447,12 +471,13 @@ begin
     Result := inList(goodTags, tag.Name);
 end;
 
-procedure filterStyleProps(node: TXMLtag; ignoredFontStyles: WideString);
+procedure filterStyleProps(node: TXMLtag; ignoredFontStyles: WideString; cleanProprietaryProps: boolean = true);
 var
     propsStr: WideString;
     props: TStringList;
     idx: integer;
     tstr: wideString;
+    goodProp: boolean;
 begin
     props := TStringList.Create();
     propsStr := node.GetAttribute('style');
@@ -461,13 +486,17 @@ begin
     tstr := '';
     for idx := 0 to props.Count - 1 do begin
         //add if an allowed style and we are not ignoring it
-        if (inList(goodStyleProps, props[idx]) and (Pos(props[idx] + ';', ignoredFontStyles) = 0)) then
+        goodProp := (inList(goodStyleProps, props[idx]) or
+                     (not cleanProprietaryProps and inList(proprietaryStyleProps, props[idx])));
+        if ((goodProp) and (Pos(props[idx] + ';', ignoredFontStyles) = 0)) then
             tstr := tstr + props[idx] + ':' + TslObject(props.Objects[idx]).str + ';';
         //free damn object
         TslObject(props.Objects[idx]).Free;
     end;
+
     if (tstr <> '') then begin
-        SetLength(tstr, Length(tstr) - 1);
+        if (tstr[Length(tstr)] = ';') then
+            setLength(tstr, Length(tstr) - 1);
         node.setAttribute('style', tstr);
     end
     else node.removeAttribute('style');
@@ -486,22 +515,22 @@ begin
     end;
 end;
 
-procedure filterTags(node: TXMLTag; ignoredFontStyles: WideString);
+procedure filterTags(node: TXMLTag; ignoredFontStyles: WideString; cleanProprietaryProps: boolean = true);
 var
     idx: integer;
 begin
     if (node.ChildCount > 0) then begin
         for idx := 0 to node.Nodes.Count - 1 do begin
             if (TXMLTag(node.Nodes[idx]).IsTag) then
-                filterTags(TXMLTag(node.Nodes[idx]), ignoredFontStyles);
+                filterTags(TXMLTag(node.Nodes[idx]), ignoredFontStyles, cleanProprietaryProps);
         end;
     end;
     if (not inList(goodTags, node.Name)) then begin
         node.name := 'span'; //unknown tags become spans
     end;
-    
+
     filterAttribs(node);
-    filterStyleProps(node, ignoredFontStyles);
+    filterStyleProps(node, ignoredFontStyles, cleanProprietaryProps);
 end;
 
 {
@@ -510,20 +539,16 @@ end;
     "Ignores" as specified by JEP-71, by moving any cdata in an unknown tag
     to its parent.
 }
-function cleanTags(xhtmlTag: TXMLTag; ignoredFontStyles: WideString): TXMLTag;
+function cleanXIMTag(xhtmlTag: TXMLTag; cleanIgnoredProps: boolean = true; cleanProprietaryProps: boolean = true): TXMLTag;
 var
-    tTag: TXMLTag;
+    tstr: WideString;
 begin
 DebugMsg('xim cleanTags orig: ' + xhtmlTag.XML, true);
-    if (xhtmlTag.Name = 'body') then
-        ttag := xhtmlTag
-    else ttag := xhtmlTag.getFirstTag('body');
-    Result := TXMLtag.create(ttag); //copy for cleaning
-    filterTags(Result, ignoredFontStyles);
-    tTag := Result.GetFirstTag('p');
-    //change any enclosing "p" tag to span to keep our line formatting
-    if ((ttag <> nil) and (Result.ChildTags[0] = ttag)) then
-        ttag.Name := 'span';
+    Result := TXMLtag.create(xhtmlTag); //copy for cleaning
+    tstr := '';
+    if (cleanIgnoredProps) then
+        tstr := MainSession.Prefs.getString('richtext_ignored_font_styles');
+    filterTags(Result, tstr, cleanProprietaryProps);
 DebugMsg('cleaned: ' + Result.XML, true);
 end;
 
@@ -643,12 +668,6 @@ begin
                     assignTextAttribute(rtDest.SelAttributes, currFont);
                     handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons);
                 end;
-                //post process
-                if (node.Name = 'p') then begin
-                    rtDest.SelStart := Length(rtDest.WideLines.Text);
-                    rtDest.SelLength := 0;
-                    rtDest.RTFSelText := '{\rtf1 \par }';//new paragraph
-                end;
             finally
                 currFont.Free();
             end;
@@ -656,9 +675,9 @@ begin
     end;
 end;
 
-function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; ignoredFontStyles: WideString = ''; plaintext: WideString = ''): boolean;
+function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString; ignoreFontProps: boolean): boolean;
 var
-    cleanedTag: TXMLtag;
+    cleanedTag, bTag: TXMLtag;
     idx: integer;
     origSelFont: TFont;
     defFont: TFont;
@@ -667,20 +686,26 @@ var
 begin
     if (xhtmlTag = nil) then exit;
     tstr := xhtmlTag.Data;
-    cleanedTag := cleanTags(xhtmlTag, ignoredFontStyles);
+    cleanedTag := cleanXIMTag(xhtmlTag, ignoreFontProps);
+    bTag := cleanedTag.GetFirstTag('body');
     foundEmoticon := (plainText <> '') and
                       MainSession.Prefs.getBool('emoticons') and
                       emoticon_regex.Exec(plaintext);
-                      
+
     origSelFont := TFont.Create;
     defFont := TFont.Create;
     try
         AssignFont(defFont, rtDest.defAttributes);
         AssignFont(origSelFont, rtDest.selAttributes);
+        //if first node is a p tag, make it a span...
+        if ((bTag.Nodes.Count > 0) and
+            (TXMLTag(bTag.Nodes[0]).NodeType = xml_tag) and
+            (TXMLTag(bTag.Nodes[0]).Name = 'p')) then
+            TXMLTag(bTag.Nodes[0]).Name := 'span';
         //iterate over our children
-        for idx := 0 to cleanedTag.Nodes.Count - 1 do begin
+        for idx := 0 to bTag.Nodes.Count - 1 do begin
             AssignTextAttribute(rtDest.SelAttributes, defFont);
-            handleNode(rtDest, TXMLTag(cleanedTag.Nodes[idx]), foundEmoticon)
+            handleNode(rtDest, TXMLTag(bTag.Nodes[idx]), foundEmoticon)
         end;
 
         AssignTextAttribute(rtDest.SelAttributes, origSelFont);
