@@ -3849,6 +3849,12 @@ begin
             // Got a window and it is NOT the program manager (desktop).
             Windows.GetClientRect(w, wSize);
             mon := Screen.MonitorFromWindow(w, mdNearest);
+            //If window gets destroyed in between calls, returned
+            //monitor could be nil which is causing crash, added check for this.
+            if (mon = nil) then  begin
+              result := DT_UNKNOWN;
+              exit;
+            end;
             if((mon.BoundsRect.Left = wSize.Left) and
                (mon.BoundsRect.Right = wSize.Right) and
                (mon.BoundsRect.Top = wSize.Top) and
