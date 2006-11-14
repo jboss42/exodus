@@ -907,6 +907,12 @@ begin
 
       MainSession.SendTag(TXMLTag.Create(newTag));
     end;
+  end
+  else begin
+    // This is a delayed message.
+    // It was already sent, but not displayed because we were paused.
+    // This is a rare situation, but possible.
+    showMsg(tag);
   end;
 
 end;
