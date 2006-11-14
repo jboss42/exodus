@@ -203,10 +203,7 @@ begin
 
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
-        if (Msg.isMe) then
-            txt := ''
-        else txt := MainSession.Prefs.getString('richtext_ignored_font_styles');
-        XIMToRT(richedit, ximTag, txt, Msg.Body);
+        XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
         ximTag.Free();
     end;
 

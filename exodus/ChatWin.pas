@@ -227,6 +227,7 @@ uses
     ShellAPI, RosterWindow, Emoticons,
     Entity,
     XMLParser,
+    RT_XIMConversion,
     EntityCache;
 
 const
@@ -898,14 +899,14 @@ begin
       showMsg(newTag);
 
       //remove xhtml-im elements if needed now that the message has been shown.
-      if (not isToXIMEnabled(newTag)) then begin
-        //
-        ttag := newTag.QueryXPTag(XP_XHTMLIM);
-        if (ttag <> nil) then
-            newTag.RemoveTag(ttag);
+      ttag := newTag.QueryXPTag(XP_XHTMLIM);
+      if (ttag <> nil) then begin
+        if (isToXIMEnabled(newTag)) then
+            newTag.AddTag(CleanXIMTag(tTag, false, true)); //clean any proprietary styles before sending
+        newTag.RemoveTag(ttag);
       end;
-
-      MainSession.SendTag(TXMLTag.Create(newTag));
+      MainSession.SendTag(TXMLTag.create(newTag));
+      newTag.Free();
     end;
   end
   else begin
