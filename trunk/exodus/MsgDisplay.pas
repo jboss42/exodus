@@ -122,7 +122,7 @@ begin
     fvl := RichEdit.FirstVisibleLine;
     at_bottom := RichEdit.atBottom;
     is_scrolling := RichEdit.isScrolling;
-
+    ximTag := nil;
     txt := '{\rtf1 {\colortbl;'  +
         RTFColor(color_time)   + // \cf1
         RTFColor(color_server) + // \cf2
@@ -195,7 +195,7 @@ begin
 
     txt := txt + '\cf6 }';
 
-    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
@@ -206,12 +206,11 @@ begin
         if (Msg.isMe) then
             txt := ''
         else txt := MainSession.Prefs.getString('richtext_ignored_font_styles');
-
-        XIMToRT(richedit, ximTag, txt);
+        XIMToRT(richedit, ximTag, txt, Msg.Body);
         ximTag.Free();
     end;
-    
-    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+
+    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
     RichEdit.RTFSelText := '{\rtf1 \par }';
 
