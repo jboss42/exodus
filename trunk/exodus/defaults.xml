@@ -24,9 +24,9 @@
     <aa_reduce_pri value="1" control="chkAAReducePri"/>
     <auto_xa value="1" control="chkAutoXA"/>
     <auto_disconnect value="0" control="chkAutoDisconnect"/>
-    <away_time value="5" control="spnAway"/>
-    <xa_time value="30" control="spnXA"/>
-    <disconnect_time value="180" control="spnDisconnect"/>        
+	<away_time value="5" control="txtAwayTime"/>
+	<xa_time value="30" control="txtXATime"/>
+    <disconnect_time value="180" control="txtDisconnectTime"/>        
     <away_status control="txtAway">
       <control name="lblAwayStatus"/>
     </away_status>
@@ -71,24 +71,24 @@
     <toast_alpha value="0" control="chkToastAlpha"/>
     <snap_on value="1" control="chkSnap"/>
     <warn_closebusy value="1" control="chkBusy"/>
-    <roster_alpha_val value="255" control="spnRosterAlpha">
+	<roster_alpha_val value="255" control="txtRosterAlpha">
       <control name="trkRosterAlpha"/>
-      <control name="txtRosterAlpha"/>
+	  <!--control name="txtRosterAlpha"/-->
     </roster_alpha_val>
-    <toast_alpha_val value="255" control="spnToastAlpha">
+	<toast_alpha_val value="255" control="txtToastAlpha">
       <control name="trkToastAlpha"/>
-      <control name="txtToastAlpha"/>
+      <!--control name="txtToastAlpha"/-->
     </toast_alpha_val>
     <toast_duration value="5" control="txtToastDuration">
       <control name="lblToastDuration"/>
     </toast_duration>
-    <edge_snap value="15" control="spnSnap">
-      <control name="txtSnap"/>
-      <control name="trkSnap"/>
+	<edge_snap value="15" control="txtSnap">
+	  <!--control name="txtSnap"/-->
+	  <control name="trkSnap"/>
     </edge_snap>
-    <chat_memory value="60" control="spnChatMemory">
-      <control name="txtChatMemory"/>
-      <control name="trkChatMemory"/>
+	<chat_memory value="60" control="txtChatMemory">
+      <!--control name="txtChatMemory"/-->
+	  <control name="trkChatMemory"/>
     </chat_memory>
     <esc_close value="1" control="chkEscClose"/>
     <close_hotkey value="None" control="txtCloseHotkey"/>
@@ -165,13 +165,13 @@
     <custom_icondefs value="custom-icons.xml" control="txtCustomEmoteFilename"/>
 
     <!-- Network Options -->
-    <recon_tries value="25" control="spnAttempts">
+	<recon_tries value="25" control="txtAttempts">
       <control name="lblAttempts"/>
-      <control name="txtAttempts"/>
+	  <!--control name="txtAttempts"/-->
     </recon_tries>
-    <recon_time value="0" control="spnTime">
+	<recon_time value="0" control="txtTime">
       <control name="lblTime"/>
-      <control name="txtTime"/>
+	  <!--control name="txtTime"/-->
     </recon_time>        
     <http_proxy_approach value="0" control="cboProxyApproach">
       <control name="lblProxyApproach"/>
