@@ -53,6 +53,7 @@ type
     _dirty_locale: Widestring;
     _old_locale: Widestring;
     _lang_codes: TStringlist;
+    _initial_chkdebug_state: boolean;
 
     procedure ScanLocales();
   public
@@ -79,7 +80,8 @@ implementation
 uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
-    PathSelector, PrefController, Registry, Session, StrUtils;
+    PathSelector, PrefController, Registry, Session, StrUtils,
+    jabber1;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -204,6 +206,18 @@ begin
     // System Prefs
     inherited;
 
+    // Show the debug window if "show on startup" is selected and
+    // wasn't selected when the prefs window was created.
+    if (chkDebug.Checked) then begin
+        if (_initial_chkdebug_state = false) then begin
+            frmExodus.ShowXML1Click(nil);
+            _initial_chkdebug_state := true;
+        end
+    end
+    else
+        _initial_chkdebug_state := false;
+
+
     with MainSession.Prefs do begin
         i := cboLocale.ItemIndex;
         if (i < 0) then i := 0;
@@ -276,6 +290,7 @@ begin
         txtDefaultNick.Visible := False;
         lblDefaultNick.Visible := False;
     end;
+    _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
 end;
 
 end.
