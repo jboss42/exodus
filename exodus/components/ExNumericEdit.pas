@@ -3,7 +3,7 @@ unit ExNumericEdit;
 interface
 
 uses
-  Classes, ExtCtrls, TntStdCtrls, TntComCtrls, Controls;
+  Classes, ExtCtrls, TntStdCtrls, TntComCtrls, Controls, ComCtrls;
 
 type
 
@@ -28,11 +28,10 @@ type
   protected
     { Protected declarations }
     procedure CreateWindowHandle(const Params: TCreateParams); override;
-    //function  GetChildOwner: TComponent; override;
 
     procedure editNumKeyPress(Sender: TObject; var Key: Char);
     procedure editNumExit(Sender: TObject);
-
+    procedure spnNumClicked(Sender: TObject; Button: TUDBtnType);
     function IsValidChar(Key: Char): Boolean; virtual;
     function IsValid(): Boolean; virtual;
 
@@ -103,6 +102,7 @@ begin
     _value := _min;
     //Create association between spin and edit controls
     spnNum.Associate := editNum;
+    _onChange := nil;
 
 end;    {Create}
 
@@ -133,6 +133,9 @@ begin
     Min := _min;
     //Only need 3 anchors for proper resizing
     Anchors :=  [akTop, akBottom, akRight];
+    spnNum.OnClick := Self.spnNumClicked;
+
+
   end;  { TExUpDown }
 
 end;
@@ -153,12 +156,6 @@ begin
     inherited CreateWindowHandle(p);
 
 end;  { CreateWindowHandle }
-
-
-//function TExNumericEdit.GetChildOwner: TComponent;
-//begin
-// Result := Self;
-//end;
 
 
 //Processes key press event for the edit control.
@@ -185,7 +182,17 @@ end;
 procedure TExNumericEdit.editNumExit(Sender: TObject);
 begin
    Self.IsValid();
+   if (Assigned(OnChange)) then
+     OnChange(Sender);
 end;
+
+//Let the form handle any "OnChange" events if required.
+procedure TExNumericEdit.spnNumClicked(Sender: TObject; Button: TUDBtnType);
+ begin
+   if (Assigned(OnChange)) then
+     OnChange(Sender);
+ end;
+
 
 //Checks if sequence of characters is valid number and if it is within the range
 function TExNumericEdit.IsValid(): Boolean;
@@ -229,8 +236,11 @@ begin
         editNum.SetFocus;
         Result := false;
       end
-      else
-       Result := true;    
+      else begin
+        _value := numValue;
+        editNum.Text := IntToStr(_value);
+        spnNum.Position := _value;
+      end;
 end;
 
 procedure TExNumericEdit.SetValue(value: Widestring);
@@ -250,7 +260,7 @@ end;
 
 function TExNumericEdit.GetValue(): Widestring;
 begin
-   Result := IntToStr(_value);
+   Result := IntToStr(spnNum.Position);
 end;
 
 procedure TExNumericEdit.SetMax(max: Integer);
