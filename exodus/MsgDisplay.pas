@@ -44,6 +44,8 @@ uses
 
 const
     MAX_MSG_LENGTH = 512;
+//forward declaration
+procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
@@ -117,6 +119,7 @@ var
     at_bottom: boolean;
     is_scrolling: boolean;
     ximTag: TXMLTag;
+    hlStartPos: integer;
 begin
     // add the message to the richedit control
     fvl := RichEdit.FirstVisibleLine;
@@ -200,17 +203,17 @@ begin
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
     RichEdit.RTFSelText := txt;
-
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
+        hlStartPos := RichEdit.SelStart;
         XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
+        HighlightKeywords(RichEdit, hlStartPos);
         ximTag.Free();
     end;
 
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
     RichEdit.RTFSelText := '{\rtf1 \par }';
-
     // AutoScroll the window
     if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then begin
         RichEdit.ScrollToBottom();
@@ -256,6 +259,47 @@ begin
 
   result := result + Copy(txt,pos,length(txt)-pos+1); //Append the remaining chunk
 end;
+
+procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);
+var
+    keywords : RegExpr.TRegExpr;
+    hlColor: TColor;
+    allTxt: WideString;
+    currPos: integer;
+    len: integer;
+    tint: integer;
+begin
+    hlColor := MainSession.Prefs.getInt('color_me');
+
+    allTxt := Copy(rtDest.WideLines.Text, startPos - 1, length(rtDest.WideLines.Text));
+
+    //Create a TRegExpr based on Keyword Prefs
+    keywords := CreateKeywordsExpr();
+    currPos := startPos;
+    len := length(rtDest.WideLines.Text);
+
+    if (keywords <> nil) then begin
+        try
+            //Find one or more keyword matches and format them
+            if (keywords.Exec(allTxt)) then begin
+                repeat
+                    tint := rtDest.FindWideText(keywords.Match[0], currPos, len, []);
+                    if (tint <> -1) then begin
+                        rtDest.SelStart := tint;
+                        rtDest.SelLength := keywords.MatchLen[0];
+                        rtDest.SelAttributes.Color := hlColor;
+                        rtDest.SelAttributes.Bold := true;
+                        currPos := tint + 1;
+                    end;
+                until not Keywords.ExecNext;
+            end;
+        except
+        end;
+
+        FreeAndNil(keywords);
+    end;
+end;
+
 
 end.
 
