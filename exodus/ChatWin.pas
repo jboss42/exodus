@@ -590,7 +590,7 @@ begin
     end;
 
     // setup the callbacks if we don't have them already
-    if (_pcallback <> -1) then
+    if (_pcallback = -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + WideLowerCase(cjid) + '*"]');
 
