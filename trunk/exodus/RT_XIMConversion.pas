@@ -16,7 +16,7 @@ uses
       populate the given rt with the given xhtml-im.
       Starts at current selection point and populates the rt with cdata, changing
       selection font as needed. }
-    function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString = ''; ignoreFontProps: boolean = true): boolean;
+    procedure XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString = ''; ignoreFontProps: boolean = true);
 
     {
     Remove any tags, attributes and style properties we do not handle.
@@ -675,7 +675,7 @@ begin
     end;
 end;
 
-function XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString; ignoreFontProps: boolean): boolean;
+procedure XIMToRT(rtDest: TexRichEdit; xhtmlTag: TXMLTag; plaintext: WideString; ignoreFontProps: boolean);
 var
     cleanedTag, bTag: TXMLtag;
     idx: integer;
@@ -684,6 +684,7 @@ var
     foundEmoticon: boolean;
     tstr : WideString;
 begin
+
     if (xhtmlTag = nil) then exit;
     tstr := xhtmlTag.Data;
     cleanedTag := cleanXIMTag(xhtmlTag, ignoreFontProps);
@@ -715,7 +716,4 @@ begin
         cleanedTag.Free();
     end;
 end;
-
-
-
 end.
