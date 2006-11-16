@@ -557,6 +557,7 @@ type
     procedure updateNextNotifyButton();
     procedure checkFlash();
     procedure OnNextNotifyClick();
+
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -782,7 +783,10 @@ published
     }
     procedure OptionsMenuItemsChecks();
 
-
+    {
+        Disables/enables menu items for group and contact menus based on roster selection
+    }
+    procedure ResetMenuItems(Node: TTnTTreeNode);
   end;
 
   {
@@ -4902,6 +4906,35 @@ begin
     f := getNextDockedNotifying(Tabs.ActivePage);
     if (f <> nil) then
         BringDockedToTop(f);
+end;
+
+//Reset menu items for contacts and groups based on the roster selection
+procedure TfrmExodus.ResetMenuItems(Node: TTnTTreeNode);
+begin
+   if (Node = nil) then begin
+     mnuPeople_Group_RenameGroup.Enabled := false;
+     mnuPeople_Group_DeleteGroup.Enabled := false;
+     mnuPeople_Contacts_RenameContact.Enabled := false;
+     mnuPeople_Contacts_DeleteContact.Enabled := false;
+     mnuPeople_Contacts_BlockContact.Enabled := false;
+     mnuPeople_Contacts_ContactProperties.Enabled := false;
+   end
+   else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
+     mnuPeople_Group_RenameGroup.Enabled := true;
+     mnuPeople_Group_DeleteGroup.Enabled := true;
+     mnuPeople_Contacts_RenameContact.Enabled := false;
+     mnuPeople_Contacts_DeleteContact.Enabled := false;
+     mnuPeople_Contacts_BlockContact.Enabled := false;
+     mnuPeople_Contacts_ContactProperties.Enabled := false;
+   end
+   else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
+     mnuPeople_Group_RenameGroup.Enabled := false;
+     mnuPeople_Group_DeleteGroup.Enabled := false;
+     mnuPeople_Contacts_RenameContact.Enabled := true;
+     mnuPeople_Contacts_DeleteContact.Enabled := true;
+     mnuPeople_Contacts_BlockContact.Enabled := true;
+     mnuPeople_Contacts_ContactProperties.Enabled := true;
+   end;
 end;
 
 initialization
