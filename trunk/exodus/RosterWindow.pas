@@ -759,6 +759,7 @@ begin
         lblNewUser.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
         Self.showAniStatus();
+        frmExodus.ResetMenuItems(nil);
     end;
 end;
 
@@ -2827,6 +2828,7 @@ var
     ri: TJabberRosterItem;
 begin
     // Rename some grp.
+    if (treeRoster.Selected = nil) then exit;
     go := TJabberGroup(treeRoster.Selected.Data);
     if (go = nil) then exit;
 
@@ -3198,6 +3200,7 @@ procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
   Node: TTreeNode);
 begin
     _change_node := TTnTTreeNode(Node);
+    frmExodus.ResetMenuItems(_change_node);
     if (Node <> nil) then begin
         _last_search := Node.AbsoluteIndex;
         if (getNodeType(TTnTTreeNode(Node)) = node_ritem) then begin
