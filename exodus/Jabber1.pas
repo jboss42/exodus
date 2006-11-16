@@ -3642,7 +3642,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Contacts_RenameContactClick(Sender: TObject);
 begin
-    frmRosterWindow.RenameProfile1.Click();
+    frmRosterWindow.popRenameClick(Sender);
 end;
 
 procedure TfrmExodus.mnuPeople_Group_RenameGroupClick(Sender: TObject);
