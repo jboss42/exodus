@@ -1283,15 +1283,21 @@ end;
 {---------------------------------------}
 procedure TExodusController.Connect;
 begin
+    // This must go against frmExodus, not MainSession
+    // otherwise some strange reconnect issues get triggered
+    // by there being no profile selected.
     if not MainSession.Active then
-        MainSession.Connect();
+        frmExodus.DoConnect();
 end;
 
 {---------------------------------------}
 procedure TExodusController.Disconnect;
 begin
+    // This must go against frmExodus, not MainsSession
+    // as MainSession.Disconnect() triggers the reconnect
+    // logic.
     if MainSession.Active then
-        MainSession.Disconnect();
+        frmExodus.mnuDisconnectClick(nil);
 end;
 
 {---------------------------------------}
