@@ -1567,9 +1567,12 @@ var
     aa: TExPluginAuth;
 begin
     // spin up a new auth agent, and register it w/ the session.
-    aa := TExPluginAuth.Create();
-    aa.plugin := AuthAgent;
-    MainSession.setAuthAgent(aa);
+    if (authAgent <> nil) then begin
+        aa := TExPluginAuth.Create();
+        aa.plugin := AuthAgent;
+        MainSession.setAuthAgent(aa);
+    end
+    else MainSession.setAuthAgent(nil);
 end;
 
 {---------------------------------------}

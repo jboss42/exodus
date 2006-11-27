@@ -234,7 +234,9 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    EntityCache, CapsCache, 
+    EntityCache, CapsCache,
+//    DisplayName, //display name cache
+    PluginAuth,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence, XMLVCard;
 
@@ -291,6 +293,9 @@ begin
     // Create all the things which might register w/ the session
     jCapsCache.SetSession(Self);
 
+    //display name cache
+//    DisplayName.getDisplayNameCache().setSession(Self);
+    
     // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
@@ -754,6 +759,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.SessionCallback(event: string; tag: TXMLTag);
 begin
+    Prefs.setString('temp-pw', ''); //clear temp password
     // callback for our xmpp-session-start
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
         _dispatcher.DispatchSignal('/session/error/auth', tag);
@@ -1202,20 +1208,24 @@ var
 begin
     assert(_profile <> nil); //should not try to set authagent until profile is set
     assert(_stream = nil); //should not try to change authagent once connected
+    //if the current auth agent has a plugin associated, use it regardless of
+    //what the profile specifies...
+    
+    if (_auth_agent = nil) or (not _auth_agent.InheritsFrom(TExPluginAuth)) then begin
+        // Create the AuthAgent
+        if (profile.SSL_Cert <> '')  then
+            auth := CreateJabberAuth('EXTERNAL', Self)
+        else if (_profile.KerbAuth) then
+            auth := CreateJabberAuth('GSSAPI', Self)
+        else
+            auth := CreateJabberAuth('XMPP', Self);
 
-    // Create the AuthAgent
-    if (profile.SSL_Cert <> '')  then
-        auth := CreateJabberAuth('EXTERNAL', Self)
-    else if (_profile.KerbAuth) then
-        auth := CreateJabberAuth('GSSAPI', Self)
-    else
-        auth := CreateJabberAuth('XMPP', Self);
+        if (auth = nil) then
+            raise Exception.Create('No appropriate Auth Agent found.');
 
-    if (auth = nil) then
-        raise Exception.Create('No appropriate Auth Agent found.');
-
-    // set this auth agent as our current one
-    setAuthAgent(auth);
+        // set this auth agent as our current one
+        setAuthAgent(auth);
+    end;
 end;
 
 {---------------------------------------}
@@ -1235,7 +1245,9 @@ end;
 {---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
 begin
-    // our auth-agent is all set
+    // our auth-agent is all set\
+    //remove temp password from prefs
+    Prefs.setString('temp-pw', '');
     if (ok) then begin
         _authd := true;
         _profile.NewAccount := false;
