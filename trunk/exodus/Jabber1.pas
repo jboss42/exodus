@@ -2868,7 +2868,7 @@ var
     i,
     nCount     : integer;
     acFileName : array [0..cnMaxFileNameLen] of char;
-    p          : TPoint;
+    p, orig_p  : TPoint;
     Node       : TTreeNode;
     ri         : TJabberRosterItem;
     f          : TForm;
@@ -2890,6 +2890,7 @@ begin
 }
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
+    orig_p := p;
     //First check if file is dragged to the chat window
     //Convert dropping point to tab coordinates
     p := tabs.ParentToClient(p, Self);
@@ -2914,6 +2915,7 @@ begin
       end;
     end;
 
+    p := orig_p;
     // Translate to screen coordinates, then back to client coordinates
     // for the roster window.  This would have been easier if RosterWindow
     // had worked as the target of DragAcceptFiles.
