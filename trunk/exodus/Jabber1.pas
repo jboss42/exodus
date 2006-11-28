@@ -2871,8 +2871,9 @@ var
     p          : TPoint;
     Node       : TTreeNode;
     ri         : TJabberRosterItem;
-//    f          : TForm;
+    f          : TForm;
     j          : TJabberID;
+    pageIndex  : integer;
 begin
     // Accept some files being dropped on this form
     // If we are expaned, and not showing the roster tab,
@@ -2889,6 +2890,29 @@ begin
 }
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
+    //First check if file is dragged to the chat window
+    //Convert dropping point to tab coordinates
+    p := tabs.ParentToClient(p, Self);
+    if (PtInRect(tabs.ClientRect, p)) then begin
+      //File is draged to the tab area (active or not active)
+      pageIndex := Tabs.IndexOfTabAt(p.X, p.Y);
+      if ((pageIndex >= 0) and (pageIndex <= Tabs.PageCount)) then begin
+        f := getTabForm(Tabs.Pages[pageIndex]);
+        if (f is TfrmChat) then begin
+           TfrmChat(f).AcceptFiles(msg);
+        end;
+        exit;
+      end;
+
+      //File has been dragged to active page
+      if (PtInRect(tabs.ActivePage.ClientRect, p)) then begin
+         f := getTabForm(Tabs.ActivePage);
+         if (f is TfrmChat) then begin
+            TfrmChat(f).AcceptFiles(msg);
+         end;
+         exit;
+      end;
+    end;
 
     // Translate to screen coordinates, then back to client coordinates
     // for the roster window.  This would have been easier if RosterWindow
