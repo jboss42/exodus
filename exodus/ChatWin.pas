@@ -1354,7 +1354,8 @@ begin
         _sent_composing := false;
         _send_composing := true;
     end
-    else if (_send_composing) then begin
+    else if ((_send_composing) and
+            (MsgOut.Text <> ''))then begin
         _sendComposing(_reply_id);
         _sent_composing := true;
         _send_composing := false;
