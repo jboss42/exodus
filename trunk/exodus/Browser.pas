@@ -168,7 +168,8 @@ implementation
 uses
     EntityCache, GnuGetText, CommandWizard, DiscoIdentity,
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
-    JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1;
+    JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1,
+    RosterImages;
 
 const
     sInvalidJID = 'The Jabber ID you entered is invalid.';
@@ -341,6 +342,8 @@ begin
 
     _scb := MainSession.RegisterCallback(SessionCallback, '/session/disconnected');
     _ecb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
+
+    ImageIndex := RosterImages.RI_BROWSER_INDEX;
 end;
 
 {---------------------------------------}

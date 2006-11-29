@@ -28,9 +28,6 @@ inherited frmBrowse: TfrmBrowse
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 32
-      ExplicitWidth = 422
-      ExplicitHeight = 22
       object CoolBar1: TCoolBar
         Left = 0
         Top = 0
@@ -49,8 +46,6 @@ inherited frmBrowse: TfrmBrowse
         EdgeBorders = []
         EdgeInner = esNone
         EdgeOuter = esNone
-        ExplicitWidth = 249
-        ExplicitHeight = 22
         object tlbToolBar: TToolBar
           Left = 9
           Top = 0
@@ -165,8 +160,6 @@ inherited frmBrowse: TfrmBrowse
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 0
-    ExplicitTop = 116
-    ExplicitHeight = 255
     object vwBrowse: TTntListView
       Left = 73
       Top = 3
@@ -204,7 +197,6 @@ inherited frmBrowse: TfrmBrowse
       OnColumnClick = vwBrowseColumnClick
       OnData = vwBrowseData
       OnResize = vwBrowseResize
-      ExplicitHeight = 249
     end
     object pnlInfo: TTntPanel
       Left = 3
@@ -216,7 +208,6 @@ inherited frmBrowse: TfrmBrowse
       BorderWidth = 4
       TabOrder = 1
       Visible = False
-      ExplicitHeight = 249
       object lblIdentity: TTntLabel
         Left = 4
         Top = 4
@@ -276,7 +267,6 @@ inherited frmBrowse: TfrmBrowse
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
-        ExplicitHeight = 92
       end
     end
   end
@@ -307,7 +297,6 @@ inherited frmBrowse: TfrmBrowse
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitTop = 54
     DesignSize = (
       422
       31)
@@ -378,7 +367,6 @@ inherited frmBrowse: TfrmBrowse
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 3
-    ExplicitTop = 85
     DesignSize = (
       422
       31)
