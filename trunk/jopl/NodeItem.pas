@@ -596,6 +596,8 @@ begin
         Result := RosterTreeImages.Find(prefix + 'online_blocked')
     else if (show = 'offline_blocked') then
         Result := RosterTreeImages.Find(prefix + 'offline_blocked')
+    else if (show = 'observer') then
+        Result := RosterTreeImages.Find(prefix + 'observer')
     else
         Result := RosterTreeImages.Find(prefix + 'available');
 
