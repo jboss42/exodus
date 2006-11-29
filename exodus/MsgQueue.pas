@@ -125,7 +125,8 @@ uses
     MsgList, MsgController, ChatWin, ChatController,
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
-    JabberUtils, ExUtils,  MsgRecv, Session, PrefController;
+    JabberUtils, ExUtils,  MsgRecv, Session, PrefController,
+    RosterImages;
 const
     SE_UPDATE_CHAT = '/session/gui/update-chat';
     SE_CONNECTED = '/session/authenticated';
@@ -390,6 +391,8 @@ begin
     _updateChatCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE_CHAT);
     _connectedCB    := MainSession.RegisterCallback(SessionCallback, SE_CONNECTED);
     _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
+
+    ImageIndex := RosterImages.RI_NEWSITEM_INDEX;
 end;
 
 {---------------------------------------}
