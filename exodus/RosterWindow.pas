@@ -1585,6 +1585,8 @@ begin
 
         cur_node.Text := String(tmps);
         cur_node.Data := ritem;
+        if (ritem.Subscription = 'from') then
+            ritem.setPresenceImage('observer');
         if (ritem.Ask = 'subscribe') then
             ritem.setPresenceImage('pending');
         cur_node.ImageIndex := ritem.ImageIndex;
