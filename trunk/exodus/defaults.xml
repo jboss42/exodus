@@ -342,7 +342,7 @@
     <brand_browser value="1"/>
     <brand_vcard value="1"></brand_vcard>
     <!-- lock down our nickname -->
-    <brand_prevent_change_nick value="1" state="readonly"/>
+    <brand_prevent_change_nick value="0"/>
     <!-- add roster network prefs.
         This brandable pref defines networks that will show in the
         Add to Roster dialog. The pref is a tuple of display name, network type
