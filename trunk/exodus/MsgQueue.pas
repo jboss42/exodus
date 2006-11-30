@@ -122,6 +122,7 @@ implementation
 
 uses
     RosterWindow, //for roster rendering
+    DisplayName,
     MsgList, MsgController, ChatWin, ChatController,
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
@@ -172,22 +173,13 @@ end;
 procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
 var
     tmp_jid: TJabberID;
-    ritem: TJabberRosterItem;
 begin
     // display this item
     e.img_idx := img_idx;
     e.msg := msg;
 
     tmp_jid := TJabberID.Create(e.from);
-    ritem := MainSession.roster.Find(tmp_jid.jid);
-    if (ritem = nil) then
-        ritem := MainSession.roster.Find(tmp_jid.full);
-
-    if (ritem <> nil) then
-        e.Caption := ritem.Text
-    else
-        e.Caption := tmp_jid.getDisplayJID();
-
+    e.caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
     tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
     _queue.Add(e);

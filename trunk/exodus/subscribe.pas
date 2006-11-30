@@ -157,7 +157,7 @@ var
 begin
     showNow := false;
     _jid := TJabberID.Create(jid);
-    lblJID.Caption := _jid.getDisplayFull();
+    lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayJIDBare(_jid);
 
     chkSubscribe.Checked := true;
     chkSubscribe.Enabled := true;

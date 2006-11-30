@@ -145,7 +145,8 @@ implementation
 
 {$R *.dfm}
 uses
-    RosterImages, 
+    RosterImages,
+    DisplayName, 
     JabberUtils, ExUtils,  Jabber1, JabberConst, JabberID, Presence, InputPassword,
     GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
 const
@@ -847,7 +848,7 @@ var
 begin
     recipient := r;
     jid := TJabberID.Create(r);
-    recipDisplay := jid.getDisplayFull();
+    recipDisplay := DisplayName.getDisplayNameCache().getDisplayJIDBare(jid);
     jid.Free();
 end;
 function  TFileXferPkg.getRecip(): Widestring;

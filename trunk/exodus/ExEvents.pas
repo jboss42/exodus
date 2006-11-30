@@ -82,6 +82,7 @@ function ParseLastEvent(iq: TXMLTag): Widestring;
 implementation
 uses
     // Exodus/JOPL stuff
+    DisplayName,
     RosterImages,
     Forms,
     StateForm,
@@ -143,7 +144,7 @@ begin
             img_idx := 23;
             msg := e.str_content;
             notify := true;
-            notifyMsg := _('Chat with ') + tmp_jid.getDisplayJID();
+            notifyMsg := _('Chat with ') + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
             notifyType := 'notify_newchat';
         end;
 
@@ -156,7 +157,7 @@ begin
             msg := e.str_content;
 
             notify := true;
-            notifyMsg := _(sMsgMessage) + tmp_jid.getDisplayJID();
+            notifyMsg := _(sMsgMessage) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
             notifyType := 'notify_normalmsg';
 
             xml := e.tag;
@@ -180,7 +181,7 @@ begin
             img_idx := 21;
             msg := e.str_content;
             notify := true;
-            notifyMsg := _(sMsgInvite) + tmp_jid.getDisplayJID();
+            notifyMsg := _(sMsgInvite) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
             notifyType := 'notify_invite';
         end;
 
@@ -465,7 +466,7 @@ begin
             tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
             from := tmp_tag.QueryXPData('/x/invite@from');
             cjid := TJabberID.Create(tag.getAttribute('from'));
-            str_content := cjid.getDisplayFull();
+            str_content := DisplayName.getDisplayNameCache().getDisplayJIDBare(cjid);
             cjid.Free();
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
         end
@@ -475,7 +476,7 @@ begin
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
             cjid := TJabberID.Create(tmp_tag.getAttribute('jid'));
-            str_content := cjid.getDisplayFull();
+            str_content := DisplayName.getDisplayNameCache().getDisplayJIDBare(cjid);
             cjid.Free();
         end
 
@@ -494,7 +495,7 @@ begin
             for j := 0 to i_tags.Count - 1 do begin
                 ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
                 MainSession.roster.parseItem(ri, i_tags[j]);
-                _data_list.AddObject(ri.jid.getDisplayJID(), ri);
+                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
             end;
             i_tags.Free();
         end

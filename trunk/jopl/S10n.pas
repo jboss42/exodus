@@ -235,21 +235,23 @@ procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
 var
     from: TJabberID;
     ritem: TJabberRosterItem;
+    tstr: WideString;
 begin
     { Todo:  Move this UI code out of jopl.  Perhaps throw a
              /session/gui/unsubscribed event and do it in GUIFactory? }
-             
+
     // getting a s10n denial or someone is revoking us
     from := TJabberID.Create(tag.getAttribute('from'));
+    tstr := DisplayName.getDisplayNameCache().getDisplayName(from) + ' (' + from.getDisplayJID + ')';
     ritem := MainSession.roster.Find(from.jid);
     if (ritem <> nil) then begin
         if (ritem.ask = 'subscribe') then begin
             // we are got denied by this person
-            MessageDlgW(WideFormat(sS10nDeny, [from.getDisplayJID()]), mtInformation, [mbOK], 0);
+            MessageDlgW(WideFormat(sS10nDeny, [tstr]), mtInformation, [mbOK], 0);
             ritem.remove();
         end
         else begin
-            MessageDlgW(WideFormat(sS10nUnsub, [ritem.Text]), mtInformation, [mbOK], 0);
+            MessageDlgW(WideFormat(sS10nUnsub, [tstr]), mtInformation, [mbOK], 0);
         end;
     end;
 

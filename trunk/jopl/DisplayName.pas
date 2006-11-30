@@ -128,6 +128,9 @@ type
 
         function getDisplayName(jid: TJabberID; out pendingNameChange: boolean): Widestring;overload;
         function getDisplayName(jid: TJabberID): Widestring;overload;
+        function getDisplayJIDFull(jid: TJabberID): Widestring;
+        function getDisplayJIDBare(jid: TJabberID): Widestring;
+
         function getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
         procedure setSession(js: TObject); //TObject to avoid circular reference\
     published
@@ -604,6 +607,23 @@ function TDisplayNameCache.getDisplayName(jid: TJabberID; out pendingNameChange:
 begin
     Result := getOrAddDNItem(jid).getDisplayName(pendingNameChange);
 end;
+
+function TDisplayNameCache.getDisplayJIDFull(jid: TJabberID): Widestring;
+var
+    ignored: boolean;
+begin
+    Result := getOrAddDNItem(jid).getDisplayName(ignored);
+    Result := Result + ' (' + jid.GetDisplayFull() + ')';
+end;
+
+function TDisplayNameCache.getDisplayJIDBare(jid: TJabberID): Widestring;
+var
+    ignored: boolean;
+begin
+    Result := getOrAddDNItem(jid).getDisplayName(ignored);
+    Result := Result + ' (' + jid.getDisplayJID() + ')';
+end;
+
 function TDisplayNameCache.getDisplayName(jid: TJabberID): Widestring;
 var
     ignored: boolean;

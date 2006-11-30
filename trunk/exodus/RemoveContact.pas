@@ -62,6 +62,7 @@ procedure QuietRemoveRosterItem(sjid: Widestring);
 {---------------------------------------}
 implementation
 uses
+    DisplayName,
     GnuGetText, JabberUtils, ExUtils,  JabberConst, S10n, NodeItem, Roster, Session, XMLTag, JabberID;
 {$R *.DFM}
 
@@ -75,7 +76,7 @@ begin
     f := TfrmRemove.Create(Application);
     with f do begin
         itemJID := TJabberID.Create(sjid);
-        lblJID.Caption := itemJID.getDisplayFull();
+        lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayJIDBare(itemJID);
         sel_grp := grp;
         jid := sjid;
         optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);

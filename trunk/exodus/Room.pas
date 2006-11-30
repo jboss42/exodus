@@ -709,7 +709,7 @@ var
     txt: Widestring;
     xhtml: TXMLTag;
     xml: Widestring;
-    e: TJabberEntity;
+//    e: TJabberEntity;
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
