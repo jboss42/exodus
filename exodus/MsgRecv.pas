@@ -176,6 +176,7 @@ const
 implementation
 uses
     RosterRecv,
+    DisplayName,
     chatWin,
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
     XferManager, GnuGetText,
@@ -790,27 +791,15 @@ end;
 procedure TfrmMsgRecv.setFrom(jid: WideString);
 var
     tmp_jid: TJabberID;
-    ritem: TJabberRosterItem;
 begin
     tmp_jid := TJabberID.Create(jid);
-    ritem := MainSession.roster.Find(tmp_jid.jid);
-    if (ritem <> nil) then begin
-        txtFrom.Caption := ritem.Text + ' <' + tmp_jid.getDisplayFull() + '>';
-        txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
-        if (pnlSendSubject.Visible) then
-            Self.Caption := _(sMessageTo) + ritem.Text
-        else
-            Self.Caption := _(sMessageFrom) + ritem.Text;
-    end
-    else begin
-        // not someone in our roster - still could be escaped jid
-        txtFrom.Caption := tmp_jid.getDisplayFull();
-        txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
-        if (pnlSendSubject.Visible) then
-            Self.Caption := _(sMessageTo) + tmp_jid.getDisplayFull()
-        else
-            Self.Caption := _(sMessageFrom) + tmp_jid.getDisplayFull();
-    end;
+    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayJIDFull(tmp_jid);
+    txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+    if (pnlSendSubject.Visible) then
+        Self.Caption := _(sMessageTo) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid)
+    else
+        Self.Caption := _(sMessageFrom) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
+
     tmp_jid.Free();
 end;
 

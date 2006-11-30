@@ -137,7 +137,7 @@ uses
     {$ifdef TRACE_EXCEPTIONS}
     IdException, JclDebug, JclHookExcept, TypInfo,
     {$endif}
-
+    DisplayName,
     MsgQueue,
     RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
@@ -174,6 +174,7 @@ var
     ritem: TJabberRosterItem;
 begin
     jid := TJabberID.Create(j);
+    Result := DisplayName.getDisplayNameCache().getDisplayName(jid);
     ritem := MainSession.roster.Find(jid.jid);
     if (ritem = nil) then
         result := jid.getDisplayJID()

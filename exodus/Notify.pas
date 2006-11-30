@@ -126,6 +126,7 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then begin
+        ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
         if (ritem <> nil) then
             idx := ritem.getPresenceImage('available')
         else

@@ -59,7 +59,8 @@ var
 {---------------------------------------}
 implementation
 uses
-    JabberUtils, ExUtils,  S10n, NodeItem, Roster, Session, Jabber1;
+    JabberUtils, ExUtils,  S10n, NodeItem, Roster, Session, Jabber1,
+  DisplayName;
 
 {$R *.DFM}
 
@@ -75,7 +76,7 @@ var
 begin
     // Fill up the GUI based on the event
     from := TJabberID.Create(e.from);
-    txtFrom.Caption := from.getDisplayFull();
+    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayJIDBare(from);
     from.Free();
     txtMsg.Lines.Text := e.str_content;
 

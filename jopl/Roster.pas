@@ -124,6 +124,7 @@ type
 {---------------------------------------}
 implementation
 uses
+    DisplayName,
     RosterImages, GnuGetText, JabberConst, iq, s10n, XMLUtils, Session, EntityCache;
 
 const
@@ -298,7 +299,7 @@ begin
 
     // if there is no nickname, just use the user portion of the jid
     if (ri.Text = '') then
-        ri.Text := ri.Jid.user;
+        ri.Text := DisplayName.getDisplayNameCache().getDisplayName(ri.Jid);
 
     ri.ClearGroups();    
     grps := tag.QueryXPTags('/item/group');
