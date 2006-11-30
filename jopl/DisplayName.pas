@@ -25,8 +25,8 @@ uses
     XMLTag,
     JabberID,
     IQ,     //profile request
-    NodeItem, //TJabberRosterItem
-    Roster; //roster callback
+    NodeItem; //TJabberRosterItem
+//    Roster; //roster callback
 const
     PREF_PROFILE_DN = 'displayname_profile_enabled';
     PREF_PROFILE_DN_MAP = 'displayname_profile_map';
