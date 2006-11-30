@@ -26,9 +26,9 @@ inherited frmPrefRoster: TfrmPrefRoster
   object lblDNProfileMap: TTntLabel [2]
     Left = 24
     Top = 318
-    Width = 233
+    Width = 106
     Height = 13
-    Caption = 'Create display name from using these profile fields'
+    Caption = 'Use these profile fields'
   end
   object chkShowUnsubs: TTntCheckBox [3]
     Left = 0
@@ -149,7 +149,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Left = 24
     Top = 337
     Width = 201
-    Height = 45
+    Height = 21
     TabOrder = 13
   end
 end
