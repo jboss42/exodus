@@ -55,6 +55,7 @@ uses
     RosterImages,
     RosterWindow,
     StateForm,
+    DisplayName,
     BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
     Jabber1, PrefController, RiserWindow,
     Room, NodeItem, Roster, MMSystem, Debug, Session;
@@ -115,16 +116,8 @@ begin
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
     j := tmp_jid.jid;
-    if (sess.IsBlocked(j)) then exit;
-
-    ritem := sess.roster.Find(j);
-    if ((ritem <> nil) and (ritem.Text <> '')) then
-        nick := ritem.Text
-    else if (tmp_jid.user <> '') then
-        nick := tmp_jid.userDisplay
-    else
-        nick := '';
-
+    if (sess.IsBlocked(j)) then exit; //haven't freed tmp_jid
+    nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
     tmp_jid.Free();
 
     // don't display notifications for rooms, here.

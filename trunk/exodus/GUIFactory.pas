@@ -136,7 +136,7 @@ begin
                 chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
                 if (chat <> nil) then
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                         chat.Othernick, RosterTreeImages.Find('contact'));
+                         chat.DisplayName, RosterTreeImages.Find('contact'));
             end;
             tmp_jid.Free;
         end;
@@ -215,9 +215,6 @@ begin
 
         sub := TfrmSubscribe.Create(Application);
         sub.setup(tmp_jid, ri, tag);
-        sub.ShowDefault(false);
-        DoNotify(sub, 'notify_s10n',
-                 'Subscription from ' + sjid, RosterTreeImages.Find('key'));
         tmp_jid.Free();
     end;
 end;

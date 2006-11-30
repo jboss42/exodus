@@ -17,6 +17,7 @@ object frmAdd: TfrmAdd
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -80,6 +81,7 @@ object frmAdd: TfrmAdd
     Width = 139
     Height = 21
     TabOrder = 1
+    OnChange = txtNicknameChange
   end
   object cboGroup: TTntComboBox
     Left = 94

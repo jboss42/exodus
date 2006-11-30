@@ -395,6 +395,7 @@ uses
 //    ExUtils,
     {$endif}
     PrefGraphics, //graphics handling for prefs
+    DisplayName,  //for our display name
     JabberConst, StrUtils, Stringprep,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
@@ -813,6 +814,7 @@ end;
 {---------------------------------------}
 function TPrefController.getDynamicDefault(pkey: Widestring): Widestring;
 begin
+    result := ''; //unkown
     // set the defaults for the pref controller
     if pkey = 'away_status' then
         result := _(sIdleAway)
@@ -1988,7 +1990,7 @@ function TJabberProfile.getDisplayUsername(): Widestring;
 begin
     Result := '';
     if (_jabberID <> nil) then
-        Result := _jabberID.userDisplay;
+        Result := DisplayName.getDisplayNameCache().getDisplayName(_jabberID);
 end;
 {---------------------------------------}
 function TJabberProfile.getJabberID(): TJabberID;

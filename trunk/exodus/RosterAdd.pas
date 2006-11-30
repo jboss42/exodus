@@ -23,6 +23,7 @@ interface
 
 uses
     Entity, EntityCache, JabberID, XMLTag,
+    DisplayName,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, TntStdCtrls;
 
@@ -50,7 +51,7 @@ type
         function isInNetwork() : boolean;
     end;
 
-TfrmAdd = class(TForm)
+  TfrmAdd = class(TForm)
     Label1: TTntLabel;
     txtJID: TTntEdit;
     Label2: TTntLabel;
@@ -70,16 +71,21 @@ TfrmAdd = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure txtJIDExit(Sender: TObject);
     procedure cboTypeChange(Sender: TObject);
+    procedure txtNicknameChange(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     cb: integer;
     gw_ent: TJabberEntity;
     gw, sjid, snick, sgrp: Widestring;
     addInfo : TNetworkInfo;
-    
+    dnListener: TDisplayNameListener;
     procedure doAdd;
+
+    procedure setContact(contact: TJabberID = nil);
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
+    procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
   public
     { Public declarations }
   end;
@@ -194,10 +200,7 @@ var
     f: TfrmAdd;
 begin
     f := TfrmAdd.Create(Application);
-    if (contact <> nil) then begin
-        f.txtJid.Text := contact.GetDisplayJID();
-        f.txtNickname.Text := contact.userDisplay;
-    end;
+    f.setContact(contact);
     contact.Free();
     f.Show;
     f.BringToFront();
@@ -210,6 +213,24 @@ var
 begin
     j := TJabberID.Create(contact);
     ShowAddContact(j);
+end;
+
+procedure TfrmAdd.setContact(contact: TJabberID);
+var
+    pendingNameChange: boolean;
+begin
+    if (contact <> nil) then begin
+        txtJid.Text := contact.GetDisplayJID();
+        txtNickname.Text := dnListener.getDisplayName(contact, pendingNameChange);
+        if (pendingNameChange) then
+            txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
+        else
+            txtNickname.Font.Style := txtNickname.Font.Style - [fsUnderline]
+    end
+    else begin
+        txtJid.Text := '';
+        txtNickname.Text := '';
+    end;
 end;
 
 {---------------------------------------}
@@ -287,6 +308,9 @@ begin
     MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
+    dnListener := TDisplayNameListener.Create();
+    dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
+    
     txtGateway.Text := MainSession.Server;
     //walk prefs list of networks
     tInfo := TNetworkInfo.create(_('Jabber'), NT_IN_NETWORK, MainSession.Profile.getJabberID().domain);
@@ -301,11 +325,17 @@ begin
     cboType.ItemIndex := 0;
 end;
 
+procedure TfrmAdd.FormDestroy(Sender: TObject);
+begin
+    dnListener.Free();
+end;
+
 {---------------------------------------}
 procedure TfrmAdd.txtJIDExit(Sender: TObject);
 var
     tmp_id, ti2: TJabberID;
     tinfo : TNetworkInfo;
+    pendingNameChange: boolean;
 begin
     if (txtJID.Text = '') then exit;
     tmp_id := TJabberID.Create(txtJID.Text, false); //assume unescaped
@@ -334,10 +364,20 @@ begin
     end;
 
     // add the nickname if it's not there.
-    if (txtNickname.Text = '') then
-        txtNickname.Text := tmp_id.userDisplay;
+    if (txtNickname.Text = '') then begin
+        txtNickname.Text := dnListener.getDisplayName(tmp_id, pendingNameChange);
+        if (pendingNameChange) then
+            txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
+        else
+            txtNickname.Font.Style := txtNickname.Font.Style - [fsUnderline]
+    end;
 
     tmp_id.Free();
+end;
+
+procedure TfrmAdd.txtNicknameChange(Sender: TObject);
+begin
+    txtNickname.Font.Style := txtNickname.Font.Style - [fsUnderline];
 end;
 
 {---------------------------------------}
@@ -395,6 +435,20 @@ begin
         (tag.GetAttribute('from') = gw)) then begin
         MainSession.UnRegisterCallback(cb);
         doAdd();
+    end;
+end;
+
+procedure TfrmAdd.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+var
+    selAll: boolean;
+begin
+    //woot
+    if (fsUnderline in txtNickname.Font.Style) then begin
+        selAll := txtNickname.SelLength = Length(txtNickname.Text);
+        txtNickname.Font.Style := txtNickname.Font.Style - [fsUnderline];
+        txtNickname.Text := displayName;
+        if (selAll) then
+            txtNickname.SelectAll();
     end;
 end;
 

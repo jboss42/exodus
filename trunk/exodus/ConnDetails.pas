@@ -315,7 +315,7 @@ procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
         // populate the fields
-        cboJabberID.Text := profile.getDisplayUsername() + '@' + Server;
+        cboJabberID.Text := profile.getJabberID().getDisplayJID();
         cboResource.Text := Resource;
         if (SavePasswd) then
             txtPassword.Text := Password;

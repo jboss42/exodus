@@ -131,6 +131,10 @@
     <restore_desktop value="0" control="chkRestoreDesktop"/>
 
     <start_docked value="1"/>
+
+    <!-- display name -->
+    <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
+    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap"/>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
@@ -257,12 +261,15 @@
     <xfer_prefproxy control="txt65Proxy">
       <control name="lbl65Proxy"/>
     </xfer_prefproxy>
-    
+
     
     <!-- unfiled -->
     <toolbar value="1" />
     <chat_toolbar value="1" />
     <always_lang value="0"></always_lang>
+
+    <!-- temp password used by auth plugins -->
+    <temp-pw encoded="yes"></temp-pw>
     <!-- Only show searchable jids that have no node. Default value is false,
          all searchable jids are shown.
         This option is never exposed to the user -->
@@ -334,7 +341,8 @@
     <brand_registration value="1"/>
     <brand_browser value="1"/>
     <brand_vcard value="1"></brand_vcard>
-    
+    <!-- lock down our nickname -->
+    <brand_prevent_change_nick value="1" state="readonly"/>
     <!-- add roster network prefs.
         This brandable pref defines networks that will show in the
         Add to Roster dialog. The pref is a tuple of display name, network type

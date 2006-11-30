@@ -345,9 +345,11 @@ function TJabberID.getDisplayFull: widestring;
 begin
     // return the _user@_domain
     if _userDisplay <> '' then
-        Result := _userDisplay + '@' + _domain  + '/' + _resource
+        Result := _userDisplay + '@' + _domain
     else
         Result := jid;
+    if (_resource <> '') then
+        result := Result + '/' + _resource;
 end;
 
 {---------------------------------------}

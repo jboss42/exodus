@@ -186,8 +186,9 @@ type
         procedure removeAvailJid(jid: Widestring);
 
         // Added by SIG for setting default nickname.
-        procedure SetDefaultNickname();
-        procedure vcardCallback(event: string; tag: TXMLTag);
+//JJF now handled by DisplayName        
+//        procedure SetDefaultNickname();
+//        procedure vcardCallback(event: string; tag: TXMLTag);
 
         // Account information
         property Username: WideString read GetUsername write SetUsername;
@@ -235,7 +236,7 @@ uses
     QForms, QDialogs,
     {$endif}
     EntityCache, CapsCache,
-//    DisplayName, //display name cache
+    DisplayName, //display name cache
     PluginAuth,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence, XMLVCard;
@@ -294,7 +295,7 @@ begin
     jCapsCache.SetSession(Self);
 
     //display name cache
-//    DisplayName.getDisplayNameCache().setSession(Self);
+    DisplayName.getDisplayNameCache().setSession(Self);
     
     // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
@@ -777,7 +778,7 @@ begin
     _dispatcher.DispatchSignal('/session/authenticated', tag);
     Prefs.FetchServerPrefs();
     // Added by SIG - set Default Nickname
-    SetDefaultNickname();
+//    SetDefaultNickname();
 end;
 
 {---------------------------------------}
@@ -1362,12 +1363,13 @@ end;
 
 function TJabberSession.getDisplayUsername(): widestring;
 begin
-    Result := Profile.getJabberID.userDisplay;
+    Result := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID);
 end;
 
 
 {------------- Added by SIG to support setting default nick name---}
-{------------------------------------}
+{---------- JJF now handled by DisplayName --------}
+{------------------------------------
 procedure TJabberSession.SetDefaultNickname();
 var
   vciq: TJabberIQ;
@@ -1383,10 +1385,8 @@ begin
       vciq.toJid := Username + '@' + Server;
       vciq.Send();
     end;
-
 end;
-
-{------------------------------------}
+{------------------------------------
 procedure TJabberSession.vcardCallback(event: string; tag: TXMLTag);
 var
   vcard: TXMLVCard;
@@ -1399,9 +1399,8 @@ begin
    default_nick := vcard.FamilyName + ', ' + vcard.GivenName;
    Prefs.setString('default_nick',default_nick);
    vcard.Free();
-
 end;
-
+}
 end.
 
 

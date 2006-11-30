@@ -81,6 +81,8 @@ procedure CloseSubscribeWindows();
 implementation
 uses
     RosterImages,
+    DisplayName,
+    Notify,
     JabberConst, JabberUtils, ExUtils, CapsCache, EntityCache, Entity,
     ChatWin, GnuGetText, MsgRecv, Session, Profile, Presence;
 
@@ -88,6 +90,60 @@ var
     _subscribe_windows: TList;
 
 {$R *.DFM}
+type
+    TShowHandler = class(TDisplayNameListener)
+        jid: TJabberID;
+        sub: TfrmSubscribe;
+
+
+        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure getDispNameAndShow(subFrm: TfrmSubscribe; newJID: TJabberID);
+
+        destructor Destroy();override;
+    end;
+
+destructor TShowHandler.Destroy();
+begin
+    jid.Free();
+    jid := nil;
+    inherited;
+
+end;
+
+procedure TShowHandler.fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+begin
+    if ((jid <> nil) and (jid.jid = bareJID)) then begin
+        sub.txtNickname.Text := displayName;
+        sub.ShowDefault(false);
+        DoNotify(sub, 'notify_s10n',
+                 'Subscription from ' + displayName, RosterTreeImages.Find('key'));
+        Self.Free();
+    end;
+end;
+
+procedure TShowHandler.getDispNameAndShow(subFrm: TfrmSubscribe; newJID: TJabberID);
+var
+    changePending: boolean;
+    dname: WideString;
+begin
+    jid := TJabberID.Create(newJID);//save jid for later dispname change event
+    sub := subFrm;
+
+    //newJID may already be in roster. Force a displayname lookup if needed
+    if (Self.ProfileEnabled) then
+        dName := Self.getProfileDisplayName(newJID, changePending)
+    else
+        dname := getDisplayName(newJID, changePending);
+
+    if (not changePending) then begin
+        //show now and destroy ourself
+        sub.txtNickname.Text := dname;
+        sub.ShowDefault(false);
+        DoNotify(sub, 'notify_s10n',
+                 'Subscription from ' + dname, RosterTreeImages.Find('key'));
+        Self.Free();
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmSubscribe.setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
@@ -96,7 +152,10 @@ var
     dgrp, id, capid: Widestring;
     e: TJabberEntity;
     idx: integer;
+    skipImage: boolean;
+    showNow: boolean; //show immediately, goit dispname from roster
 begin
+    showNow := false;
     _jid := TJabberID.Create(jid);
     lblJID.Caption := _jid.getDisplayFull();
 
@@ -118,15 +177,14 @@ begin
         cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
         if (ri <> nil) then begin
             txtNickName.Text := ri.Text;
+//            showNow := true;
             if (ri.GroupCount > 0) then
                 cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
-        end
-        else
-            txtNickname.Text := jid.userDisplay;
+        end;
     end;
 
     idx := -1;
-
+    skipImage := false;
     c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
     if (c <> nil) then begin
         capid := c.GetAttribute('node') + '#' + c.getAttribute('ver');
@@ -138,7 +196,7 @@ begin
                 // bail out early so we leave the image empty
                 _capsid := capid;
                 _capscb := MainSession.RegisterCallback(CapsCallback, '/session/caps');
-                exit;
+                skipImage := true;
             end
             else if (e.IdentityCount > 0) then begin
                 // use the first identity we find, and get the image
@@ -148,11 +206,21 @@ begin
         end;
     end;
 
-    if (idx = -1) then
-        idx := RosterTreeImages.Find('available');
+    if (not skipImage) then begin
+        if (idx = -1) then
+            idx := RosterTreeImages.Find('available');
 
-    if (idx >= 0) then
-        RosterTreeImages.GetImage(idx, imgIdent);
+        if (idx >= 0) then
+            RosterTreeImages.GetImage(idx, imgIdent);
+    end;
+
+    if (showNow) then begin
+        ShowDefault(false);
+        DoNotify(Self, 'notify_s10n',
+                 'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
+    end
+    else
+        TShowHandler.Create().getDispNameAndShow(Self, jid);
 end;
 
 {---------------------------------------}

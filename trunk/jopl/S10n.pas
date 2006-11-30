@@ -72,6 +72,7 @@ uses
     Presence,
     JabberID,
     NodeItem, Roster,
+    DisplayName,
     PrefController;
 
 {---------------------------------------}
@@ -107,6 +108,48 @@ begin
         _transports.Add(TJabberID.Create(tag.getAttribute('jid')).jid);
 end;
 
+type
+    TAutoAddHandler = class(TDisplayNameListener)
+        jid: TJabberID;
+        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure addToRoster(newJID: TJabberID);
+
+        destructor Destroy();override;
+    end;
+
+destructor TAutoAddHandler.Destroy();
+begin
+    jid.Free();
+    inherited;
+end;
+
+procedure TAutoAddHandler.fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+begin
+    if (jid.jid = bareJID) then begin
+        MainSession.Roster.AddItem(jid.jid, displayName, MainSession.Prefs.getString('roster_default'), true);
+        Self.Free();
+    end;
+end;
+
+procedure TAutoAddHandler.addToRoster(newJID: TJabberID);
+var
+    changePending: boolean;
+    dname: WideString;
+begin
+    jid := TJabberID.Create(newJID);//save jid for later dispname change event
+    //newJID may already be in roster. Force a displayname lookup if needed
+    if (Self.ProfileEnabled) then
+        dName := Self.getProfileDisplayName(newJID, changePending)
+    else
+        dname := getDisplayName(newJID, changePending);
+
+    if (not changePending) then begin
+        //addnow, destroy ourself
+        MainSession.Roster.AddItem(newjid.jid, dname, MainSession.Prefs.getString('roster_default'), true);
+        Self.Free();
+    end;
+end;
+
 {---------------------------------------}
 procedure TSubController.Subscribe(event: string; tag: TXMLTag);
 var
@@ -115,7 +158,6 @@ var
     add_to_roster: boolean;
     prompt: boolean;
     ritem: TJabberRosterItem;
-    dgrp: Widestring;
 begin
     // getting a s10n request
     j := TJabberID.Create(tag.GetAttribute('from'));
@@ -156,18 +198,12 @@ begin
                 // if we didn't ask for this subscription,
                 // then we should subscribe back to them
                 // if add_to_roster
-                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and (add_to_roster)) then begin
-                    dgrp := MainSession.Prefs.getString('roster_default');
-                    MainSession.Roster.AddItem(j.jid, j.userDisplay, dgrp, true);
-                end;
-
-                // we are in auto-approve mode, so approve it
-                SendSubscribed(j.jid, MainSession);
-            end
-            else
-                SendSubscribed(j.jid, MainSession);
+                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and add_to_roster) then
+                    TAutoAddHandler.Create().addToRoster(j);
+            end;
+             // we are in auto-approve mode, so approve it
+            SendSubscribed(j.jid, MainSession);
         end;
-
     end;
     j.Free;
 end;

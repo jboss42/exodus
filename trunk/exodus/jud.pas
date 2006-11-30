@@ -154,6 +154,7 @@ uses
     JabberConst, Profile, Roster, JabberID, fGeneric,
     Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel,
     TntClasses,
+    DisplayName,
     Jabber1;
 
 var
@@ -715,7 +716,7 @@ var
         if (nick_col >= 0) then
             nick := item.SubItems[nick_col];
 
-        if (nick = '') then nick := jid.userDisplay;
+        if (nick = '') then nick := DisplayName.getDisplayNameCache().getDisplayName(jid);
 
         MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
         jid.Free();

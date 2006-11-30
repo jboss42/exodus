@@ -193,6 +193,12 @@ begin
         finally
             reg.Free();
         end;
+
+        //hide nick if locked down
+        if (GetBool('brand_prevent_change_nick')) then begin
+            Self.lblDefaultNick.Visible := false;
+            Self.txtDefaultNick.Visible := false;
+        end;
     end;
 end;
 
