@@ -120,6 +120,7 @@ type
 implementation
 uses
     PrefController,
+    DisplayName,
     JabberConst, XMLUtils, Session, Chat,
     Forms, IdGlobal, ChatWin, Debug, Presence;
 
@@ -457,9 +458,7 @@ begin
   else
   	result.ToJID := Self.JID;
   result.isMe := true;
-  result.Nick := MainSession.Prefs.getString('default_nick');
-  if (result.Nick = '') then
-    result.Nick := MainSession.Profile.getDisplayUsername();
+  result.Nick := MainSession.Profile.getDisplayUsername();
   result.ID := MainSession.generateID();
   result.Thread := _threadid;
   _last_msg_id := result.ID;
@@ -490,21 +489,12 @@ begin
 
   result := TJabberMessage.Create(tag);
   result.isMe := is_me;
-
-  if (is_me) then begin
-    //An outbound message
-    result.Nick := MainSession.Prefs.getString('default_nick');
-    if (result.Nick = '') then
-      result.Nick := MainSession.Profile.getDisplayUsername();
-  end
-  else begin
-    //An inbound message
+  if (is_me) then
+    jid := TJabberID.Create(MainSession.JID)
+  else
     jid := TJabberID.Create(Self.JID);
-    result.Nick := jid.userDisplay;
-    if (result.Nick = '') then
-      jid.getDisplayFull();
-  end;
-
+    
+  result.Nick := DisplayName.getDisplayNameCache().getDisplayName(jid);
   FreeAndNil(jid);
 end;
 

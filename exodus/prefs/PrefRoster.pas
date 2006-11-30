@@ -40,8 +40,12 @@ type
     txtGrpSeperator: TTntEdit;
     TntLabel1: TTntLabel;
     chkRosterAvatars: TTntCheckBox;
+    chkUseProfileDN: TTntCheckBox;
+    txtDNProfileMap: TTntEdit;
+    lblDNProfileMap: TTntLabel;
     procedure chkInlineStatusClick(Sender: TObject);
     procedure chkNestedGrpsClick(Sender: TObject);
+    procedure chkUseProfileDNClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -64,6 +68,10 @@ begin
     inherited;
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
     txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
+    Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
+    Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
@@ -84,6 +92,13 @@ procedure TfrmPrefRoster.chkNestedGrpsClick(Sender: TObject);
 begin
   inherited;
     txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+end;
+
+procedure TfrmPrefRoster.chkUseProfileDNClick(Sender: TObject);
+begin
+  inherited;
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
 end;
 
 end.

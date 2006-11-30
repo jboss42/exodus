@@ -2,11 +2,11 @@ inherited frmPrefRoster: TfrmPrefRoster
   Left = 254
   Top = 162
   Caption = 'frmPrefRoster'
-  ClientHeight = 349
+  ClientHeight = 394
   ClientWidth = 342
   OldCreateOrder = True
   ExplicitWidth = 354
-  ExplicitHeight = 361
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   object lblDblClick: TTntLabel [0]
@@ -18,12 +18,19 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object TntLabel1: TTntLabel [1]
     Left = 24
-    Top = 264
+    Top = 254
     Width = 144
     Height = 13
     Caption = 'Seperator for nested groups is:'
   end
-  object chkShowUnsubs: TTntCheckBox [2]
+  object lblDNProfileMap: TTntLabel [2]
+    Left = 24
+    Top = 318
+    Width = 233
+    Height = 13
+    Caption = 'Create display name from using these profile fields'
+  end
+  object chkShowUnsubs: TTntCheckBox [3]
     Left = 0
     Top = 33
     Width = 337
@@ -31,7 +38,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Show contacts which I do not have a subscription to.'
     TabOrder = 0
   end
-  object chkHideBlocked: TTntCheckBox [3]
+  object chkHideBlocked: TTntCheckBox [4]
     Left = 0
     Top = 68
     Width = 337
@@ -39,7 +46,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Hide blocked contacts '
     TabOrder = 2
   end
-  object chkPresErrors: TTntCheckBox [4]
+  object chkPresErrors: TTntCheckBox [5]
     Left = 0
     Top = 86
     Width = 337
@@ -47,7 +54,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Detect contacts which are unreachable or no longer exist'
     TabOrder = 3
   end
-  object chkShowPending: TTntCheckBox [5]
+  object chkShowPending: TTntCheckBox [6]
     Left = 0
     Top = 50
     Width = 337
@@ -55,7 +62,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Show contacts I have asked to add as "Pending"'
     TabOrder = 1
   end
-  object cboDblClick: TTntComboBox [6]
+  object cboDblClick: TTntComboBox [7]
     Left = 24
     Top = 155
     Width = 201
@@ -68,26 +75,28 @@ inherited frmPrefRoster: TfrmPrefRoster
       'An instant message window'
       'A new or existing chat window')
   end
-  object chkRosterUnicode: TTntCheckBox [7]
+  object chkRosterUnicode: TTntCheckBox [8]
     Left = 0
     Top = 103
     Width = 337
     Height = 17
-    Caption = 'Allow Unicode characters in the contact list (requires 2000, ME, XP).'
+    Caption = 
+      'Allow Unicode characters in the contact list (requires 2000, ME,' +
+      ' XP).'
     TabOrder = 4
   end
-  object chkInlineStatus: TTntCheckBox [8]
+  object chkInlineStatus: TTntCheckBox [9]
     Left = 0
-    Top = 190
+    Top = 184
     Width = 241
     Height = 17
     Caption = 'Show contact status in the contact list'
     TabOrder = 6
     OnClick = chkInlineStatusClick
   end
-  object cboInlineStatus: TColorBox [9]
+  object cboInlineStatus: TColorBox [10]
     Left = 24
-    Top = 209
+    Top = 203
     Width = 201
     Height = 22
     DefaultColorColor = clBlue
@@ -105,7 +114,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
-    Top = 246
+    Top = 236
     Width = 241
     Height = 17
     Caption = 'Use nested groups'
@@ -114,7 +123,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtGrpSeperator: TTntEdit
     Left = 24
-    Top = 281
+    Top = 271
     Width = 201
     Height = 21
     TabOrder = 10
@@ -126,5 +135,21 @@ inherited frmPrefRoster: TfrmPrefRoster
     Height = 17
     Caption = 'Show Avatars in the contact list'
     TabOrder = 11
+  end
+  object chkUseProfileDN: TTntCheckBox
+    Left = 0
+    Top = 300
+    Width = 207
+    Height = 17
+    Caption = 'Get display name from contact'#39's profile'
+    TabOrder = 12
+    OnClick = chkUseProfileDNClick
+  end
+  object txtDNProfileMap: TTntEdit
+    Left = 24
+    Top = 337
+    Width = 201
+    Height = 45
+    TabOrder = 13
   end
 end

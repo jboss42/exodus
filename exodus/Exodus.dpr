@@ -241,7 +241,8 @@ uses
   ModifyHotkeys in 'ModifyHotkeys.pas' {frmModifyHotkeys},
   zlibpas in '..\jopl\png\zlibpas.pas',
   RT_XIMConversion in 'RT_XIMConversion.pas',
-  ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect};
+  ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
+  DisplayName in '..\jopl\DisplayName.pas';
 
 {$R *.TLB}
 

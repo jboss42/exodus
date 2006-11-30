@@ -25,6 +25,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
+    DisplayName,
   ToolWin, ImgList;
 
 type
@@ -73,12 +74,12 @@ type
     procedure mnuSaveClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure btnCloseClick(Sender: TObject);
+//    procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure mnuWordwrapClick(Sender: TObject);
-    procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+//    procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
+//      Shift: TShiftState; X, Y: Integer);
     procedure NotificationOptions1Click(Sender: TObject);
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
@@ -108,14 +109,14 @@ type
     _sent_composing: boolean;
     _warn_busyclose: boolean;
 
-    _destroying: boolean;
+//    _destroying: boolean;
     _isRoom:  boolean;      // true if this is a muc chat - a chat via a room
 
     _cur_ver: TJabberIQ;    // pending events
     _cur_time: TJabberIQ;
     _cur_last: TJabberIQ;
 
-    _mynick: Widestring;
+//    _mynick: Widestring;
 
     // custom notification options to use..
     _notify: array[0..3] of integer;
@@ -134,6 +135,11 @@ type
     _receivedMessage: boolean; //true if we have received at least one message
     _supportsXIM: boolean;     //true if caps advertises support
 
+    _dnListener: TDisplayNameListener;
+    _dnLocked: boolean; //can the display name be changed? true if no\ick was passed
+                        //into factory method 
+    _displayName: WideString;
+    
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
@@ -150,6 +156,10 @@ type
         chat windows might save based on munged profile&jid).
     }
     function GetWindowStateKey() : WideString;override;
+
+    procedure updateDisplayName();
+
+    procedure updatePresenceImage();
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -157,9 +167,11 @@ type
 
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
+    procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+
+    property DisplayName: WideString read _displayName;
   public
     { Public declarations }
-    OtherNick: widestring;
     chat_object: TChatController;
     com_controller: TExodusChat;
 
@@ -213,12 +225,12 @@ function StartChat(sjid, resource: widestring;
                    show_window: boolean;
                    chat_nick: widestring='';
                    bring_to_front:boolean=true): TfrmChat;
-                   
+
 procedure CloseAllChats;
 
 implementation
 uses
-    CapPresence, RosterImages, PrtRichEdit, RTFMsgList, BaseMsgList, 
+    CapPresence, RosterImages, PrtRichEdit, RTFMsgList, BaseMsgList,
     CustomNotify, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
@@ -261,9 +273,7 @@ var
     r, m: integer;
     chat: TChatController;
     win: TfrmChat;
-    tmp_jid: TJabberID;
     cjid: widestring;
-    ritem: TJabberRosterItem;
     new_chat: boolean;
     do_scroll: boolean;
 //    exp: boolean;
@@ -316,6 +326,7 @@ begin
     // Setup the properties of the window,
     // and hook it up to the chat controller.
     with TfrmChat(chat.window) do begin
+        _displayName := chat_nick;
         _isRoom := IsRoom(sjid);
         if (_isRoom) then begin
             popAddContact.Enabled := false;
@@ -324,34 +335,13 @@ begin
             mnuSendFile.Enabled   := false;
             c1.Enabled            := false;
             mnuBlock.Enabled      := false;
-            if (chat_nick = '') then begin
-                chat_nick := resource;  // OtherNick will be set to this
-            end;
+            _dnLocked := true;
         end;
-
-        tmp_jid := TJabberID.Create(sjid);
-        if (chat_nick = '') then begin
-            ritem := MainSession.roster.Find(sjid);
-            if (ritem = nil) then begin
-                if (chat_nick = '') then
-                    OtherNick := tmp_jid.userDisplay
-                else
-                    OtherNick := chat_nick;
-            end
-            else begin
-                OtherNick := ritem.Text;
-                mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
-                C1.Enabled := ritem.IsNative;
-            end;
-        end
-        else
-            OtherNick := chat_nick;
 
         if resource <> '' then
             cjid := sjid + '/' + resource
         else
             cjid := sjid;
-        tmp_jid.Free;
 
         if (SetJID(cjid) = false) then begin
             // we can't chat with this person for some reason
@@ -417,13 +407,16 @@ begin
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
-    OtherNick := '';
+    _displayName := '';
+    _dnListener := TDisplayNameListener.Create();
+    _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
+    _dnLocked := false;
 
     _check_event := false;
     _reply_id := '';
     _msg_out := false;
     _jid := nil;
-    _destroying := false;
+//    _destroying := false;
     _isRoom     := false;
     _res_menus := TWidestringlist.Create();
     _unknown_avatar := TBitmap.Create();
@@ -473,6 +466,40 @@ begin
     Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self._jid.jid);
 end;
 
+procedure TfrmChat.updateDisplayName();
+begin
+    //if this is a private chat from a room, display name shoudl be "room - nick"
+    if (_isRoom) then
+        _displayName := TJabberID.removeJEP106(_jid.user) + ' - ' + FindRoomNick(_jid.full)
+    else
+        _displayName := _dnListener.getDisplayName(_jid);
+
+    lblNick.Caption := _displayName;
+    Caption := _displayName;
+    MsgList.setTitle(_displayName);
+end;
+
+procedure TfrmChat.updatePresenceImage();
+var
+    ritem: TJabberRosterItem;
+    p: TJabberPres;
+    inRoster: boolean;
+begin
+    // setup the captions, etc..
+    ritem := MainSession.Roster.Find(_jid.jid);
+    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
+    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
+
+    if (inRoster) and (p <> nil) then
+        ChangePresImage(ritem, p.show, p.status)
+    else if (inRoster) then
+        ChangePresImage(ritem, 'offline', 'offline')
+    else if (p <> nil) then
+        ChangePresImage(nil, p.show, p.status)
+    else
+        ChangePresImage(nil, 'unknown', 'Unknown Presence')
+end;
+
 {---------------------------------------}
 procedure TfrmChat.setupMenus();
 begin
@@ -500,10 +527,7 @@ begin
     _esc := MainSession.Prefs.getBool('esc_close');
     sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
     ShortCutToKey(sc, _close_key, _close_shift);
-    if (not MainSession.Prefs.getBool('brand_prevent_change_nick')) then
-        _mynick := MainSession.Prefs.getString('default_nick');
-    if (_mynick = '') then
-        _mynick := MainSession.Profile.getDisplayUsername();
+//    _myNick := _dnListener.getDisplayName(MainSession.Profile.getJabberID);
 end;
 
 {---------------------------------------}
@@ -545,12 +569,9 @@ end;
 function TfrmChat.SetJID(cjid: widestring): boolean;
 var
     ritem: TJabberRosterItem;
-    p: TJabberPres;
     m, i: integer;
     a: TAvatar;
-    //do_pres: boolean;
-    //dp: TCapPresence;
-    n, s, nickjid: Widestring;
+    nickjid: Widestring;
     rm: TfrmRoom;
 begin
     Result := true;
@@ -600,81 +621,20 @@ begin
         rm := FindRoom(_jid.jid);
         if (rm <> nil) then begin
             nickjid := WideLowerCase(rm.getJid + '/' + rm.mynick);
-            _mynick := rm.mynick;
+//            _mynick := rm.mynick;
             _spcallback := MainSession.RegisterCallback(PresCallback,
                 '/packet/presence[@from="' + nickjid + '*"]');
         end;
     end;
 
-    if (_scallback = -1) then
-        _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
-
-    // setup the captions, etc..
-    ritem := MainSession.Roster.Find(_jid.jid);
-    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
-
-    // whether or not to send directed presence to this person
-    // do_pres := true;
-
-    if ((ritem <> nil) and (ritem.tag <> nil) and
-        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
-
-        // if this person can not do offline msgs, and they are offline, bail
-        if ((not ritem.CanOffline) and (p = nil)) then begin
-            MessageDlgW(_('This contact cannot receive offline messages.'), mtError,
-                [mbOK], 0);
-            Result := false;
-            exit;
-        end;
-
-        // This person is in our roster
-        lblNick.Hint := _jid.getDisplayFull();
-        if (_isRoom) then begin
-            s := FindRoomNick(cjid);
-            s := ritem.Text + ' - ' + s;
-            lblNick.Caption := s;
-            Caption := s;
-            MsgList.setTitle(s);
-        end
-        else begin
-            lblNick.Caption := ritem.Text;
-            Caption := ritem.Text;
-            MsgList.setTitle(ritem.Text);
-        end;
-        if (p = nil) then
-            ChangePresImage(ritem, 'offline', 'offline')
-        else
-            ChangePresImage(ritem, p.show, p.status);
-        {
-        if ((ritem.Subscription = 'to') or (ritem.Subscription = 'both')) then
-            do_pres := false;
-        }
-    end
-    else begin
-        if (OtherNick <> '') then
-            n := OtherNick
-        else if (_jid.userDisplay <> '') then
-            n := _jid.userDisplay
-        else
-            n := _jid.getDisplayFull();
-
-        if (_isRoom) then begin
-            s := _jid.userDisplay + ' - ' + n;
-            lblNick.Caption := s;
-            Caption := s;
-            MsgList.setTitle(s);
-        end
-        else begin
-            lblNick.Caption := n;
-            lblNick.Hint := cjid;
-            MsgList.setTitle(cjid);
-            Caption := n;
-        end;
-        if (p = nil) then
-            ChangePresImage(nil, 'unknown', 'Unknown Presence')
-        else
-            ChangePresImage(nil, p.show, p.status);
+    ritem := MainSession.roster.Find(sjid);
+    if (rItem <> nil) then begin
+        mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
+        C1.Enabled := ritem.IsNative;
     end;
+
+    updateDisplayName();
+    updatePresenceImage();
 
     // TODO: Can't send directed presence to people not in roster. Cope w/ TC??
     // because this causes havoc w/ TC rooms that we are in, or NOT in
@@ -749,7 +709,7 @@ begin
 
                 // Setup the cache'd old versions in ChangePresImage
 //                _cur_img := _pres_img;
-                MsgList.DisplayComposing('-- ' + OtherNick + _(' is replying --'));
+                MsgList.DisplayComposing('-- ' + DisplayName + _(' is replying --'));
 
                 {
                 should we really bail here??
@@ -962,10 +922,10 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + OtherNick,
+        DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
             RosterTreeImages.Find('contact'), 'notify_chatactivity');
         if (Msg.isMe = false ) and ( _isRoom ) then
-          Msg.Nick := OtherNick;
+          Msg.Nick := DisplayName;
 
         //Render
         DisplayMsg(Msg, MsgList);
@@ -1247,7 +1207,7 @@ begin
         else
             ts := '';
 
-        MsgList.DisplayPresence(jid + ' ' + _(sIsNow) + ' ' + txt, ts);
+        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt, ts);
     end;
 end;
 
@@ -1400,6 +1360,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
+    _dnListener.Free();
     // Unregister the callbacks + stuff
     if (MainSession <> nil) then begin
         if (_pcallback <> -1) then
@@ -1427,7 +1388,6 @@ begin
     _res_menus.Free();
 
     DragAcceptFiles(Handle, false);
-
     inherited;
 end;
 
@@ -1525,15 +1485,15 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormResize(Sender: TObject);
 begin
-  inherited;
+    inherited
 end;
 
-{---------------------------------------}
+{---------------------------------------
 procedure TfrmChat.btnCloseClick(Sender: TObject);
 begin
     Self.Close();
 end;
-
+}
 {---------------------------------------}
 procedure TfrmChat.popClearHistoryClick(Sender: TObject);
 begin
@@ -1564,8 +1524,8 @@ begin
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and
         (not MsgList.empty()) and
-        (chat_object <> nil) and
-        (not _destroying)) then begin
+        (chat_object <> nil)) //and (not _destroying))
+        then begin
         s := MsgList.getHistory();
         chat_object.SetHistory(s);
         chat_object.UnassignEvent();
@@ -1577,13 +1537,13 @@ begin
     inherited;
 end;
 
-{---------------------------------------}
+{---------------------------------------
 procedure TfrmChat.btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
     _destroying := (ssCtrl in Shift);
 end;
-
+}
 {---------------------------------------}
 procedure TfrmChat.NotificationOptions1Click(Sender: TObject);
 var
@@ -1759,6 +1719,12 @@ begin
     DragAcceptFiles(Handle, True);
     _scrollBottom();
     Self.Refresh();
+end;
+
+procedure TfrmChat.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+begin
+    //our display name has changed, refresh title, labels
+    updateDisplayName();
 end;
 
 initialization
