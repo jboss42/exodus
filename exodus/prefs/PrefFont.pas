@@ -282,9 +282,7 @@ begin
     SetLength(_offsets, 10);
     n := Now();
     dl := length(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), n)) + 2;
-    my_nick := MainSession.Prefs.getString('default_nick');
-    if (my_nick = '') then
-        my_nick := MainSession.Username;
+    my_nick := MainSession.getDisplayUsername();
 
     with colorChat do begin
         Lines.Clear;

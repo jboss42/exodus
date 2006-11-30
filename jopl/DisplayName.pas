@@ -245,8 +245,10 @@ var
     tstr: WideString;
     key: WideString;
     tags: TXMLTagList;
+    foundAll: boolean;
 begin
     strPos := 1;
+    foundAll := true;
     if (_regEx.Exec(_profileMapStr)) then begin
         repeat
             displayName := displayName + Copy(_profileMapStr, strPos, _regEx.MatchPos[0] - strPos);
@@ -255,13 +257,16 @@ begin
             tags := profileTag.QueryRecursiveTags(key, true);
             if ((tags.Count > 0) and (Trim(tags[0].Data) <> '')) then
                 displayName := displayName + tags[0].data
-            else displayName := displayName + tstr;
+            else begin
+                displayName := displayName + tstr;
+                foundAll := false;
+            end;
             tags.Free();
             strPos := _regEx.MatchPos[0] + _regEx.MatchLen[0];
         until (not _regEx.ExecNext);
     end
     else displayName := _profileMapStr;
-    Result := Trim(displayName) <> '';
+    Result := foundAll;
 end;
 
 {-------------------------------------------------------------------------------
