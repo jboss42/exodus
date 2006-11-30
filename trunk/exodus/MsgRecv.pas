@@ -191,6 +191,7 @@ var
     c: TMsgController;
     frmRosterRecv : TfrmRosterRecv;
 begin
+    Result := nil;
     if (e = nil) then exit;
     if (e.eType = evt_RosterItems) then begin
         frmRosterRecv := TfrmRosterRecv.Create(Application);
@@ -641,8 +642,7 @@ begin
         end;
 
          m.isMe := true;
-         m.Nick := MainSession.Prefs.getString('default_nick');
-         if (m.Nick = '') then m.Nick := MainSession.Username;
+         m.Nick := MainSession.getDisplayUsername();
 
          mtag := m.Tag;
 

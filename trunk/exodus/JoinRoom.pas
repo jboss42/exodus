@@ -119,16 +119,12 @@ begin
     with jr do begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        txtNick.Text := MainSession.Profile.getDisplayUsername();
         if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
-            txtNick.Text := MainSession.Profile.getDisplayUsername();
             txtNick.Enabled := False;
             chkUseRegisteredNickname.Enabled := False;
             chkUseRegisteredNickname.Checked := False;
         end;
-        if (txtNick.Text = '') then
-            txtNick.Text := MainSession.Prefs.getString('default_nick');
-        if (txtNick.Text = '') then
-            txtNick.Text := MainSession.Profile.getDisplayUsername();
         //txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
         populateServers();
         Show;

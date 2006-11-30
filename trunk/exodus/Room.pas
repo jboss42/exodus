@@ -435,12 +435,9 @@ begin
         f := TfrmRoom(room_list.Objects[i])
     else begin
         // Find out nick..
-        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick') or (rnick = '')) then
             n := MainSession.Profile.getDisplayUsername()
-        else if (rnick = '') then begin
-            n := MainSession.Prefs.getString('default_nick');
-            if (n = '') then n := MainSession.Profile.getDisplayUsername();
-        end
         else
             n := rnick;
 
@@ -461,7 +458,7 @@ begin
         if (send_presence) then
             f.sendStartPresence();
 
-        f.Caption := tmp_jid.userDisplay;
+        f.Caption := tmp_jid.userDisplay; //no display name here for room names
         
         // setup prefs
         with f do begin
@@ -712,7 +709,7 @@ var
     txt: Widestring;
     xhtml: TXMLTag;
     xml: Widestring;
-
+    e: TJabberEntity;
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
@@ -727,10 +724,16 @@ begin
             exit;
     end;
 
-    xhtml := getInputXHTML(MsgOut);
     xml := '';
-    if (xhtml <> nil) then
-        xml := xhtml.XML;
+//make sure room supports xhtml-im before sending     
+//    if (mainSession.Prefs.getBool('richtext_enabled')) then begin
+//        e := jEntityCache.getByJid(Self.jid, '');
+//        if ((e <> nil) and e.hasFeature(JabberConst.XMLNS_XHTMLIM)) then begin
+            xhtml := getInputXHTML(MsgOut);
+            if (xhtml <> nil) then
+                xml := xhtml.XML;
+//        end;
+//    end;
     
     SendRawMessage(txt, '', xml, true);
 
@@ -1228,7 +1231,7 @@ begin
             else if (not _pending_destroy) then begin
                 // Show destroy reason
                 tmp_jid := TJabberID.Create(from);
-
+                //don't use display name here for room name
                 reason := WideFormat(_(sRoomDestroyed), [tmp_jid.userDisplay]);
                 drtag := tag.QueryXPTag(xp_muc_destroy_reason);
                 if ((drtag <> nil) and (drtag.Data <> '')) then begin
