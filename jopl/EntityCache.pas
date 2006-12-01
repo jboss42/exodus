@@ -1,7 +1,7 @@
 unit EntityCache;
 {
     Copyright 2003, Peter Millard
-
+                                  
     This file is part of Exodus.
 
     Exodus is free software; you can redistribute it and/or modify
@@ -402,9 +402,12 @@ begin
     Result := nil;
     for i := 0 to _cache.Count - 1 do begin
         c := TJabberEntity(_cache.Objects[i]);
-        if (c.hasFeature(f)) then begin
+       // if (c.hasFeature(f)) then begin
+       // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+         if (c.hasFeature(f)) AND (length(c.Category)>0) AND (Integer(c.Parent)>0) then begin
             Result := c;
             exit;
+       // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
         end;
     end;
 end;
@@ -441,10 +444,12 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if (e.hasFeature(f)) then begin
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+        if (e.hasFeature(f)) AND (length(e.Category)>0) AND (Integer(e.Parent)>0) then begin
             if (jid_list.indexOf(e.jid.full) = -1) then
                 jid_list.Add(e.jid.full);
         end;
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     end;
 end;
 
@@ -470,10 +475,12 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if (e.hasFeature(f)) then begin
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+        if (e.hasFeature(f)) AND (length(e.Category)>0) AND (Integer(e.Parent)>0) then begin
             if (jid_list.IndexOf(e.jid.full) = -1) then
                 jid_list.Add(e.jid.full);
         end;
+        // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     end;
 end;
 {$endif}
