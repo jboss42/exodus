@@ -134,7 +134,7 @@
 
     <!-- display name -->
     <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
-    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap"/>
+    <displayname_profile_map value='{FAMILY}, {GIVEN}' control="txtDNProfileMap"/>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
