@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2006/09/11 11:24:53.524.bdsproj,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\Package1.bdsproj=C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\PackageTComboBoxEx.bdsproj</Transaction>
+    <Transaction>2006/09/11 11:25:24.055.pas,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxEx.pas=C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxExSIG.pas</Transaction>
+    <Transaction>2006/09/11 11:25:24.148.pas,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxExSIG.pas=C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxEx.pas</Transaction>
+    <Transaction>2006/09/11 11:25:37.570.pas,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxEx.pas=</Transaction>
+    <Transaction>2006/09/11 11:43:07.244.bdsproj,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\PackageTComboBoxEx.bdsproj=C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\PackageTComboBoxEx.bdsproj</Transaction>
+    <Transaction>2006/09/11 16:16:19.487.bdsproj,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\PackageTComboBoxEx.bdsproj=C:\src\exodus\exodus\plugins\SIGQuickChat\Packages\PackageTComboBoxEx.bdsproj</Transaction>
+    <Transaction>2006/09/11 16:18:11.736.pas,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxExSIG.pas=</Transaction>
+    <Transaction>2006/09/11 16:18:40.517.bdsproj,C:\src\exodus\exodus\plugins\SIGQuickChat\Packages\PackageTComboBoxEx.bdsproj=C:\src\exodus\exodus\plugins\SIGQuickChat\Packages\PackageQC.bdsproj</Transaction>
+  </Transactions>
+	<IPServerDescMap></IPServerDescMap>
+	<StarTeamShortcuts>; 1; 0; False; 0; -1; </StarTeamShortcuts>
+	<StarTeamMiscUserData></StarTeamMiscUserData>
+</BorlandProject>
