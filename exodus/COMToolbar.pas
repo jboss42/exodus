@@ -30,9 +30,6 @@ uses
 
 type
   TExodusToolbar = class(TAutoObject, IExodusToolbar)
-  private
-    procedure Restore(aCoolBar: TCoolBar; aFilename: string);
-
   public
     constructor Create();
     destructor Destroy; override;
@@ -116,87 +113,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusToolbar.Restore(aCoolBar: TCoolBar; aFilename: string);
-var I, ID, Value : Integer;
-    aFile: TStringList;
-    bValue: Boolean;
-    function IsValid(ID: Integer; Key: String; Out V: Integer): boolean;  overload;
-    var sValue : String;
-    begin
-      try
-        sValue := aFile.Values[IntToStr(ID)+'-'+Key];
-        if Length(sValue)>0 then begin
-          V := StrToInt(sValue);
-          Result := true;
-        end else
-          Result := false;
-      except
-        Result := false;
-      end;
-    end;
-    function IsValid(ID: Integer; Key: String; Out V: Boolean): boolean;  overload;
-    var sValue : String;
-    begin
-      try
-        sValue := aFile.Values[IntToStr(ID)+'-'+Key];
-        if Length(sValue)>0 then begin
-          Result := true;
-          if CompareText(sValue, 'false')=0 then
-            V := false
-          else if CompareText(sValue, 'true')=0 then
-            V := true
-          else
-            Result := false;
-        end else
-          Result := false;
-      except
-          Result := false;
-      end;
-    end;
-begin
-  I := 0; ID := 0; 
-  aFile := TStringList.Create;
-
-  try
-    aFile.LoadFromFile(aFileName);
-
-    { Parse all available Tcoolband (s), ttoolbar }
-    while I=I do
-    begin
-      try
-        ID := aCoolBar.Bands.Items[I].ID;
-      except
-        on EListError do Exit;
-      end;
-
-      { Restore properties from file - Get }
-      if IsValid (ID, 'Index', Value) then
-        aCoolBar.Bands.Items[I].Index := Value ;
-      if IsValid (ID, 'Width', Value) then
-        aCoolBar.Bands.Items[I].Width := Value;
-      if IsValid (ID, 'MinWidth', Value) then
-        aCoolBar.Bands.Items[I].MinWidth := Value;
-      if IsValid (ID, 'MinHeight', Value) then
-        aCoolBar.Bands.Items[I].MinHeight := Value;
-
-      if IsValid (ID, 'Break', bValue) then
-        aCoolBar.Bands.Items[I].Break := bValue;
-      if IsValid (ID, 'FixedSize', bValue) then
-        aCoolBar.Bands.Items[I].FixedSize := bValue;
-      if IsValid (ID, 'HorizontalOnly', bValue) then
-        aCoolBar.Bands.Items[I].HorizontalOnly := bValue;
-      if IsValid (ID, 'Visible', bValue) then
-        aCoolBar.Bands.Items[I].Visible := bValue;
-
-      I := I+1;
-    end;
-  except
-      OutputDebugString(PAnsiChar('Exception in Restore'));
-  end;
-end;
-
-
-{---------------------------------------}
 function TExodusToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
 var
   MyControl: TMyControl;
@@ -208,7 +124,8 @@ begin
   MyControl.Parent := ParentControl;
   Result := TExodusToolbarControl.Create(MyControl);
 
-  Restore(frmExodus.Toolbar, 'c:\TExodusToolbar.ini');
+  frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
+  frmExodus.Toolbar.ShowText := false;
 end;
 
 initialization
