@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2006/08/15 13:16:06.102.bdsproj,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\Prototypes\TestOCX\TestOCX.bdsproj=C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\Prototypes\TestOCX\TestOCX.bdsproj</Transaction>
+    <Transaction>2006/08/25 11:17:09.144.pas,C:\src\exodus\exodus\plugins\TestOCX\Woll2woll\wwcombobutton.pas=</Transaction>
+    <Transaction>2006/08/25 11:17:13.128.pas,C:\src\exodus\exodus\plugins\TestOCX\Woll2woll\wwcommon.pas=</Transaction>
+    <Transaction>2006/08/25 11:17:17.816.pas,C:\src\exodus\exodus\plugins\TestOCX\Woll2woll\wwdblook.pas=</Transaction>
+    <Transaction>2006/08/25 11:17:23.050.pas,C:\src\exodus\exodus\plugins\TestOCX\Woll2woll\wwtypes.pas=</Transaction>
+    <Transaction>2006/08/25 19:24:55.457.pas,C:\src\exodus\exodus\plugins\TestOCX\ChatSIGQuickChat.pas=</Transaction>
+    <Transaction>2006/08/26 13:37:27.526.pas,C:\src\exodus\exodus\plugins\TestOCX\Unit1.pas=C:\src\exodus\exodus\plugins\TestOCX\Controller.pas</Transaction>
+    <Transaction>2006/08/26 14:33:58.373.pas,C:\src\exodus\exodus\plugins\TestOCX\Unit1.pas=C:\src\exodus\exodus\plugins\TestOCX\TJID.pas</Transaction>
+    <Transaction>2006/08/26 14:58:54.807.pas,C:\src\exodus\exodus\plugins\TestOCX\TJID.pas=</Transaction>
+    <Transaction>2006/09/02 22:37:35.387.bdsproj,C:\src\exodus\exodus\plugins\SIGQuickChat\TestOCX.bdsproj=C:\src\exodus\exodus\plugins\SIGQuickChat\SIGQuickChat.bdsproj</Transaction>
+    <Transaction>2006/09/02 22:40:40.415.pas,C:\src\exodus\exodus\plugins\SIGQuickChat\TestOCX_TLB.pas=</Transaction>
+    <Transaction>2006/09/02 22:49:01.843.bdsproj,C:\src\exodus\exodus\plugins\SIGQuickChat\SIGQuickChat.bdsproj=C:\src\exodus\exodus\plugins\SIGQuickChat\SIGQuickChatPlug.bdsproj</Transaction>
+    <Transaction>2006/09/02 23:10:34.750.bdsproj,C:\src\exodus\exodus\plugins\SIGQuickChat\SIGQuickChatPlug.bdsproj=C:\src\exodus\exodus\plugins\SIGQuickChat\SIGQuickChat.bdsproj</Transaction>
+    <Transaction>2006/09/11 10:08:28.364.pas,C:\src\exodus\exodus\plugins\SIGQuickChat\Unit1.pas=C:\src\exodus\exodus\plugins\SIGQuickChat\ComboBoxEx.pas</Transaction>
+    <Transaction>2006/09/11 11:30:16.816.pas,C:\src\exodus\exodus\plugins\SIGQuickChat\ComboBoxEx.pas=</Transaction>
+    <Transaction>2006/09/11 16:27:00.370.pas,C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\ComboBoxExSIG.pas=</Transaction>
+    <Transaction>2006/11/20 14:28:16.784.pas,C:\src\exodus\exodus\plugins\SIGQuickChat\Unit1.pas=C:\src\exodus\exodus\plugins\SIGQuickChat\Options.pas</Transaction>
+    <Transaction>2006/11/20 14:28:16.784.dfm,C:\src\exodus\exodus\plugins\SIGQuickChat\Unit1.dfm=C:\src\exodus\exodus\plugins\SIGQuickChat\Options.dfm</Transaction>
+  </Transactions>
+	<IPServerDescMap></IPServerDescMap>
+	<StarTeamShortcuts>; 1; 0; False; 0; -1; </StarTeamShortcuts>
+	<StarTeamMiscUserData></StarTeamMiscUserData>
+</BorlandProject>
