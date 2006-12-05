@@ -9,7 +9,7 @@ library SIGQuickChat
 {
 
   importlib("stdole2.tlb");
-  importlib("Hermes.exe");
+  importlib("Exodus.exe");
 
   [
     uuid(C85D2D27-F667-42A7-8075-6B6581713F44), 
@@ -168,8 +168,6 @@ library SIGQuickChat
   };
 
   
-  typedef  struct tag IFontDisp ** PPUserType1 /*Warning: unable to validate structure name: */;
-
   [
     uuid(88631E02-B2DD-4B36-8C72-D2B8451EFD19), 
     version(1.0), 
