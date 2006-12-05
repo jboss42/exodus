@@ -382,37 +382,39 @@ var
     tmp: TJabberID;
     c, ce: TJabberEntity;
 begin
-    tmp := TJabberID.Create(tag.getAttribute('from'));
+    if (tag <> nil) then begin
+        tmp := TJabberID.Create(tag.getAttribute('from'));
 
-    idx := _wait.IndexOf(tmp.full);
-    if (idx < 0) then exit;
+        idx := _wait.IndexOf(tmp.full);
+        if (idx < 0) then exit;
 
-    // if this is /session/entity/items, AND, this jid supports MUC,
-    // assume it's children are rooms.
-    if (event = '/session/entity/items') then begin
-        _wait.Delete(idx);
-        ce := jEntityCache.getByJid(tmp.full);
-        if (ce <> nil) then begin
-            for i := 0 to ce.ItemCount - 1 do begin
-                c := ce.Items[i];
-                if (c.Jid.user <> '') then
-                    _addRoomJid(c);
+        // if this is /session/entity/items, AND, this jid supports MUC,
+        // assume it's children are rooms.
+        if (event = '/session/entity/items') then begin
+            _wait.Delete(idx);
+            ce := jEntityCache.getByJid(tmp.full);
+            if (ce <> nil) then begin
+                for i := 0 to ce.ItemCount - 1 do begin
+                    c := ce.Items[i];
+                    if (c.Jid.user <> '') then
+                        _addRoomJid(c);
+                end;
+
+                if (_wait.Count = 0) then begin
+                    aniWait.Active := false;
+                    aniWait.Visible := false;
+                    btnFetch.Visible := true;
+                    txtServerFilter.Enabled := true;
+                    _processFilter();
+                end;
             end;
-
-            if (_wait.Count = 0) then begin
-                aniWait.Active := false;
-                aniWait.Visible := false;
-                btnFetch.Visible := true;
-                txtServerFilter.Enabled := true;
-                _processFilter();
-            end;
+        end
+        else begin
+            // if this is #info, then just flesh out this item..
         end;
-    end
-    else begin
-        // if this is #info, then just flesh out this item..
-    end;
 
-    tmp.Free();
+        tmp.Free();
+    end;
 end;
 
 {---------------------------------------}
