@@ -123,7 +123,7 @@
 			<Directories Name="UnitOutputDir">.\output</Directories>
 			<Directories Name="PackageDLLOutputDir">.\output</Directories>
 			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">C:\Program Files\Borland\BDS\4.0\Bin;C:\Program Files\Borland\BDS\4.0\Lib;C:\Program Files\Borland\BDS\4.0\lib\Indy9;.\output;\..\..\..\components\jcl;C:\source\exodus\exodus\components\jcl;C:\source\exodus\exodus\components\jcl\source</Directories>
+			<Directories Name="SearchPath">C:\Program Files\Borland\BDS\4.0\Bin;C:\Program Files\Borland\BDS\4.0\Lib;C:\Program Files\Borland\BDS\4.0\lib\Indy9;.\output;\..\..\components\jcl;C:\source\exodus\exodus\components\jcl;C:\source\exodus\exodus\components\jcl\source;.\..\..\;.\..\..\..\jopl</Directories>
 			<Directories Name="Packages">PackageTComboBoxEx</Directories>
 			<Directories Name="Conditionals">INDY9</Directories>
 			<Directories Name="DebugSourceDirs">.\</Directories>
@@ -167,6 +167,7 @@
 			<VersionInfoKeys Name="Comments"></VersionInfoKeys>
 		</VersionInfoKeys>
 		<Language><Language Name="ActiveLang"></Language><Language Name="ProjectLang">$00000000</Language><Language Name="RootDir"></Language></Language>  
+    
     <Excluded_Packages>
       <Excluded_Packages Name="C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\Bpl\Package1.bpl">File C:\Documents and Settings\siracusa\My Documents\Borland Studio Projects\Bpl\Package1.bpl not found</Excluded_Packages>
     </Excluded_Packages>
