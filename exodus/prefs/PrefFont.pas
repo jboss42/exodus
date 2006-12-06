@@ -176,7 +176,8 @@ begin
             chkAllowFontSize.visible := false;
             chkAllowFontColor.visible := false;
             gbAllowedFontStyles.visible := false;
-        end;
+        end
+        else loadAllowedFontProps();
     end;
 end;
 
