@@ -496,7 +496,7 @@ end;
 
 function TfrmRoom.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 var
- bm: TXMLTag;
+ bm: TXMLTag;                                 
 begin
     //don't auto-open rooms we have bookmoarked for join on login
     bm := MainSession.Bookmarks.FindBookmark(getJID);
@@ -726,14 +726,14 @@ begin
 
     xml := '';
 //make sure room supports xhtml-im before sending     
-//    if (mainSession.Prefs.getBool('richtext_enabled')) then begin
+    if (mainSession.Prefs.getBool('richtext_enabled')) then begin
 //        e := jEntityCache.getByJid(Self.jid, '');
 //        if ((e <> nil) and e.hasFeature(JabberConst.XMLNS_XHTMLIM)) then begin
             xhtml := getInputXHTML(MsgOut);
             if (xhtml <> nil) then
                 xml := xhtml.XML;
 //        end;
-//    end;
+    end;
     
     SendRawMessage(txt, '', xml, true);
 
