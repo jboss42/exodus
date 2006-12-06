@@ -382,7 +382,8 @@ var
     tmp: TJabberID;
     c, ce: TJabberEntity;
 begin
-    if (tag <> nil) then begin
+    if ((event <> 'timeout') and
+        (tag <> nil)) then begin
         tmp := TJabberID.Create(tag.getAttribute('from'));
 
         idx := _wait.IndexOf(tmp.full);
