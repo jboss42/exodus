@@ -2161,6 +2161,7 @@ begin
 
     // Unregister callbacks, etc.
     MainSession.UnRegisterCallback(_sessioncb);
+    MainSession.Prefs.setInt('roster_width', Self.Width); 
     MainSession.Prefs.SavePosition(Self);
 
     // Clear our master icon list
