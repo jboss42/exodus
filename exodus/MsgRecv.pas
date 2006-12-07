@@ -582,6 +582,7 @@ var
     i: integer;
     mtag: TXMLTag;
     ent: TJabberEntity;
+    nick: Widestring;
 begin
     // Send the outgoing msg
     txt := getInputText(MsgOut);
@@ -601,6 +602,7 @@ begin
 
     // Check for multicast service
     ent := jEntityCache.getFirstFeature(XMLNS_ADDRESS);
+    nick := MainSession.getDisplayUsername();
     if (ent = nil) then begin
         //  send to ALL recips - no multicast service include
         //  address element as hint to clients
@@ -611,8 +613,7 @@ begin
             m.ToJID := recips[i];
             m.AddRecipient(recips[i]); // Comptability hack
             m.isMe := true;
-            m.Nick := MainSession.Prefs.getString('default_nick');
-            if (m.Nick = '') then m.Nick := MainSession.Username;
+            m.Nick := nick;
 
             mtag := m.Tag;
 
@@ -643,7 +644,7 @@ begin
         end;
 
          m.isMe := true;
-         m.Nick := MainSession.getDisplayUsername();
+         m.Nick := nick;
 
          mtag := m.Tag;
 

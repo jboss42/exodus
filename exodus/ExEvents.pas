@@ -466,7 +466,7 @@ begin
             tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
             from := tmp_tag.QueryXPData('/x/invite@from');
             cjid := TJabberID.Create(tag.getAttribute('from'));
-            str_content := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(cjid);
+            str_content := cjid.jid;
             cjid.Free();
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
         end
@@ -476,7 +476,7 @@ begin
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
             cjid := TJabberID.Create(tmp_tag.getAttribute('jid'));
-            str_content := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(cjid);
+            str_content := cjid.jid;
             cjid.Free();
         end
 
