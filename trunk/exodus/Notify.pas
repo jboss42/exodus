@@ -140,6 +140,7 @@ begin
 
         // someone is going offline
         else if (event = '/presence/offline') then begin
+            ritem := sess.roster.Find(j);
             if (ritem <> nil) then
                 idx := ritem.getPresenceImage('offline')
             else
