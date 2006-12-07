@@ -76,7 +76,7 @@ begin
     f := TfrmRemove.Create(Application);
     with f do begin
         itemJID := TJabberID.Create(sjid);
-        lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayJIDBare(itemJID);
+        lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(itemJID);
         sel_grp := grp;
         jid := sjid;
         optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);

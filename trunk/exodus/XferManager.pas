@@ -848,7 +848,7 @@ var
 begin
     recipient := r;
     jid := TJabberID.Create(r);
-    recipDisplay := DisplayName.getDisplayNameCache().getDisplayJIDBare(jid);
+    recipDisplay := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(jid);
     jid.Free();
 end;
 function  TFileXferPkg.getRecip(): Widestring;

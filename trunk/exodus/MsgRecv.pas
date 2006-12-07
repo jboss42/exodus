@@ -793,7 +793,7 @@ var
     tmp_jid: TJabberID;
 begin
     tmp_jid := TJabberID.Create(jid);
-    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayJIDFull(tmp_jid);
+    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayname(tmp_jid) + ' <' + tmp_jid.getDisplayFull + '>';
     txtFrom.Caption := Tnt_WideStringReplace(txtFrom.Caption, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
     if (pnlSendSubject.Visible) then
         Self.Caption := _(sMessageTo) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid)

@@ -99,11 +99,12 @@ procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
     idx: integer;
     sess: TJabberSession;
-    nick, j, from: Widestring;
+    nick, j, from, notifyMessage: Widestring;
     ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
     f: TForm;
 begin
+    notifyMessage := '';
     // we are getting some event to do notification on
 
     // DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true));
@@ -115,56 +116,59 @@ begin
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
-    j := tmp_jid.jid;
-    if (sess.IsBlocked(j)) then exit; //haven't freed tmp_jid
-    nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
-    tmp_jid.Free();
+    try
+        j := tmp_jid.jid;
+        if (sess.IsBlocked(j)) then exit;
+        // don't display notifications for rooms, here.
+        if (IsRoom(j)) then exit;
+        // someone is coming online for the first time..
+        if (event = '/presence/online') then begin
+            ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
+            if (ritem <> nil) then
+                idx := ritem.getPresenceImage('available')
+            else
+                idx := RosterTreeImages.Find('available');
+            //Presence notifications should be routed to the parent form of the
+            //roster. may be mainform or roster is embedded in a tab
+            f := GetRosterWindow();
+            if (f <> nil) then
+                f := TfrmRosterWindow(f).GetDockParent();
+            if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
+                f := nil; //route to mainform
+            notifyMessage := sNotifyOnline;
+        end
 
-    // don't display notifications for rooms, here.
-    if (IsRoom(j)) then exit;
-    if (nick = '') then exit;
+        // someone is going offline
+        else if (event = '/presence/offline') then begin
+            if (ritem <> nil) then
+                idx := ritem.getPresenceImage('offline')
+            else
+                idx := RosterTreeImages.Find('offline');
 
-    // someone is coming online for the first time..
-    if (event = '/presence/online') then begin
-        ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
-        if (ritem <> nil) then
-            idx := ritem.getPresenceImage('available')
+            f := GetRosterWindow();
+            if (f <> nil) then
+                f := TfrmRosterWindow(f).GetDockParent();
+            if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
+                f := nil; //route to mainform
+            notifyMessage := sNotifyOffline;
+        end
+
+        // don't display normal presence changes
+        else if ((event = '/presence/available') or (event = '/presence/error')
+            or (event = '/presence/unavailable') ) then
+            // do nothing
+
+        // unkown.
         else
-            idx := RosterTreeImages.Find('available');
-        //Presence notifications should be routed to the parent form of the
-        //roster. may be mainform or roster is embedded in a tab
-        f := GetRosterWindow();
-        if (f <> nil) then
-            f := TfrmRosterWindow(f).GetDockParent();
-        if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
-            f := nil; //route to mainform            
-        DoNotify(f, 'notify_online', nick + _(sNotifyOnline), idx);
-    end
+            DebugMessage('Unknown notify event: ' + event);
 
-    // someone is going offline
-    else if (event = '/presence/offline') then begin
-        if (ritem <> nil) then
-            idx := ritem.getPresenceImage('offline')
-        else
-            idx := RosterTreeImages.Find('offline');
-
-        f := GetRosterWindow();
-        if (f <> nil) then
-            f := TfrmRosterWindow(f).GetDockParent();
-        if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
-            f := nil; //route to mainform            
-
-        DoNotify(f, 'notify_offline', nick + _(sNotifyOffline), idx);
-    end
-
-    // don't display normal presence changes
-    else if ((event = '/presence/available') or (event = '/presence/error')
-        or (event = '/presence/unavailable') ) then
-        // do nothing
-
-    // unkown.
-    else
-        DebugMessage('Unknown notify event: ' + event);
+        if (notifyMessage <> '') then begin
+            nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
+            DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);
+        end;
+    finally
+        tmp_jid.Free();
+    end;
 end;
 
 {---------------------------------------}
