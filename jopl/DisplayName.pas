@@ -41,10 +41,8 @@ type
     TDisplayNameListener = class
     private
         _DNCB: Integer;
-        _js: TObject;
         _OnDisplayNameChange: TDisplayNameChangeEvent;
     protected
-        procedure setSession(js: TObject);
         procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);virtual;
     public
         Constructor Create();
@@ -97,8 +95,8 @@ type
         constructor create(jid: TJabberID; profileParser: TProfileParser);
         destructor  Destroy();override;
 
-        function getProfileDisplayName(out pendingNameChange: boolean): WideString;
-        function getDisplayName(out pendingNameChange: boolean): WideString;
+        function getProfileDisplayName(out pendingNameChange: boolean; ignorePending: boolean=false): WideString;
+        function getDisplayName(out pendingNameChange: boolean; ignorePending: boolean=false): WideString;
     published
         procedure ProfileCallback(event: string; tag: TXMLTag);
         property ProfileEnabled: Boolean read getProfileEnabled;
@@ -126,10 +124,10 @@ type
         Constructor create();
         Destructor Destroy(); override;
 
-        function getDisplayName(jid: TJabberID; out pendingNameChange: boolean): Widestring;overload;
+        function getDisplayName(jid: TJabberID; out pendingNameChange: boolean; ignorePending: boolean=false): Widestring;overload;
         function getDisplayName(jid: TJabberID): Widestring;overload;
-        function getDisplayJIDFull(jid: TJabberID): Widestring;
-        function getDisplayJIDBare(jid: TJabberID): Widestring;
+        function getDisplayNameAndFullJID(jid: TJabberID): Widestring;
+        function getDisplayNameAndBareJID(jid: TJabberID): Widestring;
 
         function getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
         procedure setSession(js: TObject); //TObject to avoid circular reference\
@@ -278,31 +276,23 @@ end;
 Constructor TDisplayNameListener.Create();
 begin
     inherited;
-    _js := nil;
     _DNCB := -1;
-    setSession(MainSession);
 end;
 
 Destructor TDisplayNameListener.Destroy();
 begin
-    setSession(nil);
+    if (_DNCB <> -1) then
+        MainSession.UnRegisterCallback(_DNCB);
+    _DNCB := -1;
     inherited;
-end;
-
-procedure TDisplayNameListener.setSession(js: TObject);
-begin
-    if ((_js <> nil) and (_DNCB <> -1)) then
-        TJabberSession(_js).UnRegisterCallback(_DNCB);
-
-    _js := js;
-    if (_js <> nil) then
-        _DNCB := TJabberSession(_js).RegisterCallback(DNCallback, '/session/displayname');
 end;
 
 
 function TDisplayNameListener.getDisplayName(bareJID: TJabberID; out pendingNameChange: boolean): WideString;
 begin
-    Result := getDisplayNameCache().getDisplayName(bareJID, pendingNameChange)
+    Result := getDisplayNameCache().getDisplayName(bareJID, pendingNameChange);
+    if (pendingNameChange and (_DNCB = -1)) then
+        _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
 end;
 
 function TDisplayNameListener.getDisplayName(bareJID: TJabberID): WideString;
@@ -311,6 +301,7 @@ var
 begin
     Result := Self.getDisplayName(bareJID, ignored);
 end;
+
 procedure TDisplayNameListener.fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
     if (assigned(_OnDisplayNameChange)) then begin
@@ -320,12 +311,18 @@ end;
 
 procedure TDisplayNameListener.DNCallback(event: string; tag: TXMLTag);
 begin
-    fireOnDisplaynameChange(tag.GetAttribute('jid'), tag.GetAttribute('dn'));
+    if (_DNCB <> -1) then begin
+        fireOnDisplaynameChange(tag.GetAttribute('jid'), tag.GetAttribute('dn'));
+        MainSession.UnRegisterCallback(_DNCB);
+        _DNCB := -1;
+    end;
 end;
 
 function TDisplayNameListener.getProfileDisplayName(bareJID: TJabberID; out pendingNameChange: boolean): WideString;
 begin
     Result := getDisplayNameCache().getProfileDisplayName(bareJID, pendingNameChange);
+    if (pendingNameChange and (_DNCB = -1)) then
+        _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
 end;
 
 function TDisplayNameListener.ProfileEnabled(): Boolean;
@@ -358,37 +355,18 @@ begin
     Result := useProfileDN() and Session.MainSession.Authenticated;
 end;
 
-function TDisplayNameItem.getProfileDisplayName(out pendingNameChange: boolean): WideString;
+function TDisplayNameItem.getProfileDisplayName(out pendingNameChange: boolean; ignorePending: boolean): WideString;
 begin
     Result := _displayName[dntProfile];
     if (not _fetchFailed) then begin
         if (Result = '') and (_profileIQ = nil) then begin
             Result := _displayName[dntNode];
-            pendingNameChange := true;
-            _profileIQ := TJabberIQ.Create(MainSession, MainSession.generateID(), ProfileCallback);
-            _profileIQ.Namespace := 'vcard-temp';
-            _profileIQ.qTag.Name := 'vCard';
-            _profileIQ.iqType := 'get';
-            _profileIQ.toJid := _jid.jid;
-            _profileIQ.Send;
-        end;
-    end;
-end;
-
-function TDisplayNameItem.getDisplayName(out pendingNameChange: boolean): WideString;
-begin
-    Result := _DisplayName[dntRoster];
-    pendingnameChange := false;
-    if (Result = '') then begin
-        if (ProfileEnabled) and (not _fetchFailed) then begin
-            Result := _displayName[dntProfile];
-            if (Result = '') and (_profileIQ = nil) then begin
-                Result := _displayName[dntNode];
+            if (not ignorePending) then begin
                 //make profile name node name for the moment. This handles
                 //a race condition when a request for a disp name is made while
                 //vcard is fetching
                 _displayName[dntProfile] := Result;
-                pendingNameChange := true;
+
                 _profileIQ := TJabberIQ.Create(MainSession, MainSession.generateID(), ProfileCallback);
                 _profileIQ.Namespace := 'vcard-temp';
                 _profileIQ.qTag.Name := 'vCard';
@@ -396,9 +374,20 @@ begin
                 _profileIQ.toJid := _jid.jid;
                 _profileIQ.Send;
             end;
-        end
-        else Result := _displayName[dntNode];
+        end;
     end;
+    pendingNameChange := _profileIQ <> nil;
+end;
+
+function TDisplayNameItem.getDisplayName(out pendingNameChange: boolean; ignorePending: boolean): WideString;
+begin
+    Result := _DisplayName[dntRoster];
+    pendingnameChange := false;
+    if ((Result = '') and (ProfileEnabled)) then
+        Result := getProfileDisplayName(pendingNameChange, ignorePending);
+    if (Result = '') then
+        Result := _displayName[dntNode];
+
     _lastDisplayName := Result;
 end;
 
@@ -410,7 +399,7 @@ var
 begin
     _profileIQ := nil;
     _fetchFailed := true;
-    if ((event = 'xml') and (tag <> nil)) then begin
+    if ((event = 'xml') and (tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
         tTag := tag.GetFirstTag('vCard');
         if (tTag = nil) then
             tTag := tag.GetFirstTag('vcard');
@@ -494,8 +483,13 @@ var
     changeTag: TXMLTag;
 begin
     if (event = '/roster/item') then begin
-        if (ritem <> nil) then
-            foundName := ritem.text
+        if (ritem <> nil) then begin
+            if ((ritem.Subscription = '') or (rItem.Subscription = 'remove')) then
+                //roster name becomes node?
+                //foundName := rItem.Jid.userDisplay
+                exit //don't add
+            else foundName := ritem.text;
+        end
         else
             foundName := tag.GetAttribute('name');
 
@@ -603,32 +597,32 @@ begin
     _dnCache.Clear();
 end;
 
-function TDisplayNameCache.getDisplayName(jid: TJabberID; out pendingNameChange: boolean): Widestring;
+function TDisplayNameCache.getDisplayName(jid: TJabberID; out pendingNameChange: boolean; ignorePending: boolean): Widestring;
 begin
-    Result := getOrAddDNItem(jid).getDisplayName(pendingNameChange);
+    Result := getOrAddDNItem(jid).getDisplayName(pendingNameChange, ignorePending);
 end;
 
-function TDisplayNameCache.getDisplayJIDFull(jid: TJabberID): Widestring;
+function TDisplayNameCache.getDisplayNameAndFullJID(jid: TJabberID): Widestring;
 var
     ignored: boolean;
 begin
-    Result := getOrAddDNItem(jid).getDisplayName(ignored);
-    Result := Result + ' (' + jid.GetDisplayFull() + ')';
+    Result := getOrAddDNItem(jid).getDisplayName(ignored, true);
+    Result := Result + ' <' + jid.GetDisplayFull() + '>';
 end;
 
-function TDisplayNameCache.getDisplayJIDBare(jid: TJabberID): Widestring;
+function TDisplayNameCache.getDisplayNameAndBareJID(jid: TJabberID): Widestring;
 var
     ignored: boolean;
 begin
-    Result := getOrAddDNItem(jid).getDisplayName(ignored);
-    Result := Result + ' (' + jid.getDisplayJID() + ')';
+    Result := getOrAddDNItem(jid).getDisplayName(ignored, true);
+    Result := Result + ' <' + jid.getDisplayJID() + '>';
 end;
 
 function TDisplayNameCache.getDisplayName(jid: TJabberID): Widestring;
 var
     ignored: boolean;
 begin
-    Result := getDisplayName(jid, ignored);
+    Result := getDisplayName(jid, ignored, true);
 end;
 
 function TDisplayNameCache.getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;

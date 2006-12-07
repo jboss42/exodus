@@ -299,7 +299,9 @@ begin
 
     // if there is no nickname, just use the user portion of the jid
     if (ri.Text = '') then
-        ri.Text := DisplayName.getDisplayNameCache().getDisplayName(ri.Jid);
+        if (ri.Subscription <> '') then
+            ri.Text := DisplayName.getDisplayNameCache().getDisplayName(ri.Jid)
+        else ri.Text := ri.Jid.userDisplay;
 
     ri.ClearGroups();    
     grps := tag.QueryXPTags('/item/group');

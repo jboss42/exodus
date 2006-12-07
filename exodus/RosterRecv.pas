@@ -76,7 +76,7 @@ var
 begin
     // Fill up the GUI based on the event
     from := TJabberID.Create(e.from);
-    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayJIDBare(from);
+    txtFrom.Caption := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(from);
     from.Free();
     txtMsg.Lines.Text := e.str_content;
 
