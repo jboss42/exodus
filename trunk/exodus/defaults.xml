@@ -384,6 +384,10 @@
     <fade_limit value="100"></fade_limit>
     <profile_active value="0"></profile_active>
     <wrap_input value="1"></wrap_input>
+	<brand_required_plugins>
+    </brand_required_plugins>
+	<brand_required_plugins_message
+	  value ="This installation is not in compliance with Hermes Instant Messaging Policy: A mandatory component %s has been disabled." />
 
   </prefs>
 
