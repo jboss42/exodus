@@ -1431,9 +1431,9 @@ begin
     if (MainSession.Prefs.getBool('brand_plugs')) then
     begin
         InitPlugins();
-        // Check for required plugins - SIG
-      //if ( IsRequiredPluginsSelected() = false ) then
-      //  StartPrefs(pref_plugins);
+      // Check for required plugins - SIG
+      if ( IsRequiredPluginsSelected() = false ) then
+        StartPrefs(pref_plugins);
     end;
 
     // If they had logging turned on, warn them that they need to

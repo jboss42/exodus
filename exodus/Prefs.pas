@@ -155,6 +155,7 @@ const
 
 
 procedure StartPrefs(start_page: string = '');
+function IsRequiredPluginsSelected(): WordBool;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -165,7 +166,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr;
+    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr, JabberUtils;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -208,6 +209,43 @@ begin
     f.Free();
 end;
 
+{------------- added by SIG ------------}
+function IsRequiredPluginsSelected(): WordBool;
+var
+  plugins_selected: TWideStringlist;
+  plugins_required: TWideStringlist;
+  i,j: integer;
+  plugins_msg : WideString;
+begin
+   Result := true;
+
+   plugins_selected := TWideStringlist.Create();
+   plugins_required := TWideStringlist.Create();
+   with Mainsession.Prefs do
+   begin
+      fillStringList('plugin_selected',plugins_selected);
+      fillStringList('brand_required_plugins',plugins_required);
+      plugins_msg := getString('brand_required_plugins_message');
+      if (plugins_msg = '' )  then
+        plugins_msg := 'This installation is not in compliance with Instant Messaging Policy: A mandatory component %s has been disabled.';
+
+   end;
+
+   for i := 0 to plugins_required.Count - 1 do
+   begin
+       j := plugins_selected.IndexOf(plugins_required[i]);
+       if ( j < 0 ) then
+       begin
+         plugins_msg := WideFormat(plugins_msg, [plugins_required[i]]);
+         MessageDlgW(_(plugins_msg),mtWarning, [mbOK], 0);
+         Result := false;
+       end;
+   end;
+
+   plugins_required.Free();
+   plugins_selected.Free();
+
+end;
 {---------------------------------------}
 procedure TfrmPrefs.LoadPrefs;
 begin
@@ -297,6 +335,14 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+
+  if ( (MainSession.Prefs.getBool('brand_plugs') = true) and
+       (IsRequiredPluginsSelected() = false)) then
+  begin
+    Action := caNone;
+    exit;
+  end;
+
     MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
