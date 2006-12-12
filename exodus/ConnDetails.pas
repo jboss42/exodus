@@ -441,7 +441,7 @@ begin
     else begin
         cboResource.Items.Add(_(sResourceHome));
         cboResource.Items.Add(_(sResourceWork));
-        cboResource.Items.Add(_(ComputerName));
+        cboResource.Items.Add(_(resourceName));
     end;
     list.Free();
 
@@ -564,7 +564,7 @@ begin
     else if (Sender = cboResource) then begin
         inp := cboResource.Text;
         if (Trim(inp) = '') then
-              inp := ComputerName;
+              inp := resourceName;
        
         outp := xmpp_resourceprep(inp);
         if (outp = '') then

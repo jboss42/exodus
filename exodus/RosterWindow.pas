@@ -686,7 +686,7 @@ begin
     end;
 
     if (Trim(p.Resource) = '') then
-       p.Resource := ComputerName;
+       p.Resource := resourceName;
 
 
 
@@ -3118,7 +3118,7 @@ begin
     pname := _(sProfileNew);
     if InputQueryW(_(sProfileCreate), _(sProfileNamePrompt), pname) then begin
         p := MainSession.Prefs.CreateProfile(pname);
-        p.Resource := ComputerName;
+        p.Resource := resourceName;
         p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
         case (ShowConnDetails(p)) of
             mrCancel: Begin
@@ -3569,7 +3569,7 @@ begin
     pname := _(sProfileNew);
     if InputQueryW(_(sProfileCreate), _(sProfileNamePrompt), pname) then begin
         p := MainSession.Prefs.CreateProfile(pname);
-        p.Resource := ComputerName;
+        p.Resource := resourceName;
         p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
         MainSession.Prefs.SaveProfiles();
         ShowProfiles();

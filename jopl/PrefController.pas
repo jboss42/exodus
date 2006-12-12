@@ -363,7 +363,7 @@ const
 function getPrefState(pkey: Widestring): TPrefState;
 function getMyDocs: string;
 function getUserDir: string;
-function ComputerName : Widestring;
+function resourceName : Widestring;
 {**
     Application ID. This is an ID that can be used for paths, filenames,
     window message ID, resources. It is NOT a caption.
@@ -679,12 +679,22 @@ begin
         task_dir := 3;
 end;
 
-function ComputerName() : Widestring;
+function resourceName() : Widestring;
 var
-  computerName: Widestring;
+  computerName, brandingResource: Widestring;
   size: DWORD;
 begin
   Result := '';
+  //If resource is not empty in the branding file, will use it.
+  if (MainSession <> nil) then
+     if (MainSession.Prefs <> nil) then
+        brandingResource := MainSession.Prefs.getString('brand_profile_resource');
+        if (Trim(brandingResource) <> '') then begin
+           Result := brandingResource;
+           exit;
+        end;
+
+  //If branding file resource is empty, will use computer name.
   SetLength(computerName,  MAX_COMPUTERNAME_LENGTH+1);
   size := Length(computerName);
   if GetComputerNameW (PWideChar(computerName), size) then begin
@@ -1735,8 +1745,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor TJabberProfile.Create(prof_name : Widestring; prefs: TPrefController);
-var
- resource: Widestring;
 begin
     inherited Create;
 
@@ -1744,12 +1752,9 @@ begin
 
     with prefs do begin
         password   := getString('brand_profile_password');
-        resource   := getString('brand_profile_resource');
-        if (Trim(resource) = '') then
-           resource := ComputerName;
         _jabberID := TJabberID.create(getString('brand_profile_username'),
                                       getString('brand_profile_server'),
-                                      resource);
+                                      resourceName);
         Priority   := getInt('brand_profile_priority');
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
