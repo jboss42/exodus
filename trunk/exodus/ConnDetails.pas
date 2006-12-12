@@ -25,7 +25,7 @@ uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit;
+    TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows;
 
 type
   TfrmConnDetails = class(TTntForm)
@@ -441,7 +441,7 @@ begin
     else begin
         cboResource.Items.Add(_(sResourceHome));
         cboResource.Items.Add(_(sResourceWork));
-        cboResource.Items.Add(_(PrefController.getAppInfo.ID));
+        cboResource.Items.Add(_(ComputerName));
     end;
     list.Free();
 
@@ -563,6 +563,9 @@ begin
     end
     else if (Sender = cboResource) then begin
         inp := cboResource.Text;
+        if (Trim(inp) = '') then
+              inp := ComputerName;
+       
         outp := xmpp_resourceprep(inp);
         if (outp = '') then
             MessageDlgW(_('The resource you entered is not allowed.'), mtError, [mbOK], 0)
