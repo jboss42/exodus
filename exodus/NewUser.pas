@@ -180,7 +180,7 @@ begin
              with MainSession.Profile do begin
                 Username := txtUsername.Text;
                 Password := txtPassword.Text;
-                Resource := PrefController.getAppInfo.ID;
+                Resource := ComputerName;
                 SavePasswd := true;
                 NewAccount := false;
               end;
@@ -510,7 +510,7 @@ begin
         with MainSession.Profile do begin
             Username := _username;
             password := _password;
-            Resource := PrefController.getAppInfo.ID;
+            Resource :=  ComputerName;
             SavePasswd := true;
             NewAccount := true;
         end;

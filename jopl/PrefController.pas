@@ -363,6 +363,7 @@ const
 function getPrefState(pkey: Widestring): TPrefState;
 function getMyDocs: string;
 function getUserDir: string;
+function ComputerName : Widestring;
 {**
     Application ID. This is an ID that can be used for paths, filenames,
     window message ID, resources. It is NOT a caption.
@@ -678,6 +679,21 @@ begin
         task_dir := 3;
 end;
 
+function ComputerName() : Widestring;
+var
+  computerName: Widestring;
+  size: DWORD;
+begin
+  Result := '';
+  SetLength(computerName,  MAX_COMPUTERNAME_LENGTH+1);
+  size := Length(computerName);
+  if GetComputerNameW (PWideChar(computerName), size) then begin
+     SetLength(computerName, size);
+     Result := computerName;
+  end;
+
+end;
+
 {$else}
 
 procedure getUserDir(): string;
@@ -694,6 +710,9 @@ procedure getDefaultPos;
 begin
     //
 end;
+
+
+
 {$endif}
 
 {---------------------------------------}
@@ -1716,6 +1735,8 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor TJabberProfile.Create(prof_name : Widestring; prefs: TPrefController);
+var
+ resource: Widestring;
 begin
     inherited Create;
 
@@ -1723,9 +1744,12 @@ begin
 
     with prefs do begin
         password   := getString('brand_profile_password');
+        resource   := getString('brand_profile_resource');
+        if (Trim(resource) = '') then
+           resource := ComputerName;
         _jabberID := TJabberID.create(getString('brand_profile_username'),
-                                     getString('brand_profile_server'),
-                                     getString('brand_profile_resource'));
+                                      getString('brand_profile_server'),
+                                      resource);
         Priority   := getInt('brand_profile_priority');
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
