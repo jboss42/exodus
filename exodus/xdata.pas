@@ -26,7 +26,7 @@ uses
     TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData, JabberID,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, EntityCache, Entity;
 
 type
 
@@ -693,6 +693,7 @@ end;
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
 var
     r, q, x: TXMLTag;
+    e: TJabberEntity;
 begin
   inherited;
 
@@ -722,6 +723,11 @@ begin
         end;
 
         MainSession.SendTag(r);
+        //Refresh entity
+        e := jEntityCache.getByJid(_to_jid, '');
+        if (e <> nil) then
+           e.refreshInfo(MainSession);
+
     end;
     _responded := true;
 

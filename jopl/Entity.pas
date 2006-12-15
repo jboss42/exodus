@@ -117,6 +117,7 @@ type
         procedure walk(js: TJabberSession; items_limit: boolean = true;
             timeout: integer = 10);
         procedure refresh(js: TJabberSession);
+        procedure refreshInfo(js: TJabberSession);
         procedure LoadInfo(tag: TXMLTag);
 
         procedure AddReference(e: TJabberEntity);
@@ -595,6 +596,21 @@ begin
     _discoInfo(js, WalkCallback);
 end;
 
+procedure TJabberEntity.refreshInfo(js: TJabberSession);
+begin
+    if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
+
+    _has_info := false;
+    _has_items := true;
+    _type := ent_unknown;
+
+    //ClearStringListObjects(_items);
+    //_items.Clear();
+    _feats.Clear();
+
+    _discoInfo(js, WalkCallback);
+end;
+
 {---------------------------------------}
 procedure TJabberEntity.LoadInfo(tag: TXMLTag);
 begin
@@ -828,7 +844,8 @@ begin
     getInfo(js);
 
     // We got info back... so lets get our items..
-    _discoItems(js, WalkItemsCallback);
+    if (not _has_items) then
+      _discoItems(js, WalkItemsCallback);
 end;
 
 {---------------------------------------}
