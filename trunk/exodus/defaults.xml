@@ -388,7 +388,7 @@
     </brand_required_plugins>
 	<brand_required_plugins_message
 	  value ="This installation is not in compliance with Hermes Instant Messaging Policy: A mandatory component %s has been disabled." />
-
+    <branding_disable_outflow value="0"></branding_disable_outflow>
   </prefs>
 
   <!-- default custom presence stuff -->

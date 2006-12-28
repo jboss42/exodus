@@ -159,6 +159,7 @@ type
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
+    procedure fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);    
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
     function fireIM(Jid: Widestring; var Body: Widestring;
@@ -437,7 +438,8 @@ begin
                 end;
                 try
                     // is this the IExodusPlugin interface?
-                    if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin)) then begin
+                    if  (IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin) or
+                         IsEqualGUID(iattr.guid, Exodus_TLB.IID_IExodusPlugin2)) then begin
                         // oho!  it IS.  Get the name of this coclass, so we can show
                         // what we did.  Get the doc string, just to show off.
                         //get current registration state
@@ -496,7 +498,20 @@ begin
                 try
                     iunk := CreateComObject(tattr.guid);
                     //see if iunk is an IExodusPlugin. Throws exception if not
-                    tplug := (iunk as IExodusPlugin);
+                    //tplug := (iunk as IExodusPlugin);
+                    try
+                      tplug := (iunk as IExodusPlugin);
+                    except
+                      on EIntfCastError do begin
+                          try
+                            tplug := (iunk as IExodusPlugin2);
+                          except
+                            on EIntfCastError do begin
+                               continue;
+                            end;
+                          end;
+                      end;
+                    end;
                     //type cast above will throw exception if not IExodusPlugin
                     //nil check here is to force the compiler to generate the
                     //typecast code.
@@ -589,10 +604,17 @@ begin
             plugin := IUnknown(idisp) as IExodusPlugin;
         except
             on EIntfCastError do begin
-                errorStr := WideFormat(_(sPluginErrNoIntf), [com_name]);
-                exit;
-            end;
-        end;
+               try
+                  plugin := IUnknown(idisp) as IExodusPlugin2;
+                except
+                  on EIntfCastError do begin
+                     errorStr := WideFormat(_(sPluginErrNoIntf), [com_name]);
+                     exit;
+                  end;  //begin
+                end; //try
+            end; //begin
+        end;  //try
+
 
         p := TPlugin.Create();
         p.com := plugin;
@@ -952,6 +974,24 @@ begin
         TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
 end;
 
+procedure TExodusController.fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);
+var
+    i: integer;
+    iep2: IExodusPlugin2;
+begin
+    for i := 0 to plugs.Count - 1 do
+        try
+           iep2 := (TPlugin(plugs.Objects[i]).com as IExodusPlugin2);
+        except
+            on EIntfCastError do begin
+              iep2 := nil;
+            end;
+        end;
+        if (iep2 <> nil) then
+          iep2.NewIncomingIM(jid, ExodusChat);
+
+       
+end;
 {---------------------------------------}
 procedure TExodusController.fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
 var

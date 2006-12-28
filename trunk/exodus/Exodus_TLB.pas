@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 11/29/2006 10:58:26 AM from Type Library described below.
+// File generated on 12/28/2006 12:34:09 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -104,6 +104,7 @@ const
   CLASS_ExodusBookmarkManager: TGUID = '{EEEE7D8D-0C7E-4DF1-B556-CFDAD2893123}';
   IID_IExodusToolbarControl: TGUID = '{B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}';
   CLASS_ExodusToolbarControl: TGUID = '{6AB0CC3F-2AF5-460B-B76C-1A4E807BA152}';
+  IID_IExodusPlugin2: TGUID = '{7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -237,6 +238,8 @@ type
   IExodusBookmarkManagerDisp = dispinterface;
   IExodusToolbarControl = interface;
   IExodusToolbarControlDisp = dispinterface;
+  IExodusPlugin2 = interface;
+  IExodusPlugin2Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -4113,6 +4116,35 @@ type
     ['{B35EACB5-C3DC-473E-8C4C-EFA175DF4CAB}']
     property Visible: WordBool dispid 201;
     property Enabled: WordBool dispid 202;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPlugin2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}
+// *********************************************************************//
+  IExodusPlugin2 = interface(IExodusPlugin)
+    ['{7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}']
+    procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPlugin2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}
+// *********************************************************************//
+  IExodusPlugin2Disp = dispinterface
+    ['{7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}']
+    procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat); dispid 301;
+    procedure Startup(const exodusController: IExodusController); dispid 1;
+    procedure Shutdown; dispid 2;
+    procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); dispid 3;
+    procedure NewChat(const JID: WideString; const chat: IExodusChat); dispid 4;
+    procedure NewRoom(const JID: WideString; const room: IExodusChat); dispid 5;
+    function NewIM(const JID: WideString; var Body: WideString; var Subject: WideString; 
+                   const xTags: WideString): WideString; dispid 8;
+    procedure Configure; dispid 12;
+    procedure NewOutgoingIM(const JID: WideString; const instantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//
