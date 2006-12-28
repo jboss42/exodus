@@ -218,6 +218,7 @@ begin
             Result.ShowDefault(); //bring the message window to front
             Result.PushEvent(e);
         end;
+        ExComController.fireNewIncomingIM(e.from, TExodusChat(Result.ComController));        
     end;
 end;
 
