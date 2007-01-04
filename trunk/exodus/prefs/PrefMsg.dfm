@@ -2,46 +2,46 @@ inherited frmPrefMsg: TfrmPrefMsg
   Left = 282
   Top = 230
   Caption = 'frmPrefMsg'
-  ClientHeight = 300
+  ClientHeight = 333
   ClientWidth = 348
   OldCreateOrder = True
   ExplicitWidth = 360
-  ExplicitHeight = 312
+  ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimestampFmt: TTntLabel [0]
-    Left = 26
-    Top = 137
+    Left = 29
+    Top = 160
     Width = 35
     Height = 13
     Caption = 'Format:'
   end
   object lblMsgOptions: TTntLabel [1]
-    Left = 5
-    Top = 161
+    Left = 8
+    Top = 185
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object lblSpoolPath: TTntLabel [2]
-    Left = 5
-    Top = 247
+    Left = 8
+    Top = 271
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
     Visible = False
   end
   object lblInviteOptions: TTntLabel [3]
-    Left = 5
-    Top = 201
-    Width = 198
+    Left = 8
+    Top = 225
+    Width = 231
     Height = 13
     Caption = 'When I get invited to a conference room, do this:'
   end
   object chkTimestamp: TTntCheckBox [4]
-    Left = 5
-    Top = 117
-    Width = 300
+    Left = 8
+    Top = 135
+    Width = 170
     Height = 17
     Caption = 'Timestamp messages'
     TabOrder = 2
@@ -55,8 +55,8 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 0
   end
   object cboMsgOptions: TTntComboBox [6]
-    Left = 26
-    Top = 177
+    Left = 29
+    Top = 201
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -68,16 +68,16 @@ inherited frmPrefMsg: TfrmPrefMsg
       'Put messages into existing chats')
   end
   object txtSpoolPath: TTntEdit [7]
-    Left = 26
-    Top = 263
+    Left = 29
+    Top = 287
     Width = 207
     Height = 21
     TabOrder = 6
     Visible = False
   end
   object btnSpoolBrowse: TTntButton [8]
-    Left = 243
-    Top = 261
+    Left = 246
+    Top = 285
     Width = 75
     Height = 25
     Caption = 'Browse'
@@ -86,8 +86,8 @@ inherited frmPrefMsg: TfrmPrefMsg
     OnClick = btnSpoolBrowseClick
   end
   object cboInviteOptions: TTntComboBox [9]
-    Left = 26
-    Top = 217
+    Left = 29
+    Top = 241
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -107,8 +107,8 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 1
   end
   object txtTimestampFmt: TTntComboBox [11]
-    Left = 72
-    Top = 134
+    Left = 75
+    Top = 158
     Width = 161
     Height = 21
     ItemHeight = 13
@@ -149,6 +149,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 17
     Caption = 'Display avatars in chat windows'
     TabOrder = 11
+  end
+  object chkShowPriority: TTntCheckBox
+    Left = 5
+    Top = 108
+    Width = 300
+    Height = 17
+    Caption = 'Show priority'
+    TabOrder = 12
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

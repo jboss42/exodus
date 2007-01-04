@@ -43,6 +43,7 @@ type
     chkQueueDNDChats: TTntCheckBox;
     chkQueueOffline: TTntCheckBox;
     chkChatAvatars: TTntCheckBox;
+    chkShowPriority: TTntCheckBox;
     procedure btnSpoolBrowseClick(Sender: TObject);
   private
     { Private declarations }
@@ -64,6 +65,7 @@ uses
 procedure TfrmPrefMsg.LoadPrefs();
 begin
     inherited;
+    chkShowPriority.Visible := MainSession.Prefs.getBool('branding_priority_notifications');
 end;
 
 procedure TfrmPrefMsg.SavePrefs();

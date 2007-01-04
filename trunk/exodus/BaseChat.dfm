@@ -2,16 +2,16 @@ inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
   ClientHeight = 260
-  ClientWidth = 355
+  ClientWidth = 415
   OnDestroy = FormDestroy
-  ExplicitWidth = 363
+  ExplicitWidth = 423
   ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
     Left = 0
     Top = 227
-    Width = 355
+    Width = 415
     Height = 5
     Cursor = crVSplit
     Align = alBottom
@@ -19,19 +19,20 @@ inherited frmBaseChat: TfrmBaseChat
     Beveled = True
     OnMoved = Splitter1Moved
     ExplicitTop = 192
+    ExplicitWidth = 355
   end
   inherited pnlDockTop: TPanel
-    Width = 355
-    TabOrder = 3
-    ExplicitWidth = 355
+    Width = 415
+    TabOrder = 2
+    ExplicitWidth = 415
     inherited tbDockBar: TToolBar
-      Left = 306
-      ExplicitLeft = 306
+      Left = 366
+      ExplicitLeft = 366
     end
     object pnlChatTop: TPanel
       Left = 0
       Top = 0
-      Width = 303
+      Width = 363
       Height = 32
       Align = alClient
       BevelOuter = bvNone
@@ -41,7 +42,7 @@ inherited frmBaseChat: TfrmBaseChat
   object pnlMsgList: TPanel
     Left = 0
     Top = 32
-    Width = 355
+    Width = 415
     Height = 166
     Align = alClient
     BevelOuter = bvNone
@@ -51,16 +52,16 @@ inherited frmBaseChat: TfrmBaseChat
   object pnlInput: TPanel
     Left = 0
     Top = 232
-    Width = 355
+    Width = 415
     Height = 28
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 2
+    TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
       Top = 2
-      Width = 351
+      Width = 411
       Height = 24
       Align = alClient
       AutoURLDetect = adNone
@@ -166,13 +167,12 @@ inherited frmBaseChat: TfrmBaseChat
   object tbMsgOutToolbar: TTntToolBar
     Left = 0
     Top = 198
-    Width = 355
+    Width = 415
     Height = 29
     Align = alBottom
-    ButtonHeight = 25
     ButtonWidth = 25
     Images = frmExodus.ImageList2
-    TabOrder = 1
+    TabOrder = 3
     object ChatToolbarButtonBold: TTntToolButton
       Left = 0
       Top = 0
@@ -266,6 +266,21 @@ inherited frmBaseChat: TfrmBaseChat
       ImageIndex = 77
       PopupMenu = popHotkeys
       OnClick = ChatToolbarButtonHotkeysClick
+    end
+    object TntToolButton1: TTntToolButton
+      Left = 241
+      Top = 0
+      Width = 8
+      Caption = 'TntToolButton1'
+      Style = tbsSeparator
+    end
+    object cmbPriority: TTntComboBox
+      Left = 249
+      Top = 0
+      Width = 72
+      Height = 21
+      ItemHeight = 13
+      TabOrder = 0
     end
   end
   object popMsgList: TTntPopupMenu

@@ -28,7 +28,7 @@ uses
 function RTFColor(color_pref: integer) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
-procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_server, color_action, color_me, color_other, font_color: integer) overload;
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 
 {---------------------------------------}
@@ -40,7 +40,7 @@ uses
     XMLParser,
     RT_XIMConversion,
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords;
+    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -74,6 +74,7 @@ begin
                   Msg,
                   AutoScroll,
                   MainSession.Prefs.getInt('color_time'),
+                  MainSession.Prefs.getInt('color_priority'),
                   MainSession.Prefs.getInt('color_server'),
                   MainSession.Prefs.getInt('color_action'),
                   MainSession.Prefs.getInt('color_me'),
@@ -112,7 +113,7 @@ end;
 
 {---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean;
-                        color_time, color_server, color_action, color_me, color_other, font_color: integer);
+                        color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer);
 var
     len, fvl: integer;
     txt, body: WideString;
@@ -133,6 +134,7 @@ begin
         RTFColor(color_me)     + // \cf4
         RTFColor(color_other)  + // \cf5
         RTFColor(font_color)   + // \cf6
+        RTFColor(color_priority) + // \cf7
         '}\uc1';
 
     if (MainSession.Prefs.getBool('timestamp')) then begin
@@ -150,6 +152,10 @@ begin
         end;
 
         txt := txt + ']';
+    end;
+
+    if ((Msg.Priority = high) or (Msg.Priority = low)) then begin
+        txt := txt + '\cf7[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
     end;
 
     len := Length(Msg.Body);

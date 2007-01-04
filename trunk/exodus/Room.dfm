@@ -18,6 +18,7 @@ inherited frmRoom: TfrmRoom
   end
   inherited pnlDockTop: TPanel
     Width = 382
+    TabOrder = 1
     ExplicitWidth = 382
     inherited tbDockBar: TToolBar
       Left = 333

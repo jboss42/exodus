@@ -48,11 +48,12 @@ uses
     RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    MsgQueue, NodeItem, Roster, JabberID, Session;
+    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
     sNotifyChat = 'Chat with ';
+    sPriorityNotifyChat = 'Priority Chat with ';
 
 {---------------------------------------}
 constructor TGUIFactory.Create();
@@ -90,6 +91,7 @@ var
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
     q: TfrmMsgQueue;
+    msg: TJabberMessage;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
@@ -134,9 +136,15 @@ begin
             if (not MainSession.IsBlocked(tmp_jid)) then begin
                 //show window but don't bring it to front. Let notifications do that
                 chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-                if (chat <> nil) then
+                if (chat <> nil) then begin
+                  msg := TJabberMessage.Create(tag);
+                  if (((msg.Priority = high) or (msg.Priority = low)) and (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
+                    DoNotify(chat, 'notify_priority_chatactivity',  GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyChat) +
+                         chat.DisplayName, RosterTreeImages.Find('contact'))
+                  else
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
                          chat.DisplayName, RosterTreeImages.Find('contact'));
+                end;
             end;
             tmp_jid.Free;
         end;

@@ -324,6 +324,8 @@ begin
         _lang := Prefs.getString('locale')
     else
         _lang := '';
+    if (Prefs.getBool('branding_priority_notifications') = false) then
+      Prefs.setBool('show_priority', false);
 
     // Create the Presence_XML list for stashing stuff in every pres packet
     Presence_XML := TWideStringlist.Create();

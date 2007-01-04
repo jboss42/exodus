@@ -26,7 +26,7 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList;
+  ToolWin, ImgList, JabberMsg;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -59,6 +59,7 @@ type
     imgAvatar: TPaintBox;
     Panel3: TPanel;
     Print1: TTntMenuItem;
+    
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure doHistory(Sender: TObject);
@@ -119,7 +120,7 @@ type
 //    _mynick: Widestring;
 
     // custom notification options to use..
-    _notify: array[0..3] of integer;
+    _notify: array[0..1] of integer;
 
     // the current contact's avatar
     _avatar: TAvatar;
@@ -144,7 +145,7 @@ type
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
-    function  _sendMsg(txt: Widestring; xml: Widestring = ''): boolean;
+    function  _sendMsg(txt: Widestring; xml: Widestring = ''; priority: PriorityType = None): boolean;
     procedure _sendComposing(id: Widestring);
     function isToXIMEnabled(tag: TXMLTag): boolean; //is the to of this message xhtml-im enabled?
   protected
@@ -182,7 +183,7 @@ type
     procedure showPres(tag: TXMLTag);
     procedure handleMUCPresence(tag: TXMLTag);
     procedure SetupResources();
-    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
+    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     procedure SendMsg; override;
     function  SetJID(cjid: widestring): boolean;
@@ -235,16 +236,18 @@ uses
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
-    JabberMsg, Roster, Session, XMLUtils,
+    Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons,
     Entity,
     XMLParser,
     RT_XIMConversion,
-    EntityCache;
+    EntityCache,
+    TypInfo;
 
 const
     sReplying = ' is replying.';
     sChatActivity = 'Chat Activity: ';
+    sPriorityChatActivity = 'Priority Chat Activity: ';
     sUserBlocked = 'This user is now blocked.';
     sIsNow = 'is now';
     sAvailable = 'available';
@@ -256,6 +259,7 @@ const
     sMsgLocalTime = 'Local Time: ';
 
     NOTIFY_CHAT_ACTIVITY = 0;
+    NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
 
 {$R *.dfm}
 
@@ -423,6 +427,7 @@ begin
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
 
     _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
+    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');    
 
     _receivedXIMNode := false;
     _receivedMessage := false;
@@ -922,8 +927,13 @@ begin
 
     if (Msg.Body <> '') then begin
         //Notify
-        DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
-            RosterTreeImages.Find('contact'), 'notify_chatactivity');
+        if ((Msg.Priority = High) or (Msg.Priority = Low)) then
+          DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+              RosterTreeImages.Find('contact'), 'notify_chatactivity')
+        else
+          DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
+              RosterTreeImages.Find('contact'), 'notify_chatactivity');
+
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := DisplayName;
 
@@ -949,19 +959,19 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.SendRawMessage(body, subject, xml: Widestring;
-    fire_plugins: boolean);
+    fire_plugins: boolean; priority: PriorityType);
 begin
     // send the msg
     // XXX: PGM: is this your trim?  What should we do with messages that
     // start with $#D, etc.?
-    chat_object.SendMsg(Trim(body),subject,xml,true);
+    chat_object.SendMsg(Trim(body),subject,xml,true, priority);
     _check_event := true;
 end;
 
 {---------------------------------------}
-function TfrmChat._sendMsg(txt: Widestring; xml: Widestring): boolean;
+function TfrmChat._sendMsg(txt: Widestring; xml: Widestring; priority: PriorityType): boolean;
 begin
-      sendRawMessage(txt,'',xml,true);
+      sendRawMessage(txt,'',xml,true, priority);
       result := true;
 end;
 
@@ -971,6 +981,7 @@ var
     txt: Widestring;
     xhtml: TXMLTag;
     xml: Widestring;
+    priority: PriorityType;
 begin
     // Get the text from the UI
     // and send the actual message out
@@ -981,11 +992,17 @@ begin
       exit;
     end;
     xml := '';
+
     xhtml := getInputXHTML(MsgOut);
     if (xhtml <> nil) then
         xml := xhtml.XML;
-        
-    if (_sendMsg(txt, xml)) then begin
+
+    if (MainSession.Prefs.getBool('show_priority')) then
+       priority := PriorityType(GetEnumValue(TypeInfo(PriorityType), cmbPriority.Text))
+    else
+       priority := None;
+
+    if (_sendMsg(txt, xml, priority)) then begin
         _sent_composing := false;
         inherited;
     end;
@@ -1111,6 +1128,12 @@ begin
 
     Self.ImageIndex := newPresIdx;
 end;
+
+
+
+
+
+
 
 {---------------------------------------}
 procedure TfrmChat.handleMucPresence(tag: TXMLTag);
@@ -1553,9 +1576,12 @@ begin
     f := TfrmCustomNotify.Create(Application);
 
     f.addItem('Chat activity');
+    f.addItem('Priority chat activity');
     f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY]);
+    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY]);
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_CHAT_ACTIVITY] := f.getVal(0);
+        _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := f.getVal(1);
     end;
 
     f.Free();

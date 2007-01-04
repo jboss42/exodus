@@ -67,7 +67,7 @@ type
     Customize1: TTntMenuItem;
     pnlChatTop: TPanel;
     ChatToolbarButtonColors: TTntToolButton;
-
+    cmbPriority: TTntComboBox;
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
@@ -132,6 +132,7 @@ type
         Update tool bar state based on prefs.
     }
     procedure updateFromPrefs();
+    procedure populatePriority();
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -176,7 +177,9 @@ uses
     Emoticons,
     ToolbarColorSelect,
     Jabber1,
-    ExUtils;
+    ExUtils,
+    JabberMsg,
+    TypInfo;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -389,6 +392,8 @@ begin
 
     MsgOut.Lines.Clear();
     UpdateToolbarState();
+    if (MainSession.Prefs.getBool('show_priority')) then
+      cmbPriority.Text := GetDisplayPriority(medium);
     MsgOut.SetFocus;
 end;
 
@@ -416,6 +421,7 @@ begin
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
+    cmbPriority.Text := GetDisplayPriority(medium);
 
     _msgHistory := TWideStringList.Create();
     _pending := '';
@@ -706,12 +712,31 @@ begin
             MsgOut.DefAttributes.UnderlineType := ultNone;
         end;
     end;
+    PopulatePriority();
     AssignDefaultFont(Self.Font);
     MsgList.setupPrefs();
     //msgout will pickup parent font by default, but we need to change bg color
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 end;
 
+procedure TfrmBaseChat.PopulatePriority();
+var
+   priority: PriorityType;
+   endPriority: PriorityType;
+begin
+    if (MainSession.Prefs.getBool('show_priority')) then begin
+       cmbPriority.Visible := true;
+       cmbPriority.Clear;
+       endPriority :=  System.High(PriorityType);
+       Dec(endPriority);
+       for priority := System.Low(PriorityType) to endPriority do
+         cmbPriority.AddItem(GetDisplayPriority(priority), nil);
+       cmbPriority.Text := GetDisplayPriority(medium);
+    end
+    else begin
+      cmbPriority.Visible := false;
+    end;
+end;
 procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
 begin
     MsgOut.SelAttributes.Color := selColor;
