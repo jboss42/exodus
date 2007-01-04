@@ -104,7 +104,8 @@
     <color_bg value="$ffffff"/>
     <color_me value="$ff0000"/>
     <color_other value="$0000ff"/>
-    <color_time value="$808080"/>
+	<color_time value="$808080"/>
+	<color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
     <roster_bg value="$80000005"/>
@@ -158,7 +159,8 @@
     </msg_treatment>
     <queue_offline value="1" control="chkQueueOffline"/>
     <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
-    <chat_avatars value="1" control="chkChatAvatars"/>
+	<chat_avatars value="1" control="chkChatAvatars"/>
+	<show_priority value="1" control="chkShowPriority"/>
 
     <!-- Emoticon Options -->
     <emoticons value="1" control="chkEmoticons"/>
@@ -209,13 +211,15 @@
 
     <notify_online value="1"/>
     <notify_offline value="0"/>
-    <notify_newchat value="1"/>
+	<notify_newchat value="1"/>
     <notify_normalmsg value="1"/>
     <notify_s10n value="1"/>
     <notify_invite value="1"/>
     <notify_keyword value="1"/>
-    <notify_chatactivity value="4"/>
-    <notify_roomactivity value="1"/>
+	<notify_chatactivity value="4"/>
+	<notify_priority_chatactivity value="4"/>
+	<notify_roomactivity value="1"/>
+    <notify_priority_roomactivity value="1"/>	
     <notify_oob value="1"/>
     <notify_autoresponse value="0"/>                     
     
@@ -388,7 +392,9 @@
     </brand_required_plugins>
 	<brand_required_plugins_message
 	  value ="This installation is not in compliance with Hermes Instant Messaging Policy: A mandatory component %s has been disabled." />
-    <branding_disable_outflow value="0"></branding_disable_outflow>
+	<branding_disable_outflow value="0"></branding_disable_outflow>
+	<!-- indicates if priority notification feature should be used -->
+	<branding_priority_notifications value="1"></branding_priority_notifications>
   </prefs>
 
   <!-- default custom presence stuff -->

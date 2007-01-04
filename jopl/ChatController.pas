@@ -65,7 +65,7 @@ type
         procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
         procedure SendMsg(tag: TXMLTag); overload;
-        procedure SendMsg(body: Widestring; subject: Widestring; xml: Widestring; composing: boolean = false); overload;
+        procedure SendMsg(body: Widestring; subject: Widestring; xml: Widestring; composing: boolean = false; priority: PriorityType = None); overload;
         procedure SendMsgCallback(event: string; tag: TXMLTag);
         procedure SetHistory(s: Widestring);
         procedure setThreadID(id: Widestring);
@@ -78,7 +78,7 @@ type
 
         function CreateMessage(): TJabberMessage; overload;
         function CreateMessage(tag: TXMLTag): TJabberMessage; overload;
-        function CreateMessage(body: Widestring; subject: Widestring; xml: Widestring): TJabberMessage; overload;
+        function CreateMessage(body: Widestring; subject: Widestring; xml: Widestring; priority: PriorityType = None): TJabberMessage; overload;
 
         function getHistory: Widestring;
         function getThreadID: Widestring;
@@ -365,11 +365,11 @@ end;
 
 {---------------------------------------}
 //Send an outgoing message for this chat
-procedure TChatController.SendMsg(body: Widestring; subject: Widestring; xml: Widestring; composing: boolean = false);
+procedure TChatController.SendMsg(body: Widestring; subject: Widestring; xml: Widestring; composing: boolean = false; priority: PriorityType = None);
 var
   msg: TJabberMessage;
 begin
-  msg := CreateMessage(body,subject,xml);
+  msg := CreateMessage(body,subject,xml, priority);
   msg.Composing := composing;
   SendMsg(msg.Tag);
   FreeAndNil(msg);
@@ -466,12 +466,13 @@ end;
 
 {---------------------------------------}
 //Create (an outbound) message for this chat
-function TChatController.CreateMessage(body: Widestring; subject: Widestring; xml: Widestring): TJabberMessage;
+function TChatController.CreateMessage(body: Widestring; subject: Widestring; xml: Widestring; priority: PriorityType): TJabberMessage;
 begin
   result := CreateMessage();
   result.Body := body;
   result.Subject := subject;
   result.XML := xml;
+  result.Priority := priority;
 end;
 
 {---------------------------------------}

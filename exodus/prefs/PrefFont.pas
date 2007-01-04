@@ -64,19 +64,35 @@ type
     _clr_font_color: string;
     _clr_font: string;
     _clr_bg: string;
-    _offsets: array of integer;
     _color_me: integer;
     _color_other: integer;
     _color_action: integer;
     _color_server: integer;
     _font_color: integer;
     _color_time: integer;
+    _color_priority: integer;
     _color_bg: integer;
     _roster_bg: integer;
     _roster_font_color: integer;
     _lastAllowFont: boolean;
     _lastAllowSize: boolean;
     _lastAllowColor: boolean;
+
+    type TRange = record
+       Min: Integer;
+       Max: Integer;
+    end;
+
+    type _ranges = array of TRange;
+
+    var _time_ranges: _ranges;
+    var _other_ranges: _ranges;
+    var _me_ranges: _ranges;
+    var _action_ranges: _ranges;
+    var _server_ranges: _ranges;
+    var _font_ranges: _ranges;
+    var _priority_ranges: _ranges;
+
 
     procedure redrawChat();
     procedure loadAllowedFontProps();
@@ -103,7 +119,7 @@ uses
     ShellAPI,
     PrefFile,
     PrefController,
-    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils;
+    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
@@ -130,6 +146,7 @@ begin
         _color_server := getInt('color_server');
         _font_color := getInt('font_color');
         _color_time := getInt('color_time');
+        _color_priority := getInt('color_priority');
         _color_bg := getInt('color_bg');
         _roster_bg := getInt('roster_bg');
         _roster_font_color := getInt('roster_font_color');
@@ -194,6 +211,7 @@ begin
     MainSession.Prefs.setInt('color_server', _color_server);
     MainSession.Prefs.setInt('font_color', _font_color);
     MainSession.Prefs.setInt('color_time', _color_time);
+    MainSession.Prefs.setInt('color_priority', _color_priority);
     MainSession.Prefs.setInt('color_bg', _color_bg);
     MainSession.Prefs.setInt('roster_bg', _roster_bg);
     MainSession.Prefs.setInt('roster_font_color', _roster_font_color);
@@ -280,7 +298,16 @@ var
     dl : integer;
     my_nick: WideString;
 begin
-    SetLength(_offsets, 10);
+    SetLength(_time_ranges, 4);
+    SetLength(_me_ranges, 1);
+    SetLength(_other_ranges, 1);    
+    SetLength(_action_ranges, 1);
+    SetLength(_server_ranges, 1);
+    SetLength(_font_ranges, 1);
+    SetLength(_priority_ranges, 2);
+
+
+
     n := Now();
     dl := length(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), n)) + 2;
     my_nick := MainSession.getDisplayUsername();
@@ -288,52 +315,73 @@ begin
     with colorChat do begin
         Lines.Clear;
 
-        _offsets[0] := 0;
-        _offsets[1] := _offsets[0] + dl;
-        _offsets[2] := _offsets[1] + length(my_nick) + 2;
+        _time_ranges[0].Min := 0;
+        _time_ranges[0].Max := _time_ranges[0].Min + dl - 1;
+
+
         m := TJabberMessage.Create();
         with m do begin
             Body := _('Some text from me');
             isMe := true;
             Nick := my_nick;
             Time := n;
+            Priority := High;
         end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_server, _color_action, _color_me, _color_other, _font_color);
+
+        _priority_ranges[0].Min := _time_ranges[0].Max + 1;
+        _priority_ranges[0].Max := _priority_ranges[0].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
+        _me_ranges[0].Min := _priority_ranges[0].Max + 1;
+        _me_ranges[0].Max := _me_ranges[0].Min + length(my_nick) + 2 - 1;
+        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
         m.Free();
 
-        _offsets[3] := Length(WideLines.Text) - WideLines.Count;
-        _offsets[4] := _offsets[3] + dl;
-        _offsets[5] := _offsets[4] + length(_('Friend')) + 2;
+        _time_ranges[1].Min := Length(WideLines.Text) - WideLines.Count;
+        _time_ranges[1].Max :=  _time_ranges[1].Min + dl - 1;
+
+
         m := TJabberMessage.Create();
         with m do begin
             Body := _('Some reply text');
             isMe := false;
             Nick := _('Friend');
             Time := n;
+            Priority := High;
         end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_server, _color_action, _color_me, _color_other, _font_color);
+
+        _priority_ranges[1].Min := _time_ranges[1].Max + 1;
+        _priority_ranges[1].Max := _priority_ranges[1].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
+        _other_ranges[0].Min := _priority_ranges[1].Max + 1;
+        _other_ranges[0].Max :=  _other_ranges[0].Min + length(_('Friend')) + 2 - 1;
+        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
         m.Free();
 
-        _offsets[6] := Length(WideLines.Text) - WideLines.Count;
-        _offsets[7] := _offsets[6] + dl;
+        _time_ranges[2].Min := Length(WideLines.Text) - WideLines.Count;
+        _time_ranges[2].Max := _time_ranges[2].Min + dl - 1;
+
+        _action_ranges[0].Min := _time_ranges[2].Max + 1;
+
         m := TJabberMessage.Create();
         with m do begin
             Body := _('/me does action');
             Nick := my_nick;
             Time := n;
         end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_server, _color_action, _color_me, _color_other, _font_color);
+        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
         m.Free();
 
-        _offsets[8] := Length(WideLines.Text) - WideLines.Count;
-        _offsets[9] := _offsets[8] + dl;
+        _action_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
+        _time_ranges[3].Min :=_action_ranges[0].Max + 1;
+        _time_ranges[3].Max := _time_ranges[3].Min + dl - 1;
+
         m := TJabberMessage.Create();
+        _server_ranges[0].Min := _time_ranges[3].Max + 1;
         with m do begin
             Body := _('Server says something');
             Nick := '';
             Time := n;
         end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_server, _color_action, _color_me, _color_other, _font_color);
+        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
+        _server_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
         m.Free();
     end;
 end;
@@ -375,6 +423,9 @@ begin
     end
     else if (_clr_font_color =  'color_time') then begin
         _color_time := integer(clrBoxFont.Selected);
+    end
+    else if (_clr_font_color =  'color_priority') then begin
+        _color_priority := integer(clrBoxFont.Selected);
     end
     else if(_clr_font_color = 'roster_font_color') then begin
         _roster_font_color := Integer(clrBoxFont.Selected);
@@ -480,9 +531,11 @@ end;
 procedure TfrmPrefFont.colorChatSelectionChange(Sender: TObject);
 var
     start: integer;
+    idx: integer;
+//    priorityUsed: boolean;
 begin
     inherited;
-    
+//    priorityUsed := MainSession.Prefs.getBool('show_priority');
     // Select the chat window
     lblColor.Caption := _(sChatFontLabel);
     _clr_control := colorChat;
@@ -491,47 +544,80 @@ begin
 
     start := colorChat.SelStart;
 
-    // time
-    if ((start >= _offsets[0]) and (start < _offsets[1])) or
-       ((start >= _offsets[3]) and (start < _offsets[4])) or
-       ((start >= _offsets[6]) and (start < _offsets[7])) or
-       ((start >= _offsets[8]) and (start < _offsets[9])) then begin
-        _clr_font_color := 'color_time';
-        _clr_font := '';
-        clrBoxFont.Selected := TColor(_font_color);
-    end
-    else if ((start >= _offsets[1]) and (start < _offsets[2])) then begin
-        // on <pgm>, color-me
-        _clr_font_color := 'color_me';
-        _clr_font := '';
-        clrBoxFont.Selected := TColor(_color_me);
-    end
-    else if ((start >= _offsets[4]) and (start < _offsets[5])) then begin
-        // on <c-neal>, color-other
-        _clr_font_color := 'color_other';
-        _clr_font := '';
-        clrBoxFont.Selected := TColor(_color_other);
-    end
-    else if ((start >= _offsets[7]) and (start < _offsets[8])) then begin
-        // /me
-        _clr_font_color := 'color_action';
-        _clr_font := '';
-        clrBoxFont.Selected := TColor(_color_action);
-    end
-    else if start >= _offsets[9] then begin
-        // server
-        _clr_font_color := 'color_server';
-        _clr_font := '';
-        clrBoxFont.Selected := TColor(_color_server);
-    end
-    else begin
-        // normal window, font_color
-        _clr_font_color := 'font_color';
-        _clr_font := 'font';
-        clrBoxFont.Selected := TColor(_font_color);
+    for idx := 0 to Length(_time_ranges) - 1 do begin
+      if ((start >= _time_ranges[idx].Min) and (start <= _time_ranges[idx].Max)) then
+        begin
+          _clr_font_color := 'color_time';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_font_color);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
     end;
 
-    btnFont.Enabled := (_clr_font <> '');
+    for idx := 0 to Length(_me_ranges) - 1 do begin
+      if ((start >= _me_ranges[idx].Min) and (start <= _me_ranges[idx].Max)) then
+        begin
+          // on <pgm>, color-me
+          _clr_font_color := 'color_me';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_color_me);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
+    end;
+
+    for idx := 0 to Length(_priority_ranges) - 1 do begin
+      if ((start >= _priority_ranges[idx].Min) and (start <= _priority_ranges[idx].Max)) then
+        begin
+          // on <pgm>, color-me
+          _clr_font_color := 'color_priority';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_color_priority);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
+     end;
+
+
+    for idx := 0 to Length(_other_ranges) - 1 do begin
+      if ((start >= _other_ranges[idx].Min) and (start <= _other_ranges[idx].Max)) then
+        begin
+          _clr_font_color := 'color_other';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_color_other);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
+    end;
+
+    for idx := 0 to Length(_action_ranges) - 1 do begin
+      if ((start >= _action_ranges[idx].Min) and (start <= _action_ranges[idx].Max)) then
+        begin
+          _clr_font_color := 'color_action';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_color_action);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
+    end;
+
+    for idx := 0 to Length(_server_ranges) - 1 do begin
+      if ((start >= _server_ranges[idx].Min) and (start <= _server_ranges[idx].Max)) then
+        begin
+          _clr_font_color := 'color_server';
+          _clr_font := '';
+          clrBoxFont.Selected := TColor(_color_server);
+          btnFont.Enabled := (_clr_font <> '');
+          exit;
+        end;
+    end;
+
+    // normal window, font_color
+   _clr_font_color := 'font_color';
+   _clr_font := 'font';
+   clrBoxFont.Selected := TColor(_font_color);
+   btnFont.Enabled := (_clr_font <> '');
 end;
 
 end.

@@ -25,9 +25,24 @@ uses
     AddressList,
     XmlTag,
     SysUtils;
+
+type PriorityType    = (high,
+                        medium,
+                        low,
+                        none);
+const
+
+   sHighPriority   = 'High';
+   sNormalPriority = 'Normal';
+   sLowPriority    = 'Low';
+
+function GetDisplayPriority(priority: PriorityType) : Widestring;
+function GetValuePriority(priorityName: Widestring) : PriorityType;
+
 type
 
     TJabberMessage = class
+
     private
         _toJID    : WideString;
         _fromJID  : WideString;
@@ -46,6 +61,7 @@ type
         _xml      : Widestring;
         _composing: boolean;
         _addresses: TJabberAddressList; // use optional (for JEP-33 support)
+        _priority: PriorityType;
         
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -58,7 +74,7 @@ type
         // I use cBody to distinguish between the create's body varialbe and the classes.
         constructor Create; overload;
         constructor Create(mTag: TXMLTag); overload;
-        constructor Create(cToJID, cMsgType, cBody, cSubject : WideString); overload;
+        constructor Create(cToJID, cMsgType, cBody, cSubject : WideString; priority: PriorityType = None); overload;
         destructor Destroy; override;
 
         // Use of this method optional for JEP-33 support
@@ -81,6 +97,7 @@ type
         property highlight: boolean read _highlight write _highlight;
         property XML: Widestring read _xml write _xml;
         property Composing: boolean read _composing write _composing;
+        property Priority: PriorityType read _priority write _priority;
   end;
 
 
@@ -90,8 +107,34 @@ type
 implementation
 
 uses
-    JabberConst, XMLUtils;
+    JabberConst, XMLUtils, TypInfo, gnugettext;
+    
+function GetDisplayPriority(priority: PriorityType) : Widestring;
+begin
+  if (priority = high) then
+   Result := _(sHighPriority)
+  else if (priority = medium) then
+   Result := _(sNormalPriority)
+  else if (priority = low) then
+   Result := _(sLowPriority)
+  else
+   Result := '';
 
+
+end;
+
+function GetValuePriority(priorityName: Widestring): PriorityType;
+begin
+  if (priorityName = _(sHighPriority)) then
+   Result := high
+  else if (priorityName = _(sNormalPriority)) then
+   Result := medium
+  else if (priorityName = _(sLowPriority)) then
+   Result := low
+  else
+   Result := none;
+
+end;
 { TJabberMessage }
 
 constructor TJabberMessage.Create;
@@ -112,6 +155,7 @@ begin
     _highlight := false;
     _tag := nil;
     _addresses := TJabberAddressList.Create();
+    _priority := None;
 end;
 
 {---------------------------------------}
@@ -119,6 +163,8 @@ constructor TJabberMessage.Create(mTag: TXMLTag);
 var
     t: TXMLTag;
     tmps: Widestring;
+    headerList: TXMLTagList;
+    i: integer;
 begin
     // create a msg object based on the msg tag
     Create();
@@ -170,11 +216,24 @@ begin
             _addresses.Free();
             _addresses := TJabberAddressList.Create(t);
         end;
+
+       t := GetFirstTag('headers');
+       if (t <> nil) then begin
+          headerList := t.ChildTags();
+          for i := 0 to headerList.Count - 1 do begin
+            if ((headerList[i].Name = 'header') and (headerList[i].GetAttribute('name') = 'Urgency')) then begin
+               _priority := PriorityType(GetEnumValue(TypeInfo(PriorityType), headerList[i].Data ));
+               break;
+            end;
+          end;
+
+       end;
+
     end;
 end;
 
 {---------------------------------------}
-constructor TJabberMessage.Create(cToJID, cMsgType, cBody, cSubject : WideString);
+constructor TJabberMessage.Create(cToJID, cMsgType, cBody, cSubject : WideString; priority: PriorityType);
 begin
     //initialize variables for now
     Create();
@@ -187,6 +246,7 @@ begin
     setSubject(cSubject);
     setBody(cBody);
     setMsgType(cMsgType);
+    _priority := priority;
 end;
 
 {---------------------------------------}
@@ -245,6 +305,13 @@ begin
           mtag := Result.AddTag('x');
           mtag.setAttribute('xmlns', XMLNS_XEVENT);
           mtag.AddTag('composing');
+        end;
+
+        if ((Priority = High) or (Priority = Low)) then begin
+          mtag := Result.AddTag('headers');
+          mtag.setAttribute('xmlns', XMLNS_SHIM);
+          mtag := mtag.AddBasicTag('header', GetEnumName(TypeInfo(PriorityType), Ord(Priority)));
+          mtag.setAttribute('name', 'Urgency');
         end;
 
         if (_xml <> '') then

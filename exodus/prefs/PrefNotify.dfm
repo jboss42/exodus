@@ -42,7 +42,9 @@ inherited frmPrefNotify: TfrmPrefNotify
       'Conference Invites'
       'Keywords (Conf. Rooms)'
       'Chat window activity'
+      'Chat window activity with priority'
       'Conf. Room activity'
+      'Conf. Room activity with priority'
       'File Transfers'
       'Auto Response generated')
     TabOrder = 4

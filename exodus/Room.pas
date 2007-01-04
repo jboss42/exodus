@@ -24,7 +24,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList;
+    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg;
 
 type
   TMemberNode = TTntListItem;
@@ -232,7 +232,7 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
 
     procedure ShowMsg(tag: TXMLTag);
-    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
+    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
     function addRoomUser(jid, nick: Widestring): TRoomMember;
     procedure removeRoomUser(jid: Widestring);
@@ -279,6 +279,7 @@ const
     sRoom = '%s'; // Room';
     sNotifyKeyword = 'Keyword in ';
     sNotifyActivity = 'Activity in ';
+    sPriorityNotifyActivity = 'Priority activity in ';
     sRoomSubjChange = '/me has changed the subject to: ';
     sRoomSubjPrompt = 'Change conference room subject';
     sRoomNewSubj = 'New subject';
@@ -356,6 +357,7 @@ const
 
     NOTIFY_ROOM_ACTIVITY = 0;
     NOTIFY_KEYWORD = 1;
+    NOTIFY_PRIORITY_ROOM_ACTIVITY = 2;
     
 function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid: Widestring; rnick: Widestring = '';
@@ -385,7 +387,6 @@ uses
     IQ,
     Jabber1,
     JabberConst,
-    JabberMsg,
     JoinRoom,
     MsgDisplay,
     MsgRecv,
@@ -637,6 +638,11 @@ begin
             Msg.highlight := true;
         end
         else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (Msg.Tag.QueryXPTag(XP_MSGDELAY) = nil) then
+          if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+            DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
+                     GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
+                     RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
+          else
             DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
                      _(sNotifyActivity) + Self.Caption,
                      RosterTreeImages.Find('conference'), 'notify_roomactivity');
@@ -671,14 +677,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
+procedure TfrmRoom.SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType);
 var
     add_xml: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
     //
-    msg := TJabberMessage.Create(jid, 'groupchat', body, Subject);
+    msg := TJabberMessage.Create(jid, 'groupchat', body, Subject, priority);
     msg.nick := MyNick;
     msg.isMe := true;
     msg.ID := MainSession.generateID();
@@ -709,6 +715,7 @@ var
     txt: Widestring;
     xhtml: TXMLTag;
     xml: Widestring;
+    priority: PriorityType;
 //    e: TJabberEntity;
 begin
     // Send the actual message out
@@ -725,6 +732,9 @@ begin
     end;
 
     xml := '';
+
+ 
+    
 //make sure room supports xhtml-im before sending     
     if (mainSession.Prefs.getBool('richtext_enabled')) then begin
 //        e := jEntityCache.getByJid(Self.jid, '');
@@ -734,8 +744,13 @@ begin
                 xml := xhtml.XML;
 //        end;
     end;
-    
-    SendRawMessage(txt, '', xml, true);
+
+    if (MainSession.Prefs.getBool('show_priority')) then
+       priority := PriorityType(GetValuePriority(cmbPriority.Text))
+    else
+       priority := none;
+
+    SendRawMessage(txt, '', xml, true, priority);
 
     inherited;
 end;
@@ -1621,7 +1636,8 @@ begin
 
     _notify[NOTIFY_ROOM_ACTIVITY] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[NOTIFY_KEYWORD] := MainSession.Prefs.getInt('notify_keyword');
-    
+    _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_roomactivity');
+
     AssignUnicodeFont(lblSubject.Font, 8);
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
@@ -2357,12 +2373,15 @@ begin
 
     f.addItem('Room activity');
     f.addItem('Keywords');
+    f.addItem('Priority room activity');
     f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY]);
     f.setVal(1, _notify[NOTIFY_KEYWORD]);
+    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY]);
 
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);
         _notify[NOTIFY_KEYWORD] := f.getVal(1);
+        _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] := f.getVal(2);
 
         if ((_notify[NOTIFY_KEYWORD] <> 0) and (_keywords = nil)) then
             setupKeywords();

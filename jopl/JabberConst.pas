@@ -73,6 +73,7 @@ const
 
     XMLNS_XHTMLIM    = 'http://jabber.org/protocol/xhtml-im';
     XMLNS_XHTML      = 'http://www.w3.org/1999/xhtml';
+    XMLNS_SHIM       = 'http://jabber.org/protocol/shim';
 var
     XP_MSGXDATA: TXPLite;
     XP_MUCINVITE: TXPLite;

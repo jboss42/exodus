@@ -67,6 +67,7 @@ uses
 
 const
     sSoundChatactivity = 'Activity in a chat window';
+    sSoundPriorityChatActivity = 'Priority activity in a chat window';
     sSoundInvite = 'Invited to a conference room';
     sSoundKeyword = 'Keyword in a conference room';
     sSoundNewchat = 'New conversation';
@@ -74,13 +75,14 @@ const
     sSoundOffline = 'Contact went offline';
     sSoundOnline = 'Contact came online';
     sSoundRoomactivity = 'Activity in a conference room';
+    sSoundPriorityRoomactivity = 'Priority activity in a conference room';
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';
     sSoundSetup = 'Make sure to configure sounds in your Sounds Control Panel using the hotlink provided.';
 
 const
-    NUM_NOTIFIES = 11;
+    NUM_NOTIFIES = 13;
 
 
 procedure TfrmPrefNotify.LoadPrefs();
@@ -99,7 +101,9 @@ begin
     chkNotify.Items.Add(_(sSoundInvite));
     chkNotify.Items.Add(_(sSoundKeyword));
     chkNotify.Items.Add(_(sSoundChatactivity));
+    chkNotify.Items.Add(_(sSoundPriorityChatactivity));
     chkNotify.Items.Add(_(sSoundRoomactivity));
+    chkNotify.Items.Add(_(sSoundPriorityRoomactivity));    
     chkNotify.Items.Add(_(sSoundOOB));
     chkNotify.Items.Add(_(sSoundAutoResponse));
     SetLength(_notify, NUM_NOTIFIES);
@@ -116,9 +120,11 @@ begin
         _notify[5]  := getInt('notify_invite');
         _notify[6]  := getInt('notify_keyword');
         _notify[7]  := getInt('notify_chatactivity');
-        _notify[8]  := getInt('notify_roomactivity');
-        _notify[9]  := getInt('notify_oob');
-        _notify[10] := getInt('notify_autoresponse');
+        _notify[8]  := getInt('notify_priority_chatactivity');
+        _notify[9]  := getInt('notify_roomactivity');
+        _notify[10] := getInt('notify_priority_roomactivity');
+        _notify[11] := getInt('notify_oob');
+        _notify[12] := getInt('notify_autoresponse');
 
         optNotify.Enabled;
         chkToast.Checked := false;
@@ -151,9 +157,11 @@ begin
         setInt('notify_invite', _notify[5]);
         setInt('notify_keyword', _notify[6]);
         setInt('notify_chatactivity', _notify[7]);
-        setInt('notify_roomactivity', _notify[8]);
-        setInt('notify_oob', _notify[9]);
-        setInt('notify_autoresponse', _notify[10]);
+        setInt('notify_priority_chatactivity', _notify[8]);
+        setInt('notify_roomactivity', _notify[9]);
+        setInt('notify_priority_roomactivity', _notify[10]);
+        setInt('notify_oob', _notify[11]);
+        setInt('notify_autoresponse', _notify[12]);
     end;
 end;
 

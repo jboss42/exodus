@@ -117,6 +117,7 @@ const
     P_COLOR_TIME   = 'color_time';
     P_COLOR_ACTION = 'color_action';
     P_COLOR_SERVER = 'color_server';
+    P_COLOR_PRIORITY = 'color_priority';
 
     P_TAB_WIDTH    = 'event_width';
     P_ROSTER_WIDTH = 'roster_width';
