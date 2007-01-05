@@ -583,6 +583,7 @@ var
     i: integer;
     mtag: TXMLTag;
     ent: TJabberEntity;
+    allowed: WordBool;
     nick: Widestring;
 begin
     // Send the outgoing msg
@@ -591,10 +592,15 @@ begin
 
     // let plugins know about message going out
     // if they don't want to allow it, they change txt to NULL
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     if (ComController <> nil) then
-        TExodusChat(ComController).fireBeforeMsg(txt);
+        allowed := TExodusChat(ComController).fireBeforeMsg(txt)
+    else
+        allowed := true;
 
-    if (txt = '') then exit;
+    if ((allowed = false) or (txt = '')) then exit;
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+
 
     if (pnlSendSubject.Visible) then
         s := txtSendSubject.Text

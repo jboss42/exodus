@@ -722,9 +722,14 @@ begin
     txt := getInputText(MsgOut);
 
     // plugin madness
-    allowed := TExodusChat(ComController).fireBeforeMsg(txt);
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
+    if (ComController <> nil) then
+      allowed := TExodusChat(ComController).fireBeforeMsg(txt)
+    else
+      allowed := true;
 
     if ((allowed = false) or (txt = '')) then exit;
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then
@@ -2805,6 +2810,9 @@ begin
     inherited;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
+    TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 {
@@ -2818,6 +2826,9 @@ begin
     inherited;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
+    TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 function TRoomMember.getRealJID(): WideString;
