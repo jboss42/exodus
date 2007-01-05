@@ -479,7 +479,11 @@ begin
         if (_chat <> nil) then
             Result := TfrmChat(_chat.window).MsgList.getHandle()
         else if (_room <> nil) then
-            Result := _room.MsgOut.Handle
+            //Result := _room.MsgList.getHandle()
+            if (_room.MsgList is TfRTFMsgList) then
+               Result := TfRTFMsgList(_room.MsgList).MsgList.Handle
+            else
+               Result := -1
         else if (_im <> nil) then
             Result := _im.txtMsg.Handle
         else exit;
