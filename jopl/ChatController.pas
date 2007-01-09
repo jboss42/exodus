@@ -392,9 +392,19 @@ var
   xml: Widestring;
   send_allowed: boolean;
   jid: TJabberID;
+  toJid: TJabberID;
 begin
   body := tag.GetBasicText('body');
   jid := TJabberID.Create(Self.JID);
+
+  toJid := TJabberID.Create(tag.GetAttribute('to'));
+  //This function executes as callback when resource2 sending message
+  //to resource1 for the same jid. The callback is registered for all
+  //resources for this jid.
+  //Do not want to send messages to myself
+  if (toJid.full = MainSession.Jid) then
+    exit;
+
 
   if (Self.Window <> nil) then begin
     chat_win := TFrmChat(Self.Window); //We have a chat window
