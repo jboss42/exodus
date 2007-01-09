@@ -2417,13 +2417,15 @@ begin
         slist := getSelectedContacts(MainSession.Prefs.getBool('roster_only_online'));
         for i := 0 to slist.count - 1 do begin
             ri := TJabberRosterItem(slist[i]);
-            if (_blockers.IndexOf(ri.jid.jid) >= 0) then begin
-                b := false;
-                if (not u) then break;
-            end
-            else begin
-                u := false;
-                if (not b) then break;
+            if (ri <> nil) then begin
+              if (_blockers.IndexOf(ri.jid.jid) >= 0) then begin
+                  b := false;
+                  if (not u) then break;
+              end
+              else begin
+                  u := false;
+                  if (not b) then break;
+              end;
             end;
         end;
         if ((not b) and (not u)) then begin
