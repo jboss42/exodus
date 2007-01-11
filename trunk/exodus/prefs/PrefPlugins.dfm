@@ -100,5 +100,6 @@ inherited frmPrefPlugins: TfrmPrefPlugins
       end>
     TabOrder = 0
     ViewStyle = vsReport
+    OnSelectItem = lstPluginsSelectItem
   end
 end

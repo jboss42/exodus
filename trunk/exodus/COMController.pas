@@ -239,6 +239,7 @@ function LoadPlugin(com_name: string; var errorStr: WideString): boolean;
 procedure InitPlugins();
 procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
+function IsPluginConfigurable(com_name: string): boolean;
 procedure ReloadPlugins(sl: TWidestringlist);
 
 var
@@ -656,6 +657,41 @@ begin
 
     p := TPlugin(plugs.Objects[idx]);
     p.com.Configure();
+end;
+
+function IsPluginConfigurable(com_name: string): boolean;
+var
+    idx: integer;
+    p: TPlugin;
+    errorStr: WideString;
+    com2: IExodusPlugin2;
+begin
+    //
+    idx := plugs.IndexOf(com_name);
+    if (idx < 0) then begin
+        LoadPlugin(com_name, errorStr);
+        idx := plugs.IndexOf(com_name);
+    end;
+
+    if (idx < 0) then begin
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
+    p := TPlugin(plugs.Objects[idx]);
+    try
+       com2 := p.com as IExodusPlugin2;
+    except
+        on EIntfCastError do begin
+          com2 := nil
+        end;
+    end;
+
+    if (com2 <> nil) then
+      Result := com2.TryConfigure()
+    else
+      Result := false;
 end;
 
 {---------------------------------------}
