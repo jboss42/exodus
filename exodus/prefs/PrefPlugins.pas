@@ -37,6 +37,8 @@ type
     txtPluginDir: TTntEdit;
     btnBrowsePluginPath: TTntButton;
     lstPlugins: TTntListView;
+    procedure lstPluginsSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);
@@ -87,6 +89,14 @@ begin
         txtPluginDir.Text := dir;
         scanPlugins();
      end;
+end;
+
+procedure TfrmPrefPlugins.lstPluginsSelectItem(Sender: TObject; Item: TListItem;
+  Selected: Boolean);
+begin
+  inherited;
+  if (lstPlugins.Selected <> nil) then
+    btnConfigPlugin.Enabled := IsPluginConfigurable(lstPlugins.Selected.Caption);
 end;
 
 {---------------------------------------}
@@ -241,6 +251,7 @@ procedure TfrmPrefPlugins.FormCreate(Sender: TObject);
 begin
   inherited;
     AssignUnicodeURL(lblPluginScan.Font, 8);
+    btnConfigPlugin.Enabled := false;
 end;
 
 end.
