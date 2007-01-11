@@ -319,7 +319,6 @@ object frmRosterWindow: TfrmRosterWindow
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
-    ChangeDelay = 30
     Ctl3D = True
     DragMode = dmAutomatic
     HideSelection = False
@@ -330,6 +329,7 @@ object frmRosterWindow: TfrmRosterWindow
     ParentCtl3D = False
     ParentShowHint = False
     PopupMenu = popRoster
+    RowSelect = True
     ShowButtons = False
     ShowHint = True
     ShowLines = False
