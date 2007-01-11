@@ -627,10 +627,6 @@ var
     path, cur_grp: Widestring;
     p: TJabberPres;
 begin
-    if ((ri.Subscription <> 'to') and
-        (ri.Subscription <> 'both') and
-        (TJabberSession(_js).Prefs.getBool('roster_show_unsub') = false)) then exit;
-
     // make sure _groups is populated.
     p := TJabberSession(_js).ppdb.FindPres(ri.jid.jid, '');
 
