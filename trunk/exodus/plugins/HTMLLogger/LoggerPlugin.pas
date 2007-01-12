@@ -31,8 +31,11 @@ uses
 
 
 type
-  THTMLLogger = class(TAutoObject, IExodusPlugin, IExodusLogger)
+  THTMLLogger = class(TAutoObject, IExodusLogger, IExodusPlugin2)
   protected
+    function TryConfigure: WordBool; safecall;
+    procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat);
+      safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
       const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
@@ -55,6 +58,7 @@ type
     procedure LogMessage(const Msg: IExodusLogMsg); safecall;
     procedure Purge; safecall;
     procedure Show(const jid: WideString); safecall;
+
 
   private
     _exodus: IExodusController;
@@ -444,6 +448,17 @@ end;
 procedure THTMLLogger.Show(const jid: WideString);
 begin
     _showLog(jid);
+end;
+
+function THTMLLogger.TryConfigure: WordBool;
+begin
+   Result := true;
+end;
+
+procedure THTMLLogger.NewIncomingIM(const JID: WideString;
+  const instantMsg: IExodusChat);
+begin
+
 end;
 
 initialization
