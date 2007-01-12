@@ -12,7 +12,7 @@ unit ExHTMLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/12/2007 12:16:25 PM from Type Library described below.
+// File generated on 1/12/2007 1:30:02 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\exodus\plugins\HTMLLogger\ExHTMLLogger.tlb (1)
@@ -21,7 +21,7 @@ unit ExHTMLLogger_TLB;
 // Helpfile: 
 // HelpString: ExHTMLLogger Library
 // DepndLst: 
-//   (1) v1.0 Exodus, (C:\Program Files\jabber inc\Hermes\Hermes.exe)
+//   (1) v1.0 Exodus, (C:\Program Files\Jabber Inc\Hermes\Hermes.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 

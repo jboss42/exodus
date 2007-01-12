@@ -33,7 +33,7 @@ uses
 type
   THTMLLogger = class(TAutoObject, IExodusLogger, IExodusPlugin2)
   protected
-    function TryConfigure: WordBool; safecall;
+    function Get_Configurable: WordBool; safecall;
     procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat);
       safecall;
     function NewIM(const jid: WideString; var Body, Subject: WideString;
@@ -450,15 +450,16 @@ begin
     _showLog(jid);
 end;
 
-function THTMLLogger.TryConfigure: WordBool;
-begin
-   Result := true;
-end;
 
 procedure THTMLLogger.NewIncomingIM(const JID: WideString;
   const instantMsg: IExodusChat);
 begin
 
+end;
+
+function THTMLLogger.Get_Configurable: WordBool;
+begin
+  Result := true;
 end;
 
 initialization
