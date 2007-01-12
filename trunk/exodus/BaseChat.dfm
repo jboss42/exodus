@@ -279,6 +279,7 @@ inherited frmBaseChat: TfrmBaseChat
       Top = 0
       Width = 72
       Height = 21
+      Style = csDropDownList
       ItemHeight = 13
       TabOrder = 0
     end
