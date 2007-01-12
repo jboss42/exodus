@@ -689,7 +689,7 @@ begin
     end;
 
     if (com2 <> nil) then
-      Result := com2.TryConfigure()
+      Result := com2.Configurable
     else
       Result := false;
 end;

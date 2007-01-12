@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 12/28/2006 12:34:09 PM from Type Library described below.
+// File generated on 1/12/2007 1:13:13 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\exodus\Exodus.tlb (1)
@@ -4126,6 +4126,8 @@ type
   IExodusPlugin2 = interface(IExodusPlugin)
     ['{7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}']
     procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat); safecall;
+    function Get_Configurable: WordBool; safecall;
+    property Configurable: WordBool read Get_Configurable;
   end;
 
 // *********************************************************************//
@@ -4136,6 +4138,7 @@ type
   IExodusPlugin2Disp = dispinterface
     ['{7A57094D-B8DE-4EE8-82B4-B5412F5C2F14}']
     procedure NewIncomingIM(const JID: WideString; const instantMsg: IExodusChat); dispid 301;
+    property Configurable: WordBool readonly dispid 303;
     procedure Startup(const exodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const event: WideString; const XML: WideString); dispid 3;
