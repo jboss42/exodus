@@ -133,6 +133,7 @@ type
     }
     procedure updateFromPrefs();
     procedure populatePriority();
+    procedure SetPriorityNormal();
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -393,7 +394,7 @@ begin
     MsgOut.Lines.Clear();
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
-      cmbPriority.Text := GetDisplayPriority(medium);
+      SetPriorityNormal;
     MsgOut.SetFocus;
 end;
 
@@ -421,7 +422,7 @@ begin
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
-    cmbPriority.Text := GetDisplayPriority(medium);
+    SetPriorityNormal;
 
     _msgHistory := TWideStringList.Create();
     _pending := '';
@@ -593,6 +594,8 @@ begin
     _msgHistory.Clear();
 end;
 
+
+
 {---------------------------------------}
 procedure TfrmBaseChat.Copy1Click(Sender: TObject);
 begin
@@ -731,11 +734,28 @@ begin
        Dec(endPriority);
        for priority := System.Low(PriorityType) to endPriority do
          cmbPriority.AddItem(GetDisplayPriority(priority), nil);
-       cmbPriority.Text := GetDisplayPriority(medium);
+
+       SetPriorityNormal;
+
     end
     else begin
       cmbPriority.Visible := false;
     end;
+end;
+
+procedure TfrmBaseChat.SetPriorityNormal();
+var
+ idx: integer;
+ mediumDisplay: WideString;
+begin
+
+  mediumDisplay := GetDisplayPriority(medium);
+  for idx := 0 to cmbPriority.DropDownCount do begin
+       if (cmbPriority.Items[idx] = mediumDisplay)then begin
+          cmbPriority.ItemIndex := idx;
+          break;
+       end;
+  end
 end;
 procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
 begin
