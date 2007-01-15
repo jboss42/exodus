@@ -1376,6 +1376,10 @@ begin
 
     OptionsMenuItemsChecks();
 
+    // Remove the "old menus" from user view
+    // Eventually will have to actually remove menus
+    Old1.Visible := false
+
 end;
 
 {---------------------------------------}
