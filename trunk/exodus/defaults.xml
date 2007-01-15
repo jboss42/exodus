@@ -312,8 +312,8 @@
     <brand_profile_password ></brand_profile_password>
     <brand_profile_port value="5222"></brand_profile_port>
     <brand_profile_priority value="1"></brand_profile_priority>
-    <brand_profile_resource value="Exodus"></brand_profile_resource>
-    
+	<!--brand_profile_resource value="Exodus"></brand_profile_resource-->
+
     <brand_profile_resource_list>
       <s>Home</s>
       <s>Work</s>
