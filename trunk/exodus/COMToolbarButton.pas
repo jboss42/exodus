@@ -8,7 +8,7 @@ uses
   ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
-  TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton)
+  TExodusToolbarButton = class(TAutoObject, IExodusToolbarButton, IExodusToolbarButton2)
   private
     _button: TToolButton;
     _menu_listener: IExodusMenuListener;
@@ -27,6 +27,7 @@ type
     procedure Set_Enabled(Value: WordBool); safecall;
     function Get_MenuListener: IExodusMenuListener; safecall;
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
+    function Get_Name: Widestring; safecall;
 
   published
     procedure OnClick(Sender: TObject);
@@ -104,6 +105,11 @@ begin
     if (_menu_listener <> nil) then
         _menu_listener.OnMenuItemClick(_button.Name, '');
 end;
+
+function TExodusToolbarButton.Get_Name(): Widestring;
+begin
+    Result := _button.Name;
+end; 
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusToolbarButton, Class_ExodusToolbarButton,

@@ -91,6 +91,7 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure Print1Click(Sender: TObject);
+    procedure MsgOutOnEnter(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1038,6 +1039,12 @@ begin
     // dispatch key-presses to Plugins
     com_controller.fireMsgKeyUp(Key, Shift);
     inherited;
+
+end;
+
+procedure TfrmChat.MsgOutOnEnter(Sender: TObject);
+begin
+  inherited;
 
 end;
 

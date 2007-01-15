@@ -20,7 +20,11 @@ unit JabberUtils;
 }
 interface
 uses
-    Unicode, PrefController, XMLTag, Dialogs, Graphics, Classes, SysUtils;
+    Unicode,
+    {$ifdef EXODUS}
+    PrefController,
+    {$endif}
+    XMLTag, Dialogs, Graphics, Classes, SysUtils;
 
 function jabberIQResult(orig: TXMLTag): TXMLTag;
 function jabberIQError(orig: TXMLTag): TXMLTag;
