@@ -671,17 +671,6 @@ library Exodus
   };
 
   [
-    uuid(C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6), 
-    version(1.0), 
-    noncreatable, 
-    hidden
-  ]
-  coclass ExodusChat
-  {
-    [default] interface IExodusChat;
-  };
-
-  [
     uuid(027E1B53-59A9-4FA4-9610-AC6CA2561248), 
     version(1.0), 
     hidden
@@ -777,6 +766,22 @@ library Exodus
   };
 
   [
+    uuid(7F9C4FDB-8567-45DF-9E92-8FFB7FA28A34), 
+    version(1.0), 
+    helpstring("Dispatch Inteface for updated ExodusToolbarButton"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusToolbarButton2: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * value );
+  };
+
+  [
     uuid(E12A4659-336B-4921-AC6A-771B1DCA5AF8), 
     version(1.0), 
     helpstring("ExodusToolbar Object")
@@ -784,16 +789,6 @@ library Exodus
   coclass ExodusToolbar
   {
     [default] interface IExodusToolbar;
-  };
-
-  [
-    uuid(D29EB98A-994F-4E67-A12F-652733E7E5DD), 
-    version(1.0), 
-    helpstring("ExodusToolbarButton Object")
-  ]
-  coclass ExodusToolbarButton
-  {
-    [default] interface IExodusToolbarButton;
   };
 
   [
@@ -977,6 +972,45 @@ library Exodus
   coclass ExodusToolbarControl
   {
     [default] interface IExodusToolbarControl;
+  };
+
+  [
+    uuid(A13F6C20-8EA7-4477-B915-3C4AEECBB637), 
+    version(1.0)
+  ]
+  coclass ExodusMsgOutToolbar
+  {
+    [default] interface IExodusMsgOutToolbar;
+  };
+
+  [
+    uuid(9CF91FC0-612D-4815-A715-B1F9E9BF54E8), 
+    version(1.0)
+  ]
+  coclass ExodusDockToolbar
+  {
+    [default] interface IExodusDockToolbar;
+  };
+
+  [
+    uuid(C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6), 
+    version(1.0), 
+    noncreatable, 
+    hidden
+  ]
+  coclass ExodusChat
+  {
+    [default] interface IExodusChat;
+  };
+
+  [
+    uuid(D29EB98A-994F-4E67-A12F-652733E7E5DD), 
+    version(1.0), 
+    helpstring("ExodusToolbarButton Object")
+  ]
+  coclass ExodusToolbarButton
+  {
+    [default] interface IExodusToolbarButton;
   };
 
   
@@ -1374,100 +1408,24 @@ library Exodus
   };
 
   [
-    uuid(D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3), 
+    uuid(51385483-0B0F-45A3-95C7-579A8DDF62DF), 
     version(1.0), 
-    helpstring("Dispatch interface for ExodusChat Object"), 
+    helpstring("Dispatch interface for updated ExodusChat object"), 
     dual, 
     oleautomation
   ]
-   interface IExodusChat: IDispatch
+   interface IExodusChat2: IDispatch
   {
     [
     propget, 
-    id(0x00000001)
+    id(0x000000D4)
     ]
-    HRESULT _stdcall JID([out, retval] BSTR * value );
-    [
-    id(0x00000002), 
-    helpstring("Add an item to the context menu")
-    ]
-    HRESULT _stdcall AddContextMenu([in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * menuID );
+    HRESULT _stdcall DockToolbar([out, retval] IExodusDockToolbar ** value /*Warning: unable to validate structure name: */ );
     [
     propget, 
-    id(0x00000004)
+    id(0x000000DF)
     ]
-    HRESULT _stdcall MsgOutText([out, retval] BSTR * value );
-    [
-    id(0x00000003)
-    ]
-    HRESULT _stdcall RegisterPlugin([in] IExodusChatPlugin * plugin /*Warning: unable to validate structure name: */, [out, retval] long * ID );
-    [
-    id(0x00000005)
-    ]
-    HRESULT _stdcall UnRegisterPlugin([in] long ID, [out, retval] VARIANT_BOOL * success );
-    [
-    id(0x00000006)
-    ]
-    HRESULT _stdcall GetMagicInt([in] ChatParts part /*Warning: unable to validate structure name: */, [out, retval] long * value );
-    [
-    id(0x00000007), 
-    helpstring("Remove an item from the context menu")
-    ]
-    HRESULT _stdcall RemoveContextMenu([in] BSTR menuID );
-    [
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall AddMsgOut([in] BSTR value );
-    [
-    id(0x000000CA), 
-    helpstring("Add an item to the composer context menu")
-    ]
-    HRESULT _stdcall AddMsgOutMenu([in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * menuID );
-    [
-    id(0x000000CB), 
-    helpstring("Remove an item from the composer context menu")
-    ]
-    HRESULT _stdcall RemoveMsgOutMenu([in] BSTR menuID );
-    [
-    id(0x000000CC)
-    ]
-    HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * XML );
-    [
-    propget, 
-    id(0x000000CD)
-    ]
-    HRESULT _stdcall CurrentThreadID([out, retval] BSTR * Thread );
-    [
-    id(0x000000CE)
-    ]
-    HRESULT _stdcall DisplayMessage([in] BSTR Body, [in] BSTR Subject, [in] BSTR from );
-    [
-    id(0x000000CF)
-    ]
-    HRESULT _stdcall AddRoomUser([in] BSTR JID, [in] BSTR Nickname );
-    [
-    id(0x000000D0)
-    ]
-    HRESULT _stdcall RemoveRoomUser([in] BSTR JID );
-    [
-    propget, 
-    id(0x000000D1)
-    ]
-    HRESULT _stdcall CurrentNick([out, retval] BSTR * value );
-    [
-    id(0x000000D2)
-    ]
-    HRESULT _stdcall GetControl([in] BSTR Name, [out, retval] IExodusControl ** value /*Warning: unable to validate structure name: */ );
-    [
-    propget, 
-    id(0x000000D3)
-    ]
-    HRESULT _stdcall Caption([out, retval] BSTR * value );
-    [
-    propput, 
-    id(0x000000D3)
-    ]
-    HRESULT _stdcall Caption([in] BSTR value );
+    HRESULT _stdcall MsgOutToolbar([out, retval] IExodusMsgOutToolbar ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -5622,6 +5580,103 @@ library Exodus
   };
 
   [
+    uuid(D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusChat Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChat: IExodusChat2
+  {
+    [
+    propget, 
+    id(0x00000001)
+    ]
+    HRESULT _stdcall JID([out, retval] BSTR * value );
+    [
+    id(0x00000002), 
+    helpstring("Add an item to the context menu")
+    ]
+    HRESULT _stdcall AddContextMenu([in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * menuID );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall MsgOutText([out, retval] BSTR * value );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall RegisterPlugin([in] IExodusChatPlugin * plugin /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall UnRegisterPlugin([in] long ID, [out, retval] VARIANT_BOOL * success );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall GetMagicInt([in] ChatParts part /*Warning: unable to validate structure name: */, [out, retval] long * value );
+    [
+    id(0x00000007), 
+    helpstring("Remove an item from the context menu")
+    ]
+    HRESULT _stdcall RemoveContextMenu([in] BSTR menuID );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddMsgOut([in] BSTR value );
+    [
+    id(0x000000CA), 
+    helpstring("Add an item to the composer context menu")
+    ]
+    HRESULT _stdcall AddMsgOutMenu([in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * menuID );
+    [
+    id(0x000000CB), 
+    helpstring("Remove an item from the composer context menu")
+    ]
+    HRESULT _stdcall RemoveMsgOutMenu([in] BSTR menuID );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall SendMessage([in] BSTR * Body, [in] BSTR * Subject, [in] BSTR * XML );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall CurrentThreadID([out, retval] BSTR * Thread );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall DisplayMessage([in] BSTR Body, [in] BSTR Subject, [in] BSTR from );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall AddRoomUser([in] BSTR JID, [in] BSTR Nickname );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall RemoveRoomUser([in] BSTR JID );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall CurrentNick([out, retval] BSTR * value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall GetControl([in] BSTR Name, [out, retval] IExodusControl ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Caption([in] BSTR value );
+  };
+
+  [
     uuid(2954B16B-64BA-4441-A476-918CCCCA9B46), 
     version(1.0), 
     dual, 
@@ -7249,7 +7304,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-   interface IExodusToolbarButton: IDispatch
+   interface IExodusToolbarButton: IExodusToolbarButton2
   {
     [
     propget, 
@@ -7905,6 +7960,88 @@ library Exodus
     id(0x000000CB)
     ]
     HRESULT _stdcall NewOutgoingIM([in] BSTR JID, [in] IExodusChat * instantMsg /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(7A57094D-B8DE-4EE8-82B4-B5412F5C2F14), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusPlugin2: IExodusPlugin
+  {
+    [
+    id(0x0000012D)
+    ]
+    HRESULT _stdcall NewIncomingIM([in] BSTR JID, [in] IExodusChat * instantMsg /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x0000012F), 
+    helpstring("Indicates if plugin is configurable")
+    ]
+    HRESULT _stdcall Configurable([out, retval] VARIANT_BOOL * value );
+  };
+
+  [
+    uuid(51F924C1-A27E-4396-8EF3-B5035D325CF7), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusMsgOutToolbar: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Count([out, retval] long * value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall GetButton([in] long index, [out, retval] IExodusToolbarButton ** button /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddButton([in] BSTR ImageID, [out, retval] IExodusToolbarButton ** button /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall AddControl([in] BSTR ID, [out, retval] IExodusToolbarControl ** Control /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall RemoveButton([in] BSTR button );
+  };
+
+  [
+    uuid(F7427F75-8915-4AC2-823F-1C897BE9B9A6), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusDockToolbar: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Count([out, retval] long * value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall GetButton([in] long index, [out, retval] ExodusToolbarButton ** button /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddButton([in] BSTR ImageID, [out, retval] ExodusToolbarButton ** button /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall AddControl([in] BSTR ID, [out, retval] ExodusToolbarControl ** Control /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall RemoveButton([in] BSTR button );
   };
 
 };
