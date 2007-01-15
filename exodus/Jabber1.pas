@@ -946,7 +946,7 @@ uses
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
-    XMLUtils, XMLParser;
+    XMLUtils, XMLParser, DisplayName;
 
 {$R *.DFM}
 
@@ -1319,7 +1319,7 @@ begin
     setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
     setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
                             mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
-                            mnuFile_MyStatus_DoNotDisturb); //???dda
+                            mnuFile_MyStatus_DoNotDisturb);
     setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
         trayPresXA, trayPresDND);
 
@@ -1632,6 +1632,8 @@ var
     fps: TWidestringlist;
     i: integer;
     extExists, RTEnabled: boolean;
+    logmsg: TJabberMessage;
+    tmpjid: TJabberID;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1898,6 +1900,7 @@ begin
                 MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
         end;
     end
+
     else if (event = '/session/presence') then begin
         // Our presence was changed.. reflect that in the tray icon
         if (MainSession.Show = '') then
@@ -1923,6 +1926,26 @@ begin
         msg.LParamHi := GetPresenceAtom(MainSession.Show);
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
         PostMessage(HWND_BROADCAST, sExodusPresence, self.Handle, msg.LParam);
+    end
+
+    else if (event = '/session/log_message') then begin
+        // We got a message to log using the log plugins
+        if (tag <> nil) then begin
+            logmsg := TJabberMessage.Create(tag);
+            logmsg.Time := StrToDateTime(tag.GetFirstTag('time').Data);
+            tmpjid := TJabberID.Create(logmsg.FromJID);
+            if (tmpjid.getDisplayJID() = MainSession.BareJid) then begin
+                logmsg.isMe := true;
+                logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
+            end
+            else begin
+                logmsg.isMe := false;
+                logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
+            end;
+            LogMessage(logmsg);
+            tmpjid.Free();
+            logmsg.Free();
+        end
     end;
 end;
 
@@ -2051,16 +2074,7 @@ begin
     // Build the custom presence menus.
     if (enable) then begin
         BuildPresMenus(mnuPresence, presOnlineClick);
-//        BuildPresMenus(trayPresence, presOnlineClick);
     end;
-
-
-
-
-
- //???dda
-
-
 
     // File Menu
     mnuFile_Connect.Visible := not enable;
@@ -2645,7 +2659,7 @@ begin
     // toggle toolbar on/off
     Toolbar.Visible := not Toolbar.Visible;
     mnuToolbar.Checked := Toolbar.Visible;
-    mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible; //???dda
+    mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     MainSession.Prefs.setBool('toolbar', Toolbar.Visible);
 end;
 
@@ -3501,7 +3515,7 @@ begin
     tempbool := MainSession.Prefs.getBool('chat_toolbar');
     tempbool := not tempbool;
     mnuChatToolbar.Checked := tempbool;
-    mnuWindows_View_ShowChatToolbar.Checked := tempbool; //???dda
+    mnuWindows_View_ShowChatToolbar.Checked := tempbool;
     MainSession.Prefs.setBool('chat_toolbar', tempbool);
     MainSession.FireEvent('/session/prefs', nil);
 end;

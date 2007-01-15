@@ -173,6 +173,7 @@ inherited frmBaseChat: TfrmBaseChat
     ButtonWidth = 25
     Images = frmExodus.ImageList2
     TabOrder = 3
+    ExplicitTop = 199
     object ChatToolbarButtonBold: TTntToolButton
       Left = 0
       Top = 0

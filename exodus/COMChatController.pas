@@ -28,7 +28,7 @@ uses
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
 type
-  TExodusChat = class(TAutoObject, IExodusChat)
+  TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2)
   protected
     function Get_jid: WideString; safecall;
     function AddContextMenu(const caption: WideString; const menuListener: IExodusMenuListener): WideString; safecall;
@@ -51,6 +51,8 @@ type
     function Get_Caption: WideString; safecall;
     procedure Set_Caption(const Value: WideString); safecall;
     procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
+    function Get_DockToolbar: IExodusDockToolbar; safecall;
+    function Get_MsgOutToolbar: IExodusMsgOutToolbar; safecall;
 
     { Protected declarations }
 
@@ -658,6 +660,27 @@ begin
         TfrmChat(_chat.Window).Caption := Value
     else if (_room <> nil) then
         _room.Caption := Value;
+end;
+
+{---------------------------------------}
+function TExodusChat.Get_DockToolbar: IExodusDockToolbar;
+begin
+    Result := nil;
+    if (_chat <> nil) then
+        Result := TfrmChat(_chat.Window).DockToolbar
+    else if (_room <> nil) then
+        Result := _room.DockToolbar;
+end;
+
+{---------------------------------------}
+function TExodusChat.Get_MsgOutToolbar: IExodusMsgOutToolbar;
+begin
+    Result := nil;
+    if (_chat <> nil) then
+        Result := TfrmChat(_chat.Window).MsgOutToolbar
+    else if (_room <> nil) then
+        Result := _room
+        .MsgOutToolbar;
 end;
 
 initialization

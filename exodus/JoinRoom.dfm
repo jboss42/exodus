@@ -188,6 +188,10 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lstRooms: TTntListView
         Left = 0
         Top = 56
@@ -251,7 +255,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Width = 262
           Height = 21
           Hint = 'Select the conference room server to use.'
-          ItemHeight = 13
+          ItemHeight = 0
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0

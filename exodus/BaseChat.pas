@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
-  Buttons;
+    Buttons, COMMsgOutToolbar, COMDockToolbar;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -137,7 +137,8 @@ type
   public
     { Public declarations }
     AutoScroll: boolean;
-
+    MsgOutToolbar: TExodusMsgOutToolbar;
+    DockToolbar: TExodusDockToolbar;
 
     procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
@@ -464,6 +465,12 @@ begin
     _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
     _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
 
+    MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
+    MsgOutToolbar.ObjAddRef();
+
+    DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
+    DockToolbar.ObjAddRef();
+
     updateFromPrefs();
 end;
 
@@ -497,6 +504,13 @@ begin
         frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();
     _msgHistory.Free();
+
+    if (MsgOutToolbar <> nil) then
+        MsgOutToolbar.Free();
+
+    if (DockToolbar <> nil) then
+        DockToolbar.Free();
+
     inherited;
 end;
 
