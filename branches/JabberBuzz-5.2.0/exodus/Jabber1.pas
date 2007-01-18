@@ -1946,6 +1946,9 @@ begin
                 logmsg.isMe := false;
                 logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
             end;
+            if (tag.GetFirstTag('isme') <>nil) then
+                logmsg.isMe := true;
+
             LogMessage(logmsg);
             tmpjid.Free();
             logmsg.Free();
