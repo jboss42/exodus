@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 705
+  ClientHeight = 725
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -33,7 +33,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 674
+    Height = 694
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -176,7 +176,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 674
+    Height = 694
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -190,7 +190,7 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 31
     Width = 229
-    Height = 674
+    Height = 694
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
@@ -201,7 +201,7 @@ object frmExodus: TfrmExodus
       Left = 0
       Top = 0
       Width = 229
-      Height = 674
+      Height = 694
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0

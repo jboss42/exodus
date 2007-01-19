@@ -786,6 +786,11 @@ published
         Disables/enables menu items for group and contact menus based on roster selection
     }
     procedure ResetMenuItems(Node: TTnTTreeNode);
+
+    {
+        Removes a shortcut from an already existing menu so there are no duplicates
+    }
+    procedure RemoveMenuShortCut(value: integer);
   end;
 
   {
@@ -1237,7 +1242,7 @@ end;
 procedure TfrmExodus.FormCreate(Sender: TObject);
 var
     win_ver: string;
-    menu_list: TWideStringList;
+    menu_list, shortcut_list: TWideStringList;
     i : integer;
     mi: TMenuItem;
     s: TXMLTag;
@@ -1283,13 +1288,22 @@ begin
 
         menu_list := TWideStringList.Create();
         fillStringlist('brand_help_menu_list', menu_list);
+
+        shortcut_list := TWideStringList.Create();
+        fillStringList('brand_help_shortcut_list', shortcut_list);
         for i := 0 to menu_list.Count-1 do begin
             mi := TMenuItem.Create(self);
             mi.Caption := menu_list.Strings[i];
             mi.OnClick := ShowBrandURL;
+            if ((i < shortcut_list.Count) and
+                (shortcut_list.Strings[i] <> '')) then begin
+                mi.ShortCut := TextToShortCut(shortcut_list.Strings[i]);
+                RemoveMenuShortCut(mi.ShortCut);
+            end;
             Help1.Insert(i, mi);
         end;
         menu_list.Free();
+        shortcut_list.Free();
     end;
 
     // Setup our session callback
@@ -4867,6 +4881,28 @@ begin
      mnuPeople_Contacts_ContactProperties.Enabled := true;
    end;
 end;
+
+procedure TfrmExodus.RemoveMenuShortCut(value: integer);
+    procedure RemoveMenuShortCutRecurse(value: integer; menuItem: TMenuItem);
+    var
+        i: integer;
+    begin
+        if (menuItem.ShortCut = value) then
+            menuItem.ShortCut := TextToShortCut('');
+        if (menuItem.Count > 0) then begin
+            for i := 0 to menuItem.Count - 1 do
+                RemoveMenuShortCutRecurse(value, menuItem.Items[i]);
+        end;
+    end;
+var
+    i: integer;
+begin
+    for i := 0 to MainMenu1.Items.Count - 1 do
+        RemoveMenuShortCutRecurse(value, MainMenu1.Items[i]);
+end;
+
+
+
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
