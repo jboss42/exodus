@@ -358,7 +358,7 @@ begin
     Self.Align := alClient;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
-    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsRequired);
+    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
     pnlDockTop.Visible := true;
 end;
 
@@ -382,7 +382,7 @@ begin
     tstr := windowState.GetAttribute('dock');
     if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
         tstr := 't';
-    _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
+    _initiallyDocked :=  ((ads <> adsForbidden) and (tstr = 't'));
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);

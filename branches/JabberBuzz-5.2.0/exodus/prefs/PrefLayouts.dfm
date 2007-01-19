@@ -1144,8 +1144,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     WordWrap = True
   end
   object cboView: TTntComboBox [5]
-    Left = 4
-    Top = 54
+    Left = 8
+    Top = 55
     Width = 277
     Height = 21
     Style = csDropDownList
@@ -1153,9 +1153,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     TabOrder = 1
     OnChange = cboViewChange
     Items.Strings = (
-      'Show small contact list and never dock'
-      'Dock windows. Contact list is always visible'
-      'Dock windows and use tabs')
+      'Use separate windows for all conversations'
+      'Use a tabbed interface with windows docked')
   end
   inherited pnlHeader: TTntPanel
     Width = 355

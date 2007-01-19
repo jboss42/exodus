@@ -34,7 +34,6 @@ type
   TfrmMsgQueue = class(TfrmDockable)
     PopupMenu1: TTntPopupMenu;
     D1: TTntMenuItem;
-    pnlRoster: TPanel;
     pnlMsgQueue: TPanel;
     Splitter1: TSplitter;
     lstEvents: TTntListView;
@@ -53,7 +52,6 @@ type
     procedure D1Click(Sender: TObject);
     procedure lstEventsEnter(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure splitRosterMoved(Sender: TObject);
   private
     { Private declarations }
     _queue          : TObjectList;
@@ -86,14 +84,6 @@ type
 
         Embed the roster if not already showing
     }
-    procedure ShowRoster();
-
-    {
-        Hide the roster
-
-        Hide the roster and clear state if rendering it.
-    }
-    procedure HideRoster();
 
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag);override;
@@ -682,56 +672,7 @@ begin
     end;
 end;
 
-{
-    Render the roster
 
-    Embed the roster if not already showing
-}
-procedure TfrmMsgQueue.ShowRoster();
-begin
-        //this is a mess. To get splitter working with the correct control
-        //we need to hide/de-align/set their relative positions/size them and show them
-        pnlRoster.Visible := false;
-        splitRoster.Visible := false;
-        pnlRoster.Align := alNone;
-        splitRoster.Align := alNone;
-        pnlMsgQueue.Align := alNone;
-
-        pnlRoster.Left := 0;
-        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
-        pnlMsgQueue.Left := splitRoster.BoundsRect.Right + 1;
-
-        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-
-        pnlRoster.Align := alLeft;
-        splitRoster.Align := alLeft;
-        pnlMsgQueue.Align := alClient;
-
-        pnlRoster.Visible := true;
-        splitRoster.Visible := true;
-        RosterWindow.DockRoster(pnlRoster);
-end;
-
-procedure TfrmMsgQueue.splitRosterMoved(Sender: TObject);
-begin
-  inherited;
-    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
-        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
-end;
-
-{
-    Hide the roster
-
-    Hide the roster and clear state if rendering it.
-}
-procedure TfrmMsgQueue.HideRoster();
-begin
-    if (pnlRoster.Visible) then begin
-        pnlRoster.Visible := false;
-        splitRoster.Visible := false;
-        pnlMsgQueue.Align := alClient; //fill it all
-    end;
-end;
 
 initialization
     Classes.RegisterClass(TfrmMsgQueue);

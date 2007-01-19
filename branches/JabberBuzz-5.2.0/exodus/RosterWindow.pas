@@ -357,7 +357,7 @@ type
     undocked or not shown. Essentially this is a GUI hint to the roster rendering
     code.
 }
-function isEmbeddedRoster() : boolean;
+//function isEmbeddedRoster() : boolean;
 
 {
     If a roster instance exists, dock it in the given docksite
@@ -477,10 +477,10 @@ end;
     undocked or not shown. Essentially this is a GUI hint to the roster rendering
     code.
 }
-function isEmbeddedRoster() : boolean;
-begin
-    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
-end;
+//function isEmbeddedRoster() : boolean;
+//begin
+//    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
+//end;
 
 {
     If a roster instance exists, dock it in the given docksite

@@ -186,14 +186,13 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 20
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end
@@ -226,14 +225,13 @@ object frmRosterWindow: TfrmRosterWindow
     object lblCreate: TTntLabel
       Left = 5
       Top = 254
-      Width = 184
+      Width = 97
       Height = 13
       Cursor = crHandPoint
       Align = alBottom
       Caption = 'Create a New Profile'
       Transparent = False
       OnClick = lblCreateClick
-      ExplicitWidth = 97
     end
     object lblConnect: TTntLabel
       Left = 5
@@ -253,14 +251,13 @@ object frmRosterWindow: TfrmRosterWindow
     object lblNewUser: TTntLabel
       Left = 5
       Top = 241
-      Width = 184
+      Width = 124
       Height = 13
       Cursor = crHandPoint
       Align = alBottom
       Caption = 'Run the New User Wizard'
       Transparent = False
       OnClick = lblNewUserClick
-      ExplicitWidth = 124
     end
     object pnlAnimation: TPanel
       Left = 5

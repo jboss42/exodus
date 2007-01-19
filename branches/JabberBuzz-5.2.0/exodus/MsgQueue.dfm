@@ -11,57 +11,49 @@ inherited frmMsgQueue: TfrmMsgQueue
   PixelsPerInch = 96
   TextHeight = 13
   object splitRoster: TSplitter [0]
-    Left = 130
+    Left = 0
     Top = 32
     Height = 244
     ResizeStyle = rsUpdate
-    OnMoved = splitRosterMoved
     ExplicitLeft = 125
     ExplicitTop = 1
     ExplicitHeight = 276
   end
   inherited pnlDockTop: TPanel
     Width = 446
-    TabOrder = 2
+    TabOrder = 1
     ExplicitWidth = 446
     inherited tbDockBar: TToolBar
       Left = 397
       ExplicitLeft = 397
     end
   end
-  object pnlRoster: TPanel
-    Left = 0
-    Top = 32
-    Width = 130
-    Height = 244
-    Align = alLeft
-    Caption = 'pnlRoster'
-    TabOrder = 0
-    Visible = False
-  end
   object pnlMsgQueue: TPanel
-    Left = 133
+    Left = 3
     Top = 32
-    Width = 313
+    Width = 443
     Height = 244
     Align = alClient
     Caption = 'pnlMsgQueue'
-    TabOrder = 1
+    TabOrder = 0
+    ExplicitLeft = 133
+    ExplicitWidth = 313
     object Splitter1: TSplitter
       Left = 1
       Top = 96
-      Width = 311
+      Width = 441
       Height = 4
       Cursor = crVSplit
       Align = alTop
       ResizeStyle = rsUpdate
       ExplicitLeft = 6
       ExplicitTop = 131
+      ExplicitWidth = 311
     end
     object lstEvents: TTntListView
       Left = 1
       Top = 1
-      Width = 311
+      Width = 441
       Height = 95
       Align = alTop
       Columns = <
@@ -91,11 +83,12 @@ inherited frmMsgQueue: TfrmMsgQueue
       OnDblClick = lstEventsDblClick
       OnEnter = lstEventsEnter
       OnKeyDown = lstEventsKeyDown
+      ExplicitWidth = 311
     end
     object txtMsg: TExRichEdit
       Left = 1
       Top = 100
-      Width = 311
+      Width = 441
       Height = 143
       Align = alClient
       AutoURLDetect = adDefault

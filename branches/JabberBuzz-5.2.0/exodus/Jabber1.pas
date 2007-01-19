@@ -77,7 +77,7 @@ type
     {
       Dock states
     }
-    TDockStates = (dsRosterOnly, dsDockOnly, dsRosterDock, dsUninitialized);
+    TDockStates = (dsRosterOnly, dsDock, dsUninitialized);
 
     IExodusDockManager = interface
     {
@@ -617,12 +617,12 @@ type
     {
         Adjust layout so roster panel and dock panel are shown
     }
-    procedure layoutRosterDock();
-
-    {
-        Adjust layout so only dock panel is shown
-    }
-    procedure layoutDockOnly();
+//    procedure layoutRosterDock();
+//
+//    {
+//        Adjust layout so only dock panel is shown
+//    }
+    procedure layoutDock();
 
     {
         Adjust layout so only roster panel is shown
@@ -776,7 +776,6 @@ published
         Really there is only one form that can do this, TfrmMsgQueue,
         and its pretty much hard coded to that form.
     }
-    function FindFirstRosterEmbedingDockable() : TfrmDockable;
 
     {
         Process the Options menu items for checkmarks.
@@ -792,7 +791,7 @@ published
   {
       Dock states, allowed -> docking/undocking , required -> dock only, forbidden -> undock only
   }
-  TAllowedDockStates = (adsAllowed, adsRequired, adsForbidden);
+  TAllowedDockStates = (adsAllowed, adsForbidden);
 
 procedure StartTrayAlert();
 procedure StopTrayAlert();
@@ -826,7 +825,6 @@ function getAllowedDockState() : TAllowedDockStates;
     undocked or not shown. Essentially this is a GUI hint to the roster rendering
     code.
 }
-function useEmbeddedRoster() : boolean;
 
 
 var
@@ -1428,7 +1426,9 @@ begin
         MainSession.Prefs.setInt(P_ROSTER_WIDTH, roster_w);
     end;
 
+
     updateLayoutPrefChange();
+    RosterWindow.DockRoster(pnlRoster);
     RosterWindow.GetRosterWindow().Show;
 
     // load up all the plugins..
@@ -4154,36 +4154,12 @@ begin
     if (MainSession <> nil) then  begin
         if (not MainSession.Prefs.getBool('expanded')) then
             Result := adsForbidden
-        else if (MainSession.Prefs.getBool('dock_locked')) then
-            Result := adsRequired;
     end;
 end;
 
-{
-    Should the roster be embedded in a docked Messenger?
 
-    This function will return true if the roster should be embedded whenever
-    the messenger tab is docked. Will return false if roster should never be
-    embedded. Will return true if roster is currently embedded in a docked
-    messenger tab *and* if it *should* be embedded when the messenger tab is
-    undocked or not shown. Essentially this is a GUI hint to the roster rendering
-    code.
-}
-function useEmbeddedRoster() : boolean;
-begin
-    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
-end;
 
-{
-    Can the given form render a roster?
 
-    Right now only one class can embed a roster, but this abstraction
-    may help if we decide other classes can (debug perhaps?) 
-}
-function isRosterEmbedDockable(f : TForm) : boolean;
-begin
-    Result := (f is TfrmMsgQueue);
-end;
 
 procedure TfrmExodus.focusActiveTab();
 var
@@ -4226,28 +4202,7 @@ begin
     Tabs.SelectNextPage(goforward, visibleonly);
 end;
 
-{
-    Find the first docked form that is can render a roster
 
-    Really there is only one form that can do this, TfrmMsgQueue,
-    and its pretty much hard coded to that form.
-
-    Will return nil of no forms are docked that can embed
-}
-function TfrmExodus.FindFirstRosterEmbedingDockable() : TfrmDockable;
-var
-    i : integer;
-    tf : TForm;
-begin
-    for i := 0 to Tabs.PageCount - 1 do begin
-        tf := getTabForm(Tabs.Pages[i]);
-        if (isRosterEmbedDockable(tf)) then begin
-            Result := TfrmDockable(tf);
-            exit;
-        end;
-    end;
-    Result := nil;
-end;
 
 {
     Get the current docksite for the main window.
@@ -4555,7 +4510,7 @@ begin
         frm.removeDockbarButton(_nextNotifyButton);
     end;
 
-    updateLayoutDockChange(frm, false, tabs.VisibleDockClientCount = 1);
+    updateLayoutDockChange(frm, true, tabs.PageCount = 1);
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
@@ -4563,7 +4518,7 @@ end;
 
 function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
 begin
-    updateLayoutDockChange(frm, true, tabs.VisibleDockClientCount = 0);
+    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
     frm.ManualDock(Tabs); //fires TabsDockDrop event
     Result := GetTabSheet(frm);
     frm.Visible := true;
@@ -4576,7 +4531,7 @@ begin
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);
-    updateLayoutDockChange(TfrmDockable(frm), false, tabs.VisibleDockClientCount = 1);
+    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
     frm.ManualFloat(frm.FloatPos);
     frm.Docked := false;
     frm.Visible := true;
@@ -4605,42 +4560,20 @@ end;
 }
 procedure TfrmExodus.updateLayoutPrefChange();
 var
-    embedDocked : TfrmDockable;
-    dockAllowed, embedRoster: boolean;
-    newState: TDockStates;
+    dockAllowed: boolean;
 begin
     if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
     // make sure the roster is docked in the appropriate place.
     dockAllowed := (Jabber1.getAllowedDockState() <> adsForbidden);
-    embedRoster := useEmbeddedRoster();
-    embedDocked := FindFirstRosterEmbedingDockable();
 
-    if ((not dockAllowed) or (Tabs.PageCount = 0)) then
-        newState := dsRosterOnly
-    else if (embedRoster and (embedDocked <> nil)) then
-        newState := dsDockOnly
+    if ((not dockAllowed) or (Tabs.PageCount = 0)) then begin
+       layoutRosterOnly();
+       undockAllForms();
+       Self.DockSite := dockAllowed;
+    end
     else
-        newState := dsRosterDock;
+        layoutDock();
 
-    if (newState = dsRosterOnly) then begin
-        layoutRosterOnly();
-        RosterWindow.DockRoster(pnlRoster);
-        //undock any forms currently docked
-        undockAllForms();
-        if (embedDocked <> nil) then
-            TfrmMsgQueue(embedDocked).HideRoster();
-        Self.DockSite := dockAllowed;
-    end
-    else if (newState = dsDockOnly) then begin
-        layoutDockOnly();
-        TfrmMsgQueue(embedDocked).ShowRoster();
-    end
-    else begin //dsrosterdock
-        layoutRosterDock();
-        if (embedDocked <> nil) then
-            TfrmMsgQueue(embedDocked).HideRoster();
-        RosterWindow.DockRoster(pnlRoster);
-    end;
 end;
 
 {
@@ -4663,69 +4596,23 @@ procedure TfrmExodus.updateLayoutDockChange(frm: TfrmDockable; docking: boolean;
 var
     oldState : TDockStates;
     newState : TDockStates;
-    embedForm: boolean;
 begin
     oldState := DockState;
     //figure out what state we are moving to...
-    embedForm := isRosterEmbedDockable(frm) and useEmbeddedRoster();
-    if (docking) then begin
-        if (FirstOrLastDock) then begin
-            if (embedForm) then
-                newState := dsDockOnly
-            else
-                newState := dsRosterDock
-        end
-        else if (embedForm) then
-            newState := dsDockOnly
-        else exit;
-    end
-    else if (FirstOrLastDock) then
-        newState := dsRosterOnly
-    else if (embedForm) then
-        newState := dsRosterDock
-    else exit;
+    if (docking) then
+       if (FirstOrLastDock) then
+         newState := dsRosterOnly
+       else
+         newState := dsDock
+    else
+      newState := dsRosterOnly;
 
     if (newState <> oldState) then begin
         _noMoveCheck := true;
-        if (newState = dsDockOnly) then begin
-            layoutDockOnly();
-            if (embedForm) then
-                TfrmMsgQueue(frm).ShowRoster();
-        end
-        else begin
-            if (newState = dsRosterOnly) then begin
-                layoutRosterOnly();
-                if (embedForm) then
-                    TfrmMsgQueue(frm).HideRoster();
-            end
-            else begin
-                layoutRosterDock();
-                if (not docking and embedForm) then
-                    TfrmMsgQueue(frm).HideRoster();
-            end;
-            RosterWindow.DockRoster(pnlRoster);
-        end;
-        _noMoveCheck := false;
-    end;
-end;
-
-{
-    Adjust layout so only dock panel is shown
-}
-procedure TfrmExodus.layoutDockOnly();
-begin
-    saveRosterDockWidths();
-    if (DockState <> dsDockOnly) then begin
-        _noMoveCheck := true;
-        splitRoster.Visible := false;
-        pnlRoster.Visible := false;
-        pnlDock.Align := alClient;
-        pnlDock.Visible := true;
-        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
-
-        _currDockState := dsDockOnly;
-        Self.DockSite := false;
-        Tabs.DockSite := true;
+          if (newState = dsDock) then
+            layoutDock()
+          else
+            layoutRosterOnly();
         _noMoveCheck := false;
     end;
 end;
@@ -4733,10 +4620,10 @@ end;
 {
     Adjust layout so roster panel and dock panel are shown
 }
-procedure TfrmExodus.layoutRosterDock();
+procedure TfrmExodus.layoutDock();
 begin
     saveRosterDockWidths();
-    if (DockState <> dsRosterDock) then begin
+    if (DockState <> dsDock) then begin
         _noMoveCheck := true;
         //this is a mess. To get splitter working with the correct control
         //we need to hide/de-align/set their relative positions/size them and show them
@@ -4769,7 +4656,7 @@ begin
         pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
 
         _noMoveCheck := false;
-        _currDockState := dsRosterDock;
+        _currDockState := dsDock;
         Self.DockSite := false;
         Tabs.DockSite := true;
     end;
@@ -4806,11 +4693,9 @@ procedure TfrmExodus.saveRosterDockWidths();
 begin
     if (DockState = dsRosterOnly) then
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
-    else if (DockState = dsRosterDock) then begin
+    else if (DockState = dsDock) then begin
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
         MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width);
-    end else if (DockState = dsDockOnly) then begin
-        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width - MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) - 3);
     end;
 end;
 
