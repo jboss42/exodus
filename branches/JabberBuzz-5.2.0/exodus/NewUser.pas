@@ -255,6 +255,7 @@ begin
     if ((MainSession.Active) and (not MainSession.Authenticated)) then
         MainSession.Disconnect();
 
+    MainSession.NoAuth := false;
     Self.Close();
 end;
 
@@ -568,6 +569,7 @@ begin
     if (_iq <> nil) then
         FreeAndNil(_iq);
     Action := caFree;
+    MainSession.NoAuth := false;
 end;
 
 {---------------------------------------}
