@@ -27,8 +27,9 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   end
   inherited pnlHeader: TTntPanel
     Width = 353
-    Caption = 'Application Plugins'
+    Caption = 'Plugins'
     TabOrder = 6
+    ExplicitTop = -6
     ExplicitWidth = 353
   end
   object btnAddPlugin: TTntButton

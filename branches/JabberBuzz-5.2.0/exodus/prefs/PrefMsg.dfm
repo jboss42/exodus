@@ -122,8 +122,10 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   inherited pnlHeader: TTntPanel
     Width = 348
-    Caption = 'Message Options'
+    Caption = 'Messages'
     TabOrder = 8
+    ExplicitLeft = 5
+    ExplicitTop = -4
     ExplicitWidth = 348
   end
   object chkQueueDNDChats: TTntCheckBox

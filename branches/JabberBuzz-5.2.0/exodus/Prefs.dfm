@@ -31,7 +31,6 @@ object frmPrefs: TfrmPrefs
     TabOrder = 0
     TabStop = True
     OnMouseMove = OffBoxMouseMove
-    ExplicitHeight = 389
     object Shape2: TShape
       Left = 0
       Top = 260
@@ -829,7 +828,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 32
+      ExplicitWidth = 57
     end
     object imgSystem: TImage
       Left = 0
@@ -8180,19 +8179,17 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 357
     Height = 440
-    ActivePage = tbsKeywords
+    ActivePage = tbsBlockList
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
-    ExplicitHeight = 389
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       OnMouseMove = OffBoxMouseMove
-      ExplicitHeight = 357
       object memKeywords: TTntMemo
         Left = 0
         Top = 114
@@ -8200,7 +8197,6 @@ object frmPrefs: TfrmPrefs
         Height = 294
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 243
       end
       object Panel2: TPanel
         Left = 0
@@ -8217,10 +8213,10 @@ object frmPrefs: TfrmPrefs
           Height = 28
           Align = alTop
           Caption = 
-            'You can be notified when a keyword appears in conference room. Enter i' +
-            'n the keywords that you want to look for in messages.'
+            'You can be notified when a keyword appears in conference room. E' +
+            'nter in the keywords that you want to look for in messages.'
           WordWrap = True
-          ExplicitWidth = 348
+          ExplicitWidth = 326
         end
         object chkRegex: TTntCheckBox
           Left = 5
@@ -8238,7 +8234,7 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        Caption = 'Notification Keywords'
+        Caption = 'Keywords'
         Color = clHighlight
         ParentBackground = False
         TabOrder = 2
@@ -8247,7 +8243,6 @@ object frmPrefs: TfrmPrefs
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
-      ExplicitHeight = 357
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
@@ -8255,7 +8250,6 @@ object frmPrefs: TfrmPrefs
         Height = 319
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 268
       end
       object pnlBlocked: TTntPanel
         Left = 0
@@ -8264,7 +8258,7 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        Caption = 'Blocked Contacts'
+        Caption = 'Block List'
         Color = clHighlight
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -8308,7 +8302,6 @@ object frmPrefs: TfrmPrefs
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitTop = 389
     object Bevel1: TBevel
       Left = 1
       Top = 1

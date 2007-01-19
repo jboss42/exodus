@@ -11,7 +11,7 @@ inherited frmPrefEmote: TfrmPrefEmote
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 365
-    Caption = 'Emoticon Options'
+    Caption = 'Emoticons'
     ExplicitWidth = 365
   end
   object Panel1: TPanel

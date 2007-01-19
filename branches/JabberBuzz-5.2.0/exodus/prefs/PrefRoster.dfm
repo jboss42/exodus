@@ -108,7 +108,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   inherited pnlHeader: TTntPanel
     Width = 342
-    Caption = 'Contact List Item Options'
+    Caption = 'Contact List'
     TabOrder = 8
     ExplicitWidth = 342
   end

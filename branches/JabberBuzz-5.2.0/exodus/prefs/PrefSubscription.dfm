@@ -11,7 +11,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 324
-    Caption = 'Subscription Options'
+    Caption = 'Subscriptions'
     ExplicitWidth = 324
   end
   object optIncomingS10n: TTntRadioGroup
@@ -20,7 +20,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     Width = 313
     Height = 121
     Caption = 'Incoming Behavior'
-    Items.WideStrings = (
+    Items.Strings = (
       'Ask me for all requests'
       'Auto-Accept requests from people in my contact list.'
       'Auto-Accept all requests'

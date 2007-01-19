@@ -60,7 +60,7 @@ inherited frmPrefAway: TfrmPrefAway
   end
   inherited pnlHeader: TTntPanel
     Width = 300
-    Caption = 'Auto Away Options'
+    Caption = 'Auto-Away'
     TabOrder = 7
     ExplicitWidth = 300
   end

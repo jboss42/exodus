@@ -186,7 +186,7 @@ inherited frmPrefFont: TfrmPrefFont
   end
   inherited pnlHeader: TTntPanel
     Width = 464
-    Caption = 'Fonts and Colors'
+    Caption = 'Fonts, Colors'
     TabOrder = 5
     ExplicitWidth = 464
   end

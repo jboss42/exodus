@@ -12,7 +12,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 349
-    Caption = 'Presence Options'
+    Caption = 'Presence'
     TabOrder = 4
     ExplicitWidth = 349
   end
@@ -190,7 +190,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 20
       Width = 225
       Height = 21
-      TabOrder = 0
+      TabOrder = 1
       OnChange = txtCPTitleChange
     end
     object txtCPStatus: TTntEdit
@@ -198,7 +198,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 44
       Width = 225
       Height = 21
-      TabOrder = 1
+      TabOrder = 2
       OnChange = txtCPTitleChange
     end
     object cboCPType: TTntComboBox
@@ -208,7 +208,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
-      TabOrder = 2
+      TabOrder = 3
       OnChange = txtCPTitleChange
       Items.Strings = (
         'Free to Chat'
@@ -226,7 +226,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       BevelOuter = bvNone
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 0
       Text = '0'
       Min = -128
       Max = 127
@@ -241,7 +241,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Width = 97
       Height = 19
       HotKey = 32833
-      TabOrder = 5
+      TabOrder = 4
       OnChange = txtCPTitleChange
     end
   end

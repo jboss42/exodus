@@ -5,6 +5,8 @@ inherited frmPrefSystem: TfrmPrefSystem
   ClientHeight = 384
   ClientWidth = 307
   OldCreateOrder = True
+  ExplicitWidth = 319
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object lblLang: TTntLabel [0]
@@ -32,7 +34,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   inherited pnlHeader: TTntPanel
     Width = 307
-    Caption = 'System Options'
+    Caption = 'System'
     TabOrder = 12
     ExplicitWidth = 307
   end

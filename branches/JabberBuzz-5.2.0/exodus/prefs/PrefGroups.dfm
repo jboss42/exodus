@@ -5,6 +5,8 @@ inherited frmPrefGroups: TfrmPrefGroups
   ClientHeight = 299
   ClientWidth = 272
   OldCreateOrder = True
+  ExplicitWidth = 284
+  ExplicitHeight = 311
   PixelsPerInch = 96
   TextHeight = 13
   object lblGatewayGrp: TTntLabel [0]
@@ -63,7 +65,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 5
-    Items.WideStrings = (
+    Items.Strings = (
       'Do Not Disturb'
       'Ext. Away'
       'Away'
@@ -104,7 +106,8 @@ inherited frmPrefGroups: TfrmPrefGroups
   end
   inherited pnlHeader: TTntPanel
     Width = 272
-    Caption = 'Roster Group Options'
+    Caption = 'Groups'
     TabOrder = 8
+    ExplicitWidth = 272
   end
 end

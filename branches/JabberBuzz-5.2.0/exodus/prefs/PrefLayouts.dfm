@@ -1139,8 +1139,8 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     Height = 41
     AutoSize = False
     Caption = 
-      'Main window shows only the contact list. Other windows are opened sepa' +
-      'rately and are never docked.'
+      'Main window shows only the contact list. Other windows are opene' +
+      'd separately and are never docked.'
     WordWrap = True
   end
   object cboView: TTntComboBox [5]
@@ -1159,7 +1159,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   end
   inherited pnlHeader: TTntPanel
     Width = 355
-    Caption = 'Window Layouts'
+    Caption = 'Layouts'
     TabOrder = 2
     ExplicitWidth = 355
   end

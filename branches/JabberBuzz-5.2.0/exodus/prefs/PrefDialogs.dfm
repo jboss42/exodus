@@ -80,7 +80,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   end
   inherited pnlHeader: TTntPanel
     Width = 294
-    Caption = 'Window Options'
+    Caption = 'Windows'
     TabOrder = 5
     ExplicitWidth = 294
   end
