@@ -244,6 +244,7 @@ begin
     btnContacts.Enabled := false;
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;
 end;
 
 

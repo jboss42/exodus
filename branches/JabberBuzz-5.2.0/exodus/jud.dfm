@@ -269,6 +269,7 @@ inherited frmJud: TfrmJud
       end
       inherited Image1: TImage
         Left = 460
+        Picture.Data = {00}
         ExplicitLeft = 368
       end
     end
