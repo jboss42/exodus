@@ -1281,8 +1281,8 @@ begin
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
         self.Caption := GetString('brand_caption');
-        trayShow.Caption := _('Show ') + getAppInfo.ID;
-        trayExit.Caption := _('Exit ') + getAppInfo.ID;
+        trayShow.Caption := _('Show ') + getAppInfo.Caption;
+        trayExit.Caption := _('Exit ') + getAppInfo.Caption;
         Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
 
