@@ -1556,10 +1556,14 @@ procedure TfrmRoom.configCallback(event: string; Tag: TXMLTag);
 var
     iq: TJabberIQ;
     x: TXMLTag;
+    roomCaption: widestring;
+    roomJID: TJabberID;
 begin
     // We are configuring the room
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
-        if (ShowXDataEx(tag) = false) then begin
+        roomJID := TJabberID.Create(jid);
+        roomCaption := roomJID.userDisplay + _(' Configuration');
+        if (ShowXDataEx(tag, roomCaption) = false) then begin
             // there are no fields... submit a blank form.
             iq := TJabberIQ.Create(MainSession, MainSession.generateID());
             iq.toJid := Self.Jid;
@@ -1570,6 +1574,7 @@ begin
             x.setAttribute('type', 'submit');
             iq.Send();
         end;
+        roomJID.Free;
     end;
 end;
 
@@ -2892,6 +2897,10 @@ begin
         end;
 
     SpeedButton1.Enabled := enable;
+    if (enable) then
+        SpeedButton1.Hint := _('Edit Subject')
+    else
+        SpeedButton1.Hint := '';
 end;
 
 

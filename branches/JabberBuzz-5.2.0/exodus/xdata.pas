@@ -105,7 +105,7 @@ const BTN_W = 30;
 const XDATA_FONT_SIZE = 9;
 const CHECKBOX_WIDTH = 20;
 
-function  showXDataEx(tag: TXMLTag): boolean;
+function  showXDataEx(tag: TXMLTag; title: widestring = ''): boolean;
 procedure showXData(tag: TXMLTag);
 
 implementation
@@ -124,11 +124,14 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function _showXData(tag: TXMLTag): boolean;
+function _showXData(tag: TXMLTag; title: widestring = ''): boolean;
 var
     f: TfrmXData;
 begin
     f := TfrmXData.Create(nil);
+    if (title <> '') then
+        f.Caption := title;
+
     f.Render(tag);
     //f.ShowDefault();
     f.Show();
@@ -136,9 +139,9 @@ begin
 end;
 
 {---------------------------------------}
-function  showXDataEx(tag: TXMLTag): boolean;
+function  showXDataEx(tag: TXMLTag; title: widestring = ''): boolean;
 begin
-    Result := _showXData(tag);
+    Result := _showXData(tag, title);
 end;
 
 {---------------------------------------}

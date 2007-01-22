@@ -57,7 +57,6 @@ inherited frmRoom: TfrmRoom
           Top = 6
           Width = 20
           Height = 20
-          Hint = 'Edit Subject'
           Flat = True
           Glyph.Data = {
             F6000000424DF600000000000000760000002800000010000000100000000100
