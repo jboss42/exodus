@@ -297,6 +297,11 @@ begin
         lblDefaultNick.Visible := False;
     end;
     _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
+
+    if (not chkAutoUpdate.Visible) then
+        btnUpdateCheck.Visible := false;
+    if (not chkAutoUpdate.Enabled) then
+        btnUpdateCheck.Enabled := false;
 end;
 
 end.
