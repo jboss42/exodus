@@ -298,10 +298,8 @@ begin
     end;
     _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
 
-    if (not chkAutoUpdate.Visible) then
-        btnUpdateCheck.Visible := false;
-    if (not chkAutoUpdate.Enabled) then
-        btnUpdateCheck.Enabled := false;
+    btnUpdateCheck.Visible := chkAutoUpdate.Visible;
+    btnUpdateCheck.Enabled := chkAutoUpdate.Enabled;
 end;
 
 end.
