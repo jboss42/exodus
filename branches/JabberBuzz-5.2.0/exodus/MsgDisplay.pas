@@ -154,9 +154,14 @@ begin
         txt := txt + ']';
     end;
 
-    if ((Msg.Priority = high) or (Msg.Priority = low)) then begin
+    if (Msg.Priority = high) then begin
         txt := txt + '\cf7[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
+    end
+    else if (Msg.Priority = low) then begin
+       //We want to default color for low priority messages to timestamp color
+       txt := txt + '\cf1[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
     end;
+         
 
     len := Length(Msg.Body);
 
