@@ -4524,7 +4524,7 @@ begin
         frm.removeDockbarButton(_nextNotifyButton);
     end;
 
-    updateLayoutDockChange(frm, true, tabs.PageCount = 1);
+    updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
     idx := _docked_forms.IndexOf(frm);
     if (idx >= 0) then
         _docked_forms.Delete(idx);

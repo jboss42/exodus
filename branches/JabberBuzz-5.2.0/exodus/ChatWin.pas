@@ -399,6 +399,7 @@ begin
             Delete(i);
             if ((c <> nil) and (c.window <> nil)) then begin
                 TfrmChat(c.window).Close();
+                TfrmChat(c.window).Free();
                 //Application.ProcessMessages();
             end;
         end;
