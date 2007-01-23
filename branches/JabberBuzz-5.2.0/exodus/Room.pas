@@ -651,11 +651,17 @@ begin
     if (Msg.Subject <> '') then begin
         _subject := Msg.Subject;
         if (_subject = '') then begin
-            lblSubject.Hint := _(sNoSubjectHint);
+            if (SpeedButton1.Enabled = false) then
+              lblSubject.Hint := ''
+            else
+              lblSubject.Hint := _(sNoSubjectHint);
             lblSubject.Caption := _(sNoSubject);
         end
         else begin
-            lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
+           if (SpeedButton1.Enabled = false) then
+              lblSubject.Hint := ''
+            else
+              lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
             lblSubject.Caption := Tnt_WideStringReplace(_subject, '&', '&&',[rfReplaceAll, rfIgnoreCase]);
             Msg.Body := _(sRoomSubjChange) + Msg.Subject;
             DisplayMsg(Msg, MsgList);
@@ -2899,8 +2905,10 @@ begin
     SpeedButton1.Enabled := enable;
     if (enable) then
         SpeedButton1.Hint := _('Edit Subject')
-    else
+    else begin
         SpeedButton1.Hint := '';
+        lblSubject.Hint := '';
+    end;
 end;
 
 
