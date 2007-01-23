@@ -139,6 +139,7 @@ begin
     cur_key := '';
     pres_cb := -1;
     entity := nil;
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;    
 end;
 
 {---------------------------------------}

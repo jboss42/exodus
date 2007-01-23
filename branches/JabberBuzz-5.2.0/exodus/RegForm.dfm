@@ -18,6 +18,8 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited Tabs: TPageControl
+    ExplicitTop = 53
+    ExplicitHeight = 263
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4
       ExplicitTop = 27
@@ -63,15 +65,11 @@ inherited frmRegister: TfrmRegister
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object formBox: TScrollBox
         Left = 0
         Top = 0
         Width = 408
-        Height = 193
+        Height = 200
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -82,7 +80,7 @@ inherited frmRegister: TfrmRegister
       end
       object Panel2: TPanel
         Left = 0
-        Top = 193
+        Top = 200
         Width = 408
         Height = 32
         Align = alBottom
@@ -102,10 +100,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TTntLabel
         Left = 0
         Top = 0
@@ -126,10 +120,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblOK: TTntLabel
         Left = 0
         Top = 0
@@ -173,12 +163,18 @@ inherited frmRegister: TfrmRegister
   end
   inherited pnlDockTop: TPanel
     inherited Panel1: TPanel
+      ExplicitTop = 0
+      ExplicitWidth = 364
+      ExplicitHeight = 53
       inherited lblWizardDetails: TTntLabel
         Width = 75
         Height = 13
         AutoSize = True
         ExplicitWidth = 75
         ExplicitHeight = 13
+      end
+      inherited Image1: TImage
+        Picture.Data = {00}
       end
     end
   end
