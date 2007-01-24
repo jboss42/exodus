@@ -173,7 +173,6 @@ inherited frmBaseChat: TfrmBaseChat
     ButtonWidth = 25
     Images = frmExodus.ImageList2
     TabOrder = 3
-    ExplicitTop = 199
     object ChatToolbarButtonBold: TTntToolButton
       Left = 0
       Top = 0
@@ -281,7 +280,13 @@ inherited frmBaseChat: TfrmBaseChat
       Width = 72
       Height = 21
       Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
       ItemHeight = 13
+      ParentFont = False
       TabOrder = 0
     end
   end

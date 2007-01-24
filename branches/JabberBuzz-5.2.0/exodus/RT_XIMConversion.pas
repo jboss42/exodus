@@ -627,7 +627,7 @@ begin
         rtDest.WideSelText := TXMLCData(node).Data;
 end;
 
-procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
+procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false; isMe : boolean = false);
 var
     newFont: TFont;
     currFont: TFont;
@@ -655,8 +655,12 @@ begin
             try
                 AssignFont(currFont, rtDest.SelAttributes);
                 newFont := getFontFromNode(node, currFont);
-                if (newFont <> nil) then 
+                if (newFont <> nil) then
                     currFont := newFont; //setup for text attrib assignment before
+                //If me, then set default font size to my rich edit font
+                //IsMe passed with negation as arument, so need to use not 
+                if (not isMe) then
+                    currFont.Size := rtDest.SelAttributes.Size;
                 //pre process, newline for paragraphs for example
                 if ((node.Name = 'p') or (node.Name = 'div')) then begin
                     rtDest.SelStart := Length(rtDest.WideLines.Text);
@@ -666,7 +670,7 @@ begin
                 //iterate over our children
                 for idx := 0 to node.Nodes.Count - 1 do begin
                     assignTextAttribute(rtDest.SelAttributes, currFont);
-                    handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons);
+                    handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons, isMe);
                 end;
             finally
                 currFont.Free();
@@ -706,7 +710,7 @@ begin
         //iterate over our children
         for idx := 0 to bTag.Nodes.Count - 1 do begin
             AssignTextAttribute(rtDest.SelAttributes, defFont);
-            handleNode(rtDest, TXMLTag(bTag.Nodes[idx]), foundEmoticon)
+            handleNode(rtDest, TXMLTag(bTag.Nodes[idx]), foundEmoticon, ignoreFontProps)
         end;
 
         AssignTextAttribute(rtDest.SelAttributes, origSelFont);
