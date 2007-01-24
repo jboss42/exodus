@@ -119,6 +119,8 @@ begin
         RemoveAllPresence();
         for i := 0 to _pres_list.Count - 1 do begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
+            if (Trim(cp.title) = '') then
+                cp.title := sPrefsDfltPres;
             setPresence(cp);
         end;
     end;
