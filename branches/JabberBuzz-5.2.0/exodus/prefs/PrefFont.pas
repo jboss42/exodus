@@ -549,7 +549,7 @@ begin
         begin
           _clr_font_color := 'color_time';
           _clr_font := '';
-          clrBoxFont.Selected := TColor(_font_color);
+          clrBoxFont.Selected := TColor(_color_time);
           btnFont.Enabled := (_clr_font <> '');
           exit;
         end;
