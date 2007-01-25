@@ -50,9 +50,12 @@ var
 begin
   _judFields := TWideStringList.Create();
 
-  for i := 0 to fields.Count-1 do begin
-    _judFields.Add(fields[i]);
-    ComboBox1.Items.Add(_judFields[i]);
+  // It is possible to have fields passed in as nil
+  if (fields <> nil) then begin
+      for i := 0 to fields.Count-1 do begin
+        _judFields.Add(fields[i]);
+        ComboBox1.Items.Add(_judFields[i]);
+      end;
   end;
 end;
 
