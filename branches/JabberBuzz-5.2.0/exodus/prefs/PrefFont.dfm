@@ -3,10 +3,10 @@ inherited frmPrefFont: TfrmPrefFont
   Top = 256
   Caption = 'frmPrefFont'
   ClientHeight = 401
-  ClientWidth = 464
+  ClientWidth = 511
   OldCreateOrder = True
   ShowHint = True
-  ExplicitWidth = 476
+  ExplicitWidth = 523
   ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
@@ -18,7 +18,7 @@ inherited frmPrefFont: TfrmPrefFont
     Caption = 'Contact List Window'
   end
   object lblChat: TTntLabel [1]
-    Left = 136
+    Left = 168
     Top = 56
     Width = 69
     Height = 13
@@ -88,7 +88,7 @@ inherited frmPrefFont: TfrmPrefFont
     OnClick = btnFontClick
   end
   object colorChat: TExRichEdit [9]
-    Left = 136
+    Left = 168
     Top = 72
     Width = 320
     Height = 113
@@ -185,7 +185,7 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 464
+    Width = 511
     Caption = 'Fonts, Colors'
     TabOrder = 5
     ExplicitWidth = 464
