@@ -75,7 +75,7 @@ inherited frmPrefSystem: TfrmPrefSystem
     Top = 50
     Width = 233
     Height = 17
-    Caption = 'Run when windows starts'
+    Caption = 'Run when Windows starts'
     TabOrder = 1
   end
   object chkOnTop: TTntCheckBox
