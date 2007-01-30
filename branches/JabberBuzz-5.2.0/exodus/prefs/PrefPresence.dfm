@@ -121,7 +121,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 21
       Width = 273
       Height = 17
-      Caption = 'Send client capabilities in presence.'
+      Caption = 'Send client capabilities in presence'
       Checked = True
       State = cbChecked
       TabOrder = 1
