@@ -13,7 +13,7 @@
     <autologin value="0" control="chkAutoLogin"/>        
     <window_ontop value="0" control="chkOnTop" state="inv"/>
     <window_toolbox value="0" control="chkToolbox"/>        
-    <close_min value="1" control="chkCloseMin"/>
+    <close_min value="0" control="chkCloseMin"/>
     <single_instance value="1" control="chkSingleInstance"/>
     <default_nick control="txtDefaultNick">
       <control name="lblDefaultNick"/>
@@ -46,23 +46,23 @@
     </roster_chat>
     <inline_status value="0" control="chkInlineStatus"/>
     <inline_color value="8421376" control="cboInlineStatus"/>
-    <nested_groups value="1" control="chkNestedGrps"/>
+    <nested_groups value="0" control="chkNestedGrps"/>
     <group_seperator value="/" control="txtGrpSeperator"/>
     <roster_avatars value="false" control="chkRosterAvatars"/>
     
     <!-- Roster Group Options -->
     <roster_sort value="0" control="chkSort"/>
-    <roster_groupcounts value="1" control="chkGroupCounts"/>
+	<roster_groupcounts value="0" control="chkGroupCounts"/>
     <roster_collapsed value="0" control="chkCollapsed"/>
     <roster_offline_group value="0" control="chkOfflineGrp"/>
-    <roster_only_online value="0" control="chkOnlineOnly"/>
+	<roster_only_online value="1" control="chkOnlineOnly"/>
     <roster_default value="Friends" control="txtDefaultGrp">
       <control name="lblDefaultGrp"/>
     </roster_default>
     <roster_transport_grp value="Transports" control="txtGatewayGrp">
       <control name="lblGatewayGrp"/>
     </roster_transport_grp>
-    <roster_filter value="0" control="cboVisible">
+    <roster_filter value="2" control="cboVisible">
       <control name="lblFilter"/>
     </roster_filter>            
     
@@ -120,7 +120,7 @@
     <richtext_ignored_font_styles value="font-size;font-family;"/>
     
     <!-- Layouts -->
-    <expanded value="0"/>
+    <expanded value="1"/>
     <dock_locked value="0"/>
     <stacked_tabs value="1"/>
 
@@ -134,7 +134,7 @@
 
     <!-- display name -->
     <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
-    <displayname_profile_map value='{FAMILY}, {GIVEN}' control="txtDNProfileMap"/>
+    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap"/>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
@@ -158,14 +158,15 @@
     </msg_treatment>
     <queue_offline value="1" control="chkQueueOffline"/>
     <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
-	<chat_avatars value="1" control="chkChatAvatars"/>
+	<chat_avatars value="0" control="chkChatAvatars"/>
 	<show_priority value="1" control="chkShowPriority"/>
 
     <!-- Emoticon Options -->
     <emoticons value="1" control="chkEmoticons"/>
-    <emoticon_dlls>
+	<emoticon_dlls>
       <s>msn_emoticons.dll</s>
-      <s>yahoo_emoticons.dll</s>
+	  <s>yahoo_emoticons.dll</s>
+	  <s>buzz_emoticons.dll</s>
     </emoticon_dlls>
     <custom_icondefs value="custom-icons.xml" control="txtCustomEmoteFilename"/>
 
@@ -196,7 +197,7 @@
     </http_proxy_user>
     
     <!-- Notification Options -->
-    <notify_sounds value="1" control="chkSound"/>
+    <notify_sounds value="0" control="chkSound"/>
     <!-- send notifications if application is active? -->
     <notify_active value="1" control="chkNotifyActive"/>
     <!-- send notifications to currently active form? -->
@@ -208,7 +209,7 @@
     <!-- actually flash the tab's image until no longer notifying -->
     <notify_tab_flasher value="1"/> <!-- control="chkFlashTabInfinite"/> -->
 
-    <notify_online value="1"/>
+    <notify_online value="0"/>
     <notify_offline value="0"/>
 	<notify_newchat value="1"/>
     <notify_normalmsg value="1"/>
@@ -217,20 +218,20 @@
     <notify_keyword value="1"/>
 	<notify_chatactivity value="4"/>
 	<notify_priority_chatactivity value="4"/>
-	<notify_roomactivity value="1"/>
-    <notify_priority_roomactivity value="1"/>	
+	<notify_roomactivity value="4"/>
+    <notify_priority_roomactivity value="4"/>	
     <notify_oob value="1"/>
     <notify_autoresponse value="0"/>                     
     
     <!-- Presence Options -->
-    <pres_tracking value="1" control="cboPresTracking">
+    <pres_tracking value="0" control="cboPresTracking">
       <control name="lblPresTracking"/>
     </pres_tracking>
     <presence_message_listen value="1" control="chkPresenceSync"/>
     <presence_message_send value="1" control="chkPresenceSync"/>
     <client_caps value="1" control="chkClientCaps"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
-    <room_joins value="1" control="chkRoomJoins"/>        
+    <room_joins value="0" control="chkRoomJoins"/>        
     
     <!-- Subscription Options -->
     <s10n_auto_accept value="0" control="optIncomingS10n"/>
