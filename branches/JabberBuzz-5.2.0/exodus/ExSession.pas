@@ -273,7 +273,6 @@ begin
                     end;
                 end;
                 case Ord(OptChar) of
-                    0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
                     Ord('d'): ExStartup.debug := true;
                     Ord('l'): begin log_debug := true; log_filename := OptArg end;
                     Ord('x'): expanded := OptArg;
