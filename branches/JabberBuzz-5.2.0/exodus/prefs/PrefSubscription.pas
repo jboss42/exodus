@@ -27,8 +27,8 @@ uses
 
 type
   TfrmPrefSubscription = class(TfrmPrefPanel)
-    optIncomingS10n: TTntRadioGroup;
     chkIncomingS10nAdd: TTntCheckBox;
+    optIncomingS10n: TTntRadioGroup;
   private
     { Private declarations }
   public

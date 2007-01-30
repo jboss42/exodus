@@ -14,6 +14,14 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     Caption = 'Subscriptions'
     ExplicitWidth = 324
   end
+  object chkIncomingS10nAdd: TTntCheckBox
+    Left = 16
+    Top = 159
+    Width = 300
+    Height = 17
+    Caption = 'Add requestor to default contact list group when accepted'
+    TabOrder = 1
+  end
   object optIncomingS10n: TTntRadioGroup
     Left = 8
     Top = 32
@@ -22,17 +30,9 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     Caption = 'Incoming Behavior'
     Items.Strings = (
       'Ask me for all requests'
-      'Auto-Accept requests from people in my contact list.'
+      'Auto-Accept requests from people in my contact list'
       'Auto-Accept all requests'
       'Auto-Deny all requests')
-    TabOrder = 1
-  end
-  object chkIncomingS10nAdd: TTntCheckBox
-    Left = 16
-    Top = 159
-    Width = 300
-    Height = 17
-    Caption = 'Add requestor to default contact list group when accepted'
     TabOrder = 2
   end
 end
