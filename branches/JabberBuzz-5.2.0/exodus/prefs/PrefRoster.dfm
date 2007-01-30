@@ -35,7 +35,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Top = 33
     Width = 337
     Height = 17
-    Caption = 'Show contacts which I do not have a subscription to.'
+    Caption = 'Show contacts which I do not have a subscription to'
     TabOrder = 0
   end
   object chkHideBlocked: TTntCheckBox [4]
