@@ -28,10 +28,10 @@ type
   TfrmPrefLayouts = class(TfrmPrefPanel)
     lblPreview: TTntLabel;
     cboView: TTntComboBox;
-    imgView2: TImage;
     imgView1: TImage;
     lblViewHelp: TTntLabel;
     chkStacked: TTntCheckBox;
+    imgView2: TImage;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }
