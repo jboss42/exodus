@@ -219,7 +219,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
-    _normalImageIndex := RosterImages.RI_APPIMAGE_INDEX;
+    _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
     _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
     btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
