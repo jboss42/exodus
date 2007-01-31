@@ -215,6 +215,7 @@ begin
     chkDefaultConfig.Checked := MainSession.Prefs.getBool('tc_default_config');
     chkUseRegisteredNickname.Checked := MainSession.Prefs.getBool('tc_use_reg_nick');
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
+    Self.Icon.Handle := Application.Icon.Handle;
 
     optSpecifyClick(Self);
 end;

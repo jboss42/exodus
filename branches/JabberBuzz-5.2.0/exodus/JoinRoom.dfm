@@ -10,7 +10,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 416
-  ExplicitHeight = 406
+  ExplicitHeight = 405
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -55,6 +55,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
     inherited Image1: TImage
       Left = 367
+      Picture.Data = {00}
       ExplicitLeft = 367
     end
   end
@@ -188,10 +189,6 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lstRooms: TTntListView
         Left = 0
         Top = 56
@@ -255,7 +252,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Width = 262
           Height = 21
           Hint = 'Select the conference room server to use.'
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
