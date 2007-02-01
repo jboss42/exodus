@@ -715,12 +715,15 @@ begin
 
     // unload any plugins not in the loaded list
     for i := plugs.Count - 1 downto 0 do begin
-        idx := loaded.IndexOf(plugs[i]);
-        if (idx < 0) then begin
-            // unload the plugin
-            p := TPlugin(plugs.Objects[i]);
-            plugs.Delete(i);
-            p.com.Shutdown;
+        try
+            idx := loaded.IndexOf(plugs[i]);
+            if (idx < 0) then begin
+                // unload the plugin
+                p := TPlugin(plugs.Objects[i]);
+                plugs.Delete(i);
+                p.com.Shutdown;
+            end;
+        finally
         end;
     end;
     loaded.Free();
