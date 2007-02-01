@@ -280,8 +280,10 @@ begin
     for i := Self.Count - 1 downto 0 do begin
         if (Pos(LowerCase(Strings[i]), levt) = 1) then begin
             sig := TSignal(Objects[i]);
-            if (sig <> nil) then
+            if (sig <> nil) then begin
                 sig.Invoke(event, tag);
+                exit;
+            end;
         end;
     end;
 end;

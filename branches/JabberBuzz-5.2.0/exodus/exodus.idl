@@ -1017,6 +1017,32 @@ library Exodus
   typedef BSTR * PWideString1;
 
   [
+    uuid(A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRoster2: IDispatch
+  {
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall EnableContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL enable );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall ShowContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL show );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall SetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [in] BSTR caption );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall GetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [out, retval] BSTR * caption );
+  };
+
+  [
     uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
@@ -1478,7 +1504,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-   interface IExodusRoster: IDispatch
+   interface IExodusRoster: IExodusRoster2
   {
     [
     id(0x00000001)

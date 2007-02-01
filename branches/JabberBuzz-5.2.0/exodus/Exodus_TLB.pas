@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/15/2007 9:21:00 AM from Type Library described below.
+// File generated on 1/31/2007 3:42:09 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus_branch\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -51,7 +51,7 @@ const
   IID_IExodusChat2: TGUID = '{51385483-0B0F-45A3-95C7-579A8DDF62DF}';
   IID_IExodusMenuListener: TGUID = '{2ABB30A9-94E3-4085-BED5-4561F62E36EF}';
   IID_IExodusChatPlugin: TGUID = '{E28E487A-7258-4B32-AD1C-F23A808F0460}';
-  IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
+  IID_IExodusRoster2: TGUID = '{A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
   IID_IExodusRosterItem: TGUID = '{BDD5493D-440F-4376-802B-070B5A4ABFF3}';
   IID_IExodusPresence: TGUID = '{FF4EFE7E-35AC-48B5-ACDB-6753C402F0DB}';
@@ -75,7 +75,7 @@ const
   IID_IExodusControlButton: TGUID = '{0D41733E-3505-46FB-B199-C6046E1C84C7}';
   IID_IExodusIQListener: TGUID = '{57DFE494-4509-4972-A93B-6C7E6A9D6A59}';
   IID_IExodusChat: TGUID = '{D2639B6C-A7BB-4CCC-BD73-8C1EB197F9D3}';
-  CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
+  IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   CLASS_ExodusPPDB: TGUID = '{9ED8C497-1121-4C9E-B586-C7DFDB35B581}';
   CLASS_ExodusRosterItem: TGUID = '{B39343ED-2E2D-4C91-AE4F-E0153BA347DA}';
   CLASS_ExodusPresence: TGUID = '{8B7DF610-B49C-4A90-9B98-CB0CB27D8827}';
@@ -111,6 +111,7 @@ const
   CLASS_ExodusDockToolbar: TGUID = '{9CF91FC0-612D-4815-A715-B1F9E9BF54E8}';
   CLASS_ExodusChat: TGUID = '{C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6}';
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
+  CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -168,8 +169,8 @@ type
   IExodusMenuListenerDisp = dispinterface;
   IExodusChatPlugin = interface;
   IExodusChatPluginDisp = dispinterface;
-  IExodusRoster = interface;
-  IExodusRosterDisp = dispinterface;
+  IExodusRoster2 = interface;
+  IExodusRoster2Disp = dispinterface;
   IExodusPPDB = interface;
   IExodusPPDBDisp = dispinterface;
   IExodusRosterItem = interface;
@@ -216,6 +217,8 @@ type
   IExodusIQListenerDisp = dispinterface;
   IExodusChat = interface;
   IExodusChatDisp = dispinterface;
+  IExodusRoster = interface;
+  IExodusRosterDisp = dispinterface;
   IExodusControlBitBtn = interface;
   IExodusControlBitBtnDisp = dispinterface;
   IExodusControlMainMenu = interface;
@@ -260,7 +263,6 @@ type
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
   exodusController = IExodusController;
-  ExodusRoster = IExodusRoster;
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
   ExodusPresence = IExodusPresence;
@@ -277,6 +279,7 @@ type
   ExodusDockToolbar = IExodusDockToolbar;
   ExodusChat = IExodusChat;
   ExodusToolbarButton = IExodusToolbarButton;
+  ExodusRoster = IExodusRoster;
 
 
 // *********************************************************************//
@@ -583,58 +586,33 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusRoster
+// Interface: IExodusRoster2
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// GUID:      {A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}
 // *********************************************************************//
-  IExodusRoster = interface(IDispatch)
-    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
-    procedure Fetch; safecall;
-    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
-                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
-    function Find(const JabberID: WideString): IExodusRosterItem; safecall;
-    function Item(index: Integer): IExodusRosterItem; safecall;
-    function Count: Integer; safecall;
-    procedure RemoveItem(const Item: IExodusRosterItem); safecall;
-    function AddGroup(const grp: WideString): IExodusRosterGroup; safecall;
-    function GetGroup(const grp: WideString): IExodusRosterGroup; safecall;
-    procedure RemoveGroup(const grp: IExodusRosterGroup); safecall;
-    function Get_GroupsCount: Integer; safecall;
-    function Groups(index: Integer): IExodusRosterGroup; safecall;
-    function AddContextMenu(const ID: WideString): WordBool; safecall;
-    procedure RemoveContextMenu(const ID: WideString); safecall;
-    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
-                                const MenuListener: IExodusMenuListener): WideString; safecall;
-    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); safecall;
-    function AddItem(const JabberID: WideString): IExodusRosterItem; safecall;
-    property GroupsCount: Integer read Get_GroupsCount;
+  IExodusRoster2 = interface(IDispatch)
+    ['{A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}']
+    procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
+                                    enable: WordBool); safecall;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); safecall;
+    procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
+                                        const caption: WideString); safecall;
+    function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; safecall;
   end;
 
 // *********************************************************************//
-// DispIntf:  IExodusRosterDisp
+// DispIntf:  IExodusRoster2Disp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// GUID:      {A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}
 // *********************************************************************//
-  IExodusRosterDisp = dispinterface
-    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
-    procedure Fetch; dispid 1;
-    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
-                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
-    function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
-    function Item(index: Integer): IExodusRosterItem; dispid 7;
-    function Count: Integer; dispid 8;
-    procedure RemoveItem(const Item: IExodusRosterItem); dispid 201;
-    function AddGroup(const grp: WideString): IExodusRosterGroup; dispid 202;
-    function GetGroup(const grp: WideString): IExodusRosterGroup; dispid 203;
-    procedure RemoveGroup(const grp: IExodusRosterGroup); dispid 204;
-    property GroupsCount: Integer readonly dispid 205;
-    function Groups(index: Integer): IExodusRosterGroup; dispid 206;
-    function AddContextMenu(const ID: WideString): WordBool; dispid 208;
-    procedure RemoveContextMenu(const ID: WideString); dispid 209;
-    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
-                                const MenuListener: IExodusMenuListener): WideString; dispid 210;
-    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); dispid 211;
-    function AddItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
+  IExodusRoster2Disp = dispinterface
+    ['{A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}']
+    procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
+                                    enable: WordBool); dispid 213;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); dispid 214;
+    procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
+                                        const caption: WideString); dispid 215;
+    function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; dispid 216;
   end;
 
 // *********************************************************************//
@@ -2926,6 +2904,67 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusRoster
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// *********************************************************************//
+  IExodusRoster = interface(IExodusRoster2)
+    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+    procedure Fetch; safecall;
+    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
+                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; safecall;
+    function Find(const JabberID: WideString): IExodusRosterItem; safecall;
+    function Item(index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
+    procedure RemoveItem(const Item: IExodusRosterItem); safecall;
+    function AddGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    function GetGroup(const grp: WideString): IExodusRosterGroup; safecall;
+    procedure RemoveGroup(const grp: IExodusRosterGroup); safecall;
+    function Get_GroupsCount: Integer; safecall;
+    function Groups(index: Integer): IExodusRosterGroup; safecall;
+    function AddContextMenu(const ID: WideString): WordBool; safecall;
+    procedure RemoveContextMenu(const ID: WideString); safecall;
+    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
+                                const MenuListener: IExodusMenuListener): WideString; safecall;
+    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); safecall;
+    function AddItem(const JabberID: WideString): IExodusRosterItem; safecall;
+    property GroupsCount: Integer read Get_GroupsCount;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// *********************************************************************//
+  IExodusRosterDisp = dispinterface
+    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+    procedure Fetch; dispid 1;
+    function Subscribe(const JabberID: WideString; const Nickname: WideString; 
+                       const Group: WideString; Subscribe: WordBool): IExodusRosterItem; dispid 3;
+    function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
+    function Item(index: Integer): IExodusRosterItem; dispid 7;
+    function Count: Integer; dispid 8;
+    procedure RemoveItem(const Item: IExodusRosterItem); dispid 201;
+    function AddGroup(const grp: WideString): IExodusRosterGroup; dispid 202;
+    function GetGroup(const grp: WideString): IExodusRosterGroup; dispid 203;
+    procedure RemoveGroup(const grp: IExodusRosterGroup); dispid 204;
+    property GroupsCount: Integer readonly dispid 205;
+    function Groups(index: Integer): IExodusRosterGroup; dispid 206;
+    function AddContextMenu(const ID: WideString): WordBool; dispid 208;
+    procedure RemoveContextMenu(const ID: WideString); dispid 209;
+    function AddContextMenuItem(const menuID: WideString; const Caption: WideString; 
+                                const MenuListener: IExodusMenuListener): WideString; dispid 210;
+    procedure RemoveContextMenuItem(const menuID: WideString; const itemID: WideString); dispid 211;
+    function AddItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
+    procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
+                                    enable: WordBool); dispid 213;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); dispid 214;
+    procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
+                                        const caption: WideString); dispid 215;
+    function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; dispid 216;
+  end;
+
+// *********************************************************************//
 // Interface: IExodusControlBitBtn
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {2954B16B-64BA-4441-A476-918CCCCA9B46}
@@ -4285,18 +4324,6 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoExodusRoster provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusRoster exposed by              
-// the CoClass ExodusRoster. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusRoster = class
-    class function Create: IExodusRoster;
-    class function CreateRemote(const MachineName: string): IExodusRoster;
-  end;
-
-// *********************************************************************//
 // The Class CoExodusPPDB provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPPDB exposed by              
 // the CoClass ExodusPPDB. The functions are intended to be used by             
@@ -4488,6 +4515,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusToolbarButton;
   end;
 
+// *********************************************************************//
+// The Class CoExodusRoster provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRoster exposed by              
+// the CoClass ExodusRoster. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRoster = class
+    class function Create: IExodusRoster;
+    class function CreateRemote(const MachineName: string): IExodusRoster;
+  end;
+
 implementation
 
 uses ComObj;
@@ -4500,16 +4539,6 @@ end;
 class function CoexodusController.CreateRemote(const MachineName: string): IExodusController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_exodusController) as IExodusController;
-end;
-
-class function CoExodusRoster.Create: IExodusRoster;
-begin
-  Result := CreateComObject(CLASS_ExodusRoster) as IExodusRoster;
-end;
-
-class function CoExodusRoster.CreateRemote(const MachineName: string): IExodusRoster;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
 end;
 
 class function CoExodusPPDB.Create: IExodusPPDB;
@@ -4670,6 +4699,16 @@ end;
 class function CoExodusToolbarButton.CreateRemote(const MachineName: string): IExodusToolbarButton;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusToolbarButton) as IExodusToolbarButton;
+end;
+
+class function CoExodusRoster.Create: IExodusRoster;
+begin
+  Result := CreateComObject(CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusRoster.CreateRemote(const MachineName: string): IExodusRoster;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
 end;
 
 end.

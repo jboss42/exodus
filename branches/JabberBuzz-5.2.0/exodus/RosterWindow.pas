@@ -773,7 +773,6 @@ var
     b_jid: Widestring;
     imgsrc, restype, resname : Widestring;
     ins: cardinal;
-    
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -935,8 +934,6 @@ begin
         end;
 
         imgAd.Visible := true;
-
-
     end
     else if ((event = '/session/adimage/off') and Self.Visible) then begin
         imgAd.Visible := false;
@@ -2307,10 +2304,12 @@ var
     ri: TJabberRosterItem;
     pri: TJabberPres;
     slist: TList;
+    contextMenuTag: TXMLTag;
+    menuname: Widestring;
 begin
     // Figure out what popup menu to show
     // based on the selection
-
+    menuname := '';
     ri := nil;
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
     if (n <> nil) then begin
@@ -2329,18 +2328,25 @@ begin
         // show the actions popup when no node is hit
         treeRoster.PopupMenu := popActions;
         popProperties.Enabled := false;
+        menuname := sPredefinedActions;
     end;
     node_transport: begin
         treeRoster.PopupMenu := popTransport;
         treeRoster.Selected := n;
+        menuname := sPredefinedTransport;
     end;
     node_ritem: begin
         // show the roster menu when a node is hit
-        if (_cur_ritem.CustomContext <> nil) then
-            treeRoster.PopupMenu := _cur_ritem.CustomContext
+        if (_cur_ritem.CustomContext <> nil) then begin
+            treeRoster.PopupMenu := _cur_ritem.CustomContext;
+            if (leftstr(treeRoster.PopupMenu.name, length('pluginContext_')) = 'pluginContext_') then begin
+                menuname := rightstr(treeRoster.PopupMenu.Name, length(treeRoster.PopupMenu.Name) - length('pluginContext_'));
+            end;
+        end
         else begin
             treeRoster.PopupMenu := popRoster;
             treeRoster.Selected := n;
+            menuname := sPredefinedRoster;
 
             o := false;         // online?
             me := false;        // is this me?
@@ -2405,6 +2411,7 @@ begin
 
         // check to see if we have multiple contacts or a group selected
         treeRoster.PopupMenu := popGroup;
+        menuname := sPredefinedGroup;
         if (treeRoster.SelectionCount <= 1) then begin
             treeRoster.Selected := n;
         end;
@@ -2449,8 +2456,16 @@ begin
         slist.Clear();
         slist.Free();
     end;
+    end;
+
+    if (menuname = '') then menuname := treeRoster.PopupMenu.Name;
+
+    contextMenuTag := TXMLTag.Create('context_menu');
+    contextMenuTag.setAttribute('menu_id', menuname);
+    MainSession.FireEvent('/roster/context_menu', contextMenuTag);
+    contextMenuTag.Free();
 end;
-end;
+
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popHistoryClick(Sender: TObject);
