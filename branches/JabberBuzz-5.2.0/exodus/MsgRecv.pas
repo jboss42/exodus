@@ -170,6 +170,8 @@ const
     sBtnNext = 'Next';
     sMsgsPending = 'You have unread messages. Read all messages before closing the window.';
 
+    sDeclineReason = 'Reason for declining invitation';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -182,7 +184,7 @@ uses
     XferManager, GnuGetText,
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
     RosterWindow, RemoveContact, Room, NodeItem, Roster,
-    Presence, Session, Jabber1;
+    Presence, Session, Jabber1, InputPassword;
 
 {$R *.DFM}
 
@@ -546,8 +548,44 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnCancelClick(Sender: TObject);
+var
+    messagetag: TXmlTag;
+    xTag: TXmlTag;
+    declineTag: TXmlTag;
+    reasonTag: TXmlTag;
+    rjid: TJabberID;
+    reason: Widestring;
 begin
-    NextOrClose();
+    if eType = evt_Invite then begin
+        // send back a decline message.
+        messagetag := TXmlTag.Create('message');
+        xTag := TXmlTag.Create('x');
+        declineTag := TXmlTag.Create('decline');
+        reasonTag := TXMLTag.Create('reason');
+
+        rjid := TJabberID.Create(_base_jid, false);
+        messagetag.setAttribute('from', MainSession.JID);
+        messagetag.setAttribute('to', rjid.jid);
+        xTag.setAttribute('xmlns', 'http://jabber.org/protocol/muc#user');
+        declineTag.setAttribute('to', JID);
+        reason := '';
+        if (not InputQueryW(_(sDeclineReason), _(sDeclineReason), reason, False, False)) then begin
+            reasonTag.Free();
+            declineTag.Free();
+            xTag.Free();
+            messagetag.Free();
+        end
+        else begin
+            reasonTag.AddCData(reason);
+            declineTag.AddTag(reasonTag);
+            xTag.AddTag(declineTag);
+            messagetag.AddTag(xTag);
+            MainSession.SendTag(messagetag);
+            NextOrClose();
+        end;
+    end
+    else
+        NextOrClose();
 end;
 
 {---------------------------------------}

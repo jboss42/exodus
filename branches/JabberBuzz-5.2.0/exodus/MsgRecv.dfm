@@ -31,6 +31,7 @@ inherited frmMsgRecv: TfrmMsgRecv
       Left = 328
       Height = 30
       ExplicitLeft = 328
+      ExplicitHeight = 30
     end
     object pnlTop2: TPanel
       Left = 0
@@ -45,14 +46,12 @@ inherited frmMsgRecv: TfrmMsgRecv
         Left = 3
         Top = 3
         Width = 29
-        Height = 24
+        Height = 30
         Align = alLeft
         Caption = 'From: '
         Color = clBtnFace
         ParentColor = False
         Transparent = True
-        ExplicitLeft = 44
-        ExplicitTop = 1
         ExplicitHeight = 13
       end
       object txtFrom: TTntLabel
@@ -70,10 +69,7 @@ inherited frmMsgRecv: TfrmMsgRecv
         Transparent = True
         WordWrap = True
         OnClick = txtFromClick
-        ExplicitLeft = 67
-        ExplicitTop = -3
-        ExplicitWidth = 255
-        ExplicitHeight = 41
+        ExplicitWidth = 34
       end
     end
   end
@@ -229,8 +225,6 @@ inherited frmMsgRecv: TfrmMsgRecv
     Height = 178
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 41
-    ExplicitHeight = 173
     inline frameButtons1: TframeButtons
       Left = 1
       Top = 147
@@ -240,7 +234,7 @@ inherited frmMsgRecv: TfrmMsgRecv
       TabOrder = 0
       TabStop = True
       ExplicitLeft = 1
-      ExplicitTop = 151
+      ExplicitTop = 147
       ExplicitWidth = 375
       ExplicitHeight = 30
       inherited Panel2: TPanel
@@ -383,7 +377,6 @@ inherited frmMsgRecv: TfrmMsgRecv
         AutoSize = True
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 46
         object pnlSendSubject: TPanel
           Left = 0
           Top = 0
@@ -394,7 +387,6 @@ inherited frmMsgRecv: TfrmMsgRecv
           BorderWidth = 2
           TabOrder = 0
           Visible = False
-          ExplicitTop = 32
           object lblSubject1: TTntLabel
             Left = 2
             Top = 2
@@ -427,7 +419,6 @@ inherited frmMsgRecv: TfrmMsgRecv
           BevelOuter = bvNone
           BorderWidth = 2
           TabOrder = 1
-          ExplicitTop = 56
           object txtSubject: TTntLabel
             Left = 45
             Top = 2
@@ -435,8 +426,8 @@ inherited frmMsgRecv: TfrmMsgRecv
             Height = 18
             Align = alClient
             Caption = 'txtSubject'
-            ExplicitLeft = 50
-            ExplicitTop = 4
+            ExplicitWidth = 47
+            ExplicitHeight = 13
           end
           object lblSubject2: TTntStaticText
             Left = 2
