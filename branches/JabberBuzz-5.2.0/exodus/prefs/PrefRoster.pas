@@ -38,7 +38,7 @@ type
     cboInlineStatus: TColorBox;
     chkNestedGrps: TTntCheckBox;
     txtGrpSeperator: TTntEdit;
-    TntLabel1: TTntLabel;
+    lblNestedGrpSeparator: TTntLabel;
     chkRosterAvatars: TTntCheckBox;
     chkUseProfileDN: TTntCheckBox;
     txtDNProfileMap: TTntEdit;
@@ -67,7 +67,15 @@ procedure TfrmPrefRoster.LoadPrefs();
 begin
     inherited;
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
-    txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+    if (MainSession.Prefs.getBool('branding_nested_subgroup') = false) then begin
+      txtGrpSeperator.Visible := false;
+      chkNestedGrps.Visible := false;
+      lblNestedGrpSeparator.Visible := false;
+      chkNestedGrps.Checked := false;
+    end
+    else
+      txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+
     Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
     Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
     Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible;

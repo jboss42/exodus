@@ -395,6 +395,8 @@
 	<branding_disable_outflow value="0"></branding_disable_outflow>
 	<!-- indicates if priority notification feature should be used -->
 	<branding_priority_notifications value="1"></branding_priority_notifications>
+  	<!-- indicates if nested subgroup feature should be available -->
+	<branding_nested_subgroup value="0"></branding_nested_subgroup>	
   </prefs>
 
   <!-- default custom presence stuff -->

@@ -16,16 +16,16 @@ inherited frmPrefRoster: TfrmPrefRoster
     Height = 13
     Caption = 'When I double click a contact'
   end
-  object TntLabel1: TTntLabel [1]
+  object lblNestedGrpSeparator: TTntLabel [1]
     Left = 24
-    Top = 254
+    Top = 334
     Width = 144
     Height = 13
     Caption = 'Seperator for nested groups is:'
   end
   object lblDNProfileMap: TTntLabel [2]
     Left = 24
-    Top = 318
+    Top = 262
     Width = 106
     Height = 13
     Caption = 'Use these profile fields'
@@ -114,7 +114,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
-    Top = 236
+    Top = 316
     Width = 241
     Height = 17
     Caption = 'Use nested groups'
@@ -123,7 +123,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtGrpSeperator: TTntEdit
     Left = 24
-    Top = 271
+    Top = 351
     Width = 201
     Height = 21
     TabOrder = 10
@@ -138,7 +138,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkUseProfileDN: TTntCheckBox
     Left = 0
-    Top = 300
+    Top = 244
     Width = 207
     Height = 17
     Caption = 'Get display name from contact'#39's profile'
@@ -147,7 +147,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtDNProfileMap: TTntEdit
     Left = 24
-    Top = 337
+    Top = 281
     Width = 201
     Height = 21
     TabOrder = 13
