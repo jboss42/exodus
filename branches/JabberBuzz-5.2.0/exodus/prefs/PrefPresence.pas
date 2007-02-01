@@ -160,6 +160,7 @@ begin
     txtCPStatus.Enabled := e;
     txtCPPriority.Enabled := e;
     txtCPHotkey.Enabled := e;
+    cboCPType.Enabled := e;
 
     if (not e) then begin
         txtCPTitle.Text := '';
