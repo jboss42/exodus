@@ -235,12 +235,14 @@ var
     cp: TJabberCustomPres;
 begin
     // delete the current pres
-    cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
-    _pres_list.Remove(cp);
-    MainSession.Prefs.removePresence(cp);
-    lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
-    lstCustompresClick(Self);
-    cp.Free();
+    if (lstCustomPres.SelCount > 0) then begin
+      cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
+      _pres_list.Remove(cp);
+      MainSession.Prefs.removePresence(cp);
+      lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
+      lstCustompresClick(Self);
+      cp.Free();
+    end;
 end;
 
 {---------------------------------------}
