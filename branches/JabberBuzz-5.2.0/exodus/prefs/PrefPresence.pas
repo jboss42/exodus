@@ -156,11 +156,7 @@ begin
     _no_pres_change := true;
 
     e := ((lstCustomPres.Items.Count > 0) and (lstCustomPres.ItemIndex >= 0));
-    txtCPTitle.Enabled := e;
-    txtCPStatus.Enabled := e;
-    txtCPPriority.Enabled := e;
-    txtCPHotkey.Enabled := e;
-    cboCPType.Enabled := e;
+    GroupBox1.Enabled := e;
 
     if (not e) then begin
         txtCPTitle.Text := '';

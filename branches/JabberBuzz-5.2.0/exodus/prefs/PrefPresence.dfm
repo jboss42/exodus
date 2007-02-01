@@ -144,6 +144,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 147
     Align = alTop
     Caption = 'Properties'
+    Enabled = False
     TabOrder = 3
     object Label11: TTntLabel
       Left = 6
@@ -190,7 +191,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 20
       Width = 225
       Height = 21
-      Enabled = False
       TabOrder = 1
       OnChange = txtCPTitleChange
     end
@@ -199,7 +199,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 44
       Width = 225
       Height = 21
-      Enabled = False
       TabOrder = 2
       OnChange = txtCPTitleChange
     end
@@ -209,7 +208,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Width = 227
       Height = 21
       Style = csDropDownList
-      Enabled = False
       ItemHeight = 13
       TabOrder = 3
       OnChange = txtCPTitleChange
@@ -227,7 +225,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Height = 25
       Hint = 'Priority of -1 uses current priority.'
       BevelOuter = bvNone
-      Enabled = False
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
@@ -244,7 +241,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 118
       Width = 97
       Height = 19
-      Enabled = False
       HotKey = 32833
       TabOrder = 4
       OnChange = txtCPTitleChange
