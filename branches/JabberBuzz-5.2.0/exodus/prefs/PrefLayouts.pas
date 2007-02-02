@@ -65,7 +65,7 @@ procedure TfrmPrefLayouts.LoadPrefs();
 begin
     // Get Branded images
     MainSession.Prefs.getImage('undocked', imgView1, 'layouts');
-    MainSession.Prefs.getImage('docked_without_roster_visible', imgView2, 'layouts');
+    MainSession.Prefs.getImage('docked_roster', imgView2, 'layouts');
     // Left Align the images
     imgView1.Left := lblPreview.Left;
     imgView2.Left := lblPreview.Left;
