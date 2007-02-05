@@ -300,7 +300,7 @@ begin
                         rtDest.SelLength := keywords.MatchLen[0];
                         rtDest.SelAttributes.Color := hlColor;
                         rtDest.SelAttributes.Bold := true;
-                        currPos := tint + 1;
+                        currPos := tint + keywords.MatchLen[0]; 
                     end;
                 until not Keywords.ExecNext;
             end;
