@@ -166,7 +166,8 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr, JabberUtils;
+    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr,
+    JabberUtils, XMLTag;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -248,6 +249,8 @@ begin
 end;
 {---------------------------------------}
 procedure TfrmPrefs.LoadPrefs;
+var
+    regex_pref_tag: TXmlTag;
 begin
     // load prefs from the reg.
     with MainSession.Prefs do begin
@@ -255,6 +258,14 @@ begin
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
         chkRegex.Checked := getBool('regex_keywords');
+        regex_pref_tag := MainSession.Prefs.getXMLPref('regex_keywords');
+        if (regex_pref_tag <> nil) then begin
+            if (regex_pref_tag.GetAttribute('state') = 'inv') then
+                chkRegex.Visible := false
+            else if (regex_pref_tag.GetAttribute('state') = 'ro') then
+                chkRegex.Enabled := false;
+        end;
+
         fillStringList('blockers', memBlocks.Lines);
    end;
 end;
@@ -406,6 +417,7 @@ begin
         Width := Shape1.Width;
         Visible := false;
     end;
+
 
 end;
 
