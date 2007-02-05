@@ -124,8 +124,16 @@ begin
         // someone is coming online for the first time..
         if (event = '/presence/online') then begin
             ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
-            if (ritem <> nil) then
-                idx := ritem.getPresenceImage('available')
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('available');
+                if ((ritem = MainSession.roster.ActiveItem) and
+                    (MainSession.Roster.ActiveItem.IsContact) and
+                    (MainSession.Roster.ActiveItem.IsNative) and
+                    (frmrosterWindow.treeRoster.SelectionCount < 2)) then begin
+                    frmExodus.btnSendFile.Enabled := true;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+                end;
+            end
             else
                 idx := RosterTreeImages.Find('available');
             //Presence notifications should be routed to the parent form of the
@@ -141,8 +149,13 @@ begin
         // someone is going offline
         else if (event = '/presence/offline') then begin
             ritem := sess.roster.Find(j);
-            if (ritem <> nil) then
-                idx := ritem.getPresenceImage('offline')
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('offline');
+                if (ritem = MainSession.roster.ActiveItem) then begin
+                    frmExodus.btnSendFile.Enabled := false;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
+                end;
+            end
             else
                 idx := RosterTreeImages.Find('offline');
 

@@ -2368,6 +2368,8 @@ begin
             popProperties.Enabled := true;
             popSendFile.Enabled := (o) and (native) and
                 (MainSession.Profile.ConnectionType = conn_normal);
+            frmExodus.mnuPeople_Contacts_SendFile.Enabled := popSendFile.Enabled;
+            frmExodus.btnSendFile.Enabled := popSendFile.Enabled;
             if (room.room_list.Count > 0) then begin
                 popInvite.Enabled := (native);
                 popGrpInvite.Enabled := true;
@@ -3277,10 +3279,21 @@ procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
 begin
     _change_node := TTnTTreeNode(Node);
     frmExodus.ResetMenuItems(_change_node);
+    frmExodus.btnSendFile.Enabled := false;
+    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
     if (Node <> nil) then begin
         _last_search := Node.AbsoluteIndex;
         if (getNodeType(TTnTTreeNode(Node)) = node_ritem) then begin
             MainSession.Roster.ActiveItem := TJabberRosterItem(Node.Data);
+
+            if ((MainSession.Roster.ActiveItem.IsNative) and
+                (MainSession.Roster.ActiveItem.IsOnline) and
+                (MainSession.Profile.ConnectionType = conn_normal) and
+                (treeRoster.SelectionCount < 2))then begin
+                frmExodus.btnSendFile.Enabled := true;
+                frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+            end;
+
             exit;
         end;
     end;

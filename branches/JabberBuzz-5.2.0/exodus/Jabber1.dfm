@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 725
+  ClientHeight = 745
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -33,7 +33,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 694
+    Height = 714
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -143,7 +143,9 @@ object frmExodus: TfrmExodus
         Top = 0
         Hint = 'Send File'
         Caption = 'Send File'
+        Enabled = False
         ImageIndex = 8
+        OnClick = mnuPeople_Contacts_SendFileClick
       end
       object btnBrowser: TToolButton
         Left = 169
@@ -176,7 +178,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 694
+    Height = 714
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -185,23 +187,25 @@ object frmExodus: TfrmExodus
     TabOrder = 1
     Visible = False
     OnDockDrop = FormDockDrop
+    ExplicitHeight = 694
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
     Width = 229
-    Height = 694
+    Height = 714
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 694
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
       Width = 229
-      Height = 694
+      Height = 714
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -226,6 +230,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 694
     end
   end
   object MainMenu1: TTntMainMenu
@@ -604,6 +609,8 @@ object frmExodus: TfrmExodus
         end
         object mnuPeople_Contacts_SendFile: TTntMenuItem
           Caption = '&Send File...'
+          Enabled = False
+          OnClick = mnuPeople_Contacts_SendFileClick
         end
         object mnuPeople_Contacts_SendMessage: TTntMenuItem
           Caption = 'Send &Message...'

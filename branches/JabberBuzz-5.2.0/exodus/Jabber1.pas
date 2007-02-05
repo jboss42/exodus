@@ -1330,6 +1330,8 @@ begin
             mnuBrowser.ShortCut := 0;
             btnBrowser.Visible := false;
         end;
+        mnuPeople_Contacts_SendFile.Visible := getBool('brand_ft');
+        btnSendFile.Visible := getBool('brand_ft');
     end;
 
     // Make sure presence menus have unified captions
@@ -1396,6 +1398,8 @@ begin
     // Remove the "old menus" from user view
     // Eventually will have to actually remove menus
     Old1.Visible := false
+
+
 
 end;
 
@@ -2130,7 +2134,6 @@ begin
 
     // People Menu
     People.Enabled := enable;
-    btnSendFile.Enabled := enable;
 
     // Options Menu
     mnuOptions_Password.Enabled := enable;
