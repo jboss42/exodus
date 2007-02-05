@@ -2847,6 +2847,7 @@ var
     old_grp, new_grp, grp_exists_msg, special_grp_msg: WideString;
     i: integer;
     ri: TJabberRosterItem;
+    x: TXMLTag;
 begin
     // Rename some grp.
     if (treeRoster.Selected = nil) then exit;
@@ -2878,6 +2879,15 @@ begin
                 exit;
             end;
 
+            if (go.isEmpty) then begin
+              MainSession.Roster.removeGroup(go);
+              TTntTreeNode(go.Data).Free();
+              MainSession.Roster.addGroup(new_grp);
+              x := TXMLTag.Create('group');
+              x.setAttribute('name', new_grp);
+              MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+              exit;
+            end;
 
             for i := 0 to MainSession.Roster.Count - 1 do begin
                 ri := MainSession.Roster.Items[i];
@@ -2895,8 +2905,11 @@ end;
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
     go: TJabberGroup;
-    recips: TList;
     special_grp_rmv_msg : WideString;
+    i: Integer;
+    parent:  TTntTreeNode;
+    rosterItems: TWideStringList;
+    removeAsGroup: boolean;
 begin
     // Remove the grp..
     if (treeRoster.SelectionCount = 1) then begin
@@ -2919,10 +2932,52 @@ begin
             RemoveGroup(_cur_grp)
     end
     else begin
-        recips := getSelectedContacts(false);
-        RemoveGroup('', recips);
-        recips.Free();
-    end;
+
+//        //We have several nodes selected, we will only display one
+//        //dialog if all selected nodes belonging to the same parent.
+//        //If selected nodes are from different groups
+//        //we display roster item/group removal dialog for each node.
+        parent := nil;
+        rosterItems := TWideStringList.Create;
+        removeAsGroup := false;
+        for i := 0 to treeRoster.SelectionCount - 1 do begin
+          if (i = 0) then begin
+            parent := TTntTreeNode(treeRoster.Selections[i]).Parent;
+            continue;
+          end;
+          if (treeRoster.Selections[i].Parent <> parent) then begin
+              break;
+          end;
+        end;
+        //If we reached end of loop, we have the same parent.
+        //We will remove items as a group.
+        if (i = treeRoster.SelectionCount) then
+           removeAsGroup := true;
+
+        //Build a list of strings with selected roster items
+        for i := 0 to treeRoster.SelectionCount - 1 do
+          if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+             rosterItems.Add(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full);
+
+        if (removeAsGroup) then
+             if (treeRoster.Selections[0].Parent <> nil) then
+               RemoveRosterItems(rosterItems, treeRoster.Selections[0].Parent.Text)
+             else
+               RemoveRosterItems(rosterItems)
+        else begin
+           for i := 0 to treeRoster.SelectionCount - 1 do begin
+            // Remove this roster item.
+            if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+              if (treeRoster.Selections[i].Parent <> nil) then
+                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full, treeRoster.Selections[i].Parent.Text)
+              else
+                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full)
+            else
+              RemoveGroup(TJabberGroup(treeRoster.Selections[i].Data).FullName);
+          end;
+        end;
+
+      end;
 end;
 
 {---------------------------------------}
