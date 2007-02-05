@@ -73,6 +73,7 @@ type
     procedure cboTypeChange(Sender: TObject);
     procedure txtNicknameChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure txtJIDChange(Sender: TObject);
   private
     { Private declarations }
     cb: integer;
@@ -331,6 +332,14 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmAdd.txtJIDChange(Sender: TObject);
+begin
+    if (Length(Trim(txtJid.Text)) > 0) then
+        Self.frameButtons1.btnOK.Enabled := true
+    else
+        Self.frameButtons1.btnOK.Enabled := false;
+end;
+
 procedure TfrmAdd.txtJIDExit(Sender: TObject);
 var
     tmp_id, ti2: TJabberID;

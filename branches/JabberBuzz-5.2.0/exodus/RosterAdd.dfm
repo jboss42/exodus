@@ -73,6 +73,7 @@ object frmAdd: TfrmAdd
     Width = 139
     Height = 21
     TabOrder = 0
+    OnChange = txtJIDChange
     OnExit = txtJIDExit
   end
   object txtNickname: TTntEdit
@@ -118,6 +119,7 @@ object frmAdd: TfrmAdd
         ExplicitLeft = 91
         ExplicitHeight = 29
         inherited btnOK: TTntButton
+          Enabled = False
           OnClick = frameButtons1btnOKClick
         end
         inherited btnCancel: TTntButton
