@@ -103,6 +103,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Height = 17
     Caption = 'Only show online contacts'
     TabOrder = 4
+    OnClick = chkOfflineGrpClick
   end
   inherited pnlHeader: TTntPanel
     Width = 272
