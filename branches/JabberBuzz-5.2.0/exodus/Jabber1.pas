@@ -1012,6 +1012,9 @@ begin
     end
     else if (Self.WindowState = wsMaximized) then begin
         ShowWindow(Handle, SW_RESTORE);
+        //The following two lines are required to resize panels on restore
+        Self.AutoSize := true;
+        Self.AutoSize := false;
         _was_max := false;
     end;
 end;
@@ -4643,6 +4646,9 @@ end;
     Adjust layout so roster panel and dock panel are shown
 }
 procedure TfrmExodus.layoutDock();
+var
+  mon: TMonitor;
+  ratioRoster: real;
 begin
     saveRosterDockWidths();
     if (DockState <> dsDock) then begin
@@ -4672,11 +4678,26 @@ begin
 
         //roster autosizing is neccessary to get splitter aligned with the
         //correct control. JJF doesn't know why though...
-        pnlRoster.autoSize := true;
-        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
         pnlRoster.autoSize := false;
-        pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
 
+
+
+        //Obtain the width of the monitor
+        //If we exceed the width of the monitor,
+        //recalculate widths for roster based on the same ratio
+        mon := Screen.MonitorFromWindow(Self.Handle, mdNearest);
+        if (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH) >= mon.Width) then begin
+          ratioRoster := (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3)/(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH));
+          Self.ClientWidth  := mon.Width;
+          pnlRoster.Width := Trunc(Self.ClientWidth * ratioRoster);
+        end
+        else begin
+            Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
+            pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+          
+        end;
+
+        //pnlRoster.autoSize := true;
         _noMoveCheck := false;
         _currDockState := dsDock;
         Self.DockSite := false;
