@@ -1351,6 +1351,7 @@ var
     node_rect: TRect;
     plevel: integer;
     go: TJabberGroup;
+    pres: TJabberPres;
 begin
     // Render a specific roster item, with the givenode_listn presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1588,6 +1589,29 @@ begin
             ritem.setPresenceImage('observer');
         if (ritem.Ask = 'subscribe') then
             ritem.setPresenceImage('pending');
+
+        // Deal with blocked users
+        if (MainSession.isBlocked(ritem.jid)) then begin
+            if (ritem.IsOnline()) then
+                ritem.setPresenceImage('online_blocked')
+            else
+                ritem.setPresenceImage('offline_blocked');
+        end
+        else begin
+            if (ritem.ImageIndex = ritem.getPresenceImage('online_blocked')) then begin
+                // Was blocked but not blocked any more
+                // Online so need to figure out what icon to show based on current presence
+                 pres := MainSession.ppdb.FindPres(ritem.Jid.jid, ritem.Jid.resource);
+                 ritem.setPresenceImage(pres.Show);
+            end
+            else if (ritem.ImageIndex = ritem.getPresenceImage('offline_blocked')) then begin
+                // Was blocked but not blocked anymore
+                // Offline, so just show the offline icon
+                ritem.setPresenceImage('offline');       
+            end;
+        end;
+
+
         cur_node.ImageIndex := ritem.ImageIndex;
 
         cur_node.SelectedIndex := ritem.ImageIndex;
