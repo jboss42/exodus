@@ -4695,8 +4695,9 @@ begin
         splitRoster.Visible := false; //hide first or will expand and throw widsths off
         pnlRoster.Visible := false;
         pnlDock.Visible := false;
-
+        _noMoveCheck := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+        _noMoveCheck := false;
         pnlRoster.Align := alClient;
         pnlRoster.Visible := true;
 
