@@ -398,6 +398,7 @@ begin
             c := TChatController(Objects[i]);
             Delete(i);
             if ((c <> nil) and (c.window <> nil)) then begin
+                TfrmChat(c.window)._warn_busyclose := false; //don't warn on all close
                 TfrmChat(c.window).Close();
                 TfrmChat(c.window).Free();
                 //Application.ProcessMessages();
