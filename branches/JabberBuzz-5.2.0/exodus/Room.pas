@@ -2409,12 +2409,23 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.S1Click(Sender: TObject);
 var
-    fn     : widestring;
+    fn: widestring;
+    filetype: integer;
 begin
-    dlgSave.FileName := MungeName(self.jid + '.rtf');
+    dlgSave.FileName := MungeName(self.jid);
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
-
+    filetype := dlgSave.FilterIndex;
+    if (filetype = 1) then begin
+        // .rtf file
+        if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
+            fn := fn + '.rtf';
+    end
+    else if (filetype = 2) then begin
+        // .txt file
+        if (LowerCase(RightStr(fn, 3)) <> '.txt') then
+            fn := fn + '.txt';
+    end;
     MsgList.Save(fn);
 end;
 
