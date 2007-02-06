@@ -116,6 +116,8 @@ begin
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
+    f := nil;
+    idx := -1;
     try
         j := tmp_jid.jid;
         if (sess.IsBlocked(j)) then exit;

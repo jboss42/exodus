@@ -629,7 +629,7 @@ begin
             c := TComponent(_chat.Window)
         else if (_room <> nil) then
             c := _room
-       else if (_im <> nil) then
+        else //if (_im <> nil) then
             c := _im;
         //see if the control we want is actually the form
         if SameText(c.Name, Name) then

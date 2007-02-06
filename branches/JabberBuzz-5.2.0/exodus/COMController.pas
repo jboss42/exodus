@@ -667,6 +667,7 @@ var
     com2: IExodusPlugin2;
 begin
     //
+    Result := false;
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
         LoadPlugin(com_name, errorStr);

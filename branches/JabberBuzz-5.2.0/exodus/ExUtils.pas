@@ -645,7 +645,7 @@ var
     msg, x, item: TXMLTag;
     ri: TJabberRosterItem;
     noi, noi_domain, noi_parameter: Widestring;
-    offset: integer;
+    offset: Cardinal;
 begin
     msg := TXMLTag.Create('message');
     msg.setAttribute('id', MainSession.generateID());
