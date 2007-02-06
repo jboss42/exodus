@@ -842,15 +842,16 @@ begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
+    //get screnn coords and see if we fit, adjust size/position as needed
     // Make it slightly bigger to acccomodate PtInRect
-    dtop := Screen.DesktopRect;
-    dtop.Bottom := dtop.Bottom + 1;
-    dtop.Right := dtop.Right + 1;
+    dtop := Screen.MonitorFromRect(Self.getPosition).WorkareaRect;
+    inc(dtop.Bottom);// := dtop.Bottom + 1;
+    inc(dtop.Right);// := dtop.Right + 1;
 
     cp.X := _pos.left;
     cp.Y := _pos.Top;
+    //check top, right and bottom, left to make sure rectangle is fully on desktop
     ok := PtInRect(dtop, cp);
-
     cp.X := _pos.left + _pos.width;
     cp.Y := _pos.Top + _pos.Height;
     ok := ok and PtInRect(dtop, cp);
