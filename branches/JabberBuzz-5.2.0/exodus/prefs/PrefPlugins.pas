@@ -125,9 +125,10 @@ begin
     scanPluginDir(sl);
 
     with lstPlugins do begin
-        btnConfigPlugin.Enabled := (Items.Count > 0);
         btnRemovePlugin.Enabled := (Items.Count > 0);
     end;
+
+    btnConfigPlugin.Enabled := false; // no item selected when rescaned. 
 
     sl.Free();
 end;
