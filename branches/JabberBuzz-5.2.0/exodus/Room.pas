@@ -2411,9 +2411,10 @@ procedure TfrmRoom.S1Click(Sender: TObject);
 var
     fn     : widestring;
 begin
-    dlgSave.FileName := MungeName(self.jid);
+    dlgSave.FileName := MungeName(self.jid + '.rtf');
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
+
     MsgList.Save(fn);
 end;
 
