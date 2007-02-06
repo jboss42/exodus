@@ -77,6 +77,7 @@ var
 const
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
+    sPrefsDefaultPres = 'Restore default presence entries?';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -257,6 +258,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPresence.btnDefaultsClick(Sender: TObject);
 begin
+    if MessageDlgW(_(sPrefsDefaultPres), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
     MainSession.Prefs.setupDefaultPresence();
     LoadPrefs();
 end;

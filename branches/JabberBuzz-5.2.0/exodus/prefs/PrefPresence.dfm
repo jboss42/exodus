@@ -57,7 +57,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 4
       Width = 75
       Height = 25
-      Caption = 'Clear'
+      Caption = 'Clear All'
       TabOrder = 2
       OnClick = btnCustomPresClearClick
     end
