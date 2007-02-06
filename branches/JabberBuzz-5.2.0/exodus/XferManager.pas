@@ -824,6 +824,8 @@ begin
 
     // only close if there are no frames left.
     CanClose := (box.ControlCount = 0);
+    if (CanClose) then
+        inherited FormCloseQuery(Sender, CanClose);
 end;
 
 {---------------------------------------}
