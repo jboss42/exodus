@@ -191,10 +191,19 @@ end;
 procedure TBookmarkManager.parseItem(tag: TXMLTag; ri: TJabberRosterItem);
 var
     jid: TJabberID;
+    tstr : WideString;
+    tj: TJabberID;
 begin
     jid := TJabberID.Create(tag.GetAttribute('jid'));
     ri.IsContact := false;
-    ri.Text := tag.getAttribute('name');
+    tstr := tag.getAttribute('name');
+    //hi, hack here. Some clients are sendig the node protions of jids as names
+    //without unescaping special characters first. Play with the name a bit
+    //and see if it is a jid node.
+    if (tstr = jid.user) then
+        tstr := jid.userDisplay;
+    ri.Text := tstr;
+
     ri.Status := '';
     ri.Tooltip := jid.getDisplayJID();
     ri.Action := '/session/gui/conference';
