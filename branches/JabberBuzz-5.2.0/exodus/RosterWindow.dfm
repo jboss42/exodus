@@ -405,14 +405,17 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Presence'
       object popSendPres: TTntMenuItem
         Caption = 'Send Visible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object popSendInvisible: TTntMenuItem
         Caption = 'Send Invisible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object N2: TTntMenuItem
         Caption = '-'
+        Visible = False
       end
       object popSendSubscribe: TTntMenuItem
         Caption = 'Subscribe Again'
