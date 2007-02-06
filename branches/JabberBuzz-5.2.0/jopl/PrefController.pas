@@ -1250,19 +1250,23 @@ end;
 
 {---------------------------------------}
 procedure TPrefController.CheckPositions(form: TForm; t, l, w, h: integer);
-var
+{var
     ok: boolean;
     dtop, tmp: TRect;
     mon: TMonitor;
     cp: TPoint;
     vwidth, vht, i: integer;
+}    
 begin
-    tmp := Bounds(l, t, w, h);
+//    tmp := Bounds(l, t, w, h);
 
     // Netmeeting hack
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
+    Form.SetBounds(l, t, w, h);
+    Form.MakeFullyVisible();
+{ JJF MakeFullyVisible should do the job much better.
     // For multiple monitors, make a desktop rect that spans all monitors
     vwidth := 0;
     vht := 0;
@@ -1297,6 +1301,7 @@ begin
     w := Abs(tmp.Right - tmp.Left);
     h := Abs(tmp.Bottom - tmp.Top);
     Form.SetBounds(l, t, w, h);
+    }
 end;
 
 {---------------------------------------}

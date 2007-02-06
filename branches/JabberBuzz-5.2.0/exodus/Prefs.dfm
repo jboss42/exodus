@@ -6,13 +6,14 @@ object frmPrefs: TfrmPrefs
   ClientHeight = 477
   ClientWidth = 456
   Color = clBtnFace
-  DefaultMonitor = dmDesktop
+  DefaultMonitor = dmMainForm
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Arial'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -8243,10 +8244,6 @@ object frmPrefs: TfrmPrefs
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
@@ -8284,7 +8281,7 @@ object frmPrefs: TfrmPrefs
         object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
-          Width = 320
+          Width = 349
           Height = 42
           Align = alTop
           Caption = 
@@ -8292,6 +8289,7 @@ object frmPrefs: TfrmPrefs
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
+          ExplicitWidth = 320
         end
       end
     end

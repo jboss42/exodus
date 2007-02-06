@@ -5,12 +5,14 @@ inherited frmJoinRoom: TfrmJoinRoom
   Caption = 'Join Room'
   ClientHeight = 372
   ClientWidth = 408
+  DefaultMonitor = dmMainForm
   OldCreateOrder = True
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 416
-  ExplicitHeight = 405
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
