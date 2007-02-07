@@ -4893,6 +4893,10 @@ begin
      mnuPeople_Contacts_DeleteContact.Enabled := false;
      mnuPeople_Contacts_BlockContact.Enabled := false;
      mnuPeople_Contacts_ContactProperties.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendMessage.Enabled := false;
+     mnuPeople_Contacts_ViewHistory.Enabled := false;
    end
    else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
      mnuPeople_Group_RenameGroup.Enabled := true;
@@ -4901,6 +4905,9 @@ begin
      mnuPeople_Contacts_DeleteContact.Enabled := false;
      mnuPeople_Contacts_BlockContact.Enabled := false;
      mnuPeople_Contacts_ContactProperties.Enabled := false;
+     mnuPeople_Contacts_SendFile.Enabled := false;
+     mnuPeople_Contacts_SendMessage.Enabled := false;
+     mnuPeople_Contacts_ViewHistory.Enabled := false;
    end
    else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
      mnuPeople_Group_RenameGroup.Enabled := false;
@@ -4909,6 +4916,9 @@ begin
      mnuPeople_Contacts_DeleteContact.Enabled := true;
      mnuPeople_Contacts_BlockContact.Enabled := true;
      mnuPeople_Contacts_ContactProperties.Enabled := true;
+     mnuPeople_Contacts_SendFile.Enabled := true;
+     mnuPeople_Contacts_SendMessage.Enabled := true;
+     mnuPeople_Contacts_ViewHistory.Enabled := true;
    end;
 end;
 
