@@ -966,7 +966,7 @@ initialization
     emoticon_regex := TRegExpr.Create();
     with emoticon_regex do begin
         ModifierG := false;
-        Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
+        Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([>:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
         Compile();
     end;
 
