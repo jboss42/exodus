@@ -358,6 +358,7 @@ begin
     Self.Align := alClient;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
+    btnDockToggle.Hint := _('Undock this tab');
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
     pnlDockTop.Visible := true;
 end;
@@ -367,6 +368,7 @@ begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
+    btnDockToggle.Hint := _('Dock this window');
     //hide top panel if no toolbar buttons are showing and no subclass has
     //added a child component (pnlDockTop.ControlCount = 1 -> only toolbar)
     pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or (visibleButtonCount(tbDockbar) > 0);

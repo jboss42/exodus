@@ -51,6 +51,7 @@ inherited frmDockable: TfrmDockable
         AlignWithMargins = True
         Left = 23
         Top = 0
+        Hint = 'Close this tab'
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0

@@ -5,7 +5,7 @@ object frmState: TfrmState
   ClientHeight = 167
   ClientWidth = 203
   Color = clBtnFace
-  DefaultMonitor = dmMainForm
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
