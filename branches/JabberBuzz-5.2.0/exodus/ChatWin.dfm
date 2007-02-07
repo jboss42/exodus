@@ -20,14 +20,14 @@ inherited frmChat: TfrmChat
   end
   inherited pnlDockTop: TPanel
     Width = 492
-    ExplicitWidth = 383
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 334
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
       Width = 440
-      ExplicitWidth = 331
+      ExplicitWidth = 440
       object pnlJID: TPanel
         Left = 0
         Top = 0
@@ -75,14 +75,14 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Width = 492
     Height = 322
-    ExplicitWidth = 383
-    ExplicitHeight = 173
+    ExplicitWidth = 492
+    ExplicitHeight = 322
   end
   inherited pnlInput: TPanel
     Top = 388
     Width = 492
-    ExplicitTop = 239
-    ExplicitWidth = 383
+    ExplicitTop = 388
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
       Width = 488
       WantReturns = False
@@ -92,8 +92,8 @@ inherited frmChat: TfrmChat
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 354
     Width = 492
-    ExplicitTop = 205
-    ExplicitWidth = 383
+    ExplicitTop = 354
+    ExplicitWidth = 492
   end
   object SaveDialog1: TSaveDialog [5]
     DefaultExt = 'html'

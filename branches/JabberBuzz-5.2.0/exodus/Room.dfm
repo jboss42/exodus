@@ -19,14 +19,14 @@ inherited frmRoom: TfrmRoom
   inherited pnlDockTop: TPanel
     Width = 492
     TabOrder = 1
-    ExplicitWidth = 382
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 333
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
       Width = 440
-      ExplicitWidth = 330
+      ExplicitWidth = 440
       object pnlSubj: TPanel
         Left = 0
         Top = 0
@@ -79,8 +79,8 @@ inherited frmRoom: TfrmRoom
     Width = 492
     Height = 322
     TabOrder = 2
-    ExplicitWidth = 382
-    ExplicitHeight = 177
+    ExplicitWidth = 492
+    ExplicitHeight = 322
     object Splitter2: TSplitter
       Left = 380
       Top = 4
@@ -100,8 +100,6 @@ inherited frmRoom: TfrmRoom
       BorderWidth = 1
       Caption = '`'
       TabOrder = 0
-      ExplicitLeft = 273
-      ExplicitHeight = 169
       object lstRoster: TTntListView
         Left = 1
         Top = 1
@@ -135,7 +133,6 @@ inherited frmRoom: TfrmRoom
         OnDragOver = OnDockedDragOver
         OnInfoTip = lstRosterInfoTip
         OnKeyPress = lstRosterKeyPress
-        ExplicitHeight = 167
       end
     end
   end
@@ -143,8 +140,8 @@ inherited frmRoom: TfrmRoom
     Top = 388
     Width = 492
     TabOrder = 0
-    ExplicitTop = 243
-    ExplicitWidth = 382
+    ExplicitTop = 388
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
       Width = 488
     end
@@ -152,8 +149,8 @@ inherited frmRoom: TfrmRoom
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 354
     Width = 492
-    ExplicitTop = 209
-    ExplicitWidth = 382
+    ExplicitTop = 354
+    ExplicitWidth = 492
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual
