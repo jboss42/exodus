@@ -126,8 +126,12 @@ begin
     lstHotkeys.AlphaSort();
 
     //see if we have too many hotkeys to allow for more.
-    if (lstHotkeys.Items.Count >= 12) then
-        btnAddHotkeys.Enabled := false;
+    btnAddHotkeys.Enabled := false;
+    for i := 1 to 12 do begin
+        if (not _used_hotkeys[i]) then begin
+            btnAddHotkeys.Enabled := true;
+        end;
+    end;
 end;
 
 procedure TfrmPrefHotkeys.btnModifyHotkeysClick(Sender: TObject);
@@ -226,9 +230,15 @@ begin
         item.SubItems.Add(_hotkeys_text.Strings[i]);
         _set_usedkeys(_hotkeys_keys.Strings[i], true);
     end;
-    
+
     _set_AvailableHotkeys;
 
+    btnAddHotkeys.Enabled := false;
+    for i := 1 to 12 do begin
+        if (not _used_hotkeys[i]) then begin
+            btnAddHotkeys.Enabled := true;
+        end;
+    end;
 end;
 
 procedure TfrmPrefHotkeys.lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
