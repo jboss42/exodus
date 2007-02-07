@@ -448,6 +448,16 @@ begin
         end
         else
             mnuSendFile.Visible := false;
+        if ((not getBool('brand_print')) and
+            (MainSession.Profile.ConnectionType = conn_normal)) then begin
+            PrintHistory1.Visible := false;
+            Print1.Visible := false;
+        end
+        else begin
+            PrintHistory1.Visible := true;
+            Print1.Visible := true;
+        end;
+
     end;
 
 end;

@@ -1680,6 +1680,13 @@ begin
 
     if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
         popNick.Enabled := False;
+
+    if (not MainSession.Prefs.getBool('brand_print')) then begin
+        Print1.Visible := false;
+    end
+    else begin
+        Print1.Visible := true;
+    end;
 end;
 
 {---------------------------------------}
