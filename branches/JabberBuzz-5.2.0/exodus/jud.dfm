@@ -57,9 +57,7 @@ inherited frmJud: TfrmJud
         Width = 484
         Height = 13
         Align = alTop
-        Caption = 
-          'Select the user database or enter in the Jabber ID of the search' +
-          ' agent to use:'
+        Caption = 'Select the user database for the search agent to use:'
         WordWrap = True
         ExplicitWidth = 365
       end
