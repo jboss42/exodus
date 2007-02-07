@@ -273,7 +273,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Top = 18
           Width = 105
           Height = 25
-          Caption = 'Fetch Conference Rooms'
+          Caption = 'Fetch Rooms'
           TabOrder = 1
           OnClick = btnFetchClick
         end
