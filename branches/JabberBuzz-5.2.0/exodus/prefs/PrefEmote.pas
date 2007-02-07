@@ -271,8 +271,9 @@ var
     li: TListItem;
     e: TEmoticon;
     f: TfrmEmoteProps;
-    fn, txt: Widestring;
+    fn, txt, ms: Widestring;
     i: integer;
+    valid: boolean;    
 begin
   inherited;
     // Edit
@@ -297,16 +298,40 @@ begin
     f.txtFilename.Text := fn;
     f.txtText.Text := txt;
 
-    if (f.ShowModal = mrOK) then begin
-        // replace text for this emoticon
-        i := el.indexOfText(txt);
-        if (i >= 0) then begin
-            el.setText(i, f.txtText.Text);
-            li.Caption := f.txtText.Text;
+    valid := false;
+    while (valid = false) do begin
+      if (f.ShowModal = mrOK) then begin
+        // validate the text matches our regex.
+        if (emoticon_regex.Exec(f.txtText.Text)) then begin
+            // we have a match
+            ms := emoticon_regex.Match[2];
+            if (ms = f.txtText.Text) then valid := true;
         end;
-    end;
-    f.Free();
 
+        if (valid = false) then begin
+            if (MessageDlgW(_('The text you entered is not a valid emoticon string. Try (foo), or ::foo::'),
+                mtError, [mbOK, mbCancel], 0) = mrCancel) then begin
+                f.Free();
+                exit;
+            end;
+        end;
+      end
+      //Canceled 
+      else begin
+       f.Free();
+       exit;
+      end;
+    end;
+
+
+    // replace text for this emoticon
+    i := el.indexOfText(txt);
+    if (i >= 0) then begin
+         el.setText(i, f.txtText.Text);
+         li.Caption := f.txtText.Text;
+    end;
+
+    f.Free();
 end;
 
 {---------------------------------------}
