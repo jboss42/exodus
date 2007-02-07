@@ -356,6 +356,7 @@ end;
 procedure TfrmDockable.OnDocked();
 begin
     Self.Align := alClient;
+    tbDockBar.Visible := true;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     btnDockToggle.Hint := _('Undock this tab');
@@ -364,6 +365,8 @@ begin
 end;
 
 procedure TfrmDockable.OnFloat();
+var
+    btnsVisible: boolean;
 begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
@@ -371,7 +374,8 @@ begin
     btnDockToggle.Hint := _('Dock this window');
     //hide top panel if no toolbar buttons are showing and no subclass has
     //added a child component (pnlDockTop.ControlCount = 1 -> only toolbar)
-    pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or (visibleButtonCount(tbDockbar) > 0);
+    tbDockBar.Visible := (visibleButtonCount(tbDockbar) > 0);
+    pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or tbDockBar.Visible;
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
