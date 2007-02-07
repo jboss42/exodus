@@ -3,30 +3,30 @@ inherited frmChat: TfrmChat
   Top = 384
   ActiveControl = MsgOut
   Caption = 'Chat Window'
-  ClientHeight = 267
-  ClientWidth = 383
+  ClientHeight = 416
+  ClientWidth = 492
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   OnClose = FormClose
-  ExplicitWidth = 391
-  ExplicitHeight = 301
+  ExplicitWidth = 500
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 234
-    Width = 383
+    Top = 383
+    Width = 492
     ExplicitTop = 239
     ExplicitWidth = 383
   end
   inherited pnlDockTop: TPanel
-    Width = 383
+    Width = 492
     ExplicitWidth = 383
     inherited tbDockBar: TToolBar
-      Left = 334
+      Left = 443
       ExplicitLeft = 334
     end
     inherited pnlChatTop: TPanel
-      Width = 331
+      Width = 440
       ExplicitWidth = 331
       object pnlJID: TPanel
         Left = 0
@@ -40,7 +40,7 @@ inherited frmChat: TfrmChat
           Left = 43
           Top = 0
           Width = 48
-          Height = 13
+          Height = 32
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -48,6 +48,7 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
@@ -72,25 +73,25 @@ inherited frmChat: TfrmChat
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 383
-    Height = 173
+    Width = 492
+    Height = 322
     ExplicitWidth = 383
     ExplicitHeight = 173
   end
   inherited pnlInput: TPanel
-    Top = 239
-    Width = 383
+    Top = 388
+    Width = 492
     ExplicitTop = 239
     ExplicitWidth = 383
     inherited MsgOut: TExRichEdit
-      Width = 379
+      Width = 488
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 205
-    Width = 383
+    Top = 354
+    Width = 492
     ExplicitTop = 205
     ExplicitWidth = 383
   end

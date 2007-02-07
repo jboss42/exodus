@@ -142,6 +142,7 @@ type
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -258,7 +259,7 @@ type
 
         Subclasses should override this method to open forms. The default
         implementation does nothing.
-        
+
         @param autoOpenInfo Persisted opening information
     }
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); virtual;
@@ -796,15 +797,15 @@ begin
             _pos.height := SafeInt(windowState.getAttribute('pos_h'));
             _pos.width := SafeInt(windowState.getAttribute('pos_w'));
         end else begin
-            _pos.height := Self.Height;
-            _pos.width := Self.Width
+            _pos.height := Self.ExplicitHeight;
+            _pos.width := Self.ExplicitWidth;
         end;
     end
     else begin
         _pos.Left := 0;
         _pos.Top := 0;
-        _pos.Width := Self.Width;
-        _pos.Height := Self.Height;
+        _pos.Width := Self.ExplicitWidth;
+        _pos.Height := Self.ExplicitHeight;
         CenterOnMainformMonitor(_pos);
     end;
     _origPos.Left := _pos.Left;
@@ -812,11 +813,7 @@ begin
     _origPos.Top := _pos.Top;
     _origPos.height := _pos.height;
     normalizePos();
-    //setwiondowpos sets the undocked dimensions of window.
-//    _skipWindowPosHandling := true;
     SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
-//    _skipWindowPosHandling := false;
-    //minimized, maximized or restored
     _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
@@ -866,9 +863,8 @@ begin
     //get screnn coords and see if we fit, adjust size/position as needed
     // Make it slightly bigger to acccomodate PtInRect
 
-    dtop := Screen.MonitorFromRect(toRect(_pos)).WorkareaRect;
     Self.DefaultMonitor := dmDesktop;
-//    Self.Monitor := Screen.MonitorFromRect(toRect(_pos));
+    dtop := Screen.MonitorFromRect(toRect(_pos)).WorkareaRect;
     inc(dtop.Bottom);// := dtop.Bottom + 1;
     inc(dtop.Right);// := dtop.Right + 1;
 

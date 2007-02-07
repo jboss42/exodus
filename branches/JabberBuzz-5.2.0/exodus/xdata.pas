@@ -133,8 +133,8 @@ begin
         f.Caption := title;
 
     f.Render(tag);
-    //f.ShowDefault();
-    f.Show();
+    f.ShowDefault(true,'f'); //bring to front, always undocked
+    //f.Show();
     Result := true;
 end;
 
@@ -634,6 +634,7 @@ end;
 procedure TfrmXData.RestoreWindowState();
 begin
     //nop
+    inherited;
 end;
 
 procedure TfrmXData.PersistWindowState();
