@@ -11,14 +11,14 @@ inherited frmPrefSystem: TfrmPrefSystem
   TextHeight = 13
   object lblLang: TTntLabel [0]
     Left = 8
-    Top = 186
+    Top = 223
     Width = 99
     Height = 13
     Caption = 'Language file to use:'
   end
   object lblLangScan: TTntLabel [1]
     Left = 17
-    Top = 226
+    Top = 263
     Width = 130
     Height = 13
     Cursor = crHandPoint
@@ -27,7 +27,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object lblDefaultNick: TTntLabel [2]
     Left = 8
-    Top = 251
+    Top = 180
     Width = 111
     Height = 13
     Caption = 'My default nickname is:'
@@ -123,7 +123,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object cboLocale: TTntComboBox
     Left = 8
-    Top = 202
+    Top = 239
     Width = 188
     Height = 21
     Style = csDropDownList
@@ -134,7 +134,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object txtDefaultNick: TTntEdit
     Left = 8
-    Top = 267
+    Top = 196
     Width = 188
     Height = 21
     TabOrder = 10

@@ -24,7 +24,7 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
@@ -136,6 +136,7 @@ var
     i: integer;
     tmps: Widestring;
     reg: TRegistry;
+    temptag: TXmlTag;
 begin
     // System Prefs
     _dirty_locale := '';
@@ -148,7 +149,19 @@ begin
     with MainSession.Prefs do begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
-        tmps := getString('locale');
+        temptag := getXMLPref('locale');
+        tmps := temptag.GetAttribute('value');
+        if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
+            lblLang.Visible := false;
+            cboLocale.Visible := false;
+            lblLangScan.Visible := false;
+        end;
+        if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
+            lblLang.Enabled := false;
+            cboLocale.Enabled := false;
+            lblLangScan.Enabled := false;
+        end;
+
         // stay compatible with old prefs
         if (Pos('Default', tmps) = 1) then begin
             tmps := 'Default';
@@ -285,6 +298,7 @@ begin
 end;
 
 {---------------------------------------}
+
 procedure TfrmPrefSystem.lblLangScanClick(Sender: TObject);
 begin
   inherited;
