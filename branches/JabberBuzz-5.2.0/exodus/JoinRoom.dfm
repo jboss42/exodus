@@ -29,6 +29,7 @@ inherited frmJoinRoom: TfrmJoinRoom
       Left = 151
       ExplicitLeft = 151
       inherited btnBack: TTntButton
+        Enabled = False
         OnClick = btnBackClick
       end
       inherited btnNext: TTntButton
