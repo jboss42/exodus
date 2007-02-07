@@ -34,6 +34,7 @@ inherited frmJoinRoom: TfrmJoinRoom
       end
       inherited btnNext: TTntButton
         Default = True
+        Enabled = False
         OnClick = btnNextClick
       end
       inherited btnCancel: TTntButton
@@ -65,6 +66,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   inherited Tabs: TPageControl
     Width = 408
     Height = 271
+    ActivePage = TabSheet2
     TabOrder = 0
     ExplicitWidth = 408
     ExplicitHeight = 271
@@ -128,13 +130,15 @@ inherited frmJoinRoom: TfrmJoinRoom
         ShowHint = True
         TabOrder = 4
         Text = 'txtServer'
+        OnChange = txtServerChange
       end
       object txtRoom: TTntEdit
         Left = 162
-        Top = 157
+        Top = 159
         Width = 190
         Height = 21
         TabOrder = 5
+        OnChange = txtRoomChange
       end
       object txtPassword: TTntEdit
         Left = 162
@@ -150,6 +154,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Width = 190
         Height = 21
         TabOrder = 0
+        OnChange = txtNickChange
       end
       object optSpecify: TTntRadioButton
         Left = 4

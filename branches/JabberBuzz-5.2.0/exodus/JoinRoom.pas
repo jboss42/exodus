@@ -71,6 +71,9 @@ type
       FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
       Wrap: Boolean; var Index: Integer);
     procedure lstRoomsKeyPress(Sender: TObject; var Key: Char);
+    procedure txtNickChange(Sender: TObject);
+    procedure txtServerChange(Sender: TObject);
+    procedure txtRoomChange(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
@@ -84,6 +87,7 @@ type
     procedure _fetch(jid: Widestring);
     procedure _addRoomJid(ce: TJabberEntity);
     procedure _processFilter();
+    procedure _enableNext();
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
   public
@@ -218,6 +222,7 @@ begin
     Self.Icon.Handle := Application.Icon.Handle;
 
     optSpecifyClick(Self);
+    _enableNext();
 end;
 
 {---------------------------------------}
@@ -254,6 +259,8 @@ begin
         Tabs.ActivePage := tabSheet2;
         btnBack.Enabled := true;
         btnNext.Caption := _('Finish');
+
+        _enableNext();
 
         // browse each server
         for i := 0 to txtServer.Items.Count - 1 do
@@ -299,6 +306,30 @@ begin
     Self.Close;
     exit;
 
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom._enableNext();
+begin
+    if (Tabs.ActivePage = tabSheet1) then begin
+        if (optSpecify.Checked) then begin
+            if ((Trim(txtRoom.Text) <> '') and
+                (Trim(txtServer.Text) <> '') and
+                (Trim(txtNick.Text) <> '')) then
+                btnNext.Enabled := true
+            else
+                btnNext.Enabled := false;
+        end
+        else begin
+            btnNext.Enabled := true;
+        end;
+    end
+    else if (Tabs.ActivePage = tabSheet2) then begin
+        if (lstRooms.SelCount > 0) then
+            btnNext.Enabled := true
+        else
+            btnNext.Enabled := false;
+    end;
 end;
 
 {---------------------------------------}
@@ -428,6 +459,7 @@ begin
         Tabs.ActivePage := tabSheet1;
         btnNext.Caption := _('Next >');
         btnBack.Enabled := false;
+        _enableNext();
     end;
 end;
 
@@ -448,6 +480,7 @@ begin
         btnNext.Caption := _('Finish')
     else
         btnNext.Caption := _('Next >');
+    _enableNext();
 end;
 
 {---------------------------------------}
@@ -468,6 +501,7 @@ procedure TfrmJoinRoom.lstRoomsChange(Sender: TObject; Item: TListItem;
 var
     li: TTntListItem;
 begin
+    _enableNext();
     li := lstRooms.Selected;
     if (li = nil) then exit;
 
@@ -522,6 +556,24 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmJoinRoom.txtNickChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
+procedure TfrmJoinRoom.txtRoomChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
+procedure TfrmJoinRoom.txtServerChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
 procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
 begin
     btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
