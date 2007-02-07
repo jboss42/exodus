@@ -199,6 +199,9 @@ begin
             Self.lblDefaultNick.Visible := false;
             Self.txtDefaultNick.Visible := false;
         end;
+        //Auto login should not be enabled if password is not saved
+        chkAutoLogin.Enabled := MainSession.Profile.SavePasswd and MainSession.Authenticated;
+        
     end;
 end;
 
