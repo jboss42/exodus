@@ -11,21 +11,21 @@ inherited frmPrefRoster: TfrmPrefRoster
   TextHeight = 13
   object lblDblClick: TTntLabel [0]
     Left = 0
-    Top = 139
+    Top = 127
     Width = 143
     Height = 13
     Caption = 'When I double click a contact'
   end
   object lblNestedGrpSeparator: TTntLabel [1]
     Left = 24
-    Top = 334
+    Top = 322
     Width = 144
     Height = 13
     Caption = 'Seperator for nested groups is:'
   end
   object lblDNProfileMap: TTntLabel [2]
     Left = 24
-    Top = 262
+    Top = 250
     Width = 106
     Height = 13
     Caption = 'Use these profile fields'
@@ -48,11 +48,12 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkPresErrors: TTntCheckBox [5]
     Left = 0
-    Top = 86
+    Top = 369
     Width = 337
     Height = 17
     Caption = 'Detect contacts which are unreachable or no longer exist'
     TabOrder = 3
+    Visible = False
   end
   object chkShowPending: TTntCheckBox [6]
     Left = 0
@@ -64,7 +65,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object cboDblClick: TTntComboBox [7]
     Left = 24
-    Top = 155
+    Top = 143
     Width = 201
     Height = 21
     Style = csDropDownList
@@ -77,7 +78,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkRosterUnicode: TTntCheckBox [8]
     Left = 0
-    Top = 103
+    Top = 86
     Width = 337
     Height = 17
     Caption = 
@@ -87,7 +88,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkInlineStatus: TTntCheckBox [9]
     Left = 0
-    Top = 184
+    Top = 172
     Width = 241
     Height = 17
     Caption = 'Show contact status in the contact list'
@@ -96,7 +97,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object cboInlineStatus: TColorBox [10]
     Left = 24
-    Top = 203
+    Top = 191
     Width = 201
     Height = 22
     DefaultColorColor = clBlue
@@ -114,7 +115,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
-    Top = 316
+    Top = 304
     Width = 241
     Height = 17
     Caption = 'Use nested groups'
@@ -123,14 +124,14 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtGrpSeperator: TTntEdit
     Left = 24
-    Top = 351
+    Top = 339
     Width = 201
     Height = 21
     TabOrder = 10
   end
   object chkRosterAvatars: TTntCheckBox
     Left = 0
-    Top = 120
+    Top = 104
     Width = 337
     Height = 17
     Caption = 'Show Avatars in the contact list'
@@ -138,7 +139,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkUseProfileDN: TTntCheckBox
     Left = 0
-    Top = 244
+    Top = 232
     Width = 207
     Height = 17
     Caption = 'Get display name from contact'#39's profile'
@@ -147,7 +148,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtDNProfileMap: TTntEdit
     Left = 24
-    Top = 281
+    Top = 269
     Width = 201
     Height = 21
     TabOrder = 13
