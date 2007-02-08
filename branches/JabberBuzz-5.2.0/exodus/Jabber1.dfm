@@ -185,9 +185,7 @@ object frmExodus: TfrmExodus
     BorderWidth = 1
     UseDockManager = False
     TabOrder = 1
-    Visible = False
     OnDockDrop = FormDockDrop
-    ExplicitHeight = 694
   end
   object pnlDock: TPanel
     Left = 88
@@ -200,7 +198,6 @@ object frmExodus: TfrmExodus
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
-    ExplicitHeight = 694
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
@@ -230,7 +227,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 694
     end
   end
   object MainMenu1: TTntMainMenu

@@ -4336,7 +4336,7 @@ end;
 procedure TfrmExodus.TabsChange(Sender: TObject);
 begin
 //    outputdebugmsg('TfrmExodus.Tabs.OnChange');
-
+    outputdebugmsg('TfrmExodus.TabsChange');
     focusActiveTab();
 end;
 
@@ -4345,8 +4345,7 @@ procedure TfrmExodus.TabsContextPopup(Sender: TObject; MousePos: TPoint;
 begin
     //a hack. Tabs.OnChange doesn't seem to fire when right clicking tab.
     inherited;
-//    outputdebugmsg('TfrmExodus.Tabs.ONcONTEXTmENU');
-
+    outputdebugmsg('TfrmExodus.TabsContextPopup');
     focusActiveTab();
 end;
 
@@ -4404,16 +4403,19 @@ end;
 procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
 begin
+outputdebugmsg('TfrmExodus.TabsUnDock');
     // check to see if the tab is a frmDockable
     Allow := true;
-    if (Client is TfrmDockable) then begin
+    if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
+//        Self.FloatDocked(TfrmDockable(Client));
         CloseDocked(TfrmDockable(Client));
+        TfrmDockable(Client).Docked := false;
         TfrmDockable(Client).OnFloat();
     end;
 end;
 
 {
-    Event fired when programaticvally undocking 
+    Event fired when programaticvally undocking
 
     Does not update the layout of the dock manager. This method is used
     when undocking tabs while updating the layout (see updateLayoutPrefChange)
@@ -4422,8 +4424,9 @@ procedure TfrmExodus.TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
 var
     frm: TfrmDockable;
-    idx: Integer;  
+    idx: Integer;
 begin
+outputdebugmsg('TfrmExodus.TabsUnDockNoLayoutChange');
     // check to see if the tab is a frmDockable
     Allow := true;
     if (Client is TfrmDockable) then begin
@@ -4448,6 +4451,7 @@ end;
 procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
   Y: Integer);
 begin
+outputdebugmsg('TfrmExodus.TabsDockDrop');
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
@@ -4469,6 +4473,7 @@ end;
 procedure TfrmExodus.FormDockDrop(Sender: TObject; Source: TDragDockObject;
   X, Y: Integer);
 begin
+outputdebugmsg('TfrmExodus.FormDockDrop');
     if (Source.Control is TfrmDockable) then begin
         // We got a new form dropped on us.
         OpenDocked(TfrmDockable(Source.Control));
@@ -4481,6 +4486,7 @@ procedure TfrmExodus.popCloseTabClick(Sender: TObject);
 var
     f: TForm;
 begin
+outputdebugmsg('TfrmExodus.popCloseTabClick');
     // Close the window docked to this tab..
     f := getTabForm(Tabs.ActivePage);
     if (f <> nil) then
@@ -4492,6 +4498,7 @@ procedure TfrmExodus.popFloatTabClick(Sender: TObject);
 var
     f: TForm;
 begin
+outputdebugmsg('TfrmExodus.popFloatTabClick');
     // Undock this window
     f := getTabForm(Tabs.ActivePage);
     if ((f <> nil) and (f is TfrmDockable)) then
@@ -4529,6 +4536,7 @@ procedure TfrmExodus.CloseDocked(frm: TfrmDockable);
 var
     idx: integer;
 begin
+outputdebugmsg('TfrmExodus.CloseDocked');
     frm.Docked := false;
 //    frm.Visible := false;
     if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
@@ -4543,24 +4551,17 @@ end;
 
 function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
 begin
-    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
+outputdebugmsg('TfrmExodus.OpenDocked');
+//    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
     frm.ManualDock(Tabs); //fires TabsDockDrop event
     Result := GetTabSheet(frm);
     frm.Visible := true;
 end;
 
 procedure TfrmExodus.FloatDocked(frm : TfrmDockable);
-var
-    idx: integer;
 begin
-    idx := _docked_forms.IndexOf(frm);
-    if (idx >= 0) then
-        _docked_forms.Delete(idx);
-    updateLayoutDockChange(TfrmDockable(frm), false, tabs.PageCount = 1);
+outputdebugmsg('TfrmExodus.FloatDocked');
     frm.ManualFloat(frm.FloatPos);
-    frm.Docked := false;
-    frm.Visible := true;
-    frm.OnFloat();
 end;
 
 
@@ -4663,7 +4664,6 @@ begin
         splitRoster.Align := alNone;
         pnlDock.Align := alNone;
 
-
         pnlRoster.Left := 0;
         splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
         pnlDock.Left := pnlRoster.BoundsRect.Right + 4;
@@ -4680,8 +4680,6 @@ begin
         //correct control. JJF doesn't know why though...
         pnlRoster.autoSize := false;
 
-
-
         //Obtain the width of the monitor
         //If we exceed the width of the monitor,
         //recalculate widths for roster based on the same ratio
@@ -4694,10 +4692,9 @@ begin
         else begin
             Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
             pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-          
         end;
 
-        //pnlRoster.autoSize := true;
+//        pnlRoster.autoSize := true;
         _noMoveCheck := false;
         _currDockState := dsDock;
         Self.DockSite := false;
@@ -4714,13 +4711,13 @@ begin
     saveRosterDockWidths();
     if (DockState <> dsRosterOnly) then begin
         splitRoster.Visible := false; //hide first or will expand and throw widsths off
-        pnlRoster.Visible := false;
+  //      pnlRoster.Visible := false;
         pnlDock.Visible := false;
         _noMoveCheck := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         _noMoveCheck := false;
-        pnlRoster.Align := alClient;
-        pnlRoster.Visible := true;
+//        pnlRoster.Align := alClient;
+//        pnlRoster.Visible := true;
 
         _currDockState := dsRosterOnly;
         Self.DockSite := true;
