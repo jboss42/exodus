@@ -142,7 +142,14 @@ var
 begin
     f := TfrmInvite.Create(Application);
     rjid := TJabberID.Create(room_jid);
-    f.cboRoom.Text := rjid.getDisplayJID();
+    //Need to find matching item in the list for "DropDownList" combo box style
+    for i := 0 to f.cboRoom.Items.Count - 1 do begin
+      if (f.cboRoom.Items[i] = rjid.getDisplayJID()) then begin
+        f.cboRoom.ItemIndex := i;
+        break;
+      end;
+    end;
+
     rjid.Free();
 
     // Only add the jids selected
