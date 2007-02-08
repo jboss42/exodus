@@ -18,17 +18,18 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited Tabs: TPageControl
-    ExplicitTop = 53
-    ExplicitHeight = 263
+    ActivePage = TabSheet4
+    ExplicitWidth = 494
+    ExplicitHeight = 324
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4
       ExplicitTop = 27
-      ExplicitWidth = 408
-      ExplicitHeight = 232
+      ExplicitWidth = 486
+      ExplicitHeight = 293
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 408
+        Width = 486
         Height = 90
         Align = alTop
         AutoSize = False
@@ -43,12 +44,13 @@ inherited frmRegister: TfrmRegister
         Font.Style = []
         ParentFont = False
         WordWrap = True
+        ExplicitWidth = 408
       end
       object lblIns: TTntLabel
         Left = 0
         Top = 90
-        Width = 408
-        Height = 142
+        Width = 486
+        Height = 203
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'
@@ -59,6 +61,7 @@ inherited frmRegister: TfrmRegister
         Font.Style = []
         ParentFont = False
         WordWrap = True
+        ExplicitWidth = 408
         ExplicitHeight = 135
       end
     end
@@ -68,8 +71,8 @@ inherited frmRegister: TfrmRegister
       object formBox: TScrollBox
         Left = 0
         Top = 0
-        Width = 408
-        Height = 200
+        Width = 486
+        Height = 261
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -80,8 +83,8 @@ inherited frmRegister: TfrmRegister
       end
       object Panel2: TPanel
         Left = 0
-        Top = 200
-        Width = 408
+        Top = 261
+        Width = 486
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
@@ -103,7 +106,7 @@ inherited frmRegister: TfrmRegister
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 408
+        Width = 486
         Height = 90
         Align = alTop
         AutoSize = False
@@ -115,6 +118,7 @@ inherited frmRegister: TfrmRegister
         Font.Style = []
         ParentFont = False
         WordWrap = True
+        ExplicitWidth = 408
       end
     end
     object TabSheet4: TTabSheet
@@ -123,7 +127,7 @@ inherited frmRegister: TfrmRegister
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 408
+        Width = 486
         Height = 90
         Align = alTop
         AutoSize = False
@@ -138,18 +142,19 @@ inherited frmRegister: TfrmRegister
         ParentFont = False
         Visible = False
         WordWrap = True
+        ExplicitWidth = 408
       end
       object lblBad: TTntLabel
         Left = 0
         Top = 90
-        Width = 408
+        Width = 486
         Height = 90
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has Failed! Press Previous to ' +
-          'go back and verify that all of the parameters have been filled i' +
-          'n correctly. Press Cancel to close this wizard.'
+          'Your Registration to this service has Failed! Press Back to go b' +
+          'ack and verify that all of the parameters have been filled in co' +
+          'rrectly. Press Cancel to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
@@ -158,14 +163,17 @@ inherited frmRegister: TfrmRegister
         ParentFont = False
         Visible = False
         WordWrap = True
+        ExplicitWidth = 408
       end
     end
   end
   inherited pnlDockTop: TPanel
+    ExplicitWidth = 494
+    inherited tbDockBar: TToolBar
+      ExplicitLeft = 445
+    end
     inherited Panel1: TPanel
-      ExplicitTop = 0
-      ExplicitWidth = 364
-      ExplicitHeight = 53
+      ExplicitWidth = 442
       inherited lblWizardDetails: TTntLabel
         Width = 75
         Height = 13
