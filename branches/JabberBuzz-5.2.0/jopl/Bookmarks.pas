@@ -199,7 +199,6 @@ procedure TBookmarkManager.parseItem(tag: TXMLTag; ri: TJabberRosterItem);
 var
     jid: TJabberID;
     tstr : WideString;
-    tj: TJabberID;
 begin
     jid := TJabberID.Create(tag.GetAttribute('jid'));
     ri.IsContact := false;

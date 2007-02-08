@@ -365,8 +365,6 @@ begin
 end;
 
 procedure TfrmDockable.OnFloat();
-var
-    btnsVisible: boolean;
 begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);

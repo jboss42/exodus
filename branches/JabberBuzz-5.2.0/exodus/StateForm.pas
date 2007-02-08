@@ -532,11 +532,9 @@ end;
 procedure TfrmState.CenterOnMainformMonitor(var pos: TPos);
 var
     dtop: TRect;
-    mon: TMonitor;
     cp: TPoint;
 begin
     // center it on the mainform's monitor
-//    Self.DefaultMonitor := dmMainform;
     Self.DefaultMonitor := dmActiveForm;
     dtop := Screen.ActiveForm.Monitor.WorkareaRect;
     cp := CenterPoint(dtop);
