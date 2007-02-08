@@ -83,7 +83,7 @@ inherited frmPrefAway: TfrmPrefAway
     Top = 32
     Width = 270
     Height = 17
-    Caption = 'Enable Auto Away'
+    Caption = 'Enable Auto-Away'
     TabOrder = 3
     OnClick = chkAutoAwayClick
   end
