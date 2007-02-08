@@ -97,6 +97,9 @@ begin
     if (event = '/session/gui/conference-props') then begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
     end
+    else if (event = '/session/gui/conference-props-rename') then begin
+        ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
+    end
     else if (event = '/session/gui/conference') then begin
         StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
             tag.GetBasicText('password'), true, false, (tag.GetAttribute('reg_nick') = 'true'));

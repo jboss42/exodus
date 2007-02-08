@@ -3723,14 +3723,22 @@ procedure TfrmRosterWindow.treeRosterKeyDown(Sender: TObject;
 var
     msg: string;
     Node: TTreeNode;
+    ri: TJabberRosterItem;
 begin
     Node := treeRoster.Selected;
 
     if (Node = nil) then exit;
 
     if (TObject(Node.Data) is TJabberRosterItem) then begin
+        ri := TJabberRosterItem(Node.Data);
+
         case Key of
-            VK_F2: popRenameClick(Sender);
+            VK_F2: begin
+                if (ri.IsContact) then
+                    popRenameClick(Sender)
+                else if (ri.Tag.Name = 'conference') then
+                    MainSession.FireEvent('/session/gui/conference-props-rename', ri.Tag);
+            end;
             VK_F10: popPropertiesClick(Sender);
             VK_DELETE: popRemoveClick(Sender);
         end;

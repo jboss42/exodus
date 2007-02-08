@@ -93,8 +93,14 @@ begin
     _menu.Items.Add(mi);
 
     mi := TTntMenuItem.Create(_menu);
+    mi.Name := 'mnuRenameRoom';
+    mi.Caption := _('Rename...');
+    mi.OnClick := Self.MenuClick;
+    _menu.Items.Add(mi);
+
+    mi := TTntMenuItem.Create(_menu);
     mi.Name := 'mnuProperties';
-    mi.Caption := _('Properties');
+    mi.Caption := _('Properties...');
     mi.OnClick := Self.MenuClick;
     _menu.Items.Add(mi);
 end;
@@ -121,11 +127,12 @@ begin
 
     if (mi.Name = 'mnuJoinRoom') then
         MainSession.FireEvent('/session/gui/conference', ri.tag)
-    else if (mi.Name = 'mnuRemoveRoom') then begin
-        RemoveBookmark(ri.Jid.jid);
-    end
+    else if (mi.Name = 'mnuRemoveRoom') then
+        RemoveBookmark(ri.Jid.jid)
     else if (mi.Name = 'mnuProperties') then
-        MainSession.FireEvent('/session/gui/conference-props', ri.tag);
+        MainSession.FireEvent('/session/gui/conference-props', ri.tag)
+    else if (mi.Name = 'mnuRenameRoom') then
+        MainSession.FireEvent('/session/gui/conference-props-rename', ri.tag);
 end;
 
 {---------------------------------------}
@@ -214,7 +221,7 @@ begin
     ri.SetCleanGroups();
 
     ri.ImageIndex := RosterTreeImages.Find('conference');
-    ri.InlineEdit := true;
+    ri.InlineEdit := false;
 
     // setup right click opts for bookmarks
     ri.CustomContext := _menu;

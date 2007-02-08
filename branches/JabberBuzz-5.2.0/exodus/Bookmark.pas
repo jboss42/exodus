@@ -52,7 +52,7 @@ type
 var
   frmBookmark: TfrmBookmark;
 
-function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''; doing_rename: boolean = false): TfrmBookmark;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -66,7 +66,7 @@ uses
     RosterWindow;
 
 {---------------------------------------}
-function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''; doing_rename: boolean = false): TfrmBookmark;
 var
     f: TfrmBookmark;
     bm: TXMLTag;
@@ -101,7 +101,12 @@ begin
             chkRegisteredNick.Checked := (bm.GetAttribute('reg_nick') = 'true');
         end;
         tmp.Free();
+
         Show();
+        if (doing_rename) then begin
+            txtName.SetFocus;
+            txtName.SelectAll;
+        end;
     end;
 
     Result := f;
