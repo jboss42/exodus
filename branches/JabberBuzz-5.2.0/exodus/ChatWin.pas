@@ -428,9 +428,9 @@ begin
     _res_menus := TWidestringlist.Create();
     _unknown_avatar := TBitmap.Create();
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
-
-    _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
-    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');    
+                                 _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
+    
+    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');
 
     _receivedXIMNode := false;
     _receivedMessage := false;
@@ -1601,8 +1601,8 @@ begin
 
     f.addItem('Chat activity');
     f.addItem('Priority chat activity');
-    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY]);
-    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY]);
+    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_chatactivity'));
+    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_priority_chatactivity'));
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_CHAT_ACTIVITY] := f.getVal(0);
         _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := f.getVal(1);

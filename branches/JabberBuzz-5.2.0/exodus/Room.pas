@@ -2397,9 +2397,9 @@ begin
     f.addItem('Room activity');
     f.addItem('Keywords');
     f.addItem('Priority room activity');
-    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY]);
-    f.setVal(1, _notify[NOTIFY_KEYWORD]);
-    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY]);
+    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_roomactivity'));
+    f.setVal(1, _notify[NOTIFY_KEYWORD], MainSession.Prefs.getInt('notify_keyword'));
+    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_priority_roomactivity'));
 
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);

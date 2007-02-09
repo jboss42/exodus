@@ -48,9 +48,8 @@ type
   public
     { Public declarations }
     function getVal(idx: integer): integer;
-    procedure setVal(idx, value: integer);
-    procedure setDefault(idx, value: integer);
-
+    procedure setVal(idx, value, def: integer);
+   
     procedure addItem(itm: Widestring);
   end;
 
@@ -108,21 +107,12 @@ begin
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
     chkTrayNotify.Enabled := e;
-    chkFront.Checked := e;
+    chkFront.Enabled := e;
 
-    if chkToast.Enabled then begin
-        chkToast.Checked := ((_vals[i] and notify_toast) > 0);
-        chkFlash.Checked := ((_vals[i] and notify_flash) > 0);
-        chkTrayNotify.Checked := ((_vals[i] and notify_tray) > 0);
-        chkFront.Checked := ((_vals[i] and notify_front) > 0);
-    end
-    else begin
-        chkToast.Checked := false;
-        chkFlash.Checked := false;
-        chkTrayNotify.Checked := false;
-        chkFront.Checked := false;
-        _vals[i] := 0;
-    end;
+    chkToast.Checked := ((_vals[i] and notify_toast) > 0);
+    chkFlash.Checked := ((_vals[i] and notify_flash) > 0);
+    chkTrayNotify.Checked := ((_vals[i] and notify_tray) > 0);
+    chkFront.Checked := ((_vals[i] and notify_front) > 0);
 
     _no_notify_update := false;
     
@@ -153,7 +143,7 @@ begin
     result := _vals[idx];
 end;
 
-procedure TfrmCustomNotify.setVal(idx, value: integer);
+procedure TfrmCustomNotify.setVal(idx, value, def: integer);
 begin
     if (Length(_vals) <= idx) then begin
         SetLength(_vals, idx + 5);
@@ -161,19 +151,11 @@ begin
     end;
 
     _vals[idx] := value;
-    _defs[idx] := value;
+    _defs[idx] := def;
 
     if (idx < chkNotify.Items.Count) then
         chkNotify.Checked[idx] := (_vals[idx] > 0);
 
-end;
-
-procedure TfrmCustomNotify.setDefault(idx, value: integer);
-begin
-    if (Length(_defs) <= idx) then
-        SetLength(_defs, idx + 5);
-
-    _defs[idx] := value;
 end;
 
 procedure TfrmCustomNotify.FormShow(Sender: TObject);
@@ -193,7 +175,7 @@ begin
         _vals[i] := _defs[i];
         chkNotify.Checked[i] := (_vals[i] > 0);
     end;
-    chkToastClick(Self);
+    chkNotifyClick(Self);
 end;
 
 end.
