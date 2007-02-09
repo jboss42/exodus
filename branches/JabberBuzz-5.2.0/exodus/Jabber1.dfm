@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 745
+  ClientHeight = 528
   ClientWidth = 317
   Color = clBtnFace
   UseDockManager = True
@@ -33,7 +33,7 @@ object frmExodus: TfrmExodus
     Left = 83
     Top = 31
     Width = 5
-    Height = 714
+    Height = 497
     AutoSnap = False
     Beveled = True
     MinSize = 1
@@ -77,7 +77,6 @@ object frmExodus: TfrmExodus
         Top = 0
         Hint = 'Connect'
         Caption = 'Connect'
-        Enabled = False
         ImageIndex = 80
         OnClick = mnuFile_ConnectClick
       end
@@ -178,7 +177,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 83
-    Height = 714
+    Height = 497
     Align = alLeft
     AutoSize = True
     BevelOuter = bvNone
@@ -186,23 +185,25 @@ object frmExodus: TfrmExodus
     UseDockManager = False
     TabOrder = 1
     OnDockDrop = FormDockDrop
+    ExplicitHeight = 714
   end
   object pnlDock: TPanel
     Left = 88
     Top = 31
     Width = 229
-    Height = 714
+    Height = 497
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
     Caption = 'pnlDock'
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 714
     object Tabs: TTntPageControl
       Left = 0
       Top = 0
       Width = 229
-      Height = 714
+      Height = 497
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -227,6 +228,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 714
     end
   end
   object MainMenu1: TTntMainMenu
