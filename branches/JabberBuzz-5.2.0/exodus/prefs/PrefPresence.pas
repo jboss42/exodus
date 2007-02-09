@@ -227,7 +227,9 @@ begin
   idx := -1;
   for i := 0 to _pres_list.Count - 1 do
     begin
-      if (TJabberCustomPres(_pres_list[i]).hotkey = key) and (i <> lstCustomPres.ItemIndex) then begin
+      if (TJabberCustomPres(_pres_list[i]).hotkey = key) and
+         (i <> lstCustomPres.ItemIndex) and
+         (TJabberCustomPres(_pres_list[i]).hotkey <> '') then begin
           Result := true;
           idx := i;
           exit;
@@ -260,7 +262,7 @@ var
     cp: TJabberCustomPres;
 begin
     // delete the current pres
-    if (lstCustomPres.ItemIndex > 0) then begin
+    if (lstCustomPres.ItemIndex >= 0) then begin
       cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
       _pres_list.Remove(cp);
       MainSession.Prefs.removePresence(cp);
