@@ -270,8 +270,9 @@ var
 begin
     cacheIcons();
 
-    setupOfflineGrp();
     setupUnfiledGrp();
+    if (MainSession.Prefs.getBool('roster_offline_group')) then
+        setupOfflineGrp();
 
     js := TJabberSession(_js);
     f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 600);
