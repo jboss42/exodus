@@ -3,8 +3,8 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 528
-  ClientWidth = 317
+  ClientHeight = 511
+  ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -29,24 +29,10 @@ object frmExodus: TfrmExodus
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object splitRoster: TSplitter
-    Left = 83
-    Top = 31
-    Width = 5
-    Height = 497
-    AutoSnap = False
-    Beveled = True
-    MinSize = 1
-    ResizeStyle = rsUpdate
-    OnMoved = splitRosterMoved
-    ExplicitLeft = 80
-    ExplicitTop = 33
-    ExplicitHeight = 394
-  end
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 317
+    Width = 272
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -55,7 +41,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 313
+        Width = 268
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -173,37 +159,42 @@ object frmExodus: TfrmExodus
       end
     end
   end
-  object pnlRoster: TPanel
+  object Panel1: TPanel
     Left = 0
     Top = 31
-    Width = 83
-    Height = 497
-    Align = alLeft
-    AutoSize = True
-    BevelOuter = bvNone
-    BorderWidth = 1
-    UseDockManager = False
-    TabOrder = 1
-    OnDockDrop = FormDockDrop
-    ExplicitHeight = 714
-  end
-  object pnlDock: TPanel
-    Left = 88
-    Top = 31
-    Width = 229
-    Height = 497
+    Width = 272
+    Height = 480
     Align = alClient
-    AutoSize = True
-    BevelOuter = bvNone
-    Caption = 'pnlDock'
-    TabOrder = 2
-    Visible = False
-    ExplicitHeight = 714
+    Caption = 'Panel1'
+    TabOrder = 1
+    object splitRoster: TSplitter
+      Left = 170
+      Top = 1
+      Width = 5
+      Height = 478
+      AutoSnap = False
+      Beveled = True
+      MinSize = 1
+      ResizeStyle = rsUpdate
+      OnMoved = splitRosterMoved
+    end
+    object pnlRoster: TPanel
+      Left = 1
+      Top = 1
+      Width = 169
+      Height = 478
+      Align = alLeft
+      BevelOuter = bvNone
+      BorderWidth = 1
+      UseDockManager = False
+      TabOrder = 0
+      OnDockDrop = FormDockDrop
+    end
     object Tabs: TTntPageControl
-      Left = 0
-      Top = 0
-      Width = 229
-      Height = 497
+      Left = 175
+      Top = 1
+      Width = 96
+      Height = 478
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -220,7 +211,7 @@ object frmExodus: TfrmExodus
       ParentFont = False
       PopupMenu = popTabs
       RaggedRight = True
-      TabOrder = 0
+      TabOrder = 1
       OnChange = TabsChange
       OnContextPopup = TabsContextPopup
       OnDockDrop = TabsDockDrop
@@ -228,7 +219,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 714
     end
   end
   object MainMenu1: TTntMainMenu

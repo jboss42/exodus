@@ -165,8 +165,6 @@ type
     btnBrowser: TToolButton;
     btnFind: TToolButton;
     timReconnect: TTimer;
-    pnlRoster: TPanel;
-    splitRoster: TSplitter;
     timTrayAlert: TTimer;
     XMPPAction: TDdeServerConv;
     Resolver: TIdDNSResolver;
@@ -249,8 +247,6 @@ type
     mnuPluginOpts: TTntMenuItem;
     N15: TTntMenuItem;
     bigImages: TImageList;
-    pnlDock: TPanel;
-    Tabs: TTntPageControl;
     mnuChatToolbar: TTntMenuItem;
     File1: TTntMenuItem;
     People: TTntMenuItem;
@@ -343,6 +339,10 @@ type
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
     mnuWindows_View_ShowDebugXML: TTntMenuItem;
+    Panel1: TPanel;
+    pnlRoster: TPanel;
+    splitRoster: TSplitter;
+    Tabs: TTntPageControl;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -2435,7 +2435,7 @@ end;
 
 procedure TfrmExodus.splitRosterMoved(Sender: TObject);
 begin
-    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
+//    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
         mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
@@ -4407,7 +4407,6 @@ outputdebugmsg('TfrmExodus.TabsUnDock');
     // check to see if the tab is a frmDockable
     Allow := true;
     if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
-//        Self.FloatDocked(TfrmDockable(Client));
         CloseDocked(TfrmDockable(Client));
         TfrmDockable(Client).Docked := false;
         TfrmDockable(Client).OnFloat();
@@ -4651,34 +4650,18 @@ var
   mon: TMonitor;
   ratioRoster: real;
 begin
-    saveRosterDockWidths();
     if (DockState <> dsDock) then begin
+        saveRosterDockWidths();
         _noMoveCheck := true;
         //this is a mess. To get splitter working with the correct control
         //we need to hide/de-align/set their relative positions/size them and show them
+        pnlRoster.align := alNone;
+        splitRoster.align := alNone;
+        Tabs.align := alNone;
+
         splitRoster.Visible := false; //hide this first or will expand and throw widths off
         pnlRoster.Visible := false;
-        pnlDock.Visible := false;
-
-        pnlRoster.Align := alNone;
-        splitRoster.Align := alNone;
-        pnlDock.Align := alNone;
-
-        pnlRoster.Left := 0;
-        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
-        pnlDock.Left := pnlRoster.BoundsRect.Right + 4;
-
-        pnlRoster.Align := alLeft;
-        pnlRoster.Visible := true;
-        splitRoster.Align := alLeft;
-        splitRoster.Width := 3;
-        splitRoster.Visible := true;
-        pnlDock.Align := alClient;
-        pnlDock.Visible := true;
-
-        //roster autosizing is neccessary to get splitter aligned with the
-        //correct control. JJF doesn't know why though...
-        pnlRoster.autoSize := false;
+        Tabs.Visible := false;
 
         //Obtain the width of the monitor
         //If we exceed the width of the monitor,
@@ -4694,7 +4677,16 @@ begin
             pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         end;
 
-//        pnlRoster.autoSize := true;
+        pnlRoster.Left := 0;
+        pnlRoster.Align := alLeft;
+        pnlRoster.Visible := true;
+        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
+        splitRoster.Align := alLeft;
+        splitRoster.Visible := true;
+        Tabs.Left := pnlRoster.BoundsRect.Right + 4;
+        Tabs.Align := alClient;
+        Tabs.Visible := true;
+
         _noMoveCheck := false;
         _currDockState := dsDock;
         Self.DockSite := false;
@@ -4710,15 +4702,12 @@ begin
     //if tabs were being shown, save tab size
     saveRosterDockWidths();
     if (DockState <> dsRosterOnly) then begin
-        splitRoster.Visible := false; //hide first or will expand and throw widsths off
-  //      pnlRoster.Visible := false;
-        pnlDock.Visible := false;
+        Tabs.Visible := false;
+        pnlRoster.Align := alClient;
+        splitRoster.Visible := false;
         _noMoveCheck := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         _noMoveCheck := false;
-//        pnlRoster.Align := alClient;
-//        pnlRoster.Visible := true;
-
         _currDockState := dsRosterOnly;
         Self.DockSite := true;
         Tabs.DockSite := false;
@@ -4736,7 +4725,7 @@ begin
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
     else if (DockState = dsDock) then begin
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
-        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, pnlDock.Width);
+        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, Tabs.Width);
     end;
 end;
 
