@@ -9,18 +9,18 @@ inherited frmPrefAway: TfrmPrefAway
   ExplicitHeight = 263
   PixelsPerInch = 96
   TextHeight = 13
-  object Label2: TTntLabel [0]
+  object lblAwayTime: TTntLabel [0]
     Left = 8
-    Top = 121
+    Top = 125
     Width = 213
-    Height = 13
+    Height = 23
     Caption = 'Minutes to wait before setting status to Away:'
   end
-  object Label3: TTntLabel [1]
+  object lblXATime: TTntLabel [1]
     Left = 8
-    Top = 145
+    Top = 149
     Width = 201
-    Height = 13
+    Height = 23
     Caption = 'Minutes to wait before setting status to XA:'
   end
   object lblAwayStatus: TTntLabel [2]
@@ -32,14 +32,14 @@ inherited frmPrefAway: TfrmPrefAway
   end
   object lblXAStatus: TTntLabel [3]
     Left = 8
-    Top = 225
+    Top = 230
     Width = 50
     Height = 13
     Caption = 'XA Status:'
   end
-  object TntLabel1: TTntLabel [4]
+  object lblDisconnectTime: TTntLabel [4]
     Left = 8
-    Top = 169
+    Top = 173
     Width = 178
     Height = 13
     Caption = 'Minutes to wait before Disconnecting:'
