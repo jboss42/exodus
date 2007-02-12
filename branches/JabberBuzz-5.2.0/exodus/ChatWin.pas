@@ -1254,7 +1254,7 @@ begin
         else
             ts := '';
 
-        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt, ts);
+        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts);
     end;
 end;
 
