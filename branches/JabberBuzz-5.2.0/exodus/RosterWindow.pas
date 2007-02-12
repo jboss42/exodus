@@ -3202,7 +3202,12 @@ begin
         end;
     end
     else if (lstProfiles.ItemIndex >= 0) then
-        DoLogin(lstProfiles.ItemIndex);
+        // Item is actively selected OR we have a "last logged in"
+        DoLogin(lstProfiles.ItemIndex)
+    else if (lstProfiles.Items.Count > 0) then
+        // Do NOT have an actively selected item OR a "last logged in"
+        // BUT we do have an item (at least default). So, try item 0
+        DoLogin(0);  
 end;
 
 {---------------------------------------}
