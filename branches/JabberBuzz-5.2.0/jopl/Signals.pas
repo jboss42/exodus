@@ -398,12 +398,23 @@ begin
         Result := false;
     end
     else begin
-        l.classname := TObject(l.callback.Data).ClassName;
-        l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
+        try
+            l.classname := TObject(l.callback.Data).ClassName;
+            l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
 
-        Self.AddObject(event, l);
-        if (Dispatcher <> nil) then
-            Dispatcher.AddListenerInfo(l.cb_id, Self, l);
+            Self.AddObject(event, l);
+            if (Dispatcher <> nil) then
+                Dispatcher.AddListenerInfo(l.cb_id, Self, l);
+        except
+            // It is possible in some situations to get a addListener
+            // call processed after the callback is no longer valid.
+            // This happens if the object the callback is in is distroyed
+            // before the Add listener queue is processed.
+            // An example would be an IQ that returns with a type=error
+            // before the /session/disconnected event listener has
+            // been registered for the IQ.
+            // Try-Catching here to prevent a crash when this happens.
+        end;
         Result := true;
     end;
 end;
