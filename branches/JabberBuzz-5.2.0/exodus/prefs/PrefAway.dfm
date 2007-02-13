@@ -13,14 +13,14 @@ inherited frmPrefAway: TfrmPrefAway
     Left = 8
     Top = 125
     Width = 213
-    Height = 23
+    Height = 13
     Caption = 'Minutes to wait before setting status to Away:'
   end
   object lblXATime: TTntLabel [1]
     Left = 8
     Top = 149
     Width = 201
-    Height = 23
+    Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
   object lblAwayStatus: TTntLabel [2]
@@ -106,7 +106,7 @@ inherited frmPrefAway: TfrmPrefAway
     Top = 81
     Width = 273
     Height = 17
-    Caption = 'Reduce priority to 0 during auto-away.'
+    Caption = 'Reduce priority to 0 during Auto-Away'
     TabOrder = 6
   end
   object chkAutoXA: TTntCheckBox
