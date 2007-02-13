@@ -163,6 +163,13 @@ begin
         exit;
     end;
 
+   if ((MainSession.Prefs.getBool('esc_close')) and (Ord(key) = 27)) then begin
+      if (Self.Parent <> nil) then
+        if (Self.Parent.Parent <> nil) then
+          SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
+          exit;
+   end;
+
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
