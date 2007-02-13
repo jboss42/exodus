@@ -332,7 +332,7 @@ begin
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
-        kw_expr := CreateKeywordsExpr(); //Try to create/compile Keyword expression
+        kw_expr := CreateKeywordsExpr(true); //Try to create/compile Keyword expression
         FreeAndNil(kw_expr);
 
         //Blocked JIDs
