@@ -150,16 +150,21 @@ begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
         temptag := getXMLPref('locale');
-        tmps := temptag.GetAttribute('value');
-        if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
-            lblLang.Visible := false;
-            cboLocale.Visible := false;
-            lblLangScan.Visible := false;
-        end;
-        if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
-            lblLang.Enabled := false;
-            cboLocale.Enabled := false;
-            lblLangScan.Enabled := false;
+        if (temptag = nil) then begin
+            tmps := 'Default';
+        end
+        else begin
+            tmps := temptag.GetAttribute('value');
+            if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
+                lblLang.Visible := false;
+                cboLocale.Visible := false;
+                lblLangScan.Visible := false;
+            end;
+            if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
+                lblLang.Enabled := false;
+                cboLocale.Enabled := false;
+                lblLangScan.Enabled := false;
+            end;
         end;
 
         // stay compatible with old prefs
