@@ -59,7 +59,7 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 22
     DefaultColorColor = clBlue
     Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    Style = [cbStandardColors, cbExtendedColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
     TabOrder = 2
@@ -72,7 +72,7 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 22
     DefaultColorColor = clBlue
     Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    Style = [cbStandardColors, cbExtendedColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
     TabOrder = 3
@@ -188,7 +188,7 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 511
     Caption = 'Fonts, Colors'
     TabOrder = 5
-    ExplicitWidth = 464
+    ExplicitWidth = 511
   end
   object colorRoster: TTntTreeView
     Left = 8
