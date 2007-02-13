@@ -4,7 +4,7 @@ object frmPrefs: TfrmPrefs
   BorderWidth = 1
   Caption = 'Settings'
   ClientHeight = 477
-  ClientWidth = 456
+  ClientWidth = 603
   Color = clBtnFace
   DefaultMonitor = dmMainForm
   Font.Charset = ANSI_CHARSET
@@ -8178,7 +8178,7 @@ object frmPrefs: TfrmPrefs
   object PageControl1: TTntPageControl
     Left = 99
     Top = 0
-    Width = 357
+    Width = 504
     Height = 440
     ActivePage = tbsKeywords
     Align = alClient
@@ -8187,30 +8187,34 @@ object frmPrefs: TfrmPrefs
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
+    ExplicitWidth = 357
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       OnMouseMove = OffBoxMouseMove
+      ExplicitWidth = 349
       object memKeywords: TTntMemo
         Left = 0
         Top = 114
-        Width = 349
+        Width = 496
         Height = 294
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 349
       end
       object Panel2: TPanel
         Left = 0
         Top = 24
-        Width = 349
+        Width = 496
         Height = 90
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 349
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 349
+          Width = 496
           Height = 28
           Align = alTop
           Caption = 
@@ -8231,7 +8235,7 @@ object frmPrefs: TfrmPrefs
       object pnlKeyword: TTntPanel
         Left = 0
         Top = 0
-        Width = 349
+        Width = 496
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
@@ -8239,6 +8243,7 @@ object frmPrefs: TfrmPrefs
         Color = clHighlight
         ParentBackground = False
         TabOrder = 2
+        ExplicitWidth = 349
       end
     end
     object tbsBlockList: TTntTabSheet
@@ -8300,28 +8305,31 @@ object frmPrefs: TfrmPrefs
   object Panel1: TPanel
     Left = 0
     Top = 440
-    Width = 456
+    Width = 603
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
+    ExplicitWidth = 456
     object Bevel1: TBevel
       Left = 1
       Top = 1
-      Width = 454
+      Width = 601
       Height = 5
       Align = alTop
       Shape = bsTopLine
+      ExplicitWidth = 454
     end
     object Panel3: TPanel
-      Left = 214
+      Left = 361
       Top = 6
       Width = 241
       Height = 30
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitLeft = 214
       object btnOK: TTntButton
         Left = 4
         Top = 1
