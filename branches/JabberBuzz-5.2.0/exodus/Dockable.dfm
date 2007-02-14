@@ -3,6 +3,7 @@ inherited frmDockable: TfrmDockable
   ClientWidth = 204
   DragKind = dkDock
   DragMode = dmAutomatic
+  OnClose = FormClose
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown

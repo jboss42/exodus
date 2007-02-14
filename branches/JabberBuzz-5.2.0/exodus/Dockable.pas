@@ -84,15 +84,18 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnCloseDockClick(Sender: TObject);
     procedure btnDockToggleClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
     _normalImageIndex: integer;//image shown when not notifying
     _notifyImageIndex: integer;//image shown when notifying
+    _prefs_callback_id: integer; //ID for prefs events
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
+    procedure prefsCallback(event: string; tag: TXMLTag);
   protected
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
@@ -226,6 +229,7 @@ begin
     _docked := false;
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+    _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
     inherited;
 end;
 
@@ -298,6 +302,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmDockable.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+    MainSession.UnRegisterCallback(_prefs_callback_id);
+end;
+
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
@@ -449,6 +459,12 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
+end;
+
+procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/prefs') then
+        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
 end;
 
 end.
