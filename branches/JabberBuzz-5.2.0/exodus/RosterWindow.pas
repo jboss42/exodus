@@ -2971,9 +2971,14 @@ begin
             parent := TTntTreeNode(treeRoster.Selections[i]).Parent;
             continue;
           end;
-          if (treeRoster.Selections[i].Parent <> parent) then begin
+
+          if (treeRoster.Selections[i].Parent <> parent) then
               break;
-          end;
+          //If there are any group nodes, will have to use group removal
+          //dialogs for each selected group.
+          if (getNodeType(TTntTreeNode(treeRoster.Selections[i])) <> node_ritem) then 
+              break;
+
         end;
         //If we reached end of loop, we have the same parent.
         //We will remove items as a group.
