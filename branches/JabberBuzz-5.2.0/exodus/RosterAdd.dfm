@@ -41,17 +41,6 @@ object frmAdd: TfrmAdd
     Height = 13
     Caption = 'Group:'
   end
-  object lblAddGrp: TTntLabel
-    Left = 94
-    Top = 125
-    Width = 83
-    Height = 13
-    Cursor = crHandPoint
-    Caption = 'Add a new Group'
-    Color = clBtnFace
-    ParentColor = False
-    OnClick = lblAddGrpClick
-  end
   object Label4: TTntLabel
     Left = 8
     Top = 9

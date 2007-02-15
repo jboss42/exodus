@@ -59,7 +59,6 @@ type
     Label3: TTntLabel;
     cboGroup: TTntComboBox;
     frameButtons1: TframeButtons;
-    lblAddGrp: TTntLabel;
     cboType: TTntComboBox;
     Label4: TTntLabel;
     lblGateway: TTntLabel;
@@ -305,7 +304,6 @@ var
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    URLLabel(lblAddGrp);
     MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
