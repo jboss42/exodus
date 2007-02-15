@@ -93,6 +93,7 @@ type
     imgHotkeys: TImage;
     imgPlugins: TImage;
     lblHotkeys: TTntLabel;
+    procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -270,6 +271,17 @@ begin
    end;
 end;
 
+
+procedure TfrmPrefs.memKeywordsKeyPress(Sender: TObject; var Key: Char);
+begin
+    if ((Key = '(') or (Key = ')') or (Key = '[') or
+        (Key = ']') or (Key = '*') or (Key = '+') or
+        (Key = '\') or (Key = '?') or (Key = '.') or
+        (Key = '"')) then  begin
+           MessageDlgW(_('The following characters should not be used: ( ) [ ] * + \ ?.'), mtError, [mbOK], 0);
+           Key := #0;
+         end;
+end;
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;

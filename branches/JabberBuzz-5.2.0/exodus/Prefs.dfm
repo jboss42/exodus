@@ -8187,12 +8187,10 @@ object frmPrefs: TfrmPrefs
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
-    ExplicitWidth = 357
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       OnMouseMove = OffBoxMouseMove
-      ExplicitWidth = 349
       object memKeywords: TTntMemo
         Left = 0
         Top = 114
@@ -8200,7 +8198,10 @@ object frmPrefs: TfrmPrefs
         Height = 294
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 349
+        OnKeyDown = memKeywordsKeyDown
+        OnKeyPress = memKeywordsKeyPress
+        ExplicitLeft = 2
+        ExplicitTop = 113
       end
       object Panel2: TPanel
         Left = 0
@@ -8210,7 +8211,6 @@ object frmPrefs: TfrmPrefs
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 349
         object Label1: TTntLabel
           Left = 0
           Top = 0
@@ -8221,7 +8221,7 @@ object frmPrefs: TfrmPrefs
             'You can be notified when a keyword appears in conference room. E' +
             'nter in the keywords that you want to look for in messages.'
           WordWrap = True
-          ExplicitWidth = 326
+          ExplicitWidth = 477
         end
         object chkRegex: TTntCheckBox
           Left = 5
@@ -8243,20 +8243,15 @@ object frmPrefs: TfrmPrefs
         Color = clHighlight
         ParentBackground = False
         TabOrder = 2
-        ExplicitWidth = 349
       end
     end
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
-        Width = 349
+        Width = 496
         Height = 319
         Align = alClient
         TabOrder = 0
@@ -8264,7 +8259,7 @@ object frmPrefs: TfrmPrefs
       object pnlBlocked: TTntPanel
         Left = 0
         Top = 0
-        Width = 349
+        Width = 496
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
@@ -8282,7 +8277,7 @@ object frmPrefs: TfrmPrefs
       object Panel4: TPanel
         Left = 0
         Top = 24
-        Width = 349
+        Width = 496
         Height = 65
         Align = alTop
         BevelOuter = bvNone
@@ -8290,14 +8285,15 @@ object frmPrefs: TfrmPrefs
         object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
-          Width = 320
-          Height = 42
+          Width = 496
+          Height = 28
           Align = alTop
           Caption = 
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
+          ExplicitWidth = 495
         end
       end
     end
@@ -8311,7 +8307,6 @@ object frmPrefs: TfrmPrefs
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitWidth = 456
     object Bevel1: TBevel
       Left = 1
       Top = 1
@@ -8329,7 +8324,6 @@ object frmPrefs: TfrmPrefs
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 214
       object btnOK: TTntButton
         Left = 4
         Top = 1
