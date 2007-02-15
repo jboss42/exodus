@@ -26,12 +26,12 @@ object frmGrpRemove: TfrmGrpRemove
     TabOrder = 0
     TabStop = True
     ExplicitTop = 138
-    ExplicitWidth = 306
+    ExplicitWidth = 319
     ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 319
       Height = 34
-      ExplicitWidth = 306
+      ExplicitWidth = 319
       ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 319
@@ -40,7 +40,7 @@ object frmGrpRemove: TfrmGrpRemove
       inherited Panel1: TPanel
         Left = 159
         Height = 29
-        ExplicitLeft = 146
+        ExplicitLeft = 159
         ExplicitHeight = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -60,6 +60,7 @@ object frmGrpRemove: TfrmGrpRemove
     Checked = True
     TabOrder = 1
     TabStop = True
+    OnClick = optClick
   end
   object cboNewGroup: TTntComboBox
     Left = 24
@@ -78,10 +79,11 @@ object frmGrpRemove: TfrmGrpRemove
     Height = 17
     Caption = 'Remove all contacts in this group:'
     TabOrder = 3
+    OnClick = optClick
   end
   object chkUnsub: TTntCheckBox
     Left = 24
-    Top = 88
+    Top = 89
     Width = 233
     Height = 17
     Caption = 'Remove these contacts from my contact list.'
