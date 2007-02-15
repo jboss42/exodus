@@ -94,7 +94,7 @@ var
 begin
 
     // Don't show toast while auto away
-    if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
+    //if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
 
     if singleToast = nil then begin
         // create a new instance

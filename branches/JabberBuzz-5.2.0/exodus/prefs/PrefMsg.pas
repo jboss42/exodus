@@ -41,9 +41,10 @@ type
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
     chkQueueDNDChats: TTntCheckBox;
-    chkQueueOffline: TTntCheckBox;
+    chkQueueNotAvail: TTntCheckBox;
     chkChatAvatars: TTntCheckBox;
     chkShowPriority: TTntCheckBox;
+    chkQueueOffline: TTntCheckBox;
     procedure btnSpoolBrowseClick(Sender: TObject);
   private
     { Private declarations }
@@ -66,6 +67,19 @@ procedure TfrmPrefMsg.LoadPrefs();
 begin
     inherited;
     chkShowPriority.Visible := MainSession.Prefs.getBool('branding_priority_notifications');
+    if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = true) then begin
+       chkQueueDNDChats.Visible  := false;
+       chkQueueOffline.Visible := false;
+       chkQueueNotAvail.Visible := true;
+       chkQueueNotAvail.Top :=  chkQueueDNDChats.Top;
+       chkQueueNotAvail.Left :=  chkQueueDNDChats.Left;
+    end
+    else begin
+       chkQueueDNDChats.Visible  := true;
+       chkQueueOffline.Visible := true;
+       chkQueueNotAvail.Visible := false;
+    end;
+
 end;
 
 procedure TfrmPrefMsg.SavePrefs();

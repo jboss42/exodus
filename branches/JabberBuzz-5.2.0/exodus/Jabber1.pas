@@ -4083,7 +4083,10 @@ begin
     // set us to away
     DebugMsg(_(sSetAutoAway));
     Application.ProcessMessages;
-    MainSession.Pause();
+    if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
+      MainSession.Pause();
+    end;
+
     if ((MainSession.Show = 'away') or
         (MainSession.Show = 'xa') or
         (MainSession.Show = 'dnd')) then begin
@@ -4152,7 +4155,9 @@ begin
     if (_valid_aa) then begin
         timAutoAway.Enabled := true;
     end;
-    MainSession.Play();
+    if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
+      MainSession.Play();
+    end;
 end;
 
 {*******************************************************************************

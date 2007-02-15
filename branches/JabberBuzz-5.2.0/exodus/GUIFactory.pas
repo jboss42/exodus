@@ -133,6 +133,10 @@ begin
             // queue the chat window. Event now owned by msg queue, don't free
             RenderEvent(CreateJabberEvent(tag));
         end
+        else if (MainSession.Prefs.getBool('queue_not_avail') and (MainSession.Show <> '')) then begin
+            // queue the chat window. Event now owned by msg queue, don't free
+            RenderEvent(CreateJabberEvent(tag));
+        end
         else begin
             // New Chat Window
             tmp_jid := TJabberID.Create(tag.getAttribute('from'));

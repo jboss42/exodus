@@ -156,8 +156,9 @@
     <msg_treatment value="0" control="cboMsgOptions">
       <control name="lblMsgOptions"/>
     </msg_treatment>
-    <queue_offline value="1" control="chkQueueOffline"/>
-    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
+	<queue_offline value="0" control="chkQueueOffline"/>
+	<queue_dnd_chats value="0" control="chkQueueDNDChats"/>
+	<queue_not_avail value="1" control="chkQueueNotAvail"/>
 	<chat_avatars value="0" control="chkChatAvatars"/>
 	<show_priority value="1" control="chkShowPriority"/>
 
@@ -396,7 +397,9 @@
 	<!-- indicates if priority notification feature should be used -->
 	<branding_priority_notifications value="1"></branding_priority_notifications>
   	<!-- indicates if nested subgroup feature should be available -->
-	<branding_nested_subgroup value="0"></branding_nested_subgroup>	
+	<branding_nested_subgroup value="0"></branding_nested_subgroup>
+	<!-- indicates if all messages should be queued to offline queue when I am not available -->
+	<branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
   </prefs>
 
   <!-- default custom presence stuff -->
