@@ -53,7 +53,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 18
     Enabled = False
     Max = 255
-    Min = 10
+    Min = 100
     PageSize = 15
     Frequency = 15
     Position = 255
@@ -71,7 +71,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     TabOrder = 3
     Text = '255'
-    Min = 10
+    Min = 100
     Max = 255
     OnChange = txtRosterAlphaChange
     DesignSize = (
@@ -100,7 +100,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 19
     Enabled = False
     Max = 255
-    Min = 10
+    Min = 100
     PageSize = 15
     Frequency = 15
     Position = 255
@@ -118,7 +118,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     TabOrder = 2
     Text = '255'
-    Min = 10
+    Min = 100
     Max = 255
     OnChange = txtToastAlphaChange
     DesignSize = (
