@@ -1965,6 +1965,8 @@ begin
             logmsg.Time := StrToDateTime(tag.GetFirstTag('time').Data);
             tmpjid := TJabberID.Create(logmsg.FromJID);
             if (tmpjid.getDisplayJID() = MainSession.BareJid) then begin
+                tmpjid.Free;  // Hack to get around problems with displayname and being logged in with multiple resources.
+                tmpjid := TJabberID.Create(MainSession.BareJid);
                 logmsg.isMe := true;
                 logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
             end

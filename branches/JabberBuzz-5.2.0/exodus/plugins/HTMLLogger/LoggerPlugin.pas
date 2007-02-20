@@ -79,6 +79,7 @@ type
     procedure _logMessage(log: IExodusLogMsg);
     procedure _showLog(jid: Widestring);
     procedure _clearLog(jid: Widestring);
+    function SetupFrameSet(base_fn, munged_name: Widestring): boolean;
 
   public
     procedure purgeLogs();
@@ -272,12 +273,17 @@ end;
 procedure THTMLLogger._logMessage(log: IExodusLogMsg);
 var
     buff: string;
+    dir: Widestring;
     fn: Widestring;
+    base_fn: Widestring;
+    date_fn: Widestring;
     header: boolean;
     rjid, j: TJabberID;
     ndate: TDateTime;
     fs: TFileStream;
     ritem: IExodusRosterItem;
+    tempstring: string;
+    jdatetime: TDateTime;
 begin
     // check the roster for the rjid, and bail if we aren't logging non-roster folk
     if (_roster) and (log.Direction = 'in') then begin
@@ -288,28 +294,71 @@ begin
     end;
 
     // prepare to log
-    fn := _path;
+    dir := _path;
+    jdatetime := JabberToDateTime(log.Timestamp);
 
     if (log.Direction = 'out') then
         j := TJabberID.Create(log.ToJid)
     else
         j := TJabberID.Create(log.FromJid);
 
-    if (Copy(fn, length(fn), 1) <> '\') then
-        fn := fn + '\';
+    if (Copy(dir, length(fn), 1) <> '\') then
+        dir := dir + '\';
 
-    if (not DirectoryExists(fn)) then begin
+    if (not DirectoryExists(dir)) then begin
         // mkdir
-        if CreateDir(fn) = false then begin
+        if CreateDir(dir) = false then begin
             MessageDlg(sBadLogDir, mtError, [mbOK], 0);
             exit;
         end;
     end;
 
-    // Munge the filename
-    fn := fn + MungeName(j.jid) + '.html';
+    base_fn := dir + MungeName(j.jid); // directory and jid
 
+    // Add framset file
+    if (not SetupFrameSet(base_fn, MungeName(j.jid))) then
+        exit; // will have already seen an error message
+
+    // Add to today's date_log
     try
+        date_fn := base_fn + '_dates.html';
+        if (FileExists(date_fn)) then begin
+            // Open stream
+            fs := TFileStream.Create(date_fn, fmOpenReadWrite, fmShareDenyNone);
+
+            // See if this date is already in the file
+            SetLength(buff, fs.Size);
+            fs.Read(Pointer(buff)^, fs.Size);
+            DateTimeToString(tempstring, 'yyyy/mm/dd', jdatetime);
+            if (Pos(tempstring, buff) = 0) then begin
+                // Date not in file yet
+                fs.Seek(0, soFromEnd);
+                DateTimeToString(tempstring, 'yyyymmdd', jDateTime);
+                tempstring := MungeName(j.jid) + '_' + tempstring + '.html';
+                buff := '<a target="log_frame" href="' + tempstring + '">';
+                DateTimeToString(tempstring, 'yyyy/mm/dd', jDateTime);
+                buff := buff + tempstring + '</a><br/>';
+                fs.Write(Pointer(buff)^, Length(buff));
+            end;
+            fs.Free();
+        end;
+    except
+        on e: Exception do begin
+            MessageDlg('Could not open log file: ' + date_fn, mtError, [mbOK], 0);
+            exit;
+        end;
+    end;
+
+    // add to today's log
+    try
+        // Munge the filename
+        fn := base_fn; // directory and jid
+        fn := fn + '_';
+        DateTimeToString(tempstring, 'yyyymmdd', jDateTime);
+        fn := fn + tempstring; // date
+        fn := fn + '.html'; // file extension
+
+        // Find/create and add to today's log
         if (FileExists(fn)) then begin
             fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
             ndate := FileDateToDateTime(FileGetDate(fs.Handle));
@@ -328,6 +377,16 @@ begin
             // Make sure to put a new conversation header
             header := true;
         end;
+
+        if (header) then begin
+            buff := '<p><font size=+1><b>New Conversation at: ' +
+                DateTimeToStr(jDateTime) + '</b></font><br />';
+            fs.Write(Pointer(buff)^, Length(buff));
+        end;
+
+        buff := _getMsgHTML(log);
+        fs.Write(Pointer(buff)^, Length(buff));
+        fs.Free();
     except
         on e: Exception do begin
             MessageDlg('Could not open log file: ' + fn, mtError, [mbOK], 0);
@@ -335,16 +394,89 @@ begin
         end;
     end;
 
-    if (header) then begin
-        buff := '<p><font size=+1><b>New Conversation at: ' +
-            DateTimeToStr(Now) + '</b></font><br />';
-        fs.Write(Pointer(buff)^, Length(buff));
+    j.Free();
+end;
+
+{---------------------------------------}
+function THTMLLogger.SetupFrameSet(base_fn, munged_name: WideString ):boolean;
+var
+    fs: TFileStream;
+    buff: string;
+    frameset_fn: Widestring;
+    dates_fn: Widestring;
+    oldlogexists: boolean;
+begin
+    Result := false;
+    frameset_fn := base_fn + '.html';
+    dates_fn := base_fn + '_dates.html';
+
+    // Frameset
+    try
+        if (FileExists(frameset_fn)) then begin
+            // File does exist, see if it is old or new log
+            // - THIS IS A TOTAL HACK! to get around old logs
+            fs := TFileStream.Create(frameset_fn, fmOpenReadWrite, fmShareDenyNone);
+            SetLength(buff, 1024); // we should know within first 1K bytes if this is old or new
+            fs.Read(Pointer(buff)^, 1024);
+            fs.Free();
+            if (Pos('name="log_frame"/></frameset>', buff) = 0) then begin
+                // didn't find this so, must be old log file (HACK)
+                if ( not RenameFile(frameset_fn, base_fn + '_old.html')) then begin
+                    MessageDlg('Could not rename old log file: ' + frameset_fn, mtError, [mbOK], 0);
+                    exit;
+                end;
+                oldlogexists := true;
+            end;
+        end;
+
+        if (not FileExists(frameset_fn)) then begin
+            // Frameset for this JID doesn't exist so we need to create one.
+            fs := TFileStream.Create(frameset_fn, fmCreate, fmShareDenyNone);
+
+            // put some UTF-8 header fu in here
+            buff := '<html><head>';
+            buff := buff + '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            buff := buff + '</head>';
+            fs.Write(Pointer(buff)^, Length(buff));
+            buff := '<frameset cols="20%,*"><frame src="';
+            buff := buff + munged_name + '_dates.html' + '" name="date_frame"/><frame src="';
+            buff := buff + '" name="log_frame"/></frameset></html>';
+            fs.Write(Pointer(buff)^, Length(buff));
+            fs.Free();
+        end;
+    except
+        on e: Exception do begin
+            MessageDlg('Could not open log file: ' + frameset_fn, mtError, [mbOK], 0);
+            exit;
+        end;
     end;
 
-    buff := _getMsgHTML(log);
-    fs.Write(Pointer(buff)^, Length(buff));
-    fs.Free();
-    j.Free();
+    // Dates
+    try
+        if (not FileExists(dates_fn)) then begin
+            // Frameset for this JID doesn't exist so we need to create one.
+            fs := TFileStream.Create(dates_fn, fmCreate, fmShareDenyNone);
+
+            // put some UTF-8 header fu in here
+            buff := '<html><head>';
+            buff := buff + '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            buff := buff + '</head>';
+            fs.Write(Pointer(buff)^, Length(buff));
+            buff := '<body>';
+            if (oldlogexists) then begin
+                buff := buff + '<a target="log_frame" href="' + munged_name + '_old.html">Old Logs</a><br/>';
+            end;
+            fs.Write(Pointer(buff)^, Length(buff));
+            fs.Free();
+        end;
+    except
+        on e: Exception do begin
+            MessageDlg('Could not open log file: ' + dates_fn, mtError, [mbOK], 0);
+            exit;
+        end;
+    end;
+
+    Result := true;
 end;
 
 {---------------------------------------}
