@@ -8198,10 +8198,7 @@ object frmPrefs: TfrmPrefs
         Height = 294
         Align = alClient
         TabOrder = 0
-        OnKeyDown = memKeywordsKeyDown
         OnKeyPress = memKeywordsKeyPress
-        ExplicitLeft = 2
-        ExplicitTop = 113
       end
       object Panel2: TPanel
         Left = 0
@@ -8248,6 +8245,10 @@ object frmPrefs: TfrmPrefs
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
@@ -8285,7 +8286,7 @@ object frmPrefs: TfrmPrefs
         object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
-          Width = 496
+          Width = 495
           Height = 28
           Align = alTop
           Caption = 
@@ -8293,7 +8294,6 @@ object frmPrefs: TfrmPrefs
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
-          ExplicitWidth = 495
         end
       end
     end
