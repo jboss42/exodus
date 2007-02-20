@@ -58,6 +58,7 @@ object frmExodus: TfrmExodus
       Images = ImageList2
       TabOrder = 0
       Transparent = True
+      Wrapable = False
       object btnConnect: TToolButton
         Left = 0
         Top = 0
