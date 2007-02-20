@@ -193,6 +193,7 @@ begin
     _online := 0;
     _full := name;
     _parts := TWidestringlist.Create();
+    _parts.CaseSensitive := true;
     _jids := TWidestringlist.Create();
 
     _grps := TWidestringlist.Create();

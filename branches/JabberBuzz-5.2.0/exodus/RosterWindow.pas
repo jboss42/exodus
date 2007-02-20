@@ -1436,6 +1436,7 @@ begin
     node_list := TWideStringlist(ritem.Data);
     if node_list = nil then begin
         node_list := TWideStringlist.Create;
+        node_list.CaseSensitive := true;
         ritem.Data := node_list;
     end;
 
