@@ -103,8 +103,14 @@ end;
 
 {---------------------------------------}
 procedure TfRTFMsgList.Clear();
+var
+ i: Integer;
 begin
     MsgList.Clear();
+    for i := 0 to MsgList.Lines.Count - 1 do begin
+         MsgList.Lines[i] := '';
+    end;
+
 end;
 
 {---------------------------------------}
