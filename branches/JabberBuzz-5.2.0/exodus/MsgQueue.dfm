@@ -1,11 +1,10 @@
 inherited frmMsgQueue: TfrmMsgQueue
   Left = 247
   Top = 194
-  Caption = 'Messages'
+  Caption = 'Message Queue'
   ClientHeight = 276
   ClientWidth = 446
   OldCreateOrder = True
-  OnClose = FormClose
   ExplicitWidth = 454
   ExplicitHeight = 310
   PixelsPerInch = 96
@@ -36,8 +35,6 @@ inherited frmMsgQueue: TfrmMsgQueue
     Align = alClient
     Caption = 'pnlMsgQueue'
     TabOrder = 0
-    ExplicitLeft = 133
-    ExplicitWidth = 313
     object Splitter1: TSplitter
       Left = 1
       Top = 96
@@ -83,7 +80,6 @@ inherited frmMsgQueue: TfrmMsgQueue
       OnDblClick = lstEventsDblClick
       OnEnter = lstEventsEnter
       OnKeyDown = lstEventsKeyDown
-      ExplicitWidth = 311
     end
     object txtMsg: TExRichEdit
       Left = 1

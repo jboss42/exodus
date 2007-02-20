@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 511
+  ClientHeight = 531
   ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
@@ -164,38 +164,41 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 272
-    Height = 480
+    Height = 500
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 1
+    ExplicitHeight = 480
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 478
+      Height = 498
       AutoSnap = False
       Beveled = True
       MinSize = 1
       ResizeStyle = rsUpdate
       OnMoved = splitRosterMoved
+      ExplicitHeight = 478
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
       Width = 169
-      Height = 478
+      Height = 498
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
+      ExplicitHeight = 478
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 96
-      Height = 478
+      Height = 498
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -220,6 +223,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 478
     end
   end
   object MainMenu1: TTntMainMenu
@@ -792,7 +796,7 @@ object frmExodus: TfrmExodus
           OnClick = mnuChatToolbarClick
         end
         object mnuWindows_View_ShowInstantMessages1: TTntMenuItem
-          Caption = 'Show Instant &Messages'
+          Caption = 'Show &Message Queue'
           OnClick = ShowEventsWindow1Click
         end
         object mnuWindows_View_ShowDebugXML: TTntMenuItem
