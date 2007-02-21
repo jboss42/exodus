@@ -2108,6 +2108,8 @@ begin
     btnRoom.Enabled := enable;
     btnFind.Enabled := enable;
     btnBrowser.Enabled := enable;
+    if (not enable) then // if all these other toolbar buttons are disabling, then send file should as well.
+        btnSendFile.Enabled := false;
 
     // Build the custom presence menus.
     if (enable) then begin
@@ -2297,6 +2299,9 @@ begin
             Tabs.ActivePage := tbsRoster;
             }
     end;
+
+    // This forces a tree refresh which de-selects the current node item.
+    btnSendFile.Enabled := false;
 end;
 
 {---------------------------------------}
