@@ -581,6 +581,9 @@ begin
         if (not isRegistered(com_name)) then begin
             //scan plugin directory and see if there is a lib with this object
             dir := MainSession.Prefs.getString('plugin_dir');
+            if (dir = '') then
+               dir := ExtractFilePath(Application.ExeName) + 'plugins';
+
             if (not scanPluginsForProgID(dir, com_name, dll)) then begin
                 errorStr := WideFormat(_(sPluginErrNoLib), [com_name]);
                 exit;
