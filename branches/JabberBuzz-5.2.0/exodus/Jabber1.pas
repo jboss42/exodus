@@ -1832,11 +1832,14 @@ begin
             rtries := MainSession.Prefs.getInt('recon_tries');
             if (rtries < 0) then rtries := 3;
 
-            if (_reconnect_tries < rtries) then begin
+            if (_reconnect_tries <= rtries) then begin
                 setupReconnect();
             end
-            else
+            else begin
                 DebugMsg('Attempted to reconnect too many times.');
+                PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+             end;
+
         end
         else begin
             _last_show := '';
