@@ -221,6 +221,9 @@ var
 begin
     // Change the plugin dir
     p := txtPluginDir.Text;
+    if (not DirectoryExists(p)) then
+        p := '';
+
     if (browsePath(p)) then begin
         if (p <> txtPluginDir.Text) then begin
             txtPluginDir.Text := p;
