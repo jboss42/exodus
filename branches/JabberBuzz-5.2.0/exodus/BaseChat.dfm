@@ -344,4 +344,9 @@ inherited frmBaseChat: TfrmBaseChat
       OnClick = Customize1Click
     end
   end
+  object AppEvents: TApplicationEvents
+    OnShortCut = AppEventsShortCut
+    Left = 104
+    Top = 120
+  end
 end
