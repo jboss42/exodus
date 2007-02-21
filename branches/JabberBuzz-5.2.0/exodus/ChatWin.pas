@@ -645,7 +645,7 @@ begin
         end;
     end;
 
-    ritem := MainSession.roster.Find(sjid);
+    ritem := MainSession.roster.Find(cjid);
     if (rItem <> nil) then begin
         mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
         C1.Enabled := ritem.IsNative;
@@ -1497,6 +1497,16 @@ begin
             DispString(ParseLastEvent(tag));
         end;
 
+    end
+    else if (tag <> nil) then begin
+        // Error type - IQ will delete self, must nil out the pointer.
+        ns := tag.Namespace(true);
+        if (ns = XMLNS_VERSION) then
+            _cur_ver := nil
+        else if (ns = XMLNS_TIME) then
+            _cur_time := nil
+        else if (ns = XMLNS_LAST) then
+            _cur_last := nil;
     end;
 end;
 
