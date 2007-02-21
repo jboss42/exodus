@@ -242,7 +242,8 @@ uses
   zlibpas in '..\jopl\png\zlibpas.pas',
   RT_XIMConversion in 'RT_XIMConversion.pas',
   ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
-  DisplayName in '..\jopl\DisplayName.pas';
+  DisplayName in '..\jopl\DisplayName.pas',
+  BrowseForFolderU in 'BrowseForFolderU.pas';
 
 {$R *.TLB}
 

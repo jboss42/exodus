@@ -70,7 +70,7 @@ implementation
 {$R *.dfm}
 uses
     ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,
-    GnuGetText, PathSelector, Registry, Session, PrefController;
+    GnuGetText, PathSelector, Registry, Session, PrefController, BrowseForFolderU;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -224,7 +224,8 @@ begin
     if (not DirectoryExists(p)) then
         p := '';
 
-    if (browsePath(p)) then begin
+    p := BrowseForFolder(_('Select Plugins Directory'), p);
+    if (p <> '') then begin
         if (p <> txtPluginDir.Text) then begin
             txtPluginDir.Text := p;
             scanPlugins();
