@@ -671,7 +671,7 @@ object frmExodus: TfrmExodus
           OnClick = mnuConferenceClick
         end
         object mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem
-          Caption = '&Search for Conferenece Room...'
+          Caption = '&Search for Conference Room...'
           OnClick = mnuSearchClick
         end
         object mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem
