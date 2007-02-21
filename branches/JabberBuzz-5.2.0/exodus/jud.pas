@@ -167,9 +167,32 @@ var
 function StartSearch(sjid: string): TfrmJUD;
 var
     f: TfrmJUD;
-    sl: TTntStrings;
+    stringlist: TTntStrings;
+    searchlist, gclist: TTntStrings;
     i: integer;
     j: TJabberID;
+    function notCommonList(list1, list2: TTntStrings): TTntStrings;
+    var
+        i,j: integer;
+        matchfound: boolean;
+        retval: TTntStrings;
+    begin
+        retval := TTntStringList.Create();
+        for i := 0 to list1.Count - 1 do begin
+            matchfound := false;
+            for j := 0 to list2.Count - 1 do begin
+                if (list2.Strings[j] = list1.Strings[i]) then begin
+                    // Found a match
+                    matchfound := true;
+                end;
+            end;
+
+            if (not matchfound) then begin
+                retval.Add(list1.Strings[i]);
+            end;
+        end;
+        Result := retval;
+    end;
 begin
     // Start a new search
     // create a new room
@@ -177,17 +200,29 @@ begin
 
     // populate the drop down box based on our entity cache
     f.cboJID.Items.Clear();
-    sl := TTntStringList.create();
-    jEntityCache.getByFeature(FEAT_SEARCH, sl);
+    searchlist := TTntStringList.create();
+    gclist := TTntStringList.create();
+    jEntityCache.getByFeature(FEAT_SEARCH, searchlist);
+
+    // makesure to not return gcs as part of our search
+    jEntityCache.getByFeature(FEAT_GROUPCHAT, gclist);
+
+    stringlist := notCommonList(searchlist, gclist);
+
+    searchlist.Clear();
+    searchlist.Free;
+    gclist.Clear();
+    gclist.Free();
+
     If (MainSession.Prefs.getBool('search_component_only')) then begin
-        for i := 0 to sl.Count -1 do begin
-            j := TJabberID.Create(sl[i]);
+        for i := 0 to stringlist.Count -1 do begin
+            j := TJabberID.Create(stringlist[i]);
             if (j.user = '') then
-                f.cboJID.Items.Add(sl[i]);
+                f.cboJID.Items.Add(stringlist[i]);
             j.Free();
         end;
     end
-    else  f.cboJID.Items.AddStrings(sl);
+    else  f.cboJID.Items.AddStrings(stringlist);
 
     f.reset();
     f.ShowDefault();

@@ -6,8 +6,9 @@ inherited frmJud: TfrmJud
   ClientWidth = 492
   KeyPreview = True
   OldCreateOrder = True
-  OnClose = FormClose
   OnResize = FormResize
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -49,8 +50,8 @@ inherited frmJud: TfrmJud
       OnEnter = TabSheet1Enter
       ExplicitLeft = 4
       ExplicitTop = 27
-      ExplicitWidth = 545
-      ExplicitHeight = 230
+      ExplicitWidth = 484
+      ExplicitHeight = 291
       object lblSelect: TTntLabel
         Left = 0
         Top = 0
@@ -59,7 +60,7 @@ inherited frmJud: TfrmJud
         Align = alTop
         Caption = 'Select the user database for the search agent to use:'
         WordWrap = True
-        ExplicitWidth = 365
+        ExplicitWidth = 251
       end
       object cboJID: TTntComboBox
         Left = 16
@@ -74,17 +75,18 @@ inherited frmJud: TfrmJud
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 545
       ExplicitHeight = 230
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 484
+        Width = 179
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
         WordWrap = True
-        ExplicitWidth = 179
       end
       object aniWait: TAnimate
         Left = 0
@@ -100,24 +102,23 @@ inherited frmJud: TfrmJud
     object TabFields: TTabSheet
       Caption = 'TabFields'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 545
       ExplicitHeight = 230
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 484
+        Width = 204
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
-        ExplicitWidth = 204
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitWidth = 545
-      ExplicitHeight = 230
       object Panel2: TPanel
         Left = 0
         Top = 232
@@ -127,8 +128,6 @@ inherited frmJud: TfrmJud
         BevelOuter = bvNone
         BorderWidth = 2
         TabOrder = 0
-        ExplicitTop = 171
-        ExplicitWidth = 545
         object Label3: TTntLabel
           Left = 2
           Top = 2
@@ -225,6 +224,8 @@ inherited frmJud: TfrmJud
     object TabXData: TTabSheet
       Caption = 'TabXData'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 545
       ExplicitHeight = 230
       inline xdataBox: TframeXData

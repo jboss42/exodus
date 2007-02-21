@@ -2749,7 +2749,7 @@ end;
 procedure TfrmExodus.mnuSearchClick(Sender: TObject);
 begin
     // Start a default search
-    StartSearch(jEntityCache.getFirstSearch());
+    StartSearch('');
 end;
 
 
