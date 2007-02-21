@@ -213,13 +213,17 @@ begin
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
+    hlStartPos := RichEdit.SelStart; // Done here because RTFSelText messes this up.
     RichEdit.RTFSelText := txt;
+
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
-        hlStartPos := RichEdit.SelStart;
         XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
         HighlightKeywords(RichEdit, hlStartPos);
         ximTag.Free();
+    end
+    else begin
+        HighlightKeywords(RichEdit, hlStartPos);
     end;
 
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
