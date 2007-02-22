@@ -705,7 +705,7 @@ object frmExodus: TfrmExodus
       Caption = '&Options'
       OnClick = OptionsClick
       object mnuOptions_Password: TTntMenuItem
-        Caption = '&Password'
+        Caption = 'P&assword'
         Enabled = False
         object mnuOptions_Password_ChangePassword: TTntMenuItem
           Caption = '&Change Password...'
