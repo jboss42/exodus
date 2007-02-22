@@ -1150,9 +1150,10 @@ end;
 {---------------------------------------}
 procedure TJabberSession.UnBlock(jid : TJabberID);
 var
-    i: integer;
+    i,j: integer;
     blockers: TWideStringList;
     block : TXMLTag;
+    c: TChatController;
 begin
     blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
@@ -1165,6 +1166,15 @@ begin
     block := TXMLTag.Create('unblock');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/unblock', block);
+    //Disable all open chat windows
+    with MainSession.ChatList do begin
+       for j := Count - 1 downto 0 do begin
+           c := TChatController(Objects[j]);
+           if (c <> nil) then
+             if (c.jid = jid.jid) then
+                c.EnableChat();
+       end;
+    end;
     block.Free();
 end;
 
@@ -1173,6 +1183,8 @@ procedure TJabberSession.Block(jid : TJabberID);
 var
     blockers: TWideStringList;
     block: TXMLTag;
+    j: Integer;
+    c: TChatController;
 begin
     blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
@@ -1184,6 +1196,15 @@ begin
     block := TXMLTag.Create('block');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
+    //Disable all open chat windows
+    with MainSession.ChatList do begin
+       for j := Count - 1 downto 0 do begin
+           c := TChatController(Objects[j]);
+           if (c <> nil) then
+             if (c.jid = jid.jid) then
+                c.DisableChat();
+       end;
+    end;
     block.Free();
 end;
 

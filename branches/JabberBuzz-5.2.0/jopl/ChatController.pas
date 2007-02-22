@@ -89,6 +89,7 @@ type
         procedure Release();
         procedure TimedRelease();
         procedure DisableChat();
+        procedure EnableChat();
         procedure RegisterSessionCB(event: widestring);
         procedure RegisterMsgCB();
         procedure RegisterSendMsgCB();
@@ -229,6 +230,15 @@ begin
     Self.unassignSendMsgEvent();
     Self.unassignEvent();
     StopTimer();
+end;
+
+procedure TChatController.EnableChat();
+begin
+    RegisterMsgCB();
+    RegisterSendMsgCB();
+    OnMessage :=  TfrmChat(_window).MessageEvent;
+    OnSendMessage :=  TfrmChat(_window).SendMessageEvent;
+    StartTimer();
 end;
 
 {---------------------------------------}
