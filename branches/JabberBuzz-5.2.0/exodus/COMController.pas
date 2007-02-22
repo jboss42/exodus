@@ -1865,6 +1865,7 @@ begin
     else
         MainSession.FireEvent(Event, x);
 
+    x.Free();
 end;
 
 {---------------------------------------}
