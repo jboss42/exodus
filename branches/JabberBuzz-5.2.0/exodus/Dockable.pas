@@ -296,7 +296,6 @@ begin
     inherited;
 
     if (Docked) then begin
-        OutputDebugMsg('TfrmDockable.gotActivate calling UpdateDocked: ImageIndex: ' + IntToStr(ImageIndex));
         GetDockManager().UpdateDocked(Self);
     end;
 end;
@@ -350,6 +349,11 @@ begin
         GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
+    //if ctrl d try to toggle dock state
+    else if ((Jabber1.getAllowedDockState() <> adsForbidden) and ([ssCtrl] = Shift)) and (Key=68) then begin
+      btnDockToggleClick(Self);
+      Key := 0;
+    end;
 end;
 
 function visibleButtonCount(bar: TToolBar): integer;
@@ -369,7 +373,7 @@ begin
     tbDockBar.Visible := true;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
-    btnDockToggle.Hint := _('Undock this tab');
+    btnDockToggle.Hint := _('Undock this tab (ctrl-d)');
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
     pnlDockTop.Visible := true;
 end;
@@ -379,7 +383,7 @@ begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
-    btnDockToggle.Hint := _('Dock this window');
+    btnDockToggle.Hint := _('Dock this window (ctrl-d)');
     //hide top panel if no toolbar buttons are showing and no subclass has
     //added a child component (pnlDockTop.ControlCount = 1 -> only toolbar)
     tbDockBar.Visible := (visibleButtonCount(tbDockbar) > 0);
