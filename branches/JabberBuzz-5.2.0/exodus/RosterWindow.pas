@@ -2395,14 +2395,7 @@ begin
                 (MainSession.Profile.ConnectionType = conn_normal);
             frmExodus.mnuPeople_Contacts_SendFile.Enabled := popSendFile.Enabled;
             frmExodus.btnSendFile.Enabled := popSendFile.Enabled;
-            if (room.room_list.Count > 0) then begin
-                popInvite.Enabled := (native);
-                popGrpInvite.Enabled := true;
-            end
-            else begin
-                popInvite.Enabled := false;
-                popGrpInvite.Enabled := false;
-            end;
+            popInvite.Enabled := native and (room.room_list.Count > 0);
 
             popPresence.Enabled := (e and (not me));
 //            popClientInfo.Enabled := true;
@@ -2479,6 +2472,7 @@ begin
         end;
 
         popGroupBlock.OnClick := popBlock.OnClick;
+        popGrpInvite.Enabled := (room.room_list.Count > 0);
 
         slist.Clear();
         slist.Free();

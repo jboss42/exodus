@@ -459,6 +459,7 @@ type
     procedure mnuWindows_LayoutClick(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
+    procedure mnuPeople_ConferenceClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -3690,6 +3691,12 @@ begin
     Prefs.StartPrefs(pref_fonts);
 end;
 
+procedure TfrmExodus.mnuPeople_ConferenceClick(Sender: TObject);
+begin
+  //invite to room should only be available if rooms are open.
+   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
+end;
+
 procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
 begin
     frmRosterWindow.popGrpInvite.Click();
@@ -4936,6 +4943,8 @@ begin
      mnuPeople_Contacts_SendMessage.Enabled := true;
      mnuPeople_Contacts_ViewHistory.Enabled := true;
    end;
+   //invite to room should only be available if rooms are open.
+   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 end;
 
 procedure TfrmExodus.RemoveMenuShortCut(value: integer);

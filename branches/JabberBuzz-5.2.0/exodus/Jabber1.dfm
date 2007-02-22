@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 551
+  ClientHeight = 571
   ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
@@ -164,15 +164,16 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 272
-    Height = 520
+    Height = 540
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 1
+    ExplicitHeight = 520
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 518
+      Height = 538
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -184,19 +185,20 @@ object frmExodus: TfrmExodus
       Left = 1
       Top = 1
       Width = 169
-      Height = 518
+      Height = 538
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
+      ExplicitHeight = 518
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 96
-      Height = 518
+      Height = 538
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -221,6 +223,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 518
     end
   end
   object MainMenu1: TTntMainMenu
@@ -659,6 +662,7 @@ object frmExodus: TfrmExodus
       end
       object mnuPeople_Conference: TTntMenuItem
         Caption = 'C&onference'
+        OnClick = mnuPeople_ConferenceClick
         object mnuPeople_Conference_InviteContacttoConference: TTntMenuItem
           Caption = '&Invite to Conference Room...'
           OnClick = mnuPeople_Conference_InviteContacttoConferenceClick
