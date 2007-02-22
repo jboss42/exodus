@@ -3313,7 +3313,11 @@ procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
   Node: TTreeNode);
 begin
     _change_node := TTnTTreeNode(Node);
-    frmExodus.ResetMenuItems(_change_node);
+    //if multiselected, make change_node null for now. disables menu items...
+    if (Self.treeRoster.SelectionCount <> 1) then
+      frmExodus.ResetMenuItems(nil)
+    else frmExodus.ResetMenuItems(_change_node);
+
     frmExodus.btnSendFile.Enabled := false;
     frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
     if (Node <> nil) then begin
