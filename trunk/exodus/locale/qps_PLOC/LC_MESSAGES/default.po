@@ -1,14 +1,14 @@
-# Pseudo-localization for testing purposes
-# Copyright (C) 2007 Joe Hildebrand
-# This file is distributed under the same license as the Exodus package.
-# FIRST AUTHOR <joe-exodus@cursive.net>, 2007.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2007-02-21 16:48\n"
-"PO-Revision-Date: 2007-02-21 16:48\n"
-"Last-Translator: Joe Hildebrand <joe-exodus@cursive.net>\n"
+"POT-Creation-Date: 2006-03-24 10:58\n"
+"PO-Revision-Date: 2006-03-24 10:58\n"
+"Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6830,7 +6830,7 @@ msgstr "Ĩŉşŧäľľįŉģ..."
 #: AutoUpdateStatus.pas:205
 #: WebGet.pas:94
 msgid "Error: %s"
-msgstr "Ēřřőř: %ş"
+msgstr "Ēřřőř: %s"
 
 #: Bookmark.pas:78
 msgid "Add a new bookmark"
@@ -6934,7 +6934,7 @@ msgstr "Ŧĥįş čĥäŧ ŵįŉđőŵ įş þūşƴ. ℭľőşę äŉƴŵäƴş
 
 #: ChatWin.pas:1481
 msgid "Chat Transcript: %s"
-msgstr "ℭĥäŧ Ŧřäŉşčřįpŧ: %ş"
+msgstr "ℭĥäŧ Ŧřäŉşčřįpŧ: %s"
 
 #. remove from list?
 #: COMController.pas:273
@@ -6945,19 +6945,19 @@ msgstr "Ŗęɱőνę ŧĥįş pľūģįŉ ƒřőɱ ŧĥę ľįşŧ őƒ pľūģ�
 
 #: COMController.pas:372
 msgid "Plugin could not be created. (%s)"
-msgstr "Ṕľūģįŉ čőūľđ ŉőŧ þę čřęäŧęđ. (%ş)"
+msgstr "Ṕľūģįŉ čőūľđ ŉőŧ þę čřęäŧęđ. (%s)"
 
 #: COMController.pas:382
 msgid "Plugin class does not support IExodusPlugin. "
 "(%s)"
 msgstr "Ṕľūģįŉ čľäşş đőęş ŉőŧ şūppőřŧ ĨĒχőđūşṔľūģįŉ. "
-"(%ş)"
+"(%s)"
 
 #: COMController.pas:394
 msgid "Plugin class could not be initialized. "
 "(%s)"
 msgstr "Ṕľūģįŉ čľäşş čőūľđ ŉőŧ þę įŉįŧįäľįžęđ. "
-"(%ş)"
+"(%s)"
 
 #: COMController.pas:416
 msgid "Plugin could not be initialized or configured."
@@ -7007,7 +7007,7 @@ msgstr "Ŧĥįş ĵäþþęř ęŉŧįŧƴ đőęş ŉőŧ şūppőřŧ řęɱő
 #: ConnDetails.pas:161
 #: ConnDetails.pas:582
 msgid "%s Details"
-msgstr "%ş Đęŧäįľş"
+msgstr "%s Đęŧäįľş"
 
 #: ConnDetails.pas:196
 msgid "The Jabber ID you entered (username@server/resource) is invalid. "
@@ -7082,7 +7082,7 @@ msgstr "Ŀőčäľ Ŧįɱę: "
 
 #: ExEvents.pas:287
 msgid "Ping Time: %s seconds."
-msgstr "Ṕįŉģ Ŧįɱę: %ş şęčőŉđş."
+msgstr "Ṕįŉģ Ŧįɱę: %s şęčőŉđş."
 
 #: ExEvents.pas:303
 #: ExEvents.pas:531
@@ -7150,7 +7150,7 @@ msgstr "Åŉ ęřřőř ĥäş őččūřřęđ. Ēχőđūş ŵįľľ äūŧő�
 #: ExResponders.pas:712
 #: ExResponders.pas:906
 msgid "%s query from: %s"
-msgstr "%ş qūęřƴ ƒřőɱ: %ş"
+msgstr "%s qūęřƴ ƒřőɱ: %s"
 
 #: ExResponders.pas:366
 msgid "Version"
@@ -7164,7 +7164,7 @@ msgstr "Ŀäşŧ"
 
 #: ExResponders.pas:501
 msgid "Accept authentication request from %s"
-msgstr "Åččępŧ äūŧĥęŉŧįčäŧįőŉ řęqūęşŧ ƒřőɱ %ş"
+msgstr "Åččępŧ äūŧĥęŉŧįčäŧįőŉ řęqūęşŧ ƒřőɱ %s"
 
 #: ExResponders.pas:502
 msgid "HTTP authentication"
@@ -7187,7 +7187,7 @@ msgstr "Ŵįŉşőčĸ2₂ įş řęqūįřęđ ƒőř ŧĥįş äppľįčäŧį
 #. -t           : show test menu
 #: ExSession.pas:241
 msgid "Invalid command line:%s"
-msgstr "Ĩŉνäľįđ čőɱɱäŉđ ľįŉę:%ş"
+msgstr "Ĩŉνäľįđ čőɱɱäŉđ ľįŉę:%s"
 
 #. show the help message
 #: ExSession.pas:275
@@ -7344,30 +7344,30 @@ msgstr " ūŉĸŉőŵŉ ľäşŧ řęşūľŧ: "
 #: ExUtils.pas:470
 msgid "%d day, "
 msgid_plural ""
-msgstr[0] "%đ đäƴ, "
+msgstr[0] "%d đäƴ, "
 msgstr[1] ""
 
 #: ExUtils.pas:471
 msgid "%d hour, "
 msgid_plural "foos"
-msgstr[0] "%đ ĥőūř, "
+msgstr[0] "%d ĥőūř, "
 msgstr[1] "ƒőőş"
 
 #: ExUtils.pas:472
 msgid "%d minute, "
 msgid_plural ""
-msgstr[0] "%đ ɱįŉūŧę, "
+msgstr[0] "%d ɱįŉūŧę, "
 msgstr[1] ""
 
 #: ExUtils.pas:473
 msgid "%d second."
 msgid_plural ""
-msgstr[0] "%đ şęčőŉđ."
+msgstr[0] "%d şęčőŉđ."
 msgstr[1] ""
 
 #: ExUtils.pas:611
 msgid "This message contains %d roster items."
-msgstr "Ŧĥįş ɱęşşäģę čőŉŧäįŉş %đ řőşŧęř įŧęɱş."
+msgstr "Ŧĥįş ɱęşşäģę čőŉŧäįŉş %d řőşŧęř įŧęɱş."
 
 #: ExUtils.pas:690
 #: ExUtils.pas:708
@@ -7404,7 +7404,7 @@ msgstr "Ēŉŧęř ŉęŵ ģřőūp ŉäɱę þęľőŵ. "
 msgid "To create a nested group a name like "
 "foo%sbar."
 msgstr "Ŧő čřęäŧę ä ŉęşŧęđ ģřőūp ä ŉäɱę ľįĸę "
-"ƒőő%şþäř."
+"ƒőő%sbar."
 
 #: ExUtils.pas:1022
 msgid "New Roster Group"
@@ -7434,36 +7434,36 @@ msgstr "Ēɱpŧƴ řęqūįřęđ ƒįęľđş"
 #: getOpt.pas:122
 msgid "%s: improper use of TGetOpts, one, some or more properties not "
 "initialized."
-msgstr "%ş: įɱpřőpęř ūşę őƒ ŦĞęŧØpŧş, őŉę, şőɱę őř ɱőřę přőpęřŧįęş ŉőŧ "
+msgstr "%s: įɱpřőpęř ūşę őƒ ŦĞęŧØpŧş, őŉę, şőɱę őř ɱőřę přőpęřŧįęş ŉőŧ "
 "įŉįŧįäľįžęđ."
 
 #. Programmer's name for it: SReqOptMissing
 #: getOpt.pas:123
 msgid "%s: a required option (-%s) is missing."
-msgstr "%ş: ä řęqūįřęđ őpŧįőŉ (-%ş) įş ɱįşşįŉģ."
+msgstr "%s: ä řęqūįřęđ őpŧįőŉ (-%s) įş ɱįşşįŉģ."
 
 #. Programmer's name for it: SOptNeedsArg
 #: getOpt.pas:124
 msgid "%s: Option %s requires an argument."
-msgstr "%ş: Øpŧįőŉ %ş řęqūįřęş äŉ äřģūɱęŉŧ."
+msgstr "%s: Øpŧįőŉ %s řęqūįřęş äŉ äřģūɱęŉŧ."
 
 #. Programmer's name for it: SOPtUnknown
 #: getOpt.pas:125
 msgid "%s: Unknown option %s."
-msgstr "%ş: Ůŉĸŉőŵŉ őpŧįőŉ %ş."
+msgstr "%s: Ůŉĸŉőŵŉ őpŧįőŉ %s."
 
 #. Programmer's name for it: SNoLongOpt
 #: getOpt.pas:126
 msgid "%s: long option format not supported."
-msgstr "%ş: ľőŉģ őpŧįőŉ ƒőřɱäŧ ŉőŧ şūppőřŧęđ."
+msgstr "%s: ľőŉģ őpŧįőŉ ƒőřɱäŧ ŉőŧ şūppőřŧęđ."
 
 #: GrpRemove.pas:76
 msgid "Remove %d contacts"
-msgstr "Ŗęɱőνę %đ čőŉŧäčŧş"
+msgstr "Ŗęɱőνę %d čőŉŧäčŧş"
 
 #: GrpRemove.pas:83
 msgid "Remove the %s group"
-msgstr "Ŗęɱőνę ŧĥę %ş ģřőūp"
+msgstr "Ŗęɱőνę ŧĥę %s ģřőūp"
 
 #: GUIFactory.pas:189
 msgid "This server does not advertise support for in-band registration. Try "
@@ -7494,7 +7494,7 @@ msgstr "Ŧĥę Ŗőőɱ Åđđřęşş ƴőū ęŉŧęřęđ įş įŉνäľįđ
 #. Send out invites.
 #: invite.pas:202
 msgid "You have been invited to the %s room."
-msgstr "Ÿőū ĥäνę þęęŉ įŉνįŧęđ ŧő ŧĥę %ş řőőɱ."
+msgstr "Ÿőū ĥäνę þęęŉ įŉνįŧęđ ŧő ŧĥę %s řőőɱ."
 
 #: invite.pas:203
 msgid "Conference Room:"
@@ -7668,7 +7668,7 @@ msgstr "Ńő Ŗęşūľŧş ŵęřę ƒőūŉđ."
 
 #: jud.pas:495
 msgid "%d items found."
-msgstr "%đ įŧęɱş ƒőūŉđ."
+msgstr "%d įŧęɱş ƒőūŉđ."
 
 #: MsgQueue.pas:167
 msgid "Exodus could not create or write to the spool directory specified in "
@@ -7686,7 +7686,7 @@ msgstr "Ŧĥę ƒįľę ƴőū şpęčįƒįęđ ŧő şŧőřę qūęūęđ ɱ�
 msgid "There was an error trying to write to the file: "
 "%s"
 msgstr "Ŧĥęřę ŵäş äŉ ęřřőř ŧřƴįŉģ ŧő ŵřįŧę ŧő ŧĥę ƒįľę: "
-"%ş"
+"%s"
 
 #: MsgRecv.pas:403
 msgid "Decline"
@@ -7704,7 +7704,7 @@ msgstr "Ŧő:"
 #: MsgRecv.pas:456
 msgid "This contact (%s) can not receive offline "
 "messages."
-msgstr "Ŧĥįş čőŉŧäčŧ (%ş) čäŉ ŉőŧ řęčęįνę őƒƒľįŉę "
+msgstr "Ŧĥįş čőŉŧäčŧ (%s) čäŉ ŉőŧ řęčęįνę őƒƒľįŉę "
 "ɱęşşäģęş."
 
 #: MsgRecv.pas:505
@@ -7820,14 +7820,14 @@ msgstr "Øpęŉ"
 #: RecvStatus.pas:638
 msgid "The file transfer for %s completed, but the file appears to be "
 "corrupt."
-msgstr "Ŧĥę ƒįľę ŧřäŉşƒęř ƒőř %ş čőɱpľęŧęđ, þūŧ ŧĥę ƒįľę äppęäřş ŧő þę "
+msgstr "Ŧĥę ƒįľę ŧřäŉşƒęř ƒőř %s čőɱpľęŧęđ, þūŧ ŧĥę ƒįľę äppęäřş ŧő þę "
 "čőřřūpŧ."
 
 #: RecvStatus.pas:653
 msgid "There was an error receiving the file. "
 "(%d)"
 msgstr "Ŧĥęřę ŵäş äŉ ęřřőř řęčęįνįŉģ ŧĥę ƒįľę. "
-"(%đ)"
+"(%d)"
 
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:719
@@ -7845,7 +7845,7 @@ msgstr "Ŵäįŧįŉģ ŧő čäŉčęľ ŧřäŉşƒęř..."
 #: RecvStatus.pas:772
 msgid "The sender of a file transfer (%s) went "
 "offline."
-msgstr "Ŧĥę şęŉđęř őƒ ä ƒįľę ŧřäŉşƒęř (%ş) ŵęŉŧ "
+msgstr "Ŧĥę şęŉđęř őƒ ä ƒįľę ŧřäŉşƒęř (%s) ŵęŉŧ "
 "őƒƒľįŉę."
 
 #: RegForm.pas:134
@@ -7887,7 +7887,7 @@ msgstr "Ÿőūř řęģįşŧřäŧįőŉ ĥäş þęęŉ řęɱőνęđ."
 
 #: RemoveContact.pas:79
 msgid "Remove this contact from the %s group."
-msgstr "Ŗęɱőνę ŧĥįş čőŉŧäčŧ ƒřőɱ ŧĥę %ş ģřőūp."
+msgstr "Ŗęɱőνę ŧĥįş čőŉŧäčŧ ƒřőɱ ŧĥę %s ģřőūp."
 
 #: Room.pas:499
 #: Room.pas:503
@@ -7988,25 +7988,25 @@ msgstr "Ŧĥę řőőɱ ĥäş þęęŉ đęşŧřőƴęđ ƒőř äŉ ūŉĸŉ�
 #: Room.pas:1044
 #: Room.pas:1245
 msgid "%s is now known as %s."
-msgstr "%ş įş ŉőŵ ĸŉőŵŉ äş %ş."
+msgstr "%s įş ŉőŵ ĸŉőŵŉ äş %s."
 
 #: Room.pas:1052
 #: Room.pas:1243
 msgid "%s has been banned from this room. %s"
-msgstr "%ş ĥäş þęęŉ þäŉŉęđ ƒřőɱ ŧĥįş řőőɱ. %ş"
+msgstr "%s ĥäş þęęŉ þäŉŉęđ ƒřőɱ ŧĥįş řőőɱ. %s"
 
 #: Room.pas:1053
 #: Room.pas:1246
 msgid "%s has been kicked from this room. %s"
-msgstr "%ş ĥäş þęęŉ ĸįčĸęđ ƒřőɱ ŧĥįş řőőɱ. %ş"
+msgstr "%s ĥäş þęęŉ ĸįčĸęđ ƒřőɱ ŧĥįş řőőɱ. %s"
 
 #: Room.pas:1059
 msgid "%s has left the room."
-msgstr "%ş ĥäş ľęƒŧ ŧĥę řőőɱ."
+msgstr "%s ĥäş ľęƒŧ ŧĥę řőőɱ."
 
 #: Room.pas:1087
 msgid "%s has entered the room."
-msgstr "%ş ĥäş ęŉŧęřęđ ŧĥę řőőɱ."
+msgstr "%s ĥäş ęŉŧęřęđ ŧĥę řőőɱ."
 
 #. someone maybe changed my role
 #: Room.pas:1113
@@ -8019,7 +8019,7 @@ msgstr "Ÿőūř νőįčę ĥäş þęęŉ řęνőĸęđ."
 
 #: Room.pas:1117
 msgid "%s has a new role of %s."
-msgstr "%ş ĥäş ä ŉęŵ řőľę őƒ %ş."
+msgstr "%s ĥäş ä ŉęŵ řőľę őƒ %s."
 
 #. this is the first time I've joined the room
 #: Room.pas:1157
@@ -8138,7 +8138,7 @@ msgstr "Ŗőőɱ Ṕäşşŵőřđ"
 
 #: Room.pas:2551
 msgid "Room Transcript: %s"
-msgstr "Ŗőőɱ Ŧřäŉşčřįpŧ: %ş"
+msgstr "Ŗőőɱ Ŧřäŉşčřįpŧ: %s"
 
 #: RoomAdminList.pas:158
 msgid "There was an error fetching this room "
@@ -8216,12 +8216,12 @@ msgstr "Ńęŵ ģřőūp ŉäɱę:"
 #. Block or Unblock this user
 #: RosterWindow.pas:2627
 msgid "Block %d contacts?"
-msgstr "ßľőčĸ %đ čőŉŧäčŧş?"
+msgstr "ßľőčĸ %d čőŉŧäčŧş?"
 
 #. Block or Unblock this user
 #: RosterWindow.pas:2656
 msgid "Unblock %d contacts?"
-msgstr "Ůŉþľőčĸ %đ čőŉŧäčŧş?"
+msgstr "Ůŉþľőčĸ %d čőŉŧäčŧş?"
 
 #: RosterWindow.pas:2684
 msgid "You must select more than one online contact to "
@@ -8266,7 +8266,7 @@ msgstr "Ńęŵ Ńįčĸŉäɱę: "
 
 #: RosterWindow.pas:3129
 msgid "Reconnect in %d seconds."
-msgstr "Ŗęčőŉŉęčŧ įŉ %đ şęčőŉđş."
+msgstr "Ŗęčőŉŉęčŧ įŉ %d şęčőŉđş."
 
 #: SendStatus.pas:368
 msgid "Waiting for connection..."
@@ -8285,21 +8285,21 @@ msgstr "Ŧĥęřę ŵäş äŉ ęřřőř ŧřƴįŉģ ŧő řęäđ ŧĥę "
 
 #: SendStatus.pas:803
 msgid "Your file transfer was refused to %s"
-msgstr "Ÿőūř ƒįľę ŧřäŉşƒęř ŵäş řęƒūşęđ ŧő %ş"
+msgstr "Ÿőūř ƒįľę ŧřäŉşƒęř ŵäş řęƒūşęđ ŧő %s"
 
 #. they refused
 #: SendStatus.pas:886
 msgid "The recipient (%s) refused your file: "
 "%s"
-msgstr "Ŧĥę řęčįpįęŉŧ (%ş) řęƒūşęđ ƴőūř ƒįľę: "
-"%ş"
+msgstr "Ŧĥę řęčįpįęŉŧ (%s) řęƒūşęđ ƴőūř ƒįľę: "
+"%s"
 
 #. error
 #: SendStatus.pas:910
 msgid "The stream was not activated for file: "
 "%s"
 msgstr "Ŧĥę şŧřęäɱ ŵäş ŉőŧ äčŧįνäŧęđ ƒőř ƒįľę: "
-"%ş"
+"%s"
 
 #. our thread completed.
 #: SendStatus.pas:926
@@ -8382,7 +8382,7 @@ msgstr "Ŧĥę ℭőŉŧäčŧ ɱūşŧ þę őŉľįŉę þęƒőřę ƴőū č
 #: XferManager.pas:297
 #: XferManager.pas:364
 msgid "%s is sending you a file."
-msgstr "%ş įş şęŉđįŉģ ƴőū ä ƒįľę."
+msgstr "%s įş şęŉđįŉģ ƴőū ä ƒįľę."
 
 #. check to see if we should disconnect current xfers
 #: XferManager.pas:497
@@ -8453,7 +8453,7 @@ msgstr "Ṃäđ"
 #. Programmer's name for it: SUREBaseString
 #: /src/exodus/jopl/Unicode.pas:824
 msgid "Error in regular expression: %s"
-msgstr "Ēřřőř įŉ řęģūľäř ęχpřęşşįőŉ: %ş"
+msgstr "Ēřřőř įŉ řęģūľäř ęχpřęşşįőŉ: %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
 #: /src/exodus/jopl/Unicode.pas:825
