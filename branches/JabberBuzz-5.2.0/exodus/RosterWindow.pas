@@ -2698,9 +2698,12 @@ begin
                 end;
 
                 p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-                if ((p <> nil) and (_show_status)) then begin
+                if (_show_status) then begin
+                  if (p <> nil) then
                     if (p.Status <> '') then
-                        c2 := '(' + p.Status + ')';
+                      c2 := '(' + p.Status + ')'
+                    else if (p.Show <> '') then
+                      c2 := '(' + p.Show + ')'
                 end;
             end;
 
