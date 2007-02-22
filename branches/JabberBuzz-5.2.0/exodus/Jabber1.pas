@@ -343,6 +343,7 @@ type
     pnlRoster: TPanel;
     splitRoster: TSplitter;
     Tabs: TTntPageControl;
+    mnuOptions_Notifications_NewConversation: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -457,6 +458,7 @@ type
     procedure mnuFile_ConnectClick(Sender: TObject);
     procedure mnuWindows_LayoutClick(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
+    procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2679,6 +2681,18 @@ begin
     ShowMyProfile();
 end;
 
+procedure TfrmExodus.mnuOptions_Notifications_NewConversationClick(
+  Sender: TObject);
+begin
+    if (mnuOptions_Notifications_NewConversation.Checked) then
+        MainSession.Prefs.setInt('notify_newchat', 0)
+    else
+        MainSession.Prefs.setInt('notify_newchat', 1);
+
+    mnuOptions_Notifications_NewConversation.Checked :=
+                                not mnuOptions_Notifications_NewConversation.Checked;
+end;
+
 procedure TfrmExodus.mnuOptions_Notifications_NewMessageClick(Sender: TObject);
 begin
     if (mnuOptions_Notifications_NewMessage.Checked) then
@@ -4823,6 +4837,7 @@ begin
     mnuOptions_Notifications_ContactOnline.Checked := MainSession.Prefs.getBool('notify_online');
     mnuOptions_Notifications_ContactOffline.Checked := MainSession.Prefs.getBool('notify_offline');
     mnuOptions_Notifications_NewMessage.Checked := MainSession.Prefs.getBool('notify_normalmsg');
+    mnuOptions_Notifications_NewConversation.Checked := MainSession.Prefs.getBool('notify_newchat');
 end;
 
 function TfrmExodus.getNextDockedNotifying(start: TTabSheet): TfrmDockable;

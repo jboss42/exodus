@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 531
+  ClientHeight = 551
   ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
@@ -164,16 +164,15 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 272
-    Height = 500
+    Height = 520
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitHeight = 480
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 498
+      Height = 518
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -185,20 +184,19 @@ object frmExodus: TfrmExodus
       Left = 1
       Top = 1
       Width = 169
-      Height = 498
+      Height = 518
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 478
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 96
-      Height = 498
+      Height = 518
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -223,7 +221,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 478
     end
   end
   object MainMenu1: TTntMainMenu
@@ -752,15 +749,19 @@ object frmExodus: TfrmExodus
       object mnuOptions_Notifications: TTntMenuItem
         Caption = '&Notifications'
         object mnuOptions_Notifications_NewMessage: TTntMenuItem
-          Caption = '&New Message'
+          Caption = 'Received New &Message'
           OnClick = mnuOptions_Notifications_NewMessageClick
         end
+        object mnuOptions_Notifications_NewConversation: TTntMenuItem
+          Caption = 'New &Conversation'
+          OnClick = mnuOptions_Notifications_NewConversationClick
+        end
         object mnuOptions_Notifications_ContactOnline: TTntMenuItem
-          Caption = 'Contact &Online'
+          Caption = 'Contact Comes &Online'
           OnClick = mnuOptions_Notifications_ContactOnlineClick
         end
         object mnuOptions_Notifications_ContactOffline: TTntMenuItem
-          Caption = 'Contact O&ffline'
+          Caption = 'Contact Goes O&ffline'
           OnClick = mnuOptions_Notifications_ContactOfflineClick
         end
       end
