@@ -24,7 +24,8 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg;
+    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
+  AppEvnts;
 
 type
   TMemberNode = TTntListItem;
@@ -324,12 +325,13 @@ const
     sStatus_401  = 'You supplied an invalid password to enter this room.';
     sStatus_403  = 'You are not allowed to enter this conference room because you are on the ban list.';
     sStatus_404  = 'The conference room is being created. Please try again later.';
+    sStatus_404a = 'The conference room could not be entered. Please check your conference server and try again.';
     sStatus_405  = 'You are not allowed to create conference rooms.';
     sStatus_405a = 'You are not allowed to enter the conference room.';
     sStatus_407  = 'You are not on the member list for this conference room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
     sStatus_413  = 'The conference room you were trying to enter is at maximum occupancy. Try again later.';
-    sStatus_Unknown = 'The conference room has been destroyed for an unknown reason.';
+    sStatus_Unknown = 'The conference room could not be entered for an unknown reason. Please check the conference room name and server and try again.';
 
     sEditVoice     = 'Edit Voice List';
     sEditBan       = 'Edit Ban List';
@@ -1201,7 +1203,11 @@ begin
                 exit;
             end
             else if (ecode = '404') then begin
-                MessageDlgW(_(sStatus_404), mtError, [mbOK], 0);
+                if (etag.QueryXPTag('/error/item-not-found') <> nil) then
+                  MessageDlgW(_(sStatus_404), mtError, [mbOK], 0)
+                else if (etag.QueryXPTag('/error/remote-server-not-found') <> nil) then
+                  MessageDlgW(_(sStatus_404a), mtError, [mbOK], 0);
+
                 Self.Close();
                 exit;
             end
