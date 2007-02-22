@@ -79,7 +79,7 @@ type
     procedure _logMessage(log: IExodusLogMsg);
     procedure _showLog(jid: Widestring);
     procedure _clearLog(jid: Widestring);
-    function SetupFrameSet(base_fn, munged_name: Widestring): boolean;
+    function SetupFrameSet(dir:string; base_fn, munged_name: Widestring): boolean;
 
   public
     procedure purgeLogs();
@@ -313,10 +313,10 @@ begin
         end;
     end;
 
-    base_fn := dir + MungeName(j.jid); // directory and jid
+    base_fn := dir + MungeName(j.jid) + '\' + MungeName(j.jid) ; // directory and jid
 
     // Add framset file
-    if (not SetupFrameSet(base_fn, MungeName(j.jid))) then
+    if (not SetupFrameSet(dir, base_fn, MungeName(j.jid))) then
         exit; // will have already seen an error message
 
     // Add to today's date_log
@@ -398,17 +398,19 @@ begin
 end;
 
 {---------------------------------------}
-function THTMLLogger.SetupFrameSet(base_fn, munged_name: WideString ):boolean;
+function THTMLLogger.SetupFrameSet(dir: string; base_fn, munged_name: WideString ):boolean;
 var
     fs: TFileStream;
     buff: string;
     frameset_fn: Widestring;
     dates_fn: Widestring;
     oldlogexists: boolean;
+    basedir: string;
 begin
     Result := false;
-    frameset_fn := base_fn + '.html';
+    frameset_fn := dir + munged_name + '.html';
     dates_fn := base_fn + '_dates.html';
+    basedir := dir + munged_name + '\';
 
     // Frameset
     try
@@ -421,7 +423,7 @@ begin
             fs.Free();
             if (Pos('name="log_frame"/></frameset>', buff) = 0) then begin
                 // didn't find this so, must be old log file (HACK)
-                if ( not RenameFile(frameset_fn, base_fn + '_old.html')) then begin
+                if ( not RenameFile(frameset_fn, dir + munged_name + '_old.html')) then begin
                     MessageDlg('Could not rename old log file: ' + frameset_fn, mtError, [mbOK], 0);
                     exit;
                 end;
@@ -431,6 +433,7 @@ begin
 
         if (not FileExists(frameset_fn)) then begin
             // Frameset for this JID doesn't exist so we need to create one.
+            CreateDirectory(PAnsiChar(basedir), nil);
             fs := TFileStream.Create(frameset_fn, fmCreate, fmShareDenyNone);
 
             // put some UTF-8 header fu in here
@@ -439,7 +442,7 @@ begin
             buff := buff + '</head>';
             fs.Write(Pointer(buff)^, Length(buff));
             buff := '<frameset cols="20%,*"><frame src="';
-            buff := buff + munged_name + '_dates.html' + '" name="date_frame"/><frame src="';
+            buff := buff + munged_name + '\' + munged_name + '_dates.html' + '" name="date_frame"/><frame src="';
             buff := buff + '" name="log_frame"/></frameset></html>';
             fs.Write(Pointer(buff)^, Length(buff));
             fs.Free();
@@ -464,7 +467,7 @@ begin
             fs.Write(Pointer(buff)^, Length(buff));
             buff := '<body>';
             if (oldlogexists) then begin
-                buff := buff + '<a target="log_frame" href="' + munged_name + '_old.html">Old Logs</a><br/>';
+                buff := buff + '<a target="log_frame" href="' + '../' + munged_name + '_old.html">Old Logs</a><br/>';
             end;
             fs.Write(Pointer(buff)^, Length(buff));
             fs.Free();
