@@ -1087,6 +1087,9 @@ begin
         // close this room.
         if (tag <> nil) then tmps := tag.Data() else tmps := '';
         _sendPresence('unavailable', tmps);
+    end
+    else if (event = '/session/prefs') then begin
+        setupKeywords();
     end;
 end;
 
@@ -1698,6 +1701,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.setupKeywords();
 begin
+    _keywords.Free;
     _keywords := Keywords.CreateKeywordsExpr();
 end;
 
