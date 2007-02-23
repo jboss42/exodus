@@ -306,13 +306,13 @@ begin
 
             if (_composing) then begin
               //Add composing event
-              mtag := Result.AddTag('x');
+              mtag := _tag.AddTag('x');
               mtag.setAttribute('xmlns', XMLNS_XEVENT);
               mtag.AddTag('composing');
             end;
 
             if ((Priority = High) or (Priority = Low)) then begin
-              mtag := Result.AddTag('headers');
+              mtag := _tag.AddTag('headers');
               mtag.setAttribute('xmlns', XMLNS_SHIM);
               mtag := mtag.AddBasicTag('header', GetEnumName(TypeInfo(PriorityType), Ord(Priority)));
               mtag.setAttribute('name', 'Urgency');
