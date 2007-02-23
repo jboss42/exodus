@@ -704,7 +704,7 @@ begin
         add_xml := TExodusChat(ComController).fireAfterMsg(body);
         msg.Body := body;
     end;
-    mtag := msg.Tag;
+    mtag := msg.GetTag;
 
     if (add_xml <> '') then
       mtag.addInsertedXML(add_xml);
