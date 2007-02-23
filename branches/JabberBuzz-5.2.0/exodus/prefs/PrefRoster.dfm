@@ -3,9 +3,9 @@ inherited frmPrefRoster: TfrmPrefRoster
   Top = 162
   Caption = 'frmPrefRoster'
   ClientHeight = 394
-  ClientWidth = 342
+  ClientWidth = 396
   OldCreateOrder = True
-  ExplicitWidth = 354
+  ExplicitWidth = 408
   ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
@@ -79,7 +79,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkRosterUnicode: TTntCheckBox [8]
     Left = 0
     Top = 86
-    Width = 337
+    Width = 361
     Height = 17
     Caption = 
       'Allow Unicode characters in the contact list (requires 2000, ME,' +
@@ -108,7 +108,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     TabOrder = 7
   end
   inherited pnlHeader: TTntPanel
-    Width = 342
+    Width = 396
     Caption = 'Contact List'
     TabOrder = 8
     ExplicitWidth = 342
