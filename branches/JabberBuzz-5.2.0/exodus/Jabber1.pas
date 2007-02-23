@@ -4841,10 +4841,10 @@ procedure TfrmExodus.OptionsMenuItemsChecks();
 begin
     mnuOptions_EnableEmoticonDisplays.Checked := MainSession.Prefs.getBool('emoticons');
     mnuOptions_EnableStartupWithWindows.Checked := MainSession.Prefs.getBool('auto_start');
-    mnuOptions_Notifications_ContactOnline.Checked := MainSession.Prefs.getBool('notify_online');
-    mnuOptions_Notifications_ContactOffline.Checked := MainSession.Prefs.getBool('notify_offline');
-    mnuOptions_Notifications_NewMessage.Checked := MainSession.Prefs.getBool('notify_normalmsg');
-    mnuOptions_Notifications_NewConversation.Checked := MainSession.Prefs.getBool('notify_newchat');
+    mnuOptions_Notifications_ContactOnline.Checked := (MainSession.Prefs.getInt('notify_online') > 0);
+    mnuOptions_Notifications_ContactOffline.Checked := (MainSession.Prefs.getInt('notify_offline') > 0);
+    mnuOptions_Notifications_NewMessage.Checked := (MainSession.Prefs.getInt('notify_normalmsg') > 0);
+    mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
 function TfrmExodus.getNextDockedNotifying(start: TTabSheet): TfrmDockable;
