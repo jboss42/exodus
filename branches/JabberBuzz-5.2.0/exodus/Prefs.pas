@@ -93,6 +93,7 @@ type
     imgHotkeys: TImage;
     imgPlugins: TImage;
     lblHotkeys: TTntLabel;
+    TntLabel1: TTntLabel;
     procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);

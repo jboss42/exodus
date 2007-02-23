@@ -245,7 +245,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 315
       ExplicitWidth = 46
     end
     object imgFonts: TImage
@@ -442,7 +441,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 221
       ExplicitWidth = 64
     end
     object imgS10n: TImage
@@ -640,7 +638,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 174
       ExplicitWidth = 66
     end
     object imgRoster: TImage
@@ -837,7 +834,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 80
       ExplicitWidth = 57
     end
     object imgSystem: TImage
@@ -1034,7 +1030,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 33
       ExplicitWidth = 36
     end
     object imgNotify: TImage
@@ -1175,7 +1170,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 362
       ExplicitWidth = 53
     end
     object imgAway: TImage
@@ -1372,7 +1366,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 550
       ExplicitWidth = 57
     end
     object imgKeywords: TImage
@@ -1569,7 +1562,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 597
       ExplicitWidth = 51
     end
     object imgBlockList: TImage
@@ -1766,7 +1758,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 691
       ExplicitWidth = 46
     end
     object imgCustompres: TImage
@@ -1963,7 +1954,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 738
       ExplicitWidth = 46
     end
     object imgMessages: TImage
@@ -2160,7 +2150,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 409
       ExplicitWidth = 50
     end
     object lblPlugins: TTntLabel
@@ -2553,7 +2542,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 503
       ExplicitWidth = 67
     end
     object imgGroups: TImage
@@ -2750,7 +2738,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 127
       ExplicitWidth = 36
     end
     object imgLayouts: TImage
@@ -2920,7 +2907,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 268
       ExplicitWidth = 39
     end
     object lblNetwork: TTntLabel
@@ -2935,7 +2921,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 785
       ExplicitWidth = 41
     end
     object imgEmote: TImage
@@ -8021,7 +8006,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 456
       ExplicitWidth = 49
     end
     object imgHotkeys: TImage
@@ -8202,7 +8186,6 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitTop = 644
       ExplicitWidth = 39
     end
   end
@@ -8224,22 +8207,31 @@ object frmPrefs: TfrmPrefs
       OnMouseMove = OffBoxMouseMove
       object memKeywords: TTntMemo
         Left = 0
-        Top = 114
+        Top = 97
         Width = 496
-        Height = 294
+        Height = 311
         Align = alClient
         TabOrder = 0
         OnKeyPress = memKeywordsKeyPress
+        ExplicitTop = 114
+        ExplicitHeight = 294
       end
       object Panel2: TPanel
         Left = 0
         Top = 24
         Width = 496
-        Height = 90
+        Height = 73
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
         object Label1: TTntLabel
+          Left = 2
+          Top = 54
+          Width = 279
+          Height = 14
+          Caption = 'The following characters should not be used: ( ) [ ] * + \ ?.'
+        end
+        object TntLabel1: TTntLabel
           Left = 0
           Top = 0
           Width = 496
@@ -8252,8 +8244,8 @@ object frmPrefs: TfrmPrefs
           ExplicitWidth = 477
         end
         object chkRegex: TTntCheckBox
-          Left = 5
-          Top = 66
+          Left = 2
+          Top = 34
           Width = 260
           Height = 14
           Caption = 'Use Regular Expressions for Keyword matches'
