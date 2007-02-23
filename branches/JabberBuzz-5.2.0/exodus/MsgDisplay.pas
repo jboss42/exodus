@@ -87,7 +87,7 @@ var
     fooTag: TXMLTag;
     _parser: TXMLTagParser;
 begin
-    fooTag := Msg.Tag;
+    fooTag := Msg.GetTag;
     Result := fooTag.GetFirstTag('html');
     if ((Result = nil) or (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then begin
         //check XML attrib of message to see if there is any additional
