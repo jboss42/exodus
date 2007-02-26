@@ -919,12 +919,19 @@ procedure TfrmMsgRecv.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
   inherited;
-    if (_events.Count = 0) then
-        CanClose := true
-    else begin
-        CanClose := false;
-        MessageDlgW(_(sMsgsPending), mtError, [mbOK], 0);
-    end;
+    CanClose := true;
+// This code was removed to prevent a situation with room invites
+// that could cause getting stuck in a loop.
+// Until this code can be reworked, it is now possible to dismiss the
+// messages window without having actually read all messages.
+// This is a short term fix with the understanding that this code will be
+// reworked in the next release
+//    if (_events.Count = 0) then
+//        CanClose := true
+//    else begin
+//        CanClose := false;
+//        MessageDlgW(_(sMsgsPending), mtError, [mbOK], 0);
+//    end;
 end;
 
 {---------------------------------------}
