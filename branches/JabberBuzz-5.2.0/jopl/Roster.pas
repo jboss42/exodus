@@ -542,7 +542,10 @@ begin
     if ((p <> nil) and (p.priority < 0)) then p := nil;
 
     // setup the image
-    if ((is_me) and (p = nil)) then begin
+    if ((is_me) and
+        ((p = nil) or
+         (event = '/presence/offline') or
+         (event = '/presence/unavailable'))) then begin
         // this resource isn't online anymore... remove it
         ri.Removed := true;
     end
@@ -579,6 +582,12 @@ begin
 
     // notify the window that this item needs to be updated
     TJabberSession(_js).FireEvent('/roster/item', tag, ri);
+
+    // If this is my resource and it went offline, then
+    // get rid of the item in Self's list or we will never
+    // see it again.
+    if (is_me and ri.Removed) then
+        Self.RemoveItem(ri.Jid.full);
 end;
 
 {---------------------------------------}
