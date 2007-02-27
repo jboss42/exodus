@@ -2442,8 +2442,10 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.ShowXML1Click(Sender: TObject);
 begin
-    // show the debug window if it's hidden
-    ShowDebugForm();
+    if (isDebugShowing) then
+      CloseDebugForm()
+    else
+      ShowDebugForm();
 end;
 
 procedure TfrmExodus.splitRosterMoved(Sender: TObject);
@@ -3079,6 +3081,7 @@ begin
     _hidden := true;
 end;
 
+
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
 //var
@@ -3385,7 +3388,10 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
-    getMsgQueue();
+    if (isMsgQueueShowing) then
+      closeMsgQueue()
+    else
+      showMsgQueue();
 end;
 
 {---------------------------------------}

@@ -101,6 +101,7 @@ const
     sDefaultSpool = 'default_spool.xml';
 
 function showMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
+procedure closeMsgQueue();
 function getMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
 function isMsgQueueShowing(): boolean;
 {---------------------------------------}
@@ -131,12 +132,18 @@ begin
     Result := getMsgQueue(bringToFront, dockOverride);
 end;
 
+procedure closeMsgQueue();
+begin
+    if frmMsgQueue <> nil then
+      frmMsgQueue.Close();
+end;
 {---------------------------------------}
 function getMsgQueue(bringToFront: boolean; dockOverride: string): TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
     frmMsgQueue.ShowDefault(bringToFront, dockOverride);
+    frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := true;
     Result := frmMsgQueue;
 end;
 
@@ -500,6 +507,7 @@ begin
     _queue.Free(); //owns refs, frees them here
     Action := caFree;
     frmMsgQueue := nil;
+    frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := false;
     inherited;
 end;
 
