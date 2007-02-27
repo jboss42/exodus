@@ -100,6 +100,7 @@ var
 
 procedure StartJoinRoom; overload;
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload;
+procedure StartJoinRoomBrowse;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -152,6 +153,38 @@ begin
             txtNick.Text := MainSession.Profile.getDisplayUsername();
 
         populateServers();
+        Show;
+    end;
+end;
+
+{---------------------------------------}
+procedure StartJoinRoomBrowse;
+var
+    jr: TfrmJoinRoom;
+    i: integer;
+begin
+    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
+    jr := TfrmJoinRoom.Create(Application);
+    with jr do begin
+        txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
+        txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        txtNick.Text := MainSession.Profile.getDisplayUsername();
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
+            txtNick.Enabled := False;
+            chkUseRegisteredNickname.Enabled := False;
+            chkUseRegisteredNickname.Checked := False;
+        end;
+        populateServers();
+        optBrowse.Checked := true;
+        Tabs.ActivePage := tabSheet2;
+        btnBack.Enabled := true;
+        btnNext.Caption := _('Finish');
+
+        _enableNext();
+
+        // browse each server
+        for i := 0 to txtServer.Items.Count - 1 do
+            _fetch(txtServer.Items[i]);
         Show;
     end;
 end;
