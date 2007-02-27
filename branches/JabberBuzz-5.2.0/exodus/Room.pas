@@ -1696,6 +1696,8 @@ begin
     else begin
         Print1.Visible := true;
     end;
+
+    popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
 end;
 
 {---------------------------------------}
