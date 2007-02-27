@@ -48,12 +48,13 @@ uses
     RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg;
+    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
     sNotifyChat = 'Chat with ';
     sPriorityNotifyChat = 'Priority Chat with ';
+    sCannotOffline = 'This contact cannot receive offline messages.';
 
 {---------------------------------------}
 constructor TGUIFactory.Create();
@@ -112,6 +113,16 @@ begin
         //0 -> A new one to one chat window
         //1 -> An instant message window
         //2 -> A new or existing chat window
+        ri := MainSession.Roster.Find(tmp_jid.jid);
+        if (ri <> nil) then begin
+            if (not ri.IsNative) then begin
+                if (not ri.IsOnline) then begin
+                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
+                    exit;
+                end;
+            end;
+        end;
+
         if ((r = 0) or (r = 2)) then begin
             if (tmp_jid.resource <> '') then
                 StartChat(tmp_jid.jid, tmp_jid.resource, true)

@@ -26,7 +26,7 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList, JabberMsg;
+  ToolWin, ImgList, JabberMsg, AppEvnts;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -258,6 +258,7 @@ const
     sChat = 'Chat';
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sMsgLocalTime = 'Local Time: ';
+    sCannotOffline = 'This contact cannot receive offline messages.';
 
     NOTIFY_CHAT_ACTIVITY = 0;
     NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
@@ -1000,7 +1001,17 @@ var
     xhtml: TXMLTag;
     xml: Widestring;
     priority: PriorityType;
+    ri: TJabberRosterItem;
 begin
+    ri := MainSession.roster.Find(_jid.jid);
+    if (ri <> nil) then begin
+        if ((not ri.IsNative) and (not ri.IsOnline)) then begin
+            MsgOut.Clear;
+            MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
+            exit;
+        end;
+    end;
+    
     // Get the text from the UI
     // and send the actual message out
     txt := getInputText(MsgOut);
