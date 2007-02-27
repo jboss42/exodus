@@ -201,16 +201,32 @@ begin
     if ((notify and notify_front) = 0) then begin
         //check "notify if app active" and "notify if window active" prefs.
         if (Application.Active) then begin
-            //check active app notify
-            if (not MainSession.prefs.getBool('notify_active')) then exit;
-            //check active form notify
-            if (not MainSession.prefs.getBool('notify_active_win')) then begin
-                //if notify directed at dock manager (win = nil) and
-                //any active child means main window is active (Application.Active)
-                if (win = nil) then exit;
-                if (GetForegroundWindow() = win.handle) then exit;
-                //if dock manager is active and win is top docked, it is active
-                if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+            if (not MainSession.prefs.getBool('notify_active')) then begin
+                // We Don't want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We never want to get notified when app active
+                    exit;
+                end
+                else begin
+                    // We DO want to get notified when in active window  (chat activity, not contact offline/online)
+                    // Make sure we have the active window
+                    if (win = nil) then exit;
+                    if (GetForegroundWindow() <> win.handle) then exit;
+                    //if dock manager is active and win is top docked, it is active
+                    if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                end;
+            end
+            else begin
+                // We DO want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We Don't want to be notified when in active window. (chat activity, not contact offline/online)
+                    // Make sure we are in active window
+                    if (win <> nil) then begin
+                        if (GetForegroundWindow() = win.handle) then exit;
+                        //if dock manager is active and win is top docked, it is active
+                        if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                    end;
+                end;
             end;
         end;
     end;
