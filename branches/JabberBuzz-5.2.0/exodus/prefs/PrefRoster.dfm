@@ -32,7 +32,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkShowUnsubs: TTntCheckBox [3]
     Left = 0
-    Top = 33
+    Top = 104
     Width = 337
     Height = 17
     Caption = 'Show contacts which I do not have a subscription to'
@@ -40,7 +40,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkHideBlocked: TTntCheckBox [4]
     Left = 0
-    Top = 68
+    Top = 50
     Width = 337
     Height = 17
     Caption = 'Hide blocked contacts '
@@ -57,7 +57,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkShowPending: TTntCheckBox [6]
     Left = 0
-    Top = 50
+    Top = 32
     Width = 337
     Height = 17
     Caption = 'Show contacts I have asked to add as "Pending"'
@@ -78,7 +78,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkRosterUnicode: TTntCheckBox [8]
     Left = 0
-    Top = 86
+    Top = 68
     Width = 361
     Height = 17
     Caption = 
@@ -111,7 +111,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 396
     Caption = 'Contact List'
     TabOrder = 8
-    ExplicitWidth = 342
+    ExplicitWidth = 396
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
@@ -131,7 +131,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkRosterAvatars: TTntCheckBox
     Left = 0
-    Top = 104
+    Top = 86
     Width = 337
     Height = 17
     Caption = 'Show Avatars in the contact list'
