@@ -239,10 +239,13 @@ uses
     DisplayName, //display name cache
     PluginAuth,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard;
+    JabberConst, CapPresence, XMLVCard, Windows, strutils;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
+var
+    exe_FullPath: string;
+    exe_FullPath_len: cardinal;
 begin
     //
     inherited Create();
@@ -319,6 +322,10 @@ begin
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
     Prefs.SetSession(Self);
+    SetLength(exe_FullPath, MAX_PATH+1);
+    exe_FullPath_len := GetModuleFileName(0, PChar(exe_FullPath), MAX_PATH);
+    exe_FullPath := LeftStr(exe_FullPath, exe_FullPath_len);
+    Prefs.setString('exe_FullPath', exe_FullPath);
 
     if (Prefs.getBool('always_lang')) then
         _lang := Prefs.getString('locale')
