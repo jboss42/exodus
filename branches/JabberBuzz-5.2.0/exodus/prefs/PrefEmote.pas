@@ -64,6 +64,8 @@ type
       Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
       Stage: TCustomDrawStage; var DefaultDraw: Boolean);
     procedure chkEmoticonsClick(Sender: TObject);
+    procedure lstCustomEmotesSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     { Private declarations }
     el: TEmoticonList;
@@ -405,6 +407,19 @@ begin
 
 end;
 
+procedure TfrmPrefEmote.lstCustomEmotesSelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+begin
+  inherited;
+    btnCustomEmoteRemove.Enabled := Selected;
+
+    if (lstCustomEmotes.SelCount = 1) then
+        btnCustomEmoteEdit.Enabled := true
+    else
+        btnCustomEmoteEdit.Enabled := false;
+    
+end;
+
 procedure TfrmPrefEmote.chkEmoticonsClick(Sender: TObject);
 begin
   inherited;
@@ -415,8 +430,10 @@ begin
     pageEmotes.Enabled := chkEmoticons.Checked;
 
     btnCustomEmoteAdd.Enabled := chkEmoticons.Checked;
-    btnCustomEmoteRemove.Enabled := chkEmoticons.Checked;
-    btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
+    if (not chkEmoticons.Checked) then begin
+        btnCustomEmoteRemove.Enabled := chkEmoticons.Checked;
+        btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
+    end;
     txtCustomEmoteFilename.Enabled := chkEmoticons.Checked;
 end;
 
