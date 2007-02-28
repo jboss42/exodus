@@ -61,11 +61,19 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    JabberUtils, ExUtils,  FileCtrl, Session;
+    JabberUtils, ExUtils,  FileCtrl, Session, Unicode;
 
 procedure TfrmPrefMsg.LoadPrefs();
+var
+  date_time_formats: TWideStringList;
 begin
     inherited;
+    date_time_formats := TWideStringList.Create;
+    MainSession.Prefs.fillStringlist('date_time_formats', date_time_formats);
+    if (date_time_formats.Count > 0) then begin
+       AssignTntStrings(date_time_formats, txtTimestampFmt.Items);
+    end;
+
     chkShowPriority.Visible := MainSession.Prefs.getBool('branding_priority_notifications');
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = true) then begin
        chkQueueDNDChats.Visible  := false;
@@ -84,6 +92,10 @@ end;
 
 procedure TfrmPrefMsg.SavePrefs();
 begin
+    if (Trim(txtTimestampFmt.Text) <> '') then
+       if (txtTimestampFmt.Items.IndexOf(txtTimestampFmt.Text) < 0) then
+         txtTimestampFmt.Items.Add(txtTimestampFmt.Text);
+    MainSession.Prefs.setStringList('date_time_formats', txtTimestampFmt.Items);
     inherited;
 end;
 

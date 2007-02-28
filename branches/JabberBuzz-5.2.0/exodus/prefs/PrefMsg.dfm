@@ -5,7 +5,6 @@ inherited frmPrefMsg: TfrmPrefMsg
   ClientHeight = 376
   ClientWidth = 417
   OldCreateOrder = True
-  ExplicitTop = -14
   ExplicitWidth = 429
   ExplicitHeight = 388
   PixelsPerInch = 96
@@ -119,16 +118,16 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 3
     Text = 'h:mm am/pm'
     Items.Strings = (
+      'm/d/y h:mm am/pm'
+      'mm/dd/yy hh:mm:ss'
       'h:mm am/pm'
-      'hh:mm'
-      't'
-      'tt')
+      'hh:mm:ss')
   end
   inherited pnlHeader: TTntPanel
     Width = 417
     Caption = 'Messages'
     TabOrder = 8
-    ExplicitWidth = 379
+    ExplicitWidth = 417
   end
   object chkQueueDNDChats: TTntCheckBox
     Left = 5

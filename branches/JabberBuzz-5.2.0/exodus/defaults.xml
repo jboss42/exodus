@@ -138,7 +138,7 @@
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
-    <timestamp_format value="t" control="txtTimestampFmt">
+	<timestamp_format value="h:mm am/pm" control="txtTimestampFmt">
       <control name="lblTimestampFmt"/>
     </timestamp_format>
     <msg_queue value="0" control="chkMsgQueue"/>
