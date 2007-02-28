@@ -370,7 +370,7 @@ begin
             // Form may have been rendered before - remove it
             for idx := 0 to (tbsReg.ControlCount-1) do
                 begin
-                    tbsReg.Controls[0].Destroy;
+                    tbsReg.Controls[idx].Destroy;
                 end;
             RenderTopFields(tbsReg, f, _key);
         end;
