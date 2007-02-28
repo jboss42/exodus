@@ -367,7 +367,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popChatClick
     end
     object popMsg: TTntMenuItem
-      Caption = 'Message...'
+      Caption = 'Send Message...'
       OnClick = popMsgClick
     end
     object popHistory: TTntMenuItem
@@ -674,7 +674,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popGrpInviteClick
     end
     object BroadcastMessage1: TTntMenuItem
-      Caption = 'Broadcast Message'
+      Caption = 'Send Message'
       OnClick = BroadcastMessage1Click
     end
     object SendContactsTo1: TTntMenuItem
