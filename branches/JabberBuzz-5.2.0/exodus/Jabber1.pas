@@ -460,6 +460,7 @@ type
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
+    procedure btnFindClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2437,6 +2438,11 @@ procedure TfrmExodus.btnDelPersonClick(Sender: TObject);
 begin
     // delete the current contact
     frmRosterWindow.popRemoveClick(Self);
+end;
+
+procedure TfrmExodus.btnFindClick(Sender: TObject);
+begin
+    StartSearch('');
 end;
 
 {---------------------------------------}
