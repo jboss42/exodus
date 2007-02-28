@@ -243,7 +243,7 @@ begin
     l := Length(MsgOut.Text);
     if ((l > 0) and (MsgOut.Text[l] <> ' ')) then
         MsgOut.SelText := ' ';
-    MsgOut.SelText := etxt + ' ';
+    MsgOut.SelText := etxt;
 end;
 
 {---------------------------------------}

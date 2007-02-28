@@ -959,14 +959,50 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 initialization
+
     EmoticonList := TEmoticonList.Create();
 
     // This is a "meta-regex" that should match everything
     // Create the static regex object and compile it.
     emoticon_regex := TRegExpr.Create();
+    
     with emoticon_regex do begin
         ModifierG := false;
-        Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([>:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
+        //Modify set of characters that we would like to treat as word char
+        //For emoticon it will be most of the characters but the whitespaces
+        WordChars := WordChars +
+                       chr(33) + //!
+                       chr(34) + //"
+                       chr(35) + //#
+                       chr(36) + //$
+                       chr(37) + //%
+                       chr(38) + //&
+                       chr(39) + //'
+                       chr(40) + //(
+                       chr(41) + //)
+                       chr(42) + //*
+                       chr(43) + //+
+                       chr(44) + //,
+                       chr(45) + //-
+                       chr(46) + //.
+                       chr(47) + ///
+                       chr(58) + //:
+                       chr(59) + //;
+                       chr(60) + //<
+                       chr(61) + //=
+                       chr(62) + //>
+                       chr(63) + //?
+                       chr(64) + //@
+                       chr(91) + //[
+                       chr(92) + //\
+                       chr(93) + //]
+                       chr(94) + //^
+                       chr(96) + //'
+                       chr(123) + //{
+                       chr(124) + //|
+                       chr(125) + //}
+                       chr(126); //~
+        Expression := '(.*)(\b\w+\b)';
         Compile();
     end;
 
