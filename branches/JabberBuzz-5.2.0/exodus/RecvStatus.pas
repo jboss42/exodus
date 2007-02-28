@@ -438,26 +438,36 @@ begin
         end;
     end;
 
-    // use the save as dialog
-    SaveDialog1.Filename := _filename;
-    if (not SaveDialog1.Execute) then begin
-        SendError('406', 'not-acceptable');
-        kill();
-        exit;
-    end;
-    _filename := SaveDialog1.filename;
+    while (true) do begin
+        // use the save as dialog
+        SaveDialog1.Filename := _filename;
+        if (not SaveDialog1.Execute) then begin
+            SendError('406', 'not-acceptable');
+            kill();
+            exit;
+        end;
+        _filename := SaveDialog1.filename;
 
-    if FileExists(_filename) then begin
-        if MessageDlgW(_(sXferOverwrite),
-            mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-        DeleteFile(_filename);
-    end;
-
-    file_path := ExtractFilePath(_filename);
-    if (not DirectoryExists(file_path)) then begin
-        if MessageDlgW(_(sXferCreateDir), mtConfirmation,
-            [mbYes, mbNo], 0) = mrNo then exit;
-        CreateDir(file_path);
+        if FileExists(_filename) then begin
+            if MessageDlgW(_(sXferOverwrite),
+                mtConfirmation, [mbYes, mbNo], 0) = mrYes then begin
+                DeleteFile(_filename);
+                break;
+            end;
+        end
+        else begin
+            file_path := ExtractFilePath(_filename);
+            if (not DirectoryExists(file_path)) then begin
+                if MessageDlgW(_(sXferCreateDir), mtConfirmation,
+                    [mbYes, mbNo], 0) = mrYes then begin
+                    CreateDir(file_path);
+                    break;
+                end;
+            end
+            else begin
+                break;
+            end;
+        end;
     end;
 
     // Create a stream, and get the file into it.
@@ -563,22 +573,32 @@ begin
             // receive mode
             _filename := URLToFilename(_pkg.url);
 
-            // use the save as dialog
-            SaveDialog1.Filename := _filename;
-            if (not SaveDialog1.Execute) then exit;
-            _filename := SaveDialog1.filename;
+            while (true) do begin
+                // use the save as dialog
+                SaveDialog1.Filename := _filename;
+                if (not SaveDialog1.Execute) then exit;
+                _filename := SaveDialog1.filename;
 
-            if FileExists(_filename) then begin
-                if MessageDlgW(_(sXferOverwrite),
-                    mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-                DeleteFile(_filename);
-            end;
-
-            file_path := ExtractFilePath(_filename);
-            if (not DirectoryExists(file_path)) then begin
-                if MessageDlgW(_(sXferCreateDir), mtConfirmation,
-                    [mbYes, mbNo], 0) = mrNo then exit;
-                CreateDir(file_path);
+                if FileExists(_filename) then begin
+                    if MessageDlgW(_(sXferOverwrite),
+                        mtConfirmation, [mbYes, mbNo], 0) = mrYes then begin
+                        DeleteFile(_filename);
+                        break;
+                    end;
+                end
+                else begin
+                    file_path := ExtractFilePath(_filename);
+                    if (not DirectoryExists(file_path)) then begin
+                        if MessageDlgW(_(sXferCreateDir), mtConfirmation,
+                            [mbYes, mbNo], 0) = mrYes then begin
+                            CreateDir(file_path);
+                            break;
+                        end;
+                    end
+                    else begin
+                        break;
+                    end;
+                end;
             end;
 
             // Create a stream, and get the file into it.
