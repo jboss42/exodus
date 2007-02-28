@@ -40,6 +40,7 @@ type
     btnBack: TTntButton;
     btnNext: TTntButton;
     btnCancel: TTntButton;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -51,6 +52,10 @@ var
 
 implementation
 
+procedure TfrmWizard.FormCreate(Sender: TObject);
+begin
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;
+end;
 {$R *.dfm}
 
 end.
