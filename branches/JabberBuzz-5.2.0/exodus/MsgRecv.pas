@@ -110,6 +110,7 @@ type
     _xtags: Widestring;
     _events: TQueue;
     _controller: TExMsgController;
+    _callback_id: integer;
 
     procedure SetupResources();
     procedure DisablePopup();
@@ -142,6 +143,7 @@ type
 
     procedure pluginMenuClick(Sender: TObject);
     function JID: Widestring;
+    procedure OnCallback(event: string; tag: TXMLTag);
 
     // TMsgController
     function getObject(): TObject;
@@ -171,6 +173,7 @@ const
     sMsgsPending = 'You have unread messages. Read all messages before closing the window.';
 
     sDeclineReason = 'Reason for declining invitation';
+    SE_DISCONNECTED = '/session/disconnected';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -345,6 +348,17 @@ begin
     echat.setIM(Self);
     echat.ObjAddRef();
     ComController := echat;
+
+    //register for callbacks
+    _callback_id := MainSession.RegisterCallback(OnCallback, SE_DISCONNECTED);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.OnCallback(event: string; tag: TXMLTag);
+begin
+    if (event = SE_DISCONNECTED) then begin
+        Self.Close;
+    end;
 end;
 
 {---------------------------------------}
@@ -1013,6 +1027,8 @@ begin
 
     if (_events <> nil) then
         _events.Free();
+
+    MainSession.UnRegisterCallback(_callback_id);
 
   inherited;
 end;

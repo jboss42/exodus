@@ -196,6 +196,7 @@ begin
         setSpoolPath(false);
         ClearItems();
         loadEvents();
+        Self.Close;
     end
     else if ((event = SE_UPDATE_CHAT) and (tag <> nil)) then begin
         SaveEvents();
