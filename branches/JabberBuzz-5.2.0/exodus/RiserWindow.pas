@@ -135,8 +135,8 @@ begin
         if (Label1.Width > (ClientWidth - 55)) then
             ClientWidth := Label1.Width + 70;
 
-        if (Label1.Height > (ClientHeight + 15)) then
-            ClientHeight := Label1.Height + 15;
+        if (Label1.Height > (ClientHeight + 30)) then
+            ClientHeight := Label1.Height + 30;
     end;
     singleToast.Position();
 
