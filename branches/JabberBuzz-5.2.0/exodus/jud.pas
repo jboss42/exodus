@@ -66,6 +66,8 @@ type
     xdataBox: TframeXData;
     btnChat: TButton;
     btnBroadcastMsg: TButton;
+    procedure lstContactsMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure btnBroadcastMsgClick(Sender: TObject);
     procedure OnChatClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
@@ -90,8 +92,7 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure lstContactsSelectItem(Sender: TObject; Item: TListItem;
-      Selected: Boolean);
+
 
     procedure TabSheet1Enter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -956,11 +957,11 @@ begin
     end;
 end;
 
-procedure TfrmJud.lstContactsSelectItem(Sender: TObject; Item: TListItem;
-  Selected: Boolean);
+procedure TfrmJud.lstContactsMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-     if (lstContacts.SelCount > 0) then begin
+     if (lstContacts.Selected <> nil) then begin
          btnContacts.Enabled := true;
          btnChat.Enabled := true;
          btnBroadcastMsg.Enabled := true;
@@ -971,6 +972,7 @@ begin
          btnBroadcastMsg.Enabled := false;
      end;
 end;
+
 
 procedure TfrmJud.OnChatClick(Sender: TObject);
 var

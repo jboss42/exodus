@@ -4,18 +4,16 @@ inherited frmJud: TfrmJud
   Caption = 'Jabber Search'
   ClientHeight = 416
   ClientWidth = 492
-  KeyPreview = True
   OldCreateOrder = True
   OnResize = FormResize
-  ExplicitWidth = 320
-  ExplicitHeight = 240
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
     Top = 375
     Width = 492
-    ExplicitTop = 314
-    ExplicitWidth = 553
+    ExplicitTop = 375
+    ExplicitWidth = 492
     inherited Bevel1: TBevel
       Width = 492
       ExplicitWidth = 409
@@ -25,27 +23,28 @@ inherited frmJud: TfrmJud
       Anchors = [akTop, akRight]
       Cancel = True
       OnClick = btnBackClick
-      ExplicitLeft = 311
+      ExplicitLeft = 250
     end
     inherited btnNext: TTntButton
       Left = 326
       Anchors = [akTop, akRight]
       Default = True
       OnClick = btnNextClick
-      ExplicitLeft = 387
+      ExplicitLeft = 326
     end
     inherited btnCancel: TTntButton
       Left = 410
       Anchors = [akTop, akRight]
       OnClick = btnCancelClick
-      ExplicitLeft = 471
+      ExplicitLeft = 410
     end
   end
   inherited Tabs: TPageControl
     Width = 492
     Height = 322
-    ExplicitWidth = 553
-    ExplicitHeight = 261
+    ActivePage = TabSheet4
+    ExplicitWidth = 492
+    ExplicitHeight = 322
     inherited TabSheet1: TTabSheet
       OnEnter = TabSheet1Enter
       ExplicitLeft = 4
@@ -75,18 +74,15 @@ inherited frmJud: TfrmJud
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 545
-      ExplicitHeight = 230
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 179
+        Width = 484
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
         WordWrap = True
+        ExplicitWidth = 179
       end
       object aniWait: TAnimate
         Left = 0
@@ -96,24 +92,20 @@ inherited frmJud: TfrmJud
         Align = alTop
         CommonAVI = aviFindFolder
         StopFrame = 29
-        ExplicitWidth = 545
       end
     end
     object TabFields: TTabSheet
       Caption = 'TabFields'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 545
-      ExplicitHeight = 230
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 204
+        Width = 484
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
+        ExplicitWidth = 204
       end
     end
     object TabSheet4: TTabSheet
@@ -216,18 +208,12 @@ inherited frmJud: TfrmJud
         OnColumnClick = lstContactsColumnClick
         OnContextPopup = lstContactsContextPopup
         OnData = lstContactsData
-        OnSelectItem = lstContactsSelectItem
-        ExplicitWidth = 545
-        ExplicitHeight = 171
+        OnMouseUp = lstContactsMouseUp
       end
     end
     object TabXData: TTabSheet
       Caption = 'TabXData'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 545
-      ExplicitHeight = 230
       inline xdataBox: TframeXData
         Left = 0
         Top = 0
@@ -236,18 +222,18 @@ inherited frmJud: TfrmJud
         Align = alClient
         TabOrder = 0
         TabStop = True
-        ExplicitWidth = 545
-        ExplicitHeight = 230
+        ExplicitWidth = 484
+        ExplicitHeight = 291
         inherited Panel1: TPanel
           Width = 484
           Height = 291
-          ExplicitWidth = 545
-          ExplicitHeight = 230
+          ExplicitWidth = 484
+          ExplicitHeight = 291
           inherited ScrollBox1: TScrollBox
             Width = 474
             Height = 281
-            ExplicitWidth = 535
-            ExplicitHeight = 220
+            ExplicitWidth = 474
+            ExplicitHeight = 281
           end
         end
       end
@@ -255,14 +241,14 @@ inherited frmJud: TfrmJud
   end
   inherited pnlDockTop: TPanel
     Width = 492
-    ExplicitWidth = 553
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 504
+      ExplicitLeft = 443
     end
     inherited Panel1: TPanel
       Width = 440
-      ExplicitWidth = 501
+      ExplicitWidth = 440
       inherited Bevel2: TBevel
         Width = 440
         ExplicitWidth = 409
