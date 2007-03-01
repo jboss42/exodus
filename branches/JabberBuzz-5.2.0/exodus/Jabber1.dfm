@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 591
+  ClientHeight = 611
   ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
@@ -164,16 +164,16 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 272
-    Height = 560
+    Height = 580
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitHeight = 540
+    ExplicitHeight = 560
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 558
+      Height = 578
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -185,20 +185,20 @@ object frmExodus: TfrmExodus
       Left = 1
       Top = 1
       Width = 169
-      Height = 558
+      Height = 578
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 538
+      ExplicitHeight = 558
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 96
-      Height = 558
+      Height = 578
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -223,7 +223,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 538
+      ExplicitHeight = 558
     end
   end
   object MainMenu1: TTntMainMenu
@@ -572,7 +572,7 @@ object frmExodus: TfrmExodus
       Enabled = False
       object mnuPeople_Search: TTntMenuItem
         Caption = '&Search...'
-        OnClick = mnuSearchClick
+        OnClick = btnFindClick
       end
       object mnuPeople_Contacts: TTntMenuItem
         Caption = '&Contacts'
