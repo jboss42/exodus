@@ -29,6 +29,7 @@ uses
     Exodus_TLB,
     ExHTMLLogger_TLB;
 
+function DelDir(dir: string): Boolean;
 
 type
   THTMLLogger = class(TAutoObject, IExodusLogger, IExodusPlugin2)
@@ -105,7 +106,7 @@ const
     sNoHistory = 'There is no history file for this contact.';
     sBadLogDir = 'The log directory you specified is invalid. Configure the HTML Logging plugin correctly.';
     sHistoryDeleted = 'History deleted.';
-    sHistoryError = 'Could not delete history file.';
+    sHistoryError = 'Could not delete history file(s).';
     sHistoryNone = 'No history file for this user.';
     sConfirmClearLog = 'Do you really want to clear the log for %s?';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
@@ -113,6 +114,22 @@ const
 
 {---------------------------------------}
 {---------------------------------------}
+{---------------------------------------}
+
+function DelDir(dir: string): Boolean;
+var
+  fos: TSHFileOpStruct;
+begin
+  ZeroMemory(@fos, SizeOf(fos));
+  with fos do
+  begin
+    wFunc  := FO_DELETE;
+    fFlags := FOF_SILENT or FOF_NOCONFIRMATION;
+    pFrom  := PChar(dir + #0);
+  end;
+  Result := (0 = ShFileOperation(fos));
+end;
+
 {---------------------------------------}
 procedure THTMLLogger.Startup(const ExodusController: IExodusController);
 begin
@@ -501,6 +518,7 @@ end;
 procedure THTMLLogger._clearLog(jid: Widestring);
 var
     fn: string;
+    dn: string;
 begin
     if (MessageDlgW(WideFormat(sConfirmClearLog, [jid]),
         mtConfirmation, [mbOK,mbCancel]) = mrCancel) then
@@ -511,10 +529,22 @@ begin
         fn := fn + '\';
 
     // Munge the filename
-    fn := fn + MungeName(jid) + '.html';
+    fn := fn + MungeName(jid);
+    dn := fn;
+    fn := fn + '.html';
     if FileExists(fn) then begin
-        if (DeleteFile(PChar(fn))) then
-            MessageDlgW(sHistoryDeleted, mtInformation, [mbOK])
+        if (DeleteFile(PChar(fn))) then begin
+            // work on dir now
+            if (DirectoryExists(dn)) then begin
+                if (DelDir(dn)) then begin
+                    MessageDlgW(sHistoryDeleted, mtInformation, [mbOK]);
+                end
+                else
+                    MessageDlgW(sHistoryError, mtError, [mbCancel]);
+            end
+            else
+                MessageDlgW(sHistoryDeleted, mtInformation, [mbOK]);
+        end
         else
             MessageDlgW(sHistoryError, mtError, [mbCancel]);
     end
@@ -531,14 +561,16 @@ begin
         mtConfirmation, [mbOK,mbCancel]) = mrCancel) then exit;
 
     fn := _path;
-    if (AnsiRightStr(fn, 1) <> '\') then
-        fn := fn + '\';
+    if (AnsiRightStr(fn, 1) = '\') then
+        fn := AnsiLeftStr(fn, Length(fn) - 1);
 
-    // just shell exec a delete command.. easiest way to handle this
-    cmd := 'del "' + fn + '*.html"';
-    ShellExecute(0, PChar(cmd), nil, nil, nil, SW_HIDE);
-
-    MessageDlgW(sFilesDeleted, mtInformation, [mbOK]);
+    // Probably easiest to just delete directory and then recreate
+    if (DelDir(fn)) then begin
+        CreateDirectory(PAnsiChar(fn), nil);
+        MessageDlgW(sFilesDeleted, mtInformation, [mbOK]);
+    end
+    else
+        MessageDlgW(sHistoryError, mtError, [mbCancel]);
 end;
 
 
