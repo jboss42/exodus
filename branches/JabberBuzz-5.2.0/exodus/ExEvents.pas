@@ -433,13 +433,17 @@ begin
             tmp_tag := tag.GetFirstTag('error');
             if (tmp_tag <> nil) then begin
                 str_content := _('ERROR: ') + tmp_tag.Data();
-                ins :=  _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
-                    tmp_tag.getAttribute('code');
+                ins := _('ERROR: ');
+                if (tmp_tag.Data <> '') then
+                    ins := ins + tmp_tag.Data() + _(', Code=')
+                else
+                    ins := ins + _('Code=');
+                ins := ins + tmp_tag.getAttribute('code');
             end
             else
                 str_content := _('Unknown Error');
             error := true;
-            ins := ins + _(#13#10'Original Message was:');
+            ins := ins + _(#13#10'Original Message was: ');
             ins := ins + tag.GetBasicText('body');
             _data_list.Insert(0, ins);
         end
