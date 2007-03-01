@@ -784,6 +784,12 @@ procedure TfSendStatus.FTCallback(event: string; tag: TXMLTag);
 var
     accept: boolean;
 begin
+    if (event = '/session/disconnected') then begin
+     _iq := nil;
+      kill();
+      exit;
+    end;
+    
     // They either accept, or deny our ft offering
     assert(_iq <> nil);
     _iq := nil;

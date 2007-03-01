@@ -510,10 +510,6 @@ begin
             httpServer.DefaultPort := p;
         end;
     end
-    else if (event = '/session/disconnected') then begin
-        // kill all frames
-        Self.Close();
-    end;
 end;
 
 {---------------------------------------}
@@ -609,7 +605,7 @@ var
 begin
     i := getFrameIndex(frame);
     if (i = -1) then exit;
-    PostMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
+    SendMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
 end;
 
 
