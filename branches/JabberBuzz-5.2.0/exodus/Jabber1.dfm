@@ -168,7 +168,6 @@ object frmExodus: TfrmExodus
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitHeight = 560
     object splitRoster: TSplitter
       Left = 170
       Top = 1
@@ -192,7 +191,6 @@ object frmExodus: TfrmExodus
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 558
     end
     object Tabs: TTntPageControl
       Left = 175
@@ -223,7 +221,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 558
     end
   end
   object MainMenu1: TTntMainMenu
@@ -334,7 +331,7 @@ object frmExodus: TfrmExodus
             object mnuSearch: TTntMenuItem
               Caption = '&Search for a Contact'
               ShortCut = 16467
-              OnClick = mnuSearchClick
+              OnClick = btnFindClick
             end
             object RemovePerson1: TTntMenuItem
               Caption = '&Remove a Contact'
