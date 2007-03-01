@@ -768,14 +768,7 @@ begin
             SendError('406', 'not-acceptable');
             kill();
             end;
-        recv_si_wait: begin
-            // disable btn, and wait for stream hosts, then
-            // immediately turn around and refuse.
-            lblStatus.Caption := _('Waiting to cancel transfer...');
-            btnCancel.Enabled := false;
-            _state := recv_si_cancel;
-            end;
-        recv_si_cancel, recv_si_stream, recv_done: begin
+        recv_si_wait, recv_si_cancel, recv_si_stream, recv_done: begin
             // kill the socket and close panel.
             if (_thread <> nil) then
                 _thread.Terminate();
