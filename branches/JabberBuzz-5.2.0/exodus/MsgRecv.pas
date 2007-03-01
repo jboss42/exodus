@@ -660,7 +660,7 @@ begin
             m.isMe := true;
             m.Nick := nick;
 
-            mtag := m.Tag;
+            mtag := m.GetTag;
 
             // plugin stuff
             if (ComController <> nil) then
