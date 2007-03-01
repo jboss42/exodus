@@ -432,12 +432,17 @@ begin
             eType := evt_Message;
             tmp_tag := tag.GetFirstTag('error');
             if (tmp_tag <> nil) then begin
-                str_content := _('ERROR: ') + tmp_tag.Data();
+                if (tmp_tag.Data() <> '') then
+                    str_content := _('ERROR: ') + tmp_tag.Data()
+                else
+                    str_content := _('ERROR');
+
                 ins := _('ERROR: ');
                 if (tmp_tag.Data <> '') then
                     ins := ins + tmp_tag.Data() + _(', Code=')
                 else
                     ins := ins + _('Code=');
+
                 ins := ins + tmp_tag.getAttribute('code');
             end
             else
