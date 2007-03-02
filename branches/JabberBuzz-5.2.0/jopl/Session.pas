@@ -29,8 +29,10 @@ uses
     PrefController,
     JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText;
 
+const
+    sErrorRevoke = 'Error on attempt to revoke voice from owner or user with a higher affiliation';
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -239,7 +241,7 @@ uses
     DisplayName, //display name cache
     PluginAuth,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard, Windows, strutils;
+    JabberConst, CapPresence, XMLVCard, Windows, strutils, JabberUtils;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
@@ -643,7 +645,13 @@ begin
     else if msg = 'xml' then begin
         // We got a stanza. Whoop.
         // Let's always fire debug events
-        if (tag.Name = 'stream:stream') then begin
+        if (tag.GetAttribute('type') = 'error') then begin
+           tag := tag.GetFirstTag('error');
+           if (tag <> nil) then
+             if (tag.GetAttribute('code') = '405') then
+               MessageDlgW(_(sErrorRevoke), mtError, [mbOK], 0);
+        end
+        else if (tag.Name = 'stream:stream') then begin
 
             // we got connected
             _stream_id := tag.getAttribute('id');
