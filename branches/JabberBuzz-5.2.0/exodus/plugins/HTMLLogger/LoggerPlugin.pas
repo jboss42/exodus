@@ -428,6 +428,7 @@ begin
     frameset_fn := dir + munged_name + '.html';
     dates_fn := base_fn + '_dates.html';
     basedir := dir + munged_name + '\';
+    oldlogexists := false;
 
     // Frameset
     try
