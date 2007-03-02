@@ -1129,7 +1129,8 @@ end;
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
     emsg, ptype, from: Widestring;
-    tmp_jid: TJabberID;
+    tmp_jid, from_jid: TJabberID;
+    from_base: Widestring;
     i: integer;
     member: TRoomMember;
     mtag, t, itag, xtag, etag, drtag: TXMLTag;
@@ -1140,6 +1141,10 @@ begin
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
     i := _roster.indexOf(from);
+    if (from <> '') then begin
+        from_jid := TJabberID.Create(from);
+        from_base := from_jid.jid;
+    end;
 
     // check for MUC presence
     xtag := tag.QueryXPTag(xp_muc_presence);
@@ -1152,7 +1157,7 @@ begin
         if (etag <> nil) then begin
             ecode := etag.GetAttribute('code');
             if (ecode = '409') then begin
-                MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_409), mtError, [mbOK], 0, from_base);
                 if (_old_nick = '') then begin
                     Self.Close();
                     exit;
@@ -1182,7 +1187,7 @@ begin
                     end
                     else begin
                         // 401 error IS due to bad password so show password error
-                        MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
+                        MessageDlgW(_(sStatus_401), mtError, [mbOK], 0, from_base);
                         if (_passwd_from_join_room) then begin
                             Self.Close();
                             tmp_jid := TJabberID.Create(from);
@@ -1207,15 +1212,15 @@ begin
             end
             else if (ecode = '404') then begin
                 if (etag.QueryXPTag('/error/item-not-found') <> nil) then
-                  MessageDlgW(_(sStatus_404), mtError, [mbOK], 0)
+                  MessageDlgW(_(sStatus_404), mtError, [mbOK], 0, from_base)
                 else if (etag.QueryXPTag('/error/remote-server-not-found') <> nil) then
-                  MessageDlgW(_(sStatus_404a), mtError, [mbOK], 0);
+                  MessageDlgW(_(sStatus_404a), mtError, [mbOK], 0, from_base);
 
                 Self.Close();
                 exit;
             end
             else if (ecode = '405') then begin
-                MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
@@ -1224,7 +1229,7 @@ begin
                 //If can't join, first check if we are allowed to regiter
                 if  (e <> nil) then begin
                   if (e.hasFeature('muc-members-openreg') or e.hasFeature('muc-openreg')) then begin
-                    if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                    if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0, from_base) = mrYes) then begin
                       t := TXMLTag.Create('register');
                       t.setAttribute('jid', Self.jid);
                       MainSession.FireEvent('/session/register', t);
@@ -1233,7 +1238,7 @@ begin
                   end
                   else
                     //If can't register, can't enter
-                    MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0)
+                    MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0, from_base)
                   end;
                 Self.Close();
                 exit;
@@ -1244,19 +1249,19 @@ begin
                     emsg := etag.Data();
                 if (emsg = '') then
                     emsg := _(sStatus_403);
-                MessageDlgW(emsg, mtError, [mbOK], 0);
+                MessageDlgW(emsg, mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
             else if (ecode = '413') then begin
                 //Note:  This is the JINC code for max-occupants
-                MessageDlgW(_(sStatus_413), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_413), mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
         end;
 
-        MessageDlgW(_(sStatus_Unknown), mtError, [mbOK], 0);
+        MessageDlgW(_(sStatus_Unknown), mtError, [mbOK], 0, from_base);
         Self.Close();
         exit;
     end
@@ -1276,7 +1281,7 @@ begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
                 end;
 
-                MessageDlgW(reason, mtInformation, [mbOK], 0);
+                MessageDlgW(reason, mtInformation, [mbOK], 0, from_base);
                 tmp_jid.Free();
                 _pending_destroy := false;
             end;
@@ -1457,6 +1462,8 @@ begin
         end;
         RenderMember(member, tag);
     end;
+
+    from_jid.Free();
 
 end;
 
