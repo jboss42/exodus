@@ -1144,7 +1144,9 @@ begin
     if (from <> '') then begin
         from_jid := TJabberID.Create(from);
         from_base := from_jid.jid;
-    end;
+    end
+    else
+        from_jid := nil;
 
     // check for MUC presence
     xtag := tag.QueryXPTag(xp_muc_presence);
