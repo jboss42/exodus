@@ -1306,9 +1306,21 @@ end;
 procedure TfrmChat.lblJIDClick(Sender: TObject);
 var
     cp: TPoint;
+    p: TJabberPres;
+    inRoster: boolean;
+    ritem: TJabberRosterItem;
 begin
   inherited;
     GetCursorPos(cp);
+    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
+    ritem := MainSession.Roster.Find(_jid.jid);
+    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
+
+    if (inRoster) and (p <> nil) then
+        mnuSendFile.Enabled := true
+    else
+        mnuSendFile.Enabled := false;
+
     popContact.popup(cp.x, cp.y);
 end;
 
