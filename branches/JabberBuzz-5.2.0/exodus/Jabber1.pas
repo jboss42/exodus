@@ -4240,6 +4240,7 @@ var
 begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage = nil) then exit;
+    if (not Tabs.Visible or not Tabs.Enabled) then exit;
     if (not Self.Visible or not Self.Enabled) then exit;
 
     f := getTabForm(Tabs.ActivePage);
