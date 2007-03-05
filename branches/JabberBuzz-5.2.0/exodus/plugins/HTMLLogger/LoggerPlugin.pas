@@ -108,7 +108,7 @@ const
     sHistoryDeleted = 'History deleted.';
     sHistoryError = 'Could not delete history file(s).';
     sHistoryNone = 'No history file for this user.';
-    sConfirmClearLog = 'Do you really want to clear the log for %s?';
+    sConfirmClearLog = 'Do you really want to clear the log for %s?' + #13#10 + 'Once cleared these logs are not recoverable.';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
     sFilesDeleted = 'HTML log files deleted.';
 
