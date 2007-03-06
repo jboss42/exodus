@@ -165,6 +165,9 @@ type
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure CTCPCallbackTime(event: string; tag: TXMLTag);
+    procedure CTCPCallbackVersion(event: string; tag: TXMLTag);
+    procedure CTCPCallbackLast(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
 
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
@@ -412,6 +415,9 @@ end;
 procedure TfrmChat.FormCreate(Sender: TObject);
 begin
     inherited;
+    _cur_ver := nil;
+    _cur_time := nil;
+    _cur_last := nil;
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
@@ -1476,11 +1482,41 @@ begin
         jid := p.fromJID.full;
 
     if Sender = mnuVersionRequest then
-        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallback)
+        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallbackVersion)
     else if Sender = mnuTimeRequest then
-        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallback)
+        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallbackTime)
     else if Sender = mnuLastActivity then
-        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallback);
+        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallbackLast);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackTime(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_time := nil
+    else
+        CTCPCallback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackVersion(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_ver := nil
+    else
+        CTCPCallback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackLast(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_last := nil
+    else
+        CTCPCallback(event, tag);
 end;
 
 {---------------------------------------}
