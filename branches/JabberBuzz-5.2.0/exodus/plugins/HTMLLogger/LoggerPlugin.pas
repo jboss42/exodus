@@ -340,11 +340,24 @@ begin
 
     // Add to today's XML log
     try
-        xml_fn := base_fn + '.xml';
+        xml_fn := base_fn;
+        xml_fn := xml_fn + '_';
+        DateTimeToString(tempstring, 'yyyymmdd', jDateTime);
+        xml_fn := xml_fn + tempstring; // date
+        xml_fn := xml_fn + '.xml'; // file extension
         if (FileExists(xml_fn)) then begin
             fs := TFileStream.Create(xml_fn, fmOpenReadWrite, fmShareDenyNone);
             fs.Seek(0, soFromEnd);
             buff := log.XML + #13#10;
+            fs.Write(Pointer(buff)^, Length(buff));
+            fs.Free();
+        end
+        else begin
+            fs := TFileStream.Create(xml_fn, fmCreate, fmShareDenyNone);
+
+            // put some UTF-8 header fu in here
+            buff := '<!-- Note: this file is not well formed XML as there is no root element -->' + #13#10;
+            buff := buff + log.XML + #13#10;
             fs.Write(Pointer(buff)^, Length(buff));
             fs.Free();
         end;
@@ -440,14 +453,12 @@ var
     buff: string;
     frameset_fn: Widestring;
     dates_fn: Widestring;
-    xml_fn: Widestring;
     oldlogexists: boolean;
     basedir: string;
 begin
     Result := false;
     frameset_fn := dir + munged_name + '.html';
     dates_fn := base_fn + '_dates.html';
-    xml_fn := base_fn + '.xml';
     basedir := dir + munged_name + '\';
     oldlogexists := false;
 
@@ -514,22 +525,6 @@ begin
     except
         on e: Exception do begin
             MessageDlg(sCouldNotFindFile + dates_fn, mtError, [mbOK], 0);
-            exit;
-        end;
-    end;
-
-    // XML log
-    try
-        if (not FileExists(xml_fn)) then begin
-            fs := TFileStream.Create(xml_fn, fmCreate, fmShareDenyNone);
-
-            buff := '<!-- Note: this file is not well formed XML as there is no root element -->' + #13#10;
-            fs.Write(Pointer(buff)^, Length(buff));
-            fs.Free();
-        end;
-    except
-        on e: Exception do begin
-            MessageDlg(sCouldNotFindFile + xml_fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
