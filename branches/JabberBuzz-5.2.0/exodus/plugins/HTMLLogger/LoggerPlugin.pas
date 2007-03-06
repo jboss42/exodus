@@ -111,6 +111,7 @@ const
     sConfirmClearLog = 'Do you really want to clear the log for %s?' + #13#10 + 'Once cleared these logs are not recoverable.';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
     sFilesDeleted = 'HTML log files deleted.';
+    sCouldNotFindFile = 'Could not open log file: ';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -294,6 +295,7 @@ var
     fn: Widestring;
     base_fn: Widestring;
     date_fn: Widestring;
+    xml_fn: Widestring;
     header: boolean;
     rjid, j: TJabberID;
     ndate: TDateTime;
@@ -336,6 +338,23 @@ begin
     if (not SetupFrameSet(dir, base_fn, MungeName(j.jid))) then
         exit; // will have already seen an error message
 
+    // Add to today's XML log
+    try
+        xml_fn := base_fn + '.xml';
+        if (FileExists(xml_fn)) then begin
+            fs := TFileStream.Create(xml_fn, fmOpenReadWrite, fmShareDenyNone);
+            fs.Seek(0, soFromEnd);
+            buff := log.XML + #13#10;
+            fs.Write(Pointer(buff)^, Length(buff));
+            fs.Free();
+        end;
+    except
+        on e: Exception do Begin
+            MessageDlg(sCouldNotFindFile + xml_fn, mtError, [mbOK], 0);
+            exit;
+        end;
+    end;
+
     // Add to today's date_log
     try
         date_fn := base_fn + '_dates.html';
@@ -361,7 +380,7 @@ begin
         end;
     except
         on e: Exception do begin
-            MessageDlg('Could not open log file: ' + date_fn, mtError, [mbOK], 0);
+            MessageDlg(sCouldNotFindFile + date_fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -406,7 +425,7 @@ begin
         fs.Free();
     except
         on e: Exception do begin
-            MessageDlg('Could not open log file: ' + fn, mtError, [mbOK], 0);
+            MessageDlg(sCouldNotFindFile + fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -421,12 +440,14 @@ var
     buff: string;
     frameset_fn: Widestring;
     dates_fn: Widestring;
+    xml_fn: Widestring;
     oldlogexists: boolean;
     basedir: string;
 begin
     Result := false;
     frameset_fn := dir + munged_name + '.html';
     dates_fn := base_fn + '_dates.html';
+    xml_fn := base_fn + '.xml';
     basedir := dir + munged_name + '\';
     oldlogexists := false;
 
@@ -467,7 +488,7 @@ begin
         end;
     except
         on e: Exception do begin
-            MessageDlg('Could not open log file: ' + frameset_fn, mtError, [mbOK], 0);
+            MessageDlg(sCouldNotFindFile + frameset_fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -492,7 +513,23 @@ begin
         end;
     except
         on e: Exception do begin
-            MessageDlg('Could not open log file: ' + dates_fn, mtError, [mbOK], 0);
+            MessageDlg(sCouldNotFindFile + dates_fn, mtError, [mbOK], 0);
+            exit;
+        end;
+    end;
+
+    // XML log
+    try
+        if (not FileExists(xml_fn)) then begin
+            fs := TFileStream.Create(xml_fn, fmCreate, fmShareDenyNone);
+
+            buff := '<!-- Note: this file is not well formed XML as there is no root element -->' + #13#10;
+            fs.Write(Pointer(buff)^, Length(buff));
+            fs.Free();
+        end;
+    except
+        on e: Exception do begin
+            MessageDlg(sCouldNotFindFile + xml_fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -556,7 +593,7 @@ end;
 {---------------------------------------}
 procedure THTMLLogger.purgeLogs();
 var
-    cmd, fn: string;
+    fn: string;
 begin
     if (MessageDlgW(sConfirmClearAllLogs,
         mtConfirmation, [mbOK,mbCancel]) = mrCancel) then exit;
