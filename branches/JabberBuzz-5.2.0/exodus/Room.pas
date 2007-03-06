@@ -931,7 +931,7 @@ begin
         m := TJabberMessage.Create(nick, 'normal', tmps,
             _('Groupchat private message'));
         // XXX: do we want to do plugin stuff for priv msgs?
-        MainSession.SendTag(m.Tag);
+        MainSession.SendTag(m.GetTag);
         m.Free();
         Result := true;
     end
