@@ -32,7 +32,7 @@ uses
     Contnrs, Classes, SysUtils, JabberID, GnuGetText;
 
 const
-    sErrorRevoke = 'Error on attempt to revoke voice from owner or user with a higher affiliation';
+    sErrorNoPrivileges = 'Operation has failed due to lack of privileges (%s)';
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -181,6 +181,7 @@ type
         function IsBlocked(jid : TJabberID): boolean; overload;
         function getDisplayUsername(): widestring;
 
+        procedure RefreshBlockers();
         procedure Block(jid : TJabberID);
         procedure UnBlock(jid : TJabberID);     
 
@@ -648,8 +649,8 @@ begin
         if (tag.GetAttribute('type') = 'error') then begin
            tag := tag.GetFirstTag('error');
            if (tag <> nil) then
-             if (tag.GetAttribute('code') = '405') then
-               MessageDlgW(_(sErrorRevoke), mtError, [mbOK], 0);
+             if ((tag.GetAttribute('code') = '405') or (tag.GetAttribute('code') = '403')) then
+               MessageDlgW(WideFormat(_(sErrorNoPrivileges), [tag.GetAttribute('code')]), mtError, [mbOK], 0);
         end
         else if (tag.Name = 'stream:stream') then begin
 
@@ -1194,6 +1195,26 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberSession.RefreshBlockers();
+var
+    j: Integer;
+    c: TChatController;
+begin
+
+    //Disable all open chat windows
+    with MainSession.ChatList do begin
+       for j := Count - 1 downto 0 do begin
+           c := TChatController(Objects[j]);
+           if (c <> nil) then
+             if (IsBlocked(c.jid)) then
+                c.DisableChat()
+             else
+                c.EnableChat();
+       end;
+    end;
+
+end;
+
 procedure TJabberSession.Block(jid : TJabberID);
 var
     blockers: TWideStringList;
