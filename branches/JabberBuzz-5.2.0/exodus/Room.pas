@@ -1869,7 +1869,7 @@ begin
     // send the msg out
     msg := TJabberMessage.Create(jid, 'groupchat',
                                  _(sRoomSubjChange) + subj, subj);
-    MainSession.SendTag(msg.Tag);
+    MainSession.SendTag(msg.GetTag);
     msg.Free;
 end;
 
