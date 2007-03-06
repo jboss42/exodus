@@ -605,7 +605,7 @@ var
 begin
     i := getFrameIndex(frame);
     if (i = -1) then exit;
-    SendMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
+    PostMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
 end;
 
 
