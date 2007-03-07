@@ -36,7 +36,7 @@
     <away_auto_response value="0" control="chkAwayAutoResponse"/>
 
     <!-- Roster Options -->                    	
-    <roster_show_unsub value="0" control="chkShowUnsubs" state="inv"/>
+    <roster_show_unsub value="0" control="chkShowUnsubs"/>
     <roster_show_pending value="1" control="chkShowPending"/>
     <roster_hide_block value="0" control="chkHideBlocked"/>
     <roster_pres_errors  value="0" control="chkPresErrors"/>
