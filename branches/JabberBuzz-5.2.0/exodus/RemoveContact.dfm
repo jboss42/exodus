@@ -58,7 +58,7 @@ object frmRemove: TfrmRemove
   object optMove: TTntRadioButton
     Left = 8
     Top = 23
-    Width = 249
+    Width = 355
     Height = 17
     Caption = 'Remove this contact from this group'
     TabOrder = 1
