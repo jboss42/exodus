@@ -14,7 +14,7 @@
     <window_ontop value="0" control="chkOnTop" state="inv"/>
     <window_toolbox value="0" control="chkToolbox"/>        
     <close_min value="0" control="chkCloseMin"/>
-    <single_instance value="1" control="chkSingleInstance"/>
+	<single_instance value="1" control="chkSingleInstance" state="inv"/>
     <default_nick control="txtDefaultNick">
       <control name="lblDefaultNick"/>
     </default_nick>
@@ -229,7 +229,7 @@
       <control name="lblPresTracking"/>
     </pres_tracking>
     <presence_message_listen value="1" control="chkPresenceSync"/>
-    <presence_message_send value="1" control="chkPresenceSync"/>
+    <presence_message_send value="1" control="chkPresenceSync" state="inv"/>
     <client_caps value="1" control="chkClientCaps"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
     <room_joins value="0" control="chkRoomJoins"/>        
