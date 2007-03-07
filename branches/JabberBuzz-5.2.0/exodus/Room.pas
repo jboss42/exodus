@@ -2088,7 +2088,12 @@ begin
     popRosterSubscribe.Enabled := false;
     popRosterVCard.Enabled := false;
     popRosterBrowse.Enabled := false;
-
+    popKick.Enabled := false;
+    popBan.Enabled := false;
+    popVoice.Enabled := false;
+    popModerator.Enabled := false;
+    popAdministrator.Enabled := false;
+    
     if (not e) then exit;
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
