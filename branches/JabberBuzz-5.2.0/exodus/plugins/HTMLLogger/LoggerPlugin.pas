@@ -378,14 +378,14 @@ begin
             // See if this date is already in the file
             SetLength(buff, fs.Size);
             fs.Read(Pointer(buff)^, fs.Size);
-            DateTimeToString(tempstring, 'yyyy/mm/dd', jdatetime);
+            DateTimeToString(tempstring, 'yyyy"/"mm"/"dd', jdatetime);
             if (Pos(tempstring, buff) = 0) then begin
                 // Date not in file yet
                 fs.Seek(0, soFromEnd);
                 DateTimeToString(tempstring, 'yyyymmdd', jDateTime);
                 tempstring := MungeName(j.jid) + '_' + tempstring + '.html';
                 buff := '<a target="log_frame" href="' + tempstring + '">';
-                DateTimeToString(tempstring, 'yyyy/mm/dd', jDateTime);
+                DateTimeToString(tempstring, 'yyyy"/"mm"/"dd', jDateTime);
                 buff := buff + tempstring + '</a><br/>';
                 fs.Write(Pointer(buff)^, Length(buff));
             end;
