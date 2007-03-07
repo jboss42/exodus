@@ -1188,7 +1188,7 @@ begin
            c := TChatController(Objects[j]);
            if (c <> nil) then
              if (c.jid = jid.jid) then
-                c.EnableChat();
+                c.SetJid(c.jid);
        end;
     end;
     block.Free();
@@ -1199,28 +1199,36 @@ procedure TJabberSession.RefreshBlockers();
 var
     j: Integer;
     c: TChatController;
+    block: TXMLTag;
 begin
-
-    //Disable all open chat windows
+    block := TXMLTag.Create('block');
+    //Iterate through all controllers
     with MainSession.ChatList do begin
        for j := Count - 1 downto 0 do begin
            c := TChatController(Objects[j]);
-           if (c <> nil) then
-             if (IsBlocked(c.jid)) then
-                c.DisableChat()
-             else
-                c.EnableChat();
+           block.setAttribute('jid', c.jid);
+           if (c <> nil) then begin
+             if (IsBlocked(c.jid)) then begin
+                //If blocked, chat window will be closed and will
+                //disable controller for this jid
+                MainSession.FireEvent('/session/block', block);
+             end
+             else begin
+                //Enable controller just in case window is not open
+                c.SetJid(c.jid);
+                //MainSession.FireEvent('/session/unblock', block);
+             end;
+           end;
        end;
     end;
-
+    block.Free();
 end;
+
 
 procedure TJabberSession.Block(jid : TJabberID);
 var
     blockers: TWideStringList;
     block: TXMLTag;
-    j: Integer;
-    c: TChatController;
 begin
     blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
@@ -1232,15 +1240,6 @@ begin
     block := TXMLTag.Create('block');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
-    //Disable all open chat windows
-    with MainSession.ChatList do begin
-       for j := Count - 1 downto 0 do begin
-           c := TChatController(Objects[j]);
-           if (c <> nil) then
-             if (c.jid = jid.jid) then
-                c.DisableChat();
-       end;
-    end;
     block.Free();
 end;
 

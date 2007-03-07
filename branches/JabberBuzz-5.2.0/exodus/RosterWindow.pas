@@ -875,6 +875,7 @@ begin
         BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
 
         Redraw();
+        MainSession.RefreshBlockers;
     end
 
     // someone has been blocked

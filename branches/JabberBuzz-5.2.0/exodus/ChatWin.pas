@@ -141,7 +141,7 @@ type
     _dnLocked: boolean; //can the display name be changed? true if no\ick was passed
                         //into factory method 
     _displayName: WideString;
-    
+
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
@@ -314,7 +314,12 @@ begin
     // Create a new chat controller if we don't have one
     if chat = nil then begin
         chat := MainSession.ChatList.AddChat(sjid, resource);
-    end;
+    end
+    else
+       //We need to do this for existing chat controllers to make sure
+       //callbacks are re-registered if they
+       //have been unregistered before due to blocking
+       chat.SetJID(sjid);
 
     // Create a window if we don't have one.
     if (chat.window = nil) then begin
@@ -389,6 +394,7 @@ begin
     end;
 
     Result := TfrmChat(chat.window);
+
 end;
 
 {---------------------------------------}
@@ -445,6 +451,8 @@ begin
 
     SetupPrefs();
     SetupMenus();
+
+    _scallback := MainSession.RegisterCallback(SessionCallback, '/session/block');
 
     // branding/menus
     with MainSession.Prefs do begin
@@ -681,7 +689,16 @@ begin
 end;
 
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+ chat: TChatController;
 begin
+    //
+    chat := MainSession.ChatList.FindChat(_jid.jid, _jid.resource, '');
+    if (chat <> nil) then
+       if (MainSession.IsBlocked(_jid.jid)) then begin
+         chat.DisableChat;
+         chat.Window := nil;
+       end;
     Action := caFree;
     inherited;
 end;
@@ -1082,40 +1099,36 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/disconnected') then begin
-        MsgList.DisplayPresence(_('You have been disconnected.'), '');
-        MainSession.UnRegisterCallback(_pcallback);
-        _pcallback := -1;
-
-        // this should make sure that hidden windows
-        // just go away when we get disconnected.
-        //if (not Visible) then Self.Free();
-        if (self.Visible) then
-            Self.Close()
-        else
-            Self.Free();
-    end
-    else if (event = '/session/connected') then begin
-        Self.SetJID(jid);
-    end
-    else if (event = '/session/prefs') then
-        SetupPrefs()
-
-    else if (event = '/session/logger') then
-        SetupMenus()
-
-    else if (event = '/session/block') then begin
+//    if (event = '/session/disconnected') then begin
+//        MsgList.DisplayPresence(_('You have been disconnected.'), '');
+//        MainSession.UnRegisterCallback(_pcallback);
+//        _pcallback := -1;
+//
+//        // this should make sure that hidden windows
+//        // just go away when we get disconnected.
+//        //if (not Visible) then Self.Free();
+//        if (self.Visible) then
+//            Self.Close()
+//        else
+//            Self.Free();
+//    end
+//    else if (event = '/session/connected') then begin
+//        Self.SetJID(jid);
+//    end
+//    else if (event = '/session/prefs') then
+//        SetupPrefs()
+//
+//    else if (event = '/session/logger') then
+//        SetupMenus()
+//    else if (event = '/session/block') then begin
+    if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            MsgList.DisplayPresence(_(sUserBlocked), '');
-            MainSession.UnRegisterCallback(_pcallback);
-            _pcallback := -1;
-            freeChatObject();
-            Self.Close();
+            PostMessage(Handle, WM_CLOSE, 0, 0);
         end;
     end
-    else if (event = '/session/avatars') then
-        imgAvatar.Refresh();
+//    else if (event = '/session/avatars') then
+//        imgAvatar.Refresh();
 
 end;
 
