@@ -403,7 +403,8 @@ begin
     // change in the bg color
     if (_clr_control = colorChat) then begin
         _color_bg := Integer(clrBoxBG.Selected);
-        colorChat.Color := clrBoxBG.Selected
+        colorChat.Color := clrBoxBG.Selected;
+        redrawChat;
     end
     else begin
         _roster_bg := Integer(clrBoxBG.Selected);
