@@ -287,6 +287,7 @@ begin
     hlColor := MainSession.Prefs.getInt('color_me');
 
     allTxt := Copy(rtDest.WideLines.Text, startPos+1, length(rtDest.WideLines.Text));
+    allTxt := StringReplace(allTxt, #$D#$A, '', [rfReplaceAll, rfIgnoreCase]);
 
     //Create a TRegExpr based on Keyword Prefs
     keywords := CreateKeywordsExpr();
