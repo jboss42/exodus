@@ -72,6 +72,7 @@ object frmExodus: TfrmExodus
         Top = 0
         Hint = 'Disconnect'
         Caption = 'Disconnect'
+        Enabled = False
         ImageIndex = 79
         Visible = False
         OnClick = mnuDisconnectClick
