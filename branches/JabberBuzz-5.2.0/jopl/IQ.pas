@@ -60,6 +60,10 @@ type
         constructor Create(session: TJabberSession; id: Widestring;
             seconds: longint = 15); reintroduce; overload;
 
+        constructor Create(session: TJabberSession; id: Widestring;
+            payload: TXMLTag; cb: TPacketEvent;
+            seconds: longint = 15); reintroduce; overload;
+
         destructor Destroy; override;
         procedure Send;
 
@@ -114,6 +118,31 @@ begin
     qTag := Self.AddTag('query');
 end;
 
+{---------------------------------------}
+constructor TJabberIQ.Create(session: TJabberSession; id: Widestring;
+    payload: TXMLTag; cb: TPacketEvent; seconds: longint = 15);
+var
+    payloadtag: TXMLTag;
+begin
+    inherited Create();
+
+    _js := session;
+    _id := id;
+    _callback := cb;
+    _cbIndex := -1;
+    _timer := TTimer.Create(nil);
+    _timer.Interval := 1000;
+    _timer.Enabled := false;
+    _timer.OnTimer := Timeout;
+    _ticks := 0;
+    _timeout := seconds;
+
+    // manip the xml tag
+    Self.Name := 'iq';
+    payloadtag := TXMLTag.Create(payload);
+    qTag := Self.AddTag(payloadtag);
+
+end;
 {---------------------------------------}
 destructor TJabberIQ.Destroy;
 begin
