@@ -45,7 +45,7 @@
       <control name="lblDblClick"/>
     </roster_chat>
     <inline_status value="0" control="chkInlineStatus"/>
-    <inline_color value="8421376" control="cboInlineStatus"/>
+	<inline_color value="$808000" control="cboInlineStatus"/>
     <nested_groups value="0" control="chkNestedGrps"/>
     <group_seperator value="/" control="txtGrpSeperator"/>
     <roster_avatars value="false" control="chkRosterAvatars"/>
@@ -96,7 +96,7 @@
     <!-- fonts and colors -->
     <font_name value="Arial"/>
     <font_size value="10"/>
-    <font_color value="0"/>
+	<font_color value=$000000"/>
     <font_charset value="1"/>
     <font_bold value="0"/>
     <font_italic value="0"/>
@@ -108,8 +108,8 @@
 	<color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
-    <roster_bg value="$80000005"/>
-    <roster_font_color value="0"/>
+	<roster_bg value="$80000005"/>
+	<roster_font_color value="$000000"/>
     <roster_font_size value="10"/>
     <roster_font_charset value="1"/>
     <msglist_type value="0" control="cboMsgList"/>
