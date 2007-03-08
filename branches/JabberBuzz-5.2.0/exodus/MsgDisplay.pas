@@ -213,7 +213,7 @@ begin
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
-    hlStartPos := RichEdit.SelStart; // Done here because RTFSelText messes this up.
+    hlStartPos := Length(RichEdit.WideLines.Text); // Done here because RTFSelText messes this up.
     RichEdit.RTFSelText := txt;
 
     if (ximTag <> nil) then begin
@@ -286,7 +286,7 @@ var
 begin
     hlColor := MainSession.Prefs.getInt('color_me');
 
-    allTxt := Copy(rtDest.WideLines.Text, startPos - 1, length(rtDest.WideLines.Text));
+    allTxt := Copy(rtDest.WideLines.Text, startPos+1, length(rtDest.WideLines.Text));
 
     //Create a TRegExpr based on Keyword Prefs
     keywords := CreateKeywordsExpr();
