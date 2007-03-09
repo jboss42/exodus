@@ -76,6 +76,8 @@ begin
     else
       txtGrpSeperator.Enabled := chkNestedGrps.Checked;
 
+    Self.cboInlineStatus.Enabled := Self.chkInlineStatus.Checked;
+    Self.cboInlineStatus.Visible := Self.chkInlineStatus.Visible;
     Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
     Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
     Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
