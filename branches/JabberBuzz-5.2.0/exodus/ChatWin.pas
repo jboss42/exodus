@@ -352,6 +352,11 @@ begin
             _dnLocked := true;
         end;
 
+        if (MainSession.IsBlocked(sjid)) then
+          mnuBlock.Caption := _('Unblock')
+        else
+          mnuBlock.Caption := _('Block');
+          
         if resource <> '' then
             cjid := sjid + '/' + resource
         else
@@ -1585,8 +1590,11 @@ end;
 {---------------------------------------}
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
-    MainSession.Block(_jid);
-    freeChatObject();
+     if (MainSession.IsBlocked(_jid.jid)) then
+         MainSession.UnBlock(_jid)
+     else
+         MainSession.Block(_jid);
+
 end;
 
 {---------------------------------------}
