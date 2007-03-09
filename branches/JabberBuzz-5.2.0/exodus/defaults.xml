@@ -96,7 +96,7 @@
     <!-- fonts and colors -->
     <font_name value="Arial"/>
     <font_size value="10"/>
-	<font_color value=$000000"/>
+	<font_color value="$000000"/>
     <font_charset value="1"/>
     <font_bold value="0"/>
     <font_italic value="0"/>
