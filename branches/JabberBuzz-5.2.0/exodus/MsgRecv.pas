@@ -111,6 +111,7 @@ type
     _events: TQueue;
     _controller: TExMsgController;
     _callback_id: integer;
+    _password: Widestring;
 
     procedure SetupResources();
     procedure DisablePopup();
@@ -427,10 +428,12 @@ begin
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
 
+
     DisablePopup();
 
     if (eType = evt_Invite) then begin
         // Change button captions for TC Invites
+        _password := e.password;
         frameButtons1.btnOK.Caption := _(sAccept);
         frameButtons1.btnCancel.Caption := _(sDecline);
     end
@@ -611,7 +614,7 @@ begin
     if eType = evt_Invite then begin
         // join this grp... grp is in the subject
         jid := TJabberID.Create(_base_jid, false);
-        StartRoom(jid.jid, '', '', True, False, True);
+        StartRoom(jid.jid, '', _password, True, False, True);
         jid.Free();
         Self.Close();
     end

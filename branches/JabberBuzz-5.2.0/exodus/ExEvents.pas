@@ -55,6 +55,7 @@ type
         msg: WideString;
         caption: WideString;
         error: boolean;
+        password: Widestring;
 
         constructor create; overload;
         constructor create(evt: TJabberEvent); overload;
@@ -478,6 +479,7 @@ begin
             str_content := cjid.jid;
             cjid.Free();
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
+            password := tmp_tag.QueryXPData('/x/password');
         end
 
         else if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then begin
