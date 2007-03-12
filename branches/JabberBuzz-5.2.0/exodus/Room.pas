@@ -25,7 +25,7 @@ uses
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
     JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
-  AppEvnts;
+    AppEvnts, IQ;
 
 type
   TMemberNode = TTntListItem;
@@ -171,6 +171,8 @@ type
     _pending_start: boolean;
     _pending_destroy: boolean;  // if user is destroying room
     _passwd_from_join_room: boolean; //was the password supplied by the Join Room DLG.
+    _kick_iq: TJabberIQ;
+    _voice_iq: TJabberIQ;
 
     _my_membership_role: WideString; // My membership to the room.
 
@@ -219,6 +221,8 @@ type
     procedure EntityCallback(event: string; tag: TXMLTag);
     procedure autoConfigCallback(event: string; tag: TXMLTag);
     procedure roomuserCallback(event: string; tag: TXMLTag);
+    procedure KickUserCB(event: string; tag: TXMLTag);
+    procedure ChangeVoiceCB(event: string; tag: TXMLTag);
 
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
@@ -344,6 +348,9 @@ const
     sNoSubject     = 'No conference room subject';
     sMsgRosterItems = 'This message contains %d roster items.';
 
+    sOppErrorNoPrivileges = 'Operation has failed due to lack of privileges (%s)';
+    sOppErrorGeneral = 'Operation has failed (%s)';
+
 const
     MUC_OWNER = 'owner';
     MUC_ADMIN = 'admin';
@@ -386,7 +393,6 @@ uses
     GnuGetText,
     InputPassword,
     Invite,
-    IQ,
     Jabber1,
     JabberConst,
     JoinRoom,
@@ -1644,6 +1650,8 @@ begin
     inherited;
 
     // Create
+    _kick_iq := nil;
+    _voice_iq := nil;
     _mcallback := -1;
     _ecallback := -1;
     _pcallback := -1;
@@ -2212,7 +2220,7 @@ end;
 procedure TfrmRoom.popKickClick(Sender: TObject);
 var
     reason: WideString;
-    iq, q: TXMLTag;
+    q: TXMLTag;
 begin
   inherited;
     // Kick the selected participant
@@ -2227,12 +2235,8 @@ begin
         if (not InputQueryW(_(sBanReason), _(sBanReason), reason)) then exit;
     end;
 
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
-    iq.setAttribute('to', jid);
-    q := iq.AddTag('query');
-    q.setAttribute('xmlns', XMLNS_MUCADMIN);
+
+    q := TXMLTag.Create('query');
 
     if (Sender = popKick) then
         AddMemberItems(q, reason, MUC_NONE)
@@ -2243,7 +2247,32 @@ begin
     else if (Sender = popAdministrator) then
         AddMemberItems(q, '', '', MUC_ADMIN);
 
-    MainSession.SendTag(iq);
+    if (_kick_iq <> nil) then
+        _kick_iq.Free;
+    _kick_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), q, KickUserCB);
+    _kick_iq.toJid := jid;
+    _kick_iq.Namespace := XMLNS_MUCADMIN;
+    _kick_iq.iqType := 'set';
+    _kick_iq.Send();
+    q.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.KickUserCB(event: string; tag: TXMLTag);
+var
+    tmp_tag: TXMLTag;
+begin
+    if ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error')) then begin
+        tmp_tag := tag.GetFirstTag('error');
+        if (tmp_tag <> nil) then begin
+            if ((tmp_tag.GetAttribute('code') = '405') or (tmp_tag.GetAttribute('code') = '403')) then
+                MessageDlgW(WideFormat(_(sOppErrorNoPrivileges), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0)
+            else
+                MessageDlgW(WideFormat(_(sOppErrorGeneral), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0);
+        end;
+    end;
+    _kick_iq := nil;
 end;
 
 {---------------------------------------}
@@ -2272,7 +2301,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popVoiceClick(Sender: TObject);
 var
-    iq, q: TXMLTag;
+    q: TXMLTag;
     i: integer;
     cur_member: TRoomMember;
     new_role: WideString;
@@ -2281,12 +2310,7 @@ begin
     // Toggle Voice
     if (lstRoster.SelCount = 0) then exit;
 
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
-    iq.setAttribute('to', jid);
-    q := iq.AddTag('query');
-    q.setAttribute('xmlns', XMLNS_MUCADMIN);
+    q := TXmlTag.Create('query');
 
     // Iterate over all selected items, and toggle
     // voice by changing roles
@@ -2308,7 +2332,32 @@ begin
         end;
     end;
 
-    MainSession.SendTag(iq);
+    if (_voice_iq <> nil) then
+        _voice_iq.Free;
+    _voice_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), q, ChangeVoiceCB);
+    _voice_iq.toJid := jid;
+    _voice_iq.Namespace := XMLNS_MUCADMIN;
+    _voice_iq.iqType := 'set';
+    _voice_iq.Send();
+    q.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.ChangeVoiceCB(event: string; tag: TXMLTag);
+var
+    tmp_tag: TXMLTag;
+begin
+    if ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error')) then begin
+        tmp_tag := tag.GetFirstTag('error');
+        if (tmp_tag <> nil) then begin
+            if ((tmp_tag.GetAttribute('code') = '405') or (tmp_tag.GetAttribute('code') = '403')) then
+                MessageDlgW(WideFormat(_(sOppErrorNoPrivileges), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0)
+            else
+                MessageDlgW(WideFormat(_(sOppErrorGeneral), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0);
+        end;
+    end;
+    _voice_iq := nil;
 end;
 
 {---------------------------------------}
@@ -2399,6 +2448,10 @@ begin
     if (i >= 0) then
         room_list.Delete(i);
 
+
+    _kick_iq.Free;
+    _voice_iq.Free;
+    
     inherited;
 end;
 

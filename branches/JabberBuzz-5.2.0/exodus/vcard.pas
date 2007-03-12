@@ -378,7 +378,9 @@ procedure TfrmVCard.vCardIQCB(event: string; tag: TXMLTag);
 var
     w: word;
 begin
-    if (event = 'timeout') then begin
+    if ((event = 'timeout') or
+        ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error'))) then begin
         w := 0; //reserved
         MessageBoxExW(Self.Handle, PWideChar(_(sFailureToSetVCard)), PWideChar(_('My Profile')), MB_OK OR MB_ICONERROR, w);
     end;

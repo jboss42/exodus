@@ -31,8 +31,6 @@ uses
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID, GnuGetText;
 
-const
-    sErrorNoPrivileges = 'Operation has failed due to lack of privileges (%s)';
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
 
@@ -646,14 +644,8 @@ begin
     else if msg = 'xml' then begin
         // We got a stanza. Whoop.
         // Let's always fire debug events
-        if (tag.GetAttribute('type') = 'error') then begin
-           tag := tag.GetFirstTag('error');
-           if (tag <> nil) then
-             if ((tag.GetAttribute('code') = '405') or (tag.GetAttribute('code') = '403')) then
-               MessageDlgW(WideFormat(_(sErrorNoPrivileges), [tag.GetAttribute('code')]), mtError, [mbOK], 0);
-        end
-        else if (tag.Name = 'stream:stream') then begin
 
+        if (tag.Name = 'stream:stream') then begin
             // we got connected
             _stream_id := tag.getAttribute('id');
             _xmpp := (tag.GetAttribute('version') = '1.0');
