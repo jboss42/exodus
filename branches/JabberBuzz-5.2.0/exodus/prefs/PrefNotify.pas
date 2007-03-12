@@ -140,6 +140,11 @@ begin
     chkNotify.ItemIndex := 0;
     chkNotifyClick(Self);
 
+    if (chkSound.Visible = true) then
+      lblConfigSounds.Visible := true
+    else
+       lblConfigSounds.Visible := false;
+       
     _loading := false;
 end;
 
