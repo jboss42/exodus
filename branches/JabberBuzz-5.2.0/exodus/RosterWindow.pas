@@ -3045,7 +3045,7 @@ var
     jids: TWideStringlist;
 begin
     // Invite the whole group to the conference.
-    sel := Self.getSelectedContacts(true);
+    sel := Self.getSelectedContacts(false);
     jids := TWideStringlist.Create();
     for i := 0 to sel.Count - 1 do
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
