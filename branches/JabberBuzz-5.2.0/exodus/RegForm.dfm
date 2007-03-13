@@ -3,7 +3,7 @@ inherited frmRegister: TfrmRegister
   Top = 361
   Caption = 'Service Registration'
   OldCreateOrder = True
-  OnClose = FormClose
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -132,8 +132,8 @@ inherited frmRegister: TfrmRegister
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has been completed Successfull' +
-          'y. Press the '#39'Finish'#39' button to Finish.'
+          'Your registration to this service has been completed successfull' +
+          'y. Press the '#39'Finish'#39' button to finish.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
@@ -152,9 +152,9 @@ inherited frmRegister: TfrmRegister
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has Failed! Press Back to go b' +
-          'ack and verify that all of the parameters have been filled in co' +
-          'rrectly. Press Cancel to close this wizard.'
+          'Your registration to this service has failed! Press '#39'Back'#39' to go' +
+          ' back and verify that all of the parameters have been filled in ' +
+          'correctly. Press '#39'Cancel'#39' to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
