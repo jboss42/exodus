@@ -3031,8 +3031,7 @@ begin
     if (_cur_ritem = nil) then exit;
 
     jids := TWideStringlist.Create();
-    if (_cur_ritem.IsOnline) then
-      jids.Add(_cur_ritem.jid.jid);
+    jids.Add(_cur_ritem.jid.jid);
 
     ShowInvite('', jids);
     jids.Free();
@@ -3046,7 +3045,7 @@ var
     jids: TWideStringlist;
 begin
     // Invite the whole group to the conference.
-    sel := Self.getSelectedContacts(true);
+    sel := Self.getSelectedContacts(false);
     jids := TWideStringlist.Create();
     for i := 0 to sel.Count - 1 do
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
