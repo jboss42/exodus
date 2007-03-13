@@ -140,8 +140,9 @@ implementation
 
 uses
     PrefController,
-    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms, 
-    XMLParser, XMLTag, Classes, StrUtils;
+    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms,
+    XMLParser, XMLTag, Classes, StrUtils, JabberUtils, GnuGetText,
+    Dialogs;
 
 {---------------------------------------}
 constructor TEmoticon.Create(filename: string);
@@ -434,12 +435,18 @@ begin
     // image/jpeg
     // image/png
     if (mime = 'image/gif') then begin
-        if (resHandle <> 0) then
-            result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
-        else
-            result := TGifEmoticon.Create(fileName);
+        try
+            if (resHandle <> 0) then
+                result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
+            else
+                result := TGifEmoticon.Create(fileName);
 
-        _objects.AddObject(key, result);
+            _objects.AddObject(key, result);
+        except
+            MessageDlgW(WideFormat(_('Failed to load emoticon image: %s'), [fileName]), mtError, [mbOK], 0);
+            result := nil;
+        end;
+
     end
     else if (mime = 'image/x-ms-bmp') then begin
         if (resHandle > 0) then
