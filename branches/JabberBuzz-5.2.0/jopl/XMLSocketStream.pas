@@ -351,7 +351,6 @@ end;
 procedure TSocketThread.Sock_Disconnect(Sender: TObject);
 begin
     // Socket is disconnected
-     doMessage(WM_DISCONNECTED);
 end;
 
 {---------------------------------------}
