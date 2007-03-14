@@ -224,6 +224,7 @@ procedure TSocketThread.DataTerminate(Sender: TObject);
 begin
     // destructor for the thread
     ThreadCleanUp();
+   doMessage(WM_DISCONNECTED);
 end;
 
 
@@ -589,8 +590,6 @@ begin
             // Socket is disconnected
             _active := false;
             KillSocket();
-            if (_thread <> nil) then
-                _thread.Terminate();
             _timer.Enabled := false;
             _thread := nil;
             DoCallbacks('disconnected', nil);
