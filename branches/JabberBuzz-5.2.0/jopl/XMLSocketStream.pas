@@ -224,7 +224,11 @@ procedure TSocketThread.DataTerminate(Sender: TObject);
 begin
     // destructor for the thread
     ThreadCleanUp();
-   doMessage(WM_DISCONNECTED);
+    try
+        doMessage(WM_DISCONNECTED);
+    except
+
+    end;
 end;
 
 
