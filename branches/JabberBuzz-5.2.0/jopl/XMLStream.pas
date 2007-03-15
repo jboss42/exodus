@@ -495,9 +495,14 @@ begin
     _callbacks.Clear();
 
     if _thread <> nil then begin
-        _thread.Terminate;
-        _thread._stream := nil;
+        try
+            _thread.Terminate;
+            _thread._stream := nil;
+        except
+
+        end;
     end;
+    _thread := nil;
 
     _callbacks.Free;
     inherited;

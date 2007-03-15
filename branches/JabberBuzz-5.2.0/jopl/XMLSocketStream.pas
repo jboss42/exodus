@@ -914,8 +914,12 @@ begin
     end
     else if (_active) then begin
         _active := false;
-        if (_thread <> nil) then
-            _thread.Terminate;
+        try
+            if (_thread <> nil) then
+                _thread.Terminate;
+        except
+
+        end;
         _timer.Enabled := false;
         _thread := nil;
     end;

@@ -770,8 +770,12 @@ begin
             end;
         recv_si_wait, recv_si_cancel, recv_si_stream, recv_done: begin
             // kill the socket and close panel.
-            if (_thread <> nil) then
-                _thread.Terminate();
+            try
+                if (_thread <> nil) then
+                    _thread.Terminate();
+            except
+
+            end;
             kill();
             end;
         end;

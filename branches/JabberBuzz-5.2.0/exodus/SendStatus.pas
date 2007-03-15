@@ -672,8 +672,12 @@ begin
         end;
     send_cancel: begin
         // kill the thread, etc..
-        if (_thread <> nil) then
-            _thread.Terminate();
+        try
+            if (_thread <> nil) then
+                _thread.Terminate();
+        except
+
+        end;
         _thread := nil;
         end;
     end;
@@ -991,8 +995,12 @@ begin
         _iq := nil;
     end;
 
-    if (_thread <> nil) then
-        _thread.Terminate();
+    try
+        if (_thread <> nil) then
+            _thread.Terminate();
+    except
+
+    end;
         
     getXferManager().killFrame(Self);
 end;

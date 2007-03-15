@@ -1676,7 +1676,9 @@ begin
         _reconnect_tries := 0;
         setTrayIcon(1);
         btnDisconnect.Enabled := true;
+        mnuFile_Disconnect.Enabled := true;
         btnConnect.Enabled := false;
+        mnuFile_Connect.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1852,6 +1854,7 @@ begin
             _last_status := '';
         end;
         btnConnect.Enabled := true;
+        mnuFile_Connect.Enabled := true;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -2140,11 +2143,15 @@ begin
     Toolbar1.AutoSize := false;
     if (enable) then begin
         btnConnect.Visible := not enable;
+        mnuFile_Connect.Enabled := not enable;
         btnDisconnect.Visible := enable;
+        mnuFile_Disconnect.Enabled := enable;
     end
     else begin
         btnDisconnect.Visible := enable;
+        mnuFile_Disconnect.Enabled := enable;
         btnConnect.Visible := not enable;
+        mnuFile_Connect.Enabled := not enable;
     end;
     Toolbar1.AutoSize := true;
 
@@ -2328,6 +2335,7 @@ end;
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
 begin
     btnConnect.Enabled := false;
+    mnuFile_Connect.Enabled := false;
     frmRosterWindow.lblConnectClick(Sender);
 end;
 
@@ -3795,6 +3803,7 @@ end;
 procedure TfrmExodus.mnuDisconnectClick(Sender: TObject);
 begin
     btnDisconnect.Enabled := false;
+    mnuFile_Disconnect.Enabled := false;
     if MainSession.Active then begin
         _logoff := true;
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
