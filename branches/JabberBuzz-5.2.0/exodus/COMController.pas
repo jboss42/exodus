@@ -1188,12 +1188,29 @@ end;
 function TExodusController.CreateDockableWindow(
   const Caption: WideString): Integer;
 var
+    p: Pointer;
     f: TfrmDockContainer;
+    ti: integer;
+    tstr: Widestring;
 begin
+EXutils.OutputDebugMsg('creating TfrmDockContainer');
     Application.CreateForm(TfrmDockContainer, f);
+EXutils.OutputDebugMsg('showing dock container');
     f.ShowDefault();
-    f.Caption := Caption;
-    Result := f.Panel1.Handle;
+    Application.ProcessMessages();
+    //hack alert! Info Broker work.
+    tstr := Copy(Caption, 1, Length('vcl_'));
+EXutils.OutputDebugMsg('Caption: ' + caption + ', tstr: ' + tstr);
+    if (tstr = 'vcl_') then begin
+EXutils.OutputDebugMsg('found delphi caption, returning tpanel');
+      f.Caption := Copy(Caption, Length('vcl_') + 1, Length(Caption));
+      p := @(TPanel(f.panel1));
+      Result := Integer(p);
+    end else begin
+EXutils.OutputDebugMsg('found normal caption, returning hwnd');
+      f.Caption := Caption;
+      Result := f.Panel1.Handle;
+    end;
 end;
 
 {---------------------------------------}

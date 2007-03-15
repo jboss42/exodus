@@ -12,9 +12,8 @@ inherited frmDockContainer: TfrmDockContainer
     Width = 204
     Height = 135
     Align = alClient
-    BevelInner = bvLowered
-    BevelOuter = bvLowered
-    BorderWidth = 10
+    BevelOuter = bvNone
+    BorderWidth = 3
     Caption = 'Panel1'
     DockSite = True
     TabOrder = 0
