@@ -312,7 +312,10 @@
     <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
     <brand_profile_password ></brand_profile_password>
     <brand_profile_port value="5222"></brand_profile_port>
-    <brand_profile_priority value="1"></brand_profile_priority>
+	<brand_profile_priority value="1"></brand_profile_priority>
+	<brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
+	<brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
+
 	<!--brand_profile_resource value="Exodus"></brand_profile_resource-->
 
     <brand_profile_resource_list>

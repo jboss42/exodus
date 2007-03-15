@@ -1454,6 +1454,8 @@ end;
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
     Result := TJabberProfile.Create(name, self);
+    Result.KerbAuth  := MainSession.Prefs.getBool('brand_profile_kerberos');
+    Result.SASLRealm :=  MainSession.Prefs.getString('brand_profile_realm');
     _profiles.AddObject(name, Result);
 end;
 
