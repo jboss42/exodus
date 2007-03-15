@@ -1467,6 +1467,9 @@ begin
             
             // Who can change subject
             _EnableSubjectButton();
+
+            // Am I the owner, thus no registration option
+            popRegister.Enabled := (member.affil <> MUC_OWNER);
         end;
         RenderMember(member, tag);
     end;
