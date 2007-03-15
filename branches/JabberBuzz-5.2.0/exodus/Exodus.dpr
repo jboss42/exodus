@@ -243,7 +243,8 @@ uses
   RT_XIMConversion in 'RT_XIMConversion.pas',
   ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
   DisplayName in '..\jopl\DisplayName.pas',
-  BrowseForFolderU in 'BrowseForFolderU.pas';
+  BrowseForFolderU in 'BrowseForFolderU.pas',
+  SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant};
 
 {$R *.TLB}
 

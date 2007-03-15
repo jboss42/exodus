@@ -2366,17 +2366,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice))
+        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _rlist)
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan))
+        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _rlist)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember))
+        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _rlist)
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator))
+        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _rlist)
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin))
+        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _rlist)
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner));
+        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _rlist);
 end;
 
 {---------------------------------------}

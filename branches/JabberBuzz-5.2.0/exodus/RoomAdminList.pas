@@ -21,7 +21,7 @@ unit RoomAdminList;
 interface
 
 uses
-    XMLTag, IQ, Unicode, SelContact,   
+    XMLTag, IQ, Unicode, SelContact, SelRoomOccupant,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
     TntComCtrls, TntStdCtrls;
@@ -53,7 +53,8 @@ type
     _adds: TWidestringlist;
     _dels: TWidestringlist;
     _selector: TfrmSelContact;
-
+    _occupant_selector: TfrmSelRoomOccupant;
+    _rlist: TList;
 
     room_jid: Widestring;
     role: bool;
@@ -61,16 +62,19 @@ type
     offList: Widestring;
 
     procedure AddJid(j, n: Widestring);
+    procedure AddNick(n: Widestring);
   public
     { Public declarations }
+
     procedure Start();
+    procedure SetList(rlist: TList);
   end;
 
 var
   frmRoomAdminList: TfrmRoomAdminList;
 
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: WideString = '');
+    caption: WideString = ''; rlist: TList = nil);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -85,7 +89,7 @@ uses
 
 {---------------------------------------}
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: Widestring = '' );
+    caption: Widestring = ''; rlist: TList = nil);
 var
     f: TfrmRoomAdminList;
 begin
@@ -110,8 +114,36 @@ begin
 
     if (caption <> '') then
         f.Caption := caption;
+
+    f.SetList(rlist);
         
     f.Start();
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.SetList(rlist: TList);
+var
+    i: integer;
+    rm: TRoomMember;
+begin
+    if (rlist <> nil) then begin
+        _rlist := TList.Create();
+        for i := 0 to rlist.Count - 1 do begin
+            rm := TRoomMember.Create();
+            rm.jid := TRoomMember(rlist.Items[i]).jid;
+            rm.Nick := TRoomMember(rlist.Items[i]).Nick;
+            rm.Node := TRoomMember(rlist.Items[i]).Node;
+            rm.status := TRoomMember(rlist.Items[i]).status;
+            rm.show := TRoomMember(rlist.Items[i]).show;
+            rm.blockShow := TRoomMember(rlist.Items[i]).blockShow;
+            rm.role := TRoomMember(rlist.Items[i]).role;
+            rm.affil := TRoomMember(rlist.Items[i]).affil;
+            rm.real_jid := TRoomMember(rlist.Items[i]).real_jid;
+            _rlist.Add(rm);
+        end;
+    end
+    else
+        _rlist := nil;
 end;
 
 {---------------------------------------}
@@ -137,6 +169,11 @@ begin
     else
         item.setAttribute('affiliation', onList);
     _iq.Send();
+
+    if (role) then begin
+        lstItems.Columns.Delete(1);
+        lstItems.Column[0].Width := lstItems.Width - 5;
+    end;
     Show();
 end;
 
@@ -263,17 +300,28 @@ begin
     _adds := TWidestringlist.Create();
     _dels := TWidestringlist.Create();
     _selector := TfrmSelContact.Create(nil);
+    _rlist := nil;
 
     MainSession.Prefs.RestorePosition(Self);
 end;
 
 {---------------------------------------}
 procedure TfrmRoomAdminList.FormDestroy(Sender: TObject);
+var
+    i: integer;
 begin
     if (_iq <> nil) then FreeAndNil(_iq);
     FreeAndNil(_adds);
     FreeAndNil(_dels);
     _selector.Free();
+
+    if (_rlist <> nil) then begin
+        for i := 0 to _rlist.Count - 1 do
+            TRoomMember(_rlist.Items[i]).Free;
+
+        _rlist.Clear;
+        _rlist.Free;
+    end;
 end;
 
 {---------------------------------------}
@@ -283,13 +331,26 @@ var
     ritem: TJabberRosterItem;
 begin
     // Add a JID
-    if (_selector.ShowModal = mrOK) then begin
-        j := _selector.GetSelectedJID();
-        ritem := MainSession.Roster.Find(j);
-        if (ritem <> nil) then
-            AddJid(j, ritem.Text)
-        else
-            AddJid(j, '');
+    if (role) then begin
+        // Select by Nick
+        _occupant_selector := TfrmSelRoomOccupant.Create(nil);
+        _occupant_selector.SetList(_rlist);
+        if (_occupant_selector.ShowModal = mrOK) then begin
+            j := _occupant_selector.GetSelectedNick();
+            AddNick(j);
+        end;
+        _occupant_selector.Free();
+    end
+    else begin
+        // Select by JID
+        if (_selector.ShowModal = mrOK) then begin
+            j := _selector.GetSelectedJID();
+            ritem := MainSession.Roster.Find(j);
+            if (ritem <> nil) then
+                AddJid(j, ritem.Text)
+            else
+                AddJid(j, '');
+        end;
     end;
 end;
 
@@ -313,6 +374,17 @@ begin
     _adds.AddObject(tmp_jid.full, li);
 
     tmp_jid.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.AddNick(n: Widestring);
+var
+    li: TTntListItem;
+begin
+    li := TTntListItem(lstItems.Items.Add());
+    li.Caption := n;
+    li.Checked := true;
+    _adds.AddObject(n, li);
 end;
 
 {---------------------------------------}
@@ -364,23 +436,43 @@ var
     j: Widestring;
     idx, i: integer;
     itemJID: TJabberID;
+    itemlbl: Widestring;
     nick: TWideStrings;
 begin
     // Remove these folks from the list
-    for i := lstItems.Items.Count - 1 downto 0 do begin
-        if (lstItems.Items[i].Selected) then begin
-            itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
-            j := itemJID.full();
-            idx := _adds.IndexOf(j);
-            if (idx >= 0) then
-                _adds.Delete(idx)
-            else begin
-                nick := TWideStringList.Create();
-                nick.Add(lstItems.Items[i].Caption);
-                _dels.AddObject(j, nick);
-            end;
+    if (role) then begin
+        for i := lstItems.Items.Count - 1 downto 0 do begin
+            if (lstItems.Items[i].Selected) then begin
+                itemlbl := lstItems.Items[i].Caption;
+                idx := _adds.IndexOf(itemlbl);
+                if (idx >= 0) then
+                    _adds.Delete(idx)
+                else begin
+                    nick := TWideStringList.Create();
+                    nick.Add(lstItems.Items[i].Caption);
+                    _dels.AddObject(itemlbl, nick);
+                end;
 
-            lstItems.Items.Delete(i);
+                lstItems.Items.Delete(i);
+            end;
+        end;
+    end
+    else begin
+        for i := lstItems.Items.Count - 1 downto 0 do begin
+            if (lstItems.Items[i].Selected) then begin
+                itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
+                j := itemJID.full();
+                idx := _adds.IndexOf(j);
+                if (idx >= 0) then
+                    _adds.Delete(idx)
+                else begin
+                    nick := TWideStringList.Create();
+                    nick.Add(lstItems.Items[i].Caption);
+                    _dels.AddObject(j, nick);
+                end;
+
+                lstItems.Items.Delete(i);
+            end;
         end;
     end;
 end;
