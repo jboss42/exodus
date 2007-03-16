@@ -739,22 +739,26 @@ var
     pp: TPlugin;
     i: integer;
 begin
-    // kill all of the various plugins which are loaded.
-    for i := proxies.Count -1 downto 0 do
-        TPluginProxy(proxies.Objects[i]).Free();
+    try
+        // kill all of the various plugins which are loaded.
+        for i := proxies.Count -1 downto 0 do
+            TPluginProxy(proxies.Objects[i]).Free();
 
-    // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
-    // or else bad things can happen here... assume that mem is getting
-    // cleared.
-    // JJF 8/14/06 This needs to be addressed
-    //todo JJF get definitive answer to when COM objects should be released!
-    for i := plugs.Count - 1 downto 0 do begin
-        pp := TPlugin(plugs.Objects[i]);
-        plugs.Delete(i);
-        pp.com.Shutdown;
+        // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
+        // or else bad things can happen here... assume that mem is getting
+        // cleared.
+        // JJF 8/14/06 This needs to be addressed
+        //todo JJF get definitive answer to when COM objects should be released!
+        for i := plugs.Count - 1 downto 0 do begin
+            pp := TPlugin(plugs.Objects[i]);
+            plugs.Delete(i);
+            pp.com.Shutdown;
+        end;
+
+        plugs.Clear();
+    except
+
     end;
-
-    plugs.Clear();
 end;
 
 {---------------------------------------}
