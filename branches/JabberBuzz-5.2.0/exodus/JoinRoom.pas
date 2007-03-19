@@ -77,6 +77,7 @@ type
   private
     { Private declarations }
     _cb: integer;
+    _disconcb: integer;
     _all: TList;
     _filter: TList;
     _cur: TList;
@@ -90,6 +91,7 @@ type
     procedure _enableNext();
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
+    procedure DisconCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     procedure populateServers();
@@ -243,6 +245,7 @@ begin
     _wait := TWidestringlist.Create();
 
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
+    _disconcb := MainSession.RegisterCallback(DisconCallback, '/session/disconnected');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 
     if (MainSession.Prefs.getBool('tc_browse')) then
@@ -264,6 +267,7 @@ begin
     if (MainSession <> nil) then begin
         MainSession.Prefs.SavePosition(Self);
         MainSession.UnRegisterCallback(_cb);
+        MainSession.UnRegisterCallback(_disconcb);
     end;
 
     _wait.Free();
@@ -483,6 +487,13 @@ begin
 
         tmp.Free();
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.DisconCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then
+        Self.Close();
 end;
 
 {---------------------------------------}
