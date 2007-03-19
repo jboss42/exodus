@@ -1128,7 +1128,7 @@ begin
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
         if (_hidden) then begin
             // restore our app
-            bringToFront();
+            doRestore();
             _hidden := false;
             msg.Result := 0;
         end
@@ -1136,7 +1136,6 @@ begin
             // minimize our app
             _hidden := true;
             Self.Visible := false;
-//            ShowWindow(Handle, SW_HIDE);
             PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
         end;
     end
