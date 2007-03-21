@@ -248,6 +248,7 @@ begin
 
         // TODO: Use newfangled RTF madness
         SelAttributes.Color := c;
+        Paragraph.Alignment := taLeft;
         if timestamp <> '' then
             txt := '[' + timestamp + '] ' + txt;
 
