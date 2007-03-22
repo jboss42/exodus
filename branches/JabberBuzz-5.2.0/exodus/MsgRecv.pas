@@ -457,7 +457,6 @@ begin
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
 
     tempjid.Free;
-    tempjid := nil;
 end;
 
 {---------------------------------------}

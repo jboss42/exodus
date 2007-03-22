@@ -1194,7 +1194,6 @@ function TExodusController.CreateDockableWindow(
 var
     p: Pointer;
     f: TfrmDockContainer;
-    ti: integer;
     tstr: Widestring;
 begin
 EXutils.OutputDebugMsg('creating TfrmDockContainer');

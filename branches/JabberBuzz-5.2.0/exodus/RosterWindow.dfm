@@ -692,6 +692,12 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Block'
       OnClick = popBlockClick
     end
+    object popGroupUnBlock: TTntMenuItem
+      Caption = 'UnBlock'
+    end
+    object N15: TTntMenuItem
+      Caption = '-'
+    end
     object popGrpRename: TTntMenuItem
       Caption = 'Rename'
       OnClick = popGrpRenameClick

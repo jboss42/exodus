@@ -133,6 +133,8 @@ type
     N12: TTntMenuItem;
     N13: TTntMenuItem;
     N14: TTntMenuItem;
+    popGroupUnBlock: TTntMenuItem;
+    N15: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -2324,12 +2326,10 @@ procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
 var
     offline, native, me, o, e: boolean;
-    b, u: boolean;
-    i, r: integer;
+    r: integer;
     n: TTntTreeNode;
     ri: TJabberRosterItem;
     pri: TJabberPres;
-    slist: TList;
     contextMenuTag: TXMLTag;
     menuname: Widestring;
 begin
@@ -2438,45 +2438,18 @@ begin
         end;
         popGrpRename.Enabled := (treeRoster.SelectionCount <= 1);
 
-        b := true;
-        u := true;
-
-        // do blocking madness
-        slist := getSelectedContacts(MainSession.Prefs.getBool('roster_only_online'));
-        for i := 0 to slist.count - 1 do begin
-            ri := TJabberRosterItem(slist[i]);
-            if (ri <> nil) then begin
-              if (_blockers.IndexOf(ri.jid.jid) >= 0) then begin
-                  b := false;
-                  if (not u) then break;
-              end
-              else begin
-                  u := false;
-                  if (not b) then break;
-              end;
-            end;
-        end;
-        if ((not b) and (not u)) then begin
-            popGroupBlock.Caption := _(sBtnBlock);
-            popGroupBlock.Enabled := false;
-            popBlock.OnClick := popBlockClick;
-        end
-        else if (b) then begin
-            popGroupBlock.Caption := _(sBtnBlock);
-            popGroupBlock.Enabled := true;
-            popBlock.OnClick := popBlockClick;
-        end
-        else if (u) then begin
-            popGroupBlock.Caption := _(sBtnUnBlock);
-            popGroupBlock.Enabled := true;
-            popBlock.OnClick := popUnBlockClick;
-        end;
-
+        // do blocking
+        // --   Block and Unblock are always available for a group
+        //      even if all contacts are blocked or unblocked.
+        //      It doesn't hurt to block an already blocked
+        //      contact, same for unblocking.
+        popBlock.OnClick := popBlockClick;
         popGroupBlock.OnClick := popBlock.OnClick;
-        popGrpInvite.Enabled := (room.room_list.Count > 0);
+        popBlock.OnClick := popUnBlockClick;
+        popGroupUnBlock.OnClick := popBlock.OnClick;
 
-        slist.Clear();
-        slist.Free();
+        // Should contacts be able to be invited to rooms
+        popGrpInvite.Enabled := (room.room_list.Count > 0);
     end;
     end;
 
@@ -2931,7 +2904,7 @@ procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
     go: TJabberGroup;
     special_grp_rmv_msg : WideString;
-    i: Integer;
+    i: Cardinal;
     parent:  TTntTreeNode;
     rosterItems: TWideStringList;
     removeAsGroup: boolean;
