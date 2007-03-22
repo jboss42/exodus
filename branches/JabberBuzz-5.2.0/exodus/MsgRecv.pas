@@ -417,14 +417,19 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.DisplayEvent(e: TJabberEvent);
+var
+    tempjid: TJabberID;
 begin
     eType := e.eType;
     recips.Add(e.from);
     setFrom(e.from);
     frameButtons1.btnOK.Enabled := true;
     frameButtons1.btnCancel.Enabled := true;
-    txtSubject.Caption := Tnt_WideStringReplace(e.str_content, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
-    _base_JID := e.str_content;
+
+    tempjid := TJabberID.Create(e.str_content);
+    _base_JID := tempjid.removeJEP106(tempjid.full);
+    txtSubject.Caption := Tnt_WideStringReplace(_base_JID, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
 
@@ -450,6 +455,9 @@ begin
         frameButtons1.btnOK.Visible := (eType = evt_Message);
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
+
+    tempjid.Free;
+    tempjid := nil;
 end;
 
 {---------------------------------------}
