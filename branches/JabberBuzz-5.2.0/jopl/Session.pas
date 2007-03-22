@@ -29,7 +29,7 @@ uses
     PrefController,
     JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID, GnuGetText;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -549,7 +549,6 @@ begin
     end
     else begin
         tag.Free;
-        raise Exception.Create('Invalid stream');
     end;
 end;
 
