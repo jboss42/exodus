@@ -29,7 +29,7 @@ uses
     PrefController,
     JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -78,6 +78,7 @@ type
         _paused: boolean;
         _resuming: boolean;
         _pauseQueue: TQueue;
+        _queue: TEventMsgQueue;
         _id: longint;
         _cb_id: longint;
         _authd: boolean;
@@ -224,6 +225,7 @@ type
         property NoAuth: boolean read _no_auth write _no_auth;
         property AuthAgent: TJabberAuth read _auth_agent;
         property Authenticated: boolean read _authd;
+        property EventQueue: TEventMsgQueue read _queue;
     end;
 
 var
@@ -286,6 +288,7 @@ begin
     _dispatcher.AddSignal(_chatSignal);
 
     _pauseQueue := TQueue.Create();
+    _queue := TEventMsgQueue.Create();
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
@@ -363,6 +366,7 @@ begin
         _stream.Free();
 
     _pauseQueue.Free();
+    _queue.Free();
     Presence_XML.Free();
 
     // Free the dispatcher... this should free the signals

@@ -379,6 +379,8 @@ begin
     _Notify := TNotifyController.Create;
     _Notify.SetSession(MainSession);
 
+    MainSession.EventQueue.SetSession(MainSession);
+
     // S10N controller singleton
     _subcontroller := TSubController.Create();
 

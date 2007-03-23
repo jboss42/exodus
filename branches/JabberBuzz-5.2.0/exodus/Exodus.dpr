@@ -244,7 +244,8 @@ uses
   ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
   DisplayName in '..\jopl\DisplayName.pas',
   BrowseForFolderU in 'BrowseForFolderU.pas',
-  SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant};
+  SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant},
+  EventQueue in '..\jopl\EventQueue.pas';
 
 {$R *.TLB}
 

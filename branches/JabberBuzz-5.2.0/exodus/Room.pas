@@ -564,6 +564,7 @@ var
     rm: TRoomMember;
     etag: TXMLTag;
     e: TJabberEntity;
+    skip_notification: Boolean;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -635,9 +636,13 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
     end;
-
-    // this check is needed only to prevent extraneous regexing.
-    if ((not server) and (not MainSession.IsPaused)) then begin
+    skip_notification := MainSession.Prefs.getBool('queue_not_avail') and
+                         ((MainSession.Show = 'away') or
+                          (MainSession.Show = 'xa') or
+                          (MainSession.Show = 'dnd'));
+    if (skip_notification = false) then begin
+      // this check is needed only to prevent extraneous regexing.
+      if ((not server) and (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
             DoNotify(Self, _notify[NOTIFY_KEYWORD],
@@ -654,6 +659,7 @@ begin
             DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
                      _(sNotifyActivity) + Self.Caption,
                      RosterTreeImages.Find('conference'), 'notify_roomactivity');
+      end;
     end;
 
     if (Msg.Subject <> '') then begin

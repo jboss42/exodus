@@ -28,9 +28,7 @@ uses
     ExRichEdit, Menus, TntComCtrls, TntMenus, TntStdCtrls, Buttons;
 
 type
-  {
-    JJF added roster rendering for "PGM" layout.
-  }
+  
   TfrmMsgQueue = class(TfrmDockable)
     PopupMenu1: TTntPopupMenu;
     D1: TTntMenuItem;
@@ -52,44 +50,30 @@ type
     procedure D1Click(Sender: TObject);
     procedure lstEventsEnter(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
+    procedure ClearItems();
   private
     { Private declarations }
-    _queue          : TObjectList;
-    _updatechatCB   : integer;
-    _connectedCB    : Integer; //session connected callback ID
-    _disconnectedCB : Integer; //session disconnected callback ID
+    _updateCB   : integer;
 
-    _currSpoolFile  : Widestring; //current spool file we are reading/writing
-    _documentDir    : Widestring; //path to My Documents/Exodus-Logs
-
-    _loading: boolean;
+    //_loading: boolean;
     _sel: integer;
 
-    procedure SaveEvents();
-    procedure LoadEvents();
     procedure removeItems();
 
     function FindColumnIndex(pHeader: pNMHdr): integer;
     function FindColumnWidth(pHeader: pNMHdr): integer;
+    function GetEventCount(): integer;
+    procedure SetEventCount(count: integer);
 
-    procedure setSpoolPath(connected : boolean);
-    procedure ClearItems();
   protected
     procedure WMNotify(var Msg: TWMNotify); message WM_NOTIFY;
   published
     procedure SessionCallback(event: string; tag: TXMLTag);
-
-    {
-        Render the roster
-
-        Embed the roster if not already showing
-    }
-
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag);override;
+    property EventCount: Integer read GetEventCount write SetEventCount;
   public
     { Public declarations }
-    procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
     procedure RemoveItem(i: integer);
   end;
 
@@ -99,10 +83,10 @@ var
 const
     sNoSpoolDir = ' could not create or write to the spool directory specified in the options.';
     sDefaultSpool = 'default_spool.xml';
-
 function showMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
+procedure hideMsgQueue();
 procedure closeMsgQueue();
-function getMsgQueue(bringToFront: boolean=true; dockOverride: string = 'n'): TfrmMsgQueue;
+function getMsgQueue(): TfrmMsgQueue;
 function isMsgQueueShowing(): boolean;
 {---------------------------------------}
 {---------------------------------------}
@@ -118,18 +102,24 @@ uses
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
     JabberUtils, ExUtils,  MsgRecv, Session, PrefController,
-    RosterImages;
-const
-    SE_UPDATE_CHAT = '/session/gui/update-chat';
-    SE_CONNECTED = '/session/authenticated';
-    SE_DISCONNECTED = '/session/disconnected';
-
-    CB_UNASSIGNED = -1; //unassigned callback ID
+    RosterImages, EventQueue;
 
 {---------------------------------------}
 function showMsgQueue(bringToFront: boolean; dockOverride: string): TfrmMsgQueue;
 begin
-    Result := getMsgQueue(bringToFront, dockOverride);
+    Result := getMsgQueue();
+    Result.ShowDefault(bringToFront, dockOverride);
+    frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := true;
+end;
+
+procedure hideMsgQueue();
+var
+ msgQueue: TfrmMsgQueue;
+
+begin
+    msgQueue := getMsgQueue();
+    msgQueue.Visible := false;
+    frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := false;
 end;
 
 procedure closeMsgQueue();
@@ -138,12 +128,10 @@ begin
       frmMsgQueue.Close();
 end;
 {---------------------------------------}
-function getMsgQueue(bringToFront: boolean; dockOverride: string): TfrmMsgQueue;
+function getMsgQueue(): TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-    frmMsgQueue.ShowDefault(bringToFront, dockOverride);
-    frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := true;
     Result := frmMsgQueue;
 end;
 
@@ -154,7 +142,8 @@ end;
 
 class procedure TfrmMsgQueue.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
-    getMsgQueue(false); //open but don't bring to front
+    getMsgQueue(); //open but don't bring to front
+    showMsgQueue(false);
 end;
 
 function TfrmMsgQueue.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
@@ -166,179 +155,19 @@ begin
     else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
-{---------------------------------------}
-procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
-var
-    tmp_jid: TJabberID;
+function TfrmMsgQueue.GetEventCount() : integer;
 begin
-    // display this item
-    e.img_idx := img_idx;
-    e.msg := msg;
-
-    tmp_jid := TJabberID.Create(e.from);
-    e.caption := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
-    tmp_jid.Free();
-    // NB: _queue now owns e... it needs to free it, etc.
-    _queue.Add(e);
-    lstEvents.Items.Count := lstEvents.Items.Count + 1;
-    SaveEvents();
+ if (lstEvents <> nil) then
+   Result := lstEvents.Items.Count
+ else
+   Result := 0;
 end;
 
-{---------------------------------------}
-procedure TfrmMsgQueue.SessionCallback(event: string; tag: TXMLTag);
+procedure TfrmMsgQueue.SetEventCount(count: integer);
 begin
-    if (event = SE_CONNECTED) then begin
-        setSpoolPath(true);
-        ClearItems();
-        loadEvents();
-    end
-    else if (event = SE_DISCONNECTED) then begin
-        setSpoolPath(false);
-        ClearItems();
-        loadEvents();
-        Self.Close;
-    end
-    else if ((event = SE_UPDATE_CHAT) and (tag <> nil)) then begin
-        SaveEvents();
-    end;
+ if (lstEvents <> nil) then
+   lstEvents.Items.Count := count;
 end;
-
-{---------------------------------------}
-procedure TfrmMsgQueue.SaveEvents();
-var
-    t, i, d: integer;
-    s, e: TXMLTag;
-    event: TJabberEvent;
-    ss: TStringList;
-    c: TChatController;
-    tl: TXMLTagList;
-begin
-    // save all of the events in the listview out to a file
-    if (MainSession = nil) then exit;
-    if (_loading) then exit;
-
-    s := TXMLTag.Create('spool');
-    for i := 0 to _queue.Count - 1 do begin
-        event := TJabberEvent(_queue[i]);
-        e := s.AddTag('event');
-        with e do begin
-            e.setAttribute('img', IntToStr(event.img_idx));
-            e.setAttribute('caption', event.caption);
-            e.setAttribute('msg', event.msg);
-            e.setAttribute('timestamp', DateTimeToStr(event.Timestamp));
-            e.setAttribute('edate', DateTimeToStr(event.edate));
-            e.setAttribute('elapsed_time', IntToStr(event.elapsed_time));
-            e.setAttribute('etype', IntToStr(integer(event.eType)));
-            e.setAttribute('from', event.from);
-            e.setAttribute('id', event.id);
-            e.setAttribute('str_content', event.str_content);
-            for d := 0 to event.Data.Count - 1 do
-                e.AddBasicTag('data', event.Data.Strings[d]);
-
-            // spool out queued chat messages to disk.
-            if (event.eType = evt_Chat) then begin
-                c := MainSession.ChatList.FindChat(event.from_jid.jid, event.from_jid.resource, '');
-                if (c <> nil) then begin
-                    tl := c.getTags();
-                    for t := 0 to tl.Count - 1 do
-                        e.AddTag(tl[t]);
-                    tl.Free();
-                end;
-            end;
-        end;
-    end;
-
-    ss := TStringlist.Create();
-    try
-        ss.Add(UTF8Encode(s.xml));
-        ss.SaveToFile(_currSpoolFile);
-    except
-        MessageDlgW(WideFormat(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
-            mtError, [mbOK], 0);
-    end;
-
-    ss.Free();
-    s.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmMsgQueue.LoadEvents();
-var
-    m,i,d: integer;
-    p: TXMLTagParser;
-    cur_e, s: TXMLTag;
-    msgs, dtags, etags: TXMLTagList;
-    e: TJabberEvent;
-    c: TChatController;
-begin
-    if (not FileExists(_currSpoolFile)) then exit;
-
-    _loading := true;
-
-    p := TXMLTagParser.Create();
-    p.ParseFile(_currSpoolFile);
-
-    if p.Count > 0 then begin
-        s := p.popTag();
-        etags := s.ChildTags();
-
-        for i := 0 to etags.Count - 1 do begin
-            cur_e := etags[i];
-            e := TJabberEvent.Create();
-            _queue.Add(e);
-            e.eType := TJabberEventType(SafeInt(cur_e.GetAttribute('etype')));
-            e.from := cur_e.GetAttribute('from');
-            e.from_jid := TJabberID.Create(e.from);
-            e.id := cur_e.GetAttribute('id');
-            try
-                e.Timestamp := StrToDateTime(cur_e.GetAttribute('timestamp'));
-            except
-                on EConvertError do
-                    e.Timestamp := Now();
-            end;
-            try
-                e.edate := StrToDateTime(cur_e.GetAttribute('edate'));
-            except
-                on EConvertError do
-                    e.edate := Now();
-            end;
-            e.str_content := cur_e.GetAttribute('str_content');
-            if (e.str_content = '') then
-                // check data_type for backwards compat.
-                e.str_content := cur_e.getAttribute('data_type');
-            e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
-            e.msg := cur_e.GetAttribute('msg');
-            e.caption := cur_e.GetAttribute('caption');
-            e.img_idx := SafeInt(cur_e.GetAttribute('img'));
-
-            lstEvents.Items.Count := lstEvents.Items.Count + 1;
-
-            dtags := cur_e.QueryTags('data');
-            for d := 0 to dtags.Count - 1 do
-                e.Data.Add(dtags[d].Data);
-            dtags.Free();
-
-            // create a new chat controller for this event and populate it
-            msgs := cur_e.QueryTags('message');
-            if (msgs.Count > 0) then begin
-                c := MainSession.ChatList.FindChat(e.from_jid.jid, e.from_jid.resource, '');
-                if (c = nil) then
-                    c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource);
-                c.AddRef();
-                for m := 0 to msgs.Count - 1 do
-                    c.PushMessage(msgs[m]);
-            end;
-            msgs.Free();
-        end;
-        etags.Free();
-        s.Free();
-    end;
-    p.Free();
-
-    _loading := false;
-end;
-
-
 {---------------------------------------}
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 var
@@ -346,14 +175,7 @@ var
 begin
     inherited;
 
-    _updateChatCB := CB_UNASSIGNED;
-    _connectedCB  := CB_UNASSIGNED;
-    _disconnectedCB := CB_UNASSIGNED;
-    
-    _loading := false;
-    _queue := TObjectList.Create();
-    _queue.OwnsObjects := true; //frees on remove, delete, destruction etc
-    _documentDir := MainSession.Prefs.getString('log_path');
+    _updateCB := CB_UNASSIGNED;
 
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
     txtMsg.Color := lstEvents.Color;
@@ -370,19 +192,23 @@ begin
         tmp := MainSession.Prefs.getInt('quecol_3');
         if (tmp <> 0) then Column[2].Width := tmp;
     end;
-    if (MainSession.Authenticated) then begin
-        setSpoolPath(true);
-    end
-    else begin
-        setSpoolPath(false);
-    end;
-    LoadEvents();
+    
+    lstEvents.Items.Count := MainSession.EventQueue.Count;
 
-    _updateChatCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE_CHAT);
-    _connectedCB    := MainSession.RegisterCallback(SessionCallback, SE_CONNECTED);
-    _disconnectedCB := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
-
+    _updateCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE);
     ImageIndex := RosterImages.RI_NEWSITEM_INDEX;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.SessionCallback(event: string; tag: TXMLTag);
+begin
+  if (event = SE_UPDATE) then begin
+    EventCount := MainSession.EventQueue.Count;
+    if (MainSession.EventQueue.Count = 0) then begin
+        lstEvents.Items.Clear();
+        txtMsg.WideLines.Clear();
+    end;
+  end;
 end;
 
 {---------------------------------------}
@@ -465,7 +291,7 @@ begin
         _sel := -1;
     end
     else begin
-        e := TJabberEvent(_queue[Item.Index]);
+        e := TJabberEvent(MainSession.EventQueue[Item.Index]);
         if ((e <> nil) and (lstEvents.SelCount = 1) and
             (e.Data.Text <> '') and (Item.Selected) and (Change = ctState) and
             (Item.Index <> _sel) and (Item.Index >= 0) ) then begin
@@ -484,28 +310,22 @@ begin
     if (lstEvents.SelCount <= 0) then exit;
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
-    e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
+    e := TJabberEvent(MainSession.EventQueue[lstEvents.Selected.Index]);
     if (e.eType = evt_Chat) then begin
         // startChat will automatically play the queue of msgs
         StartChat(e.from_jid.jid, e.from_jid.resource, true);
-        RemoveItem(lstEvents.Selected.Index);
-    end else
+    end else begin
         StartRecvMsg(e);
+        RemoveItem(lstEvents.Selected.Index);
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    if (mainSession <> nil)  then begin
-        if (_updateChatCB <>CB_UNASSIGNED) then
-            MainSession.UnRegisterCallback(_updateChatCB);
-        if (_connectedCB <>CB_UNASSIGNED) then
-            MainSession.UnRegisterCallback(_connectedCB);
-        if (_disconnectedCB <>CB_UNASSIGNED) then
-            MainSession.UnRegisterCallback(_disconnectedCB);
-    end;
-    _queue.Free(); //owns refs, frees them here
+   if (_updateCB <>CB_UNASSIGNED) then
+       MainSession.UnRegisterCallback(_updateCB);
     Action := caFree;
     frmMsgQueue := nil;
     frmExodus.mnuWindows_View_ShowInstantMessages1.Checked := false;
@@ -524,7 +344,7 @@ begin
     if (isNotifying) then
         isNotifying := false;
 
-    _queue.Clear(); //frees references
+    MainSession.EventQueue.Clear(); //frees references
     lstEvents.items.Clear();
     txtMsg.Clear();
 end;
@@ -532,13 +352,13 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.RemoveItem(i: integer);
 begin
-    _queue.Delete(i); //frees reference
-    lstEvents.Items.Count := _queue.Count;
-    if (_queue.Count = 0) then begin
+    MainSession.EventQueue.Delete(i); //frees reference
+    lstEvents.Items.Count := MainSession.EventQueue.Count;
+    if (MainSession.EventQueue.Count = 0) then begin
         lstEvents.Items.Clear();
         txtMsg.WideLines.Clear();
     end;
-    Self.SaveEvents();
+    MainSession.EventQueue.SaveEvents();
 end;
 
 {---------------------------------------}
@@ -562,18 +382,18 @@ begin
     else begin
         for i := lstEvents.Items.Count-1 downto 0 do begin
             if (lstEvents.Items[i].Selected) then begin
-                _queue.Delete(i); //frees reference
+                MainSession.EventQueue.Delete(i); //frees reference
                 lstEvents.Items.Count := lstEvents.Items.Count - 1;
                 first := i;
             end;
         end;
-        Self.SaveEvents();
+        MainSession.EventQueue.SaveEvents();
         lstEvents.ClearSelection();
     end;
 
     if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
         lstEvents.ItemIndex := first;
-        e := TJabberEvent(_queue[first]); //e is reference
+        e := TJabberEvent(MainSession.EventQueue[first]); //e is reference
         if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
     end
@@ -630,10 +450,10 @@ var
     e: TJabberEvent;
 begin
     inherited;
-    if (item.index >= _queue.Count) then
+    if (item.index >= MainSession.EventQueue.Count) then
         exit;
 
-    e := TJabberEvent(_queue[item.Index]);
+    e := TJabberEvent(MainSession.EventQueue[item.Index]);
 
     TTntListItem(item).Caption := e.caption;
     item.ImageIndex := e.img_idx;
@@ -662,25 +482,6 @@ begin
     if ((lstEvents.ItemIndex = -1) and (lstEvents.Items.Count > 0)) then
         lstEVents.ItemIndex := 0;
 end;
-
-
-{---------------------------------------}
-{*
-    Set the path used for the spool file based on session. If disconnected, a
-    global spool.xml file is used (for offline events? not sure what would
-    ever be in a spool file when disconnected but might as well leave
-    the option open). If connected a jid_spool file will be used.
-*}
-procedure TfrmMsgQueue.setSpoolPath(connected : boolean);
-begin
-    if (connected) then begin
-        _currSpoolFile := _documentDir + '\' + MungeName(mainSession.BareJid) + '_spool.xml';
-    end
-    else begin
-        _currSpoolFile := _documentDir + '\' + sDefaultSpool;
-    end;
-end;
-
 
 
 initialization

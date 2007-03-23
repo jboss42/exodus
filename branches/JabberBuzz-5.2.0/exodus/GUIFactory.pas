@@ -48,7 +48,8 @@ uses
     RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows;
+    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
+    ChatController;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -91,8 +92,8 @@ var
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
-    q: TfrmMsgQueue;
     msg: TJabberMessage;
+    c: TChatController;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
@@ -144,7 +145,11 @@ begin
             // queue the chat window. Event now owned by msg queue, don't free
             RenderEvent(CreateJabberEvent(tag));
         end
-        else if (MainSession.Prefs.getBool('queue_not_avail') and (MainSession.Show <> '')) then begin
+        else if ((MainSession.Prefs.getBool('queue_not_avail') and
+                ((MainSession.Show = 'away') or
+                 (MainSession.Show = 'xa') or
+                 (MainSession.Show = 'dnd'))) or
+                (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil)) then begin
             // queue the chat window. Event now owned by msg queue, don't free
             RenderEvent(CreateJabberEvent(tag));
         end
@@ -167,12 +172,38 @@ begin
             tmp_jid.Free;
         end;
     end
-
+    else if (event = '/session/gui/update-chat') then begin
+      tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+       //Delayed messages processing
+       if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil) then begin
+         //Check the status of message queue for the chat controller
+         c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
+         if (c <> nil) then begin
+           //First new delayed messate, show queue ant notifications
+           if (c.msg_queue.Count = 1) then begin
+             DoNotify(showMsgQueue, 'notify_newchat', _('Chat with ') + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid), RosterTreeImages.Find('contact'));
+           end;
+         end;
+         MainSession.EventQueue.SaveEvents();
+       end
+       else begin
+        //If not delayed messages, it was queued due to user
+        //being in not Available state, check current presence.
+        if ((MainSession.Show <> 'away') and
+            (MainSession.Show <> 'xa') and
+            (MainSession.Show <> 'dnd')) then
+             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
+                if (chat <> nil) then begin
+                   DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                   chat.DisplayName, RosterTreeImages.Find('contact'));
+                end;
+       end;
+       tmp_jid.Free;
+    end
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
-        q := getMsgQueue();
         //event is now referenced by msg queue. do not free
-        q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
+        MainSession.EventQueue.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
     end
 
     else if (event = '/session/gui/msgevent') then begin

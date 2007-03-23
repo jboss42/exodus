@@ -2161,7 +2161,7 @@ begin
     // Options Menu
     mnuOptions_Password.Enabled := enable;
     mnuOptions_Registration.Enabled := enable;
-
+    mnuWindows_View_ShowInstantMessages1.Enabled := enable;
     //Windows Menu
 end;
 
@@ -2212,10 +2212,7 @@ begin
     end;
 
     // Close up the msg queue
-    if (frmMsgQueue <> nil) then begin
-        frmMsgQueue.lstEvents.Items.Clear; //?? why clear before close?
-        frmMsgQueue.Close;
-    end;
+    closeMsgQueue();
     // Close whatever rooms we have
 
     CloseAllRooms();
@@ -3404,7 +3401,7 @@ end;
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
     if (isMsgQueueShowing) then
-      closeMsgQueue()
+      hideMsgQueue()
     else
       showMsgQueue();
 end;
@@ -3806,6 +3803,7 @@ begin
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
         CloseAllRooms();
         CloseAllChats();
+        closeMsgQueue();
         MainSession.Disconnect();
     end
 end;

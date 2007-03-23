@@ -136,6 +136,7 @@ var
     notifyType: WideString;
     notifyFrm: TfrmState;
     frmMsg: TfrmMsgQueue;
+    queueMsg: Boolean;
 begin
     notify := false;
     // create a listview item for this event
@@ -187,9 +188,10 @@ begin
         end;
 
         evt_RosterItems: begin
-            StartRecvMsg(e);
-            e.Free();//msg queue does not own this, need to cleanup
-            exit;
+            //StartRecvMsg(e);
+            //e.Free();//msg queue does not own this, need to cleanup
+            //exit;
+            //notify := false;
         end;
 
         else begin
@@ -200,32 +202,47 @@ begin
 
     tmp_jid.Free();
 
-    //add event to message queue if any of:
-    //  already showing
-    //  offline message
-    //  queued chat
-    //  preference to use msg queue for all messages
-    if (MsgQueue.isMsgQueueShowing() or e.delayed or
-        MainSession.Prefs.getBool('msg_queue') or
-        (e.eType = evt_Chat)) then begin
-        if (not frmExodus.visible) then
-            frmMsg := ShowMsgQueue(false, 'f')
-        else frmMsg := ShowMsgQueue(false);
-        
-        frmMsg.LogEvent(e, msg, img_idx); //e now referenced by frmMsg, don't free
-        //invites may still be popped up, even in the messages show up here
-        if ((e.eType = evt_Invite) and
-            (MainSession.Prefs.getInt('invite_treatment') = invite_popup)) then begin
-            notifyFrm := StartRecvMsg(e);
-        end
-        else notifyFrm := frmMsg;
+  
+    //Log event and display message queue based on preferences
+//    MainSession.EventQueue.LogEvent(e, msg, img_idx); //e now referenced by frmMsg, don't free
+//    if (MsgQueue.isMsgQueueShowing() or e.delayed or
+//        MainSession.Prefs.getBool('msg_queue') or
+//        (e.eType = evt_Chat)) then begin
+//
+//        if (not frmExodus.visible) then
+//            frmMsg := ShowMsgQueue(false, 'f')
+//        else frmMsg := ShowMsgQueue(false);
+//
+//        //invites may still be popped up, even in the messages show up here
+//        if ((e.eType = evt_Invite) and
+//            (MainSession.Prefs.getInt('invite_treatment') = invite_popup)) then begin
+//            notifyFrm := StartRecvMsg(e);
+//        end
+//        else notifyFrm := frmMsg;
+//
+//    end
+//    else begin
+//        notifyFrm := StartRecvMsg(e);
+//        e.Free(); //msgqueue does not own this, need to cleanup
+//    end;
+    queueMsg := MainSession.Prefs.getBool('queue_not_avail') and
+                ((MainSession.Show = 'away') or
+                 (MainSession.Show = 'xa') or
+                 (MainSession.Show = 'dnd')) or
+                 e.delayed;
 
+    if (queueMsg) then begin
+      MainSession.EventQueue.LogEvent(e, msg, img_idx); //e now referenced by frmMsg, don't free
+      frmMsg := ShowMsgQueue(false);
+      notifyFrm := frmMsg;
+      if (e.delayed = false) then
+        notify := false;
     end
     else begin
-        notifyFrm := StartRecvMsg(e);
-        e.Free(); //msgqueue does not own this, need to cleanup
+      notifyFrm := StartRecvMsg(e);
+      e.Free(); //msgqueue does not own this, need to cleanup 
     end;
-
+    
     if (notify) then
         DoNotify(notifyFrm, notifyType, notifyMsg, img_idx);
 end;

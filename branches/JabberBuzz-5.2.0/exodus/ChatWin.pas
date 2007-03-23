@@ -26,7 +26,7 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList, JabberMsg, AppEvnts;
+  ToolWin, ImgList, JabberMsg, AppEvnts, MsgQueue;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -376,10 +376,6 @@ begin
         //Assign outgoing message event
         chat.OnSendMessage := SendMessageEvent;
 
-        if (show_window) then
-            ShowDefault(bring_to_front);
-        Application.ProcessMessages();
-
         if (hist <> '') then begin
             MsgList.populate(hist);
             do_scroll := true;
@@ -391,6 +387,10 @@ begin
         if (do_scroll) then
             _scrollBottom();
 
+        if (show_window) then
+            ShowDefault(bring_to_front);
+        Application.ProcessMessages();
+        
     end;
 
     if (new_chat) then begin
@@ -412,6 +412,8 @@ begin
         for i := Count - 1 downto 0 do begin
             c := TChatController(Objects[i]);
             Delete(i);
+            if (c.window = nil) then
+              c.Free();
             if ((c <> nil) and (c.window <> nil)) then begin
                 TfrmChat(c.window)._warn_busyclose := false; //don't warn on all close
                 TfrmChat(c.window).Close();
@@ -712,15 +714,26 @@ end;
 procedure TfrmChat.PlayQueue();
 var
     t: TXMLTag;
+    //showMsgQueue: boolean;
 begin
     // pull all of the msgs from the controller queue,
     // and feed them into this window
     if (chat_object = nil) then exit;
 
+    while (chat_object.last_session_msg_queue.AtLeast(1)) do begin
+        t := TXMLTag(chat_object.last_session_msg_queue.Pop());
+        Self.MessageEvent(t);
+    end;
+
     while (chat_object.msg_queue.AtLeast(1)) do begin
         t := TXMLTag(chat_object.msg_queue.Pop());
         Self.MessageEvent(t);
     end;
+
+    //The following code is used to remove chat events from the queue
+    MainSession.EventQueue.RemoveEvents(_jid.jid);
+
+
 end;
 
 {---------------------------------------}
@@ -934,6 +947,7 @@ var
     m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
     emsg, err: Widestring;
+    notify: Boolean;
 begin
     // display the body of the msg
     if (_warn_busyclose) then begin
@@ -970,16 +984,28 @@ begin
         subj_msg.Free();
     end;
 
+    notify := true;
     if (Msg.Body <> '') then begin
         //Notify
         if (not Msg.isMe) then begin
+           if ((MainSession.Prefs.getBool('queue_not_avail')) and
+               ((MainSession.Show = 'away') or
+                (MainSession.Show = 'xa') or
+                (MainSession.Show = 'dnd'))) then
+               notify := false;
+        end
+        else
+           notify := false;
+
+        if (notify) then begin
             if ((Msg.Priority = High) or (Msg.Priority = Low)) then
-              DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
-                  RosterTreeImages.Find('contact'), 'notify_chatactivity')
-            else
-              DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
-                  RosterTreeImages.Find('contact'), 'notify_chatactivity');
+               DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+                   RosterTreeImages.Find('contact'), 'notify_chatactivity')
+             else
+               DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
+                   RosterTreeImages.Find('contact'), 'notify_chatactivity');
         end;
+
 
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := DisplayName;
