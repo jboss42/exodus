@@ -135,7 +135,7 @@ uses
     Avatar, JabberUtils, ExUtils,  GnuGetText, IQ, Session;
 const
     sVCardError = 'No vCard response was ever returned.';
-    sFailureToSetVCard = 'Could not modify profile.' + #13#10 + 'Either the server is too busy or you do not have persion to change your profile.';
+    sFailureToSetVCard = 'Could not modify profile.' + #13#10 + 'Either the server is too busy or you do not have permission to change your profile.';
 
 {---------------------------------------}
 procedure ShowMyProfile;
