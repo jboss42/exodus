@@ -417,6 +417,8 @@ const
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';
+    sGroup = 'Group';
+    sContact = 'Contact';
     sMyResources = 'My Resources';
 
     sNetMeetingConnError = 'Your connection type does not support direct connections.';
@@ -2412,11 +2414,11 @@ begin
             popHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 
             if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
-                popBlock.Caption := _(sBtnUnBlock);
+                popBlock.Caption := _(sBtnUnBlock) + ' ' + _(sContact);
                 popBlock.OnClick := popUnblockClick;
             end
             else begin
-                popBlock.Caption := _(sBtnBlock);
+                popBlock.Caption := _(sBtnBlock) + ' ' + _(sContact);
                 popBlock.OnClick := popBlockClick;
             end;
             popGroupBlock.OnClick := popBlock.OnClick;
