@@ -245,8 +245,10 @@ uses
   DisplayName in '..\jopl\DisplayName.pas',
   BrowseForFolderU in 'BrowseForFolderU.pas',
   SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant},
-  EventQueue in '..\jopl\EventQueue.pas';
-
+  EventQueue in '..\jopl\EventQueue.pas',
+  COMDockToolbar in 'COMDockToolbar.pas',
+  COMMsgOutToolbar in 'COMMsgOutToolbar.pas';
+  
 {$R *.TLB}
 
 {$R *.RES}
