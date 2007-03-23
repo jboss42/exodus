@@ -26,7 +26,7 @@ uses
     TntClasses,
     {$endif}
     NodeItem, JabberID, Presence, Signals, Unicode, XMLTag,
-    SysUtils, Classes;
+    SysUtils, Classes, Windows;
 
 type
 
@@ -659,8 +659,12 @@ begin
 
     // If this ritem is in unfiled, and they shouldn't be, remove them.
     // If they need to be in unfiled, but aren't, add them
+
     unf := getGroup(_('Unfiled'));
-    assert(unf <> nil);
+    if (unf = nil) then begin
+        unf := setupUnfiledGrp();
+        assert(unf <> nil);
+    end;
 
     jidx := unf.inGroup(ri.jid);
     if ((ri.GroupCount > 0) and (jidx)) then

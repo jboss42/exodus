@@ -167,9 +167,7 @@ object frmExodus: TfrmExodus
     Width = 272
     Height = 600
     Align = alClient
-    Caption = 'Panel1'
     TabOrder = 1
-    ExplicitHeight = 580
     object splitRoster: TSplitter
       Left = 170
       Top = 1
@@ -193,7 +191,6 @@ object frmExodus: TfrmExodus
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 578
     end
     object Tabs: TTntPageControl
       Left = 175
@@ -224,7 +221,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 578
     end
   end
   object MainMenu1: TTntMainMenu
