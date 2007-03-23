@@ -2665,7 +2665,8 @@ begin
             if (_cur_ritem.Text <> '') then
                 c1 := _cur_ritem.Text
             else
-                c1 := _cur_ritem.jid.Full;
+                // remove JID escaping as this is displayed jid text.
+                c1 := _cur_ritem.jid.removeJEP106(_cur_ritem.jid.Full);
 
             if (_cur_ritem.IsContact) then begin
                 if (_cur_ritem.ask = 'subscribe') then begin
