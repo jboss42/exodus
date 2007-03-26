@@ -798,4 +798,15 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
   end
+  object popBookmarkGrp: TTntPopupMenu
+    Left = 72
+    Top = 376
+    object JoinAllRooms1: TTntMenuItem
+      Caption = 'Join All Rooms'
+      OnClick = JoinAllRooms1Click
+    end
+    object N16: TTntMenuItem
+      Caption = '-'
+    end
+  end
 end

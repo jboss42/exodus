@@ -135,6 +135,9 @@ type
     N14: TTntMenuItem;
     popGroupUnBlock: TTntMenuItem;
     N15: TTntMenuItem;
+    popBookmarkGrp: TTntPopupMenu;
+    JoinAllRooms1: TTntMenuItem;
+    N16: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -220,6 +223,7 @@ type
     procedure RenameProfile1Click(Sender: TObject);
     procedure lstProfilesSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
+    procedure JoinAllRooms1Click(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -448,6 +452,7 @@ const
     // predefined popup names
     sPredefinedActions = 'Actions';
     sPredefinedBookmark = 'Bookmark';
+    sPredefinedBookmarkGrp = 'BookmarkGrp';
     sPredefinedGroup = 'Group';
     sPredefinedProfiles = 'Profiles';
     sPredefinedRoster = 'Roster';
@@ -617,6 +622,7 @@ begin
     // Add predefined menus to stringlist.
     ExCOMRoster.AddPredefinedMenu(sPredefinedActions, popActions);
     ExCOMRoster.AddPredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedBookmarkGrp, popBookmarkGrp);
     ExCOMRoster.AddPredefinedMenu(sPredefinedGroup, popGroup);
     ExCOMRoster.AddPredefinedMenu(sPredefinedProfiles, popProfiles);
     ExCOMRoster.AddPredefinedMenu(sPredefinedRoster, popRoster);
@@ -631,6 +637,7 @@ begin
     // Remove predefinded menus.
     ExCOMRoster.RemovePredefinedMenu(sPredefinedActions, popActions);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmarkGrp, popBookmarkGrp);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedGroup, popGroup);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedProfiles, popProfiles);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedRoster, popRoster);
@@ -1702,6 +1709,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.JoinAllRooms1Click(Sender: TObject);
+var
+    recips: TList;
+    i: integer;
+    ri: TJabberRosterItem;
+begin
+    recips := getSelectedContacts(false);
+    for i := 0 to recips.Count - 1 do begin
+        ri := TJabberRosterItem(recips[i]);
+        MainSession.FireEvent(ri.Action, ri.Tag);
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmRosterWindow.RenameProfile1Click(Sender: TObject);
 var
     go: TTntListItem;
@@ -2429,6 +2450,11 @@ begin
         if ((_cur_go <> nil) and (_cur_go.FullName = _transports)) then begin
             treeRoster.PopupMenu := popActions;
             popProperties.Enabled := false;
+            exit;
+        end;
+        // check to see if we have the Bookmarks grp selected
+        if ((_cur_go <> nil) and (_cur_go.FullName = sGrpBookmarks)) then begin
+            treeRoster.PopupMenu := popBookmarkGrp;
             exit;
         end;
 
