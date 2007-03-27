@@ -1858,7 +1858,7 @@ begin
     _parser.Clear();
     _parser.ParseString(XML, '');
     if (_parser.Count > 0) then
-        x := _parser.popTag()
+        x := _parser.popTag() // We now own this memory
     else
         x := nil;
     _parser.Clear();
@@ -1867,7 +1867,7 @@ begin
         ri := nil;
         if (Arg <> '') then begin
             ri := MainSession.roster.Find(Arg);
-            x := ri.Tag;
+            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
         end;
         MainSession.FireEvent(Event, x, ri);
     end
