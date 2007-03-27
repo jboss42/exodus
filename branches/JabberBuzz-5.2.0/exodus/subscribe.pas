@@ -219,8 +219,10 @@ begin
         DoNotify(Self, 'notify_s10n',
                  'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
     end
-    else
+    else begin
         TShowHandler.Create().getDispNameAndShow(Self, jid);
+        ShowDefault(true);
+    end;
 end;
 
 {---------------------------------------}
