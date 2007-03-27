@@ -200,6 +200,9 @@ begin
     ss := TStringlist.Create();
     try
         ss.Add(UTF8Encode(s.xml));
+        if (not DirectoryExists(_documentDir)) then begin
+            CreateDir(_documentDir);
+        end;
         ss.SaveToFile(_currSpoolFile);
     except
         MessageDlgW(WideFormat(_('There was an error trying to write to the file: %s'), [_currSpoolFile]),
