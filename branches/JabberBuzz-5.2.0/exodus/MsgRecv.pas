@@ -77,6 +77,7 @@ type
     txtFrom: TTntLabel;
     pnlError: TPanel;
     Image1: TImage;
+    procedure txtSendSubjectExit(Sender: TObject);
     
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -745,6 +746,13 @@ end;
 procedure TfrmMsgRecv.txtMsgURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TfrmMsgRecv.txtSendSubjectExit(Sender: TObject);
+begin
+  inherited;
+  if (MsgOut.Visible) then
+    MsgOut.SetFocus;
 end;
 
 {---------------------------------------}

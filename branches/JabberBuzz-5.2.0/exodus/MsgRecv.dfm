@@ -4,11 +4,10 @@ inherited frmMsgRecv: TfrmMsgRecv
   Caption = 'Message'
   ClientHeight = 408
   ClientWidth = 377
-  OnClose = FormClose
   OnDestroy = FormDestroy
   OnResize = FormResize
   ExplicitWidth = 385
-  ExplicitHeight = 442
+  ExplicitHeight = 441
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -408,6 +407,7 @@ inherited frmMsgRecv: TfrmMsgRecv
             TabOrder = 0
             WantReturns = False
             WordWrap = False
+            OnExit = txtSendSubjectExit
           end
         end
         object pnlSubject: TPanel
