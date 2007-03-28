@@ -105,7 +105,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 21
         ItemHeight = 13
         TabOrder = 0
-        OnExit = txtUsernameExit
+        OnChange = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
         Items.Strings = (
           'jabber.org'
