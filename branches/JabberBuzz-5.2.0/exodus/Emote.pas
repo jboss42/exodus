@@ -566,7 +566,10 @@ begin
     end;
 
     parser := TXMLTagParser.Create();
-    parser.ParseResource(h, 'icondef');
+    try
+        parser.ParseResource(h, 'icondef');
+    except
+    end;
     if (parser.Count <= 0) then begin
         parser.Free();
         Result := false;
@@ -735,6 +738,7 @@ var
     dlls : TWideStringList;
     i : integer;
     fn: Widestring;
+    dlgrslt: integer;
 begin
     dlls := TWideStringList.Create();
     EmoticonList.Clear();
@@ -746,10 +750,14 @@ begin
 
     // Load up any icon sets we have...
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
-    for i := 0 to dlls.Count - 1 do begin
-        EmoticonList.AddResourceFile(dlls[i]);
-        // XXX: check results of addresourcefile to ensure this DLL is ok.
+    for i := dlls.Count - 1 downto 0 do begin
+        if (not EmoticonList.AddResourceFile(dlls[i])) then begin
+            dlgrslt := MessageDlgW(WideFormat(_('Emoticon resource (%s) not found or not a valid emoticon resource.'), [dlls[i]]) + #10#13 + _('Do you wish to remove from list?'), mtError, [mbYES, mbNO], 0);
+            if (dlgrslt = 6) then // mrYes
+                dlls.Delete(i);
+        end;
     end;
+    MainSession.Prefs.setStringlist('emoticon_dlls', dlls);
     dlls.Free();
 
     // Make sure the GUI form is updated.

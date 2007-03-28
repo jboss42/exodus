@@ -138,6 +138,10 @@ begin
 
     // Reload our lists.
     InitializeEmoticonLists();
+
+    // If emote dlls had invalid dlls, this list could have changed.
+    // So, reload.
+    MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 end;
 
 {---------------------------------------}
