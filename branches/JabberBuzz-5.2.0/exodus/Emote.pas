@@ -752,7 +752,7 @@ begin
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
     for i := dlls.Count - 1 downto 0 do begin
         if (not EmoticonList.AddResourceFile(dlls[i])) then begin
-            dlgrslt := MessageDlgW(WideFormat(_('Emoticon resource (%s) not found or not a valid emoticon resource.'), [dlls[i]]) + #10#13 + _('Do you wish to remove from list?'), mtError, [mbYES, mbNO], 0);
+            dlgrslt := MessageDlgW(WideFormat(_('Emoticon resource (%s) not found or not a valid emoticon resource. Do you wish to remove from list?'), [dlls[i]]), mtError, [mbYES, mbNO], 0);
             if (dlgrslt = 6) then // mrYes
                 dlls.Delete(i);
         end;
