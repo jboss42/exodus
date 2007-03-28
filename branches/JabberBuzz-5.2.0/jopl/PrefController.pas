@@ -468,6 +468,19 @@ begin
 end;
 
 function TApplicationInfo.GetID() : String;
+    function GetLongFileName(const FileName: string): string;
+    var
+        SHFileInfo: TSHFileInfo;
+    begin
+        if SHGetFileInfo(PChar(FileName),
+                       0,
+                       SHFileInfo,
+                       SizeOf(SHFileInfo),
+                       SHGFI_DISPLAYNAME) <> 0 then
+        Result := string(SHFileInfo.szDisplayName)
+        else
+        Result := FileName;
+    end;
 var
     tstr : string;
 begin
@@ -475,7 +488,8 @@ begin
         if (cachedID = '') then
         begin
             //remove .exe
-            tstr := ExtractFileName(Application.ExeName);
+
+            tstr := ExtractFileName(GetLongFileName(Application.ExeName));
             cachedID := Copy(tstr, 0, Length(tstr) - 4);
         end;
         Result := cachedID;
