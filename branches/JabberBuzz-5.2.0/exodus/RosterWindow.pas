@@ -408,7 +408,7 @@ const
     sNoContactsSel = 'You must select one or more contacts.';
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
-    sNoBroadcast = 'You must select more than one online contact to broadcast.';
+    sNoBroadcast = 'You must select at least one contact to send a message.';
     sSignOn = 'Click a profile to connect';
     sNewProfile = 'Create a New Profile';
     sCancelLogin = 'Click to Cancel...';
