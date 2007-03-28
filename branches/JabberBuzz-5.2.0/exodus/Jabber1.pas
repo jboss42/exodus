@@ -795,6 +795,8 @@ published
         Removes a shortcut from an already existing menu so there are no duplicates
     }
     procedure RemoveMenuShortCut(value: integer);
+    function DisableHelp(Command: Word; Data: Longint;
+     var CallHelp: Boolean): Boolean;
   end;
 
   {
@@ -4988,7 +4990,12 @@ begin
         RemoveMenuShortCutRecurse(value, MainMenu1.Items[i]);
 end;
 
-
+function TfrmExodus.DisableHelp(Command: Word; Data: Longint;
+    var CallHelp: Boolean): Boolean;
+begin
+  CallHelp := false;
+  Result := true;
+end;
 
 
 initialization

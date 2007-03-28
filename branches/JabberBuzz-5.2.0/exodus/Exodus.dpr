@@ -282,6 +282,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
+  Application.OnHelp := frmExodus.DisableHelp;
   frmExodus.Startup();
   Application.Run;
 
