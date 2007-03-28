@@ -12,7 +12,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 416
-  ExplicitHeight = 406
+  ExplicitHeight = 405
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -59,14 +59,12 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
     inherited Image1: TImage
       Left = 367
-      Picture.Data = {00}
       ExplicitLeft = 367
     end
   end
   inherited Tabs: TPageControl
     Width = 408
     Height = 271
-    ActivePage = TabSheet2
     TabOrder = 0
     ExplicitWidth = 408
     ExplicitHeight = 271
@@ -92,9 +90,9 @@ inherited frmJoinRoom: TfrmJoinRoom
       object lblPassword: TTntLabel
         Left = 25
         Top = 188
-        Width = 49
+        Width = 112
         Height = 13
-        Caption = 'Password:'
+        Caption = 'Administrator Password:'
       end
       object Label3: TTntLabel
         Left = 6
