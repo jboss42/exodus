@@ -82,7 +82,8 @@ type
         classname: string;
         methodname: string;
 
-        constructor Create;
+        constructor Create; reintroduce; overload;
+        constructor Create(_curId: longint); reintroduce; overload;
     end;
 
     {---------------------------------------}
@@ -318,7 +319,8 @@ procedure TSignalDispatcher.DeleteListener(lid: longint);
 var
     ls: string;
     li: TListenerInfo;
-    i: integer;
+    i,j: integer;
+    co: TChangeListEvent;
 begin
     // lookup the lid in the stringlist,
     // and then call the corresponding signal's delListener method
@@ -333,6 +335,18 @@ begin
             li.Free();
         end;
         _lid_info.Delete(i);
+    end
+    else begin
+        // We didn't find the callback with the given lid.
+        // But, since the Add for that callback is possibly stuck in the change_lsit,
+        // then we need to set up a delete for it none the less. Otherwise, the
+        // add could add a callback that goes into a already freed object.
+        for j := 0 to Self.Count -1 do begin
+            co := TChangeListEvent.Create();
+            co.l := TSignalListener.Create(lid);
+            co.op := cl_delete;
+            TSignal(Self.Objects[j]).change_list.Push(co);
+        end;
     end;
 end;
 
@@ -357,6 +371,11 @@ begin
 
     cb_id := _lid;
     inc(_lid);
+end;
+
+constructor TSignalListener.Create(_curId: longint);
+begin
+    cb_id := _curId;
 end;
 
 constructor TSignal.Create(my_event: String);
@@ -424,11 +443,25 @@ function TSignal.delListener(l: TSignalListener): boolean;
 var
     idx: integer;
     co: TChangeListEvent;
+    i: integer;
 begin
     // remove the listener from the list
     Result := false;
     idx := Self.IndexOfObject(l);
-    if (idx < 0) then exit;
+    if (idx < 0) then begin
+        // We couldn't find it via the object, so need to try finding
+        // via ids - This would be a result of an unregistercallback()
+        // that happend before the call back was added.  But now it is added
+        // and we are having to hack a way to finding it to delete it so it
+        // doesn't access freed memory.
+        for i := 0 to Self.Count - 1 do begin
+            if (TSignalListener(Self.Objects[i]).cb_id = l.cb_id) then begin
+                idx := i;
+                break;
+            end;
+        end;
+        if (idx < 0) then exit;
+    end;
 
     if (_invoking = 0) then begin
         l.Free();
