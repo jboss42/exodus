@@ -403,6 +403,7 @@
 	<branding_nested_subgroup value="0"></branding_nested_subgroup>
 	<!-- indicates if all messages should be queued to offline queue when I am not available -->
 	<branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
+	<brand_warn_close_com_server value="1"/>
   </prefs>
 
   <!-- default custom presence stuff -->

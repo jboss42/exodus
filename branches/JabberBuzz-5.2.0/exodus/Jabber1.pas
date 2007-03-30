@@ -465,6 +465,7 @@ type
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
+    _ApprovedExitWithCOMActive: boolean;// Flag to show COM object message when exiting.
 
     _tray_notify: boolean;              // boolean for flashing tray icon
     _edge_snap: integer;                // edge snap fuzziness
@@ -955,7 +956,8 @@ uses
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
-    XMLUtils, XMLParser, DisplayName;
+    XMLUtils, XMLParser, DisplayName,
+    ComServ;
 
 {$R *.DFM}
 
@@ -2268,6 +2270,18 @@ procedure TfrmExodus.FormCloseQuery(Sender: TObject;
 begin
     //mainsession should never be nil here, it is created before this object
     //and destroyed in ExSession finalization
+
+    // Ask before clsoing in COM server situation
+    if ((MainSession.Prefs.getBool('brand_warn_close_com_server')) and
+        (ComServer.ObjectCount > 0) and
+        (not _ApprovedExitWithCOMActive))then begin
+        if (MessageDlgW(_('Other applications currently depend on this application.  Exiting this application may cause unpredicatable results in those applications.  Do you wish to exit?'), mtConfirmation, [mbYes, mbNo],0) = mrNo) then begin
+            CanClose := false;
+            exit;
+        end;
+    end;
+    _ApprovedExitWithCOMActive := true;
+
 
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,

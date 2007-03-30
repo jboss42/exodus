@@ -2006,8 +2006,11 @@ initialization
   // is that the warning comes too late, and just leads to cores.
   // TODO: figure out how to disconnect from all of the clients that are
   // connected to us, using CoDisconnectObject.
-
-  // XXX: ComServer.UIInteractive := false;
+  // UPDATE:  The Dialog Delphi pops up comes too late to be of any good.
+  // Added own Dialog that informs user he is doing something "bad" and allows
+  // them to continue or abort the application exit.  Thus, if they do abort,
+  // we are still in a "good" state.  This is brandable.
+  ComServer.UIInteractive := false;
 
   plugs := TStringList.Create();
   proxies := TStringList.Create();
