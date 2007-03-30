@@ -12,7 +12,7 @@ type
   private
     { Private declarations }
     //_queue          : TObjectList;
-    _updatechatCB   : integer;
+    //_updatechatCB   : integer;
     _connectedCB    : Integer; //session connected callback ID
     _disconnectedCB : Integer; //session disconnected callback ID
     _currSpoolFile  : Widestring; //current spool file we are reading/writing
@@ -49,7 +49,7 @@ uses Session, XMLParser, ChatController, SysUtils, XmlUtils, JabberID,
 constructor TEventMsgQueue.Create();
 begin
     inherited Create();
-    _updatechatCB := CB_UNASSIGNED;
+//    _updatechatCB := CB_UNASSIGNED;
     _disconnectedCB := CB_UNASSIGNED;
     Self.OwnsObjects := true; //frees on remove, delete, destruction etc
 
@@ -60,8 +60,8 @@ destructor TEventMsgQueue.Destroy;
 begin
     // Unregister the callback and remove us from the chat list.
    if (MainSession <> nil)  then begin
-        if (_updateChatCB <>CB_UNASSIGNED) then
-            MainSession.UnRegisterCallback(_updateChatCB);
+//        if (_updateChatCB <>CB_UNASSIGNED) then
+//            MainSession.UnRegisterCallback(_updateChatCB);
         if (_connectedCB <>CB_UNASSIGNED) then
             MainSession.UnRegisterCallback(_connectedCB);
         if (_disconnectedCB <>CB_UNASSIGNED) then
@@ -75,6 +75,8 @@ end;
 procedure TEventMsgQueue.SetSession(s: TObject);
 begin
     _connectedCB   := TJabberSession(s).RegisterCallback(SessionCallback, SE_CONNECTED);
+    _disconnectedCB   := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
+
 end;
 
 {---------------------------------------}
@@ -294,7 +296,6 @@ begin
         _documentDir := MainSession.Prefs.getString('log_path');
         setSpoolPath(true);
         loadEvents();
-        _disconnectedCB   := MainSession.RegisterCallback(SessionCallback, SE_DISCONNECTED);
     end
     else if (event = SE_DISCONNECTED) then
         Clear();
