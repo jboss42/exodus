@@ -407,6 +407,7 @@ inherited frmMsgRecv: TfrmMsgRecv
             TabOrder = 0
             WantReturns = False
             WordWrap = False
+            OnEnter = txtSendSubjectEnter
             OnExit = txtSendSubjectExit
           end
         end

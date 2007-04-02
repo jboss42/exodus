@@ -77,6 +77,7 @@ type
     txtFrom: TTntLabel;
     pnlError: TPanel;
     Image1: TImage;
+    procedure txtSendSubjectEnter(Sender: TObject);
     procedure txtSendSubjectExit(Sender: TObject);
     
     procedure FormCreate(Sender: TObject);
@@ -113,7 +114,7 @@ type
     _controller: TExMsgController;
     _callback_id: integer;
     _password: Widestring;
-
+    _closing: Boolean;
     procedure SetupResources();
     procedure DisablePopup();
     procedure mnuResourceClick(Sender: TObject);
@@ -649,6 +650,7 @@ var
     allowed: WordBool;
     nick: Widestring;
 begin
+    _closing := true;
     // Send the outgoing msg
     txt := getInputText(MsgOut);
     if (txt = '') then exit;
@@ -748,9 +750,17 @@ begin
     ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
+procedure TfrmMsgRecv.txtSendSubjectEnter(Sender: TObject);
+begin
+  inherited;
+  _closing := false;
+end;
+
 procedure TfrmMsgRecv.txtSendSubjectExit(Sender: TObject);
 begin
   inherited;
+  if (_closing = true) then exit;
+  
   if (MsgOut.Visible) then
     MsgOut.SetFocus;
 end;
@@ -1019,6 +1029,7 @@ end;
 procedure TfrmMsgRecv.frameButtons2btnCancelClick(Sender: TObject);
 begin
   inherited;
+  _closing := true;
     // cancel the reply window
     if (not txtMsg.Visible) then
         Self.Close
