@@ -403,7 +403,12 @@
 	<branding_nested_subgroup value="0"></branding_nested_subgroup>
 	<!-- indicates if all messages should be queued to offline queue when I am not available -->
 	<branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
+
+	<!-- Should Exodus display a error box when trying to close when Exodus is being used as a COM server? -->
 	<brand_warn_close_com_server value="1"/>
+
+	<!-- Should Exodus show a warning when trying to register a new account with a server that doesn't advertise in-band registration? -->
+	<brand_show_in_band_registration_warning value="1"/>
   </prefs>
 
   <!-- default custom presence stuff -->

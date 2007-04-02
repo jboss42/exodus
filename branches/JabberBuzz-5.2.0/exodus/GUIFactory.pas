@@ -213,11 +213,15 @@ begin
     end
 
     else if (event = '/session/gui/no-inband-reg') then begin
-        if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
-            mtError, [mbYes, mbNo], 0) = mrYes) then
-            MainSession.CreateAccount()
+        if (MainSession.Prefs.getBool('brand_show_in_band_registration_warning')) then begin
+            if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
+                mtError, [mbYes, mbNo], 0) = mrYes) then
+                MainSession.CreateAccount()
+            else
+                MainSession.FireEvent('/session/error/reg', nil);
+        end
         else
-            MainSession.FireEvent('/session/error/reg', nil);
+            MainSession.CreateAccount();
     end
 
     else if (event = '/session/gui/reg-not-supported') then begin
