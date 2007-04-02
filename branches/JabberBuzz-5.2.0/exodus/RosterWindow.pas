@@ -347,7 +347,7 @@ type
     procedure ToggleGUI(state: integer);
 
     function RenderGroup(grp: TJabberGroup): TTntTreeNode;
-    function getSelectedContacts(online: boolean = true): TList;
+    function getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
 
     property CurRosterItem: TJabberRosterItem read _cur_ritem;
     property CurGroup: Widestring read _cur_grp;
@@ -1169,7 +1169,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
+function TfrmRosterWindow.getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
 var
     c, i: integer;
     ri: TJabberRosterItem;
@@ -1199,7 +1199,7 @@ begin
             end
             else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
                 // add this grp to the selection
-                _cur_go.getRosterItems(Result, online);
+                _cur_go.getRosterItems(Result, online, observer);
             end;
         end;
     end;
@@ -3045,9 +3045,19 @@ var
     i: integer;
     sel: TList;
     jids: TWideStringlist;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Invite the whole group to the conference.
-    sel := Self.getSelectedContacts(false);
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := getSelectedContacts(true, observer)
+    else
+        sel := getSelectedContacts(false, observer);
+
     jids := TWideStringlist.Create();
     for i := 0 to sel.Count - 1 do
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
@@ -3062,9 +3072,19 @@ procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
     sel: TList;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Send contacts to this JID..
-    sel := getSelectedContacts(false);
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := getSelectedContacts(true, observer)
+    else
+        sel := getSelectedContacts(false, observer);
+
     if (sel.Count = 0) then begin
         MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel.Free();
@@ -3151,12 +3171,18 @@ var
     r: TList;
     jl: TWideStringList;
     i: integer;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Broadcast a message to the grp
     if ((_show_online) and (_show_filter > show_offline)) then
-        r := getSelectedContacts(true)
+        r := getSelectedContacts(true, observer)
     else
-        r := getSelectedContacts(false);
+        r := getSelectedContacts(false, observer);
 
     if (r.Count < 1) then
         MessageDlgW(_(sNoBroadcast), mtError, [mbOK], 0)
@@ -3562,8 +3588,18 @@ end;
 procedure TfrmRosterWindow.MoveorCopyContacts1Click(Sender: TObject);
 var
     sel: TList;
+    observer: boolean;
 begin
-    sel := Self.getSelectedContacts(false);
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := Self.getSelectedContacts(true, observer)
+    else
+        sel := Self.getSelectedContacts(false, observer);
+
     ShowGrpManagement(sel);
 end;
 

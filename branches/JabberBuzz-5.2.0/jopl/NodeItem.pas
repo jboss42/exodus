@@ -85,7 +85,7 @@ type
         procedure setPresence(jid: TJabberID; p: TJabberPres); overload;
         procedure setPresence(jid: Widestring; p: TJabberPres); overload;
 
-        procedure getRosterItems(l: TList; online: boolean);
+        procedure getRosterItems(l: TList; online: boolean; observer: boolean = true);
 
         property NestLevel: integer read getNestLevel;
         property Online: integer read _online;
@@ -387,20 +387,22 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberGroup.getRosterItems(l: TList; online: boolean);
+procedure TJabberGroup.getRosterItems(l: TList; online: boolean; observer: boolean = true);
 var
     ri: TJabberRosterItem;
     i: integer;
 begin
     for i := 0 to _jids.Count - 1 do begin
         ri := MainSession.Roster.Find(_jids[i]);
-        if ((online = false) or (_jids.Objects[i] <> nil)) then
-            l.Add(ri);
+
+        if (not ((not observer) and (ri.Subscription() <> 'both'))) then
+            if ((online = false) or (_jids.Objects[i] <> nil)) then
+                l.Add(ri);
     end;
 
     // add all contacts in my sub-grps
     for i := 0 to _grps.Count - 1 do
-        TJabberGroup(_grps.Objects[i]).getRosterItems(l, online);
+        TJabberGroup(_grps.Objects[i]).getRosterItems(l, online, observer);
     
 end;
 
