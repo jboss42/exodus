@@ -26,11 +26,9 @@ object frmConnDetails: TfrmConnDetails
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 293
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
-      ExplicitHeight = 265
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
@@ -104,8 +102,8 @@ object frmConnDetails: TfrmConnDetails
         Width = 285
         Height = 21
         ItemHeight = 13
-        TabOrder = 0
-        OnChange = txtUsernameExit
+        TabOrder = 1
+        OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
         Items.Strings = (
           'jabber.org'
@@ -117,7 +115,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 170
         Height = 17
         Caption = 'Save pass&word'
-        TabOrder = 6
+        TabOrder = 5
         OnClick = chkSavePasswdClick
       end
       object txtPassword: TTntEdit
@@ -126,7 +124,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 170
         Height = 21
         PasswordChar = '*'
-        TabOrder = 1
+        TabOrder = 2
       end
       object cboResource: TTntComboBox
         Left = 100
@@ -134,7 +132,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 170
         Height = 21
         ItemHeight = 13
-        TabOrder = 2
+        TabOrder = 3
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
       end
@@ -144,7 +142,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 181
         Height = 17
         Caption = 'This is a new account'
-        TabOrder = 7
+        TabOrder = 6
       end
       object txtPriority: TExNumericEdit
         Left = 100
@@ -152,7 +150,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 46
         Height = 25
         BevelOuter = bvNone
-        TabOrder = 4
+        TabOrder = 0
         Text = '0'
         Min = -128
         Max = 127
@@ -175,7 +173,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 181
         Height = 17
         Caption = 'Use Kerberos'
-        TabOrder = 9
+        TabOrder = 7
         OnClick = chkWinLoginClick
       end
       object txtRealm: TTntEdit
@@ -183,13 +181,12 @@ object frmConnDetails: TfrmConnDetails
         Top = 117
         Width = 170
         Height = 21
-        TabOrder = 3
+        TabOrder = 4
       end
     end
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      ExplicitHeight = 265
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -240,7 +237,6 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
-      ExplicitHeight = 265
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -281,7 +277,6 @@ object frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
-      ExplicitHeight = 265
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -390,7 +385,6 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
-      ExplicitHeight = 265
       object Label1: TTntLabel
         Left = 1
         Top = 27
@@ -477,7 +471,6 @@ object frmConnDetails: TfrmConnDetails
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
-    ExplicitTop = 293
     object Panel1: TPanel
       Left = 159
       Top = 4
@@ -506,6 +499,7 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Cancel'
         ModalResult = 2
         TabOrder = 1
+        OnClick = btnCancelClick
       end
       object btnConnect: TTntButton
         Left = 161

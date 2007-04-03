@@ -103,9 +103,11 @@ type
     procedure lblRenameClick(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure chkSavePasswdClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
+    _Canceled: boolean;
 
     procedure RestoreSocket(profile: TJabberProfile);
     procedure SaveSocket(profile: TJabberProfile);
@@ -451,6 +453,8 @@ begin
     tbsSSL.TabVisible := ExStartup.ssl_ok;
     if (not tbsSSL.TabVisible) then
         optSSL.ItemIndex := ssl_tls;
+
+    _Canceled := false;
 end;
 
 {---------------------------------------}
@@ -519,6 +523,11 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmConnDetails.btnCancelClick(Sender: TObject);
+begin
+    _Canceled := true;
+end;
+
 procedure TfrmConnDetails.btnCertBrowseClick(Sender: TObject);
 begin
     if (OpenDialog1.Execute()) then
@@ -552,6 +561,8 @@ var
     jid: TJabberID;
     inp, outp: Widestring;
 begin
+    if (_Canceled) then exit;
+
     // stringprep txtUsername, cboServer, or cboResource.
     if (Sender = cboJabberID) then begin
         jid := TJabberID.Create(cboJabberID.Text, false);
