@@ -167,7 +167,6 @@
 	<emoticon_dlls>
       <s>msn_emoticons.dll</s>
 	  <s>yahoo_emoticons.dll</s>
-	  <s>buzz_emoticons.dll</s>
     </emoticon_dlls>
     <custom_icondefs value="custom-icons.xml" control="txtCustomEmoteFilename"/>
 

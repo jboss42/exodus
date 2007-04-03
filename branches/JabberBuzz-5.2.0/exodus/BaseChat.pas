@@ -523,6 +523,7 @@ begin
   if ((Msg.CharCode  >= VK_F2) and (Msg.CharCode <= VK_F12)) then
      begin
         case Msg.CharCode  of
+            VK_F1: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F01');
             VK_F2: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F02');
             VK_F3: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F03');
             VK_F4: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F04');
@@ -538,7 +539,8 @@ begin
                 hotkeyidx := -1;
 
         end;
-        if (hotkeyidx >= 0) then  begin
+        if ((hotkeyidx >= 0) and
+            (MsgOut.Focused))then begin
             MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
             Handled := true;
         end;
