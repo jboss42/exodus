@@ -87,8 +87,9 @@
 	  <control name="trkSnap"/>
     </edge_snap>
 	<chat_memory value="60" control="txtChatMemory">
-      <!--control name="txtChatMemory"/-->
 	  <control name="trkChatMemory"/>
+	  <control name="lblMem1"/>
+	  <control name="lblMem2"/>
     </chat_memory>
     <esc_close value="1" control="chkEscClose"/>
     <close_hotkey value="None" control="txtCloseHotkey"/>
