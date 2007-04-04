@@ -1325,6 +1325,7 @@ begin
                     member.jid := tmp1;
                     _roster.Delete(i);
                     _roster.AddObject(member.jid, member);
+                    _roster.Sort;
                 end
                 else if ((scode = '301') or (scode = '307')) then begin
                     itag := tag.QueryXPTag(xp_muc_reason);
@@ -1495,6 +1496,8 @@ begin
     member.Nick := nick;
 
     _roster.AddObject(jid, member);
+    _roster.Sort;
+
     _rlist.Add(member);
     _rlist.Sort(ItemCompare);
     lstRoster.Items.Count := _rlist.Count;
@@ -2419,6 +2422,11 @@ procedure TfrmRoom.selectNicks(wsl: TWideStringList);
 var
     i, c: integer;
 begin
+    // Unselect every nick or random nicks can be caught in the results
+    for i := 0 to lstRoster.Items.Count - 1 do
+        lstRoster.Items[i].Selected := false;
+
+    // Lookup the selected nicks and "select" them
     for i := 0 to wsl.Count - 1 do begin
         c := _roster.indexOf(Self.jid + '/' + wsl[i]);
         if (c >=0) then

@@ -5,7 +5,6 @@ inherited frmRoom: TfrmRoom
   ClientHeight = 416
   ClientWidth = 492
   OldCreateOrder = True
-  OnClose = FormClose
   ExplicitWidth = 500
   ExplicitHeight = 450
   PixelsPerInch = 96
