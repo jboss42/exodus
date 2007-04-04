@@ -648,6 +648,7 @@ type
         layout.
     }
     procedure undockAllForms();
+    procedure DoDisconnect();
 
 published
     // Callbacks
@@ -1229,7 +1230,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMDisconnect(var msg: TMessage);
 begin
-    MainSession.Disconnect();
+    DoDisconnect();
 end;
 
  procedure TfrmExodus.WMActivate(var msg: TMessage);
@@ -3812,8 +3813,16 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuDisconnectClick(Sender: TObject);
 begin
-    btnDisconnect.Enabled := false;
-    mnuFile_Disconnect.Enabled := false;
+    DoDisconnect();
+end;
+
+procedure TfrmExodus.DoDisconnect();
+begin
+    if (Showing) then begin
+        btnDisconnect.Enabled := false;
+        mnuFile_Disconnect.Enabled := false;
+    end;
+
     if MainSession.Active then begin
         _logoff := true;
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
