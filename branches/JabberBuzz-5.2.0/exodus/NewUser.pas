@@ -565,6 +565,8 @@ end;
 procedure TfrmNewUser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
+    MainSession.UnregisterCallback(_session_cb);
+
     // make sure we cancel any outstanding queries..
     if (_iq <> nil) then
         FreeAndNil(_iq);

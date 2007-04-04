@@ -170,6 +170,7 @@ type
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
+        procedure DeactivateProfile();
 
         procedure Pause;
         procedure Play;
@@ -979,6 +980,18 @@ begin
     // make this profile the active one..
     _profile := TJabberProfile(Prefs.Profiles.Objects[i]);
     _priority := _profile.Priority;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.ActivateDefaultProfile();
+var
+ prof_index: Integer;
+begin
+//    _profile := DefaultProfile
+   prof_index := Prefs.getInt('profile_active');
+   if ((prof_index < 0) or (prof_index >= Prefs.Profiles.Count)) then
+        prof_index := 0;
+   _profile := TJabberProfile(Prefs.Profiles.Objects[prof_index]);
 end;
 
 {---------------------------------------}

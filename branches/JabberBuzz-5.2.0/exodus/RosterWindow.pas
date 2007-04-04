@@ -3743,6 +3743,7 @@ begin
             ToggleGUI(gui_disconnected);
             MainSession.Prefs.RemoveProfile(p);
             MainSession.Prefs.SaveProfiles();
+            MainSession.ActivateDefaultProfile();
             ShowProfiles();
         end
         else
