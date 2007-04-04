@@ -170,7 +170,7 @@ type
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
-        procedure DeactivateProfile();
+        procedure ActivateDefaultProfile();
 
         procedure Pause;
         procedure Play;
