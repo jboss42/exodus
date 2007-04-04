@@ -77,6 +77,8 @@ begin
     guid := AnsiReplaceStr(guid, '-', '_');
     btn.Name := 'dock_toolbar_button_' + guid;
 
+    _toolbar.Visible := true;
+
     Result := TExodusToolbarButton.Create(btn);
 end;
 
@@ -135,6 +137,7 @@ end;
 procedure TExodusDockToolbar.RemoveButton(const button: WideString);
 var
     i: integer;
+    visibleButtons: integer;
 begin
     _toolbar.AutoSize := false;
     for i := _toolbar.ButtonCount - 1 downto 0 do begin
@@ -143,6 +146,14 @@ begin
         end;
     end;
     _toolbar.AutoSize := true;
+
+    visibleButtons := 0;
+    for i := 0 to _toolbar.ButtonCount - 1 do begin
+        if (_toolbar.Buttons[i].Visible) then
+            inc(visibleButtons);
+    end;
+
+    _toolbar.Visible := (visibleButtons > 0);    
 end;
 
 
