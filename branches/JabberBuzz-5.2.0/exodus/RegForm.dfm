@@ -174,9 +174,13 @@ inherited frmRegister: TfrmRegister
     end
     inherited Panel1: TPanel
       ExplicitWidth = 442
+      inherited lblWizardTitle: TTntLabel
+        Anchors = [akLeft, akTop, akRight]
+      end
       inherited lblWizardDetails: TTntLabel
         Width = 75
         Height = 13
+        Anchors = [akLeft, akTop, akRight]
         AutoSize = True
         ExplicitWidth = 75
         ExplicitHeight = 13
