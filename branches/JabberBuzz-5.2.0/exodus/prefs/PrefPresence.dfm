@@ -129,7 +129,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object chkRoomJoins: TTntCheckBox
       Left = 4
       Top = 39
-      Width = 273
+      Width = 317
       Height = 17
       Caption = 'Show enter and leave messages in conference room windows.'
       Checked = True
