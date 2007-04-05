@@ -41,6 +41,7 @@ const
     node_grp = 3;
     node_transport = 4;
     node_myres = 5;
+    node_multiselect = 6;
 
 function WindowsVersion(var verinfo: string): integer;
 function URLToFilename(url: string): string;

@@ -439,7 +439,6 @@ const
     sRenameProfilePrompt = 'New profile name:';
     sProfileAlreadyExists = 'Profile %s already exists.';
 
-    sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
 
     // Profile strings
@@ -2355,6 +2354,9 @@ var
     pri: TJabberPres;
     contextMenuTag: TXMLTag;
     menuname: Widestring;
+    i: integer;
+    transcnt, bookcnt, rescnt, contactcnt: integer;
+    nodetype: integer;
 begin
     // Figure out what popup menu to show
     // based on the selection
@@ -2363,7 +2365,7 @@ begin
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
     if (n <> nil) then begin
         if (treeRoster.SelectionCount > 1) then
-            r := node_grp
+            r := node_multiselect
         else
             r := getNodeType(n);
     end
@@ -2410,6 +2412,8 @@ begin
                 o := (pri <> nil);
                 native := ri.IsNative;
                 offline := ri.CanOffline;
+                if (ri.IsInGroup(g_myres)) then
+                    me := true;
             end;
 
             popChat.Enabled := (e and (o or offline));
@@ -2453,8 +2457,17 @@ begin
             exit;
         end;
         // check to see if we have the Bookmarks grp selected
-        if ((_cur_go <> nil) and (_cur_go.FullName = sGrpBookmarks)) then begin
+        if ((_cur_go <> nil) and (_cur_go.FullName = g_bookmarks)) then begin
             treeRoster.PopupMenu := popBookmarkGrp;
+            exit;
+        end;
+        // check to se if we have the My Resources grp selected
+        if ((_cur_go <> nil) and (_cur_go.FullName = g_myres)) then begin
+            // Not much we can do with the My Resources group, so just
+            // show the Actions menu
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+            menuname := sPredefinedActions;
             exit;
         end;
 
@@ -2478,6 +2491,88 @@ begin
 
         // Should contacts be able to be invited to rooms
         popGrpInvite.Enabled := (room.room_list.Count > 0);
+    end;
+    node_multiselect: begin
+        // Go through selctions to find out if we have any "special" groups/items
+        transcnt := 0;
+        bookcnt := 0;
+        rescnt := 0;
+        contactcnt := 0;
+        for i := 0 to treeRoster.SelectionCount - 1 do begin
+            if (TObject(treeRoster.Selections[i].Data) <> nil) then begin
+                if (TObject(treeRoster.Selections[i].Data) is TJabberRosterItem) then begin
+                    if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(_transports)) then
+                        inc(transcnt)
+                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_bookmarks)) then
+                        inc(bookcnt)
+                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_myres)) then
+                        inc(rescnt)
+                    else
+                        inc(contactcnt);
+                end
+                else if (TObject(treeRoster.Selections[i].Data) is TJabberGroup) then begin
+                    if (TJabberGroup(treeRoster.Selections[i].Data).FullName = _transports) then
+                        inc(transcnt)
+                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_bookmarks) then
+                        inc(bookcnt)
+                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_myres) then
+                        inc(rescnt)
+                    else
+                        inc(contactcnt);
+                end;
+            end;
+        end;
+
+        if ((transcnt = 0) and
+            (bookcnt = 0) and
+            (rescnt = 0)) then begin
+            // Everything is a "regular" group and/or regular contacts
+            // so show group menu.
+            treeRoster.PopupMenu := popGroup;
+            menuname := sPredefinedGroup;
+            popGrpRename.Enabled := false;
+
+            // do blocking
+            // --   Block and Unblock are always available for a group
+            //      even if all contacts are blocked or unblocked.
+            //      It doesn't hurt to block an already blocked
+            //      contact, same for unblocking.
+            popBlock.OnClick := popBlockClick;
+            popGroupBlock.OnClick := popBlock.OnClick;
+            popBlock.OnClick := popUnBlockClick;
+            popGroupUnBlock.OnClick := popBlock.OnClick;
+
+            // Should contacts be able to be invited to rooms
+            popGrpInvite.Enabled := (room.room_list.Count > 0);
+        end
+        else if ((transcnt > 0) and
+                 (bookcnt = 0) and
+                 (rescnt = 0) and
+                 (contactcnt = 0)) then begin
+            // all transports - do miminal for now
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+        end
+        else if ((transcnt = 0) and
+                 (bookcnt > 0) and
+                 (rescnt = 0) and
+                 (contactcnt = 0)) then begin
+            // all bookmarks
+            treeRoster.PopupMenu := popBookmarkGrp;
+        end
+        else if ((transcnt = 0) and
+                 (bookcnt = 0) and
+                 (rescnt > 0) and
+                 (contactcnt = 0)) then begin
+            // all my resources - do minimal for now.
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+        end
+        else begin
+           // A mix - do only minimal
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+        end;
     end;
     end;
 
