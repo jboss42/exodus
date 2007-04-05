@@ -135,6 +135,7 @@ const
     sGrpAway = 'Away';
     sGrpXA = 'Ext. Away';
     sGrpDND = 'Do Not Disturb';
+    sGrpMyResources = 'My Resources';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -603,6 +604,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             l.Add(c);
     end;
@@ -622,6 +624,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             tnt.Add(c);
     end;

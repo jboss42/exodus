@@ -338,7 +338,7 @@ begin
     end
     else begin
         // We didn't find the callback with the given lid.
-        // But, since the Add for that callback is possibly stuck in the change_lsit,
+        // But, since the Add for that callback is possibly stuck in the change_list,
         // then we need to set up a delete for it none the less. Otherwise, the
         // add could add a callback that goes into a already freed object.
         for j := 0 to Self.Count -1 do begin
