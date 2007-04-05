@@ -80,7 +80,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
-    TabOrder = 0
+    TabOrder = 1
     Visible = False
     inline frameButtons2: TframeButtons
       Left = 3
@@ -223,7 +223,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Width = 377
     Height = 178
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     inline frameButtons1: TframeButtons
       Left = 1
       Top = 147
@@ -407,8 +407,6 @@ inherited frmMsgRecv: TfrmMsgRecv
             TabOrder = 0
             WantReturns = False
             WordWrap = False
-            OnEnter = txtSendSubjectEnter
-            OnExit = txtSendSubjectExit
           end
         end
         object pnlSubject: TPanel
