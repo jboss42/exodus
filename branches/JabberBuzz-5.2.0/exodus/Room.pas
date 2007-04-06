@@ -1102,7 +1102,6 @@ begin
     end
     else if (event = '/session/prefs') then begin
         setupKeywords();
-        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     end;
 end;
 
@@ -1661,7 +1660,6 @@ var
     e: TExodusChat;
 begin
     inherited;
-    handleSnapBuffer := false;
 
     // Create
     _kick_iq := nil;
