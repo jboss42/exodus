@@ -1867,6 +1867,7 @@ end;
 procedure TfrmChat.OnDocked();
 begin
     inherited;
+    mnuOnTop.Enabled := false;
     DragAcceptFiles( Handle, False );
     // scroll the MsgView to the bottom.
     _scrollBottom();
@@ -1887,6 +1888,7 @@ end;
 procedure TfrmChat.OnFloat();
 begin
     inherited;
+    mnuOnTop.Enabled := true;
     DragAcceptFiles(Handle, True);
     _scrollBottom();
     Self.Refresh();

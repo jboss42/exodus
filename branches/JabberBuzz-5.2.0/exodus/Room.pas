@@ -2933,6 +2933,7 @@ end;
 procedure TfrmRoom.OnDocked();
 begin
     inherited;
+    mnuOnTop.Enabled := false;
     _scrollBottom();
     Self.Refresh();
     //SIG-SIG-SIG
@@ -2949,6 +2950,7 @@ end;
 procedure TfrmRoom.OnFloat();
 begin
     inherited;
+    mnuOnTop.Enabled := true;
     _scrollBottom();
     Self.Refresh();
     //SIG-SIG-SIG
