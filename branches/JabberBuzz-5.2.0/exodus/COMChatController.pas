@@ -434,7 +434,7 @@ var
 begin
     cp := TChatPlugin.Create;
     cp.com := Plugin;
-    Plugin._AddRef();
+    //Plugin._AddRef();
     Result := _plugs.Add(cp);
     if _plugs.Count = 1 then
         _ccbId := MainSession.RegisterCallback(ChatCallback);
