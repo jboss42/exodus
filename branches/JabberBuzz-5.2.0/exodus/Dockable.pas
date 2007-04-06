@@ -97,6 +97,8 @@ type
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
   protected
+    _handleSnapBuffer: boolean;
+
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
 
@@ -161,6 +163,7 @@ type
         called.
     }
     property ImageIndex: Integer read getImageIndex write setImageIndex;
+    property handleSnapBuffer: boolean read _handleSnapBuffer write _handleSnapBuffer;
 
   end;
 
@@ -222,6 +225,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
+    _handleSnapBuffer := true;
     _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
     _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
     btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
@@ -467,8 +471,20 @@ end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/prefs') then
-        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+    if (event = '/session/prefs') then begin
+        if (_handleSnapBuffer) then begin
+            // This check is needed because in some cases
+            // changing the snap buffer here seems to cause
+            // an exception in the paint routine of some controls
+            // on descendent forms.  For example, lstRoster on
+            // Room.pas seems to have a problem with Self
+            // getting set to nil for the lstRosterCustomDrawItem
+            // when this is done here.  Room.pas has been modified
+            // to handle the SnapBuffer on its own.  Why it works
+            // there and not here is a mystery.
+            SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+        end;
+    end;
 end;
 
 end.
