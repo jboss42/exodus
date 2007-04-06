@@ -624,6 +624,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    inherited;
     if (not _responded) then Cancel();
     Action := caFree;
     if (MainSession <> nil) then
