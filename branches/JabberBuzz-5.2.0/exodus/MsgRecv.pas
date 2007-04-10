@@ -188,7 +188,7 @@ uses
     XferManager, GnuGetText,
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
     RosterWindow, RemoveContact, Room, NodeItem, Roster,
-    Presence, Session, Jabber1, InputPassword;
+    Presence, Session, Jabber1, InputPassword, MsgDisplay;
 
 {$R *.DFM}
 
@@ -455,7 +455,7 @@ begin
         frameButtons1.btnOK.Visible := (eType = evt_Message);
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
-
+    HighlightKeywords(txtMsg, 0);
     tempjid.Free;
 end;
 

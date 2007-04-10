@@ -30,6 +30,7 @@ procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: bo
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
+procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -44,8 +45,6 @@ uses
 
 const
     MAX_MSG_LENGTH = 512;
-//forward declaration
-procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
