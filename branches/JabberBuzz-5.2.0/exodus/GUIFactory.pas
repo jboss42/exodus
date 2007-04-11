@@ -49,7 +49,7 @@ uses
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
-    ChatController;
+    ChatController, Presence;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -94,6 +94,7 @@ var
     e: TJabberEvent;
     msg: TJabberMessage;
     c: TChatController;
+    p: TJabberPres;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
@@ -272,10 +273,19 @@ begin
         // block list?
         // Don't use MainSession.IsBlocked since it also
         // blocks people not on my roster. Just check our sync'd blocker list.
-        if (_blockers.IndexOf(tmp_jid.jid) >= 0) then exit;
+        if (_blockers.IndexOf(tmp_jid.jid) >= 0) then begin
+            // This contact is on our block list.
+            // So, we will auto-deny the subscription request.
+            p := TJabberPres.Create;
+            p.toJID := TJabberID.Create(tmp_jid.jid);
+            p.PresType := 'unsubscribed';
 
-        sub := TfrmSubscribe.Create(Application);
-        sub.setup(tmp_jid, ri, tag);
+            MainSession.SendTag(p);
+        end
+        else begin
+            sub := TfrmSubscribe.Create(Application);
+            sub.setup(tmp_jid, ri, tag);
+        end;
         tmp_jid.Free();
     end;
 end;
