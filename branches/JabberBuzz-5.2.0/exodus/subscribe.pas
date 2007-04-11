@@ -286,15 +286,6 @@ begin
 
     MainSession.SendTag(p);
 
-    // HACK to deal with subscription request from
-    // services (AOL) that will continue to send
-    // subscription requests even after denied.
-    // We add them to the block list.
-    if (_jid.domain = 'aol.com') then begin
-        MainSession.Prefs.AddStringlistValue('blockers', _jid.jid);
-    end;
-
-
     Self.Close;
 end;
 
