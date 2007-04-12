@@ -31,7 +31,8 @@ procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: 
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
-
+function AdjustDST( inTime : TDateTime): TDateTime;
+function isTimeDST(time: TDateTime): Boolean;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -41,7 +42,7 @@ uses
     XMLParser,
     RT_XIMConversion,
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo;
+    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo, DateUtils;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -139,7 +140,12 @@ begin
     if (MainSession.Prefs.getBool('timestamp')) then begin
         txt := txt + '\cf1[';
         try
-            txt := txt +
+         DebugMsg('Original:' + FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                         Msg.Time));
+         Msg.Time := AdjustDST(Msg.Time);
+         DebugMsg('Adjusted:' + FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                         Msg.Time));
+         txt := txt +
                 EscapeRTF(FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                                          Msg.Time));
         except
@@ -315,7 +321,59 @@ begin
     end;
 end;
 
+function AdjustDST( inTime : TDateTime): TDateTime;
+var
+  timezoneinfo: TTimezoneinformation;
+  dstNow, dstTime: Boolean;
+  timezoneResult: word;
+begin
+  Result := inTime;
+  timezoneResult  := GetTimezoneInformation(timezoneinfo);
+  //If automatic DST adjustment check box is not checked,
+  //we do not need to adjust time.
+  if (timezoneinfo.DaylightBias = 0) then
+     exit;
+     
+  dstTime := isTimeDST(inTime);
+  //If we are currently in DST and time for the message is
+  //not in DST, we need to adjust by subtracting (bias is negative)
+  if (timezoneResult = TIME_ZONE_ID_DAYLIGHT) then begin
+    if (dstTime = false) then
+      Result := IncMinute(inTime, timezoneinfo.DaylightBias);
 
+  end
+  else begin
+     //If we are currently not in DST and time for the message is
+     //in DST, we need to adjust by adding (bias is negative)
+     if (dstTime = true) then
+      Result := IncMinute(inTime, -timezoneinfo.DaylightBias);
+
+  end;
+
+end;
+
+function isTimeDST(time: TDateTime): Boolean;
+var
+  timezoneinfo: TTimezoneinformation;
+  dstStart, dstEnd: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, Milli: word;
+begin
+
+    GetTimezoneInformation(timezoneinfo);
+    DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
+    //Calculate when daylight savings time begins
+    with timezoneinfo.DaylightDate do
+      dstStart:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+    //Calculate when daylight savings time ends
+    with timezoneinfo.StandardDate do
+      dstEnd:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+
+    if ((time >= dstStart) and (time <= dstEnd)) then
+      Result := true
+    else
+      Result := false;
+
+end;
 end.
 
 
