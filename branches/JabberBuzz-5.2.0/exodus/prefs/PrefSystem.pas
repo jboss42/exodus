@@ -219,7 +219,8 @@ begin
         end;
         //Auto login should not be enabled if password is not saved
         chkAutoLogin.Enabled := MainSession.Profile.SavePasswd and MainSession.Authenticated;
-        
+
+        chkDebug.Visible := getBool('brand_show_debug_in_menu');        
     end;
 end;
 

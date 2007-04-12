@@ -1345,6 +1345,7 @@ begin
         btnSendFile.Visible := getBool('brand_ft');
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
         mnuOptions_Plugins.Visible := getBool('brand_plugs');
+        mnuWindows_View_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
     end;
 
     // Make sure presence menus have unified captions

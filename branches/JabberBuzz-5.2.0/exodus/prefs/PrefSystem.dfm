@@ -48,7 +48,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkDebug: TTntCheckBox
     Left = 8
-    Top = 68
+    Top = 139
     Width = 169
     Height = 17
     Caption = 'Start with Debug visible'
@@ -64,7 +64,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkCloseMin: TTntCheckBox
     Left = 8
-    Top = 120
+    Top = 103
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
@@ -89,7 +89,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkToolbox: TTntCheckBox
     Left = 8
-    Top = 103
+    Top = 86
     Width = 217
     Height = 17
     Caption = 'Small Titlebar for main window'
@@ -107,7 +107,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkSingleInstance: TTntCheckBox
     Left = 8
-    Top = 138
+    Top = 121
     Width = 209
     Height = 17
     Caption = 'Only allow a single, running instance'
@@ -115,7 +115,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkStartMin: TTntCheckBox
     Left = 8
-    Top = 86
+    Top = 69
     Width = 225
     Height = 17
     Caption = 'Start minimized to the system tray'

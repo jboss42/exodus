@@ -412,6 +412,9 @@
 
 	<!-- Should Exodus allow users to block messages from other users -->
 	<brand_allow_blocking_jids value="1"/>
+
+	<!-- Should the ability to show the debug window be available to the user through the main menu system -->
+	<brand_show_debug_in_menu value="1"/>
   </prefs>
 
   <!-- default custom presence stuff -->
