@@ -30,7 +30,7 @@ type
     {M+}
 
     // A function definition for a global signal handler
-    TSignalExceptionHandler = procedure(e_data: TWidestringlist);
+    TSignalExceptionHandler = procedure(e_data: TWidestringlist; showdlg: boolean);
 
     {---------------------------------------}
     // Base callback method for TSignal listeners
@@ -265,7 +265,7 @@ begin
     data.Add('Listener Methodname: ' + sl.methodname);
     if (tag <> nil) then
         data.Add('XML Packet: ' + tag.xml());
-    _handler(data);
+    _handler(data, true);
     data.Free();
 end;
 

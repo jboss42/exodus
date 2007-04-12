@@ -24,7 +24,7 @@ interface
 uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, SelContact, Emote, NodeItem, 
+    ShellAPI, Registry, SelContact, Emote, NodeItem,
     Dockable,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -32,7 +32,7 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms;
+    TntForms, ExTracer;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -2285,6 +2285,8 @@ begin
     end;
     _ApprovedExitWithCOMActive := true;
 
+    // Disable showing error dialog when exiting
+    Application.OnException := CatchersMit.gotExceptionNoDlg;
 
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
