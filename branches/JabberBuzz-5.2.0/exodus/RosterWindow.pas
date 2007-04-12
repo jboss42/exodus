@@ -627,6 +627,13 @@ begin
     ExCOMRoster.AddPredefinedMenu(sPredefinedRoster, popRoster);
     ExCOMRoster.AddPredefinedMenu(sPredefinedStatus, popStatus);
     ExCOMRoster.AddPredefinedMenu(sPredefinedTransport, popTransport);
+
+    // Check to see if we allow for blocking
+    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then begin
+        popBlock.Visible := false;
+        popGroupBlock.Visible := false;
+        popGroupUnBlock.Visible := false;
+    end;
 end;
 
 {---------------------------------------}

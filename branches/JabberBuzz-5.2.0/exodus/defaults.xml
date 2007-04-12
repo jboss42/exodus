@@ -409,6 +409,9 @@
 
 	<!-- Should Exodus show a warning when trying to register a new account with a server that doesn't advertise in-band registration? -->
 	<brand_show_in_band_registration_warning value="1"/>
+
+	<!-- Should Exodus allow users to block messages from other users -->
+	<brand_allow_blocking_jids value="1"/>
   </prefs>
 
   <!-- default custom presence stuff -->

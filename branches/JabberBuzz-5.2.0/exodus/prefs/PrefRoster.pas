@@ -82,6 +82,10 @@ begin
     Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
     Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
     Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
+
+    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then
+        chkHideBlocked.Enabled := false;
+
 end;
 
 procedure TfrmPrefRoster.SavePrefs();

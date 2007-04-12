@@ -480,6 +480,8 @@ begin
             Print1.Visible := true;
         end;
 
+        if (getBool('brand_allow_blocking_jids') = false) then 
+            mnuBlock.Visible := false;
     end;
 
 end;

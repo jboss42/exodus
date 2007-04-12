@@ -399,6 +399,8 @@ begin
         lblTransfer.Visible := getBool('brand_ft');
         imgPlugins.Visible := getBool('brand_plugs');
         lblPlugins.Visible := getBool('brand_plugs');
+        imgBlockList.Visible := getBool('brand_allow_blocking_jids');
+        lblBlockList.Visible := getBool('brand_allow_blocking_jids');
     end;
 
     // Init all the other panels
@@ -430,7 +432,6 @@ begin
         Width := Shape1.Width;
         Visible := false;
     end;
-
 
 end;
 
