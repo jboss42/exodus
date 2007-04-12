@@ -727,7 +727,7 @@ begin
                 plugs.Delete(i);
                 p.com.Shutdown;
             end;
-        finally
+        except
         end;
     end;
     loaded.Free();
@@ -749,15 +749,19 @@ begin
         // cleared.
         // JJF 8/14/06 This needs to be addressed
         //todo JJF get definitive answer to when COM objects should be released!
+
         for i := plugs.Count - 1 downto 0 do begin
+          try
             pp := TPlugin(plugs.Objects[i]);
             plugs.Delete(i);
             pp.com.Shutdown;
+          except
+            continue;
+          end;
+
         end;
-
-        plugs.Clear();
+       plugs.Clear();
     except
-
     end;
 end;
 
@@ -983,6 +987,8 @@ end;
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
+   try
+
     if (_menu_items <> nil) then begin
 
         OutputDebugString('Destroying TExodusController');
@@ -998,9 +1004,12 @@ begin
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
         FreeAndNil(_parser);
-
         inherited;
+
     end;
+   except
+
+   end;
 end;
 
 {---------------------------------------}
