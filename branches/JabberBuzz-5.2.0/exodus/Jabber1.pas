@@ -1343,8 +1343,8 @@ begin
         end;
         mnuPeople_Contacts_SendFile.Visible := getBool('brand_ft');
         btnSendFile.Visible := getBool('brand_ft');
-
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
+        mnuOptions_Plugins.Visible := getBool('brand_plugs');
     end;
 
     // Make sure presence menus have unified captions
