@@ -90,9 +90,9 @@ inherited frmJoinRoom: TfrmJoinRoom
       object lblPassword: TTntLabel
         Left = 25
         Top = 188
-        Width = 112
+        Width = 155
         Height = 13
-        Caption = 'Administrator Password:'
+        Caption = 'Password to join room if required:'
       end
       object Label3: TTntLabel
         Left = 6
@@ -118,7 +118,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Shape = bsTopLine
       end
       object txtServer: TTntComboBox
-        Left = 162
+        Left = 190
         Top = 128
         Width = 190
         Height = 21
@@ -131,7 +131,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnChange = txtServerChange
       end
       object txtRoom: TTntEdit
-        Left = 162
+        Left = 190
         Top = 159
         Width = 190
         Height = 21
@@ -139,7 +139,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnChange = txtRoomChange
       end
       object txtPassword: TTntEdit
-        Left = 162
+        Left = 190
         Top = 186
         Width = 190
         Height = 21
