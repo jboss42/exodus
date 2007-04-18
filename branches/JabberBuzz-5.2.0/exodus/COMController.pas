@@ -659,7 +659,11 @@ begin
     end;
 
     p := TPlugin(plugs.Objects[idx]);
-    p.com.Configure();
+    try
+        p.com.Configure();
+    except
+        DebugMessage('COM Exception in ConfigurePlugin');
+    end;
 end;
 
 function IsPluginConfigurable(com_name: string): boolean;
@@ -728,6 +732,7 @@ begin
                 p.com.Shutdown;
             end;
         except
+            DebugMessage('COM Exception in ReloadPlugins');
         end;
     end;
     loaded.Free();
@@ -756,6 +761,7 @@ begin
             plugs.Delete(i);
             pp.com.Shutdown;
           except
+            DebugMessage('COM Exception in TExodusChat.UnloadPlugins');
             continue;
           end;
 
@@ -844,8 +850,13 @@ begin
         else
             xml := tag.xml;
 
-        if (com <> nil) then
-            com.Process(_xpath, event, xml)
+        if (com <> nil) then begin
+            try
+                com.Process(_xpath, event, xml);
+            except
+                DebugMessage('COM Exception in TPluginProxy.Callback');
+            end;
+        end
         else if (l <> nil) then
             l.ProcessEvent(event, xml);
     except
@@ -936,6 +947,7 @@ begin
         else
             com.ProcessIQ(iqid, '');
     except
+        DebugMessage('COM Exception in TIQProxy.Callback');
     end;
 
     Self.Free();
@@ -951,6 +963,7 @@ begin
         // callback our listener
         com.TimeoutIQ(iqid);
     except
+        DebugMessage('COM Exception in TIQProxy.Timeout');
     end;
 
     Self.Free;
@@ -1023,8 +1036,13 @@ procedure TExodusController.fireNewChat(jid: WideString; ExodusChat: IExodusChat
 var
     i: integer;
 begin
-    for i := 0 to plugs.count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+    for i := 0 to plugs.count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewChat');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1032,8 +1050,13 @@ procedure TExodusController.fireNewOutgoingIM(jid: Widestring; ExodusChat: IExod
 var
     i: integer;
 begin
-    for i := 0 to plugs.Count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewOutgoingIM');
+        end;
+    end;
 end;
 
 procedure TExodusController.fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);
@@ -1059,8 +1082,13 @@ procedure TExodusController.fireNewRoom(jid: Widestring; ExodusChat: IExodusChat
 var
     i: integer;
 begin
-    for i := 0 to plugs.Count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewRoom');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1071,8 +1099,13 @@ var
     xml: Widestring;
 begin
     xml := '';
-    for i := 0 to plugs.Count - 1 do
-        xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+        except
+            DebugMessage('COM Exception in TExodusController.fireIM');
+        end;
+    end;
     Result := xml;
 end;
 
@@ -1283,8 +1316,13 @@ begin
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
         //broadcast to all plugins the menu selection
-        for i := 0 to plugs.count - 1 do
-            TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+        for i := 0 to plugs.count - 1 do begin
+            try
+                TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+            except
+                DebugMessage('COM Exception in TExodusController.fireMenuClick');
+            end;
+        end;
 {$ELSE}
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
@@ -1307,8 +1345,13 @@ begin
     idx := _roster_menus.indexOfObject(Sender);
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
-        for i := 0 to plugs.count - 1 do
-            TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
+        for i := 0 to plugs.count - 1 do begin
+            try
+                TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
+            except
+                DebugMessage('COM Exception in TExodusController.fireRosterMenuClick');
+            end
+        end;
 {$ELSE}
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_roster_menus.Objects[idx]).Tag);

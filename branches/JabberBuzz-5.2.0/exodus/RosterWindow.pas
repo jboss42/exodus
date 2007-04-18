@@ -2363,7 +2363,6 @@ var
     menuname: Widestring;
     i: integer;
     transcnt, bookcnt, rescnt, contactcnt: integer;
-    nodetype: integer;
 begin
     // Figure out what popup menu to show
     // based on the selection

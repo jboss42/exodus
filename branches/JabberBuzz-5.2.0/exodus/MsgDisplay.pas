@@ -324,7 +324,7 @@ end;
 function AdjustDST( inTime : TDateTime): TDateTime;
 var
   timezoneinfo: TTimezoneinformation;
-  dstNow, dstTime: Boolean;
+  dstTime: Boolean;
   timezoneResult: word;
 begin
   Result := inTime;
