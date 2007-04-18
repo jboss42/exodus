@@ -928,12 +928,15 @@ end;
 procedure TIQProxy.Callback(event: string; tag: TXMLTag);
 begin
     //
-    _timer.Enabled := false;
+    try
+        _timer.Enabled := false;
 
-    if ((event = 'xml') and (tag <> nil)) then
-        com.ProcessIQ(iqid, tag.xml)
-    else
-        com.ProcessIQ(iqid, '');
+        if ((event = 'xml') and (tag <> nil)) then
+            com.ProcessIQ(iqid, tag.xml)
+        else
+            com.ProcessIQ(iqid, '');
+    except
+    end;
 
     Self.Free();
 end;
@@ -941,11 +944,14 @@ end;
 {---------------------------------------}
 procedure TIQProxy.Timeout(Sender: TObject);
 begin
-    // we got a timeout event
-    _timer.Enabled := false;
+    try
+        // we got a timeout event
+        _timer.Enabled := false;
 
-    // callback our listener
-    com.TimeoutIQ(iqid);
+        // callback our listener
+        com.TimeoutIQ(iqid);
+    except
+    end;
 
     Self.Free;
 end;
