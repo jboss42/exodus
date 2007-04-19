@@ -254,7 +254,7 @@ uses
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, ComServ;
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -1250,17 +1250,20 @@ EXutils.OutputDebugMsg('showing dock container');
     f.ShowDefault();
     Application.ProcessMessages();
     //hack alert! Info Broker work.
-    tstr := Copy(Caption, 1, Length('vcl_'));
+    tstr := Copy(Caption, 1, Length('ie_'));
 EXutils.OutputDebugMsg('Caption: ' + caption + ', tstr: ' + tstr);
-    if (tstr = 'vcl_') then begin
-EXutils.OutputDebugMsg('found delphi caption, returning tpanel');
-      f.Caption := Copy(Caption, Length('vcl_') + 1, Length(Caption));
-      p := @(TPanel(f.panel1));
+    if (tstr = 'ie_') then begin
+EXutils.OutputDebugMsg('found ie caption, returning tpanel');
+      f.Caption := Copy(Caption, Length('ie_') + 1, Length(Caption));
+EXutils.OutputDebugMsg('assigned captions');
+      p := @(TWebBrowser(f.WebBrowser1));
+EXutils.OutputDebugMsg('got pointer');
       Result := Integer(p);
+EXutils.OutputDebugMsg('set result');
     end else begin
 EXutils.OutputDebugMsg('found normal caption, returning hwnd');
       f.Caption := Caption;
-      Result := f.Panel1.Handle;
+      Result := f.Handle;
     end;
 end;
 
