@@ -4,15 +4,16 @@ object frmPrefs: TfrmPrefs
   BorderWidth = 1
   Caption = 'Settings'
   ClientHeight = 477
-  ClientWidth = 456
+  ClientWidth = 603
   Color = clBtnFace
-  DefaultMonitor = dmDesktop
+  DefaultMonitor = dmMainForm
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Arial'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -31,7 +32,6 @@ object frmPrefs: TfrmPrefs
     TabOrder = 0
     TabStop = True
     OnMouseMove = OffBoxMouseMove
-    ExplicitHeight = 389
     object Shape2: TShape
       Left = 0
       Top = 260
@@ -243,6 +243,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -94
       ExplicitWidth = 46
     end
     object imgFonts: TImage
@@ -438,6 +439,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -188
       ExplicitWidth = 64
     end
     object imgS10n: TImage
@@ -634,6 +636,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -235
       ExplicitWidth = 66
     end
     object imgRoster: TImage
@@ -829,7 +832,8 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 32
+      ExplicitTop = -329
+      ExplicitWidth = 57
     end
     object imgSystem: TImage
       Left = 0
@@ -1024,6 +1028,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -376
       ExplicitWidth = 36
     end
     object imgNotify: TImage
@@ -1163,6 +1168,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -47
       ExplicitWidth = 53
     end
     object imgAway: TImage
@@ -1358,6 +1364,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 141
       ExplicitWidth = 57
     end
     object imgKeywords: TImage
@@ -1553,6 +1560,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 188
       ExplicitWidth = 51
     end
     object imgBlockList: TImage
@@ -1749,6 +1757,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 282
       ExplicitWidth = 46
     end
     object imgCustompres: TImage
@@ -1945,6 +1954,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 329
       ExplicitWidth = 46
     end
     object imgMessages: TImage
@@ -2140,6 +2150,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 0
       ExplicitWidth = 50
     end
     object lblPlugins: TTntLabel
@@ -2149,12 +2160,13 @@ object frmPrefs: TfrmPrefs
       Height = 14
       Align = alTop
       Alignment = taCenter
-      Caption = 'Plugins'
+      Caption = 'Plug-ins'
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 34
+      ExplicitTop = 423
+      ExplicitWidth = 38
     end
     object imgNetwork: TImage
       Left = 0
@@ -2531,6 +2543,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 94
       ExplicitWidth = 67
     end
     object imgGroups: TImage
@@ -2726,6 +2739,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -282
       ExplicitWidth = 36
     end
     object imgLayouts: TImage
@@ -2894,6 +2908,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -141
       ExplicitWidth = 39
     end
     object lblNetwork: TTntLabel
@@ -2908,6 +2923,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 376
       ExplicitWidth = 41
     end
     object imgEmote: TImage
@@ -7992,6 +8008,7 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 47
       ExplicitWidth = 49
     end
     object imgHotkeys: TImage
@@ -8172,13 +8189,14 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 235
       ExplicitWidth = 39
     end
   end
   object PageControl1: TTntPageControl
     Left = 99
     Top = 0
-    Width = 357
+    Width = 504
     Height = 440
     ActivePage = tbsKeywords
     Align = alClient
@@ -8187,44 +8205,49 @@ object frmPrefs: TfrmPrefs
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
-    ExplicitHeight = 389
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       OnMouseMove = OffBoxMouseMove
-      ExplicitHeight = 357
       object memKeywords: TTntMemo
         Left = 0
-        Top = 114
-        Width = 349
-        Height = 294
+        Top = 97
+        Width = 496
+        Height = 311
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 243
+        OnKeyPress = memKeywordsKeyPress
       end
       object Panel2: TPanel
         Left = 0
         Top = 24
-        Width = 349
-        Height = 90
+        Width = 496
+        Height = 73
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
         object Label1: TTntLabel
+          Left = 2
+          Top = 54
+          Width = 279
+          Height = 14
+          Caption = 'The following characters should not be used: ( ) [ ] * + \ ?.'
+        end
+        object TntLabel1: TTntLabel
           Left = 0
           Top = 0
-          Width = 349
+          Width = 496
           Height = 28
           Align = alTop
           Caption = 
-            'You can be notified when a keyword appears in conference room. Enter i' +
-            'n the keywords that you want to look for in messages.'
+            'You can be notified when a keyword appears in conference room. E' +
+            'nter in the keywords that you want to look for in messages.'
           WordWrap = True
-          ExplicitWidth = 348
+          ExplicitWidth = 477
         end
         object chkRegex: TTntCheckBox
-          Left = 5
-          Top = 66
+          Left = 2
+          Top = 34
           Width = 260
           Height = 14
           Caption = 'Use Regular Expressions for Keyword matches'
@@ -8234,11 +8257,11 @@ object frmPrefs: TfrmPrefs
       object pnlKeyword: TTntPanel
         Left = 0
         Top = 0
-        Width = 349
+        Width = 496
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        Caption = 'Notification Keywords'
+        Caption = 'Keywords'
         Color = clHighlight
         ParentBackground = False
         TabOrder = 2
@@ -8247,24 +8270,26 @@ object frmPrefs: TfrmPrefs
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
-      ExplicitHeight = 357
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object memBlocks: TTntMemo
         Left = 0
         Top = 89
-        Width = 349
+        Width = 496
         Height = 319
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 268
       end
       object pnlBlocked: TTntPanel
         Left = 0
         Top = 0
-        Width = 349
+        Width = 496
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        Caption = 'Blocked Contacts'
+        Caption = 'Block List'
         Color = clHighlight
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -8278,7 +8303,7 @@ object frmPrefs: TfrmPrefs
       object Panel4: TPanel
         Left = 0
         Top = 24
-        Width = 349
+        Width = 496
         Height = 65
         Align = alTop
         BevelOuter = bvNone
@@ -8286,15 +8311,14 @@ object frmPrefs: TfrmPrefs
         object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
-          Width = 349
-          Height = 42
+          Width = 495
+          Height = 28
           Align = alTop
           Caption = 
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
-          ExplicitWidth = 320
         end
       end
     end
@@ -8302,23 +8326,23 @@ object frmPrefs: TfrmPrefs
   object Panel1: TPanel
     Left = 0
     Top = 440
-    Width = 456
+    Width = 603
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
-    ExplicitTop = 389
     object Bevel1: TBevel
       Left = 1
       Top = 1
-      Width = 454
+      Width = 601
       Height = 5
       Align = alTop
       Shape = bsTopLine
+      ExplicitWidth = 454
     end
     object Panel3: TPanel
-      Left = 214
+      Left = 361
       Top = 6
       Width = 241
       Height = 30

@@ -140,7 +140,7 @@ var
     i: integer;
 begin
     _toolbar.AutoSize := false;
-    for i := 0 to _toolbar.ButtonCount - 1 do begin
+    for i := _toolbar.ButtonCount - 1 downto 0 do begin
         if (_toolbar.Buttons[i].Name = button) then begin
             _toolbar.RemoveControl(_toolbar.Buttons[i]);
         end;

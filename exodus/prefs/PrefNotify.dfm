@@ -23,7 +23,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   end
   inherited pnlHeader: TTntPanel
     Width = 338
-    Caption = 'Notification Options'
+    Caption = 'Notification'
     TabOrder = 6
     ExplicitWidth = 338
   end

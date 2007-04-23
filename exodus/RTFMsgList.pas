@@ -103,8 +103,14 @@ end;
 
 {---------------------------------------}
 procedure TfRTFMsgList.Clear();
+var
+ i: Integer;
 begin
     MsgList.Clear();
+    for i := 0 to MsgList.Lines.Count - 1 do begin
+         MsgList.Lines[i] := '';
+    end;
+
 end;
 
 {---------------------------------------}
@@ -162,6 +168,13 @@ begin
         Key := #0;
         exit;
     end;
+
+   if ((MainSession.Prefs.getBool('esc_close')) and (Ord(key) = 27)) then begin
+      if (Self.Parent <> nil) then
+        if (Self.Parent.Parent <> nil) then
+          SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
+          exit;
+   end;
 
     if (Ord(key) < 32) then exit;
 
@@ -235,6 +248,7 @@ begin
 
         // TODO: Use newfangled RTF madness
         SelAttributes.Color := c;
+        Paragraph.Alignment := taLeft;
         if timestamp <> '' then
             txt := '[' + timestamp + '] ' + txt;
 

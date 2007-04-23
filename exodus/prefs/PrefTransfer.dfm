@@ -5,6 +5,8 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   ClientHeight = 343
   ClientWidth = 318
   OldCreateOrder = True
+  ExplicitWidth = 330
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   object lblXferPath: TTntLabel [0]
@@ -32,8 +34,10 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   end
   inherited pnlHeader: TTntPanel
     Width = 318
-    Caption = 'File Transfer Options'
+    Caption = 'File Transfers'
     TabOrder = 6
+    ExplicitTop = 3
+    ExplicitWidth = 318
   end
   object grpWebDav: TGroupBox
     Left = 8
@@ -191,7 +195,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     ItemHeight = 13
     TabOrder = 2
     OnChange = cboXferModeChange
-    Items.WideStrings = (
+    Items.Strings = (
       'Discover a file transfer component using my server.'
       'Always use a specific file transfer component.'
       'Send files directly from my machine to the recipient.'

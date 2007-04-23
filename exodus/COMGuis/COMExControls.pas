@@ -37,7 +37,7 @@ function getCOMControl(o: TObject): IExodusControl;
 
 implementation
 uses
-    Buttons,ComCtrls,COMExBitBtn,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExForm,COMExLabel,COMExListBox,COMExMainMenu,COMExMemo,COMExMenuItem,COMExPageControl,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,COMExSpeedButton,ExtCtrls,Graphics,Menus,TntButtons,TntComCtrls,TntExtCtrls,TntMenus,TntStdCtrls;
+    Buttons,ComCtrls,COMExBitBtn,COMExButton,COMExCheckBox,COMExComboBox,COMExEdit,COMExFont,COMExForm,COMExLabel,COMExListBox,COMExMainMenu,COMExMemo,COMExMenuItem,COMExPageControl,COMExPanel,COMExPopupMenu,COMExRadioButton,COMExRichEdit,COMExSpeedButton,ExtCtrls,Graphics,Menus,TntButtons,TntComCtrls,TntExtCtrls,TntMenus,TntStdCtrls, ExRichEdit;
 
 function getCOMControl(o: TObject): IExodusControl;
 begin
@@ -113,7 +113,7 @@ begin
         Result := IExodusControl(TExControlPageControl.Create(TTntPageControl(o)));
         exit;
     end;
-    if (o is TRichEdit) then begin 
+    if ((o is TRichEdit)or (o is TExRichEdit)) then begin
         Result := IExodusControl(TExControlRichEdit.Create(TRichEdit(o)));
         exit;
     end;

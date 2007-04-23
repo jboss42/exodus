@@ -69,11 +69,13 @@ begin
     gs.Sort();
 
     AssignTntStrings(gs, txtDefaultGrp.Items);
-    AssignTntStrings(gs, txtGatewayGrp.Items);
-
-    gs.Free();
-
     inherited;
+    //add groups to gateway, add current gateway txt to list if its not already there
+    if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
+        gs.Add(txtGatewayGrp.Text);
+    gs.Sort();
+    AssignTntStrings(gs, txtGatewayGrp.Items);
+    gs.Free();
 end;
 
 procedure TfrmPrefGroups.SavePrefs();

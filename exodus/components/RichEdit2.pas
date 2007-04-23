@@ -3129,7 +3129,7 @@ begin
   RichEdit.FWide:= True;
   Word((@Text)^) := SizeOf(Text);
   L := RichEdit.PrivatePerform(EM_GETLINE, Index, Longint(@Text));
-  if (Text[L - 1] = #13) then Dec(L, 1);
+  if ((Text[L - 1] = #13) or (Text[L - 1] = #11)) then Dec(L, 1);  //CR or Shift-CR
   SetString(Result, Text, L);
   RichEdit.FWide:= False;
 end;

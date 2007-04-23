@@ -84,16 +84,20 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnCloseDockClick(Sender: TObject);
     procedure btnDockToggleClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
     _normalImageIndex: integer;//image shown when not notifying
     _notifyImageIndex: integer;//image shown when notifying
+    _prefs_callback_id: integer; //ID for prefs events
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
+    procedure prefsCallback(event: string; tag: TXMLTag);
   protected
+
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
 
@@ -219,13 +223,14 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
-    _normalImageIndex := RosterImages.RI_APPIMAGE_INDEX;
+    _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
     _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
     btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     _docked := false;
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+    _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
     inherited;
 end;
 
@@ -292,12 +297,17 @@ begin
     inherited;
 
     if (Docked) then begin
-        OutputDebugMsg('TfrmDockable.gotActivate calling UpdateDocked: ImageIndex: ' + IntToStr(ImageIndex));
         GetDockManager().UpdateDocked(Self);
     end;
 end;
 
 {---------------------------------------}
+procedure TfrmDockable.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+    MainSession.UnRegisterCallback(_prefs_callback_id);
+end;
+
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
@@ -340,6 +350,11 @@ begin
         GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
+    //if ctrl d try to toggle dock state
+    else if ((Jabber1.getAllowedDockState() <> adsForbidden) and ([ssCtrl] = Shift)) and (Key=68) then begin
+      btnDockToggleClick(Self);
+      Key := 0;
+    end;
 end;
 
 function visibleButtonCount(bar: TToolBar): integer;
@@ -356,9 +371,11 @@ end;
 procedure TfrmDockable.OnDocked();
 begin
     Self.Align := alClient;
+    tbDockBar.Visible := true;
     btnCloseDock.Visible := true;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
-    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsRequired);
+    btnDockToggle.Hint := _('Undock this tab (ctrl-d)');
+    btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
     pnlDockTop.Visible := true;
 end;
 
@@ -367,9 +384,11 @@ begin
     btnCloseDock.Visible := false;
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_DOCK_KEY);
     btnDockToggle.Visible := (Jabber1.getAllowedDockState() <> adsForbidden);
+    btnDockToggle.Hint := _('Dock this window (ctrl-d)');
     //hide top panel if no toolbar buttons are showing and no subclass has
     //added a child component (pnlDockTop.ControlCount = 1 -> only toolbar)
-    pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or (visibleButtonCount(tbDockbar) > 0);
+    tbDockBar.Visible := (visibleButtonCount(tbDockbar) > 0);
+    pnlDockTop.Visible := (pnlDockTop.ControlCount <> 1) or tbDockBar.Visible;
 end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
@@ -382,7 +401,7 @@ begin
     tstr := windowState.GetAttribute('dock');
     if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
         tstr := 't';
-    _initiallyDocked :=  (ads = adsRequired) or ((ads <> adsForbidden) and (tstr = 't'));
+    _initiallyDocked :=  ((ads <> adsForbidden) and (tstr = 't'));
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
@@ -445,6 +464,12 @@ end;
 procedure TfrmDockable.showDockToggleButton(show: boolean);
 begin
     btnDockToggle.Visible := show;
+end;
+
+procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/prefs') then 
+        SnapBuffer := MainSession.Prefs.getInt('edge_snap');
 end;
 
 end.

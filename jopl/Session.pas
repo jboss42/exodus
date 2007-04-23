@@ -29,7 +29,7 @@ uses
     PrefController,
     JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -78,6 +78,7 @@ type
         _paused: boolean;
         _resuming: boolean;
         _pauseQueue: TQueue;
+        _queue: TEventMsgQueue;
         _id: longint;
         _cb_id: longint;
         _authd: boolean;
@@ -169,6 +170,7 @@ type
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
+        procedure ActivateDefaultProfile();
 
         procedure Pause;
         procedure Play;
@@ -179,6 +181,7 @@ type
         function IsBlocked(jid : TJabberID): boolean; overload;
         function getDisplayUsername(): widestring;
 
+        procedure RefreshBlockers();
         procedure Block(jid : TJabberID);
         procedure UnBlock(jid : TJabberID);     
 
@@ -223,6 +226,7 @@ type
         property NoAuth: boolean read _no_auth write _no_auth;
         property AuthAgent: TJabberAuth read _auth_agent;
         property Authenticated: boolean read _authd;
+        property EventQueue: TEventMsgQueue read _queue;
     end;
 
 var
@@ -239,10 +243,13 @@ uses
     DisplayName, //display name cache
     PluginAuth,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
-    JabberConst, CapPresence, XMLVCard;
+    JabberConst, CapPresence, XMLVCard, Windows, strutils, JabberUtils;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
+var
+    exe_FullPath: string;
+    exe_FullPath_len: cardinal;
 begin
     //
     inherited Create();
@@ -282,6 +289,7 @@ begin
     _dispatcher.AddSignal(_chatSignal);
 
     _pauseQueue := TQueue.Create();
+    _queue := TEventMsgQueue.Create();
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
@@ -319,6 +327,10 @@ begin
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
     Prefs.SetSession(Self);
+    SetLength(exe_FullPath, MAX_PATH+1);
+    exe_FullPath_len := GetModuleFileName(0, PChar(exe_FullPath), MAX_PATH);
+    exe_FullPath := LeftStr(exe_FullPath, exe_FullPath_len);
+    Prefs.setString('exe_FullPath', exe_FullPath);
 
     if (Prefs.getBool('always_lang')) then
         _lang := Prefs.getString('locale')
@@ -355,6 +367,7 @@ begin
         _stream.Free();
 
     _pauseQueue.Free();
+    _queue.Free();
     Presence_XML.Free();
 
     // Free the dispatcher... this should free the signals
@@ -541,7 +554,6 @@ begin
     end
     else begin
         tag.Free;
-        raise Exception.Create('Invalid stream');
     end;
 end;
 
@@ -636,8 +648,8 @@ begin
     else if msg = 'xml' then begin
         // We got a stanza. Whoop.
         // Let's always fire debug events
-        if (tag.Name = 'stream:stream') then begin
 
+        if (tag.Name = 'stream:stream') then begin
             // we got connected
             _stream_id := tag.getAttribute('id');
             _xmpp := (tag.GetAttribute('version') = '1.0');
@@ -971,6 +983,18 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberSession.ActivateDefaultProfile();
+var
+ prof_index: Integer;
+begin
+//    _profile := DefaultProfile
+   prof_index := Prefs.getInt('profile_active');
+   if ((prof_index < 0) or (prof_index >= Prefs.Profiles.Count)) then
+        prof_index := 0;
+   _profile := TJabberProfile(Prefs.Profiles.Objects[prof_index]);
+end;
+
+{---------------------------------------}
 procedure TJabberSession.setPresence(show, status: WideString; priority: integer);
 var
     p: TJabberPres;
@@ -1150,9 +1174,10 @@ end;
 {---------------------------------------}
 procedure TJabberSession.UnBlock(jid : TJabberID);
 var
-    i: integer;
+    i,j: integer;
     blockers: TWideStringList;
     block : TXMLTag;
+    c: TChatController;
 begin
     blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
@@ -1165,10 +1190,49 @@ begin
     block := TXMLTag.Create('unblock');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/unblock', block);
+    //Disable all open chat windows
+    with MainSession.ChatList do begin
+       for j := Count - 1 downto 0 do begin
+           c := TChatController(Objects[j]);
+           if (c <> nil) then
+             if (c.jid = jid.jid) then
+                c.SetJid(c.jid);
+       end;
+    end;
     block.Free();
 end;
 
 {---------------------------------------}
+procedure TJabberSession.RefreshBlockers();
+var
+    j: Integer;
+    c: TChatController;
+    block: TXMLTag;
+begin
+    block := TXMLTag.Create('block');
+    //Iterate through all controllers
+    with MainSession.ChatList do begin
+       for j := Count - 1 downto 0 do begin
+           c := TChatController(Objects[j]);
+           block.setAttribute('jid', c.jid);
+           if (c <> nil) then begin
+             if (IsBlocked(c.jid)) then begin
+                //If blocked, chat window will be closed and will
+                //disable controller for this jid
+                MainSession.FireEvent('/session/block', block);
+             end
+             else begin
+                //Enable controller just in case window is not open
+                c.SetJid(c.jid);
+                //MainSession.FireEvent('/session/unblock', block);
+             end;
+           end;
+       end;
+    end;
+    block.Free();
+end;
+
+
 procedure TJabberSession.Block(jid : TJabberID);
 var
     blockers: TWideStringList;

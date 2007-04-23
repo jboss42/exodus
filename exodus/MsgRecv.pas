@@ -110,6 +110,8 @@ type
     _xtags: Widestring;
     _events: TQueue;
     _controller: TExMsgController;
+    _callback_id: integer;
+    _password: Widestring;
 
     procedure SetupResources();
     procedure DisablePopup();
@@ -142,6 +144,7 @@ type
 
     procedure pluginMenuClick(Sender: TObject);
     function JID: Widestring;
+    procedure OnCallback(event: string; tag: TXMLTag);
 
     // TMsgController
     function getObject(): TObject;
@@ -170,6 +173,9 @@ const
     sBtnNext = 'Next';
     sMsgsPending = 'You have unread messages. Read all messages before closing the window.';
 
+    sDeclineReason = 'Reason for declining invitation';
+    SE_DISCONNECTED = '/session/disconnected';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -182,7 +188,7 @@ uses
     XferManager, GnuGetText,
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
     RosterWindow, RemoveContact, Room, NodeItem, Roster,
-    Presence, Session, Jabber1;
+    Presence, Session, Jabber1, InputPassword, MsgDisplay;
 
 {$R *.DFM}
 
@@ -343,6 +349,17 @@ begin
     echat.setIM(Self);
     echat.ObjAddRef();
     ComController := echat;
+
+    //register for callbacks
+    _callback_id := MainSession.RegisterCallback(OnCallback, SE_DISCONNECTED);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.OnCallback(event: string; tag: TXMLTag);
+begin
+    if (event = SE_DISCONNECTED) then begin
+        Self.Close;
+    end;
 end;
 
 {---------------------------------------}
@@ -400,21 +417,28 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.DisplayEvent(e: TJabberEvent);
+var
+    tempjid: TJabberID;
 begin
     eType := e.eType;
     recips.Add(e.from);
     setFrom(e.from);
     frameButtons1.btnOK.Enabled := true;
     frameButtons1.btnCancel.Enabled := true;
-    txtSubject.Caption := Tnt_WideStringReplace(e.str_content, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
-    _base_JID := e.str_content;
+
+    tempjid := TJabberID.Create(e.str_content);
+    _base_JID := tempjid.removeJEP106(tempjid.full);
+    txtSubject.Caption := Tnt_WideStringReplace(_base_JID, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
+
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
+
 
     DisablePopup();
 
     if (eType = evt_Invite) then begin
         // Change button captions for TC Invites
+        _password := e.password;
         frameButtons1.btnOK.Caption := _(sAccept);
         frameButtons1.btnCancel.Caption := _(sDecline);
     end
@@ -431,6 +455,8 @@ begin
         frameButtons1.btnOK.Visible := (eType = evt_Message);
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
+    HighlightKeywords(txtMsg, 0);
+    tempjid.Free;
 end;
 
 {---------------------------------------}
@@ -449,6 +475,7 @@ begin
     ActiveControl := MsgOut;
     lblFrom.Caption := _(sTo);
     pnlTop.Height := pnlSendSubject.Top + pnlSendSubject.Height + 3;
+
 end;
 
 {---------------------------------------}
@@ -546,8 +573,44 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnCancelClick(Sender: TObject);
+var
+    messagetag: TXmlTag;
+    xTag: TXmlTag;
+    declineTag: TXmlTag;
+    reasonTag: TXmlTag;
+    rjid: TJabberID;
+    reason: Widestring;
 begin
-    NextOrClose();
+    if eType = evt_Invite then begin
+        // send back a decline message.
+        messagetag := TXmlTag.Create('message');
+        xTag := TXmlTag.Create('x');
+        declineTag := TXmlTag.Create('decline');
+        reasonTag := TXMLTag.Create('reason');
+
+        rjid := TJabberID.Create(_base_jid, false);
+        messagetag.setAttribute('from', MainSession.JID);
+        messagetag.setAttribute('to', rjid.jid);
+        xTag.setAttribute('xmlns', 'http://jabber.org/protocol/muc#user');
+        declineTag.setAttribute('to', JID);
+        reason := '';
+        if (not InputQueryW(_(sDeclineReason), _(sDeclineReason), reason, False, False)) then begin
+            reasonTag.Free();
+            declineTag.Free();
+            xTag.Free();
+            messagetag.Free();
+        end
+        else begin
+            reasonTag.AddCData(reason);
+            declineTag.AddTag(reasonTag);
+            xTag.AddTag(declineTag);
+            messagetag.AddTag(xTag);
+            MainSession.SendTag(messagetag);
+            NextOrClose();
+        end;
+    end
+    else
+        NextOrClose();
 end;
 
 {---------------------------------------}
@@ -559,7 +622,7 @@ begin
     if eType = evt_Invite then begin
         // join this grp... grp is in the subject
         jid := TJabberID.Create(_base_jid, false);
-        StartRoom(jid.jid, '', '', True, False, True);
+        StartRoom(jid.jid, '', _password, True, False, True);
         jid.Free();
         Self.Close();
     end
@@ -622,7 +685,7 @@ begin
             m.isMe := true;
             m.Nick := nick;
 
-            mtag := m.Tag;
+            mtag := m.GetTag;
 
             // plugin stuff
             if (ComController <> nil) then
@@ -653,7 +716,7 @@ begin
          m.isMe := true;
          m.Nick := nick;
 
-         mtag := m.Tag;
+         mtag := m.GetTag;
 
          // plugin stuff
          if (ComController <> nil) then
@@ -881,12 +944,19 @@ procedure TfrmMsgRecv.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
   inherited;
-    if (_events.Count = 0) then
-        CanClose := true
-    else begin
-        CanClose := false;
-        MessageDlgW(_(sMsgsPending), mtError, [mbOK], 0);
-    end;
+    CanClose := true;
+// This code was removed to prevent a situation with room invites
+// that could cause getting stuck in a loop.
+// Until this code can be reworked, it is now possible to dismiss the
+// messages window without having actually read all messages.
+// This is a short term fix with the understanding that this code will be
+// reworked in the next release
+//    if (_events.Count = 0) then
+//        CanClose := true
+//    else begin
+//        CanClose := false;
+//        MessageDlgW(_(sMsgsPending), mtError, [mbOK], 0);
+//    end;
 end;
 
 {---------------------------------------}
@@ -968,6 +1038,8 @@ begin
 
     if (_events <> nil) then
         _events.Free();
+
+    MainSession.UnRegisterCallback(_callback_id);
 
   inherited;
 end;

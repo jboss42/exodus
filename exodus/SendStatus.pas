@@ -672,8 +672,12 @@ begin
         end;
     send_cancel: begin
         // kill the thread, etc..
-        if (_thread <> nil) then
-            _thread.Terminate();
+        try
+            if (_thread <> nil) then
+                _thread.Terminate();
+        except
+
+        end;
         _thread := nil;
         end;
     end;
@@ -784,6 +788,12 @@ procedure TfSendStatus.FTCallback(event: string; tag: TXMLTag);
 var
     accept: boolean;
 begin
+    if (event = '/session/disconnected') then begin
+     _iq := nil;
+      kill();
+      exit;
+    end;
+    
     // They either accept, or deny our ft offering
     assert(_iq <> nil);
     _iq := nil;
@@ -985,8 +995,12 @@ begin
         _iq := nil;
     end;
 
-    if (_thread <> nil) then
-        _thread.Terminate();
+    try
+        if (_thread <> nil) then
+            _thread.Terminate();
+    except
+
+    end;
         
     getXferManager().killFrame(Self);
 end;

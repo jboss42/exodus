@@ -105,7 +105,7 @@ const BTN_W = 30;
 const XDATA_FONT_SIZE = 9;
 const CHECKBOX_WIDTH = 20;
 
-function  showXDataEx(tag: TXMLTag): boolean;
+function  showXDataEx(tag: TXMLTag; title: widestring = ''): boolean;
 procedure showXData(tag: TXMLTag);
 
 implementation
@@ -124,21 +124,24 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function _showXData(tag: TXMLTag): boolean;
+function _showXData(tag: TXMLTag; title: widestring = ''): boolean;
 var
     f: TfrmXData;
 begin
     f := TfrmXData.Create(nil);
+    if (title <> '') then
+        f.Caption := title;
+
     f.Render(tag);
-    //f.ShowDefault();
-    f.Show();
+    f.ShowDefault(true,'f'); //bring to front, always undocked
+    //f.Show();
     Result := true;
 end;
 
 {---------------------------------------}
-function  showXDataEx(tag: TXMLTag): boolean;
+function  showXDataEx(tag: TXMLTag; title: widestring = ''): boolean;
 begin
-    Result := _showXData(tag);
+    Result := _showXData(tag, title);
 end;
 
 {---------------------------------------}
@@ -621,6 +624,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    inherited;
     if (not _responded) then Cancel();
     Action := caFree;
     if (MainSession <> nil) then
@@ -631,6 +635,7 @@ end;
 procedure TfrmXData.RestoreWindowState();
 begin
     //nop
+    inherited;
 end;
 
 procedure TfrmXData.PersistWindowState();
