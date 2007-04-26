@@ -247,6 +247,7 @@ begin
         tag.setAttribute('handle', IntToStr(TForm(new_window).Handle));
         tag.setAttribute('jid', self._jid);
         MainSession.FireEvent('/chat/window', tag, self);
+        tag.Free;
     end;
 end;
 
@@ -411,9 +412,11 @@ begin
   //to resource1 for the same jid. The callback is registered for all
   //resources for this jid.
   //Do not want to send messages to myself
-  if (toJid.full = MainSession.Jid) then
-    exit;
-
+  if (toJid.full = MainSession.Jid) then begin
+      jid.Free;
+      toJid.Free;
+      exit;
+  end;
 
   if (Self.Window <> nil) then begin
     chat_win := TFrmChat(Self.Window); //We have a chat window
@@ -454,6 +457,8 @@ begin
     if (Assigned(_send_event)) then
       _send_event(tag) //Directly invoke the event
   end;
+  jid.Free;
+  toJid.Free;
 end;
 
 {---------------------------------------}

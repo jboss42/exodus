@@ -160,7 +160,9 @@ end;
 
 Destructor TPrefGraphic.Destroy();
 begin
-
+    FCache.Clear();
+    FCache.Free();
+    inherited Destroy();
 end;
 
 function TPrefGraphic.getCacheIndex(key : WideString; imgList : WideString = '') : integer;

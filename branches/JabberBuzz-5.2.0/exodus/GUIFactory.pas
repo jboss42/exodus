@@ -168,6 +168,7 @@ begin
                   else
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
                          chat.DisplayName, RosterTreeImages.Find('contact'));
+                  FreeAndNil(msg);
                 end;
             end;
             tmp_jid.Free;

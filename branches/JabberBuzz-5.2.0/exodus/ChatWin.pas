@@ -861,6 +861,7 @@ begin
         if (toStr = '') then exit;
         toJID := TJabberID.Create(toStr);
         e := getBestCapsEntity(toJID);
+        FreeAndNil(toJID);
         if (e <> nil) then begin
             if (e.hasFeature(XMLNS_XHTMLIM)) then begin
                 _supportsXIM := true;
@@ -1081,6 +1082,7 @@ begin
     xhtml := getInputXHTML(MsgOut);
     if (xhtml <> nil) then
         xml := xhtml.XML;
+    FreeAndNil(xhtml);
 
     if (MainSession.Prefs.getBool('show_priority')) then
        priority := PriorityType(GetEnumValue(TypeInfo(PriorityType), cmbPriority.Text))

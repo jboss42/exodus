@@ -767,6 +767,7 @@ begin
             xhtml := getInputXHTML(MsgOut);
             if (xhtml <> nil) then
                 xml := xhtml.XML;
+            FreeAndNil(xhtml);
 //        end;
     end;
 

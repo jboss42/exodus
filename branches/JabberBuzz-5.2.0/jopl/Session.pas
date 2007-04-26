@@ -708,11 +708,13 @@ begin
                     for i := 0 to methods.Count - 1 do begin
                         if methods.Tags[i].Data = 'zlib' then begin
                             StartCompression('zlib');
+                            FreeAndNil(methods);
                             exit;
                         end
                     end;
                     // doesn't support zlib
                     Self.FireEvent('/session/error/compression', nil);
+                    FreeAndNil(methods);
                 end;
                 {$endif}
 

@@ -435,11 +435,22 @@ begin
     windowState := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
 
+    // We now own memory for rootTag.
     wsTag := rootTag.GetFirstTag('state');
-    if (wsTag = nil) then exit;
-    
+    if (wsTag = nil) then begin
+        rootTag.Free;
+        exit;
+    end;
+
     windowState := wsTag.GetFirstTag(pKey);
-    Result := (windowState <> nil);
+    if (windowState <> nil) then begin
+        Result := true;
+        windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
+    end
+    else
+        Result := false;
+
+    rootTag.Free;
 end;
 
 procedure TStateFormPrefsHelper.SetAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');

@@ -405,6 +405,7 @@ var
     oneValue : WideString;
     oneProp: WideString;
     exSizeExists: boolean;
+    i: Integer;
 begin
     Result := nil;
     exSizeExists := false;
@@ -451,6 +452,11 @@ begin
                     Result.Style := Result.Style - [fsUnderline]
             end
         end;
+        for i := props.Count - 1 downto 0 do begin
+            TslObject(props.Objects[i]).Free;
+            props.Delete(i);
+        end;
+        props.Free();
     end;
 end;
 
@@ -655,8 +661,10 @@ begin
             try
                 AssignFont(currFont, rtDest.SelAttributes);
                 newFont := getFontFromNode(node, currFont);
-                if (newFont <> nil) then
+                if (newFont <> nil) then begin
+                    currFont.Free; // We are replacing this with newFont.
                     currFont := newFont; //setup for text attrib assignment before
+                end;
                 //If me, then set default font size to my rich edit font
                 //IsMe passed with negation as arument, so need to use not 
                 if (not isMe) then

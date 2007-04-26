@@ -640,6 +640,9 @@ end;
 procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    // Cleanup memory
+    _caps_xp.Free();
+
     // Remove predefinded menus.
     ExCOMRoster.RemovePredefinedMenu(sPredefinedActions, popActions);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmark, popBookmark);
