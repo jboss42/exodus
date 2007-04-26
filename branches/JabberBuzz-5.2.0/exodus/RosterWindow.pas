@@ -768,6 +768,11 @@ begin
         lblStatus.Caption := _(sDisconnected);
         imgSSL.Visible := false;
         AssignUnicodeFont(lblConnect.Font, 8);
+        _online_go := nil;
+        _chat_go := nil;
+        _away_go := nil;
+        _xa_go := nil;
+        _dnd_go := nil;
     end
     else if (state = gui_connecting) then begin
         pnlAnimation.Visible := true;
