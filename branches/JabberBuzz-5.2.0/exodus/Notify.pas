@@ -180,7 +180,10 @@ begin
 
         if (notifyMessage <> '') then begin
             nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
-            DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);
+            if (notifyMessage = sNotifyOnline) then
+              DoNotify(f, 'notify_online', nick + _(notifyMessage), idx)
+            else
+              DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);            
         end;
     finally
         tmp_jid.Free();
