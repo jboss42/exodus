@@ -214,11 +214,11 @@ begin
 
     txt := txt + '\cf6 }';
 
-    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
+    RichEdit.SelStart := RichEdit.GetTextLen;
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
-    hlStartPos := Length(RichEdit.WideLines.Text); // Done here because RTFSelText messes this up.
+    hlStartPos := RichEdit.GetTextLen;; // Done here because RTFSelText messes this up.
     RichEdit.RTFSelText := txt;
 
     if (ximTag <> nil) then begin
@@ -231,7 +231,7 @@ begin
         HighlightKeywords(RichEdit, hlStartPos);
     end;
 
-    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
+    RichEdit.SelStart := RichEdit.GetTextLen;
     RichEdit.SelLength := 0;
     RichEdit.RTFSelText := '{\rtf1 \par }';
     // AutoScroll the window
@@ -291,13 +291,13 @@ var
 begin
     hlColor := MainSession.Prefs.getInt('color_me');
 
-    allTxt := Copy(rtDest.WideLines.Text, startPos+1, length(rtDest.WideLines.Text));
+    allTxt := Copy(rtDest.WideText, startPos+1, rtDest.GetTextLen);
     allTxt := StringReplace(allTxt, #$D#$A, '', [rfReplaceAll, rfIgnoreCase]);
 
     //Create a TRegExpr based on Keyword Prefs
     keywords := CreateKeywordsExpr();
     currPos := startPos;
-    len := length(rtDest.WideLines.Text);
+    len := rtDest.GetTextLen;
 
     if (keywords <> nil) then begin
         try
