@@ -933,6 +933,17 @@ begin
     end;
 
     _timer.Free();
+
+    try
+        // Set the com to nil to avoid it trying to be released
+        // as com is a member variable.
+        // If IExodusIQListener is gone this will cause a crash
+        // which we can catch if we set com to nil.
+        // NOTE:  doing a com._Release causes an invalid pointer
+        // operation.
+        com := nil;
+    except
+    end;
 end;
 
 {---------------------------------------}
