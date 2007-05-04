@@ -1546,6 +1546,8 @@ procedure TExodusController.StartRoom(const roomJID, Nickname,
   useRegisteredNickname: WordBool);
 begin
     Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig, useRegisteredNickname);
+    // force window to front
+    frmExodus.doRestore();
 end;
 
 {---------------------------------------}
