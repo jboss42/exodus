@@ -1460,7 +1460,7 @@ begin
     // This must go against frmExodus, not MainSession
     // otherwise some strange reconnect issues get triggered
     // by there being no profile selected.
-    if ((not MainSession.Active) and (frmExodus.Showing)) then
+    if ((not MainSession.Active) and (frmExodus.isActive)) then
         frmExodus.DoConnect();
 end;
 
