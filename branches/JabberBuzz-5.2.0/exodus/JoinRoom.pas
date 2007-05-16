@@ -124,15 +124,15 @@ begin
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
     jr := TfrmJoinRoom.Create(Application);
     with jr do begin
-        txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
-        txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        txtRoom.Text := MainSession.Prefs.getStringInProfile(MainSession.Profile.Name, 'tc_lastroom');
+        txtServer.Text := MainSession.Prefs.getStringInProfile(MainSession.Profile.Name, 'tc_lastserver');
         txtNick.Text := MainSession.Profile.getDisplayUsername();
         if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
             txtNick.Enabled := False;
             chkUseRegisteredNickname.Enabled := False;
             chkUseRegisteredNickname.Checked := False;
         end;
-        //txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
+        //txtNick.Text := MainSession.Prefs.getStringInProfile(MainSession.Profile.Name, 'tc_lastnick');
         populateServers();
         Show;
     end;
@@ -168,8 +168,8 @@ begin
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
     jr := TfrmJoinRoom.Create(Application);
     with jr do begin
-        txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
-        txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        txtRoom.Text := MainSession.Prefs.getStringInProfile(MainSession.Profile.Name, 'tc_lastroom');
+        txtServer.Text := MainSession.Prefs.getStringInProfile(MainSession.Profile.Name, 'tc_lastserver');
         txtNick.Text := MainSession.Profile.getDisplayUsername();
         if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
             txtNick.Enabled := False;
@@ -248,12 +248,12 @@ begin
     _disconcb := MainSession.RegisterCallback(DisconCallback, '/session/disconnected');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 
-    if (MainSession.Prefs.getBool('tc_browse')) then
+    if (MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_browse')) then
         optBrowse.Checked := true
     else
         optSpecify.Checked := true;
-    chkDefaultConfig.Checked := MainSession.Prefs.getBool('tc_default_config');
-    chkUseRegisteredNickname.Checked := MainSession.Prefs.getBool('tc_use_reg_nick');
+    chkDefaultConfig.Checked := MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_default_config');
+    chkUseRegisteredNickname.Checked := MainSession.Prefs.getBoolInProfile(MainSession.Profile.Name, 'tc_use_reg_nick');
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
     Self.Icon.Handle := Application.Icon.Handle;
 
@@ -333,12 +333,12 @@ begin
     StartRoom(rjid, txtNick.Text, pass, true, dconfig, registered_nick);
 
     with MainSession.Prefs do begin
-        setString('tc_lastroom', txtRoom.Text);
-        setString('tc_lastserver', txtServer.Text);
-        setString('tc_lastnick', txtNick.Text);
-        setBool('tc_browse', optBrowse.Checked);
-        setBool('tc_default_config', dconfig);
-        setBool('tc_use_reg_nick', registered_nick);
+        setStringInProfile(MainSession.Profile.Name, 'tc_lastroom', txtRoom.Text);
+        setStringInProfile(MainSession.Profile.Name, 'tc_lastserver', txtServer.Text);
+        setStringInProfile(MainSession.Profile.Name, 'tc_lastnick', txtNick.Text);
+        setBoolInProfile(MainSession.Profile.Name, 'tc_browse', optBrowse.Checked);
+        setBoolInProfile(MainSession.Profile.Name, 'tc_default_config', dconfig);
+        setBoolInProfile(MainSession.Profile.Name, 'tc_use_reg_nick', registered_nick);
     end;
     Self.Close;
     exit;

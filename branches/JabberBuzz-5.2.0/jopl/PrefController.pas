@@ -136,6 +136,7 @@ type
     private
         _password: Widestring;
         _jabberID: TJabberID;
+        _profilePrefs: TXMLTag;
 
         function getPassword: Widestring;
         function getJid: Widestring;
@@ -190,6 +191,7 @@ type
         NumPollKeys: integer;
 
         constructor Create(prof_name: Widestring; prefs: TPrefController);
+        destructor Destroy();
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -203,6 +205,7 @@ type
         property Username: Widestring read getUsername write setUsername;
         property Server: Widestring read getServer write setServer;
         property Resource: Widestring read getResource write setResource;
+        property ProfilePrefs: TXMLTag read _profilePrefs;
 
     end;
 
@@ -243,6 +246,15 @@ type
         function getStringlistCount(pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
         function getStringlistValue(pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
 
+        procedure fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
+        function getStringInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
+        function getIntInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): integer;
+        function getBoolInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
+        function getDateTimeInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+        function getSetDateTimeInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+        function getStringlistCountInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
+        function getStringlistValueInProfile(profilename: Widestring; pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
+
         // setters
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
@@ -252,16 +264,30 @@ type
 
         procedure AddStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
         procedure RemoveStringlistValue(pkey, value: Widestring; server_side: TPrefKind = pkClient);
-        
+
+        procedure setStringInProfile(profilename: Widestring; pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
+        procedure setIntInProfile(profilename: Widestring; pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
+        procedure setBoolInProfile(profilename: Widestring; pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
+        procedure setDateTimeInProfile(profilename: Widestring; pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
+        procedure setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
+
+        procedure AddStringlistValueInProfile(profilename: Widestring; pkey, value: Widestring; server_side: TPrefKind = pkClient);
+        procedure RemoveStringlistValueInProfile(profilename: Widestring; pkey, value: Widestring; server_side: TPrefKind = pkClient);
 {$ifdef Exodus}
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
+
+        procedure fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
+        procedure setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
 {$endif}
         {**
             Get/set the xml child of a pref.
         **}
         function getXMLPref(pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
         procedure setXMLPref(value : TXMLTag; server_side: TPrefKind = pkClient);
+
+        function getXMLPrefInProfile(profilename: Widestring; pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
+        procedure setXMLPrefInProfile(profilename: Widestring; value : TXMLTag; server_side: TPrefKind = pkClient);
 
         function getImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient) : boolean;
         procedure setImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient);
@@ -856,6 +882,33 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefController.getStringInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
+var
+    uf: TPrefFile;
+    uv: Widestring;
+//    ds, bs: TPrefState;
+begin
+    Result := '';
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
+
+        uf := getBestFile(uf, pkey);
+    end;
+    uv := uf.getStringInProfile(profilename, pkey);
+    if (uv <> '') then
+        Result := uv
+    else
+        Result := getDynamicDefault(pkey);
+end;
+
+{---------------------------------------}
 function TPrefController.getDynamicDefault(pkey: Widestring): Widestring;
 begin
     result := ''; //unkown
@@ -896,9 +949,21 @@ function TPrefController.getInt(pkey: Widestring; server_side: TPrefKind = pkCli
 end;
 
 {---------------------------------------}
+function TPrefController.getIntInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): integer;begin
+    // find int value
+    Result := SafeInt(getStringInProfile(profilename, pkey, server_side));
+end;
+
+{---------------------------------------}
 function TPrefController.getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
 begin
     Result := SafeBool(getString(pkey, server_side));
+end;
+
+{---------------------------------------}
+function TPrefController.getBoolInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
+begin
+    Result := SafeBool(getStringInProfile(profilename, pkey, server_side));
 end;
 
 {---------------------------------------}
@@ -908,6 +973,15 @@ var
 begin
     GetLocaleFormatSettings(LANG_NEUTRAL, f);
     Result := StrToDateTimeDef(getString(pkey, server_side), Now(), f);
+end;
+
+{---------------------------------------}
+function TPrefController.getDateTimeInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+var
+    f: TFormatSettings;
+begin
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    Result := StrToDateTimeDef(getStringInProfile(profilename, pkey, server_side), Now(), f);
 end;
 
 {---------------------------------------}
@@ -928,13 +1002,38 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefController.getSetDateTimeInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+var
+    f: TFormatSettings;
+    s: string;
+    n: TDateTime;
+begin
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    s := getStringInProfile(profilename, pkey, server_side);
+    n := Now();
+    if (s = '') then begin
+        Result := n;
+        setString(pkey, DateTimeToStr(n, f), server_side);
+    end else
+        Result := StrToDateTimeDef(s, n, f);
+end;
 
+{---------------------------------------}
 procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
 begin
      if (pvalue) then
         setString(pkey, 'true', server_side)
      else
         setString(pkey, 'false', server_side);
+end;
+
+{---------------------------------------}
+procedure TPrefController.setBoolInProfile(profilename: Widestring; pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
+begin
+     if (pvalue) then
+        setStringInProfile(profilename, pkey, 'true', server_side)
+     else
+        setStringInProfile(profilename, pkey, 'false', server_side);
 end;
 
 {---------------------------------------}
@@ -945,6 +1044,16 @@ begin
     // store in lang-independant way, so we know how to read in.
     GetLocaleFormatSettings(LANG_NEUTRAL, f);
     setString(pkey, DateTimeToStr(pvalue, f), server_side);
+end;
+
+{---------------------------------------}
+procedure TPrefController.setDateTimeInProfile(profilename: Widestring; pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
+var
+    f: TFormatSettings;
+begin
+    // store in lang-independant way, so we know how to read in.
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    setStringInProfile(profilename, pkey, DateTimeToStr(pvalue, f), server_side);
 end;
 
 {---------------------------------------}
@@ -963,9 +1072,30 @@ begin
 end;
 
 {---------------------------------------}
+procedure TPrefController.setStringInProfile(profilename: Widestring; pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    uf.setStringInProfile(profilename, pkey, pvalue);
+    Save();
+end;
+
+{---------------------------------------}
 procedure TPrefController.setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
 begin
     setString(pkey, IntToStr(pvalue), server_side);
+end;
+
+{---------------------------------------}
+procedure TPrefController.setIntInProfile(profilename: Widestring; pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
+begin
+    setStringInProfile(profilename, pkey, IntToStr(pvalue), server_side);
 end;
 
 {---------------------------------------}
@@ -976,6 +1106,20 @@ begin
     ts := TWideStringList.Create();
     try
         fillStringList(pkey, ts, server_side);
+        Result := ts.Count;
+    finally
+        ts.Free();
+    end;
+end;
+
+{---------------------------------------}
+function TPrefController.getStringlistCountInProfile(profilename: Widestring; pkey: Widestring; server_side: TPrefKind = pkClient): Integer;
+var
+    ts: TWideStringList;
+begin
+    ts := TWideStringList.Create();
+    try
+        fillStringListInProfile(profilename, pkey, ts, server_side);
         Result := ts.Count;
     finally
         ts.Free();
@@ -1011,6 +1155,34 @@ begin
 end;
 
 {---------------------------------------}
+{
+    Anytime the string list is modified in part, we need to make sure the user
+    pref file has the latest version of the string list, no matter where we got it
+    from. For instance, if the string list does not yet exist in the user pref file
+    and we do a getStringListCount, *that* string list may have some from the
+    branding file. Now we want to add to it so we need to make sure
+    the user pref file has a copy of the one from the branding file.
+    Utlimately this means we *must* deal with string lists as an atomic data
+    structure, even when using methods that pull pieces out.
+}
+procedure TPrefController.AddStringlistValueInProfile(profilename: Widestring; pkey, value: Widestring; server_side: TPrefKind = pkClient);
+var
+    ts: TWideStringList;
+begin
+    ts := TWideStringList.Create();
+    try
+        fillStringListInProfile(profilename, pkey, ts, server_side);
+        //now modify the string list and save it to prefs
+        if (ts.IndexOf(value) = -1) then
+            ts.Add(value);
+        setStringListInProfile(profilename, pkey, ts, server_side);
+        Save();
+    finally
+        ts.Free();
+    end;
+end;
+
+{---------------------------------------}
 function TPrefController.getStringlistValue(pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
 var
     ts: TWideStringList;
@@ -1018,6 +1190,22 @@ begin
     ts := TWideStringList.Create();
     try
         fillStringList(pkey, ts, server_side);
+        if (index < ts.Count) then
+            Result := ts[index]
+        else Result := '';
+    finally
+        ts.Free();
+    end;
+end;
+
+{---------------------------------------}
+function TPrefController.getStringlistValueInProfile(profilename: Widestring; pkey: Widestring; index: Integer; server_side: TPrefKind = pkClient): Widestring;
+var
+    ts: TWideStringList;
+begin
+    ts := TWideStringList.Create();
+    try
+        fillStringListInProfile(profilename, pkey, ts, server_side);
         if (index < ts.Count) then
             Result := ts[index]
         else Result := '';
@@ -1045,6 +1233,24 @@ begin
 end;
 
 {---------------------------------------}
+procedure TPrefController.RemoveStringlistValueInProfile(profilename, pkey, value: Widestring; server_side: TPrefKind = pkClient);
+var
+    ts: TWideStringList;
+begin
+    ts := TWideStringList.Create();
+    try
+        fillStringListInProfile(profilename, pkey, ts, server_side);
+        //now modify the string list and save it to prefs
+        if (ts.IndexOf(value) > -1) then
+            ts.Delete(ts.IndexOf(value));
+        setStringListInProfile(profilename, pkey, ts, server_side);
+        Save();
+    finally
+        ts.Free();
+    end;
+end;
+
+{---------------------------------------}
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
@@ -1062,6 +1268,26 @@ begin
         uf := getBestFile(uf, pKey);
     end;
     uf.fillStringlist(pkey, sl);
+end;
+
+{---------------------------------------}
+procedure TPrefController.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    // TODO: what SHOULD we do if we get a server-side pref request, and we
+    // haven't gotten any server prefs yet?
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
+
+        uf := getBestFile(uf, pKey);
+    end;
+    uf.fillStringlistInProfile(profilename, pkey, sl);
 end;
 
 {---------------------------------------}
@@ -1098,6 +1324,19 @@ begin
         tsl.Free();
     end;
 end;
+
+procedure TPrefController.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
+var
+    tsl : TWideStringList;
+begin
+    tsl := TWideStringList.Create();
+    try
+        fillStringListInProfile(profilename, pkey, tsl, server_side);
+        WideToTnT(tsl, sl);
+    finally
+        tsl.Free();
+    end;
+end;
 {$endif}
 
 {---------------------------------------}
@@ -1116,6 +1355,21 @@ begin
 end;
 
 {---------------------------------------}
+procedure TPrefController.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    // TODO: see getString()
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+
+    uf.setStringListInProfile(profilename, pkey, pvalue);
+    Save();
+end;
+
+{---------------------------------------}
 {$ifdef Exodus}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
 var
@@ -1125,6 +1379,19 @@ begin
     try
         TntToWide(pvalue,tsl);
         setStringList(pkey, tsl, server_side);
+    finally
+        tsl.Free();
+    end;
+end;
+
+procedure TPrefController.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
+var
+    tsl : TWideStringList;
+begin
+    tsl := TWideStringList.Create();
+    try
+        TntToWide(pvalue,tsl);
+        setStringListInProfile(profilename, pkey, tsl, server_side);
     finally
         tsl.Free();
     end;
@@ -1152,6 +1419,24 @@ begin
     result := uf.getXMLPref(pKey);
 end;
 
+function TPrefController.getXMLPrefInProfile(profilename: Widestring; pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
+var
+    uf: TPrefFile;
+begin
+    // TODO: see getString()
+    if (server_side = pkDefault) then
+        uf := getDefaultFile(pkey)
+    else begin
+        if ((server_side <> pkServer) or (_server_file = nil)) then
+            uf := _pref_file
+        else
+            uf := _server_file;
+
+        uf := getBestFile(uf, pkey);
+    end;
+    result := uf.getXMLPrefInProfile(profilename, pKey);
+end;
+
 procedure TPrefController.setXMLPref(value: TXMLTag; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
@@ -1164,6 +1449,17 @@ begin
     Save();
 end;
 
+procedure TPrefController.setXMLPrefInProfile(profilename: Widestring; value: TXMLTag; server_side: TPrefKind = pkClient);
+var
+    uf: TPrefFile;
+begin
+    if ((server_side <> pkServer) or (_server_file = nil)) then
+        uf := _pref_file
+    else
+        uf := _server_file;
+    uf.setXMLPrefInProfile(profilename, value);
+    Save();
+end;
 
 function TPrefController.getImage(pkey : WideString; image : TImage; imageList : WideString = ''; server_side: TPrefKind = pkClient) : boolean;
 begin
@@ -1801,8 +2097,16 @@ begin
         URL           := getString('brand_profile_http_url');
         Poll          := getInt('brand_profile_http_poll');
         NumPollKeys   := getInt('brand_profile_num_poll_keys');
+
+        // Profile Prefs
+        _profilePrefs := nil;
     end;
 
+end;
+
+destructor TJabberProfile.Destroy;
+begin
+    _profilePrefs.Free();
 end;
 
 {---------------------------------------}
@@ -1917,6 +2221,11 @@ begin
     Poll := StrToIntDef(tag.GetBasicText('poll'), 10);
     NumPollKeys := StrToIntDef(tag.GetBasicText('num_poll_keys'), 256);
 
+    // Profile Prefs
+    _profilePrefs := tag.GetFirstTag('prefs');
+    if (_profilePrefs <> nil) then
+        _profilePrefs := TXMLTag.Create(_profilePrefs);
+
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
     if (Resource = '') then Resource := getAppInfo().ID;
@@ -1966,6 +2275,11 @@ begin
     node.AddBasicTag('poll', FloatToStr(Poll));
     node.AddBasicTag('num_poll_keys', IntToStr(NumPollKeys));
 
+    // Profile Prefs
+    if (_profilePrefs <> nil) then
+        node.AddTag(TXMLTag.Create(_profilePrefs)); // Coyp TXMLTag
+
+    // Avatar
     if (Avatar <> '') then begin
         x := node.AddBasicTag('avatar', Avatar);
         x.setAttribute('hash', AvatarHash);

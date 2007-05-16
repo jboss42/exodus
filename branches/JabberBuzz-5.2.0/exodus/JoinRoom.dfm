@@ -12,7 +12,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 416
-  ExplicitHeight = 405
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -119,7 +119,7 @@ inherited frmJoinRoom: TfrmJoinRoom
       end
       object txtServer: TTntComboBox
         Left = 190
-        Top = 128
+        Top = 132
         Width = 190
         Height = 21
         Hint = 'Select the conference room server to use.'
