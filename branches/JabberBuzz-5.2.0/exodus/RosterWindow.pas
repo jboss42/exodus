@@ -3345,8 +3345,10 @@ begin
     else if (lstProfiles.ItemIndex >= 0) then
         // Item is actively selected OR we have a "last logged in"
         DoLogin(lstProfiles.ItemIndex)
-    else if (lstProfiles.Items.Count > 0) then
+    else if ((lstProfiles.Items.Count > 0) and
+             (Sender <> lstProfiles)) then
         // Do NOT have an actively selected item OR a "last logged in"
+        // Do NOT have a click on the "whitespace" of profile list
         // BUT we do have an item (at least default). So, try item 0
         DoLogin(0);  
 end;
