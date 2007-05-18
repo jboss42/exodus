@@ -410,7 +410,7 @@ procedure TJabberEntity._discoInfo(js: TJabberSession; callback: TSignalEvent);
 begin
     // Dispatch a disco#info query
     _iq := TJabberIQ.Create(js, js.generateID(), callback, _timeout);
-    _iq.toJid := TJabberID.applyJEP106(_jid.full);
+    _iq.toJid := _jid.full;
     _iq.Namespace := XMLNS_DISCOINFO;
     _iq.iqType := 'get';
     
