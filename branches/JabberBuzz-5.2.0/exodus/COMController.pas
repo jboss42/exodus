@@ -1251,31 +1251,20 @@ end;
 function TExodusController.CreateDockableWindow(
   const Caption: WideString): Integer;
 var
-    p: Pointer;
     f: TfrmDockContainer;
-    tstr: Widestring;
 begin
-EXutils.OutputDebugMsg('creating TfrmDockContainer');
     Application.CreateForm(TfrmDockContainer, f);
-EXutils.OutputDebugMsg('showing dock container');
     f.ShowDefault();
     Application.ProcessMessages();
     //hack alert! Info Broker work.
-    tstr := Copy(Caption, 1, Length('ie_'));
-EXutils.OutputDebugMsg('Caption: ' + caption + ', tstr: ' + tstr);
-    if (tstr = 'ie_') then begin
-EXutils.OutputDebugMsg('found ie caption, returning tpanel');
-      f.Caption := Copy(Caption, Length('ie_') + 1, Length(Caption));
-EXutils.OutputDebugMsg('assigned captions');
-      p := @(TWebBrowser(f.WebBrowser1));
-EXutils.OutputDebugMsg('got pointer');
-      Result := Integer(p);
-EXutils.OutputDebugMsg('set result');
+    if (Copy(Caption, 1, Length('TForm_')) = 'TForm_') then begin
+      f.Caption := Copy(Caption, Length('TForm_') + 1, Length(Caption));
+      Result := Integer(f);
     end else begin
-EXutils.OutputDebugMsg('found normal caption, returning hwnd');
       f.Caption := Caption;
       Result := f.Handle;
     end;
+    f.UID := f.Caption;
 end;
 
 {---------------------------------------}
