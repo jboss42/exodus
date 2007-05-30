@@ -415,6 +415,25 @@
 
 	<!-- Should the ability to show the debug window be available to the user through the main menu system -->
 	<brand_show_debug_in_menu value="1"/>
+
+	<!-- Brand the logo box in the profiles screen with an image
+
+		 Example: <brand_logo type="dll" resname="example_image_res_name" source="brand.dll"/>
+
+		 Attributes:	type   (required):			either "dll" or "file"
+						source (required): 			name of dll file for "dll" or name of file for "file,"
+													(either way ("dll" or "file") the file MUST be in directory
+													tree where Exodus.EXE is located).
+						resname(required/optional): name of resource in dll file (required for "dll" type)
+
+		 Note(s): Image must be <= 150x115.
+		 
+	-->
+	<brand_logo/>
+
+	<!-- Brand the minimum size of the window -->
+	<brand_min_window_height value="230"/>
+	<brand_min_window_width value="250"/>
   </prefs>
 
   <!-- default custom presence stuff -->

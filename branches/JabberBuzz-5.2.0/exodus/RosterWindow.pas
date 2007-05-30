@@ -138,6 +138,7 @@ type
     popBookmarkGrp: TTntPopupMenu;
     JoinAllRooms1: TTntMenuItem;
     N16: TTntMenuItem;
+    ImageLogo: TImage;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -527,6 +528,9 @@ end;
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
     s : widestring;
+    tag: TXMLTag;
+    restype,resname,src: widestring;
+    ins: cardinal;
 begin
     // Deal with fonts & stuff
     inherited;
@@ -614,6 +618,43 @@ begin
     _adURL := MainSession.Prefs.getString('brand_ad_url');
     if (_adURL <> '') then
         imgAd.Cursor := crHandPoint;
+
+    try
+        tag := MainSession.Prefs.getXMLPref('brand_logo');
+        if (tag <> nil) then begin
+            restype := tag.GetAttribute('type');
+            resname := tag.GetAttribute('resname');
+            src  := tag.GetAttribute('source');
+
+            if ((restype <> '') and
+                (src <> '')) then begin
+                if ((restype = 'dll') and
+                    (resname <> '')) then begin
+                    ins := LoadLibraryW(PWChar(src));
+                    if (ins = 0) then
+                        ins := LoadLibrary(PChar(String(src)));
+                    if (ins > 0) then begin
+                        ImageLogo.Picture.Bitmap.LoadFromResourceName(ins, resname);
+                        FreeLibrary(ins);
+                    end;
+                end
+                else if (restype = 'file') then begin
+                    ImageLogo.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + src);
+                end;
+            end
+            else begin
+                // brand logo not found
+                ImageLogo.Visible := false;
+            end;
+        end
+        else begin
+            // brand logo not found
+            ImageLogo.Visible := false;
+        end;
+    except
+        // Image not loaded
+        ImageLogo.Visible := false;
+    end;
 
     _caps_xp := TXPLite.Create('/presence/c[xmlns="http://jabber.org/protocol/caps"]');
     _client_bmp := TBitmap.Create();
@@ -758,6 +799,8 @@ begin
         aniWait.Visible := false;
         lblCreate.Visible := true;
         lblNewUser.Visible := true;
+        if (ImageLogo.Picture.Bitmap.HandleAllocated()) then
+            ImageLogo.Visible := true;
         lblConnect.Caption := _(sSignOn);
         lblCreate.Caption := _(sNewProfile);
         lblConnect.Font.Color := clWindowText;
@@ -783,6 +826,7 @@ begin
         lblConnect.Caption := _(sCancelLogin);
         lstProfiles.Visible := false;
         lblCreate.Visible := false;
+        ImageLogo.Visible := false;
         lblNewUser.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
         Self.showAniStatus();
@@ -816,6 +860,7 @@ begin
         Self.showAniStatus();
         lstProfiles.Visible := false;
         lblCreate.Visible := false;
+        ImageLogo.Visible := false;
         lblNewUser.Visible := false;
         ShowPresence('online');
         ResetPanels();
@@ -828,6 +873,7 @@ begin
         Self.showAniStatus();
         lstProfiles.Visible := false;
         lblCreate.Visible := false;
+        ImageLogo.Visible := false;
         lblNewUser.Visible := false;
     end
 

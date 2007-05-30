@@ -1315,6 +1315,9 @@ begin
         end;
         menu_list.Free();
         shortcut_list.Free();
+
+        frmExodus.Constraints.MinHeight := getInt('brand_min_window_height');
+        frmExodus.Constraints.MinWidth := getInt('brand_min_window_width');
     end;
 
     // Setup our session callback
@@ -2382,6 +2385,10 @@ procedure TfrmExodus.FormResize(Sender: TObject);
 begin
 //    if (timFlasher.Enabled) then
 //        timFlasher.Enabled := false;
+    if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
+        frmExodus.Width := frmExodus.Constraints.MinWidth;
+    if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
+        frmExodus.Height := frmExodus.Constraints.MinHeight;
 end;
 
 {---------------------------------------}
