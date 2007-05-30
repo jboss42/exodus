@@ -435,11 +435,22 @@ begin
     windowState := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
 
+    // We now own memory for rootTag.
     wsTag := rootTag.GetFirstTag('state');
-    if (wsTag = nil) then exit;
-    
+    if (wsTag = nil) then begin
+        rootTag.Free;
+        exit;
+    end;
+
     windowState := wsTag.GetFirstTag(pKey);
-    Result := (windowState <> nil);
+    if (windowState <> nil) then begin
+        Result := true;
+        windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
+    end
+    else
+        Result := false;
+
+    rootTag.Free;
 end;
 
 procedure TStateFormPrefsHelper.SetAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
@@ -534,20 +545,27 @@ var
     dtop: TRect;
     cp: TPoint;
 begin
-    // center it on the mainform's monitor
-    Self.DefaultMonitor := dmActiveForm;
-    dtop := Screen.ActiveForm.Monitor.WorkareaRect;
-    cp := CenterPoint(dtop);
-    //adjust width/height if neccessary and possible
-    if (Self.BorderStyle = bsSizeable) then begin
-        if (pos.Width > (dtop.Right - dtop.Left)) then
-            pos.width := (dtop.Right - dtop.Left) - 27;
-        if (pos.height > (dtop.bottom - dtop.Top)) then
-            pos.height := (dtop.bottom - dtop.Top) - 27;
+    // It apparently is possible for ActiveForm to be nil at times
+    try
+        if ((Screen <> nil) and
+            (Screen.ActiveForm <> nil)) then begin
+            // center it on the mainform's monitor
+            Self.DefaultMonitor := dmActiveForm;
+            dtop := Screen.ActiveForm.Monitor.WorkareaRect;
+            cp := CenterPoint(dtop);
+            //adjust width/height if neccessary and possible
+            if (Self.BorderStyle = bsSizeable) then begin
+                if (pos.Width > (dtop.Right - dtop.Left)) then
+                    pos.width := (dtop.Right - dtop.Left) - 27;
+                if (pos.height > (dtop.bottom - dtop.Top)) then
+                    pos.height := (dtop.bottom - dtop.Top) - 27;
 
+            end;
+            pos.Left := cp.x - (pos.width div 2);
+            pos.Top := cp.y - (pos.height div 2);
+        end;
+    except
     end;
-    pos.Left := cp.x - (pos.width div 2);
-    pos.Top := cp.y - (pos.height div 2);
 end;
 
 { TfrmState }
