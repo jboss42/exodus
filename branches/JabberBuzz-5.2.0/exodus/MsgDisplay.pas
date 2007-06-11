@@ -86,6 +86,7 @@ function getXIMTag(msg: TJabberMessage): TXMLTag;
 var
     fooTag: TXMLTag;
     _parser: TXMLTagParser;
+    bTag: TXMLTag;
 begin
     fooTag := Msg.GetTag;
     Result := fooTag.GetFirstTag('html');
@@ -104,11 +105,19 @@ begin
             _parser.Free();
         end;
     end;
+
     if ((Result <> nil) and (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then
         Result := nil;
+    //check for body tag, CS invalid XHTML-IM hack, JJF 6/10/07
+    if (Result <> nil) then begin
+        bTag := result.GetFirstTag('body');
+        if (bTag = nil) or (bTag.getAttribute('xmlns') <> 'http://www.w3.org/1999/xhtml') then
+          Result := nil;
+    end;
+
     if (Result <> nil) then
         Result := TXMLTag.Create(Result);
-    fooTag.Free();        
+    fooTag.Free();
 end;
 
 {---------------------------------------}
