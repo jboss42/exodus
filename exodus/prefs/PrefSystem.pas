@@ -24,7 +24,7 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
@@ -136,6 +136,7 @@ var
     i: integer;
     tmps: Widestring;
     reg: TRegistry;
+    temptag: TXmlTag;
 begin
     // System Prefs
     _dirty_locale := '';
@@ -148,7 +149,24 @@ begin
     with MainSession.Prefs do begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
-        tmps := getString('locale');
+        temptag := getXMLPref('locale');
+        if (temptag = nil) then begin
+            tmps := 'Default';
+        end
+        else begin
+            tmps := temptag.GetAttribute('value');
+            if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
+                lblLang.Visible := false;
+                cboLocale.Visible := false;
+                lblLangScan.Visible := false;
+            end;
+            if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
+                lblLang.Enabled := false;
+                cboLocale.Enabled := false;
+                lblLangScan.Enabled := false;
+            end;
+        end;
+
         // stay compatible with old prefs
         if (Pos('Default', tmps) = 1) then begin
             tmps := 'Default';
@@ -199,6 +217,10 @@ begin
             Self.lblDefaultNick.Visible := false;
             Self.txtDefaultNick.Visible := false;
         end;
+        //Auto login should not be enabled if password is not saved
+        chkAutoLogin.Enabled := MainSession.Profile.SavePasswd and MainSession.Authenticated;
+
+        chkDebug.Visible := getBool('brand_show_debug_in_menu');        
     end;
 end;
 
@@ -282,6 +304,7 @@ begin
 end;
 
 {---------------------------------------}
+
 procedure TfrmPrefSystem.lblLangScanClick(Sender: TObject);
 begin
   inherited;
@@ -297,6 +320,9 @@ begin
         lblDefaultNick.Visible := False;
     end;
     _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
+
+    btnUpdateCheck.Visible := chkAutoUpdate.Visible;
+    btnUpdateCheck.Enabled := chkAutoUpdate.Enabled;
 end;
 
 end.

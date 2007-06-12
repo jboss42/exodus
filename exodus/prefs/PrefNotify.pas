@@ -71,9 +71,9 @@ const
     sSoundInvite = 'Invited to a conference room';
     sSoundKeyword = 'Keyword in a conference room';
     sSoundNewchat = 'New conversation';
-    sSoundNormalmsg = 'Received a normal message';
-    sSoundOffline = 'Contact went offline';
-    sSoundOnline = 'Contact came online';
+    sSoundNormalmsg = 'Received new message';
+    sSoundOffline = 'Contact goes offline';
+    sSoundOnline = 'Contact comes online';
     sSoundRoomactivity = 'Activity in a conference room';
     sSoundPriorityRoomactivity = 'Priority activity in a conference room';
     sSoundS10n = 'Subscription request';
@@ -136,10 +136,15 @@ begin
             chkNotify.Checked[i] := (_notify[i] > 0);
 
     end;
-    
+
     chkNotify.ItemIndex := 0;
     chkNotifyClick(Self);
 
+    if (chkSound.Visible = true) then
+      lblConfigSounds.Visible := true
+    else
+       lblConfigSounds.Visible := false;
+       
     _loading := false;
 end;
 

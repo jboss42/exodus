@@ -151,7 +151,7 @@ uses
     GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
 const
     sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';
-    sXferRecv = '%s is sending you a file.';
+    sXferRecv = '%s';
     sXferURL = 'File transfer URL: ';
     sXferDesc = 'File Description: ';
     sXferOnline = 'The Contact must be online before you can send a file.';
@@ -510,10 +510,6 @@ begin
             httpServer.DefaultPort := p;
         end;
     end
-    else if (event = '/session/disconnected') then begin
-        // kill all frames
-        Self.Close();
-    end;
 end;
 
 {---------------------------------------}
@@ -824,6 +820,8 @@ begin
 
     // only close if there are no frames left.
     CanClose := (box.ControlCount = 0);
+    if (CanClose) then
+        inherited FormCloseQuery(Sender, CanClose);
 end;
 
 {---------------------------------------}

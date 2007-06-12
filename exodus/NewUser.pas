@@ -255,6 +255,7 @@ begin
     if ((MainSession.Active) and (not MainSession.Authenticated)) then
         MainSession.Disconnect();
 
+    MainSession.NoAuth := false;
     Self.Close();
 end;
 
@@ -369,7 +370,7 @@ begin
             // Form may have been rendered before - remove it
             for idx := 0 to (tbsReg.ControlCount-1) do
                 begin
-                    tbsReg.Controls[0].Destroy;
+                    tbsReg.Controls[idx].Destroy;
                 end;
             RenderTopFields(tbsReg, f, _key);
         end;
@@ -564,10 +565,13 @@ end;
 procedure TfrmNewUser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
+    MainSession.UnregisterCallback(_session_cb);
+
     // make sure we cancel any outstanding queries..
     if (_iq <> nil) then
         FreeAndNil(_iq);
     Action := caFree;
+    MainSession.NoAuth := false;
 end;
 
 {---------------------------------------}

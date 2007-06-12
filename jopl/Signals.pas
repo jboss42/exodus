@@ -30,7 +30,7 @@ type
     {M+}
 
     // A function definition for a global signal handler
-    TSignalExceptionHandler = procedure(e_data: TWidestringlist);
+    TSignalExceptionHandler = procedure(e_data: TWidestringlist; showdlg: boolean);
 
     {---------------------------------------}
     // Base callback method for TSignal listeners
@@ -82,7 +82,8 @@ type
         classname: string;
         methodname: string;
 
-        constructor Create;
+        constructor Create; reintroduce; overload;
+        constructor Create(_curId: longint); reintroduce; overload;
     end;
 
     {---------------------------------------}
@@ -264,7 +265,7 @@ begin
     data.Add('Listener Methodname: ' + sl.methodname);
     if (tag <> nil) then
         data.Add('XML Packet: ' + tag.xml());
-    _handler(data);
+    _handler(data, true);
     data.Free();
 end;
 
@@ -280,8 +281,10 @@ begin
     for i := Self.Count - 1 downto 0 do begin
         if (Pos(LowerCase(Strings[i]), levt) = 1) then begin
             sig := TSignal(Objects[i]);
-            if (sig <> nil) then
+            if (sig <> nil) then begin
                 sig.Invoke(event, tag);
+                exit;
+            end;
         end;
     end;
 end;
@@ -316,7 +319,8 @@ procedure TSignalDispatcher.DeleteListener(lid: longint);
 var
     ls: string;
     li: TListenerInfo;
-    i: integer;
+    i,j: integer;
+    co: TChangeListEvent;
 begin
     // lookup the lid in the stringlist,
     // and then call the corresponding signal's delListener method
@@ -331,6 +335,18 @@ begin
             li.Free();
         end;
         _lid_info.Delete(i);
+    end
+    else begin
+        // We didn't find the callback with the given lid.
+        // But, since the Add for that callback is possibly stuck in the change_list,
+        // then we need to set up a delete for it none the less. Otherwise, the
+        // add could add a callback that goes into a already freed object.
+        for j := 0 to Self.Count -1 do begin
+            co := TChangeListEvent.Create();
+            co.l := TSignalListener.Create(lid);
+            co.op := cl_delete;
+            TSignal(Self.Objects[j]).change_list.Push(co);
+        end;
     end;
 end;
 
@@ -355,6 +371,11 @@ begin
 
     cb_id := _lid;
     inc(_lid);
+end;
+
+constructor TSignalListener.Create(_curId: longint);
+begin
+    cb_id := _curId;
 end;
 
 constructor TSignal.Create(my_event: String);
@@ -396,12 +417,23 @@ begin
         Result := false;
     end
     else begin
-        l.classname := TObject(l.callback.Data).ClassName;
-        l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
+        try
+            l.classname := TObject(l.callback.Data).ClassName;
+            l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
 
-        Self.AddObject(event, l);
-        if (Dispatcher <> nil) then
-            Dispatcher.AddListenerInfo(l.cb_id, Self, l);
+            Self.AddObject(event, l);
+            if (Dispatcher <> nil) then
+                Dispatcher.AddListenerInfo(l.cb_id, Self, l);
+        except
+            // It is possible in some situations to get a addListener
+            // call processed after the callback is no longer valid.
+            // This happens if the object the callback is in is distroyed
+            // before the Add listener queue is processed.
+            // An example would be an IQ that returns with a type=error
+            // before the /session/disconnected event listener has
+            // been registered for the IQ.
+            // Try-Catching here to prevent a crash when this happens.
+        end;
         Result := true;
     end;
 end;
@@ -411,11 +443,25 @@ function TSignal.delListener(l: TSignalListener): boolean;
 var
     idx: integer;
     co: TChangeListEvent;
+    i: integer;
 begin
     // remove the listener from the list
     Result := false;
     idx := Self.IndexOfObject(l);
-    if (idx < 0) then exit;
+    if (idx < 0) then begin
+        // We couldn't find it via the object, so need to try finding
+        // via ids - This would be a result of an unregistercallback()
+        // that happend before the call back was added.  But now it is added
+        // and we are having to hack a way to finding it to delete it so it
+        // doesn't access freed memory.
+        for i := 0 to Self.Count - 1 do begin
+            if (TSignalListener(Self.Objects[i]).cb_id = l.cb_id) then begin
+                idx := i;
+                break;
+            end;
+        end;
+        if (idx < 0) then exit;
+    end;
 
     if (_invoking = 0) then begin
         l.Free();

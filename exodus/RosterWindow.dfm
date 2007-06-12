@@ -367,11 +367,11 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popChatClick
     end
     object popMsg: TTntMenuItem
-      Caption = 'Message...'
+      Caption = 'Send Message...'
       OnClick = popMsgClick
     end
     object popHistory: TTntMenuItem
-      Caption = 'Show History...'
+      Caption = 'View History...'
       OnClick = popHistoryClick
     end
     object popSendFile: TTntMenuItem
@@ -379,7 +379,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popSendFileClick
     end
     object popInvite: TTntMenuItem
-      Caption = 'Invite to Conference'
+      Caption = 'Invite to Conference...'
       OnClick = popInviteClick
     end
     object popSendContacts: TTntMenuItem
@@ -405,14 +405,17 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Presence'
       object popSendPres: TTntMenuItem
         Caption = 'Send Visible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object popSendInvisible: TTntMenuItem
         Caption = 'Send Invisible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object N2: TTntMenuItem
         Caption = '-'
+        Visible = False
       end
       object popSendSubscribe: TTntMenuItem
         Caption = 'Subscribe Again'
@@ -420,22 +423,22 @@ object frmRosterWindow: TfrmRosterWindow
       end
     end
     object popRename: TTntMenuItem
-      Caption = 'Rename...'
+      Caption = 'Rename Contact...'
       OnClick = popRenameClick
     end
     object N1: TTntMenuItem
       Caption = '-'
     end
     object popBlock: TTntMenuItem
-      Caption = 'Block'
+      Caption = 'Block Contact'
       OnClick = popBlockClick
     end
     object popRemove: TTntMenuItem
-      Caption = 'Remove'
+      Caption = 'Delete Contact'
       OnClick = popRemoveClick
     end
     object popProperties: TTntMenuItem
-      Caption = 'Properties...'
+      Caption = 'Contact Properties...'
       OnClick = popPropertiesClick
     end
     object N7: TTntMenuItem
@@ -671,7 +674,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popGrpInviteClick
     end
     object BroadcastMessage1: TTntMenuItem
-      Caption = 'Broadcast Message'
+      Caption = 'Send Message'
       OnClick = BroadcastMessage1Click
     end
     object SendContactsTo1: TTntMenuItem
@@ -686,15 +689,21 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
     object popGroupBlock: TTntMenuItem
-      Caption = 'Block'
+      Caption = 'Block Group'
       OnClick = popBlockClick
     end
+    object popGroupUnBlock: TTntMenuItem
+      Caption = 'UnBlock Group'
+    end
+    object N15: TTntMenuItem
+      Caption = '-'
+    end
     object popGrpRename: TTntMenuItem
-      Caption = 'Rename'
+      Caption = 'Rename Group'
       OnClick = popGrpRenameClick
     end
     object popGrpRemove: TTntMenuItem
-      Caption = 'Remove'
+      Caption = 'Delete Group'
       OnClick = popGrpRemoveClick
     end
     object N4: TTntMenuItem
@@ -786,6 +795,17 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = lblDeleteClick
     end
     object N10: TTntMenuItem
+      Caption = '-'
+    end
+  end
+  object popBookmarkGrp: TTntPopupMenu
+    Left = 72
+    Top = 376
+    object JoinAllRooms1: TTntMenuItem
+      Caption = 'Join All Rooms'
+      OnClick = JoinAllRooms1Click
+    end
+    object N16: TTntMenuItem
       Caption = '-'
     end
   end

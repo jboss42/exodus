@@ -15,7 +15,11 @@ inherited frmNewUser: TfrmNewUser
         OnClick = btnBackClick
       end
       inherited btnNext: TTntButton
+        Left = 90
+        Top = 6
         OnClick = btnNextClick
+        ExplicitLeft = 90
+        ExplicitTop = 6
       end
       inherited btnCancel: TTntButton
         OnClick = btnCancelClick
@@ -222,8 +226,8 @@ inherited frmNewUser: TfrmNewUser
         AutoSize = False
         Caption = 
           'Your Registration to this service has been completed Successfull' +
-          'y. You can now add contacts to your Contact List by selecting Tools | ' +
-          'Contacts from the main menu.'
+          'y. You can now add contacts to your Contact List by selecting To' +
+          'ols | Contacts from the main menu.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13

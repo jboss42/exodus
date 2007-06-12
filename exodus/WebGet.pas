@@ -32,6 +32,8 @@ type
     IdHTTP1: TIdHTTP;
     frameButtons1: TframeButtons;
     ProgressBar1: TProgressBar;
+    procedure IdHTTP1Status(ASender: TObject; const AStatus: TIdStatus;
+      const AStatusText: string);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure IdHTTP1WorkBegin(Sender: TObject; AWorkMode: TWorkMode;
       const AWorkCountMax: Integer);
@@ -61,7 +63,8 @@ const
     sDownloading      = 'Downloading...';
     sDownloadComplete = 'Download Complete';
     sInitializing     = 'Initializing...';
-    sError            = 'Error: %s';
+    sError            = 'Error: %s';   
+    sNetworkError     = 'Network connection is not availble.';
 
 
 function ExWebDownload(caption, url: string): String;
@@ -92,7 +95,12 @@ begin
         on E: EIdProtocolReplyError do begin
             f.Free();
             MessageDlgW(WideFormat(_(sError), [E.Message]), mtError, [mbOK], 0);
+        end
+        else begin
+            f.Free();
+            MessageDlgW(_(sNetworkError), mtError, [mbOK], 0);
         end;
+
     end;
 end;
 
@@ -118,6 +126,12 @@ end;
 procedure TfrmWebDownload.IdHTTP1Connected(Sender: TObject);
 begin
     lblStatus.Caption := _(sDownloading);
+end;
+
+procedure TfrmWebDownload.IdHTTP1Status(ASender: TObject;
+  const AStatus: TIdStatus; const AStatusText: string);
+begin
+   lblStatus.Caption :=  _(sDownloading);
 end;
 
 end.

@@ -25,7 +25,7 @@ unit XMLSocketStream;
 
 interface
 uses
-    XMLTag, XMLStream, PrefController,
+    XMLTag, XMLStream, PrefController, XMLParser,
 
     {$ifdef linux}
     QExtCtrls, IdSSLIntercept,
@@ -135,7 +135,7 @@ uses
     {$ifdef INDY9}
     HttpProxyIOHandler, IdSSLOpenSSLHeaders, ZlibHandler,
     {$endif}
-    Session, StrUtils, Classes;
+    Session, StrUtils, Classes, Unicode;
 
 var
     _check_ssl: boolean;
@@ -170,6 +170,37 @@ begin
 end;
 {$endif}
 
+function PWideToString(  pw : PWideChar  ) : string;
+var
+    p : PChar;
+    iLen : integer;
+begin
+    {Get memory for the string}
+    iLen := lstrlenw(  pw  ) + 1;
+    GetMem(  p,  iLen  );
+
+    {Convert a unicode (PWideChar) to a string}
+    WideCharToMultiByte(  CP_UTF8,  0,  pw,  iLen,  p,  iLen * 2,  nil,  nil  );
+
+    Result := p;
+    FreeMem(  p,  iLen  );
+end;
+
+function PCharToWideString(  p : PChar  ) : Widestring;
+var
+    pw : PWideChar;
+    iLen : integer;
+begin
+    {Get memory for the string}
+    iLen := lstrlen(  p  ) + 1;
+    GetMem(  pw,  iLen * 2 );
+
+    {Convert a unicode (PWideChar) to a string}
+    MultiByteToWideChar( CP_UTF8, 0, p, iLen, pw, iLen * 2);
+
+    Result := pw;
+    FreeMem(  pw,  iLen  );
+end;
 
 {---------------------------------------}
 {      TSocketThread Class              }
@@ -193,6 +224,11 @@ procedure TSocketThread.DataTerminate(Sender: TObject);
 begin
     // destructor for the thread
     ThreadCleanUp();
+    try
+        doMessage(WM_DISCONNECTED);
+    except
+
+    end;
 end;
 
 
@@ -280,7 +316,7 @@ begin
             else
                 _remain_utf := '';
 
-            buff := UTF8Decode(inp);
+            buff := PCharToWideString(PChar(inp));
 
             // We are shutting down, or we've got an exception, so just bail
             if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
@@ -558,8 +594,6 @@ begin
             // Socket is disconnected
             _active := false;
             KillSocket();
-            if (_thread <> nil) then
-                _thread.Terminate();
             _timer.Enabled := false;
             _thread := nil;
             DoCallbacks('disconnected', nil);
@@ -884,8 +918,12 @@ begin
     end
     else if (_active) then begin
         _active := false;
-        if (_thread <> nil) then
-            _thread.Terminate;
+        try
+            if (_thread <> nil) then
+                _thread.Terminate;
+        except
+
+        end;
         _timer.Enabled := false;
         _thread := nil;
     end;
@@ -910,13 +948,14 @@ begin
 
         if (_socks_info <> nil) then
             FreeAndNil(_socks_info);
-            
+
         _socket.Free();
         _socket := nil;
     end;
 
     _sock_lock.Release();
 end;
+
 
 {---------------------------------------}
 procedure TXMLSocketStream.Send(xml: Widestring);
@@ -927,7 +966,7 @@ begin
     if (_socket = nil) then exit;
 
     DoDataCallbacks(true, xml);
-    buff := UTF8Encode(xml);
+    buff := PWideToString(PWideChar(xml));
     try
         _Socket.Write(buff);
         _timer.Enabled := false;

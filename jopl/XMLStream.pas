@@ -308,6 +308,7 @@ procedure TParseThread.ParseTags(buff: Widestring);
 var
     c_tag: TXMLTag;
 begin
+
     {
     Called by handleBuffer. This sends the buffer, which
     should contain a single XML fragement, into the parser
@@ -315,6 +316,7 @@ begin
     Tags are popped off this stack by the GetTag method
     when the stream object asks for them.
     }
+
     _tag_parser.ParseString(buff, _root_tag);
     repeat
         c_tag := _tag_parser.popTag();
@@ -328,8 +330,28 @@ begin
 
 end;
 
+
 {---------------------------------------}
 function TParseThread.getFullTag(buff: Widestring): Widestring;
+    function RPos(find_data, in_data: Widestring): cardinal;
+    var
+        lastpos, newpos: cardinal;
+        mybuff: widestring;
+        origlen: cardinal;
+    begin
+        lastpos := 0;
+        newpos := 0;
+        origlen := Length(buff);
+        repeat
+            mybuff := Copy(in_data, lastpos + 1, origlen-newpos);
+            newpos := pos(find_data, mybuff);
+            if (newpos > 0) then begin
+                lastpos := lastpos + newpos;
+            end;
+        until (newpos <= 0);
+
+        Result := lastpos;
+    end;
 var
     sbuff, r, stag, etag, tmps: Widestring;
     p, ls, le, e, l, ps, pe, ws, sp, tb, cr, nl, i: longint;
@@ -436,7 +458,7 @@ begin
 
             // find the end tag, and dec the counter
             tmps := Copy(sbuff, i, l - i + 1);
-            pe := Pos(etag, tmps);
+            pe := RPos(etag, tmps);
             if ((pe > 0) and ((ps > 0) and (pe > ps)) ) then begin
                 _counter := _counter - 1;
                 i := i + pe + le - 1;
@@ -473,9 +495,14 @@ begin
     _callbacks.Clear();
 
     if _thread <> nil then begin
-        _thread.Terminate;
-        _thread._stream := nil;
+        try
+            _thread.Terminate;
+            _thread._stream := nil;
+        except
+
+        end;
     end;
+    _thread := nil;
 
     _callbacks.Free;
     inherited;

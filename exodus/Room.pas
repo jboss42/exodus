@@ -24,7 +24,8 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
-    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg;
+    JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
+    AppEvnts, IQ;
 
 type
   TMemberNode = TTntListItem;
@@ -170,6 +171,8 @@ type
     _pending_start: boolean;
     _pending_destroy: boolean;  // if user is destroying room
     _passwd_from_join_room: boolean; //was the password supplied by the Join Room DLG.
+    _kick_iq: TJabberIQ;
+    _voice_iq: TJabberIQ;
 
     _my_membership_role: WideString; // My membership to the room.
 
@@ -218,6 +221,8 @@ type
     procedure EntityCallback(event: string; tag: TXMLTag);
     procedure autoConfigCallback(event: string; tag: TXMLTag);
     procedure roomuserCallback(event: string; tag: TXMLTag);
+    procedure KickUserCB(event: string; tag: TXMLTag);
+    procedure ChangeVoiceCB(event: string; tag: TXMLTag);
 
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
@@ -324,12 +329,13 @@ const
     sStatus_401  = 'You supplied an invalid password to enter this room.';
     sStatus_403  = 'You are not allowed to enter this conference room because you are on the ban list.';
     sStatus_404  = 'The conference room is being created. Please try again later.';
+    sStatus_404a = 'The conference room could not be entered. Please check your conference server and try again.';
     sStatus_405  = 'You are not allowed to create conference rooms.';
     sStatus_405a = 'You are not allowed to enter the conference room.';
     sStatus_407  = 'You are not on the member list for this conference room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
     sStatus_413  = 'The conference room you were trying to enter is at maximum occupancy. Try again later.';
-    sStatus_Unknown = 'The conference room has been destroyed for an unknown reason.';
+    sStatus_Unknown = 'The conference room could not be entered for an unknown reason. Please check the conference room name and server and try again.';
 
     sEditVoice     = 'Edit Voice List';
     sEditBan       = 'Edit Ban List';
@@ -341,6 +347,9 @@ const
     sNoSubjectHint = 'Click the button to change the room subject.';
     sNoSubject     = 'No conference room subject';
     sMsgRosterItems = 'This message contains %d roster items.';
+
+    sOppErrorNoPrivileges = 'Operation has failed due to lack of privileges (%s)';
+    sOppErrorGeneral = 'Operation has failed (%s)';
 
 const
     MUC_OWNER = 'owner';
@@ -384,7 +393,6 @@ uses
     GnuGetText,
     InputPassword,
     Invite,
-    IQ,
     Jabber1,
     JabberConst,
     JoinRoom,
@@ -556,6 +564,7 @@ var
     rm: TRoomMember;
     etag: TXMLTag;
     e: TJabberEntity;
+    skip_notification: Boolean;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -627,9 +636,13 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
     end;
-
-    // this check is needed only to prevent extraneous regexing.
-    if ((not server) and (not MainSession.IsPaused)) then begin
+    skip_notification := MainSession.Prefs.getBool('queue_not_avail') and
+                         ((MainSession.Show = 'away') or
+                          (MainSession.Show = 'xa') or
+                          (MainSession.Show = 'dnd'));
+    if (skip_notification = false) then begin
+      // this check is needed only to prevent extraneous regexing.
+      if ((not server) and (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
             DoNotify(Self, _notify[NOTIFY_KEYWORD],
@@ -646,16 +659,23 @@ begin
             DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
                      _(sNotifyActivity) + Self.Caption,
                      RosterTreeImages.Find('conference'), 'notify_roomactivity');
+      end;
     end;
 
     if (Msg.Subject <> '') then begin
         _subject := Msg.Subject;
         if (_subject = '') then begin
-            lblSubject.Hint := _(sNoSubjectHint);
+            if (SpeedButton1.Enabled = false) then
+              lblSubject.Hint := ''
+            else
+              lblSubject.Hint := _(sNoSubjectHint);
             lblSubject.Caption := _(sNoSubject);
         end
         else begin
-            lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
+           if (SpeedButton1.Enabled = false) then
+              lblSubject.Hint := ''
+            else
+              lblSubject.Hint := Tnt_WideStringReplace(_subject, '|', Chr(13),[rfReplaceAll, rfIgnoreCase]);
             lblSubject.Caption := Tnt_WideStringReplace(_subject, '&', '&&',[rfReplaceAll, rfIgnoreCase]);
             Msg.Body := _(sRoomSubjChange) + Msg.Subject;
             DisplayMsg(Msg, MsgList);
@@ -696,7 +716,7 @@ begin
         add_xml := TExodusChat(ComController).fireAfterMsg(body);
         msg.Body := body;
     end;
-    mtag := msg.Tag;
+    mtag := msg.GetTag;
 
     if (add_xml <> '') then
       mtag.addInsertedXML(add_xml);
@@ -923,7 +943,7 @@ begin
         m := TJabberMessage.Create(nick, 'normal', tmps,
             _('Groupchat private message'));
         // XXX: do we want to do plugin stuff for priv msgs?
-        MainSession.SendTag(m.Tag);
+        MainSession.SendTag(m.GetTag);
         m.Free();
         Result := true;
     end
@@ -1079,6 +1099,9 @@ begin
         // close this room.
         if (tag <> nil) then tmps := tag.Data() else tmps := '';
         _sendPresence('unavailable', tmps);
+    end
+    else if (event = '/session/prefs') then begin
+        setupKeywords();
     end;
 end;
 
@@ -1118,7 +1141,8 @@ end;
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
     emsg, ptype, from: Widestring;
-    tmp_jid: TJabberID;
+    tmp_jid, from_jid: TJabberID;
+    from_base: Widestring;
     i: integer;
     member: TRoomMember;
     mtag, t, itag, xtag, etag, drtag: TXMLTag;
@@ -1129,6 +1153,12 @@ begin
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
     i := _roster.indexOf(from);
+    if (from <> '') then begin
+        from_jid := TJabberID.Create(from);
+        from_base := from_jid.jid;
+    end
+    else
+        from_jid := nil;
 
     // check for MUC presence
     xtag := tag.QueryXPTag(xp_muc_presence);
@@ -1141,7 +1171,7 @@ begin
         if (etag <> nil) then begin
             ecode := etag.GetAttribute('code');
             if (ecode = '409') then begin
-                MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_409), mtError, [mbOK], 0, from_base);
                 if (_old_nick = '') then begin
                     Self.Close();
                     exit;
@@ -1171,7 +1201,7 @@ begin
                     end
                     else begin
                         // 401 error IS due to bad password so show password error
-                        MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
+                        MessageDlgW(_(sStatus_401), mtError, [mbOK], 0, from_base);
                         if (_passwd_from_join_room) then begin
                             Self.Close();
                             tmp_jid := TJabberID.Create(from);
@@ -1195,12 +1225,16 @@ begin
                 exit;
             end
             else if (ecode = '404') then begin
-                MessageDlgW(_(sStatus_404), mtError, [mbOK], 0);
+                if (etag.QueryXPTag('/error/item-not-found') <> nil) then
+                  MessageDlgW(_(sStatus_404), mtError, [mbOK], 0, from_base)
+                else if (etag.QueryXPTag('/error/remote-server-not-found') <> nil) then
+                  MessageDlgW(_(sStatus_404a), mtError, [mbOK], 0, from_base);
+
                 Self.Close();
                 exit;
             end
             else if (ecode = '405') then begin
-                MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
@@ -1209,7 +1243,7 @@ begin
                 //If can't join, first check if we are allowed to regiter
                 if  (e <> nil) then begin
                   if (e.hasFeature('muc-members-openreg') or e.hasFeature('muc-openreg')) then begin
-                    if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                    if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0, from_base) = mrYes) then begin
                       t := TXMLTag.Create('register');
                       t.setAttribute('jid', Self.jid);
                       MainSession.FireEvent('/session/register', t);
@@ -1218,7 +1252,7 @@ begin
                   end
                   else
                     //If can't register, can't enter
-                    MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0)
+                    MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0, from_base)
                   end;
                 Self.Close();
                 exit;
@@ -1229,19 +1263,19 @@ begin
                     emsg := etag.Data();
                 if (emsg = '') then
                     emsg := _(sStatus_403);
-                MessageDlgW(emsg, mtError, [mbOK], 0);
+                MessageDlgW(emsg, mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
             else if (ecode = '413') then begin
                 //Note:  This is the JINC code for max-occupants
-                MessageDlgW(_(sStatus_413), mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_413), mtError, [mbOK], 0, from_base);
                 Self.Close();
                 exit;
             end
         end;
 
-        MessageDlgW(_(sStatus_Unknown), mtError, [mbOK], 0);
+        MessageDlgW(_(sStatus_Unknown), mtError, [mbOK], 0, from_base);
         Self.Close();
         exit;
     end
@@ -1261,7 +1295,7 @@ begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
                 end;
 
-                MessageDlgW(reason, mtInformation, [mbOK], 0);
+                MessageDlgW(reason, mtInformation, [mbOK], 0, from_base);
                 tmp_jid.Free();
                 _pending_destroy := false;
             end;
@@ -1291,6 +1325,7 @@ begin
                     member.jid := tmp1;
                     _roster.Delete(i);
                     _roster.AddObject(member.jid, member);
+                    _roster.Sort;
                 end
                 else if ((scode = '301') or (scode = '307')) then begin
                     itag := tag.QueryXPTag(xp_muc_reason);
@@ -1439,9 +1474,14 @@ begin
             
             // Who can change subject
             _EnableSubjectButton();
+
+            // Am I the owner, thus no registration option
+            popRegister.Enabled := (member.affil <> MUC_OWNER);
         end;
         RenderMember(member, tag);
     end;
+
+    from_jid.Free();
 
 end;
 
@@ -1456,6 +1496,8 @@ begin
     member.Nick := nick;
 
     _roster.AddObject(jid, member);
+    _roster.Sort;
+
     _rlist.Add(member);
     _rlist.Sort(ItemCompare);
     lstRoster.Items.Count := _rlist.Count;
@@ -1556,10 +1598,14 @@ procedure TfrmRoom.configCallback(event: string; Tag: TXMLTag);
 var
     iq: TJabberIQ;
     x: TXMLTag;
+    roomCaption: widestring;
+    roomJID: TJabberID;
 begin
     // We are configuring the room
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
-        if (ShowXDataEx(tag) = false) then begin
+        roomJID := TJabberID.Create(jid);
+        roomCaption := roomJID.userDisplay + _(' Configuration');
+        if (ShowXDataEx(tag, roomCaption) = false) then begin
             // there are no fields... submit a blank form.
             iq := TJabberIQ.Create(MainSession, MainSession.generateID());
             iq.toJid := Self.Jid;
@@ -1570,6 +1616,7 @@ begin
             x.setAttribute('type', 'submit');
             iq.Send();
         end;
+        roomJID.Free;
     end;
 end;
 
@@ -1615,6 +1662,8 @@ begin
     inherited;
 
     // Create
+    _kick_iq := nil;
+    _voice_iq := nil;
     _mcallback := -1;
     _ecallback := -1;
     _pcallback := -1;
@@ -1669,11 +1718,21 @@ begin
 
     if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
         popNick.Enabled := False;
+
+    if (not MainSession.Prefs.getBool('brand_print')) then begin
+        Print1.Visible := false;
+    end
+    else begin
+        Print1.Visible := true;
+    end;
+
+    popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
 end;
 
 {---------------------------------------}
 procedure TfrmRoom.setupKeywords();
 begin
+    _keywords.Free;
     _keywords := Keywords.CreateKeywordsExpr();
 end;
 
@@ -1830,7 +1889,7 @@ begin
     // send the msg out
     msg := TJabberMessage.Create(jid, 'groupchat',
                                  _(sRoomSubjChange) + subj, subj);
-    MainSession.SendTag(msg.Tag);
+    MainSession.SendTag(msg.GetTag);
     msg.Free;
 end;
 
@@ -2049,7 +2108,12 @@ begin
     popRosterSubscribe.Enabled := false;
     popRosterVCard.Enabled := false;
     popRosterBrowse.Enabled := false;
-
+    popKick.Enabled := false;
+    popBan.Enabled := false;
+    popVoice.Enabled := false;
+    popModerator.Enabled := false;
+    popAdministrator.Enabled := false;
+    
     if (not e) then exit;
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
@@ -2168,7 +2232,7 @@ end;
 procedure TfrmRoom.popKickClick(Sender: TObject);
 var
     reason: WideString;
-    iq, q: TXMLTag;
+    q: TXMLTag;
 begin
   inherited;
     // Kick the selected participant
@@ -2183,12 +2247,8 @@ begin
         if (not InputQueryW(_(sBanReason), _(sBanReason), reason)) then exit;
     end;
 
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
-    iq.setAttribute('to', jid);
-    q := iq.AddTag('query');
-    q.setAttribute('xmlns', XMLNS_MUCADMIN);
+
+    q := TXMLTag.Create('query');
 
     if (Sender = popKick) then
         AddMemberItems(q, reason, MUC_NONE)
@@ -2199,7 +2259,32 @@ begin
     else if (Sender = popAdministrator) then
         AddMemberItems(q, '', '', MUC_ADMIN);
 
-    MainSession.SendTag(iq);
+    if (_kick_iq <> nil) then
+        _kick_iq.Free;
+    _kick_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), q, KickUserCB);
+    _kick_iq.toJid := jid;
+    _kick_iq.Namespace := XMLNS_MUCADMIN;
+    _kick_iq.iqType := 'set';
+    _kick_iq.Send();
+    q.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.KickUserCB(event: string; tag: TXMLTag);
+var
+    tmp_tag: TXMLTag;
+begin
+    if ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error')) then begin
+        tmp_tag := tag.GetFirstTag('error');
+        if (tmp_tag <> nil) then begin
+            if ((tmp_tag.GetAttribute('code') = '405') or (tmp_tag.GetAttribute('code') = '403')) then
+                MessageDlgW(WideFormat(_(sOppErrorNoPrivileges), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0)
+            else
+                MessageDlgW(WideFormat(_(sOppErrorGeneral), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0);
+        end;
+    end;
+    _kick_iq := nil;
 end;
 
 {---------------------------------------}
@@ -2228,7 +2313,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popVoiceClick(Sender: TObject);
 var
-    iq, q: TXMLTag;
+    q: TXMLTag;
     i: integer;
     cur_member: TRoomMember;
     new_role: WideString;
@@ -2237,12 +2322,7 @@ begin
     // Toggle Voice
     if (lstRoster.SelCount = 0) then exit;
 
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
-    iq.setAttribute('to', jid);
-    q := iq.AddTag('query');
-    q.setAttribute('xmlns', XMLNS_MUCADMIN);
+    q := TXmlTag.Create('query');
 
     // Iterate over all selected items, and toggle
     // voice by changing roles
@@ -2264,7 +2344,32 @@ begin
         end;
     end;
 
-    MainSession.SendTag(iq);
+    if (_voice_iq <> nil) then
+        _voice_iq.Free;
+    _voice_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), q, ChangeVoiceCB);
+    _voice_iq.toJid := jid;
+    _voice_iq.Namespace := XMLNS_MUCADMIN;
+    _voice_iq.iqType := 'set';
+    _voice_iq.Send();
+    q.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.ChangeVoiceCB(event: string; tag: TXMLTag);
+var
+    tmp_tag: TXMLTag;
+begin
+    if ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error')) then begin
+        tmp_tag := tag.GetFirstTag('error');
+        if (tmp_tag <> nil) then begin
+            if ((tmp_tag.GetAttribute('code') = '405') or (tmp_tag.GetAttribute('code') = '403')) then
+                MessageDlgW(WideFormat(_(sOppErrorNoPrivileges), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0)
+            else
+                MessageDlgW(WideFormat(_(sOppErrorGeneral), [tmp_tag.GetAttribute('code')]), mtError, [mbOK], 0);
+        end;
+    end;
+    _voice_iq := nil;
 end;
 
 {---------------------------------------}
@@ -2273,17 +2378,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice))
+        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _rlist)
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan))
+        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _rlist)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember))
+        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _rlist)
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator))
+        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _rlist)
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin))
+        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _rlist)
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner));
+        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _rlist);
 end;
 
 {---------------------------------------}
@@ -2317,6 +2422,11 @@ procedure TfrmRoom.selectNicks(wsl: TWideStringList);
 var
     i, c: integer;
 begin
+    // Unselect every nick or random nicks can be caught in the results
+    for i := 0 to lstRoster.Items.Count - 1 do
+        lstRoster.Items[i].Selected := false;
+
+    // Lookup the selected nicks and "select" them
     for i := 0 to wsl.Count - 1 do begin
         c := _roster.indexOf(Self.jid + '/' + wsl[i]);
         if (c >=0) then
@@ -2355,6 +2465,10 @@ begin
     if (i >= 0) then
         room_list.Delete(i);
 
+
+    _kick_iq.Free;
+    _voice_iq.Free;
+    
     inherited;
 end;
 
@@ -2379,9 +2493,9 @@ begin
     f.addItem('Room activity');
     f.addItem('Keywords');
     f.addItem('Priority room activity');
-    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY]);
-    f.setVal(1, _notify[NOTIFY_KEYWORD]);
-    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY]);
+    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_roomactivity'));
+    f.setVal(1, _notify[NOTIFY_KEYWORD], MainSession.Prefs.getInt('notify_keyword'));
+    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_priority_roomactivity'));
 
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);
@@ -2398,11 +2512,23 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.S1Click(Sender: TObject);
 var
-    fn     : widestring;
+    fn: widestring;
+    filetype: integer;
 begin
     dlgSave.FileName := MungeName(self.jid);
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
+    filetype := dlgSave.FilterIndex;
+    if (filetype = 1) then begin
+        // .rtf file
+        if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
+            fn := fn + '.rtf';
+    end
+    else if (filetype = 2) then begin
+        // .txt file
+        if (LowerCase(RightStr(fn, 3)) <> '.txt') then
+            fn := fn + '.txt';
+    end;
     MsgList.Save(fn);
 end;
 
@@ -2665,7 +2791,6 @@ begin
         // make sure the control doesn't redraw this.
         DefaultDraw := false;
     end;
-
 end;
 
 {---------------------------------------}
@@ -2808,6 +2933,7 @@ end;
 procedure TfrmRoom.OnDocked();
 begin
     inherited;
+    mnuOnTop.Enabled := false;
     _scrollBottom();
     Self.Refresh();
     //SIG-SIG-SIG
@@ -2824,6 +2950,7 @@ end;
 procedure TfrmRoom.OnFloat();
 begin
     inherited;
+    mnuOnTop.Enabled := true;
     _scrollBottom();
     Self.Refresh();
     //SIG-SIG-SIG
@@ -2892,6 +3019,12 @@ begin
         end;
 
     SpeedButton1.Enabled := enable;
+    if (enable) then
+        SpeedButton1.Hint := _('Edit Subject')
+    else begin
+        SpeedButton1.Hint := '';
+        lblSubject.Hint := '';
+    end;
 end;
 
 

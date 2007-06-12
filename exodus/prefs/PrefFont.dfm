@@ -3,10 +3,10 @@ inherited frmPrefFont: TfrmPrefFont
   Top = 256
   Caption = 'frmPrefFont'
   ClientHeight = 401
-  ClientWidth = 464
+  ClientWidth = 511
   OldCreateOrder = True
   ShowHint = True
-  ExplicitWidth = 476
+  ExplicitWidth = 523
   ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
@@ -18,25 +18,27 @@ inherited frmPrefFont: TfrmPrefFont
     Caption = 'Contact List Window'
   end
   object lblChat: TTntLabel [1]
-    Left = 136
+    Left = 150
     Top = 56
     Width = 69
     Height = 13
     Caption = 'Chat Windows'
   end
-  object Label24: TTntLabel [2]
+  object lblBackgroundColor: TTntLabel [2]
     Left = 8
     Top = 208
     Width = 88
     Height = 13
     Caption = 'Background Color:'
+    Enabled = False
   end
-  object Label25: TTntLabel [3]
+  object lblFontColor: TTntLabel [3]
     Left = 8
-    Top = 232
+    Top = 236
     Width = 51
     Height = 13
     Caption = 'Font Color:'
+    Enabled = False
   end
   object Label5: TTntLabel [4]
     Left = 8
@@ -47,51 +49,61 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object lblColor: TTntLabel [5]
     Left = 8
-    Top = 190
+    Top = 161
     Width = 69
     Height = 13
     Caption = 'Element Name'
   end
-  object clrBoxBG: TColorBox [6]
-    Left = 136
+  object lblChatWindowElement: TTntLabel [6]
+    Left = 8
+    Top = 181
+    Width = 108
+    Height = 13
+    Caption = 'Chat Window Element:'
+    Enabled = False
+  end
+  object clrBoxBG: TColorBox [7]
+    Left = 150
     Top = 205
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
     Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    Style = [cbStandardColors, cbExtendedColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
+    Enabled = False
     ItemHeight = 16
     TabOrder = 2
     OnChange = clrBoxBGChange
   end
-  object clrBoxFont: TColorBox [7]
-    Left = 136
-    Top = 229
+  object clrBoxFont: TColorBox [8]
+    Left = 150
+    Top = 233
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
     Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    Style = [cbStandardColors, cbExtendedColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
+    Enabled = False
     ItemHeight = 16
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TTntButton [8]
-    Left = 136
-    Top = 256
+  object btnFont: TTntButton [9]
+    Left = 150
+    Top = 260
     Width = 90
     Height = 25
     Caption = 'Change Font'
     TabOrder = 4
     OnClick = btnFontClick
   end
-  object colorChat: TExRichEdit [9]
-    Left = 136
-    Top = 72
-    Width = 320
-    Height = 113
+  object colorChat: TExRichEdit [10]
+    Left = 150
+    Top = 71
+    Width = 353
+    Height = 89
     AutoURLDetect = adNone
     CustomURLs = <
       item
@@ -185,17 +197,17 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 464
-    Caption = 'Fonts and Colors'
+    Width = 511
+    Caption = 'Fonts, Colors'
     TabOrder = 5
-    ExplicitWidth = 464
+    ExplicitWidth = 511
   end
   object colorRoster: TTntTreeView
     Left = 8
-    Top = 72
+    Top = 71
     Width = 121
-    Height = 112
-    BevelWidth = 0
+    Height = 89
+    BevelWidth = 10
     Indent = 19
     ReadOnly = True
     ShowButtons = False
@@ -249,6 +261,17 @@ inherited frmPrefFont: TfrmPrefFont
       OnClick = chkAllowFontFamilyClick
     end
   end
+  object cboChatWindowElement: TTntComboBox
+    Left = 150
+    Top = 178
+    Width = 170
+    Height = 21
+    Style = csDropDownList
+    Enabled = False
+    ItemHeight = 13
+    TabOrder = 8
+    OnChange = cboChatWindowElementChange
+  end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -262,6 +285,6 @@ inherited frmPrefFont: TfrmPrefFont
   object OpenDialog1: TOpenDialog
     Filter = 'CSS Stylesheets|*.css|All Files|*.*'
     Left = 336
-    Top = 24
+    Top = 28
   end
 end

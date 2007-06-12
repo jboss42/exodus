@@ -562,7 +562,7 @@ var
     i: integer;
     tstr: Widestring;
 begin
-    tstr := jid.jid;
+    tstr := jid.full;
     i := _dnCache.IndexOf(tstr);
     if (i <> -1) then
         Result := TDisplayNameItem(_dnCache.Objects[i])
@@ -574,7 +574,7 @@ procedure TDisplayNameCache.removeDNItem(dnItem: TDisplayNameItem);
 var
     i: integer;
 begin
-    i := _dnCache.IndexOf(dnItem._jid.jid);
+    i := _dnCache.IndexOf(dnItem._jid.full);
     if (i <> -1) then begin
         _dnCache.Objects[i].Free();
         _dnCache.Delete(i);
@@ -583,8 +583,8 @@ end;
 
 procedure TDisplayNameCache.addDNItem(dnItem: TDisplayNameItem);
 begin
-    if (_dnCache.IndexOf(dnItem._jid.jid) = -1) then
-        _dnCache.AddObject(dnItem._jid.jid, dnItem)
+    if (_dnCache.IndexOf(dnItem._jid.full) = -1) then
+        _dnCache.AddObject(dnItem._jid.full, dnItem)
 end;
 
 procedure TDisplayNameCache.clearDNCache();

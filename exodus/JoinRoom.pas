@@ -71,9 +71,13 @@ type
       FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
       Wrap: Boolean; var Index: Integer);
     procedure lstRoomsKeyPress(Sender: TObject; var Key: Char);
+    procedure txtNickChange(Sender: TObject);
+    procedure txtServerChange(Sender: TObject);
+    procedure txtRoomChange(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
+    _disconcb: integer;
     _all: TList;
     _filter: TList;
     _cur: TList;
@@ -84,8 +88,10 @@ type
     procedure _fetch(jid: Widestring);
     procedure _addRoomJid(ce: TJabberEntity);
     procedure _processFilter();
+    procedure _enableNext();
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
+    procedure DisconCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     procedure populateServers();
@@ -96,6 +102,7 @@ var
 
 procedure StartJoinRoom; overload;
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload;
+procedure StartJoinRoomBrowse;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -148,6 +155,38 @@ begin
             txtNick.Text := MainSession.Profile.getDisplayUsername();
 
         populateServers();
+        Show;
+    end;
+end;
+
+{---------------------------------------}
+procedure StartJoinRoomBrowse;
+var
+    jr: TfrmJoinRoom;
+    i: integer;
+begin
+    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
+    jr := TfrmJoinRoom.Create(Application);
+    with jr do begin
+        txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
+        txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
+        txtNick.Text := MainSession.Profile.getDisplayUsername();
+        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
+            txtNick.Enabled := False;
+            chkUseRegisteredNickname.Enabled := False;
+            chkUseRegisteredNickname.Checked := False;
+        end;
+        populateServers();
+        optBrowse.Checked := true;
+        Tabs.ActivePage := tabSheet2;
+        btnBack.Enabled := true;
+        btnNext.Caption := _('Finish');
+
+        _enableNext();
+
+        // browse each server
+        for i := 0 to txtServer.Items.Count - 1 do
+            _fetch(txtServer.Items[i]);
         Show;
     end;
 end;
@@ -206,6 +245,7 @@ begin
     _wait := TWidestringlist.Create();
 
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
+    _disconcb := MainSession.RegisterCallback(DisconCallback, '/session/disconnected');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 
     if (MainSession.Prefs.getBool('tc_browse')) then
@@ -214,7 +254,11 @@ begin
         optSpecify.Checked := true;
     chkDefaultConfig.Checked := MainSession.Prefs.getBool('tc_default_config');
     chkUseRegisteredNickname.Checked := MainSession.Prefs.getBool('tc_use_reg_nick');
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;
+    Self.Icon.Handle := Application.Icon.Handle;
+
     optSpecifyClick(Self);
+    _enableNext();
 end;
 
 {---------------------------------------}
@@ -223,6 +267,7 @@ begin
     if (MainSession <> nil) then begin
         MainSession.Prefs.SavePosition(Self);
         MainSession.UnRegisterCallback(_cb);
+        MainSession.UnRegisterCallback(_disconcb);
     end;
 
     _wait.Free();
@@ -251,6 +296,8 @@ begin
         Tabs.ActivePage := tabSheet2;
         btnBack.Enabled := true;
         btnNext.Caption := _('Finish');
+
+        _enableNext();
 
         // browse each server
         for i := 0 to txtServer.Items.Count - 1 do
@@ -296,6 +343,30 @@ begin
     Self.Close;
     exit;
 
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom._enableNext();
+begin
+    if (Tabs.ActivePage = tabSheet1) then begin
+        if (optSpecify.Checked) then begin
+            if ((Trim(txtRoom.Text) <> '') and
+                (Trim(txtServer.Text) <> '') and
+                (Trim(txtNick.Text) <> '')) then
+                btnNext.Enabled := true
+            else
+                btnNext.Enabled := false;
+        end
+        else begin
+            btnNext.Enabled := true;
+        end;
+    end
+    else if (Tabs.ActivePage = tabSheet2) then begin
+        if (lstRooms.SelCount > 0) then
+            btnNext.Enabled := true
+        else
+            btnNext.Enabled := false;
+    end;
 end;
 
 {---------------------------------------}
@@ -419,12 +490,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmJoinRoom.DisconCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then
+        Self.Close();
+end;
+
+{---------------------------------------}
 procedure TfrmJoinRoom.btnBackClick(Sender: TObject);
 begin
     if (Tabs.ActivePage = tabSheet2) then begin
         Tabs.ActivePage := tabSheet1;
         btnNext.Caption := _('Next >');
         btnBack.Enabled := false;
+        _enableNext();
     end;
 end;
 
@@ -445,6 +524,7 @@ begin
         btnNext.Caption := _('Finish')
     else
         btnNext.Caption := _('Next >');
+    _enableNext();
 end;
 
 {---------------------------------------}
@@ -465,6 +545,7 @@ procedure TfrmJoinRoom.lstRoomsChange(Sender: TObject; Item: TListItem;
 var
     li: TTntListItem;
 begin
+    _enableNext();
     li := lstRooms.Selected;
     if (li = nil) then exit;
 
@@ -519,6 +600,24 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmJoinRoom.txtNickChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
+procedure TfrmJoinRoom.txtRoomChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
+procedure TfrmJoinRoom.txtServerChange(Sender: TObject);
+begin
+  inherited;
+    _enableNext();
+end;
+
 procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
 begin
     btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);

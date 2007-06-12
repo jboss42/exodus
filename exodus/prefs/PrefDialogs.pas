@@ -81,9 +81,22 @@ procedure TfrmPrefDialogs.LoadPrefs();
 begin
     //
     inherited;
-    chkRosterAlphaClick(Self);
-    chkSnapClick(Self);
-    chkToastAlphaClick(Self);
+    trkRosterAlpha.Visible := chkRosterAlpha.Visible;
+    txtRosterAlpha.Visible := chkRosterAlpha.Visible;
+    if (chkRosterAlpha.Visible) then
+      chkRosterAlphaClick(Self);
+
+    trkToastAlpha.Visible := chkToastAlpha.Visible;
+    txtToastAlpha.Visible := chkToastAlpha.Visible;
+    if (chkToastAlpha.Visible) then
+      chkToastAlphaClick(Self);
+
+    trkSnap.Visible := chkSnap.Visible;
+    txtSnap.Visible := chkSnap.Visible;
+    if (chkSnap.Visible) then
+      chkSnapClick(Self);
+
+
 end;
 
 procedure TfrmPrefDialogs.SavePrefs();

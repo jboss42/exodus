@@ -270,7 +270,7 @@ begin
         memDesc.Lines.Text := Desc;
 
         if (Picture <> nil) then begin
-            Picture.Draw(picBox.Canvas);
+            Picture.Draw(picBox.Canvas, picBox.ClientRect);
         end;
     end;
 end;
@@ -452,7 +452,7 @@ end;
 procedure TfrmProfile.picBoxPaint(Sender: TObject);
 begin
     if (_vcard = nil) or (_vcard.picture = nil) then exit;
-    _vcard.Picture.Draw(picBox.Canvas);
+    _vcard.picture.Draw(picBox.Canvas, picBox.ClientRect);
 end;
 
 // soley here to disallow a change in subscription state -

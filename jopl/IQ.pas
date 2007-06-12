@@ -60,6 +60,10 @@ type
         constructor Create(session: TJabberSession; id: Widestring;
             seconds: longint = 15); reintroduce; overload;
 
+        constructor Create(session: TJabberSession; id: Widestring;
+            payload: TXMLTag; cb: TPacketEvent;
+            seconds: longint = 15); reintroduce; overload;
+
         destructor Destroy; override;
         procedure Send;
 
@@ -115,6 +119,31 @@ begin
 end;
 
 {---------------------------------------}
+constructor TJabberIQ.Create(session: TJabberSession; id: Widestring;
+    payload: TXMLTag; cb: TPacketEvent; seconds: longint = 15);
+var
+    payloadtag: TXMLTag;
+begin
+    inherited Create();
+
+    _js := session;
+    _id := id;
+    _callback := cb;
+    _cbIndex := -1;
+    _timer := TTimer.Create(nil);
+    _timer.Interval := 1000;
+    _timer.Enabled := false;
+    _timer.OnTimer := Timeout;
+    _ticks := 0;
+    _timeout := seconds;
+
+    // manip the xml tag
+    Self.Name := 'iq';
+    payloadtag := TXMLTag.Create(payload);
+    qTag := Self.AddTag(payloadtag);
+
+end;
+{---------------------------------------}
 destructor TJabberIQ.Destroy;
 begin
     _timer.Free;
@@ -123,22 +152,6 @@ begin
     if (_cbSession >= 0) then
         _js.UnRegisterCallback(_cbSession);
     inherited Destroy;
-end;
-
-{---------------------------------------}
-procedure TJabberIQ.Timeout(Sender: TObject);
-begin
-    // we got a timeout event
-    inc(_ticks);
-
-    if (_ticks >= _timeout) then begin
-        _timer.Enabled := false;
-        if (Assigned(_callback)) then
-            _callback('timeout', nil);
-        _js.UnRegisterCallback(_cbIndex);
-        _cbIndex := -1;
-        Self.Free;
-    end;
 end;
 
 {---------------------------------------}
@@ -170,6 +183,28 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberIQ.Timeout(Sender: TObject);
+begin
+    // we got a timeout event
+    _timer.Enabled := false;
+    inc(_ticks);
+
+    if (_ticks >= _timeout) then begin
+        _js.UnRegisterCallback(_cbIndex);
+        _cbIndex := -1;
+        _js.UnRegisterCallback(_cbSession);
+        _cbSession := -1;
+        try
+            if (Assigned(_callback)) then _callback('timeout', nil);
+        except
+        end;
+        Self.Free;
+    end
+    else
+        _timer.Enabled := true;
+end;
+
+{---------------------------------------}
 procedure TJabberIQ.iqCallback(event: string; xml: TXMLTag);
 begin
     // callback from _js
@@ -180,7 +215,10 @@ begin
     _cbIndex := -1;
     _cbSession := -1;
     xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
-    if (Assigned(_callback)) then _callback('xml', xml);
+    try
+        if (Assigned(_callback)) then _callback('xml', xml);
+    except
+    end;
     Self.Free;
 end;
 
@@ -192,8 +230,10 @@ begin
     _js.UnRegisterCallback(_cbSession);
     _cbIndex := -1;
     _cbSession := -1;
-    if (Assigned(_callback)) then
-        _callback(event, nil);
+    try
+        if (Assigned(_callback)) then _callback(event, nil);
+    except
+    end;
     Self.Free();
 end;
 

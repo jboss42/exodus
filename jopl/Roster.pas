@@ -26,7 +26,7 @@ uses
     TntClasses,
     {$endif}
     NodeItem, JabberID, Presence, Signals, Unicode, XMLTag,
-    SysUtils, Classes;
+    SysUtils, Classes, Windows;
 
 type
 
@@ -135,6 +135,7 @@ const
     sGrpAway = 'Away';
     sGrpXA = 'Ext. Away';
     sGrpDND = 'Do Not Disturb';
+    sGrpMyResources = 'My Resources';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -270,8 +271,9 @@ var
 begin
     cacheIcons();
 
-    setupOfflineGrp();
     setupUnfiledGrp();
+    if (MainSession.Prefs.getBool('roster_offline_group')) then
+        setupOfflineGrp();
 
     js := TJabberSession(_js);
     f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 600);
@@ -541,7 +543,10 @@ begin
     if ((p <> nil) and (p.priority < 0)) then p := nil;
 
     // setup the image
-    if ((is_me) and (p = nil)) then begin
+    if ((is_me) and
+        ((p = nil) or
+         (event = '/presence/offline') or
+         (event = '/presence/unavailable'))) then begin
         // this resource isn't online anymore... remove it
         ri.Removed := true;
     end
@@ -578,6 +583,12 @@ begin
 
     // notify the window that this item needs to be updated
     TJabberSession(_js).FireEvent('/roster/item', tag, ri);
+
+    // If this is my resource and it went offline, then
+    // get rid of the item in Self's list or we will never
+    // see it again.
+    if (is_me and ri.Removed) then
+        Self.RemoveItem(ri.Jid.full);
 end;
 
 {---------------------------------------}
@@ -593,6 +604,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             l.Add(c);
     end;
@@ -612,6 +624,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             tnt.Add(c);
     end;
@@ -649,8 +662,12 @@ begin
 
     // If this ritem is in unfiled, and they shouldn't be, remove them.
     // If they need to be in unfiled, but aren't, add them
+
     unf := getGroup(_('Unfiled'));
-    assert(unf <> nil);
+    if (unf = nil) then begin
+        unf := setupUnfiledGrp();
+        assert(unf <> nil);
+    end;
 
     jidx := unf.inGroup(ri.jid);
     if ((ri.GroupCount > 0) and (jidx)) then

@@ -142,6 +142,7 @@ type
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+
   private
      _pos: TPos;          //our position
      _persistPos: boolean; //should we persist our current position?
@@ -153,7 +154,7 @@ type
      _flasher: TTimer;
      
     procedure NormalizePos(); //
-    procedure CenterOnMonitor(var pos: TPos);
+    procedure CenterOnMainformMonitor(var pos: TPos);
 
     procedure setNotifying(newNotifyingState: boolean);
 
@@ -258,7 +259,7 @@ type
 
         Subclasses should override this method to open forms. The default
         implementation does nothing.
-        
+
         @param autoOpenInfo Persisted opening information
     }
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); virtual;
@@ -519,19 +520,32 @@ begin
         _isNotifying := newNotifyingState;
 end;
 
+function toRect(pos: TPos): TRect;
+begin
+    Result.Left := pos.Left;
+    Result.Right := pos.Left + pos.Width;
+    Result.Top := pos.Top;
+    Result.Bottom := pos.Top + pos.Height;
+end;
+
 {---------------------------------------}
-procedure TfrmState.CenterOnMonitor(var pos: TPos);
+procedure TfrmState.CenterOnMainformMonitor(var pos: TPos);
 var
     dtop: TRect;
-    mon: TMonitor;
     cp: TPoint;
-
 begin
-    // center it on the default monitor
-    mon := Screen.MonitorFromWindow(Self.Handle, mdNearest);
-    dtop := mon.WorkAreaRect;
+    // center it on the mainform's monitor
+    Self.DefaultMonitor := dmActiveForm;
+    dtop := Screen.ActiveForm.Monitor.WorkareaRect;
     cp := CenterPoint(dtop);
+    //adjust width/height if neccessary and possible
+    if (Self.BorderStyle = bsSizeable) then begin
+        if (pos.Width > (dtop.Right - dtop.Left)) then
+            pos.width := (dtop.Right - dtop.Left) - 27;
+        if (pos.height > (dtop.bottom - dtop.Top)) then
+            pos.height := (dtop.bottom - dtop.Top) - 27;
 
+    end;
     pos.Left := cp.x - (pos.width div 2);
     pos.Top := cp.y - (pos.height div 2);
 end;
@@ -673,10 +687,14 @@ begin
     prefHelper := TStateFormPrefsHelper.create();
     if (not _stateRestored) then begin
         if (not MainSession.Prefs.getBool('restore_window_state') or
-           (not prefHelper.getWindowState(GetWindowStateKey(), stateTag))) then
+           (not prefHelper.getWindowState(GetWindowStateKey(), stateTag))) then begin
             stateTag := TXMLTag.create(GetWindowStateKey());
-OutputDebugMsg('Restored window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
+//            Self.DefaultMonitor := dmMainForm; //open on the main forms monitor 
+           end;
+        _skipWindowPosHandling := true;
         Self.OnRestoreWindowState(stateTag);
+        _skipWindowPosHandling := false;
+OutputDebugMsg('Restored window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
         stateTag.Free();
         _stateRestored := true;
     end;
@@ -707,6 +725,7 @@ procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     if (not Self.Visible) then begin
         RestoreWindowState();
+        _skipWindowPosHandling := true;
         if (_windowState = wsMinimized) then
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
         else if (_windowState = wsMaximized) then
@@ -718,6 +737,7 @@ begin
         else
             SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
         Self.Visible := true;
+        _skipWindowPosHandling := false;
     end
     else if (frmExodus.isMinimized() and not bringtofront) then
         ShowWindow(Handle, SW_SHOWMINNOACTIVE)
@@ -775,27 +795,23 @@ begin
             _pos.height := SafeInt(windowState.getAttribute('pos_h'));
             _pos.width := SafeInt(windowState.getAttribute('pos_w'));
         end else begin
-            _pos.height := Self.Height;
-            _pos.width := Self.Width
+            _pos.height := Self.ExplicitHeight;
+            _pos.width := Self.ExplicitWidth;
         end;
     end
     else begin
         _pos.Left := 0;
         _pos.Top := 0;
-        _pos.Width := Self.Width;
-        _pos.Height := Self.Height;
-        CenterOnMonitor(_pos);
+        _pos.Width := Self.ExplicitWidth;
+        _pos.Height := Self.ExplicitHeight;
+        CenterOnMainformMonitor(_pos);
     end;
     _origPos.Left := _pos.Left;
     _origPos.width := _pos.width;
     _origPos.Top := _pos.Top;
     _origPos.height := _pos.height;
     normalizePos();
-    //setwiondowpos sets the undocked dimensions of window.
-    _skipWindowPosHandling := true;
     SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
-    _skipWindowPosHandling := false;
-    //minimized, maximized or restored
     _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
@@ -842,15 +858,18 @@ begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
+    //get screnn coords and see if we fit, adjust size/position as needed
     // Make it slightly bigger to acccomodate PtInRect
-    dtop := Screen.DesktopRect;
-    dtop.Bottom := dtop.Bottom + 1;
-    dtop.Right := dtop.Right + 1;
+
+    Self.DefaultMonitor := dmDesktop;
+    dtop := Screen.MonitorFromRect(toRect(_pos)).WorkareaRect;
+    inc(dtop.Bottom);// := dtop.Bottom + 1;
+    inc(dtop.Right);// := dtop.Right + 1;
 
     cp.X := _pos.left;
     cp.Y := _pos.Top;
+    //check top, right and bottom, left to make sure rectangle is fully on desktop
     ok := PtInRect(dtop, cp);
-
     cp.X := _pos.left + _pos.width;
     cp.Y := _pos.Top + _pos.Height;
     ok := ok and PtInRect(dtop, cp);
@@ -859,7 +878,7 @@ begin
         //we had to move this window as it won't fit in our desktop.
         //don't save new coords.
         _persistPos := false;
-        CenterOnMonitor(_pos);
+        CenterOnMainformMonitor(_pos);
     end;
 end;
 

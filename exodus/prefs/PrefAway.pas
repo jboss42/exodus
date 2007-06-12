@@ -30,8 +30,8 @@ type
   TfrmPrefAway = class(TfrmPrefPanel)
     txtAwayTime: TExNumericEdit;
     txtXATime: TExNumericEdit;
-    Label2: TTntLabel;
-    Label3: TTntLabel;
+    lblAwayTime: TTntLabel;
+    lblXATime: TTntLabel;
     lblAwayStatus: TTntLabel;
     lblXAStatus: TTntLabel;
     chkAutoAway: TTntCheckBox;
@@ -40,7 +40,7 @@ type
     chkAAReducePri: TTntCheckBox;
     chkAutoXA: TTntCheckBox;
     chkAutoDisconnect: TTntCheckBox;
-    TntLabel1: TTntLabel;
+    lblDisconnectTime: TTntLabel;
     txtDisconnectTime: TExNumericEdit;
     chkAwayAutoResponse: TTntCheckBox;
     procedure chkAutoAwayClick(Sender: TObject);
@@ -101,8 +101,13 @@ begin
     chkAutoDisconnect.Enabled := e;
 
     txtAwayTime.Enabled := e;
+    lblAwayTime.Enabled := e;
+    lblAwayStatus.Enabled := e;
     txtXATime.Enabled := xa;
+    lblXATime.Enabled := xa;
+    lblXAStatus.Enabled := xa;
     txtDisconnectTime.Enabled := dis;
+    lblDisconnectTime.Enabled := dis;
     txtAway.Enabled := e and (not aro);
     txtXA.Enabled := xa and (not xro);
 end;

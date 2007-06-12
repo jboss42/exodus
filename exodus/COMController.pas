@@ -254,7 +254,7 @@ uses
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, ComServ;
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -581,6 +581,9 @@ begin
         if (not isRegistered(com_name)) then begin
             //scan plugin directory and see if there is a lib with this object
             dir := MainSession.Prefs.getString('plugin_dir');
+            if (dir = '') then
+               dir := ExtractFilePath(Application.ExeName) + 'plugins';
+
             if (not scanPluginsForProgID(dir, com_name, dll)) then begin
                 errorStr := WideFormat(_(sPluginErrNoLib), [com_name]);
                 exit;
@@ -656,7 +659,11 @@ begin
     end;
 
     p := TPlugin(plugs.Objects[idx]);
-    p.com.Configure();
+    try
+        p.com.Configure();
+    except
+        DebugMessage('COM Exception in ConfigurePlugin');
+    end;
 end;
 
 function IsPluginConfigurable(com_name: string): boolean;
@@ -667,6 +674,7 @@ var
     com2: IExodusPlugin2;
 begin
     //
+    Result := false;
     idx := plugs.IndexOf(com_name);
     if (idx < 0) then begin
         LoadPlugin(com_name, errorStr);
@@ -715,12 +723,16 @@ begin
 
     // unload any plugins not in the loaded list
     for i := plugs.Count - 1 downto 0 do begin
-        idx := loaded.IndexOf(plugs[i]);
-        if (idx < 0) then begin
-            // unload the plugin
-            p := TPlugin(plugs.Objects[i]);
-            plugs.Delete(i);
-            p.com.Shutdown;
+        try
+            idx := loaded.IndexOf(plugs[i]);
+            if (idx < 0) then begin
+                // unload the plugin
+                p := TPlugin(plugs.Objects[i]);
+                plugs.Delete(i);
+                p.com.Shutdown;
+            end;
+        except
+            DebugMessage('COM Exception in ReloadPlugins');
         end;
     end;
     loaded.Free();
@@ -732,22 +744,31 @@ var
     pp: TPlugin;
     i: integer;
 begin
-    // kill all of the various plugins which are loaded.
-    for i := proxies.Count -1 downto 0 do
-        TPluginProxy(proxies.Objects[i]).Free();
+    try
+        // kill all of the various plugins which are loaded.
+        for i := proxies.Count -1 downto 0 do
+            TPluginProxy(proxies.Objects[i]).Free();
 
-    // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
-    // or else bad things can happen here... assume that mem is getting
-    // cleared.
-    // JJF 8/14/06 This needs to be addressed
-    //todo JJF get definitive answer to when COM objects should be released!
-    for i := plugs.Count - 1 downto 0 do begin
-        pp := TPlugin(plugs.Objects[i]);
-        plugs.Delete(i);
-        pp.com.Shutdown;
+        // pgm Dec 12, 2002 - Don't free pp, or call pp.com._Release,
+        // or else bad things can happen here... assume that mem is getting
+        // cleared.
+        // JJF 8/14/06 This needs to be addressed
+        //todo JJF get definitive answer to when COM objects should be released!
+
+        for i := plugs.Count - 1 downto 0 do begin
+          try
+            pp := TPlugin(plugs.Objects[i]);
+            plugs.Delete(i);
+            pp.com.Shutdown;
+          except
+            DebugMessage('COM Exception in TExodusChat.UnloadPlugins');
+            continue;
+          end;
+
+        end;
+       plugs.Clear();
+    except
     end;
-
-    plugs.Clear();
 end;
 
 {---------------------------------------}
@@ -829,8 +850,13 @@ begin
         else
             xml := tag.xml;
 
-        if (com <> nil) then
-            com.Process(_xpath, event, xml)
+        if (com <> nil) then begin
+            try
+                com.Process(_xpath, event, xml);
+            except
+                DebugMessage('COM Exception in TPluginProxy.Callback');
+            end;
+        end
         else if (l <> nil) then
             l.ProcessEvent(event, xml);
     except
@@ -913,12 +939,16 @@ end;
 procedure TIQProxy.Callback(event: string; tag: TXMLTag);
 begin
     //
-    _timer.Enabled := false;
+    try
+        _timer.Enabled := false;
 
-    if ((event = 'xml') and (tag <> nil)) then
-        com.ProcessIQ(iqid, tag.xml)
-    else
-        com.ProcessIQ(iqid, '');
+        if ((event = 'xml') and (tag <> nil)) then
+            com.ProcessIQ(iqid, tag.xml)
+        else
+            com.ProcessIQ(iqid, '');
+    except
+        DebugMessage('COM Exception in TIQProxy.Callback');
+    end;
 
     Self.Free();
 end;
@@ -926,11 +956,15 @@ end;
 {---------------------------------------}
 procedure TIQProxy.Timeout(Sender: TObject);
 begin
-    // we got a timeout event
-    _timer.Enabled := false;
+    try
+        // we got a timeout event
+        _timer.Enabled := false;
 
-    // callback our listener
-    com.TimeoutIQ(iqid);
+        // callback our listener
+        com.TimeoutIQ(iqid);
+    except
+        DebugMessage('COM Exception in TIQProxy.Timeout');
+    end;
 
     Self.Free;
 end;
@@ -972,6 +1006,8 @@ end;
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
+   try
+
     if (_menu_items <> nil) then begin
 
         OutputDebugString('Destroying TExodusController');
@@ -987,9 +1023,12 @@ begin
         FreeAndNil(_roster_menus);
         FreeAndNil(_msg_menus);
         FreeAndNil(_parser);
-
         inherited;
+
     end;
+   except
+
+   end;
 end;
 
 {---------------------------------------}
@@ -997,8 +1036,13 @@ procedure TExodusController.fireNewChat(jid: WideString; ExodusChat: IExodusChat
 var
     i: integer;
 begin
-    for i := 0 to plugs.count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+    for i := 0 to plugs.count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewChat');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1006,8 +1050,13 @@ procedure TExodusController.fireNewOutgoingIM(jid: Widestring; ExodusChat: IExod
 var
     i: integer;
 begin
-    for i := 0 to plugs.Count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewOutgoingIM');
+        end;
+    end;
 end;
 
 procedure TExodusController.fireNewIncomingIM(jid: Widestring; ExodusChat: IExodusChat);
@@ -1033,8 +1082,13 @@ procedure TExodusController.fireNewRoom(jid: Widestring; ExodusChat: IExodusChat
 var
     i: integer;
 begin
-    for i := 0 to plugs.Count - 1 do
-        TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+        except
+            DebugMessage('COM Exception in TExodusController.fireNewRoom');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1045,8 +1099,13 @@ var
     xml: Widestring;
 begin
     xml := '';
-    for i := 0 to plugs.Count - 1 do
-        xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+    for i := 0 to plugs.Count - 1 do begin
+        try
+            xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+        except
+            DebugMessage('COM Exception in TExodusController.fireIM');
+        end;
+    end;
     Result := xml;
 end;
 
@@ -1181,12 +1240,31 @@ end;
 function TExodusController.CreateDockableWindow(
   const Caption: WideString): Integer;
 var
+    p: Pointer;
     f: TfrmDockContainer;
+    tstr: Widestring;
 begin
+EXutils.OutputDebugMsg('creating TfrmDockContainer');
     Application.CreateForm(TfrmDockContainer, f);
+EXutils.OutputDebugMsg('showing dock container');
     f.ShowDefault();
-    f.Caption := Caption;
-    Result := f.Panel1.Handle;
+    Application.ProcessMessages();
+    //hack alert! Info Broker work.
+    tstr := Copy(Caption, 1, Length('ie_'));
+EXutils.OutputDebugMsg('Caption: ' + caption + ', tstr: ' + tstr);
+    if (tstr = 'ie_') then begin
+EXutils.OutputDebugMsg('found ie caption, returning tpanel');
+      f.Caption := Copy(Caption, Length('ie_') + 1, Length(Caption));
+EXutils.OutputDebugMsg('assigned captions');
+      p := @(TWebBrowser(f.WebBrowser1));
+EXutils.OutputDebugMsg('got pointer');
+      Result := Integer(p);
+EXutils.OutputDebugMsg('set result');
+    end else begin
+EXutils.OutputDebugMsg('found normal caption, returning hwnd');
+      f.Caption := Caption;
+      Result := f.Handle;
+    end;
 end;
 
 {---------------------------------------}
@@ -1241,8 +1319,13 @@ begin
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
         //broadcast to all plugins the menu selection
-        for i := 0 to plugs.count - 1 do
-            TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+        for i := 0 to plugs.count - 1 do begin
+            try
+                TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+            except
+                DebugMessage('COM Exception in TExodusController.fireMenuClick');
+            end;
+        end;
 {$ELSE}
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
@@ -1265,8 +1348,13 @@ begin
     idx := _roster_menus.indexOfObject(Sender);
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
-        for i := 0 to plugs.count - 1 do
-            TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
+        for i := 0 to plugs.count - 1 do begin
+            try
+                TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
+            except
+                DebugMessage('COM Exception in TExodusController.fireRosterMenuClick');
+            end
+        end;
 {$ELSE}
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_roster_menus.Objects[idx]).Tag);
@@ -1361,7 +1449,7 @@ begin
     // This must go against frmExodus, not MainSession
     // otherwise some strange reconnect issues get triggered
     // by there being no profile selected.
-    if not MainSession.Active then
+    if ((not MainSession.Active) and (frmExodus.Showing)) then
         frmExodus.DoConnect();
 end;
 
@@ -1831,7 +1919,7 @@ begin
     _parser.Clear();
     _parser.ParseString(XML, '');
     if (_parser.Count > 0) then
-        x := _parser.popTag()
+        x := _parser.popTag() // We now own this memory
     else
         x := nil;
     _parser.Clear();
@@ -1840,7 +1928,7 @@ begin
         ri := nil;
         if (Arg <> '') then begin
             ri := MainSession.roster.Find(Arg);
-            x := ri.Tag;
+            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
         end;
         MainSession.FireEvent(Event, x, ri);
     end
@@ -1858,6 +1946,7 @@ begin
     else
         MainSession.FireEvent(Event, x);
 
+    x.Free();
 end;
 
 {---------------------------------------}
@@ -1978,8 +2067,11 @@ initialization
   // is that the warning comes too late, and just leads to cores.
   // TODO: figure out how to disconnect from all of the clients that are
   // connected to us, using CoDisconnectObject.
-
-  // XXX: ComServer.UIInteractive := false;
+  // UPDATE:  The Dialog Delphi pops up comes too late to be of any good.
+  // Added own Dialog that informs user he is doing something "bad" and allows
+  // them to continue or abort the application exit.  Thus, if they do abort,
+  // we are still in a "good" state.  This is brandable.
+  ComServer.UIInteractive := false;
 
   plugs := TStringList.Create();
   proxies := TStringList.Create();

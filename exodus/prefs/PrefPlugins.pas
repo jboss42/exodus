@@ -70,7 +70,7 @@ implementation
 {$R *.dfm}
 uses
     ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,
-    GnuGetText, PathSelector, Registry, Session, PrefController;
+    GnuGetText, PathSelector, Registry, Session, PrefController, BrowseForFolderU;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -125,9 +125,10 @@ begin
     scanPluginDir(sl);
 
     with lstPlugins do begin
-        btnConfigPlugin.Enabled := (Items.Count > 0);
         btnRemovePlugin.Enabled := (Items.Count > 0);
     end;
+
+    btnConfigPlugin.Enabled := false; // no item selected when rescaned. 
 
     sl.Free();
 end;
@@ -220,7 +221,11 @@ var
 begin
     // Change the plugin dir
     p := txtPluginDir.Text;
-    if (browsePath(p)) then begin
+    if (not DirectoryExists(p)) then
+        p := '';
+
+    p := BrowseForFolder(_('Select Plugins Directory'), p);
+    if (p <> '') then begin
         if (p <> txtPluginDir.Text) then begin
             txtPluginDir.Text := p;
             scanPlugins();
