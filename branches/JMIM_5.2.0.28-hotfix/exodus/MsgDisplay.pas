@@ -86,6 +86,7 @@ function getXIMTag(msg: TJabberMessage): TXMLTag;
 var
     fooTag: TXMLTag;
     _parser: TXMLTagParser;
+    bTag: TXMLtag;
 begin
     fooTag := Msg.GetTag;
     Result := fooTag.GetFirstTag('html');
@@ -106,6 +107,14 @@ begin
     end;
     if ((Result <> nil) and (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then
         Result := nil;
+
+    //make sure body element in shtml NS exists
+    if (Result <> nil) then begin
+      bTag := Result.getFirstTag('body');
+      if (bTag <> nil) and (bTag.getAttribute('xmlns') <> 'http://www.w3.org/1999/xhtml') then
+        Result := nil;
+    end;
+    
     if (Result <> nil) then
         Result := TXMLTag.Create(Result);
     fooTag.Free();        
