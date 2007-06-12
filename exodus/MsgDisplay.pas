@@ -111,7 +111,7 @@ begin
     //make sure body element in shtml NS exists
     if (Result <> nil) then begin
       bTag := Result.getFirstTag('body');
-      if (bTag <> nil) and (bTag.getAttribute('xmlns') <> 'http://www.w3.org/1999/xhtml') then
+      if (bTag = nil) or (bTag.getAttribute('xmlns') <> 'http://www.w3.org/1999/xhtml') then
         Result := nil;
     end;
     
