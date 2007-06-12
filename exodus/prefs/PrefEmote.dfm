@@ -11,7 +11,7 @@ inherited frmPrefEmote: TfrmPrefEmote
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 365
-    Caption = 'Emoticon Options'
+    Caption = 'Emoticons'
     ExplicitWidth = 365
   end
   object Panel1: TPanel
@@ -122,6 +122,7 @@ inherited frmPrefEmote: TfrmPrefEmote
           Width = 75
           Height = 25
           Caption = 'Remove'
+          Enabled = False
           TabOrder = 1
           OnClick = btnCustomEmoteRemoveClick
         end
@@ -131,6 +132,7 @@ inherited frmPrefEmote: TfrmPrefEmote
           Width = 75
           Height = 25
           Caption = 'Edit ...'
+          Enabled = False
           TabOrder = 2
           OnClick = btnCustomEmoteEditClick
         end
@@ -182,6 +184,8 @@ inherited frmPrefEmote: TfrmPrefEmote
         TabOrder = 2
         OnAdvancedCustomDrawItem = lstCustomEmotesAdvancedCustomDrawItem
         OnDblClick = btnCustomEmoteEditClick
+        OnSelectItem = lstCustomEmotesSelectItem
+        ExplicitTop = -2
       end
     end
   end

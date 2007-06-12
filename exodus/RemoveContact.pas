@@ -29,20 +29,21 @@ uses
 type
   TfrmRemove = class(TForm)
     frameButtons1: TframeButtons;
-    Bevel1: TBevel;
     optMove: TTntRadioButton;
     optRemove: TTntRadioButton;
     chkRemove1: TTntCheckBox;
     chkRemove2: TTntCheckBox;
-    lblJID: TTntStaticText;
+    lblJid: TEdit;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure optRemoveClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure RosterItemRemove(temp_jid: WideString);
   private
     { Private declarations }
     jid: Widestring;
+    jidList: TWideStringList;
     sel_grp: Widestring;
   public
     { Public declarations }
@@ -55,6 +56,7 @@ const
     sRemoveGrpLabel = 'Remove this contact from the %s group.';
 
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
+procedure RemoveRosterItems(items: TWideStringList; grp: WideString = '');
 procedure QuietRemoveRosterItem(sjid: Widestring);
 
 {---------------------------------------}
@@ -67,7 +69,7 @@ uses
 {$R *.DFM}
 
 {---------------------------------------}
-procedure RemoveRosterItem(sjid: Widestring; grp: Widestring);
+procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
 var
     f: TfrmRemove;
     ritem: TJabberRosterItem;
@@ -76,13 +78,38 @@ begin
     f := TfrmRemove.Create(Application);
     with f do begin
         itemJID := TJabberID.Create(sjid);
-        lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(itemJID);
+        lblJID.Text := DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(itemJID);
         sel_grp := grp;
         jid := sjid;
         optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);
         ritem := MainSession.Roster.Find(sjid);
         optMove.Enabled := ((ritem <> nil) and (ritem.GroupCount > 1));
         itemJID.Free();
+        Show;
+    end;
+end;
+
+{---------------------------------------}
+procedure RemoveRosterItems(items: TWideStringList; grp: WideString);
+var
+    f: TfrmRemove;
+    itemJID: TJabberID;
+    i: Integer;
+begin
+    f := TfrmRemove.Create(Application);
+
+    with f do begin
+        lblJID.Text := '';
+        for i := 0 to items.Count - 1 do begin
+         itemJID := TJabberID.Create(items[i]);
+         lblJID.Text := lblJID.Text + DisplayName.getDisplayNameCache().getDisplayNameAndBareJID(itemJID) + ' ';
+         itemJID.Free();
+        end;
+        sel_grp := grp;
+        jidList := TWideStringList.Create();
+        jidList := items;
+        optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);
+        optMove.Enabled := true;
         Show;
     end;
 end;
@@ -111,10 +138,25 @@ end;
 {---------------------------------------}
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
+ i: integer;
+begin
+    if (jidList <> nil) then begin
+      for i := 0 to jidList.Count - 1 do begin
+        RosterItemRemove(jidList[i]);
+      end;
+    end
+    else
+      RosterItemRemove(jid);
+
+    Self.Close;
+end;
+
+procedure TfrmRemove.RosterItemRemove(temp_jid: WideString);
+var
     ritem: TJabberRosterItem;
 begin
     // Handle removing from a single grp
-    ritem := MainSession.roster.Find(jid);
+    ritem := MainSession.roster.Find(temp_jid);
     assert(ritem <> nil);
     
     if (optMove.Checked) then begin
@@ -137,8 +179,6 @@ begin
         // send an unsubscribed
         SendUnSubscribed(ritem.jid.full, MainSession);
     end;
-
-    Self.Close;
 end;
 
 {---------------------------------------}

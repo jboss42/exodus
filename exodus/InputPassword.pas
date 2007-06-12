@@ -36,9 +36,10 @@ type
     { Private declarations }
   public
     { Public declarations }
+    RequireInput: boolean;
   end;
 
-function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
+function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False; RequireInput: Boolean = True): Boolean;
 
 implementation
 
@@ -46,7 +47,7 @@ uses
     JabberUtils, ExUtils,  GnuGetText;
 {$R *.dfm}
 
-function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
+function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False; RequireInput: Boolean = True): Boolean;
 var
     w, h: integer;
     r: TRect;
@@ -82,6 +83,15 @@ begin
     if (not password) then
         pf.txtPassword.PasswordChar := #0;
 
+    if (RequireInput) then 
+        pf.frameButtons1.btnOK.Enabled := false
+    else
+        pf.frameButtons1.btnOk.Enabled := true;
+
+    pf.RequireInput := RequireInput;
+
+    if (Value <> '') then pf.frameButtons1.btnOK.Enabled := true;    
+
     if (pf.ShowModal) = mrOK then begin
         Value := pf.txtPassword.Text;
         result := true;
@@ -97,6 +107,7 @@ end;
 
 procedure TfrmInputPass.FormCreate(Sender: TObject);
 begin
+    RequireInput := true;
     TranslateComponent(Self);
 end;
 
@@ -104,11 +115,13 @@ procedure TfrmInputPass.txtPasswordOnChange(Sender: TObject);
 var
     txt: string;
 begin
-    txt := Trim(txtPassword.Text);
-    if (Length(txt) > 0) then
-        frameButtons1.btnOK.Enabled := true
-    else
-        frameButtons1.btnOK.Enabled := false;
+    if (RequireInput) then begin
+        txt := Trim(txtPassword.Text);
+        if (Length(txt) > 0) then
+            frameButtons1.btnOK.Enabled := true
+        else
+            frameButtons1.btnOK.Enabled := false;
+    end;
 end;
 
 end.

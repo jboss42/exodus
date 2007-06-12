@@ -93,8 +93,14 @@ begin
     _menu.Items.Add(mi);
 
     mi := TTntMenuItem.Create(_menu);
+    mi.Name := 'mnuRenameRoom';
+    mi.Caption := _('Rename...');
+    mi.OnClick := Self.MenuClick;
+    _menu.Items.Add(mi);
+
+    mi := TTntMenuItem.Create(_menu);
     mi.Name := 'mnuProperties';
-    mi.Caption := _('Properties');
+    mi.Caption := _('Properties...');
     mi.OnClick := Self.MenuClick;
     _menu.Items.Add(mi);
 end;
@@ -121,11 +127,12 @@ begin
 
     if (mi.Name = 'mnuJoinRoom') then
         MainSession.FireEvent('/session/gui/conference', ri.tag)
-    else if (mi.Name = 'mnuRemoveRoom') then begin
-        RemoveBookmark(ri.Jid.jid);
-    end
+    else if (mi.Name = 'mnuRemoveRoom') then
+        RemoveBookmark(ri.Jid.jid)
     else if (mi.Name = 'mnuProperties') then
-        MainSession.FireEvent('/session/gui/conference-props', ri.tag);
+        MainSession.FireEvent('/session/gui/conference-props', ri.tag)
+    else if (mi.Name = 'mnuRenameRoom') then
+        MainSession.FireEvent('/session/gui/conference-props-rename', ri.tag);
 end;
 
 {---------------------------------------}
@@ -191,10 +198,18 @@ end;
 procedure TBookmarkManager.parseItem(tag: TXMLTag; ri: TJabberRosterItem);
 var
     jid: TJabberID;
+    tstr : WideString;
 begin
     jid := TJabberID.Create(tag.GetAttribute('jid'));
     ri.IsContact := false;
-    ri.Text := tag.getAttribute('name');
+    tstr := tag.getAttribute('name');
+    //hi, hack here. Some clients are sendig the node protions of jids as names
+    //without unescaping special characters first. Play with the name a bit
+    //and see if it is a jid node.
+    if (tstr = jid.user) then
+        tstr := jid.userDisplay;
+    ri.Text := tstr;
+
     ri.Status := '';
     ri.Tooltip := jid.getDisplayJID();
     ri.Action := '/session/gui/conference';
@@ -205,7 +220,7 @@ begin
     ri.SetCleanGroups();
 
     ri.ImageIndex := RosterTreeImages.Find('conference');
-    ri.InlineEdit := true;
+    ri.InlineEdit := false;
 
     // setup right click opts for bookmarks
     ri.CustomContext := _menu;

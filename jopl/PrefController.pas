@@ -468,6 +468,19 @@ begin
 end;
 
 function TApplicationInfo.GetID() : String;
+    function GetLongFileName(const FileName: string): string;
+    var
+        SHFileInfo: TSHFileInfo;
+    begin
+        if SHGetFileInfo(PChar(FileName),
+                       0,
+                       SHFileInfo,
+                       SizeOf(SHFileInfo),
+                       SHGFI_DISPLAYNAME) <> 0 then
+        Result := string(SHFileInfo.szDisplayName)
+        else
+        Result := FileName;
+    end;
 var
     tstr : string;
 begin
@@ -475,7 +488,8 @@ begin
         if (cachedID = '') then
         begin
             //remove .exe
-            tstr := ExtractFileName(Application.ExeName);
+
+            tstr := ExtractFileName(GetLongFileName(Application.ExeName));
             cachedID := Copy(tstr, 0, Length(tstr) - 4);
         end;
         Result := cachedID;
@@ -1250,19 +1264,23 @@ end;
 
 {---------------------------------------}
 procedure TPrefController.CheckPositions(form: TForm; t, l, w, h: integer);
-var
+{var
     ok: boolean;
     dtop, tmp: TRect;
     mon: TMonitor;
     cp: TPoint;
     vwidth, vht, i: integer;
+}    
 begin
-    tmp := Bounds(l, t, w, h);
+//    tmp := Bounds(l, t, w, h);
 
     // Netmeeting hack
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
 
+    Form.SetBounds(l, t, w, h);
+    Form.MakeFullyVisible();
+{ JJF MakeFullyVisible should do the job much better.
     // For multiple monitors, make a desktop rect that spans all monitors
     vwidth := 0;
     vht := 0;
@@ -1297,6 +1315,7 @@ begin
     w := Abs(tmp.Right - tmp.Left);
     h := Abs(tmp.Bottom - tmp.Top);
     Form.SetBounds(l, t, w, h);
+    }
 end;
 
 {---------------------------------------}
@@ -1449,6 +1468,8 @@ end;
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
     Result := TJabberProfile.Create(name, self);
+    Result.KerbAuth  := MainSession.Prefs.getBool('brand_profile_kerberos');
+    Result.SASLRealm :=  MainSession.Prefs.getString('brand_profile_realm');
     _profiles.AddObject(name, Result);
 end;
 

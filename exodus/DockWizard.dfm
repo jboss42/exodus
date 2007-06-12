@@ -3,49 +3,58 @@ inherited frmDockWizard: TfrmDockWizard
   Top = 141
   BorderStyle = bsDialog
   Caption = 'Dockable Wizard'
-  ClientHeight = 357
-  ClientWidth = 416
-  ExplicitWidth = 422
-  ExplicitHeight = 389
+  ClientHeight = 418
+  ClientWidth = 494
+  ExplicitWidth = 500
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object TntPanel1: TTntPanel [0]
     Left = 0
-    Top = 316
-    Width = 416
+    Top = 377
+    Width = 494
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 316
+    ExplicitWidth = 416
+    DesignSize = (
+      494
+      41)
     object Bevel1: TBevel
       Left = 0
       Top = 0
-      Width = 416
+      Width = 494
       Height = 5
       Align = alTop
       Shape = bsTopLine
+      ExplicitWidth = 416
     end
     object btnBack: TTntButton
-      Left = 176
-      Top = 8
+      Left = 253
+      Top = 9
       Width = 75
       Height = 25
+      Anchors = [akRight, akBottom]
       Caption = '< Back'
       TabOrder = 0
     end
     object btnNext: TTntButton
-      Left = 252
-      Top = 8
+      Left = 329
+      Top = 9
       Width = 75
       Height = 25
+      Anchors = [akRight, akBottom]
       Caption = 'Next >'
       TabOrder = 1
     end
     object btnCancel: TTntButton
-      Left = 336
-      Top = 8
+      Left = 413
+      Top = 9
       Width = 75
       Height = 25
+      Anchors = [akRight, akBottom]
       Cancel = True
       Caption = 'Cancel'
       TabOrder = 2
@@ -54,33 +63,35 @@ inherited frmDockWizard: TfrmDockWizard
   object Tabs: TPageControl [1]
     Left = 0
     Top = 53
-    Width = 416
-    Height = 263
+    Width = 494
+    Height = 324
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
-    ExplicitTop = 92
-    ExplicitHeight = 224
+    ExplicitWidth = 416
+    ExplicitHeight = 263
     object TabSheet1: TTabSheet
       Caption = 'TabSheet1'
-      ExplicitHeight = 193
+      ExplicitLeft = 8
+      ExplicitTop = 25
     end
   end
   inherited pnlDockTop: TPanel
-    Width = 416
+    Width = 494
     Height = 53
     ExplicitWidth = 416
     ExplicitHeight = 53
     inherited tbDockBar: TToolBar
-      Left = 367
+      Left = 445
       Height = 47
       ExplicitLeft = 367
+      ExplicitHeight = 47
     end
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 364
+      Width = 442
       Height = 53
       Align = alClient
       BevelOuter = bvNone
@@ -89,13 +100,11 @@ inherited frmDockWizard: TfrmDockWizard
       ParentBackground = False
       ParentCtl3D = False
       TabOrder = 1
-      ExplicitTop = -28
-      ExplicitWidth = 416
-      ExplicitHeight = 60
+      ExplicitWidth = 364
       object Bevel2: TBevel
         Left = 0
         Top = 44
-        Width = 364
+        Width = 442
         Height = 9
         Align = alBottom
         Shape = bsBottomLine
@@ -126,7 +135,7 @@ inherited frmDockWizard: TfrmDockWizard
         Transparent = True
       end
       object Image1: TImage
-        Left = 323
+        Left = 401
         Top = 0
         Width = 41
         Height = 44

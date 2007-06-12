@@ -93,6 +93,8 @@ type
     imgHotkeys: TImage;
     imgPlugins: TImage;
     lblHotkeys: TTntLabel;
+    TntLabel1: TTntLabel;
+    procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -166,7 +168,8 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr, JabberUtils;
+    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr,
+    JabberUtils, XMLTag;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -248,6 +251,8 @@ begin
 end;
 {---------------------------------------}
 procedure TfrmPrefs.LoadPrefs;
+var
+    regex_pref_tag: TXmlTag;
 begin
     // load prefs from the reg.
     with MainSession.Prefs do begin
@@ -255,10 +260,29 @@ begin
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
         chkRegex.Checked := getBool('regex_keywords');
+        regex_pref_tag := MainSession.Prefs.getXMLPref('regex_keywords');
+        if (regex_pref_tag <> nil) then begin
+            if (regex_pref_tag.GetAttribute('state') = 'inv') then
+                chkRegex.Visible := false
+            else if (regex_pref_tag.GetAttribute('state') = 'ro') then
+                chkRegex.Enabled := false;
+        end;
+
         fillStringList('blockers', memBlocks.Lines);
    end;
 end;
 
+
+procedure TfrmPrefs.memKeywordsKeyPress(Sender: TObject; var Key: Char);
+begin
+    if ((Key = '(') or (Key = ')') or (Key = '[') or
+        (Key = ']') or (Key = '*') or (Key = '+') or
+        (Key = '\') or (Key = '?') or (Key = '.') or
+        (Key = '"')) then  begin
+           MessageDlgW(_('The following characters should not be used: ( ) [ ] * + \ ?.'), mtError, [mbOK], 0);
+           Key := #0;
+         end;
+end;
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
@@ -321,7 +345,7 @@ begin
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
-        kw_expr := CreateKeywordsExpr(); //Try to create/compile Keyword expression
+        kw_expr := CreateKeywordsExpr(true); //Try to create/compile Keyword expression
         FreeAndNil(kw_expr);
 
         //Blocked JIDs
@@ -375,6 +399,8 @@ begin
         lblTransfer.Visible := getBool('brand_ft');
         imgPlugins.Visible := getBool('brand_plugs');
         lblPlugins.Visible := getBool('brand_plugs');
+        imgBlockList.Visible := getBool('brand_allow_blocking_jids');
+        lblBlockList.Visible := getBool('brand_allow_blocking_jids');
     end;
 
     // Init all the other panels
