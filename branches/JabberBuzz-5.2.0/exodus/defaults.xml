@@ -315,6 +315,7 @@
 	<brand_profile_priority value="1"></brand_profile_priority>
 	<brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
 	<brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
+	<brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
 
 	<!--brand_profile_resource value="Exodus"></brand_profile_resource-->
 

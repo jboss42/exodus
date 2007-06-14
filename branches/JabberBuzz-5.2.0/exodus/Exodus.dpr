@@ -247,8 +247,9 @@ uses
   SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant},
   EventQueue in '..\jopl\EventQueue.pas',
   COMDockToolbar in 'COMDockToolbar.pas',
-  COMMsgOutToolbar in 'COMMsgOutToolbar.pas';
-  
+  COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
+  idSSLSchannel in 'idSSLSchannel.pas';
+
 {$R *.TLB}
 
 {$R *.RES}

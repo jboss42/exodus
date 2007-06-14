@@ -1,9 +1,8 @@
 object frmConnDetails: TfrmConnDetails
   Left = 513
   Top = 170
-  ActiveControl = cboJabberID
   Caption = 'Connection Details'
-  ClientHeight = 322
+  ClientHeight = 444
   ClientWidth = 402
   Color = clBtnFace
   Constraints.MinWidth = 410
@@ -22,7 +21,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 402
-    Height = 289
+    Height = 411
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
@@ -81,7 +80,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblRename: TTntLabel
         Left = 100
-        Top = 244
+        Top = 364
         Width = 90
         Height = 13
         Cursor = crHandPoint
@@ -111,7 +110,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkSavePasswd: TTntCheckBox
         Left = 100
-        Top = 172
+        Top = 189
         Width = 170
         Height = 17
         Caption = 'Save pass&word'
@@ -121,7 +120,7 @@ object frmConnDetails: TfrmConnDetails
       object txtPassword: TTntEdit
         Left = 100
         Top = 68
-        Width = 170
+        Width = 285
         Height = 21
         PasswordChar = '*'
         TabOrder = 2
@@ -129,7 +128,7 @@ object frmConnDetails: TfrmConnDetails
       object cboResource: TTntComboBox
         Left = 100
         Top = 92
-        Width = 170
+        Width = 285
         Height = 21
         ItemHeight = 13
         TabOrder = 3
@@ -138,7 +137,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkRegister: TTntCheckBox
         Left = 100
-        Top = 189
+        Top = 172
         Width = 181
         Height = 17
         Caption = 'This is a new account'
@@ -158,30 +157,74 @@ object frmConnDetails: TfrmConnDetails
           46
           25)
       end
-      object chkWinLogin: TTntCheckBox
-        Left = 100
-        Top = 206
-        Width = 181
-        Height = 17
-        Caption = 'Use Windows login information'
-        TabOrder = 8
-        OnClick = chkWinLoginClick
-      end
-      object chkKerberos: TTntCheckBox
-        Left = 100
-        Top = 224
-        Width = 181
-        Height = 17
-        Caption = 'Use Kerberos'
-        TabOrder = 7
-        OnClick = chkWinLoginClick
-      end
       object txtRealm: TTntEdit
         Left = 100
-        Top = 117
-        Width = 170
+        Top = 116
+        Width = 285
         Height = 21
         TabOrder = 4
+      end
+      object TntGroupBox1: TTntGroupBox
+        Left = 100
+        Top = 206
+        Width = 285
+        Height = 68
+        Caption = 'Kerberos Authentication'
+        TabOrder = 7
+        object chkKerberos: TTntCheckBox
+          Left = 16
+          Top = 20
+          Width = 181
+          Height = 17
+          Caption = 'Use Kerberos Authentication'
+          TabOrder = 0
+          OnClick = chkWinLoginClick
+        end
+        object chkWinLogin: TTntCheckBox
+          Left = 16
+          Top = 43
+          Width = 181
+          Height = 17
+          Caption = 'Use Windows login information'
+          TabOrder = 1
+          OnClick = chkWinLoginClick
+        end
+      end
+      object TntGroupBox2: TTntGroupBox
+        Left = 100
+        Top = 280
+        Width = 285
+        Height = 78
+        Caption = 'X.509 Certificate Authentication'
+        TabOrder = 8
+        object chkx509: TTntCheckBox
+          Left = 16
+          Top = 16
+          Width = 212
+          Height = 17
+          Caption = 'Use X.509 Certificate Authentication'
+          TabOrder = 0
+          OnClick = chkx509Click
+        end
+        object txtx509: TTntEdit
+          Left = 16
+          Top = 39
+          Width = 177
+          Height = 21
+          Enabled = False
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object btnx509browse: TTntButton
+          Left = 199
+          Top = 37
+          Width = 75
+          Height = 25
+          Caption = 'Select Cert...'
+          Enabled = False
+          TabOrder = 2
+          OnClick = btnx509browseClick
+        end
       end
     end
     object tbsConn: TTntTabSheet
@@ -418,7 +461,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 197
+        Top = 319
         Width = 390
         Height = 60
         Align = alBottom
@@ -464,7 +507,7 @@ object frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 289
+    Top = 411
     Width = 402
     Height = 33
     Align = alBottom
@@ -518,6 +561,6 @@ object frmConnDetails: TfrmConnDetails
     DefaultExt = 'pem'
     Filter = 'SSL Key Files|*.pem|All Files|*.*'
     Left = 8
-    Top = 214
+    Top = 206
   end
 end

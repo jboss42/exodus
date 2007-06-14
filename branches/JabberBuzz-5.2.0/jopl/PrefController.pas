@@ -165,6 +165,7 @@ type
         WinLogin: boolean;
         KerbAuth: boolean;
         SASLRealm: Widestring;
+        x509Auth: boolean;
 
         // Socket connection
         Host: Widestring;
@@ -225,7 +226,7 @@ type
         procedure ServerPrefsCallback(event: String; tag: TXMLTag);
 
         function getDynamicDefault(pkey: Widestring): Widestring;
-
+        function getProfilePrefsTag(profilename: Widestring): TXMLTag;
     public
         constructor Create(filename: Widestring);
         Destructor Destroy; override;
@@ -844,11 +845,13 @@ begin
     // TODO: save server prefs
 end;
 
+{---------------------------------------}
 function TPrefController.getRoot(rootName: WideString; var rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
 begin
     Result := _pref_file.getRoot(rootName, rootTag);
 end;
 
+{---------------------------------------}
 function TPrefController.setRoot(rootTag: TXMLTag; server_side: TPrefKind = pkClient): boolean;
 begin
     Result := _pref_file.setRoot(rootTag);
@@ -886,7 +889,7 @@ function TPrefController.getStringInProfile(profilename: Widestring; pkey: Wides
 var
     uf: TPrefFile;
     uv: Widestring;
-//    ds, bs: TPrefState;
+    t: TXMLTag;
 begin
     Result := '';
     // TODO: what SHOULD we do if we get a server-side pref request, and we
@@ -901,11 +904,15 @@ begin
 
         uf := getBestFile(uf, pkey);
     end;
-    uv := uf.getStringInProfile(profilename, pkey);
-    if (uv <> '') then
-        Result := uv
-    else
-        Result := getDynamicDefault(pkey);
+
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then begin
+        uv := uf.getStringInProfile(t, pkey);
+        if (uv <> '') then
+            Result := uv
+        else
+            Result := getDynamicDefault(pkey);
+    end;
 end;
 
 {---------------------------------------}
@@ -1075,6 +1082,7 @@ end;
 procedure TPrefController.setStringInProfile(profilename: Widestring; pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
+    t: TXMLTag;
 begin
     // TODO: see getString()
     if ((server_side <> pkServer) or (_server_file = nil)) then
@@ -1082,8 +1090,11 @@ begin
     else
         uf := _server_file;
 
-    uf.setStringInProfile(profilename, pkey, pvalue);
-    Save();
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then begin
+        uf.setStringInProfile(t, pkey, pvalue);
+    end;
+    SaveProfiles();
 end;
 
 {---------------------------------------}
@@ -1274,6 +1285,7 @@ end;
 procedure TPrefController.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
+    t: TXMLTag;
 begin
     // TODO: what SHOULD we do if we get a server-side pref request, and we
     // haven't gotten any server prefs yet?
@@ -1287,7 +1299,10 @@ begin
 
         uf := getBestFile(uf, pKey);
     end;
-    uf.fillStringlistInProfile(profilename, pkey, sl);
+
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then
+        uf.fillStringlistInProfile(t, pkey, sl);
 end;
 
 {---------------------------------------}
@@ -1302,6 +1317,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TnTToWide(ins: TTntStrings; outs: TWideStrings);
 var
     i : integer;
@@ -1312,6 +1328,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
 var
     tsl : TWideStringList;
@@ -1325,6 +1342,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TPrefController.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
 var
     tsl : TWideStringList;
@@ -1358,6 +1376,7 @@ end;
 procedure TPrefController.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
+    t: TXMLTag;
 begin
     // TODO: see getString()
     if ((server_side <> pkServer) or (_server_file = nil)) then
@@ -1365,8 +1384,10 @@ begin
     else
         uf := _server_file;
 
-    uf.setStringListInProfile(profilename, pkey, pvalue);
-    Save();
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then
+        uf.setStringListInProfile(t, pkey, pvalue);
+    SaveProfiles();
 end;
 
 {---------------------------------------}
@@ -1384,6 +1405,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TPrefController.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
 var
     tsl : TWideStringList;
@@ -1401,6 +1423,7 @@ end;
 {**
     Get/set the xml child of a pref.
 **}
+{---------------------------------------}
 function TPrefController.getXMLPref(pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
 var
     uf: TPrefFile;
@@ -1422,6 +1445,7 @@ end;
 function TPrefController.getXMLPrefInProfile(profilename: Widestring; pkey : WideString; server_side: TPrefKind = pkClient) : TXMLTag;
 var
     uf: TPrefFile;
+    t: TXMLTag;
 begin
     // TODO: see getString()
     if (server_side = pkDefault) then
@@ -1434,7 +1458,11 @@ begin
 
         uf := getBestFile(uf, pkey);
     end;
-    result := uf.getXMLPrefInProfile(profilename, pKey);
+
+    Result := nil;
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then
+        result := uf.getXMLPrefInProfile(t, pKey);
 end;
 
 procedure TPrefController.setXMLPref(value: TXMLTag; server_side: TPrefKind = pkClient);
@@ -1452,12 +1480,16 @@ end;
 procedure TPrefController.setXMLPrefInProfile(profilename: Widestring; value: TXMLTag; server_side: TPrefKind = pkClient);
 var
     uf: TPrefFile;
+    t: TXMLTag;
 begin
     if ((server_side <> pkServer) or (_server_file = nil)) then
         uf := _pref_file
     else
         uf := _server_file;
-    uf.setXMLPrefInProfile(profilename, value);
+
+    t := getProfilePrefsTag(profilename);
+    if (t <> nil) then
+        uf.setXMLPrefInProfile(t, value);
     Save();
 end;
 
@@ -1766,6 +1798,7 @@ begin
     Result := TJabberProfile.Create(name, self);
     Result.KerbAuth  := MainSession.Prefs.getBool('brand_profile_kerberos');
     Result.SASLRealm :=  MainSession.Prefs.getString('brand_profile_realm');
+    Result.x509Auth := MainSession.Prefs.getBool('brand_profile_x509auth');
     _profiles.AddObject(name, Result);
 end;
 
@@ -2058,6 +2091,17 @@ begin
     _pref_file.save();
 end;
 
+{---------------------------------------}
+function TPrefController.getProfilePrefsTag(profilename: Widestring): TXMLTag;
+var
+    i: integer;
+begin
+    Result := nil;
+    i := _profiles.IndexOf(profilename);
+    if (i >= 0) then begin
+        Result := TJabberProfile(_profiles.Objects[i]).ProfilePrefs;
+    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -2077,6 +2121,7 @@ begin
         SavePasswd := getBool('brand_profile_save_password');
         WinLogin   := getBool('brand_profile_winlogin');
         KerbAuth   := getBool('brand_profile_kerbauth');
+        x509Auth   := getBool('brand_profile_x509auth');
         SASLRealm  := getString('brand_profile_saslrealm');
         ConnectionType := getInt('brand_profile_conn_type');
         temp       := false;
@@ -2099,7 +2144,7 @@ begin
         NumPollKeys   := getInt('brand_profile_num_poll_keys');
 
         // Profile Prefs
-        _profilePrefs := nil;
+        _profilePrefs := TXMLTag.Create('prefs');
     end;
 
 end;
@@ -2136,7 +2181,7 @@ end;
 procedure TJabberProfile.Load(tag: TXMLTag);
 var
     tmps, tmps1: Widestring;
-    ptag: TXMLTag;
+    t, ptag: TXMLTag;
 begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
@@ -2169,6 +2214,12 @@ begin
         KerbAuth := SafeBool(tag.GetBasicText('kerblogin'))
     else
         KerbAuth := false;
+
+    ptag := tag.GetFirstTag('x509login');
+    if (ptag <> nil) then
+        x509Auth := SafeBool(Tag.GetBasicText('x509login'))
+    else
+        x509Auth := false;
 
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
@@ -2222,9 +2273,12 @@ begin
     NumPollKeys := StrToIntDef(tag.GetBasicText('num_poll_keys'), 256);
 
     // Profile Prefs
-    _profilePrefs := tag.GetFirstTag('prefs');
-    if (_profilePrefs <> nil) then
-        _profilePrefs := TXMLTag.Create(_profilePrefs);
+    t := tag.GetFirstTag('prefs');
+    if (t <> nil) then begin
+        _profilePrefs.Free();
+        _profilePrefs := TXMLTag.Create(t);
+    end;
+
 
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
@@ -2246,6 +2300,7 @@ begin
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
     node.AddBasicTag('winlogin', SafeBoolStr(WinLogin));
     node.AddBasicTag('kerblogin', SafeBoolStr(KerbAuth));
+    node.AddBasicTag('x509login', SafeBoolStr(x509Auth));
 
     ptag := node.AddTag('password');
     if (SavePasswd) then begin
@@ -2277,7 +2332,7 @@ begin
 
     // Profile Prefs
     if (_profilePrefs <> nil) then
-        node.AddTag(TXMLTag.Create(_profilePrefs)); // Coyp TXMLTag
+        node.AddTag(TXMLTag.Create(_profilePrefs)); // Copy TXMLTag
 
     // Avatar
     if (Avatar <> '') then begin
@@ -2350,6 +2405,7 @@ begin
     _jabberID.Free();
     _jabberID := TJabberID.Create(username, server, res);
 end;
+
 {---------------------------------------}
 function TJabberProfile.getDisplayUsername(): Widestring;
 begin
@@ -2357,11 +2413,13 @@ begin
     if (_jabberID <> nil) then
         Result := DisplayName.getDisplayNameCache().getDisplayName(_jabberID);
 end;
+
 {---------------------------------------}
 function TJabberProfile.getJabberID(): TJabberID;
 begin
     Result := _jabberID;
 end;
+
 
 initialization
 {$IFDEF DEFAULTS_FROM_FILE}

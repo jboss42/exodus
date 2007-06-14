@@ -1367,7 +1367,6 @@ begin
     // some gui related flags
     _appclosing := false;
 
-    _noMoveCheck := true;
     _noMoveCheck := false;
     _tray_notify := false;
     _reconnect_tries := 0;

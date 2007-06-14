@@ -42,7 +42,7 @@ type
         _prof     : TXMLTag;
         _bms      : TXMLTag;
         _ws       : TXMLTag;
-        
+
         _filename : Widestring;
         _ctrlHash : TWideStringList;
         _dirty    : boolean;
@@ -50,7 +50,6 @@ type
         _writable : TWritableState;
 
         procedure init();
-        function _getProfileTag(Profilename: Widestring): TXMLTag;
 
     public
         constructor Create(filename: Widestring); overload;
@@ -68,37 +67,46 @@ type
             @returns true if the given pref key exists
         }
         function hasPref(pkey: WideString): boolean;
-        
+
+        {
+            Does this file have the given preference in a profile?
+
+            @param profilename the profile to look into
+            @param pkey the preference we are looking for
+            @returns true if the given pref key exists
+        }
+        function hasPrefInProfile(profiletag: TXMLTag; pkey: WideString): boolean;
+
         // Generic get & sets
         function getString(pkey: Widestring): Widestring;
         function getState(pkey: Widestring): TPrefState;
         function getControl(pkey: Widestring): Widestring;
         function getPref(control: Widestring): Widestring;
         procedure setString(pkey: Widestring; val: Widestring);
-        function getStringInProfile(profilename: Widestring; pkey: Widestring): Widestring;
-        procedure setStringInProfile(profilename: Widestring; pkey: Widestring; val: Widestring);
+        function getStringInProfile(profiletag: TXMLTag; pkey: Widestring): Widestring;
+        procedure setStringInProfile(profiletag: TXMLTag; pkey: Widestring; val: Widestring);
 {$ifdef Exodus}
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings); overload;
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean; overload;
         function fillStringlist(pkey: Widestring; sl: TTntStrings): boolean; overload;
-        procedure setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings);overload;
-        procedure setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TTntStrings); overload;
-        function fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings): boolean; overload;
-        function fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TTntStrings): boolean; overload;
+        procedure setStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; pvalue: TWideStrings);overload;
+        procedure setStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; pvalue: TTntStrings); overload;
+        function fillStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; sl: TWideStrings): boolean; overload;
+        function fillStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; sl: TTntStrings): boolean; overload;
 {$else}
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean;
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);
-        function fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings): boolean;
-        procedure setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings);
+        function fillStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; sl: TWideStrings): boolean;
+        procedure setStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; pvalue: TWideStrings);
 {$endif}
         {**
             Get/set the xml child of a pref.
         **}
         function getXMLPref(pkey : WideString) : TXMLTag;
         procedure setXMLPref(value : TXMLTag);
-        function getXMLPrefInProfile(profilename: Widestring; pkey : WideString) : TXMLTag;
-        procedure setXMLPrefInProfile(profilename: Widestring; value : TXMLTag);
+        function getXMLPrefInProfile(profiletag: TXMLTag; pkey : WideString) : TXMLTag;
+        procedure setXMLPrefInProfile(profiletag: TXMLTag; value : TXMLTag);
 
         // Custom pres
         function findPresenceTag(pkey: Widestring): TXMLTag;
@@ -426,6 +434,19 @@ begin
     Result := (_pref.GetFirstTag(pkey) <> nil);
 end;
 
+{
+    Does this file have the given preference in a profile?
+
+    @param profiletag the profile prefs to look into
+    @param pkey the preference we are looking for
+    @returns true if the given pref key exists
+}
+function TPrefFile.hasPrefInProfile(profiletag: TXMLTag; pkey: WideString): boolean;
+begin
+    if (profileTag <> nil) then    
+        Result := (profileTag.GetFirstTag(pkey) <> nil)
+end;
+
 {---------------------------------------}
 function TPrefFile.getString(pkey: Widestring): Widestring;
 var
@@ -439,12 +460,10 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefFile.getStringInProfile(profilename: Widestring; pkey: Widestring): Widestring;
+function TPrefFile.getStringInProfile(profiletag: TXMLTag; pkey: Widestring): Widestring;
 var
     t: TXMLTag;
-    profileTag: TXMLTag;
 begin
-    profileTag := _getProfileTag(profilename);
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(pkey);
         if (t = nil) then
@@ -517,14 +536,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefFile.setStringInProfile(profilename: Widestring; pkey: Widestring; val: Widestring);
+procedure TPrefFile.setStringInProfile(profiletag: TXMLTag; pkey: Widestring; val: Widestring);
 var
     t: TXMLTag;
-    profileTag: TXMLTag;
 begin
     _dirty := true;
-
-    profileTag := _getProfileTag(profilename);
 
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(pkey);
@@ -560,17 +576,14 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefFile.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TWideStrings): boolean;
+function TPrefFile.fillStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; sl: TWideStrings): boolean;
 var
     t: TXMLTag;
     s: TXMLTagList;
     i: integer;
-    profileTag: TXMLTag;
 begin
     sl.Clear();
     Result := false;
-
-    profileTag := _getProfileTag(profilename);
 
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(pkey);
@@ -616,16 +629,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefFile.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TWideStrings);
+procedure TPrefFile.setStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; pvalue: TWideStrings);
 var
     i: integer;
     t: TXMLTag;
     s: TXMLTagList;
-    profileTag: TXMLTag;
 begin
     _dirty := true;
-
-    profileTag := _getProfileTag(profilename);
 
     if (profileTag <> nil) then begin
         // setup the stringlist in it's own parent..
@@ -671,17 +681,14 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefFile.fillStringlistInProfile(profilename: Widestring; pkey: Widestring; sl: TTntStrings): boolean;
+function TPrefFile.fillStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; sl: TTntStrings): boolean;
 var
     t: TXMLTag;
     s: TXMLTagList;
     i: integer;
-    profileTag: TXMLTag;
 begin
     sl.Clear();
     Result := false;
-
-    profileTag := _getProfileTag(profilename);
 
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(pkey);
@@ -727,16 +734,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefFile.setStringlistInProfile(profilename: Widestring; pkey: Widestring; pvalue: TTntStrings);
+procedure TPrefFile.setStringlistInProfile(profiletag: TXMLTag; pkey: Widestring; pvalue: TTntStrings);
 var
     i: integer;
     t: TXMLTag;
     s: TXMLTagList;
-    profileTag: TXMLTag;
 begin
     _dirty := true;
-
-    profileTag := _getProfileTag(profilename);
 
     if (profileTag <> nil) then begin
         // setup the stringlist in it's own parent..
@@ -896,12 +900,10 @@ begin
         Result := TXMLTag.Create(t);
 end;
 
-function TPrefFile.getXMLPrefInProfile(profilename: Widestring; pkey : WideString) : TXMLTag;
+function TPrefFile.getXMLPrefInProfile(profiletag: TXMLTag; pkey : WideString) : TXMLTag;
 var
     t: TXMLTag;
-    profileTag: TXMLTag;
 begin
-    profileTag := _getProfileTag(profilename);
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(pkey);
         if (t = nil) then
@@ -924,40 +926,16 @@ begin
     _dirty := true;
 end;
 
-procedure TPrefFile.setXMLPrefInProfile(profilename: Widestring; value : TXMLTag);
+procedure TPrefFile.setXMLPrefInProfile(profiletag: TXMLTag; value : TXMLTag);
 var
     t: TXMLTag;
-    profileTag: TXMLTag;
 begin
-    profileTag := _getProfileTag(profilename);
     if (profileTag <> nil) then begin
         t := profileTag.GetFirstTag(value.Name);
         if (t <> nil) then
             profileTag.removeTag(t);
         profileTag.addTag(TXMLTag.Create(value));
         _dirty := true;
-    end;
-end;
-
-function TPrefFile._getProfileTag(Profilename: Widestring): TXMLTag;
-var
-    taglist: TXMLTagList;
-    t: TXMLTag;
-    i: integer;
-begin
-    Result := nil;
-
-    taglist := _prof.ChildTags();
-    if (taglist <> nil) then begin
-        for i := 0 to taglist.Count - 1 do begin
-            t := taglist.Tags[i];
-            if (t.GetAttribute('name') = profilename) then begin
-                Result := t.GetFirstTag(PREF);
-                if (Result = nil) then
-                    Result := t.AddTag(PREF);
-                break;
-            end;
-        end;
     end;
 end;
 
