@@ -310,7 +310,8 @@ begin
     allTxt := rtSource.WideText;
     ExUtils.DebugMsg('rt: ' + tstr);
     while(currSelPos <= Length(allTxt)) do begin
-      if (allTxt[currSelPos] = #13) then begin
+      if ((allTxt[currSelPos] = #13) or // Carriage Return 
+          (allTxt[currSelPos] = #11)) then begin // Vertical Tab (Shift-Return)
         //emit a break;
         currTag.AddCData(currCData);
         currCData := '';
@@ -622,15 +623,33 @@ Begin
     currFont.Free();
 end;
 
+function ReplaceNBSP(instring: Widestring): Widestring;
+var
+    nbsppos: integer;
+begin
+    Result := instring;
+    nbsppos := POS(NBSP, Result);
+    while (nbsppos > 0) do begin
+        Result[nbsppos] := ' ';
+        nbsppos := POS(NBSP, Result);
+    end;
+end;
+
 procedure handleCData(rtDest: TExRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
+var
+    s: widestring;
 begin
     rtDest.SelStart := Length(rtDest.WideLines.Text);
     rtDest.SelLength := 0;
-    //check to see if we found an emoticon
+
+    // Clear out any non-breaking spaces as RTF cannot handle them
+    s := ReplaceNBSP(TXMLCData(node).Data);
+
+    // Check to see if we found an emoticon
     if (handleEmoticons) then
-        ReplaceEmoticons(rtDest, TXMLCData(node).Data)
+        ReplaceEmoticons(rtDest, s)
     else
-        rtDest.WideSelText := TXMLCData(node).Data;
+        rtDest.WideSelText := s;
 end;
 
 procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false; isMe : boolean = false);
@@ -696,7 +715,6 @@ var
     foundEmoticon: boolean;
     tstr : WideString;
 begin
-
     if (xhtmlTag = nil) then exit;
     tstr := xhtmlTag.Data;
     cleanedTag := cleanXIMTag(xhtmlTag, ignoreFontProps);

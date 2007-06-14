@@ -4137,9 +4137,9 @@ begin
         if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then begin
             // we are available again
             SetAutoAvailable()
-        //if we have auto-discnnect enabled and last input > disconnect time
-        //and we are auto-etended away (hmm, thats seems wrong, you can have
-        //auto-disconnect without auto-extaway, but must have auto-away
+        //if we have auto-disconnect enabled and last input > disconnect time
+        //and we are auto-extended away (hmm, thats seems wrong, you can have
+        //auto-disconnect without auto-extended away, but must have auto-away
         end
         else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
             // Disconnect us
