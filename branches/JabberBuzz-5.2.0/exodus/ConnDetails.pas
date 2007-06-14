@@ -63,11 +63,7 @@ type
     lblServerList: TTntLabel;
     Label13: TTntLabel;
     chkRegister: TTntCheckBox;
-    OpenDialog1: TOpenDialog;
     tbsSSL: TTntTabSheet;
-    TntLabel1: TTntLabel;
-    txtSSLCert: TTntEdit;
-    btnCertBrowse: TTntButton;
     optSSL: TTntRadioGroup;
     cboSocksType: TTntComboBox;
     Label6: TTntLabel;
@@ -101,7 +97,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
     procedure lblServerListClick(Sender: TObject);
-    procedure btnCertBrowseClick(Sender: TObject);
     procedure optSSLClick(Sender: TObject);
     procedure chkSRVClick(Sender: TObject);
     procedure txtUsernameExit(Sender: TObject);
@@ -375,8 +370,6 @@ begin
     // Enable/Disable Controls
     btnx509browse.Enabled := chkx509.Checked;
     txtx509.Enabled := chkx509.Checked;
-    txtSSLCert.Enabled := not chkx509.Checked;
-    btnCertBrowse.Enabled := not chkx509.Checked;
     optssl.Enabled := not chkx509.Checked;
     txtPassword.Enabled := not chkx509.Checked;
     txtRealm.Enabled := not chkx509.Checked;
@@ -385,7 +378,6 @@ begin
 
     if (chkx509.Checked) then begin
         optssl.ItemIndex := 0;
-        txtSSLCert.Text := '';
         chkRegister.Checked := false;
         chkSavePasswd.Checked := false;
         txtPassword.Text := '';
@@ -395,7 +387,6 @@ begin
         // Clear the x509 data
         _sslCertKey := '';
         txtx509.Text := '';
-        txtSSLCert.Text := '';
         chkCert(nil);
     end;
 end;
@@ -456,10 +447,6 @@ begin
         chkPolling.Checked := (ConnectionType = conn_http);
         txtPriority.Text := IntToStr(Priority);
 		txtx509.Text := getCertFriendlyName;
-        if (txtx509.Text <> '') then
-            txtSSLCert.Text := txtx509.Text
-        else
-            txtSSLCert.Text := SSL_Cert;
         chkSRV.Checked := srv;
     end;
 
@@ -474,21 +461,16 @@ begin
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
         ssl := optSSL.ItemIndex;
+
         if (chkPolling.Checked) then
             ConnectionType := conn_http
         else
             ConnectionType := conn_normal;
+
         Priority := StrToInt(txtPriority.Text);
-        if (txtSSLCert.Text = '') then begin
-            _sslCertKey := '';
-            SSL_Cert := _sslCertKey;
-        end
-        else begin
-            if (chkx509.Checked) then
-                SSL_Cert := _sslCertKey
-            else
-                SSL_Cert := txtSSLCert.Text;
-        end;
+
+        if (chkx509.Checked) then
+            SSL_Cert := _sslCertKey
     end;
 end;
 
@@ -624,13 +606,6 @@ begin
         q.Free();
     end;
     parser.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmConnDetails.btnCertBrowseClick(Sender: TObject);
-begin
-    if (OpenDialog1.Execute()) then
-        txtSSLCert.Text := OpenDialog1.FileName;
 end;
 
 {---------------------------------------}
@@ -789,7 +764,6 @@ begin
       if (m_pCertContext<>nil) then begin
         //Set the SSL cert textbox to the cert's friendly name
         txtx509.Text := reallyGetCertFriendlyName(m_pCertContext);
-        txtSSLCert.Text := txtx509.Text;
 
         // Save Certificate ID.
         CertGetCertificateContextProperty(m_pCertContext,

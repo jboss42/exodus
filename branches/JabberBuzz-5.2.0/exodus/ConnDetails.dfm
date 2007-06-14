@@ -280,33 +280,9 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
-      object TntLabel1: TTntLabel
-        Left = 1
-        Top = 9
-        Width = 73
-        Height = 13
-        Caption = 'SSL Certificate:'
-        Transparent = True
-      end
-      object txtSSLCert: TTntEdit
-        Left = 18
-        Top = 29
-        Width = 263
-        Height = 21
-        TabOrder = 0
-      end
-      object btnCertBrowse: TTntButton
-        Left = 285
-        Top = 28
-        Width = 72
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 1
-        OnClick = btnCertBrowseClick
-      end
       object optSSL: TTntRadioGroup
-        Left = 8
-        Top = 64
+        Left = 11
+        Top = 3
         Width = 345
         Height = 105
         Caption = 'SSL Modes'
@@ -314,7 +290,7 @@ object frmConnDetails: TfrmConnDetails
           'Encrypt the connection whenever possible.'
           'All connections must be encrypted.'
           'Use old SSL port method.')
-        TabOrder = 2
+        TabOrder = 0
       end
     end
     object tbsSocket: TTntTabSheet
@@ -556,11 +532,5 @@ object frmConnDetails: TfrmConnDetails
         OnClick = btnConnectClick
       end
     end
-  end
-  object OpenDialog1: TOpenDialog
-    DefaultExt = 'pem'
-    Filter = 'SSL Key Files|*.pem|All Files|*.*'
-    Left = 8
-    Top = 206
   end
 end
