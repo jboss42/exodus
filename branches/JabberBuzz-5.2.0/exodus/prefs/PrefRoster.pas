@@ -61,9 +61,12 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  Unicode, Session;
+    JabberUtils, ExUtils,  Unicode, Session,
+    PrefFile, PrefController;
 
 procedure TfrmPrefRoster.LoadPrefs();
+var
+    s: TPrefState;
 begin
     inherited;
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
@@ -78,10 +81,17 @@ begin
 
     Self.cboInlineStatus.Enabled := Self.chkInlineStatus.Checked;
     Self.cboInlineStatus.Visible := Self.chkInlineStatus.Visible;
-    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
-    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
-    Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
-    Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible;
+    s := PrefController.getPrefState('displayname_profile_map');
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
+                                    (s <> psInvisible);
 
     if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then
         chkHideBlocked.Enabled := false;
@@ -109,10 +119,17 @@ begin
 end;
 
 procedure TfrmPrefRoster.chkUseProfileDNClick(Sender: TObject);
+var
+    s: TPrefState;
 begin
   inherited;
-    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
-    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked;
+    s := PrefController.getPrefState('displayname_profile_map');
+    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
+    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
+                                    (s <> psReadOnly) and
+                                    (s <> psInvisible);
 end;
 
 end.

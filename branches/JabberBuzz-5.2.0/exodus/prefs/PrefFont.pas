@@ -143,7 +143,7 @@ begin
     _lastAllowSize := Pos('font-size;', tstr) = 0;
     _lastAllowColor := Pos('color;', tstr) = 0;
 
-    inherited; //ingherited will set rtenabled, which will end up using _last* vars
+    inherited; //inherited will set rtenabled, which will end up using _last* vars
 
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
@@ -243,14 +243,14 @@ begin
         s := PrefController.getPrefState('richtext_ignored_font_styles');
 
         chkAllowFontFamily.visible := (s <> psInvisible);
-        chkAllowFontFamily.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontFamily.enabled := (s <> psInvisible) and (s <> psReadOnly);
         chkAllowFontSize.visible := (s <> psInvisible);
-        chkAllowFontSize.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontSize.enabled := (s <> psInvisible) and (s <> psReadOnly);
         chkAllowFontColor.visible := (s <> psInvisible);
-        chkAllowFontColor.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontColor.enabled := (s <> psInvisible) and (s <> psReadOnly);
         gbAllowedFontStyles.visible := (s <> psInvisible);
-        gbAllowedFontStyles.enabled := (s <> psInvisible) or (s <> psReadOnly);
-        
+        gbAllowedFontStyles.enabled := (s <> psInvisible) and (s <> psReadOnly);
+
         chkAllowFontFamily.Checked := _lastAllowFont;
         chkAllowFontSize.Checked := _lastAllowSize;
         chkAllowFontColor.Checked := _lastAllowColor;

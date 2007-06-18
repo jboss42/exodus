@@ -63,6 +63,8 @@ uses
 {---------------------------------------}
 procedure TfrmPrefLayouts.LoadPrefs();
 begin
+    inherited;
+    
     // Get Branded images
     MainSession.Prefs.getImage('undocked', imgView1, 'layouts');
     MainSession.Prefs.getImage('docked_roster', imgView2, 'layouts');

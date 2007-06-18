@@ -61,11 +61,13 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    JabberUtils, ExUtils,  FileCtrl, Session, Unicode;
+    JabberUtils, ExUtils,  FileCtrl, Session, Unicode,
+    PrefFile, PrefController;
 
 procedure TfrmPrefMsg.LoadPrefs();
 var
   date_time_formats: TWideStringList;
+  s: TPrefState;
 begin
     inherited;
     date_time_formats := TWideStringList.Create;
@@ -78,13 +80,16 @@ begin
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = true) then begin
        chkQueueDNDChats.Visible  := false;
        chkQueueOffline.Visible := false;
-       chkQueueNotAvail.Visible := true;
+       s := PrefController.getPrefState('queue_not_avail');
+       chkQueueNotAvail.Visible := (s <> psInvisible);
        chkQueueNotAvail.Top :=  chkQueueDNDChats.Top;
        chkQueueNotAvail.Left :=  chkQueueDNDChats.Left;
     end
     else begin
-       chkQueueDNDChats.Visible  := true;
-       chkQueueOffline.Visible := true;
+       s := PrefController.getPrefState('queue_dnd_chats');
+       chkQueueDNDChats.Visible  := (s <> psInvisible);
+       s := PrefController.getPrefState('queue_offline');
+       chkQueueOffline.Visible := (s <> psInvisible);
        chkQueueNotAvail.Visible := false;
     end;
 

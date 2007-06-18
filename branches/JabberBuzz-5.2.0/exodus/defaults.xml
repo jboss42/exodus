@@ -24,11 +24,17 @@
     <aa_reduce_pri value="1" control="chkAAReducePri"/>
     <auto_xa value="1" control="chkAutoXA"/>
     <auto_disconnect value="0" control="chkAutoDisconnect"/>
-	<away_time value="5" control="txtAwayTime"/>
-	<xa_time value="30" control="txtXATime"/>
-    <disconnect_time value="180" control="txtDisconnectTime"/>        
-    <away_status control="txtAway">
-      <control name="lblAwayStatus"/>
+	<away_time value="5" control="txtAwayTime">
+	  <control name="lblAwayTime"/>
+	</away_time>
+	<xa_time value="30" control="txtXATime">
+	  <control name="lblXATime"/>
+	</xa_time>
+	<disconnect_time value="180" control="txtDisconnectTime">
+      <control name="lblDisconnectTime"/>
+	</disconnect_time>
+	<away_status control="txtAway">
+	  <control name="lblAwayStatus"/>
     </away_status>
     <xa_status control="txtXA">
       <control name="lblXAStatus"/>
@@ -92,7 +98,9 @@
 	  <control name="lblMem2"/>
     </chat_memory>
     <esc_close value="1" control="chkEscClose"/>
-    <close_hotkey value="None" control="txtCloseHotkey"/>
+	<close_hotkey value="None" control="txtCloseHotkey">
+    	<control name="lblClose"/>
+	</close_hotkey>
     
     <!-- fonts and colors -->
     <font_name value="Arial"/>
@@ -123,7 +131,7 @@
     <!-- Layouts -->
     <expanded value="1"/>
     <dock_locked value="0"/>
-    <stacked_tabs value="1"/>
+    <stacked_tabs value="1" control="chkStacked"/>
 
     <event_width value="400"/>
     <roster_width value="215"/>
@@ -135,7 +143,9 @@
 
     <!-- display name -->
     <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
-    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap"/>
+	<displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap">
+      <control name="lblDNProfileMap"/>
+	</displayname_profile_map>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
@@ -240,7 +250,8 @@
     
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath">
-      <control name="lblXferPath"/>
+	  <control name="lblXferPath"/>
+	  <control name="btnTransferBrowse"/>
     </xfer_path>        
     <xfer_port value="5280" control="txtXferPort">
       <control name="lblXferPort"/>

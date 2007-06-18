@@ -81,7 +81,7 @@ uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils,
-    jabber1;
+    jabber1, PrefFile;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -137,6 +137,7 @@ var
     tmps: Widestring;
     reg: TRegistry;
     temptag: TXmlTag;
+    s: TPrefState;
 begin
     // System Prefs
     _dirty_locale := '';
@@ -218,7 +219,11 @@ begin
             Self.txtDefaultNick.Visible := false;
         end;
         //Auto login should not be enabled if password is not saved
-        chkAutoLogin.Enabled := MainSession.Profile.SavePasswd and MainSession.Authenticated;
+        s := PrefController.getPrefState('autologin');
+        chkAutoLogin.Enabled := (s <> psReadOnly) and
+                                (s <> psInvisible) and
+                                MainSession.Profile.SavePasswd and
+                                MainSession.Authenticated;
 
         chkDebug.Visible := getBool('brand_show_debug_in_menu');        
     end;

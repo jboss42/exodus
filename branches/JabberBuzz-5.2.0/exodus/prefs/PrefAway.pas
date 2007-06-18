@@ -60,7 +60,7 @@ var
 implementation
 {$R *.dfm}
 uses
-    Session;
+    Session, PrefFile, PrefController;
 
 procedure TfrmPrefAway.LoadPrefs();
 begin
@@ -82,6 +82,7 @@ end;
 procedure TfrmPrefAway.DoEnables();
 var
     aro, xro, e, xa, dis: boolean;
+    s: TPrefState;
 begin
     e := chkAutoAway.Checked;
     if (e) then begin
@@ -96,18 +97,27 @@ begin
     aro := txtAway.ReadOnly;
     xro := txtXA.ReadOnly;
 
-    chkAAReducePri.Enabled := e;
-    chkAutoXA.Enabled := e;
-    chkAutoDisconnect.Enabled := e;
+    s := PrefController.getPrefState('aa_reduce_pri');
+    chkAAReducePri.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('auto_xa');
+    chkAutoXA.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('auto_disconnect');
+    chkAutoDisconnect.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
 
-    txtAwayTime.Enabled := e;
-    lblAwayTime.Enabled := e;
-    lblAwayStatus.Enabled := e;
-    txtXATime.Enabled := xa;
-    lblXATime.Enabled := xa;
-    lblXAStatus.Enabled := xa;
-    txtDisconnectTime.Enabled := dis;
-    lblDisconnectTime.Enabled := dis;
+    s := PrefController.getPrefState('away_time');
+    txtAwayTime.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
+    lblAwayTime.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('away_status');
+    lblAwayStatus.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('xa_time');
+    txtXATime.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
+    lblXATime.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('xa_status');
+    lblXAStatus.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
+    s := PrefController.getPrefState('disconnect_time');
+    txtDisconnectTime.Enabled := dis and (s <> psReadOnly) and (s <> psInvisible);
+    lblDisconnectTime.Enabled := dis and (s <> psReadOnly) and (s <> psInvisible);
+
     txtAway.Enabled := e and (not aro);
     txtXA.Enabled := xa and (not xro);
 end;
