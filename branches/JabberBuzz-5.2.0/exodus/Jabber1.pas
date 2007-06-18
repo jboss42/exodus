@@ -958,7 +958,7 @@ uses
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser, DisplayName,
-    ComServ;
+    ComServ, PrefFile;
 
 {$R *.DFM}
 
@@ -1257,6 +1257,7 @@ var
     i : integer;
     mi: TMenuItem;
     s: TXMLTag;
+    prefstate: TPrefState;
 begin
     Randomize();
     _currDockState := dsUninitialized;
@@ -1350,6 +1351,10 @@ begin
         mnuOptions_Plugins.Visible := getBool('brand_plugs');
         mnuWindows_View_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
     end;
+
+    prefstate := PrefController.getPrefState('auto_start');
+    mnuOptions_EnableStartupWithWindows.Enabled := (prefstate <> psReadOnly);
+    mnuOptions_EnableStartupWithWindows.Visible := (prefstate <> psInvisible);
 
     // Make sure presence menus have unified captions
     setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
