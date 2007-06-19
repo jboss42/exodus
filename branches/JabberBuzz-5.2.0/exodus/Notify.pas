@@ -307,8 +307,12 @@ begin
         ForceForegroundWindow(w.Handle);
     end;
 }
+
+    // NOTE:    sound keys in registry MUST be no more then 31 chars
+    //          due to Windows limitations.  Thus the first param to
+    //          PlaySound() is hard coded to exodus_
     if (MainSession.prefs.getBool('notify_sounds')) then
-        PlaySound(pchar(PrefController.getAppInfo().ID + '_' + sound_name), 0,
+        PlaySound(pchar('exodus_' + sound_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 end;
 
