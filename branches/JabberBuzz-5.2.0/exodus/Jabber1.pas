@@ -3049,6 +3049,8 @@ begin
     else if (TObject(Node.Data) is TJabberRosteritem) then begin
         ri := TJabberRosterItem(Node.Data);
         if (not ri.IsContact) then exit;
+        if (not ri.IsNative) then exit;
+        
         j := ri.jid;
 
         // find out how many files we're accepting

@@ -673,6 +673,8 @@ begin
     if (rItem <> nil) then begin
         mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
         C1.Enabled := ritem.IsNative;
+        if (not ritem.IsNative) then
+            DragAcceptFiles(Handle, false);
     end;
 
     updateDisplayName();
@@ -1370,10 +1372,14 @@ begin
     ritem := MainSession.Roster.Find(_jid.jid);
     inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
 
-    if (inRoster) and (p <> nil) then
-        mnuSendFile.Enabled := true
-    else
+    if (inRoster) and (p <> nil) and (ritem.IsNative) then begin
+        mnuSendFile.Enabled := true;
+        DragAcceptFiles(Handle, true);
+    end
+    else begin
         mnuSendFile.Enabled := false;
+        DragAcceptFiles(Handle, false);
+    end;
 
     popContact.popup(cp.x, cp.y);
 end;
@@ -1454,21 +1460,26 @@ var
     i,
     nCount     : integer;
     acFileName : array [0..cnMaxFileNameLen] of char;
+    ritem: TJabberRosterItem;
 begin
-    // find out how many files we're accepting
-    if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
+    ritem := MainSession.roster.Find(jid);
 
-    nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+    if (ritem.IsNative) then begin
+        // find out how many files we're accepting
+        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
 
-    // query Windows one at a time for the file name
-    for i := 0 to nCount-1 do begin
-        DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
-        // do your thing with the acFileName
-        FileSend(_jid.full, acFileName);
+        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+
+        // query Windows one at a time for the file name
+        for i := 0 to nCount-1 do begin
+            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
+            // do your thing with the acFileName
+            FileSend(_jid.full, acFileName);
+        end;
+
+        // let Windows know that you're done
+        DragFinish( msg.Drop );
     end;
-
-    // let Windows know that you're done
-    DragFinish( msg.Drop );
 end;
 
 {---------------------------------------}
