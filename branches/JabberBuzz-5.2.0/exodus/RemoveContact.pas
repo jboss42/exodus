@@ -53,7 +53,7 @@ var
   frmRemove: TfrmRemove;
 
 const
-    sRemoveGrpLabel = 'Remove this contact from the %s group.';
+    sRemoveGrpLabel = 'Delete this contact from the %s group.';
 
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
 procedure RemoveRosterItems(items: TWideStringList; grp: WideString = '');

@@ -4,7 +4,7 @@ object frmRemove: TfrmRemove
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 2
-  Caption = 'Remove Contact'
+  Caption = 'Delete Contact'
   ClientHeight = 165
   ClientWidth = 371
   Color = clBtnFace
@@ -60,7 +60,7 @@ object frmRemove: TfrmRemove
     Top = 23
     Width = 355
     Height = 17
-    Caption = 'Remove this contact from this group'
+    Caption = 'Delete this contact from this group'
     TabOrder = 1
     OnClick = optRemoveClick
   end
@@ -69,7 +69,7 @@ object frmRemove: TfrmRemove
     Top = 47
     Width = 233
     Height = 17
-    Caption = 'Remove this contact from my contact list.'
+    Caption = 'Delete this contact from my contact list.'
     Checked = True
     TabOrder = 2
     TabStop = True
@@ -80,7 +80,7 @@ object frmRemove: TfrmRemove
     Top = 71
     Width = 217
     Height = 17
-    Caption = 'Remove this person from my contact list.'
+    Caption = 'Delete this person from my contact list.'
     Checked = True
     State = cbChecked
     TabOrder = 3
@@ -90,7 +90,7 @@ object frmRemove: TfrmRemove
     Top = 95
     Width = 289
     Height = 17
-    Caption = 'Force this person to remove me from their contact list'
+    Caption = 'Force this person to delete me from their contact list'
     Checked = True
     State = cbChecked
     TabOrder = 4
