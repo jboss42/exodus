@@ -285,8 +285,10 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.chkSavePasswdClick(Sender: TObject);
 begin
-      if (not chkSavePasswd.Checked) then
+      if (not chkSavePasswd.Checked) then begin
           txtPassword.Text := '';
+          MainSession.Prefs.setBool('autologin', false);
+      end;
 end;
 
 procedure TfrmConnDetails.chkSocksAuthClick(Sender: TObject);
