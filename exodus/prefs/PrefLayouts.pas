@@ -28,11 +28,10 @@ type
   TfrmPrefLayouts = class(TfrmPrefPanel)
     lblPreview: TTntLabel;
     cboView: TTntComboBox;
-    imgView2: TImage;
-    imgView3: TImage;
     imgView1: TImage;
     lblViewHelp: TTntLabel;
     chkStacked: TTntCheckBox;
+    imgView2: TImage;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }
@@ -64,26 +63,23 @@ uses
 {---------------------------------------}
 procedure TfrmPrefLayouts.LoadPrefs();
 begin
+    inherited;
+    
     // Get Branded images
     MainSession.Prefs.getImage('undocked', imgView1, 'layouts');
-    MainSession.Prefs.getImage('docked_with_roster_visible', imgView2, 'layouts');
-    MainSession.Prefs.getImage('docked_without_roster_visible', imgView3, 'layouts');
-
+    MainSession.Prefs.getImage('docked_roster', imgView2, 'layouts');
     // Left Align the images
     imgView1.Left := lblPreview.Left;
     imgView2.Left := lblPreview.Left;
-    imgView3.Left := lblPreview.Left;
 
     with MainSession.Prefs do begin
         // View management stuff
-        if (getBool('expanded')) then begin
-            if (getBool('roster_messenger')) then
-                cboView.ItemIndex := 2
-            else
-                cboView.ItemIndex := 1;
-        end
+        if (getBool('expanded')) then
+           cboView.ItemIndex := 1
         else
-            cboView.ItemIndex := 0;
+           cboView.ItemIndex := 0;
+
+
         cboViewChange(Self);
         chkStacked.Checked := getBool('stacked_tabs');
     end;
@@ -97,15 +93,9 @@ begin
         //
         if (cboView.ItemIndex = 0) then begin
             setBool('expanded', false);
-            setBool('roster_messenger', false);
         end
         else if (cboView.ItemIndex = 1) then begin
             setBool('expanded', true);
-            setBool('roster_messenger', false);
-        end
-        else if (cboView.ItemIndex = 2) then begin
-            setBool('expanded', true);
-            setBool('roster_messenger', true);
         end;
 
         setBool('stacked_tabs', chkStacked.Checked);
@@ -121,12 +111,10 @@ begin
     idx := cboView.ItemIndex;
     imgView1.Visible := (idx = 0);
     imgView2.Visible := (idx = 1);
-    imgView3.Visible := (idx = 2);
 
     case idx of
     0: lblViewHelp.Caption := _(sViewSimple);
     1: lblViewHelp.Caption := _(sViewShare);
-    2: lblViewHelp.Caption := _(sViewExpanded);
     end;
     
 end;

@@ -3,8 +3,8 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 705
-  ClientWidth = 317
+  ClientHeight = 651
+  ClientWidth = 272
   Color = clBtnFace
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -29,24 +29,10 @@ object frmExodus: TfrmExodus
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object splitRoster: TSplitter
-    Left = 83
-    Top = 31
-    Width = 5
-    Height = 674
-    AutoSnap = False
-    Beveled = True
-    MinSize = 1
-    ResizeStyle = rsUpdate
-    OnMoved = splitRosterMoved
-    ExplicitLeft = 80
-    ExplicitTop = 33
-    ExplicitHeight = 394
-  end
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 317
+    Width = 272
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -55,7 +41,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 313
+        Width = 268
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -72,12 +58,12 @@ object frmExodus: TfrmExodus
       Images = ImageList2
       TabOrder = 0
       Transparent = True
+      Wrapable = False
       object btnConnect: TToolButton
         Left = 0
         Top = 0
         Hint = 'Connect'
         Caption = 'Connect'
-        Enabled = False
         ImageIndex = 80
         OnClick = mnuFile_ConnectClick
       end
@@ -86,6 +72,7 @@ object frmExodus: TfrmExodus
         Top = 0
         Hint = 'Disconnect'
         Caption = 'Disconnect'
+        Enabled = False
         ImageIndex = 79
         Visible = False
         OnClick = mnuDisconnectClick
@@ -136,14 +123,16 @@ object frmExodus: TfrmExodus
         AutoSize = True
         Caption = 'Find'
         ImageIndex = 65
-        OnClick = mnuSearchClick
+        OnClick = btnFindClick
       end
       object btnSendFile: TToolButton
         Left = 146
         Top = 0
         Hint = 'Send File'
         Caption = 'Send File'
+        Enabled = False
         ImageIndex = 8
+        OnClick = mnuPeople_Contacts_SendFileClick
       end
       object btnBrowser: TToolButton
         Left = 169
@@ -172,36 +161,44 @@ object frmExodus: TfrmExodus
       end
     end
   end
-  object pnlRoster: TPanel
+  object Panel1: TPanel
     Left = 0
     Top = 31
-    Width = 83
-    Height = 674
-    Align = alLeft
-    AutoSize = True
-    BevelOuter = bvNone
-    BorderWidth = 1
-    UseDockManager = False
-    TabOrder = 1
-    Visible = False
-    OnDockDrop = FormDockDrop
-  end
-  object pnlDock: TPanel
-    Left = 88
-    Top = 31
-    Width = 229
-    Height = 674
+    Width = 272
+    Height = 620
     Align = alClient
-    AutoSize = True
-    BevelOuter = bvNone
-    Caption = 'pnlDock'
-    TabOrder = 2
-    Visible = False
+    TabOrder = 1
+    ExplicitHeight = 600
+    object splitRoster: TSplitter
+      Left = 170
+      Top = 1
+      Width = 5
+      Height = 618
+      AutoSnap = False
+      Beveled = True
+      MinSize = 1
+      ResizeStyle = rsUpdate
+      OnMoved = splitRosterMoved
+      ExplicitHeight = 478
+    end
+    object pnlRoster: TPanel
+      Left = 1
+      Top = 1
+      Width = 169
+      Height = 618
+      Align = alLeft
+      BevelOuter = bvNone
+      BorderWidth = 1
+      UseDockManager = False
+      TabOrder = 0
+      OnDockDrop = FormDockDrop
+      ExplicitHeight = 598
+    end
     object Tabs: TTntPageControl
-      Left = 0
-      Top = 0
-      Width = 229
-      Height = 674
+      Left = 175
+      Top = 1
+      Width = 96
+      Height = 618
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -218,7 +215,7 @@ object frmExodus: TfrmExodus
       ParentFont = False
       PopupMenu = popTabs
       RaggedRight = True
-      TabOrder = 0
+      TabOrder = 1
       OnChange = TabsChange
       OnContextPopup = TabsContextPopup
       OnDockDrop = TabsDockDrop
@@ -226,6 +223,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 598
     end
   end
   object MainMenu1: TTntMainMenu
@@ -336,7 +334,7 @@ object frmExodus: TfrmExodus
             object mnuSearch: TTntMenuItem
               Caption = '&Search for a Contact'
               ShortCut = 16467
-              OnClick = mnuSearchClick
+              OnClick = btnFindClick
             end
             object RemovePerson1: TTntMenuItem
               Caption = '&Remove a Contact'
@@ -514,6 +512,7 @@ object frmExodus: TfrmExodus
           Tag = 1
           Caption = 'Free To Chat'
           ImageIndex = 4
+          OnClick = presDNDClick
         end
         object mnuFile_MyStatus_Away: TTntMenuItem
           Tag = 2
@@ -525,6 +524,7 @@ object frmExodus: TfrmExodus
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
+          OnClick = presDNDClick
         end
         object mnuFile_MyStatus_Donotdisturb: TTntMenuItem
           Tag = 4
@@ -574,7 +574,7 @@ object frmExodus: TfrmExodus
       Enabled = False
       object mnuPeople_Search: TTntMenuItem
         Caption = '&Search...'
-        OnClick = mnuSearchClick
+        OnClick = btnFindClick
       end
       object mnuPeople_Contacts: TTntMenuItem
         Caption = '&Contacts'
@@ -604,6 +604,8 @@ object frmExodus: TfrmExodus
         end
         object mnuPeople_Contacts_SendFile: TTntMenuItem
           Caption = '&Send File...'
+          Enabled = False
+          OnClick = mnuPeople_Contacts_SendFileClick
         end
         object mnuPeople_Contacts_SendMessage: TTntMenuItem
           Caption = 'Send &Message...'
@@ -662,6 +664,7 @@ object frmExodus: TfrmExodus
       end
       object mnuPeople_Conference: TTntMenuItem
         Caption = 'C&onference'
+        OnClick = mnuPeople_ConferenceClick
         object mnuPeople_Conference_InviteContacttoConference: TTntMenuItem
           Caption = '&Invite to Conference Room...'
           OnClick = mnuPeople_Conference_InviteContacttoConferenceClick
@@ -671,7 +674,7 @@ object frmExodus: TfrmExodus
           OnClick = mnuConferenceClick
         end
         object mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem
-          Caption = '&Search for Conferenece Room...'
+          Caption = '&Search for Conference Room...'
           OnClick = mnuSearchClick
         end
         object mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem
@@ -708,7 +711,7 @@ object frmExodus: TfrmExodus
       Caption = '&Options'
       OnClick = OptionsClick
       object mnuOptions_Password: TTntMenuItem
-        Caption = '&Password'
+        Caption = 'P&assword'
         Enabled = False
         object mnuOptions_Password_ChangePassword: TTntMenuItem
           Caption = '&Change Password...'
@@ -752,15 +755,19 @@ object frmExodus: TfrmExodus
       object mnuOptions_Notifications: TTntMenuItem
         Caption = '&Notifications'
         object mnuOptions_Notifications_NewMessage: TTntMenuItem
-          Caption = '&New Message'
+          Caption = 'Received New &Message'
           OnClick = mnuOptions_Notifications_NewMessageClick
         end
+        object mnuOptions_Notifications_NewConversation: TTntMenuItem
+          Caption = 'New &Conversation'
+          OnClick = mnuOptions_Notifications_NewConversationClick
+        end
         object mnuOptions_Notifications_ContactOnline: TTntMenuItem
-          Caption = 'Contact &Online'
+          Caption = 'Contact Comes &Online'
           OnClick = mnuOptions_Notifications_ContactOnlineClick
         end
         object mnuOptions_Notifications_ContactOffline: TTntMenuItem
-          Caption = 'Contact O&ffline'
+          Caption = 'Contact Goes O&ffline'
           OnClick = mnuOptions_Notifications_ContactOfflineClick
         end
       end
@@ -796,7 +803,7 @@ object frmExodus: TfrmExodus
           OnClick = mnuChatToolbarClick
         end
         object mnuWindows_View_ShowInstantMessages1: TTntMenuItem
-          Caption = 'Show Instant &Messages'
+          Caption = 'Show &Message Queue'
           OnClick = ShowEventsWindow1Click
         end
         object mnuWindows_View_ShowDebugXML: TTntMenuItem

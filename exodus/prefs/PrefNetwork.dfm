@@ -11,7 +11,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 343
-    Caption = 'Connection Options'
+    Caption = 'Network'
     TabOrder = 2
     ExplicitWidth = 343
   end

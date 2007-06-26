@@ -3,35 +3,37 @@ inherited frmBrowse: TfrmBrowse
   Top = 551
   Caption = 'Jabber Browser'
   ClientHeight = 391
-  ClientWidth = 422
+  ClientWidth = 442
+  DefaultMonitor = dmMainForm
   OnClose = FormClose
   OnDestroy = FormDestroy
   OnDragOver = FormDragOver
   OnResize = ResizeAddressBar
-  ExplicitWidth = 430
+  ExplicitWidth = 450
   ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlDockTop: TPanel
-    Width = 422
+    Width = 442
     TabOrder = 1
     ExplicitWidth = 422
     inherited tbDockBar: TToolBar
-      Left = 373
+      Left = 393
       ExplicitLeft = 373
     end
     object pnlTop: TTntPanel
       Left = 0
       Top = 0
-      Width = 370
+      Width = 390
       Height = 32
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 370
       object CoolBar1: TCoolBar
         Left = 0
         Top = 0
-        Width = 370
+        Width = 390
         Height = 32
         Align = alClient
         BandMaximize = bmNone
@@ -41,15 +43,16 @@ inherited frmBrowse: TfrmBrowse
             HorizontalOnly = True
             ImageIndex = -1
             MinHeight = 22
-            Width = 370
+            Width = 390
           end>
         EdgeBorders = []
         EdgeInner = esNone
         EdgeOuter = esNone
+        ExplicitWidth = 370
         object tlbToolBar: TToolBar
           Left = 9
           Top = 0
-          Width = 357
+          Width = 377
           Height = 22
           AutoSize = True
           DisabledImages = DisToolbar
@@ -154,16 +157,17 @@ inherited frmBrowse: TfrmBrowse
   object Panel3: TTntPanel
     Left = 0
     Top = 94
-    Width = 422
+    Width = 442
     Height = 277
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 0
+    ExplicitWidth = 422
     object vwBrowse: TTntListView
       Left = 73
       Top = 3
-      Width = 346
+      Width = 366
       Height = 271
       Align = alClient
       Columns = <
@@ -197,6 +201,7 @@ inherited frmBrowse: TfrmBrowse
       OnColumnClick = vwBrowseColumnClick
       OnData = vwBrowseData
       OnResize = vwBrowseResize
+      ExplicitWidth = 346
     end
     object pnlInfo: TTntPanel
       Left = 3
@@ -273,7 +278,7 @@ inherited frmBrowse: TfrmBrowse
   object StatBar: TStatusBar
     Left = 0
     Top = 371
-    Width = 422
+    Width = 442
     Height = 20
     Panels = <
       item
@@ -287,18 +292,20 @@ inherited frmBrowse: TfrmBrowse
       item
         Width = 50
       end>
+    ExplicitWidth = 450
   end
   object pnlJid: TPanel
     Left = 0
     Top = 32
-    Width = 422
+    Width = 442
     Height = 31
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
+    ExplicitWidth = 422
     DesignSize = (
-      422
+      442
       31)
     object btnGo: TSpeedButton
       Left = 367
@@ -361,14 +368,15 @@ inherited frmBrowse: TfrmBrowse
   object pnlNode: TPanel
     Left = 0
     Top = 63
-    Width = 422
+    Width = 442
     Height = 31
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 3
+    ExplicitWidth = 422
     DesignSize = (
-      422
+      442
       31)
     object pnlNodeID: TTntPanel
       Left = 1

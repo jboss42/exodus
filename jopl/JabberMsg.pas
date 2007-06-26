@@ -68,7 +68,8 @@ type
         procedure SetThread(const Value: WideString);
         procedure SetMsgType(const Value: WideString);
 
-        function GetTag: TXMLTag;
+        function GetTagProp: TXMLTag;
+
     protected
     public
         // I use cBody to distinguish between the create's body varialbe and the classes.
@@ -77,9 +78,12 @@ type
         constructor Create(cToJID, cMsgType, cBody, cSubject : WideString; priority: PriorityType = None); overload;
         destructor Destroy; override;
 
+        function GetTag(duplicateTag:boolean = true): TXMLTag;
+
+
         // Use of this method optional for JEP-33 support
         procedure AddRecipient(jid: WideString; addrType: WideString = 'to');        
-        property Tag: TXMLTag read GetTag;
+        property Tag: TXMLTag read GetTagProp;
 
         property ToJID : WideString read _toJID write _toJID;
         property FromJID: WideString read _fromJID write _fromJID;
@@ -262,63 +266,67 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberMessage.GetTag: TXMLTag;
+function TJabberMessage.GetTagProp: TXMLTag;
+begin
+    Result := GetTag(false);
+end;
+
+{---------------------------------------}
+function TJabberMessage.GetTag(duplicateTag:boolean = true): TXMLTag;
 var
     raw_body: WideString;
     mtag: TXMLTag;
 begin
-    // I made the _tag form allocate the same way, so that we can always free
-    // or not. /hildjj
-    if (_tag <> nil) then begin
-        result := TXMLTag.Create(_tag);
-        exit;
+    if (_tag = nil) then begin
+        // build a tag based on this
+        _tag := TXMLTag.Create;
+
+        with _tag do begin
+            Name := 'message';
+            setAttribute('to', _toJID);
+            // prevent sending from=''
+            if (Length(_fromJID) > 0) then
+                setattribute('from', _fromJID);
+            setAttribute('id', _id);
+            if (_msg_type <> 'normal') then
+                setAttribute('type', _msg_type);
+            ClearTags;
+            // next statement for JEP 33 compliance
+            if (_addresses.Count >0) then
+                AddTag(_addresses.GetTag());
+            if _thread <> '' then
+                AddBasicTag('thread', _thread);
+            if _subject <> '' then
+                AddBasicTag('subject', _subject);
+
+            raw_body := _body;
+            if _action then raw_body := '/me ' + raw_body;
+
+            AddBasicTag('body', raw_body);
+
+            if (_composing) then begin
+              //Add composing event
+              mtag := _tag.AddTag('x');
+              mtag.setAttribute('xmlns', XMLNS_XEVENT);
+              mtag.AddTag('composing');
+            end;
+
+            if ((Priority = High) or (Priority = Low)) then begin
+              mtag := _tag.AddTag('headers');
+              mtag.setAttribute('xmlns', XMLNS_SHIM);
+              mtag := mtag.AddBasicTag('header', GetEnumName(TypeInfo(PriorityType), Ord(Priority)));
+              mtag.setAttribute('name', 'Urgency');
+            end;
+
+            if (_xml <> '') then
+              addInsertedXML(_xml);
+        end;
     end;
 
-    // build a tag based on this
-    Result := TXMLTag.Create;
-
-    with Result do begin
-        Name := 'message';
-        setAttribute('to', _toJID);
-        // prevent sending from='' 
-        if (Length(_fromJID) > 0) then
-            setattribute('from', _fromJID);
-        setAttribute('id', _id);
-        if (_msg_type <> 'normal') then
-            setAttribute('type', _msg_type);
-        ClearTags;
-        // next statement for JEP 33 compliance
-        if (_addresses.Count >0) then
-            AddTag(_addresses.GetTag());
-        if _thread <> '' then
-            AddBasicTag('thread', _thread);
-        if _subject <> '' then
-            AddBasicTag('subject', _subject);
-
-        raw_body := _body;
-        if _action then raw_body := '/me ' + raw_body;
-
-        AddBasicTag('body', raw_body);
-
-        if (_composing) then begin
-          //Add composing event
-          mtag := Result.AddTag('x');
-          mtag.setAttribute('xmlns', XMLNS_XEVENT);
-          mtag.AddTag('composing');
-        end;
-
-        if ((Priority = High) or (Priority = Low)) then begin
-          mtag := Result.AddTag('headers');
-          mtag.setAttribute('xmlns', XMLNS_SHIM);
-          mtag := mtag.AddBasicTag('header', GetEnumName(TypeInfo(PriorityType), Ord(Priority)));
-          mtag.setAttribute('name', 'Urgency');
-        end;
-
-        if (_xml <> '') then
-          addInsertedXML(_xml);
-    end;
-
-    _tag := TXMLTag.Create(result);
+    if (duplicateTag) then
+        result := TXMLTag.Create(_tag)
+    else
+        result := _tag;
 end;
 
 {---------------------------------------}

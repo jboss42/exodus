@@ -43,12 +43,14 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    function MenuShortCutExists(value: integer): boolean;
+    procedure _set_AvailableHotkeys();
+    procedure _set_usedkeys(hotkey: Widestring; value: boolean);
 
   public
     { Public declarations }
     procedure LoadPrefs(); override;
     procedure SavePrefs(); override;
-    procedure _set_usedkeys(hotkey: Widestring; value: boolean);
 
   public
     _used_hotkeys: array[1..12] of boolean;
@@ -75,7 +77,8 @@ implementation
 uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
-    PathSelector, PrefController, Registry, Session, StrUtils;
+    PathSelector, PrefController, Registry, Session, StrUtils,
+    Menus, Jabber1;
 
 {---------------------------------------}
 procedure TfrmPrefHotkeys.btnAddHotkeysClick(Sender: TObject);
@@ -85,7 +88,8 @@ var
     item: TTntListItem;
 begin
 
-    dlg := TfrmModifyHotkeys.Create(Self);
+    dlg := TfrmModifyHotkeys.Create(Self.Owner);
+    dlg.Position := poOwnerFormCenter;
 
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
@@ -123,8 +127,12 @@ begin
     lstHotkeys.AlphaSort();
 
     //see if we have too many hotkeys to allow for more.
-    if (lstHotkeys.Items.Count >= 12) then
-        btnAddHotkeys.Enabled := false;
+    btnAddHotkeys.Enabled := false;
+    for i := 1 to 12 do begin
+        if (not _used_hotkeys[i]) then begin
+            btnAddHotkeys.Enabled := true;
+        end;
+    end;
 end;
 
 procedure TfrmPrefHotkeys.btnModifyHotkeysClick(Sender: TObject);
@@ -224,6 +232,14 @@ begin
         _set_usedkeys(_hotkeys_keys.Strings[i], true);
     end;
 
+    _set_AvailableHotkeys;
+
+    btnAddHotkeys.Enabled := false;
+    for i := 1 to 12 do begin
+        if (not _used_hotkeys[i]) then begin
+            btnAddHotkeys.Enabled := true;
+        end;
+    end;
 end;
 
 procedure TfrmPrefHotkeys.lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
@@ -288,6 +304,63 @@ begin
         _used_hotkeys[11] := value
     else if (hotkey = 'F12') then
         _used_hotkeys[12] := value
+end;
+
+procedure TfrmPrefHotkeys._set_AvailableHotkeys();
+begin
+    // This function will set the available hotkeys (F1-F12) based
+    // on which keys are used for menus, which take priority over
+    // hotkeys
+
+    if (MenuShortCutExists(TextToShortCut('F1'))) then
+        _used_hotkeys[1] := true;
+    if (MenuShortCutExists(TextToShortCut('F2'))) then
+        _used_hotkeys[2] := true;
+    if (MenuShortCutExists(TextToShortCut('F3'))) then
+        _used_hotkeys[3] := true;
+    if (MenuShortCutExists(TextToShortCut('F4'))) then
+        _used_hotkeys[4] := true;
+    if (MenuShortCutExists(TextToShortCut('F5'))) then
+        _used_hotkeys[5] := true;
+    if (MenuShortCutExists(TextToShortCut('F6'))) then
+        _used_hotkeys[6] := true;
+    if (MenuShortCutExists(TextToShortCut('F7'))) then
+        _used_hotkeys[7] := true;
+    if (MenuShortCutExists(TextToShortCut('F8'))) then
+        _used_hotkeys[8] := true;
+    if (MenuShortCutExists(TextToShortCut('F9'))) then
+        _used_hotkeys[9] := true;
+    if (MenuShortCutExists(TextToShortCut('F10'))) then
+        _used_hotkeys[10] := true;
+    if (MenuShortCutExists(TextToShortCut('F11'))) then
+        _used_hotkeys[11] := true;
+    if (MenuShortCutExists(TextToShortCut('F12'))) then
+        _used_hotkeys[12] := true;
+end;
+
+function TfrmPrefHotkeys.MenuShortCutExists(value: integer): boolean;
+    function MenuShortCutExistsRecurse(value: integer; menuItem: TMenuItem): boolean;
+    var
+        i: integer;
+    begin
+        if (menuItem.ShortCut = value) then
+            Result := true
+        else if (menuItem.Count > 0) then begin
+            for i := 0 to menuItem.Count - 1 do begin
+                Result := MenuShortCutExistsRecurse(value, menuItem.Items[i]);
+                if (Result) then Exit;                
+            end;
+        end
+        else
+            Result := false;
+    end;
+var
+    i: integer;
+begin
+    for i := 0 to frmExodus.MainMenu1.Items.Count - 1 do begin
+        Result := MenuShortCutExistsRecurse(value, frmExodus.MainMenu1.Items[i]);
+        if (Result) then Exit;
+    end;
 end;
 
 end.

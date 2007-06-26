@@ -13,8 +13,8 @@
     <autologin value="0" control="chkAutoLogin"/>        
     <window_ontop value="0" control="chkOnTop" state="inv"/>
     <window_toolbox value="0" control="chkToolbox"/>        
-    <close_min value="1" control="chkCloseMin"/>
-    <single_instance value="1" control="chkSingleInstance"/>
+    <close_min value="0" control="chkCloseMin"/>
+	<single_instance value="1" control="chkSingleInstance"/>
     <default_nick control="txtDefaultNick">
       <control name="lblDefaultNick"/>
     </default_nick>
@@ -24,11 +24,17 @@
     <aa_reduce_pri value="1" control="chkAAReducePri"/>
     <auto_xa value="1" control="chkAutoXA"/>
     <auto_disconnect value="0" control="chkAutoDisconnect"/>
-	<away_time value="5" control="txtAwayTime"/>
-	<xa_time value="30" control="txtXATime"/>
-    <disconnect_time value="180" control="txtDisconnectTime"/>        
-    <away_status control="txtAway">
-      <control name="lblAwayStatus"/>
+	<away_time value="5" control="txtAwayTime">
+	  <control name="lblAwayTime"/>
+	</away_time>
+	<xa_time value="30" control="txtXATime">
+	  <control name="lblXATime"/>
+	</xa_time>
+	<disconnect_time value="180" control="txtDisconnectTime">
+      <control name="lblDisconnectTime"/>
+	</disconnect_time>
+	<away_status control="txtAway">
+	  <control name="lblAwayStatus"/>
     </away_status>
     <xa_status control="txtXA">
       <control name="lblXAStatus"/>
@@ -45,24 +51,24 @@
       <control name="lblDblClick"/>
     </roster_chat>
     <inline_status value="0" control="chkInlineStatus"/>
-    <inline_color value="8421376" control="cboInlineStatus"/>
-    <nested_groups value="1" control="chkNestedGrps"/>
+	<inline_color value="$808000" control="cboInlineStatus"/>
+    <nested_groups value="0" control="chkNestedGrps"/>
     <group_seperator value="/" control="txtGrpSeperator"/>
     <roster_avatars value="false" control="chkRosterAvatars"/>
     
     <!-- Roster Group Options -->
     <roster_sort value="0" control="chkSort"/>
-    <roster_groupcounts value="1" control="chkGroupCounts"/>
+	<roster_groupcounts value="0" control="chkGroupCounts"/>
     <roster_collapsed value="0" control="chkCollapsed"/>
     <roster_offline_group value="0" control="chkOfflineGrp"/>
-    <roster_only_online value="0" control="chkOnlineOnly"/>
+	<roster_only_online value="1" control="chkOnlineOnly"/>
     <roster_default value="Friends" control="txtDefaultGrp">
       <control name="lblDefaultGrp"/>
     </roster_default>
     <roster_transport_grp value="Transports" control="txtGatewayGrp">
       <control name="lblGatewayGrp"/>
     </roster_transport_grp>
-    <roster_filter value="0" control="cboVisible">
+    <roster_filter value="2" control="cboVisible">
       <control name="lblFilter"/>
     </roster_filter>            
     
@@ -87,16 +93,19 @@
 	  <control name="trkSnap"/>
     </edge_snap>
 	<chat_memory value="60" control="txtChatMemory">
-      <!--control name="txtChatMemory"/-->
 	  <control name="trkChatMemory"/>
+	  <control name="lblMem1"/>
+	  <control name="lblMem2"/>
     </chat_memory>
     <esc_close value="1" control="chkEscClose"/>
-    <close_hotkey value="None" control="txtCloseHotkey"/>
+	<close_hotkey value="None" control="txtCloseHotkey">
+    	<control name="lblClose"/>
+	</close_hotkey>
     
     <!-- fonts and colors -->
     <font_name value="Arial"/>
     <font_size value="10"/>
-    <font_color value="0"/>
+	<font_color value="$000000"/>
     <font_charset value="1"/>
     <font_bold value="0"/>
     <font_italic value="0"/>
@@ -108,8 +117,8 @@
 	<color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
-    <roster_bg value="$80000005"/>
-    <roster_font_color value="0"/>
+	<roster_bg value="$80000005"/>
+	<roster_font_color value="$000000"/>
     <roster_font_size value="10"/>
     <roster_font_charset value="1"/>
     <msglist_type value="0" control="cboMsgList"/>
@@ -120,10 +129,9 @@
     <richtext_ignored_font_styles value="font-size;font-family;"/>
     
     <!-- Layouts -->
-    <expanded value="0"/>
+    <expanded value="1"/>
     <dock_locked value="0"/>
-    <roster_messenger value="1"/>
-    <stacked_tabs value="1"/>
+    <stacked_tabs value="1" control="chkStacked"/>
 
     <event_width value="400"/>
     <roster_width value="215"/>
@@ -135,11 +143,13 @@
 
     <!-- display name -->
     <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
-    <displayname_profile_map value='{FAMILY}, {GIVEN}' control="txtDNProfileMap"/>
+	<displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap">
+      <control name="lblDNProfileMap"/>
+	</displayname_profile_map>
     
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
-    <timestamp_format value="t" control="txtTimestampFmt">
+	<timestamp_format value="h:mm am/pm" control="txtTimestampFmt">
       <control name="lblTimestampFmt"/>
     </timestamp_format>
     <msg_queue value="0" control="chkMsgQueue"/>
@@ -157,16 +167,17 @@
     <msg_treatment value="0" control="cboMsgOptions">
       <control name="lblMsgOptions"/>
     </msg_treatment>
-    <queue_offline value="1" control="chkQueueOffline"/>
-    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
-	<chat_avatars value="1" control="chkChatAvatars"/>
+	<queue_offline value="0" control="chkQueueOffline"/>
+	<queue_dnd_chats value="0" control="chkQueueDNDChats"/>
+	<queue_not_avail value="1" control="chkQueueNotAvail"/>
+	<chat_avatars value="0" control="chkChatAvatars"/>
 	<show_priority value="1" control="chkShowPriority"/>
 
     <!-- Emoticon Options -->
     <emoticons value="1" control="chkEmoticons"/>
-    <emoticon_dlls>
+	<emoticon_dlls>
       <s>msn_emoticons.dll</s>
-      <s>yahoo_emoticons.dll</s>
+	  <s>yahoo_emoticons.dll</s>
     </emoticon_dlls>
     <custom_icondefs value="custom-icons.xml" control="txtCustomEmoteFilename"/>
 
@@ -197,7 +208,7 @@
     </http_proxy_user>
     
     <!-- Notification Options -->
-    <notify_sounds value="1" control="chkSound"/>
+    <notify_sounds value="0" control="chkSound"/>
     <!-- send notifications if application is active? -->
     <notify_active value="1" control="chkNotifyActive"/>
     <!-- send notifications to currently active form? -->
@@ -209,7 +220,7 @@
     <!-- actually flash the tab's image until no longer notifying -->
     <notify_tab_flasher value="1"/> <!-- control="chkFlashTabInfinite"/> -->
 
-    <notify_online value="1"/>
+    <notify_online value="0"/>
     <notify_offline value="0"/>
 	<notify_newchat value="1"/>
     <notify_normalmsg value="1"/>
@@ -218,20 +229,20 @@
     <notify_keyword value="1"/>
 	<notify_chatactivity value="4"/>
 	<notify_priority_chatactivity value="4"/>
-	<notify_roomactivity value="1"/>
-    <notify_priority_roomactivity value="1"/>	
+	<notify_roomactivity value="4"/>
+    <notify_priority_roomactivity value="4"/>	
     <notify_oob value="1"/>
     <notify_autoresponse value="0"/>                     
     
     <!-- Presence Options -->
-    <pres_tracking value="1" control="cboPresTracking">
+    <pres_tracking value="0" control="cboPresTracking">
       <control name="lblPresTracking"/>
     </pres_tracking>
     <presence_message_listen value="1" control="chkPresenceSync"/>
     <presence_message_send value="1" control="chkPresenceSync"/>
     <client_caps value="1" control="chkClientCaps"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
-    <room_joins value="1" control="chkRoomJoins"/>        
+    <room_joins value="0" control="chkRoomJoins"/>        
     
     <!-- Subscription Options -->
     <s10n_auto_accept value="0" control="optIncomingS10n"/>
@@ -239,7 +250,8 @@
     
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath">
-      <control name="lblXferPath"/>
+	  <control name="lblXferPath"/>
+	  <control name="btnTransferBrowse"/>
     </xfer_path>        
     <xfer_port value="5280" control="txtXferPort">
       <control name="lblXferPort"/>
@@ -311,7 +323,11 @@
     <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
     <brand_profile_password ></brand_profile_password>
     <brand_profile_port value="5222"></brand_profile_port>
-    <brand_profile_priority value="1"></brand_profile_priority>
+	<brand_profile_priority value="1"></brand_profile_priority>
+	<brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
+	<brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
+	<brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
+
 	<!--brand_profile_resource value="Exodus"></brand_profile_resource-->
 
     <brand_profile_resource_list>
@@ -395,6 +411,41 @@
 	<branding_disable_outflow value="0"></branding_disable_outflow>
 	<!-- indicates if priority notification feature should be used -->
 	<branding_priority_notifications value="1"></branding_priority_notifications>
+  	<!-- indicates if nested subgroup feature should be available -->
+	<branding_nested_subgroup value="0"></branding_nested_subgroup>
+	<!-- indicates if all messages should be queued to offline queue when I am not available -->
+	<branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
+
+	<!-- Should Exodus display a error box when trying to close when Exodus is being used as a COM server? -->
+	<brand_warn_close_com_server value="1"/>
+
+	<!-- Should Exodus show a warning when trying to register a new account with a server that doesn't advertise in-band registration? -->
+	<brand_show_in_band_registration_warning value="1"/>
+
+	<!-- Should Exodus allow users to block messages from other users -->
+	<brand_allow_blocking_jids value="1"/>
+
+	<!-- Should the ability to show the debug window be available to the user through the main menu system -->
+	<brand_show_debug_in_menu value="1"/>
+
+	<!-- Brand the logo box in the profiles screen with an image
+
+		 Example: <brand_logo type="dll" resname="example_image_res_name" source="brand.dll"/>
+
+		 Attributes:	type   (required):			either "dll" or "file"
+						source (required): 			name of dll file for "dll" or name of file for "file,"
+													(either way ("dll" or "file") the file MUST be in directory
+													tree where Exodus.EXE is located).
+						resname(required/optional): name of resource in dll file (required for "dll" type)
+
+		 Note(s): Image must be <= 150x115.
+		 
+	-->
+	<brand_logo/>
+
+	<!-- Brand the minimum size of the window -->
+	<brand_min_window_height value="230"/>
+	<brand_min_window_width value="250"/>
   </prefs>
 
   <!-- default custom presence stuff -->

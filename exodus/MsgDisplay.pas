@@ -30,7 +30,9 @@ procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: bo
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true) overload;
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean; color_time, color_priority, color_server, color_action, color_me, color_other, font_color: integer) overload;
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
-
+procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
+function AdjustDST( inTime : TDateTime): TDateTime;
+function isTimeDST(time: TDateTime): Boolean;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -40,12 +42,10 @@ uses
     XMLParser,
     RT_XIMConversion,
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo;
+    ExtCtrls, Dialogs, XMLTag, XMLUtils, Session, Keywords, TypInfo, DateUtils;
 
 const
     MAX_MSG_LENGTH = 512;
-//forward declaration
-procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
@@ -86,8 +86,9 @@ function getXIMTag(msg: TJabberMessage): TXMLTag;
 var
     fooTag: TXMLTag;
     _parser: TXMLTagParser;
+    bTag: TXMLTag;
 begin
-    fooTag := Msg.Tag;
+    fooTag := Msg.GetTag;
     Result := fooTag.GetFirstTag('html');
     if ((Result = nil) or (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then begin
         //check XML attrib of message to see if there is any additional
@@ -104,11 +105,19 @@ begin
             _parser.Free();
         end;
     end;
+
     if ((Result <> nil) and (Result.getAttribute('xmlns') <> XMLNS_XHTMLIM)) then
         Result := nil;
+    //check for body tag, CS invalid XHTML-IM hack, JJF 6/10/07
+    if (Result <> nil) then begin
+        bTag := result.GetFirstTag('body');
+        if (bTag = nil) or (bTag.getAttribute('xmlns') <> 'http://www.w3.org/1999/xhtml') then
+          Result := nil;
+    end;
+
     if (Result <> nil) then
         Result := TXMLTag.Create(Result);
-    fooTag.Free();        
+    fooTag.Free();
 end;
 
 {---------------------------------------}
@@ -140,7 +149,12 @@ begin
     if (MainSession.Prefs.getBool('timestamp')) then begin
         txt := txt + '\cf1[';
         try
-            txt := txt +
+         DebugMsg('Original:' + FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                         Msg.Time));
+         Msg.Time := AdjustDST(Msg.Time);
+         DebugMsg('Adjusted:' + FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                         Msg.Time));
+         txt := txt +
                 EscapeRTF(FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                                          Msg.Time));
         except
@@ -154,9 +168,14 @@ begin
         txt := txt + ']';
     end;
 
-    if ((Msg.Priority = high) or (Msg.Priority = low)) then begin
+    if (Msg.Priority = high) then begin
         txt := txt + '\cf7[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
+    end
+    else if (Msg.Priority = low) then begin
+       //We want to default color for low priority messages to timestamp color
+       txt := txt + '\cf1[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
     end;
+         
 
     len := Length(Msg.Body);
 
@@ -204,20 +223,24 @@ begin
 
     txt := txt + '\cf6 }';
 
-    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
+    RichEdit.SelStart := RichEdit.GetTextLen;
     RichEdit.SelLength := 0;
     RichEdit.Paragraph.Alignment := taLeft;
     RichEdit.SelAttributes.BackColor := RichEdit.Color;
+    hlStartPos := RichEdit.GetTextLen;; // Done here because RTFSelText messes this up.
     RichEdit.RTFSelText := txt;
+
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
-        hlStartPos := RichEdit.SelStart;
         XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
         HighlightKeywords(RichEdit, hlStartPos);
         ximTag.Free();
+    end
+    else begin
+        HighlightKeywords(RichEdit, hlStartPos);
     end;
 
-    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
+    RichEdit.SelStart := RichEdit.GetTextLen;
     RichEdit.SelLength := 0;
     RichEdit.RTFSelText := '{\rtf1 \par }';
     // AutoScroll the window
@@ -277,12 +300,13 @@ var
 begin
     hlColor := MainSession.Prefs.getInt('color_me');
 
-    allTxt := Copy(rtDest.WideLines.Text, startPos - 1, length(rtDest.WideLines.Text));
+    allTxt := Copy(rtDest.WideText, startPos+1, rtDest.GetTextLen);
+    allTxt := StringReplace(allTxt, #$D#$A, '', [rfReplaceAll, rfIgnoreCase]);
 
     //Create a TRegExpr based on Keyword Prefs
     keywords := CreateKeywordsExpr();
     currPos := startPos;
-    len := length(rtDest.WideLines.Text);
+    len := rtDest.GetTextLen;
 
     if (keywords <> nil) then begin
         try
@@ -295,7 +319,7 @@ begin
                         rtDest.SelLength := keywords.MatchLen[0];
                         rtDest.SelAttributes.Color := hlColor;
                         rtDest.SelAttributes.Bold := true;
-                        currPos := tint + 1;
+                        currPos := tint + keywords.MatchLen[0]; 
                     end;
                 until not Keywords.ExecNext;
             end;
@@ -306,7 +330,59 @@ begin
     end;
 end;
 
+function AdjustDST( inTime : TDateTime): TDateTime;
+var
+  timezoneinfo: TTimezoneinformation;
+  dstTime: Boolean;
+  timezoneResult: word;
+begin
+  Result := inTime;
+  timezoneResult  := GetTimezoneInformation(timezoneinfo);
+  //If automatic DST adjustment check box is not checked,
+  //we do not need to adjust time.
+  if (timezoneinfo.DaylightBias = 0) then
+     exit;
+     
+  dstTime := isTimeDST(inTime);
+  //If we are currently in DST and time for the message is
+  //not in DST, we need to adjust by subtracting (bias is negative)
+  if (timezoneResult = TIME_ZONE_ID_DAYLIGHT) then begin
+    if (dstTime = false) then
+      Result := IncMinute(inTime, timezoneinfo.DaylightBias);
 
+  end
+  else begin
+     //If we are currently not in DST and time for the message is
+     //in DST, we need to adjust by adding (bias is negative)
+     if (dstTime = true) then
+      Result := IncMinute(inTime, -timezoneinfo.DaylightBias);
+
+  end;
+
+end;
+
+function isTimeDST(time: TDateTime): Boolean;
+var
+  timezoneinfo: TTimezoneinformation;
+  dstStart, dstEnd: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, Milli: word;
+begin
+
+    GetTimezoneInformation(timezoneinfo);
+    DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
+    //Calculate when daylight savings time begins
+    with timezoneinfo.DaylightDate do
+      dstStart:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+    //Calculate when daylight savings time ends
+    with timezoneinfo.StandardDate do
+      dstEnd:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+
+    if ((time >= dstStart) and (time <= dstEnd)) then
+      Result := true
+    else
+      Result := false;
+
+end;
 end.
 
 

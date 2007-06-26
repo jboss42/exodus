@@ -30,8 +30,8 @@ type
   TfrmPrefFont = class(TfrmPrefPanel)
     lblRoster: TTntLabel;
     lblChat: TTntLabel;
-    Label24: TTntLabel;
-    Label25: TTntLabel;
+    lblBackgroundColor: TTntLabel;
+    lblFontColor: TTntLabel;
     Label5: TTntLabel;
     clrBoxBG: TColorBox;
     clrBoxFont: TColorBox;
@@ -46,6 +46,8 @@ type
     chkAllowFontFamily: TTntCheckBox;
     chkAllowFontSize: TTntCheckBox;
     chkAllowFontColor: TTntCheckBox;
+    lblChatWindowElement: TTntLabel;
+    cboChatWindowElement: TTntComboBox;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -58,6 +60,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure chkRTEnabledClick(Sender: TObject);
     procedure chkAllowFontFamilyClick(Sender: TObject);
+    procedure cboChatWindowElementChange(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -106,8 +109,15 @@ var
   frmPrefFont: TfrmPrefFont;
 
 const
-    sRosterFontLabel = 'Roster Font and Background';
-    sChatFontLabel = 'Chat Font and Background';
+    sRosterFontLabel = 'Contact List Window Colors';
+    sChatFontLabel = 'Chat Window Colors';
+    sActionText = 'Action text';
+    sMessageLabelMe = 'Messages from me';
+    sMessageLabelOthers = 'Messages from others';
+    sMessagePriority = 'Message priority';
+    sMessageText = 'Message text';
+    sSystemMessages = 'System messages';
+    sTimestamp = 'Timestamp';
 
 
 {---------------------------------------}
@@ -133,7 +143,7 @@ begin
     _lastAllowSize := Pos('font-size;', tstr) = 0;
     _lastAllowColor := Pos('color;', tstr) = 0;
 
-    inherited; //ingherited will set rtenabled, which will end up using _last* vars
+    inherited; //inherited will set rtenabled, which will end up using _last* vars
 
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
@@ -233,14 +243,14 @@ begin
         s := PrefController.getPrefState('richtext_ignored_font_styles');
 
         chkAllowFontFamily.visible := (s <> psInvisible);
-        chkAllowFontFamily.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontFamily.enabled := (s <> psInvisible) and (s <> psReadOnly);
         chkAllowFontSize.visible := (s <> psInvisible);
-        chkAllowFontSize.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontSize.enabled := (s <> psInvisible) and (s <> psReadOnly);
         chkAllowFontColor.visible := (s <> psInvisible);
-        chkAllowFontColor.enabled := (s <> psInvisible) or (s <> psReadOnly);
+        chkAllowFontColor.enabled := (s <> psInvisible) and (s <> psReadOnly);
         gbAllowedFontStyles.visible := (s <> psInvisible);
-        gbAllowedFontStyles.enabled := (s <> psInvisible) or (s <> psReadOnly);
-        
+        gbAllowedFontStyles.enabled := (s <> psInvisible) and (s <> psReadOnly);
+
         chkAllowFontFamily.Checked := _lastAllowFont;
         chkAllowFontSize.Checked := _lastAllowSize;
         chkAllowFontColor.Checked := _lastAllowColor;
@@ -393,7 +403,8 @@ begin
     // change in the bg color
     if (_clr_control = colorChat) then begin
         _color_bg := Integer(clrBoxBG.Selected);
-        colorChat.Color := clrBoxBG.Selected
+        colorChat.Color := clrBoxBG.Selected;
+        redrawChat;
     end
     else begin
         _roster_bg := Integer(clrBoxBG.Selected);
@@ -454,6 +465,14 @@ begin
     btnFont.Enabled := true;
     clrBoxBG.Selected := TColor(_roster_bg);
     clrBoxFont.Selected := TColor(_roster_font_color);
+    lblRoster.Font.Style := [fsBold];
+    lblChat.Font.Style := [];
+    lblChatWindowElement.Enabled := false;
+    cboChatWindowElement.Enabled := false;
+    lblBackgroundColor.Enabled := true;
+    clrBoxBG.Enabled := true;
+    lblFontColor.Enabled := true;
+    clrBoxFont.Enabled := true
 end;
 
 {---------------------------------------}
@@ -463,12 +482,73 @@ begin
     AssignUnicodeFont(lblRoster.Font, 9);
     AssignUnicodeFont(lblChat.Font, 9);
     AssignUnicodeFont(lblColor.Font, 9);
-    lblRoster.Font.Style := [fsBold];
-    lblChat.Font.Style := [fsBold];
     lblColor.Font.Style := [fsBold];
+
+    cboChatWindowElement.AddItem(sActionText, nil);
+    cboChatWindowElement.AddItem(sMessageLabelMe, nil);
+    cboChatWindowElement.AddItem(sMessageLabelOthers, nil);
+    cboChatWindowElement.AddItem(sMessagePriority, nil);
+    cboChatWindowElement.AddItem(sMessageText, nil);
+    cboChatWindowElement.AddItem(sSystemMessages, nil);
+    cboChatWindowElement.AddItem(sTimestamp, nil);
 end;
 
 {---------------------------------------}
+procedure TfrmPrefFont.cboChatWindowElementChange(Sender: TObject);
+var
+    index: integer;
+begin
+  inherited;
+
+    index := cboChatWindowElement.ItemIndex;
+
+    if (index = cboChatWindowElement.Items.IndexOf(sTimestamp)) then begin
+        _clr_font_color := 'color_time';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_time);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sMessageLabelMe)) then begin
+        // on <pgm>, color-me
+        _clr_font_color := 'color_me';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_me);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sMessagePriority)) then begin
+        // on <pgm>, color-me
+        _clr_font_color := 'color_priority';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_priority);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sMessageLabelOthers)) then begin
+        _clr_font_color := 'color_other';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_other);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sActionText)) then begin
+        _clr_font_color := 'color_action';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_action);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sSystemMessages)) then begin
+        _clr_font_color := 'color_server';
+        _clr_font := '';
+        clrBoxFont.Selected := TColor(_color_server);
+        btnFont.Enabled := (_clr_font <> '');
+    end
+    else if(index = cboChatWindowElement.Items.IndexOf(sMessageText)) then begin
+        // normal window, font_color
+       _clr_font_color := 'font_color';
+       _clr_font := 'font';
+       clrBoxFont.Selected := TColor(_font_color);
+       btnFont.Enabled := (_clr_font <> '');
+    end;
+end;
+
 procedure TfrmPrefFont.cboMsgListChange(Sender: TObject);
 var
     idx: integer;
@@ -518,6 +598,14 @@ begin
   inherited;
     // find the "thing" that we clicked on in the window..
     lblColor.Caption := _(sChatFontLabel);
+    lblRoster.Font.Style := [];
+    lblChat.Font.Style := [fsBold];
+    lblChatWindowElement.Enabled := true;
+    cboChatWindowElement.Enabled := true;
+    lblBackgroundColor.Enabled := true;
+    clrBoxBG.Enabled := true;
+    lblFontColor.Enabled := true;
+    clrBoxFont.Enabled := true;
 
     btnFont.Enabled := false;
     clrBoxBG.Selected := TColor(_color_bg);
@@ -549,8 +637,9 @@ begin
         begin
           _clr_font_color := 'color_time';
           _clr_font := '';
-          clrBoxFont.Selected := TColor(_font_color);
+          clrBoxFont.Selected := TColor(_color_time);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sTimestamp);
           exit;
         end;
     end;
@@ -563,6 +652,7 @@ begin
           _clr_font := '';
           clrBoxFont.Selected := TColor(_color_me);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sMessageLabelMe);
           exit;
         end;
     end;
@@ -575,6 +665,7 @@ begin
           _clr_font := '';
           clrBoxFont.Selected := TColor(_color_priority);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sMessagePriority);
           exit;
         end;
      end;
@@ -587,6 +678,7 @@ begin
           _clr_font := '';
           clrBoxFont.Selected := TColor(_color_other);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sMessageLabelOthers);
           exit;
         end;
     end;
@@ -598,6 +690,7 @@ begin
           _clr_font := '';
           clrBoxFont.Selected := TColor(_color_action);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sActionText);
           exit;
         end;
     end;
@@ -609,6 +702,7 @@ begin
           _clr_font := '';
           clrBoxFont.Selected := TColor(_color_server);
           btnFont.Enabled := (_clr_font <> '');
+          cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sSystemMessages);
           exit;
         end;
     end;
@@ -618,6 +712,7 @@ begin
    _clr_font := 'font';
    clrBoxFont.Selected := TColor(_font_color);
    btnFont.Enabled := (_clr_font <> '');
+   cboChatWindowElement.ItemIndex := cboChatWindowElement.Items.IndexOf(sMessageText);
 end;
 
 end.

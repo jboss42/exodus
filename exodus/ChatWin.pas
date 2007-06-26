@@ -26,7 +26,7 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList, JabberMsg;
+  ToolWin, ImgList, JabberMsg, AppEvnts, MsgQueue;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -141,7 +141,7 @@ type
     _dnLocked: boolean; //can the display name be changed? true if no\ick was passed
                         //into factory method 
     _displayName: WideString;
-    
+
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
@@ -165,6 +165,9 @@ type
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure CTCPCallbackTime(event: string; tag: TXMLTag);
+    procedure CTCPCallbackVersion(event: string; tag: TXMLTag);
+    procedure CTCPCallbackLast(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
 
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
@@ -258,6 +261,7 @@ const
     sChat = 'Chat';
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sMsgLocalTime = 'Local Time: ';
+    sCannotOffline = 'This contact cannot receive offline messages.';
 
     NOTIFY_CHAT_ACTIVITY = 0;
     NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
@@ -310,7 +314,12 @@ begin
     // Create a new chat controller if we don't have one
     if chat = nil then begin
         chat := MainSession.ChatList.AddChat(sjid, resource);
-    end;
+    end
+    else
+       //We need to do this for existing chat controllers to make sure
+       //callbacks are re-registered if they
+       //have been unregistered before due to blocking
+       chat.SetJID(sjid);
 
     // Create a window if we don't have one.
     if (chat.window = nil) then begin
@@ -343,6 +352,11 @@ begin
             _dnLocked := true;
         end;
 
+        if (MainSession.IsBlocked(sjid)) then
+          mnuBlock.Caption := _('Unblock')
+        else
+          mnuBlock.Caption := _('Block');
+          
         if resource <> '' then
             cjid := sjid + '/' + resource
         else
@@ -362,10 +376,6 @@ begin
         //Assign outgoing message event
         chat.OnSendMessage := SendMessageEvent;
 
-        if (show_window) then
-            ShowDefault(bring_to_front);
-        Application.ProcessMessages();
-
         if (hist <> '') then begin
             MsgList.populate(hist);
             do_scroll := true;
@@ -377,6 +387,10 @@ begin
         if (do_scroll) then
             _scrollBottom();
 
+        if (show_window) then
+            ShowDefault(bring_to_front);
+        Application.ProcessMessages();
+        
     end;
 
     if (new_chat) then begin
@@ -385,6 +399,7 @@ begin
     end;
 
     Result := TfrmChat(chat.window);
+
 end;
 
 {---------------------------------------}
@@ -397,9 +412,13 @@ begin
         for i := Count - 1 downto 0 do begin
             c := TChatController(Objects[i]);
             Delete(i);
+            if (c.window = nil) then
+              c.Free();
             if ((c <> nil) and (c.window <> nil)) then begin
+                TfrmChat(c.window)._warn_busyclose := false; //don't warn on all close
                 TfrmChat(c.window).Close();
-                Application.ProcessMessages();
+                TfrmChat(c.window).Free();
+                //Application.ProcessMessages();
             end;
         end;
     end;
@@ -409,6 +428,9 @@ end;
 procedure TfrmChat.FormCreate(Sender: TObject);
 begin
     inherited;
+    _cur_ver := nil;
+    _cur_time := nil;
+    _cur_last := nil;
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
@@ -426,9 +448,9 @@ begin
     _res_menus := TWidestringlist.Create();
     _unknown_avatar := TBitmap.Create();
     frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
-
-    _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
-    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');    
+                                 _notify[NOTIFY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_chatactivity');
+    
+    _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := MainSession.Prefs.getInt('notify_priority_chatactivity');
 
     _receivedXIMNode := false;
     _receivedMessage := false;
@@ -436,6 +458,8 @@ begin
 
     SetupPrefs();
     SetupMenus();
+
+    _scallback := MainSession.RegisterCallback(SessionCallback, '/session/block');
 
     // branding/menus
     with MainSession.Prefs do begin
@@ -446,6 +470,18 @@ begin
         end
         else
             mnuSendFile.Visible := false;
+        if ((not getBool('brand_print')) and
+            (MainSession.Profile.ConnectionType = conn_normal)) then begin
+            PrintHistory1.Visible := false;
+            Print1.Visible := false;
+        end
+        else begin
+            PrintHistory1.Visible := true;
+            Print1.Visible := true;
+        end;
+
+        if (getBool('brand_allow_blocking_jids') = false) then 
+            mnuBlock.Visible := false;
     end;
 
 end;
@@ -633,10 +669,12 @@ begin
         end;
     end;
 
-    ritem := MainSession.roster.Find(sjid);
+    ritem := MainSession.roster.Find(cjid);
     if (rItem <> nil) then begin
         mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
         C1.Enabled := ritem.IsNative;
+        if (not ritem.IsNative) then
+            DragAcceptFiles(Handle, false);
     end;
 
     updateDisplayName();
@@ -662,7 +700,16 @@ begin
 end;
 
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+ chat: TChatController;
 begin
+    //
+    chat := MainSession.ChatList.FindChat(_jid.jid, _jid.resource, '');
+    if (chat <> nil) then
+       if (MainSession.IsBlocked(_jid.jid)) then begin
+         chat.DisableChat;
+         chat.Window := nil;
+       end;
     Action := caFree;
     inherited;
 end;
@@ -671,15 +718,26 @@ end;
 procedure TfrmChat.PlayQueue();
 var
     t: TXMLTag;
+    //showMsgQueue: boolean;
 begin
     // pull all of the msgs from the controller queue,
     // and feed them into this window
     if (chat_object = nil) then exit;
 
+    while (chat_object.last_session_msg_queue.AtLeast(1)) do begin
+        t := TXMLTag(chat_object.last_session_msg_queue.Pop());
+        Self.MessageEvent(t);
+    end;
+
     while (chat_object.msg_queue.AtLeast(1)) do begin
         t := TXMLTag(chat_object.msg_queue.Pop());
         Self.MessageEvent(t);
     end;
+
+    //The following code is used to remove chat events from the queue
+    MainSession.EventQueue.RemoveEvents(_jid.jid);
+
+
 end;
 
 {---------------------------------------}
@@ -805,6 +863,7 @@ begin
         if (toStr = '') then exit;
         toJID := TJabberID.Create(toStr);
         e := getBestCapsEntity(toJID);
+        FreeAndNil(toJID);
         if (e <> nil) then begin
             if (e.hasFeature(XMLNS_XHTMLIM)) then begin
                 _supportsXIM := true;
@@ -893,6 +952,7 @@ var
     m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
     emsg, err: Widestring;
+    notify: Boolean;
 begin
     // display the body of the msg
     if (_warn_busyclose) then begin
@@ -929,14 +989,28 @@ begin
         subj_msg.Free();
     end;
 
+    notify := true;
     if (Msg.Body <> '') then begin
         //Notify
-        if ((Msg.Priority = High) or (Msg.Priority = Low)) then
-          DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
-              RosterTreeImages.Find('contact'), 'notify_chatactivity')
+        if (not Msg.isMe) then begin
+           if ((MainSession.Prefs.getBool('queue_not_avail')) and
+               ((MainSession.Show = 'away') or
+                (MainSession.Show = 'xa') or
+                (MainSession.Show = 'dnd'))) then
+               notify := false;
+        end
         else
-          DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
-              RosterTreeImages.Find('contact'), 'notify_chatactivity');
+           notify := false;
+
+        if (notify) then begin
+            if ((Msg.Priority = High) or (Msg.Priority = Low)) then
+               DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
+                   RosterTreeImages.Find('contact'), 'notify_chatactivity')
+             else
+               DoNotify(Self, _notify[NOTIFY_CHAT_ACTIVITY], _(sChatActivity) + DisplayName,
+                   RosterTreeImages.Find('contact'), 'notify_chatactivity');
+        end;
+
 
         if (Msg.isMe = false ) and ( _isRoom ) then
           Msg.Nick := DisplayName;
@@ -986,7 +1060,17 @@ var
     xhtml: TXMLTag;
     xml: Widestring;
     priority: PriorityType;
+    ri: TJabberRosterItem;
 begin
+    ri := MainSession.roster.Find(_jid.jid);
+    if (ri <> nil) then begin
+        if ((not ri.IsNative) and (not ri.IsOnline)) then begin
+            MsgOut.Clear;
+            MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
+            exit;
+        end;
+    end;
+    
     // Get the text from the UI
     // and send the actual message out
     txt := getInputText(MsgOut);
@@ -1000,6 +1084,7 @@ begin
     xhtml := getInputXHTML(MsgOut);
     if (xhtml <> nil) then
         xml := xhtml.XML;
+    FreeAndNil(xhtml);
 
     if (MainSession.Prefs.getBool('show_priority')) then
        priority := PriorityType(GetEnumValue(TypeInfo(PriorityType), cmbPriority.Text))
@@ -1051,40 +1136,36 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/disconnected') then begin
-        MsgList.DisplayPresence(_('You have been disconnected.'), '');
-        MainSession.UnRegisterCallback(_pcallback);
-        _pcallback := -1;
-
-        // this should make sure that hidden windows
-        // just go away when we get disconnected.
-        //if (not Visible) then Self.Free();
-        if (self.Visible) then
-            Self.Close()
-        else
-            Self.Free();
-    end
-    else if (event = '/session/connected') then begin
-        Self.SetJID(jid);
-    end
-    else if (event = '/session/prefs') then
-        SetupPrefs()
-
-    else if (event = '/session/logger') then
-        SetupMenus()
-
-    else if (event = '/session/block') then begin
+//    if (event = '/session/disconnected') then begin
+//        MsgList.DisplayPresence(_('You have been disconnected.'), '');
+//        MainSession.UnRegisterCallback(_pcallback);
+//        _pcallback := -1;
+//
+//        // this should make sure that hidden windows
+//        // just go away when we get disconnected.
+//        //if (not Visible) then Self.Free();
+//        if (self.Visible) then
+//            Self.Close()
+//        else
+//            Self.Free();
+//    end
+//    else if (event = '/session/connected') then begin
+//        Self.SetJID(jid);
+//    end
+//    else if (event = '/session/prefs') then
+//        SetupPrefs()
+//
+//    else if (event = '/session/logger') then
+//        SetupMenus()
+//    else if (event = '/session/block') then begin
+    if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            MsgList.DisplayPresence(_(sUserBlocked), '');
-            MainSession.UnRegisterCallback(_pcallback);
-            _pcallback := -1;
-            freeChatObject();
-            Self.Close();
+            PostMessage(Handle, WM_CLOSE, 0, 0);
         end;
     end
-    else if (event = '/session/avatars') then
-        imgAvatar.Refresh();
+//    else if (event = '/session/avatars') then
+//        imgAvatar.Refresh();
 
 end;
 
@@ -1240,7 +1321,7 @@ begin
         else
             ts := '';
 
-        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt, ts);
+        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts);
     end;
 end;
 
@@ -1281,9 +1362,25 @@ end;
 procedure TfrmChat.lblJIDClick(Sender: TObject);
 var
     cp: TPoint;
+    p: TJabberPres;
+    inRoster: boolean;
+    ritem: TJabberRosterItem;
 begin
   inherited;
     GetCursorPos(cp);
+    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
+    ritem := MainSession.Roster.Find(_jid.jid);
+    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
+
+    if (inRoster) and (p <> nil) and (ritem.IsNative) then begin
+        mnuSendFile.Enabled := true;
+        DragAcceptFiles(Handle, true);
+    end
+    else begin
+        mnuSendFile.Enabled := false;
+        DragAcceptFiles(Handle, false);
+    end;
+
     popContact.popup(cp.x, cp.y);
 end;
 
@@ -1363,21 +1460,26 @@ var
     i,
     nCount     : integer;
     acFileName : array [0..cnMaxFileNameLen] of char;
+    ritem: TJabberRosterItem;
 begin
-    // find out how many files we're accepting
-    if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
+    ritem := MainSession.roster.Find(jid);
 
-    nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+    if (ritem.IsNative) then begin
+        // find out how many files we're accepting
+        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
 
-    // query Windows one at a time for the file name
-    for i := 0 to nCount-1 do begin
-        DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
-        // do your thing with the acFileName
-        FileSend(_jid.full, acFileName);
+        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+
+        // query Windows one at a time for the file name
+        for i := 0 to nCount-1 do begin
+            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
+            // do your thing with the acFileName
+            FileSend(_jid.full, acFileName);
+        end;
+
+        // let Windows know that you're done
+        DragFinish( msg.Drop );
     end;
-
-    // let Windows know that you're done
-    DragFinish( msg.Drop );
 end;
 
 {---------------------------------------}
@@ -1439,11 +1541,41 @@ begin
         jid := p.fromJID.full;
 
     if Sender = mnuVersionRequest then
-        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallback)
+        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallbackVersion)
     else if Sender = mnuTimeRequest then
-        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallback)
+        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallbackTime)
     else if Sender = mnuLastActivity then
-        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallback);
+        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallbackLast);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackTime(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_time := nil
+    else
+        CTCPCallback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackVersion(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_ver := nil
+    else
+        CTCPCallback(event, tag);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.CTCPCallbackLast(event: string; tag: TXMLTag);
+begin
+    if ((event = 'timeout') and
+        (tag = nil)) then
+        _cur_last := nil
+    else
+        CTCPCallback(event, tag);
 end;
 
 {---------------------------------------}
@@ -1483,14 +1615,27 @@ begin
             DispString(ParseLastEvent(tag));
         end;
 
+    end
+    else if (tag <> nil) then begin
+        // Error type - IQ will delete self, must nil out the pointer.
+        ns := tag.Namespace(true);
+        if (ns = XMLNS_VERSION) then
+            _cur_ver := nil
+        else if (ns = XMLNS_TIME) then
+            _cur_time := nil
+        else if (ns = XMLNS_LAST) then
+            _cur_last := nil;
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
-    MainSession.Block(_jid);
-    freeChatObject();
+     if (MainSession.IsBlocked(_jid.jid)) then
+         MainSession.UnBlock(_jid)
+     else
+         MainSession.Block(_jid);
+
 end;
 
 {---------------------------------------}
@@ -1587,8 +1732,8 @@ begin
 
     f.addItem('Chat activity');
     f.addItem('Priority chat activity');
-    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY]);
-    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY]);
+    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_chatactivity'));
+    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_priority_chatactivity'));
     if (f.ShowModal) = mrOK then begin
         _notify[NOTIFY_CHAT_ACTIVITY] := f.getVal(0);
         _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := f.getVal(1);
@@ -1737,6 +1882,7 @@ end;
 procedure TfrmChat.OnDocked();
 begin
     inherited;
+    mnuOnTop.Enabled := false;
     DragAcceptFiles( Handle, False );
     // scroll the MsgView to the bottom.
     _scrollBottom();
@@ -1757,6 +1903,7 @@ end;
 procedure TfrmChat.OnFloat();
 begin
     inherited;
+    mnuOnTop.Enabled := true;
     DragAcceptFiles(Handle, True);
     _scrollBottom();
     Self.Refresh();

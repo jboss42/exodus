@@ -131,7 +131,11 @@ begin
 
     //newJID may already be in roster. Force a displayname lookup if needed
     if (Self.ProfileEnabled) then
-        dName := Self.getProfileDisplayName(newJID, changePending)
+    begin
+        dName := Self.getProfileDisplayName(newJID, changePending);
+        if (dName = '') then
+          dname := getDisplayName(newJID, changePending);
+    end
     else
         dname := getDisplayName(newJID, changePending);
 
@@ -219,8 +223,10 @@ begin
         DoNotify(Self, 'notify_s10n',
                  'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
     end
-    else
+    else begin
         TShowHandler.Create().getDispNameAndShow(Self, jid);
+        ShowDefault(true);
+    end;
 end;
 
 {---------------------------------------}
@@ -283,6 +289,7 @@ begin
     p.PresType := 'unsubscribed';
 
     MainSession.SendTag(p);
+
     Self.Close;
 end;
 

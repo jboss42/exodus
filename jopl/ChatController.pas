@@ -51,14 +51,14 @@ type
         _send_msg_cb: integer;  // Outgoing message callback
         _sent_auto_response: boolean; //Have we sent the participant an auto response since last non-available status?
         _last_msg_id: Widestring; //ID of the last message sent
-
         procedure SetWindow(new_window: TObject);
     protected
         procedure timMemoryTimer(Sender: TObject);
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
         msg_queue: TQueue;
-
+        last_session_msg_queue: TQueue; //Number of newly received offline messages
+ 
         constructor Create(sjid, sresource: Widestring);
         destructor Destroy; override;
 
@@ -74,7 +74,7 @@ type
         procedure unassignEvent();
         procedure unassignSendMsgEvent();
 
-        procedure PushMessage(tag: TXMLTag);
+        procedure PushMessage(tag: TXMLTag; last_session_queue: boolean = false);
 
         function CreateMessage(): TJabberMessage; overload;
         function CreateMessage(tag: TXMLTag): TJabberMessage; overload;
@@ -178,13 +178,14 @@ begin
     _jid := sjid;
     _resource := sresource;
     msg_queue := TQueue.Create();
+    last_session_msg_queue := TQueue.Create();
     _history := '';
     _memory := TTimer.Create(nil);
     _memory.OnTimer := timMemoryTimer;
     _memory.Enabled := false;
     _queued := false;
     _threadid := '';
-    
+   
     if (_resource <> '') then
         self.SetJID(_jid + '/' + _resource)
     else
@@ -231,6 +232,7 @@ begin
     StopTimer();
 end;
 
+
 {---------------------------------------}
 procedure TChatController.SetWindow(new_window: TObject);
 var
@@ -245,6 +247,7 @@ begin
         tag.setAttribute('handle', IntToStr(TForm(new_window).Handle));
         tag.setAttribute('jid', self._jid);
         MainSession.FireEvent('/chat/window', tag, self);
+        tag.Free;
     end;
 end;
 
@@ -266,6 +269,7 @@ begin
     // Free stuff
     _memory.Free();
     msg_queue.Free();
+    last_session_msg_queue.Free();
     inherited;
 end;        
 
@@ -330,10 +334,16 @@ begin
             PushMessage(tag);
 
             // if this is the first msg into the queue, fire gui event
-            if (msg_queue.Count = 1) then
+            if (msg_queue.Count = 1) then begin
+              if (last_session_msg_queue.Count = 0) then
                 MainSession.FireEvent('/session/gui/chat', tag)
+              else begin
+                MainSession.FireEvent('/session/gui/update-chat', tag)
+              end;
+            end
             else
-                MainSession.FireEvent('/session/gui/update-chat', tag);
+              MainSession.FireEvent('/session/gui/update-chat', tag)
+
         end;
     end;
 
@@ -402,9 +412,11 @@ begin
   //to resource1 for the same jid. The callback is registered for all
   //resources for this jid.
   //Do not want to send messages to myself
-  if (toJid.full = MainSession.Jid) then
-    exit;
-
+  if (toJid.full = MainSession.Jid) then begin
+      jid.Free;
+      toJid.Free;
+      exit;
+  end;
 
   if (Self.Window <> nil) then begin
     chat_win := TFrmChat(Self.Window); //We have a chat window
@@ -444,16 +456,9 @@ begin
   else begin
     if (Assigned(_send_event)) then
       _send_event(tag) //Directly invoke the event
-    else begin
-      PushMessage(tag);
-
-      // if this is the first msg into the queue, fire gui event
-      if (msg_queue.Count = 1) then
-        MainSession.FireEvent('/session/gui/chat', tag)
-      else
-        MainSession.FireEvent('/session/gui/update-chat', tag);
-    end;
   end;
+  jid.Free;
+  toJid.Free;
 end;
 
 {---------------------------------------}
@@ -511,8 +516,11 @@ end;
 
 {---------------------------------------}
 //Push a message into the message queue for this chat
-procedure TChatController.PushMessage(tag: TXMLTag);
+procedure TChatController.PushMessage(tag: TXMLTag; last_session_queue: boolean=false);
 begin
+  if (last_session_queue) then
+    last_session_msg_queue.Push(TXMLTag.Create(tag))
+  else
     msg_queue.Push(TXMLTag.Create(tag));
 end;
 
@@ -560,6 +568,13 @@ begin
     // return a copy of all of the tags in the queue
     tmp_queue := TQueue.Create();
     Result := TXMLTagList.Create();
+
+    while (last_session_msg_queue.AtLeast(1)) do begin
+        m := TXMLTag(last_session_msg_queue.Pop());
+        c := TXMLTag.Create(m);
+        Result.Add(c);
+        tmp_queue.Push(m);
+    end;
 
     while (msg_queue.AtLeast(1)) do begin
         m := TXMLTag(msg_queue.Pop());

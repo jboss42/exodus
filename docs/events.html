@@ -195,6 +195,12 @@ correct version of fireEvent() for the event that you are firing.</p>
 		<td valign="top">Finished retrieving roster for the first time.</td>
 	</tr>
 	<tr>
+		<td valign="top" width="265">/roster/context_menu</td>
+		<td valign="top">&lt;context_menu menu_id="Roster"/&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">The roster is showing a context menu.  The menu_id is the menu name (custom or predefined).</td>
+	</tr>
+	<tr>
 		<td valign="top" width="265">/roster/item</td>
 		<td valign="top">&lt;item xmlns='jabber:iq:roster' name='' jid=''&gt;</td>
 		<td valign="top">&nbsp;</td>
@@ -370,12 +376,24 @@ correct version of fireEvent() for the event that you are firing.</p>
 		<td valign="top">TLS error.</td>
 	</tr>
 	<tr>
+		<td valign="top" width="265">/session/log_message</td>
+		<td valign="top">&lt;log_message to='user1@domain.com/work' from='user2@domain.com/home'&gt;&lt;time&gt;07/04/2006 12:00:00&lt;/time&gt;&lt;body&gt;Happy 4th of July!&lt;/body&gt;&lt;/log_message&gt;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Sent only by plugins to trigger the message logging plugins to log the supplied message.</td>
+	</tr>
+	<tr>
 		<td valign="top" width="265">/session/logger</td>
 		<td valign="top">&lt;off/&gt; or &lt;on date_enabled='true|false'/&gt;</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">Logging has been enabled or disabled.</td>
 	</tr>
 	
+	<tr>
+		<td valign="top" width="265">/session/plugin/plugin_name</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">Prefered event ID for plugins to send events to other plugins.  The plugin_name is defined by the specific plugin receiving the message.  XML is also plugin defined.</td>
+	</tr>
 	<tr>
 		<td valign="top" width="265">/session/prefs</td>
 		<td valign="top">nil</td>

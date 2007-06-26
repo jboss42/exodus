@@ -59,7 +59,6 @@ type
     Label3: TTntLabel;
     cboGroup: TTntComboBox;
     frameButtons1: TframeButtons;
-    lblAddGrp: TTntLabel;
     cboType: TTntComboBox;
     Label4: TTntLabel;
     lblGateway: TTntLabel;
@@ -73,6 +72,7 @@ type
     procedure cboTypeChange(Sender: TObject);
     procedure txtNicknameChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure txtJIDChange(Sender: TObject);
   private
     { Private declarations }
     cb: integer;
@@ -304,7 +304,6 @@ var
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    URLLabel(lblAddGrp);
     MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
@@ -331,6 +330,14 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmAdd.txtJIDChange(Sender: TObject);
+begin
+    if (Length(Trim(txtJid.Text)) > 0) then
+        Self.frameButtons1.btnOK.Enabled := true
+    else
+        Self.frameButtons1.btnOK.Enabled := false;
+end;
+
 procedure TfrmAdd.txtJIDExit(Sender: TObject);
 var
     tmp_id, ti2: TJabberID;

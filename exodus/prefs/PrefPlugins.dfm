@@ -12,22 +12,22 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   object Label6: TTntLabel [0]
     Left = 0
     Top = 241
-    Width = 191
+    Width = 194
     Height = 13
-    Caption = 'Plugin Directory (automatically scanned):'
+    Caption = 'Plug-in Directory (automatically scanned):'
   end
   object lblPluginScan: TTntLabel [1]
     Left = 0
     Top = 287
-    Width = 155
+    Width = 177
     Height = 13
     Cursor = crHandPoint
-    Caption = 'Re-Scan this directory for plugins'
+    Caption = 'Re-scan this directory for plug-ins'
     OnClick = lblPluginScanClick
   end
   inherited pnlHeader: TTntPanel
     Width = 353
-    Caption = 'Application Plugins'
+    Caption = 'Plug-ins'
     TabOrder = 6
     ExplicitWidth = 353
   end
