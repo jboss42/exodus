@@ -49,6 +49,8 @@ function escapeChar(Ch: WideChar): WideString;
 begin
     if (ch = #0) then
         Result := ''
+    else if (ch = #11) then
+        Result := ''
     else Result := ch;
 end;
 
@@ -273,72 +275,71 @@ end;
 function RTToXIM(rtSource: TExRichEdit): TXMLTag;
 
 var
-  i, currSelPos: Integer;
+  currSelPos: Integer;
   currFont, defaultFont, testFont: TFont;
   outerTag: TXMLtag;
   currTag: TXMLTag;
   currCData: WideString;
-  lineIdx: Integer;
   tstr: WideString;
+  allTxt: WideString;
 begin
-    Result := TXMLTag.Create('html');
-    Result.setAttribute('xmlns', XMLNS_XHTMLIM);
-    outerTag := Result.AddTagNS('body', XMLNS_XHTML);
-    //empty body if no text
-    if (Length(WideString(rtSource.WideLines.GetText)) = 0) then exit;
+  Result := TXMLTag.Create('html');
+  Result.setAttribute('xmlns', XMLNS_XHTMLIM);
+  outerTag := Result.AddTagNS('body', XMLNS_XHTML);
+  //empty body if no text
+  if (Length(WideString(rtSource.WideLines.GetText)) = 0) then exit;
 
-    outerTag := outerTag.AddTag('p');
-    currFont := TFont.Create;
-    testFont := TFont.Create;
-    defaultFont := TFont.Create;
+  outerTag := outerTag.AddTag('p');
+  currFont := TFont.Create;
+  testFont := TFont.Create;
+  defaultFont := TFont.Create;
 
-    rtSource.Lines.BeginUpdate;
+  rtSource.Lines.BeginUpdate;
   try
     assignFont(defaultFont, rtSource.DefAttributes);
     assignFont(currFont, rtSource.DefAttributes);
-    
+
     tstr :=  getStyleAttrib(defaultFont);
     if (tstr[Length(tstr)] = ';') then
-        setLength(tstr, Length(tstr) - 1);
+      setLength(tstr, Length(tstr) - 1);
 
     outerTag.setAttribute('style', tstr);
     currTag := outerTag;
-    currSelPos := 0;
+    currSelPos := 1;
     currCData := '';
-    lineIdx := 0;
-    //prime the loop by creating an inital span tag
-    repeat
-        //if not the first line, add a break
-        if (lineIdx > 0) then begin
-            currTag.AddCData(currCData);
-            currCData := '';
-            currTag.addTag('br');
-        end;
-        for i := 1 to Length(rtSource.WideLines[lineIdx]) do begin
-            //select the current character, and check style, emit tags when changing
-            rtSource.SelStart := currSelPos;
-            rtSource.SelLength := 1;
-            AssignFont(testFont, rtSource.SelAttributes);
-            //check to see if any font property we handle has changed
-            if (not isEqual(testFont, currFont)) then begin
-                //differing fonts, change tag
-                if (currCData <> '') then
-                    currTag.AddCData(escapeCData(currCData))
-                else if ((currTag <> outerTag) and (currTag.ChildCount = 0)) then
-                    outerTag.RemoveTag(currTag); //empty tag
+    allTxt := rtSource.WideText;
+    ExUtils.DebugMsg('rt: ' + tstr);
+    while(currSelPos <= Length(allTxt)) do begin
+      if ((allTxt[currSelPos] = #13) or // Carriage Return 
+          (allTxt[currSelPos] = #11)) then begin // Vertical Tab (Shift-Return)
+        //emit a break;
+        currTag.AddCData(currCData);
+        currCData := '';
+        currTag.addTag('br');
+        inc(currSelPos);
+      end;
+      //select the current character, and check style, emit tags when changing
+      rtSource.SelStart := currSelPos - 1; //0 based
+      rtSource.SelLength := 1;
+      AssignFont(testFont, rtSource.SelAttributes);
+      //check to see if any font property we handle has changed
+      if (not isEqual(testFont, currFont)) then begin
+        //differing fonts, change tag
+        if (currCData <> '') then
+          currTag.AddCData(escapeCData(currCData))
+        else if ((currTag <> outerTag) and (currTag.ChildCount = 0)) then
+          outerTag.RemoveTag(currTag); //empty tag
 
-                currCData := '';
-                currFont.Assign(testFont);
-                currTag := AddSpanTag(currFont, defaultFont, outerTag);
-            end;
-            currCData := currCData + escapeChar(rtSource.WideLines[lineIdx][i]);
-            inc(currSelPos);
-        end;
-        inc(lineIdx);
-        inc(currSelPos); //newline
-    until (lineIdx = rtSource.WideLines.Count);
+        currCData := '';
+        currFont.Assign(testFont);
+        currTag := AddSpanTag(currFont, defaultFont, outerTag);
+      end;
+      currCData := currCData + escapeChar(allTxt[currSelPos]);
+      inc(currSelPos);
+    end;
+
     if (currCData <> '') then
-        currTag.AddCData(escapeCData(currCData));
+      currTag.AddCData(escapeCData(currCData));
   finally
     rtSource.Lines.EndUpdate;
     currFont.Free;
@@ -405,6 +406,7 @@ var
     oneValue : WideString;
     oneProp: WideString;
     exSizeExists: boolean;
+    i: Integer;
 begin
     Result := nil;
     exSizeExists := false;
@@ -451,6 +453,11 @@ begin
                     Result.Style := Result.Style - [fsUnderline]
             end
         end;
+        for i := props.Count - 1 downto 0 do begin
+            TslObject(props.Objects[i]).Free;
+            props.Delete(i);
+        end;
+        props.Free();
     end;
 end;
 
@@ -616,18 +623,36 @@ Begin
     currFont.Free();
 end;
 
+function ReplaceNBSP(instring: Widestring): Widestring;
+var
+    nbsppos: integer;
+begin
+    Result := instring;
+    nbsppos := POS(NBSP, Result);
+    while (nbsppos > 0) do begin
+        Result[nbsppos] := ' ';
+        nbsppos := POS(NBSP, Result);
+    end;
+end;
+
 procedure handleCData(rtDest: TExRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
+var
+    s: widestring;
 begin
     rtDest.SelStart := Length(rtDest.WideLines.Text);
     rtDest.SelLength := 0;
-    //check to see if we found an emoticon
+
+    // Clear out any non-breaking spaces as RTF cannot handle them
+    s := ReplaceNBSP(TXMLCData(node).Data);
+
+    // Check to see if we found an emoticon
     if (handleEmoticons) then
-        ReplaceEmoticons(rtDest, TXMLCData(node).Data)
+        ReplaceEmoticons(rtDest, s)
     else
-        rtDest.WideSelText := TXMLCData(node).Data;
+        rtDest.WideSelText := s;
 end;
 
-procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false);
+procedure handleNode(rtDest: TexRichEdit; node: TXMLTag; handleEmoticons: boolean = false; isMe : boolean = false);
 var
     newFont: TFont;
     currFont: TFont;
@@ -655,8 +680,14 @@ begin
             try
                 AssignFont(currFont, rtDest.SelAttributes);
                 newFont := getFontFromNode(node, currFont);
-                if (newFont <> nil) then 
+                if (newFont <> nil) then begin
+                    currFont.Free; // We are replacing this with newFont.
                     currFont := newFont; //setup for text attrib assignment before
+                end;
+                //If me, then set default font size to my rich edit font
+                //IsMe passed with negation as arument, so need to use not 
+                if (not isMe) then
+                    currFont.Size := rtDest.SelAttributes.Size;
                 //pre process, newline for paragraphs for example
                 if ((node.Name = 'p') or (node.Name = 'div')) then begin
                     rtDest.SelStart := Length(rtDest.WideLines.Text);
@@ -666,7 +697,7 @@ begin
                 //iterate over our children
                 for idx := 0 to node.Nodes.Count - 1 do begin
                     assignTextAttribute(rtDest.SelAttributes, currFont);
-                    handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons);
+                    handleNode(rtDest, TXMLTag(node.Nodes[idx]), handleEmoticons, isMe);
                 end;
             finally
                 currFont.Free();
@@ -684,7 +715,6 @@ var
     foundEmoticon: boolean;
     tstr : WideString;
 begin
-
     if (xhtmlTag = nil) then exit;
     tstr := xhtmlTag.Data;
     cleanedTag := cleanXIMTag(xhtmlTag, ignoreFontProps);
@@ -706,7 +736,7 @@ begin
         //iterate over our children
         for idx := 0 to bTag.Nodes.Count - 1 do begin
             AssignTextAttribute(rtDest.SelAttributes, defFont);
-            handleNode(rtDest, TXMLTag(bTag.Nodes[idx]), foundEmoticon)
+            handleNode(rtDest, TXMLTag(bTag.Nodes[idx]), foundEmoticon, ignoreFontProps)
         end;
 
         AssignTextAttribute(rtDest.SelAttributes, origSelFont);

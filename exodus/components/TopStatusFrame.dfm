@@ -1,7 +1,7 @@
 object ExodusStatusFrame: TExodusStatusFrame
   Left = 0
   Top = 0
-  Width = 451
+  Width = 455
   Height = 53
   Align = alTop
   Color = 49146335
@@ -11,7 +11,7 @@ object ExodusStatusFrame: TExodusStatusFrame
   object imgHeader: TImage
     Left = 0
     Top = 0
-    Width = 451
+    Width = 455
     Height = 50
     Align = alClient
     Picture.Data = {
@@ -2562,14 +2562,12 @@ object ExodusStatusFrame: TExodusStatusFrame
       E9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DF
       EDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DF3A52}
     OnEndDock = imgHeaderEndDock
-    ExplicitLeft = -217
-    ExplicitWidth = 537
     ExplicitHeight = 49
   end
   object bvlBottom: TBevel
     Left = 0
     Top = 50
-    Width = 451
+    Width = 455
     Height = 3
     Align = alBottom
     Shape = bsBottomLine
@@ -2578,7 +2576,7 @@ object ExodusStatusFrame: TExodusStatusFrame
   end
   object lblTitle: TTntLabel
     Left = 28
-    Top = 9
+    Top = 3
     Width = 81
     Height = 16
     Caption = 'Subject Text'
@@ -2592,9 +2590,10 @@ object ExodusStatusFrame: TExodusStatusFrame
   end
   object lblStatus: TTntLabel
     Left = 28
-    Top = 28
-    Width = 255
-    Height = 13
+    Top = 19
+    Width = 424
+    Height = 28
+    AutoSize = False
     Caption = 'Instructional text and error messages appear here...'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 9981440
@@ -2603,5 +2602,7 @@ object ExodusStatusFrame: TExodusStatusFrame
     Font.Style = []
     ParentFont = False
     Transparent = True
+    Layout = tlCenter
+    WordWrap = True
   end
 end

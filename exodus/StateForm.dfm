@@ -12,6 +12,7 @@ object frmState: TfrmState
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefault
   ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate

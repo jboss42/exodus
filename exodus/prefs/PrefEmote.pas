@@ -64,6 +64,8 @@ type
       Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
       Stage: TCustomDrawStage; var DefaultDraw: Boolean);
     procedure chkEmoticonsClick(Sender: TObject);
+    procedure lstCustomEmotesSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     { Private declarations }
     el: TEmoticonList;
@@ -136,6 +138,10 @@ begin
 
     // Reload our lists.
     InitializeEmoticonLists();
+
+    // If emote dlls had invalid dlls, this list could have changed.
+    // So, reload.
+    MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 end;
 
 {---------------------------------------}
@@ -271,8 +277,9 @@ var
     li: TListItem;
     e: TEmoticon;
     f: TfrmEmoteProps;
-    fn, txt: Widestring;
+    fn, txt, ms: Widestring;
     i: integer;
+    valid: boolean;    
 begin
   inherited;
     // Edit
@@ -297,16 +304,40 @@ begin
     f.txtFilename.Text := fn;
     f.txtText.Text := txt;
 
-    if (f.ShowModal = mrOK) then begin
-        // replace text for this emoticon
-        i := el.indexOfText(txt);
-        if (i >= 0) then begin
-            el.setText(i, f.txtText.Text);
-            li.Caption := f.txtText.Text;
+    valid := false;
+    while (valid = false) do begin
+      if (f.ShowModal = mrOK) then begin
+        // validate the text matches our regex.
+        if (emoticon_regex.Exec(f.txtText.Text)) then begin
+            // we have a match
+            ms := emoticon_regex.Match[2];
+            if (ms = f.txtText.Text) then valid := true;
         end;
-    end;
-    f.Free();
 
+        if (valid = false) then begin
+            if (MessageDlgW(_('The text you entered is not a valid emoticon string. Try (foo), or ::foo::'),
+                mtError, [mbOK, mbCancel], 0) = mrCancel) then begin
+                f.Free();
+                exit;
+            end;
+        end;
+      end
+      //Canceled 
+      else begin
+       f.Free();
+       exit;
+      end;
+    end;
+
+
+    // replace text for this emoticon
+    i := el.indexOfText(txt);
+    if (i >= 0) then begin
+         el.setText(i, f.txtText.Text);
+         li.Caption := f.txtText.Text;
+    end;
+
+    f.Free();
 end;
 
 {---------------------------------------}
@@ -380,6 +411,19 @@ begin
 
 end;
 
+procedure TfrmPrefEmote.lstCustomEmotesSelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+begin
+  inherited;
+    btnCustomEmoteRemove.Enabled := Selected;
+
+    if (lstCustomEmotes.SelCount = 1) then
+        btnCustomEmoteEdit.Enabled := true
+    else
+        btnCustomEmoteEdit.Enabled := false;
+    
+end;
+
 procedure TfrmPrefEmote.chkEmoticonsClick(Sender: TObject);
 begin
   inherited;
@@ -390,8 +434,10 @@ begin
     pageEmotes.Enabled := chkEmoticons.Checked;
 
     btnCustomEmoteAdd.Enabled := chkEmoticons.Checked;
-    btnCustomEmoteRemove.Enabled := chkEmoticons.Checked;
-    btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
+    if (not chkEmoticons.Checked) then begin
+        btnCustomEmoteRemove.Enabled := chkEmoticons.Checked;
+        btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
+    end;
     txtCustomEmoteFilename.Enabled := chkEmoticons.Checked;
 end;
 

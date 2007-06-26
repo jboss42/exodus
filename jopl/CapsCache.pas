@@ -112,6 +112,8 @@ destructor TJabberCapsCache.Destroy();
 begin
     _cache.Free();
     _pending.Free();
+    _xp.Free();
+    _xp_q.Free();
 end;
 
 {---------------------------------------}

@@ -37,7 +37,7 @@ type
 implementation
 
 uses
-    RosterImages, ComServ;
+    RosterImages, ComServ, Debug;
 
 constructor TExodusToolbarButton.Create(btn: TToolButton);
 begin
@@ -102,14 +102,19 @@ end;
 
 procedure TExodusToolbarButton.OnClick(Sender: TObject);
 begin
-    if (_menu_listener <> nil) then
-        _menu_listener.OnMenuItemClick(_button.Name, '');
+    if (_menu_listener <> nil) then begin
+        try
+            _menu_listener.OnMenuItemClick(_button.Name, '');
+        except
+            DebugMessage('COM Exception in TExodusToolbarButton.OnClick');
+        end;
+    end;
 end;
 
 function TExodusToolbarButton.Get_Name(): Widestring;
 begin
     Result := _button.Name;
-end; 
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusToolbarButton, Class_ExodusToolbarButton,

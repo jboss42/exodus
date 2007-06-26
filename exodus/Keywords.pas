@@ -21,16 +21,20 @@ interface
   uses
     RegExpr;
 
-  function CreateKeywordsExpr(): RegExpr.TRegExpr;
+  function CreateKeywordsExpr(force_show_error: boolean = false): RegExpr.TRegExpr;
+
 
 implementation
   uses
     Unicode, SysUtils, Session,
     Windows, Dialogs, JabberUtils, Prefs;
 
+  var
+    ShowKeywordError: boolean = true;
+
   //Create TRegExpr based on Keyword Prefs
   //Returns nil when no user-defined keywords or on invalid keyword expression
-  function CreateKeywordsExpr() : RegExpr.TRegExpr;
+  function CreateKeywordsExpr(force_show_error: boolean = false) : RegExpr.TRegExpr;
   const
     ERR_MSG_KEYWORDS : Widestring = 'One or more keyword expressions are invalid. Keyword notification will be disabled until your keyword preferences are corrected.';
   var
@@ -39,6 +43,9 @@ implementation
     regex_keywords : boolean;
     i : integer;
   begin
+    if (force_show_error) then
+        ShowKeywordError := true;
+
     kw_list := TWideStringList.Create();
 
     try
@@ -68,9 +75,13 @@ implementation
         result.Expression := expr;
         result.Compile(); //Bad expressions in preferences will cause problems here
       end;
+      ShowKeywordError := true;
     except
       FreeAndNil(result);
-      MessageDlgW(ERR_MSG_KEYWORDS,mtError, [mbOK], 0);
+      if (ShowKeywordError) then begin
+          MessageDlgW(ERR_MSG_KEYWORDS,mtError, [mbOK], 0);
+          ShowKeywordError := false;
+      end;
     end;
 
     FreeAndNil(kw_list);

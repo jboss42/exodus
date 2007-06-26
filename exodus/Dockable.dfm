@@ -3,6 +3,8 @@ inherited frmDockable: TfrmDockable
   ClientWidth = 204
   DragKind = dkDock
   DragMode = dmAutomatic
+  KeyPreview = True
+  OnClose = FormClose
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
@@ -51,6 +53,7 @@ inherited frmDockable: TfrmDockable
         AlignWithMargins = True
         Left = 23
         Top = 0
+        Hint = 'Close this tab'
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0

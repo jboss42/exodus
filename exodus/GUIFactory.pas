@@ -48,12 +48,14 @@ uses
     RosterImages, PrefController, MsgRecv, Room, Bookmark,  
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg;
+    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
+    ChatController, Presence;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
     sNotifyChat = 'Chat with ';
     sPriorityNotifyChat = 'Priority Chat with ';
+    sCannotOffline = 'This contact cannot receive offline messages.';
 
 {---------------------------------------}
 constructor TGUIFactory.Create();
@@ -90,12 +92,16 @@ var
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
-    q: TfrmMsgQueue;
     msg: TJabberMessage;
+    c: TChatController;
+    p: TJabberPres;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/conference-props') then begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
+    end
+    else if (event = '/session/gui/conference-props-rename') then begin
+        ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
     end
     else if (event = '/session/gui/conference') then begin
         StartRoom(tag.GetAttribute('jid'), tag.GetBasicText('nick'),
@@ -109,6 +115,16 @@ begin
         //0 -> A new one to one chat window
         //1 -> An instant message window
         //2 -> A new or existing chat window
+        ri := MainSession.Roster.Find(tmp_jid.jid);
+        if (ri <> nil) then begin
+            if (not ri.IsNative) then begin
+                if (not ri.IsOnline) then begin
+                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
+                    exit;
+                end;
+            end;
+        end;
+
         if ((r = 0) or (r = 2)) then begin
             if (tmp_jid.resource <> '') then
                 StartChat(tmp_jid.jid, tmp_jid.resource, true)
@@ -130,6 +146,14 @@ begin
             // queue the chat window. Event now owned by msg queue, don't free
             RenderEvent(CreateJabberEvent(tag));
         end
+        else if ((MainSession.Prefs.getBool('queue_not_avail') and
+                ((MainSession.Show = 'away') or
+                 (MainSession.Show = 'xa') or
+                 (MainSession.Show = 'dnd'))) or
+                (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil)) then begin
+            // queue the chat window. Event now owned by msg queue, don't free
+            RenderEvent(CreateJabberEvent(tag));
+        end
         else begin
             // New Chat Window
             tmp_jid := TJabberID.Create(tag.getAttribute('from'));
@@ -144,17 +168,44 @@ begin
                   else
                     DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
                          chat.DisplayName, RosterTreeImages.Find('contact'));
+                  FreeAndNil(msg);
                 end;
             end;
             tmp_jid.Free;
         end;
     end
-
+    else if (event = '/session/gui/update-chat') then begin
+      tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+       //Delayed messages processing
+       if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil) then begin
+         //Check the status of message queue for the chat controller
+         c := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
+         if (c <> nil) then begin
+           //First new delayed messate, show queue ant notifications
+           if (c.msg_queue.Count = 1) then begin
+             DoNotify(showMsgQueue, 'notify_newchat', _('Chat with ') + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid), RosterTreeImages.Find('contact'));
+           end;
+         end;
+         MainSession.EventQueue.SaveEvents();
+       end
+       else begin
+        //If not delayed messages, it was queued due to user
+        //being in not Available state, check current presence.
+        if ((MainSession.Show <> 'away') and
+            (MainSession.Show <> 'xa') and
+            (MainSession.Show <> 'dnd')) then
+             chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
+                if (chat <> nil) then begin
+                   DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                   chat.DisplayName, RosterTreeImages.Find('contact'));
+                end;
+       end;
+       tmp_jid.Free;
+    end
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
-        q := getMsgQueue();
         //event is now referenced by msg queue. do not free
-        q.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
+        MainSession.EventQueue.LogEvent(e, e.str_content, RosterTreeImages.Find('headline'));
     end
 
     else if (event = '/session/gui/msgevent') then begin
@@ -164,11 +215,15 @@ begin
     end
 
     else if (event = '/session/gui/no-inband-reg') then begin
-        if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
-            mtError, [mbYes, mbNo], 0) = mrYes) then
-            MainSession.CreateAccount()
+        if (MainSession.Prefs.getBool('brand_show_in_band_registration_warning')) then begin
+            if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
+                mtError, [mbYes, mbNo], 0) = mrYes) then
+                MainSession.CreateAccount()
+            else
+                MainSession.FireEvent('/session/error/reg', nil);
+        end
         else
-            MainSession.FireEvent('/session/error/reg', nil);
+            MainSession.CreateAccount();
     end
 
     else if (event = '/session/gui/reg-not-supported') then begin
@@ -219,10 +274,19 @@ begin
         // block list?
         // Don't use MainSession.IsBlocked since it also
         // blocks people not on my roster. Just check our sync'd blocker list.
-        if (_blockers.IndexOf(tmp_jid.jid) >= 0) then exit;
+        if (_blockers.IndexOf(tmp_jid.jid) >= 0) then begin
+            // This contact is on our block list.
+            // So, we will auto-deny the subscription request.
+            p := TJabberPres.Create;
+            p.toJID := TJabberID.Create(tmp_jid.jid);
+            p.PresType := 'unsubscribed';
 
-        sub := TfrmSubscribe.Create(Application);
-        sub.setup(tmp_jid, ri, tag);
+            MainSession.SendTag(p);
+        end
+        else begin
+            sub := TfrmSubscribe.Create(Application);
+            sub.setup(tmp_jid, ri, tag);
+        end;
         tmp_jid.Free();
     end;
 end;

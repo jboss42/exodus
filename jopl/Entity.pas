@@ -264,10 +264,13 @@ begin
     _items.Clear();
     ClearStringListObjects(_idents);
     _idents.Clear();
+    _idents.Free();
     _feats.Clear();
     FreeAndNil(_items);
     FreeAndNil(_feats);
     _jid.Free();
+    _refs.Clear();
+    _refs.Free();
 end;
 
 {---------------------------------------}

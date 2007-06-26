@@ -2,68 +2,64 @@ inherited frmJud: TfrmJud
   BorderIcons = [biSystemMenu, biMaximize]
   BorderStyle = bsSizeable
   Caption = 'Jabber Search'
-  ClientHeight = 355
-  ClientWidth = 553
-  KeyPreview = True
+  ClientHeight = 416
+  ClientWidth = 492
   OldCreateOrder = True
-  OnClose = FormClose
   OnResize = FormResize
-  ExplicitWidth = 561
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 314
-    Width = 553
-    ExplicitTop = 314
-    ExplicitWidth = 553
+    Top = 375
+    Width = 492
+    ExplicitTop = 375
+    ExplicitWidth = 492
     inherited Bevel1: TBevel
-      Width = 553
+      Width = 492
       ExplicitWidth = 409
     end
     inherited btnBack: TTntButton
-      Left = 311
+      Left = 250
       Anchors = [akTop, akRight]
       Cancel = True
       OnClick = btnBackClick
-      ExplicitLeft = 311
+      ExplicitLeft = 250
     end
     inherited btnNext: TTntButton
-      Left = 387
+      Left = 326
       Anchors = [akTop, akRight]
       Default = True
       OnClick = btnNextClick
-      ExplicitLeft = 387
+      ExplicitLeft = 326
     end
     inherited btnCancel: TTntButton
-      Left = 471
+      Left = 410
       Anchors = [akTop, akRight]
       OnClick = btnCancelClick
-      ExplicitLeft = 471
+      ExplicitLeft = 410
     end
   end
   inherited Tabs: TPageControl
-    Width = 553
-    Height = 261
-    ExplicitTop = 53
-    ExplicitWidth = 553
-    ExplicitHeight = 261
+    Width = 492
+    Height = 322
+    ActivePage = TabSheet4
+    ExplicitWidth = 492
+    ExplicitHeight = 322
     inherited TabSheet1: TTabSheet
       OnEnter = TabSheet1Enter
       ExplicitLeft = 4
       ExplicitTop = 27
-      ExplicitWidth = 545
-      ExplicitHeight = 230
+      ExplicitWidth = 484
+      ExplicitHeight = 291
       object lblSelect: TTntLabel
         Left = 0
         Top = 0
-        Width = 545
+        Width = 484
         Height = 13
         Align = alTop
-        Caption = 
-          'Select the user database or enter in the Jabber ID of the search' +
-          ' agent to use:'
+        Caption = 'Select the user database for the search agent to use:'
         WordWrap = True
-        ExplicitWidth = 365
+        ExplicitWidth = 251
       end
       object cboJID: TTntComboBox
         Left = 16
@@ -81,7 +77,7 @@ inherited frmJud: TfrmJud
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 545
+        Width = 484
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
@@ -91,7 +87,7 @@ inherited frmJud: TfrmJud
       object aniWait: TAnimate
         Left = 0
         Top = 13
-        Width = 545
+        Width = 484
         Height = 50
         Align = alTop
         CommonAVI = aviFindFolder
@@ -104,7 +100,7 @@ inherited frmJud: TfrmJud
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 545
+        Width = 484
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
@@ -117,8 +113,8 @@ inherited frmJud: TfrmJud
       ImageIndex = 3
       object Panel2: TPanel
         Left = 0
-        Top = 171
-        Width = 545
+        Top = 232
+        Width = 484
         Height = 59
         Align = alBottom
         BevelOuter = bvNone
@@ -191,8 +187,8 @@ inherited frmJud: TfrmJud
       object lstContacts: TTntListView
         Left = 0
         Top = 0
-        Width = 545
-        Height = 171
+        Width = 484
+        Height = 232
         Align = alClient
         Columns = <
           item
@@ -212,7 +208,7 @@ inherited frmJud: TfrmJud
         OnColumnClick = lstContactsColumnClick
         OnContextPopup = lstContactsContextPopup
         OnData = lstContactsData
-        OnSelectItem = lstContactsSelectItem
+        OnMouseUp = lstContactsMouseUp
       end
     end
     object TabXData: TTabSheet
@@ -221,42 +217,40 @@ inherited frmJud: TfrmJud
       inline xdataBox: TframeXData
         Left = 0
         Top = 0
-        Width = 545
-        Height = 230
+        Width = 484
+        Height = 291
         Align = alClient
         TabOrder = 0
         TabStop = True
-        ExplicitWidth = 545
-        ExplicitHeight = 230
+        ExplicitWidth = 484
+        ExplicitHeight = 291
         inherited Panel1: TPanel
-          Width = 545
-          Height = 230
-          ExplicitWidth = 545
-          ExplicitHeight = 230
+          Width = 484
+          Height = 291
+          ExplicitWidth = 484
+          ExplicitHeight = 291
           inherited ScrollBox1: TScrollBox
-            Width = 535
-            Height = 220
-            ExplicitWidth = 535
-            ExplicitHeight = 220
+            Width = 474
+            Height = 281
+            ExplicitWidth = 474
+            ExplicitHeight = 281
           end
         end
       end
     end
   end
   inherited pnlDockTop: TPanel
-    Width = 553
-    ExplicitWidth = 553
+    Width = 492
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
-      Left = 504
-      ExplicitLeft = 504
+      Left = 443
+      ExplicitLeft = 443
     end
     inherited Panel1: TPanel
-      Width = 501
-      ExplicitTop = 0
-      ExplicitWidth = 501
-      ExplicitHeight = 53
+      Width = 440
+      ExplicitWidth = 440
       inherited Bevel2: TBevel
-        Width = 501
+        Width = 440
         ExplicitWidth = 409
       end
       inherited lblWizardTitle: TTntLabel
@@ -268,7 +262,8 @@ inherited frmJud: TfrmJud
         Caption = ''
       end
       inherited Image1: TImage
-        Left = 460
+        Left = 399
+        Picture.Data = {00}
         ExplicitLeft = 368
       end
     end

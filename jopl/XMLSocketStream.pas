@@ -25,21 +25,21 @@ unit XMLSocketStream;
 
 interface
 uses
-    XMLTag, XMLStream, PrefController,
+    XMLTag, XMLStream, PrefController, XMLParser,
 
     {$ifdef linux}
     QExtCtrls, IdSSLIntercept,
     {$else}
 
     {$ifdef INDY9}
-    IdIOHandlerSocket,
+    IdIOHandlerSocket, idSSLSchannel,
     {$endif}
     Windows, ExtCtrls, IdSSLOpenSSL, ZLib,
 
     {$endif}
 
     IdTCPConnection, IdTCPClient, IdException, IdThread, IdSocks,
-    SysUtils, SyncObjs;
+    SysUtils, SyncObjs, JwaCryptUIApi, JwaWinCrypt;
 
 type
 
@@ -55,6 +55,7 @@ type
         {$else}
             {$ifdef INDY9}
             _ssl_int: TIdSSLIOHandlerSocket;
+			_x509_int: TIdSchannelIOHandlerSocket;
             _socks_info: TIdSocksInfo;
             _iohandler: TIdIOHandlerSocket;
             {$else}
@@ -83,6 +84,7 @@ type
         procedure _connectIndy8();
         {$ifend}
 
+        procedure verifyServerCertificate;
     protected
         // TODO: make this a real event handler, so that other subclasses
         // know how to get these events more explicitly.
@@ -135,7 +137,7 @@ uses
     {$ifdef INDY9}
     HttpProxyIOHandler, IdSSLOpenSSLHeaders, ZlibHandler,
     {$endif}
-    Session, StrUtils, Classes;
+    Session, StrUtils, Classes, Unicode;
 
 var
     _check_ssl: boolean;
@@ -170,6 +172,37 @@ begin
 end;
 {$endif}
 
+function PWideToString(  pw : PWideChar  ) : string;
+var
+    p : PChar;
+    iLen : integer;
+begin
+    {Get memory for the string}
+    iLen := lstrlenw(  pw  ) + 1;
+    GetMem(  p,  iLen  );
+
+    {Convert a unicode (PWideChar) to a string}
+    WideCharToMultiByte(  CP_UTF8,  0,  pw,  iLen,  p,  iLen * 2,  nil,  nil  );
+
+    Result := p;
+    FreeMem(  p,  iLen  );
+end;
+
+function PCharToWideString(  p : PChar  ) : Widestring;
+var
+    pw : PWideChar;
+    iLen : integer;
+begin
+    {Get memory for the string}
+    iLen := lstrlen(  p  ) + 1;
+    GetMem(  pw,  iLen * 2 );
+
+    {Convert a unicode (PWideChar) to a string}
+    MultiByteToWideChar( CP_UTF8, 0, p, iLen, pw, iLen * 2);
+
+    Result := pw;
+    FreeMem(  pw,  iLen  );
+end;
 
 {---------------------------------------}
 {      TSocketThread Class              }
@@ -193,6 +226,11 @@ procedure TSocketThread.DataTerminate(Sender: TObject);
 begin
     // destructor for the thread
     ThreadCleanUp();
+    try
+        doMessage(WM_DISCONNECTED);
+    except
+
+    end;
 end;
 
 
@@ -280,7 +318,7 @@ begin
             else
                 _remain_utf := '';
 
-            buff := UTF8Decode(inp);
+            buff := PCharToWideString(PChar(inp));
 
             // We are shutting down, or we've got an exception, so just bail
             if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
@@ -420,6 +458,7 @@ begin
     inherited;
 
     _ssl_int    := nil;
+    _x509_int   := nil;
     _ssl_check  := false;
     _ssl_ok     := false;
     _socket     := nil;
@@ -524,25 +563,44 @@ begin
             // Socket is connected
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
-            if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
-                (_ssl_int.PassThrough)) then begin
-                if (_profile.SocksType = proxy_http) then begin
-                    HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
-                end;
+            if (not MainSession.Profile.x509Auth) then begin
+                if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
+                    (_ssl_int.PassThrough)) then begin
+                    if (_profile.SocksType = proxy_http) then begin
+                        HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
+                    end;
 
-                _ssl_int.PassThrough := false;
+                    _ssl_int.PassThrough := false;
+                end;
+            end
+            else begin
+                if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
+                    (_x509_int.PassThrough)) then begin
+                    if (_profile.SocksType = proxy_http) then begin
+                        HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
+                    end;
+
+                    _x509_int.PassThrough := false;
+                end;
             end;
 
             // Validate here, not in onVerifyPeer
-            if ((_profile.ssl = ssl_port) and (_ssl_int <> nil)) then begin
-                FixIndy9SSL();
-                cert := _ssl_int.SSLSocket.PeerCert;
-                if (VerifyPeer(cert) <> SVE_NONE) then begin
-                    tag := TXMLTag.Create('ssl');
-                    tag.AddCData(_ssl_err);
-                    fp := cert.FingerprintAsString;
-                    tag.setAttribute('fingerprint', fp);
-                    DoCallbacks('ssl-error', tag);
+            if (_profile.ssl = ssl_port) then begin
+                if ((not MainSession.Profile.x509Auth) and
+                    (_ssl_int <> nil)) then begin
+                    FixIndy9SSL();
+                    cert := _ssl_int.SSLSocket.PeerCert;
+	                if (VerifyPeer(cert) <> SVE_NONE) then begin
+	                    tag := TXMLTag.Create('ssl');
+	                    tag.AddCData(_ssl_err);
+	                    fp := cert.FingerprintAsString;
+	                    tag.setAttribute('fingerprint', fp);
+	                    DoCallbacks('ssl-error', tag);
+	                end;
+                end
+                else if (_x509_int <> nil) then begin
+                    FixIndy9SSL();
+					verifyServerCertificate;
                 end;
             end;
 
@@ -558,8 +616,6 @@ begin
             // Socket is disconnected
             _active := false;
             KillSocket();
-            if (_thread <> nil) then
-                _thread.Terminate();
             _timer.Enabled := false;
             _thread := nil;
             DoCallbacks('disconnected', nil);
@@ -634,21 +690,25 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream._setupSSL();
 begin
-    with _ssl_int do begin
-        SSLOptions.Mode := sslmClient;
-        SSLOptions.Method :=  sslvTLSv1;
-
-        // TODO: get certs from profile, that would be *cool*.
-        SSLOptions.CertFile := '';
-        SSLOptions.RootCertFile := '';
-
-        if (_ssl_cert <> '') then begin
-            SSLOptions.CertFile := _ssl_cert;
-            SSLOptions.KeyFile := _ssl_cert;
-        end;
-
-        // TODO: Add verification options here!
-    end;
+	if (not MainSession.Profile.x509Auth) then begin 
+	    with _ssl_int do begin
+	        SSLOptions.Mode := sslmClient;
+	        SSLOptions.Method :=  sslvTLSv1;
+	
+	        // TODO: get certs from profile, that would be *cool*.
+	        SSLOptions.CertFile := '';
+	        SSLOptions.RootCertFile := '';
+	
+	        if (_ssl_cert <> '') then begin
+	            SSLOptions.CertFile := _ssl_cert;
+	            SSLOptions.KeyFile := _ssl_cert;
+	        end;
+	
+	        // TODO: Add verification options here!
+	    end;
+	end
+	else
+		_x509_int.CertificateId := _ssl_cert;
 end;
 
 {---------------------------------------}
@@ -660,19 +720,37 @@ var
 begin
     // Setup everything for Indy9 objects
     _ssl_int := nil;
+    _x509_int := nil;
     _socks_info := TIdSocksInfo.Create(nil);
     _iohandler := nil;
 
     // Let's always use SSL if we can, then we can always do TLS
     if (checkSSL()) then begin
-        _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
-        if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
-            _ssl_int.PassThrough := true;
-        _ssl_int.UseNagle := false;
+		if (not MainSession.Profile.x509Auth) then begin
+        	_ssl_int := TIdSSLIOHandlerSocket.Create(nil);
+
+            if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
+                _ssl_int.PassThrough := true;
+
+            _ssl_int.UseNagle := false;
+        end
+		else begin
+	        _x509_int := TIdSchannelIOHandlerSocket.Create(nil);
+    	    _x509_int.ServerName := _profile.Server; //SChannel
+
+            if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
+               _x509_int.PassThrough := true;
+		end;
+
         _setupSSL();
-        _iohandler := _ssl_int;
-        _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
-        _ssl_int.OnGetPassword := TSocketThread(_thread).SSLGetPassword;
+
+		if (not MainSession.Profile.x509Auth) then begin
+	        _iohandler := _ssl_int;
+	        _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
+    	    _ssl_int.OnGetPassword := TSocketThread(_thread).SSLGetPassword;
+		end
+		else
+			_iohandler := _x509_int;
     end;
 
     // Create an HTTP Proxy if we need one
@@ -799,10 +877,6 @@ begin
     // Create our socket
     _socket := TIdTCPClient.Create(nil);
 
-    // SUCK, make the recv buffer freaken' gigantic to avoid weird SSL issues
-    //_socket.RecvBufferSize := 4096;
-    _socket.RecvBufferSize := (1024 * 1024);
-
     _socket.Port := _profile.ResolvedPort;
     _socket.Host := _profile.ResolvedIP;
 
@@ -820,16 +894,31 @@ begin
     _connectIndy8();
     {$ifend}
 
+    // SUCK, make the recv buffer freaken' gigantic to avoid weird SSL issues
+    //_socket.RecvBufferSize := 4096;
+	if (not MainSession.Profile.x509Auth) then
+	    _socket.RecvBufferSize := (1024 * 1024)
+	else
+		_socket.RecvBufferSize := _x509_int.MaxIntialChunkSize; //SChannel
+
     _thread.Start;
 end;
 
 {---------------------------------------}
 function TXMLSocketStream.isSSLCapable(): boolean;
 begin
-    if (_ssl_int <> nil) then
-        Result := _ssl_int.PassThrough
-    else
-        Result := false;
+    if (not MainSession.Profile.x509Auth) then begin
+        if (_ssl_int <> nil) then
+            Result := _ssl_int.PassThrough
+        else
+            Result := false;
+    end
+    else begin
+        if (_x509_int <> nil) then
+            Result := _x509_int.PassThrough
+        else
+            Result := false;
+    end;
 end;
 
 {---------------------------------------}
@@ -839,22 +928,51 @@ var
     cert: TIdX509;
     tag: TXMLTag;
 begin
-    if (_ssl_int = nil) then exit;
+    if (not MainSession.Profile.x509Auth) then begin
+        if (_ssl_int = nil) then exit;
 
-    if (_ssl_int.PassThrough = false) then
-        exit
+        if (_ssl_int.PassThrough = false) then
+            exit
+        else begin
+            _ssl_int.PassThrough := false;
+            FixIndy9SSL();
+            cert := _ssl_int.SSLSocket.PeerCert;
+            if (VerifyPeer(cert) <> SVE_NONE) then begin
+                tag := TXMLTag.Create('ssl');
+                tag.AddCData(_ssl_err);
+                fp := cert.FingerprintAsString;
+                tag.setAttribute('fingerprint', fp);
+                DoCallbacks('ssl-error', tag);
+            end;
+        end;
+    end
     else begin
-        _ssl_int.PassThrough := false;
-        FixIndy9SSL();
-        cert := _ssl_int.SSLSocket.PeerCert;
-        if (VerifyPeer(cert) <> SVE_NONE) then begin
-            tag := TXMLTag.Create('ssl');
-            tag.AddCData(_ssl_err);
-            fp := cert.FingerprintAsString;
-            tag.setAttribute('fingerprint', fp);
-            DoCallbacks('ssl-error', tag);
+        if (_x509_int = nil) then exit;
+
+        if (_x509_int.PassThrough = false) then exit
+        else begin
+            _x509_int.PassThrough := false;
+            _socket.RecvBufferSize := _x509_int.MaxDataChunkSize;
+            FixIndy9SSL();
+            verifyServerCertificate;
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TXMLSocketStream.verifyServerCertificate;
+var
+  tag: TXMLTag;
+  fp, ssl_err: WideString;
+begin
+  if (not _x509_int.PeerCert.verifyCertificate(ssl_err)) then
+  begin
+    tag := TXMLTag.Create('ssl');
+    tag.AddCData(ssl_err);
+    fp := _x509_int.PeerCert.FingerprintAsString;
+    tag.setAttribute('fingerprint', fp);
+    DoCallbacks('ssl-error', tag);
+  end;
 end;
 
 {---------------------------------------}
@@ -876,16 +994,25 @@ begin
     _timer.Enabled := false;
     if ((_socket <> nil) and (_socket.Connected)) then begin
         {$ifdef INDY9}
-        if (_ssl_int <> nil) then begin
-            _ssl_int.PassThrough := true;
+        if (not MainSession.Profile.x509Auth) then begin
+            if (_ssl_int <> nil) then
+                _ssl_int.PassThrough := true;
+        end
+        else begin
+            if (_x509_int <> nil) then
+                _x509_int.PassThrough := true;
         end;
         {$endif}
         _socket.Disconnect();
     end
     else if (_active) then begin
         _active := false;
-        if (_thread <> nil) then
-            _thread.Terminate;
+        try
+            if (_thread <> nil) then
+                _thread.Terminate;
+        except
+
+        end;
         _timer.Enabled := false;
         _thread := nil;
     end;
@@ -908,15 +1035,19 @@ begin
         if (_ssl_int <> nil) then
             FreeAndNil(_ssl_int);
 
+        if (_x509_int <> nil) then
+            FreeAndNil(_x509_int);
+
         if (_socks_info <> nil) then
             FreeAndNil(_socks_info);
-            
+
         _socket.Free();
         _socket := nil;
     end;
 
     _sock_lock.Release();
 end;
+
 
 {---------------------------------------}
 procedure TXMLSocketStream.Send(xml: Widestring);
@@ -927,7 +1058,7 @@ begin
     if (_socket = nil) then exit;
 
     DoDataCallbacks(true, xml);
-    buff := UTF8Encode(xml);
+    buff := PWideToString(PWideChar(xml));
     try
         _Socket.Write(buff);
         _timer.Enabled := false;
