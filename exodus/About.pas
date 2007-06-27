@@ -103,6 +103,17 @@ begin
     InfoBox.WideLines.Add('');
 
     additional := TWideStringList.Create();
+
+    MainSession.Prefs.fillStringlist('brand_about_additional_list', additional);
+    for i := 0 to additional.Count - 1 do begin
+        InfoBox.WideLines.Add(additional.Strings[i]);
+    end;
+
+    if (additional.Count > 0) then
+        InfoBox.WideLines.Add('');
+
+    additional.Clear();
+
     MainSession.Prefs.fillStringlist('about_additional_list', additional);
     for i := 0 to additional.Count - 1 do begin
         InfoBox.WideLines.Add(additional.Strings[i]);
