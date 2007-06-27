@@ -446,6 +446,9 @@
 	<!-- Brand the minimum size of the window -->
 	<brand_min_window_height value="230"/>
 	<brand_min_window_width value="250"/>
+
+  <!-- Stringlist with additional data to be added to the about box -->
+  <brand_about_additional_list/>
   </prefs>
 
   <!-- default custom presence stuff -->
