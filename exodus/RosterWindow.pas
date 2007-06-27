@@ -1456,7 +1456,14 @@ begin
     end
 
     else if (ritem.ask = 'subscribe') and (_show_pending) then begin
-        // allow these items to pass thru
+        // allow these items to pass thru if showing offline, 
+        // But, make sure they are hidden if
+        // not showing offline contacts
+        if ((_show_online) and (_show_filter > show_offline)) then begin
+            RemoveItemNodes(ritem);
+            exit
+        end;
+
     end
 
     else if ((ritem.IsInGroup(_transports)) and
