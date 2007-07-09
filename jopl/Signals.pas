@@ -258,13 +258,31 @@ begin
     if (not Assigned(_handler)) then exit;
 
     data := TWidestringList.Create();
-    data.Add('Exception: ' + e.Message);
-    data.Add('Signal Class: ' + sig.ClassName);
-    data.Add('Event: ' + event);
-    data.Add('Listener Classname: ' + sl.classname);
-    data.Add('Listener Methodname: ' + sl.methodname);
-    if (tag <> nil) then
-        data.Add('XML Packet: ' + tag.xml());
+    try
+        // try...except here because
+        // it is possible for sig or sl
+        // to point to invalid data.
+        data.Add('Exception: ' + e.Message);
+        data.Add('Event: ' + event);
+        data.Add('Signal Class: ' + sig.ClassName);
+        data.Add('Listener Classname: ' + sl.classname);
+        data.Add('Listener Methodname: ' + sl.methodname);
+        if (tag <> nil) then
+            data.Add('XML Packet: ' + tag.xml());
+    except
+        // Prevent app excpetion code from seeing an excpetion
+        // if it happens in this block.
+        // Nothing really to do with the exception because we
+        // are already in this function due to an unrecoverable
+        // exception.  So, just continue on with recording the
+        // original exception with what data we have aquired
+        // (adding note that we excpeted here as well).
+        // The fact that an exception happened inside of this
+        // exception handling code is less important then the
+        // original excpetion.
+        on second_ex: Exception do
+            data.Add('Secondary Exception in handleException(): ' + second_ex.Message);
+    end;
     _handler(data, true);
     data.Free();
 end;
