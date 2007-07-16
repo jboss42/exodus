@@ -958,7 +958,8 @@ uses
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser, DisplayName,
-    ComServ, PrefFile;
+    ComServ, PrefFile,
+    DebugManager;
 
 {$R *.DFM}
 
@@ -4048,12 +4049,14 @@ begin
 
 		// if no user is assosiated with winsta0, then no user is
 		// is logged on:
-		if len = 0 then
+		if len = 0 then begin
 			// no one is logged on:
-			result := DT_NO_LOG
-		else
+			result := DT_NO_LOG;
+        end
+		else begin
 			// the station is locked
 			result := DT_LOCKED;
+        end;
         exit;
     end;
     result := DT_UNKNOWN;
