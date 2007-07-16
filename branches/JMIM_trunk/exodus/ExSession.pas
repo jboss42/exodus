@@ -98,7 +98,7 @@ uses
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
-    XMLParser, XMLUtils, DebugLogger;
+    XMLParser, XMLUtils, DebugLogger, DebugManager;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -534,6 +534,7 @@ begin
     // Initialize the global responders/xpath events
     initResponders();
 
+    StartDBGManager();
     if (log_debug) then begin
         StartDebugLogger(log_filename);
     end;
@@ -736,8 +737,11 @@ begin
     // free all of the stuff we created
     // kill all of the auto-responders..
     OutputDebugString('TeardownSession');
+
     cleanupResponders();
     StopDebugLogger();
+
+    StopDBGManager();
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
@@ -768,6 +772,7 @@ begin
     if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
     if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
     if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+
 
 end;
 
