@@ -331,6 +331,8 @@ begin
     exe_FullPath_len := GetModuleFileName(0, PChar(exe_FullPath), MAX_PATH);
     exe_FullPath := LeftStr(exe_FullPath, exe_FullPath_len);
     Prefs.setString('exe_FullPath', exe_FullPath);
+    exe_FullPath := Windows.GetCommandLine();
+    Prefs.setString('exe_CommandLine', exe_FullPath);
 
     if (Prefs.getBool('always_lang')) then
         _lang := Prefs.getString('locale')
