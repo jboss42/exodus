@@ -554,8 +554,15 @@ begin
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a browse query
         if (not _fallback) then begin
-            _has_info := true;
-            js.FireEvent('/session/entity/info', tag);
+            // We are in a error or timeout IQ result
+            // So, the disco#info failed, and we do
+            // NOT have any info.  Unfortunately, this
+            // does NOT remove the entity from the
+            // pending cache so, won't do a disco again
+            // in this session. 
+
+            //_has_info := true;
+            //js.FireEvent('/session/entity/info', tag);
             exit;
         end;
         
