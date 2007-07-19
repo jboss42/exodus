@@ -42,7 +42,8 @@ uses
 constructor TExodusToolbarButton.Create(btn: TToolButton);
 begin
     _button := btn;
-    _button.OnClick := Self.OnClick;
+    if (not Assigned(_button.OnClick)) then
+        _button.OnClick := Self.OnClick;
 end;
 
 function TExodusToolbarButton.Get_ImageID: WideString;
