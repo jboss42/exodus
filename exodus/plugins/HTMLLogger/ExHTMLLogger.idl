@@ -16,7 +16,7 @@ library ExHTMLLogger
   [
     uuid(BA304092-987A-42C3-A4CC-40D196BE1A4F), 
     version(1.0), 
-    helpstring("HTMLLogger Object")
+    helpstring("Save chat message history")
   ]
   coclass HTMLLogger
   {
