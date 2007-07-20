@@ -1026,6 +1026,7 @@ begin
         Self.AutoSize := false;
         _was_max := false;
     end;
+    SetForegroundWindow(Self.Handle);
 end;
 
 {---------------------------------------}
