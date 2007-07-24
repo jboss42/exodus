@@ -2862,13 +2862,20 @@ begin
                     _cur_ritem.setPresenceImage('pending');
                 end;
 
-                p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+
+                if (_cur_ritem.Jid.jid = MainSession.BareJid) then
+                    // Is a resource contact, not standard contact
+                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, _cur_ritem.Jid.resource)
+                else
+                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
                 if (_show_status) then begin
                   if (p <> nil) then
                     if (p.Status <> '') then
                       c2 := '(' + p.Status + ')'
                     else if (p.Show <> '') then
                       c2 := '(' + p.Show + ')'
+                    else
+                      c2 := '';
                 end;
             end;
 
