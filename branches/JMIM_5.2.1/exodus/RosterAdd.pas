@@ -237,6 +237,7 @@ end;
 procedure TfrmAdd.frameButtons1btnOKClick(Sender: TObject);
 var
     tmp_jid: TJabberID;
+    tmp_xml: TXMLTag;
 begin
     // Add the new roster item..
     sjid := txtJID.Text;
@@ -244,11 +245,21 @@ begin
     sgrp := cboGroup.Text;
     addInfo := TNetworkInfo(cboType.Items.Objects[cboType.ItemIndex]);
 
+    tmp_xml := TXMLTag.Create('roster_add');
+    tmp_xml.AddBasicTag('name', addInfo.name);
+    tmp_xml.AddBasicTag('network_type', addInfo.nType);
+    tmp_xml.AddBasicTag('transport_features', addInfo.transFeat);
+    tmp_xml.AddBasicTag('auto_complete_data', addInfo.acName);
+    tmp_xml.AddBasicTag('jid', sjid);
+    tmp_xml.AddBasicTag('nick', snick);
+    tmp_xml.AddBasicTag('group', sgrp);
+
     if (addInfo.isInNetwork()) then begin
         tmp_jid := TJabberID.Create(sjid, false);
         sjid := tmp_jid.jid;
         if (WideLowercase(sjid) = WideLowercase(MainSession.Profile.getJabberID().jid())) then begin
             MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);
+            tmp_xml.Free();
             exit;
         end;
 
@@ -256,6 +267,7 @@ begin
             if MessageDlgW(_(sNoDomain), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         if (tmp_jid.resource <> '') then
             if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+        MainSession.FireEvent('/roster/add/in-network/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
         doAdd();
         tmp_jid.Free();
     end
@@ -268,9 +280,13 @@ begin
             gw_ent := jEntityCache.fetch(gw, MainSession);
             self.Hide();
         end
-        else
+        else begin
+            MainSession.FireEvent('/roster/add/gateway/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
             doAdd();
+        end;
     end;
+
+    tmp_xml.Free();
 end;
 
 {---------------------------------------}
