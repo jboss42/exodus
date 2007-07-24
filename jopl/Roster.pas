@@ -562,8 +562,14 @@ begin
         ri.ImageIndex := _ico_Unknown
     else if p = nil then
         ri.setPresenceImage('offline')
-    else
-        ri.setPresenceImage(p.show);
+    else begin
+        if (is_me) then
+            // Show the provided presence
+            ri.setPresenceImage(pres.Show)
+        else
+            // Show the PPDB presence
+            ri.setPresenceImage(p.show);
+    end;
 
     if (p = nil) then
         ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
