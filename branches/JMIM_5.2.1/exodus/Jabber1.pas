@@ -1793,7 +1793,8 @@ begin
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
-        if (MainSession.Profile.ConnectionType = conn_normal) then
+        if ((MainSession.Profile.ConnectionType = conn_normal) and
+            (MainSession.Prefs.getBool('brand_ft'))) then
             DragAcceptFiles(Handle, True);
 
         // 1. Fetch the roster
