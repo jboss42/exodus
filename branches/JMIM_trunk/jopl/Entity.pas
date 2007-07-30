@@ -70,6 +70,7 @@ type
         _refs: TList;
 
         _has_info: Boolean;             // do we need to do a disco#info?
+        _disco_info_error: Boolean;     // Was the disco#info a type="error"
         _has_items: boolean;            // do we have children?
         _items: TWidestringlist;        // our children
         _idents: TWidestringlist;       // our Identities
@@ -143,6 +144,7 @@ type
         
         property hasItems: boolean read _has_items;
         property hasInfo: boolean read _has_info;
+        property discoInfoError: boolean read _disco_info_error;
 
         property FeatureCount: Integer read _getFeatureCount;
         property Features[Index: integer]: Widestring read _getFeature;
@@ -238,6 +240,7 @@ begin
     _refs := TList.Create();
     _type := etype;
     _has_info := false;
+    _disco_info_error := false;
     _has_items := false;
 
     _items := TWidestringlist.Create();
@@ -554,15 +557,10 @@ begin
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a browse query
         if (not _fallback) then begin
-            // We are in a error or timeout IQ result
-            // So, the disco#info failed, and we do
-            // NOT have any info.  Unfortunately, this
-            // does NOT remove the entity from the
-            // pending cache so, won't do a disco again
-            // in this session. 
-
-            //_has_info := true;
-            //js.FireEvent('/session/entity/info', tag);
+            _has_info := true;
+            if (tag.GetAttribute('type') = 'error') then
+                _disco_info_error := true;
+            js.FireEvent('/session/entity/info', tag);
             exit;
         end;
         
@@ -596,6 +594,7 @@ begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
 
     _has_info := false;
+    _disco_info_error := false;
     _has_items := false;
     _type := ent_unknown;
 
@@ -611,6 +610,7 @@ begin
     if ((_iq <> nil) or (_type = ent_cached_disco)) then exit;
 
     _has_info := false;
+    _disco_info_error := false;
     _has_items := true;
     _type := ent_unknown;
 
@@ -687,6 +687,7 @@ begin
     }
 
     _has_info := true;
+    _disco_info_error := false;
     _feats.Clear();
     _idents.Clear();
 
@@ -929,6 +930,7 @@ begin
 
     // we have the info about this object..
     _has_info := true;
+    _disco_info_error := false;
 
     // but not it's children
     _has_items := false;
@@ -984,6 +986,7 @@ begin
     // we got browse back
     _type := ent_browse;
     _has_info := true;
+    _disco_info_error := false;
     _has_items := true;
 
     // process results
@@ -1000,6 +1003,7 @@ begin
         _processBrowseItem(q);
 
         _has_info := true;
+        _disco_info_error := false;
         _has_items := true;
 
 
@@ -1060,6 +1064,7 @@ begin
 
     // desc := agent.GetBasicText('description');
     _has_info := true;
+    _disco_info_error := false;
     
     tmps := item.GetBasicText('service');
     if (tmps <> '') then _feats.Add(tmps);
@@ -1109,6 +1114,7 @@ begin
         end
         else begin
             _has_info := true;
+            _disco_info_error := false;
             _has_items := true;
         end;        
         exit;
@@ -1116,6 +1122,7 @@ begin
 
     _type := ent_agents;
     _has_info := true;
+    _disco_info_error := false;
     _has_items := true;
 
     ClearStringListObjects(_items);
