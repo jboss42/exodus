@@ -248,7 +248,8 @@ uses
   EventQueue in '..\jopl\EventQueue.pas',
   COMDockToolbar in 'COMDockToolbar.pas',
   COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
-  idSSLSchannel in 'idSSLSchannel.pas';
+  idSSLSchannel in 'idSSLSchannel.pas',
+  VistaAltFixUnit in 'VistaAltFixUnit.pas';
 
 {$R *.TLB}
 
