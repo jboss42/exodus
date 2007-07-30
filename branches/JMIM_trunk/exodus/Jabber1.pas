@@ -32,7 +32,7 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer;
+    TntForms, ExTracer, VistaAltFixUnit;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -1261,6 +1261,8 @@ var
     s: TXMLTag;
     prefstate: TPrefState;
 begin
+    TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
+
     Randomize();
     _currDockState := dsUninitialized;
 
