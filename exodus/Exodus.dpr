@@ -249,7 +249,8 @@ uses
   COMDockToolbar in 'COMDockToolbar.pas',
   COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
   idSSLSchannel in 'idSSLSchannel.pas',
-  DebugManager in '..\jopl\DebugManager.pas';
+  DebugManager in '..\jopl\DebugManager.pas',
+  VistaAltFixUnit in 'VistaAltFixUnit.pas';
 
 {$R *.TLB}
 
