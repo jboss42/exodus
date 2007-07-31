@@ -1241,10 +1241,10 @@ end;
 procedure TExodusController.StartChat(const jid, resource,
   nickname: WideString);
 begin
-    // start chat
-    ChatWin.StartChat(jid, resource, true, nickname);
     // force window to front
     frmExodus.doRestore();
+    // start chat
+    ChatWin.StartChat(jid, resource, true, nickname);
 end;
 
 {---------------------------------------}
@@ -1534,9 +1534,11 @@ procedure TExodusController.StartRoom(const roomJID, Nickname,
   password: WideString; sendPresence, defaultConfig,
   useRegisteredNickname: WordBool);
 begin
-    Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig, useRegisteredNickname);
     // force window to front
     frmExodus.doRestore();
+
+    // start the room
+    Room.startRoom(RoomJID, Nickname, Password, SendPresence, defaultConfig, useRegisteredNickname);
 end;
 
 {---------------------------------------}
