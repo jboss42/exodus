@@ -510,6 +510,7 @@ function TApplicationInfo.GetID() : String;
     end;
 var
     tstr : string;
+    tstr2: string;
 begin
     try
         if (cachedID = '') then
@@ -517,7 +518,20 @@ begin
             //remove .exe
 
             tstr := ExtractFileName(GetLongFileName(Application.ExeName));
-            cachedID := Copy(tstr, 0, Length(tstr) - 4);
+
+            // This is a poor way of doing this, but we don't want the file extension
+            // If file extensions are hidden, then we leave this allone.
+            // If they are showing then chop off .exe.  We check this by seeing if
+            // last 4 characters are .exe or not.
+            if (Length(tstr) > 4) then
+                tstr2 := LowerCase(Rightstr(tstr, 4))
+            else
+                tstr2 := '';
+
+            if (tstr2 = '.exe') then
+                cachedID := Copy(tstr, 0, Length(tstr) - 4)
+            else
+                cachedID := Copy(tstr, 0, Length(tstr));
         end;
         Result := cachedID;
     Except
