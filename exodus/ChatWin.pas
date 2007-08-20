@@ -1450,7 +1450,7 @@ var
 begin
     ritem := MainSession.roster.Find(jid);
 
-    if (ritem.IsNative) then begin
+    if ((ritem <> nil) and ritem.IsNative) then begin
         // find out how many files we're accepting
         if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
 
