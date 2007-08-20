@@ -571,20 +571,38 @@ begin
             ri.setPresenceImage(p.show);
     end;
 
-    if (p = nil) then
-        ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
-    else begin
-        // Compile a list of jid: status for each resource
-        tmps := '';
-        while (p <> nil) do begin
-            if (tmps <> '') then tmps := tmps + ''#13#10;
-            if (p.Status = '') then
-              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(p.show)
+    // Gen Tooltip
+    if (is_me) then begin
+        // This is another of my resources presences.
+        // We do not want to build up a tooltip with multiple
+        // entries as there are problems propigating changes.
+        // Just make tool tip jid: presence for this resource
+        if (pres <> nil) then begin
+            if (pres.Status <> '') then
+                ri.Tooltip := pres.fromJid.getDisplayFull() + ': ' + pres.Status
             else
-              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
-            p := TJabberSession(_js).ppdb.NextPres(p);
+                ri.Tooltip := pres.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(pres.show);
+        end
+        else
+            ri.Tooltip := '';
+    end
+    else begin
+        // Not one of my presences, so build up tooltip with all presences for JID.
+        if (p = nil) then
+            ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
+        else begin
+            // Compile a list of jid: status for each resource
+            tmps := '';
+            while (p <> nil) do begin
+                if (tmps <> '') then tmps := tmps + ''#13#10;
+                if (p.Status = '') then
+                  tmps := tmps + p.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(p.show)
+                else
+                  tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
+                p := TJabberSession(_js).ppdb.NextPres(p);
+            end;
+            ri.Tooltip := tmps;
         end;
-        ri.Tooltip := tmps;
     end;
 
     // notify the window that this item needs to be updated
