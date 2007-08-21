@@ -688,7 +688,7 @@ begin
         Msg.isMe := False;
         LogMessage(Msg);
 
-        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) then
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then
             MsgOut.SetFocus();
     end;
 
@@ -2709,7 +2709,7 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (MsgOut.Visible) then begin
+    if (MsgOut.Visible) and (MsgOut.Enabled) then begin
         MsgOut.SetFocus();
         MsgOut.WideSelText := Key;
     end;
