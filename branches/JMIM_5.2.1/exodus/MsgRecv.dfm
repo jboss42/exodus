@@ -45,19 +45,18 @@ inherited frmMsgRecv: TfrmMsgRecv
         Left = 3
         Top = 3
         Width = 29
-        Height = 30
+        Height = 13
         Align = alLeft
         Caption = 'From: '
         Color = clBtnFace
         ParentColor = False
         Transparent = True
-        ExplicitHeight = 13
       end
       object txtFrom: TTntLabel
         AlignWithMargins = True
         Left = 38
         Top = 3
-        Width = 284
+        Width = 34
         Height = 30
         Cursor = crHandPoint
         Align = alClient
@@ -68,7 +67,6 @@ inherited frmMsgRecv: TfrmMsgRecv
         Transparent = True
         WordWrap = True
         OnClick = txtFromClick
-        ExplicitWidth = 34
       end
     end
   end
@@ -390,13 +388,12 @@ inherited frmMsgRecv: TfrmMsgRecv
             Left = 2
             Top = 2
             Width = 42
-            Height = 20
+            Height = 13
             Align = alLeft
             Caption = 'Subject: '
             Color = clBtnFace
             ParentColor = False
             Layout = tlCenter
-            ExplicitHeight = 13
           end
           object txtSendSubject: TTntMemo
             Left = 44
@@ -421,24 +418,21 @@ inherited frmMsgRecv: TfrmMsgRecv
           object txtSubject: TTntLabel
             Left = 45
             Top = 2
-            Width = 287
-            Height = 18
+            Width = 47
+            Height = 13
             Align = alClient
             Caption = 'txtSubject'
-            ExplicitWidth = 47
-            ExplicitHeight = 13
           end
           object lblSubject2: TTntStaticText
             Left = 2
             Top = 2
             Width = 43
-            Height = 18
+            Height = 17
             Align = alLeft
             Caption = 'Subject:'
             Color = clBtnFace
             ParentColor = False
             TabOrder = 0
-            ExplicitHeight = 17
           end
         end
       end

@@ -1139,11 +1139,13 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         MsgOut.Visible := false;
+        MsgList.SetFocus();
         MsgList.DisplayPresence(_('You have been disconnected.'), '');
     end
     else if (event = '/session/presence') then begin
         if (not MsgOut.Visible) then begin
             MsgOut.Visible := true;
+            MsgOut.SetFocus();
             MsgList.DisplayPresence(_('Reconnected'), '');
         end;
     end

@@ -261,7 +261,8 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
     begin
         MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
-        MsgOut.SetFocus();
+        if (MsgOut.Visible and MsgOut.Enabled) then
+            MsgOut.SetFocus();
     end;
 
 begin
@@ -376,7 +377,8 @@ begin
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
-    MsgOut.SetFocus;
+    if (MsgOut.Visible and MsgOut.Enabled) then
+        MsgOut.SetFocus;
 end;
 
 {---------------------------------------}
