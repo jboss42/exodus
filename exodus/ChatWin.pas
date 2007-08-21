@@ -459,7 +459,7 @@ begin
     SetupPrefs();
     SetupMenus();
 
-    _scallback := MainSession.RegisterCallback(SessionCallback, '/session/block');
+    _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 
     // branding/menus
     with MainSession.Prefs do begin
@@ -1136,37 +1136,25 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
-//    if (event = '/session/disconnected') then begin
-//        MsgList.DisplayPresence(_('You have been disconnected.'), '');
-//        MainSession.UnRegisterCallback(_pcallback);
-//        _pcallback := -1;
-//
-//        // this should make sure that hidden windows
-//        // just go away when we get disconnected.
-//        //if (not Visible) then Self.Free();
-//        if (self.Visible) then
-//            Self.Close()
-//        else
-//            Self.Free();
-//    end
-//    else if (event = '/session/connected') then begin
-//        Self.SetJID(jid);
-//    end
-//    else if (event = '/session/prefs') then
-//        SetupPrefs()
-//
-//    else if (event = '/session/logger') then
-//        SetupMenus()
-//    else if (event = '/session/block') then begin
-    if (event = '/session/block') then begin
+    if (event = '/session/disconnected') then begin
+        // post a msg to the window and disable the text input box.
+        MsgOut.Visible := false;
+        MsgList.SetFocus();
+        MsgList.DisplayPresence(_('You have been disconnected.'), '');
+    end
+    else if (event = '/session/presence') then begin
+        if (not MsgOut.Visible) then begin
+            MsgOut.Visible := true;
+            MsgOut.SetFocus();
+            MsgList.DisplayPresence(_('Reconnected'), '');
+        end;
+    end
+    else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
             PostMessage(Handle, WM_CLOSE, 0, 0);
         end;
-    end
-//    else if (event = '/session/avatars') then
-//        imgAvatar.Refresh();
-
+    end;
 end;
 
 {---------------------------------------}
@@ -1464,7 +1452,7 @@ var
 begin
     ritem := MainSession.roster.Find(jid);
 
-    if (ritem.IsNative) then begin
+    if ((ritem <> nil) and ritem.IsNative) then begin
         // find out how many files we're accepting
         if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
 

@@ -163,8 +163,10 @@ begin
 
     if (Ord(key) = 22) then begin
         // paste, Ctrl-V
-        bc.MsgOut.SetFocus();
-        bc.MsgOut.PasteFromClipboard();
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.PasteFromClipboard();
+        end;
         Key := #0;
         exit;
     end;
@@ -179,8 +181,10 @@ begin
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
-        bc.MsgOut.SetFocus();
-        bc.MsgOut.WideSelText := Key;
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.WideSelText := Key;
+        end;
     end;
 
     Key := #0;
