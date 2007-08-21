@@ -23,7 +23,7 @@ interface
 uses
     Roster, NodeItem,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
+    Dialogs, buttonFrame, StdCtrls, TntStdCtrls, XMLTag;
 
 type
   TfrmBookmark = class(TForm)
@@ -45,8 +45,10 @@ type
   private
     { Private declarations }
     new: boolean;
+    _scallback: integer;
   public
     { Public declarations }
+    procedure SessionCallback(event: string; tag: TXMLTag);
   end;
 
 var
@@ -62,7 +64,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLTag, JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
+    JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
     RosterWindow;
 
 {---------------------------------------}
@@ -172,6 +174,7 @@ procedure TfrmBookmark.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+    MainSession.UnRegisterCallback(_scallback);
 end;
 
 {---------------------------------------}
@@ -183,6 +186,14 @@ begin
         txtNick.Enabled := false;
         chkRegisteredNick.Enabled := false;
     end;
+    _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+end;
+
+{---------------------------------------}
+procedure TfrmBookmark.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then
+        Self.Close;
 end;
 
 end.
