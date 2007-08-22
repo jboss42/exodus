@@ -197,14 +197,36 @@ end;
 {---------------------------------------}
 function TExodusImageList.AddImage(id: Widestring; Image: TBitmap): integer;
 var
-    i: integer;
+    i, j: integer;
+    preAddSize: integer;
+    postAddSize: integer;
 begin
     if (_imgList <> nil) then begin
         i := _ids.IndexOf(id);
         if (i = -1) then begin
             // add the image
-            _ids.Add(id);
+
+            // Determine if we have an incorrectly sized image.
+            // That would be an image that offsets the _imgList
+            // memory more then 1 icon size.  This is to try and
+            // avoid the problem with adding an image that is too
+            // wide and that shifting the icon count off from the
+            // string list count.  If that happened, requests for
+            // icons would return the wrong bitmap.
+            preAddSize := _imgList.Count;
             Result := _imgList.AddMasked(Image, Image.Canvas.Pixels[0,0]);
+            postAddSize := _imgList.Count;
+            if (postAddSize = (preAddSize + 1)) then begin
+                // A good add, so add to stringlist
+                _ids.Add(id);
+            end
+            else begin
+                // A bad add, so back out add from _imgList
+                for j := 0 to (postAddSize - preAddSize - 1) do begin
+                    _imgList.Delete(preAddSize);
+                end;
+                Result := -1;
+            end;
         end
         else
             Result := i;
