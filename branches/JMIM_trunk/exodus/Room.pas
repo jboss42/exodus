@@ -1687,6 +1687,7 @@ begin
     _pending_start := false;
     _pending_destroy := false;
     _passwd_from_join_room := true;
+    _insertTab := true;
 
     ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
 
@@ -1776,26 +1777,21 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.MsgOutKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-begin
-    if (Key = 0) then exit;
-    TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
-    inherited;
-end;
-{---------------------------------------}
-procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
     tmps: Widestring;
     prefix: Widestring;
     i: integer;
     found, exloop: boolean;
     nick: Widestring;
+    curselstart: integer;
 begin
-    inherited;
-    if (Key = #0) then exit;
-
+    if (Key = 0) then exit;
+    TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
     // Send the msg if they hit return
-    if (Key = #09) then begin
+
+    if (chr(Key) = #09) then begin
         // do tab completion
+        curselstart := -1;
         tmps := MsgOut.Lines.Text;
         if _nick_prefix = '' then begin
             // grab the new prefix..
@@ -1812,6 +1808,7 @@ begin
             if prefix = '' then begin
                 _nick_start := 0;
                 prefix := tmps;
+                curselstart := MsgOut.SelStart;
                 MsgOut.SelStart := 0;
                 MsgOut.SelLength := Length(prefix);
             end;
@@ -1848,6 +1845,7 @@ begin
                     SelLength := 0;
                     exloop := true;
                     found := true;
+                    _insertTab := false;
                     break;
                 end;
             end;
@@ -1859,17 +1857,45 @@ begin
         until (found) or (exloop);
 
         if not found then begin
-            MsgOut.WideSelText := _nick_prefix;
+            if (curselstart >= 0) then begin
+                MsgOut.SelStart := curselstart;
+                MsgOut.SelLength := 0;
+            end
+            else
+                MsgOut.WideSelText := _nick_prefix;
+
             _nick_prefix := '';
             _nick_idx := 0;
-        end;
-        Key := Chr(0);
+        end
+        else
+            Key := 0;
     end
     else begin
         _nick_prefix := '';
         _nick_idx := 0;
     end;
+
+    // Ctrl+I is a tab, but we don't want a tab.
+    if ((Shift = [ssCtrl]) and
+        (chr(Key) = 'I')) then begin
+        _insertTab := false;
+    end;
+
+    inherited;
 end;
+{---------------------------------------}
+procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
+begin
+    inherited;
+    if (Key = #0) then exit;
+
+    if ((Key = #9) and
+        (not _insertTab)) then begin
+        Key := #0;
+        _insertTab := true;
+    end;
+end;
+
 {---------------------------------------}
 procedure TfrmRoom.btnCloseClick(Sender: TObject);
 begin
