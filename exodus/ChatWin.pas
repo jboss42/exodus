@@ -141,6 +141,7 @@ type
     _dnLocked: boolean; //can the display name be changed? true if no\ick was passed
                         //into factory method 
     _displayName: WideString;
+    _insertTab: boolean; // Should a tab insert a tab?
 
     procedure SetupPrefs();
     procedure SetupMenus();
@@ -438,6 +439,7 @@ begin
     _dnListener := TDisplayNameListener.Create();
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
     _dnLocked := false;
+    _insertTab := true;
 
     _check_event := false;
     _reply_id := '';
@@ -1106,12 +1108,26 @@ begin
 
     // dispatch key-presses to Plugins
     com_controller.fireMsgKeyDown(Key, Shift);
+
+    // Ctrl+I is a tab, but we don't want a tab.
+    if ((Shift = [ssCtrl]) and
+        (chr(Key) = 'I')) then begin
+        _insertTab := false;
+    end;
+
     inherited;
 end;
 {---------------------------------------}
  procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
     if (Key = #0) then exit;
+
+    if ((Key = #9) and
+        (not _insertTab)) then begin
+        Key := #0;
+        _insertTab := true;
+    end;
+
     inherited;
 end;
 {---------------------------------------}
