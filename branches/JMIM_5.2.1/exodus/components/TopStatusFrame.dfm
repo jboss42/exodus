@@ -1,20 +1,20 @@
 object ExodusStatusFrame: TExodusStatusFrame
   Left = 0
   Top = 0
-  Width = 623
+  Width = 451
   Height = 53
   Align = alTop
   Color = 49146335
   ParentColor = False
   TabOrder = 0
   TabStop = True
-  ExplicitWidth = 451
   object imgHeader: TImage
     Left = 0
     Top = 0
-    Width = 451
+    Width = 542
     Height = 50
     Align = alLeft
+    AutoSize = True
     Picture.Data = {
       07544269746D61702E3E0100424D2E3E01000000000036000000280000001E02
       0000320000000100180000000000F83D0100120B0000120B0000000000000000
@@ -2563,13 +2563,11 @@ object ExodusStatusFrame: TExodusStatusFrame
       E9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DF
       EDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DFEDE9DF3A52}
     OnEndDock = imgHeaderEndDock
-    ExplicitWidth = 455
-    ExplicitHeight = 49
   end
   object bvlBottom: TBevel
     Left = 0
     Top = 50
-    Width = 623
+    Width = 451
     Height = 3
     Align = alBottom
     Shape = bsBottomLine
