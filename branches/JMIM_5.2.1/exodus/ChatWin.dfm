@@ -3,43 +3,43 @@ inherited frmChat: TfrmChat
   Top = 384
   ActiveControl = MsgOut
   Caption = 'Chat Window'
-  ClientHeight = 512
-  ClientWidth = 606
+  ClientHeight = 416
+  ClientWidth = 492
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
-  ExplicitWidth = 614
-  ExplicitHeight = 552
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 500
+  ExplicitHeight = 450
+  PixelsPerInch = 96
+  TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 471
-    Width = 606
-    ExplicitTop = 471
-    ExplicitWidth = 606
+    Top = 383
+    Width = 492
+    ExplicitTop = 383
+    ExplicitWidth = 492
   end
   inherited pnlDockTop: TPanel
-    Width = 606
-    ExplicitWidth = 606
+    Width = 492
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
-      Left = 557
-      ExplicitLeft = 557
+      Left = 443
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
-      Width = 554
-      ExplicitWidth = 554
+      Width = 440
+      ExplicitWidth = 440
       object pnlJID: TPanel
         Left = 0
         Top = 0
-        Width = 432
-        Height = 39
+        Width = 351
+        Height = 32
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
         object lblNick: TTntLabel
-          Left = 53
+          Left = 43
           Top = 0
-          Width = 61
-          Height = 39
+          Width = 48
+          Height = 32
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,22 +47,22 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
-          ExplicitHeight = 16
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
           Top = 0
-          Width = 43
-          Height = 39
+          Width = 35
+          Height = 32
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
         end
         object Panel3: TPanel
-          Left = 43
+          Left = 35
           Top = 0
-          Width = 10
-          Height = 39
+          Width = 8
+          Height = 32
           Align = alLeft
           BevelOuter = bvNone
           TabOrder = 0
@@ -71,27 +71,29 @@ inherited frmChat: TfrmChat
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 606
-    Height = 403
-    ExplicitWidth = 606
-    ExplicitHeight = 403
+    Width = 492
+    Height = 322
+    ExplicitTop = 31
+    ExplicitWidth = 492
+    ExplicitHeight = 322
   end
   inherited pnlInput: TPanel
-    Top = 478
-    Width = 606
-    ExplicitTop = 478
-    ExplicitWidth = 606
+    Top = 388
+    Width = 492
+    ExplicitTop = 359
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 602
+      Width = 488
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 442
-    Width = 606
-    ExplicitTop = 442
-    ExplicitWidth = 606
+    Top = 354
+    Width = 492
+    ExplicitLeft = 2
+    ExplicitTop = 330
+    ExplicitWidth = 492
   end
   object SaveDialog1: TSaveDialog [5]
     DefaultExt = 'html'
