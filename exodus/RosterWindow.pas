@@ -27,7 +27,8 @@ uses
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
-    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls;
+    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls, TntForms,
+  RichEdit2, ExRichEdit;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -139,6 +140,8 @@ type
     JoinAllRooms1: TTntMenuItem;
     N16: TTntMenuItem;
     ImageLogo: TImage;
+    pnlConnectLogo: TPanel;
+    txtDisclaimer: TExRichEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -225,6 +228,8 @@ type
     procedure lstProfilesSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure JoinAllRooms1Click(Sender: TObject);
+    procedure pnlConnectLogoResize(Sender: TObject);
+    procedure txtDisclaimerURLClick(Sender: TObject; URL: string);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -282,6 +287,8 @@ type
     _drop: TExDropTarget;
     _auto_dir: integer;
 
+    _ShowDisclaimerText: boolean;   // Show the disclaimer text box be shown
+
     g_offline: Widestring;
     g_online: Widestring;
     g_chat: Widestring;
@@ -305,7 +312,7 @@ type
     procedure ExpandGrpNode(n: TTntTreeNode);
     procedure DrawAvatar(Node: TTntTreeNode; a: TAvatar);
     procedure DoLogin(idx: integer);
-    
+
     function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
     procedure SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
 
@@ -531,7 +538,14 @@ var
     tag: TXMLTag;
     restype,resname,src: widestring;
     ins: cardinal;
+    imgh: integer;
+    txth: integer;
+    disFile: TextFile;
+    tstring: widestring;
+    Buffer: array [0..1023] of char;
 begin
+    _ShowDisclaimerText := false;
+
     // Deal with fonts & stuff
     inherited;
 
@@ -605,6 +619,7 @@ begin
     ShowProfiles();
     treeRoster.Visible := false;
     pnlStatus.Visible := true;
+    pnlShow.Visible := false;
 
     ToggleGUI(gui_disconnected);
 
@@ -620,41 +635,172 @@ begin
         imgAd.Cursor := crHandPoint;
 
     try
-        tag := MainSession.Prefs.getXMLPref('brand_logo');
+        txtDisclaimer.WideText := ''; // For some reason the RTF will not show without this.
+        tag := MainSession.Prefs.getXMLPref('brand_disclaimer_text');
         if (tag <> nil) then begin
             restype := tag.GetAttribute('type');
             resname := tag.GetAttribute('resname');
             src  := tag.GetAttribute('source');
+            try
+                txth := StrToInt(tag.GetAttribute('height'));
+            except
+                txth := 0;
+            end;
 
-            if ((restype <> '') and
+            if ((restype = 'dll') and
+                (resname <> '') and
                 (src <> '')) then begin
-                if ((restype = 'dll') and
-                    (resname <> '')) then begin
+                try
                     ins := LoadLibraryW(PWChar(src));
                     if (ins = 0) then
                         ins := LoadLibrary(PChar(String(src)));
                     if (ins > 0) then begin
-                        ImageLogo.Picture.Bitmap.LoadFromResourceName(ins, resname);
+                        LoadString(ins, StrToInt(resname), Buffer, sizeof(Buffer));
+                        tstring := Buffer;
+                        txtDisclaimer.WideText := tstring;
                         FreeLibrary(ins);
                     end;
+                except
+                    _ShowDisclaimerText := false;
+                end;
+            end
+            else if ((restype = 'file') and
+                     (src <> '')) then begin
+                try
+                    if (FileExists(src)) then begin
+                        // File exists as specified, so, just try to load it
+                        try
+                            txtDisclaimer.InsertFromFile(src);
+                            _ShowDisclaimerText := true;
+                        except
+                            _ShowDisclaimerText := false;
+                        end;
+                    end
+                    else begin
+                        // File doesn't exist as specified, possibly just filename, not full path
+                        // thus file might be in app root directory
+                        try
+                            if (FileExists(ExtractFilePath(Application.EXEName) + src)) then begin
+                                txtDisclaimer.InsertFromFile(ExtractFilePath(Application.EXEName) + src);
+                                _ShowDisclaimerText := true;
+                            end
+                            else
+                                _ShowDisclaimerText := false;
+                        except
+                            _ShowDisclaimerText := false;
+                        end;
+                    end;
+                except
+                    _ShowDisclaimerText := false;
+                end;
+            end
+            else if ((restype = 'text') and
+                     (tag.Data <> '')) then begin
+                try
+                    txtDisclaimer.InsertRTF(tag.Data);
+                    _ShowDisclaimerText := true;
+                except
+                    _ShowDisclaimerText := false;
+                    txtDisclaimer.Visible := false;
+                end;
+            end
+            else begin
+                // brand logo not found
+                txtDisclaimer.Visible := false;
+                _ShowDisclaimerText := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            end;
+
+            if ((_ShowDisclaimerText) and
+                (txth > 0)) then begin
+                // We were successful in loading text, so, now resize
+                txtDisclaimer.Visible := true;
+                txtDisclaimer.Height := txth;
+                pnlConnectLogo.Height := txth + lblCreate.Height + lblNewUser.Height;
+            end
+            else begin
+                txtDisclaimer.Visible := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            end;
+        end
+        else begin
+            // brand logo not found
+            txtDisclaimer.Visible := false;
+            _ShowDisclaimerText := false;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+        end;
+    except
+        // Image not loaded
+        txtDisclaimer.Visible := false;
+        _ShowDisclaimerText := false;
+        pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+    end;
+
+    if (not _ShowDisclaimerText) then begin
+        // Disclaimer text takes precedence over image.
+        try
+            tag := MainSession.Prefs.getXMLPref('brand_logo');
+            if (tag <> nil) then begin
+                restype := tag.GetAttribute('type');
+                resname := tag.GetAttribute('resname');
+                src  := tag.GetAttribute('source');
+                try
+                    imgh := StrToInt(tag.GetAttribute('height'));
+                except
+                    imgh := 0;
+                end;
+
+                if ((restype <> '') and
+                    (src <> '') and
+                    (imgh > 0)) then begin
+                    if ((restype = 'dll') and
+                        (resname <> '')) then begin
+                        ins := LoadLibraryW(PWChar(src));
+                        if (ins = 0) then
+                            ins := LoadLibrary(PChar(String(src)));
+                        if (ins > 0) then begin
+                            ImageLogo.Picture.Bitmap.LoadFromResourceName(ins, resname);
+                            FreeLibrary(ins);
+                        end;
+                    end
+                    else if (restype = 'file') then begin
+                        try
+                            if (FileExists(src)) then
+                                // File exists as specified, so, just try to load it
+                                ImageLogo.Picture.LoadFromFile(src)
+                            else
+                                // File doesn't exist as specified, possibly just filename, not full path
+                                // thus file might be in app root directory
+                                ImageLogo.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + src);
+                        except
+                        end;
+                    end;
+
+                    if (ImageLogo.Picture.Bitmap.HandleAllocated()) then begin
+                        // We were successful in loading graphic, so, now resize
+                        pnlConnectLogo.Height := imgh + lblCreate.Height + lblNewUser.Height;
+                    end;
                 end
-                else if (restype = 'file') then begin
-                    ImageLogo.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + src);
+                else begin
+                    // brand logo not found
+                    ImageLogo.Visible := false;
+                    pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
                 end;
             end
             else begin
                 // brand logo not found
                 ImageLogo.Visible := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
             end;
-        end
-        else begin
-            // brand logo not found
+        except
+            // Image not loaded
             ImageLogo.Visible := false;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
         end;
-    except
-        // Image not loaded
+    end
+    else
         ImageLogo.Visible := false;
-    end;
+
 
     _caps_xp := TXPLite.Create('/presence/c[xmlns="http://jabber.org/protocol/caps"]');
     _client_bmp := TBitmap.Create();
@@ -795,12 +941,18 @@ begin
         MainSession.Roster.Clear();
         pnlAnimation.Visible := false;
         treeRoster.Visible := false;
+        pnlShow.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
-        lblCreate.Visible := true;
-        lblNewUser.Visible := true;
-        if (ImageLogo.Picture.Bitmap.HandleAllocated()) then
+        pnlConnectLogo.Visible := true;
+        if (ImageLogo.Picture.Bitmap.HandleAllocated()) then begin
             ImageLogo.Visible := true;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height + ImageLogo.Height;
+        end;
+        if (_ShowDisclaimerText) then begin
+            txtDisclaimer.Visible := true;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height + txtDisclaimer.Height;
+        end;
         lblConnect.Caption := _(sSignOn);
         lblCreate.Caption := _(sNewProfile);
         lblConnect.Font.Color := clWindowText;
@@ -825,9 +977,7 @@ begin
         lblStatus.Caption := _(sConnecting);
         lblConnect.Caption := _(sCancelLogin);
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        ImageLogo.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
         Self.showAniStatus();
         frmExodus.ResetMenuItems(nil);
@@ -859,9 +1009,7 @@ begin
         lblStatus.Caption := _(sAuthenticating);
         Self.showAniStatus();
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        ImageLogo.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
         ShowPresence('online');
         ResetPanels();
     end
@@ -872,9 +1020,7 @@ begin
         lblStatus.Caption := _(sAuthenticated);
         Self.showAniStatus();
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        ImageLogo.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
     end
 
     // it's the end of the roster, update the GUI
@@ -884,6 +1030,7 @@ begin
             aniWait.Visible := false;
             pnlConnect.Visible := false;
             treeRoster.Visible := true;
+            pnlShow.Visible := true;
             if (_avatars) then begin
                 _show_status := true;
                 treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
@@ -1919,6 +2066,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.pnlConnectLogoResize(Sender: TObject);
+begin
+    ImageLogo.Height := pnlConnectLogo.Height - (lblCreate.Height + lblNewUser.Height);
+    ImageLogo.Width := pnlConnectLogo.Width;
+end;
+
 procedure TfrmRosterWindow.pnlStatusClick(Sender: TObject);
 var
     cp : TPoint;
@@ -3802,6 +3955,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.txtDisclaimerURLClick(Sender: TObject; URL: string);
+begin
+    Screen.Cursor := crHourGlass;
+    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    Screen.Cursor := crDefault;
+end;
+
 procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
 var
     i:         integer;

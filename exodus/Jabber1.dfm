@@ -3,8 +3,8 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 651
-  ClientWidth = 272
+  ClientHeight = 709
+  ClientWidth = 392
   Color = clBtnFace
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -32,7 +32,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 272
+    Width = 392
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -41,7 +41,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 268
+        Width = 388
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -77,23 +77,24 @@ object frmExodus: TfrmExodus
         Visible = False
         OnClick = mnuDisconnectClick
       end
-      object ToolButtonSep2: TToolButton
-        Left = 46
-        Top = 0
-        Width = 8
-        Caption = 'ToolButtonSep2'
-        ImageIndex = 81
-        Style = tbsSeparator
-      end
       object btnOnlineRoster: TToolButton
-        Left = 54
+        Left = 46
         Top = 0
         Hint = 'View Online/All'
         AllowAllUp = True
         AutoSize = True
         Caption = 'View'
         ImageIndex = 55
+        Style = tbsCheck
         OnClick = btnOnlineRosterClick
+      end
+      object ToolButtonSep2: TToolButton
+        Left = 69
+        Top = 0
+        Width = 8
+        Caption = 'ToolButtonSep2'
+        ImageIndex = 81
+        Style = tbsSeparator
       end
       object btnAddContact: TToolButton
         Left = 77
@@ -164,41 +165,40 @@ object frmExodus: TfrmExodus
   object Panel1: TPanel
     Left = 0
     Top = 31
-    Width = 272
-    Height = 620
+    Width = 392
+    Height = 678
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 600
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 618
+      Height = 676
       AutoSnap = False
       Beveled = True
       MinSize = 1
       ResizeStyle = rsUpdate
+      Visible = False
+      OnCanResize = splitRosterCanResize
       OnMoved = splitRosterMoved
-      ExplicitHeight = 478
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
       Width = 169
-      Height = 618
+      Height = 676
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 598
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
-      Width = 96
-      Height = 618
+      Width = 216
+      Height = 676
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -223,7 +223,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 598
     end
   end
   object MainMenu1: TTntMainMenu
