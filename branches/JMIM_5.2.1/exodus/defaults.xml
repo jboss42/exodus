@@ -323,12 +323,12 @@
     <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
     <brand_profile_password ></brand_profile_password>
     <brand_profile_port value="5222"></brand_profile_port>
-	<brand_profile_priority value="1"></brand_profile_priority>
-	<brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
-	<brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
-	<brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
+    <brand_profile_priority value="1"></brand_profile_priority>
+    <brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
+    <brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
+    <brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
 
-	<!--brand_profile_resource value="Exodus"></brand_profile_resource-->
+    <!--brand_profile_resource value="Exodus"></brand_profile_resource-->
 
     <brand_profile_resource_list>
       <s>Home</s>
@@ -344,7 +344,7 @@
       <s>jabber.org</s>
       <s>jabber.com</s>
     </brand_profile_server_list>
-    
+
     <brand_profile_socks_auth value="false"></brand_profile_socks_auth>
     <brand_profile_socks_host ></brand_profile_socks_host>
     <brand_profile_socks_password ></brand_profile_socks_password>
@@ -354,6 +354,10 @@
     <brand_profile_ssl value="false"></brand_profile_ssl>
     <brand_profile_srv value="true"></brand_profile_srv>
     <brand_profile_username ></brand_profile_username>
+    <brand_profile_enable_connect_btn value="true"></brand_profile_enable_connect_btn>
+    <brand_profile_show_download_public_servers value="true"></brand_profile_show_download_public_servers>
+
+
     <brand_muc value="1"></brand_muc>
     <brand_ft value="1"></brand_ft>
     <brand_plugs value="1"></brand_plugs>
@@ -428,24 +432,50 @@
 	<!-- Should the ability to show the debug window be available to the user through the main menu system -->
 	<brand_show_debug_in_menu value="1"/>
 
+	<!-- Brand text to place in an edit box on the profiles screen.
+                 Important!: If <brand_disclaimer_text/> is not empty, then <brand_logo/> will NOT be shown!
+
+		 Example(s): <brand_disclaimer_text type="dll" resname="example_text_res_name" source="brand.dll" height="100"/>
+                             <brand_disclaimer_text type="text" height="150">example disclaimer text</brand_disclaimer_text>
+
+		 Attributes:	type   (required): either "dll" or "file" or "text"
+                 		source (required/option): name of dll file for type="dll" or name of file for type="file". Not needed for type="text"
+				resname(required/optional): Number of string in string table in dll file (required for "dll" type)
+                                                            This MUST be the NUMBER of the string in the string table.
+                                height (required): Height of textbox
+
+                 Note: The text to be displayed can be RTF.
+                 Note: If type="text", then the tag's CDATA is the text that will be displayed.
+		 Note: <brand_min_profiles_window_height/> and <brand_min_profiles_window_width_*/> should be such that the text box is properly shown
+	-->
+        <brand_disclaimer_text/>
+
 	<!-- Brand the logo box in the profiles screen with an image
+                 Important!: If <brand_disclaimer_text/> is not empty, then <brand_logo/> will NOT be shown!
 
-		 Example: <brand_logo type="dll" resname="example_image_res_name" source="brand.dll"/>
+		 Example: <brand_logo type="dll" resname="example_image_res_name" source="brand.dll" height="100"/>
 
-		 Attributes:	type   (required):			either "dll" or "file"
-						source (required): 			name of dll file for "dll" or name of file for "file,"
-													(either way ("dll" or "file") the file MUST be in directory
-													tree where Exodus.EXE is located).
-						resname(required/optional): name of resource in dll file (required for "dll" type)
+		 Attributes:	type   (required): either "dll" or "file"
+                 		source (required): name of dll file for type="dll" or name of file for type="file".
+				resname(required/optional): name of resource in dll file (required for "dll" type)
+                                height (required): Height of image
 
-		 Note(s): Image must be <= 150x115.
-		 
+		 Note: <brand_min_profiles_window_height/> and <brand_min_profiles_window_width_*/> should be such that the logo is properly shown
 	-->
 	<brand_logo/>
 
 	<!-- Brand the minimum size of the window -->
-	<brand_min_window_height value="230"/>
-	<brand_min_window_width value="250"/>
+        <!-- brand_min_roster_* is minimum size (in pixels) when user is logged into a server -->
+	<brand_min_roster_window_height value="230"/>
+	<brand_min_roster_window_width_docked value="600"/> <!-- When 1 or more windows are docked -->
+        <brand_min_roster_window_width_undocked value="250"/> <!-- No docked windows -->
+        <brand_min_roster_spliter_width value="250"/>
+
+        <!-- brand_min_profiles_* is minimum size (in pixels) when user is NOT logged into a server -->
+	<brand_min_profiles_window_height value="230"/>
+	<brand_min_profiles_window_width_docked value="600"/> <!-- When 1 or more windows are docked -->
+	<brand_min_profiles_window_width_undocked value="250"/> <!-- No docked windows -->
+        <brand_min_profiles_spliter_width value="250"/>
 
   <!-- Stringlist with additional data to be added to the about box -->
   <brand_about_additional_list/>

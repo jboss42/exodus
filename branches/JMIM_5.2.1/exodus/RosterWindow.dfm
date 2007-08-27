@@ -123,6 +123,7 @@ object frmRosterWindow: TfrmRosterWindow
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
+    Visible = False
     object imgStatus: TPaintBox
       Left = 2
       Top = 2
@@ -188,14 +189,13 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 20
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end
@@ -226,18 +226,6 @@ object frmRosterWindow: TfrmRosterWindow
       WordWrap = True
       ExplicitWidth = 184
     end
-    object lblCreate: TTntLabel
-      Left = 5
-      Top = 278
-      Width = 230
-      Height = 13
-      Cursor = crHandPoint
-      Align = alBottom
-      Caption = 'Create a New Profile'
-      Transparent = False
-      OnClick = lblCreateClick
-      ExplicitWidth = 97
-    end
     object lblConnect: TTntLabel
       Left = 5
       Top = 81
@@ -253,27 +241,6 @@ object frmRosterWindow: TfrmRosterWindow
       WordWrap = True
       OnClick = lblConnectClick
       ExplicitWidth = 184
-    end
-    object lblNewUser: TTntLabel
-      Left = 5
-      Top = 265
-      Width = 230
-      Height = 13
-      Cursor = crHandPoint
-      Align = alBottom
-      Caption = 'Run the New User Wizard'
-      Transparent = False
-      OnClick = lblNewUserClick
-      ExplicitWidth = 124
-    end
-    object ImageLogo: TImage
-      Left = 5
-      Top = 150
-      Width = 230
-      Height = 115
-      Align = alBottom
-      Anchors = [akBottom]
-      Center = True
     end
     object pnlAnimation: TPanel
       Left = 5
@@ -299,7 +266,7 @@ object frmRosterWindow: TfrmRosterWindow
       Left = 5
       Top = 104
       Width = 230
-      Height = 46
+      Height = 37
       Align = alClient
       BorderStyle = bsNone
       Columns = <
@@ -320,6 +287,143 @@ object frmRosterWindow: TfrmRosterWindow
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
+    end
+    object pnlConnectLogo: TPanel
+      Left = 5
+      Top = 141
+      Width = 230
+      Height = 150
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = clWindow
+      TabOrder = 2
+      OnResize = pnlConnectLogoResize
+      object ImageLogo: TImage
+        Left = 0
+        Top = 0
+        Width = 230
+        Height = 33
+        Align = alTop
+        Center = True
+      end
+      object lblNewUser: TTntLabel
+        Left = 0
+        Top = 124
+        Width = 124
+        Height = 13
+        Cursor = crHandPoint
+        Align = alBottom
+        Caption = 'Run the New User Wizard'
+        Transparent = False
+        OnClick = lblNewUserClick
+      end
+      object lblCreate: TTntLabel
+        Left = 0
+        Top = 137
+        Width = 97
+        Height = 13
+        Cursor = crHandPoint
+        Align = alBottom
+        Caption = 'Create a New Profile'
+        Transparent = False
+        OnClick = lblCreateClick
+      end
+      object txtDisclaimer: TExRichEdit
+        Left = 0
+        Top = 33
+        Width = 230
+        Height = 40
+        Align = alTop
+        AutoURLDetect = adExtended
+        CustomURLs = <
+          item
+            Name = 'e-mail'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'http'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'file'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'mailto'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'ftp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'https'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'gopher'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'nntp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'prospero'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'telnet'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'news'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'wais'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end>
+        LangOptions = [loAutoFont]
+        Language = 1033
+        ReadOnly = True
+        ScrollBars = ssVertical
+        ShowSelectionBar = False
+        TabOrder = 0
+        URLColor = clBlue
+        URLCursor = crHandPoint
+        OnURLClick = txtDisclaimerURLClick
+        InputFormat = ifRTF
+        OutputFormat = ofRTF
+        SelectedInOut = False
+        PlainRTF = False
+        UndoLimit = 0
+        AllowInPlace = False
+      end
     end
   end
   object treeRoster: TTntTreeView

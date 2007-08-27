@@ -61,7 +61,6 @@ type
     Label10: TTntLabel;
     Label12: TTntLabel;
     lblServerList: TTntLabel;
-    Label13: TTntLabel;
     chkRegister: TTntCheckBox;
     tbsSSL: TTntTabSheet;
     optSSL: TTntRadioGroup;
@@ -86,10 +85,11 @@ type
     TntLabel2: TTntLabel;
     txtRealm: TTntEdit;
     chkx509: TTntCheckBox;
-    TntGroupBox1: TTntGroupBox;
-    TntGroupBox2: TTntGroupBox;
+    KerbGroupBox: TTntGroupBox;
+    x509GroupBox: TTntGroupBox;
     txtx509: TTntEdit;
     btnx509browse: TTntButton;
+    Label13: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -513,7 +513,7 @@ begin
 
     URLLabel(lblServerList);
     URLLabel(lblRename);
-    MainSession.Prefs.RestorePosition(Self);
+    MainSession.Prefs.RestorePosition(Self, false);
 
     list := TWideStringList.Create();
     MainSession.Prefs.fillStringList('brand_profile_server_list', list);
@@ -543,6 +543,16 @@ begin
         optSSL.ItemIndex := ssl_tls;
 
     _Canceled := false;
+
+    if (MainSession.Prefs.getBool('brand_profile_enable_connect_btn')) then
+        btnConnect.Enabled := true
+    else
+        btnConnect.Enabled := false;
+
+    if (MainSession.Prefs.getBool('brand_profile_show_download_public_servers')) then
+        lblServerList.Visible := true
+    else
+        lblServerList.Visible := false;
 end;
 
 {---------------------------------------}
@@ -682,7 +692,6 @@ begin
         chkSavePasswd.Enabled := false;
         cboJabberID.Enabled := false;
         lblUsername.Enabled := false;
-        Label13.Enabled := false;
         lblServerList.Enabled := false;
         txtRealm.Enabled := false;
         TntLabel2.Enabled := false;

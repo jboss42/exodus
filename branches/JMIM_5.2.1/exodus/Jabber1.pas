@@ -461,6 +461,8 @@ type
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
     procedure btnFindClick(Sender: TObject);
+    procedure splitRosterCanResize(Sender: TObject; var NewSize: Integer;
+      var Accept: Boolean);
 
   private
     { Private declarations }
@@ -486,6 +488,8 @@ type
 //    _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
     _pending_passwd: Widestring;
+    _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
+    _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
@@ -513,7 +517,7 @@ type
     _rostercb: integer;
     _dns_cb: integer;
     _currDockState: TDockStates;
-    
+
     // Reconnect variables
     _reconnect_interval: integer;
     _reconnect_cur: integer;
@@ -1320,8 +1324,15 @@ begin
         menu_list.Free();
         shortcut_list.Free();
 
-        frmExodus.Constraints.MinHeight := getInt('brand_min_window_height');
-        frmExodus.Constraints.MinWidth := getInt('brand_min_window_width');
+        _enforceConstraints := true;
+        frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
+        if ((splitRoster.Visible) and
+            (MainSession.Prefs.getBool('expanded'))) then begin
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked');
+        end
+        else begin
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+        end;
     end;
 
     // Setup our session callback
@@ -1822,6 +1833,23 @@ begin
         end;
         // Play any pending XMPP actions
         PlayXMPPActions();
+
+        // We are logged in, so change main form to roster witdth
+        with MainSession.Prefs do begin
+            frmExodus.Constraints.MinHeight := getInt('brand_min_roster_window_height');
+            if (splitRoster.Visible) then
+                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_docked')
+            else
+                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_undocked');
+        end;
+
+        if (not splitRoster.Visible) then begin
+            // We don't have a docked window (for example, the debug window)
+            _profileScreenLastWidth := Self.Width;
+            Self.Width := MainSession.Prefs.getInt('roster_width');
+        end
+        else
+            _profileScreenLastWidth := 0;
     end
 
     else if (event = '/session/disconnected') then begin
@@ -1873,6 +1901,29 @@ begin
         end;
         btnConnect.Enabled := true;
         mnuFile_Connect.Enabled := true;
+
+        // Change back to profile width from roster width
+        with MainSession.Prefs do begin
+            frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
+            if (splitRoster.Visible) then
+                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked')
+            else
+                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+        end;
+
+        if (not splitRoster.Visible) then begin
+            // We don't have a docked window so free to muck with sizes.
+            if (_profileScreenLastWidth > 0) then
+                // Didn't have a docked window at login so restore to width at that time.
+                Self.Width := _profileScreenLastWidth
+            else
+                // had a docked window at login so restore to roster_width
+                Self.Width := MainSession.Prefs.getInt('roster_width');
+        end
+        else begin
+            if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then
+                pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
+        end;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -2393,10 +2444,14 @@ procedure TfrmExodus.FormResize(Sender: TObject);
 begin
 //    if (timFlasher.Enabled) then
 //        timFlasher.Enabled := false;
-    if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
-        frmExodus.Width := frmExodus.Constraints.MinWidth;
-    if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
-        frmExodus.Height := frmExodus.Constraints.MinHeight;
+
+    // Check for constraints
+    if (_enforceConstraints) then begin
+        if (frmExodus.Width < frmExodus.Constraints.MinWidth) then
+            frmExodus.Width := frmExodus.Constraints.MinWidth;
+        if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
+            frmExodus.Height := frmExodus.Constraints.MinHeight;
+    end;
 end;
 
 {---------------------------------------}
@@ -2497,10 +2552,35 @@ begin
       ShowDebugForm();
 end;
 
+procedure TfrmExodus.splitRosterCanResize(Sender: TObject; var NewSize: Integer;
+  var Accept: Boolean);
+begin
+    Accept := true;
+    if (MainSession.Active) then begin
+        if (newSize < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
+            Accept := false;
+        end;
+    end
+    else begin
+        if (NewSize < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
+            Accept := false;
+        end;
+    end;
+end;
+
 procedure TfrmExodus.splitRosterMoved(Sender: TObject);
 begin
-//    if (pnlRoster.Visible and (pnlRoster.Width > 0)) then
-        mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
+    if (MainSession.Active) then begin
+        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
+            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_roster_spliter_width');
+        end;
+    end
+    else begin
+        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
+            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
+        end;
+    end;
+    mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {---------------------------------------}
@@ -4729,11 +4809,14 @@ var
 begin
     oldState := DockState;
     //figure out what state we are moving to...
-    if (docking) then
-       if (FirstOrLastDock) then
-         newState := dsRosterOnly
-       else
-         newState := dsDock
+    if (docking) then begin
+       if (FirstOrLastDock) then begin
+         newState := dsRosterOnly;
+       end
+       else begin
+         newState := dsDock;
+       end
+    end
     else
       newState := dsRosterOnly;
 
@@ -4756,6 +4839,7 @@ var
   ratioRoster: real;
 begin
     if (DockState <> dsDock) then begin
+        _enforceConstraints := false;
         saveRosterDockWidths();
         _noMoveCheck := true;
         //this is a mess. To get splitter working with the correct control
@@ -4796,6 +4880,13 @@ begin
         _currDockState := dsDock;
         Self.DockSite := false;
         Tabs.DockSite := true;
+
+         if (MainSession.Active) then
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_docked')
+         else
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_docked');
+
+         _enforceConstraints := true;
     end;
 end;
 
@@ -4807,6 +4898,7 @@ begin
     //if tabs were being shown, save tab size
     saveRosterDockWidths();
     if (DockState <> dsRosterOnly) then begin
+        _enforceConstraints := false;
         Tabs.Visible := false;
         pnlRoster.Align := alClient;
         splitRoster.Visible := false;
@@ -4816,6 +4908,13 @@ begin
         _currDockState := dsRosterOnly;
         Self.DockSite := true;
         Tabs.DockSite := false;
+
+         if (MainSession.Active) then
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
+         else
+            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
+
+         _enforceConstraints := true;
     end;
 end;
 
