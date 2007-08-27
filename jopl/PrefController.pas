@@ -308,8 +308,8 @@ type
         procedure SavePosition(form: TForm); overload;
         procedure SavePosition(form: TForm; key: Widestring); overload;
         procedure CheckPositions(form: TForm; t, l, w, h: integer);
-        procedure RestorePosition(form: TForm); overload;
-        function RestorePosition(form: TForm; key: Widestring): boolean; overload;
+        procedure RestorePosition(form: TForm; RestoreSize: boolean = true); overload;
+        function RestorePosition(form: TForm; key: Widestring; RestoreSize: boolean = true): boolean; overload;
 
         {
             Retrieves the given root tag.
@@ -1661,7 +1661,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.RestorePosition(form: TForm; key: Widestring): boolean;
+function TPrefController.RestorePosition(form: TForm; key: Widestring; RestoreSize: boolean): boolean;
 var
     f: TXMLTag;
     t,l,w,h: integer;
@@ -1670,8 +1670,14 @@ begin
     if (f <> nil) then begin
         t := SafeInt(f.getAttribute('top'));
         l := SafeInt(f.getAttribute('left'));
-        w := SafeInt(f.getAttribute('width'));
-        h := SafeInt(f.getAttribute('height'));
+        if (RestoreSize) then begin
+            w := SafeInt(f.getAttribute('width'));
+            h := SafeInt(f.getAttribute('height'));
+        end
+        else begin
+            w := form.Width;
+            h := form.Height;
+        end;
     end
     else begin
         Result := false;
@@ -1683,7 +1689,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.RestorePosition(form: TForm);
+procedure TPrefController.RestorePosition(form: TForm; RestoreSize: boolean);
 var
     f: TXMLTag;
     fkey: Widestring;
@@ -1696,8 +1702,14 @@ begin
     if (f <> nil) then begin
         t := SafeInt(f.getAttribute('top'));
         l := SafeInt(f.getAttribute('left'));
-        w := SafeInt(f.getAttribute('width'));
-        h := SafeInt(f.getAttribute('height'));
+        if (RestoreSize) then begin
+            w := SafeInt(f.getAttribute('width'));
+            h := SafeInt(f.getAttribute('height'));
+        end
+        else begin
+            w := form.Width;
+            h := form.Height;
+        end;
     end
     else begin
         t := form.Top;
