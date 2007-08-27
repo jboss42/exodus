@@ -173,6 +173,7 @@ type
     _passwd_from_join_room: boolean; //was the password supplied by the Join Room DLG.
     _kick_iq: TJabberIQ;
     _voice_iq: TJabberIQ;
+    _insertTab: boolean;        // Should tab or ctrl + I insert a tab?
 
     _my_membership_role: WideString; // My membership to the room.
 
