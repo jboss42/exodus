@@ -945,6 +945,8 @@ begin
         aniWait.Active := false;
         aniWait.Visible := false;
         pnlConnectLogo.Visible := true;
+        if (frmExodus <> nil) then
+            frmExodus.btnConnect.Enabled := true;
         if (ImageLogo.Picture.Bitmap.HandleAllocated()) then begin
             ImageLogo.Visible := true;
             pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height + ImageLogo.Height;
@@ -973,6 +975,8 @@ begin
         pnlAnimation.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
+        if (frmExodus <> nil) then
+            frmExodus.btnConnect.Enabled := false;
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);
         lblConnect.Caption := _(sCancelLogin);
