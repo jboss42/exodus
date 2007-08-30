@@ -411,14 +411,8 @@ object frmRosterWindow: TfrmRosterWindow
             Cursor = crDefault
             Underline = True
           end>
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
         LangOptions = [loAutoFont]
         Language = 1033
-        ParentFont = False
         ReadOnly = True
         ScrollBars = ssVertical
         ShowSelectionBar = False
@@ -426,7 +420,7 @@ object frmRosterWindow: TfrmRosterWindow
         URLColor = clBlue
         URLCursor = crHandPoint
         OnURLClick = txtDisclaimerURLClick
-        InputFormat = ifUnicode
+        InputFormat = ifRTF
         OutputFormat = ofRTF
         SelectedInOut = False
         PlainRTF = False
