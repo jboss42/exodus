@@ -541,8 +541,6 @@ var
     imgh: integer;
     txth: integer;
     disFile: TextFile;
-    disFileText: widestring;
-    tempstring: string;
     tstring: widestring;
     Buffer: array [0..16384] of char;
 begin
@@ -672,19 +670,7 @@ begin
                     if (FileExists(src)) then begin
                         // File exists as specified, so, just try to load it
                         try
-                            disFileText := '';
-                            tempstring := '';
-                            FileMode := fmOpenRead;
-                            AssignFile(disFile, src);
-                            Reset(disFile);
-                            while not Eof(disFile) do
-                            begin
-                                ReadLn(disFile, tempstring);
-                                disFileText := disFileText + tempstring;
-                            end;
-                            CloseFile(disFile);
-                            FileMode := fmOpenReadWrite;
-                            txtDisclaimer.InsertRTF(disFileText);
+                            txtDisclaimer.InsertFromFile(src);
                             _ShowDisclaimerText := true;
                         except
                             _ShowDisclaimerText := false;
@@ -695,19 +681,7 @@ begin
                         // thus file might be in app root directory
                         try
                             if (FileExists(ExtractFilePath(Application.EXEName) + src)) then begin
-                                disFileText := '';
-                                tempstring := '';
-                                FileMode := fmOpenRead;
-                                AssignFile(disFile, ExtractFilePath(Application.EXEName) + src);
-                                Reset(disFile);
-                                while not Eof(disFile) do
-                                begin
-                                    ReadLn(disFile, tempstring);
-                                    disFileText := disFileText + tempstring;
-                                end;
-                                CloseFile(disFile);
-                                FileMode := fmOpenReadWrite;
-                                txtDisclaimer.InsertRTF(disFileText);
+                                txtDisclaimer.InsertFromFile(ExtractFilePath(Application.EXEName) + src);
                                 _ShowDisclaimerText := true;
                             end
                             else
