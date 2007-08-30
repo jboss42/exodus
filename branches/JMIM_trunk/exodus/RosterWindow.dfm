@@ -189,13 +189,14 @@ object frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 30
-        Height = 13
+        Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
+        ExplicitHeight = 13
       end
     end
   end
@@ -309,24 +310,26 @@ object frmRosterWindow: TfrmRosterWindow
       object lblNewUser: TTntLabel
         Left = 0
         Top = 124
-        Width = 124
+        Width = 230
         Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Run the New User Wizard'
         Transparent = False
         OnClick = lblNewUserClick
+        ExplicitWidth = 124
       end
       object lblCreate: TTntLabel
         Left = 0
         Top = 137
-        Width = 97
+        Width = 230
         Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Create a New Profile'
         Transparent = False
         OnClick = lblCreateClick
+        ExplicitWidth = 97
       end
       object txtDisclaimer: TExRichEdit
         Left = 0
@@ -334,7 +337,7 @@ object frmRosterWindow: TfrmRosterWindow
         Width = 230
         Height = 40
         Align = alTop
-        AutoURLDetect = adExtended
+        AutoURLDetect = adDefault
         CustomURLs = <
           item
             Name = 'e-mail'
@@ -408,8 +411,14 @@ object frmRosterWindow: TfrmRosterWindow
             Cursor = crDefault
             Underline = True
           end>
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         LangOptions = [loAutoFont]
         Language = 1033
+        ParentFont = False
         ReadOnly = True
         ScrollBars = ssVertical
         ShowSelectionBar = False
@@ -417,7 +426,7 @@ object frmRosterWindow: TfrmRosterWindow
         URLColor = clBlue
         URLCursor = crHandPoint
         OnURLClick = txtDisclaimerURLClick
-        InputFormat = ifRTF
+        InputFormat = ifUnicode
         OutputFormat = ofRTF
         SelectedInOut = False
         PlainRTF = False
