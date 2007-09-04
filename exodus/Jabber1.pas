@@ -3684,6 +3684,7 @@ procedure TfrmExodus.ShowBrandURL(Sender: TObject);
 var
     i : integer;
     url_list: TWideStringList;
+    shellresult: cardinal;
 begin
     i := Help1.IndexOf(TMenuItem(Sender));
     if (i < 0) then exit;
@@ -3691,10 +3692,26 @@ begin
     url_list := TWideStringList.Create();
     MainSession.Prefs.fillStringlist('brand_help_url_list', url_list);
 
-    if (i < url_list.Count) then
-        ShellExecute(Application.Handle, 'open',
-                     pchar(string(url_list.Strings[i])),
-                     '', '', SW_SHOW)
+    if (i < url_list.Count) then begin
+        try
+            shellresult := ShellExecute(Application.Handle, 'open',
+                         pchar(string(url_list.Strings[i])),
+                         '', '', SW_SHOW);
+            if (shellresult <= 32) then begin
+                // > 32 is success (see Window API documentation)
+                // We are here so must be some form of error.
+                // If url is a relative path, this might fail, so try
+                // to use url with exe home directory.
+                if (FileExists(ExtractFilePath(Application.ExeName) +
+                    url_list.Strings[i])) then begin
+                    ShellExecute(Application.Handle, 'open',
+                                 pchar(string(ExtractFilePath(Application.ExeName) +
+                                        url_list.Strings[i])), '', '', SW_SHOW);
+                end;
+            end;
+        except
+        end;
+    end
     else
         MessageDlgW(_(sBrandingError), mtWarning, [mbOK], 0);
 
