@@ -3,7 +3,7 @@ object frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 709
+  ClientHeight = 446
   ClientWidth = 392
   Color = clBtnFace
   UseDockManager = True
@@ -166,14 +166,15 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 392
-    Height = 678
+    Height = 415
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 419
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 676
+      Height = 413
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -181,24 +182,26 @@ object frmExodus: TfrmExodus
       Visible = False
       OnCanResize = splitRosterCanResize
       OnMoved = splitRosterMoved
+      ExplicitHeight = 676
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
       Width = 169
-      Height = 676
+      Height = 413
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
       TabOrder = 0
       OnDockDrop = FormDockDrop
+      ExplicitHeight = 417
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 216
-      Height = 676
+      Height = 413
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -223,6 +226,7 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 417
     end
   end
   object MainMenu1: TTntMainMenu
