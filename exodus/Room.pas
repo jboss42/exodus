@@ -2032,9 +2032,6 @@ end;
 
 {---------------------------------------}
 procedure CloseAllRooms();
-var
-    i: integer;
-    f: TfrmRoom;
 begin
     MainSession.FireEvent('/session/close-rooms', nil);
 end;
