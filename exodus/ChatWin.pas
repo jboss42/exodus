@@ -289,117 +289,122 @@ var
 //    exp: boolean;
     hist: string;
 begin
-    // either show an existing chat or start one.
-    chat := MainSession.ChatList.FindChat(sjid, resource, '');
-    new_chat := false;
-    do_scroll := false;
-    hist := '';
-    win := nil;
+    Result := nil;
 
-    // If we have an existing chat, we may just want to raise it
-    // or redock it, etc...
-    r := MainSession.Prefs.getInt(P_CHAT);
-    m := MainSession.Prefs.getInt('chat_memory');
+    try
+        // either show an existing chat or start one.
+        chat := MainSession.ChatList.FindChat(sjid, resource, '');
+        new_chat := false;
+        do_scroll := false;
+        hist := '';
+        win := nil;
 
-    if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
-        win := TfrmChat(chat.window);
-        if (win <> nil) then begin //ignore showwindow param, bring window to front
-            win.ShowDefault(bring_to_front);
-            Result := win;
-            exit;
+        // If we have an existing chat, we may just want to raise it
+        // or redock it, etc...
+        r := MainSession.Prefs.getInt(P_CHAT);
+        m := MainSession.Prefs.getInt('chat_memory');
+
+        if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
+            win := TfrmChat(chat.window);
+            if (win <> nil) then begin //ignore showwindow param, bring window to front
+                win.ShowDefault(bring_to_front);
+                Result := win;
+                exit;
+            end;
+
+            DebugMsg('Existing chat refcount: ' + IntToStr(chat.RefCount));
         end;
 
-        DebugMsg('Existing chat refcount: ' + IntToStr(chat.RefCount));
-    end;
-
-    // Create a new chat controller if we don't have one
-    if chat = nil then begin
-        chat := MainSession.ChatList.AddChat(sjid, resource);
-    end
-    else
-       //We need to do this for existing chat controllers to make sure
-       //callbacks are re-registered if they
-       //have been unregistered before due to blocking
-       chat.SetJID(sjid);
-
-    // Create a window if we don't have one.
-    if (chat.window = nil) then begin
-        new_chat := true;
-        win := TfrmChat.Create(Application);
-        chat.Window := win;
-        chat.stopTimer();
-        win.chat_object := chat;
-        win.chat_object.AddRef();
-        win.com_controller := TExodusChat.Create();
-        win.com_controller.setChatSession(chat);
-        win.com_controller.ObjAddRef();
-
-        hist := TrimRight(chat.getHistory());
-        DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
-    end;
-
-    // Setup the properties of the window,
-    // and hook it up to the chat controller.
-    with TfrmChat(chat.window) do begin
-        _displayName := chat_nick;
-        _isRoom := IsRoom(sjid);
-        if (_isRoom) then begin
-            popAddContact.Enabled := false;
-            mnuProfile.Enabled    := false;
-            popResources.Enabled  := false;
-            mnuSendFile.Enabled   := false;
-            c1.Enabled            := false;
-            mnuBlock.Enabled      := false;
-            _dnLocked := true;
-        end;
-
-        if (MainSession.IsBlocked(sjid)) then
-          mnuBlock.Caption := _('Unblock')
+        // Create a new chat controller if we don't have one
+        if chat = nil then begin
+            chat := MainSession.ChatList.AddChat(sjid, resource);
+        end
         else
-          mnuBlock.Caption := _('Block');
-          
-        if resource <> '' then
-            cjid := sjid + '/' + resource
-        else
-            cjid := sjid;
+           //We need to do this for existing chat controllers to make sure
+           //callbacks are re-registered if they
+           //have been unregistered before due to blocking
+           chat.SetJID(sjid);
 
-        if (SetJID(cjid) = false) then begin
-            // we can't chat with this person for some reason
-            Result := nil;
-            chat.Free();
-            exit;
+        // Create a window if we don't have one.
+        if (chat.window = nil) then begin
+            new_chat := true;
+            win := TfrmChat.Create(Application);
+            chat.Window := win;
+            chat.stopTimer();
+            win.chat_object := chat;
+            win.chat_object.AddRef();
+            win.com_controller := TExodusChat.Create();
+            win.com_controller.setChatSession(chat);
+            win.com_controller.ObjAddRef();
+
+            hist := TrimRight(chat.getHistory());
+            DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
         end;
 
-        SetupResources();
+        // Setup the properties of the window,
+        // and hook it up to the chat controller.
+        with TfrmChat(chat.window) do begin
+            _displayName := chat_nick;
+            _isRoom := IsRoom(sjid);
+            if (_isRoom) then begin
+                popAddContact.Enabled := false;
+                mnuProfile.Enabled    := false;
+                popResources.Enabled  := false;
+                mnuSendFile.Enabled   := false;
+                c1.Enabled            := false;
+                mnuBlock.Enabled      := false;
+                _dnLocked := true;
+            end;
 
-        //Assign incoming message event
-        chat.OnMessage := MessageEvent;
-        //Assign outgoing message event
-        chat.OnSendMessage := SendMessageEvent;
+            if (MainSession.IsBlocked(sjid)) then
+              mnuBlock.Caption := _('Unblock')
+            else
+              mnuBlock.Caption := _('Block');
 
-        if (hist <> '') then begin
-            MsgList.populate(hist);
-            do_scroll := true;
+            if resource <> '' then
+                cjid := sjid + '/' + resource
+            else
+                cjid := sjid;
+
+            if (SetJID(cjid) = false) then begin
+                // we can't chat with this person for some reason
+                Result := nil;
+                chat.Free();
+                exit;
+            end;
+
+            SetupResources();
+
+            //Assign incoming message event
+            chat.OnMessage := MessageEvent;
+            //Assign outgoing message event
+            chat.OnSendMessage := SendMessageEvent;
+
+            if (hist <> '') then begin
+                MsgList.populate(hist);
+                do_scroll := true;
+            end;
+
+            PlayQueue();
+
+            // scroll to the bottom..
+            if (do_scroll) then
+                _scrollBottom();
+
+            if (show_window) then
+                ShowDefault(bring_to_front);
+            Application.ProcessMessages();
+
         end;
 
-        PlayQueue();
+        if (new_chat) then begin
+            assert(win <> nil);
+            ExCOMController.fireNewChat(sjid, win.com_controller);
+        end;
 
-        // scroll to the bottom..
-        if (do_scroll) then
-            _scrollBottom();
-
-        if (show_window) then
-            ShowDefault(bring_to_front);
-        Application.ProcessMessages();
-        
+        Result := TfrmChat(chat.window);
+    except
     end;
-
-    if (new_chat) then begin
-        assert(win <> nil);
-        ExCOMController.fireNewChat(sjid, win.com_controller);
-    end;
-
-    Result := TfrmChat(chat.window);
 
 end;
 
