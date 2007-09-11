@@ -1708,6 +1708,9 @@ begin
         mnuFile_Disconnect.Enabled := true;
         btnConnect.Enabled := false;
         mnuFile_Connect.Enabled := false;
+        btnOptions.Enabled := false;
+        mnuOptions_Options.Enabled := false;
+        Preferences1.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1851,6 +1854,11 @@ begin
         end
         else
             _profileScreenLastWidth := 0;
+
+        btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
+
     end
 
     else if (event = '/session/disconnected') then begin
@@ -1902,6 +1910,9 @@ begin
         end;
         btnConnect.Enabled := true;
         mnuFile_Connect.Enabled := true;
+        btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
 
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
@@ -2412,8 +2423,11 @@ begin
 end;
 
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
-begin
+begin 
     btnConnect.Enabled := false;
+    btnOptions.Enabled := false;
+    mnuOptions_Options.Enabled := false;
+    Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
     frmRosterWindow.lblConnectClick(Sender);
 end;
