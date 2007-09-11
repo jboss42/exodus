@@ -3949,7 +3949,7 @@ begin
         CloseAllChats();
         closeMsgQueue();
         MainSession.Disconnect();
-    end
+    end;
 end;
 
 procedure TfrmExodus.mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
