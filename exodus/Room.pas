@@ -437,60 +437,63 @@ var
 begin
     Result := nil;
 
-    // Make sure we have TC..
-    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
-    // is there already a room window?
-    i := room_list.IndexOf(rjid);
-    if (i >= 0) then
-        f := TfrmRoom(room_list.Objects[i])
-    else begin
-        // Find out nick..
+    try
+        // Make sure we have TC..
+        if (not MainSession.Prefs.getBool('brand_muc')) then exit;
+        // is there already a room window?
+        i := room_list.IndexOf(rjid);
+        if (i >= 0) then
+            f := TfrmRoom(room_list.Objects[i])
+        else begin
+            // Find out nick..
 
-        if (MainSession.Prefs.getBool('brand_prevent_change_nick') or (rnick = '')) then
-            n := MainSession.Profile.getDisplayUsername()
-        else
-            n := rnick;
+            if (MainSession.Prefs.getBool('brand_prevent_change_nick') or (rnick = '')) then
+                n := MainSession.Profile.getDisplayUsername()
+            else
+                n := rnick;
 
-        // create a new room
-        f := TfrmRoom.Create(Application);
-        f.SetJID(rjid);
+            // create a new room
+            f := TfrmRoom.Create(Application);
+            f.SetJID(rjid);
 
-        if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
-            f.useRegisteredNick := false
-        else
-            f.useRegisteredNick := use_registered_nick;
-            
-        f.MyNick := n;
-        tmp_jid := TJabberID.Create(rjid);
-        f.SetPassword(Password);
-        f.UseDefaultConfig := default_config;
+            if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
+                f.useRegisteredNick := false
+            else
+                f.useRegisteredNick := use_registered_nick;
 
-        if (send_presence) then
-            f.sendStartPresence();
+            f.MyNick := n;
+            tmp_jid := TJabberID.Create(rjid);
+            f.SetPassword(Password);
+            f.UseDefaultConfig := default_config;
 
-        f.Caption := tmp_jid.userDisplay; //no display name here for room names
-        
-        // setup prefs
-        with f do begin
-            lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-            lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
-            lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
-            lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
-            lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
-            if (lstRoster.Font.Charset = 0) then
-                lstRoster.Font.Charset := DEFAULT_CHARSET;
+            if (send_presence) then
+                f.sendStartPresence();
+
+            f.Caption := tmp_jid.userDisplay; //no display name here for room names
+
+            // setup prefs
+            with f do begin
+                lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+                lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
+                lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
+                lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
+                lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
+                if (lstRoster.Font.Charset = 0) then
+                    lstRoster.Font.Charset := DEFAULT_CHARSET;
+            end;
+
+            // let the plugins know about the new room
+            ExComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
+
+            room_list.AddObject(rjid, f);
+            tmp_jid.Free();
         end;
 
-        // let the plugins know about the new room
-        ExComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
+        f.ShowDefault(bring_to_front);
 
-        room_list.AddObject(rjid, f);
-        tmp_jid.Free();
+        Result := f;
+    except
     end;
-
-    f.ShowDefault(bring_to_front);
-
-    Result := f;
 end;
 
 class procedure TfrmRoom.AutoOpenFactory(autoOpenInfo: TXMLTag);
@@ -2034,12 +2037,7 @@ var
     i: integer;
     f: TfrmRoom;
 begin
-    for i := 0 to room_list.Count - 1 do begin
-        f := TfrmRoom(room_list.Objects[0]); //rooms removed from list during close
-        f.Close();
-        Application.ProcessMessages();
-    end;
-    room_list.Clear();
+    MainSession.FireEvent('/session/close-rooms', nil);
 end;
 
 {---------------------------------------}
