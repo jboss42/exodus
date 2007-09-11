@@ -177,6 +177,8 @@ var
     l: TTntLabel;
     f: TfrmPrefs;
 begin
+    if ((MainSession.Active) and (not MainSession.Authenticated)) then exit;
+    
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
 
@@ -200,12 +202,12 @@ begin
         else if (start_page = pref_network) then l := f.lblNetwork
         else if (start_page = pref_plugins) then l := f.lblPlugins
         else if (start_page = pref_hotkeys) then l := f.lblHotkeys;
-             
+
 
         if (l <> nil) then begin
             f._cur_label := l;
         end;
-        
+
     end;
 
     f.ShowModal;
