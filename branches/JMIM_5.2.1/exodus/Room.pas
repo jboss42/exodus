@@ -1300,7 +1300,7 @@ begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
                 end;
 
-                MessageDlgW(reason, mtInformation, [mbOK], 0, from_base);
+                MessageDlgW(reason, mtInformation, [mbOK], 0, TJabberID.removeJEP106(from_base));
                 tmp_jid.Free();
                 _pending_destroy := false;
             end;
