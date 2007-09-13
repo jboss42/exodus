@@ -129,9 +129,12 @@ type
     function updateProfile(): boolean;
     function encodeCertKey(keyLength: Cardinal; key: Pointer): string;
     procedure decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
+    procedure _setConnectButtonEnabled(val: boolean);
+    function _getConnectButtonEnabled(): boolean;
 
   public
     { Public declarations }
+    property ConnectButtonEnabled: boolean read _getConnectButtonEnabled write _setConnectButtonEnabled;
   end;
 
 var
@@ -162,6 +165,7 @@ const
     sDownloadCaption = 'Downloading public server list';
     sNoSSL = 'This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF.';
     sMissingX509Cert = 'Please specify a certificate for x.509 authentication';
+    sDefaultProfileName = 'Default Profile';
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -170,6 +174,17 @@ var
 begin
     //
     f := TfrmConnDetails.Create(nil);
+
+    if ((MainSession.Prefs.Profiles.Count = 1) and
+        (p.Name = sDefaultProfileName) and
+        (p.Username = '') and
+        (p.Server = '') and
+        (p.password = '')) then begin
+        // Fairly Sure this is the first run of application
+        // So disable connect button.
+        f.ConnectButtonEnabled := false;
+    end;
+
 
     with f do begin
         _profile := p;
@@ -185,6 +200,19 @@ begin
     f.Free();
 end;
 
+{---------------------------------------}
+procedure TfrmConnDetails._setConnectButtonEnabled(val: boolean);
+begin
+    btnConnect.Enabled := val;
+end;
+
+{---------------------------------------}
+function TfrmConnDetails._getConnectButtonEnabled(): boolean;
+begin
+    Result := btnConnect.Enabled;
+end;
+
+{---------------------------------------}
 function TfrmConnDetails.updateProfile(): boolean;
 var
     valid: boolean;

@@ -117,10 +117,6 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsAdvProfile: TTntTabSheet
       Caption = 'Advanced'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 395
-      ExplicitHeight = 256
       object Label12: TTntLabel
         Left = 4
         Top = 13
@@ -212,7 +208,7 @@ object frmConnDetails: TfrmConnDetails
         Top = 10
         Width = 277
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 3
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
