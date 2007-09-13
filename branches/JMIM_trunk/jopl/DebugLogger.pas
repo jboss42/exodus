@@ -180,7 +180,10 @@ var
 begin
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
     data := '[' + time + ']  ' + data + ''#13#10;
-    WRITE(_logfile, data);
+    try
+    	WRITE(_logfile, data);
+    except	
+	end;
 end;
 
 {---------------------------------------}
