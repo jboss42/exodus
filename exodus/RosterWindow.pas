@@ -975,8 +975,12 @@ begin
         pnlAnimation.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
-        if (frmExodus <> nil) then
+        if (frmExodus <> nil) then begin
             frmExodus.btnConnect.Enabled := false;
+            frmExodus.btnOptions.Enabled := false;
+            frmExodus.mnuOptions_Options.Enabled := false;
+            frmExodus.Preferences1.Enabled := false;
+        end;
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);
         lblConnect.Caption := _(sCancelLogin);

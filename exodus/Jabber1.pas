@@ -505,6 +505,7 @@ type
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
+    _killshow: boolean;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -1045,7 +1046,6 @@ begin
         msg.Result := 0;
     end
     else if ((msg.WParam = SIZE_RESTORED) and (_hidden)) then begin
-        doRestore();
         msg.Result := 0;
     end
     else
@@ -1266,6 +1266,8 @@ var
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
+    _killshow := false;
+
     Randomize();
     _currDockState := dsUninitialized;
 
@@ -1410,14 +1412,14 @@ begin
 
     // If we are supposed to be hidden, make it so.
     if (ExStartup.minimized) then begin
-//        Self.Visible := false;
-//        _hidden := true;
-//        Self.WindowState := wsMinimized;
-//        ShowWindow(Self.Handle, SW_HIDE);
-        SendMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-    end
-    else
-        Self.Visible := true;
+        // This is here because on some systems, the minimize
+        // at startup was not working at all.  For some reason
+        // some machines don't respond to the SC_MINIMIZE called
+        // at this point.
+        _killshow := true;
+    end;
+
+    Self.Visible := true;
 
     // Set our default presence info.
     MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
@@ -1707,6 +1709,9 @@ begin
         mnuFile_Disconnect.Enabled := true;
         btnConnect.Enabled := false;
         mnuFile_Connect.Enabled := false;
+        btnOptions.Enabled := false;
+        mnuOptions_Options.Enabled := false;
+        Preferences1.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1850,6 +1855,11 @@ begin
         end
         else
             _profileScreenLastWidth := 0;
+
+        btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
+
     end
 
     else if (event = '/session/disconnected') then begin
@@ -1901,6 +1911,9 @@ begin
         end;
         btnConnect.Enabled := true;
         mnuFile_Connect.Enabled := true;
+        btnOptions.Enabled := true;
+        mnuOptions_Options.Enabled := true;
+        Preferences1.Enabled := true;
 
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
@@ -2413,6 +2426,9 @@ end;
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
 begin
     btnConnect.Enabled := false;
+    btnOptions.Enabled := false;
+    mnuOptions_Options.Enabled := false;
+    Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
     frmRosterWindow.lblConnectClick(Sender);
 end;
@@ -2529,6 +2545,16 @@ end;
 procedure TfrmExodus.FormShow(Sender: TObject);
 begin
     _noMoveCheck := false;
+
+    if (_killshow) then begin
+        // This is here because on some systems, the minimize
+        // at startup was not working at all.  For some reason
+        // some machines don't respond to the SC_MINIMIZE at
+        // the point it was being called.
+        _killshow := false;
+        _hidden := true;
+        PostMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+    end;
 end;
 
 {---------------------------------------}
