@@ -505,6 +505,7 @@ type
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
+    _killshow: boolean;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -1046,7 +1047,6 @@ begin
         msg.Result := 0;
     end
     else if ((msg.WParam = SIZE_RESTORED) and (_hidden)) then begin
-        doRestore();
         msg.Result := 0;
     end
     else
@@ -1267,6 +1267,8 @@ var
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
+    _killshow := false;
+
     Randomize();
     _currDockState := dsUninitialized;
 
@@ -1411,14 +1413,14 @@ begin
 
     // If we are supposed to be hidden, make it so.
     if (ExStartup.minimized) then begin
-//        Self.Visible := false;
-//        _hidden := true;
-//        Self.WindowState := wsMinimized;
-//        ShowWindow(Self.Handle, SW_HIDE);
-        SendMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-    end
-    else
-        Self.Visible := true;
+        // This is here because on some systems, the minimize
+        // at startup was not working at all.  For some reason
+        // some machines don't respond to the SC_MINIMIZE called
+        // at this point.
+        _killshow := true;
+    end;
+
+    Self.Visible := true;
 
     // Set our default presence info.
     MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
@@ -2544,6 +2546,16 @@ end;
 procedure TfrmExodus.FormShow(Sender: TObject);
 begin
     _noMoveCheck := false;
+
+    if (_killshow) then begin
+        // This is here because on some systems, the minimize
+        // at startup was not working at all.  For some reason
+        // some machines don't respond to the SC_MINIMIZE at
+        // the point it was being called.
+        _killshow := false;
+        _hidden := true;
+        PostMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+    end;
 end;
 
 {---------------------------------------}
