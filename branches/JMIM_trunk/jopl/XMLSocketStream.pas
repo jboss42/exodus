@@ -185,7 +185,7 @@ begin
     WideCharToMultiByte(  CP_UTF8,  0,  pw,  iLen,  p,  iLen * 2,  nil,  nil  );
 
     Result := p;
-    FreeMem(  p,  iLen  );
+    FreeMem(  p  );
 end;
 
 function PCharToWideString(  p : PChar  ) : Widestring;
@@ -195,13 +195,13 @@ var
 begin
     {Get memory for the string}
     iLen := lstrlen(  p  ) + 1;
-    GetMem(  pw,  iLen * 2 );
+    GetMem(  pw,  iLen * 2  );
 
     {Convert a unicode (PWideChar) to a string}
     MultiByteToWideChar( CP_UTF8, 0, p, iLen, pw, iLen * 2);
 
     Result := pw;
-    FreeMem(  pw,  iLen  );
+    FreeMem(  pw  );
 end;
 
 {---------------------------------------}
