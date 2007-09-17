@@ -176,6 +176,7 @@ type
 
     TPlugin = class
         com: IExodusPlugin;
+        libName: Widestring;
     end;
 
     // This class is a local object which receives events which a plugin has
@@ -622,6 +623,8 @@ begin
 
         p := TPlugin.Create();
         p.com := plugin;
+        p.libName := com_name;
+        
         plugs.AddObject(com_name, p);
         try
             p.com.Startup(ExComController);
@@ -1046,12 +1049,17 @@ end;
 procedure TExodusController.fireNewChat(jid: WideString; ExodusChat: IExodusChat);
 var
     i: integer;
+    p: TPlugin;
 begin
     for i := 0 to plugs.count - 1 do begin
+        P := TPlugin(plugs.Objects[i]);
         try
-            TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+            P.com.NewChat(jid, ExodusChat);
         except
-            DebugMessage('COM Exception in TExodusController.fireNewChat');
+            on E:Exception do begin
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewChat');
+                continue;
+            end;
         end;
     end;
 end;
@@ -1060,12 +1068,17 @@ end;
 procedure TExodusController.fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
 var
     i: integer;
+    p: TPlugin;
 begin
     for i := 0 to plugs.Count - 1 do begin
+        P := TPlugin(plugs.Objects[i]);
         try
-            TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
+            p.com.NewOutgoingIM(jid, ExodusChat);
         except
-            DebugMessage('COM Exception in TExodusController.fireNewOutgoingIM');
+            on E:Exception do begin
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
+                continue;
+            end;
         end;
     end;
 end;
@@ -1074,30 +1087,44 @@ procedure TExodusController.fireNewIncomingIM(jid: Widestring; ExodusChat: IExod
 var
     i: integer;
     iep2: IExodusPlugin2;
+    p: TPlugin;
 begin
-    for i := 0 to plugs.Count - 1 do
+    for i := 0 to plugs.Count - 1 do begin
+        P := TPlugin(plugs.Objects[i]);
         try
-           iep2 := (TPlugin(plugs.Objects[i]).com as IExodusPlugin2);
+           iep2 := (p.com as IExodusPlugin2);
         except
             on EIntfCastError do begin
               iep2 := nil;
             end;
         end;
-        if (iep2 <> nil) then
-          iep2.NewIncomingIM(jid, ExodusChat);
-
-       
+        if (iep2 <> nil) then begin
+            try
+                iep2.NewIncomingIM(jid, ExodusChat);
+            except
+                on E:Exception do begin
+                    DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewOutgoingIM');
+                    continue;
+                end;
+            end;
+        end;
+    end;
 end;
 {---------------------------------------}
 procedure TExodusController.fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
 var
     i: integer;
+    p: TPlugin;
 begin
     for i := 0 to plugs.Count - 1 do begin
+        P := TPlugin(plugs.Objects[i]);
         try
-            TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+            p.com.NewRoom(jid, ExodusChat);
         except
-            DebugMessage('COM Exception in TExodusController.fireNewRoom');
+            on E:Exception do begin
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireNewRoom');
+                continue;
+            end;
         end;
     end;
 end;
@@ -1108,13 +1135,18 @@ function TExodusController.fireIM(Jid: Widestring; var Body: Widestring;
 var
     i: integer;
     xml: Widestring;
+    p: TPlugin;
 begin
     xml := '';
     for i := 0 to plugs.Count - 1 do begin
+        P := TPlugin(plugs.Objects[i]);
         try
-            xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+            xml := xml + p.com.NewIM(jid, body, subject, xtags);
         except
-            DebugMessage('COM Exception in TExodusController.fireIM');
+            on E:Exception do begin
+                DebugMessage('Plugin ' + p.libName + ' raised an exception (' + E.Message + ') in TExodusController.fireIM');
+                continue;
+            end;
         end;
     end;
     Result := xml;
@@ -1127,6 +1159,7 @@ var
 //    i: integer;
     txml : TXMLTag;
     mc: TMenuContainer;
+    p: TPlugin;
 begin
     if (idx >= _msg_menus.Count) then exit;
     //create xml to pass onto event
@@ -1140,7 +1173,7 @@ begin
     for i := 0 to plugs.Count - 1 do
         TPlugin(plugs.Objects[i]).com.MsgMenuClick(_msg_menus[idx], jid,
             Body, Subject);
-*}            
+*}
 end;
 
 {---------------------------------------}
@@ -1276,7 +1309,7 @@ var
 begin
     // add a new TMenuItem to the Plugins menu
     mi := TMenuItem.Create(frmExodus);
-    frmExodus.mnuOptions_Plugins.Add(mi); 
+    frmExodus.mnuOptions_Plugins.Add(mi);
     mi.Caption := caption;
     mi.OnClick := frmExodus.mnuPluginDummyClick; //calls fireMenuClick
     inc(_nextid);
@@ -1314,12 +1347,14 @@ var
 {$ELSE}
     mListener : IExodusMenuListener;
 {$ENDIF}
+    p: TPlugin;
 begin
     idx := _menu_items.IndexOfObject(Sender);
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
         //broadcast to all plugins the menu selection
         for i := 0 to plugs.count - 1 do begin
+            P := TPlugin(plugs.Objects[i]);
             try
                 TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
             except
@@ -1344,11 +1379,13 @@ var
 {$ELSE}
     mListener : IExodusMenuListener;
 {$ENDIF}
+    p: TPlugin;
 begin
     idx := _roster_menus.indexOfObject(Sender);
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
         for i := 0 to plugs.count - 1 do begin
+            P := TPlugin(plugs.Objects[i]);
             try
                 TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
             except
