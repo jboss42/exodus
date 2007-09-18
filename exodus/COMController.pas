@@ -1159,7 +1159,6 @@ var
 //    i: integer;
     txml : TXMLTag;
     mc: TMenuContainer;
-    p: TPlugin;
 begin
     if (idx >= _msg_menus.Count) then exit;
     //create xml to pass onto event
@@ -1347,7 +1346,6 @@ var
 {$ELSE}
     mListener : IExodusMenuListener;
 {$ENDIF}
-    p: TPlugin;
 begin
     idx := _menu_items.IndexOfObject(Sender);
     if (idx >= 0) then begin
@@ -1379,7 +1377,6 @@ var
 {$ELSE}
     mListener : IExodusMenuListener;
 {$ENDIF}
-    p: TPlugin;
 begin
     idx := _roster_menus.indexOfObject(Sender);
     if (idx >= 0) then begin

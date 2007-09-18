@@ -540,7 +540,6 @@ var
     ins: cardinal;
     imgh: integer;
     txth: integer;
-    disFile: TextFile;
     tstring: widestring;
     Buffer: array [0..16384] of char;
 begin
