@@ -40,7 +40,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkAutoUpdate: TTntCheckBox
     Left = 9
-    Top = 157
+    Top = 145
     Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
@@ -48,7 +48,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkDebug: TTntCheckBox
     Left = 8
-    Top = 139
+    Top = 126
     Width = 169
     Height = 17
     Caption = 'Start with Debug visible'
@@ -64,7 +64,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkCloseMin: TTntCheckBox
     Left = 8
-    Top = 103
+    Top = 88
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
@@ -72,8 +72,8 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkAutoStart: TTntCheckBox
     Left = 8
-    Top = 50
-    Width = 233
+    Top = 164
+    Width = 188
     Height = 17
     Caption = 'Run when Windows starts'
     TabOrder = 1
@@ -89,7 +89,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkToolbox: TTntCheckBox
     Left = 8
-    Top = 86
+    Top = 69
     Width = 217
     Height = 17
     Caption = 'Small Titlebar for main window'
@@ -107,7 +107,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkSingleInstance: TTntCheckBox
     Left = 8
-    Top = 121
+    Top = 107
     Width = 209
     Height = 17
     Caption = 'Only allow a single, running instance'
@@ -115,7 +115,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkStartMin: TTntCheckBox
     Left = 8
-    Top = 69
+    Top = 50
     Width = 225
     Height = 17
     Caption = 'Start minimized to the system tray'
