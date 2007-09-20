@@ -395,7 +395,7 @@ begin
     for i := 0 to _jids.Count - 1 do begin
         ri := MainSession.Roster.Find(_jids[i]);
 
-        if (not ((not observer) and (ri.Subscription() <> 'both'))) then
+        if (ri <> nil) and (not ((not observer) and (ri.Subscription() <> 'both'))) then
             if ((online = false) or (_jids.Objects[i] <> nil)) then
                 l.Add(ri);
     end;
@@ -403,7 +403,7 @@ begin
     // add all contacts in my sub-grps
     for i := 0 to _grps.Count - 1 do
         TJabberGroup(_grps.Objects[i]).getRosterItems(l, online, observer);
-    
+
 end;
 
 {---------------------------------------}
