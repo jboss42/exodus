@@ -224,8 +224,11 @@ begin
                                 (s <> psInvisible) and
                                 MainSession.Profile.SavePasswd and
                                 MainSession.Authenticated;
+        if (s = psInvisible) then begin
+          chkAutoLogin.Visible := false;
+        end;
 
-        chkDebug.Visible := getBool('brand_show_debug_in_menu');        
+        chkDebug.Visible := getBool('brand_show_debug_in_menu');
     end;
 end;
 
