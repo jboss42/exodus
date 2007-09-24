@@ -614,6 +614,9 @@ begin
         popInvite.Visible := _brand_muc;
         popGrpInvite.Visible := _brand_muc;
         popSendFile.Visible := _brand_ft;
+
+        lblCreate.Visible := ( getBool('branding_roster_hide_create') = false );
+        lblNewUser.Visible := ( getBool('branding_roster_hide_new_wizard') = false );
     end;
 
     ShowProfiles();
