@@ -23,7 +23,7 @@ object frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 405
     Height = 286
-    ActivePage = tbsProfile
+    ActivePage = tbsAdvProfile
     Align = alClient
     TabOrder = 0
     object tbsProfile: TTntTabSheet
@@ -81,7 +81,7 @@ object frmConnDetails: TfrmConnDetails
         Top = 5
         Width = 277
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
@@ -117,10 +117,6 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsAdvProfile: TTntTabSheet
       Caption = 'Advanced'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 395
-      ExplicitHeight = 256
       object Label12: TTntLabel
         Left = 4
         Top = 13
@@ -212,7 +208,7 @@ object frmConnDetails: TfrmConnDetails
         Top = 10
         Width = 277
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 3
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
@@ -234,6 +230,9 @@ object frmConnDetails: TfrmConnDetails
         Text = '0'
         Min = -128
         Max = 127
+        DesignSize = (
+          46
+          25)
       end
     end
     object tbsConn: TTntTabSheet
@@ -410,7 +409,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 190
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 5
         OnChange = cboSocksTypeChange
         Items.Strings = (
@@ -516,8 +515,6 @@ object frmConnDetails: TfrmConnDetails
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
-    ExplicitTop = 284
-    ExplicitWidth = 403
     object Panel1: TPanel
       Left = 139
       Top = 4
@@ -526,7 +523,6 @@ object frmConnDetails: TfrmConnDetails
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 137
       object btnOK: TTntButton
         Left = 13
         Top = 0
