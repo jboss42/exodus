@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
-	CertSelector, JwaCryptUIApi, JwaWinCrypt;
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile;
 
 type
   TfrmConnDetails = class(TTntForm)
@@ -396,6 +396,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.chkx509Click(Sender: TObject);
+var
+  ps : TPrefState;
 begin
     // Enable/Disable Controls
     btnx509browse.Enabled := chkx509.Checked;
@@ -403,8 +405,12 @@ begin
     optssl.Enabled := not chkx509.Checked;
     txtPassword.Enabled := not chkx509.Checked;
     txtRealm.Enabled := not chkx509.Checked;
-    chkRegister.Enabled := not chkx509.Checked;
-    chkSavePasswd.Enabled := not chkx509.Checked;
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkRegister.Enabled := not chkx509.Checked;
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkSavePasswd.Enabled := not chkx509.Checked;
 
     if (chkx509.Checked) then begin
         optssl.ItemIndex := 0;
@@ -526,7 +532,7 @@ begin
             txtKeys.Text := '256';
             MessageDlgW(_(sSmallKeys), mtWarning, [mbOK], 0);
         end;
-        
+
     end;
 end;
 
@@ -535,6 +541,7 @@ procedure TfrmConnDetails.FormCreate(Sender: TObject);
 var
     list : TWideStrings;
     i : integer;
+    ps : TPrefState;
 begin
     AssignUnicodeFont(Self, 8);
     TranslateComponent(Self);
@@ -581,6 +588,32 @@ begin
         lblServerList.Visible := true
     else
         lblServerList.Visible := false;
+
+    // Do the save password control
+
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( ps <> psInvisible) then begin
+          chkSavePasswd.Visible := true;
+        if ( ps = psReadOnly ) then
+          chkSavePasswd.Enabled	:= false
+        else
+          chkSavePasswd.Enabled := true;
+    end
+    else
+        chkSavePasswd.Visible := false;
+
+    // Do the "This is a new account" control
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( ps <> psInvisible) then begin
+          chkRegister.Visible := true;
+        if ( ps = psReadOnly ) then
+          chkRegister.Enabled	:= false
+        else
+          chkRegister.Enabled := true;
+    end
+    else
+        chkSavePasswd.Visible := false;
+
 end;
 
 {---------------------------------------}
@@ -696,7 +729,7 @@ begin
         inp := cboResource.Text;
         if (Trim(inp) = '') then
               inp := resourceName;
-       
+
         outp := xmpp_resourceprep(inp);
         if (outp = '') then
             MessageDlgW(_('The resource you entered is not allowed.'), mtError, [mbOK], 0)
@@ -709,6 +742,7 @@ end;
 procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
 var
     p : integer;
+    ps : TPrefState;
 begin
     if chkWinLogin.Checked then begin
         txtPassword.Enabled := false;
@@ -730,9 +764,13 @@ begin
     else begin
         txtPassword.Enabled := true;
         Label10.Enabled := true;
-        chkRegister.Enabled := true;
+        ps := PrefController.getPrefState('brand_profile_register');
+        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+          chkRegister.Enabled := true;
         chkKerberos.Enabled := true;
-        chkSavePasswd.Enabled := true;
+        ps := PrefController.getPrefState('brand_profile_save_password');
+        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+          chkSavePasswd.Enabled := true;
         cboJabberID.Enabled := true;
         lblUsername.Enabled := true;
         Label13.Enabled := true;
@@ -956,16 +994,21 @@ procedure TfrmConnDetails.chkCert(Sender: TObject);
 var
   p: Integer;
   certSelected: Boolean;
+  ps : TPrefState;
 begin
     certSelected := (_sslCertKey <> '');
     txtPassword.Enabled := not certSelected;
     txtPassword.ReadOnly := certSelected;
-    chkRegister.Enabled := not certSelected;
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkRegister.Enabled := not certSelected;
     chkWinLogin.Enabled := not certSelected;
     chkKerberos.Enabled := not certSelected;
     txtRealm.Enabled := not certSelected;
     txtRealm.ReadOnly := certSelected;
-    chkSavePasswd.Enabled := not certSelected;
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkSavePasswd.Enabled := not certSelected;
 
     if certSelected then
     begin
