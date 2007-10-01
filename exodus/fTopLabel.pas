@@ -77,6 +77,9 @@ begin
         end
         else begin
             cur_field := cur_tag.Name;
+             if (ParentControl.FindChildControl('frame_'+ cur_field) <> nil) then
+                 continue;
+
             cur_frame := TframeTopLabel.Create(ParentControl);
             with cur_frame do begin
                 Parent := ParentControl;

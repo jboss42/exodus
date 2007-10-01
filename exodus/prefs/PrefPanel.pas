@@ -105,7 +105,11 @@ begin
             TTntRadioGroup(c).ItemIndex := SafeInt(sval)
         else if (c.inheritsFrom(TTntEdit)) then
             TTntEdit(c).Text := sval
-        else if ((c.inheritsFrom(TTntLabel)) or (c.inheritsFrom(TLabel))) then
+        else if ((c.inheritsFrom(TTntLabel)) or
+                 (c.inheritsFrom(TLabel))) then
+            // do nothing
+        else if ((c.InheritsFrom(TTntButton)) or
+                 (c.InheritsFrom(TButton))) then
             // do nothing
         else
             assert(false);

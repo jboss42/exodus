@@ -167,7 +167,10 @@ begin
 
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
     line := '[' + time + ']  ' + line + ''#13#10;
-    WRITE(_logfile, line);
+    try
+        WRITE(_logfile, line);
+    except
+    end;
 end;
 
 {---------------------------------------}

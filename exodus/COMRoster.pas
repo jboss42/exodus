@@ -29,8 +29,9 @@ uses
 
 type
 
-  TExodusRoster = class(TAutoObject, IExodusRoster)
+  TExodusRoster = class(TAutoObject, IExodusRoster, IExodusRoster2)
   protected
+    { Protected declarations }
     function addItem(const JabberID: WideString): IExodusRosterItem; safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     procedure Fetch; safecall;
@@ -51,7 +52,15 @@ type
       safecall;
     function Subscribe(const JabberID, nickname, Group: WideString;
       Subscribe: WordBool): IExodusRosterItem; safecall;
-    { Protected declarations }
+
+    // IExodusRoster2
+    procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString;
+                                    enable: WordBool); safecall;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString;
+                                  show: WordBool); safecall;
+    procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
+                                        const caption: WideString); safecall;
+    function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; safecall;
 
   private
     _predefined_menus: TWidestringlist;
@@ -449,6 +458,91 @@ begin
     menu := TTntPopupMenu(_menus.Objects[idx]);
     Result := menu;
 end;
+
+{---------------------------------------}
+procedure TExodusRoster.EnableContextMenuItem(const menuID: WideString; const itemID: WideString; enable: WordBool);
+var
+    i, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuitem;
+begin
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            item.Enabled := enable;
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool);
+var
+    i, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuitem;
+begin
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            item.Visible := show;
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusRoster.SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; const caption: WideString);
+var
+    i, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuitem;
+begin
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            item.Caption := caption;
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusRoster.GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString;
+var
+    i, idx: integer;
+    menu: TTntPopupMenu;
+    item: TTntMenuitem;
+begin
+    idx := _menus.IndexOf(menuID);
+    if (idx = -1) then exit;
+
+    menu := TTntPopupMenu(_menus.Objects[idx]);
+
+    for i := 0 to menu.Items.Count - 1 do begin
+        item := TTntMenuItem(menu.Items[i]);
+        if (item.Name = itemID) then begin
+            Result := item.Caption;
+            exit;
+        end;
+    end;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusRoster, Class_ExodusRoster,

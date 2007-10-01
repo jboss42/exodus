@@ -54,6 +54,7 @@ object frmModifyHotkeys: TfrmModifyHotkeys
     Top = 32
     Width = 174
     Height = 21
+    MaxLength = 80
     TabOrder = 1
     OnChange = txtHotkeyMessageChange
   end

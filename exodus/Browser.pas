@@ -184,7 +184,7 @@ var
 {---------------------------------------}
 function ShowBrowser(jid: string = ''): TfrmBrowse;
 begin
-    Result := TfrmBrowse.Create(Application);
+//    Result := TfrmBrowse.Create(Application);
     Application.CreateForm(TfrmBrowse, Result);
     Result.ShowDefault(true);
 

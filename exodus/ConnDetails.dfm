@@ -1,10 +1,10 @@
 object frmConnDetails: TfrmConnDetails
   Left = 513
   Top = 170
-  ActiveControl = cboJabberID
+  BorderStyle = bsDialog
   Caption = 'Connection Details'
-  ClientHeight = 322
-  ClientWidth = 402
+  ClientHeight = 319
+  ClientWidth = 405
   Color = clBtnFace
   Constraints.MinWidth = 410
   DefaultMonitor = dmDesktop
@@ -21,16 +21,18 @@ object frmConnDetails: TfrmConnDetails
   object PageControl1: TTntPageControl
     Left = 0
     Top = 0
-    Width = 402
-    Height = 289
+    Width = 405
+    Height = 286
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 293
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
-      ExplicitHeight = 265
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
@@ -41,28 +43,29 @@ object frmConnDetails: TfrmConnDetails
       end
       object Label10: TTntLabel
         Left = 2
-        Top = 71
+        Top = 35
         Width = 49
         Height = 13
         Caption = 'Password:'
         Transparent = True
       end
-      object Label12: TTntLabel
-        Left = 2
-        Top = 95
-        Width = 49
-        Height = 13
-        Caption = 'Resource:'
-        Transparent = True
-      end
       object lblServerList: TTntLabel
-        Left = 100
-        Top = 49
+        Left = 225
+        Top = 239
         Width = 152
         Height = 13
         Cursor = crHandPoint
         Caption = 'Download a list of public servers'
         OnClick = lblServerListClick
+      end
+      object lblRename: TTntLabel
+        Left = 100
+        Top = 101
+        Width = 90
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Rename this profile'
+        OnClick = lblRenameClick
       end
       object Label13: TTntLabel
         Left = 100
@@ -73,35 +76,10 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Enter desired Jabber ID for new accounts.'
         WordWrap = True
       end
-      object Label6: TTntLabel
-        Left = 3
-        Top = 147
-        Width = 34
-        Height = 13
-        Caption = 'Priority:'
-        Transparent = True
-      end
-      object lblRename: TTntLabel
-        Left = 100
-        Top = 244
-        Width = 90
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Rename this profile'
-        OnClick = lblRenameClick
-      end
-      object TntLabel2: TTntLabel
-        Left = 2
-        Top = 120
-        Width = 63
-        Height = 13
-        Caption = 'SASL Realm:'
-        Transparent = True
-      end
       object cboJabberID: TTntComboBox
         Left = 100
-        Top = 3
-        Width = 285
+        Top = 5
+        Width = 277
         Height = 21
         ItemHeight = 13
         TabOrder = 0
@@ -113,83 +91,154 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkSavePasswd: TTntCheckBox
         Left = 100
-        Top = 172
+        Top = 80
         Width = 170
         Height = 17
         Caption = 'Save pass&word'
-        TabOrder = 6
+        TabOrder = 2
         OnClick = chkSavePasswdClick
       end
       object txtPassword: TTntEdit
         Left = 100
-        Top = 68
-        Width = 170
+        Top = 32
+        Width = 277
         Height = 21
         PasswordChar = '*'
         TabOrder = 1
       end
-      object cboResource: TTntComboBox
-        Left = 100
-        Top = 92
-        Width = 170
-        Height = 21
-        ItemHeight = 13
-        TabOrder = 2
-        OnExit = txtUsernameExit
-        OnKeyPress = txtUsernameKeyPress
-      end
       object chkRegister: TTntCheckBox
         Left = 100
-        Top = 189
+        Top = 61
         Width = 181
         Height = 17
         Caption = 'This is a new account'
-        TabOrder = 7
+        TabOrder = 3
+      end
+    end
+    object tbsAdvProfile: TTntTabSheet
+      Caption = 'Advanced'
+      object Label12: TTntLabel
+        Left = 4
+        Top = 13
+        Width = 49
+        Height = 13
+        Caption = 'Resource:'
+        Transparent = True
+      end
+      object TntLabel2: TTntLabel
+        Left = 4
+        Top = 38
+        Width = 63
+        Height = 13
+        Caption = 'SASL Realm:'
+        Transparent = True
+      end
+      object Label6: TTntLabel
+        Left = 4
+        Top = 67
+        Width = 34
+        Height = 13
+        Caption = 'Priority:'
+        Transparent = True
+      end
+      object KerbGroupBox: TTntGroupBox
+        Left = 4
+        Top = 88
+        Width = 375
+        Height = 68
+        Caption = 'Kerberos Authentication'
+        TabOrder = 1
+        object chkKerberos: TTntCheckBox
+          Left = 16
+          Top = 20
+          Width = 181
+          Height = 17
+          Caption = 'Use Kerberos Authentication'
+          TabOrder = 0
+          OnClick = chkWinLoginClick
+        end
+        object chkWinLogin: TTntCheckBox
+          Left = 16
+          Top = 43
+          Width = 181
+          Height = 17
+          Caption = 'Use Windows login information'
+          TabOrder = 1
+          OnClick = chkWinLoginClick
+        end
+      end
+      object x509GroupBox: TTntGroupBox
+        Left = 4
+        Top = 161
+        Width = 375
+        Height = 78
+        Caption = 'X.509 Certificate Authentication'
+        TabOrder = 2
+        object chkx509: TTntCheckBox
+          Left = 16
+          Top = 16
+          Width = 212
+          Height = 17
+          Caption = 'Use X.509 Certificate Authentication'
+          TabOrder = 0
+          OnClick = chkx509Click
+        end
+        object txtx509: TTntEdit
+          Left = 16
+          Top = 39
+          Width = 267
+          Height = 21
+          Enabled = False
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object btnx509browse: TTntButton
+          Left = 289
+          Top = 37
+          Width = 75
+          Height = 25
+          Caption = 'Select Cert...'
+          Enabled = False
+          TabOrder = 2
+          OnClick = btnx509browseClick
+        end
+      end
+      object cboResource: TTntComboBox
+        Left = 102
+        Top = 10
+        Width = 277
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 3
+        OnExit = txtUsernameExit
+        OnKeyPress = txtUsernameKeyPress
+      end
+      object txtRealm: TTntEdit
+        Left = 102
+        Top = 34
+        Width = 277
+        Height = 21
+        TabOrder = 4
       end
       object txtPriority: TExNumericEdit
-        Left = 100
-        Top = 143
+        Left = 102
+        Top = 61
         Width = 46
         Height = 25
         BevelOuter = bvNone
-        TabOrder = 4
+        TabOrder = 0
         Text = '0'
         Min = -128
         Max = 127
-        DesignSize = (
-          46
-          25)
-      end
-      object chkWinLogin: TTntCheckBox
-        Left = 100
-        Top = 206
-        Width = 181
-        Height = 17
-        Caption = 'Use Windows login information'
-        TabOrder = 8
-        OnClick = chkWinLoginClick
-      end
-      object chkKerberos: TTntCheckBox
-        Left = 100
-        Top = 224
-        Width = 181
-        Height = 17
-        Caption = 'Use Kerberos'
-        TabOrder = 9
-        OnClick = chkWinLoginClick
-      end
-      object txtRealm: TTntEdit
-        Left = 100
-        Top = 117
-        Width = 170
-        Height = 21
-        TabOrder = 3
       end
     end
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      ExplicitHeight = 265
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -240,34 +289,13 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
-      ExplicitHeight = 265
-      object TntLabel1: TTntLabel
-        Left = 1
-        Top = 9
-        Width = 73
-        Height = 13
-        Caption = 'SSL Certificate:'
-        Transparent = True
-      end
-      object txtSSLCert: TTntEdit
-        Left = 18
-        Top = 29
-        Width = 263
-        Height = 21
-        TabOrder = 0
-      end
-      object btnCertBrowse: TTntButton
-        Left = 285
-        Top = 28
-        Width = 72
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 1
-        OnClick = btnCertBrowseClick
-      end
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object optSSL: TTntRadioGroup
-        Left = 8
-        Top = 64
+        Left = 11
+        Top = 3
         Width = 345
         Height = 105
         Caption = 'SSL Modes'
@@ -275,13 +303,16 @@ object frmConnDetails: TfrmConnDetails
           'Encrypt the connection whenever possible.'
           'All connections must be encrypted.'
           'Use old SSL port method.')
-        TabOrder = 2
+        TabOrder = 0
       end
     end
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
-      ExplicitHeight = 265
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
@@ -390,7 +421,10 @@ object frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
-      ExplicitHeight = 265
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label1: TTntLabel
         Left = 1
         Top = 27
@@ -424,8 +458,8 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 197
-        Width = 390
+        Top = 194
+        Width = 393
         Height = 60
         Align = alBottom
         AutoSize = False
@@ -436,6 +470,7 @@ object frmConnDetails: TfrmConnDetails
           'ion.'
         WordWrap = True
         ExplicitTop = 155
+        ExplicitWidth = 390
       end
       object txtURL: TTntEdit
         Left = 100
@@ -470,24 +505,26 @@ object frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 289
-    Width = 402
+    Top = 286
+    Width = 405
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 4
     TabOrder = 1
-    ExplicitTop = 293
+    ExplicitTop = 284
+    ExplicitWidth = 403
     object Panel1: TPanel
-      Left = 159
+      Left = 139
       Top = 4
-      Width = 239
+      Width = 262
       Height = 25
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitLeft = 137
       object btnOK: TTntButton
-        Left = 4
+        Left = 13
         Top = 0
         Width = 75
         Height = 25
@@ -498,7 +535,7 @@ object frmConnDetails: TfrmConnDetails
         OnClick = frameButtons1btnOKClick
       end
       object btnCancel: TTntButton
-        Left = 82
+        Left = 94
         Top = 0
         Width = 75
         Height = 25
@@ -506,9 +543,10 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Cancel'
         ModalResult = 2
         TabOrder = 1
+        OnClick = btnCancelClick
       end
       object btnConnect: TTntButton
-        Left = 161
+        Left = 173
         Top = 0
         Width = 75
         Height = 25
@@ -519,11 +557,5 @@ object frmConnDetails: TfrmConnDetails
         OnClick = btnConnectClick
       end
     end
-  end
-  object OpenDialog1: TOpenDialog
-    DefaultExt = 'pem'
-    Filter = 'SSL Key Files|*.pem|All Files|*.*'
-    Left = 8
-    Top = 214
   end
 end

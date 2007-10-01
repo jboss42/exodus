@@ -148,16 +148,19 @@ Function NotifyInstances ; Closes all running instances of Exodus
     ; if we do, show a warning..
     FindWindow "$0" "${PRODUCT_WINDOWCLASS}" "" '0'
     IntCmpU '$0' '0' done
-  loop:
-    FindWindow "$0" "${PRODUCT_WINDOWCLASS}" "" '0'
-    IntCmpU '$0' '0' done
-    !define MUI_FINISHPAGE_RUN ""
-    SendMessage "$0" '6374' '0' '0'
-    Sleep '100'
-    IntOp '$1' '$1' + '1'
-    IntCmpU '$1' '30' prompt
-    Goto loop
-  prompt:
+    ;removing this for the time beinging. Shutdown problems that occur after
+    ;the window has been destroyed can keep this from working correctly.
+    ;probably need to check for a process rather than a window.
+;  loop:
+;    FindWindow "$0" "${PRODUCT_WINDOWCLASS}" "" '0'
+;    IntCmpU '$0' '0' done
+;    !define MUI_FINISHPAGE_RUN ""
+;    SendMessage "$0" '6374' '0' '0'
+;    Sleep '100'
+;    IntOp '$1' '$1' + '1'
+;    IntCmpU '$1' '30' prompt
+;    Goto loop
+;  prompt:
     MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION \
         "$(MSG_NotifyInstances)" IDRETRY start
     ; cancel

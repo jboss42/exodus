@@ -140,8 +140,9 @@ implementation
 
 uses
     PrefController,
-    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms, 
-    XMLParser, XMLTag, Classes, StrUtils;
+    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms,
+    XMLParser, XMLTag, Classes, StrUtils, JabberUtils, GnuGetText,
+    Dialogs;
 
 {---------------------------------------}
 constructor TEmoticon.Create(filename: string);
@@ -434,12 +435,18 @@ begin
     // image/jpeg
     // image/png
     if (mime = 'image/gif') then begin
-        if (resHandle <> 0) then
-            result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
-        else
-            result := TGifEmoticon.Create(fileName);
+        try
+            if (resHandle <> 0) then
+                result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
+            else
+                result := TGifEmoticon.Create(fileName);
 
-        _objects.AddObject(key, result);
+            _objects.AddObject(key, result);
+        except
+            MessageDlgW(WideFormat(_('Failed to load emoticon image: %s'), [fileName]), mtError, [mbOK], 0);
+            result := nil;
+        end;
+
     end
     else if (mime = 'image/x-ms-bmp') then begin
         if (resHandle > 0) then
@@ -559,7 +566,10 @@ begin
     end;
 
     parser := TXMLTagParser.Create();
-    parser.ParseResource(h, 'icondef');
+    try
+        parser.ParseResource(h, 'icondef');
+    except
+    end;
     if (parser.Count <= 0) then begin
         parser.Free();
         Result := false;
@@ -728,6 +738,7 @@ var
     dlls : TWideStringList;
     i : integer;
     fn: Widestring;
+    dlgrslt: integer;
 begin
     dlls := TWideStringList.Create();
     EmoticonList.Clear();
@@ -739,10 +750,14 @@ begin
 
     // Load up any icon sets we have...
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
-    for i := 0 to dlls.Count - 1 do begin
-        EmoticonList.AddResourceFile(dlls[i]);
-        // XXX: check results of addresourcefile to ensure this DLL is ok.
+    for i := dlls.Count - 1 downto 0 do begin
+        if (not EmoticonList.AddResourceFile(dlls[i])) then begin
+            dlgrslt := MessageDlgW(WideFormat(_('Emoticon resource (%s) not found or not a valid emoticon resource. Do you wish to remove from list?'), [dlls[i]]), mtError, [mbYES, mbNO], 0);
+            if (dlgrslt = 6) then // mrYes
+                dlls.Delete(i);
+        end;
     end;
+    MainSession.Prefs.setStringlist('emoticon_dlls', dlls);
     dlls.Free();
 
     // Make sure the GUI form is updated.
@@ -959,14 +974,50 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 initialization
+
     EmoticonList := TEmoticonList.Create();
 
     // This is a "meta-regex" that should match everything
     // Create the static regex object and compile it.
     emoticon_regex := TRegExpr.Create();
+    
     with emoticon_regex do begin
         ModifierG := false;
-        Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
+        //Modify set of characters that we would like to treat as word char
+        //For emoticon it will be most of the characters but the whitespaces
+        WordChars := WordChars +
+                       chr(33) + //!
+                       chr(34) + //"
+                       chr(35) + //#
+                       chr(36) + //$
+                       chr(37) + //%
+                       chr(38) + //&
+                       chr(39) + //'
+                       chr(40) + //(
+                       chr(41) + //)
+                       chr(42) + //*
+                       chr(43) + //+
+                       chr(44) + //,
+                       chr(45) + //-
+                       chr(46) + //.
+                       chr(47) + ///
+                       chr(58) + //:
+                       chr(59) + //;
+                       chr(60) + //<
+                       chr(61) + //=
+                       chr(62) + //>
+                       chr(63) + //?
+                       chr(64) + //@
+                       chr(91) + //[
+                       chr(92) + //\
+                       chr(93) + //]
+                       chr(94) + //^
+                       chr(96) + //'
+                       chr(123) + //{
+                       chr(124) + //|
+                       chr(125) + //}
+                       chr(126); //~
+        Expression := '(.*)(\b\w+\b)';
         Compile();
     end;
 

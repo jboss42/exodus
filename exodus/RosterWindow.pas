@@ -27,7 +27,8 @@ uses
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
-    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls;
+    CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls, TntForms,
+  RichEdit2, ExRichEdit;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -133,6 +134,14 @@ type
     N12: TTntMenuItem;
     N13: TTntMenuItem;
     N14: TTntMenuItem;
+    popGroupUnBlock: TTntMenuItem;
+    N15: TTntMenuItem;
+    popBookmarkGrp: TTntPopupMenu;
+    JoinAllRooms1: TTntMenuItem;
+    N16: TTntMenuItem;
+    ImageLogo: TImage;
+    pnlConnectLogo: TPanel;
+    txtDisclaimer: TExRichEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -218,6 +227,9 @@ type
     procedure RenameProfile1Click(Sender: TObject);
     procedure lstProfilesSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
+    procedure JoinAllRooms1Click(Sender: TObject);
+    procedure pnlConnectLogoResize(Sender: TObject);
+    procedure txtDisclaimerURLClick(Sender: TObject; URL: string);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -275,6 +287,8 @@ type
     _drop: TExDropTarget;
     _auto_dir: integer;
 
+    _ShowDisclaimerText: boolean;   // Show the disclaimer text box be shown
+
     g_offline: Widestring;
     g_online: Widestring;
     g_chat: Widestring;
@@ -298,7 +312,7 @@ type
     procedure ExpandGrpNode(n: TTntTreeNode);
     procedure DrawAvatar(Node: TTntTreeNode; a: TAvatar);
     procedure DoLogin(idx: integer);
-    
+
     function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
     procedure SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
 
@@ -341,7 +355,7 @@ type
     procedure ToggleGUI(state: integer);
 
     function RenderGroup(grp: TJabberGroup): TTntTreeNode;
-    function getSelectedContacts(online: boolean = true): TList;
+    function getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
 
     property CurRosterItem: TJabberRosterItem read _cur_ritem;
     property CurGroup: Widestring read _cur_grp;
@@ -357,7 +371,7 @@ type
     undocked or not shown. Essentially this is a GUI hint to the roster rendering
     code.
 }
-function isEmbeddedRoster() : boolean;
+//function isEmbeddedRoster() : boolean;
 
 {
     If a roster instance exists, dock it in the given docksite
@@ -402,7 +416,7 @@ const
     sNoContactsSel = 'You must select one or more contacts.';
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
-    sNoBroadcast = 'You must select more than one online contact to broadcast.';
+    sNoBroadcast = 'You must select at least one contact to send a message.';
     sSignOn = 'Click a profile to connect';
     sNewProfile = 'Create a New Profile';
     sCancelLogin = 'Click to Cancel...';
@@ -415,6 +429,8 @@ const
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';
+    sGroup = 'Group';
+    sContact = 'Contact';
     sMyResources = 'My Resources';
 
     sNetMeetingConnError = 'Your connection type does not support direct connections.';
@@ -431,7 +447,6 @@ const
     sRenameProfilePrompt = 'New profile name:';
     sProfileAlreadyExists = 'Profile %s already exists.';
 
-    sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
 
     // Profile strings
@@ -444,6 +459,7 @@ const
     // predefined popup names
     sPredefinedActions = 'Actions';
     sPredefinedBookmark = 'Bookmark';
+    sPredefinedBookmarkGrp = 'BookmarkGrp';
     sPredefinedGroup = 'Group';
     sPredefinedProfiles = 'Profiles';
     sPredefinedRoster = 'Roster';
@@ -477,10 +493,10 @@ end;
     undocked or not shown. Essentially this is a GUI hint to the roster rendering
     code.
 }
-function isEmbeddedRoster() : boolean;
-begin
-    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
-end;
+//function isEmbeddedRoster() : boolean;
+//begin
+//    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
+//end;
 
 {
     If a roster instance exists, dock it in the given docksite
@@ -519,7 +535,16 @@ end;
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
     s : widestring;
+    tag: TXMLTag;
+    restype,resname,src: widestring;
+    ins: cardinal;
+    imgh: integer;
+    txth: integer;
+    tstring: widestring;
+    Buffer: array [0..16384] of char;
 begin
+    _ShowDisclaimerText := false;
+
     // Deal with fonts & stuff
     inherited;
 
@@ -593,6 +618,7 @@ begin
     ShowProfiles();
     treeRoster.Visible := false;
     pnlStatus.Visible := true;
+    pnlShow.Visible := false;
 
     ToggleGUI(gui_disconnected);
 
@@ -607,26 +633,206 @@ begin
     if (_adURL <> '') then
         imgAd.Cursor := crHandPoint;
 
+    try
+        txtDisclaimer.WideText := ''; // For some reason the RTF will not show without this.
+        tag := MainSession.Prefs.getXMLPref('brand_disclaimer_text');
+        if (tag <> nil) then begin
+            restype := tag.GetAttribute('type');
+            resname := tag.GetAttribute('resname');
+            src  := tag.GetAttribute('source');
+            try
+                txth := StrToInt(tag.GetAttribute('height'));
+            except
+                txth := 0;
+            end;
+
+            if ((restype = 'dll') and
+                (resname <> '') and
+                (src <> '')) then begin
+                try
+                    ins := LoadLibraryW(PWChar(src));
+                    if (ins = 0) then
+                        ins := LoadLibrary(PChar(String(src)));
+                    if (ins > 0) then begin
+                        LoadString(ins, StrToInt(resname), Buffer, sizeof(Buffer));
+                        tstring := Buffer;
+                        txtDisclaimer.WideText := tstring;
+                        FreeLibrary(ins);
+                    end;
+                except
+                    _ShowDisclaimerText := false;
+                end;
+            end
+            else if ((restype = 'file') and
+                     (src <> '')) then begin
+                try
+                    if (FileExists(src)) then begin
+                        // File exists as specified, so, just try to load it
+                        try
+                            txtDisclaimer.InsertFromFile(src);
+                            _ShowDisclaimerText := true;
+                        except
+                            _ShowDisclaimerText := false;
+                        end;
+                    end
+                    else begin
+                        // File doesn't exist as specified, possibly just filename, not full path
+                        // thus file might be in app root directory
+                        try
+                            if (FileExists(ExtractFilePath(Application.EXEName) + src)) then begin
+                                txtDisclaimer.InsertFromFile(ExtractFilePath(Application.EXEName) + src);
+                                _ShowDisclaimerText := true;
+                            end
+                            else
+                                _ShowDisclaimerText := false;
+                        except
+                            _ShowDisclaimerText := false;
+                        end;
+                    end;
+                except
+                    _ShowDisclaimerText := false;
+                end;
+            end
+            else if ((restype = 'text') and
+                     (tag.Data <> '')) then begin
+                try
+                    txtDisclaimer.InsertRTF(tag.Data);
+                    _ShowDisclaimerText := true;
+                except
+                    _ShowDisclaimerText := false;
+                    txtDisclaimer.Visible := false;
+                end;
+            end
+            else begin
+                // brand logo not found
+                txtDisclaimer.Visible := false;
+                _ShowDisclaimerText := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            end;
+
+            if ((_ShowDisclaimerText) and
+                (txth > 0)) then begin
+                // We were successful in loading text, so, now resize
+                txtDisclaimer.Visible := true;
+                txtDisclaimer.Height := txth;
+                pnlConnectLogo.Height := txth + lblCreate.Height + lblNewUser.Height;
+            end
+            else begin
+                txtDisclaimer.Visible := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            end;
+        end
+        else begin
+            // brand logo not found
+            txtDisclaimer.Visible := false;
+            _ShowDisclaimerText := false;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+        end;
+    except
+        // Image not loaded
+        txtDisclaimer.Visible := false;
+        _ShowDisclaimerText := false;
+        pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+    end;
+
+    if (not _ShowDisclaimerText) then begin
+        // Disclaimer text takes precedence over image.
+        try
+            tag := MainSession.Prefs.getXMLPref('brand_logo');
+            if (tag <> nil) then begin
+                restype := tag.GetAttribute('type');
+                resname := tag.GetAttribute('resname');
+                src  := tag.GetAttribute('source');
+                try
+                    imgh := StrToInt(tag.GetAttribute('height'));
+                except
+                    imgh := 0;
+                end;
+
+                if ((restype <> '') and
+                    (src <> '') and
+                    (imgh > 0)) then begin
+                    if ((restype = 'dll') and
+                        (resname <> '')) then begin
+                        ins := LoadLibraryW(PWChar(src));
+                        if (ins = 0) then
+                            ins := LoadLibrary(PChar(String(src)));
+                        if (ins > 0) then begin
+                            ImageLogo.Picture.Bitmap.LoadFromResourceName(ins, resname);
+                            FreeLibrary(ins);
+                        end;
+                    end
+                    else if (restype = 'file') then begin
+                        try
+                            if (FileExists(src)) then
+                                // File exists as specified, so, just try to load it
+                                ImageLogo.Picture.LoadFromFile(src)
+                            else
+                                // File doesn't exist as specified, possibly just filename, not full path
+                                // thus file might be in app root directory
+                                ImageLogo.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + src);
+                        except
+                        end;
+                    end;
+
+                    if (ImageLogo.Picture.Bitmap.HandleAllocated()) then begin
+                        // We were successful in loading graphic, so, now resize
+                        pnlConnectLogo.Height := imgh + lblCreate.Height + lblNewUser.Height;
+                    end;
+                end
+                else begin
+                    // brand logo not found
+                    ImageLogo.Visible := false;
+                    pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+                end;
+            end
+            else begin
+                // brand logo not found
+                ImageLogo.Visible := false;
+                pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            end;
+        except
+            // Image not loaded
+            ImageLogo.Visible := false;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+        end;
+    end
+    else
+        ImageLogo.Visible := false;
+
+
     _caps_xp := TXPLite.Create('/presence/c[xmlns="http://jabber.org/protocol/caps"]');
     _client_bmp := TBitmap.Create();
 
     // Add predefined menus to stringlist.
     ExCOMRoster.AddPredefinedMenu(sPredefinedActions, popActions);
     ExCOMRoster.AddPredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.AddPredefinedMenu(sPredefinedBookmarkGrp, popBookmarkGrp);
     ExCOMRoster.AddPredefinedMenu(sPredefinedGroup, popGroup);
     ExCOMRoster.AddPredefinedMenu(sPredefinedProfiles, popProfiles);
     ExCOMRoster.AddPredefinedMenu(sPredefinedRoster, popRoster);
     ExCOMRoster.AddPredefinedMenu(sPredefinedStatus, popStatus);
     ExCOMRoster.AddPredefinedMenu(sPredefinedTransport, popTransport);
+
+    // Check to see if we allow for blocking
+    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then begin
+        popBlock.Visible := false;
+        popGroupBlock.Visible := false;
+        popGroupUnBlock.Visible := false;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    // Cleanup memory
+    _caps_xp.Free();
+
     // Remove predefinded menus.
     ExCOMRoster.RemovePredefinedMenu(sPredefinedActions, popActions);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmark, popBookmark);
+    ExCOMRoster.RemovePredefinedMenu(sPredefinedBookmarkGrp, popBookmarkGrp);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedGroup, popGroup);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedProfiles, popProfiles);
     ExCOMRoster.RemovePredefinedMenu(sPredefinedRoster, popRoster);
@@ -734,10 +940,20 @@ begin
         MainSession.Roster.Clear();
         pnlAnimation.Visible := false;
         treeRoster.Visible := false;
+        pnlShow.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
-        lblCreate.Visible := true;
-        lblNewUser.Visible := true;
+        pnlConnectLogo.Visible := true;
+        if (frmExodus <> nil) then
+            frmExodus.btnConnect.Enabled := true;
+        if (ImageLogo.Picture.Bitmap.HandleAllocated()) then begin
+            ImageLogo.Visible := true;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height + ImageLogo.Height;
+        end;
+        if (_ShowDisclaimerText) then begin
+            txtDisclaimer.Visible := true;
+            pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height + txtDisclaimer.Height;
+        end;
         lblConnect.Caption := _(sSignOn);
         lblCreate.Caption := _(sNewProfile);
         lblConnect.Font.Color := clWindowText;
@@ -748,17 +964,27 @@ begin
         lblStatus.Caption := _(sDisconnected);
         imgSSL.Visible := false;
         AssignUnicodeFont(lblConnect.Font, 8);
+        _online_go := nil;
+        _chat_go := nil;
+        _away_go := nil;
+        _xa_go := nil;
+        _dnd_go := nil;
     end
     else if (state = gui_connecting) then begin
         pnlAnimation.Visible := true;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
+        if (frmExodus <> nil) then begin
+            frmExodus.btnConnect.Enabled := false;
+            frmExodus.btnOptions.Enabled := false;
+            frmExodus.mnuOptions_Options.Enabled := false;
+            frmExodus.Preferences1.Enabled := false;
+        end;
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);
         lblConnect.Caption := _(sCancelLogin);
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
         AssignUnicodeURL(lblConnect.Font, 8);
         Self.showAniStatus();
         frmExodus.ResetMenuItems(nil);
@@ -773,7 +999,6 @@ var
     b_jid: Widestring;
     imgsrc, restype, resname : Widestring;
     ins: cardinal;
-    
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -791,8 +1016,7 @@ begin
         lblStatus.Caption := _(sAuthenticating);
         Self.showAniStatus();
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
         ShowPresence('online');
         ResetPanels();
     end
@@ -803,8 +1027,7 @@ begin
         lblStatus.Caption := _(sAuthenticated);
         Self.showAniStatus();
         lstProfiles.Visible := false;
-        lblCreate.Visible := false;
-        lblNewUser.Visible := false;
+        pnlConnectLogo.Visible := false;
     end
 
     // it's the end of the roster, update the GUI
@@ -814,6 +1037,7 @@ begin
             aniWait.Visible := false;
             pnlConnect.Visible := false;
             treeRoster.Visible := true;
+            pnlShow.Visible := true;
             if (_avatars) then begin
                 _show_status := true;
                 treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
@@ -876,6 +1100,7 @@ begin
         BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
 
         Redraw();
+        MainSession.RefreshBlockers;
     end
 
     // someone has been blocked
@@ -935,8 +1160,6 @@ begin
         end;
 
         imgAd.Visible := true;
-
-
     end
     else if ((event = '/session/adimage/off') and Self.Visible) then begin
         imgAd.Visible := false;
@@ -1002,7 +1225,7 @@ begin
         if (ritem <> nil) then begin
             if (ritem.Group[0] = g_bookmarks) then begin
                 RemoveItemNodes(ritem);
-                MainSession.roster.RemoveItem(ritem.Text);
+                MainSession.roster.RemoveItem(ritem.Jid.jid);
             end
         end;
     end;
@@ -1160,7 +1383,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
+function TfrmRosterWindow.getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
 var
     c, i: integer;
     ri: TJabberRosterItem;
@@ -1190,7 +1413,7 @@ begin
             end
             else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
                 // add this grp to the selection
-                _cur_go.getRosterItems(Result, online);
+                _cur_go.getRosterItems(Result, online, observer);
             end;
         end;
     end;
@@ -1354,6 +1577,7 @@ var
     node_rect: TRect;
     plevel: integer;
     go: TJabberGroup;
+    pres: TJabberPres;
 begin
     // Render a specific roster item, with the givenode_listn presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1386,7 +1610,14 @@ begin
     end
 
     else if (ritem.ask = 'subscribe') and (_show_pending) then begin
-        // allow these items to pass thru
+        // allow these items to pass thru if showing offline, 
+        // But, make sure they are hidden if
+        // not showing offline contacts
+        if ((_show_online) and (_show_filter > show_offline)) then begin
+            RemoveItemNodes(ritem);
+            exit
+        end;
+
     end
 
     else if ((ritem.IsInGroup(_transports)) and
@@ -1438,6 +1669,7 @@ begin
     node_list := TWideStringlist(ritem.Data);
     if node_list = nil then begin
         node_list := TWideStringlist.Create;
+        node_list.CaseSensitive := true;
         ritem.Data := node_list;
     end;
 
@@ -1591,6 +1823,29 @@ begin
             ritem.setPresenceImage('observer');
         if (ritem.Ask = 'subscribe') then
             ritem.setPresenceImage('pending');
+
+        // Deal with blocked users
+        if (MainSession.isBlocked(ritem.jid)) then begin
+            if (ritem.IsOnline()) then
+                ritem.setPresenceImage('online_blocked')
+            else
+                ritem.setPresenceImage('offline_blocked');
+        end
+        else begin
+            if (ritem.ImageIndex = ritem.getPresenceImage('online_blocked')) then begin
+                // Was blocked but not blocked any more
+                // Online so need to figure out what icon to show based on current presence
+                 pres := MainSession.ppdb.FindPres(ritem.Jid.jid, ritem.Jid.resource);
+                 ritem.setPresenceImage(pres.Show);
+            end
+            else if (ritem.ImageIndex = ritem.getPresenceImage('offline_blocked')) then begin
+                // Was blocked but not blocked anymore
+                // Offline, so just show the offline icon
+                ritem.setPresenceImage('offline');       
+            end;
+        end;
+
+
         cur_node.ImageIndex := ritem.ImageIndex;
 
         cur_node.SelectedIndex := ritem.ImageIndex;
@@ -1671,6 +1926,20 @@ begin
         grp_rect := n.DisplayRect(false);
         InvalidateRect(treeRoster.Handle, @grp_rect, false);
         n := n.Parent;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.JoinAllRooms1Click(Sender: TObject);
+var
+    recips: TList;
+    i: integer;
+    ri: TJabberRosterItem;
+begin
+    recips := getSelectedContacts(false);
+    for i := 0 to recips.Count - 1 do begin
+        ri := TJabberRosterItem(recips[i]);
+        MainSession.FireEvent(ri.Action, ri.Tag);
     end;
 end;
 
@@ -1804,6 +2073,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.pnlConnectLogoResize(Sender: TObject);
+begin
+    ImageLogo.Height := pnlConnectLogo.Height - (lblCreate.Height + lblNewUser.Height);
+    ImageLogo.Width := pnlConnectLogo.Width;
+end;
+
 procedure TfrmRosterWindow.pnlStatusClick(Sender: TObject);
 var
     cp : TPoint;
@@ -2301,21 +2576,23 @@ procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
 var
     offline, native, me, o, e: boolean;
-    b, u: boolean;
-    i, r: integer;
+    r: integer;
     n: TTntTreeNode;
     ri: TJabberRosterItem;
     pri: TJabberPres;
-    slist: TList;
+    contextMenuTag: TXMLTag;
+    menuname: Widestring;
+    i: integer;
+    transcnt, bookcnt, rescnt, contactcnt: integer;
 begin
     // Figure out what popup menu to show
     // based on the selection
-
+    menuname := '';
     ri := nil;
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
     if (n <> nil) then begin
         if (treeRoster.SelectionCount > 1) then
-            r := node_grp
+            r := node_multiselect
         else
             r := getNodeType(n);
     end
@@ -2329,18 +2606,25 @@ begin
         // show the actions popup when no node is hit
         treeRoster.PopupMenu := popActions;
         popProperties.Enabled := false;
+        menuname := sPredefinedActions;
     end;
     node_transport: begin
         treeRoster.PopupMenu := popTransport;
         treeRoster.Selected := n;
+        menuname := sPredefinedTransport;
     end;
     node_ritem: begin
         // show the roster menu when a node is hit
-        if (_cur_ritem.CustomContext <> nil) then
-            treeRoster.PopupMenu := _cur_ritem.CustomContext
+        if (_cur_ritem.CustomContext <> nil) then begin
+            treeRoster.PopupMenu := _cur_ritem.CustomContext;
+            if (leftstr(treeRoster.PopupMenu.name, length('pluginContext_')) = 'pluginContext_') then begin
+                menuname := rightstr(treeRoster.PopupMenu.Name, length(treeRoster.PopupMenu.Name) - length('pluginContext_'));
+            end;
+        end
         else begin
             treeRoster.PopupMenu := popRoster;
             treeRoster.Selected := n;
+            menuname := sPredefinedRoster;
 
             o := false;         // online?
             me := false;        // is this me?
@@ -2355,6 +2639,8 @@ begin
                 o := (pri <> nil);
                 native := ri.IsNative;
                 offline := ri.CanOffline;
+                if (ri.IsInGroup(g_myres)) then
+                    me := true;
             end;
 
             popChat.Enabled := (e and (o or offline));
@@ -2362,14 +2648,9 @@ begin
             popProperties.Enabled := true;
             popSendFile.Enabled := (o) and (native) and
                 (MainSession.Profile.ConnectionType = conn_normal);
-            if (room.room_list.Count > 0) then begin
-                popInvite.Enabled := (native);
-                popGrpInvite.Enabled := true;
-            end
-            else begin
-                popInvite.Enabled := false;
-                popGrpInvite.Enabled := false;
-            end;
+            frmExodus.mnuPeople_Contacts_SendFile.Enabled := popSendFile.Enabled;
+            frmExodus.btnSendFile.Enabled := popSendFile.Enabled;
+            popInvite.Enabled := native and (room.room_list.Count > 0);
 
             popPresence.Enabled := (e and (not me));
 //            popClientInfo.Enabled := true;
@@ -2385,11 +2666,11 @@ begin
             popHistory.Enabled := (ExCOMController.ContactLogger <> nil);
 
             if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
-                popBlock.Caption := _(sBtnUnBlock);
+                popBlock.Caption := _(sBtnUnBlock) + ' ' + _(sContact);
                 popBlock.OnClick := popUnblockClick;
             end
             else begin
-                popBlock.Caption := _(sBtnBlock);
+                popBlock.Caption := _(sBtnBlock) + ' ' + _(sContact);
                 popBlock.OnClick := popBlockClick;
             end;
             popGroupBlock.OnClick := popBlock.OnClick;
@@ -2402,55 +2683,134 @@ begin
             popProperties.Enabled := false;
             exit;
         end;
+        // check to see if we have the Bookmarks grp selected
+        if ((_cur_go <> nil) and (_cur_go.FullName = g_bookmarks)) then begin
+            treeRoster.PopupMenu := popBookmarkGrp;
+            exit;
+        end;
+        // check to se if we have the My Resources grp selected
+        if ((_cur_go <> nil) and (_cur_go.FullName = g_myres)) then begin
+            // Not much we can do with the My Resources group, so just
+            // show the Actions menu
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+            menuname := sPredefinedActions;
+            exit;
+        end;
 
         // check to see if we have multiple contacts or a group selected
         treeRoster.PopupMenu := popGroup;
+        menuname := sPredefinedGroup;
         if (treeRoster.SelectionCount <= 1) then begin
             treeRoster.Selected := n;
         end;
         popGrpRename.Enabled := (treeRoster.SelectionCount <= 1);
 
-        b := true;
-        u := true;
+        // do blocking
+        // --   Block and Unblock are always available for a group
+        //      even if all contacts are blocked or unblocked.
+        //      It doesn't hurt to block an already blocked
+        //      contact, same for unblocking.
+        popBlock.OnClick := popBlockClick;
+        popGroupBlock.OnClick := popBlock.OnClick;
+        popBlock.OnClick := popUnBlockClick;
+        popGroupUnBlock.OnClick := popBlock.OnClick;
 
-        // do blocking madness
-        slist := getSelectedContacts(MainSession.Prefs.getBool('roster_only_online'));
-        for i := 0 to slist.count - 1 do begin
-            ri := TJabberRosterItem(slist[i]);
-            if (ri <> nil) then begin
-              if (_blockers.IndexOf(ri.jid.jid) >= 0) then begin
-                  b := false;
-                  if (not u) then break;
-              end
-              else begin
-                  u := false;
-                  if (not b) then break;
-              end;
+        // Should contacts be able to be invited to rooms
+        popGrpInvite.Enabled := (room.room_list.Count > 0);
+    end;
+    node_multiselect: begin
+        // Go through selctions to find out if we have any "special" groups/items
+        transcnt := 0;
+        bookcnt := 0;
+        rescnt := 0;
+        contactcnt := 0;
+        for i := 0 to treeRoster.SelectionCount - 1 do begin
+            if (TObject(treeRoster.Selections[i].Data) <> nil) then begin
+                if (TObject(treeRoster.Selections[i].Data) is TJabberRosterItem) then begin
+                    if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(_transports)) then
+                        inc(transcnt)
+                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_bookmarks)) then
+                        inc(bookcnt)
+                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_myres)) then
+                        inc(rescnt)
+                    else
+                        inc(contactcnt);
+                end
+                else if (TObject(treeRoster.Selections[i].Data) is TJabberGroup) then begin
+                    if (TJabberGroup(treeRoster.Selections[i].Data).FullName = _transports) then
+                        inc(transcnt)
+                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_bookmarks) then
+                        inc(bookcnt)
+                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_myres) then
+                        inc(rescnt)
+                    else
+                        inc(contactcnt);
+                end;
             end;
         end;
-        if ((not b) and (not u)) then begin
-            popGroupBlock.Caption := _(sBtnBlock);
-            popGroupBlock.Enabled := false;
+
+        if ((transcnt = 0) and
+            (bookcnt = 0) and
+            (rescnt = 0)) then begin
+            // Everything is a "regular" group and/or regular contacts
+            // so show group menu.
+            treeRoster.PopupMenu := popGroup;
+            menuname := sPredefinedGroup;
+            popGrpRename.Enabled := false;
+
+            // do blocking
+            // --   Block and Unblock are always available for a group
+            //      even if all contacts are blocked or unblocked.
+            //      It doesn't hurt to block an already blocked
+            //      contact, same for unblocking.
             popBlock.OnClick := popBlockClick;
-        end
-        else if (b) then begin
-            popGroupBlock.Caption := _(sBtnBlock);
-            popGroupBlock.Enabled := true;
-            popBlock.OnClick := popBlockClick;
-        end
-        else if (u) then begin
-            popGroupBlock.Caption := _(sBtnUnBlock);
-            popGroupBlock.Enabled := true;
+            popGroupBlock.OnClick := popBlock.OnClick;
             popBlock.OnClick := popUnBlockClick;
+            popGroupUnBlock.OnClick := popBlock.OnClick;
+
+            // Should contacts be able to be invited to rooms
+            popGrpInvite.Enabled := (room.room_list.Count > 0);
+        end
+        else if ((transcnt > 0) and
+                 (bookcnt = 0) and
+                 (rescnt = 0) and
+                 (contactcnt = 0)) then begin
+            // all transports - do miminal for now
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+        end
+        else if ((transcnt = 0) and
+                 (bookcnt > 0) and
+                 (rescnt = 0) and
+                 (contactcnt = 0)) then begin
+            // all bookmarks
+            treeRoster.PopupMenu := popBookmarkGrp;
+        end
+        else if ((transcnt = 0) and
+                 (bookcnt = 0) and
+                 (rescnt > 0) and
+                 (contactcnt = 0)) then begin
+            // all my resources - do minimal for now.
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+        end
+        else begin
+           // A mix - do only minimal
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
         end;
-
-        popGroupBlock.OnClick := popBlock.OnClick;
-
-        slist.Clear();
-        slist.Free();
     end;
+    end;
+
+    if (menuname = '') then menuname := treeRoster.PopupMenu.Name;
+
+    contextMenuTag := TXMLTag.Create('context_menu');
+    contextMenuTag.setAttribute('menu_id', menuname);
+    MainSession.FireEvent('/roster/context_menu', contextMenuTag);
+    contextMenuTag.Free();
 end;
-end;
+
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popHistoryClick(Sender: TObject);
@@ -2653,7 +3013,8 @@ begin
             if (_cur_ritem.Text <> '') then
                 c1 := _cur_ritem.Text
             else
-                c1 := _cur_ritem.jid.Full;
+                // remove JID escaping as this is displayed jid text.
+                c1 := _cur_ritem.jid.removeJEP106(_cur_ritem.jid.Full);
 
             if (_cur_ritem.IsContact) then begin
                 if (_cur_ritem.ask = 'subscribe') then begin
@@ -2661,10 +3022,20 @@ begin
                     _cur_ritem.setPresenceImage('pending');
                 end;
 
-                p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-                if ((p <> nil) and (_show_status)) then begin
+
+                if (_cur_ritem.Jid.jid = MainSession.BareJid) then
+                    // Is a resource contact, not standard contact
+                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, _cur_ritem.Jid.resource)
+                else
+                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+                if (_show_status) then begin
+                  if (p <> nil) then
                     if (p.Status <> '') then
-                        c2 := '(' + p.Status + ')';
+                      c2 := '(' + p.Status + ')'
+                    else if (p.Show <> '') then
+                      c2 := '(' + p.Show + ')'
+                    else
+                      c2 := '';
                 end;
             end;
 
@@ -2832,6 +3203,7 @@ var
     old_grp, new_grp, grp_exists_msg, special_grp_msg: WideString;
     i: integer;
     ri: TJabberRosterItem;
+    x: TXMLTag;
 begin
     // Rename some grp.
     if (treeRoster.Selected = nil) then exit;
@@ -2863,6 +3235,15 @@ begin
                 exit;
             end;
 
+            if (go.isEmpty) then begin
+              MainSession.Roster.removeGroup(go);
+              TTntTreeNode(go.Data).Free();
+              MainSession.Roster.addGroup(new_grp);
+              x := TXMLTag.Create('group');
+              x.setAttribute('name', new_grp);
+              MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
+              exit;
+            end;
 
             for i := 0 to MainSession.Roster.Count - 1 do begin
                 ri := MainSession.Roster.Items[i];
@@ -2880,8 +3261,11 @@ end;
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
     go: TJabberGroup;
-    recips: TList;
     special_grp_rmv_msg : WideString;
+    i: Cardinal;
+    parent:  TTntTreeNode;
+    rosterItems: TWideStringList;
+    removeAsGroup: boolean;
 begin
     // Remove the grp..
     if (treeRoster.SelectionCount = 1) then begin
@@ -2904,10 +3288,57 @@ begin
             RemoveGroup(_cur_grp)
     end
     else begin
-        recips := getSelectedContacts(false);
-        RemoveGroup('', recips);
-        recips.Free();
-    end;
+
+//        //We have several nodes selected, we will only display one
+//        //dialog if all selected nodes belonging to the same parent.
+//        //If selected nodes are from different groups
+//        //we display roster item/group removal dialog for each node.
+        parent := nil;
+        rosterItems := TWideStringList.Create;
+        removeAsGroup := false;
+        for i := 0 to treeRoster.SelectionCount - 1 do begin
+          if (i = 0) then begin
+            parent := TTntTreeNode(treeRoster.Selections[i]).Parent;
+            continue;
+          end;
+
+          if (treeRoster.Selections[i].Parent <> parent) then
+              break;
+          //If there are any group nodes, will have to use group removal
+          //dialogs for each selected group.
+          if (getNodeType(TTntTreeNode(treeRoster.Selections[i])) <> node_ritem) then 
+              break;
+
+        end;
+        //If we reached end of loop, we have the same parent.
+        //We will remove items as a group.
+        if (i = treeRoster.SelectionCount) then
+           removeAsGroup := true;
+
+        //Build a list of strings with selected roster items
+        for i := 0 to treeRoster.SelectionCount - 1 do
+          if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+             rosterItems.Add(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full);
+
+        if (removeAsGroup) then
+             if (treeRoster.Selections[0].Parent <> nil) then
+               RemoveRosterItems(rosterItems, treeRoster.Selections[0].Parent.Text)
+             else
+               RemoveRosterItems(rosterItems)
+        else begin
+           for i := 0 to treeRoster.SelectionCount - 1 do begin
+            // Remove this roster item.
+            if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+              if (treeRoster.Selections[i].Parent <> nil) then
+                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full, treeRoster.Selections[i].Parent.Text)
+              else
+                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full)
+            else
+              RemoveGroup(TJabberGroup(treeRoster.Selections[i].Data).FullName);
+          end;
+        end;
+
+      end;
 end;
 
 {---------------------------------------}
@@ -2943,9 +3374,19 @@ var
     i: integer;
     sel: TList;
     jids: TWideStringlist;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Invite the whole group to the conference.
-    sel := Self.getSelectedContacts(true);
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := getSelectedContacts(true, observer)
+    else
+        sel := getSelectedContacts(false, observer);
+
     jids := TWideStringlist.Create();
     for i := 0 to sel.Count - 1 do
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
@@ -2960,9 +3401,19 @@ procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
     sel: TList;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Send contacts to this JID..
-    sel := getSelectedContacts(false);
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := getSelectedContacts(true, observer)
+    else
+        sel := getSelectedContacts(false, observer);
+
     if (sel.Count = 0) then begin
         MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel.Free();
@@ -3049,14 +3500,20 @@ var
     r: TList;
     jl: TWideStringList;
     i: integer;
+    observer: boolean;
 begin
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
     // Broadcast a message to the grp
     if ((_show_online) and (_show_filter > show_offline)) then
-        r := getSelectedContacts(true)
+        r := getSelectedContacts(true, observer)
     else
-        r := getSelectedContacts(false);
+        r := getSelectedContacts(false, observer);
 
-    if (r.Count <= 1) then
+    if (r.Count < 1) then
         MessageDlgW(_(sNoBroadcast), mtError, [mbOK], 0)
     else begin
         jl := TWideStringlist.Create();
@@ -3106,7 +3563,14 @@ begin
         end;
     end
     else if (lstProfiles.ItemIndex >= 0) then
-        DoLogin(lstProfiles.ItemIndex);
+        // Item is actively selected OR we have a "last logged in"
+        DoLogin(lstProfiles.ItemIndex)
+    else if ((lstProfiles.Items.Count > 0) and
+             (Sender <> lstProfiles)) then
+        // Do NOT have an actively selected item OR a "last logged in"
+        // Do NOT have a click on the "whitespace" of profile list
+        // BUT we do have an item (at least default). So, try item 0
+        DoLogin(0);  
 end;
 
 {---------------------------------------}
@@ -3206,11 +3670,26 @@ procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
   Node: TTreeNode);
 begin
     _change_node := TTnTTreeNode(Node);
-    frmExodus.ResetMenuItems(_change_node);
+    //if multiselected, make change_node null for now. disables menu items...
+    if (Self.treeRoster.SelectionCount <> 1) then
+      frmExodus.ResetMenuItems(nil)
+    else frmExodus.ResetMenuItems(_change_node);
+
+    frmExodus.btnSendFile.Enabled := false;
+    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
     if (Node <> nil) then begin
         _last_search := Node.AbsoluteIndex;
         if (getNodeType(TTnTTreeNode(Node)) = node_ritem) then begin
             MainSession.Roster.ActiveItem := TJabberRosterItem(Node.Data);
+
+            if ((MainSession.Roster.ActiveItem.IsNative) and
+                (MainSession.Roster.ActiveItem.IsOnline) and
+                (MainSession.Profile.ConnectionType = conn_normal) and
+                (treeRoster.SelectionCount < 2))then begin
+                frmExodus.btnSendFile.Enabled := true;
+                frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+            end;
+
             exit;
         end;
     end;
@@ -3440,8 +3919,18 @@ end;
 procedure TfrmRosterWindow.MoveorCopyContacts1Click(Sender: TObject);
 var
     sel: TList;
+    observer: boolean;
 begin
-    sel := Self.getSelectedContacts(false);
+    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+        observer := true
+    else
+        observer := false;
+
+    if ((_show_online) and (_show_filter > show_offline)) then
+        sel := Self.getSelectedContacts(true, observer)
+    else
+        sel := Self.getSelectedContacts(false, observer);
+
     ShowGrpManagement(sel);
 end;
 
@@ -3473,6 +3962,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.txtDisclaimerURLClick(Sender: TObject; URL: string);
+begin
+    Screen.Cursor := crHourGlass;
+    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    Screen.Cursor := crDefault;
+end;
+
 procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
 var
     i:         integer;
@@ -3585,6 +4081,7 @@ begin
             ToggleGUI(gui_disconnected);
             MainSession.Prefs.RemoveProfile(p);
             MainSession.Prefs.SaveProfiles();
+            MainSession.ActivateDefaultProfile();
             ShowProfiles();
         end
         else
@@ -3616,14 +4113,22 @@ procedure TfrmRosterWindow.treeRosterKeyDown(Sender: TObject;
 var
     msg: string;
     Node: TTreeNode;
+    ri: TJabberRosterItem;
 begin
     Node := treeRoster.Selected;
 
     if (Node = nil) then exit;
 
     if (TObject(Node.Data) is TJabberRosterItem) then begin
+        ri := TJabberRosterItem(Node.Data);
+
         case Key of
-            VK_F2: popRenameClick(Sender);
+            VK_F2: begin
+                if (ri.IsContact) then
+                    popRenameClick(Sender)
+                else if (ri.Tag.Name = 'conference') then
+                    MainSession.FireEvent('/session/gui/conference-props-rename', ri.Tag);
+            end;
             VK_F10: popPropertiesClick(Sender);
             VK_DELETE: popRemoveClick(Sender);
         end;

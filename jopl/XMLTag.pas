@@ -220,6 +220,7 @@ end;
 destructor TXMLTag.Destroy;
 begin
     // Free everything for this node
+    _AttrList.Clear;
     _AttrList.Free;
     _Children.Clear;
     _Children.Free;

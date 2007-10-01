@@ -138,8 +138,9 @@ end;
 function TJabberChatList.FindChat(sjid, sresource, sthread: widestring): TChatController;
 var
     full: string;
-    i: integer;
+    i,j: integer;
     p: TJabberPres;
+    jid: TJabberID;
 begin
     // find a chat object for this jid/resource/thread
     if sresource <> '' then
@@ -156,14 +157,28 @@ begin
         p := nil;
         i := indexOf(sjid);
         while (i < 0) do begin
+            // See if they are online to find their Full JID
             if (p = nil) then
                 p := MainSession.ppdb.FindPres(sjid, '')
             else
                 p := MainSession.ppdb.NextPres(p);
             if (p <> nil) then
+                // We have presence so try to find any conversation thread
                 i := indexOf(p.fromJid.full)
             else begin
+                // Offline (no presence) so see if we can find ANY conversation
+                // to attach to for sending offline message.
                 i := -1;
+                for j := 0 to Self.Count - 1 do begin
+                    jid := TJabberID.Create(Self.Get(j));
+                    if (jid.jid = sjid) then begin
+                        //Found a conversation with base JID
+                        i := j;
+                        jid.Free;
+                        break;
+                    end;
+                    jid.Free;
+                end;
                 break;
             end;
         end;

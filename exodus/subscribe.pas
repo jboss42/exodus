@@ -66,6 +66,8 @@ type
 
   public
     { Public declarations }
+    showhandler: TObject;
+
     procedure setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
     procedure EnableAdd(e: boolean);
   end;
@@ -104,6 +106,8 @@ type
 
 destructor TShowHandler.Destroy();
 begin
+    if (sub <> nil) then
+        sub.showhandler := nil;
     jid.Free();
     jid := nil;
     inherited;
@@ -113,11 +117,16 @@ end;
 procedure TShowHandler.fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
     if ((jid <> nil) and (jid.jid = bareJID)) then begin
-        sub.txtNickname.Text := displayName;
-        sub.ShowDefault(false);
-        DoNotify(sub, 'notify_s10n',
-                 'Subscription from ' + displayName, RosterTreeImages.Find('key'));
-        Self.Free();
+        try
+            if (sub <> nil) then begin
+                sub.txtNickname.Text := displayName;
+                sub.ShowDefault(false);
+                DoNotify(sub, 'notify_s10n',
+                         'Subscription from ' + displayName, RosterTreeImages.Find('key'));
+            end;
+        finally
+            Self.Free();
+        end;
     end;
 end;
 
@@ -131,7 +140,11 @@ begin
 
     //newJID may already be in roster. Force a displayname lookup if needed
     if (Self.ProfileEnabled) then
-        dName := Self.getProfileDisplayName(newJID, changePending)
+    begin
+        dName := Self.getProfileDisplayName(newJID, changePending);
+        if (dName = '') then
+          dname := getDisplayName(newJID, changePending);
+    end
     else
         dname := getDisplayName(newJID, changePending);
 
@@ -219,8 +232,11 @@ begin
         DoNotify(Self, 'notify_s10n',
                  'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
     end
-    else
-        TShowHandler.Create().getDispNameAndShow(Self, jid);
+    else begin
+        showHandler := TShowHandler.Create();
+        TShowHandler(showHandler).getDispNameAndShow(Self, jid);
+        ShowDefault(true);
+    end;
 end;
 
 {---------------------------------------}
@@ -255,6 +271,12 @@ var
     p1: TJabberPres;
 
 begin
+    // Need to make showHandler de-ref this form
+    // or can end up with an exception
+    if (showHandler <> nil) then begin
+        TShowHandler(showHandler).sub := nil;
+    end;
+
     // send a subscribed and possible add..
     sjid := _jid.full();
     snick := txtNickname.Text;
@@ -283,6 +305,7 @@ begin
     p.PresType := 'unsubscribed';
 
     MainSession.SendTag(p);
+
     Self.Close;
 end;
 

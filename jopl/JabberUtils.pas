@@ -188,6 +188,9 @@ function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
 var
     flags: Word;
     res: integer;
+    {$ifdef EXODUS}
+    tempstring: widestring;
+    {$endif}
 begin
     flags := 0;
     case DlgType of
@@ -213,7 +216,10 @@ begin
         flags := flags or MB_OK;
 
     {$ifdef EXODUS}
-    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(PrefController.getAppInfo.Caption),
+    tempstring := PrefController.getAppInfo.Caption;
+    if (Caption <> '') then
+        tempstring := tempstring + ' - ' + Caption;
+    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(tempstring),
         flags);
     {$else}
     res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(Caption),

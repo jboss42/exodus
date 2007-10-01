@@ -3,31 +3,30 @@ inherited frmChat: TfrmChat
   Top = 384
   ActiveControl = MsgOut
   Caption = 'Chat Window'
-  ClientHeight = 267
-  ClientWidth = 383
+  ClientHeight = 416
+  ClientWidth = 492
   Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
-  OnClose = FormClose
-  ExplicitWidth = 391
-  ExplicitHeight = 301
+  ExplicitWidth = 500
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 234
-    Width = 383
-    ExplicitTop = 239
-    ExplicitWidth = 383
+    Top = 383
+    Width = 492
+    ExplicitTop = 383
+    ExplicitWidth = 492
   end
   inherited pnlDockTop: TPanel
-    Width = 383
-    ExplicitWidth = 383
+    Width = 492
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
-      Left = 334
-      ExplicitLeft = 334
+      Left = 443
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
-      Width = 331
-      ExplicitWidth = 331
+      Width = 440
+      ExplicitWidth = 440
       object pnlJID: TPanel
         Left = 0
         Top = 0
@@ -58,7 +57,6 @@ inherited frmChat: TfrmChat
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-          ExplicitHeight = 28
         end
         object Panel3: TPanel
           Left = 35
@@ -73,27 +71,29 @@ inherited frmChat: TfrmChat
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 383
-    Height = 173
-    ExplicitWidth = 383
-    ExplicitHeight = 173
+    Width = 492
+    Height = 322
+    ExplicitTop = 31
+    ExplicitWidth = 492
+    ExplicitHeight = 322
   end
   inherited pnlInput: TPanel
-    Top = 239
-    Width = 383
-    ExplicitTop = 239
-    ExplicitWidth = 383
+    Top = 388
+    Width = 492
+    ExplicitTop = 359
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 379
+      Width = 488
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 205
-    Width = 383
-    ExplicitTop = 205
-    ExplicitWidth = 383
+    Top = 354
+    Width = 492
+    ExplicitLeft = 2
+    ExplicitTop = 330
+    ExplicitWidth = 492
   end
   object SaveDialog1: TSaveDialog [5]
     DefaultExt = 'html'

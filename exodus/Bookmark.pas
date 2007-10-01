@@ -23,7 +23,7 @@ interface
 uses
     Roster, NodeItem,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
+    Dialogs, buttonFrame, StdCtrls, TntStdCtrls, XMLTag;
 
 type
   TfrmBookmark = class(TForm)
@@ -45,14 +45,16 @@ type
   private
     { Private declarations }
     new: boolean;
+    _scallback: integer;
   public
     { Public declarations }
+    procedure SessionCallback(event: string; tag: TXMLTag);
   end;
 
 var
   frmBookmark: TfrmBookmark;
 
-function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''; doing_rename: boolean = false): TfrmBookmark;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -62,11 +64,11 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLTag, JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
+    JabberUtils, ExUtils,  GnuGetText, JabberID, Session,
     RosterWindow;
 
 {---------------------------------------}
-function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''; doing_rename: boolean = false): TfrmBookmark;
 var
     f: TfrmBookmark;
     bm: TXMLTag;
@@ -101,7 +103,12 @@ begin
             chkRegisteredNick.Checked := (bm.GetAttribute('reg_nick') = 'true');
         end;
         tmp.Free();
+
         Show();
+        if (doing_rename) then begin
+            txtName.SetFocus;
+            txtName.SelectAll;
+        end;
     end;
 
     Result := f;
@@ -167,6 +174,7 @@ procedure TfrmBookmark.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+    MainSession.UnRegisterCallback(_scallback);
 end;
 
 {---------------------------------------}
@@ -178,6 +186,14 @@ begin
         txtNick.Enabled := false;
         chkRegisteredNick.Enabled := false;
     end;
+    _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+end;
+
+{---------------------------------------}
+procedure TfrmBookmark.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then
+        Self.Close;
 end;
 
 end.

@@ -242,7 +242,14 @@ uses
   zlibpas in '..\jopl\png\zlibpas.pas',
   RT_XIMConversion in 'RT_XIMConversion.pas',
   ToolbarColorSelect in 'ToolbarColorSelect.pas' {frmToolbarColorSelect},
-  DisplayName in '..\jopl\DisplayName.pas';
+  DisplayName in '..\jopl\DisplayName.pas',
+  BrowseForFolderU in 'BrowseForFolderU.pas',
+  SelRoomOccupant in 'SelRoomOccupant.pas' {frmSelRoomOccupant},
+  EventQueue in '..\jopl\EventQueue.pas',
+  COMDockToolbar in 'COMDockToolbar.pas',
+  COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
+  idSSLSchannel in 'idSSLSchannel.pas',
+  VistaAltFixUnit in 'VistaAltFixUnit.pas';
 
 {$R *.TLB}
 
@@ -277,6 +284,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
+  Application.OnHelp := frmExodus.DisableHelp;
   frmExodus.Startup();
   Application.Run;
 

@@ -227,7 +227,7 @@ end;
 {---------------------------------------}
 procedure TJabberEntityCache.Add(jid: Widestring; e: TJabberEntity);
 begin
-    _cache.AddObject(jid, e);
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
 end;
 
 {---------------------------------------}
@@ -246,7 +246,7 @@ var
     i: integer;
     cur: TJabberEntity;
 begin
-    i := _cache.indexOf(jid);
+    i := _cache.indexOf(TJabberID.applyJEP106(jid));
 
     if (i >= 0) then begin
         repeat
@@ -291,7 +291,7 @@ var
     cur: TJabberEntity;
     i: integer;
 begin
-    i := _cache.IndexOf(jid);
+    i := _cache.IndexOf(TJabberID.applyJEP106(jid));
     if (i >= 0) then begin
         Result := nil;
         cur := TJabberEntity(_cache.Objects[i]);
@@ -341,7 +341,7 @@ begin
     end;
 
     e := TJabberEntity.Create(TJabberID.Create(jid), node);
-    _cache.AddObject(jid, e);
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
 
     e.walk(js, items_limit);
     Result := e;
@@ -363,7 +363,7 @@ begin
 
     e := TJabberEntity.Create(TJabberID.Create(jid), node);
     e.fallbackProtocols := false;
-    _cache.AddObject(jid, e);
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
     if (timeout <> -1) then
         e.timeout := timeout;
     e.getItems(js);
@@ -386,7 +386,7 @@ begin
 
     e := TJabberEntity.Create(TJabberID.Create(jid), node);
     e.fallbackProtocols := false;
-    _cache.AddObject(jid, e);
+    _cache.AddObject(TJabberID.applyJEP106(jid), e);
     if (timeout <> -1) then
         e.timeout := timeout;
     e.getInfo(js);

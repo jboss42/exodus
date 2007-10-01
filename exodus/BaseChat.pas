@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus, Unicode, ToolWin, TntComCtrls, ImgList, XMLTag, XMLUtils,
-    Buttons, COMMsgOutToolbar, COMDockToolbar;
+    Buttons, COMMsgOutToolbar, COMDockToolbar, AppEvnts;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -68,6 +68,8 @@ type
     pnlChatTop: TPanel;
     ChatToolbarButtonColors: TTntToolButton;
     cmbPriority: TTntComboBox;
+    AppEvents: TApplicationEvents;
+    procedure AppEventsShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
@@ -259,7 +261,8 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
     begin
         MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
-        MsgOut.SetFocus();
+        if (MsgOut.Visible and MsgOut.Enabled) then
+            MsgOut.SetFocus();
     end;
 
 begin
@@ -313,8 +316,6 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
-var
-    hotkeyidx: integer;
 begin
     if (Key = 0) then exit;
     // handle Ctrl-Tab to switch tabs
@@ -343,26 +344,6 @@ begin
     // magic debug key sequence Ctrl-Shift-H to dump the HTML or RTF to debug.
     else if ((chr(Key) = 'H') and  (Shift = [ssCtrl, ssShift])) then begin
         DebugMsg(getMsgList.getHistory());
-    end
-    else if ((Key >= VK_F1) and (Key <= VK_F12) and (Shift <> [ssCtrl, ssShift])) then begin
-        case Key of
-            VK_F1: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F01');
-            VK_F2: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F02');
-            VK_F3: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F03');
-            VK_F4: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F04');
-            VK_F5: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F05');
-            VK_F6: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F06');
-            VK_F7: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F07');
-            VK_F8: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F08');
-            VK_F9: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F09');
-            VK_F10: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F10');
-            VK_F11: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F11');
-            VK_F12: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F12');
-            else
-                hotkeyidx := -1;
-        end;
-        if (hotkeyidx >= 0) then
-            MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
     end
     //click toolbar buttons
     else if ((_rtEnabled) and
@@ -396,7 +377,8 @@ begin
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
-    MsgOut.SetFocus;
+    if (MsgOut.Visible and MsgOut.Enabled) then
+        MsgOut.SetFocus;
 end;
 
 {---------------------------------------}
@@ -535,6 +517,38 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmBaseChat.AppEventsShortCut(var Msg: TWMKey; var Handled: Boolean);
+var
+  hotkeyidx: Integer;
+begin
+  Handled := false;
+  if ((Msg.CharCode  >= VK_F2) and (Msg.CharCode <= VK_F12)) then
+     begin
+        case Msg.CharCode  of
+            VK_F1: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F01');
+            VK_F2: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F02');
+            VK_F3: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F03');
+            VK_F4: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F04');
+            VK_F5: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F05');
+            VK_F6: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F06');
+            VK_F7: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F07');
+            VK_F8: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F08');
+            VK_F9: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F09');
+            VK_F10: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F10');
+            VK_F11: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F11');
+            VK_F12: hotkeyidx := _hotkeys_keys_stringlist.IndexOf('F12');
+            else
+                hotkeyidx := -1;
+
+        end;
+        if ((hotkeyidx >= 0) and
+            (MsgOut.Focused))then begin
+            MsgOut.SelText := _hotkeys_text_stringlist.Strings[hotkeyidx];
+            Handled := true;
+        end;
+    end;
+end;
+
 procedure TfrmBaseChat.ChatToolbarButtonBoldClick(Sender: TObject);
 begin
     inherited;
