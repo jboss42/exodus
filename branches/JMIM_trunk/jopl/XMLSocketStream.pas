@@ -175,14 +175,15 @@ end;
 function PWideToString(  pw : PWideChar  ) : string;
 var
     p : PChar;
-    iLen : integer;
+    newLen : integer;
 begin
     {Get memory for the string}
-    iLen := lstrlenw(  pw  ) + 1;
-    GetMem(  p,  iLen  );
+    newLen := WideCharToMultiByte(  CP_UTF8,  0,  pw,  -1,  p,  0,  nil,  nil  );
+    //iLen := lstrlenw(  pw  ) + 1;
+    GetMem(  p,  newLen  );
 
     {Convert a unicode (PWideChar) to a string}
-    WideCharToMultiByte(  CP_UTF8,  0,  pw,  iLen,  p,  iLen * 2,  nil,  nil  );
+    WideCharToMultiByte(  CP_UTF8,  0,  pw,  -1,  p,  newLen,  nil,  nil  );
 
     Result := p;
     FreeMem(  p  );
@@ -1055,6 +1056,7 @@ var
     buff: UTF8String;
 begin
     // Send this text out the socket
+
     if (_socket = nil) then exit;
 
     DoDataCallbacks(true, xml);

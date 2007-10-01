@@ -107,14 +107,23 @@ end;
 destructor TExodusChat.Destroy();
 var
     i: integer;
+    p: TChatPlugin;
 begin
     // free all of our plugin proxies
+    DebugMessage('calling plugin OnClose event for ' + inttostr(_plugs.Count) + ' plugin');
+
     for i := _plugs.Count - 1 downto 0 do begin
+        DebugMessage('calling plugin OnClose event, #' + inttostr(i));
+        p :=TChatPlugin(_plugs[i]);
         try
-            TChatPlugin(_plugs[i]).com.onClose();
+            p.com.onClose();
         except
-            DebugMessage('COM Exception in TExodusChat.Destroy');
+            On E:Exception do begin
+                DebugMessage('Exception while processing plugin.onClose events in TExodusChat.Destroy (' + E.message + ')');
+                continue;
+            end;
         end;
+        DebugMessage('done calling plugin OnClose event, #' + inttostr(i));
     end;
 
     // free all of our plugin menu items
@@ -479,20 +488,15 @@ var
 begin
     cp := TChatPlugin.Create;
     cp.com := Plugin;
-    //Plugin._AddRef();
     Result := _plugs.Add(cp);
     if _plugs.Count = 1 then
         _ccbId := MainSession.RegisterCallback(ChatCallback);
 
-    if (_chat <> nil ) then
-      begin
-       if (_chat.Window <> nil) then
+    if (_chat <> nil ) and (_chat.Window <> nil) then
         fireNewWindow(TForm(_chat.Window).Handle );
-      end;
 
     if ( _room <> nil ) then
-      fireNewWindow(_room.Handle);
-
+        fireNewWindow(_room.Handle);
 end;
 
 {---------------------------------------}
@@ -711,7 +715,7 @@ end;
 function TExodusChat.Get_DockToolbar: IExodusDockToolbar;
 begin
     Result := nil;
-    if (_chat <> nil) then
+    if (_chat <> nil) and (_chat.Window <> nil) then
         Result := TfrmChat(_chat.Window).DockToolbar
     else if (_room <> nil) then
         Result := _room.DockToolbar;
@@ -721,7 +725,7 @@ end;
 function TExodusChat.Get_MsgOutToolbar: IExodusMsgOutToolbar;
 begin
     Result := nil;
-    if (_chat <> nil) then
+    if (_chat <> nil) and (_chat.Window <> nil) then
         Result := TfrmChat(_chat.Window).MsgOutToolbar
     else if (_room <> nil) then
         Result := _room
