@@ -804,6 +804,7 @@ published
     procedure RemoveMenuShortCut(value: integer);
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
+
   end;
 
   {
@@ -2424,7 +2425,7 @@ begin
 end;
 
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
-begin
+begin 
     btnConnect.Enabled := false;
     btnOptions.Enabled := false;
     mnuOptions_Options.Enabled := false;

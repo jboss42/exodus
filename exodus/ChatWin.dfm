@@ -14,8 +14,8 @@ inherited frmChat: TfrmChat
   inherited Splitter1: TSplitter
     Top = 383
     Width = 492
-    ExplicitTop = 239
-    ExplicitWidth = 383
+    ExplicitTop = 383
+    ExplicitWidth = 492
   end
   inherited pnlDockTop: TPanel
     Width = 492
@@ -57,7 +57,6 @@ inherited frmChat: TfrmChat
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-          ExplicitHeight = 28
         end
         object Panel3: TPanel
           Left = 35
@@ -74,13 +73,14 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Width = 492
     Height = 322
+    ExplicitTop = 31
     ExplicitWidth = 492
     ExplicitHeight = 322
   end
   inherited pnlInput: TPanel
     Top = 388
     Width = 492
-    ExplicitTop = 388
+    ExplicitTop = 359
     ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
       Width = 488
@@ -91,7 +91,8 @@ inherited frmChat: TfrmChat
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 354
     Width = 492
-    ExplicitTop = 354
+    ExplicitLeft = 2
+    ExplicitTop = 330
     ExplicitWidth = 492
   end
   object SaveDialog1: TSaveDialog [5]
