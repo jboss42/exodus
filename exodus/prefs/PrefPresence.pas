@@ -51,6 +51,7 @@ type
     cboPresTracking: TTntComboBox;
     Label1: TTntLabel;
     StaticText4: TTntPanel;
+    chkClientCaps: TTntCheckBox;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
@@ -92,6 +93,7 @@ begin
             lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
         cboPresTracking.ItemIndex := getInt('pres_tracking');
         chkPresenceSync.Checked := getBool('presence_message_listen');
+        chkClientCaps.Checked := getBool('client_caps');
     end;
 end;
 
@@ -110,6 +112,7 @@ begin
         setInt('pres_tracking', cboPresTracking.ItemIndex);
         setBool('presence_message_send', chkPresenceSync.Checked);
         setBool('presence_message_listen', chkPresenceSync.Checked);
+        setBool('client_caps', chkClientCaps.Checked);
     end;
 end;
 
