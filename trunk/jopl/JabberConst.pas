@@ -61,6 +61,8 @@ const
     XMLNS_BYTESTREAMS= 'http://jabber.org/protocol/bytestreams';
     XMLNS_FEATNEG    = 'http://jabber.org/protocol/feature-neg';
 
+    XMLNS_CLIENTCAPS = 'http://jabber.org/protocols/caps';
+
     XMLNS_STREAMERR  = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 
 var

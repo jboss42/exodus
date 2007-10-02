@@ -1,8 +1,8 @@
 inherited frmPrefPresence: TfrmPrefPresence
-  Left = 229
-  Top = 143
+  Left = 252
+  Top = 144
   Caption = 'frmPrefPresence'
-  ClientHeight = 392
+  ClientHeight = 433
   ClientWidth = 329
   OldCreateOrder = True
   OnDestroy = FormDestroy
@@ -10,7 +10,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   TextHeight = 13
   object lstCustomPres: TTntListBox
     Left = 0
-    Top = 117
+    Top = 145
     Width = 329
     Height = 102
     Align = alTop
@@ -20,7 +20,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
-    Top = 219
+    Top = 247
     Width = 329
     Height = 34
     Align = alTop
@@ -56,7 +56,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 253
+    Top = 281
     Width = 329
     Height = 119
     Align = alTop
@@ -161,20 +161,20 @@ inherited frmPrefPresence: TfrmPrefPresence
     Left = 0
     Top = 24
     Width = 329
-    Height = 93
+    Height = 121
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
     object Label8: TTntLabel
       Left = 5
-      Top = 28
+      Top = 52
       Width = 126
       Height = 13
       Caption = 'Presence tracking in chats'
     end
     object Label1: TTntLabel
       Left = 0
-      Top = 75
+      Top = 99
       Width = 118
       Height = 13
       Caption = 'Custom Presence Entries'
@@ -197,7 +197,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     end
     object cboPresTracking: TTntComboBox
       Left = 15
-      Top = 44
+      Top = 68
       Width = 207
       Height = 21
       ItemHeight = 13
@@ -206,6 +206,16 @@ inherited frmPrefPresence: TfrmPrefPresence
         'Track all presence changes'
         'Show only last presence change'
         'Don'#39't show presence changes')
+    end
+    object chkClientCaps: TTntCheckBox
+      Left = 4
+      Top = 24
+      Width = 273
+      Height = 17
+      Caption = 'Send client capabilities in presence.'
+      Checked = True
+      State = cbChecked
+      TabOrder = 2
     end
   end
   object StaticText4: TTntPanel

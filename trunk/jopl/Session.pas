@@ -717,6 +717,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.setPresence(show, status: WideString; priority: integer);
 var
+    c: TXMLTag;
     p: TJabberPres;
     i: integer;
 begin
@@ -730,6 +731,14 @@ begin
         p.Status := status;
         if (priority = -1) then priority := 0;
         p.Priority := priority;
+
+        // Add in client capabilities if we have them enabled.
+        if (Prefs.getBool('client_caps')) then begin
+            c := p.AddTag('c');
+            c.setAttribute('xmlns', XMLNS_CLIENTCAPS);
+            c.setAttribute('node', Prefs.getString('client_caps_uri'));
+            c.setAttribute('ver', GetAppVersion())
+        end;
 
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);
