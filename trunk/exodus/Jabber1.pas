@@ -2022,15 +2022,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.btnDelPersonClick(Sender: TObject);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
 begin
     // delete the current contact
-    n := frmRosterWindow.treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        RemoveRosterItem(ritem.jid.jid);
+    frmRosterWindow.popRemoveClick(Self);
 end;
 
 {---------------------------------------}
