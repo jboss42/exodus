@@ -2,31 +2,30 @@ inherited frmRoom: TfrmRoom
   Left = 252
   Top = 264
   Caption = 'Conference Room'
-  ClientHeight = 271
-  ClientWidth = 382
+  ClientHeight = 416
+  ClientWidth = 492
   OldCreateOrder = True
-  OnClose = FormClose
-  ExplicitWidth = 390
-  ExplicitHeight = 305
+  ExplicitWidth = 500
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 238
-    Width = 382
+    Top = 383
+    Width = 492
     ExplicitTop = 243
     ExplicitWidth = 382
   end
   inherited pnlDockTop: TPanel
-    Width = 382
+    Width = 492
     TabOrder = 1
-    ExplicitWidth = 382
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
-      Left = 333
-      ExplicitLeft = 333
+      Left = 443
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
-      Width = 330
-      ExplicitWidth = 330
+      Width = 440
+      ExplicitWidth = 440
       object pnlSubj: TPanel
         Left = 0
         Top = 0
@@ -57,7 +56,6 @@ inherited frmRoom: TfrmRoom
           Top = 6
           Width = 20
           Height = 20
-          Hint = 'Edit Subject'
           Flat = True
           Glyph.Data = {
             F6000000424DF600000000000000760000002800000010000000100000000100
@@ -77,24 +75,25 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 382
-    Height = 177
+    Width = 492
+    Height = 322
     TabOrder = 2
-    ExplicitWidth = 382
-    ExplicitHeight = 177
+    ExplicitWidth = 492
+    ExplicitHeight = 322
     object Splitter2: TSplitter
-      Left = 270
+      Left = 380
       Top = 4
-      Height = 169
+      Height = 314
       Align = alRight
       ResizeStyle = rsUpdate
+      ExplicitLeft = 270
       ExplicitHeight = 212
     end
     object Panel6: TPanel
-      Left = 273
+      Left = 383
       Top = 4
       Width = 105
-      Height = 169
+      Height = 314
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -104,7 +103,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 167
+        Height = 312
         Align = alClient
         Columns = <
           item
@@ -137,20 +136,20 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 243
-    Width = 382
+    Top = 388
+    Width = 492
     TabOrder = 0
-    ExplicitTop = 243
-    ExplicitWidth = 382
+    ExplicitTop = 388
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 378
+      Width = 488
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 209
-    Width = 382
-    ExplicitTop = 209
-    ExplicitWidth = 382
+    Top = 354
+    Width = 492
+    ExplicitTop = 354
+    ExplicitWidth = 492
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual

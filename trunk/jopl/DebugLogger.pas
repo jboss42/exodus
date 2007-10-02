@@ -2,22 +2,26 @@ unit DebugLogger;
 
 interface
 uses
-    XMLTag;
+    XMLTag, DebugManager;
 type
 
-    TDebugLogFile = class
+    TDebugLogFile = class (TInterfacedObject, IDebugLogger)
     private
         _filename : Widestring;
         _logfile  : TextFile;
-        _cb       : Integer;
         _isLogging : Boolean;
         procedure Init();
         procedure RotateLog();
-        procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
+        procedure output(data: widestring; dt: TDateTime);
 
     public
         constructor Create(filename: Widestring);
         destructor  Destroy(); override;
+
+        // IDebugLogger
+        procedure DebugStatement(msg: Widestring; dt: TDateTime);
+        procedure DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
+        procedure DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
     end;
 
 var
@@ -80,16 +84,15 @@ begin
     end;
 
     _isLogging := true;
-     
-    // Attach callbacks
-    _cb := MainSession.RegisterCallback(DataCallback);
+
+    dbgManager.AddDebugger('dbgfile', Self);
 
 end;
 {---------------------------------------}
 destructor TDebugLogFile.Destroy();
 begin
     if (_isLogging) then begin
-        MainSession.UnRegisterCallback(_cb);
+        dbgManager.RemoveDebugger('dbgfile');
         CloseFile(_logfile);
     end;
 end;
@@ -148,26 +151,39 @@ begin
 end;
 
 {---------------------------------------}
-procedure TDebugLogFile.DataCallback(event: string; tag: TXMLTag; data: Widestring);
-var
-    line : Widestring;
-    time: string;
-    tstr : WideString;
+procedure TDebugLogFile.DebugStatement(msg: Widestring; dt: TDateTime);
 begin
-    tstr := getObfuscatedData(event, tag, data);
-    if (event = '/data/send') then begin
-        if (Trim(tstr) <> '') then
-            line := 'SENT: ' + tstr;
-    end
-    else if (event = '/data/debug') then begin
-        line := tstr;
-    end
-    else
-        line := 'RECV: ' + tstr;
+    output(msg, dt);
+end;
 
+{---------------------------------------}
+procedure TDebugLogFile.DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
+var
+    tstr: Widestring;
+begin
+    tstr := getObfuscatedData('/data/send', xml, data);
+    output('SENT: ' + tstr, dt);
+end;
+
+{---------------------------------------}
+procedure TDebugLogFile.DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
+var
+    tstr: Widestring;
+begin
+    tstr := getObfuscatedData('/data/recv', xml, data);
+    output('RECV: ' + tstr, dt);
+end;
+
+procedure TDebugLogFile.output(data: widestring; dt: TDateTime);
+var
+    time: string;
+begin
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
-    line := '[' + time + ']  ' + line + ''#13#10;
-    WRITE(_logfile, line);
+    data := '[' + time + ']  ' + data + ''#13#10;
+    try
+    	WRITE(_logfile, data);
+    except	
+	end;
 end;
 
 {---------------------------------------}
@@ -182,9 +198,10 @@ end;
 {---------------------------------------}
 procedure StopDebugLogger();
 begin
-    if (debugLogFile <> nil) then
-        FreeAndNil(debugLogFile);
-
+    if (debugLogFile <> nil) then begin
+        debugLogFile._Release;
+        debugLogFile := nil;
+    end;
 end;
 
 end.

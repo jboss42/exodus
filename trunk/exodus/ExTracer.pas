@@ -41,6 +41,7 @@ type
   TCatchersMit = class
   public
     procedure gotException(Sender: TObject; e: Exception);
+    procedure gotExceptionNoDlg(Sender: TObject; e: Exception);
   end;
 
 var
@@ -66,7 +67,16 @@ var
 begin
     l := TWidestringlist.Create();
     l.Add('Exception: ' + e.Message);
-    ExHandleException(l);
+    ExHandleException(l, true);
+end;
+
+procedure TCatchersMit.gotExceptionNoDlg(Sender: TObject; e: Exception);
+var
+    l: TWidestringlist;
+begin
+    l := TWidestringlist.Create();
+    l.Add('Exception: ' + e.Message);
+    ExHandleException(l, false);
 end;
 
 procedure ExodusException(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
@@ -87,7 +97,7 @@ begin
     // Just use the existing error log stuff.
     l := TWidestringlist.Create();
     l.Add('Exception: ' + e.Message);
-    ExHandleException(l);
+    ExHandleException(l, true);
 end;
 
 procedure TfrmException.frameButtons1btnCancelClick(Sender: TObject);

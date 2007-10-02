@@ -32,6 +32,7 @@ type
     optNuke: TTntRadioButton;
     chkUnsub: TTntCheckBox;
     chkUnsubed: TTntCheckBox;
+    procedure optClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -115,6 +116,13 @@ begin
         for i := 0 to ct_list.Count - 1 do begin
             cur_jid := TJabberRosterItem(ct_list[i]).jid.jid;
             case act of
+            0: begin
+                ri := TJabberRosterItem(ct_list[i]);
+                if (ri.IsInGroup(cur_grp)) then
+                   ri.DelGroup(cur_grp);
+                ri.update();
+              end;
+
             1: begin
                 // send a subscription='remove'
                 iq := TXMLTag.Create('iq');
@@ -149,6 +157,13 @@ begin
     Self.Close;
 end;
 
+procedure TfrmGrpRemove.optClick(Sender: TObject);
+begin
+  chkUnsubed.Enabled := optNuke.Checked;
+  chkUnsub.Enabled := optNuke.Checked;
+  cboNewGroup.Enabled := optMove.Checked;
+end;
+
 {---------------------------------------}
 procedure TfrmGrpRemove.FormCreate(Sender: TObject);
 begin
@@ -156,7 +171,9 @@ begin
     TranslateComponent(Self);
     cur_grp := '';
     ct_list := TList.Create;
+    optClick(nil);
 end;
+
 
 {---------------------------------------}
 procedure TfrmGrpRemove.frameButtons1btnCancelClick(Sender: TObject);

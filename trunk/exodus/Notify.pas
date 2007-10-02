@@ -116,6 +116,8 @@ begin
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
+    f := nil;
+    idx := -1;
     try
         j := tmp_jid.jid;
         if (sess.IsBlocked(j)) then exit;
@@ -124,8 +126,16 @@ begin
         // someone is coming online for the first time..
         if (event = '/presence/online') then begin
             ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
-            if (ritem <> nil) then
-                idx := ritem.getPresenceImage('available')
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('available');
+                if ((ritem = MainSession.roster.ActiveItem) and
+                    (MainSession.Roster.ActiveItem.IsContact) and
+                    (MainSession.Roster.ActiveItem.IsNative) and
+                    (frmrosterWindow.treeRoster.SelectionCount < 2)) then begin
+                    frmExodus.btnSendFile.Enabled := true;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+                end;
+            end
             else
                 idx := RosterTreeImages.Find('available');
             //Presence notifications should be routed to the parent form of the
@@ -141,8 +151,13 @@ begin
         // someone is going offline
         else if (event = '/presence/offline') then begin
             ritem := sess.roster.Find(j);
-            if (ritem <> nil) then
-                idx := ritem.getPresenceImage('offline')
+            if (ritem <> nil) then begin
+                idx := ritem.getPresenceImage('offline');
+                if (ritem = MainSession.roster.ActiveItem) then begin
+                    frmExodus.btnSendFile.Enabled := false;
+                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
+                end;
+            end
             else
                 idx := RosterTreeImages.Find('offline');
 
@@ -165,7 +180,10 @@ begin
 
         if (notifyMessage <> '') then begin
             nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
-            DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);
+            if (notifyMessage = sNotifyOnline) then
+              DoNotify(f, 'notify_online', nick + _(notifyMessage), idx)
+            else
+              DoNotify(f, 'notify_offline', nick + _(notifyMessage), idx);            
         end;
     finally
         tmp_jid.Free();
@@ -186,16 +204,32 @@ begin
     if ((notify and notify_front) = 0) then begin
         //check "notify if app active" and "notify if window active" prefs.
         if (Application.Active) then begin
-            //check active app notify
-            if (not MainSession.prefs.getBool('notify_active')) then exit;
-            //check active form notify
-            if (not MainSession.prefs.getBool('notify_active_win')) then begin
-                //if notify directed at dock manager (win = nil) and
-                //any active child means main window is active (Application.Active)
-                if (win = nil) then exit;
-                if (GetForegroundWindow() = win.handle) then exit;
-                //if dock manager is active and win is top docked, it is active
-                if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+            if (not MainSession.prefs.getBool('notify_active')) then begin
+                // We Don't want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We never want to get notified when app active
+                    exit;
+                end
+                else begin
+                    // We DO want to get notified when in active window  (chat activity, not contact offline/online)
+                    // Make sure we have the active window
+                    if (win = nil) then exit;
+                    if (GetForegroundWindow() <> win.handle) then exit;
+                    //if dock manager is active and win is top docked, it is active
+                    if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                end;
+            end
+            else begin
+                // We DO want to be notified when active (contact offline/online msgs)
+                if (not MainSession.prefs.getBool('notify_active_win')) then begin
+                    // We Don't want to be notified when in active window. (chat activity, not contact offline/online)
+                    // Make sure we are in active window
+                    if (win <> nil) then begin
+                        if (GetForegroundWindow() = win.handle) then exit;
+                        //if dock manager is active and win is top docked, it is active
+                        if ((GetDockManager().GetTopDocked() = win) and GetDockManager().isActive) then exit;
+                    end;
+                end;
             end;
         end;
     end;
@@ -273,8 +307,12 @@ begin
         ForceForegroundWindow(w.Handle);
     end;
 }
+
+    // NOTE:    sound keys in registry MUST be no more then 31 chars
+    //          due to Windows limitations.  Thus the first param to
+    //          PlaySound() is hard coded to exodus_
     if (MainSession.prefs.getBool('notify_sounds')) then
-        PlaySound(pchar(PrefController.getAppInfo().ID + '_' + sound_name), 0,
+        PlaySound(pchar('exodus_' + sound_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 end;
 

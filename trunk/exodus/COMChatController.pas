@@ -92,7 +92,7 @@ implementation
 
 uses
     COMExControls, ChatWin, Controls, BaseMsgList, RTFMsgList, Forms,
-    ComServ, Menus, SysUtils;
+    ComServ, Menus, SysUtils, Debug;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -107,10 +107,23 @@ end;
 destructor TExodusChat.Destroy();
 var
     i: integer;
+    p: TChatPlugin;
 begin
     // free all of our plugin proxies
+    DebugMessage('calling plugin OnClose event for ' + inttostr(_plugs.Count) + ' plugin');
+
     for i := _plugs.Count - 1 downto 0 do begin
-        TChatPlugin(_plugs[i]).com.onClose();
+        DebugMessage('calling plugin OnClose event, #' + inttostr(i));
+        p :=TChatPlugin(_plugs[i]);
+        try
+            p.com.onClose();
+        except
+            On E:Exception do begin
+                DebugMessage('Exception while processing plugin.onClose events in TExodusChat.Destroy (' + E.message + ')');
+                continue;
+            end;
+        end;
+        DebugMessage('done calling plugin OnClose event, #' + inttostr(i));
     end;
 
     // free all of our plugin menu items
@@ -167,8 +180,12 @@ begin
         s := s or windows.MOD_CONTROL;
 
     for i := 0 to _plugs.Count - 1 do begin
-        Result := TChatPlugin(_plugs[i]).com.OnKeyUp(key, s);
-        if (Result = true) then exit;
+        try
+            Result := TChatPlugin(_plugs[i]).com.OnKeyUp(key, s);
+            if (Result = true) then exit;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireMsgKeyUp');
+        end;
     end;
 
 end;
@@ -190,8 +207,12 @@ begin
         s := s or windows.MOD_CONTROL;
 
     for i := 0 to _plugs.Count - 1 do begin
-        Result := TChatPlugin(_plugs[i]).com.OnKeyDown(key, s);
-        if (Result = true) then exit;
+        try
+            Result := TChatPlugin(_plugs[i]).com.OnKeyDown(key, s);
+            if (Result = true) then exit;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireMsgKeyDown');
+        end;
     end;
 
 end;
@@ -202,8 +223,12 @@ var
 begin
     Result := true;
     for i := 0 to _plugs.Count - 1 do begin
-        Result := TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
-        if (Result = false) then exit;
+        try
+            Result := TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
+            if (Result = false) then exit;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireBeforeMsg');
+        end;
     end;
 end;
 
@@ -214,8 +239,14 @@ var
     buff: Widestring;
 begin
     buff := '';
-    for i := 0 to _plugs.Count - 1 do
-        buff := buff + TChatPlugin(_plugs[i]).com.onAfterMessage(body);
+    for i := 0 to _plugs.Count - 1 do begin
+        try
+            buff := buff + TChatPlugin(_plugs[i]).com.onAfterMessage(body);
+        except
+            DebugMessage('COM Exception in TExodusChat.fireAfterMsg');
+        end;
+    end;
+
     Result := buff;
 end;
 
@@ -226,8 +257,12 @@ var
 begin
     Result := True;
     for i := 0 to _plugs.Count - 1 do begin
-        Result := TChatPlugin(_plugs[i]).com.OnBeforeRecvMessage(body, xml);
-        if (Result = false) then exit;
+        try
+            Result := TChatPlugin(_plugs[i]).com.OnBeforeRecvMessage(body, xml);
+            if (Result = false) then exit;
+        except
+            DebugMessage('COM Exception in TExodusChat.fireBeforeRecvMsg');
+        end;
     end;
 end;
 
@@ -237,7 +272,11 @@ var
     i: integer;
 begin
     for i := 0 to _plugs.Count - 1 do begin
-        TChatPlugin(_plugs[i]).com.OnAfterRecvMessage(body);
+        try
+            TChatPlugin(_plugs[i]).com.OnAfterRecvMessage(body);
+        except
+            DebugMessage('COM Exception in TExodusChat.fireAfterRecvMsg');
+        end;
     end;
 end;
 
@@ -246,8 +285,13 @@ procedure TExodusChat.fireNewWindow(new_hwnd: HWND);
 var
     i: integer;
 begin
-    for i := 0 to _plugs.Count - 1 do
-        TChatPlugin(_plugs[i]).com.OnNewWindow(new_hwnd);
+    for i := 0 to _plugs.Count - 1 do begin
+        try
+            TChatPlugin(_plugs[i]).com.OnNewWindow(new_hwnd);
+        except
+            DebugMessage('COM Exception in TExodusChat.fireNewWindow');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -255,8 +299,13 @@ procedure TExodusChat.fireClose();
 var
     i: integer;
 begin
-    for i := _plugs.Count - 1 downto 0 do
-        TChatPlugin(_plugs[i]).com.onClose();
+    for i := _plugs.Count - 1 downto 0 do begin
+        try
+            TChatPlugin(_plugs[i]).com.onClose();
+        except
+            DebugMessage('COM Exception in TExodusChat.fireClose');
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -272,8 +321,13 @@ begin
     idx := _menu_items.IndexOfObject(Sender);
     if (idx >= 0) then begin
 {$IFDEF OLD_MENU_EVENTS}
-        for i := 0 to _plugs.Count - 1 do
-            TChatPlugin(_plugs[i]).com.onMenu(_menu_items[idx]);
+        for i := 0 to _plugs.Count - 1 do begin
+            try
+                TChatPlugin(_plugs[i]).com.onMenu(_menu_items[idx]);
+            except
+                DebugMessage('COM Exception in TExodusChat.fireMenuClick');
+            end;
+        end;
 {$ELSE}
         //fire event on one menu listener
         mListener := IExodusMenuListener(TMenuItem(_menu_items.Objects[idx]).Tag);
@@ -434,20 +488,15 @@ var
 begin
     cp := TChatPlugin.Create;
     cp.com := Plugin;
-    Plugin._AddRef();
     Result := _plugs.Add(cp);
     if _plugs.Count = 1 then
         _ccbId := MainSession.RegisterCallback(ChatCallback);
 
-    if (_chat <> nil ) then
-      begin
-       if (_chat.Window <> nil) then
+    if (_chat <> nil ) and (_chat.Window <> nil) then
         fireNewWindow(TForm(_chat.Window).Handle );
-      end;
 
     if ( _room <> nil ) then
-      fireNewWindow(_room.Handle);
-
+        fireNewWindow(_room.Handle);
 end;
 
 {---------------------------------------}
@@ -629,7 +678,7 @@ begin
             c := TComponent(_chat.Window)
         else if (_room <> nil) then
             c := _room
-       else if (_im <> nil) then
+        else //if (_im <> nil) then
             c := _im;
         //see if the control we want is actually the form
         if SameText(c.Name, Name) then
@@ -666,7 +715,7 @@ end;
 function TExodusChat.Get_DockToolbar: IExodusDockToolbar;
 begin
     Result := nil;
-    if (_chat <> nil) then
+    if (_chat <> nil) and (_chat.Window <> nil) then
         Result := TfrmChat(_chat.Window).DockToolbar
     else if (_room <> nil) then
         Result := _room.DockToolbar;
@@ -676,7 +725,7 @@ end;
 function TExodusChat.Get_MsgOutToolbar: IExodusMsgOutToolbar;
 begin
     Result := nil;
-    if (_chat <> nil) then
+    if (_chat <> nil) and (_chat.Window <> nil) then
         Result := TfrmChat(_chat.Window).MsgOutToolbar
     else if (_room <> nil) then
         Result := _room

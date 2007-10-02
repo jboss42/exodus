@@ -4,8 +4,8 @@ object frmRosterWindow: TfrmRosterWindow
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'contact list - Exodus'
-  ClientHeight = 506
-  ClientWidth = 194
+  ClientHeight = 505
+  ClientWidth = 240
   Color = clBtnFace
   Constraints.MinWidth = 130
   DefaultMonitor = dmDesktop
@@ -26,8 +26,8 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 475
-    Width = 194
+    Top = 474
+    Width = 240
     Height = 10
     Align = alBottom
     AutoSize = True
@@ -38,11 +38,12 @@ object frmRosterWindow: TfrmRosterWindow
     Visible = False
     OnClick = imgAdClick
     ExplicitTop = 479
+    ExplicitWidth = 194
   end
   object pnlFind: TPanel
     Left = 0
     Top = 0
-    Width = 194
+    Width = 240
     Height = 49
     Align = alTop
     BevelOuter = bvNone
@@ -103,8 +104,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 485
-    Width = 194
+    Top = 484
+    Width = 240
     Height = 21
     Panels = <
       item
@@ -115,13 +116,14 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 451
-    Width = 194
+    Top = 450
+    Width = 240
     Height = 24
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
+    Visible = False
     object imgStatus: TPaintBox
       Left = 2
       Top = 2
@@ -133,7 +135,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnPaint = imgStatusPaint
     end
     object imgSSL: TImage
-      Left = 173
+      Left = 219
       Top = 2
       Width = 19
       Height = 20
@@ -169,11 +171,12 @@ object frmRosterWindow: TfrmRosterWindow
         FFFF}
       Transparent = True
       Visible = False
+      ExplicitLeft = 173
     end
     object pnlStatus: TTntPanel
       Left = 25
       Top = 2
-      Width = 148
+      Width = 194
       Height = 20
       Cursor = crArrow
       Align = alClient
@@ -200,8 +203,8 @@ object frmRosterWindow: TfrmRosterWindow
   object pnlConnect: TPanel
     Left = 0
     Top = 49
-    Width = 194
-    Height = 272
+    Width = 240
+    Height = 296
     Align = alTop
     BevelOuter = bvLowered
     BorderWidth = 4
@@ -213,7 +216,7 @@ object frmRosterWindow: TfrmRosterWindow
     object lblStatus: TTntLabel
       Left = 5
       Top = 49
-      Width = 184
+      Width = 230
       Height = 32
       Align = alTop
       Alignment = taCenter
@@ -222,23 +225,12 @@ object frmRosterWindow: TfrmRosterWindow
       Transparent = False
       Layout = tlCenter
       WordWrap = True
-    end
-    object lblCreate: TTntLabel
-      Left = 5
-      Top = 254
-      Width = 184
-      Height = 13
-      Cursor = crHandPoint
-      Align = alBottom
-      Caption = 'Create a New Profile'
-      Transparent = False
-      OnClick = lblCreateClick
-      ExplicitWidth = 97
+      ExplicitWidth = 184
     end
     object lblConnect: TTntLabel
       Left = 5
       Top = 81
-      Width = 184
+      Width = 230
       Height = 23
       Cursor = crHandPoint
       Align = alTop
@@ -249,23 +241,12 @@ object frmRosterWindow: TfrmRosterWindow
       Layout = tlCenter
       WordWrap = True
       OnClick = lblConnectClick
-    end
-    object lblNewUser: TTntLabel
-      Left = 5
-      Top = 241
-      Width = 184
-      Height = 13
-      Cursor = crHandPoint
-      Align = alBottom
-      Caption = 'Run the New User Wizard'
-      Transparent = False
-      OnClick = lblNewUserClick
-      ExplicitWidth = 124
+      ExplicitWidth = 184
     end
     object pnlAnimation: TPanel
       Left = 5
       Top = 5
-      Width = 184
+      Width = 230
       Height = 44
       Align = alTop
       BevelOuter = bvNone
@@ -285,8 +266,8 @@ object frmRosterWindow: TfrmRosterWindow
     object lstProfiles: TTntListView
       Left = 5
       Top = 104
-      Width = 184
-      Height = 137
+      Width = 230
+      Height = 37
       Align = alClient
       BorderStyle = bsNone
       Columns = <
@@ -308,12 +289,151 @@ object frmRosterWindow: TfrmRosterWindow
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
     end
+    object pnlConnectLogo: TPanel
+      Left = 5
+      Top = 141
+      Width = 230
+      Height = 150
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = clWindow
+      TabOrder = 2
+      OnResize = pnlConnectLogoResize
+      object ImageLogo: TImage
+        Left = 0
+        Top = 0
+        Width = 230
+        Height = 33
+        Align = alTop
+        Center = True
+      end
+      object lblNewUser: TTntLabel
+        Left = 0
+        Top = 124
+        Width = 230
+        Height = 13
+        Cursor = crHandPoint
+        Align = alBottom
+        Caption = 'Run the New User Wizard'
+        Transparent = False
+        OnClick = lblNewUserClick
+        ExplicitWidth = 124
+      end
+      object lblCreate: TTntLabel
+        Left = 0
+        Top = 137
+        Width = 230
+        Height = 13
+        Cursor = crHandPoint
+        Align = alBottom
+        Caption = 'Create a New Profile'
+        Transparent = False
+        OnClick = lblCreateClick
+        ExplicitWidth = 97
+      end
+      object txtDisclaimer: TExRichEdit
+        Left = 0
+        Top = 33
+        Width = 230
+        Height = 40
+        Align = alTop
+        AutoURLDetect = adDefault
+        CustomURLs = <
+          item
+            Name = 'e-mail'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'http'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'file'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'mailto'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'ftp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'https'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'gopher'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'nntp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'prospero'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'telnet'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'news'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'wais'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end>
+        LangOptions = [loAutoFont]
+        Language = 1033
+        ReadOnly = True
+        ScrollBars = ssVertical
+        ShowSelectionBar = False
+        TabOrder = 0
+        URLColor = clBlue
+        URLCursor = crHandPoint
+        OnURLClick = txtDisclaimerURLClick
+        InputFormat = ifRTF
+        OutputFormat = ofRTF
+        SelectedInOut = False
+        PlainRTF = False
+        UndoLimit = 0
+        AllowInPlace = False
+      end
+    end
   end
   object treeRoster: TTntTreeView
     Left = 0
-    Top = 321
-    Width = 194
-    Height = 130
+    Top = 345
+    Width = 240
+    Height = 105
     Cursor = crArrow
     Hint = 'Contact List Hint'
     Align = alClient
@@ -367,11 +487,11 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popChatClick
     end
     object popMsg: TTntMenuItem
-      Caption = 'Message...'
+      Caption = 'Send Message...'
       OnClick = popMsgClick
     end
     object popHistory: TTntMenuItem
-      Caption = 'Show History...'
+      Caption = 'View History...'
       OnClick = popHistoryClick
     end
     object popSendFile: TTntMenuItem
@@ -379,7 +499,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popSendFileClick
     end
     object popInvite: TTntMenuItem
-      Caption = 'Invite to Conference'
+      Caption = 'Invite to Conference...'
       OnClick = popInviteClick
     end
     object popSendContacts: TTntMenuItem
@@ -405,14 +525,17 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Presence'
       object popSendPres: TTntMenuItem
         Caption = 'Send Visible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object popSendInvisible: TTntMenuItem
         Caption = 'Send Invisible'
+        Visible = False
         OnClick = popSendPresClick
       end
       object N2: TTntMenuItem
         Caption = '-'
+        Visible = False
       end
       object popSendSubscribe: TTntMenuItem
         Caption = 'Subscribe Again'
@@ -420,22 +543,22 @@ object frmRosterWindow: TfrmRosterWindow
       end
     end
     object popRename: TTntMenuItem
-      Caption = 'Rename...'
+      Caption = 'Rename Contact...'
       OnClick = popRenameClick
     end
     object N1: TTntMenuItem
       Caption = '-'
     end
     object popBlock: TTntMenuItem
-      Caption = 'Block'
+      Caption = 'Block Contact'
       OnClick = popBlockClick
     end
     object popRemove: TTntMenuItem
-      Caption = 'Remove'
+      Caption = 'Delete Contact'
       OnClick = popRemoveClick
     end
     object popProperties: TTntMenuItem
-      Caption = 'Properties...'
+      Caption = 'Contact Properties...'
       OnClick = popPropertiesClick
     end
     object N7: TTntMenuItem
@@ -493,8 +616,8 @@ object frmRosterWindow: TfrmRosterWindow
   object ImageList2: TImageList
     BkColor = clWhite
     ShareImages = True
-    Left = 40
-    Top = 314
+    Left = 104
+    Top = 410
     Bitmap = {
       494C010102000400040010001000FFFFFF00FF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -671,7 +794,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popGrpInviteClick
     end
     object BroadcastMessage1: TTntMenuItem
-      Caption = 'Broadcast Message'
+      Caption = 'Send Message'
       OnClick = BroadcastMessage1Click
     end
     object SendContactsTo1: TTntMenuItem
@@ -686,15 +809,21 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
     object popGroupBlock: TTntMenuItem
-      Caption = 'Block'
+      Caption = 'Block Group'
       OnClick = popBlockClick
     end
+    object popGroupUnBlock: TTntMenuItem
+      Caption = 'UnBlock Group'
+    end
+    object N15: TTntMenuItem
+      Caption = '-'
+    end
     object popGrpRename: TTntMenuItem
-      Caption = 'Rename'
+      Caption = 'Rename Group'
       OnClick = popGrpRenameClick
     end
     object popGrpRemove: TTntMenuItem
-      Caption = 'Remove'
+      Caption = 'Delete Group'
       OnClick = popGrpRemoveClick
     end
     object N4: TTntMenuItem
@@ -786,6 +915,17 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = lblDeleteClick
     end
     object N10: TTntMenuItem
+      Caption = '-'
+    end
+  end
+  object popBookmarkGrp: TTntPopupMenu
+    Left = 72
+    Top = 376
+    object JoinAllRooms1: TTntMenuItem
+      Caption = 'Join All Rooms'
+      OnClick = JoinAllRooms1Click
+    end
+    object N16: TTntMenuItem
       Caption = '-'
     end
   end

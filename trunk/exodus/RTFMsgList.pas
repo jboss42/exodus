@@ -103,8 +103,14 @@ end;
 
 {---------------------------------------}
 procedure TfRTFMsgList.Clear();
+var
+ i: Integer;
 begin
     MsgList.Clear();
+    for i := 0 to MsgList.Lines.Count - 1 do begin
+         MsgList.Lines[i] := '';
+    end;
+
 end;
 
 {---------------------------------------}
@@ -157,17 +163,28 @@ begin
 
     if (Ord(key) = 22) then begin
         // paste, Ctrl-V
-        bc.MsgOut.SetFocus();
-        bc.MsgOut.PasteFromClipboard();
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.PasteFromClipboard();
+        end;
         Key := #0;
         exit;
     end;
 
+   if ((MainSession.Prefs.getBool('esc_close')) and (Ord(key) = 27)) then begin
+      if (Self.Parent <> nil) then
+        if (Self.Parent.Parent <> nil) then
+          SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
+          exit;
+   end;
+
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
-        bc.MsgOut.SetFocus();
-        bc.MsgOut.WideSelText := Key;
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.SetFocus();
+            bc.MsgOut.WideSelText := Key;
+        end;
     end;
 
     Key := #0;
@@ -235,6 +252,7 @@ begin
 
         // TODO: Use newfangled RTF madness
         SelAttributes.Color := c;
+        Paragraph.Alignment := taLeft;
         if timestamp <> '' then
             txt := '[' + timestamp + '] ' + txt;
 

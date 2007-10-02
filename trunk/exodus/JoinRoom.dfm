@@ -5,7 +5,9 @@ inherited frmJoinRoom: TfrmJoinRoom
   Caption = 'Join Room'
   ClientHeight = 372
   ClientWidth = 408
+  DefaultMonitor = dmMainForm
   OldCreateOrder = True
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -27,10 +29,12 @@ inherited frmJoinRoom: TfrmJoinRoom
       Left = 151
       ExplicitLeft = 151
       inherited btnBack: TTntButton
+        Enabled = False
         OnClick = btnBackClick
       end
       inherited btnNext: TTntButton
         Default = True
+        Enabled = False
         OnClick = btnNextClick
       end
       inherited btnCancel: TTntButton
@@ -86,9 +90,9 @@ inherited frmJoinRoom: TfrmJoinRoom
       object lblPassword: TTntLabel
         Left = 25
         Top = 188
-        Width = 49
+        Width = 155
         Height = 13
-        Caption = 'Password:'
+        Caption = 'Password to join room if required:'
       end
       object Label3: TTntLabel
         Left = 6
@@ -114,8 +118,8 @@ inherited frmJoinRoom: TfrmJoinRoom
         Shape = bsTopLine
       end
       object txtServer: TTntComboBox
-        Left = 162
-        Top = 128
+        Left = 190
+        Top = 132
         Width = 190
         Height = 21
         Hint = 'Select the conference room server to use.'
@@ -124,16 +128,18 @@ inherited frmJoinRoom: TfrmJoinRoom
         ShowHint = True
         TabOrder = 4
         Text = 'txtServer'
+        OnChange = txtServerChange
       end
       object txtRoom: TTntEdit
-        Left = 162
-        Top = 157
+        Left = 190
+        Top = 159
         Width = 190
         Height = 21
         TabOrder = 5
+        OnChange = txtRoomChange
       end
       object txtPassword: TTntEdit
-        Left = 162
+        Left = 190
         Top = 186
         Width = 190
         Height = 21
@@ -146,6 +152,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Width = 190
         Height = 21
         TabOrder = 0
+        OnChange = txtNickChange
       end
       object optSpecify: TTntRadioButton
         Left = 4
@@ -188,10 +195,6 @@ inherited frmJoinRoom: TfrmJoinRoom
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lstRooms: TTntListView
         Left = 0
         Top = 56
@@ -255,7 +258,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Width = 262
           Height = 21
           Hint = 'Select the conference room server to use.'
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -268,7 +271,7 @@ inherited frmJoinRoom: TfrmJoinRoom
           Top = 18
           Width = 105
           Height = 25
-          Caption = 'Fetch Conference Rooms'
+          Caption = 'Fetch Rooms'
           TabOrder = 1
           OnClick = btnFetchClick
         end

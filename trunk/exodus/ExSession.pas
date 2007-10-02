@@ -98,22 +98,22 @@ uses
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
-    XMLParser, XMLUtils, DebugLogger;
+    XMLParser, XMLUtils, DebugLogger, DebugManager;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
     sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
-    sCmdFileLog =   ' -l '#9#9' : log debug output to file'#13#10;
+    sCmdFileLog =   ' -l [file] '#9#9' : log debug output to file'#13#10;
     sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
     sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
     sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
     sCmdExpanded =  ' -x [yes|no] '#9' : Expanded Mode'#13#10;
     sCmdJID =       ' -j [jid] '#9#9' : Jid'#13#10;
     sCmdPassword =  ' -p [pass] '#9' : Password'#13#10;
-    sCmdResource =  ' -r [res] '#9' : Resource'#13#10;
-    sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
-    sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
-    sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    sCmdResource =  ' -r [res] '#9#9' : Resource'#13#10;
+    sCmdPriority =  ' -i [pri] '#9#9' : Priority'#13#10;
+    sCmdProfile =   ' -f [prof] '#9#9' : Profile name'#13#10;
+    sCmdConfig =    ' -c [file] '#9#9' : Config path name'#13#10;
     sCmdXMPP =      ' -X [xmpp URI] '#9' : XMPP URI handling'#13#10;
     
     sUnkArg = 'Invalid command line:%s';
@@ -166,6 +166,7 @@ var
     regdll, invisible, show_help, log_debug: boolean;
     jid: TJabberID;
     expanded, pass, resource, profile_name, config, xmpp_file, xmpp_uri : String;
+    log_filename: string;
     prof_index: integer;
 
     cli_priority: integer;
@@ -183,6 +184,8 @@ var
     node: TXMLTag;
 
     ws2: THandle;
+
+    inloop: Boolean;
 
 begin
     // setup all the session stuff, parse cmd line params, etc..
@@ -234,7 +237,7 @@ begin
     with TGetOpts.Create(nil) do begin
         try
             // -d           : debug
-            // -l           : log debug output to file
+            // -l [file]    : log debug output to file
             // -m           : minimized
             // -v           : invisible
             // -?           : help
@@ -254,16 +257,24 @@ begin
 
             Options  := 'dlmva?0xujprifceswot';
 
-            OptFlags := '-------::::::::-:::-';
+            OptFlags := '-:-----::::::::-:::-';
 
             ReqFlags := '                    ';
 
             LongOpts := 'debug,log,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,embedding,status,show,xmpp,testmenu';
-            while GetOpt do begin
+            inloop := true;
+            while inloop do begin
+                try
+                    inloop := GetOpt;
+                except
+                    on E : Exception do begin
+                        ShowMessage(format(_(sUnkArg), [E.Message]));
+                        break;
+                    end;
+                end;
                 case Ord(OptChar) of
-                    0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
                     Ord('d'): ExStartup.debug := true;
-                    Ord('l'): log_debug := true;
+                    Ord('l'): begin log_debug := true; log_filename := OptArg end;
                     Ord('x'): expanded := OptArg;
                     Ord('m'): ExStartup.minimized := true;
                     Ord('a'): ExStartup.testaa := true;
@@ -284,9 +295,11 @@ begin
                     Ord('u'): xmpp_uri := OptArg;
                 end;
             end;
-        finally
-            Free();
+        except
+            on E : Exception do
+                ShowMessage(E.Message);
         end;
+        Free();
     end;
 
     if (regdll) then begin
@@ -365,6 +378,8 @@ begin
     // Notification singlton
     _Notify := TNotifyController.Create;
     _Notify.SetSession(MainSession);
+
+    MainSession.EventQueue.SetSession(MainSession);
 
     // S10N controller singleton
     _subcontroller := TSubController.Create();
@@ -519,8 +534,9 @@ begin
     // Initialize the global responders/xpath events
     initResponders();
 
+    StartDBGManager();
     if (log_debug) then begin
-        StartDebugLogger(ChangeFileExt(config, '.log'));
+        StartDebugLogger(log_filename);
     end;
 
     // if we don't have sound registry settings, then add them
@@ -721,8 +737,11 @@ begin
     // free all of the stuff we created
     // kill all of the auto-responders..
     OutputDebugString('TeardownSession');
+
     cleanupResponders();
     StopDebugLogger();
+
+    StopDBGManager();
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
@@ -753,6 +772,7 @@ begin
     if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
     if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
     if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+
 
 end;
 
