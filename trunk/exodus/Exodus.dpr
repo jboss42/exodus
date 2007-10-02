@@ -155,7 +155,8 @@ uses
   Wizard in 'Wizard.pas' {frmWizard},
   RegForm in 'RegForm.pas' {frmRegister},
   LocalUtils in 'LocalUtils.pas',
-  SendFile in 'SendFile.pas' {frmSendFile};
+  SendFile in 'SendFile.pas' {frmSendFile},
+  SendStatus in 'SendStatus.pas' {fSendStatus: TFrame};
 
 {$R *.TLB}
 
