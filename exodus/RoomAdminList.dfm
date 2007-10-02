@@ -86,7 +86,7 @@ object frmRoomAdminList: TfrmRoomAdminList
     BevelOuter = bvNone
     TabOrder = 2
     object btnRemove: TTntButton
-      Left = 4
+      Left = 6
       Top = 34
       Width = 75
       Height = 25
@@ -95,8 +95,8 @@ object frmRoomAdminList: TfrmRoomAdminList
       OnClick = btnRemoveClick
     end
     object TntButton1: TTntButton
-      Left = 4
-      Top = 6
+      Left = 6
+      Top = 3
       Width = 75
       Height = 25
       Caption = 'Add'

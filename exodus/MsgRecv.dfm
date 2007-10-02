@@ -4,11 +4,10 @@ inherited frmMsgRecv: TfrmMsgRecv
   Caption = 'Message'
   ClientHeight = 408
   ClientWidth = 377
-  OnClose = FormClose
   OnDestroy = FormDestroy
   OnResize = FormResize
   ExplicitWidth = 385
-  ExplicitHeight = 442
+  ExplicitHeight = 441
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -31,6 +30,7 @@ inherited frmMsgRecv: TfrmMsgRecv
       Left = 328
       Height = 30
       ExplicitLeft = 328
+      ExplicitHeight = 30
     end
     object pnlTop2: TPanel
       Left = 0
@@ -45,21 +45,18 @@ inherited frmMsgRecv: TfrmMsgRecv
         Left = 3
         Top = 3
         Width = 29
-        Height = 24
+        Height = 13
         Align = alLeft
         Caption = 'From: '
         Color = clBtnFace
         ParentColor = False
         Transparent = True
-        ExplicitLeft = 44
-        ExplicitTop = 1
-        ExplicitHeight = 13
       end
       object txtFrom: TTntLabel
         AlignWithMargins = True
         Left = 38
         Top = 3
-        Width = 284
+        Width = 34
         Height = 30
         Cursor = crHandPoint
         Align = alClient
@@ -70,10 +67,6 @@ inherited frmMsgRecv: TfrmMsgRecv
         Transparent = True
         WordWrap = True
         OnClick = txtFromClick
-        ExplicitLeft = 67
-        ExplicitTop = -3
-        ExplicitWidth = 255
-        ExplicitHeight = 41
       end
     end
   end
@@ -85,7 +78,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
-    TabOrder = 0
+    TabOrder = 1
     Visible = False
     inline frameButtons2: TframeButtons
       Left = 3
@@ -228,9 +221,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Width = 377
     Height = 178
     Align = alClient
-    TabOrder = 1
-    ExplicitTop = 41
-    ExplicitHeight = 173
+    TabOrder = 0
     inline frameButtons1: TframeButtons
       Left = 1
       Top = 147
@@ -240,7 +231,7 @@ inherited frmMsgRecv: TfrmMsgRecv
       TabOrder = 0
       TabStop = True
       ExplicitLeft = 1
-      ExplicitTop = 151
+      ExplicitTop = 147
       ExplicitWidth = 375
       ExplicitHeight = 30
       inherited Panel2: TPanel
@@ -383,7 +374,6 @@ inherited frmMsgRecv: TfrmMsgRecv
         AutoSize = True
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 46
         object pnlSendSubject: TPanel
           Left = 0
           Top = 0
@@ -394,18 +384,16 @@ inherited frmMsgRecv: TfrmMsgRecv
           BorderWidth = 2
           TabOrder = 0
           Visible = False
-          ExplicitTop = 32
           object lblSubject1: TTntLabel
             Left = 2
             Top = 2
             Width = 42
-            Height = 20
+            Height = 13
             Align = alLeft
             Caption = 'Subject: '
             Color = clBtnFace
             ParentColor = False
             Layout = tlCenter
-            ExplicitHeight = 13
           end
           object txtSendSubject: TTntMemo
             Left = 44
@@ -427,28 +415,24 @@ inherited frmMsgRecv: TfrmMsgRecv
           BevelOuter = bvNone
           BorderWidth = 2
           TabOrder = 1
-          ExplicitTop = 56
           object txtSubject: TTntLabel
             Left = 45
             Top = 2
-            Width = 287
-            Height = 18
+            Width = 47
+            Height = 13
             Align = alClient
             Caption = 'txtSubject'
-            ExplicitLeft = 50
-            ExplicitTop = 4
           end
           object lblSubject2: TTntStaticText
             Left = 2
             Top = 2
             Width = 43
-            Height = 18
+            Height = 17
             Align = alLeft
             Caption = 'Subject:'
             Color = clBtnFace
             ParentColor = False
             TabOrder = 0
-            ExplicitHeight = 17
           end
         end
       end

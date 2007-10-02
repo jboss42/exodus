@@ -26,7 +26,7 @@ uses
     TntClasses,
     {$endif}
     NodeItem, JabberID, Presence, Signals, Unicode, XMLTag,
-    SysUtils, Classes;
+    SysUtils, Classes, Windows;
 
 type
 
@@ -135,6 +135,7 @@ const
     sGrpAway = 'Away';
     sGrpXA = 'Ext. Away';
     sGrpDND = 'Do Not Disturb';
+    sGrpMyResources = 'My Resources';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -270,8 +271,9 @@ var
 begin
     cacheIcons();
 
-    setupOfflineGrp();
     setupUnfiledGrp();
+    if (MainSession.Prefs.getBool('roster_offline_group')) then
+        setupOfflineGrp();
 
     js := TJabberSession(_js);
     f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 600);
@@ -541,7 +543,10 @@ begin
     if ((p <> nil) and (p.priority < 0)) then p := nil;
 
     // setup the image
-    if ((is_me) and (p = nil)) then begin
+    if ((is_me) and
+        ((p = nil) or
+         (event = '/presence/offline') or
+         (event = '/presence/unavailable'))) then begin
         // this resource isn't online anymore... remove it
         ri.Removed := true;
     end
@@ -557,27 +562,57 @@ begin
         ri.ImageIndex := _ico_Unknown
     else if p = nil then
         ri.setPresenceImage('offline')
-    else
-        ri.setPresenceImage(p.show);
-
-    if (p = nil) then
-        ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
     else begin
-        // Compile a list of jid: status for each resource
-        tmps := '';
-        while (p <> nil) do begin
-            if (tmps <> '') then tmps := tmps + ''#13#10;
-            if (p.Status = '') then
-              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(p.show)
+        if (is_me) then
+            // Show the provided presence
+            ri.setPresenceImage(pres.Show)
+        else
+            // Show the PPDB presence
+            ri.setPresenceImage(p.show);
+    end;
+
+    // Gen Tooltip
+    if (is_me) then begin
+        // This is another of my resources presences.
+        // We do not want to build up a tooltip with multiple
+        // entries as there are problems propigating changes.
+        // Just make tool tip jid: presence for this resource
+        if (pres <> nil) then begin
+            if (pres.Status <> '') then
+                ri.Tooltip := pres.fromJid.getDisplayFull() + ': ' + pres.Status
             else
-              tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
-            p := TJabberSession(_js).ppdb.NextPres(p);
+                ri.Tooltip := pres.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(pres.show);
+        end
+        else
+            ri.Tooltip := '';
+    end
+    else begin
+        // Not one of my presences, so build up tooltip with all presences for JID.
+        if (p = nil) then
+            ri.Tooltip := ri.jid.getDisplayFull() + ': ' + _('Offline')
+        else begin
+            // Compile a list of jid: status for each resource
+            tmps := '';
+            while (p <> nil) do begin
+                if (tmps <> '') then tmps := tmps + ''#13#10;
+                if (p.Status = '') then
+                  tmps := tmps + p.fromJid.getDisplayFull() + ': ' + DecodeShowDisplayValue(p.show)
+                else
+                  tmps := tmps + p.fromJid.getDisplayFull() + ': ' + p.Status;
+                p := TJabberSession(_js).ppdb.NextPres(p);
+            end;
+            ri.Tooltip := tmps;
         end;
-        ri.Tooltip := tmps;
     end;
 
     // notify the window that this item needs to be updated
     TJabberSession(_js).FireEvent('/roster/item', tag, ri);
+
+    // If this is my resource and it went offline, then
+    // get rid of the item in Self's list or we will never
+    // see it again.
+    if (is_me and ri.Removed) then
+        Self.RemoveItem(ri.Jid.full);
 end;
 
 {---------------------------------------}
@@ -593,6 +628,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             l.Add(c);
     end;
@@ -612,6 +648,7 @@ begin
         if ((c <> sGrpBookmarks) and
             (c <> sGrpUnfiled) and
             (c <> sGrpOffline) and
+            (c <> sGrpMyResources) and
             (c <> t)) then
             tnt.Add(c);
     end;
@@ -649,8 +686,12 @@ begin
 
     // If this ritem is in unfiled, and they shouldn't be, remove them.
     // If they need to be in unfiled, but aren't, add them
+
     unf := getGroup(_('Unfiled'));
-    assert(unf <> nil);
+    if (unf = nil) then begin
+        unf := setupUnfiledGrp();
+        assert(unf <> nil);
+    end;
 
     jidx := unf.inGroup(ri.jid);
     if ((ri.GroupCount > 0) and (jidx)) then

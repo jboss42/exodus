@@ -5,18 +5,20 @@ inherited frmPrefSystem: TfrmPrefSystem
   ClientHeight = 384
   ClientWidth = 307
   OldCreateOrder = True
+  ExplicitWidth = 319
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object lblLang: TTntLabel [0]
     Left = 8
-    Top = 186
+    Top = 223
     Width = 99
     Height = 13
     Caption = 'Language file to use:'
   end
   object lblLangScan: TTntLabel [1]
     Left = 17
-    Top = 226
+    Top = 263
     Width = 130
     Height = 13
     Cursor = crHandPoint
@@ -25,20 +27,20 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object lblDefaultNick: TTntLabel [2]
     Left = 8
-    Top = 251
+    Top = 180
     Width = 111
     Height = 13
     Caption = 'My default nickname is:'
   end
   inherited pnlHeader: TTntPanel
     Width = 307
-    Caption = 'System Options'
+    Caption = 'System'
     TabOrder = 12
     ExplicitWidth = 307
   end
   object chkAutoUpdate: TTntCheckBox
     Left = 9
-    Top = 157
+    Top = 145
     Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
@@ -46,7 +48,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkDebug: TTntCheckBox
     Left = 8
-    Top = 68
+    Top = 126
     Width = 169
     Height = 17
     Caption = 'Start with Debug visible'
@@ -62,7 +64,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkCloseMin: TTntCheckBox
     Left = 8
-    Top = 120
+    Top = 88
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
@@ -70,10 +72,10 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkAutoStart: TTntCheckBox
     Left = 8
-    Top = 50
-    Width = 233
+    Top = 164
+    Width = 188
     Height = 17
-    Caption = 'Run when windows starts'
+    Caption = 'Run when Windows starts'
     TabOrder = 1
   end
   object chkOnTop: TTntCheckBox
@@ -87,7 +89,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkToolbox: TTntCheckBox
     Left = 8
-    Top = 103
+    Top = 69
     Width = 217
     Height = 17
     Caption = 'Small Titlebar for main window'
@@ -105,7 +107,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkSingleInstance: TTntCheckBox
     Left = 8
-    Top = 138
+    Top = 107
     Width = 209
     Height = 17
     Caption = 'Only allow a single, running instance'
@@ -113,7 +115,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object chkStartMin: TTntCheckBox
     Left = 8
-    Top = 86
+    Top = 50
     Width = 225
     Height = 17
     Caption = 'Start minimized to the system tray'
@@ -121,7 +123,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object cboLocale: TTntComboBox
     Left = 8
-    Top = 202
+    Top = 239
     Width = 188
     Height = 21
     Style = csDropDownList
@@ -132,7 +134,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   end
   object txtDefaultNick: TTntEdit
     Left = 8
-    Top = 267
+    Top = 196
     Width = 188
     Height = 21
     TabOrder = 10

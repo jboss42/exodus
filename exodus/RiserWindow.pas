@@ -94,7 +94,7 @@ var
 begin
 
     // Don't show toast while auto away
-    if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
+    //if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
 
     if singleToast = nil then begin
         // create a new instance
@@ -135,8 +135,8 @@ begin
         if (Label1.Width > (ClientWidth - 55)) then
             ClientWidth := Label1.Width + 70;
 
-        if (Label1.Height > (ClientHeight + 15)) then
-            ClientHeight := Label1.Height + 15;
+        if (Label1.Height > (ClientHeight + 30)) then
+            ClientHeight := Label1.Height + 30;
     end;
     singleToast.Position();
 

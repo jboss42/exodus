@@ -59,6 +59,7 @@ type
     procedure btnCustomPresRemoveClick(Sender: TObject);
     procedure btnCustomPresClearClick(Sender: TObject);
     procedure btnDefaultsClick(Sender: TObject);
+    function  isDuplicateHotKey(key: WideString; out idx: integer): Boolean;
   private
     { Private declarations }
     _pres_list: TList;
@@ -77,6 +78,8 @@ var
 const
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
+    sPrefsDefaultPres = 'Restore default presence entries?';
+    sPrefsDupHotKey = 'Hot key is already used for presence %s';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -119,6 +122,8 @@ begin
         RemoveAllPresence();
         for i := 0 to _pres_list.Count - 1 do begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
+            if (Trim(cp.title) = '') then
+                cp.title := sPrefsDfltPres;
             setPresence(cp);
         end;
     end;
@@ -154,10 +159,7 @@ begin
     _no_pres_change := true;
 
     e := ((lstCustomPres.Items.Count > 0) and (lstCustomPres.ItemIndex >= 0));
-    txtCPTitle.Enabled := e;
-    txtCPStatus.Enabled := e;
-    txtCPPriority.Enabled := e;
-    txtCPHotkey.Enabled := e;
+    GroupBox1.Enabled := e;
 
     if (not e) then begin
         txtCPTitle.Text := '';
@@ -184,7 +186,8 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPresence.txtCPTitleChange(Sender: TObject);
 var
-    i: integer;
+    i, idx: integer;
+    msg: WideString;
 begin
     // something changed on the current custom pres object
     // automatically update it.
@@ -206,7 +209,33 @@ begin
         end;
         if (title <> lstCustomPres.Items[i]) then
             lstCustomPres.Items[i] := title;
+        if (isDuplicateHotKey(hotkey, idx)) then begin
+          msg := WideFormat(_(sPrefsDupHotKey),[TJabberCustomPres(_pres_list[idx]).title]);
+          MessageDlgW(msg, mtInformation, [mbOk], 0);
+          hotkey := '';
+          txtCPHotkey.HotKey := TextToShortcut(hotkey);
+        end;
+
     end;
+end;
+
+function  TfrmPrefPresence.isDuplicateHotKey(key: WideString; out idx: integer): Boolean;
+var
+  i: Integer;
+begin
+  Result := false;
+  idx := -1;
+  for i := 0 to _pres_list.Count - 1 do
+    begin
+      if (TJabberCustomPres(_pres_list[i]).hotkey = key) and
+         (i <> lstCustomPres.ItemIndex) and
+         (TJabberCustomPres(_pres_list[i]).hotkey <> '') then begin
+          Result := true;
+          idx := i;
+          exit;
+      end;
+    end;
+
 end;
 
 {---------------------------------------}
@@ -233,12 +262,14 @@ var
     cp: TJabberCustomPres;
 begin
     // delete the current pres
-    cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
-    _pres_list.Remove(cp);
-    MainSession.Prefs.removePresence(cp);
-    lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
-    lstCustompresClick(Self);
-    cp.Free();
+    if (lstCustomPres.ItemIndex >= 0) then begin
+      cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
+      _pres_list.Remove(cp);
+      MainSession.Prefs.removePresence(cp);
+      lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
+      lstCustompresClick(Self);
+      cp.Free();
+    end;
 end;
 
 {---------------------------------------}
@@ -256,6 +287,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPresence.btnDefaultsClick(Sender: TObject);
 begin
+    if MessageDlgW(_(sPrefsDefaultPres), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
     MainSession.Prefs.setupDefaultPresence();
     LoadPrefs();
 end;

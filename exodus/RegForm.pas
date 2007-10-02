@@ -105,7 +105,7 @@ implementation
 uses
     NodeItem, EntityCache, fGeneric, 
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, JabberUtils, ExUtils, 
-    Jabber1, Room;
+    Jabber1, Room, PrefController;
 
 {---------------------------------------}
 procedure StartServiceReg(jid: Widestring);
@@ -132,13 +132,15 @@ begin
 
     lblWizardTitle.Caption := _(sServiceRegTitle);
     lblWizardDetails.Caption := _(sServiceRegDetails);
-
+    MainSession.Prefs.setInt(P_TAB_WIDTH, Self.Width);
+    MainSession.FireEvent('/session/prefs', nil);
     cur_stage := rsWelcome;
     Tabs.ActivePage := TabSheet1;
     cur_iq := nil;
     cur_key := '';
     pres_cb := -1;
     entity := nil;
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;    
 end;
 
 {---------------------------------------}

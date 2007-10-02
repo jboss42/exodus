@@ -112,6 +112,8 @@ destructor TJabberCapsCache.Destroy();
 begin
     _cache.Free();
     _pending.Free();
+    _xp.Free();
+    _xp_q.Free();
 end;
 
 {---------------------------------------}
@@ -200,7 +202,8 @@ begin
     for c := 0 to _cache.Count - 1 do begin
         e := TJabberEntity(_cache.Objects[c]);
 
-        if (e.hasInfo) then begin
+        if ((e.hasInfo) and
+            (not e.discoInfoError)) then begin
             iq := cache.AddTag('iq');
             iq.setAttribute('from', 'caps-cache');
             iq.setAttribute('capid', _cache[c]);

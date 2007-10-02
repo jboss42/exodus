@@ -84,7 +84,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    JabberUtils, ExUtils,  Session, FileCtrl;
+    JabberUtils, ExUtils,  Session, FileCtrl, PrefController;
 
 procedure TfrmPrefTransfer.LoadPrefs();
 var
@@ -135,7 +135,7 @@ procedure TfrmPrefTransfer.lblXferDefaultClick(Sender: TObject);
 begin
   inherited;
     // reset everything to defaults..
-    txtXFerPath.Text := ExtractFilePath(Application.EXEName);
+    txtXFerPath.Text := getMyDocs() + getAppInfo().ID + '-Downloads';
     cboXferMode.ItemIndex := 0;
     cboXferModeChange(Self);
     txtXferPort.Text := '5280';

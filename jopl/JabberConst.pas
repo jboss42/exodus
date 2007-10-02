@@ -132,7 +132,11 @@ finalization
     XP_MUCINVITE.Free();
     XP_MSGXDATA.Free();
     XP_XHTMLIM.Free();
-    
+    XP_MUCADMINMSG.Free();
+    XP_XDELIVER.Free();
+    XP_XDISPLAY.Free();
+    XP_XROSTER.Free();
+
     REGEX_URL.Free();
-    REGEX_CRLF.Free();    
+    REGEX_CRLF.Free();
 end.

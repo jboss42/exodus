@@ -25,7 +25,8 @@ uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows;
+    TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile;
 
 type
   TfrmConnDetails = class(TTntForm)
@@ -60,13 +61,8 @@ type
     Label10: TTntLabel;
     Label12: TTntLabel;
     lblServerList: TTntLabel;
-    Label13: TTntLabel;
     chkRegister: TTntCheckBox;
-    OpenDialog1: TOpenDialog;
     tbsSSL: TTntTabSheet;
-    TntLabel1: TTntLabel;
-    txtSSLCert: TTntEdit;
-    btnCertBrowse: TTntButton;
     optSSL: TTntRadioGroup;
     cboSocksType: TTntComboBox;
     Label6: TTntLabel;
@@ -88,6 +84,12 @@ type
     chkKerberos: TTntCheckBox;
     TntLabel2: TTntLabel;
     txtRealm: TTntEdit;
+    chkx509: TTntCheckBox;
+    KerbGroupBox: TTntGroupBox;
+    x509GroupBox: TTntGroupBox;
+    txtx509: TTntEdit;
+    btnx509browse: TTntButton;
+    Label13: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -95,7 +97,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
     procedure lblServerListClick(Sender: TObject);
-    procedure btnCertBrowseClick(Sender: TObject);
     procedure optSSLClick(Sender: TObject);
     procedure chkSRVClick(Sender: TObject);
     procedure txtUsernameExit(Sender: TObject);
@@ -103,10 +104,20 @@ type
     procedure lblRenameClick(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure chkSavePasswdClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+	procedure chkCert(Sender: TObject);
+    procedure btnx509browseClick(Sender: TObject);
+    procedure chkx509Click(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
+    _Canceled: boolean;
 
+    _sslCertKey: string;
+
+    function FNStringGetOperatingSystemVersionMicrosoftWindowsS: string;
+    function getCertFriendlyName(): string;
+    function reallyGetCertFriendlyName(cert: PCCERT_CONTEXT): string;
     procedure RestoreSocket(profile: TJabberProfile);
     procedure SaveSocket(profile: TJabberProfile);
     procedure RestoreHttp(profile: TJabberProfile);
@@ -116,9 +127,14 @@ type
     procedure RestoreConn(profile: TJabberProfile);
     procedure SaveConn(profile: TJabberProfile);
     function updateProfile(): boolean;
+    function encodeCertKey(keyLength: Cardinal; key: Pointer): string;
+    procedure decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
+    procedure _setConnectButtonEnabled(val: boolean);
+    function _getConnectButtonEnabled(): boolean;
 
   public
     { Public declarations }
+    property ConnectButtonEnabled: boolean read _getConnectButtonEnabled write _setConnectButtonEnabled;
   end;
 
 var
@@ -136,7 +152,7 @@ implementation
 uses
     ExSession, Stringprep, InputPassword, 
     JabberUtils, ExUtils,  GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
-    Registry, StrUtils;
+    Registry, StrUtils, IdCoder;
 
 const
     sSmallKeys = 'Must have a larger number of poll keys.';
@@ -148,6 +164,8 @@ const
     sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
     sDownloadCaption = 'Downloading public server list';
     sNoSSL = 'This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF.';
+    sMissingX509Cert = 'Please specify a certificate for x.509 authentication';
+    sDefaultProfileName = 'Default Profile';
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -156,6 +174,17 @@ var
 begin
     //
     f := TfrmConnDetails.Create(nil);
+
+    if ((MainSession.Prefs.Profiles.Count = 1) and
+        (p.Name = sDefaultProfileName) and
+        (p.Username = '') and
+        (p.Server = '') and
+        (p.password = '')) then begin
+        // Fairly Sure this is the first run of application
+        // So disable connect button.
+        f.ConnectButtonEnabled := false;
+    end;
+
 
     with f do begin
         _profile := p;
@@ -171,6 +200,19 @@ begin
     f.Free();
 end;
 
+{---------------------------------------}
+procedure TfrmConnDetails._setConnectButtonEnabled(val: boolean);
+begin
+    btnConnect.Enabled := val;
+end;
+
+{---------------------------------------}
+function TfrmConnDetails._getConnectButtonEnabled(): boolean;
+begin
+    Result := btnConnect.Enabled;
+end;
+
+{---------------------------------------}
 function TfrmConnDetails.updateProfile(): boolean;
 var
     valid: boolean;
@@ -186,10 +228,13 @@ begin
         valid := false
     else begin
         tj := TJabberID.Create(jid);
-        if not chkWinLogin.Checked then
-            valid := (tj.user <> '')
-        else
-            cboJabberID.Text := tj.domain;
+        if (chkWinLogin.Checked or (_sslCertKey <> '')) then
+        begin
+          cboJabberID.Text := tj.domain;
+        end else begin
+          valid := (tj.user <> '');
+        end;
+            
         tj.Free();
     end;
 
@@ -212,10 +257,47 @@ begin
     MainSession.Prefs.SaveProfiles();
 end;
 
+function TfrmConnDetails.encodeCertKey(keyLength: Cardinal; key: Pointer): string;
+var
+  encoder: TIdEncoderMime;
+  tmp: string;
+begin
+  encoder := TIdEncoderMIME.Create(nil);
+  try
+    SetString(tmp, PChar(key), keyLength);
+    Result := encoder.EncodeString(tmp);
+  finally
+    encoder.Free;
+  end;
+end;
+
+procedure TfrmConnDetails.decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
+var
+  decodedString: string;
+  decoder: TIdDecoderMIME;
+begin
+  decoder := TIdDecoderMIME.Create(nil);
+  try
+    decodedString := decoder.DecodeToString(encodedString);
+    decodedLength := Length(decodedString);
+    key := AllocMem(decodedLength);
+    Move(Pointer(decodedString)^, key^, decodedLength);
+  finally
+    decoder.Free;
+  end;
+end;
+
 {---------------------------------------}
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 begin
     // Check that resource does not match password
+    if ((chkx509.Checked) and
+        (Trim(txtx509.Text) = ''))  then begin
+        MessageDlgW(_(sMissingX509Cert), mtError, [mbOK], 0);
+        ModalResult := mrNone;
+        exit
+    end;
+
     if (cboResource.Text = txtPassword.Text) then begin
         MessageDlgW(_(sProfileResourcePassMatch), mtError, [mbOK], 0);
         ModalResult := mrNone;
@@ -231,8 +313,10 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.chkSavePasswdClick(Sender: TObject);
 begin
-      if (not chkSavePasswd.Checked) then
+      if (not chkSavePasswd.Checked) then begin
           txtPassword.Text := '';
+          MainSession.Prefs.setBool('autologin', false);
+      end;
 end;
 
 procedure TfrmConnDetails.chkSocksAuthClick(Sender: TObject);
@@ -311,6 +395,38 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmConnDetails.chkx509Click(Sender: TObject);
+var
+  ps : TPrefState;
+begin
+    // Enable/Disable Controls
+    btnx509browse.Enabled := chkx509.Checked;
+    txtx509.Enabled := chkx509.Checked;
+    optssl.Enabled := not chkx509.Checked;
+    txtPassword.Enabled := not chkx509.Checked;
+    txtRealm.Enabled := not chkx509.Checked;
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkRegister.Enabled := not chkx509.Checked;
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkSavePasswd.Enabled := not chkx509.Checked;
+
+    if (chkx509.Checked) then begin
+        optssl.ItemIndex := 0;
+        chkRegister.Checked := false;
+        chkSavePasswd.Checked := false;
+        txtPassword.Text := '';
+        txtRealm.Text := '';
+    end
+    else begin
+        // Clear the x509 data
+        _sslCertKey := '';
+        txtx509.Text := '';
+        chkCert(nil);
+    end;
+end;
+
 procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
@@ -324,6 +440,7 @@ begin
         chkRegister.Checked := NewAccount;
         chkWinLogin.Checked := WinLogin;
         chkKerberos.Checked := KerbAuth;
+        chkx509.Checked := x509Auth;
     end;
 end;
 
@@ -347,6 +464,7 @@ begin
         NewAccount := chkRegister.Checked;
         WinLogin := chkWinLogin.Checked;
         KerbAuth := chkKerberos.Checked;
+        x509Auth := chkx509.Checked;
         j.Free();
     end;
 end;
@@ -364,9 +482,11 @@ begin
         optSSL.ItemIndex := ssl;
         chkPolling.Checked := (ConnectionType = conn_http);
         txtPriority.Text := IntToStr(Priority);
-        txtSSLCert.Text := SSL_Cert;
+		txtx509.Text := getCertFriendlyName;
         chkSRV.Checked := srv;
     end;
+
+    chkCert(nil);
 end;
 
 {---------------------------------------}
@@ -377,12 +497,16 @@ begin
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
         ssl := optSSL.ItemIndex;
+
         if (chkPolling.Checked) then
             ConnectionType := conn_http
         else
             ConnectionType := conn_normal;
+
         Priority := StrToInt(txtPriority.Text);
-        SSL_Cert := txtSSLCert.Text;
+
+        if (chkx509.Checked) then
+            SSL_Cert := _sslCertKey
     end;
 end;
 
@@ -408,7 +532,7 @@ begin
             txtKeys.Text := '256';
             MessageDlgW(_(sSmallKeys), mtWarning, [mbOK], 0);
         end;
-        
+
     end;
 end;
 
@@ -417,13 +541,14 @@ procedure TfrmConnDetails.FormCreate(Sender: TObject);
 var
     list : TWideStrings;
     i : integer;
+    ps : TPrefState;
 begin
     AssignUnicodeFont(Self, 8);
     TranslateComponent(Self);
 
     URLLabel(lblServerList);
     URLLabel(lblRename);
-    MainSession.Prefs.RestorePosition(Self);
+    MainSession.Prefs.RestorePosition(Self, false);
 
     list := TWideStringList.Create();
     MainSession.Prefs.fillStringList('brand_profile_server_list', list);
@@ -451,6 +576,44 @@ begin
     tbsSSL.TabVisible := ExStartup.ssl_ok;
     if (not tbsSSL.TabVisible) then
         optSSL.ItemIndex := ssl_tls;
+
+    _Canceled := false;
+
+    if (MainSession.Prefs.getBool('brand_profile_enable_connect_btn')) then
+        btnConnect.Enabled := true
+    else
+        btnConnect.Enabled := false;
+
+    if (MainSession.Prefs.getBool('brand_profile_show_download_public_servers')) then
+        lblServerList.Visible := true
+    else
+        lblServerList.Visible := false;
+
+    // Do the save password control
+
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( ps <> psInvisible) then begin
+          chkSavePasswd.Visible := true;
+        if ( ps = psReadOnly ) then
+          chkSavePasswd.Enabled	:= false
+        else
+          chkSavePasswd.Enabled := true;
+    end
+    else
+        chkSavePasswd.Visible := false;
+
+    // Do the "This is a new account" control
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( ps <> psInvisible) then begin
+          chkRegister.Visible := true;
+        if ( ps = psReadOnly ) then
+          chkRegister.Enabled	:= false
+        else
+          chkRegister.Enabled := true;
+    end
+    else
+        chkSavePasswd.Visible := false;
+
 end;
 
 {---------------------------------------}
@@ -519,10 +682,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.btnCertBrowseClick(Sender: TObject);
+procedure TfrmConnDetails.btnCancelClick(Sender: TObject);
 begin
-    if (OpenDialog1.Execute()) then
-        txtSSLCert.Text := OpenDialog1.FileName;
+    _Canceled := true;
 end;
 
 {---------------------------------------}
@@ -552,6 +714,8 @@ var
     jid: TJabberID;
     inp, outp: Widestring;
 begin
+    if (_Canceled) then exit;
+
     // stringprep txtUsername, cboServer, or cboResource.
     if (Sender = cboJabberID) then begin
         jid := TJabberID.Create(cboJabberID.Text, false);
@@ -565,7 +729,7 @@ begin
         inp := cboResource.Text;
         if (Trim(inp) = '') then
               inp := resourceName;
-       
+
         outp := xmpp_resourceprep(inp);
         if (outp = '') then
             MessageDlgW(_('The resource you entered is not allowed.'), mtError, [mbOK], 0)
@@ -578,6 +742,7 @@ end;
 procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
 var
     p : integer;
+    ps : TPrefState;
 begin
     if chkWinLogin.Checked then begin
         txtPassword.Enabled := false;
@@ -589,7 +754,6 @@ begin
         chkSavePasswd.Enabled := false;
         cboJabberID.Enabled := false;
         lblUsername.Enabled := false;
-        Label13.Enabled := false;
         lblServerList.Enabled := false;
         txtRealm.Enabled := false;
         TntLabel2.Enabled := false;
@@ -600,9 +764,13 @@ begin
     else begin
         txtPassword.Enabled := true;
         Label10.Enabled := true;
-        chkRegister.Enabled := true;
+        ps := PrefController.getPrefState('brand_profile_register');
+        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+          chkRegister.Enabled := true;
         chkKerberos.Enabled := true;
-        chkSavePasswd.Enabled := true;
+        ps := PrefController.getPrefState('brand_profile_save_password');
+        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+          chkSavePasswd.Enabled := true;
         cboJabberID.Enabled := true;
         lblUsername.Enabled := true;
         Label13.Enabled := true;
@@ -613,6 +781,11 @@ begin
 
     if not txtPassword.Enabled then
         txtPassword.Text := '';
+
+    if (chkKerberos.Checked) then
+        chkx509.Enabled := false
+    else
+        chkx509.Enabled := true;
 end;
 
 {---------------------------------------}
@@ -642,6 +815,211 @@ begin
         ModalResult := mrYes
     else
         ModalResult := mrNone;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.btnx509browseClick(Sender: TObject);
+var
+    m_hCertStore: HCERTSTORE;
+    m_pCertContext: PCCERT_CONTEXT;
+    sMy: LPCWSTR;
+    keyLength: DWORD;
+    key: Pointer;
+begin
+    sMy := 'MY';
+    m_hCertStore := CertOpenStore(CERT_STORE_PROV_SYSTEM_W, 0, 0,
+      CERT_SYSTEM_STORE_CURRENT_USER, sMy);
+    if (m_hCertStore <> nil) then begin
+      if (FNStringGetOperatingSystemVersionMicrosoftWindowsS = 'Windows 2000') then begin
+        m_pCertContext := CertSelector.getSelectedCertificate(Self);
+      end
+      else begin
+        m_pCertContext := CryptUIDlgSelectCertificateFromStore(m_hCertStore,
+          self.Handle, nil, nil, CRYPTUI_SELECT_LOCATION_COLUMN, 0, nil);
+      end;
+
+      if (m_pCertContext<>nil) then begin
+        //Set the SSL cert textbox to the cert's friendly name
+        txtx509.Text := reallyGetCertFriendlyName(m_pCertContext);
+
+        // Save Certificate ID.
+        CertGetCertificateContextProperty(m_pCertContext,
+          CERT_KEY_IDENTIFIER_PROP_ID, nil, keyLength);
+        key := AllocMem(keyLength);
+        try
+          CertGetCertificateContextProperty(m_pCertContext,
+            CERT_KEY_IDENTIFIER_PROP_ID, key, keyLength);
+
+          _sslCertKey := encodeCertKey(keyLength, key);
+        finally
+          FreeMem(key, keyLength);
+        end;
+
+        CertFreeCertificateContext(m_pCertContext);
+      end;
+
+      CertCloseStore(m_hCertStore, 0);
+    end;
+
+    chkCert(nil);
+end;
+
+{---------------------------------------}
+function TfrmConnDetails.FNStringGetOperatingSystemVersionMicrosoftWindowsS:
+string;
+ var s : string;
+ begin
+  s := 'Windows version unknown';
+  case Win32Platform of
+   VER_PLATFORM_WIN32s :
+    begin
+     s := 'Windows 32 bits';
+    end;
+   VER_PLATFORM_WIN32_WINDOWS :
+    case Win32MinorVersion of
+     0:
+      if ( Win32BuildNumber < 1000 ) then begin
+       s := 'Windows 95';
+      end
+      else if ( Win32BuildNumber = 1111 ) then begin
+       s := 'Windows 95 b';
+      end
+      else if ( Win32BuildNumber > 1111 ) then begin
+       s := 'Windows 95c';
+      end;
+     10:
+      if ( Win32BuildNumber < 2000 ) then begin
+       s := 'Windows 98';
+      end
+      else if ( Win32BuildNumber > 2000 ) then begin
+       s := 'Windows 98 second edition';
+      end;
+     90:
+      begin
+       //s := FNStringGetOperatingSystemVersionMicrosoftWindowsMeS;
+      end;
+    end;
+   VER_PLATFORM_WIN32_NT :
+    if ( ( Win32MinorVersion = 2 ) and ( Win32MajorVersion = 5 ) ) then begin
+      s := 'Windows 2003'; // server
+      // buildnumber=3790
+    end
+    else if ( ( Win32MinorVersion = 1 ) and ( Win32MajorVersion = 5 ) ) then begin
+      s := 'Windows XP'; // home + professional
+      // buildnumber=2600
+    end
+    else if ( Win32MajorVersion = 4 ) then begin
+     s := 'Windows NT'; // workstation + server
+    end
+    else if ( Win32MajorVersion = 5 ) then begin
+      s := 'Windows 2000' // workstation + server
+      // buildnumber=2195
+    end;
+ end;
+ result := s;
+end;
+
+{---------------------------------------}
+function TfrmConnDetails.reallyGetCertFriendlyName(cert: PCCERT_CONTEXT): string;
+var
+  namePtr: PAnsiChar;
+  nameLength: Integer;
+  name: array[0..256] of Char;
+begin
+  name := '';
+  nameLength := 128;
+  namePtr := Addr(name);
+
+  CertGetNameString(cert,
+    CERT_NAME_FRIENDLY_DISPLAY_TYPE,
+    0, nil, namePtr, nameLength);
+
+  Result := string(namePtr);
+end;
+
+{---------------------------------------}
+function TfrmConnDetails.getCertFriendlyName(): string;
+var
+  m_hCertStore: HCERTSTORE;
+  sMy: LPCWSTR;
+  testCert: PCCERT_CONTEXT;
+  keyBlob: CRYPT_HASH_BLOB;
+  key: Pointer;
+  keyLength: DWORD;
+begin
+  if (_sslCertKey = '') then begin
+    if ((_profile.x509Auth) and
+        (_profile.SSL_Cert <> '')) then begin
+        _sslCertKey := _profile.SSL_Cert;
+    end
+    else begin
+        Result := '';
+        Exit;
+    end;
+  end;
+
+  sMy := 'MY';
+  m_hCertStore := CertOpenStore(CERT_STORE_PROV_SYSTEM_W, 0, 0,
+    CERT_SYSTEM_STORE_CURRENT_USER, sMy);
+  if (m_hCertStore <> nil) then begin
+    // Decode the certificate id and get the certificate.
+    decodeCertKey(key, keyLength, _sslCertKey);
+    try
+      keyBlob.cbData := keyLength;
+      keyBlob.pbData := key;
+      testCert := CertFindCertificateInStore(m_hCertStore, X509_ASN_ENCODING, 0,
+        CERT_FIND_KEY_IDENTIFIER, @keyBlob, nil);
+    finally
+      FreeMem(key, keyLength);
+    end;
+
+    if (testCert <> nil) then begin
+      Result := reallyGetCertFriendlyName(testCert);
+    end
+    else begin
+      _sslCertKey := '';
+      Result := '';
+    end;
+
+    if (testCert <> nil) then begin
+      CertFreeCertificateContext(testCert);
+    end;
+
+    CertCloseStore(m_hCertStore, 0);
+  end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.chkCert(Sender: TObject);
+var
+  p: Integer;
+  certSelected: Boolean;
+  ps : TPrefState;
+begin
+    certSelected := (_sslCertKey <> '');
+    txtPassword.Enabled := not certSelected;
+    txtPassword.ReadOnly := certSelected;
+    ps := PrefController.getPrefState('brand_profile_register');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkRegister.Enabled := not certSelected;
+    chkWinLogin.Enabled := not certSelected;
+    chkKerberos.Enabled := not certSelected;
+    txtRealm.Enabled := not certSelected;
+    txtRealm.ReadOnly := certSelected;
+    ps := PrefController.getPrefState('brand_profile_save_password');
+    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
+      chkSavePasswd.Enabled := not certSelected;
+
+    if certSelected then
+    begin
+        chkRegister.Checked := false;
+        p := pos('@', cboJabberID.Text);
+        if (p <> -1) then
+            cboJabberID.Text := MidStr(cboJabberID.Text, p+1, length(cboJabberID.Text));
+    end;
+
+    if not txtPassword.Enabled then
+        txtPassword.Text := ''
 end;
 
 end.

@@ -42,7 +42,7 @@ object frmBookmark: TfrmBookmark
   object Label4: TTntLabel
     Left = 8
     Top = 95
-    Width = 82
+    Width = 140
     Height = 13
     Caption = 'Conference Room Nickname:'
   end

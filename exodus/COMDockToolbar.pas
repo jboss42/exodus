@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-    RosterImages, Jabber1, COMToolbarControl, ComServ;
+    Debug, RosterImages, Jabber1, COMToolbarControl, ComServ;
 
 {---------------------------------------}
 function TExodusDockToolbar.AddButton(
@@ -76,6 +76,8 @@ begin
     guid := AnsiMidStr(guid, 2, length(guid) - 2);
     guid := AnsiReplaceStr(guid, '-', '_');
     btn.Name := 'dock_toolbar_button_' + guid;
+
+    _toolbar.Visible := true;
 
     Result := TExodusToolbarButton.Create(btn);
 end;
@@ -135,14 +137,30 @@ end;
 procedure TExodusDockToolbar.RemoveButton(const button: WideString);
 var
     i: integer;
+    visibleButtons: integer;
 begin
-    _toolbar.AutoSize := false;
-    for i := 0 to _toolbar.ButtonCount - 1 do begin
-        if (_toolbar.Buttons[i].Name = button) then begin
-            _toolbar.RemoveControl(_toolbar.Buttons[i]);
+    try
+        _toolbar.AutoSize := false;
+        for i := _toolbar.ButtonCount - 1 downto 0 do begin
+            if (_toolbar.Buttons[i].Name = button) then begin
+                _toolbar.RemoveControl(_toolbar.Buttons[i]);
+            end;
         end;
+        _toolbar.AutoSize := true;
+
+//        if (_toolbar.Visible) then begin
+            visibleButtons := 0;
+            for i := 0 to _toolbar.ButtonCount - 1 do begin
+                if (_toolbar.Buttons[i].Visible) then
+                    inc(visibleButtons);
+            end;
+
+            _toolbar.Visible := (visibleButtons > 0);
+//        end;
+    except
+        on E:Exception do
+            DebugMessage('Exception in TExodusDockToolbar.RemoveButton (' + E.Message + ')');
     end;
-    _toolbar.AutoSize := true;
 end;
 
 

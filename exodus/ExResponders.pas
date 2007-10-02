@@ -122,7 +122,7 @@ type
 procedure initResponders();
 procedure cleanupResponders();
 
-procedure ExHandleException(e_data: TWidestringlist);
+procedure ExHandleException(e_data: TWidestringlist; showdlg: boolean);
 
 var
     Exodus_Disco_Items: TDiscoItemsResponder;
@@ -220,7 +220,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ExHandleException(e_data: TWidestringlist);
+procedure ExHandleException(e_data: TWidestringlist; showdlg: boolean);
 var
     s, i: integer;
     msg, ver, orig, fname, dir: String;
@@ -293,8 +293,10 @@ begin
 
     // We got an exception during signal dispatching.
     //MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
-    excMessage := WideFormat(_(sExceptionMsg), [fname]);
-    MessageDlgW(excMessage, mtError, [mbOK], 0);
+    if (showdlg) then begin
+        excMessage := WideFormat(_(sExceptionMsg), [fname]);
+        MessageDlgW(excMessage, mtError, [mbOK], 0);
+    end;
     e_data.SaveToFile(fname);
     e_data.Free();
 
@@ -967,5 +969,4 @@ initialization
     _last := nil;
     _xdata := nil;
     _iqoob := nil;
-
 end.

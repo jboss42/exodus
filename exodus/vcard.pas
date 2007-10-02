@@ -110,12 +110,14 @@ type
     procedure btnPicBrowseClick(Sender: TObject);
     procedure PaintBox1Paint(Sender: TObject);
     procedure btnPicClearClick(Sender: TObject);
+
   private
     { Private declarations }
     _vcard: TXMLVCard;
     procedure Callback(event: string; tag: TXMLTag);
   public
     { Public declarations }
+    procedure vCardIQCB(event: string; tag: TXMLTag);
   end;
 
 var
@@ -133,6 +135,7 @@ uses
     Avatar, JabberUtils, ExUtils,  GnuGetText, IQ, Session;
 const
     sVCardError = 'No vCard response was ever returned.';
+    sFailureToSetVCard = 'Could not modify profile.' + #13#10 + 'Either the server is too busy or you do not have permission to change your profile.';
 
 {---------------------------------------}
 procedure ShowMyProfile;
@@ -263,7 +266,9 @@ end;
 {---------------------------------------}
 procedure TfrmVCard.frameButtons1btnOKClick(Sender: TObject);
 var
-    iq: TXMLTag;
+    payload: TXMLTag;
+    iq: TJabberIQ;
+    i: integer;
 begin
     // Save the vcard..
     with _vcard do begin
@@ -316,10 +321,8 @@ begin
         OrgTitle := txtOrgTitle.Text;
     end;
 
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('id', MainSession.generateID());
-    iq.setAttribute('type', 'set');
-    _vcard.fillTag(iq);
+    payload := TXMLTag.Create('iq');
+    _vcard.fillTag(payload);
 
     // save this hash to the profile..
     if (_vcard.Picture <> nil) then begin
@@ -331,7 +334,57 @@ begin
             MainSession.Priority);
     end;
 
-    MainSession.SendTag(iq);
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID(), payload.GetFirstTag('vCard'), vCardIQCB, 10);
+    iq.iqType := 'set';
+    iq.Namespace := 'vcard-temp';
+    payload.Free;
+
+    // Show Hourglass Mouse Pointer
+    frameButtons1.btnOK.Cursor := crHourGlass;
+    frameButtons1.btnCancel.Cursor := crHourGlass;
+    Self.Cursor := crHourGlass;
+    for i := 0 to Self.ControlCount - 1 do begin
+        Self.Controls[i].Cursor := crHourGlass;
+    end;
+    frameButtons1.Cursor := crHourGlass;
+    for i := 0 to frameButtons1.ControlCount - 1 do begin
+        frameButtons1.Controls[i].Cursor := crHourGlass;
+    end;
+    TabSheet1.Cursor := crHourGlass;
+    for i := 0 to TabSheet1.ControlCount - 1 do begin
+        TabSheet1.Controls[i].Cursor := crHourGlass;
+    end;
+
+    // Disable controls
+    frameButtons1.btnOK.Enabled := false;
+    frameButtons1.btnCancel.Enabled := false;
+    for i := 0 to Self.ControlCount - 1 do begin
+        Self.Controls[i].Enabled := false;
+    end;
+    frameButtons1.Enabled := false;
+    for i := 0 to frameButtons1.ControlCount - 1 do begin
+        frameButtons1.Controls[i].Enabled := false;
+    end;
+    TabSheet1.Enabled := false;
+    for i := 0 to TabSheet1.ControlCount - 1 do begin
+        TabSheet1.Controls[i].Enabled := false;
+    end;
+
+    iq.Send();
+end;
+
+{---------------------------------------}
+procedure TfrmVCard.vCardIQCB(event: string; tag: TXMLTag);
+var
+    w: word;
+begin
+    if ((event = 'timeout') or
+        ((tag <> nil) and
+        (tag.GetAttribute('type') = 'error'))) then begin
+        w := 0; //reserved
+        MessageBoxExW(Self.Handle, PWideChar(_(sFailureToSetVCard)), PWideChar(_('My Profile')), MB_OK OR MB_ICONERROR, w);
+    end;
+
     Self.Close;
 end;
 
