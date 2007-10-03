@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2006-01-30 14:53\n"
-"PO-Revision-Date: 2006-01-30 14:53\n"
+"POT-Creation-Date: 2006-02-06 08:02\n"
+"PO-Revision-Date: 2006-02-06 08:02\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -657,21 +657,21 @@ msgstr ""
 #. frmRoom..popRoomRoster..N3..Caption
 #: Room.dfm:295
 #. frmRosterWindow..popRoster..popPresence..N2..Caption
-#: RosterWindow.dfm:397
+#: RosterWindow.dfm:398
 #. frmRosterWindow..popRoster..N1..Caption
-#: RosterWindow.dfm:410
+#: RosterWindow.dfm:411
 #. frmRosterWindow..popRoster..N7..Caption
-#: RosterWindow.dfm:427
+#: RosterWindow.dfm:428
 #. frmRosterWindow..popStatus..N8..Caption
-#: RosterWindow.dfm:466
+#: RosterWindow.dfm:467
 #. frmRosterWindow..popGroup..N3..Caption
-#: RosterWindow.dfm:664
+#: RosterWindow.dfm:665
 #. frmRosterWindow..popGroup..N4..Caption
-#: RosterWindow.dfm:679
+#: RosterWindow.dfm:680
 #. frmRosterWindow..popBookmark..N5..Caption
-#: RosterWindow.dfm:695
+#: RosterWindow.dfm:696
 #. frmRosterWindow..popTransport..N6..Caption
-#: RosterWindow.dfm:720
+#: RosterWindow.dfm:721
 msgid "-"
 msgstr ""
 
@@ -1119,7 +1119,7 @@ msgstr ""
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
 #: MsgRecv.dfm:500
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
-#: RosterWindow.dfm:374
+#: RosterWindow.dfm:375
 msgid "Version Request"
 msgstr ""
 
@@ -1128,7 +1128,7 @@ msgstr ""
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
 #: MsgRecv.dfm:504
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
-#: RosterWindow.dfm:378
+#: RosterWindow.dfm:379
 msgid "Time Request"
 msgstr ""
 
@@ -1139,8 +1139,8 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #: Profile.dfm:223
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
-#: RosterWindow.dfm:382
-#: ExEvents.pas:533
+#: RosterWindow.dfm:383
+#: ExEvents.pas:535
 msgid "Last Activity"
 msgstr ""
 
@@ -1598,16 +1598,16 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
 #: Jabber1.dfm:3161
 #. frmRosterWindow..popStatus..presOnline..Caption
-#: RosterWindow.dfm:436
+#: RosterWindow.dfm:437
 #. init the cmd line stuff
 #: ExSession.pas:194
 #: Jabber1.pas:3005
-#: RosterWindow.pas:388
-#: RosterWindow.pas:414
-#: RosterWindow.pas:1574
+#: RosterWindow.pas:389
+#: RosterWindow.pas:415
+#: RosterWindow.pas:1575
 #. reset status to online;
-#: RosterWindow.pas:1618
-#: /src/exodus/jopl/PrefController.pas:1247
+#: RosterWindow.pas:1619
+#: /src/exodus/jopl/PrefController.pas:1257
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1622,12 +1622,12 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
 #: Jabber1.dfm:3173
 #. frmRosterWindow..popStatus..presAway..Caption
-#: RosterWindow.dfm:448
+#: RosterWindow.dfm:449
 #: Jabber1.pas:3003
-#: RosterWindow.pas:390
-#: RosterWindow.pas:416
-#: RosterWindow.pas:1558
-#: /src/exodus/jopl/PrefController.pas:1265
+#: RosterWindow.pas:391
+#: RosterWindow.pas:417
+#: RosterWindow.pas:1559
+#: /src/exodus/jopl/PrefController.pas:1275
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1637,7 +1637,7 @@ msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:80
-#: RosterWindow.pas:417
+#: RosterWindow.pas:418
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:68
 msgid "Ext. Away"
@@ -1650,10 +1650,10 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
 #: Jabber1.dfm:3185
 #. frmRosterWindow..popStatus..presDND..Caption
-#: RosterWindow.dfm:460
-#: RosterWindow.pas:392
-#: RosterWindow.pas:418
-#: RosterWindow.pas:1566
+#: RosterWindow.dfm:461
+#: RosterWindow.pas:393
+#: RosterWindow.pas:419
+#: RosterWindow.pas:1567
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:67
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1750,7 +1750,7 @@ msgstr ""
 #. frmPrefs..Scroller..lblCustomPres..Caption
 #: Prefs.dfm:1932
 #. frmRosterWindow..popRoster..popPresence..Caption
-#: RosterWindow.dfm:387
+#: RosterWindow.dfm:388
 msgid "Presence"
 msgstr ""
 
@@ -1992,13 +1992,13 @@ msgstr ""
 #. frmRoomAdminList..Panel2..btnRemove..Caption
 #: RoomAdminList.dfm:85
 #. frmRosterWindow..popRoster..popRemove..Caption
-#: RosterWindow.dfm:417
+#: RosterWindow.dfm:418
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
-#: RosterWindow.dfm:675
+#: RosterWindow.dfm:676
 #. frmRosterWindow..popBookmark..Delete1..Caption
-#: RosterWindow.dfm:698
+#: RosterWindow.dfm:699
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
-#: RosterWindow.dfm:731
+#: RosterWindow.dfm:732
 #: /src/exodus/jopl/Bookmarks.pas:91
 #. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteRemove..Caption
 #: prefs/PrefEmote.dfm:64
@@ -2034,9 +2034,9 @@ msgstr ""
 #. frmInvite..Caption
 #: invite.dfm:5
 #. frmRosterWindow..popRoster..popInvite..Caption
-#: RosterWindow.dfm:364
+#: RosterWindow.dfm:365
 #. frmRosterWindow..popGroup..popGrpInvite..Caption
-#: RosterWindow.dfm:648
+#: RosterWindow.dfm:649
 msgid "Invite to Conference"
 msgstr ""
 
@@ -2076,9 +2076,9 @@ msgstr ""
 #. do this.
 #: ExSession.pas:503
 #: Jabber1.pas:1353
-#: RosterWindow.pas:576
-#: RosterWindow.pas:2807
-#: RosterWindow.pas:3213
+#: RosterWindow.pas:577
+#: RosterWindow.pas:2808
+#: RosterWindow.pas:3214
 #: /src/exodus/jopl/JabberUtils.pas:212
 msgid "Exodus"
 msgstr ""
@@ -2110,7 +2110,7 @@ msgstr ""
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
-#: RosterWindow.dfm:624
+#: RosterWindow.dfm:625
 msgid "Add Contact"
 msgstr ""
 
@@ -2269,11 +2269,11 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
 #: Jabber1.dfm:3167
 #. frmRosterWindow..popStatus..presChat..Caption
-#: RosterWindow.dfm:442
-#: RosterWindow.pas:389
-#: RosterWindow.pas:415
+#: RosterWindow.dfm:443
+#: RosterWindow.pas:390
+#: RosterWindow.pas:416
 #. display this show type
-#: RosterWindow.pas:1554
+#: RosterWindow.pas:1555
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:211
 msgid "Free to Chat"
@@ -2284,9 +2284,9 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
 #: Jabber1.dfm:3179
 #. frmRosterWindow..popStatus..presXA..Caption
-#: RosterWindow.dfm:454
-#: RosterWindow.pas:391
-#: RosterWindow.pas:1562
+#: RosterWindow.dfm:455
+#: RosterWindow.pas:392
+#: RosterWindow.pas:1563
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:214
 msgid "Xtended Away"
@@ -2391,7 +2391,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..Custom2..Caption
 #: Jabber1.dfm:3195
 #. frmRosterWindow..popStatus..Custom1..Caption
-#: RosterWindow.dfm:470
+#: RosterWindow.dfm:471
 msgid "Custom ..."
 msgstr ""
 
@@ -2674,7 +2674,7 @@ msgstr ""
 #. frmMsgRecv..popContact..C1..Caption
 #: MsgRecv.dfm:498
 #. frmRosterWindow..popRoster..popClientInfo..Caption
-#: RosterWindow.dfm:372
+#: RosterWindow.dfm:373
 msgid "Client Info"
 msgstr ""
 
@@ -3046,7 +3046,7 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet2..Panel3..btnAddGroup..Caption
 #: Profile.dfm:277
 #. frmRosterWindow..popActions..popAddGroup..Caption
-#: RosterWindow.dfm:628
+#: RosterWindow.dfm:629
 msgid "Add Group"
 msgstr ""
 
@@ -6054,7 +6054,7 @@ msgstr ""
 #. frmRemove..lblJID..Caption
 #: RemoveContact.dfm:103
 #. frmRosterWindow..StatBar......Text
-#: RosterWindow.dfm:158
+#: RosterWindow.dfm:159
 msgid "foo@jabber.org"
 msgstr ""
 
@@ -6179,14 +6179,14 @@ msgstr ""
 #. frmRoom..popRoomRoster..popRosterBlock..Caption
 #: Room.dfm:273
 #. frmRosterWindow..popRoster..popBlock..Caption
-#: RosterWindow.dfm:413
+#: RosterWindow.dfm:414
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
-#: RosterWindow.dfm:667
+#: RosterWindow.dfm:668
 #: Room.pas:1805
-#: RosterWindow.pas:2054
+#: RosterWindow.pas:2055
 #. do blocking madness
-#: RosterWindow.pas:2092
-#: RosterWindow.pas:2097
+#: RosterWindow.pas:2093
+#: RosterWindow.pas:2098
 msgid "Block"
 msgstr ""
 
@@ -6352,12 +6352,12 @@ msgid "JID"
 msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
-#: RosterWindow.dfm:238
+#: RosterWindow.dfm:239
 #: ExUtils.pas:676
 #: ExUtils.pas:694
 #: ExUtils.pas:712
-#: RosterWindow.pas:413
-#: RosterWindow.pas:1570
+#: RosterWindow.pas:414
+#: RosterWindow.pas:1571
 #: /src/exodus/jopl/Roster.pas:216
 #. setup the offline group
 #: /src/exodus/jopl/Roster.pas:249
@@ -6367,128 +6367,128 @@ msgid "Offline"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
-#: RosterWindow.dfm:266
-#: RosterWindow.pas:423
-#: RosterWindow.pas:623
+#: RosterWindow.dfm:267
+#: RosterWindow.pas:424
+#: RosterWindow.pas:624
 msgid "You are currently disconnected."
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblCreate..Caption
-#: RosterWindow.dfm:278
-#: RosterWindow.pas:425
-#: RosterWindow.pas:626
+#: RosterWindow.dfm:279
+#: RosterWindow.pas:426
+#: RosterWindow.pas:627
 msgid "Create a New Profile"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblConnect..Caption
-#: RosterWindow.dfm:291
-#: RosterWindow.pas:424
-#: RosterWindow.pas:624
+#: RosterWindow.dfm:292
+#: RosterWindow.pas:425
+#: RosterWindow.pas:625
 msgid "Click a profile to connect"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblNewUser..Caption
-#: RosterWindow.dfm:306
+#: RosterWindow.dfm:307
 msgid "Run the New User Wizard"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popChat..Caption
-#: RosterWindow.dfm:348
+#: RosterWindow.dfm:349
 msgid "Chat..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popMsg..Caption
-#: RosterWindow.dfm:352
+#: RosterWindow.dfm:353
 msgid "Message..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popHistory..Caption
-#: RosterWindow.dfm:356
+#: RosterWindow.dfm:357
 msgid "Show History..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popSendFile..Caption
-#: RosterWindow.dfm:360
+#: RosterWindow.dfm:361
 msgid "Send File..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popSendContacts..Caption
-#: RosterWindow.dfm:368
+#: RosterWindow.dfm:369
 msgid "Send Contact To..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendPres..Caption
-#: RosterWindow.dfm:389
+#: RosterWindow.dfm:390
 msgid "Send Visible"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
-#: RosterWindow.dfm:393
+#: RosterWindow.dfm:394
 msgid "Send Invisible"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
-#: RosterWindow.dfm:400
+#: RosterWindow.dfm:401
 msgid "Subscribe Again"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popRename..Caption
-#: RosterWindow.dfm:405
+#: RosterWindow.dfm:406
 msgid "Rename..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popProperties..Caption
-#: RosterWindow.dfm:422
+#: RosterWindow.dfm:423
 msgid "Properties..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..Caption
-#: RosterWindow.dfm:637
+#: RosterWindow.dfm:638
 msgid "Send Presence"
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
-#: RosterWindow.dfm:639
+#: RosterWindow.dfm:640
 msgid "Visible"
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
-#: RosterWindow.dfm:643
+#: RosterWindow.dfm:644
 msgid "Invisible"
 msgstr ""
 
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
-#: RosterWindow.dfm:652
+#: RosterWindow.dfm:653
 msgid "Broadcast Message"
 msgstr ""
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
-#: RosterWindow.dfm:656
+#: RosterWindow.dfm:657
 msgid "Send Contacts To..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
-#: RosterWindow.dfm:660
+#: RosterWindow.dfm:661
 msgid "Move or Copy Contacts..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
-#: RosterWindow.dfm:671
+#: RosterWindow.dfm:672
 msgid "Rename"
 msgstr ""
 
 #. frmRosterWindow..popGroup..NewGroup1..Caption
-#: RosterWindow.dfm:682
+#: RosterWindow.dfm:683
 msgid "New Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Join1..Caption
-#: RosterWindow.dfm:691
+#: RosterWindow.dfm:692
 msgid "Join Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Properties1..Caption
-#: RosterWindow.dfm:703
+#: RosterWindow.dfm:704
 #: /src/exodus/jopl/Bookmarks.pas:97
 #. frmPrefPresence..GroupBox1..Caption
 #: prefs/PrefPresence.dfm:143
@@ -6496,22 +6496,22 @@ msgid "Properties"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransLogoff..Caption
-#: RosterWindow.dfm:712
+#: RosterWindow.dfm:713
 msgid "Log Off"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransLogon..Caption
-#: RosterWindow.dfm:716
+#: RosterWindow.dfm:717
 msgid "Log On"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransProperties..Caption
-#: RosterWindow.dfm:723
+#: RosterWindow.dfm:724
 msgid "Rename ..."
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransEdit..Caption
-#: RosterWindow.dfm:727
+#: RosterWindow.dfm:728
 msgid "Properties ..."
 msgstr ""
 
@@ -6930,7 +6930,7 @@ msgstr ""
 
 #: ExEvents.pas:146
 #. New Chat Window
-#: GUIFactory.pas:144
+#: GUIFactory.pas:168
 msgid "Chat with "
 msgstr ""
 
@@ -6943,7 +6943,7 @@ msgid "Invite from "
 msgstr ""
 
 #: ExEvents.pas:279
-#: ExEvents.pas:521
+#: ExEvents.pas:523
 msgid "Time Response"
 msgstr ""
 
@@ -6956,7 +6956,7 @@ msgid "Ping Time: %s seconds."
 msgstr ""
 
 #: ExEvents.pas:301
-#: ExEvents.pas:527
+#: ExEvents.pas:529
 msgid "Version Response"
 msgstr ""
 
@@ -6972,32 +6972,33 @@ msgstr ""
 msgid "Idle for "
 msgstr ""
 
-#: ExEvents.pas:416
-#: ExEvents.pas:417
+#: ExEvents.pas:431
+#: ExEvents.pas:432
 #: Room.pas:490
 #: Room.pas:493
 msgid "ERROR: "
 msgstr ""
 
-#: ExEvents.pas:417
+#: ExEvents.pas:432
 msgid ", Code="
 msgstr ""
 
-#: ExEvents.pas:421
+#: ExEvents.pas:436
 msgid "Unknown Error"
 msgstr ""
 
-#: ExEvents.pas:423
-msgid "Original Message was:"
+#: ExEvents.pas:438
+msgid "\n"
+"Original Message was:"
 msgstr ""
 
 #. this is a queue'd chat msg
-#: ExEvents.pas:483
+#: ExEvents.pas:485
 msgid "New chat conversation"
 msgstr ""
 
 #. check for x:oob URL's
-#: ExEvents.pas:504
+#: ExEvents.pas:506
 msgid "This message contains a URL: "
 msgstr ""
 
@@ -7115,7 +7116,7 @@ msgstr ""
 #. otherwise, if we have no profiles yet, use the default profile name.
 #: ExSession.pas:399
 #. make sure we have at least a default profile
-#: RosterWindow.pas:2830
+#: RosterWindow.pas:2831
 msgid "Default Profile"
 msgstr ""
 
@@ -7232,7 +7233,7 @@ msgstr ""
 #: ExUtils.pas:670
 #: ExUtils.pas:688
 #: ExUtils.pas:706
-#: RosterWindow.pas:420
+#: RosterWindow.pas:421
 #. setup the Bookmarks group first
 #: /src/exodus/jopl/Bookmarks.pas:176
 #: /src/exodus/jopl/Bookmarks.pas:178
@@ -7243,7 +7244,7 @@ msgstr ""
 #: ExUtils.pas:673
 #: ExUtils.pas:691
 #: ExUtils.pas:709
-#: RosterWindow.pas:419
+#: RosterWindow.pas:420
 #: /src/exodus/jopl/Roster.pas:200
 #. special case for unfiled
 #: /src/exodus/jopl/Roster.pas:496
@@ -7323,17 +7324,17 @@ msgstr ""
 msgid "Remove the %s group"
 msgstr ""
 
-#: GUIFactory.pas:163
+#: GUIFactory.pas:187
 msgid "This server does not advertise support for in-band registration. Try "
 "to register a new account anyway?"
 msgstr ""
 
-#: GUIFactory.pas:171
+#: GUIFactory.pas:195
 msgid "Your authentication mechanism does not support "
 "registration."
 msgstr ""
 
-#: GUIFactory.pas:186
+#: GUIFactory.pas:210
 msgid "There was an error attempting to save your options. Another process "
 "may be accessing your options file. Some options may be lost. "
 msgstr ""
@@ -7473,11 +7474,11 @@ msgstr ""
 #. send roster items to this contact.
 #: Jabber1.pas:3119
 #. Send contacts to this JID..
-#: RosterWindow.pas:2659
-#: RosterWindow.pas:2944
+#: RosterWindow.pas:2660
+#: RosterWindow.pas:2945
 #. we got a URL drop
-#: RosterWindow.pas:3033
-#: RosterWindow.pas:3065
+#: RosterWindow.pas:3034
+#: RosterWindow.pas:3066
 msgid "You must select one or more contacts."
 msgstr ""
 
@@ -7897,8 +7898,8 @@ msgid "Enter bookmark name:"
 msgstr ""
 
 #: Room.pas:1803
-#: RosterWindow.pas:2050
-#: RosterWindow.pas:2102
+#: RosterWindow.pas:2051
+#: RosterWindow.pas:2103
 msgid "UnBlock"
 msgstr ""
 
@@ -7977,99 +7978,99 @@ msgid "The gateway server you requested does not have a transport for this "
 "contact type."
 msgstr ""
 
-#: RosterWindow.pas:421
+#: RosterWindow.pas:422
 #: /src/exodus/jopl/Roster.pas:231
 #: /src/exodus/jopl/Roster.pas:456
 msgid "My Resources"
 msgstr ""
 
-#: RosterWindow.pas:640
+#: RosterWindow.pas:641
 msgid "Trying to connect..."
 msgstr ""
 
-#: RosterWindow.pas:641
+#: RosterWindow.pas:642
 #. we've got a socket connection
-#: RosterWindow.pas:669
+#: RosterWindow.pas:670
 #. we've been authenticated
-#: RosterWindow.pas:681
-#: RosterWindow.pas:2781
+#: RosterWindow.pas:682
+#: RosterWindow.pas:2782
 msgid "Click to Cancel..."
 msgstr ""
 
-#: RosterWindow.pas:670
+#: RosterWindow.pas:671
 msgid "Connected. \n"
 "Authenticating..."
 msgstr ""
 
-#: RosterWindow.pas:682
+#: RosterWindow.pas:683
 msgid "Authenticated.\n"
 "Getting Contacts..."
 msgstr ""
 
-#: RosterWindow.pas:2332
+#: RosterWindow.pas:2333
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2565
+#: RosterWindow.pas:2566
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2565
+#: RosterWindow.pas:2566
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2687
+#: RosterWindow.pas:2688
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2716
+#: RosterWindow.pas:2717
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2744
+#: RosterWindow.pas:2745
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2785
-#: RosterWindow.pas:3177
+#: RosterWindow.pas:2786
+#: RosterWindow.pas:3178
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
 #. Create a new profile
-#: RosterWindow.pas:2804
+#: RosterWindow.pas:2805
 #. Run the new user wizard... first create a new profile
-#: RosterWindow.pas:3210
+#: RosterWindow.pas:3211
 msgid "Untitled Profile"
 msgstr ""
 
-#: RosterWindow.pas:2805
-#: RosterWindow.pas:3211
+#: RosterWindow.pas:2806
+#: RosterWindow.pas:3212
 msgid "New Profile"
 msgstr ""
 
-#: RosterWindow.pas:2805
-#: RosterWindow.pas:3211
+#: RosterWindow.pas:2806
+#: RosterWindow.pas:3212
 msgid "Enter Profile Name"
 msgstr ""
 
 #. Delete this profile
-#: RosterWindow.pas:2821
+#: RosterWindow.pas:2822
 msgid "Remove this profile?"
 msgstr ""
 
-#: RosterWindow.pas:2949
+#: RosterWindow.pas:2950
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2949
+#: RosterWindow.pas:2950
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:3178
+#: RosterWindow.pas:3179
 msgid "Reconnect in %d seconds."
 msgstr ""
 
@@ -8196,51 +8197,51 @@ msgstr ""
 msgid "XA as a result of idle."
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1256
+#: /src/exodus/jopl/PrefController.pas:1266
 msgid "Free for Chat"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1274
+#: /src/exodus/jopl/PrefController.pas:1284
 msgid "Lunch"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1283
+#: /src/exodus/jopl/PrefController.pas:1293
 msgid "Meeting"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1292
+#: /src/exodus/jopl/PrefController.pas:1302
 msgid "Bank"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1301
+#: /src/exodus/jopl/PrefController.pas:1311
 msgid "Extended Away"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1310
+#: /src/exodus/jopl/PrefController.pas:1320
 msgid "Gone Home"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1319
+#: /src/exodus/jopl/PrefController.pas:1329
 msgid "Gone to Work"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1328
+#: /src/exodus/jopl/PrefController.pas:1338
 msgid "Sleeping"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1337
+#: /src/exodus/jopl/PrefController.pas:1347
 msgid "Do Not disturb"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1346
+#: /src/exodus/jopl/PrefController.pas:1356
 msgid "Busy"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1355
+#: /src/exodus/jopl/PrefController.pas:1365
 msgid "Working"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1364
+#: /src/exodus/jopl/PrefController.pas:1374
 msgid "Mad"
 msgstr ""
 
