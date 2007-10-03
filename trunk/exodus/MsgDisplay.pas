@@ -28,6 +28,7 @@ uses
 function RTFColor(color_pref: string) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
+function RTFEncodeKeywords(txt: Widestring) : Widestring;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -36,7 +37,7 @@ implementation
 uses
 
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
-    ExtCtrls, Dialogs, XMLUtils, Session;
+    ExtCtrls, Dialogs, XMLUtils, Session, Keywords;
 
 const
     MAX_MSG_LENGTH = 512;
@@ -65,7 +66,7 @@ end;
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     len, fvl: integer;
-    txt: WideString;
+    txt, body: WideString;
     at_bottom: boolean;
     is_scrolling: boolean;
 begin
@@ -116,17 +117,20 @@ begin
             // other person's msgs
             txt := txt + '\cf5 ';
 
-        txt := txt + '<' + EscapeRTF(Msg.nick) + '>';
+        txt := txt + '<' + EscapeRTF(Msg.nick) + '>\cf6 ';
 
-        if (Msg.Highlight) then
-            txt := txt + '\cf4  '
-        else
-            txt := txt + '\cf6  ';
-
+        //Parse emoticons and/or escape RTF chars
         if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then
-            txt := txt + ProcessRTFEmoticons(Msg.Body)
+          body := ProcessRTFEmoticons(Msg.Body)
         else
-            txt := txt + EscapeRTF(Msg.Body);
+          body := EscapeRTF(Msg.Body);
+
+        // Format keywords
+        if (Msg.Highlight) then
+          body := RTFEncodeKeywords(body);
+
+        //Append body
+        txt := txt + body;
     end
 
     else begin
@@ -155,6 +159,43 @@ begin
     end;
 
 
+end;
+
+function RTFEncodeKeywords(txt: Widestring) : Widestring;
+const
+  PREFIX : Widestring = '\cf4\b '; //Highlight formatting
+  SUFFIX : Widestring = '\b0\cf6 '; //Regular formatting
+var
+  pos : integer;
+  keywords : RegExpr.TRegExpr;
+begin
+  pos := 1;
+
+  //Create a TRegExpr based on Keyword Prefs
+  keywords := CreateKeywordsExpr();
+
+  if (keywords <> nil) then begin
+    try
+      //Find one or more keyword matches and format them
+      if (keywords.Exec(txt)) then begin
+        repeat
+          result := result +
+            Copy(txt,pos,keywords.MatchPos[0]-pos) + //Chunk before the keyword
+            PREFIX +
+            Copy(txt,keywords.MatchPos[0],keywords.MatchLen[0]) + //Keyword
+            SUFFIX;
+
+          pos := keywords.MatchPos[0] + keywords.MatchLen[0];
+        until not Keywords.ExecNext;
+      end;
+    except
+      result := txt;
+    end;
+
+    FreeAndNil(keywords);
+  end;
+
+  result := result + Copy(txt,pos,length(txt)-pos+1); //Append the remaining chunk
 end;
 
 end.

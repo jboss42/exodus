@@ -161,7 +161,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils;
+    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -218,6 +218,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
+var
+  kw_expr : TRegExpr;
 begin
     // save prefs to the reg
     with MainSession.Prefs do begin
@@ -272,6 +274,10 @@ begin
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
+        kw_expr := CreateKeywordsExpr(); //Try to create/compile Keyword expression
+        FreeAndNil(kw_expr);
+
+        //Blocked JIDs
         setStringList('blockers', memBlocks.Lines);
 
         endUpdate();
