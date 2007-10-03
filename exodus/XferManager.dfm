@@ -12,7 +12,7 @@ inherited frmXferManager: TfrmXferManager
     Left = 0
     Top = 33
     Width = 436
-    Height = 168
+    Height = 164
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -71,11 +71,6 @@ inherited frmXferManager: TfrmXferManager
     Left = 40
     Top = 40
   end
-  object OpenDialog1: TOpenDialog
-    Options = [ofHideReadOnly, ofAllowMultiSelect, ofEnableSizing]
-    Left = 8
-    Top = 40
-  end
   object tcpServer: TIdTCPServer
     Bindings = <>
     CommandHandlers = <>
@@ -89,6 +84,11 @@ inherited frmXferManager: TfrmXferManager
     ReplyTexts = <>
     ReplyUnknownCommand.NumericCode = 0
     Left = 72
+    Top = 40
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'All Files|*.*'
+    Left = 8
     Top = 40
   end
 end
