@@ -396,7 +396,8 @@ uses
     StrUtils,
     xData,
     XMLNode,
-    XMLUtils;
+    XMLUtils,
+    KeyWords;
 
 {$R *.DFM}
 
@@ -1575,41 +1576,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.setupKeywords();
-var
-    kw_list : TWideStringList;
-    re : bool;
-    e : Widestring;
-    first : bool;
-    i : integer;
 begin
-    kw_list := TWideStringList.Create();
-    MainSession.Prefs.fillStringlist('keywords', kw_list);
-    if (kw_list.Count > 0) then begin
-        re := MainSession.Prefs.getBool('regex_keywords');
-        first := true;
-        e :=  '(';
-        for i := 0 to kw_list.Count-1 do begin
-            if (first) then
-                first := false
-            else
-                e := e + '|';
-            if (re) then
-                e := e + kw_list[i]
-            else
-                e := e + QuoteRegExprMetaChars(kw_list[i]);
-        end;
-            e := e + ')';
-        try
-            _keywords := TRegExpr.Create();
-            _keywords.Expression := e;
-            _keywords.Compile();
-        except
-            FreeAndNil(_keywords);
-            MessageDlgW(_('Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room.'),
-                mtError, [mbOK], 0);
-        end;
-    end;
-    kw_list.Free();
+    _keywords := Keywords.CreateKeywordsExpr();
 end;
 
 {---------------------------------------}
