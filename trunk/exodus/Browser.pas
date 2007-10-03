@@ -72,6 +72,7 @@ type
     btnGo: TSpeedButton;
     btnRefresh: TSpeedButton;
     lblError: TTntLabel;
+    ToolButton3: TToolButton;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -100,6 +101,7 @@ type
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure popContextPopup(Sender: TObject);
+    procedure ToolButton3Click(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -797,5 +799,19 @@ begin
         ContextMenu(false);
 end;
 
+
+{---------------------------------------}
+procedure TfrmBrowse.ToolButton3Click(Sender: TObject);
+var
+    i: integer;
+    ce: TJabberEntity;
+begin
+  inherited;
+    // Get info for everything in _blist
+    for i := 0 to _blist.count - 1 do begin
+        ce := TJabberEntity(_blist[i]);
+        if (not ce.hasInfo) then ce.getInfo(MainSession);
+    end;
+end;
 
 end.

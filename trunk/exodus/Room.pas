@@ -1925,13 +1925,14 @@ begin
     Result := AnsiCompareText(s1, s2);
 end;
 
-
+{---------------------------------------}
 procedure TfrmRoom.popRegisterClick(Sender: TObject);
 begin
   inherited;
     StartServiceReg(jid);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.sendStartPresence();
 var
     p : TJabberPres;
@@ -1953,6 +1954,7 @@ begin
     MainSession.SendTag(p);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.lstRosterKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
