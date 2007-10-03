@@ -26,12 +26,12 @@ unit XferManager;
 interface
 
 uses
-    Unicode, XMLTag, SyncObjs, 
+    Unicode, XMLTag, SyncObjs, ShellAPI,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-    TntStdCtrls, Buttons, TntExtCtrls;
+    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -75,11 +75,11 @@ type
   TfrmXferManager = class(TfrmDockable)
     httpServer: TIdHTTPServer;
     box: TScrollBox;
-    OpenDialog1: TOpenDialog;
     tcpServer: TIdTCPServer;
     Panel1: TPanel;
     btnClose: TSpeedButton;
     pnlCaption: TTntPanel;
+    OpenDialog1: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure httpServerCommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
@@ -94,6 +94,7 @@ type
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure btnCloseClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure OpenDialog1CanClose(Sender: TObject; var CanClose: Boolean);
 
   protected
     procedure WMCloseFrame(var msg: TMessage); message WM_CLOSE_FRAME;
@@ -195,7 +196,6 @@ begin
                 getXferManager().Close();
             exit;
         end;
-        //filename := getXferManager().OpenDialog1.Filename;
         for f := 0 to getXferManager().OpenDialog1.Files.Count - 1 do
             StartFileSend(jid, getXferManager().OpenDialog1.Files[f]);
     end;
@@ -847,6 +847,22 @@ begin
 
     // only close if there are no frames left.
     CanClose := (box.ControlCount = 0);
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.OpenDialog1CanClose(Sender: TObject;
+  var CanClose: Boolean);
+var
+    ext: string;
+begin
+  inherited;
+    if (OpenDialog1.Files.Count = 1) then begin
+        // check .lnk files..
+        ext := lowercase(ExtractFileExt(OpenDialog1.FileName));
+        if (ext <> '.lnk') then exit;
+
+
+    end;
 end;
 
 initialization
