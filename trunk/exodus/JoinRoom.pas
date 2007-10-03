@@ -136,9 +136,10 @@ begin
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
     jr := TfrmJoinRoom.Create(Application);
     with jr do begin
-        txtRoom.Text := room_jid.user;
+        txtRoom.Text := room_jid.userDisplay;
         txtServer.Text := room_jid.domain;
         txtNick.Text := nick;
+        txtPassword.Text := password;
 
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Profile.getDisplayUsername();
