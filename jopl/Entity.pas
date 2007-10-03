@@ -55,7 +55,7 @@ type
         procedure InfoCallback(event: string; tag: TXMLTag);
         procedure BrowseCallback(event: string; tag: TXMLTag);
         procedure AgentsCallback(event: string; tag: TXMLTag);
-
+        
         procedure WalkCallback(event: string; tag: TXMLTag);
         procedure WalkItemsCallback(event: string; tag: TXMLTag);
         
@@ -74,6 +74,8 @@ type
 
         _cat: Widestring;
         _cat_type: Widestring;
+
+        _use_limit: boolean;
 
         function _getFeature(i: integer): Widestring;
         function _getFeatureCount: integer;
@@ -99,7 +101,7 @@ type
 
         procedure getInfo(js: TJabberSession);
         procedure getItems(js: TJabberSession);
-        procedure walk(js: TJabberSession);
+        procedure walk(js: TJabberSession; items_limit: boolean = true);
         procedure refresh(js: TJabberSession);
 
         function ItemByJid(jid: Widestring): TJabberEntity;
@@ -335,9 +337,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberEntity.walk(js: TJabberSession);
+procedure TJabberEntity.walk(js: TJabberSession; items_limit: boolean);
 begin
     // Get Items, then get info for each one.
+    _use_limit := items_limit;
     _discoInfo(js, WalkCallback);
 end;
 
@@ -536,7 +539,7 @@ begin
     getItems(js);
 
     // Don't fetch info on all items if we have tons
-    if (_items.Count >= WALK_LIMIT) then exit;
+    if ((_use_limit) and (_items.Count >= WALK_LIMIT)) then exit;
 
     for i := 0 to _items.Count - 1 do
         TJabberEntity(_items.Objects[i]).getInfo(js);

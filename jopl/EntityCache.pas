@@ -37,12 +37,14 @@ type
         constructor Create();
         destructor Destroy(); override;
 
+        procedure Clear();
         procedure Add(jid: Widestring; e: TJabberEntity);
         procedure Remove(e: TJabberEntity);
         procedure Delete(i: integer);
 
         function getByJid(jid: Widestring): TJabberEntity;
-        function fetch(jid: Widestring; js: TJabberSession): TJabberEntity;
+        function fetch(jid: Widestring; js: TJabberSession;
+            items_limit: boolean = true): TJabberEntity;
 
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
@@ -74,6 +76,13 @@ end;
 
 {---------------------------------------}
 destructor TJabberEntityCache.Destroy();
+begin
+    Clear();
+    _cache.Free();
+end;
+
+{---------------------------------------}
+procedure TJabberEntityCache.Clear();
 var
     ce: TJabberEntity;
     i: integer;
@@ -84,7 +93,7 @@ begin
             ce.Free();
         _cache.Objects[i] := nil;
     end;
-    _cache.Free();
+    _cache.Clear();
 end;
 
 {---------------------------------------}
@@ -138,7 +147,8 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession): TJabberEntity;
+function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession;
+    items_limit: boolean): TJabberEntity;
 var
     i: integer;
     e: TJabberEntity;
