@@ -3158,7 +3158,7 @@ begin
     else
         r := getSelectedContacts(false);
 
-    if (r.Count <= 1) then
+    if (r.Count < 1) then
         MessageDlgW(_(sNoBroadcast), mtError, [mbOK], 0)
     else begin
         jl := TWideStringlist.Create();
