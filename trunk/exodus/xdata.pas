@@ -172,6 +172,14 @@ begin
     hidden := false;
     valid := true;
 
+    if (x.Name = 'warning') then begin
+        t := 'warning';
+        fixed := true;
+        req := false;
+        buildLabel(x.Data);
+        exit;
+    end;
+
     if (x.Name = 'instructions') then begin
         t := 'instructions';
         fixed := true;

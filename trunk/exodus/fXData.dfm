@@ -4,6 +4,7 @@ object frameXData: TframeXData
   Width = 320
   Height = 132
   TabOrder = 0
+  TabStop = True
   OnResize = FrameResize
   object Panel1: TPanel
     Left = 0
