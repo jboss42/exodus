@@ -658,6 +658,8 @@ var
 begin
     // Get our context/xmlns
     _to_jid := tag.getAttribute('from');
+    Caption := Caption + ' from ' + _to_jid;
+
     if (tag.Name = 'iq') then begin
         _packet := 'iq';
         _ns := tag.QueryXPData('/iq/query@xmlns')
