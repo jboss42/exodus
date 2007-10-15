@@ -540,7 +540,6 @@ var
     ins: cardinal;
     imgh: integer;
     txth: integer;
-    disFile: TextFile;
     tstring: widestring;
     Buffer: array [0..16384] of char;
 begin
@@ -2514,6 +2513,7 @@ var
     go: TJabberGroup;
     i: integer;
 begin
+
     // Only accept items from the roster
     if (Source = treeRoster) then begin
         Accept := true;
@@ -2535,7 +2535,14 @@ begin
     // check the items being dragged
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
+
+        // If we don't allow nested groups, you certainly can't drag and drop one.
         if (TObject(s_node.Data) is TJabberGroup) then begin
+            if (not MainSession.Prefs.getBool('nested_groups')) then begin
+              Accept := false;
+              exit;
+            end;
+
             go := TJabberGroup(s_node.Data);
             if (go.DragSource = false) then begin
                 Accept := false;
