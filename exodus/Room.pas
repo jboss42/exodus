@@ -1791,6 +1791,7 @@ var
 begin
     if (Key = 0) then exit;
     TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
+
     // Send the msg if they hit return
 
     if (chr(Key) = #09) then begin
@@ -2732,7 +2733,7 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (MsgOut.Visible) and (MsgOut.Enabled) then begin
+    if (MsgOut.Visible) and (MsgOut.Enabled) and (not MsgOut.ReadOnly) then begin
         MsgOut.SetFocus();
         MsgOut.WideSelText := Key;
     end;
