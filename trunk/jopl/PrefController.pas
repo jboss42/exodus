@@ -192,7 +192,7 @@ type
         NumPollKeys: integer;
 
         constructor Create(prof_name: Widestring; prefs: TPrefController);
-        destructor Destroy();
+        destructor Destroy(); reintroduce;
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
