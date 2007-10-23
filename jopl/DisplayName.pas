@@ -311,10 +311,13 @@ end;
 
 procedure TDisplayNameListener.DNCallback(event: string; tag: TXMLTag);
 begin
-    if (_DNCB <> -1) then begin
-        fireOnDisplaynameChange(tag.GetAttribute('jid'), tag.GetAttribute('dn'));
-        MainSession.UnRegisterCallback(_DNCB);
-        _DNCB := -1;
+    try
+        if (_DNCB <> -1) and (tag <> nil) then begin
+            fireOnDisplaynameChange(tag.GetAttribute('jid'), tag.GetAttribute('dn'));
+            MainSession.UnRegisterCallback(_DNCB);
+            _DNCB := -1;
+        end;
+    except
     end;
 end;
 

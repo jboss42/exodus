@@ -203,11 +203,14 @@ end;
 function TJabberChatList.AddChat(sjid, sresource: Widestring): TChatController;
 begin
     //
-    Result := TChatController.Create(sjid, sresource);
-    if (sresource = '') then
-        Self.AddObject(sjid, Result)
-    else
-        Self.AddObject(sjid + '/' + sresource, Result);
+    try
+        Result := TChatController.Create(sjid, sresource);
+        if (sresource = '') then
+            Self.AddObject(sjid, Result)
+        else
+            Self.AddObject(sjid + '/' + sresource, Result);
+    except
+    end;
 end;
 
 end.

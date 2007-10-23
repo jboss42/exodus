@@ -34,6 +34,9 @@ const
     sPref_Hotkeys_Keys = 'hotkeys_keys';
     sPref_Hotkeys_Text = 'hotkeys_text';
 
+    RTF_MSGLIST = 0;
+    HTML_MSGLIST = 1;
+
 type
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
@@ -114,6 +117,7 @@ type
     _msgframe: TObject;
     _session_chat_toolbar_callback: integer;
     _session_close_all_callback: integer;
+    _msglist_type: integer;
 
     procedure _scrollBottom();
    {
@@ -183,6 +187,9 @@ uses
     Jabber1,
     ExUtils,
     JabberMsg,
+{$IFDEF USE_TWEBBROWSER}
+    IEMsgList,
+{$ENDIF}
     TypInfo;
 
 const
@@ -396,64 +403,73 @@ var
     ht: integer;
     sc: TShortcut;
 begin
-    AutoScroll := true;
-    _rtEnabled := false;
-    _hotkey_menu_items := TWideStringList.Create();
-    _hotkeys_keys_stringlist := TWideStringList.Create();
-    _hotkeys_text_stringlist := TWideStringList.Create();
+    try
+        AutoScroll := true;
+        _rtEnabled := false;
+        _hotkey_menu_items := TWideStringList.Create();
+        _hotkeys_keys_stringlist := TWideStringList.Create();
+        _hotkeys_text_stringlist := TWideStringList.Create();
 
-    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
-    MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+        MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
+        MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
-    SetPriorityNormal;
+        SetPriorityNormal;
 
-    _msgHistory := TWideStringList.Create();
-    _pending := '';
-    _lastMsg := -1;
-    _esc := false;
+        _msgHistory := TWideStringList.Create();
+        _pending := '';
+        _lastMsg := -1;
+        _esc := false;
 
-    // Pick which frame to build
-    //ms := MainSession.prefs.getInt('msglist_type');
-    //if (ms = 0) then
-    _msgframe := TfRTFMsgList.Create(Self);
+        // Pick which frame to build
+{$IFDEF USE_TWEBBROWSER}
+        _msglist_type := MainSession.prefs.getInt('msglist_type');
+        case _msglist_type of
+            RTF_MSGLIST  : _msgframe := TfRTFMsgList.Create(Self);
+            HTML_MSGLIST : _msgframe := TfIEMsgList.Create(Self);
+        end;
+{$ELSE}
+        _msglist_type := RTF_MSGLIST;
+        _msgframe := TfRTFMsgList.Create(Self);
+{$ENDIF}
+        with MsgList do begin
+            Name := 'msg_list_frame';
+            Parent := pnlMsgList;
+            Align := alClient;
+            Visible := true;
+            setContextMenu(popMsgList);
+            ready();
+        end;
 
-    with MsgList do begin
-        Name := 'msg_list_frame';
-        Parent := pnlMsgList;
-        Align := alClient;
-        Visible := true;
-        setContextMenu(popMsgList);
-        ready();
+        inherited;
+
+        if (MainSession <> nil) then begin
+            ht := MainSession.Prefs.getInt('chat_textbox');
+            if (ht <> 0) then
+                pnlInput.Height := ht
+            else
+                MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+            _esc := MainSession.Prefs.getBool('esc_close');
+
+            sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
+            ShortCutToKey(sc, _close_key, _close_shift);
+        end;
+
+        _scroll := true;
+
+        tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
+
+        _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
+        _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
+
+        MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
+        MsgOutToolbar.ObjAddRef();
+
+        DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
+        DockToolbar.ObjAddRef();
+
+        updateFromPrefs();
+    except
     end;
-
-    inherited;
-
-    if (MainSession <> nil) then begin
-        ht := MainSession.Prefs.getInt('chat_textbox');
-        if (ht <> 0) then
-            pnlInput.Height := ht
-        else
-            MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
-        _esc := MainSession.Prefs.getBool('esc_close');
-
-        sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
-        ShortCutToKey(sc, _close_key, _close_shift);
-    end;
-
-    _scroll := true;
-
-    tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
-
-    _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-    _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
-
-    MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
-    MsgOutToolbar.ObjAddRef();
-
-    DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
-    DockToolbar.ObjAddRef();
-
-    updateFromPrefs();
 end;
 
 {---------------------------------------}

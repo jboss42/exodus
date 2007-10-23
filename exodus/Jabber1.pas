@@ -897,6 +897,8 @@ const
     sQueryTypeError = 'Unknown query type: ';
     sUserExistsErr = ''#13#10' ERROR: The username ''%s'' already exists.';
 
+    sOutOfSystemResourcesError = 'Out of system resources.';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -1435,7 +1437,7 @@ begin
 
     // Remove the "old menus" from user view
     // Eventually will have to actually remove menus
-    Old1.Visible := false
+    Old1.Visible := false;
 
 
 
@@ -2077,6 +2079,16 @@ begin
             tmpjid.Free();
             logmsg.Free();
         end
+    end
+
+    else if (event = '/session/error-out-of-system-resources') then
+    begin
+        DebugMessage(_(sOutOfSystemResourcesError));
+        MessageBoxW(Application.Handle,
+                   PWideChar(_(sOutOfSystemResourcesError)),
+                   PWideChar(MainSession.Prefs.GetString('brand_caption')),
+                   MB_OK or MB_ICONERROR);
+        Application.Terminate();
     end;
 end;
 
