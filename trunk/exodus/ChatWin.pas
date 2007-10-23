@@ -247,6 +247,9 @@ uses
     XMLParser,
     RT_XIMConversion,
     EntityCache,
+{$IFDEF USE_TWEBBROWSER}
+    IEMsgList,
+{$ENDIF}
     TypInfo;
 
 const
@@ -404,6 +407,16 @@ begin
 
         Result := TfrmChat(chat.window);
     except
+        on e: Exception do
+        begin
+            if (Pos('Out of system resources', e.Message) > 0) then
+            begin
+                MainSession.FireEvent('/session/close-all-windows', nil);
+                MainSession.FireEvent('/session/error-out-of-system-resources', nil);
+            end;
+
+            Result := nil;
+        end;
     end;
 end;
 
@@ -489,6 +502,9 @@ begin
         if (getBool('brand_allow_blocking_jids') = false) then 
             mnuBlock.Visible := false;
     end;
+
+    MsgList.setDragOver(OnDockedDragOver);
+    MsgList.setDragDrop(OnDragDrop);
 
 end;
 
@@ -1535,8 +1551,11 @@ begin
     if (_jid <> nil) then
         FreeAndNil(_jid);
 
-    _res_menus.Clear();
-    _res_menus.Free();
+    if (Assigned(_res_menus)) then
+    begin
+        _res_menus.Clear();
+        _res_menus.Free();
+    end;
 
     DragAcceptFiles(Handle, false);
     inherited;
@@ -1658,7 +1677,12 @@ end;
 procedure TfrmChat.mnuSaveClick(Sender: TObject);
 begin
   inherited;
-    // save the conversation as RTF
+    // save the conversation to file
+    case _msglist_type of
+        RTF_MSGLIST  : SaveDialog1.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt';
+        HTML_MSGLIST : SaveDialog1.Filter := 'HTML (*.htm)|*.htm';
+    end;
+
     if SaveDialog1.Execute then begin
         MsgList.Save(SaveDialog1.Filename);
     end;
@@ -1838,6 +1862,9 @@ var
     cap: Widestring;
     ml: TfBaseMsgList;
     msglist: TfRTFMsgList;
+{$IFDEF USE_TWEBBROWSER}
+    htmlmsglist: TfIEMsgList;
+{$ENDIF}
 begin
   inherited;
     ml := getMsgList();
@@ -1847,11 +1874,17 @@ begin
         with PrintDialog1 do begin
             if (not Execute) then exit;
 
-            cap := _('Chat Transcript: %s');
+            cap := _('Room Transcript: %s');
             cap := WideFormat(cap, [Self.Caption]);
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
+{$IFDEF USE_TWEBBROWSER}
+    end
+    else if (ml is TfIEMsgList) then begin
+        htmlmsglist := TfIEMsgList(ml);
+        htmlmsglist.print(true);
+{$ENDIF}
     end;
 end;
 

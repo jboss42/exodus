@@ -1,4 +1,5 @@
 unit IEMsgList;
+
 {
     Copyright 2004, Peter Millard
 
@@ -19,7 +20,15 @@ unit IEMsgList;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+// To use IE (TWebBrowser) as the history window in chats/rooms
+// Define USE_TWEBBROWSER and set <msglist_type value="1"/> in the defaults
+// or a branding file.  If msglist_type is left at a value of 0, then the
+// history window will still be RTF and not HTML even though HTML support is
+// compiled in.
+
 interface
+
+{$IFDEF USE_TWEBBROWSER}
 
 uses
     TntMenus, JabberMsg,
@@ -28,6 +37,8 @@ uses
     BaseMsgList, Session, gnugettext, unicode,
     XMLTag, XMLNode, XMLConstants, XMLCdata, LibXmlParser, XMLUtils,
     OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX;
+
+  function HTMLColor(color_pref: integer) : widestring;
 
 type
   TfIEMsgList = class(TfBaseMsgList)
@@ -51,8 +62,11 @@ type
     _style: IHTMLStyleSheet;
     _content: IHTMLElement;
     _content2: IHTMLElement2;
+    _lastelement: IHTMLElement;
+    _composingelement: IHTMLElement;
 
     _we: TMSHTMLHTMLElementEvents;
+    _we2: TMSHTMLHTMLElementEvents2;
     _de: TMSHTMLHTMLDocumentEvents;
 
     _bottom: Boolean;
@@ -60,16 +74,29 @@ type
     _queue: TWideStringList;
     _title: WideString;
     _ready: Boolean;
+    _idCount: integer;
+    _displayDateSeperator: boolean;
+    _lastTimeStamp: TDateTime;
+    _composing: integer;
+    _msgCount: integer;
+    _maxMsgCountHigh: integer;
+    _maxMsgCountLow: integer;
+    _doMessageLimiting: boolean;
 
     _dragDrop: TDragDropEvent;
     _dragOver: TDragOverEvent;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
-    
+
     function onDrop(Sender: TObject): WordBool;
     function onDragOver(Sender: TObject): WordBool;
     function onContextMenu(Sender: TObject): WordBool;
+    function onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
+    function _genElementID(): WideString;
+    procedure _ClearOldMessages();
+    function _getHistory(includeCount: boolean = true): WideString;
+    function _processUnicode(txt: widestring): WideString;
 
   protected
       procedure writeHTML(html: WideString);
@@ -99,8 +126,12 @@ type
     procedure setTitle(title: Widestring); override;
     procedure ready(); override;
     procedure refresh(); override;
+    procedure DisplayComposing(msg: Widestring); override;
+    procedure HideComposing(); override;
+    function  isComposing(): boolean; override;
 
-    procedure ChangeStylesheet(url: WideString);
+    procedure ChangeStylesheet(resname: WideString);
+    procedure print(ShowDialog: boolean);
   end;
 
 var
@@ -110,14 +141,36 @@ var
   style_tags: THashedStringList;
   style_props: THashedStringList;
 
+{$ENDIF}
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 
-uses JabberConst, Jabber1, BaseChat, JabberUtils, ExUtils,  ShellAPI, Emote;
+{$IFDEF USE_TWEBBROWSER}
+
+uses
+    JabberConst,
+    Jabber1,
+    BaseChat,
+    JabberUtils,
+    ExUtils,
+    ShellAPI,
+    Emote,
+    StrUtils;
 
 {$R *.dfm}
+
+{---------------------------------------}
+function HTMLColor(color_pref: integer) : widestring;
+var
+    color: TColor;
+begin
+    color := TColor(color_pref);
+    Result := IntToHex(GetRValue(color), 2) +
+              IntToHex(GetGValue(color), 2) +
+              IntToHex(GetBValue(color), 2);
+end;
 
 {---------------------------------------}
 constructor TfIEMsgList.Create(Owner: TComponent);
@@ -125,6 +178,18 @@ begin
     inherited;
     _queue := TWideStringList.Create();
     _ready := true;
+    _idCount := 0;
+    _composing := -1;
+    _msgCount := 0;
+    _maxMsgCountHigh := MainSession.Prefs.getInt('maximum_displayed_messages');
+    _maxMsgCountLow := MainSession.Prefs.getInt('maximum_displayed_messages_drop_down_to');
+    if ((_maxMsgCountHigh <> 0) and
+        (_maxMsgCountLow <> 0) and
+        (_maxMsgCountHigh >= _maxMsgCountLow))then
+        _doMessageLimiting := true
+    else
+        _doMessageLimiting := false;
+    _displayDateSeperator := MainSession.Prefs.getBool('display_date_seperator');
 end;
 
 {---------------------------------------}
@@ -146,6 +211,9 @@ begin
         exit;
     end;
 
+    // For some reason, the _content that is set
+    // elsewhere is causing exceptions
+    _content := _doc.all.item('content', 0) as IHTMLElement;
     _content.insertAdjacentHTML('beforeEnd', html);
 end;
 
@@ -327,11 +395,45 @@ var
     nodes: TXMLNodeList;
     cd: TXMLCData;
     dv: WideString;
+    t: TDateTime;
+    id: WideString;
 begin
+    try
+        if (_displayDateSeperator) then begin
+            t := msg.Time;
+            if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
+                (msg.Subject = '') and
+                (msg.Nick <> ''))then begin
+                txt := '<div class="date"><span><br />';
+                txt := txt +
+                       ' -= ' +
+                       DateToStr(t) +
+                       ' =- ' +
+                       '<br /></span></div>';
+
+                writeHTML(txt);
+                _lastTimeStamp := msg.Time;
+                txt := '';
+                if (_doMessageLimiting) then
+                    Inc(_msgCount);
+            end;
+        end;
+    except
+    end;
+
+    _clearOldMessages();
+
     if (not Msg.Action) then begin
         // ignore HTML for actions.  it's harder than you think.
         body := Msg.Tag.QueryXPTag(xp_xhtml);
+
         if (body <> nil) then begin
+        // if first node is a p tag, make it a span...
+            if ((body.Nodes.Count > 0) and
+                (TXMLTag(body.Nodes[0]).NodeType = xml_tag) and
+                (TXMLTag(body.Nodes[0]).Name = 'p')) then
+                TXMLTag(body.Nodes[0]).Name := 'span';
+
             nodes := body.nodes;
             for i := 0 to nodes.Count - 1 do
                 txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
@@ -340,6 +442,7 @@ begin
 
     if (txt = '') then begin
         txt := HTML_EscapeChars(Msg.Body, false, false);
+        txt := _processUnicode(txt); //StringReplace() cannot handle
         txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
@@ -348,7 +451,8 @@ begin
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
     // canonicalizing HTML as it gets inserted.
-    dv := '<div class="line">';
+    id := _genElementID();
+    dv := '<div id="' + id + '" class="line">';
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
             dv := dv + '<span class="ts">[' +
@@ -369,6 +473,12 @@ begin
     end
     else if not Msg.Action then begin
         // This is a normal message
+
+        if (Msg.Priority = high) then
+            dv := dv + '<span class="pri_high">[' + GetDisplayPriority(Msg.Priority) + ']</span>'
+        else if (Msg.Priority = low) then
+            dv := dv + '<span class="pri_low">[' + GetDisplayPriority(Msg.Priority) + ']</span>';
+
         if Msg.isMe then
             // our own msgs
             dv := dv + '<span class="me">&lt;' + Msg.Nick + '&gt;</span>'
@@ -386,6 +496,11 @@ begin
 
     dv := dv + '</div>';
     writeHTML(dv);
+
+    _lastelement := _doc.all.item(id, 0) as IHTMLElement;
+
+    if (_doMessageLimiting) then
+        Inc(_msgCount);
 
     if (_bottom) then
         ScrollToBottom();
@@ -413,6 +528,8 @@ begin
                 sp := tags.Item(i, 0) as IHTMLElement;
                 if sp.className = 'pres' then begin
                     dv.outerHTML := '';
+                    if (_doMessageLimiting) then
+                        Dec(_msgCount);
                     break;
                 end;
             end;
@@ -426,18 +543,69 @@ begin
 
     if (_bottom) then
         ScrollToBottom();
+
+    if (_doMessageLimiting) then
+        Inc(_msgCount);
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.Save(fn: string);
+var
+    txt: widestring;
+    elem: IHTMLElement;
+    byteorder_marker: Word;
+    fs: TFileStream;
 begin
-    // XXX: Save IE MsgList
+    fs := nil;
+
+    // Save out the HTML to a file using widestring
+    // This means that it is UTF-16
+    if (browser = nil) then exit;
+
+    elem := _doc.body.parentElement;
+    if (elem = nil) then exit;
+
+    try
+        try
+            fs := TFileStream.Create(fn, fmCreate);
+            byteorder_marker := $FEFF; // Unicode marker for file.
+            txt := elem.outerHTML;
+            fs.WriteBuffer(byteorder_marker, sizeof(byteorder_marker));
+            fs.WriteBuffer(txt[1], Length(txt)*sizeof(txt[1]));
+        except
+
+        end;
+    finally
+        fs.free;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.populate(history: Widestring);
+var
+    txt: widestring;
+    p: integer;
 begin
+    p := pos('-->', history);
+
+    if ((p > 0) and
+        (LeftStr(history, 4) = '<!--')) then begin
+        txt := LeftStr(history, p - 1);
+        txt := MidStr(txt, 5, Length(txt));
+        try
+            if (_doMessageLimiting) then begin
+                _msgCount := StrToInt(txt);
+            end;
+        except
+        end;
+        history := MidStr(history, p + 3, Length(history));
+    end;
+
     writeHTML(history);
+
+    if (_doMessageLimiting) then begin
+        _clearOldMessages();
+    end;
 end;
 
 {---------------------------------------}
@@ -458,10 +626,20 @@ end;
 {---------------------------------------}
 function TfIEMsgList.getHistory(): Widestring;
 begin
+    Result := _getHistory();
+end;
+
+{---------------------------------------}
+function TfIEMsgList._getHistory(includeCount: boolean): WideString;
+begin
+    Result := '';
     if (_content = nil) then
         Result := ''
-    else
-        Result := _content.innerHTML;
+    else begin
+        if (includeCount) then
+            Result := '<!--' + IntToStr(_msgCount) + '-->';
+        Result := Result + _content.innerHTML;
+    end;
 end;
 
 
@@ -478,10 +656,63 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfIEMsgList.ChangeStylesheet(url: WideString);
+procedure TfIEMsgList.ChangeStylesheet(resname: WideString);
+    function replaceString(source, key, newtxt: Widestring): widestring;
+    var
+        offset: integer;
+    begin
+        if ((source = '') or
+            (key = '')) then
+            exit;
+
+        Result := '';
+        offset := Pos(key, source);
+        while (offset > 0) do begin
+            Result := Result + LeftStr(source, offset - 1);
+            Result := Result + newtxt;
+            source := MidStr(source, offset + Length(key), Length(source));
+            offset := Pos(key, source);
+        end;
+        Result := Result + source;        
+    end;
+var
+    stream: TResourceStream;
+    tmp: TWideStringList;
+    css: Widestring;
+    i: integer;
 begin
-    // XXX: remove or disable old stylesheets
-    _style := _doc.createStyleSheet(url, 0);
+    try
+        // Get CSS template from resouce
+        stream := TResourceStream.Create(HInstance, resname, 'CSS');
+
+        tmp := TWideStringList.Create;
+        tmp.LoadFromStream(stream);
+        css := '';
+        for i := 0 to tmp.Count - 1 do
+            css := css + tmp.Strings[i];
+
+        // Place colors in CSS
+        if (css <> '') then begin
+            css := replaceString(css, '/*font_name*/', MainSession.Prefs.getString('font_name'));
+            css := replaceString(css, '/*font_size*/', MainSession.Prefs.getString('font_size') + 'pt');
+            css := replaceString(css, '/*font_color*/', HTMLColor(MainSession.Prefs.getInt('font_color')));
+            css := replaceString(css, '/*color_bg*/', HTMLColor(MainSession.Prefs.getInt('color_bg')));
+            css := replaceString(css, '/*color_me*/', HTMLColor(MainSession.Prefs.getInt('color_me')));
+            css := replaceString(css, '/*color_other*/', HTMLColor(MainSession.Prefs.getInt('color_other')));
+            css := replaceString(css, '/*color_time*/', HTMLColor(MainSession.Prefs.getInt('color_time')));
+            css := replaceString(css, '/*color_priority*/', HTMLColor(MainSession.Prefs.getInt('color_priority')));
+            css := replaceString(css, '/*color_action*/', HTMLColor(MainSession.Prefs.getInt('color_action')));
+            css := replaceString(css, '/*color_server*/', HTMLColor(MainSession.Prefs.getInt('color_server')));
+        end;
+
+        // put CSS into page
+        if (css <> '') then begin
+            _style := _doc.createStyleSheet('', 0);
+            _style.cssText := css;
+            _style.disabled := false;
+        end;
+    except
+    end;
 end;
 
 {---------------------------------------}
@@ -509,22 +740,67 @@ begin
 end;
 
 {---------------------------------------}
+function TfIEMsgList.onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
+var
+    bc: TfrmBaseChat;
+    key: integer;
+begin
+    // If typing starts on the MsgList, then bump it to the outgoing
+    // text box.
+    bc := TfrmBaseChat(_base);
+    if (not bc.MsgOut.Enabled) then exit;
+
+    if (not bc.Visible) then exit;
+
+    key := pEvtObj.keyCode;
+
+    if (key = 22) then begin
+        // paste, Ctrl-V
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.PasteFromClipboard();
+            bc.MsgOut.SetFocus();
+        end;
+    end
+    else if ((MainSession.Prefs.getBool('esc_close')) and (key = 27)) then begin
+        if (Self.Parent <> nil) then begin
+            if (Self.Parent.Parent <> nil) then begin
+                SendMessage(Self.Parent.Parent.Handle, WM_CLOSE, 0, 0);
+            end;
+        end;
+    end
+    else if (key < 32) then begin
+        // Not a "printable" key
+        bc.MsgOut.SetFocus();
+    end
+    else if (bc.pnlInput.Visible) then begin
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+            bc.MsgOut.WideSelText := WideChar(Key);
+            bc.MsgOut.SetFocus();
+        end;
+    end;
+    pEvtObj.returnValue := false;
+    // This shouldn't be needed, but the TWebbrowser control takes back focus.
+    // You would think that the SetFocus() calls above wouldn't be necessary then
+    // but for some reason the Post doesn't work if they aren't called?
+    PostMessage(bc.Handle, WM_SETFOCUS, 0, 0);
+    Result := false;
+end;
+
+{---------------------------------------}
 function TfIEMsgList.onDrop(Sender: TObject): WordBool;
 begin
-//    _dragDrop(sender, browser, _win.event.x, _win.event.y);
+    _dragDrop(sender, browser, _win.event.x, _win.event.y);
     result := false;
 end;
 
 {---------------------------------------}
 function TfIEMsgList.onDragOver(Sender: TObject): WordBool;
-//var
-//    accept: boolean;
+var
+    accept: boolean;
 begin
-//    accept := true;
-//    _dragOver(sender, browser, _win.event.x, _win.event.y, dsDragMove, accept);
-//    DebugMsg('drag event type:' + _win.event.type_);
-//    result := accept;
-    result := false;
+    accept := true;
+    _dragOver(sender, browser, _win.event.x, _win.event.y, dsDragMove, accept);
+    result := accept;
 end;
 
 {---------------------------------------}
@@ -534,46 +810,57 @@ var
     i: integer;
 begin
     inherited;
-    if ((not _ready) or (browser.Document = nil)) then
-        exit;
+    try
+        if ((not _ready) or (browser.Document = nil)) then
+            exit;
 
-    _ready := false;
-    _doc := browser.Document as IHTMLDocument2;
-    ChangeStylesheet(_home + '/iemsglist_style');
+        _ready := false;
+        _doc := browser.Document as IHTMLDocument2;
+        ChangeStylesheet('iemsglist_style');
 
-    _content := _doc.all.item('content', 0) as IHTMLElement;
-    _content2 := _content as IHTMLElement2;
-    _body := _doc.body;
-    _bottom := true;
+        _content := _doc.all.item('content', 0) as IHTMLElement;
+        _content2 := _content as IHTMLElement2;
+        _body := _doc.body;
+        _bottom := true;
 
-    _win := _doc.parentWindow;
-    if (_we <> nil) then
-        _we.Free();
+        _win := _doc.parentWindow;
+        if (_we <> nil) then
+            _we.Free();
+        if (_we2 <> nil) then
+            _we2.Free();
 
-    _we := TMSHTMLHTMLElementEvents.Create(self);
-    _we.Connect(_content);
-    _we.onscroll   := onscroll;
-    _we.onresize   := onresize;
-    _we.ondrop     := ondrop;
-    _we.ondragover := ondragover;
+        _we := TMSHTMLHTMLElementEvents.Create(self);
+        _we.Connect(_content);
+        _we.onscroll   := onscroll;
+        _we.onresize   := onresize;
+        _we.ondrop     := ondrop;
+        _we.ondragover := ondragover;
 
-   // _we.onkeypress := onkeypress;
+        _we2 := TMSHTMLHTMLElementEvents2.Create(self);
+        _we2.Connect(_content);
+        _we2.onkeypress := onkeypress;
 
-    if (_de <> nil) then
-        _de.Free();
-    _de := TMSHTMLHTMLDocumentEvents.Create(self);
-    _de.Connect(_doc);
-    _de.oncontextmenu := onContextMenu;
+        if (_de <> nil) then
+            _de.Free();
+        _de := TMSHTMLHTMLDocumentEvents.Create(self);
+        _de.Connect(_doc);
+        _de.oncontextmenu := onContextMenu;
 
-    assert (_queue <> nil);
-    for i := 0 to _queue.Count - 1 do begin
-        writeHTML(_queue.Strings[i]);
+        assert (_queue <> nil);
+        for i := 0 to _queue.Count - 1 do begin
+            writeHTML(_queue.Strings[i]);
+        end;
+        _queue.Clear();
+        if (_title <> '') then begin
+            setTitle(_title);
+        end;
+        ScrollToBottom();
+    except
+        // When Undocking, the browser.Document becomes bad and
+        // throws an exception.  Call Clear() to force a re-navigation
+        // to reset browser.Document.
+        Clear();
     end;
-    _queue.Clear();
-    if (_title <> '') then begin
-        setTitle(_title);
-    end;
-    ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -607,30 +894,139 @@ begin
     splash.innerText := _title;
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.ready();
 begin
 //    _ready := true;
-    Clear();
+//    Clear();
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.refresh();
 begin
-    _queue.Add(getHistory());
+    _queue.Add(_getHistory(false));
     Clear();
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.browserDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 begin
-//    _dragDrop(sender, source, x, y);
+    _dragDrop(sender, source, x, y);
 //  inherited;
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.browserDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
-//    _dragOver(sender, source, x, y, state, accept);
- //   inherited;
+    _dragOver(sender, source, x, y, state, accept);
+//   inherited;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.DisplayComposing(msg: Widestring);
+var
+    outstring: Widestring;
+    id: widestring;
+begin
+    HideComposing();
+    _composing := 1;
+    id := _genElementID();
+    outstring := '<div id="' +
+                 id +
+                 '"><br /><span class="composing">' +
+                 HTML_EscapeChars(msg, false, false) +
+                 '</span><br /></div>';
+    writeHTML(outstring);
+    _composingelement := _doc.all.item(id, 0) as IHTMLElement;
+
+    ScrollToBottom();
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.HideComposing();
+begin
+    if (_composing = -1) then exit;
+
+    if (_composingelement <> nil) then begin
+        _composingelement.outerHTML := '';
+        _composingelement := nil;
+    end;
+
+    _composing := -1;
+end;
+
+{---------------------------------------}
+function TfIEMsgList.isComposing(): boolean;
+begin
+    Result := (_composing >= 0);
+end;
+
+{---------------------------------------}
+function TfIEMsgList._genElementID(): WideString;
+begin
+    Result := 'msg_id_' + IntToStr(_idCount);
+    Inc(_idCount);
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.print(ShowDialog: boolean);
+var
+   vIn, vOut: OleVariant;
+begin
+    if (browser = nil) then exit;
+
+    if (ShowDialog) then begin
+        browser.ControlInterface.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_PROMPTUSER, vIn, vOut);
+    end
+    else begin
+        browser.ControlInterface.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, vIn, vOut);
+    end;
+end;
+
+
+{---------------------------------------}
+procedure TfIEMsgList._clearOldMessages();
+var
+    children: IHTMLElementCollection;
+    elem: IHTMLElement;
+begin
+    if ((_doMessageLimiting) and
+        (_msgCount >= _maxMsgCountHigh) and
+        (_content <> nil)) then begin
+        while (_msgCount >= _maxMsgCountLow) do begin
+            children := _content.children as IHTMLElementCollection;
+            if (children <> nil) then begin
+                elem := children.item(0, 0) as IHTMLElement;
+                if (elem <> nil) then begin
+                    elem.outerHTML := '';
+                    Dec(_msgCount);
+                end;
+            end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TfIEMsgList._processUnicode(txt: widestring): WideString;
+var
+    i: integer;
+begin
+    Result := '';
+    for i := 1 to Length(txt) do begin
+        if (Ord(txt[i]) > 126) then begin
+            // This looks to be a non-ascii char so represent in HTML escaped notation
+            try
+                Result := Result + '&#' + IntToStr(Ord(txt[i])) + ';';
+            except
+                exit;
+            end;
+        end
+        else begin
+            Result := Result + txt[i];
+        end;
+    end;
 end;
 
 initialization
@@ -689,4 +1085,8 @@ finalization
     style_tags.Free();
     style_props.Free();
 
+{$ENDIF}
+
 end.
+
+

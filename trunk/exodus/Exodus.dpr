@@ -23,8 +23,13 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
+{$IFDEF USE_TWEBBROWSER}
 {$R 'iehtml.res' 'iehtml.rc'}
+{$ENDIF}
 {%File 'defaults.xml'}
+{$IFDEF USE_TWEBBROWSER}
+{%File 'iemsglist_style.css'}
+{$ENDIF}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -250,7 +255,11 @@ uses
   COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
   idSSLSchannel in 'idSSLSchannel.pas',
   DebugManager in '..\jopl\DebugManager.pas',
-  VistaAltFixUnit in 'VistaAltFixUnit.pas';
+{$IFDEF USE_TWEBBROWSER}
+  IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
+  MSHTMLEvents in 'MSHTMLEvents.pas',
+{$ENDIF}
+    VistaAltFixUnit in 'VistaAltFixUnit.pas';
 
 {$R *.TLB}
 

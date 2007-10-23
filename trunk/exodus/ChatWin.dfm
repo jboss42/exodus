@@ -39,7 +39,7 @@ inherited frmChat: TfrmChat
           Left = 43
           Top = 0
           Width = 48
-          Height = 32
+          Height = 13
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,7 +47,6 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
-          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
@@ -91,8 +90,7 @@ inherited frmChat: TfrmChat
   inherited tbMsgOutToolbar: TTntToolBar
     Top = 354
     Width = 492
-    ExplicitLeft = 2
-    ExplicitTop = 330
+    ExplicitTop = 354
     ExplicitWidth = 492
   end
   object SaveDialog1: TSaveDialog [5]
