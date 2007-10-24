@@ -73,8 +73,10 @@ grep &msgfmt, glob("locale/*/LC_MESSAGES/default.po");
 e('zip locale ' . join(' ', glob("locale/*/LC_MESSAGES/default.mo")));
 
 chdir "msn-emoticons";
+e("$rcc msn.rc");
 e("$dcc $opts -D msn_emoticons.dpr");
 chdir "../yahoo-emoticons";
+e("$rcc yahoo.rc");
 e("$dcc $opts -D yahoo_emoticons.dpr");
 
 # go into our plugins dir and process
