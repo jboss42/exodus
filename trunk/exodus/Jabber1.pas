@@ -530,10 +530,8 @@ type
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     procedure SaveBands();
     procedure RestoreBands();
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     procedure setupReconnect();
     procedure setupTrayIcon();
@@ -1498,9 +1496,8 @@ begin
     if (MainSession.Prefs.getBool('brand_plugs')) then
     begin
         InitPlugins();
-      // Check for required plugins - SIG
-      if ( IsRequiredPluginsSelected() = false ) then
-        StartPrefs(pref_plugins);
+        if ( IsRequiredPluginsSelected() = false ) then
+            StartPrefs(pref_plugins);
     end;
 
     // If they had logging turned on, warn them that they need to
@@ -1529,9 +1526,7 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end;
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     RestoreBands();
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2152,9 +2147,7 @@ begin
         mnuToolbar.Checked := Toolbar.Visible;
         mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     end;
-    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     Toolbar1.Wrapable := false;
-    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2283,9 +2276,7 @@ end;
 **}
 procedure TfrmExodus.cleanup();
 begin
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     SaveBands();
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     //mainsession should never be nil here. It is created before this object
     //and only destroyed on ExSession finalization.
@@ -2660,7 +2651,6 @@ begin
 end;
 
 {---------------------------------------}
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 procedure TfrmExodus.SaveBands();
 var I, ID: Integer;
     aFile: TWideStringList;
@@ -2719,9 +2709,7 @@ begin
     I := I+1;
   end;
 end;
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 {---------------------------------------}
 procedure TfrmExodus.RestoreBands();
 var I, ID, Value : Integer;
@@ -2806,7 +2794,6 @@ begin
       OutputDebugString(PAnsiChar('Exception in Restore'));
   end;
 end;
-// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
 {--------------------------------------}
 procedure TfrmExodus.About1Click(Sender: TObject);
