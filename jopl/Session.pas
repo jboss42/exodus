@@ -188,11 +188,6 @@ type
         procedure addAvailJid(jid: Widestring);
         procedure removeAvailJid(jid: Widestring);
 
-        // Added by SIG for setting default nickname.
-//JJF now handled by DisplayName        
-//        procedure SetDefaultNickname();
-//        procedure vcardCallback(event: string; tag: TXMLTag);
-
         // Account information
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
@@ -795,7 +790,6 @@ begin
     _first_pres := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
     Prefs.FetchServerPrefs();
-    // Added by SIG - set Default Nickname
 //    SetDefaultNickname();
 end;
 
@@ -1437,40 +1431,6 @@ begin
 end;
 
 
-{------------- Added by SIG to support setting default nick name---}
-{---------- JJF now handled by DisplayName --------}
-{------------------------------------
-procedure TJabberSession.SetDefaultNickname();
-var
-  vciq: TJabberIQ;
-  default_nick: WideString;
-begin
-   default_nick := Prefs.getString('default_nick');
-    if ( default_nick = '' ) then
-    begin
-      vciq := TJabberIQ.Create(Self,generateID(),vcardCallback);
-      vciq.qTag.Name := 'VCARD';
-      vciq.Namespace := 'vcard-temp';
-      vciq.iqType := 'get';
-      vciq.toJid := Username + '@' + Server;
-      vciq.Send();
-    end;
-end;
-{------------------------------------
-procedure TJabberSession.vcardCallback(event: string; tag: TXMLTag);
-var
-  vcard: TXMLVCard;
-  default_nick: WideString;
-begin
-
-   if (event <> 'xml') then exit;
-   vcard := TXMLVCard.Create;
-   vcard.parse(tag);
-   default_nick := vcard.FamilyName + ', ' + vcard.GivenName;
-   Prefs.setString('default_nick',default_nick);
-   vcard.Free();
-end;
-}
 end.
 
 

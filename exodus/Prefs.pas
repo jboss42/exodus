@@ -214,7 +214,6 @@ begin
     f.Free();
 end;
 
-{------------- added by SIG ------------}
 function IsRequiredPluginsSelected(): WordBool;
 var
   plugins_selected: TWideStringlist;

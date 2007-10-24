@@ -934,9 +934,7 @@ begin
       send_allowed := com_controller.fireBeforeMsg(body);
 
     if (send_allowed) then begin
-      // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-
       xml := '';
-      // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-
       if (com_controller <> nil) then //Do plugin after message logic
         xml := com_controller.fireAfterMsg(body);
 
@@ -1937,10 +1935,7 @@ begin
     _scrollBottom();
     Self.Refresh();
 
-    //SIG-SIG-SIG
     com_controller.fireNewWindow(Self.Handle);
-    //SIG-SIG-SIG
-
 end;
 
 {
@@ -1957,10 +1952,7 @@ begin
     _scrollBottom();
     Self.Refresh();
 
-    //SIG-SIG-SIG
     com_controller.fireNewWindow(Self.Handle);
-    //SIG-SIG-SIG
-
 end;
 
 procedure TfrmChat.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);

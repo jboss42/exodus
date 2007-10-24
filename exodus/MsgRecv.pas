@@ -656,14 +656,12 @@ begin
 
     // let plugins know about message going out
     // if they don't want to allow it, they change txt to NULL
-    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     if (ComController <> nil) then
         allowed := TExodusChat(ComController).fireBeforeMsg(txt)
     else
         allowed := true;
 
     if ((allowed = false) or (txt = '')) then exit;
-    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
 
     if (pnlSendSubject.Visible) then
