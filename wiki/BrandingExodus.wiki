@@ -1,0 +1,26 @@
+#summary Instructions on creating a branded version of Exodus.
+
+= Creating a Branded version of Exodus =
+
+  # The easiest way to do these is to check out from Subversion. 
+  # Get or build a copy of these files: 
+    * Exodus.exe 
+    * !IdleHooks.dll 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/exodus.ico exodus.ico] 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/exodus-installer.bmp exodus-installer.bmp] 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/GPL-LICENSE.TXT GPL-LICENSE.TXT] 
+    * [http://exodus.googlecode.com/svn/trunk/redist/ZipDLL.dll ZipDLL.dll] 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/exodus-new.nsi exodus-new.nsi] 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/version.nsi version.nsi] 
+    * [http://exodus.googlecode.com/svn/trunk/exodus/plugins/example-plugin-i18n-new.nsi example-plugin-i18n-new.nsi] 
+    * [http://sourceforge.net/project/showfiles.php?group_id=22049 NSIS 2] 
+  # These files you might want to host on your own web server: 
+    * indy_openssl096k.zip 
+    * richupd.exe 
+    * branding.xml 
+  # Create a branding.xml file.  [http://exodus.googlecode.com/svn/trunk/exodus/branding_defaults.xml Here] is a template, with the defaults.  Any preference you set in this file will become the default.  You can set other preferences in here as well, such as [http://exodus.googlecode.com/svn/trunk/exodus/defaults.xml these], or things that you find in your exodus.xml file.  Good candidates are fonts and colors. 
+  # Move !ZipDll.dll to $NSIS_HOME\Plugins. 
+  # Read the [http://nsis.sourceforge.net/Docs/ NSIS docs], to find out how to customize exodus.nsi.  I'd suggest removing the "Bleeding-edge updates" section, and adding branding.xml to the !Exodus section. Search for the word *BRANDING* for hints. 
+  # If you want your branding.xml file to auto-update (seperately from your setup.exe file), put your branding.xml file on a web server, and set the <branding_url/> option in the branding.xml that you distribute in your setup.exe. When your uses start up exodus, it will check to see if there is a later branding.xml file at the specified URL. 
+  # Build your setup.exe file.  I use: "c:\program files\nsis\makensis.exe" /v2 exodus.nsi 
+  # Distribute your new setup.exe. 
