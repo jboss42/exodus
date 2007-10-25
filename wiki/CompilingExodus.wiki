@@ -1,4 +1,5 @@
 #summary Instructions on compiling the Exodus Source code.
+#labels Featured
 
 = Compiling Exodus from Source =
 
