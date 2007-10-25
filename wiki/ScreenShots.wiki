@@ -1,4 +1,5 @@
 #summary Some screen shoots of the Exodus Client.
+#labels Featured
 
 = Exodus Screen Shots =
 
