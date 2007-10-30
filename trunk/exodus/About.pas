@@ -57,7 +57,7 @@ uses
     JabberUtils, ExUtils,  GnuGetText, ShellAPI, XMLUtils, Session, Unicode;
 
 const
-    sAbout1 = 'Exodus is the creation of Peter Millard.  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
+    sAbout1 = 'Exodus is the creation of Peter Millard.  Checkout the website at http://exodus.googlecode.com for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
     sAbout2 = 'Preference Icons used with permission from collections of "Iconaholic Design".  http://www.iconaholic.com/';
     sAbout3 = 'TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.';
     sAbout4 = 'SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de';
