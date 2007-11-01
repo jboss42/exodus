@@ -367,23 +367,16 @@ end;
 function isTimeDST(time: TDateTime): Boolean;
 var
   timezoneinfo: TTimezoneinformation;
-  dstStart, dstEnd: TDateTime;
-  Year, Month, Day, Hour, Min, Sec, Milli: word;
+  dst: cardinal;
 begin
 
-    GetTimezoneInformation(timezoneinfo);
-    DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
-    //Calculate when daylight savings time begins
-    with timezoneinfo.DaylightDate do
-      dstStart:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
-    //Calculate when daylight savings time ends
-    with timezoneinfo.StandardDate do
-      dstEnd:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+    dst := GetTimezoneInformation(timezoneinfo);
 
-    if ((time >= dstStart) and (time <= dstEnd)) then
-      Result := true
-    else
-      Result := false;
+    case dst of
+        TIME_ZONE_ID_UNKNOWN:  Result := false;
+        TIME_ZONE_ID_STANDARD: Result := false;
+        TIME_ZONE_ID_DAYLIGHT: Result := true;
+    end;
 
 end;
 end.
