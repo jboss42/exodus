@@ -33,6 +33,7 @@ function RTFEncodeKeywords(txt: Widestring) : Widestring;
 procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 function AdjustDST( inTime : TDateTime): TDateTime;
 function isTimeDST(time: TDateTime): Boolean;
+function ConvertDayOfWeek(day: integer): integer;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -367,18 +368,46 @@ end;
 function isTimeDST(time: TDateTime): Boolean;
 var
   timezoneinfo: TTimezoneinformation;
-  dst: cardinal;
+  dstStart, dstEnd: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, Milli: word;
 begin
+    GetTimezoneInformation(timezoneinfo);
+    DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
+    //Calculate when daylight savings time begins
+    with timezoneinfo.DaylightDate do
+      dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                  EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    //Calculate when daylight savings time ends
+    with timezoneinfo.StandardDate do
+      dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                EncodeTime(whour, wminute, wsecond, wmilliseconds);
 
-    dst := GetTimezoneInformation(timezoneinfo);
-
-    case dst of
-        TIME_ZONE_ID_UNKNOWN:  Result := false;
-        TIME_ZONE_ID_STANDARD: Result := false;
-        TIME_ZONE_ID_DAYLIGHT: Result := true;
-    end;
-
+    if ((time >= dstStart) and (time <= dstEnd)) then
+      Result := true
+    else
+      Result := false;
 end;
+
+{
+    This function is necessary as the windows
+    SYSTEMTIME structure has day of week being
+    0 = Sunday
+    1 = Monday
+    2 = Tuesday ...
+
+    while EncodeDayOfWeekInMonth() from Delphi is
+    7 = Sunday
+    1 = Monday
+    2 = Tuesday ...
+}
+function ConvertDayOfWeek(day: integer): integer;
+begin
+    if (day = 0) then
+        Result := 7
+    else
+        Result := day;
+end;
+
 end.
 
 
