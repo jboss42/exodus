@@ -373,14 +373,25 @@ var
 begin
     GetTimezoneInformation(timezoneinfo);
     DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
+
     //Calculate when daylight savings time begins
-    with timezoneinfo.DaylightDate do
-      dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
-                  EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    if (timezoneinfo.DaylightDate.wYear = 0) then begin
+        with timezoneinfo.DaylightDate do
+          dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                      EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    end
+    else begin
+        dstStart := SystemTimeToDateTime(timezoneinfo.DaylightDate);
+    end;
     //Calculate when daylight savings time ends
-    with timezoneinfo.StandardDate do
-      dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
-                EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    if (timezoneinfo.StandardDate.wYear = 0) then begin
+        with timezoneinfo.StandardDate do
+          dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                    EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    end
+    else begin
+        dstEnd := SystemTimeToDateTime(timezoneinfo.StandardDate);
+    end;
 
     if ((time >= dstStart) and (time <= dstEnd)) then
       Result := true
