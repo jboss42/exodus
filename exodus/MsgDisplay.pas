@@ -341,6 +341,7 @@ var
   timezoneResult: word;
 begin
   Result := inTime;
+  FillChar(timezoneinfo, SizeOf(timezoneinfo), #0);
   timezoneResult  := GetTimezoneInformation(timezoneinfo);
   //If automatic DST adjustment check box is not checked,
   //we do not need to adjust time.
@@ -371,23 +372,56 @@ var
   dstStart, dstEnd: TDateTime;
   Year, Month, Day, Hour, Min, Sec, Milli: word;
 begin
+    FillChar(timezoneinfo, SizeOf(timezoneinfo), #0);
     GetTimezoneInformation(timezoneinfo);
     DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
 
     //Calculate when daylight savings time begins
     if (timezoneinfo.DaylightDate.wYear = 0) then begin
-        with timezoneinfo.DaylightDate do
-          dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
-                      EncodeTime(whour, wminute, wsecond, wmilliseconds);
+        with timezoneinfo.DaylightDate do begin
+            try
+                dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
+            except
+                on EConvertError do begin
+                    // Possibly due to wday being 5 even when only 4 of those days
+                    // in the month.  This is a difference in how GetTimeZoneInfo returns
+                    // info and how EncodeDayOfWeekInMonth works.
+                    if (wday = 5) then begin
+                        dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
+                    end
+                    else begin
+                        raise;
+                    end;
+                end;
+            end;
+        end;
     end
     else begin
         dstStart := SystemTimeToDateTime(timezoneinfo.DaylightDate);
     end;
     //Calculate when daylight savings time ends
     if (timezoneinfo.StandardDate.wYear = 0) then begin
-        with timezoneinfo.StandardDate do
-          dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
-                    EncodeTime(whour, wminute, wsecond, wmilliseconds);
+        with timezoneinfo.StandardDate do begin
+            try
+                dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
+            except
+                on EConvertError do begin
+                    // Possibly due to wday being 5 even when only 4 of those days
+                    // in the month.  This is a difference in how GetTimeZoneInfo returns
+                    // info and how EncodeDayOfWeekInMonth works.
+                    if (wday = 5) then begin
+                        dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
+                    end
+                    else begin
+                        raise;
+                    end;
+                end;
+            end;
+        end;
     end
     else begin
         dstEnd := SystemTimeToDateTime(timezoneinfo.StandardDate);
