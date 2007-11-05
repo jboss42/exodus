@@ -33,6 +33,7 @@ function RTFEncodeKeywords(txt: Widestring) : Widestring;
 procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 function AdjustDST( inTime : TDateTime): TDateTime;
 function isTimeDST(time: TDateTime): Boolean;
+function ConvertDayOfWeek(day: integer): integer;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -367,22 +368,54 @@ var
   dstStart, dstEnd: TDateTime;
   Year, Month, Day, Hour, Min, Sec, Milli: word;
 begin
-
     GetTimezoneInformation(timezoneinfo);
     DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
+
     //Calculate when daylight savings time begins
-    with timezoneinfo.DaylightDate do
-      dstStart:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+    if (timezoneinfo.DaylightDate.wYear = 0) then begin
+        with timezoneinfo.DaylightDate do
+          dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                      EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    end
+    else begin
+        dstStart := SystemTimeToDateTime(timezoneinfo.DaylightDate);
+    end;
     //Calculate when daylight savings time ends
-    with timezoneinfo.StandardDate do
-      dstEnd:=encodedate(Year,wmonth,wday)+encodetime(whour,wminute,wsecond,wmilliseconds);
+    if (timezoneinfo.StandardDate.wYear = 0) then begin
+        with timezoneinfo.StandardDate do
+          dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek)) +
+                    EncodeTime(whour, wminute, wsecond, wmilliseconds);
+    end
+    else begin
+        dstEnd := SystemTimeToDateTime(timezoneinfo.StandardDate);
+    end;
 
     if ((time >= dstStart) and (time <= dstEnd)) then
       Result := true
     else
       Result := false;
-
 end;
+
+{
+    This function is necessary as the windows
+    SYSTEMTIME structure has day of week being
+    0 = Sunday
+    1 = Monday
+    2 = Tuesday ...
+
+    while EncodeDayOfWeekInMonth() from Delphi is
+    7 = Sunday
+    1 = Monday
+    2 = Tuesday ...
+}
+function ConvertDayOfWeek(day: integer): integer;
+begin
+    if (day = 0) then
+        Result := 7
+    else
+        Result := day;
+end;
+
 end.
 
 
