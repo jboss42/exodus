@@ -23,10 +23,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, buttonFrame;
+  Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, buttonFrame, ExForm, TntForms,
+  ExFrame;
 
 type
-  TfrmSSLWarn = class(TForm)
+  TfrmSSLWarn = class(TExForm)
     Image1: TImage;
     lblHeader: TTntLabel;
     txtMsg: TTntMemo;

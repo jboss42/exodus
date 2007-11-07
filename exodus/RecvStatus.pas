@@ -32,7 +32,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls, IdSocks,
     IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP,
-    IdIOHandler, IdIOHandlerSocket;
+    IdIOHandler, IdIOHandlerSocket, ExFrame;
 
 const
     WM_RECV_DONE = WM_USER + 6001;
@@ -47,7 +47,7 @@ type
     TFileRecvState = (recv_invalid, recv_recv, recv_done,
         recv_si_offer, recv_si_wait, recv_si_stream, recv_si_cancel);
 
-    TfRecvStatus = class(TFrame)
+    TfRecvStatus = class(TExFrame)
         Panel3: TPanel;
         lblFile: TTntLabel;
         lblFrom: TTntLabel;
@@ -371,7 +371,7 @@ begin
         MainSession.UnRegisterCallback(_pres);
     if (_cur <> -1) then
         MainSession.UnRegisterCallback(_cur);
-    getXferManager().killFrame(Self);
+    getXferManager().killFrame(TExFrame(Self));
 end;
 
 {---------------------------------------}
@@ -794,7 +794,7 @@ begin
         MessageDlgW(WideFormat(_('The sender of a file transfer (%s) went offline.'),
             [_pkg.recipDisplay]), mtError, [mbOK], 0);
         _state := recv_si_cancel;
-        getXferManager().killFrame(Self);
+        getXferManager().killFrame(TExFrame(Self));
     end;
 end;
 

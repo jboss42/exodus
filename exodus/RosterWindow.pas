@@ -28,7 +28,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
     CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls, TntForms,
-  RichEdit2, ExRichEdit;
+  RichEdit2, ExRichEdit, ExForm;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -40,7 +40,7 @@ const
 
 type
 
-  TfrmRosterWindow = class(TForm)
+  TfrmRosterWindow = class(TExForm)
     popRoster: TTntPopupMenu;
     StatBar: TStatusBar;
     popStatus: TTntPopupMenu;

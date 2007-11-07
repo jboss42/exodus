@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/31/2007 3:42:09 PM from Type Library described below.
+// File generated on 11/7/2007 3:05:44 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus_branch\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -594,9 +594,9 @@ type
     ['{A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}']
     procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
                                     enable: WordBool); safecall;
-    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); safecall;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; Show: WordBool); safecall;
     procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
-                                        const caption: WideString); safecall;
+                                        const Caption: WideString); safecall;
     function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; safecall;
   end;
 
@@ -609,9 +609,9 @@ type
     ['{A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF}']
     procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
                                     enable: WordBool); dispid 213;
-    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); dispid 214;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; Show: WordBool); dispid 214;
     procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
-                                        const caption: WideString); dispid 215;
+                                        const Caption: WideString); dispid 215;
     function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; dispid 216;
   end;
 
@@ -2958,9 +2958,9 @@ type
     function AddItem(const JabberID: WideString): IExodusRosterItem; dispid 212;
     procedure EnableContextMenuItem(const menuID: WideString; const itemID: WideString; 
                                     enable: WordBool); dispid 213;
-    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; show: WordBool); dispid 214;
+    procedure ShowContextMenuItem(const menuID: WideString; const itemID: WideString; Show: WordBool); dispid 214;
     procedure SetContextMenuItemCaption(const menuID: WideString; const itemID: WideString; 
-                                        const caption: WideString); dispid 215;
+                                        const Caption: WideString); dispid 215;
     function GetContextMenuItemCaption(const menuID: WideString; const itemID: WideString): WideString; dispid 216;
   end;
 

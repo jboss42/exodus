@@ -1,16 +1,10 @@
-object frmSelRoomOccupant: TfrmSelRoomOccupant
+inherited frmSelRoomOccupant: TfrmSelRoomOccupant
   Left = 344
   Top = 310
   Caption = 'Select Occupant'
   ClientHeight = 287
   ClientWidth = 219
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
@@ -23,6 +17,14 @@ object frmSelRoomOccupant: TfrmSelRoomOccupant
     Width = 219
     Height = 33
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 254
@@ -52,6 +54,7 @@ object frmSelRoomOccupant: TfrmSelRoomOccupant
     Height = 31
     Align = alBottom
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 1
     DesignSize = (
       219
@@ -59,7 +62,7 @@ object frmSelRoomOccupant: TfrmSelRoomOccupant
     object Label1: TTntLabel
       Left = 19
       Top = 7
-      Width = 25
+      Width = 23
       Height = 13
       Caption = 'Nick:'
     end

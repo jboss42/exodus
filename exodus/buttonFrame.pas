@@ -23,10 +23,10 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls, TntStdCtrls;
+  ExtCtrls, StdCtrls, TntStdCtrls, ExFrame;
 
 type
-  TframeButtons = class(TFrame)
+  TframeButtons = class(TExFrame)
     Panel2: TPanel;
     Bevel1: TBevel;
     Panel1: TPanel;

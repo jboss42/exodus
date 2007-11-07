@@ -259,7 +259,9 @@ uses
   IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
   MSHTMLEvents in 'MSHTMLEvents.pas',
 {$ENDIF}
-    VistaAltFixUnit in 'VistaAltFixUnit.pas';
+  VistaAltFixUnit in 'VistaAltFixUnit.pas',
+  ExFrame in 'components\base\ExFrame.pas' {baseFrame},
+  ExForm in 'components\base\ExForm.pas' {baseForm};
 
 {$R *.TLB}
 

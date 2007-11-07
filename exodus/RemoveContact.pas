@@ -24,10 +24,10 @@ interface
 uses
     Unicode, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls;
+    buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
 
 type
-  TfrmRemove = class(TForm)
+  TfrmRemove = class(TExForm)
     frameButtons1: TframeButtons;
     optMove: TTntRadioButton;
     optRemove: TTntRadioButton;

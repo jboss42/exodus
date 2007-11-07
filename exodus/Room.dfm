@@ -6,7 +6,7 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 453
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -33,6 +33,7 @@ inherited frmRoom: TfrmRoom
         Height = 32
         Align = alLeft
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 0
         object lblSubject: TTntLabel
           Left = 27

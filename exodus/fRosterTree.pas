@@ -23,10 +23,10 @@ interface
 uses
     Roster, Presence, Unicode, NodeItem,  
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ImgList, ComCtrls;
+    ImgList, ComCtrls, ExFrame;
 
 type
-  TframeTreeRoster = class(TFrame)
+  TframeTreeRoster = class(TExFrame)
     treeRoster: TTreeView;
     procedure treeRosterCollapsed(Sender: TObject; Node: TTreeNode);
     procedure treeRosterExpanded(Sender: TObject; Node: TTreeNode);

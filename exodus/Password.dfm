@@ -1,4 +1,4 @@
-object frmPassword: TfrmPassword
+inherited frmPassword: TfrmPassword
   Left = 245
   Top = 196
   BorderIcons = [biSystemMenu, biMinimize]
@@ -6,7 +6,6 @@ object frmPassword: TfrmPassword
   Caption = 'Password Dialog'
   ClientHeight = 184
   ClientWidth = 233
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
   ParentFont = True
   OldCreateOrder = True
@@ -51,6 +50,14 @@ object frmPassword: TfrmPassword
     Width = 233
     Height = 33
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 3
     TabStop = True
     ExplicitTop = 151

@@ -1,4 +1,4 @@
-object frmInputPass: TfrmInputPass
+inherited frmInputPass: TfrmInputPass
   Left = 234
   Top = 143
   ActiveControl = txtPassword
@@ -6,13 +6,7 @@ object frmInputPass: TfrmInputPass
   Caption = 'Password'
   ClientHeight = 91
   ClientWidth = 267
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
@@ -36,6 +30,14 @@ object frmInputPass: TfrmInputPass
     Width = 267
     Height = 32
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 59

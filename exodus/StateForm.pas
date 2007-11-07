@@ -25,7 +25,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls,
   XMLTag,  //JOPL XML
-  TntForms; //Unicode form
+  TntForms, //Unicode form
+  ExForm;
 
 const
     WS_NORMAL = 0;
@@ -134,7 +135,7 @@ type
     The default implementation saves/restores position and window "state"
     (min/max/tray or restored).
   }
-  TfrmState = class(TTntForm)
+  TfrmState = class(TExForm)
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;

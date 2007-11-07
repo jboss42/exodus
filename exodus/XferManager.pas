@@ -31,7 +31,7 @@ uses
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs, ComCtrls, ToolWin;
+    TntStdCtrls, Buttons, TntExtCtrls, TntDialogs, ComCtrls, ToolWin, ExFrame;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -49,7 +49,7 @@ type
     desc: Widestring;
     busy: boolean;
     oob_thread: TIdPeerThread;
-    frame: TFrame;
+    frame: TExFrame;
     size: longint;
     packet: TXMLTag;
     stream_host: Widestring;
@@ -75,7 +75,7 @@ type
         hash: string;
         stream: TFileStream;
         sid: Widestring;
-        frame: TFrame;
+        frame: TExFrame;
         conn: TIdTCPServerConnection;
         thread: TIdPeerThread;
     end;
@@ -123,8 +123,8 @@ type
     procedure SendFile(pkg: TFileXferPkg);
     procedure RecvFile(pkg: TFileXferPkg);
 
-    function getFrameIndex(frame: TFrame): integer;
-    procedure killFrame(frame: TFrame);
+    function getFrameIndex(frame: TExFrame): integer;
+    procedure killFrame(frame: TExFrame);
     procedure ServeStream(spkg: TStreamPkg);
     procedure UnServeStream(hash: string);
   end;
@@ -411,7 +411,7 @@ begin
     fRecv.Align := alTop;
     fRecv.Visible := true;
     fRecv.Name := 'recv' + IntToStr(box.ControlCount);
-    pkg.frame := fRecv;
+    pkg.frame := TExFrame(fRecv);
 
     _pnl_list.AddObject('RECV:' + pkg.pathname, pkg);
 
@@ -436,7 +436,7 @@ begin
     fSend.Name := 'send_' + IntToStr(box.ControlCount);
 
     fSend.Setup(pkg);
-    pkg.Frame := fSend;
+    pkg.Frame := TExFrame(fSend);
     fSend.SendStart();
 end;
 
@@ -582,7 +582,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmXferManager.getFrameIndex(frame: TFrame): integer;
+function TfrmXferManager.getFrameIndex(frame: TExFrame): integer;
 var
     i: integer;
     p: TFileXferPkg;
@@ -599,7 +599,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmXferManager.killFrame(frame: TFrame);
+procedure TfrmXferManager.killFrame(frame: TExFrame);
 var
     i: integer;
 begin

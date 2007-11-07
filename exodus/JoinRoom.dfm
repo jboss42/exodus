@@ -18,6 +18,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   inherited TntPanel1: TTntPanel
     Top = 331
     Width = 408
+    ParentColor = True
     TabOrder = 2
     ExplicitTop = 331
     ExplicitWidth = 408
@@ -27,6 +28,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
     inherited Panel3: TPanel
       Left = 151
+      ParentColor = True
       ExplicitLeft = 151
       inherited btnBack: TTntButton
         Enabled = False
@@ -44,6 +46,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   end
   inherited Panel1: TPanel
     Width = 408
+    ParentColor = True
     ExplicitWidth = 408
     inherited Bevel2: TBevel
       Width = 408
@@ -76,7 +79,7 @@ inherited frmJoinRoom: TfrmJoinRoom
       object Label2: TTntLabel
         Left = 25
         Top = 131
-        Width = 123
+        Width = 125
         Height = 13
         Caption = 'Conference Room Server:'
       end
@@ -90,21 +93,21 @@ inherited frmJoinRoom: TfrmJoinRoom
       object lblPassword: TTntLabel
         Left = 25
         Top = 188
-        Width = 155
+        Width = 162
         Height = 13
         Caption = 'Password to join room if required:'
       end
       object Label3: TTntLabel
         Left = 6
         Top = 8
-        Width = 68
+        Width = 66
         Height = 13
         Caption = 'My Nickname:'
       end
       object TntLabel1: TTntLabel
         Left = 8
         Top = 58
-        Width = 344
+        Width = 356
         Height = 13
         Caption = 
           'If a new conference room is created you may be prompted to confi' +
@@ -238,7 +241,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         object lblFetch: TTntLabel
           Left = 2
           Top = 4
-          Width = 211
+          Width = 215
           Height = 13
           Cursor = crHandPoint
           Caption = 'Show conference rooms found on this server'

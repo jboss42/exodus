@@ -24,7 +24,7 @@ uses
     IQ, XMLTag, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
-    TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin;
+    TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin, TntForms, ExFrame;
 const
    WM_FIELDS_UPDATED = WM_USER + 6000;
 type

@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, TntStdCtrls, ExtDlgs;
+  Dialogs, StdCtrls, TntStdCtrls, ExtDlgs, ExForm;
 
 type
-  TfrmEmoteProps = class(TForm)
+  TfrmEmoteProps = class(TExForm)
     TntLabel1: TTntLabel;
     txtFilename: TTntEdit;
     btnBrowse: TTntButton;

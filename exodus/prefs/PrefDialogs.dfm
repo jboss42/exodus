@@ -12,28 +12,28 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   object lblMem1: TTntLabel [0]
     Left = 8
     Top = 199
-    Width = 197
+    Width = 200
     Height = 13
     Caption = 'Minutes to keep chat windows in memory:'
   end
   object lblMem2: TTntLabel [1]
     Left = 8
     Top = 213
-    Width = 241
+    Width = 247
     Height = 13
     Caption = 'Use 0 minutes to destroy chat windows immediately'
   end
   object lblToastDuration: TTntLabel [2]
     Left = 39
     Top = 131
-    Width = 120
+    Width = 124
     Height = 13
     Caption = 'Toast duration (seconds):'
   end
   object lblClose: TTntLabel [3]
     Left = 8
     Top = 296
-    Width = 234
+    Width = 235
     Height = 13
     Caption = 'Use this hotkey sequence to close chat windows:'
   end
@@ -69,6 +69,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 25
     BevelOuter = bvNone
     Enabled = False
+    ParentColor = True
     TabOrder = 3
     Text = '255'
     Min = 100
@@ -116,6 +117,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 25
     BevelOuter = bvNone
     Enabled = False
+    ParentColor = True
     TabOrder = 2
     Text = '255'
     Min = 100
@@ -141,6 +143,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 25
     BevelOuter = bvNone
     Enabled = False
+    ParentColor = True
     TabOrder = 1
     Text = '15'
     Min = 10
@@ -171,6 +174,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 57
     Height = 25
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 0
     Text = '60'
     Min = 0

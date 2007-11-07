@@ -23,10 +23,10 @@ interface
 uses
     Roster, NodeItem,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, TntStdCtrls, XMLTag;
+    Dialogs, buttonFrame, StdCtrls, TntStdCtrls, XMLTag, ExForm;
 
 type
-  TfrmBookmark = class(TForm)
+  TfrmBookmark = class(TExForm)
     frameButtons1: TframeButtons;
     Label1: TTntLabel;
     cboType: TTntComboBox;

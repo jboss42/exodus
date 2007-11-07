@@ -4,7 +4,6 @@ inherited frmRosterRecv: TfrmRosterRecv
   Caption = 'Receiving Contacts'
   ClientHeight = 287
   ClientWidth = 374
-  OnClose = FormClose
   ExplicitWidth = 382
   ExplicitHeight = 321
   PixelsPerInch = 96
@@ -37,46 +36,27 @@ inherited frmRosterRecv: TfrmRosterRecv
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 2
+      ParentColor = True
       TabOrder = 1
-      ExplicitTop = 32
-      ExplicitWidth = 374
-      ExplicitHeight = 22
       object StaticText1: TTntStaticText
         Left = 2
         Top = 2
-        Width = 51
+        Width = 44
         Height = 28
         Align = alLeft
         Caption = 'From:    '
-        Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
         TabOrder = 0
-        ExplicitHeight = 18
       end
       object txtFrom: TTntStaticText
-        Left = 53
+        Left = 46
         Top = 2
-        Width = 267
+        Width = 274
         Height = 28
         Align = alClient
         Caption = '<JID>'
-        Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 1
-        ExplicitWidth = 319
-        ExplicitHeight = 18
+        ExplicitLeft = 53
+        ExplicitWidth = 267
       end
     end
   end
@@ -86,6 +66,14 @@ inherited frmRosterRecv: TfrmRosterRecv
     Width = 374
     Height = 34
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 253
@@ -228,8 +216,6 @@ inherited frmRosterRecv: TfrmRosterRecv
     SmallImages = frmExodus.ImageList2
     TabOrder = 2
     ViewStyle = vsReport
-    ExplicitTop = 147
-    ExplicitHeight = 106
   end
   object Panel1: TTntPanel
     Left = 0
@@ -238,15 +224,15 @@ inherited frmRosterRecv: TfrmRosterRecv
     Height = 29
     Align = alTop
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 3
-    ExplicitTop = 118
     DesignSize = (
       374
       29)
     object Label2: TTntLabel
       Left = 3
       Top = 7
-      Width = 127
+      Width = 131
       Height = 13
       Caption = 'Add contacts to this group:'
     end

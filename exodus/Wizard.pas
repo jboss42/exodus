@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls;
+  Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls, ExForm;
 
 type
-  TfrmWizard = class(TForm)
+  TfrmWizard = class(TExForm)
     TntPanel1: TTntPanel;
     Bevel1: TBevel;
     Panel1: TPanel;

@@ -1,4 +1,4 @@
-object Form1: TExForm
+object BaseForm: TExForm
   Left = 0
   Top = 0
   Caption = 'Form1'

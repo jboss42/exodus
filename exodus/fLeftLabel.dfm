@@ -1,9 +1,10 @@
-object frmField: TfrmField
+inherited frmField: TfrmField
   Left = 0
   Top = 0
   Width = 252
   Height = 31
   TabOrder = 0
+  TabStop = True
   object lblPrompt: TTntLabel
     Left = 0
     Top = 6

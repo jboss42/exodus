@@ -16,9 +16,8 @@ inherited frmDockWizard: TfrmDockWizard
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 2
-    ExplicitTop = 316
-    ExplicitWidth = 416
     DesignSize = (
       494
       41)
@@ -69,23 +68,19 @@ inherited frmDockWizard: TfrmDockWizard
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
-    ExplicitWidth = 416
-    ExplicitHeight = 263
     object TabSheet1: TTabSheet
       Caption = 'TabSheet1'
-      ExplicitLeft = 8
-      ExplicitTop = 25
     end
   end
   inherited pnlDockTop: TPanel
     Width = 494
     Height = 53
-    ExplicitWidth = 416
+    ExplicitWidth = 494
     ExplicitHeight = 53
     inherited tbDockBar: TToolBar
       Left = 445
       Height = 47
-      ExplicitLeft = 367
+      ExplicitLeft = 445
       ExplicitHeight = 47
     end
     object Panel1: TPanel
@@ -95,12 +90,11 @@ inherited frmDockWizard: TfrmDockWizard
       Height = 53
       Align = alClient
       BevelOuter = bvNone
-      Color = clWhite
       Ctl3D = False
       ParentBackground = False
+      ParentColor = True
       ParentCtl3D = False
       TabOrder = 1
-      ExplicitWidth = 364
       object Bevel2: TBevel
         Left = 0
         Top = 44

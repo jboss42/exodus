@@ -5,7 +5,6 @@ inherited frmBrowse: TfrmBrowse
   ClientHeight = 391
   ClientWidth = 442
   DefaultMonitor = dmMainForm
-  OnClose = FormClose
   OnDestroy = FormDestroy
   OnDragOver = FormDragOver
   OnResize = ResizeAddressBar
@@ -15,11 +14,12 @@ inherited frmBrowse: TfrmBrowse
   TextHeight = 13
   inherited pnlDockTop: TPanel
     Width = 442
+    ParentColor = True
     TabOrder = 1
-    ExplicitWidth = 422
+    ExplicitWidth = 442
     inherited tbDockBar: TToolBar
       Left = 393
-      ExplicitLeft = 373
+      ExplicitLeft = 393
     end
     object pnlTop: TTntPanel
       Left = 0
@@ -28,8 +28,8 @@ inherited frmBrowse: TfrmBrowse
       Height = 32
       Align = alClient
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
-      ExplicitWidth = 370
       object CoolBar1: TCoolBar
         Left = 0
         Top = 0
@@ -48,7 +48,6 @@ inherited frmBrowse: TfrmBrowse
         EdgeBorders = []
         EdgeInner = esNone
         EdgeOuter = esNone
-        ExplicitWidth = 370
         object tlbToolBar: TToolBar
           Left = 9
           Top = 0
@@ -162,8 +161,8 @@ inherited frmBrowse: TfrmBrowse
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
+    ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 422
     object vwBrowse: TTntListView
       Left = 73
       Top = 3
@@ -201,7 +200,6 @@ inherited frmBrowse: TfrmBrowse
       OnColumnClick = vwBrowseColumnClick
       OnData = vwBrowseData
       OnResize = vwBrowseResize
-      ExplicitWidth = 346
     end
     object pnlInfo: TTntPanel
       Left = 3
@@ -211,6 +209,7 @@ inherited frmBrowse: TfrmBrowse
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
+      ParentColor = True
       TabOrder = 1
       Visible = False
       object lblIdentity: TTntLabel
@@ -220,7 +219,7 @@ inherited frmBrowse: TfrmBrowse
         Height = 13
         Align = alTop
         Caption = 'Indentities:'
-        ExplicitWidth = 51
+        ExplicitWidth = 55
       end
       object Splitter1: TSplitter
         Left = 4
@@ -237,7 +236,7 @@ inherited frmBrowse: TfrmBrowse
         Height = 13
         Align = alTop
         Caption = 'Features:'
-        ExplicitWidth = 44
+        ExplicitWidth = 47
       end
       object vwInfo: TTntListView
         Left = 4
@@ -259,6 +258,7 @@ inherited frmBrowse: TfrmBrowse
         HotTrackStyles = [htHandPoint, htUnderlineHot]
         IconOptions.AutoArrange = True
         OwnerData = True
+        ParentColor = True
         SortType = stText
         TabOrder = 1
         ViewStyle = vsReport
@@ -292,7 +292,9 @@ inherited frmBrowse: TfrmBrowse
       item
         Width = 50
       end>
-    ExplicitWidth = 450
+    ParentColor = True
+    ParentFont = True
+    UseSystemFont = False
   end
   object pnlJid: TPanel
     Left = 0
@@ -302,8 +304,8 @@ inherited frmBrowse: TfrmBrowse
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
+    ParentColor = True
     TabOrder = 2
-    ExplicitWidth = 422
     DesignSize = (
       442
       31)
@@ -341,6 +343,7 @@ inherited frmBrowse: TfrmBrowse
       Height = 29
       Align = alLeft
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
       object TntLabel1: TTntLabel
         Left = 0
@@ -350,7 +353,7 @@ inherited frmBrowse: TfrmBrowse
         Align = alClient
         Caption = 'Jabber Address'
         Layout = tlCenter
-        ExplicitWidth = 73
+        ExplicitWidth = 75
         ExplicitHeight = 13
       end
     end
@@ -373,8 +376,8 @@ inherited frmBrowse: TfrmBrowse
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 1
+    ParentColor = True
     TabOrder = 3
-    ExplicitWidth = 422
     DesignSize = (
       442
       31)
@@ -386,6 +389,7 @@ inherited frmBrowse: TfrmBrowse
       Align = alLeft
       Alignment = taLeftJustify
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
       object TntLabel2: TTntLabel
         Left = 0
@@ -395,7 +399,7 @@ inherited frmBrowse: TfrmBrowse
         Align = alClient
         Caption = 'Node Identifier'
         Layout = tlCenter
-        ExplicitWidth = 69
+        ExplicitWidth = 72
         ExplicitHeight = 13
       end
     end

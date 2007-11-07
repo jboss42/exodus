@@ -33,6 +33,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 34
     Align = alTop
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 2
     object btnCustomPresAdd: TTntButton
       Left = 4
@@ -78,18 +79,19 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 119
     Align = alTop
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 0
     object lblPresTracking: TTntLabel
       Left = 5
       Top = 59
-      Width = 165
+      Width = 164
       Height = 13
       Caption = 'Presence tracking in chat windows'
     end
     object Label1: TTntLabel
       Left = 0
       Top = 102
-      Width = 118
+      Width = 119
       Height = 13
       Caption = 'Custom Presence Entries'
     end
@@ -157,7 +159,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object Label12: TTntLabel
       Left = 6
       Top = 47
-      Width = 33
+      Width = 35
       Height = 13
       Caption = 'Status:'
       Transparent = False
@@ -165,7 +167,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object Label13: TTntLabel
       Left = 5
       Top = 71
-      Width = 27
+      Width = 28
       Height = 13
       Caption = 'Type:'
       Transparent = False
@@ -173,7 +175,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object Label14: TTntLabel
       Left = 6
       Top = 97
-      Width = 34
+      Width = 38
       Height = 13
       Caption = 'Priority:'
       Transparent = False
@@ -181,7 +183,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object lblHotkey: TTntLabel
       Left = 5
       Top = 120
-      Width = 38
+      Width = 39
       Height = 13
       Caption = 'HotKey:'
       Transparent = False
@@ -225,6 +227,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Height = 25
       Hint = 'Priority of -1 uses current priority.'
       BevelOuter = bvNone
+      ParentColor = True
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0

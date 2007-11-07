@@ -24,10 +24,10 @@ uses
   ComCtrls, 
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, fRosterTree, buttonFrame, Menus, StdCtrls, TntStdCtrls, ExtCtrls,
-  TntMenus, JabberID, TntComCtrls, Jabber1;
+  TntMenus, JabberID, TntComCtrls, Jabber1, ExForm, TntForms, ExFrame;
 
 type
-  TfrmSelRoomOccupant = class(TForm)
+  TfrmSelRoomOccupant = class(TExForm)
     frameButtons1: TframeButtons;
     Panel1: TPanel;
     Label1: TTntLabel;

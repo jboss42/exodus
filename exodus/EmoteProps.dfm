@@ -1,16 +1,10 @@
-object frmEmoteProps: TfrmEmoteProps
+inherited frmEmoteProps: TfrmEmoteProps
   Left = 255
   Top = 535
   BorderStyle = bsDialog
   Caption = 'Emoticon Properties'
   ClientHeight = 147
   ClientWidth = 339
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose

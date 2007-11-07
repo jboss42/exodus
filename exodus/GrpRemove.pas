@@ -22,10 +22,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
+  Dialogs, buttonFrame, StdCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
 
 type
-  TfrmGrpRemove = class(TForm)
+  TfrmGrpRemove = class(TExForm)
     frameButtons1: TframeButtons;
     optMove: TTntRadioButton;
     cboNewGroup: TTntComboBox;

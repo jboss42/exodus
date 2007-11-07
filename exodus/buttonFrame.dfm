@@ -1,10 +1,8 @@
-object frameButtons: TframeButtons
-  Left = 0
-  Top = 0
+inherited frameButtons: TframeButtons
   Width = 364
   Height = 24
-  AutoScroll = False
-  TabOrder = 0
+  ExplicitWidth = 364
+  ExplicitHeight = 24
   object Panel2: TPanel
     Left = 0
     Top = 0
@@ -12,6 +10,7 @@ object frameButtons: TframeButtons
     Height = 24
     Align = alClient
     BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 0
     object Bevel1: TBevel
       Left = 0
@@ -28,6 +27,7 @@ object frameButtons: TframeButtons
       Height = 19
       Align = alRight
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
       object btnOK: TTntButton
         Left = 4

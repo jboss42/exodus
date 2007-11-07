@@ -3,7 +3,6 @@ inherited frmRegister: TfrmRegister
   Top = 361
   Caption = 'Service Registration'
   OldCreateOrder = True
-  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -19,8 +18,6 @@ inherited frmRegister: TfrmRegister
   end
   inherited Tabs: TPageControl
     ActivePage = TabSheet4
-    ExplicitWidth = 494
-    ExplicitHeight = 324
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4
       ExplicitTop = 27
@@ -88,6 +85,7 @@ inherited frmRegister: TfrmRegister
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 1
         object btnDelete: TTntButton
           Left = 243
@@ -168,12 +166,7 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited pnlDockTop: TPanel
-    ExplicitWidth = 494
-    inherited tbDockBar: TToolBar
-      ExplicitLeft = 445
-    end
     inherited Panel1: TPanel
-      ExplicitWidth = 442
       inherited lblWizardTitle: TTntLabel
         Anchors = [akLeft, akTop, akRight]
       end

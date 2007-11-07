@@ -24,10 +24,10 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Grids, TntGrids, ExtCtrls;
+    Dialogs, Grids, TntGrids, ExtCtrls, ExFrame;
 
 type
-  TframeXData = class(TFrame)
+  TframeXData = class(TExFrame)
     Panel1: TPanel;
     ScrollBox1: TScrollBox;
     procedure FrameResize(Sender: TObject);

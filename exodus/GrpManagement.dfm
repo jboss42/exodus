@@ -1,16 +1,10 @@
-object frmGrpManagement: TfrmGrpManagement
+inherited frmGrpManagement: TfrmGrpManagement
   Left = 255
   Top = 165
-  Width = 367
-  Height = 243
   Caption = 'Group Management'
-  Color = clBtnFace
+  ClientHeight = 209
+  ClientWidth = 359
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
@@ -27,17 +21,33 @@ object frmGrpManagement: TfrmGrpManagement
     Width = 359
     Height = 36
     Align = alBottom
-    AutoScroll = False
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 173
+    ExplicitWidth = 359
+    ExplicitHeight = 36
     inherited Panel2: TPanel
       Width = 359
       Height = 36
+      ExplicitWidth = 359
+      ExplicitHeight = 36
       inherited Bevel1: TBevel
         Width = 359
+        ExplicitWidth = 359
       end
       inherited Panel1: TPanel
         Left = 199
         Height = 31
+        ExplicitLeft = 199
+        ExplicitHeight = 31
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

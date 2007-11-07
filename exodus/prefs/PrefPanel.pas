@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, TntExtCtrls;
+  Dialogs, ExtCtrls, TntExtCtrls, ExForm;
 
 type
-  TfrmPrefPanel = class(TForm)
+  TfrmPrefPanel = class(TExForm)
     pnlHeader: TTntPanel;
     procedure FormCreate(Sender: TObject);
   private

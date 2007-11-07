@@ -1,12 +1,9 @@
-object frameObjectActions: TframeObjectActions
-  Left = 0
-  Top = 0
+inherited frameObjectActions: TframeObjectActions
   Width = 216
   Height = 76
   AutoSize = True
-  Color = clWindow
-  ParentColor = False
-  TabOrder = 0
+  ExplicitWidth = 216
+  ExplicitHeight = 76
   object pRegister: TTntPanel
     Left = 0
     Top = 19
@@ -16,7 +13,7 @@ object frameObjectActions: TframeObjectActions
     AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 3
-    Color = clWindow
+    ParentColor = True
     TabOrder = 0
     object lblRegister: TTntLabel
       Left = 3
@@ -26,12 +23,7 @@ object frameObjectActions: TframeObjectActions
       Cursor = crHandPoint
       Align = alTop
       Caption = 'Register with this object'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
+      ExplicitWidth = 116
     end
   end
   object pSearch: TTntPanel
@@ -43,7 +35,7 @@ object frameObjectActions: TframeObjectActions
     AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 3
-    Color = clWindow
+    ParentColor = True
     TabOrder = 1
     object lblSearch: TTntLabel
       Left = 3
@@ -53,12 +45,7 @@ object frameObjectActions: TframeObjectActions
       Cursor = crHandPoint
       Align = alTop
       Caption = 'Search using this service or agent'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
+      ExplicitWidth = 162
     end
   end
   object pConf: TTntPanel
@@ -70,7 +57,7 @@ object frameObjectActions: TframeObjectActions
     AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 3
-    Color = clWindow
+    ParentColor = True
     TabOrder = 2
     object lblConf: TTntLabel
       Left = 3
@@ -80,12 +67,7 @@ object frameObjectActions: TframeObjectActions
       Cursor = crHandPoint
       Align = alTop
       Caption = 'Join a conference'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
+      ExplicitWidth = 85
     end
   end
   object pnlTop: TTntPanel
@@ -97,7 +79,7 @@ object frameObjectActions: TframeObjectActions
     AutoSize = True
     BevelOuter = bvNone
     BorderWidth = 3
-    Color = clWindow
+    ParentColor = True
     TabOrder = 3
     object Label1: TTntLabel
       Left = 3
@@ -113,6 +95,7 @@ object frameObjectActions: TframeObjectActions
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
+      ExplicitWidth = 45
     end
   end
 end

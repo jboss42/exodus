@@ -1,18 +1,13 @@
-object frmSSLWarn: TfrmSSLWarn
+inherited frmSSLWarn: TfrmSSLWarn
   Left = 248
   Top = 144
-  Width = 371
-  Height = 290
   Caption = 'Security Warning'
-  Color = clBtnFace
+  ClientHeight = 256
+  ClientWidth = 363
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   OnClose = FormClose
+  ExplicitWidth = 371
+  ExplicitHeight = 290
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
@@ -156,7 +151,7 @@ object frmSSLWarn: TfrmSSLWarn
     Width = 281
     Height = 65
     BorderStyle = bsNone
-    Color = clBtnFace
+    ParentColor = True
     TabOrder = 0
   end
   inline frameButtons1: TframeButtons
@@ -165,15 +160,33 @@ object frmSSLWarn: TfrmSSLWarn
     Width = 363
     Height = 36
     Align = alBottom
-    AutoScroll = False
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 1
+    TabStop = True
+    ExplicitTop = 220
+    ExplicitWidth = 363
+    ExplicitHeight = 36
     inherited Panel2: TPanel
       Width = 363
+      Height = 36
+      ExplicitWidth = 363
+      ExplicitHeight = 36
       inherited Bevel1: TBevel
         Width = 363
+        ExplicitWidth = 363
       end
       inherited Panel1: TPanel
         Left = 203
+        Height = 31
+        ExplicitLeft = 203
+        ExplicitHeight = 31
         inherited btnOK: TTntButton
           Default = False
           Visible = False

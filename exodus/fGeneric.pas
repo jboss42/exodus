@@ -24,11 +24,11 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs, ExodusLabel;
+    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs, ExodusLabel, ExFrame;
 
 type
 
-  TframeGeneric = class(TFrame)
+  TframeGeneric = class(TExFrame)
     elCaption: TExodusLabel;
     procedure FrameResize(Sender: TObject);
   private

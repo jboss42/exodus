@@ -1,18 +1,11 @@
-object frmBookmark: TfrmBookmark
+inherited frmBookmark: TfrmBookmark
   Left = 275
   Top = 185
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Bookmark Properties'
   ClientHeight = 203
   ClientWidth = 338
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate

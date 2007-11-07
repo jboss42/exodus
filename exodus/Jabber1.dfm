@@ -1,22 +1,15 @@
-object frmExodus: TfrmExodus
+inherited frmExodus: TfrmExodus
   Left = 258
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
   ClientHeight = 446
   ClientWidth = 392
-  Color = clBtnFace
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   KeyPreview = True
   Menu = MainMenu1
-  OldCreateOrder = False
   ShowHint = True
   OnActivate = FormActivate
   OnClick = FormPaint
@@ -27,6 +20,8 @@ object frmExodus: TfrmExodus
   OnDockDrop = FormDockDrop
   OnResize = FormResize
   OnShow = FormShow
+  ExplicitWidth = 400
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object Toolbar: TCoolBar
@@ -168,8 +163,8 @@ object frmExodus: TfrmExodus
     Width = 392
     Height = 415
     Align = alClient
+    ParentColor = True
     TabOrder = 1
-    ExplicitHeight = 678
     object splitRoster: TSplitter
       Left = 170
       Top = 1
@@ -193,9 +188,9 @@ object frmExodus: TfrmExodus
       BevelOuter = bvNone
       BorderWidth = 1
       UseDockManager = False
+      ParentColor = True
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 676
     end
     object Tabs: TTntPageControl
       Left = 175
@@ -208,14 +203,8 @@ object frmExodus: TfrmExodus
       Margins.Bottom = 0
       Align = alClient
       DockSite = True
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
       Images = ImageList2
       MultiLine = True
-      ParentFont = False
       PopupMenu = popTabs
       RaggedRight = True
       TabOrder = 1
@@ -226,7 +215,6 @@ object frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
-      ExplicitHeight = 676
     end
   end
   object MainMenu1: TTntMainMenu

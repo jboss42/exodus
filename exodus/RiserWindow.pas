@@ -24,13 +24,13 @@ interface
 uses
     Variants,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-    Dialogs, ExtCtrls, StdCtrls, TntStdCtrls;
+    Dialogs, ExtCtrls, StdCtrls, TntStdCtrls, ExForm;
 
 const
     TOAST_BUFFER_PIX = 2;
 
 type
-  TfrmRiser = class(TForm)
+  TfrmRiser = class(TExForm)
     Timer1: TTimer;
     Timer2: TTimer;
     Image1: TImage;

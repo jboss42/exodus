@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity,
-    TntSysUtils, ToolWin;
+    TntSysUtils, ToolWin, TntForms, ExFrame;
 
 type
 
