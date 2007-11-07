@@ -24,10 +24,10 @@ interface
 uses
     TntMenus, JabberMsg,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs;
+    Dialogs, ExFrame;
 
 type
-  TfBaseMsgList = class(TFrame)
+  TfBaseMsgList = class(TExFrame)
   protected
     _base: TObject; // this is our base form
 

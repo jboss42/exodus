@@ -23,10 +23,11 @@ interface
 uses
     Menus, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ComCtrls, TntStdCtrls;
+    Dialogs, buttonFrame, StdCtrls, ComCtrls, TntStdCtrls, ExForm, TntForms,
+  ExFrame;
 
 type
-  TfrmCustomPres = class(TForm)
+  TfrmCustomPres = class(TExForm)
     frameButtons1: TframeButtons;
     Label1: TTntLabel;
     cboType: TTntComboBox;

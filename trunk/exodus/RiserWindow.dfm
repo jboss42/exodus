@@ -1,18 +1,12 @@
-object frmRiser: TfrmRiser
+inherited frmRiser: TfrmRiser
   Left = 308
   Top = 212
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 45
   ClientWidth = 184
-  Color = clBtnFace
   TransparentColorValue = clWindow
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
   OldCreateOrder = False

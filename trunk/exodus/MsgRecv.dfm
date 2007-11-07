@@ -7,7 +7,7 @@ inherited frmMsgRecv: TfrmMsgRecv
   OnDestroy = FormDestroy
   OnResize = FormResize
   ExplicitWidth = 385
-  ExplicitHeight = 441
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -39,24 +39,26 @@ inherited frmMsgRecv: TfrmMsgRecv
       Height = 36
       Align = alClient
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
       object lblFrom: TTntLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 29
-        Height = 13
+        Width = 31
+        Height = 30
         Align = alLeft
         Caption = 'From: '
         Color = clBtnFace
         ParentColor = False
         Transparent = True
+        ExplicitHeight = 13
       end
       object txtFrom: TTntLabel
         AlignWithMargins = True
-        Left = 38
+        Left = 40
         Top = 3
-        Width = 34
+        Width = 282
         Height = 30
         Cursor = crHandPoint
         Align = alClient
@@ -67,6 +69,7 @@ inherited frmMsgRecv: TfrmMsgRecv
         Transparent = True
         WordWrap = True
         OnClick = txtFromClick
+        ExplicitWidth = 38
       end
     end
   end
@@ -78,6 +81,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
+    ParentColor = True
     TabOrder = 1
     Visible = False
     inline frameButtons2: TframeButtons
@@ -86,6 +90,14 @@ inherited frmMsgRecv: TfrmMsgRecv
       Width = 371
       Height = 34
       Align = alBottom
+      Color = 13681583
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
       TabOrder = 1
       TabStop = True
       ExplicitLeft = 3
@@ -221,6 +233,7 @@ inherited frmMsgRecv: TfrmMsgRecv
     Width = 377
     Height = 178
     Align = alClient
+    ParentColor = True
     TabOrder = 0
     inline frameButtons1: TframeButtons
       Left = 1
@@ -228,6 +241,14 @@ inherited frmMsgRecv: TfrmMsgRecv
       Width = 375
       Height = 30
       Align = alBottom
+      Color = 13681583
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
       TabOrder = 0
       TabStop = True
       ExplicitLeft = 1
@@ -364,6 +385,7 @@ inherited frmMsgRecv: TfrmMsgRecv
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 2
       object pnlHeader: TPanel
         Left = 41
@@ -373,6 +395,7 @@ inherited frmMsgRecv: TfrmMsgRecv
         Align = alClient
         AutoSize = True
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 0
         object pnlSendSubject: TPanel
           Left = 0
@@ -382,25 +405,26 @@ inherited frmMsgRecv: TfrmMsgRecv
           Align = alTop
           BevelOuter = bvNone
           BorderWidth = 2
+          ParentColor = True
           TabOrder = 0
           Visible = False
           object lblSubject1: TTntLabel
             Left = 2
             Top = 2
-            Width = 42
-            Height = 13
+            Width = 43
+            Height = 20
             Align = alLeft
             Caption = 'Subject: '
-            Color = clBtnFace
-            ParentColor = False
             Layout = tlCenter
+            ExplicitHeight = 13
           end
           object txtSendSubject: TTntMemo
-            Left = 44
+            Left = 45
             Top = 2
-            Width = 288
+            Width = 287
             Height = 20
             Align = alClient
+            Color = clBtnFace
             TabOrder = 0
             WantReturns = False
             WordWrap = False
@@ -414,25 +438,27 @@ inherited frmMsgRecv: TfrmMsgRecv
           Align = alTop
           BevelOuter = bvNone
           BorderWidth = 2
+          ParentColor = True
           TabOrder = 1
           object txtSubject: TTntLabel
-            Left = 45
+            Left = 46
             Top = 2
-            Width = 47
-            Height = 13
+            Width = 286
+            Height = 18
             Align = alClient
             Caption = 'txtSubject'
+            ExplicitWidth = 50
+            ExplicitHeight = 13
           end
           object lblSubject2: TTntStaticText
             Left = 2
             Top = 2
-            Width = 43
-            Height = 17
+            Width = 44
+            Height = 18
             Align = alLeft
             Caption = 'Subject:'
-            Color = clBtnFace
-            ParentColor = False
             TabOrder = 0
+            ExplicitHeight = 17
           end
         end
       end
@@ -444,12 +470,7 @@ inherited frmMsgRecv: TfrmMsgRecv
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 3
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
+        ParentColor = True
         TabOrder = 1
         Visible = False
         object Image1: TImage

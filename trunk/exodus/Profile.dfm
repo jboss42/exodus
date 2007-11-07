@@ -1,20 +1,15 @@
-object frmProfile: TfrmProfile
+inherited frmProfile: TfrmProfile
   Left = 368
   Top = 225
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   ClientHeight = 364
   ClientWidth = 454
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
+  ExplicitWidth = 462
+  ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -36,14 +31,14 @@ object frmProfile: TfrmProfile
       object Label1: TTntLabel
         Left = 4
         Top = 56
-        Width = 19
+        Width = 20
         Height = 13
         Caption = 'JID:'
       end
       object Label2: TTntLabel
         Left = 4
         Top = 80
-        Width = 25
+        Width = 23
         Height = 13
         Caption = 'Nick:'
       end
@@ -59,28 +54,28 @@ object frmProfile: TfrmProfile
       object Label7: TTntLabel
         Left = 10
         Top = 6
-        Width = 56
+        Width = 59
         Height = 13
         Caption = 'First (Given)'
       end
       object Label4: TTntLabel
         Left = 90
         Top = 6
-        Width = 34
+        Width = 33
         Height = 13
         Caption = 'Middle '
       end
       object Label5: TTntLabel
         Left = 154
         Top = 6
-        Width = 58
+        Width = 61
         Height = 13
         Caption = 'Last (Family)'
       end
       object lblUpdateNick: TTntLabel
         Left = 56
         Top = 99
-        Width = 168
+        Width = 167
         Height = 13
         Cursor = crHandPoint
         Caption = 'Update nickname based on names.'
@@ -96,7 +91,7 @@ object frmProfile: TfrmProfile
       object TntLabel1: TTntLabel
         Left = 4
         Top = 215
-        Width = 36
+        Width = 37
         Height = 13
         Cursor = crHandPoint
         Caption = 'Picture:'
@@ -187,6 +182,7 @@ object frmProfile: TfrmProfile
         Alignment = taLeftJustify
         BevelOuter = bvNone
         Caption = 'Online Resources'
+        ParentColor = True
         TabOrder = 1
       end
       object Panel2: TPanel
@@ -196,6 +192,7 @@ object frmProfile: TfrmProfile
         Height = 274
         Align = alRight
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 2
         object btnVersion: TTntButton
           Left = 6
@@ -256,6 +253,7 @@ object frmProfile: TfrmProfile
         Align = alBottom
         BevelOuter = bvNone
         Caption = 'Panel3'
+        ParentColor = True
         TabOrder = 1
         DesignSize = (
           306
@@ -286,7 +284,7 @@ object frmProfile: TfrmProfile
       object lblURL: TTntLabel
         Left = 10
         Top = 9
-        Width = 69
+        Width = 67
         Height = 13
         Cursor = crHandPoint
         Caption = 'Personal URL:'
@@ -302,35 +300,35 @@ object frmProfile: TfrmProfile
       object Label6: TTntLabel
         Left = 10
         Top = 57
-        Width = 41
+        Width = 44
         Height = 13
         Caption = 'Birthday:'
       end
       object Label28: TTntLabel
         Left = 92
         Top = 78
-        Width = 143
+        Width = 139
         Height = 13
         Caption = 'Typical Format: YYYY-MM-DD'
       end
       object Label8: TTntLabel
         Left = 7
         Top = 102
-        Width = 48
+        Width = 46
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label9: TTntLabel
         Left = 7
         Top = 126
-        Width = 38
+        Width = 39
         Height = 13
         Caption = 'Fax Tel:'
       end
       object Label3: TTntLabel
         Left = 9
         Top = 145
-        Width = 56
+        Width = 57
         Height = 13
         Caption = 'Description:'
       end
@@ -410,7 +408,7 @@ object frmProfile: TfrmProfile
       object Label13: TTntLabel
         Left = 10
         Top = 129
-        Width = 39
+        Width = 43
         Height = 13
         Caption = 'Country:'
       end
@@ -424,28 +422,28 @@ object frmProfile: TfrmProfile
       object Label29: TTntLabel
         Left = 10
         Top = 36
-        Width = 50
+        Width = 52
         Height = 13
         Caption = 'Address 2:'
       end
       object Label30: TTntLabel
         Left = 10
         Top = 12
-        Width = 50
+        Width = 52
         Height = 13
         Caption = 'Address 1:'
       end
       object Label31: TTntLabel
         Left = 10
         Top = 57
-        Width = 67
+        Width = 69
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label32: TTntLabel
         Left = 10
         Top = 103
-        Width = 86
+        Width = 85
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
@@ -746,35 +744,35 @@ object frmProfile: TfrmProfile
       object Label22: TTntLabel
         Left = 10
         Top = 9
-        Width = 78
+        Width = 79
         Height = 13
         Caption = 'Company Name:'
       end
       object Label23: TTntLabel
         Left = 10
         Top = 33
-        Width = 77
+        Width = 82
         Height = 13
         Caption = 'Org. Unit (Dept):'
       end
       object Label24: TTntLabel
         Left = 10
         Top = 57
-        Width = 23
+        Width = 24
         Height = 13
         Caption = 'Title:'
       end
       object Label19: TTntLabel
         Left = 10
         Top = 87
-        Width = 48
+        Width = 46
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label20: TTntLabel
         Left = 10
         Top = 111
-        Width = 38
+        Width = 39
         Height = 13
         Caption = 'Fax Tel:'
       end
@@ -832,35 +830,35 @@ object frmProfile: TfrmProfile
       object Label16: TTntLabel
         Left = 10
         Top = 127
-        Width = 39
+        Width = 43
         Height = 13
         Caption = 'Country:'
       end
       object Label17: TTntLabel
         Left = 10
         Top = 34
-        Width = 50
+        Width = 52
         Height = 13
         Caption = 'Address 2:'
       end
       object Label18: TTntLabel
         Left = 10
         Top = 10
-        Width = 50
+        Width = 52
         Height = 13
         Caption = 'Address 1:'
       end
       object Label26: TTntLabel
         Left = 10
         Top = 55
-        Width = 67
+        Width = 69
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label14: TTntLabel
         Left = 10
         Top = 101
-        Width = 86
+        Width = 85
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
@@ -1162,6 +1160,14 @@ object frmProfile: TfrmProfile
     Width = 454
     Height = 34
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 1
     TabStop = True
     ExplicitTop = 330

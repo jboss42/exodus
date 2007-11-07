@@ -32,7 +32,7 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer, VistaAltFixUnit;
+    TntForms, ExTracer, VistaAltFixUnit, ExForm;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -149,7 +149,7 @@ type
   end;
 
 
-  TfrmExodus = class(TTntForm, IExodusDockManager)
+  TfrmExodus = class(TExForm, IExodusDockManager)
     MainMenu1: TTntMainMenu;
     ImageList2: TImageList;
     timFlasher: TTimer;
@@ -2793,6 +2793,7 @@ begin
   except
       OutputDebugString(PAnsiChar('Exception in Restore'));
   end;
+  ToolBar.ParentColor := true;
 end;
 
 {--------------------------------------}

@@ -1,15 +1,9 @@
-object frmWebDownload: TfrmWebDownload
+inherited frmWebDownload: TfrmWebDownload
   Left = 310
   Top = 482
-  Width = 362
-  Height = 128
-  Color = clBtnFace
+  ClientHeight = 94
+  ClientWidth = 354
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poScreenCenter
@@ -32,17 +26,32 @@ object frmWebDownload: TfrmWebDownload
     Width = 354
     Height = 37
     Align = alBottom
-    AutoScroll = False
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
+    TabStop = True
+    ExplicitTop = 57
+    ExplicitWidth = 354
+    ExplicitHeight = 37
     inherited Panel2: TPanel
-      Top = 3
+      Top = 13
       Width = 354
       Align = alBottom
+      ExplicitTop = 13
+      ExplicitWidth = 354
       inherited Bevel1: TBevel
         Width = 354
+        ExplicitWidth = 354
       end
       inherited Panel1: TPanel
         Left = 194
+        ExplicitLeft = 194
         inherited btnOK: TTntButton
           Visible = False
         end
@@ -62,7 +71,6 @@ object frmWebDownload: TfrmWebDownload
   end
   object IdHTTP1: TIdHTTP
     MaxLineAction = maException
-    ReadTimeout = 0
     OnWork = IdHTTP1Work
     OnWorkBegin = IdHTTP1WorkBegin
     OnConnected = IdHTTP1Connected

@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
-  Dialogs, StdCtrls, TntStdCtrls;
+  Dialogs, StdCtrls, TntStdCtrls, ExFrame;
 
 type
-  TframeProfile = class(TFrame)
+  TframeProfile = class(TExFrame)
     lblName: TTntLabel;
     lblModify: TTntLabel;
     lblDelete: TTntLabel;

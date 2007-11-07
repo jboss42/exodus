@@ -23,6 +23,7 @@ inherited frmBaseChat: TfrmBaseChat
   end
   inherited pnlDockTop: TPanel
     Width = 415
+    ParentColor = True
     TabOrder = 2
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
@@ -36,6 +37,7 @@ inherited frmBaseChat: TfrmBaseChat
       Height = 32
       Align = alClient
       BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
     end
   end
@@ -47,6 +49,7 @@ inherited frmBaseChat: TfrmBaseChat
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
+    ParentColor = True
     TabOrder = 0
   end
   object pnlInput: TPanel

@@ -1,4 +1,4 @@
-object frmAdd: TfrmAdd
+inherited frmAdd: TfrmAdd
   Left = 252
   Top = 233
   BorderIcons = [biSystemMenu]
@@ -6,13 +6,7 @@ object frmAdd: TfrmAdd
   Caption = 'Add Contact'
   ClientHeight = 214
   ClientWidth = 251
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
@@ -23,35 +17,35 @@ object frmAdd: TfrmAdd
   object Label1: TTntLabel
     Left = 8
     Top = 41
-    Width = 54
+    Width = 56
     Height = 13
     Caption = 'Contact ID:'
   end
   object Label2: TTntLabel
     Left = 8
     Top = 73
-    Width = 51
+    Width = 49
     Height = 13
     Caption = 'Nickname:'
   end
   object Label3: TTntLabel
     Left = 8
     Top = 102
-    Width = 32
+    Width = 33
     Height = 13
     Caption = 'Group:'
   end
   object Label4: TTntLabel
     Left = 8
     Top = 9
-    Width = 67
+    Width = 69
     Height = 13
     Caption = 'Contact Type:'
   end
   object lblGateway: TTntLabel
     Left = 8
     Top = 153
-    Width = 79
+    Width = 82
     Height = 13
     Caption = 'Gateway Server:'
     Enabled = False
@@ -88,6 +82,14 @@ object frmAdd: TfrmAdd
     Width = 251
     Height = 34
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 3
     TabStop = True
     ExplicitTop = 180

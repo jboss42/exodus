@@ -23,10 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, Avatar;
+  Dialogs, ExtCtrls, Avatar, ExForm;
 
 type
-  TFloatImage = class(TForm)
+  TFloatImage = class(TExForm)
     Panel1: TPanel;
     paintAvatar: TPaintBox;
     Timer1: TTimer;

@@ -5,7 +5,6 @@ inherited frmChat: TfrmChat
   Caption = 'Chat Window'
   ClientHeight = 416
   ClientWidth = 492
-  Font.Charset = ANSI_CHARSET
   OldCreateOrder = True
   ExplicitWidth = 500
   ExplicitHeight = 450
@@ -34,12 +33,13 @@ inherited frmChat: TfrmChat
         Height = 32
         Align = alLeft
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 0
         object lblNick: TTntLabel
           Left = 43
           Top = 0
-          Width = 48
-          Height = 13
+          Width = 45
+          Height = 32
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,6 +47,7 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
@@ -64,6 +65,7 @@ inherited frmChat: TfrmChat
           Height = 32
           Align = alLeft
           BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
         end
       end
@@ -72,14 +74,13 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Width = 492
     Height = 322
-    ExplicitTop = 31
     ExplicitWidth = 492
     ExplicitHeight = 322
   end
   inherited pnlInput: TPanel
     Top = 388
     Width = 492
-    ExplicitTop = 359
+    ExplicitTop = 388
     ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
       Width = 488

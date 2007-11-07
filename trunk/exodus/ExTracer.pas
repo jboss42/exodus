@@ -23,11 +23,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls;
+  Dialogs, buttonFrame, StdCtrls, ExForm, TntForms, ExFrame;
 
 {$ifdef TRACE_EXCEPTIONS}
 type
-  TfrmException = class(TForm)
+  TfrmException = class(TExForm)
     mmLog: TMemo;
     frameButtons1: TframeButtons;
     procedure frameButtons1btnCancelClick(Sender: TObject);

@@ -24,10 +24,10 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, StdCtrls, buttonFrame, ExtCtrls, IdBaseComponent,
-    IdComponent, IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls;
+    IdComponent, IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls, ExForm;
 
 type
-  TfrmAutoUpdateStatus = class(TForm)
+  TfrmAutoUpdateStatus = class(TExForm)
     Label1: TTntLabel;
     ProgressBar1: TProgressBar;
     Image1: TImage;

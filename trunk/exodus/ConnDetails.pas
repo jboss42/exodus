@@ -26,10 +26,10 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
-	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile;
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm;
 
 type
-  TfrmConnDetails = class(TTntForm)
+  TfrmConnDetails = class(TExForm)
     PageControl1: TTntPageControl;
     tbsSocket: TTntTabSheet;
     tbsHttp: TTntTabSheet;

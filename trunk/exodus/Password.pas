@@ -21,10 +21,11 @@ unit Password;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls, 
-  Buttons, buttonFrame, TntStdCtrls, StrUtils, Dialogs, Session;
+  Buttons, buttonFrame, TntStdCtrls, StrUtils, Dialogs, Session, ExForm,
+  TntForms, ExFrame;
 
 type
-  TfrmPassword = class(TForm)
+  TfrmPassword = class(TExForm)
     Label1: TTntLabel;
     txtOldPassword: TTntEdit;
     frameButtons1: TframeButtons;

@@ -1,4 +1,4 @@
-object frmToolbarColorSelect: TfrmToolbarColorSelect
+inherited frmToolbarColorSelect: TfrmToolbarColorSelect
   Left = 0
   Top = 0
   AutoSize = True
@@ -7,12 +7,6 @@ object frmToolbarColorSelect: TfrmToolbarColorSelect
   Caption = 'frmToolbarColorSelect'
   ClientHeight = 110
   ClientWidth = 88
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   OnCreate = FormCreate

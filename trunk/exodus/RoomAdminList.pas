@@ -24,10 +24,10 @@ uses
     XMLTag, IQ, Unicode, SelContact, SelRoomOccupant,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-    TntComCtrls, TntStdCtrls;
+    TntComCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
 
 type
-  TfrmRoomAdminList = class(TForm)
+  TfrmRoomAdminList = class(TExForm)
     frameButtons1: TframeButtons;
     lstItems: TTntListView;
     Panel2: TPanel;

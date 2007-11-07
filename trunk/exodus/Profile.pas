@@ -26,10 +26,10 @@ uses
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
-    TntComCtrls, TntCheckLst, TntExtCtrls, ExtDlgs;
+    TntComCtrls, TntCheckLst, TntExtCtrls, ExtDlgs, ExForm, TntForms, ExFrame;
 
 type
-  TfrmProfile = class(TForm)
+  TfrmProfile = class(TExForm)
     PageControl1: TTntPageControl;
     TabSheet1: TTntTabSheet;
     Label1: TTntLabel;

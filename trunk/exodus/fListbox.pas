@@ -23,10 +23,10 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, TntStdCtrls;
+  StdCtrls, TntStdCtrls, ExFrame;
 
 type
-  TframeListbox = class(TFrame)
+  TframeListbox = class(TExFrame)
     List1: TTntListBox;
     lblCaption: TTntStaticText;
   private

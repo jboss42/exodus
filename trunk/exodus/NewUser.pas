@@ -25,7 +25,7 @@ uses
     IQ, XMLTag, Unicode,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls,
-    fXData;
+    fXData, TntForms, ExFrame;
 
 const
     WM_NUS_CONNECT = WM_USER + 5400;

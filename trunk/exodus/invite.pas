@@ -25,10 +25,10 @@ uses
     Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
-  TntStdCtrls, TntComCtrls, JabberID;
+  TntStdCtrls, TntComCtrls, JabberID, ExForm, TntForms, ExFrame;
 
 type
-  TfrmInvite = class(TForm)
+  TfrmInvite = class(TExForm)
     frameButtons1: TframeButtons;
     pnlMain: TPanel;
     lstJIDS: TTntListView;

@@ -24,10 +24,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame, ComCtrls, ExRichEdit,
-  RichEdit2;
+  RichEdit2, ExForm, TntForms, ExFrame;
 
 type
-  TfrmAbout = class(TForm)
+  TfrmAbout = class(TExForm)
     Panel1: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;

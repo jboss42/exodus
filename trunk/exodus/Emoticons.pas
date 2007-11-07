@@ -24,10 +24,10 @@ interface
 uses
     BaseChat,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, ToolWin, Buttons, TntButtons;
+    Dialogs, ComCtrls, ToolWin, Buttons, TntButtons, ExForm;
 
 type
-  TfrmEmoticons = class(TForm)
+  TfrmEmoticons = class(TExForm)
     SpeedButton1: TSpeedButton;
     procedure ToolButton1Click(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);

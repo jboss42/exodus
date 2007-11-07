@@ -24,10 +24,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   BaseChat,
-  Dialogs, StdCtrls, ExtCtrls, TntStdCtrls, Buttons, TntExtCtrls;
+  Dialogs, StdCtrls, ExtCtrls, TntStdCtrls, Buttons, TntExtCtrls, ExForm;
 
 type
-  TfrmToolbarColorSelect = class(TForm)
+  TfrmToolbarColorSelect = class(TExForm)
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;

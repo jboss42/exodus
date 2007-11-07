@@ -1,9 +1,10 @@
-object frameListbox: TframeListbox
+inherited frameListbox: TframeListbox
   Left = 0
   Top = 0
   Width = 172
   Height = 212
   TabOrder = 0
+  TabStop = True
   object List1: TTntListBox
     Left = 0
     Top = 17
@@ -27,5 +28,6 @@ object frameListbox: TframeListbox
     Font.Style = []
     ParentFont = False
     TabOrder = 1
+    ExplicitWidth = 121
   end
 end

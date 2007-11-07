@@ -31,10 +31,10 @@ uses
     Menus, ShellAPI, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
-    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls;
+    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls, ExForm;
 
 type
-  TfrmPrefs = class(TForm)
+  TfrmPrefs = class(TExForm)
     Scroller: TScrollBox;
     imgDialog: TImage;
     lblDialog: TTntLabel;

@@ -24,10 +24,10 @@ interface
 uses
     XMLTag, Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, TntComCtrls;
+    Dialogs, ComCtrls, TntComCtrls, ExFrame;
 
 type
-  TframeResults = class(TFrame)
+  TframeResults = class(TExFrame)
     lstResults: TTntListView;
     procedure lstResultsData(Sender: TObject; Item: TListItem);
   private

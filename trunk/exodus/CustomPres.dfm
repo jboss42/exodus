@@ -1,17 +1,11 @@
-object frmCustomPres: TfrmCustomPres
+inherited frmCustomPres: TfrmCustomPres
   Left = 254
   Top = 169
   BorderStyle = bsDialog
   Caption = 'Custom Presence'
   ClientHeight = 261
   ClientWidth = 313
-  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
@@ -45,6 +39,14 @@ object frmCustomPres: TfrmCustomPres
     Width = 313
     Height = 34
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 5
     TabStop = True
     ExplicitTop = 227

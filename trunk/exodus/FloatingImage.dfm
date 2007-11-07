@@ -1,4 +1,4 @@
-object FloatImage: TFloatImage
+inherited FloatImage: TFloatImage
   Left = 491
   Top = 282
   BorderIcons = []
@@ -6,15 +6,10 @@ object FloatImage: TFloatImage
   Caption = 'FloatingImage'
   ClientHeight = 177
   ClientWidth = 260
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
   OnActivate = FormActivate
   OnDeactivate = FormDeactivate
+  ExplicitWidth = 260
+  ExplicitHeight = 177
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -26,6 +21,7 @@ object FloatImage: TFloatImage
     BevelInner = bvLowered
     BorderWidth = 1
     Caption = 'Panel1'
+    ParentColor = True
     TabOrder = 0
     object paintAvatar: TPaintBox
       Left = 3
