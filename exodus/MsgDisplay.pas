@@ -32,7 +32,7 @@ procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: 
 function RTFEncodeKeywords(txt: Widestring) : Widestring;
 procedure HighlightKeywords(rtDest: TExRichEdit; startPos: integer);forward;
 function AdjustDST( inTime : TDateTime): TDateTime;
-function isTimeDST(time: TDateTime): Boolean;
+function isTimeDST(time: TDateTime): integer;
 function ConvertDayOfWeek(day: integer): integer;
 {---------------------------------------}
 {---------------------------------------}
@@ -47,6 +47,9 @@ uses
 
 const
     MAX_MSG_LENGTH = 512;
+    DST_UNK = -1;
+    DST_NO = 0;
+    DST_YES = 1;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
@@ -334,7 +337,7 @@ end;
 function AdjustDST( inTime : TDateTime): TDateTime;
 var
   timezoneinfo: TTimezoneinformation;
-  dstTime: Boolean;
+  dstTime: integer;
   timezoneResult: word;
 begin
   Result := inTime;
@@ -346,24 +349,30 @@ begin
      exit;
      
   dstTime := isTimeDST(inTime);
-  //If we are currently in DST and time for the message is
-  //not in DST, we need to adjust by subtracting (bias is negative)
-  if (timezoneResult = TIME_ZONE_ID_DAYLIGHT) then begin
-    if (dstTime = false) then
-      Result := IncMinute(inTime, timezoneinfo.DaylightBias);
 
-  end
-  else begin
-     //If we are currently not in DST and time for the message is
-     //in DST, we need to adjust by adding (bias is negative)
-     if (dstTime = true) then
-      Result := IncMinute(inTime, -timezoneinfo.DaylightBias);
+  // It is possible we cannot determine if a timestamp is
+  // in DST or not.  If unknown, then don't touch the
+  // timestamp.
+  if (dstTime <> DST_UNK) then begin
+      //If we are currently in DST and time for the message is
+      //not in DST, we need to adjust by subtracting (bias is negative)
+      if (timezoneResult = TIME_ZONE_ID_DAYLIGHT) then begin
+        if (dstTime = DST_NO) then
+          Result := IncMinute(inTime, timezoneinfo.DaylightBias);
 
+      end
+      else begin
+         //If we are currently not in DST and time for the message is
+         //in DST, we need to adjust by adding (bias is negative)
+         if (dstTime = DST_YES) then
+          Result := IncMinute(inTime, -timezoneinfo.DaylightBias);
+
+      end;
   end;
 
 end;
 
-function isTimeDST(time: TDateTime): Boolean;
+function isTimeDST(time: TDateTime): integer;
 var
   timezoneinfo: TTimezoneinformation;
   dstStart, dstEnd: TDateTime;
@@ -425,9 +434,23 @@ begin
     end;
 
     if ((time >= dstStart) and (time <= dstEnd)) then
-      Result := true
+      Result := DST_YES
     else
-      Result := false;
+      Result := DST_NO;
+
+    // If we are going to assert that this timestamp is or is not
+    // in DST, we better make sure that it is not in the
+    // "grey area" created when it is 1:35 AM on the date
+    // of change from Daylight to Standard time.  Just knowing
+    // it is 1:35:05 AM on 11/04/07 doesn't give enough info
+    // to know if it is Daylight or Standard time.
+    // If we do get a timestamp like that, then return
+    // unknown so that the timestamp is not altered.
+    if ((time <= dstEnd) and
+        (time >= IncMinute(dstEnd, timezoneinfo.DaylightBias))) then begin
+        // Timestamp is in the "grey area"
+        Result := DST_UNK;
+    end;
 end;
 
 {
