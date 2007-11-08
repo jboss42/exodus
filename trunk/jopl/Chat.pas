@@ -43,7 +43,7 @@ type
         procedure SetSession(s: TObject);
 
         function FindChat(sjid, sresource, sthread: Widestring): TChatController;
-        function AddChat(sjid, sresource: Widestring): TChatController; overload;
+        function AddChat(sjid, sresource: Widestring; anonymousChat: boolean): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
     end;
@@ -54,7 +54,8 @@ type
 implementation
 uses
     Presence,
-    JabberConst, PrefController, Session;
+    JabberConst, PrefController, Session,
+    Room;
 
 {---------------------------------------}
 constructor TJabberChatList.Create;
@@ -125,9 +126,12 @@ begin
                 exit;
 
             // Create a new chat controller
-            c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
-            c.MsgCallback(event, tag);
+            if (FindRoom(tmp_jid.jid) <> nil) then
+                c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, true)
+            else
+                c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, false);
 
+            c.MsgCallback(event, tag);
         end;
     finally
         tmp_jid.Free();
@@ -200,11 +204,11 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberChatList.AddChat(sjid, sresource: Widestring): TChatController;
+function TJabberChatList.AddChat(sjid, sresource: Widestring; anonymousChat: boolean): TChatController;
 begin
     //
     try
-        Result := TChatController.Create(sjid, sresource);
+        Result := TChatController.Create(sjid, sresource, anonymousChat);
         if (sresource = '') then
             Self.AddObject(sjid, Result)
         else

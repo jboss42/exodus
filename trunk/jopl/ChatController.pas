@@ -51,6 +51,7 @@ type
         _send_msg_cb: integer;  // Outgoing message callback
         _sent_auto_response: boolean; //Have we sent the participant an auto response since last non-available status?
         _last_msg_id: Widestring; //ID of the last message sent
+        _anonymous_chat: boolean; // Is chat from annonymous room
         procedure SetWindow(new_window: TObject);
     protected
         procedure timMemoryTimer(Sender: TObject);
@@ -59,7 +60,7 @@ type
         msg_queue: TQueue;
         last_session_msg_queue: TQueue; //Number of newly received offline messages
  
-        constructor Create(sjid, sresource: Widestring);
+        constructor Create(sjid, sresource: Widestring; anonymousChat: boolean);
         destructor Destroy; override;
 
         procedure SetJID(sjid: Widestring);
@@ -103,6 +104,7 @@ type
         property OnSendMessage: TChatMessageEvent read _send_event write _send_event;
         property RefCount: integer read _refs;
         property LastMsgId: Widestring read _last_msg_id;
+        property AnonymousChat: boolean read _anonymous_chat write _anonymous_chat;
     end;
 
     TChatEvent = procedure(event: string; tag: TXMLTag; controller: TChatController) of object;
@@ -165,7 +167,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TChatController.Create(sjid, sresource: Widestring);
+constructor TChatController.Create(sjid, sresource: Widestring; anonymousChat: boolean);
 begin
     // Create a new chat controller..
     // Setup msg callbacks, and either queue them,
@@ -185,6 +187,7 @@ begin
     _memory.Enabled := false;
     _queued := false;
     _threadid := '';
+    _anonymous_chat := anonymousChat;
    
     if (_resource <> '') then
         self.SetJID(_jid + '/' + _resource)
@@ -668,10 +671,16 @@ end;
 {---------------------------------------}
 //Listen for incoming messages that belong to this chat
 procedure TChatController.RegisterMsgCB();
+var
+    event: widestring;
 begin
-  UnRegisterMsgCB();
-  _msg_cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(Self.JID)) + '*"]');
+    UnRegisterMsgCB();
+    event := '/packet/message[@type="chat"][@from="';
+    event := event + XPLiteEscape(Lowercase(Self.JID));
+    if (_anonymous_chat) then
+        event := event + XPLiteEscape(Lowercase('/' + Self.Resource));
+    event := event + '*"]';
+    _msg_cb := MainSession.RegisterCallback(MsgCallback, event);
 end;
 
 {---------------------------------------}
@@ -686,10 +695,16 @@ end;
 {---------------------------------------}
 //Listen for outgoing message that belong to this chat
 procedure TChatController.RegisterSendMsgCB();
+var
+    event: widestring;
 begin
-  UnRegisterSendMsgCB();
-  _send_msg_cb := MainSession.RegisterCallback(SendMsgCallback,
-                '/packet/message[@type="chat"][@to="' + XPLiteEscape(Lowercase(Self.JID)) + '*"]');
+    UnRegisterSendMsgCB();
+    event := '/packet/message[@type="chat"][@to="';
+    event := event + XPLiteEscape(Lowercase(Self.JID));
+    if (_anonymous_chat) then
+        event := event + XPLiteEscape(Lowercase('/' + Self.Resource));
+    event := event + '*"]';  
+    _send_msg_cb := MainSession.RegisterCallback(SendMsgCallback, event);
 end;
 
 {---------------------------------------}

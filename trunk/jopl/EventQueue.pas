@@ -63,7 +63,8 @@ const
 implementation
 
 uses Session, XMLParser, ChatController, SysUtils, XmlUtils, JabberID,
-     Classes, JabberUtils, Dialogs, GnuGetText, ChatWin, DisplayName;
+     Classes, JabberUtils, Dialogs, GnuGetText, ChatWin, DisplayName,
+     Room;
 
 constructor TEventMsgQueue.Create();
 begin
@@ -157,8 +158,12 @@ begin
             msgs := cur_e.QueryTags('message');
             if (msgs.Count > 0) then begin
                 c := MainSession.ChatList.FindChat(e.from_jid.jid, e.from_jid.resource, '');
-                if (c = nil) then
-                    c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource);
+                if (c = nil) then begin
+                    if (FindRoom(e.from_jid.jid) <> nil) then
+                        c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource, true)
+                    else
+                        c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource, false);
+                end;
                 c.AddRef();
                 for m := 0 to msgs.Count - 1 do
                     c.PushMessage(msgs[m], true);

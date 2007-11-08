@@ -143,6 +143,8 @@ type
     _displayName: WideString;
     _insertTab: boolean; // Should a tab insert a tab?
 
+    _anonymousChat: boolean; // Is this chat one started from an annonymous room.
+
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
@@ -219,6 +221,7 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
 
     property getJid: Widestring read jid;
+    property anonymousChat: boolean read _anonymousChat write _anonymousChat;
   end;
 
 var
@@ -291,6 +294,7 @@ var
     do_scroll: boolean;
 //    exp: boolean;
     hist: string;
+    anonymousChat: boolean;
 begin
     Result := nil;
 
@@ -301,6 +305,13 @@ begin
         do_scroll := false;
         hist := '';
         win := nil;
+
+        // Determine if this chat is one started from an annonymous room.
+        if (FindRoom(sjid) <> nil) then
+            anonymousChat := true
+        else
+            anonymousChat := false;
+
 
         // If we have an existing chat, we may just want to raise it
         // or redock it, etc...
@@ -320,13 +331,16 @@ begin
 
         // Create a new chat controller if we don't have one
         if chat = nil then begin
-            chat := MainSession.ChatList.AddChat(sjid, resource);
+            chat := MainSession.ChatList.AddChat(sjid, resource, anonymousChat);
         end
-        else
+        else begin
            //We need to do this for existing chat controllers to make sure
            //callbacks are re-registered if they
            //have been unregistered before due to blocking
            chat.SetJID(sjid);
+        end;
+
+        chat.AnonymousChat := anonymousChat;
 
         // Create a window if we don't have one.
         if (chat.window = nil) then begin
@@ -1935,7 +1949,8 @@ begin
     _scrollBottom();
     Self.Refresh();
 
-    com_controller.fireNewWindow(Self.Handle);
+    if (com_controller <> nil) then
+        com_controller.fireNewWindow(Self.Handle);
 end;
 
 {
@@ -1952,7 +1967,8 @@ begin
     _scrollBottom();
     Self.Refresh();
 
-    com_controller.fireNewWindow(Self.Handle);
+    if (com_controller <> nil) then
+        com_controller.fireNewWindow(Self.Handle);
 end;
 
 procedure TfrmChat.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
