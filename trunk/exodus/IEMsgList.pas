@@ -447,6 +447,7 @@ begin
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
         txt := REGEX_CRLF.Replace(txt, '<br />', true);
+        cd.Free();
     end;
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
@@ -690,6 +691,10 @@ begin
         css := '';
         for i := 0 to tmp.Count - 1 do
             css := css + tmp.Strings[i];
+
+        tmp.Clear;
+        tmp.Free;
+        stream.Free(); 
 
         // Place colors in CSS
         if (css <> '') then begin
