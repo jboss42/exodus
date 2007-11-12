@@ -880,7 +880,7 @@ begin
     /foo/bar@xmlns
     //x[@xmlns="jabber:x:data"]
     }
-    matches.Clear;
+    ClearStringListObjects(Matches);
     s := 1;
     i := 2;
     l := Length(xps);

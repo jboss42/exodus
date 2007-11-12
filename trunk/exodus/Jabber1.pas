@@ -2794,6 +2794,8 @@ begin
       OutputDebugString(PAnsiChar('Exception in Restore'));
   end;
   ToolBar.ParentColor := true;
+  aFile.Clear();
+  aFile.Free();
 end;
 
 {--------------------------------------}

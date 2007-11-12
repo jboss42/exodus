@@ -270,6 +270,7 @@ begin
         end;
 
         fillStringList('blockers', memBlocks.Lines);
+        regex_pref_tag.Free();
    end;
 end;
 

@@ -391,6 +391,9 @@ begin
         end;
         prefHelper.setAutoOpenEvent(toggleEvent(event), profileList, MainSession.Profile.Name);
         prefHelper.setAutoOpenEvent(toggleEvent(event), defaultList);
+
+        profileList.Free();
+        defaultList.Free();
     end
     else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
         discovered := TWideStringList.create();

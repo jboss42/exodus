@@ -147,88 +147,92 @@ begin
 
     inherited;
 
-    with MainSession.Prefs do begin
-        // locale info, we should always have at least "default-english"
-        // in the drop down box here.
-        temptag := getXMLPref('locale');
-        if (temptag = nil) then begin
-            tmps := 'Default';
-        end
-        else begin
-            tmps := temptag.GetAttribute('value');
-            if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
-                lblLang.Visible := false;
-                cboLocale.Visible := false;
-                lblLangScan.Visible := false;
-            end;
-            if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
-                lblLang.Enabled := false;
-                cboLocale.Enabled := false;
-                lblLangScan.Enabled := false;
-            end;
-        end;
-
-        // stay compatible with old prefs
-        if (Pos('Default', tmps) = 1) then begin
-            tmps := 'Default';
-        end;
-        _old_locale := tmps;
-        _dirty_locale := tmps;
-
-        if (tmps <> '') then begin
-            i := _lang_codes.IndexOf(tmps);
-            if (i >= 0) then
-                cboLocale.ItemIndex := i
+    try
+        with MainSession.Prefs do begin
+            // locale info, we should always have at least "default-english"
+            // in the drop down box here.
+            temptag := getXMLPref('locale');
+            if (temptag = nil) then begin
+                tmps := 'Default';
+            end
             else begin
-
-                // check for en when given en_US
-                i := Pos('_', tmps);
-                if (i > 1) then begin
-                    tmps := Copy(tmps, 1, i - 1);
-                    i := _lang_codes.indexOf(tmps);
+                tmps := temptag.GetAttribute('value');
+                if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
+                    lblLang.Visible := false;
+                    cboLocale.Visible := false;
+                    lblLangScan.Visible := false;
                 end;
-
-                if (i = -1) then begin
-                    MessageDlgW(getAppInfo().ID +  _(sBadLocale), mtError, [mbOK], 0);
-                    cboLocale.ItemIndex := 0;
-                end
-                else begin
-                    _old_locale := tmps;
-                    setString('locale', tmps);
-                    cboLocale.ItemIndex := i;
+                if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
+                    lblLang.Enabled := false;
+                    cboLocale.Enabled := false;
+                    lblLangScan.Enabled := false;
                 end;
             end;
-        end
-        else
-            cboLocale.ItemIndex := 0;
 
-        // Check to see if Exodus runs when windows starts
-        reg := TRegistry.Create();
-        try
-            reg.RootKey := HKEY_CURRENT_USER;
-            reg.OpenKey(RUN_ONCE, true);
-            chkAutoStart.Checked := (reg.ValueExists(PrefController.getAppInfo.ID));
-            reg.CloseKey();
-        finally
-            reg.Free();
-        end;
+            // stay compatible with old prefs
+            if (Pos('Default', tmps) = 1) then begin
+                tmps := 'Default';
+            end;
+            _old_locale := tmps;
+            _dirty_locale := tmps;
 
-        //hide nick if locked down
-        if (GetBool('brand_prevent_change_nick')) then begin
-            Self.lblDefaultNick.Visible := false;
-            Self.txtDefaultNick.Visible := false;
-        end;
-        //Auto login should not be enabled if password is not saved
-        s := PrefController.getPrefState('autologin');
-        chkAutoLogin.Enabled := (s <> psReadOnly) and
-                                (s <> psInvisible) and
-                                MainSession.Profile.SavePasswd and
-                                MainSession.Authenticated;
-        if (s = psInvisible) then begin
-          chkAutoLogin.Visible := false;
-        end;
+            if (tmps <> '') then begin
+                i := _lang_codes.IndexOf(tmps);
+                if (i >= 0) then
+                    cboLocale.ItemIndex := i
+                else begin
 
-        chkDebug.Visible := getBool('brand_show_debug_in_menu');
+                    // check for en when given en_US
+                    i := Pos('_', tmps);
+                    if (i > 1) then begin
+                        tmps := Copy(tmps, 1, i - 1);
+                        i := _lang_codes.indexOf(tmps);
+                    end;
+
+                    if (i = -1) then begin
+                        MessageDlgW(getAppInfo().ID +  _(sBadLocale), mtError, [mbOK], 0);
+                        cboLocale.ItemIndex := 0;
+                    end
+                    else begin
+                        _old_locale := tmps;
+                        setString('locale', tmps);
+                        cboLocale.ItemIndex := i;
+                    end;
+                end;
+            end
+            else
+                cboLocale.ItemIndex := 0;
+
+            // Check to see if Exodus runs when windows starts
+            reg := TRegistry.Create();
+            try
+                reg.RootKey := HKEY_CURRENT_USER;
+                reg.OpenKey(RUN_ONCE, true);
+                chkAutoStart.Checked := (reg.ValueExists(PrefController.getAppInfo.ID));
+                reg.CloseKey();
+            finally
+                reg.Free();
+            end;
+
+            //hide nick if locked down
+            if (GetBool('brand_prevent_change_nick')) then begin
+                Self.lblDefaultNick.Visible := false;
+                Self.txtDefaultNick.Visible := false;
+            end;
+            //Auto login should not be enabled if password is not saved
+            s := PrefController.getPrefState('autologin');
+            chkAutoLogin.Enabled := (s <> psReadOnly) and
+                                    (s <> psInvisible) and
+                                    MainSession.Profile.SavePasswd and
+                                    MainSession.Authenticated;
+            if (s = psInvisible) then begin
+              chkAutoLogin.Visible := false;
+            end;
+
+            chkDebug.Visible := getBool('brand_show_debug_in_menu');
+        end;
+    finally
+        temptag.Free();
     end;
 end;
 
