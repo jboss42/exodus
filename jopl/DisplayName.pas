@@ -441,6 +441,7 @@ Destructor TDisplayNameCache.Destroy();
 begin
     setSession(nil);
     _dnCache.Free();
+    _profileParser.Free();
     inherited;
 end;
 

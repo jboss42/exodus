@@ -731,11 +731,13 @@ begin
             _ShowDisclaimerText := false;
             pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
         end;
+        FreeAndNil(tag);
     except
         // Image not loaded
         txtDisclaimer.Visible := false;
         _ShowDisclaimerText := false;
         pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+        FreeAndNil(tag);
     end;
 
     if (not _ShowDisclaimerText) then begin
@@ -794,10 +796,12 @@ begin
                 ImageLogo.Visible := false;
                 pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
             end;
+            FreeAndNil(tag);
         except
             // Image not loaded
             ImageLogo.Visible := false;
             pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
+            FreeAndNil(tag);
         end;
     end
     else

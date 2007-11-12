@@ -159,8 +159,15 @@ begin
 end;
 
 Destructor TPrefGraphic.Destroy();
+var
+    i: integer;
+    g: TBrandedGraphic;
 begin
-    FCache.Clear();
+    for i := FCache.Count -1 downto 0 do begin
+        g := TBrandedGraphic(FCache.Objects[i]);
+        g.Free();
+        FCache.Delete(i);
+    end;
     FCache.Free();
     inherited Destroy();
 end;
@@ -210,14 +217,17 @@ begin
             //check if known image tag
             if (tag.name = 'image') then begin
                 addOneImage(tag);
-            end else if (tag.name = 'imagelist') then begin
+            end
+            else if (tag.name = 'imagelist') then begin
                 tstr := tag.getAttribute('graphickey');
                 imgListChildren := tag.childTags();
                 for j := 0 to imgListChildren.Count - 1 do begin
                     addOneImage(imgListChildren[j], tstr);
                 end;
+                imgListChildren.Free();
             end;
         end;
+        children.Free();
     end;
     Result := true;
 end;

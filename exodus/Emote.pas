@@ -496,6 +496,7 @@ begin
     finally
         if (doc <> nil) then doc.Free();
         if (parser <> nil) then parser.Free();
+        icons.Free();
     end;
 end;
 
@@ -602,6 +603,7 @@ begin
 
     end;
     icons.Free();
+    icondef.Free();
     Result := true;
 end;
 
