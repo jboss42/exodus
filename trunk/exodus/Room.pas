@@ -2251,7 +2251,11 @@ begin
 
         if (_isMUC) then begin
             if ((m.role <> '') or (m.affil <> '')) then begin
-                tmps := tmps + ''#13#10 + _('Role: ') + m.role;
+                tmps := tmps + ''#13#10 + _('Role: ');
+                if (m.role = MUC_VISITOR) then
+                    tmps := tmps + 'observer'
+                else
+                    tmps := tmps + m.role;
                 tmps := tmps + ''#13#10 + _('Affiliation: ') + m.affil;
             end;
             if (m.real_jid <> '') then
