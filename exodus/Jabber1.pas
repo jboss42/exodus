@@ -2961,8 +2961,8 @@ begin
     begin
         tjid := TJabberID.Create(jid, false);
         jid := tjid.jid();
+        StartChat(jid, tjid.resource, true);
         tjid.Free();
-        StartChat(jid, '', true);
     end;
 end;
 

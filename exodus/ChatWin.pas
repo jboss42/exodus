@@ -269,6 +269,7 @@ const
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sMsgLocalTime = 'Local Time: ';
     sCannotOffline = 'This contact cannot receive offline messages.';
+    sCannotStartChatWithSelf = 'A chat cannot be started with self.';
 
     NOTIFY_CHAT_ACTIVITY = 0;
     NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
@@ -295,8 +296,26 @@ var
 //    exp: boolean;
     hist: string;
     anonymousChat: boolean;
+    tjid1, tjid2: TJabberID;
 begin
     Result := nil;
+
+    tjid1 := TJabberID.Create(sjid);
+    tjid2 := TJabberID.Create(MainSession.jid);
+    if ((tjid1.jid = tjid2.jid) and
+        ((resource = '') or
+         (resource = tjid2.resource))) then begin
+        // We are trying to start a conversation with ourselves
+        // or with our bare jid.  This causes an infinate loop
+        // when sending/receving messages.
+        // Don't allow - popup error message.
+        MessageBoxW(0, pWideChar(_(sCannotStartChatWithSelf)), PWideChar(sjid), MB_OK);
+        tjid1.Free();
+        tjid2.Free();
+        exit;
+    end;
+    tjid1.Free();
+    tjid2.Free();
 
     try
         // either show an existing chat or start one.
