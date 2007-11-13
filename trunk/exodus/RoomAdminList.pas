@@ -174,6 +174,12 @@ begin
         lstItems.Columns.Delete(1);
         lstItems.Column[0].Width := lstItems.Width - 5;
     end;
+
+    if (onList = MUC_OUTCAST) then begin
+        lstItems.Columns.Delete(0);
+        lstItems.Column[0].Width := lstItems.Width - 5;
+    end;
+
     Show();
 end;
 
