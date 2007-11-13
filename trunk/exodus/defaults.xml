@@ -3,8 +3,8 @@
     <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.44 2004/09/08 17:15:03 hildjj Exp $"/>
     
     <!-- System Options -->
-    <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
-    <auto_update_changelog_url value="http://exodus.jabberstudio.org/changelog.html"/>
+    <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
+    <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
     
     <auto_updates value="1" control="chkAutoUpdate"/>
     <auto_start value="0" control="chkAutoStart"/>
@@ -310,18 +310,14 @@
     <brand_help_menu_list>
       <s>Jabber User Guide</s>
       <s>Exodus Website</s>
-      <s>Add Feature Request</s>
       <s>Report Bug</s>
       <s>Jabber.org Website</s>
-      <s>JabberStudio Website</s>
     </brand_help_menu_list>
     <brand_help_url_list>
       <s>http://www.jabber.org/user/userguide/</s>
-      <s>http://exodus.jabberstudio.org/</s>
-      <s>http://www.jabberstudio.org/projects/exodus/features/</s>
-      <s>http://www.jabberstudio.org/projects/exodus/bugs/</s>
+      <s>http://exodus.googlecode.com/</s>
+      <s>http://code.google.com/p/exodus/issues/list</s>
       <s>http://www.jabber.org/</s>
-      <s>http://www.jabberstudio.org/</s>
     </brand_help_url_list>
     <brand_icon ></brand_icon>
     <brand_profile_conn_type value="0"></brand_profile_conn_type>
