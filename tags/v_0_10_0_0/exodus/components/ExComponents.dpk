@@ -1,0 +1,69 @@
+package ExComponents;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Exodus custom controls'}
+{$IMPLICITBUILD ON}
+{$DEFINE INDY9}
+{%TogetherDiagram 'ModelSupport_ExComponents\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\RTFEditor\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\RegExpr\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\Langs\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\RichOLE\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\TopStatusFrame\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\ExodusLabel\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\RichEdit2\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\Unicode\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\RTFProperty\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\WStrList\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\ExRichEdit\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\TntNumericEdit\default.txaPackage'}
+{%TogetherDiagram 'ModelSupport_ExComponents\default.txvpck'}
+
+requires
+  rtl,
+  vcl,
+  designide,
+  vclx,
+  TntUnicodeVcl,
+  vclactnband,
+  vcldb,
+  dbrtl,
+  indy;
+
+contains
+  ExRichEdit in 'ExRichEdit.pas',
+  richole in 'richole.pas',
+  RichEdit2 in 'RichEdit2.pas',
+  RTFProperty in 'RTFProperty.pas',
+  RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
+  WStrList in 'WStrList.pas',
+  Langs in 'Langs.pas',
+  ExodusLabel in 'ExodusLabel.pas',
+  Unicode in '..\..\jopl\Unicode.pas',
+  RegExpr in '..\..\jopl\RegExpr.pas',
+  TopStatusFrame in 'TopStatusFrame.pas',
+  gnugettext in '..\gnugettext.pas',
+  ExNumericEdit in 'ExNumericEdit.pas';
+
+end.
