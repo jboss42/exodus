@@ -10,9 +10,7 @@ inherited frmNewUser: TfrmNewUser
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    ParentColor = True
     inherited Panel3: TPanel
-      ParentColor = True
       inherited btnBack: TTntButton
         OnClick = btnBackClick
       end
@@ -29,7 +27,6 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Panel1: TPanel
-    ParentColor = True
     inherited lblWizardTitle: TTntLabel
       Width = 99
       Caption = 'New User Wizard'
@@ -92,7 +89,7 @@ inherited frmNewUser: TfrmNewUser
       object lblUsername: TTntLabel
         Left = 16
         Top = 64
-        Width = 143
+        Width = 137
         Height = 13
         Caption = 'Enter your desired username:'
         Visible = False
@@ -100,7 +97,7 @@ inherited frmNewUser: TfrmNewUser
       object lblPassword: TTntLabel
         Left = 16
         Top = 121
-        Width = 142
+        Width = 136
         Height = 13
         Caption = 'Enter your desired password:'
         Visible = False
@@ -154,7 +151,7 @@ inherited frmNewUser: TfrmNewUser
         Align = alTop
         Caption = 'Please wait...'
         WordWrap = True
-        ExplicitWidth = 66
+        ExplicitWidth = 63
       end
       object aniWait: TAnimate
         Left = 0
@@ -175,14 +172,6 @@ inherited frmNewUser: TfrmNewUser
         Width = 402
         Height = 226
         Align = alClient
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 0
         TabStop = True
         ExplicitWidth = 402

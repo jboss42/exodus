@@ -733,7 +733,6 @@ begin
                 p := TPlugin(plugs.Objects[i]);
                 plugs.Delete(i);
                 p.com.Shutdown;
-                p.Free;
             end;
         except
             DebugMessage('COM Exception in ReloadPlugins');
@@ -764,7 +763,6 @@ begin
             pp := TPlugin(plugs.Objects[i]);
             plugs.Delete(i);
             pp.com.Shutdown;
-            pp.Free;
           except
             DebugMessage('COM Exception in TExodusChat.UnloadPlugins');
             continue;
@@ -1641,15 +1639,15 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Roster: IExodusRoster;
 begin
-    //ExCOMRoster.ObjAddRef();
-    Result := COMRoster;
+    ExCOMRoster.ObjAddRef();
+    Result := ExCOMRoster;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_PPDB: IExodusPPDB;
 begin
-    //ExCOMPPDB.ObjAddRef();
-    Result := COMPPDB;
+    ExCOMPPDB.ObjAddRef();
+    Result := ExCOMPPDB;
 end;
 
 {---------------------------------------}
@@ -1905,15 +1903,15 @@ end;
 {---------------------------------------}
 function TExodusController.Get_RosterImages: IExodusRosterImages;
 begin
-    //ExCOMRosterImages.ObjAddRef();
-    Result := COMRosterImages;
+    ExCOMRosterImages.ObjAddRef();
+    Result := ExCOMRosterImages;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_EntityCache: IExodusEntityCache;
 begin
-    //ExCOMEntityCache.ObjAddRef();
-    Result := COMEntityCache;
+    ExCOMEntityCache.ObjAddRef();
+    Result := ExCOMEntityCache;
 end;
 
 {---------------------------------------}
@@ -2002,8 +2000,8 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Toolbar: IExodusToolbar;
 begin
-    //ExCOMToolbar.ObjAddRef();
-    Result := COMToolbar;
+    ExCOMToolbar.ObjAddRef();
+    Result := ExCOMToolbar;
 end;
 
 {---------------------------------------}
@@ -2092,8 +2090,8 @@ end;
 
 function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
-    //ExCOMBookmarkManager.ObjAddRef();
-    Result := COMBookmarkManager;
+    ExCOMBookmarkManager.ObjAddRef();
+    Result := ExCOMBookmarkManager;
 end;
 
 

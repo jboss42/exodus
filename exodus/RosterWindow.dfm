@@ -1,4 +1,4 @@
-inherited frmRosterWindow: TfrmRosterWindow
+object frmRosterWindow: TfrmRosterWindow
   Left = 271
   Top = 186
   AlphaBlendValue = 220
@@ -6,18 +6,22 @@ inherited frmRosterWindow: TfrmRosterWindow
   Caption = 'contact list - Exodus'
   ClientHeight = 505
   ClientWidth = 240
+  Color = clBtnFace
   Constraints.MinWidth = 130
   DefaultMonitor = dmDesktop
   DragKind = dkDock
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitTop = -142
-  ExplicitWidth = 248
-  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -43,13 +47,12 @@ inherited frmRosterWindow: TfrmRosterWindow
     Height = 49
     Align = alTop
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 4
     Visible = False
     object lblFind: TTntLabel
       Left = 3
       Top = 4
-      Width = 24
+      Width = 23
       Height = 13
       Caption = 'Find:'
     end
@@ -110,10 +113,6 @@ inherited frmRosterWindow: TfrmRosterWindow
         Text = 'foo@jabber.org'
         Width = 50
       end>
-    ParentColor = True
-    ParentFont = True
-    UseSystemFont = False
-    ExplicitTop = 480
   end
   object pnlShow: TPanel
     Left = 0
@@ -123,7 +122,6 @@ inherited frmRosterWindow: TfrmRosterWindow
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
-    ParentColor = True
     TabOrder = 1
     Visible = False
     object imgStatus: TPaintBox
@@ -186,12 +184,11 @@ inherited frmRosterWindow: TfrmRosterWindow
       AutoSize = True
       BevelOuter = bvNone
       BevelWidth = 0
-      ParentColor = True
       TabOrder = 0
       object lblStatusLink: TTntLabel
         Left = 0
         Top = 0
-        Width = 32
+        Width = 30
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
@@ -211,9 +208,9 @@ inherited frmRosterWindow: TfrmRosterWindow
     Align = alTop
     BevelOuter = bvLowered
     BorderWidth = 4
+    Color = clWindow
     Ctl3D = True
     ParentBackground = False
-    ParentColor = True
     ParentCtl3D = False
     TabOrder = 2
     object lblStatus: TTntLabel
@@ -299,7 +296,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       Height = 150
       Align = alBottom
       BevelOuter = bvNone
-      ParentColor = True
+      Color = clWindow
       TabOrder = 2
       OnResize = pnlConnectLogoResize
       object ImageLogo: TImage
@@ -320,7 +317,7 @@ inherited frmRosterWindow: TfrmRosterWindow
         Caption = 'Run the New User Wizard'
         Transparent = False
         OnClick = lblNewUserClick
-        ExplicitWidth = 123
+        ExplicitWidth = 124
       end
       object lblCreate: TTntLabel
         Left = 0
@@ -332,7 +329,7 @@ inherited frmRosterWindow: TfrmRosterWindow
         Caption = 'Create a New Profile'
         Transparent = False
         OnClick = lblCreateClick
-        ExplicitWidth = 99
+        ExplicitWidth = 97
       end
       object txtDisclaimer: TExRichEdit
         Left = 0
@@ -416,7 +413,6 @@ inherited frmRosterWindow: TfrmRosterWindow
           end>
         LangOptions = [loAutoFont]
         Language = 1033
-        ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         ShowSelectionBar = False

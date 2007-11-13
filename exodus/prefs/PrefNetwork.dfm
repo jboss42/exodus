@@ -25,7 +25,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblAttempts: TTntLabel
       Left = 8
       Top = 20
-      Width = 125
+      Width = 121
       Height = 13
       Caption = '# of Reconnect attempts:'
       Transparent = False
@@ -33,7 +33,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblTime: TTntLabel
       Left = 8
       Top = 52
-      Width = 145
+      Width = 141
       Height = 13
       Caption = 'Time lapse between attempts:'
       Transparent = False
@@ -41,7 +41,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblTime2: TTntLabel
       Left = 9
       Top = 71
-      Width = 244
+      Width = 240
       Height = 13
       Caption = 'Time is in seconds. Use 0 for a random time period.'
       Transparent = False
@@ -52,7 +52,6 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 49
       Height = 25
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 1
       Text = '0'
       Min = 0
@@ -67,7 +66,6 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 49
       Height = 25
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
       Text = '0'
       Min = 0
@@ -87,7 +85,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblProxyHost: TTntLabel
       Left = 5
       Top = 48
-      Width = 26
+      Width = 25
       Height = 13
       Caption = 'Host:'
       Enabled = False
@@ -96,7 +94,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblProxyPort: TTntLabel
       Left = 5
       Top = 74
-      Width = 24
+      Width = 22
       Height = 13
       Caption = 'Port:'
       Enabled = False
@@ -105,7 +103,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblProxyUsername: TTntLabel
       Left = 5
       Top = 122
-      Width = 52
+      Width = 51
       Height = 13
       Caption = 'Username:'
       Enabled = False
@@ -114,7 +112,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblProxyPassword: TTntLabel
       Left = 5
       Top = 145
-      Width = 50
+      Width = 49
       Height = 13
       Caption = 'Password:'
       Enabled = False
@@ -123,7 +121,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     object lblProxyApproach: TLabel
       Left = 5
       Top = 21
-      Width = 50
+      Width = 49
       Height = 13
       Caption = 'Approach:'
       Transparent = False

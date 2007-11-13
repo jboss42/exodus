@@ -1,4 +1,4 @@
-inherited frmPrefPanel: TfrmPrefPanel
+object frmPrefPanel: TfrmPrefPanel
   Left = 408
   Top = 423
   BorderStyle = bsNone
@@ -6,6 +6,12 @@ inherited frmPrefPanel: TfrmPrefPanel
   Caption = 'frmPrefPanel'
   ClientHeight = 301
   ClientWidth = 270
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -18,8 +24,8 @@ inherited frmPrefPanel: TfrmPrefPanel
     Align = alTop
     BevelOuter = bvLowered
     Caption = 'pnlHeader'
+    Color = clHighlight
     ParentBackground = False
-    ParentColor = True
     TabOrder = 0
   end
 end

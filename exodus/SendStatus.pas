@@ -32,7 +32,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, StdCtrls, ExtCtrls, IdBaseComponent, IdComponent,
     IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls, IdIOHandler,
-    IdIOHandlerSocket, IdSocks, ExFrame;
+    IdIOHandlerSocket, IdSocks;
 
 const
     WM_SEND_DONE = WM_USER + 6002;
@@ -50,7 +50,7 @@ type
 
     TFileSendThread = class;
 
-    TfSendStatus = class(TExFrame)
+    TfSendStatus = class(TFrame)
         Panel1: TPanel;
         btnCancel: TButton;
         Panel2: TPanel;
@@ -607,7 +607,7 @@ begin
         spkg.hash := _hash;
         spkg.stream := _stream;
         spkg.sid := _sid;
-        spkg.frame := TExFrame(Self);
+        spkg.frame := Self;
         getXferManager().ServeStream(spkg);
 
         // add in my other stream hosts that I know about
@@ -897,7 +897,7 @@ begin
             [_pkg.recipDisplay, _pkg.pathname]), mtError, [mbOK], 0);
         _state := send_cancel;
         DoState();
-        getXferManager().killFrame(TExFrame(Self));
+        getXferManager().killFrame(Self);
     end;
 end;
 
@@ -921,7 +921,7 @@ begin
         [_pkg.pathname]), mtError, [mbOK], 0);
     _state := send_cancel;
     DoState();
-    getXferManager().killFrame(TExFrame(Self));
+    getXferManager().killFrame(Self);
 end;
 
 {---------------------------------------}
@@ -1002,7 +1002,7 @@ begin
 
     end;
         
-    getXferManager().killFrame(TExFrame(Self));
+    getXferManager().killFrame(Self);
 end;
 
 initialization

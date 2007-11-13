@@ -25,7 +25,7 @@ uses
     Entity, EntityCache, JabberID, XMLTag,
     DisplayName,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExForm;
+    buttonFrame, StdCtrls, TntStdCtrls;
 
 const
     P_BRAND_NETWORKS= 'brand_networks';
@@ -51,7 +51,7 @@ type
         function isInNetwork() : boolean;
     end;
 
-  TfrmAdd = class(TExForm)
+  TfrmAdd = class(TForm)
     Label1: TTntLabel;
     txtJID: TTntEdit;
     Label2: TTntLabel;

@@ -1,10 +1,9 @@
-inherited frameResults: TframeResults
+object frameResults: TframeResults
   Left = 0
   Top = 0
   Width = 320
   Height = 240
   TabOrder = 0
-  TabStop = True
   object lstResults: TTntListView
     Left = 0
     Top = 0

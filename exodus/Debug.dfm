@@ -4,13 +4,13 @@ inherited frmDebug: TfrmDebug
   Caption = 'Debug'
   ClientHeight = 380
   ClientWidth = 400
+  OnClose = FormClose
   ExplicitWidth = 408
   ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlDockTop: TPanel
     Width = 400
-    ParentColor = True
     TabOrder = 1
     ExplicitWidth = 400
     inherited tbDockBar: TToolBar
@@ -24,8 +24,10 @@ inherited frmDebug: TfrmDebug
       Height = 32
       Align = alClient
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 1
+      ExplicitTop = 32
+      ExplicitWidth = 400
+      ExplicitHeight = 25
       object lblJID: TTntLabel
         Left = 71
         Top = 9
@@ -38,7 +40,7 @@ inherited frmDebug: TfrmDebug
       object lblLabel: TTntLabel
         Left = 6
         Top = 9
-        Width = 66
+        Width = 62
         Height = 13
         Caption = 'Current JID:  '
       end
@@ -53,8 +55,9 @@ inherited frmDebug: TfrmDebug
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
-    ParentColor = True
     TabOrder = 0
+    ExplicitTop = 57
+    ExplicitHeight = 323
     object Splitter1: TSplitter
       Left = 4
       Top = 299

@@ -21,7 +21,6 @@ inherited frmPrefEmote: TfrmPrefEmote
     Height = 26
     Align = alTop
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 1
     object chkEmoticons: TTntCheckBox
       Left = 2
@@ -107,7 +106,6 @@ inherited frmPrefEmote: TfrmPrefEmote
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 0
         object btnCustomEmoteAdd: TTntButton
           Left = 4
@@ -146,12 +144,11 @@ inherited frmPrefEmote: TfrmPrefEmote
         Height = 54
         Align = alBottom
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 1
         object TntLabel3: TTntLabel
           Left = 2
           Top = 8
-          Width = 194
+          Width = 190
           Height = 13
           Caption = 'Filename of custom emoticon definitions:'
         end
@@ -188,6 +185,7 @@ inherited frmPrefEmote: TfrmPrefEmote
         OnAdvancedCustomDrawItem = lstCustomEmotesAdvancedCustomDrawItem
         OnDblClick = btnCustomEmoteEditClick
         OnSelectItem = lstCustomEmotesSelectItem
+        ExplicitTop = -2
       end
     end
   end

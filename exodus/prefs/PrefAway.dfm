@@ -12,35 +12,35 @@ inherited frmPrefAway: TfrmPrefAway
   object lblAwayTime: TTntLabel [0]
     Left = 8
     Top = 125
-    Width = 224
+    Width = 213
     Height = 13
     Caption = 'Minutes to wait before setting status to Away:'
   end
   object lblXATime: TTntLabel [1]
     Left = 8
     Top = 149
-    Width = 210
+    Width = 201
     Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
   object lblAwayStatus: TTntLabel [2]
     Left = 8
     Top = 201
-    Width = 65
+    Width = 62
     Height = 13
     Caption = 'Away Status:'
   end
   object lblXAStatus: TTntLabel [3]
     Left = 8
     Top = 230
-    Width = 51
+    Width = 50
     Height = 13
     Caption = 'XA Status:'
   end
   object lblDisconnectTime: TTntLabel [4]
     Left = 8
     Top = 173
-    Width = 181
+    Width = 178
     Height = 13
     Caption = 'Minutes to wait before Disconnecting:'
   end
@@ -50,7 +50,6 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 49
     Height = 25
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 2
     Text = '5'
     Min = 1
@@ -71,7 +70,6 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 49
     Height = 25
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 1
     Text = '30'
     Min = 1
@@ -135,7 +133,6 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 49
     Height = 25
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 0
     Text = '60'
     Min = 1

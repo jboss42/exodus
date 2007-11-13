@@ -1,46 +1,23 @@
 unit DebugLogger;
-{
-    Copyright 2007, Douglas Abbink
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 interface
 uses
-    XMLTag, DebugManager;
+    XMLTag;
 type
 
-    TDebugLogFile = class (TInterfacedObject, IDebugLogger)
+    TDebugLogFile = class
     private
         _filename : Widestring;
         _logfile  : TextFile;
+        _cb       : Integer;
         _isLogging : Boolean;
         procedure Init();
         procedure RotateLog();
-        procedure output(data: widestring; dt: TDateTime);
+        procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
 
     public
         constructor Create(filename: Widestring);
         destructor  Destroy(); override;
-
-        // IDebugLogger
-        procedure DebugStatement(msg: Widestring; dt: TDateTime);
-        procedure DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
-        procedure DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
     end;
 
 var
@@ -103,15 +80,16 @@ begin
     end;
 
     _isLogging := true;
-
-    dbgManager.AddDebugger('dbgfile', Self);
+     
+    // Attach callbacks
+    _cb := MainSession.RegisterCallback(DataCallback);
 
 end;
 {---------------------------------------}
 destructor TDebugLogFile.Destroy();
 begin
     if (_isLogging) then begin
-        dbgManager.RemoveDebugger('dbgfile');
+        MainSession.UnRegisterCallback(_cb);
         CloseFile(_logfile);
     end;
 end;
@@ -170,39 +148,29 @@ begin
 end;
 
 {---------------------------------------}
-procedure TDebugLogFile.DebugStatement(msg: Widestring; dt: TDateTime);
-begin
-    output(msg, dt);
-end;
-
-{---------------------------------------}
-procedure TDebugLogFile.DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
+procedure TDebugLogFile.DataCallback(event: string; tag: TXMLTag; data: Widestring);
 var
-    tstr: Widestring;
-begin
-    tstr := getObfuscatedData('/data/send', xml, data);
-    output('SENT: ' + tstr, dt);
-end;
-
-{---------------------------------------}
-procedure TDebugLogFile.DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
-var
-    tstr: Widestring;
-begin
-    tstr := getObfuscatedData('/data/recv', xml, data);
-    output('RECV: ' + tstr, dt);
-end;
-
-procedure TDebugLogFile.output(data: widestring; dt: TDateTime);
-var
+    line : Widestring;
     time: string;
+    tstr : WideString;
 begin
+    tstr := getObfuscatedData(event, tag, data);
+    if (event = '/data/send') then begin
+        if (Trim(tstr) <> '') then
+            line := 'SENT: ' + tstr;
+    end
+    else if (event = '/data/debug') then begin
+        line := tstr;
+    end
+    else
+        line := 'RECV: ' + tstr;
+
     DateTimeToString(time, 'yyyy-mm-dd hh:mm:ss.zzz', Now());
-    data := '[' + time + ']  ' + data + ''#13#10;
+    line := '[' + time + ']  ' + line + ''#13#10;
     try
-    	WRITE(_logfile, data);
-    except	
-	end;
+        WRITE(_logfile, line);
+    except
+    end;
 end;
 
 {---------------------------------------}
@@ -217,10 +185,9 @@ end;
 {---------------------------------------}
 procedure StopDebugLogger();
 begin
-    if (debugLogFile <> nil) then begin
-        debugLogFile._Release;
-        debugLogFile := nil;
-    end;
+    if (debugLogFile <> nil) then
+        FreeAndNil(debugLogFile);
+
 end;
 
 end.

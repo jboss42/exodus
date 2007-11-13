@@ -25,8 +25,7 @@ uses
     StateForm,
     XMLTag, NodeItem, JabberID,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus, TntForms,
-  ExFrame;
+    StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus;
 
 type
   TfrmSubscribe = class(TfrmState)

@@ -3,8 +3,8 @@
     <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.44 2004/09/08 17:15:03 hildjj Exp $"/>
     
     <!-- System Options -->
-    <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
-    <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
+    <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
+    <auto_update_changelog_url value="http://exodus.jabberstudio.org/changelog.html"/>
     
     <auto_updates value="1" control="chkAutoUpdate"/>
     <auto_start value="0" control="chkAutoStart"/>
@@ -290,16 +290,7 @@
          all searchable jids are shown.
         This option is never exposed to the user -->
     <search_component_only value="0"/>
-
-<!--
-    These values only matter if USE_TWEBBROWSER is defined on compile
-    and msglist_type has a value of 1 and not 0
--->
-    <display_date_seperator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
-    <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->
-    <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
-
-    <!-- Branding items -->
+    
     <brand_ad ></brand_ad>
     <brand_ad_url ></brand_ad_url>
     <!-- application ID is different than caption. It is used for
@@ -310,14 +301,18 @@
     <brand_help_menu_list>
       <s>Jabber User Guide</s>
       <s>Exodus Website</s>
+      <s>Add Feature Request</s>
       <s>Report Bug</s>
       <s>Jabber.org Website</s>
+      <s>JabberStudio Website</s>
     </brand_help_menu_list>
     <brand_help_url_list>
       <s>http://www.jabber.org/user/userguide/</s>
-      <s>http://exodus.googlecode.com/</s>
-      <s>http://code.google.com/p/exodus/issues/list</s>
+      <s>http://exodus.jabberstudio.org/</s>
+      <s>http://www.jabberstudio.org/projects/exodus/features/</s>
+      <s>http://www.jabberstudio.org/projects/exodus/bugs/</s>
       <s>http://www.jabber.org/</s>
+      <s>http://www.jabberstudio.org/</s>
     </brand_help_url_list>
     <brand_icon ></brand_icon>
     <brand_profile_conn_type value="0"></brand_profile_conn_type>
@@ -365,7 +360,6 @@
 
     <brand_muc value="1"></brand_muc>
     <brand_ft value="1"></brand_ft>
-    <brand_print value="1"></brand_print>
     <brand_plugs value="1"></brand_plugs>
     <brand_addcontact_gateways value="1"/>
     <brand_registration value="1"/>

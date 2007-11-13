@@ -26,10 +26,10 @@ uses
     XMLParser,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-    Buttons, TntStdCtrls, TntMenus, ToolWin, DebugManager;
+    Buttons, TntStdCtrls, TntMenus, ToolWin;
 
 type
-  TfrmDebug = class(TfrmDockable, IDebugLogger)
+  TfrmDebug = class(TfrmDockable)
     Panel2: TPanel;
     Splitter1: TSplitter;
     PopupMenu1: TTntPopupMenu;
@@ -65,8 +65,10 @@ type
       Shift: TShiftState);
   private
     { Private declarations }
+    _cb: integer;
     _scb: integer;
 
+    procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
   published
@@ -74,11 +76,6 @@ type
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
-
-    // IDebugLogger
-    procedure DebugStatement(msg: Widestring; dt: TDateTime);
-    procedure DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
-    procedure DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
   end;
 
 procedure ShowDebugForm(bringToFront: boolean=true);
@@ -154,14 +151,13 @@ begin
     // make sure the output is showing..
     inherited;
 
-    dbgManager.AddDebugger('dbgwindow', Self);
-
     ImageIndex := RosterTreeImages.Find('filter');
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;
     lblJID.Font.Style := [fsUnderline];
 
+    _cb := MainSession.RegisterCallback(DataCallback);
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');
 
     if MainSession.Active then begin
@@ -237,6 +233,32 @@ begin
             xmlParser.Free();
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: Widestring);
+var
+    l, d: integer;
+    tstr : WideString;
+begin
+    if (frmDebug = nil) then exit;
+    if (not frmDebug.Visible) then exit;
+
+    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
+        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
+        for l := 1 to d do
+            MsgDebug.Lines.Delete(0);
+    end;
+    tstr := getObfuscatedData(event, tag, data);
+    if (event = '/data/send') then begin
+        if (Trim(tstr) <> '') then
+            AddWideText('SENT: ' + tstr, clBlue);
+    end
+    else if (event = '/data/debug') then begin
+        AddWideText(tstr, clRed);
+    end
+    else
+        AddWideText('RECV: ' + tstr, clGreen);
 end;
 
 {---------------------------------------}
@@ -321,12 +343,11 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    dbgManager.RemoveDebugger('dbgwindow');
-
     Action := caFree;
 
-    if (MainSession <> nil) then begin
+    if ((MainSession <> nil) and (_cb <> -1)) then begin
         MainSession.UnregisterCallback(_scb);
+        MainSession.UnregisterCallback(_cb);
     end;
 
     frmDebug := nil;
@@ -442,50 +463,6 @@ begin
         btnSendRawClick(Self);
     end;
 
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DebugStatement(msg: Widestring; dt: TDateTime);
-begin
-    AddWideText(msg, clRed);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DataSent(xml: TXMLTag; data: Widestring; dt: TDateTime);
-var
-    tstr: Widestring;
-    l, d: integer;
-begin
-    if (frmDebug = nil) then exit;
-    if (not frmDebug.Visible) then exit;
-
-    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
-        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
-        for l := 1 to d do
-            MsgDebug.Lines.Delete(0);
-    end;
-
-    tstr := getObfuscatedData('/data/send', xml, data);
-    AddWideText('SENT: ' + tstr, clBlue);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DataRecv(xml: TXMLTag; data: Widestring; dt: TDateTime);
-var
-    tstr: Widestring;
-    l, d: integer;
-begin
-    if (frmDebug = nil) then exit;
-    if (not frmDebug.Visible) then exit;
-
-    if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
-        d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
-        for l := 1 to d do
-            MsgDebug.Lines.Delete(0);
-    end;
-
-    tstr := getObfuscatedData('/data/recv', xml, data);
-    AddWideText('RECV: ' + tstr, clGreen);
 end;
 
 initialization

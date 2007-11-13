@@ -321,7 +321,7 @@ Function DownloadPlugin
     Exch $1
 
     CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
-    NSISdl::download "${HOME_URL}/${PLUGINS_DOWNLOAD_PATH}/$1_${EXODUS_VERSION}${ZIP_EXTENSION}" \
+    NSISdl::download "${HOME_URL}/${PLUGINS_DOWNLOAD_PATH}/$1${ZIP_EXTENSION}" \
         "$INSTDIR\${PLUGINS_DIR}\$1${ZIP_EXTENSION}"
     Pop $R0
     StrCmp $R0 "${NSISDL_SUCCESSFUL}" unzip

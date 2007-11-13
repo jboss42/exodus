@@ -1,25 +1,30 @@
-inherited frmPrefs: TfrmPrefs
+object frmPrefs: TfrmPrefs
   Left = 192
   Top = 266
   BorderWidth = 1
   Caption = 'Settings'
-  ClientHeight = 443
-  ClientWidth = 560
+  ClientHeight = 477
+  ClientWidth = 603
+  Color = clBtnFace
   DefaultMonitor = dmMainForm
+  Font.Charset = ANSI_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Arial'
+  Font.Style = []
+  OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitWidth = 570
-  ExplicitHeight = 479
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   object Scroller: TScrollBox
     Left = 0
     Top = 0
-    Width = 92
-    Height = 409
+    Width = 99
+    Height = 440
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
@@ -29,9 +34,9 @@ inherited frmPrefs: TfrmPrefs
     OnMouseMove = OffBoxMouseMove
     object Shape2: TShape
       Left = 0
-      Top = 241
-      Width = 63
-      Height = 52
+      Top = 260
+      Width = 68
+      Height = 55
       Brush.Color = clInfoBk
       Pen.Color = cl3DDkShadow
       Pen.Width = 2
@@ -40,16 +45,16 @@ inherited frmPrefs: TfrmPrefs
     object Shape1: TShape
       Left = 1
       Top = 1
-      Width = 61
-      Height = 50
+      Width = 66
+      Height = 54
       Brush.Color = clInactiveCaptionText
       Pen.Color = clActiveCaption
     end
     object imgDialog: TImage
       Left = 0
-      Top = 262
-      Width = 71
-      Height = 31
+      Top = 282
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -225,13 +230,12 @@ inherited frmPrefs: TfrmPrefs
         0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblDialog: TTntLabel
       Left = 0
-      Top = 293
-      Width = 71
-      Height = 13
+      Top = 315
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Windows'
@@ -239,13 +243,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 43
+      ExplicitTop = -94
+      ExplicitWidth = 46
     end
     object imgFonts: TImage
       Left = 0
-      Top = 175
-      Width = 71
-      Height = 30
+      Top = 188
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -421,13 +426,12 @@ inherited frmPrefs: TfrmPrefs
         00000000000000000000000000000000000000010000000180000003}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblFonts: TTntLabel
       Left = 0
-      Top = 205
-      Width = 71
-      Height = 13
+      Top = 221
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Fonts, Colors'
@@ -435,13 +439,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -188
       ExplicitWidth = 64
     end
     object imgS10n: TImage
       Left = 0
-      Top = 131
-      Width = 71
-      Height = 31
+      Top = 141
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -618,13 +623,12 @@ inherited frmPrefs: TfrmPrefs
       Transparent = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblS10n: TTntLabel
       Left = 0
-      Top = 162
-      Width = 71
-      Height = 13
+      Top = 174
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Subscriptions'
@@ -632,13 +636,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 63
+      ExplicitTop = -235
+      ExplicitWidth = 66
     end
     object imgRoster: TImage
       Left = 0
-      Top = 44
-      Width = 71
-      Height = 30
+      Top = 47
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -814,13 +819,12 @@ inherited frmPrefs: TfrmPrefs
         FF0000FFFF8000FFFF8001FFFFC003FFFFC007FFFFD00BFFFFFC37FF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblRoster: TTntLabel
       Left = 0
-      Top = 74
-      Width = 71
-      Height = 13
+      Top = 80
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Contact List'
@@ -828,13 +832,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = -329
       ExplicitWidth = 57
     end
     object imgSystem: TImage
       Left = 0
       Top = 0
-      Width = 71
-      Height = 31
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1010,13 +1015,12 @@ inherited frmPrefs: TfrmPrefs
         0000FFFF0000FFFF0001FFFF000FFFFF000FFFFF000FFFFFC01FFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblSystem: TTntLabel
       Left = 0
-      Top = 31
-      Width = 71
-      Height = 13
+      Top = 33
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'System'
@@ -1024,13 +1028,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 35
+      ExplicitTop = -376
+      ExplicitWidth = 36
     end
     object imgNotify: TImage
       Left = 0
-      Top = 306
-      Width = 71
-      Height = 30
+      Top = 329
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1150,13 +1155,12 @@ inherited frmPrefs: TfrmPrefs
         000100000001000080010000C0030000C0070000E00F0000F8FF0000}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblNotify: TTntLabel
       Left = 0
-      Top = 336
-      Width = 71
-      Height = 13
+      Top = 362
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Notification'
@@ -1164,13 +1168,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 54
+      ExplicitTop = -47
+      ExplicitWidth = 53
     end
     object imgAway: TImage
       Left = 0
-      Top = 480
-      Width = 71
-      Height = 31
+      Top = 517
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1346,13 +1351,12 @@ inherited frmPrefs: TfrmPrefs
         FE000000FE000000FE000000FE000000FE000001FFF8000FFFF81FFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblAway: TTntLabel
       Left = 0
-      Top = 511
-      Width = 71
-      Height = 13
+      Top = 550
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Auto-Away'
@@ -1360,13 +1364,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 54
+      ExplicitTop = 141
+      ExplicitWidth = 57
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 524
-      Width = 71
-      Height = 30
+      Top = 564
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1542,13 +1547,12 @@ inherited frmPrefs: TfrmPrefs
         F0002001F0007000F880F800F9C1FC01FFE7FE03FFFFFF07FFFFFF8F}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblKeywords: TTntLabel
       Left = 0
-      Top = 554
-      Width = 71
-      Height = 13
+      Top = 597
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Keywords'
@@ -1556,13 +1560,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 47
+      ExplicitTop = 188
+      ExplicitWidth = 51
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 611
-      Width = 71
-      Height = 31
+      Top = 658
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1738,13 +1743,13 @@ inherited frmPrefs: TfrmPrefs
         FE000003FE000003FE000007FF80000FFF60007FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
+      ExplicitTop = 611
     end
     object lblBlockList: TTntLabel
       Left = 0
-      Top = 642
-      Width = 71
-      Height = 13
+      Top = 691
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Block List'
@@ -1752,13 +1757,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 43
+      ExplicitTop = 282
+      ExplicitWidth = 46
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 655
-      Width = 71
-      Height = 30
+      Top = 705
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1934,13 +1940,13 @@ inherited frmPrefs: TfrmPrefs
         FC00003FFE00003FFE00007FFF0000FFFF8001FFFFC003FFFFF00FFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
+      ExplicitTop = 658
     end
     object lblCustomPres: TTntLabel
       Left = 0
-      Top = 685
-      Width = 71
-      Height = 13
+      Top = 738
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Presence'
@@ -1948,13 +1954,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 44
+      ExplicitTop = 329
+      ExplicitWidth = 46
     end
     object imgMessages: TImage
       Left = 0
-      Top = 349
-      Width = 71
-      Height = 31
+      Top = 376
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2130,13 +2137,12 @@ inherited frmPrefs: TfrmPrefs
         F000001FF800003FFE0000FFFF8003FFFFF83FFFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblMessages: TTntLabel
       Left = 0
-      Top = 380
-      Width = 71
-      Height = 13
+      Top = 409
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Messages'
@@ -2144,13 +2150,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 47
+      ExplicitTop = 0
+      ExplicitWidth = 50
     end
     object lblPlugins: TTntLabel
       Left = 0
-      Top = 773
-      Width = 71
-      Height = 13
+      Top = 832
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Plug-ins'
@@ -2158,13 +2165,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 37
+      ExplicitTop = 423
+      ExplicitWidth = 38
     end
     object imgNetwork: TImage
       Left = 0
-      Top = 698
-      Width = 71
-      Height = 31
+      Top = 752
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2340,13 +2348,13 @@ inherited frmPrefs: TfrmPrefs
         8000003FC000003FE000007FF00000FFF80001FFFC0007FFFF001FFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
+      ExplicitTop = 705
     end
     object imgTransfer: TImage
       Left = 0
-      Top = 436
-      Width = 71
-      Height = 31
+      Top = 470
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2522,13 +2530,12 @@ inherited frmPrefs: TfrmPrefs
         FC00001FFC00001FFC00003FFE00003FFE00007FFFC003FFFFC003FF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblTransfer: TTntLabel
       Left = 0
-      Top = 467
-      Width = 71
-      Height = 13
+      Top = 503
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'File Transfers'
@@ -2536,13 +2543,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 65
+      ExplicitTop = 94
+      ExplicitWidth = 67
     end
     object imgGroups: TImage
       Left = 0
-      Top = 87
-      Width = 71
-      Height = 31
+      Top = 94
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2718,13 +2726,12 @@ inherited frmPrefs: TfrmPrefs
         E018003FF01C003FFC7C007FFFFE00FFFFFF83FFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblGroups: TTntLabel
       Left = 0
-      Top = 118
-      Width = 71
-      Height = 13
+      Top = 127
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Groups'
@@ -2732,13 +2739,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 34
+      ExplicitTop = -282
+      ExplicitWidth = 36
     end
     object imgLayouts: TImage
       Left = 0
-      Top = 218
-      Width = 71
-      Height = 31
+      Top = 235
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2887,13 +2895,12 @@ inherited frmPrefs: TfrmPrefs
       Transparent = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblLayouts: TTntLabel
       Left = 0
-      Top = 249
-      Width = 71
-      Height = 13
+      Top = 268
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Layouts'
@@ -2901,13 +2908,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 38
+      ExplicitTop = -141
+      ExplicitWidth = 39
     end
     object lblNetwork: TTntLabel
       Left = 0
-      Top = 729
-      Width = 71
-      Height = 13
+      Top = 785
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Network'
@@ -2915,13 +2923,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 40
+      ExplicitTop = 376
+      ExplicitWidth = 41
     end
     object imgEmote: TImage
       Left = 0
-      Top = 393
-      Width = 71
-      Height = 30
+      Top = 423
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -7986,13 +7995,12 @@ inherited frmPrefs: TfrmPrefs
         FFFFFFFFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
     end
     object lblEmote: TTntLabel
       Left = 0
-      Top = 423
-      Width = 71
-      Height = 13
+      Top = 456
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Emoticons'
@@ -8000,13 +8008,14 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 48
+      ExplicitTop = 47
+      ExplicitWidth = 49
     end
     object imgHotkeys: TImage
       Left = 0
-      Top = 567
-      Width = 71
-      Height = 31
+      Top = 611
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -8039,13 +8048,14 @@ inherited frmPrefs: TfrmPrefs
         FFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
+      ExplicitLeft = -1
+      ExplicitTop = 144
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 742
-      Width = 71
-      Height = 31
+      Top = 799
+      Width = 78
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -8165,13 +8175,13 @@ inherited frmPrefs: TfrmPrefs
         FFFE0001FFF00001FFF00001FFF00031FFFFFF3FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
-      ExplicitWidth = 72
+      ExplicitTop = 752
     end
     object lblHotkeys: TTntLabel
       Left = 0
-      Top = 598
-      Width = 71
-      Height = 13
+      Top = 644
+      Width = 78
+      Height = 14
       Align = alTop
       Alignment = taCenter
       Caption = 'Hotkeys'
@@ -8179,18 +8189,19 @@ inherited frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
+      ExplicitTop = 235
       ExplicitWidth = 39
     end
   end
   object PageControl1: TTntPageControl
-    Left = 92
+    Left = 99
     Top = 0
-    Width = 468
-    Height = 409
+    Width = 504
+    Height = 440
     ActivePage = tbsKeywords
     Align = alClient
-    Constraints.MinHeight = 316
-    Constraints.MinWidth = 288
+    Constraints.MinHeight = 340
+    Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabOrder = 1
     OnMouseMove = OffBoxMouseMove
@@ -8200,46 +8211,45 @@ inherited frmPrefs: TfrmPrefs
       OnMouseMove = OffBoxMouseMove
       object memKeywords: TTntMemo
         Left = 0
-        Top = 90
-        Width = 460
-        Height = 288
+        Top = 97
+        Width = 496
+        Height = 311
         Align = alClient
         TabOrder = 0
         OnKeyPress = memKeywordsKeyPress
       end
       object Panel2: TPanel
         Left = 0
-        Top = 22
-        Width = 460
-        Height = 68
+        Top = 24
+        Width = 496
+        Height = 73
         Align = alTop
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 1
         object Label1: TTntLabel
           Left = 2
-          Top = 50
-          Width = 282
-          Height = 13
+          Top = 54
+          Width = 279
+          Height = 14
           Caption = 'The following characters should not be used: ( ) [ ] * + \ ?.'
         end
         object TntLabel1: TTntLabel
           Left = 0
           Top = 0
-          Width = 460
-          Height = 26
+          Width = 496
+          Height = 28
           Align = alTop
           Caption = 
             'You can be notified when a keyword appears in conference room. E' +
             'nter in the keywords that you want to look for in messages.'
           WordWrap = True
-          ExplicitWidth = 449
+          ExplicitWidth = 477
         end
         object chkRegex: TTntCheckBox
           Left = 2
-          Top = 32
-          Width = 241
-          Height = 13
+          Top = 34
+          Width = 260
+          Height = 14
           Caption = 'Use Regular Expressions for Keyword matches'
           TabOrder = 0
         end
@@ -8247,122 +8257,123 @@ inherited frmPrefs: TfrmPrefs
       object pnlKeyword: TTntPanel
         Left = 0
         Top = 0
-        Width = 460
-        Height = 22
+        Width = 496
+        Height = 24
         Align = alTop
         BevelOuter = bvLowered
         Caption = 'Keywords'
+        Color = clHighlight
         ParentBackground = False
-        ParentColor = True
         TabOrder = 2
       end
     end
     object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object memBlocks: TTntMemo
         Left = 0
-        Top = 83
-        Width = 460
-        Height = 295
+        Top = 89
+        Width = 496
+        Height = 319
         Align = alClient
         TabOrder = 0
       end
       object pnlBlocked: TTntPanel
         Left = 0
         Top = 0
-        Width = 460
-        Height = 22
+        Width = 496
+        Height = 24
         Align = alTop
         BevelOuter = bvLowered
         Caption = 'Block List'
+        Color = clHighlight
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
         ParentBackground = False
-        ParentColor = True
+        ParentFont = False
         TabOrder = 1
       end
       object Panel4: TPanel
         Left = 0
-        Top = 22
-        Width = 460
-        Height = 61
+        Top = 24
+        Width = 496
+        Height = 65
         Align = alTop
         BevelOuter = bvNone
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = True
-        ParentFont = False
         TabOrder = 2
         object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
-          Width = 460
-          Height = 26
+          Width = 495
+          Height = 28
           Align = alTop
           Caption = 
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
             ' sending you messages. All messages from these contacts will be ' +
             'blocked.'
           WordWrap = True
-          ExplicitWidth = 441
         end
       end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 409
-    Width = 560
-    Height = 34
+    Top = 440
+    Width = 603
+    Height = 37
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 1
-    ParentColor = True
     TabOrder = 2
     object Bevel1: TBevel
       Left = 1
       Top = 1
-      Width = 558
+      Width = 601
       Height = 5
       Align = alTop
       Shape = bsTopLine
+      ExplicitWidth = 454
     end
     object Panel3: TPanel
-      Left = 335
+      Left = 361
       Top = 6
-      Width = 224
-      Height = 27
+      Width = 241
+      Height = 30
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
       object btnOK: TTntButton
         Left = 4
         Top = 1
-        Width = 69
-        Height = 23
+        Width = 75
+        Height = 25
         Caption = 'OK'
         ModalResult = 1
         TabOrder = 0
         OnClick = frameButtons1btnOKClick
       end
       object btnCancel: TTntButton
-        Left = 77
+        Left = 83
         Top = 1
-        Width = 70
-        Height = 23
+        Width = 75
+        Height = 25
         Cancel = True
         Caption = 'Cancel'
         ModalResult = 2
         TabOrder = 1
       end
       object Button6: TTntButton
-        Left = 150
+        Left = 162
         Top = 1
-        Width = 70
-        Height = 23
+        Width = 75
+        Height = 25
         Caption = 'Apply'
         TabOrder = 2
         OnClick = frameButtons1btnOKClick

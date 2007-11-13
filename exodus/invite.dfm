@@ -1,16 +1,21 @@
-inherited frmInvite: TfrmInvite
+object frmInvite: TfrmInvite
   Left = 400
   Top = 181
   Caption = 'Invite to Conference'
   ClientHeight = 268
   ClientWidth = 323
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 331
-  ExplicitHeight = 302
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
@@ -19,14 +24,6 @@ inherited frmInvite: TfrmInvite
     Width = 323
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 234
@@ -66,7 +63,6 @@ inherited frmInvite: TfrmInvite
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
-    ParentColor = True
     TabOrder = 1
     object Splitter1: TSplitter
       Left = 3
@@ -108,7 +104,6 @@ inherited frmInvite: TfrmInvite
       Height = 106
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 1
       object btnRemove: TTntButton
         Left = 4
@@ -136,7 +131,6 @@ inherited frmInvite: TfrmInvite
       Height = 119
       Align = alTop
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 2
       object Label2: TTntLabel
         Left = 0
@@ -154,7 +148,7 @@ inherited frmInvite: TfrmInvite
         Height = 13
         Align = alTop
         Caption = 'Invite the following contacts to:'
-        ExplicitWidth = 153
+        ExplicitWidth = 147
       end
       object memReason: TTntMemo
         Left = 0
@@ -173,7 +167,6 @@ inherited frmInvite: TfrmInvite
         Height = 31
         Align = alTop
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 1
         object cboRoom: TTntComboBox
           Left = 3

@@ -1,16 +1,21 @@
-inherited frmRoomAdminList: TfrmRoomAdminList
+object frmRoomAdminList: TfrmRoomAdminList
   Left = 209
   Top = 156
   BorderWidth = 3
   Caption = 'Conference Room List Modifier'
   ClientHeight = 221
   ClientWidth = 380
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 394
-  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
@@ -19,14 +24,6 @@ inherited frmRoomAdminList: TfrmRoomAdminList
     Width = 380
     Height = 30
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 191
@@ -87,7 +84,6 @@ inherited frmRoomAdminList: TfrmRoomAdminList
     Height = 191
     Align = alRight
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 2
     object btnRemove: TTntButton
       Left = 6

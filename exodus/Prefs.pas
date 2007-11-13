@@ -31,10 +31,10 @@ uses
     Menus, ShellAPI, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
-    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls, ExForm;
+    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
-  TfrmPrefs = class(TExForm)
+  TfrmPrefs = class(TForm)
     Scroller: TScrollBox;
     imgDialog: TImage;
     lblDialog: TTntLabel;
@@ -214,6 +214,7 @@ begin
     f.Free();
 end;
 
+{------------- added by SIG ------------}
 function IsRequiredPluginsSelected(): WordBool;
 var
   plugins_selected: TWideStringlist;
@@ -270,7 +271,6 @@ begin
         end;
 
         fillStringList('blockers', memBlocks.Lines);
-        regex_pref_tag.Free();
    end;
 end;
 

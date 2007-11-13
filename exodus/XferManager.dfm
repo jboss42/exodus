@@ -4,6 +4,7 @@ inherited frmXferManager: TfrmXferManager
   Caption = 'File Transfer Manager'
   ClientWidth = 455
   OldCreateOrder = True
+  OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 463
   PixelsPerInch = 96
@@ -24,7 +25,6 @@ inherited frmXferManager: TfrmXferManager
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 5
-      ParentColor = True
       TabOrder = 1
       object pnlCaption: TTntPanel
         Left = 5

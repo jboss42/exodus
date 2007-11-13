@@ -23,7 +23,6 @@
 **/
 
 /*
-    2007-11-02 - Modified install script to work with Gooogle code repository.
     2004-03-29 - Added MAP file to daily build installers.
     2004-02-11 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
                 (all changes were made implying the usage of a stock 2.0 version
@@ -185,12 +184,11 @@ REAL STUFF STARTS HERE
 
 /* PLUGIN URLS */
 !define PLUGINS_DIR "plugins"
-!define GOOGLECODE_DOWNLOAD_DIR "files"
 !ifdef DAILY
      ; BRANDING: Change this PATH if different
     !define PLUGINS_DOWNLOAD_PATH "daily/${PLUGINS_DIR}"
 !else
-    !define PLUGINS_DOWNLOAD_PATH "${GOOGLECODE_DOWNLOAD_DIR}"
+    !define PLUGINS_DOWNLOAD_PATH "${PLUGINS_DIR}"
 !endif
 
 
@@ -246,7 +244,7 @@ REAL STUFF STARTS HERE
 !ifdef STAGE
     !define HOME_URL "http://192.168.1.1/stage"
 !else
-    !define HOME_URL "http://exodus.googlecode.com"
+    !define HOME_URL "http://exodus.jabberstudio.org"
 !endif
 
 /*

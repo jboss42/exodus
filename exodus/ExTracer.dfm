@@ -1,9 +1,15 @@
 object frmException: TfrmException
   Left = 249
   Top = 204
+  Width = 401
+  Height = 361
   Caption = 'frmException'
-  ClientHeight = 327
-  ClientWidth = 393
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
   PixelsPerInch = 96
@@ -12,7 +18,7 @@ object frmException: TfrmException
     Left = 0
     Top = 0
     Width = 393
-    Height = 293
+    Height = 297
     Align = alClient
     ScrollBars = ssBoth
     TabOrder = 0
@@ -20,37 +26,19 @@ object frmException: TfrmException
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 293
+    Top = 297
     Width = 393
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
+    AutoScroll = False
     TabOrder = 1
-    TabStop = True
-    ExplicitTop = 293
-    ExplicitWidth = 393
-    ExplicitHeight = 34
     inherited Panel2: TPanel
       Width = 393
-      Height = 34
-      ExplicitWidth = 393
-      ExplicitHeight = 34
       inherited Bevel1: TBevel
         Width = 393
-        ExplicitWidth = 393
       end
       inherited Panel1: TPanel
         Left = 233
-        Height = 29
-        ExplicitLeft = 233
-        ExplicitHeight = 29
         inherited btnOK: TTntButton
           Visible = False
         end

@@ -24,10 +24,10 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntStdCtrls, ExFrame;
+    StdCtrls, TntStdCtrls;
 
 type
-  TfrmField = class(TExFrame)
+  TfrmField = class(TFrame)
     lblPrompt: TTntLabel;
     txtData: TTntEdit;
   private

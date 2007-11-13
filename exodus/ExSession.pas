@@ -28,8 +28,7 @@ uses
     S10n,
 
     // Delphi stuff
-    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils,
-    Exodus_TLB;
+    Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils;
 
 type
     TExStartParams = class
@@ -72,31 +71,12 @@ var
     sExodusMutex: Cardinal;
 
     ExCOMController: TExodusController;
-    //We need to provide variables referencing com objects
-    //to make sure ref count will never goes to 0 during the execution.
-    //var
-    // myClass: TMyClass;
-    // myInterface: TMyInterface;
-    //begin
-    // myClass := TMyClass.Create(); //reference count does not change
-    // myInterface := myClass;       //referebce count increments
-    //The code fragment above demonstrates how Delphi keeps track of reference
-    //couting.
-    //With the new approach reference count for each object will never be less than 1.
-    //And we can actually release plugin objects afre we are done with them.
-    COMController: IExodusController;
     ExCOMRoster: TExodusRoster;
-    COMRoster: IExodusRoster;
     ExCOMPPDB: TExodusPPDB;
-    COMPPDB: IExodusPPDB;
     ExCOMRosterImages: TExodusRosterImages;
-    COMRosterImages: IExodusRosterImages;
     ExCOMEntityCache: TExodusEntityCache;
-    COMEntityCache: IExodusEntityCache;
     ExCOMToolbar: TExodusToolbar;
-    COMToolbar: IExodusToolbar;
     ExCOMBookmarkManager: TExodusBookmarkManager;
-    COMBookmarkManager: IExodusBookmarkManager;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
@@ -118,7 +98,7 @@ uses
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
-    XMLParser, XMLUtils, DebugLogger, DebugManager;
+    XMLParser, XMLUtils, DebugLogger;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -554,7 +534,6 @@ begin
     // Initialize the global responders/xpath events
     initResponders();
 
-    StartDBGManager();
     if (log_debug) then begin
         StartDebugLogger(log_filename);
     end;
@@ -586,19 +565,12 @@ begin
     **}
     // create COM interfaces for plugins to use
     ExCOMController := TExodusController.Create();
-    COMController := ExCOMController;
     ExCOMRoster := TExodusRoster.Create();
-    COMRoster := ExCOMRoster;
     ExCOMPPDB := TExodusPPDB.Create();
-    COMPPDB := ExCOMPPDB;
     ExCOMRosterImages := TExodusRosterImages.Create();
-    COMRosterImages := ExCOMRosterImages;
     ExCOMEntityCache := TExodusEntityCache.Create();
-    COMEntityCache := ExCOMEntityCache;
     ExCOMToolbar := TExodusToolbar.Create();
-    COMToolbar := ExCOMToolbar;
     ExCOMBookmarkManager := TExodusBookmarkManager.Create(MainSession.bookmarks);
-    COMBookmarkManager := ExCOMBookmarkManager;
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
@@ -767,8 +739,6 @@ begin
     cleanupResponders();
     StopDebugLogger();
 
-    StopDBGManager();
-
     // Free the Richedit library
     if (_richedit <> 0) then begin
         FreeLibrary(_richedit);
@@ -791,15 +761,13 @@ begin
         _mutex := 0;
     end;
 
-// There is no need to free. COM objects will be released as soon as references to
-// the interfaces will go out of scope (at the end of the execution).    
-//    if (ExStartup <> nil) then          FreeAndNil(ExStartup);
-//    if (ExCOMToolbar <> nil) then       FreeAndNil(ExCOMToolbar);
-//    if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
-//    if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
-//    if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
-//    if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
-//    if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
+    if (ExStartup <> nil) then          FreeAndNil(ExStartup);
+    if (ExCOMToolbar <> nil) then       FreeAndNil(ExCOMToolbar);
+    if (ExCOMRoster <> nil) then        FreeAndNil(ExCOMRoster);
+    if (ExCOMPPDB <> nil) then          FreeAndNil(ExCOMPPDB);
+    if (ExCOMRosterImages <> nil) then  FreeAndNil(ExCOMRosterImages);
+    if (ExCOMEntityCache <> nil) then   FreeAndNil(ExCOMEntityCache);
+    if (ExCOMController <> nil) then    FreeAndNil(ExCOMController);
 
 end;
 

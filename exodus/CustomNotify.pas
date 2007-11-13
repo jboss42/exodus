@@ -23,11 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst, ExForm,
-  TntForms, ExFrame;
+  Dialogs, buttonFrame, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst;
 
 type
-  TfrmCustomNotify = class(TExForm)
+  TfrmCustomNotify = class(TForm)
     chkNotify: TTntCheckListBox;
     frameButtons1: TframeButtons;
     lblDefault: TTntLabel;
