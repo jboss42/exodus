@@ -178,7 +178,6 @@ var
     newLen : integer;
 begin
     {Get memory for the string}
-    p := nil;
     newLen := WideCharToMultiByte(  CP_UTF8,  0,  pw,  -1,  p,  0,  nil,  nil  );
     //iLen := lstrlenw(  pw  ) + 1;
     GetMem(  p,  newLen  );

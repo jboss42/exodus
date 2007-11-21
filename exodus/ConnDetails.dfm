@@ -1,16 +1,21 @@
-inherited frmConnDetails: TfrmConnDetails
+object frmConnDetails: TfrmConnDetails
   Left = 513
   Top = 170
   BorderStyle = bsDialog
   Caption = 'Connection Details'
   ClientHeight = 319
   ClientWidth = 405
+  Color = clBtnFace
   Constraints.MinWidth = 410
   DefaultMonitor = dmDesktop
+  Font.Charset = ANSI_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 411
-  ExplicitHeight = 351
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl1: TTntPageControl
@@ -24,10 +29,14 @@ inherited frmConnDetails: TfrmConnDetails
     object tbsProfile: TTntTabSheet
       Caption = 'Account Details'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
-        Width = 51
+        Width = 49
         Height = 13
         Caption = 'Jabber ID:'
         Transparent = True
@@ -35,7 +44,7 @@ inherited frmConnDetails: TfrmConnDetails
       object Label10: TTntLabel
         Left = 2
         Top = 35
-        Width = 50
+        Width = 49
         Height = 13
         Caption = 'Password:'
         Transparent = True
@@ -43,7 +52,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblServerList: TTntLabel
         Left = 225
         Top = 239
-        Width = 154
+        Width = 152
         Height = 13
         Cursor = crHandPoint
         Caption = 'Download a list of public servers'
@@ -52,7 +61,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblRename: TTntLabel
         Left = 100
         Top = 101
-        Width = 92
+        Width = 90
         Height = 13
         Cursor = crHandPoint
         Caption = 'Rename this profile'
@@ -119,7 +128,7 @@ inherited frmConnDetails: TfrmConnDetails
       object TntLabel2: TTntLabel
         Left = 4
         Top = 38
-        Width = 60
+        Width = 63
         Height = 13
         Caption = 'SASL Realm:'
         Transparent = True
@@ -127,7 +136,7 @@ inherited frmConnDetails: TfrmConnDetails
       object Label6: TTntLabel
         Left = 4
         Top = 67
-        Width = 38
+        Width = 34
         Height = 13
         Caption = 'Priority:'
         Transparent = True
@@ -217,19 +226,19 @@ inherited frmConnDetails: TfrmConnDetails
         Width = 46
         Height = 25
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 0
         Text = '0'
         Min = -128
         Max = 127
-        DesignSize = (
-          46
-          25)
       end
     end
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object chkSRV: TTntCheckBox
         Left = 4
         Top = 2
@@ -248,7 +257,7 @@ inherited frmConnDetails: TfrmConnDetails
         object Label4: TTntLabel
           Left = 6
           Top = 17
-          Width = 26
+          Width = 25
           Height = 13
           Caption = 'Host:'
           Transparent = True
@@ -256,7 +265,7 @@ inherited frmConnDetails: TfrmConnDetails
         object Label7: TTntLabel
           Left = 6
           Top = 44
-          Width = 24
+          Width = 22
           Height = 13
           Caption = 'Port:'
           Transparent = True
@@ -280,6 +289,10 @@ inherited frmConnDetails: TfrmConnDetails
     end
     object tbsSSL: TTntTabSheet
       Caption = 'Encryption'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object optSSL: TTntRadioGroup
         Left = 11
         Top = 3
@@ -296,10 +309,14 @@ inherited frmConnDetails: TfrmConnDetails
     object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
-        Width = 26
+        Width = 25
         Height = 13
         Caption = 'Host:'
         Enabled = False
@@ -308,7 +325,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblSocksPort: TTntLabel
         Left = 5
         Top = 65
-        Width = 24
+        Width = 22
         Height = 13
         Caption = 'Port:'
         Enabled = False
@@ -317,7 +334,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblSocksType: TTntLabel
         Left = 5
         Top = 13
-        Width = 28
+        Width = 27
         Height = 13
         Caption = 'Type:'
         Transparent = True
@@ -325,7 +342,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblSocksUsername: TTntLabel
         Left = 5
         Top = 112
-        Width = 52
+        Width = 51
         Height = 13
         Caption = 'Username:'
         Enabled = False
@@ -334,7 +351,7 @@ inherited frmConnDetails: TfrmConnDetails
       object lblSocksPassword: TTntLabel
         Left = 5
         Top = 140
-        Width = 50
+        Width = 49
         Height = 13
         Caption = 'Password:'
         Enabled = False
@@ -404,10 +421,14 @@ inherited frmConnDetails: TfrmConnDetails
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label1: TTntLabel
         Left = 1
         Top = 27
-        Width = 23
+        Width = 25
         Height = 13
         Caption = 'URL:'
         Transparent = True
@@ -415,7 +436,7 @@ inherited frmConnDetails: TfrmConnDetails
       object Label2: TTntLabel
         Left = 1
         Top = 60
-        Width = 45
+        Width = 46
         Height = 13
         Caption = 'Poll Time:'
         Transparent = True
@@ -423,14 +444,14 @@ inherited frmConnDetails: TfrmConnDetails
       object Label5: TTntLabel
         Left = 164
         Top = 61
-        Width = 39
+        Width = 40
         Height = 13
         Caption = 'seconds'
       end
       object Label9: TTntLabel
         Left = 1
         Top = 95
-        Width = 51
+        Width = 48
         Height = 13
         Caption = '# of Keys:'
         Transparent = True
@@ -490,8 +511,9 @@ inherited frmConnDetails: TfrmConnDetails
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 4
-    ParentColor = True
     TabOrder = 1
+    ExplicitTop = 284
+    ExplicitWidth = 403
     object Panel1: TPanel
       Left = 139
       Top = 4
@@ -499,8 +521,8 @@ inherited frmConnDetails: TfrmConnDetails
       Height = 25
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
+      ExplicitLeft = 137
       object btnOK: TTntButton
         Left = 13
         Top = 0

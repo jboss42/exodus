@@ -22,10 +22,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
+  Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 
 type
-  TfrmInputPass = class(TExForm)
+  TfrmInputPass = class(TForm)
     Label1: TTntLabel;
     frameButtons1: TframeButtons;
     txtPassword: TTntEdit;

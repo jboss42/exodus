@@ -24,10 +24,10 @@ uses
     XMLTag, IQ, Unicode, SelContact, SelRoomOccupant,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-    TntComCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
+    TntComCtrls, TntStdCtrls;
 
 type
-  TfrmRoomAdminList = class(TExForm)
+  TfrmRoomAdminList = class(TForm)
     frameButtons1: TframeButtons;
     lstItems: TTntListView;
     Panel2: TPanel;
@@ -174,12 +174,6 @@ begin
         lstItems.Columns.Delete(1);
         lstItems.Column[0].Width := lstItems.Width - 5;
     end;
-
-    if (onList = MUC_OUTCAST) then begin
-        lstItems.Columns.Delete(0);
-        lstItems.Column[0].Width := lstItems.Width - 5;
-    end;
-
     Show();
 end;
 

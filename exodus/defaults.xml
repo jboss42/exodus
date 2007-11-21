@@ -290,16 +290,7 @@
          all searchable jids are shown.
         This option is never exposed to the user -->
     <search_component_only value="0"/>
-
-<!--
-    These values only matter if USE_TWEBBROWSER is defined on compile
-    and msglist_type has a value of 1 and not 0
--->
-    <display_date_seperator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
-    <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->
-    <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
-
-    <!-- Branding items -->
+    
     <brand_ad ></brand_ad>
     <brand_ad_url ></brand_ad_url>
     <!-- application ID is different than caption. It is used for

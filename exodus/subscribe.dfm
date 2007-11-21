@@ -25,7 +25,7 @@ inherited frmSubscribe: TfrmSubscribe
       'This person or agent would like to see your online presence and ' +
       'add you to their contact list.'
     WordWrap = True
-    ExplicitWidth = 326
+    ExplicitWidth = 325
   end
   object Bevel1: TBevel
     Left = 0
@@ -55,14 +55,14 @@ inherited frmSubscribe: TfrmSubscribe
     object lblNickname: TTntLabel
       Left = 8
       Top = 16
-      Width = 49
+      Width = 51
       Height = 13
       Caption = 'Nickname:'
     end
     object lblGroup: TTntLabel
       Left = 8
       Top = 48
-      Width = 33
+      Width = 32
       Height = 13
       Caption = 'Group:'
     end
@@ -89,14 +89,6 @@ inherited frmSubscribe: TfrmSubscribe
     Width = 328
     Height = 36
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 2
     TabStop = True
     ExplicitTop = 179
@@ -134,7 +126,6 @@ inherited frmSubscribe: TfrmSubscribe
     Height = 33
     Align = alTop
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 3
     object imgIdent: TImage
       Left = 0

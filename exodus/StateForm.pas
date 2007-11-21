@@ -25,8 +25,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls,
   XMLTag,  //JOPL XML
-  TntForms, //Unicode form
-  ExForm;
+  TntForms; //Unicode form
 
 const
     WS_NORMAL = 0;
@@ -135,7 +134,7 @@ type
     The default implementation saves/restores position and window "state"
     (min/max/tray or restored).
   }
-  TfrmState = class(TExForm)
+  TfrmState = class(TTntForm)
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
@@ -391,9 +390,6 @@ begin
         end;
         prefHelper.setAutoOpenEvent(toggleEvent(event), profileList, MainSession.Profile.Name);
         prefHelper.setAutoOpenEvent(toggleEvent(event), defaultList);
-
-        profileList.Free();
-        defaultList.Free();
     end
     else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
         discovered := TWideStringList.create();
@@ -649,19 +645,14 @@ end;
 {---------------------------------------}
 procedure TfrmState.WMActivate(var msg: TMessage);
 begin
-    try
-        if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
-            // we are getting activated
-            _skipWindowPosHandling := true;
-            SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-                Self.Width, Self.Height, HWND_TOP);
-            _skipWindowPosHandling := false;
-            if (self.Visible) then
-                gotActivate();
-        end;
-        inherited;
-    except
-        // Possible exception when dealing with an extreme amount of windows
+    if (not _skipWindowPosHandling and (Msg.WParamLo <> WA_INACTIVE)) then begin
+        // we are getting activated
+        _skipWindowPosHandling := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _skipWindowPosHandling := false;
+        if (self.Visible) then
+            gotActivate();
     end;
     inherited;
 end;
@@ -750,35 +741,29 @@ end;
 }
 procedure TfrmState.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
-    try
-        if (Handle <> 0) then begin
-            if (not Self.Visible) then begin
-                RestoreWindowState();
-                _skipWindowPosHandling := true;
-                if (_windowState = wsMinimized) then
-                    ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-                else if (_windowState = wsMaximized) then
-                    ShowWindow(Handle, SW_MAXIMIZE)
-                else if(bringtofront) then begin
-                    ShowWindow(Handle, SW_SHOWNORMAL);
-                    Self.BringToFront;
-                end
-                else
-                    SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
-                Self.Visible := true;
-                _skipWindowPosHandling := false;
-            end
-            else if (frmExodus.isMinimized() and not bringtofront) then
-                ShowWindow(Handle, SW_SHOWMINNOACTIVE)
-            else if(not bringtofront) then
-                ShowWindow(Handle, SW_SHOWNOACTIVATE)
-            else begin
-                ShowWindow(Handle, SW_SHOWNORMAL);
-                Self.BringToFront;
-            end;
-        end;
-    except
-        // Possible exception when dealing with an extreme amount of windows
+    if (not Self.Visible) then begin
+        RestoreWindowState();
+        _skipWindowPosHandling := true;
+        if (_windowState = wsMinimized) then
+            ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+        else if (_windowState = wsMaximized) then
+            ShowWindow(Handle, SW_MAXIMIZE)
+        else if(bringtofront) then begin
+            ShowWindow(Handle, SW_SHOWNORMAL);
+            Self.BringToFront;
+        end
+        else
+            SetWindowPos(Self.Handle, HWND_BOTTOM, 0,0,0,0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE + SWP_SHOWWINDOW);
+        Self.Visible := true;
+        _skipWindowPosHandling := false;
+    end
+    else if (frmExodus.isMinimized() and not bringtofront) then
+        ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+    else if(not bringtofront) then
+        ShowWindow(Handle, SW_SHOWNOACTIVATE)
+    else begin
+        ShowWindow(Handle, SW_SHOWNORMAL);
+        Self.BringToFront;
     end;
 end;
 

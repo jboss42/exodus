@@ -1,4 +1,4 @@
-inherited frmRemove: TfrmRemove
+object frmRemove: TfrmRemove
   Left = 276
   Top = 147
   BorderIcons = [biSystemMenu]
@@ -7,13 +7,18 @@ inherited frmRemove: TfrmRemove
   Caption = 'Delete Contact'
   ClientHeight = 165
   ClientWidth = 371
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   FormStyle = fsStayOnTop
+  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 381
-  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
@@ -22,14 +27,6 @@ inherited frmRemove: TfrmRemove
     Width = 371
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 131
@@ -105,7 +102,7 @@ inherited frmRemove: TfrmRemove
     Height = 21
     AutoSize = False
     BorderStyle = bsNone
-    ParentColor = True
+    Color = clBtnFace
     ReadOnly = True
     TabOrder = 5
     Text = 'lblJid'

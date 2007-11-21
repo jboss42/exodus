@@ -166,10 +166,10 @@ begin
             if ((etag <> nil) and (b = '') and
                 (etag.GetFirstTag('composing') <> nil) and
                 (etag.GetFirstTag('id') <> nil)) then begin
-                cc := js.ChatList.FindChat(from_jid.jid,
-                    from_jid.resource, '');
+                cc := js.ChatList.FindChat(from_jid.jid, '', '');
                 if (cc = nil) then
-                    cc := js.ChatList.FindChat(from_jid.jid, '', '');
+                    cc := js.ChatList.FindChat(from_jid.jid,
+                        from_jid.resource, '');
                 if (cc <> nil) then
                     cc.MsgCallback('xml', tag);
             end;
@@ -193,15 +193,10 @@ begin
             else begin
                 // check for an existing chat window..
                 // if we have one, then bail.
-                cc := js.ChatList.FindChat(from_jid.jid,
-                    from_jid.resource, '');
+                cc := js.ChatList.FindChat(from_jid.jid, '', '');
                 if (cc = nil) then
-                    cc := js.ChatList.FindChat(from_jid.jid, '', '');
-
-                if ((cc <> nil) and
-                    (cc.AnonymousChat)) then
-                    cc := nil;
-
+                    cc := js.ChatList.FindChat(from_jid.jid,
+                        from_jid.resource, '');
                 if (cc <> nil) then begin
                     cc.MsgCallback('xml', tag);
                     exit;

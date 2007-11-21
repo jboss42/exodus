@@ -172,14 +172,6 @@ begin
     hidden := false;
     valid := true;
 
-    if (x.Name = 'warning') then begin
-        t := 'warning';
-        fixed := true;
-        req := false;
-        buildLabel(x.Data);
-        exit;
-    end;
-
     if (x.Name = 'instructions') then begin
         t := 'instructions';
         fixed := true;
@@ -658,8 +650,6 @@ var
 begin
     // Get our context/xmlns
     _to_jid := tag.getAttribute('from');
-    Caption := Caption + ' from ' + _to_jid;
-
     if (tag.Name = 'iq') then begin
         _packet := 'iq';
         _ns := tag.QueryXPData('/iq/query@xmlns')

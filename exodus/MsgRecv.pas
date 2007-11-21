@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     Buttons, TntStdCtrls, Menus, TntMenus, StrUtils, EntityCache, Entity,
-    TntSysUtils, ToolWin, TntForms, ExFrame;
+    TntSysUtils, ToolWin;
 
 type
 
@@ -656,12 +656,14 @@ begin
 
     // let plugins know about message going out
     // if they don't want to allow it, they change txt to NULL
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     if (ComController <> nil) then
         allowed := TExodusChat(ComController).fireBeforeMsg(txt)
     else
         allowed := true;
 
     if ((allowed = false) or (txt = '')) then exit;
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
 
     if (pnlSendSubject.Visible) then

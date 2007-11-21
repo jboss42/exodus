@@ -1,9 +1,10 @@
-inherited frameTopLabel: TframeTopLabel
+object frameTopLabel: TframeTopLabel
+  Left = 0
+  Top = 0
   Width = 151
   Height = 41
+  TabOrder = 0
   OnResize = FrameResize
-  ExplicitWidth = 151
-  ExplicitHeight = 41
   object Panel1: TPanel
     Left = 0
     Top = 0
@@ -12,7 +13,6 @@ inherited frameTopLabel: TframeTopLabel
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
-    ParentColor = True
     TabOrder = 0
     object lbl: TTntLabel
       Left = 3
@@ -21,7 +21,6 @@ inherited frameTopLabel: TframeTopLabel
       Height = 13
       Align = alTop
       Caption = 'lbl'
-      ExplicitWidth = 10
     end
     object txtData: TTntEdit
       Left = 2

@@ -192,7 +192,7 @@ type
         NumPollKeys: integer;
 
         constructor Create(prof_name: Widestring; prefs: TPrefController);
-        destructor Destroy(); reintroduce;
+        destructor Destroy();
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -788,7 +788,6 @@ var
     reg  : TRegistry;
 {$endif}
     p    : WideString;
-    temptag: TXMLTag;
 begin
     inherited Create();
 
@@ -811,9 +810,7 @@ begin
 
     getDefaultPos();
 
-    temptag := getXMLPref('brand_images');
-    s_Graphics.setBranded(temptag);
-    temptag.Free();
+    s_Graphics.setBranded(getXMLPref('brand_images'));
     
     {$ifdef Exodus}
     // Write out the current prefs file..
@@ -838,9 +835,6 @@ end;
 
 {---------------------------------------}
 destructor TPrefController.Destroy;
-var
-    i: integer;
-    p: TJabberProfile;
 begin
     // Kill our cache'd nodes, etc.
     if (_pref_file <> nil) then
@@ -848,12 +842,7 @@ begin
     if (_server_file <> nil) then
         _server_file.Free();
 
-    for i := _profiles.Count - 1 downto 0 do begin
-        p := TJabberProfile(_profiles.Objects[i]);
-        if (p <> nil) then
-            p.Destroy;
-        _profiles.Delete(i);
-    end;
+    ClearStringListObjects(_profiles);
 
     _profiles.Free();
 
@@ -2186,13 +2175,9 @@ begin
 
 end;
 
-destructor TJabberProfile.Destroy();
+destructor TJabberProfile.Destroy;
 begin
-    try
-        _jabberID.Free();
-        _profilePrefs.Free();
-    except
-    end;
+    _profilePrefs.Free();
 end;
 
 {---------------------------------------}
@@ -2233,7 +2218,6 @@ begin
     tmps1 := tag.GetBasicText('resource');
     if (tmps1 = '') then tmps1 := 'Exodus';
 
-    _jabberID.Free();
     _jabberID := TJabberID.create(tag.GetBasicText('username'), tmps, tmps1);
     SASLRealm := tag.GetBasicText('saslrealm');
 
@@ -2477,6 +2461,5 @@ finalization
     s_default_file.Free();
     s_brand_file.Free();
     cachedAppInfo.Free();
-    s_Graphics.Free();
 end.
 

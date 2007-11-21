@@ -1,10 +1,16 @@
-inherited frmVCard: TfrmVCard
+object frmVCard: TfrmVCard
   Left = 201
   Top = 119
   Caption = 'My Profile'
   ClientHeight = 359
   ClientWidth = 442
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
@@ -26,8 +32,10 @@ inherited frmVCard: TfrmVCard
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
+    ExplicitHeight = 309
     object TabSheet1: TTntTabSheet
       Caption = 'General'
+      ExplicitHeight = 261
       object TntLabel1: TTntLabel
         Left = 4
         Top = 144
@@ -151,9 +159,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 261
       object Label12: TTntLabel
         Left = 4
@@ -202,7 +207,7 @@ inherited frmVCard: TfrmVCard
         Top = 6
         Width = 150
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         Items.Strings = (
           'Accounting/Finance'
@@ -256,9 +261,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 278
       object Label13: TTntLabel
         Left = 10
@@ -307,7 +309,7 @@ inherited frmVCard: TfrmVCard
         Top = 137
         Width = 150
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (
@@ -591,9 +593,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 278
       object Label22: TTntLabel
         Left = 10
@@ -669,9 +668,6 @@ inherited frmVCard: TfrmVCard
     object TabSheet6: TTntTabSheet
       Caption = 'TabSheet6'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 278
       object Label15: TTntLabel
         Left = 10
@@ -720,7 +716,7 @@ inherited frmVCard: TfrmVCard
         Top = 133
         Width = 150
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (
@@ -1008,17 +1004,9 @@ inherited frmVCard: TfrmVCard
     Width = 442
     Height = 34
     Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 1
     TabStop = True
-    ExplicitTop = 325
+    ExplicitTop = 292
     ExplicitWidth = 442
     ExplicitHeight = 34
     inherited Panel2: TPanel
@@ -1054,6 +1042,7 @@ inherited frmVCard: TfrmVCard
     Indent = 19
     TabOrder = 2
     OnClick = TreeView1Click
+    ExplicitHeight = 292
   end
   object OpenPic: TOpenPictureDialog
     Filter = 

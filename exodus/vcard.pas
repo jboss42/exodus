@@ -26,10 +26,10 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls, ExtDlgs, ExForm, TntForms, ExFrame;
+    TntComCtrls, ExtDlgs;
 
 type
-  TfrmVCard = class(TExForm)
+  TfrmVCard = class(TForm)
     Splitter1: TSplitter;
     PageControl1: TTntPageControl;
     TabSheet1: TTntTabSheet;

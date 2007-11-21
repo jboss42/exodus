@@ -297,7 +297,6 @@ const
     sUnblock = 'UnBlock';
     sUnknownFileType = 'Unknown file type';
     sReconnected = 'Reconnected.';
-    sConnected = 'Connected.';
 
 
     sDestroyRoom = 'Destroy Conferene Room';
@@ -420,9 +419,6 @@ uses
     xData,
     XMLNode,
     XMLUtils,
-{$IFDEF USE_TWEBBROWSER}
-    IEMsgList,
-{$ENDIF}
     KeyWords;
 
 {$R *.DFM}
@@ -497,16 +493,6 @@ begin
 
         Result := f;
     except
-        on e: Exception do
-        begin
-            if (Pos('Out of system resources', e.Message) > 0) then
-            begin
-                MainSession.FireEvent('/session/close-all-windows', nil);
-                MainSession.FireEvent('/session/error-out-of-system-resources', nil);
-            end;
-
-            Result := nil;
-        end;
     end;
 end;
 
@@ -760,12 +746,14 @@ begin
     txt := getInputText(MsgOut);
 
     // plugin madness
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     if (ComController <> nil) then
       allowed := TExodusChat(ComController).fireBeforeMsg(txt)
     else
       allowed := true;
 
     if ((allowed = false) or (txt = '')) then exit;
+    //-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then
@@ -1105,10 +1093,7 @@ begin
         if ((_mcallback = -1) or
             (_pending_start)) then begin
             MsgOut.Visible := true;
-            if (_pending_start) then
-                MsgList.DisplayPresence(sConnected, '')
-            else
-                MsgList.DisplayPresence(sReconnected, '');
+            MsgList.DisplayPresence(sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin
@@ -1315,8 +1300,7 @@ begin
                     reason := reason + ''#13#10 + _(sReason) + ' ' + drtag.Data;
                 end;
 
-                MessageDlgW(reason, mtInformation, [mbOK], 0,
-                            TJabberID.removeJEP106(from_base));
+                MessageDlgW(reason, mtInformation, [mbOK], 0, TJabberID.removeJEP106(from_base));
                 tmp_jid.Free();
                 _pending_destroy := false;
             end;
@@ -1806,7 +1790,6 @@ var
 begin
     if (Key = 0) then exit;
     TExodusChat(ComController).fireMsgKeyDown(Key, Shift);
-
     // Send the msg if they hit return
 
     if (chr(Key) = #09) then begin
@@ -2251,11 +2234,7 @@ begin
 
         if (_isMUC) then begin
             if ((m.role <> '') or (m.affil <> '')) then begin
-                tmps := tmps + ''#13#10 + _('Role: ');
-                if (m.role = MUC_VISITOR) then
-                    tmps := tmps + 'observer'
-                else
-                    tmps := tmps + m.role;
+                tmps := tmps + ''#13#10 + _('Role: ') + m.role;
                 tmps := tmps + ''#13#10 + _('Affiliation: ') + m.affil;
             end;
             if (m.real_jid <> '') then
@@ -2560,36 +2539,18 @@ var
     filetype: integer;
 begin
     dlgSave.FileName := MungeName(self.jid);
-
-    case _msglist_type of
-        RTF_MSGLIST  : dlgSave.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'; // RTF
-        HTML_MSGLIST : dlgSave.Filter := 'HTML (*.htm)|*.htm'; // HTML
-    end;
-
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
     filetype := dlgSave.FilterIndex;
-
-    case _msglist_type of
-        RTF_MSGLIST  :
-            begin
-                if (filetype = 1) then begin
-                    // .rtf file
-                    if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
-                        fn := fn + '.rtf';
-                end
-                else if (filetype = 2) then begin
-                    // .txt file
-                    if (LowerCase(RightStr(fn, 3)) <> '.txt') then
-                        fn := fn + '.txt';
-                end;
-            end;
-        HTML_MSGLIST :
-            begin
-                // .htm file
-                if (LowerCase(RightStr(fn, 3)) <> '.htm') then
-                    fn := fn + '.htm';
-            end;
+    if (filetype = 1) then begin
+        // .rtf file
+        if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
+            fn := fn + '.rtf';
+    end
+    else if (filetype = 2) then begin
+        // .txt file
+        if (LowerCase(RightStr(fn, 3)) <> '.txt') then
+            fn := fn + '.txt';
     end;
     MsgList.Save(fn);
 end;
@@ -2770,7 +2731,7 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (MsgOut.Visible) and (MsgOut.Enabled) and (not MsgOut.ReadOnly) then begin
+    if (MsgOut.Visible) and (MsgOut.Enabled) then begin
         MsgOut.SetFocus();
         MsgOut.WideSelText := Key;
     end;
@@ -2930,9 +2891,6 @@ var
     cap: Widestring;
     ml: TfBaseMsgList;
     msglist: TfRTFMsgList;
-{$IFDEF USE_TWEBBROWSER}
-    htmlmsglist: TfIEMsgList;
-{$ENDIF}
 begin
   inherited;
     ml := getMsgList();
@@ -2947,12 +2905,6 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
-{$IFDEF USE_TWEBBROWSER}
-    end
-    else if (ml is TfIEMsgList) then begin
-        htmlmsglist := TfIEMsgList(ml);
-        htmlmsglist.print(true);
-{$ENDIF}        
     end;
 end;
 
@@ -3007,7 +2959,9 @@ begin
     mnuOnTop.Enabled := false;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
     TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 {
@@ -3022,7 +2976,9 @@ begin
     mnuOnTop.Enabled := true;
     _scrollBottom();
     Self.Refresh();
+    //SIG-SIG-SIG
     TExodusChat(ComController).fireNewWindow(Self.Handle);
+    //SIG-SIG-SIG
 end;
 
 function TRoomMember.getRealJID(): WideString;

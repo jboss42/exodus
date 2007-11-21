@@ -34,7 +34,6 @@ inherited frmMsgQueue: TfrmMsgQueue
     Height = 244
     Align = alClient
     Caption = 'pnlMsgQueue'
-    ParentColor = True
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 1

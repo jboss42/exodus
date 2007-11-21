@@ -26,7 +26,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID, XMLTag, StrUtils, Unicode,
-  ToolWin, TntForms, ExFrame;
+  ToolWin;
 
 type
   TfrmRosterRecv = class(TfrmDockable)

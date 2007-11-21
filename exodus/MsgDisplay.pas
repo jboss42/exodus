@@ -134,7 +134,6 @@ var
     is_scrolling: boolean;
     ximTag: TXMLTag;
     hlStartPos: integer;
-    offset : integer;
 begin
     // add the message to the richedit control
     fvl := RichEdit.FirstVisibleLine;
@@ -151,7 +150,6 @@ begin
         RTFColor(color_priority) + // \cf7
         '}\uc1';
 
-    offset := Length(txt);
     if (MainSession.Prefs.getBool('timestamp')) then begin
         txt := txt + '\cf1[';
         try
@@ -181,8 +179,7 @@ begin
        //We want to default color for low priority messages to timestamp color
        txt := txt + '\cf1[' + EscapeRTF(GetDisplayPriority(Msg.Priority)) + ']';
     end;
-
-    offset := Length(txt) - offset;
+         
 
     len := Length(Msg.Body);
 
@@ -240,11 +237,11 @@ begin
     if (ximTag <> nil) then begin
         //if this is our messages, don't eat font style props
         XIMToRT(richedit, ximTag, Msg.Body, not Msg.isMe);
-        HighlightKeywords(RichEdit, hlStartPos+offset);
+        HighlightKeywords(RichEdit, hlStartPos);
         ximTag.Free();
     end
     else begin
-        HighlightKeywords(RichEdit, hlStartPos+offset);
+        HighlightKeywords(RichEdit, hlStartPos);
     end;
 
     RichEdit.SelStart := RichEdit.GetTextLen;

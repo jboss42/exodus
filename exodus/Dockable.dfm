@@ -19,7 +19,6 @@ inherited frmDockable: TfrmDockable
     Height = 32
     Align = alTop
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 0
     object tbDockBar: TToolBar
       AlignWithMargins = True

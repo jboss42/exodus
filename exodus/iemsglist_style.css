@@ -1,55 +1,25 @@
-/*
- * The comments in this CSS are replaced programmatically with the
- * values specified in the prefs.
- */
-
-
 body {
-    font-family: /*font_name*/,Arial Unicode MS, Verdana;
-    font-size: /*font_size*/;
-    background: /*color_bg*/;
+    font-family: Arial Unicode MS, Verdana;
+    font-size: 9pt;
+    background: #eee;
     margin: 0pt;
     overflow: hidden;
 }
 
-.date {
-    width: 100%;
-    text-align: center;
-    color: red;
-}
-
-.composing {
-    width: 100%;
-    text-align: center;
-    color: purple;
-}
-
-.pri_high {
-    color: /*color_priority*/;
-    white-space nowrap;
-    padding-right: 3;
-}
-
-.pri_low {
-    color: /*color_time*/;
-    white-space nowrap;
-    padding-right: 3;
-}
-
 .ts {
-    color: /*color_time*/;
+    color:gray;
     white-space: nowrap;
     padding-right: 3;
 }
 
 .me {
-    color: /*color_me*/;
+    color: blue;
     white-space: nowrap;
     padding-right: 3;
 }
 
 .other {
-    color: /*color_other*/;
+    color:red;
     white-space: nowrap;
     padding-right: 3;
 }
@@ -61,12 +31,12 @@ body {
 }
 
 .msg {
-    color: /*font_color*/;
+    color:black;
 }
 
-.svr {color:/*color_server*/}
+.svr {color:green}
 .alert {color:blue}
-.action {color:/*color_action*/}
+.action {color:purple}
 .pres {color:gray}
 
 #content {

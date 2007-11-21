@@ -1,13 +1,18 @@
-inherited frmWizard: TfrmWizard
+object frmWizard: TfrmWizard
   Left = 496
   Top = 232
   BorderStyle = bsDialog
   Caption = 'Wizard'
   ClientHeight = 358
   ClientWidth = 410
+  Color = clBtnFace
   DefaultMonitor = dmDesktop
-  ExplicitWidth = 416
-  ExplicitHeight = 390
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object TntPanel1: TTntPanel
@@ -17,7 +22,6 @@ inherited frmWizard: TfrmWizard
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
-    ParentColor = True
     TabOrder = 0
     object Bevel1: TBevel
       Left = 0
@@ -34,7 +38,6 @@ inherited frmWizard: TfrmWizard
       Height = 36
       Align = alRight
       BevelOuter = bvNone
-      ParentColor = True
       TabOrder = 0
       object btnBack: TTntButton
         Left = 9
@@ -70,9 +73,9 @@ inherited frmWizard: TfrmWizard
     Height = 60
     Align = alTop
     BevelOuter = bvNone
+    Color = clWhite
     Ctl3D = False
     ParentBackground = False
-    ParentColor = True
     ParentCtl3D = False
     TabOrder = 1
     object Bevel2: TBevel

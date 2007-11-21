@@ -28,7 +28,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
     CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls, TntForms,
-  RichEdit2, ExRichEdit, ExForm;
+  RichEdit2, ExRichEdit;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -40,7 +40,7 @@ const
 
 type
 
-  TfrmRosterWindow = class(TExForm)
+  TfrmRosterWindow = class(TForm)
     popRoster: TTntPopupMenu;
     StatBar: TStatusBar;
     popStatus: TTntPopupMenu;
@@ -613,9 +613,6 @@ begin
         popInvite.Visible := _brand_muc;
         popGrpInvite.Visible := _brand_muc;
         popSendFile.Visible := _brand_ft;
-
-        lblCreate.Visible := ( getBool('branding_roster_hide_create') = false );
-        lblNewUser.Visible := ( getBool('branding_roster_hide_new_wizard') = false );
     end;
 
     ShowProfiles();
@@ -731,13 +728,11 @@ begin
             _ShowDisclaimerText := false;
             pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
         end;
-        FreeAndNil(tag);
     except
         // Image not loaded
         txtDisclaimer.Visible := false;
         _ShowDisclaimerText := false;
         pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
-        FreeAndNil(tag);
     end;
 
     if (not _ShowDisclaimerText) then begin
@@ -796,12 +791,10 @@ begin
                 ImageLogo.Visible := false;
                 pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
             end;
-            FreeAndNil(tag);
         except
             // Image not loaded
             ImageLogo.Visible := false;
             pnlConnectLogo.Height := lblCreate.Height + lblNewUser.Height;
-            FreeAndNil(tag);
         end;
     end
     else
@@ -2517,7 +2510,6 @@ var
     go: TJabberGroup;
     i: integer;
 begin
-
     // Only accept items from the roster
     if (Source = treeRoster) then begin
         Accept := true;
@@ -2539,14 +2531,7 @@ begin
     // check the items being dragged
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
-
-        // If we don't allow nested groups, you certainly can't drag and drop one.
         if (TObject(s_node.Data) is TJabberGroup) then begin
-            if (not MainSession.Prefs.getBool('nested_groups')) then begin
-              Accept := false;
-              exit;
-            end;
-
             go := TJabberGroup(s_node.Data);
             if (go.DragSource = false) then begin
                 Accept := false;

@@ -32,7 +32,7 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer, VistaAltFixUnit, ExForm;
+    TntForms, ExTracer, VistaAltFixUnit;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -149,7 +149,7 @@ type
   end;
 
 
-  TfrmExodus = class(TExForm, IExodusDockManager)
+  TfrmExodus = class(TTntForm, IExodusDockManager)
     MainMenu1: TTntMainMenu;
     ImageList2: TImageList;
     timFlasher: TTimer;
@@ -530,8 +530,10 @@ type
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     procedure SaveBands();
     procedure RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     procedure setupReconnect();
     procedure setupTrayIcon();
@@ -895,8 +897,6 @@ const
     sQueryTypeError = 'Unknown query type: ';
     sUserExistsErr = ''#13#10' ERROR: The username ''%s'' already exists.';
 
-    sOutOfSystemResourcesError = 'Out of system resources.';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -964,7 +964,7 @@ uses
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser, DisplayName,
-    ComServ, PrefFile, DebugManager;
+    ComServ, PrefFile;
 
 {$R *.DFM}
 
@@ -1435,7 +1435,7 @@ begin
 
     // Remove the "old menus" from user view
     // Eventually will have to actually remove menus
-    Old1.Visible := false;
+    Old1.Visible := false
 
 
 
@@ -1496,8 +1496,9 @@ begin
     if (MainSession.Prefs.getBool('brand_plugs')) then
     begin
         InitPlugins();
-        if ( IsRequiredPluginsSelected() = false ) then
-            StartPrefs(pref_plugins);
+      // Check for required plugins - SIG
+      if ( IsRequiredPluginsSelected() = false ) then
+        StartPrefs(pref_plugins);
     end;
 
     // If they had logging turned on, warn them that they need to
@@ -1526,7 +1527,9 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
     end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     RestoreBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2074,16 +2077,6 @@ begin
             tmpjid.Free();
             logmsg.Free();
         end
-    end
-
-    else if (event = '/session/error-out-of-system-resources') then
-    begin
-        DebugMessage(_(sOutOfSystemResourcesError));
-        MessageBoxW(Application.Handle,
-                   PWideChar(_(sOutOfSystemResourcesError)),
-                   PWideChar(MainSession.Prefs.GetString('brand_caption')),
-                   MB_OK or MB_ICONERROR);
-        Application.Terminate();
     end;
 end;
 
@@ -2147,7 +2140,9 @@ begin
         mnuToolbar.Checked := Toolbar.Visible;
         mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
     end;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     Toolbar1.Wrapable := false;
+    // SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 end;
 
 {---------------------------------------}
@@ -2276,7 +2271,9 @@ end;
 **}
 procedure TfrmExodus.cleanup();
 begin
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
     SaveBands();
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
     //mainsession should never be nil here. It is created before this object
     //and only destroyed on ExSession finalization.
@@ -2651,6 +2648,7 @@ begin
 end;
 
 {---------------------------------------}
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 procedure TfrmExodus.SaveBands();
 var I, ID: Integer;
     aFile: TWideStringList;
@@ -2709,7 +2707,9 @@ begin
     I := I+1;
   end;
 end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 {---------------------------------------}
 procedure TfrmExodus.RestoreBands();
 var I, ID, Value : Integer;
@@ -2793,10 +2793,8 @@ begin
   except
       OutputDebugString(PAnsiChar('Exception in Restore'));
   end;
-  ToolBar.ParentColor := true;
-  aFile.Clear();
-  aFile.Free();
 end;
+// SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG-SIG
 
 {--------------------------------------}
 procedure TfrmExodus.About1Click(Sender: TObject);
@@ -2961,8 +2959,8 @@ begin
     begin
         tjid := TJabberID.Create(jid, false);
         jid := tjid.jid();
-        StartChat(jid, tjid.resource, true);
         tjid.Free();
+        StartChat(jid, '', true);
     end;
 end;
 

@@ -33,7 +33,6 @@ inherited frmRoom: TfrmRoom
         Height = 32
         Align = alLeft
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 0
         object lblSubject: TTntLabel
           Left = 27

@@ -6,7 +6,7 @@ inherited frmJud: TfrmJud
   ClientWidth = 492
   OldCreateOrder = True
   OnResize = FormResize
-  ExplicitLeft = -5
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -42,7 +42,7 @@ inherited frmJud: TfrmJud
   inherited Tabs: TPageControl
     Width = 492
     Height = 322
-    ActivePage = TabXData
+    ActivePage = TabSheet4
     ExplicitWidth = 492
     ExplicitHeight = 322
     inherited TabSheet1: TTabSheet
@@ -59,7 +59,7 @@ inherited frmJud: TfrmJud
         Align = alTop
         Caption = 'Select the user database for the search agent to use:'
         WordWrap = True
-        ExplicitWidth = 259
+        ExplicitWidth = 251
       end
       object cboJID: TTntComboBox
         Left = 16
@@ -82,7 +82,7 @@ inherited frmJud: TfrmJud
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
         WordWrap = True
-        ExplicitWidth = 183
+        ExplicitWidth = 179
       end
       object aniWait: TAnimate
         Left = 0
@@ -105,7 +105,7 @@ inherited frmJud: TfrmJud
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
-        ExplicitWidth = 210
+        ExplicitWidth = 204
       end
     end
     object TabSheet4: TTabSheet
@@ -119,12 +119,11 @@ inherited frmJud: TfrmJud
         Align = alBottom
         BevelOuter = bvNone
         BorderWidth = 2
-        ParentColor = True
         TabOrder = 0
         object Label3: TTntLabel
           Left = 2
           Top = 2
-          Width = 133
+          Width = 128
           Height = 13
           Caption = 'Add Contacts to this group:'
         end
@@ -135,12 +134,14 @@ inherited frmJud: TfrmJud
           Height = 13
           Cursor = crHandPoint
           Caption = 'Add a new Group'
+          Color = clBtnFace
+          ParentColor = False
           OnClick = lblAddGrpClick
         end
         object lblCount: TTntLabel
-          Left = 321
+          Left = 322
           Top = 2
-          Width = 66
+          Width = 65
           Height = 13
           Alignment = taRightJustify
           Caption = 'N items found'
@@ -219,14 +220,6 @@ inherited frmJud: TfrmJud
         Width = 484
         Height = 291
         Align = alClient
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 0
         TabStop = True
         ExplicitWidth = 484
