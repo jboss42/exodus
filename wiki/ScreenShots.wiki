@@ -3,6 +3,8 @@
 
 = Exodus Screen Shots =
 
+=== All screen shots from version 0.9.1.0 or earlier ===
+
 OK, For those that want screen shots... Here's one showing exodus in the "compressed" mode. It still can operate in the tabbed version ala Winjab, but this is a big departure from what Winjab was able to do.
 
 http://exodus.googlecode.com/svn/wiki/images/collapsed.png
