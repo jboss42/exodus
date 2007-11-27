@@ -14,8 +14,6 @@ type
     { Public declarations }
   end;
 
-var
-  BaseForm: TExForm;
 
 implementation
 
