@@ -616,6 +616,9 @@ begin
 
         lblCreate.Visible := ( getBool('branding_roster_hide_create') = false );
         lblNewUser.Visible := ( getBool('branding_roster_hide_new_wizard') = false );
+        popSendPres.Visible := getBool('brand_invisible_pres');
+        popSendInvisible.Visible := getBool('brand_invisible_pres');
+        popGrpPresence.Visible := getBool('brand_invisible_pres'); 
     end;
 
     ShowProfiles();
