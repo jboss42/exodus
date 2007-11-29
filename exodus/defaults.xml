@@ -362,7 +362,7 @@
     <brand_profile_enable_connect_btn value="true"></brand_profile_enable_connect_btn>
     <brand_profile_show_download_public_servers value="true"></brand_profile_show_download_public_servers>
 
-
+    <brand_invisible_pres value="1"></brand_invisible_pres>
     <brand_muc value="1"></brand_muc>
     <brand_ft value="1"></brand_ft>
     <brand_print value="1"></brand_print>
