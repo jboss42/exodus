@@ -67,14 +67,14 @@ type
     { Public declarations }
 
     procedure Start();
-    procedure SetList(rlist: TList);
+    procedure SetList(rlist: TWideStringList);
   end;
 
 var
   frmRoomAdminList: TfrmRoomAdminList;
 
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: WideString = ''; rlist: TList = nil);
+    caption: WideString = ''; rlist: TWideStringList = nil);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -89,7 +89,7 @@ uses
 
 {---------------------------------------}
 procedure ShowRoomAdminList(room_win: TForm; room_jid, role, affiliation: WideString;
-    caption: Widestring = ''; rlist: TList = nil);
+    caption: Widestring = ''; rlist: TWideStringList = nil);
 var
     f: TfrmRoomAdminList;
 begin
@@ -121,7 +121,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoomAdminList.SetList(rlist: TList);
+procedure TfrmRoomAdminList.SetList(rlist: TWideStringList);
 var
     i: integer;
     rm: TRoomMember;
@@ -130,15 +130,15 @@ begin
         _rlist := TList.Create();
         for i := 0 to rlist.Count - 1 do begin
             rm := TRoomMember.Create();
-            rm.jid := TRoomMember(rlist.Items[i]).jid;
-            rm.Nick := TRoomMember(rlist.Items[i]).Nick;
-            rm.Node := TRoomMember(rlist.Items[i]).Node;
-            rm.status := TRoomMember(rlist.Items[i]).status;
-            rm.show := TRoomMember(rlist.Items[i]).show;
-            rm.blockShow := TRoomMember(rlist.Items[i]).blockShow;
-            rm.role := TRoomMember(rlist.Items[i]).role;
-            rm.affil := TRoomMember(rlist.Items[i]).affil;
-            rm.real_jid := TRoomMember(rlist.Items[i]).real_jid;
+            rm.jid := TRoomMember(rlist.Objects[i]).jid;
+            rm.Nick := TRoomMember(rlist.Objects[i]).Nick;
+            rm.Node := TRoomMember(rlist.Objects[i]).Node;
+            rm.status := TRoomMember(rlist.Objects[i]).status;
+            rm.show := TRoomMember(rlist.Objects[i]).show;
+            rm.blockShow := TRoomMember(rlist.Objects[i]).blockShow;
+            rm.role := TRoomMember(rlist.Objects[i]).role;
+            rm.affil := TRoomMember(rlist.Objects[i]).affil;
+            rm.real_jid := TRoomMember(rlist.Objects[i]).real_jid;
             _rlist.Add(rm);
         end;
     end
@@ -214,8 +214,13 @@ begin
         for i := 0 to items.Count - 1 do begin
             itemJID := TJabberID.Create(items[i].GetAttribute('jid'));
             li := TTntListItem(lstItems.Items.Add());
-            li.Caption := items[i].GetAttribute('nick');
-            li.SubItems.Add(itemJID.getDisplayFull());
+            if (onList = MUC_OUTCAST) then begin
+                li.Caption := itemJID.getDisplayFull();
+            end
+            else begin
+                li.Caption := items[i].GetAttribute('nick');
+                li.SubItems.Add(itemJID.getDisplayFull());
+            end;
             li.Checked := true;
             itemJID.Free();
         end;
@@ -466,7 +471,10 @@ begin
     else begin
         for i := lstItems.Items.Count - 1 downto 0 do begin
             if (lstItems.Items[i].Selected) then begin
-                itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
+                if (onList = MUC_OUTCAST) then
+                    itemJID := TJabberID.Create(lstItems.Items[i].Caption, false)
+                else
+                    itemJID := TJabberID.Create(lstItems.Items[i].SubItems[0], false);
                 j := itemJID.full();
                 idx := _adds.IndexOf(j);
                 if (idx >= 0) then

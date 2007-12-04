@@ -123,7 +123,6 @@ inherited frmRoom: TfrmRoom
         ShowWorkAreas = True
         ShowHint = True
         SmallImages = frmExodus.ImageList2
-        SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
         OnCustomDrawItem = lstRosterCustomDrawItem
