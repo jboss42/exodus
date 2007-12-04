@@ -46,6 +46,7 @@ type
     blockShow: Widestring;
     role: WideString;
     affil: WideString;
+    hideUnavailable: Boolean;
     destructor Destroy(); override;
   published
     property real_jid: WideString read getRealJID write setRealJID;
@@ -151,7 +152,6 @@ type
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
     _roster: TWideStringlist;   // roster for this room
-    _rlist: TList;              // Data storage for the virtual listview
     _isMUC: boolean;            // Is this room JEP-45
     _mcallback: integer;        // Message Callback
     _ecallback: integer;        // Error msg callback
@@ -205,6 +205,10 @@ type
     procedure changeNick(new_nick: WideString);
     procedure setupKeywords();
     procedure _EnableSubjectButton();
+    function FindDuplicateRealJid(nick: Widestring; jid: Widestring): Integer;
+    function GetRoomRosterHiddenCount(index: Integer): Integer;
+    function GetRoomRosterVisibleCount(): Integer;
+    procedure ToggleDuplicateMember(rm: TRoomMember;  tag: TXMLTag);
   protected
     {
         Get the window state associated with this window.
@@ -240,7 +244,7 @@ type
     procedure ShowMsg(tag: TXMLTag);
     procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean; priority: PriorityType = None);
 
-    function addRoomUser(jid, nick: Widestring): TRoomMember;
+    function addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
     procedure removeRoomUser(jid: Widestring);
     function GetNick(rjid: Widestring): Widestring;
 
@@ -804,8 +808,8 @@ var
     r, i: integer;
 begin
     r := 0;
-    for i := 0 to _rlist.Count - 1 do begin
-        m := TRoomMember(_rlist[i]);
+    for i := 0 to _roster.Count - 1 do begin
+        m := TRoomMember(_roster.Objects[i]);
         if (Pos(tmps, m.Nick) = 0) then inc(r);
     end;
     Result := r;
@@ -1089,8 +1093,6 @@ begin
         _dcallback := -1;
 
         _roster.Clear();
-        ClearListObjects(_rlist);
-        _rlist.Clear();
         lstRoster.Items.Count := 0;
         lstRoster.Invalidate();
 
@@ -1354,7 +1356,7 @@ begin
                     if (scode = '301') then tmp2 := _(sStatus_301)
                     else if (scode = '307') then tmp2 := _(sStatus_307)
                     else if (scode = '322') then tmp2 := _(sStatus_322);
-                         
+
                     mtag := newRoomMessage(WideFormat(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
                 end;
@@ -1364,17 +1366,33 @@ begin
                 ShowMsg(mtag);
             end;
 
-            if (scode <> '303') then begin
-                _roster.Delete(i);
-                i := _rlist.IndexOf(member);
-                if (i >= 0) then begin
-                    _rlist.Delete(i);
-                    _rlist.Sort(ItemCompare);
-                    lstRoster.Items.Count := _rlist.Count;
-                    lstRoster.Invalidate();
-                end;
-                member.Free;
+            if (xtag <> nil) then begin
+                 t := xtag.GetFirstTag('item');
+                 if (t <> nil) then begin
+                      member.role := t.GetAttribute('role');
+                      member.affil := t.GetAttribute('affiliation');
+                      ToggleDuplicateMember(member, tag);
+                      //If no affiliation exists for the nick, remove it.
+                      if (member.affil = 'none') then
+                          removeRoomUser(from)
+                      else begin
+                          //member or higher, went offline, render new presence status
+                          RenderMember(member, tag);
+                          lstRoster.Items.Count := GetRoomRosterVisibleCount();
+                          lstRoster.Invalidate();
+                      end;
+                 end;
             end;
+        end
+        else begin
+           // Add unavailable members or higher to the roster
+           itag := tag.QueryXPTag(xp_muc_item);
+           if (itag <> nil) then begin
+              if (itag.GetAttribute('affiliation') <> 'none') then begin
+                  tmp_jid := TJabberID.Create(from);
+                  member := AddRoomUser(from, tmp_jid.resource, tag);
+              end;
+           end;
         end;
     end
     else begin
@@ -1383,7 +1401,7 @@ begin
 
         if (i < 0) then begin
             // this is a new member
-            member := AddRoomUser(from, tmp_jid.resource);
+            member := AddRoomUser(from, tmp_jid.resource, tag);
 
             // show new user message
             if (xtag <> nil) then begin
@@ -1442,15 +1460,8 @@ begin
 
         // check for role=none to fixup bugs in some mu-c servers.
         if (member.role = 'none') then begin
-            _roster.Delete(i);
-            i := _rlist.IndexOf(member);
-            if (i >= 0) then begin
-                _rlist.Delete(i);
-                _rlist.Sort(ItemCompare);
-                lstRoster.Items.Count := _rlist.Count;
-                lstRoster.Invalidate();
-            end;
-            member.Free;
+            if (i >= 0) then
+              RemoveRoomUser(from);
             exit;
         end;
 
@@ -1507,21 +1518,30 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.addRoomUser(jid, nick: Widestring): TRoomMember;
+function TfrmRoom.addRoomUser(jid, nick: Widestring; tag: TXMLTag = nil): TRoomMember;
 var
     member: TRoomMember;
+    itag: TXMLTag;
 begin
     //
     member := TRoomMember.Create;
     member.JID := jid;
     member.Nick := nick;
-
+    member.hideUnavailable := false;
+    if (tag <> nil) then begin
+        itag := tag.QueryXPTag(xp_muc_item);
+        if (itag <> nil) then begin
+            member.role := itag.GetAttribute('role');
+            member.affil := itag.GetAttribute('affiliation');
+            member.real_jid := itag.GetAttribute('jid');
+        end;
+    end;
     _roster.AddObject(jid, member);
     _roster.Sort;
+    ToggleDuplicateMember(member, tag);
 
-    _rlist.Add(member);
-    _rlist.Sort(ItemCompare);
-    lstRoster.Items.Count := _rlist.Count;
+    RenderMember(member, tag);
+    lstRoster.Items.Count := GetRoomRosterVisibleCount();
     lstRoster.Invalidate();
 
     Result := member;
@@ -1539,11 +1559,9 @@ begin
 
     member := TRoomMember(_roster.Objects[i]);
     _roster.Delete(i);
-    i := _rlist.IndexOf(member);
+    _roster.Sort;
     if (i >= 0) then begin
-        _rlist.Delete(i);
-        _rlist.Sort(ItemCompare);
-        lstRoster.Items.Count := _rlist.Count;
+        lstRoster.Items.Count := GetRoomRosterVisibleCount();
         lstRoster.Invalidate();
     end;
 end;
@@ -1646,6 +1664,7 @@ procedure TfrmRoom.RenderMember(member: TRoomMember; tag: TXMLTag);
 var
     i: integer;
     p: TJabberPres;
+    ptype, show: Widestring;
 begin
     // show the member
     if member = nil then exit;
@@ -1662,6 +1681,9 @@ begin
         else begin
             member.show := p.Show;
         end;
+        if (tag.getAttribute('type') = 'unavailable') then
+           member.show := 'offline';
+
         member.status := p.Status;
         p.Free();
     end;
@@ -1669,10 +1691,10 @@ begin
     if (member.show = '') then
         member.show := 'Available';
 
-    i := _rlist.IndexOf(member);
+    i := _roster.IndexOf(member.jid);
     if (i >= 0) then
         lstRoster.UpdateItems(i, i);
-    lstRoster.Invalidate();
+
 end;
 
 {---------------------------------------}
@@ -1692,7 +1714,6 @@ begin
     _dcallback := -1;
     _roster := TWideStringList.Create;
     _roster.CaseSensitive := true;
-    _rlist := TList.Create;
     _isMUC := false;
     _nick_prefix := '';
     _nick_idx := 0;
@@ -2106,7 +2127,7 @@ begin
     if (lstRoster.Selected = nil) then
         rm := nil
     else begin
-        rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+        rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
         if (rm <> nil) then begin
            if (rm.show = _(sBlocked)) then begin
               //unblock
@@ -2156,7 +2177,7 @@ begin
     
     if (not e) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if (rm <> nil) then begin
         if (rm.show = _(sBlocked)) then
             popRosterBlock.Caption := _(sUnblock)
@@ -2221,7 +2242,7 @@ begin
     // Chat w/ this person..
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if (rm = nil) or (WideLowerCase(rm.Nick) = WideLowerCase(mynick)) then exit;
     
     tmp_jid := TJabberID.Create(rm.jid);
@@ -2239,7 +2260,7 @@ var
     m: TRoomMember;
 begin
   inherited;
-    m := TRoomMember(_rlist[Item.Index]);
+    m := TRoomMember(Item.Data);
     if (m = nil) then
         InfoTip := ''
     else begin
@@ -2341,7 +2362,7 @@ begin
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if lstRoster.Items[i].Selected then begin
             with tag.AddTag('item') do begin
-                rm := TRoomMember(_rlist[i]);
+                rm := TRoomMember(lstRoster.Items[i].Data);
                 setAttribute('nick', rm.Nick);
                 if (NewRole <> '') then
                     setAttribute('role', NewRole);
@@ -2372,7 +2393,7 @@ begin
     // voice by changing roles
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if (lstRoster.Items[i].Selected) then begin
-            cur_member := TRoomMember(_rlist[i]);
+            cur_member := TRoomMember(lstRoster.Items[i].Data);
             new_role := '';
             if (cur_member.role = MUC_PART) then
                 new_role := MUC_VISITOR
@@ -2422,17 +2443,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _rlist)
+        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice), _roster)
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _rlist)
+        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan), _roster)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _rlist)
+        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember), _roster)
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _rlist)
+        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator), _roster)
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _rlist)
+        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin), _roster)
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _rlist);
+        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner), _roster);
 end;
 
 {---------------------------------------}
@@ -2501,9 +2522,7 @@ begin
 
     _keywords.Free;
     ClearStringListObjects(_roster);
-    _rlist.Clear();
     _roster.Free();
-    _rlist.Free();
 
     i := room_list.IndexOf(jid);
     if (i >= 0) then
@@ -2611,7 +2630,7 @@ begin
     // Chat w/ this person..
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if (rm <> nil) then begin
         tmp_jid := TJabberID.Create(rm.jid);
         StartMsg(tmp_jid.full);
@@ -2631,7 +2650,7 @@ begin
     // Send my JID to this user
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if (rm <> nil) then begin
         msg := TXMLTag.Create('message');
         msg.setAttribute('id', MainSession.generateID());
@@ -2651,16 +2670,27 @@ end;
 procedure TfrmRoom.lstRosterData(Sender: TObject; Item: TListItem);
 var
     rm: TRoomMember;
+    cnt: Integer;
+    hiddenMembersCount, idx: Integer;
 begin
   inherited;
     // get the data for this person..
-    rm := TRoomMember(_rlist[Item.Index]);
+    hiddenMembersCount := GetRoomRosterHiddenCount(Item.Index);
+    idx := Item.Index + hiddenMembersCount;
+    if ((idx < 0) or (idx > _roster.Count - 1)) then
+        exit;
+        
+    rm := TRoomMember(_roster.Objects[idx]);
+
     TTntListItem(Item).Caption := rm.Nick;
+    Item.Data := rm;
+
     if (rm.show = _(sBlocked)) then item.ImageIndex := RosterTreeImages.Find('online_blocked')
     else if rm.show = 'away' then Item.ImageIndex := RosterTreeImages.Find('away')
     else if rm.show = 'xa' then Item.ImageIndex := RosterTreeImages.Find('xa')
     else if rm.show = 'dnd' then Item.ImageIndex := RosterTreeImages.Find('dnd')
     else if rm.show = 'chat' then Item.ImageIndex := RosterTreeImages.Find('chat')
+    else if rm.show = 'offline' then Item.ImageIndex := RosterTreeImages.Find('offline')
     else Item.ImageIndex := RosterTreeImages.Find('available');
 
 end;
@@ -2792,7 +2822,7 @@ begin
     DefaultDraw := true;
     if (not _isMUC) then exit;
 
-    rm := TRoomMember(_rlist[Item.Index]);
+    rm := TRoomMember(Item.Data);
     moderator := (rm.role = 'moderator');
     visitor := (rm.role = 'visitor');
 
@@ -2866,7 +2896,7 @@ begin
     // subscribe to this person
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         dgrp := MainSession.Prefs.getString('roster_default');
@@ -2885,7 +2915,7 @@ begin
     // lookup the vcard.
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         ShowProfile(j.jid);
@@ -2902,7 +2932,7 @@ begin
   inherited;
     if (lstRoster.Selected = nil) then exit;
 
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         ShowBrowser(j.jid);
@@ -3100,6 +3130,93 @@ begin
     inherited Destroy();
     if (_real_jid <> nil) then
       _real_jid.Free();
+end;
+
+{---------------------------------------}
+//This function matches room member by real jid (different nicks) and returns
+//positive index if it fins one.
+function TfrmRoom.FindDuplicateRealJid(nick: Widestring; jid: Widestring): Integer;
+var
+    i: integer;
+    tmp1, tmp2: TJabberID;
+    realjid, tmpjid: WideString;
+begin
+     Result := -1;
+     if (jid = '') then exit;
+     tmp1 := TJabberID.Create(jid);
+     tmpjid := tmp1.jid;
+     for i := 0 to _roster.Count - 1 do begin
+          tmp2 := TJabberID.Create(TRoomMember(_roster.Objects[i]).real_jid);
+          realjid := tmp2.jid;
+          if (realjid = tmpjid) then begin
+              if (TRoomMember(_roster.Objects[i]).Nick = nick) then
+                 continue
+              else begin
+                 Result := i;
+                 break;
+              end;
+          end;
+     end;
+     tmp1.Free();
+end;
+{---------------------------------------}
+//This function returns hidden member count
+//found before given index.
+function TfrmRoom.GetRoomRosterHiddenCount(index: Integer): Integer;
+var
+   i, max: integer;
+begin
+    Result := 0;
+    max := index;
+    if (index > _roster.Count - 1) then
+        max := _roster.Count - 1;
+    
+    for i := 0 to max do begin
+        if (TRoomMember(_roster.Objects[i]).hideUnavailable) then
+            Inc(Result);
+    end;
+end;
+{---------------------------------------}
+//This function returns total number of visible members.
+function TfrmRoom.GetRoomRosterVisibleCount(): Integer;
+var
+   i: integer;
+begin
+    Result := 0;
+    for i := 0 to _roster.Count - 1 do begin
+        if (not TRoomMember(_roster.Objects[i]).hideUnavailable) then
+            Inc(Result);
+    end;
+end;
+
+{---------------------------------------}
+//This function toggles visibility of the duplicate member entry (by real jid).
+//Duplicate occurance happen when registred members use non-registred nicks
+//to enter the room.
+//When temp nick enters, registred nick needs to be hidden.
+//When temp nick leaves, registred nick needs to be shown.
+//When registred nick enteres after temp nick, we need to check for the
+//presence of temp nick for the given real jid.
+procedure TfrmRoom.ToggleDuplicateMember(rm: TRoomMember; tag: TXMLTag);
+var
+  i: Integer;
+begin
+   //First check if there is another nick for real jid
+   i := FindDuplicateRealJid(rm.nick, rm.real_jid);
+   if (i < 0) then
+       exit;
+
+   //Temp nick for the member or higher went offline,
+   //we need to make registered nick visible
+   if (rm.role = 'none') then begin
+       TRoomMember(_roster.Objects[i]).hideUnavailable := false;
+       rm.hideUnavailable := true;
+   end
+   else begin
+       TRoomMember(_roster.Objects[i]).hideUnavailable := true;
+       rm.hideUnavailable := false;
+   end;
+
 end;
 
 initialization
