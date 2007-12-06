@@ -373,7 +373,7 @@ begin
         setAttribute('to', tag.getAttribute('from'));
         with AddTag('query') do begin
             setAttribute('xmlns', XMLNS_VERSION);
-            AddBasicTag('name', PrefController.getAppInfo.ID);
+            AddBasicTag('name', PrefController.getAppInfo.Caption);
             AddBasicTag('version', app);
             AddBasicTag('os', win);
         end;
