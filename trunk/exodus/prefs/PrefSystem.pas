@@ -24,25 +24,29 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag, ExGroupBox;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    chkAutoUpdate: TTntCheckBox;
-    chkDebug: TTntCheckBox;
-    chkAutoLogin: TTntCheckBox;
-    chkCloseMin: TTntCheckBox;
+    ExGroupBox1: TExGroupBox;
     chkAutoStart: TTntCheckBox;
-    chkOnTop: TTntCheckBox;
+    ExGroupBox2: TExGroupBox;
     chkToolbox: TTntCheckBox;
-    btnUpdateCheck: TTntButton;
+    chkCloseMin: TTntCheckBox;
     chkSingleInstance: TTntCheckBox;
-    chkStartMin: TTntCheckBox;
+    chkAutoUpdate: TTntCheckBox;
+    btnUpdateCheck: TTntButton;
+    lblDefaultNick: TTntLabel;
+    txtDefaultNick: TTntEdit;
     lblLang: TTntLabel;
     cboLocale: TTntComboBox;
     lblLangScan: TTntLabel;
-    lblDefaultNick: TTntLabel;
-    txtDefaultNick: TTntEdit;
+    chkOnTop: TTntCheckBox;
+    ExGroupBox3: TExGroupBox;
+    chkAutoLogin: TTntCheckBox;
+    chkStartMin: TTntCheckBox;
+    chkDebug: TTntCheckBox;
+    CheckBox1: TCheckBox;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -269,7 +273,7 @@ begin
         end;
 
         setString('locale', tmp);
-
+        
         reg := TRegistry.Create();
         try
             reg.RootKey := HKEY_CURRENT_USER;

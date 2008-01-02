@@ -65,6 +65,9 @@ contains
   TopStatusFrame in 'TopStatusFrame.pas',
   gnugettext in '..\gnugettext.pas',
   ExNumericEdit in 'ExNumericEdit.pas',
+  ExGroupBox in 'ExGroupBox.pas' {Frame1: TFrame},
+  ExFrame in 'base\ExFrame.pas',
+  ExForm in 'base\ExForm.pas';
   ExGraphicLabel in 'ExGraphicLabel.pas',
   zlibpas in '..\..\jopl\png\zlibpas.pas',
   pngextra in '..\..\jopl\png\pngextra.pas',
