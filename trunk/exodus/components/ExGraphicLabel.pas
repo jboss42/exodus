@@ -15,6 +15,8 @@ type
     _border: TBorderWidth;
     _key: String;
 
+    _target: TObject;
+
     procedure SetCaption(txt: WideString);
     procedure SetSelected(sel: boolean);
     procedure SetBorder(border: TBorderWidth);
@@ -38,6 +40,8 @@ type
     property Enabled default true;
     property Selected: boolean read _selected write SetSelected default false;
     property Key: String read _key write SetKey;
+
+    property Target: TObject read _target write _target;
 
     property OnClick;
 end;
