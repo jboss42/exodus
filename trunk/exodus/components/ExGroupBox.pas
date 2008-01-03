@@ -176,15 +176,15 @@ var
   i: integer;
 begin
   if (csDesigning in Self.ComponentState) then exit;
-  {
   //update any TExGroupBox children we have first so we can reliably check
   //visiblity states
   for i := 0 to Self.ControlCount - 1 do begin
     if (Self.Controls[i] is TExGroupBox) then
       TExGroupBox(Self.Controls[i]).updateBox();
   end;
+
   Self.Visible := (not _autoHide) or (visibleChildren() > 0);
-  }
+
   //set style bits
   lblCaption.Visible := (_style <> gbsNone);
 //  chkGroup.Visible := (_style = gbsCheck);
