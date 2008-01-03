@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ComCtrls, RichEdit2, ToolWin, ExtCtrls{$IFDEF VER120}, ImgList{$ENDIF};
+  StdCtrls, ComCtrls, RichEdit2, ToolWin, ExtCtrls, ImgList{$IFDEF VER120}, ImgList{$ENDIF};
 
 type
   TRichEdit98Editor = class(TForm)

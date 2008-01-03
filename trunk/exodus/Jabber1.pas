@@ -32,7 +32,7 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer, VistaAltFixUnit, ExForm;
+    TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -74,80 +74,6 @@ type
     TGetLastInputFunc = function(var lii: tagLASTINPUTINFO): Bool; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
-    {
-      Dock states
-    }
-    TDockStates = (dsRosterOnly, dsDock, dsUninitialized);
-
-    IExodusDockManager = interface
-    {
-        Close the tab for the given form.
-
-        Adjust layout as needed
-    }
-    procedure CloseDocked(frm: TfrmDockable);
-
-    {
-        Open a tab and dock the given form
-
-        Adjust the layout as needed (none docked, embedded roster etc)
-    }
-    function OpenDocked(frm : TfrmDockable) : TTntTabSheet;
-
-    {
-        Float the given form.
-
-        Adjust layout as needed
-    }
-    procedure FloatDocked(frm : TfrmDockable);
-
-    {
-        Get the current docksite for the main window.
-
-        Pretty much the window itself but this absctraction
-        should allow us to have a free floting dock manager
-    }
-    function GetDockSite() : TWinControl;
-
-    {
-        Bring the given docked form to the front of the tab list
-
-        If form is currently docked, make it the active tab.
-        Sets focus to the new tab
-    }
-    procedure BringDockedToTop(form: TfrmDockable);
-
-    {
-        Get the currently top docked form.
-
-        May return nil if topmost docked form is not TfrmDockable(????) or
-        nothing is docked.
-    }
-    function getTopDocked() : TfrmDockable;
-
-    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
-
-    procedure OnNotify(frm: TForm; notifyEvents: integer);
-
-
-    {
-        frm has had some kind of state change and its presentation needs to
-        be updated.
-
-        form may have changed tab icon, notification state.
-    }
-    procedure UpdateDocked(frm: TfrmDockable);
-
-    {
-        Bring the dock manager to front.
-
-        Restore if minimized and bring to top of z-order. Don't take focus
-    }
-    procedure BringToFront();
-
-    function isActive(): boolean;
-  end;
-
 
   TfrmExodus = class(TExForm, IExodusDockManager)
     MainMenu1: TTntMainMenu;
@@ -528,6 +454,9 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
+    _dockManager: IExodusDockManager;
+    _dockWindow: TfrmDockWindow;
+
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
     procedure SaveBands();
@@ -803,6 +732,7 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
 
+    property dockManager:IExodusDockManager read _dockManager;
   end;
 
   {
@@ -970,7 +900,7 @@ uses
 
 function getDockManager(): IExodusDockManager;
 begin
-    Result := frmExodus;
+    Result := frmExodus.dockManager;
 end;
 
 {---------------------------------------}
@@ -1437,7 +1367,14 @@ begin
     // Eventually will have to actually remove menus
     Old1.Visible := false;
 
-
+{$IFDEF USE_ACTIVITY_WINDOW}
+    _dockWindow := TfrmDockWindow.Create(Application);
+    _dockManager := _dockWindow;
+    Self.DockSite := false;
+{$ELSE}
+    _dockWindow := nil;
+    _dockManager := frmExodus;
+{$ENDIF}
 
 end;
 
@@ -1806,6 +1743,12 @@ begin
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
         setTrayInfo(Self.Caption);
+
+{$IFDEF USE_ACTIVITY_WINDOW}
+        // Show the activity window
+        _dockWindow.Show;
+
+{$ENDIF}
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
@@ -3189,6 +3132,10 @@ procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
     if (not _cleanupComplete) then
         cleanup();
+
+{$IFDEF USE_ACTIVITY_WINDOW}
+    _dockWindow.Free();
+{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -4468,18 +4415,14 @@ end;
 }
 function TfrmExodus.GetDockSite() : TWinControl;
 begin
+{$IFDEF USE_ACTIVITY_WINDOW}
+    Result := nil;
+{$ELSE}
     if (Self.DockSite) then
         Result := Self
     else
         Result := nil;
-{
-    if (pnlDock.visible and Tabs.DockSite) then
-        Result := Tabs
-    else if (Self.DockSite) then
-        Result := Self
-    else
-        Result := nil;
-        }
+{$ENDIF}
 end;
 
 function TfrmExodus.getTabSheet(frm : TfrmDockable) : TTntTabSheet;
@@ -4765,18 +4708,22 @@ end;
 procedure TfrmExodus.CloseDocked(frm: TfrmDockable);
 var
     idx: integer;
+    frmWasDocked: boolean;
 begin
 outputdebugmsg('TfrmExodus.CloseDocked');
+    frmWasDocked := frm.Docked;
     frm.Docked := false;
 //    frm.Visible := false;
     if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
         frm.removeDockbarButton(_nextNotifyButton);
     end;
 
-    updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
-    idx := _docked_forms.IndexOf(frm);
-    if (idx >= 0) then
-        _docked_forms.Delete(idx);
+    if (frmWasDocked) then begin
+        updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
+        idx := _docked_forms.IndexOf(frm);
+        if (idx >= 0) then
+            _docked_forms.Delete(idx);
+    end;
 end;
 
 function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
@@ -4825,7 +4772,11 @@ begin
     if ((not dockAllowed) or (Tabs.PageCount = 0)) then begin
        layoutRosterOnly();
        undockAllForms();
+{$IFDEF USE_ACTIVITY_WINDOW}
+       Self.DockSite := false;
+{$ELSE}
        Self.DockSite := dockAllowed;
+{$ENDIF}
     end
     else
         layoutDock();
@@ -4925,7 +4876,11 @@ begin
         _noMoveCheck := false;
         _currDockState := dsDock;
         Self.DockSite := false;
+{$IFDEF USE_ACTIVITY_WINDOW}
+        Tabs.DockSite := false;
+{$ELSE}
         Tabs.DockSite := true;
+{$ENDIF}
 
          if (MainSession.Active) then
             frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_docked')
@@ -4952,7 +4907,11 @@ begin
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         _noMoveCheck := false;
         _currDockState := dsRosterOnly;
+{$IFDEF USE_ACTIVITY_WINDOW}
+        Self.DockSite := false;
+{$ELSE}
         Self.DockSite := true;
+{$ENDIF}
         Tabs.DockSite := false;
 
          if (MainSession.Active) then

@@ -154,6 +154,8 @@ begin
     // make sure the output is showing..
     inherited;
 
+    setUID('dbgwindow');
+
     dbgManager.AddDebugger('dbgwindow', Self);
 
     ImageIndex := RosterTreeImages.Find('filter');

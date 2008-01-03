@@ -261,7 +261,11 @@ uses
 {$ENDIF}
   VistaAltFixUnit in 'VistaAltFixUnit.pas',
   ExFrame in 'components\base\ExFrame.pas' {baseFrame},
-  ExForm in 'components\base\ExForm.pas' {baseForm};
+  ExForm in 'components\base\ExForm.pas' {baseForm},
+  ActivityWindow in 'ActivityWindow.pas' {frmActivityWindow},
+  DockWindow in 'DockWindow.pas' {frmDockWindow},
+  ExodusDockManager in 'ExodusDockManager.pas',
+  AWItem in 'AWItem.pas' {fAWItem: TTntFrame};
 
 {$R *.TLB}
 
@@ -296,6 +300,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
+  Application.CreateForm(TfrmActivityWindow, frmActivityWindow);
   Application.OnHelp := frmExodus.DisableHelp;
   frmExodus.Startup();
   Application.Run;

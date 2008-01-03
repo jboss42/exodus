@@ -1,9 +1,9 @@
-object BaseForm: TExForm
+object ExForm: TExForm
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 154
-  ClientWidth = 263
+  ClientHeight = 150
+  ClientWidth = 259
   Color = 13681583
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

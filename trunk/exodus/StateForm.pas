@@ -137,6 +137,7 @@ type
   }
   TfrmState = class(TExForm)
     procedure WMWindowPosChange(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
@@ -951,5 +952,6 @@ begin
         _flasher.Enabled := true; //OnFlash will handle rest
      end;
 end;
+
 
 end.

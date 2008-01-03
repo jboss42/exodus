@@ -40,6 +40,7 @@ type
     procedure OnDocked();override;
     procedure OnFloat();override;
 
+
     property UID: Widestring read _id write _id;
   end;
 
