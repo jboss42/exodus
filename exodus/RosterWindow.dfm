@@ -15,7 +15,6 @@ inherited frmRosterWindow: TfrmRosterWindow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitTop = -142
   ExplicitWidth = 248
   ExplicitHeight = 539
   PixelsPerInch = 96
@@ -113,7 +112,6 @@ inherited frmRosterWindow: TfrmRosterWindow
     ParentColor = True
     ParentFont = True
     UseSystemFont = False
-    ExplicitTop = 480
   end
   object pnlShow: TPanel
     Left = 0

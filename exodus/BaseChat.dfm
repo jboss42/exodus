@@ -23,7 +23,6 @@ inherited frmBaseChat: TfrmBaseChat
   end
   inherited pnlDockTop: TPanel
     Width = 415
-    ParentColor = True
     TabOrder = 2
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
@@ -288,7 +287,7 @@ inherited frmBaseChat: TfrmBaseChat
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ItemHeight = 13
+      ItemHeight = 0
       ParentFont = False
       TabOrder = 0
     end

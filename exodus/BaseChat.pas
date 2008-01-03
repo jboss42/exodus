@@ -172,6 +172,7 @@ type
     procedure gotActivate();override;
 
     procedure OnColorSelect(selColor: TColor);
+
   end;
 
 var
@@ -801,6 +802,7 @@ begin
        end;
   end
 end;
+
 procedure TfrmBaseChat.OnColorSelect(selColor: TColor);
 begin
     MsgOut.SelAttributes.Color := selColor;

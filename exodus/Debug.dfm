@@ -10,7 +10,6 @@ inherited frmDebug: TfrmDebug
   TextHeight = 13
   inherited pnlDockTop: TPanel
     Width = 400
-    ParentColor = True
     TabOrder = 1
     ExplicitWidth = 400
     inherited tbDockBar: TToolBar

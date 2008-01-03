@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 446
-  ClientWidth = 392
+  ClientHeight = 462
+  ClientWidth = 388
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -20,14 +20,14 @@ inherited frmExodus: TfrmExodus
   OnDockDrop = FormDockDrop
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 400
-  ExplicitHeight = 500
+  ExplicitWidth = 396
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 392
+    Width = 388
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -36,7 +36,7 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 388
+        Width = 384
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -160,8 +160,8 @@ inherited frmExodus: TfrmExodus
   object Panel1: TPanel
     Left = 0
     Top = 31
-    Width = 392
-    Height = 415
+    Width = 388
+    Height = 431
     Align = alClient
     ParentColor = True
     TabOrder = 1
@@ -169,7 +169,7 @@ inherited frmExodus: TfrmExodus
       Left = 170
       Top = 1
       Width = 5
-      Height = 413
+      Height = 429
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -183,7 +183,7 @@ inherited frmExodus: TfrmExodus
       Left = 1
       Top = 1
       Width = 169
-      Height = 413
+      Height = 429
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
@@ -195,8 +195,8 @@ inherited frmExodus: TfrmExodus
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
-      Width = 216
-      Height = 413
+      Width = 212
+      Height = 429
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0

@@ -272,6 +272,7 @@ type
         is fired after all other floating events are complete.
     }
     procedure OnFloat();override;
+
   end;
 
 var
@@ -427,7 +428,7 @@ uses
 {$IFDEF USE_TWEBBROWSER}
     IEMsgList,
 {$ENDIF}
-    KeyWords;
+    KeyWords, Dockable;
 
 {$R *.DFM}
 
@@ -593,6 +594,10 @@ begin
 
     if (Msg.isXdata) then exit;
     if (Msg.Time < _disconTime) then exit;
+
+    // Check to see if we need to increment the
+    // unread msg count
+    updateMsgCount(Msg);
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -1796,7 +1801,8 @@ begin
     Self.jid := sjid;
 
     j := TJabberID.Create(sjid);
-    MsgList.setTitle(j.user);
+    setUID(j.getDisplayFull());
+    MsgList.setTitle(j.removeJEP106(j.user));
     j.Free();
 end;
 

@@ -673,6 +673,8 @@ var
 begin
     Result := true;
 
+    setUID(cjid);
+
     _receivedXIMNode := false;
     _receivedMessage := false;
     _supportsXIM := false;
@@ -1031,6 +1033,10 @@ begin
     MsgList.HideComposing();
 
     Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
+
+    // Check to see if we need to increment the
+    // unread msg count
+    updateMsgCount(msg);
 
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin

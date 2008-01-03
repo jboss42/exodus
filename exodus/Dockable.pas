@@ -24,7 +24,7 @@ interface
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
-    XMLTag, ToolWin, ImgList, buttonFrame, Buttons;
+    XMLTag, ToolWin, ImgList, buttonFrame, Buttons, JabberMsg;
 
 
 type
@@ -97,6 +97,10 @@ type
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
   protected
+    _uid: widestring; // Unique ID (usually a jid) for this particular dockable window
+    _unreadmsg: integer; // Unread msg count
+    _priorityflag: boolean; // Is there a high priority msg unread
+    _activating: boolean; // Is the window currently becoming active
 
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
@@ -110,6 +114,7 @@ type
     procedure showTopbar(show: boolean);
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
+    procedure updateMsgCount(msg: TJabberMessage);
   public
     { Public declarations }
     procedure DockForm; virtual;
@@ -141,13 +146,26 @@ type
     procedure OnNotify(notifyEvents: integer);override;
 
     procedure gotActivate();override;
-
-    procedure  addDockbarButton(button: TDockbarButton);
+    procedure addDockbarButton(button: TDockbarButton);
     procedure removeDockbarButton(button: TDockbarButton);
 
+    {
+        Get the UID for the window.
+    }
+    function getUID(): Widestring;
 
+    {
+        Set the UID for the window.
+    }
+    procedure setUID(id:widestring);
+
+    {
+        Clear out the UnreadMsgCount
+    }
+    procedure ClearUnreadMsgCount();
+
+    { Public Properties }
     property Docked: boolean read _docked write _docked;
-
     property FloatPos: TRect read getPosition;
 
     {
@@ -162,6 +180,15 @@ type
         called.
     }
     property ImageIndex: Integer read getImageIndex write setImageIndex;
+
+    {
+        A UID (usually a JID) that identifies this window for tracking
+        by the activity window.
+    }
+    property UID: WideString read getUID write setUID;
+    property UnreadMsgCount: integer read _unreadmsg;
+    property PriorityFlag: boolean read _priorityflag;
+    property Activating: boolean read _activating write _activating;
 
   end;
 
@@ -231,6 +258,9 @@ begin
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
+    _unreadmsg := 0;
+    _priorityflag := false;
+    activating := false;
     inherited;
 end;
 
@@ -296,9 +326,24 @@ procedure TfrmDockable.gotActivate();
 begin
     inherited;
 
-    if (Docked) then begin
+    _activating := true;
+
+    ClearUnreadMsgCount();
+
+    try
         GetDockManager().UpdateDocked(Self);
+    except
+
     end;
+
+    _activating := false;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.ClearUnreadMsgCount();
+begin
+    _unreadmsg := 0;
+    _priorityflag := false;
 end;
 
 {---------------------------------------}
@@ -311,8 +356,7 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if (_docked) then
-        GetDockManager().CloseDocked(Self);
+    GetDockManager().CloseDocked(Self);
     inherited;
 end;
 
@@ -338,6 +382,7 @@ begin
             Self.OnFloat(); //fire float event so windows can fix up
         end;
     end;
+    GetDockManager().UpdateDocked(Self); // Make sure activity list is updated.
 end;
 
 {---------------------------------------}
@@ -468,8 +513,43 @@ end;
 
 procedure TfrmDockable.prefsCallback(event: string; tag: TXMLTag);
 begin
-    if (event = '/session/prefs') then 
+    if (event = '/session/prefs') then
         SnapBuffer := MainSession.Prefs.getInt('edge_snap');
 end;
+
+function TfrmDockable.getUID(): Widestring;
+begin
+    Result := _uid;
+end;
+
+procedure TfrmDockable.setUID(id:widestring);
+begin
+    _uid := id;
+end;
+
+procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
+begin
+    if (msg = nil) then exit;
+    
+    if (not Active) then begin
+        if (Docked) then begin
+            if ((GetDockManager().getTopDocked() <> Self) or
+                (not GetDockManager().isActive)) then begin
+                Inc(Self._unreadmsg);
+                if (msg.Priority = High) then begin
+                    _priorityflag := true;
+                end;
+            end;
+        end
+        else begin
+            Inc(Self._unreadmsg);
+            if (msg.Priority = High) then begin
+                _priorityflag := true;
+            end;
+        end;
+        GetDockManager().UpdateDocked(self);
+    end;
+end;
+
 
 end.

@@ -508,7 +508,7 @@ begin
 end;
 
 {
-    Get the singleton ibnstance of the roster
+    Get the singleton instance of the roster
 }
 function GetRosterWindow() : TfrmRosterWindow;
 begin
