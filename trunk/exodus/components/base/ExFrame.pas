@@ -14,9 +14,6 @@ type
     { Public declarations }
   end;
 
-var
-  BaseFrame: TExFrame;
-
 implementation
 
 {$R *.dfm}

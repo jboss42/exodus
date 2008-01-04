@@ -74,6 +74,6 @@ contains
   pngextra in '..\..\jopl\png\pngextra.pas',
   pngimage in '..\..\jopl\png\pngimage.pas',
   pnglang in '..\..\jopl\png\pnglang.pas',
+  ExBrandPanel in 'ExBrandPanel.pas', {ExBrandPanel1: TFrame}
   ExGradientPanel in 'ExGradientPanel.pas';
-
 end.
