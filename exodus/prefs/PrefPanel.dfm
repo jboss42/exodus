@@ -4,22 +4,49 @@ inherited frmPrefPanel: TfrmPrefPanel
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
-  ClientHeight = 301
-  ClientWidth = 270
-  OldCreateOrder = False
+  ClientHeight = 394
+  ClientWidth = 353
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 365
+  ExplicitHeight = 406
+  PixelsPerInch = 120
+  TextHeight = 17
   object pnlHeader: TTntPanel
+    AlignWithMargins = True
     Left = 0
-    Top = 0
-    Width = 270
-    Height = 26
+    Top = 2
+    Width = 353
+    Height = 22
+    Margins.Left = 0
+    Margins.Top = 2
+    Margins.Right = 0
     Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'pnlHeader'
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    Color = 14460499
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
     ParentBackground = False
-    ParentColor = True
+    ParentFont = False
     TabOrder = 0
+    object lblHeader: TTntLabel
+      AlignWithMargins = True
+      Left = 6
+      Top = 1
+      Width = 4
+      Height = 18
+      Margins.Left = 6
+      Margins.Top = 1
+      Align = alLeft
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
   end
 end
