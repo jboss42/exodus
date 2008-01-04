@@ -29,6 +29,7 @@ uses
   AWItem, Unicode, DockWindow;
 
 type
+
   TAWTrackerItem = class
   private
     { Private declarations }
@@ -51,9 +52,15 @@ type
     Button1: TButton;
     Button2: TButton;
     pnlList: TExGradientPanel;
+    Button3: TButton;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
 
@@ -63,11 +70,16 @@ type
     _docked: boolean;
     _activeitem: TfAWItem;
     _dockwindow: TfrmDockWindow;
+    _showingTopItem: integer;
+    _showingItemCnt: integer;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
     procedure onItemClick(Sender: TObject);
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
+    procedure _sortTrackingList(sortType: TSortStates = ssUnsorted);
+    procedure _sortList(var list: TWidestringList; sortType: TSortStates);
+    procedure _updateDisplay();
 
   public
     { Public declarations }
@@ -143,6 +155,8 @@ procedure TfrmActivityWindow.FormCreate(Sender: TObject);
 begin
     inherited;
     _trackingList := TWidestringList.Create;
+    _showingTopItem := -1;
+    _showingItemCnt := 0;
 end;
 
 {---------------------------------------}
@@ -153,17 +167,39 @@ begin
     _trackingList.Free;
 end;
 
+procedure TfrmActivityWindow.FormResize(Sender: TObject);
+begin
+    _updateDisplay();
+end;
+
 {---------------------------------------}
 procedure TfrmActivityWindow.Button1Click(Sender: TObject);
-var
-    item: TAWTrackerItem;
 begin
-    item := findItem('yuck@wrk217.corp.jabber.com');
-    if (item <> nil) then begin
-        item.awItem.pnlAWItemGPanel.GradientProperites.startColor := $000000FF; //$00D0C3AF;
-        item.awItem.pnlAWItemGPanel.GradientProperites.endColor := $000000FF; //$00D0C3AF;
-        item.awItem.pnlAWItemGPanel.Invalidate;
+    _sortTrackingList(ssAlpha);
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.Button2Click(Sender: TObject);
+begin
+    _sortTrackingList(ssUnread);
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.Button3Click(Sender: TObject);
+begin
+    if (_showingTopItem > 0) then begin
+        Dec(_showingTopItem);
     end;
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.Button4Click(Sender: TObject);
+begin
+    Inc(_showingTopItem);
+    _updateDisplay();
 end;
 
 {---------------------------------------}
@@ -188,15 +224,25 @@ begin
 
     for i := 0 to _trackingList.Count - 1 do begin
         if (item = TAWTrackerItem(_trackingList.Objects[i])) then begin
+            // Found Item - remove from list
             _trackingList.Delete(i);
+
+            // Delete item
+            item.frm := nil;
+            item.awItem.Free();
+            item.awItem := nil;
+            item.Free();
+
+            // Update list view
+            _updateDisplay();
+
+            if (_trackingList.Count <= 0) then begin
+                _showingTopItem := -1;
+            end;
+
             break;
         end;
     end;
-
-    item.frm := nil;
-    item.awItem.Free();
-    item.awItem := nil;
-    item.Free();
 end;
 
 {---------------------------------------}
@@ -217,21 +263,23 @@ begin
 
     if ((Result = nil) and
         (frm <> nil)) then begin
-//        if (id = '') then begin
-//            id := frm.Caption;
-//        end;
-
         Result := TAWTrackerItem.Create();
         Result.awItem := TfAWItem.Create(nil);
         Result.frm := frm;
         _trackingList.AddObject(id, Result);
         Result.awItem.OnClick := Self.onItemClick;
 
-        //???dda
+        // Setup item props
         Result.awItem.Parent := pnlList;
-        Result.awItem.Top := pnlList.Top + pnlList.Height;
-        Result.awItem.Align := alTop;
+        Result.awItem.Align := alNone;
         Result.awItem.name := id;
+        Result.awItem.Left := 0;
+
+        if (_showingTopItem < 0) then begin
+            _showingTopItem := 0;
+        end;
+
+        _updateDisplay();
     end;
 end;
 
@@ -302,8 +350,6 @@ end;
 procedure TfrmActivityWindow.onItemClick(Sender: TObject);
 var
     awitem: TfAWItem;
-    trackitem: TAWTrackerItem;
-    tsheet: TTntTabSheet;
 begin
     if (Sender = nil) then exit;
 
@@ -370,6 +416,130 @@ begin
         end;
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._sortTrackingList(sortType: TSortStates);
+begin
+    _sortList(_trackingList, sortType);
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._sortList(var list: TWidestringList; sortType: TSortStates);
+var
+    i,j: integer;
+    insertPoint: integer;
+    tempitem1, tempitem2: TAWTrackerItem;
+    tempList: TWidestringList;
+    itemadded: boolean;
+begin
+    if (sortType = ssUnsorted) then exit;
+    if (list = nil) then exit;
+    if (list.Count = 0) then exit;
+
+    tempList := TWidestringList.Create();
+    insertPoint := 0;
+
+    // Always do an Alpha sort first
+    if (sortType <> ssUnsorted) then begin
+        // Sort by Alpha so use TWidestringList default sort
+        list.Sort;
+    end;
+
+    // Refine sort if something other then Alpha
+    if (sortType = ssActive) then begin
+        // Sort by most active items, then by alpha for tied items
+    end
+    else if (sortType = ssRecent) then begin
+        // Sort by most Recent Activity, then by alpha for tied items
+    end
+    else if (sortType = ssUnread) then begin
+        // Sort by Highest Unread msgs
+        for i := 0 to list.Count - 1 do begin
+            // iterate over list to reorder
+            itemadded := false;
+            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+            for j := 0 to tempList.Count - 1 do begin
+                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                insertPoint := j;
+                if (tempitem2.awItem.count < tempitem1.awItem.count) then begin
+                    // We have an new item to add to the temp list that should be higher
+                    // then the current item in the templist
+                    tempList.InsertObject(insertPoint, list.Strings[i], list.Objects[i]);
+                    itemadded := true;
+                    break;
+                end;
+            end;
+            if (not itemadded) then begin
+                // We didn't insert the item into the temp list so add to end
+                tempList.AddObject(list.Strings[i], list.Objects[i]);
+            end;
+        end;
+        list.Clear;
+        for i := 0 to tempList.Count - 1 do begin
+            list.AddObject(tempList.Strings[i], tempList.Objects[i]);
+        end;
+    end
+    else begin
+        // Sort was Alpha which we did above
+    end;
+
+    tempList.Clear;
+    tempList.Free;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._updateDisplay();
+var
+    numSlots: integer;
+    i: integer;
+    item: TAWTrackerItem;
+    slotsFilled: integer;
+begin
+    try
+        if (_trackingList.Count > 0) then begin
+            numSlots := pnlList.Height div TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
+            slotsFilled := 0;
+            for i := 0 to _trackingList.Count - 1 do begin
+                item := TAWTrackerItem(_trackingList.Objects[i]);
+                if (i < _showingTopItem) then begin
+                    // Off the top of the viewable list
+                    item.awItem.Visible := false;
+                    Button3.Enabled := true;
+                end
+                else if (slotsFilled >= numSlots) then begin
+                    // Off the bottom of the viewable list
+                    item.awItem.Visible := false;
+                    Button4.Enabled := true;
+                end
+                else begin
+                    item.awItem.Width := pnlList.Width;
+                    item.awItem.Top := item.awItem.Height * slotsFilled;
+                    item.awItem.Visible := true;
+                    Inc(slotsFilled);
+                end;
+            end;
+
+            // Disable scroll buttons if not needed
+            if (_showingTopItem <= 0) then begin
+                Button3.Enabled := false;
+            end;
+            if (TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) then begin
+                Button4.Enabled := false;
+            end;
+
+
+
+        end
+        else begin
+            Button3.Enabled := false;
+            Button4.Enabled := false;
+        end;
+    except
+    end;
+end;
+
+
+
 
 
 

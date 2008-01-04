@@ -28,11 +28,15 @@ uses
   Controls, Forms, Dialogs,
   ExForm, Dockable, TntComCtrls,
   ComCtrls, ExtCtrls, TntExtCtrls,
-  ExodusDockManager, StdCtrls, ExGradientPanel,
-  AWItem, Unicode;
+  ExodusDockManager, StdCtrls,
+  ExGradientPanel, AWItem, Unicode,
+  StateForm;
 
 type
-  TfrmDockWindow = class(TExForm, IExodusDockManager)
+
+  TSortStates = (ssUnsorted, ssAlpha, ssActive, ssRecent, ssUnread);
+
+  TfrmDockWindow = class(TfrmState, IExodusDockManager)
     splAW: TTntSplitter;
     AWTabControl: TTntPageControl;
     pnlActivityList: TExGradientPanel;
@@ -44,6 +48,8 @@ type
       NewTarget: TWinControl; var Allow: Boolean);
     procedure FormShow(Sender: TObject);
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
+    procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
+      Y: Integer);
   private
     { Private declarations }
 
@@ -51,6 +57,7 @@ type
     { Protected declarations }
     _docked_forms: TList;
     _dockState: TDockStates;
+    _sortState: TSortStates;
 
     procedure CreateParams(Var params: TCreateParams); override;
     procedure _removeTabs(idx:integer = -1);
@@ -85,8 +92,8 @@ var
 implementation
 
 uses
-    ActivityWindow, RosterWindow, Session,
-    PrefController;
+    RosterWindow, Session, PrefController,
+    ActivityWindow;
 
 {$R *.dfm}
 
@@ -147,14 +154,28 @@ begin
     inherited;
     _docked_forms := TList.Create;
     _dockState := dsUninitialized;
+    _sortState := ssUnsorted;
     _layoutAWOnly();
 end;
 
 {---------------------------------------}
 procedure TfrmDockWindow.FormDestroy(Sender: TObject);
 begin
-    inherited;
-    _docked_forms.Free;
+    try
+        inherited;
+        _docked_forms.Free;
+    except
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.FormDockDrop(Sender: TObject; Source: TDragDockObject;
+  X, Y: Integer);
+begin
+    if (Source.Control is TfrmDockable) then begin
+        // We got a new form dropped on us.
+        OpenDocked(TfrmDockable(Source.Control));
+    end;
 end;
 
 {---------------------------------------}
@@ -168,6 +189,7 @@ begin
         aw.DockActivityWindow(pnlActivityList);
         aw.dockwindow := Self;
         aw.Show;
+        aw.OnDockDrop := FormDockDrop;
     end;
 end;
 
@@ -494,6 +516,7 @@ begin
 //        _noMoveCheck := false;
 //        _currDockState := dsDock;
         Self.DockSite := false;
+        pnlActivityList.DockSite := false;        
         AWTabControl.DockSite := true;
 
 //         if (MainSession.Active) then
@@ -525,8 +548,8 @@ begin
 //        _noMoveCheck := false;
 //        _currDockState := dsRosterOnly;
         Self.DockSite := true;
+        pnlActivityList.DockSite := true;
         AWTabControl.DockSite := false;
-
 //         if (MainSession.Active) then
 //            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
 //         else
