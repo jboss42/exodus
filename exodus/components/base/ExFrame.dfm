@@ -1,4 +1,4 @@
-object BaseFrame: TExFrame
+object ExFrame: TExFrame
   Left = 0
   Top = 0
   Width = 320
