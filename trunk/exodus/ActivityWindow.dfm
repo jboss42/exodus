@@ -14,6 +14,7 @@ object frmActivityWindow: TfrmActivityWindow
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object pnlListBase: TExGradientPanel
@@ -28,7 +29,6 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 12495763
     GradientProperites.orientation = gdHorizontal
-    ExplicitWidth = 185
     object pnlListTop: TExGradientPanel
       Left = 0
       Top = 0
@@ -41,15 +41,24 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13681583
       GradientProperites.endColor = 12495763
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 185
       object Button1: TButton
-        Left = 56
+        Left = 0
         Top = 1
         Width = 75
         Height = 25
-        Caption = 'Button1'
+        Caption = 'Alpha'
         TabOrder = 0
         OnClick = Button1Click
+      end
+      object Button3: TButton
+        Left = 116
+        Top = 1
+        Width = 75
+        Height = 25
+        Caption = 'Up'
+        Enabled = False
+        TabOrder = 1
+        OnClick = Button3Click
       end
     end
     object pnlListBottom: TExGradientPanel
@@ -64,14 +73,24 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13681583
       GradientProperites.endColor = 12495763
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 185
       object Button2: TButton
-        Left = 56
+        Left = 0
         Top = 1
         Width = 75
         Height = 25
-        Caption = 'Button2'
+        Caption = 'Unread'
         TabOrder = 0
+        OnClick = Button2Click
+      end
+      object Button4: TButton
+        Left = 116
+        Top = 0
+        Width = 75
+        Height = 25
+        Caption = 'Down'
+        Enabled = False
+        TabOrder = 1
+        OnClick = Button4Click
       end
     end
     object pnlList: TExGradientPanel
@@ -86,7 +105,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13681583
       GradientProperites.endColor = 12495763
       GradientProperites.orientation = gdHorizontal
-      ExplicitWidth = 185
     end
   end
 end

@@ -1746,8 +1746,7 @@ begin
 
 {$IFDEF USE_ACTIVITY_WINDOW}
         // Show the activity window
-        _dockWindow.Show;
-
+        _dockWindow.ShowDefault();
 {$ENDIF}
 
         // Accept files dragged from Explorer
@@ -2251,6 +2250,11 @@ begin
     // Unload all of the remaining plugins
     UnloadPlugins();
 
+{$IFDEF USE_ACTIVITY_WINDOW}
+    // Close the Activity Window
+    _dockWindow.Close();
+{$ENDIF}
+
     // Unregister callbacks, etc.
     MainSession.UnRegisterCallback(_sessioncb);
     MainSession.Prefs.SavePosition(Self);
@@ -2269,7 +2273,6 @@ begin
 
     // Close the roster window
     RosterWindow.CloseRosterWindow();
-
 
     _cleanupComplete := true;
 end;
@@ -3134,7 +3137,10 @@ begin
         cleanup();
 
 {$IFDEF USE_ACTIVITY_WINDOW}
-    _dockWindow.Free();
+    try
+        _dockWindow.Free();
+    except
+    end;
 {$ENDIF}
 end;
 

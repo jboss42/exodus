@@ -12,8 +12,10 @@ object frmDockWindow: TfrmDockWindow
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnDockDrop = FormDockDrop
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -45,6 +47,7 @@ object frmDockWindow: TfrmDockWindow
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    OnDockDrop = FormDockDrop
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 12495763
     GradientProperites.orientation = gdHorizontal
