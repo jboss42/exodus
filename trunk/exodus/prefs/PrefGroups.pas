@@ -26,17 +26,6 @@ uses
 
 type
   TfrmPrefGroups = class(TfrmPrefPanel)
-    lblGatewayGrp: TTntLabel;
-    lblDefaultGrp: TTntLabel;
-    txtGatewayGrp: TTntComboBox;
-    txtDefaultGrp: TTntComboBox;
-    chkSort: TTntCheckBox;
-    lblFilter: TTntLabel;
-    cboVisible: TTntComboBox;
-    chkCollapsed: TTntCheckBox;
-    chkGroupCounts: TTntCheckBox;
-    chkOfflineGrp: TTntCheckBox;
-    chkOnlineOnly: TTntCheckBox;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
@@ -62,20 +51,13 @@ procedure TfrmPrefGroups.LoadPrefs();
 var
     gs: TWidestringList;
 begin
-    // populate grp drop-downs.
-    gs := TWidestringList.Create();
-    MainSession.Roster.AssignGroups(gs);
-    gs.Sorted := true;
-    gs.Sort();
-
-    AssignTntStrings(gs, txtDefaultGrp.Items);
     inherited;
     //add groups to gateway, add current gateway txt to list if its not already there
-    if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
-        gs.Add(txtGatewayGrp.Text);
-    gs.Sort();
-    AssignTntStrings(gs, txtGatewayGrp.Items);
-    gs.Free();
+//    if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
+//        gs.Add(txtGatewayGrp.Text);
+//    gs.Sort();
+//    AssignTntStrings(gs, txtGatewayGrp.Items);
+//    gs.Free();
 end;
 
 procedure TfrmPrefGroups.SavePrefs();
@@ -90,10 +72,10 @@ begin
     // this only makes sense if only online is OFF.
     if (not Self.Visible) then exit;
 
-    if ((chkOfflineGrp.Checked) and (chkOnlineOnly.Checked)) then begin
-        MessageDlgW(_(sOfflineGrpWarn), mtInformation, [mbOK], 0);
-        chkOnlineOnly.Checked := false;
-    end;
+//    if ((chkOfflineGrp.Checked) and (chkOnlineOnly.Checked)) then begin
+//        MessageDlgW(_(sOfflineGrpWarn), mtInformation, [mbOK], 0);
+//        chkOnlineOnly.Checked := false;
+//    end;
 end;
 
 end.

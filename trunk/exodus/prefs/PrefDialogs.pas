@@ -48,8 +48,6 @@ type
     chkEscClose: TTntCheckBox;
     trkSnap: TTrackBar;
     trkChatMemory: TTrackBar;
-    chkSaveWindowState: TTntCheckBox;
-    chkRestoreDesktop: TTntCheckBox;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);

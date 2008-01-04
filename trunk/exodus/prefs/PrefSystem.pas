@@ -24,29 +24,37 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag, ExGroupBox;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag, ExGroupBox,
+  TntForms, ExFrame, ExBrandPanel;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    ExGroupBox1: TExGroupBox;
-    chkAutoStart: TTntCheckBox;
+    gbParentGroup: TExBrandPanel;
     ExGroupBox2: TExGroupBox;
+    chkAutoStart: TTntCheckBox;
+    gbOnStart: TExGroupBox;
+    chkAutoLogin: TTntCheckBox;
+    chkStartMin: TTntCheckBox;
+    chkRestoreDesktop: TTntCheckBox;
+    chkDebug: TTntCheckBox;
+    ExGroupBox4: TExGroupBox;
+    chkSaveWindowState: TTntCheckBox;
+    pnlDockPref: TTntPanel;
+    lblDockPref: TTntLabel;
+    rbDocked: TTntRadioButton;
+    rbUndocked: TTntRadioButton;
+    ExGroupBox3: TExGroupBox;
     chkToolbox: TTntCheckBox;
     chkCloseMin: TTntCheckBox;
     chkSingleInstance: TTntCheckBox;
+    chkOnTop: TTntCheckBox;
+    pnlAutoUpdates: TTntPanel;
     chkAutoUpdate: TTntCheckBox;
     btnUpdateCheck: TTntButton;
-    lblDefaultNick: TTntLabel;
-    txtDefaultNick: TTntEdit;
+    pnlLocale: TTntPanel;
     lblLang: TTntLabel;
-    cboLocale: TTntComboBox;
     lblLangScan: TTntLabel;
-    chkOnTop: TTntCheckBox;
-    ExGroupBox3: TExGroupBox;
-    chkAutoLogin: TTntCheckBox;
-    chkStartMin: TTntCheckBox;
-    chkDebug: TTntCheckBox;
-    CheckBox1: TCheckBox;
+    cboLocale: TTntComboBox;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -60,6 +68,8 @@ type
     _initial_chkdebug_state: boolean;
 
     procedure ScanLocales();
+
+    procedure setLocaleState();
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -75,6 +85,9 @@ const
     sNewLocale1 = 'You must exit ';
     sNewLocale2 = ' and restart it before your new locale settings will take affect.';
 
+    sStartCheckCaption = '&Start ';
+    sOnStartedAppCaption = 'When I start ';
+    
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -90,6 +103,22 @@ uses
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
 
+{The system preferences page displays the following prefs:
+    <auto_updates value="0" control="chkAutoUpdate" state="ro"/>
+    <auto_start value="0" control="chkAutoStart"/>
+    <debug value="0" control="chkDebug"/>
+    <min_start value="0" control="chkStartMin"/>
+    <autologin value="0" control="chkAutoLogin"/>
+    <window_ontop value="0" control="chkOnTop" state="ro"/>
+    <window_toolbox value="0" control="chkToolbox" state="ro"/>
+    <close_min value="0" control="chkCloseMin" state="ro"/>
+    <single_instance value="1" control="chkSingleInstance" state="ro"/>
+    <default_nick control="txtDefaultNick" state="ro">
+    	<control name="lblDefaultNick"/>
+    </default_nick>
+    <locale value="Default" state="inv"/>
+
+}
 {---------------------------------------}
 procedure TfrmPrefSystem.ScanLocales();
 var
@@ -134,23 +163,12 @@ begin
     FreeAndNil(langs);
 end;
 
-{---------------------------------------}
-procedure TfrmPrefSystem.LoadPrefs();
+procedure TfrmPrefSystem.setLocaleState();
 var
     i: integer;
     tmps: Widestring;
-    reg: TRegistry;
     temptag: TXmlTag;
-    s: TPrefState;
 begin
-    // System Prefs
-    _dirty_locale := '';
-    if (_lang_codes = nil) then
-        _lang_codes := TStringlist.Create();
-    ScanLocales();
-
-    inherited;
-
     try
         with MainSession.Prefs do begin
             // locale info, we should always have at least "default-english"
@@ -162,10 +180,12 @@ begin
             else begin
                 tmps := temptag.GetAttribute('value');
                 if (LowerCase(temptag.GetAttribute('state')) = 'inv') then begin
+                    pnlLocale.Visible := false;
                     lblLang.Visible := false;
                     cboLocale.Visible := false;
                     lblLangScan.Visible := false;
                 end;
+
                 if (LowerCase(temptag.GetAttribute('state')) = 'ro') then begin
                     lblLang.Enabled := false;
                     cboLocale.Enabled := false;
@@ -185,7 +205,6 @@ begin
                 if (i >= 0) then
                     cboLocale.ItemIndex := i
                 else begin
-
                     // check for en when given en_US
                     i := Pos('_', tmps);
                     if (i > 1) then begin
@@ -206,8 +225,36 @@ begin
             end
             else
                 cboLocale.ItemIndex := 0;
+        end;
+    finally
+        temptag.Free();
+    end;
+end;
 
-            // Check to see if Exodus runs when windows starts
+{---------------------------------------}
+procedure TfrmPrefSystem.LoadPrefs();
+var
+    tmps: Widestring;
+    reg: TRegistry;
+    s: TPrefState;
+begin
+    // System Prefs
+    _dirty_locale := '';
+    if (_lang_codes = nil) then
+        _lang_codes := TStringlist.Create();
+    ScanLocales();
+
+    inherited;
+
+    setLocaleState();
+    with MainSession.Prefs do begin
+
+        //<<AUTO START>>
+        s := PrefController.getPrefState('auto_start');
+        chkAutoStart.Visible := (s <> psInvisible);
+        chkAutoStart.Enabled := (s <> psReadOnly);
+        if (s = psReadWrite) then begin
+            // get auto-start from registry settings
             reg := TRegistry.Create();
             try
                 reg.RootKey := HKEY_CURRENT_USER;
@@ -217,27 +264,46 @@ begin
             finally
                 reg.Free();
             end;
+        end
+        else chkAutoStart.Checked := GetBool('auto_start');
 
-            //hide nick if locked down
-            if (GetBool('brand_prevent_change_nick')) then begin
-                Self.lblDefaultNick.Visible := false;
-                Self.txtDefaultNick.Visible := false;
-            end;
-            //Auto login should not be enabled if password is not saved
-            s := PrefController.getPrefState('autologin');
-            chkAutoLogin.Enabled := (s <> psReadOnly) and
-                                    (s <> psInvisible) and
-                                    MainSession.Profile.SavePasswd and
-                                    MainSession.Authenticated;
-            if (s = psInvisible) then begin
-              chkAutoLogin.Visible := false;
-            end;
+        //<<DEFAULT NICKNAME>>
 
-            chkDebug.Visible := getBool('brand_show_debug_in_menu');
+        //<<AUTO LOGIN>> 
+        //Auto login should not be enabled if password is not saved
+        s := PrefController.getPrefState('autologin');
+        chkAutoLogin.Enabled := (s <> psReadOnly) and
+                                (s <> psInvisible) and
+                                MainSession.Profile.SavePasswd and
+                                MainSession.Authenticated;
+        if (s = psInvisible) then begin
+          chkAutoLogin.Visible := false;
         end;
-    finally
-        temptag.Free();
+
+        //<<DEBUG>> enabled/visiblity already set in inherited, check branding override
+        chkDebug.Visible := getBool('brand_show_debug_in_menu');
+
+        //<<AUTO UPDATE>> hide panel if branded hidden
+        pnlAutoUpdates.Visible := chkAutoUpdate.Visible;
+        btnUpdateCheck.Enabled := chkAutoUpdate.enabled;
+
+        //app name branding
+        tmps := GetString('brand_caption');
+        if (tmps = '') then
+            tmps := _('Exodus');
+        chkAutoStart.Caption := _(sStartCheckCaption + tmps);
+        gbOnStart.Caption := _(sOnStartedAppCaption + tmps + ':');
+
+        //window dock pref
+        rbDocked.Checked := GetBool('start_docked');
+        rbUndocked.checked := not rbDocked.Checked;
+        s := PrefController.getPrefState('start_docked');
+        pnlDockPref.Visible := (s <> psInvisible);
+        lblDockPref.Enabled := (s <> psReadOnly);
+        rbDocked.Enabled := lblDockPref.Enabled;
+        rbUndocked.Enabled := lblDockPref.Enabled;
     end;
+    gbParentGroup.updateState();
 end;
 
 {---------------------------------------}
@@ -331,10 +397,6 @@ procedure TfrmPrefSystem.FormCreate(Sender: TObject);
 begin
   inherited;
     AssignUnicodeURL(lblLangScan.Font, 8);
-    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then begin
-        txtDefaultNick.Visible := False;
-        lblDefaultNick.Visible := False;
-    end;
     _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
 
     btnUpdateCheck.Visible := chkAutoUpdate.Visible;

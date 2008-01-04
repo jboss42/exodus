@@ -23,29 +23,55 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
+  Buttons, TntButtons, TntForms, ExFrame, ExBrandPanel;
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
-    lblDblClick: TTntLabel;
-    chkShowUnsubs: TTntCheckBox;
+    ExGroupBox1: TExBrandPanel;
+    pnlRosterPrefs: TExBrandPanel;
+    chkInlineStatus: TTntCheckBox;
+    chkUseProfileDN: TTntCheckBox;
+    chkCollapsed: TTntCheckBox;
     chkHideBlocked: TTntCheckBox;
+    chkGroupCounts: TTntCheckBox;
+    chkOnlineOnly: TTntCheckBox;
+    pnlManageBtn: TExBrandPanel;
+    btnManageBlocked: TTntButton;
+    grpAdvanced: TExGroupBox;
+    chkNestedGrps: TTntCheckBox;
+    gbDepricated: TExGroupBox;
+    chkSort: TTntCheckBox;
+    chkOfflineGrp: TTntCheckBox;
+    pnlMinStatus: TExBrandPanel;
+    lblFilter: TTntLabel;
+    cboVisible: TTntComboBox;
+    pnlGatewayGroup: TExBrandPanel;
+    lblGatewayGrp: TTntLabel;
+    txtGatewayGrp: TTntComboBox;
     chkPresErrors: TTntCheckBox;
     chkShowPending: TTntCheckBox;
-    cboDblClick: TTntComboBox;
+    chkShowUnsubs: TTntCheckBox;
     chkRosterUnicode: TTntCheckBox;
-    chkInlineStatus: TTntCheckBox;
-    cboInlineStatus: TColorBox;
-    chkNestedGrps: TTntCheckBox;
-    txtGrpSeperator: TTntEdit;
-    lblNestedGrpSeparator: TTntLabel;
     chkRosterAvatars: TTntCheckBox;
-    chkUseProfileDN: TTntCheckBox;
-    txtDNProfileMap: TTntEdit;
+    pnlDblClickAction: TExBrandPanel;
+    lblDblClick: TTntLabel;
+    cboDblClick: TTntComboBox;
+    pnlGroupSeperator: TExBrandPanel;
+    lblGrpSeperator: TTntLabel;
+    txtGrpSeperator: TTntEdit;
+    pnlDefaultNIck: TExBrandPanel;
+    lblDefaultNick: TTntLabel;
+    txtDefaultNick: TTntEdit;
+    pnlStatusColor: TExBrandPanel;
+    lblStatusColor: TTntLabel;
+    cboStatusColor: TColorBox;
+    pnlDNFields: TExBrandPanel;
     lblDNProfileMap: TTntLabel;
-    procedure chkInlineStatusClick(Sender: TObject);
-    procedure chkNestedGrpsClick(Sender: TObject);
-    procedure chkUseProfileDNClick(Sender: TObject);
+    txtDNProfileMap: TTntEdit;
+    pnlDefaultGroup: TExBrandPanel;
+    lblDefaultGrp: TTntLabel;
+    txtDefaultGrp: TTntComboBox;
   private
     { Private declarations }
   public
@@ -54,8 +80,8 @@ type
     procedure SavePrefs(); override;
   end;
 
-var
-  frmPrefRoster: TfrmPrefRoster;
+//var
+//  frmPrefRoster: TfrmPrefRoster;
 
 implementation
 {$R *.dfm}
@@ -67,35 +93,47 @@ uses
 procedure TfrmPrefRoster.LoadPrefs();
 var
     s: TPrefState;
+    gs: TWidestringList;
 begin
     inherited;
-    cboInlineStatus.Enabled := chkInlineStatus.Checked;
-    if (MainSession.Prefs.getBool('branding_nested_subgroup') = false) then begin
-      txtGrpSeperator.Visible := false;
-      chkNestedGrps.Visible := false;
-      lblNestedGrpSeparator.Visible := false;
-      chkNestedGrps.Checked := false;
-    end
-    else
-      txtGrpSeperator.Enabled := chkNestedGrps.Checked;
 
-    Self.cboInlineStatus.Enabled := Self.chkInlineStatus.Checked;
-    Self.cboInlineStatus.Visible := Self.chkInlineStatus.Visible;
-    s := PrefController.getPrefState('displayname_profile_map');
-    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
-                                    (s <> psReadOnly) and
-                                    (s <> psInvisible);
-    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
-                                    (s <> psReadOnly) and
-                                    (s <> psInvisible);
-    Self.lblDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
-                                    (s <> psInvisible);
-    Self.txtDNProfileMap.Visible := Self.chkUseProfileDN.Visible and
-                                    (s <> psInvisible);
+    // populate grp drop-downs.
+    gs := TWidestringList.Create();
+    MainSession.Roster.AssignGroups(gs);
+    gs.Sorted := true;
+    gs.Sort();
 
-    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then
+    AssignTntStrings(gs, txtDefaultGrp.Items);
+
+    //populate gateway gropup cbo
+    if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
+        gs.Add(txtGatewayGrp.Text);
+    gs.Sort();
+    AssignTntStrings(gs, txtGatewayGrp.Items);
+    gs.Free();
+
+
+    //disable/hide based on brand
+    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then begin
         chkHideBlocked.Enabled := false;
+        chkHideBlocked.visible := false;
+        btnManageBlocked.Visible := false;
+    end;
+        //hide nick panel if branded locked down or if pref is locked down
+    if (MainSession.Prefs.GetBool('brand_prevent_change_nick')) then begin
+        lblDefaultNick.Visible := false;
+        txtDefaultNick.Visible := false;
+    end;
 
+    if (not MainSession.Prefs.getBool('branding_nested_subgroup')) then begin
+        txtGrpSeperator.Visible := false;
+        chkNestedGrps.Visible := false;
+        lblGrpSeperator.Visible := false;
+
+        chkNestedGrps.Checked := false;
+    end;
+
+    ExGroupBox1.updateState();
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
@@ -103,33 +141,6 @@ begin
     inherited;
 
     // XXX: save nested group seperator per JEP-48
-end;
-
-procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);
-begin
-  inherited;
-    // toggle the color drop down on/off
-    cboInlineStatus.Enabled := chkInlineStatus.Checked;
-end;
-
-procedure TfrmPrefRoster.chkNestedGrpsClick(Sender: TObject);
-begin
-  inherited;
-    txtGrpSeperator.Enabled := chkNestedGrps.Checked;
-end;
-
-procedure TfrmPrefRoster.chkUseProfileDNClick(Sender: TObject);
-var
-    s: TPrefState;
-begin
-  inherited;
-    s := PrefController.getPrefState('displayname_profile_map');
-    Self.lblDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
-                                    (s <> psReadOnly) and
-                                    (s <> psInvisible);
-    Self.txtDNProfileMap.Enabled := Self.chkUseProfileDN.Checked and
-                                    (s <> psReadOnly) and
-                                    (s <> psInvisible);
 end;
 
 end.

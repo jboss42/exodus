@@ -23,11 +23,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, TntExtCtrls, ExForm;
+  Dialogs, ExtCtrls, TntExtCtrls, ExForm, StdCtrls, TntStdCtrls;
 
 type
   TfrmPrefPanel = class(TExForm)
     pnlHeader: TTntPanel;
+    lblHeader: TTntLabel;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -47,7 +48,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Menus, StdCtrls, ComCtrls, TntComCtrls, TntStdCtrls,
+    Menus, ComCtrls, TntComCtrls, 
     Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils,
     ExNumericEdit;
 
