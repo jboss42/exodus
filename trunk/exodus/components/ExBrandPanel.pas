@@ -26,8 +26,6 @@ type
       function getAutoHide(): boolean;
       procedure setAutoHide(b: boolean);
 
-      procedure initialize();virtual;
-
       function visibleChildren(): integer;virtual;
       procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
 
@@ -36,6 +34,7 @@ type
       Constructor Create(AOwner: TComponent);override;
       Destructor Destroy; Override;
       procedure updateState();virtual;
+      procedure initializeChildStates();virtual;
   published
       property AutoHide: boolean read getAutoHide write setAutoHide;
   end;
@@ -138,7 +137,7 @@ begin
 //    updateBox();
 end;
 
-procedure TExBrandPanel.initialize();
+procedure TExBrandPanel.initializeChildStates();
 var
   i: integer;
   t: TControlInfo;
@@ -152,7 +151,7 @@ begin
   //walk pnlGroups children and get their initial states
   for i := 0 to Self.ControlCount -1 do begin
       if (Controls[i] is TExBrandPanel) then
-          TExBrandPanel(Controls[i]).initialize()
+          TExBrandPanel(Controls[i]).initializeChildStates()
       else begin
         t := TControlInfo.create();
         t._control := Self.Controls[i];
