@@ -107,4 +107,11 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.orientation = gdHorizontal
     end
   end
+  object activatewindowtimer: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = activatewindowtimerTimer
+    Left = 8
+    Top = 32
+  end
 end
