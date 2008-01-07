@@ -54,6 +54,7 @@ type
     pnlList: TExGradientPanel;
     Button3: TButton;
     Button4: TButton;
+    activatewindowtimer: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -61,6 +62,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure activatewindowtimerTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -71,7 +73,7 @@ type
     _activeitem: TfAWItem;
     _dockwindow: TfrmDockWindow;
     _showingTopItem: integer;
-    _showingItemCnt: integer;
+    _newActivateSheet: TTntTabSheet;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
@@ -80,6 +82,7 @@ type
     procedure _sortTrackingList(sortType: TSortStates = ssUnsorted);
     procedure _sortList(var list: TWidestringList; sortType: TSortStates);
     procedure _updateDisplay();
+    procedure _activateNextDockedItem(curitemindx: integer);
 
   public
     { Public declarations }
@@ -90,6 +93,7 @@ type
     function addItem(id:widestring; frm:TfrmDockable): TAWTrackerItem;
     function findItem(id:widestring): TAWTrackerItem; overload;
     function findItem(frm:TfrmDockable): TAWTrackerItem; overload;
+    function findItem(awitem: TfAWItem): TAWTrackerItem; overload;
     procedure activateItem(id:widestring); overload;
 
     property docked: boolean read _docked write _docked;
@@ -156,7 +160,6 @@ begin
     inherited;
     _trackingList := TWidestringList.Create;
     _showingTopItem := -1;
-    _showingItemCnt := 0;
 end;
 
 {---------------------------------------}
@@ -224,7 +227,15 @@ begin
 
     for i := 0 to _trackingList.Count - 1 do begin
         if (item = TAWTrackerItem(_trackingList.Objects[i])) then begin
-            // Found Item - remove from list
+            // Change active item
+            if (_activeitem = item.awItem) then begin
+                _activeitem := nil;
+            end;
+            if (_trackingList.Count > 1) then begin
+                _activateNextDockedItem(i);
+            end;
+
+            // Remove from list
             _trackingList.Delete(i);
 
             // Delete item
@@ -315,6 +326,24 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmActivityWindow.findItem(awitem: TfAWItem): TAWTrackerItem;
+var
+    i: integer;
+    item: TAWTrackerItem;
+begin
+    Result := nil;
+
+    for i := 0 to _trackingList.Count - 1 do begin
+        item := TAWTrackerItem(_trackingList.Objects[i]);
+        if (item.awitem = awitem) then begin
+            Result := item;
+            exit;
+        end;
+    end;
+end;
+
+
+{---------------------------------------}
 procedure TfrmActivityWindow.DockActivityWindow(dockSite : TWinControl);
 begin
     if (dockSite <> Self.Parent) then begin
@@ -388,12 +417,38 @@ begin
             if (trackitem.frm.Docked) then begin
                 tsheet := _dockwindow.getTabSheet(trackitem.frm);
                 if (tsheet <> nil) then begin
-                    _dockwindow.AWTabControl.ActivePage := tsheet;
+                    // Set the active page.
+                    // Have to do this through timer because for some
+                    // undetermined reason, there are times when
+                    // setting the active page here doesn't seem
+                    // to actually show the new active page.
+                    // An example is when closing a docked window.
+                    _newActivateSheet := tsheet;
+                    activatewindowtimer.Enabled := true;
                 end;
             end
             else begin
                 trackitem.frm.BringToFront;
             end;
+        end;
+    except
+        Sleep(1);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.activatewindowtimerTimer(Sender: TObject);
+begin
+    inherited;
+
+    try
+        if (_newActivateSheet <> nil) then begin
+            _dockwindow.AWTabControl.ActivePage := _newActivateSheet;
+            activatewindowtimer.Enabled := false;
+            _newActivateSheet := nil;
+        end
+        else begin
+            activatewindowtimer.Enabled := false;
         end;
     except
     end;
@@ -538,9 +593,59 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow._activateNextDockedItem(curitemindx: integer);
+var
+    newActiveItem: TAWTrackerItem;
+    tsheet: TTntTabSheet;
+    i: integer;
+begin
+    if (curitemindx < 0) then exit;
+    if (curitemindx > (_trackingList.Count - 1)) then exit;
+    if (_trackingList.Count = 0) then exit;
 
+    try
+        newActiveItem := nil;
 
+        // Seach "down" in list for next docked item.
+        i := curitemindx + 1;
+        while (i < _trackingList.Count) do begin
+            newActiveItem := TAWTrackerItem(_trackingList.Objects[i]);
+            if (newActiveItem.frm.Docked) then begin
+                break;
+            end
+            else begin
+                newActiveItem := nil;
+            end;
+            Inc(i);
+        end;
 
+        // If nothing docked found, then search "up" list
+        if (newActiveItem = nil) then begin
+            i := curitemindx - 1;
+            while (i >= 0) do begin
+                newActiveItem := TAWTrackerItem(_trackingList.Objects[i]);
+                if (newActiveItem.frm.Docked) then begin
+                    break;
+                end
+                else begin
+                    newActiveItem := nil;
+                end;
+                Dec(i);
+            end;
+        end;
+
+        if (newActiveItem <> nil) then begin
+            // Got an item, so activate it
+            OnItemClick(newactiveitem.awItem);
+        end
+        else begin
+            // Deactivate all items
+            TAWTrackerItem(_trackingList.Objects[curitemindx]).awItem.activate(false);
+        end;
+    except
+    end;
+end;
 
 
 initialization
