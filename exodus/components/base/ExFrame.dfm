@@ -6,7 +6,7 @@ object ExFrame: TExFrame
   Color = 13681583
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -13
   Font.Name = 'Tahoma'
   Font.Style = []
   ParentColor = False

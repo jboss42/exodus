@@ -2,7 +2,6 @@ inherited ExCheckGroupBox: TExCheckGroupBox
   inherited pnlTop: TTntPanel
     inherited lblCaption: TTntLabel
       Left = 20
-      Height = 16
       Margins.Left = 3
       ExplicitLeft = 20
     end

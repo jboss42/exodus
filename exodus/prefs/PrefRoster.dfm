@@ -30,21 +30,13 @@ inherited frmPrefRoster: TfrmPrefRoster
     Margins.Bottom = 6
     Align = alLeft
     AutoSize = True
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -14
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 1
     TabStop = True
     AutoHide = True
     object pnlRosterPrefs: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 66
+      Top = 68
       Width = 460
       Height = 134
       Margins.Left = 0
@@ -53,17 +45,10 @@ inherited frmPrefRoster: TfrmPrefRoster
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 0
       TabStop = True
       AutoHide = True
+      ExplicitTop = 66
       object chkInlineStatus: TTntCheckBox
         Left = 0
         Top = 0
@@ -122,23 +107,16 @@ inherited frmPrefRoster: TfrmPrefRoster
     object pnlManageBtn: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 209
+      Top = 211
       Width = 457
       Height = 25
       Margins.Left = 0
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 1
       TabStop = True
       AutoHide = True
+      ExplicitTop = 209
       object btnManageBlocked: TTntButton
         Left = 26
         Top = 0
@@ -151,37 +129,31 @@ inherited frmPrefRoster: TfrmPrefRoster
     object grpAdvanced: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 243
+      Top = 245
       Width = 460
-      Height = 103
+      Height = 104
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 3
       TabStop = True
       AutoHide = True
       Caption = 'Advanced Contact List Preferences'
+      ExplicitTop = 243
       object chkNestedGrps: TTntCheckBox
         AlignWithMargins = True
         Left = 0
-        Top = 78
+        Top = 79
         Width = 457
         Height = 22
         Margins.Left = 0
         Align = alTop
         Caption = 'Use nested groups'
         TabOrder = 1
+        ExplicitTop = 78
       end
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
@@ -192,14 +164,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 2
         TabStop = True
         AutoHide = True
@@ -209,8 +173,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         object lblStatusColor: TTntLabel
           Left = 0
           Top = 3
-          Width = 118
-          Height = 16
+          Width = 129
+          Height = 17
           Caption = 'Contact status color:'
         end
         object cboStatusColor: TColorBox
@@ -232,36 +196,28 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 48
         Width = 457
-        Height = 24
+        Height = 25
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 3
         TabStop = True
         AutoHide = True
         DesignSize = (
           457
-          24)
+          25)
         object lblDNProfileMap: TTntLabel
           Left = 0
           Top = 3
-          Width = 155
-          Height = 16
+          Width = 159
+          Height = 17
           Caption = 'Display name profile fields:'
         end
         object txtDNProfileMap: TTntEdit
           Left = 203
           Top = 0
           Width = 216
-          Height = 24
+          Height = 25
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -270,7 +226,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 358
+      Top = 361
       Width = 460
       Height = 311
       Margins.Left = 0
@@ -279,18 +235,11 @@ inherited frmPrefRoster: TfrmPrefRoster
       Margins.Bottom = 6
       Align = alTop
       AutoScroll = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 2
       TabStop = True
       AutoHide = True
       Caption = 'Depricated preferences (may not be supported)'
+      ExplicitTop = 358
       object chkSort: TTntCheckBox
         Left = 0
         Top = 17
@@ -314,26 +263,18 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 175
         Width = 457
-        Height = 24
+        Height = 37
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 3
         TabStop = True
         AutoHide = True
         object lblFilter: TTntLabel
           Left = 0
           Top = 3
-          Width = 150
-          Height = 16
+          Width = 113
+          Height = 34
           Caption = '"Online" minimum status: '
           WordWrap = True
         end
@@ -341,9 +282,9 @@ inherited frmPrefRoster: TfrmPrefRoster
           Left = 203
           Top = 0
           Width = 219
-          Height = 24
+          Height = 25
           Style = csDropDownList
-          ItemHeight = 16
+          ItemHeight = 17
           TabOrder = 0
           Items.Strings = (
             'Do Not Disturb'
@@ -355,36 +296,29 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGatewayGroup: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 205
+        Top = 218
         Width = 457
-        Height = 24
+        Height = 25
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 4
         TabStop = True
         AutoHide = True
+        ExplicitTop = 205
         object lblGatewayGrp: TTntLabel
           Left = 0
           Top = 3
-          Width = 91
-          Height = 16
+          Width = 99
+          Height = 17
           Caption = 'Gateway group:'
         end
         object txtGatewayGrp: TTntComboBox
           Left = 203
           Top = 0
           Width = 219
-          Height = 24
-          ItemHeight = 16
+          Height = 25
+          ItemHeight = 17
           TabOrder = 0
         end
       end
@@ -439,37 +373,30 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDblClickAction: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 235
+        Top = 249
         Width = 457
-        Height = 24
+        Height = 25
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 10
         TabStop = True
         AutoHide = True
+        ExplicitTop = 235
         object lblDblClick: TTntLabel
           Left = 0
           Top = 3
-          Width = 128
-          Height = 16
+          Width = 136
+          Height = 17
           Caption = 'Default dblclick action:'
         end
         object cboDblClick: TTntComboBox
           Left = 203
           Top = 0
           Width = 219
-          Height = 24
+          Height = 25
           Style = csDropDownList
-          ItemHeight = 16
+          ItemHeight = 17
           TabOrder = 0
           Items.Strings = (
             'A new one to one chat window'
@@ -480,35 +407,28 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGroupSeperator: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 265
+        Top = 280
         Width = 457
-        Height = 24
+        Height = 25
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 11
         TabStop = True
         AutoHide = True
+        ExplicitTop = 267
         object lblGrpSeperator: TTntLabel
           Left = 0
           Top = 3
-          Width = 140
-          Height = 16
+          Width = 150
+          Height = 17
           Caption = 'Nested group seperator:'
         end
         object txtGrpSeperator: TTntEdit
           Left = 203
           Top = 0
           Width = 219
-          Height = 24
+          Height = 25
           TabOrder = 0
         end
       end
@@ -516,31 +436,23 @@ inherited frmPrefRoster: TfrmPrefRoster
     object pnlDefaultNIck: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 33
+      Top = 34
       Width = 457
-      Height = 24
+      Height = 25
       Margins.Left = 0
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 4
       TabStop = True
       AutoHide = True
       DesignSize = (
         457
-        24)
+        25)
       object lblDefaultNick: TTntLabel
         Left = 0
         Top = 3
-        Width = 157
-        Height = 16
+        Width = 168
+        Height = 17
         Margins.Left = 0
         Caption = 'Default nickname for chats:'
         FocusControl = txtDefaultNick
@@ -549,7 +461,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 203
         Top = 0
         Width = 216
-        Height = 24
+        Height = 25
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
@@ -559,24 +471,16 @@ inherited frmPrefRoster: TfrmPrefRoster
       Left = 0
       Top = 3
       Width = 457
-      Height = 24
+      Height = 25
       Margins.Left = 0
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 5
       TabStop = True
       AutoHide = True
       DesignSize = (
         457
-        24)
+        25)
       object lblDefaultGrp: TTntLabel
         Left = 0
         Top = 3
@@ -585,20 +489,14 @@ inherited frmPrefRoster: TfrmPrefRoster
         AutoSize = False
         Caption = 'Default group for new contacts:'
         FocusControl = txtDefaultGrp
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
       end
       object txtDefaultGrp: TTntComboBox
         Left = 203
         Top = 0
         Width = 219
-        Height = 24
+        Height = 25
         Anchors = [akLeft, akTop, akRight]
-        ItemHeight = 16
+        ItemHeight = 17
         TabOrder = 0
       end
     end
