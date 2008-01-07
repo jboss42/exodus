@@ -29,7 +29,7 @@ uses
 
 type
   TfrmPrefAway = class(TfrmPrefPanel)
-    ExBrandPanel1: TExBrandPanel;
+    pnlContainer: TExBrandPanel;
     chkAutoAway: TExCheckGroupBox;
     pnlAwayTime: TExBrandPanel;
     lblAwayTime: TTntLabel;
@@ -71,11 +71,14 @@ uses
 procedure TfrmPrefAway.LoadPrefs();
 begin
     inherited;
-    chkAutoAway.updateState();
-    chkAutoXa.updateState();
-    chkAutoDisconnect.updateState();
-    chkAutoXA.Enabled := chkAutoAway.Checked;
-    chkAutoDisconnect.Enabled := chkAutoAway.Checked;
+
+    //set the initial visible, enabled states of the check group boxes
+    chkAutoAway.InitiallyEnabled := (getPrefState('auto_away') <> psReadOnly);
+    chkAutoXA.InitiallyEnabled := (getPrefState('auto_xa') <> psReadOnly);
+    chkAutoDisconnect.InitiallyEnabled := (getPrefState('auto_disconnect') <> psReadOnly);
+
+    pnlContainer.captureChildStates();
+    pnlContainer.checkAutoHide();
 end;
 
 procedure TfrmPrefAway.SavePrefs();

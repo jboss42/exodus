@@ -303,7 +303,7 @@ begin
         rbDocked.Enabled := lblDockPref.Enabled;
         rbUndocked.Enabled := lblDockPref.Enabled;
     end;
-    gbParentGroup.updateState();
+    gbParentGroup.checkAutoHide();
 end;
 
 {---------------------------------------}

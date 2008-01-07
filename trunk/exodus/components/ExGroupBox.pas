@@ -24,8 +24,6 @@ type
     procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
     procedure SetEnabled(enabled: boolean);override;
 
-  public
-    procedure updateState();override;
   published
     property Caption: WideString read getCaption write setCaption;
   end;
@@ -52,18 +50,11 @@ begin
   lblCaption.Caption := c;
 end;
 
-procedure TExGroupBox.updateState();
-begin
-  if (csDesigning in Self.ComponentState) then exit;
-
-  inherited updateState();
-end;
-
 procedure TExGroupBox.setEnabled(enabled: boolean);
 begin
     //disable/enable title as well as children
-    Self.lblCaption.Enabled := enabled;
-    Self.TntBevel1.Enabled := enabled;
+    Self.lblCaption.Enabled := InitiallyEnabled and enabled;
+    Self.TntBevel1.Enabled := InitiallyEnabled and enabled;
     inherited;
 end;
 
@@ -88,7 +79,9 @@ begin
     else
       tIgnore := ignore;
     tIgnore.Add(pnlTop);
+
     inherited enableChildren(e, UseInitial, tIgnore);
+    
     if (ignore = nil) then
       tIgnore.Free();
 end; 

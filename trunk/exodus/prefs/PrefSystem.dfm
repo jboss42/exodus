@@ -5,7 +5,6 @@ inherited frmPrefSystem: TfrmPrefSystem
   Caption = 'frmPrefSystem'
   ClientHeight = 632
   ClientWidth = 381
-  ParentFont = True
   OldCreateOrder = True
   ExplicitWidth = 393
   ExplicitHeight = 644
