@@ -52,4 +52,11 @@ object frmDockWindow: TfrmDockWindow
     GradientProperites.endColor = 12495763
     GradientProperites.orientation = gdHorizontal
   end
+  object timFlasher: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = timFlasherTimer
+    Left = 224
+    Top = 40
+  end
 end

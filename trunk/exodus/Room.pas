@@ -598,6 +598,7 @@ begin
     // Check to see if we need to increment the
     // unread msg count
     updateMsgCount(Msg);
+    updateLastActivity(Msg.Time);
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);

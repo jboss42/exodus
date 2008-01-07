@@ -253,7 +253,7 @@ uses
 {$IFDEF USE_TWEBBROWSER}
     IEMsgList,
 {$ENDIF}
-    TypInfo;
+    TypInfo, Dockable;
 
 const
     sReplying = ' is replying.';
@@ -1037,6 +1037,7 @@ begin
     // Check to see if we need to increment the
     // unread msg count
     updateMsgCount(msg);
+    updateLastActivity(msg.Time);
 
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin

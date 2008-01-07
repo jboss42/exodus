@@ -101,6 +101,7 @@ type
     _unreadmsg: integer; // Unread msg count
     _priorityflag: boolean; // Is there a high priority msg unread
     _activating: boolean; // Is the window currently becoming active
+    _lastActivity: TDateTime; // what was the last activity for this window
 
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
@@ -115,6 +116,7 @@ type
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
     procedure updateMsgCount(msg: TJabberMessage);
+    procedure updateLastActivity(lasttime: TDateTime);
   public
     { Public declarations }
     procedure DockForm; virtual;
@@ -189,6 +191,7 @@ type
     property UnreadMsgCount: integer read _unreadmsg;
     property PriorityFlag: boolean read _priorityflag;
     property Activating: boolean read _activating write _activating;
+    property LastActivity: TDateTime read _lastActivity;
 
   end;
 
@@ -530,7 +533,7 @@ end;
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
     if (msg = nil) then exit;
-    
+
     if (not Active) then begin
         if (Docked) then begin
             if ((GetDockManager().getTopDocked() <> Self) or
@@ -550,6 +553,14 @@ begin
         GetDockManager().UpdateDocked(self);
     end;
 end;
+
+procedure TfrmDockable.updateLastActivity(lasttime: TDateTime);
+begin
+    if (lasttime > _lastActivity) then begin
+        _lastActivity := lasttime;
+    end;
+end;
+
 
 
 end.

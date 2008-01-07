@@ -39,7 +39,7 @@ uses
     ExtCtrls,
     ExFrame,
     ExGradientPanel,
-    Graphics;
+    Graphics, Menus, TntMenus;
 
 type
     TfAWItem = class(TExFrame)
@@ -50,9 +50,19 @@ type
     imgPresence: TImage;
     LeftSpacer: TBevel;
     RightSpacer: TBevel;
+    AWItemPopupMenu: TTntPopupMenu;
+    mnuCloseWindow: TTntMenuItem;
+    mnuFloatWindow: TTntMenuItem;
+    mnuDockWindow: TTntMenuItem;
     procedure imgPresenceClick(Sender: TObject);
     procedure lblNameClick(Sender: TObject);
     procedure lblCountClick(Sender: TObject);
+    procedure pnlAWItemGPanelClick(Sender: TObject);
+    procedure TntFrameClick(Sender: TObject);
+    procedure AWItemPopupMenuPopup(Sender: TObject);
+    procedure mnuCloseWindowClick(Sender: TObject);
+    procedure mnuDockWindowClick(Sender: TObject);
+    procedure mnuFloatWindowClick(Sender: TObject);
     private
         { Private declarations }
     protected
@@ -65,6 +75,7 @@ type
         _activeEndColor: TColor;
         _startColor: TColor;
         _endColor: TColor;
+        _docked: boolean;
 
         procedure _setCount(val:integer);
         function _getName(): widestring;
@@ -85,6 +96,7 @@ type
         property priorityEndColor: TColor read _priorityEndColor write _priorityEndColor;
         property activeStartColor: TColor read _activeStartColor write _activeStartColor;
         property activeEndColor: TColor read _activeEndColor write _activeEndColor;
+        property docked: boolean read _docked write _docked;
     published
         { published declarations }
     end;
@@ -92,7 +104,7 @@ type
 implementation
 
 uses
-    Jabber1;
+    Jabber1, ActivityWindow;
 
 
 {$R *.dfm}
@@ -100,6 +112,19 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+procedure TfAWItem.AWItemPopupMenuPopup(Sender: TObject);
+begin
+    inherited;
+    if (_docked) then begin
+        mnuDockWindow.Visible := false;
+        mnuFloatWindow.Visible := true;
+    end
+    else begin
+        mnuDockWindow.Visible := true;
+        mnuFloatWindow.Visible := false;
+    end;
+end;
+
 constructor TfAWItem.Create(AOwner: TComponent);
 begin
     inherited;
@@ -133,18 +158,79 @@ begin
     Self.OnClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfAWItem.lblCountClick(Sender: TObject);
 begin
     inherited;
     Self.OnClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfAWItem.lblNameClick(Sender: TObject);
 begin
     inherited;
     Self.OnClick(Self);
 end;
 
+{---------------------------------------}
+procedure TfAWItem.mnuCloseWindowClick(Sender: TObject);
+var
+    aw: TfrmActivityWindow;
+    item: TAWTrackerItem;
+begin
+    inherited;
+
+    aw := GetActivityWindow();
+
+    if (aw <> nil) then begin
+        item := aw.findItem(self);
+        if (item <> nil) then begin
+            item.frm.Close();
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfAWItem.mnuDockWindowClick(Sender: TObject);
+var
+    aw: TfrmActivityWindow;
+    item: TAWTrackerItem;
+begin
+    inherited;
+
+    aw := GetActivityWindow();
+
+    if (aw <> nil) then begin
+        item := aw.findItem(self);
+        if (item <> nil) then begin
+            item.frm.DockForm();
+            aw.activateItem(Self);
+            _docked := true;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfAWItem.mnuFloatWindowClick(Sender: TObject);
+var
+    aw: TfrmActivityWindow;
+    item: TAWTrackerItem;
+begin
+    inherited;
+
+    aw := GetActivityWindow();
+
+    if (aw <> nil) then begin
+        item := aw.findItem(self);
+        if (item <> nil) then begin
+            item.frm.FloatForm();
+            aw.activateItem(Self);
+            _docked := false;
+        end;
+    end;
+end;
+
+{---------------------------------------}
 function TfAWItem._getName(): widestring;
 begin
     Result := lblName.Caption;
@@ -186,6 +272,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfAWItem.pnlAWItemGPanelClick(Sender: TObject);
+begin
+    inherited;
+    Self.OnClick(Self);
+end;
+
 procedure TfAWItem.priorityFlag(setPriority:boolean);
 begin
     if (setPriority) then begin
@@ -200,6 +292,12 @@ begin
             _setPnlColors(_startColor, _endColor);
         end;
     end;
+end;
+
+procedure TfAWItem.TntFrameClick(Sender: TObject);
+begin
+    inherited;
+    Self.OnClick(Self);
 end;
 
 {---------------------------------------}

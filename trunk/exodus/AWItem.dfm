@@ -3,6 +3,7 @@ inherited fAWItem: TfAWItem
   Height = 24
   ParentShowHint = False
   ShowHint = True
+  OnClick = TntFrameClick
   ExplicitWidth = 185
   ExplicitHeight = 24
   object pnlAWItemGPanel: TExGradientPanel
@@ -14,8 +15,10 @@ inherited fAWItem: TfAWItem
     BevelOuter = bvNone
     ParentColor = True
     ParentShowHint = False
+    PopupMenu = AWItemPopupMenu
     ShowHint = True
     TabOrder = 0
+    OnClick = pnlAWItemGPanelClick
     GradientProperites.startColor = 13681583
     GradientProperites.endColor = 12495763
     GradientProperites.orientation = gdHorizontal
@@ -88,6 +91,22 @@ inherited fAWItem: TfAWItem
       Align = alRight
       Shape = bsSpacer
       ExplicitLeft = 16
+    end
+  end
+  object AWItemPopupMenu: TTntPopupMenu
+    OnPopup = AWItemPopupMenuPopup
+    Left = 136
+    object mnuCloseWindow: TTntMenuItem
+      Caption = 'Close Window'
+      OnClick = mnuCloseWindowClick
+    end
+    object mnuDockWindow: TTntMenuItem
+      Caption = 'Dock Window'
+      OnClick = mnuDockWindowClick
+    end
+    object mnuFloatWindow: TTntMenuItem
+      Caption = 'Float Window'
+      OnClick = mnuFloatWindowClick
     end
   end
 end

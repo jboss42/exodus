@@ -54,7 +54,7 @@ type
     pnlList: TExGradientPanel;
     Button3: TButton;
     Button4: TButton;
-    activatewindowtimer: TTimer;
+    timSetActivePanel: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -62,7 +62,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure activatewindowtimerTimer(Sender: TObject);
+    procedure timSetActivePanelTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -74,6 +74,7 @@ type
     _dockwindow: TfrmDockWindow;
     _showingTopItem: integer;
     _newActivateSheet: TTntTabSheet;
+    _curListSort: TSortStates;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
@@ -95,6 +96,7 @@ type
     function findItem(frm:TfrmDockable): TAWTrackerItem; overload;
     function findItem(awitem: TfAWItem): TAWTrackerItem; overload;
     procedure activateItem(id:widestring); overload;
+    procedure scrollToActive();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -110,6 +112,8 @@ var
 
 implementation
 
+uses
+    Room, ChatWin, Session;
 
 {$R *.dfm}
 
@@ -160,6 +164,7 @@ begin
     inherited;
     _trackingList := TWidestringList.Create;
     _showingTopItem := -1;
+    _curListSort := ssAlpha;
 end;
 
 {---------------------------------------}
@@ -283,12 +288,16 @@ begin
         // Setup item props
         Result.awItem.Parent := pnlList;
         Result.awItem.Align := alNone;
-        Result.awItem.name := id;
+//        Result.awItem.name := id;
         Result.awItem.Left := 0;
+        Result.awItem.name := frm.Caption;
 
         if (_showingTopItem < 0) then begin
             _showingTopItem := 0;
         end;
+
+        // Keep sort
+        _sortTrackingList(_curListSort);
 
         _updateDisplay();
     end;
@@ -379,12 +388,17 @@ end;
 procedure TfrmActivityWindow.onItemClick(Sender: TObject);
 var
     awitem: TfAWItem;
+    trackitem: TAWTrackerItem;
 begin
     if (Sender = nil) then exit;
 
     try
         awitem := TfAWItem(Sender);
         activateItem(awitem);
+        trackitem := _findItem(awitem);
+        if (trackitem <> nil)then begin
+            trackitem.frm.gotActivate();
+        end;
     except
     end;
 end;
@@ -424,31 +438,32 @@ begin
                     // to actually show the new active page.
                     // An example is when closing a docked window.
                     _newActivateSheet := tsheet;
-                    activatewindowtimer.Enabled := true;
+                    timSetActivePanel.Enabled := true;
                 end;
             end
             else begin
                 trackitem.frm.BringToFront;
             end;
+
+            scrollToActive();
         end;
+
     except
-        Sleep(1);
+        Sleep(1); //???dda
     end;
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.activatewindowtimerTimer(Sender: TObject);
+procedure TfrmActivityWindow.timSetActivePanelTimer(Sender: TObject);
 begin
     inherited;
 
     try
+        timSetActivePanel.Enabled := false;
         if (_newActivateSheet <> nil) then begin
             _dockwindow.AWTabControl.ActivePage := _newActivateSheet;
-            activatewindowtimer.Enabled := false;
+            _dockwindow.setWindowCaption(_newActivateSheet.Caption);
             _newActivateSheet := nil;
-        end
-        else begin
-            activatewindowtimer.Enabled := false;
         end;
     except
     end;
@@ -486,11 +501,13 @@ var
     tempitem1, tempitem2: TAWTrackerItem;
     tempList: TWidestringList;
     itemadded: boolean;
+    roomList, chatList, otherList: TWidestringList;
 begin
     if (sortType = ssUnsorted) then exit;
     if (list = nil) then exit;
     if (list.Count = 0) then exit;
 
+    _curListSort := sortType;
     tempList := TWidestringList.Create();
     insertPoint := 0;
 
@@ -506,6 +523,72 @@ begin
     end
     else if (sortType = ssRecent) then begin
         // Sort by most Recent Activity, then by alpha for tied items
+        for i := 0 to list.Count - 1 do begin
+            // iterate over list to reorder
+            itemadded := false;
+            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+            for j := 0 to tempList.Count - 1 do begin
+                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                insertPoint := j;
+                if (tempitem2.frm.LastActivity < tempitem1.frm.LastActivity) then begin
+                    // We have an new item to add to the temp list that should be higher
+                    // then the current item in the templist
+                    tempList.InsertObject(insertPoint, list.Strings[i], list.Objects[i]);
+                    itemadded := true;
+                    break;
+                end;
+            end;
+            if (not itemadded) then begin
+                // We didn't insert the item into the temp list so add to end
+                tempList.AddObject(list.Strings[i], list.Objects[i]);
+            end;
+        end;
+        list.Clear;
+        for i := 0 to tempList.Count - 1 do begin
+            list.AddObject(tempList.Strings[i], tempList.Objects[i]);
+        end;
+    end
+    else if (sortType = ssType) then begin
+        // Sort by the type of window (room, chat, etc.), then by alpha for tied items
+        roomList := TWidestringList.Create();
+        chatList := TWidestringList.Create();
+        otherList := TWidestringList.Create();
+
+        // Split them up by group
+        for i := 0 to list.Count - 1 do begin
+            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+            if (tempitem1.frm is TfrmRoom) then begin
+                roomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end
+            else if (tempitem1.frm is TfrmChat) then begin
+                chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end
+            else begin
+                otherList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            end;
+        end;
+
+        // Reassemble list
+        _trackingList.Clear();
+
+        for i := 0 to roomList.Count - 1 do begin
+            _trackingList.AddObject(roomList.Strings[i], roomList.Objects[i]);
+        end;
+        for i := 0 to chatList.Count - 1 do begin
+            _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
+        end;
+        for i := 0 to otherList.Count - 1 do begin
+            _trackingList.AddObject(otherList.Strings[i], otherList.Objects[i]);
+        end;
+
+        // Cleanup
+        roomList.Clear();
+        chatList.Clear();
+        otherList.Clear();
+
+        roomList.Free();
+        chatList.Free();
+        otherList.Free();
     end
     else if (sortType = ssUnread) then begin
         // Sort by Highest Unread msgs
@@ -581,9 +664,6 @@ begin
             if (TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) then begin
                 Button4.Enabled := false;
             end;
-
-
-
         end
         else begin
             Button3.Enabled := false;
@@ -646,6 +726,51 @@ begin
     except
     end;
 end;
+
+
+{---------------------------------------}
+procedure TfrmActivityWindow.scrollToActive();
+var
+    i: integer;
+    idx: integer;
+    numslots: integer;
+    tempitem: TAWTrackerItem;
+begin
+    if (_activeitem = nil) then exit; // No active item
+    if (_activeitem.Visible) then exit; // Active item is visible
+
+    // Find where the item is in the tracking list
+    idx := -1;
+    tempitem := nil;
+    for i := 0 to _trackingList.Count - 1 do begin
+        tempitem := TAWTrackerItem(_trackingList.Objects[i]);
+        if (tempitem.awItem = _activeitem) then begin
+            idx := i;
+            break;
+        end;
+    end;
+
+    if ((idx >= 0) and
+        (tempitem <> nil)) then begin
+        if (idx < _showingTopItem) then begin
+            // Item is above current visible
+            _showingTopItem := idx;
+        end
+        else begin
+            // Item is below current visible
+            numSlots := pnlList.Height div tempitem.awItem.Height;
+            if (numSlots > 0) then begin
+                _showingTopItem := idx - numSlots + 1;
+            end;
+        end;
+    end;
+
+    _updateDisplay();
+end;
+
+
+
+
 
 
 initialization
