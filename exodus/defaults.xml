@@ -22,20 +22,26 @@
     <locale value="Default" state="rw"/>
 
     <!-- AutoAway Options -->
-    <auto_away value="1" control="chkAutoAway"/>
-    <aa_reduce_pri value="1" control="chkAAReducePri"/>
-    <auto_xa value="1" control="chkAutoXA"/>
-    <auto_disconnect value="0" control="chkAutoDisconnect"/>
-    <away_time value="5" control="txtAway"/>
-    <xa_time value="30" control="txtXA"/>
-    <disconnect_time value="180" control="txtDisconnect"/>
-    <away_status control="txtAway">
+    <auto_away value="1" control="chkAutoAway" state="rw"/>
+    <aa_reduce_pri value="1" control="chkAAReducePri" state="rw"/>
+    <auto_xa value="1" control="chkAutoXA" state="rw"/>
+    <auto_disconnect value="0" control="chkAutoDisconnect" state="rw"/>
+    <away_time value="5" control="txtAwayTime" state="rw">
+    	<control name="lblAwayTime"/>
+    </away_time>
+    <xa_time value="30" control="txtXATime" state="rw">
+    	<control name="lblXATime"/>
+    </xa_time>
+    <disconnect_time value="180" control="txtDisconnectTime" state="rw">
+    	<control name="lblDisconnectTime"/>
+    </disconnect_time>
+    <away_status control="txtAway" state="rw">
       <control name="lblAwayStatus"/>
     </away_status>
-    <xa_status control="txtXA">
-      <control name="lblXAStatus"/>
+    <xa_status control="txtXA" state="rw">
+      <control name="lblXAStatus" state="rw"/>
     </xa_status>
-    <away_auto_response value="0" control="chkAwayAutoResponse"/>
+    <away_auto_response value="0" control="chkAwayAutoResponse" state="rw"/>
 
      <!---------------------- ROSTER ------------------------->
     <!-- Roster prefs -->

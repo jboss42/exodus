@@ -68,8 +68,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       TabStop = True
       AutoHide = True
       Caption = 'When I start my computer:'
-      BoxStyle = gbsLabel
-      Checked = False
       object chkAutoStart: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -114,8 +112,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       TabStop = True
       AutoHide = True
       Caption = 'When I start Exodus:'
-      BoxStyle = gbsLabel
-      Checked = False
       object chkAutoLogin: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -193,8 +189,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       TabStop = True
       AutoHide = True
       Caption = 'Other:'
-      BoxStyle = gbsLabel
-      Checked = False
       object chkSaveWindowState: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -272,8 +266,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       TabStop = True
       AutoHide = True
       Caption = 'Advanced system preferences:'
-      BoxStyle = gbsLabel
-      Checked = False
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3

@@ -24,29 +24,35 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
-  TntExtCtrls, ExNumericEdit;
+  TntExtCtrls, ExNumericEdit, ExGroupBox, ExCheckGroupBox, TntForms, ExFrame,
+  ExBrandPanel;
 
 type
   TfrmPrefAway = class(TfrmPrefPanel)
-    txtAwayTime: TExNumericEdit;
-    txtXATime: TExNumericEdit;
+    ExBrandPanel1: TExBrandPanel;
+    chkAutoAway: TExCheckGroupBox;
+    pnlAwayTime: TExBrandPanel;
     lblAwayTime: TTntLabel;
-    lblXATime: TTntLabel;
-    lblAwayStatus: TTntLabel;
-    lblXAStatus: TTntLabel;
-    chkAutoAway: TTntCheckBox;
-    txtAway: TTntEdit;
-    txtXA: TTntEdit;
+    txtAwayTime: TExNumericEdit;
     chkAAReducePri: TTntCheckBox;
-    chkAutoXA: TTntCheckBox;
-    chkAutoDisconnect: TTntCheckBox;
+    chkAwayAutoResponse: TTntCheckBox;
+    ExBrandPanel2: TExBrandPanel;
+    lblAwayStatus: TTntLabel;
+    txtAway: TTntEdit;
+    chkAutoXA: TExCheckGroupBox;
+    ExBrandPanel3: TExBrandPanel;
+    lblXATime: TTntLabel;
+    txtXATime: TExNumericEdit;
+    ExBrandPanel4: TExBrandPanel;
+    lblXAStatus: TTntLabel;
+    txtXA: TTntEdit;
+    chkAutoDisconnect: TExCheckGroupBox;
     lblDisconnectTime: TTntLabel;
     txtDisconnectTime: TExNumericEdit;
-    chkAwayAutoResponse: TTntCheckBox;
-    procedure chkAutoAwayClick(Sender: TObject);
+    procedure chkAutoAwayCheckChanged(Sender: TObject);
   private
     { Private declarations }
-    procedure DoEnables();
+//    procedure DoEnables();
 
   public
     { Public declarations }
@@ -65,20 +71,18 @@ uses
 procedure TfrmPrefAway.LoadPrefs();
 begin
     inherited;
-    doEnables();
+    chkAutoAway.updateState();
+    chkAutoXa.updateState();
+    chkAutoDisconnect.updateState();
+    chkAutoXA.Enabled := chkAutoAway.Checked;
+    chkAutoDisconnect.Enabled := chkAutoAway.Checked;
 end;
 
 procedure TfrmPrefAway.SavePrefs();
 begin
     inherited;
 end;
-
-procedure TfrmPrefAway.chkAutoAwayClick(Sender: TObject);
-begin
-  inherited;
-    DoEnables();
-end;
-
+{
 procedure TfrmPrefAway.DoEnables();
 var
     aro, xro, e, xa, dis: boolean;
@@ -121,6 +125,12 @@ begin
     txtAway.Enabled := e and (not aro);
     txtXA.Enabled := xa and (not xro);
 end;
+}
 
+procedure TfrmPrefAway.chkAutoAwayCheckChanged(Sender: TObject);
+begin
+    Self.chkAutoXA.Enabled := chkAutoAway.Checked;
+    Self.chkAutoDisconnect.Enabled := chkAutoAway.Checked;
+end;
 
 end.

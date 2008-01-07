@@ -48,9 +48,11 @@ implementation
 {$R *.dfm}
 
 uses
-    Menus, ComCtrls, TntComCtrls, 
+    Menus, ComCtrls, TntComCtrls,
     Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils,
-    ExNumericEdit;
+    ExNumericEdit,
+    ExbrandPanel,
+    ExCheckGroupBox;
 
 procedure TfrmPrefPanel.LoadPrefs();
 begin
@@ -74,10 +76,10 @@ begin
         c := owner.Controls[i];
         p := MainSession.Prefs.getPref(c.name);
 
-        if (p = '') then begin
+        if (p = '') or (c.InheritsFrom(TExBrandPanel))then begin
             if (c.inheritsFrom(TWinControl)) then
                 loadPrefsOwner(TWinControl(c));
-            continue;
+            if (p = '') then continue;
         end;
 
         s := getPrefState(p);
@@ -86,6 +88,8 @@ begin
         // Do stuff based on the controls type
         if (c.inheritsFrom(TTntCheckBox)) then
             TCheckBox(c).Checked := SafeBool(sval)
+        else if (c.InheritsFrom(TExCheckGroupBox)) then
+            TExCheckGroupBox(c).Checked := SafeBool(sval)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             TUpDown(c).Position := SafeInt(sval)
         else if (c.inheritsFrom(TExNumericEdit)) then
@@ -139,10 +143,11 @@ begin
         p := MainSession.Prefs.getPref(c.name);
 
         // only update if this the primary control, and we have a pref
-        if (p = '') then begin
+        //this might be a "checkable" group box so drill down and check children
+        if (p = '') or (c.InheritsFrom(TExBrandPanel))then begin
             if (c.inheritsFrom(TWinControl)) then
                 savePrefsOwner(TWinControl(c));
-            continue;
+            if (p = '') then continue;
         end;
 
         if (AnsiCompareText(c.name, MainSession.Prefs.getControl(p)) <> 0) then
@@ -154,6 +159,8 @@ begin
 
         if (c.inheritsFrom(TTntCheckBox)) then
             MainSession.Prefs.setBool(p, TCheckBox(c).Checked)
+        else if (c.InheritsFrom(TExCheckGroupBox)) then
+            MainSession.Prefs.setBool(p, TExCheckGroupBox(c).Checked)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             MainSession.Prefs.setInt(p, TUpDown(c).Position)
         else if (c.inheritsFrom(TExNumericEdit)) then

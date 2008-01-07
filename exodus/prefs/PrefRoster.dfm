@@ -41,8 +41,6 @@ inherited frmPrefRoster: TfrmPrefRoster
     TabOrder = 1
     TabStop = True
     AutoHide = True
-    ExplicitLeft = 1
-    ExplicitHeight = 896
     object pnlRosterPrefs: TExBrandPanel
       AlignWithMargins = True
       Left = 0
@@ -66,7 +64,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabOrder = 0
       TabStop = True
       AutoHide = True
-      ExplicitTop = 78
       object chkInlineStatus: TTntCheckBox
         Left = 0
         Top = 0
@@ -142,8 +139,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabOrder = 1
       TabStop = True
       AutoHide = True
-      ExplicitTop = 224
-      ExplicitWidth = 460
       object btnManageBlocked: TTntButton
         Left = 26
         Top = 0
@@ -156,10 +151,13 @@ inherited frmPrefRoster: TfrmPrefRoster
     object grpAdvanced: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 240
-      Width = 457
+      Top = 243
+      Width = 460
       Height = 103
       Margins.Left = 0
+      Margins.Top = 6
+      Margins.Right = 0
+      Margins.Bottom = 6
       Align = alTop
       AutoSize = True
       Color = 13681583
@@ -174,27 +172,22 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabStop = True
       AutoHide = True
       Caption = 'Advanced Contact List Preferences'
-      BoxStyle = gbsLabel
-      Checked = False
-      ExplicitTop = 243
-      ExplicitWidth = 460
       object chkNestedGrps: TTntCheckBox
         AlignWithMargins = True
         Left = 0
         Top = 78
-        Width = 454
+        Width = 457
         Height = 22
         Margins.Left = 0
         Align = alTop
         Caption = 'Use nested groups'
         TabOrder = 1
-        ExplicitWidth = 457
       end
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
         Left = 0
         Top = 20
-        Width = 454
+        Width = 457
         Height = 22
         Margins.Left = 0
         Align = alTop
@@ -210,10 +203,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 2
         TabStop = True
         AutoHide = True
-        ExplicitTop = 408
-        ExplicitWidth = 403
         DesignSize = (
-          454
+          457
           22)
         object lblStatusColor: TTntLabel
           Left = 0
@@ -234,14 +225,13 @@ inherited frmPrefRoster: TfrmPrefRoster
           DropDownCount = 12
           ItemHeight = 16
           TabOrder = 0
-          ExplicitWidth = 219
         end
       end
       object pnlDNFields: TExBrandPanel
         AlignWithMargins = True
         Left = 0
         Top = 48
-        Width = 454
+        Width = 457
         Height = 24
         Margins.Left = 0
         Align = alTop
@@ -257,11 +247,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 3
         TabStop = True
         AutoHide = True
-        ExplicitLeft = 88
-        ExplicitTop = 419
-        ExplicitWidth = 518
         DesignSize = (
-          454
+          457
           24)
         object lblDNProfileMap: TTntLabel
           Left = 0
@@ -277,17 +264,19 @@ inherited frmPrefRoster: TfrmPrefRoster
           Height = 24
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
-          ExplicitWidth = 219
         end
       end
     end
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 349
-      Width = 457
+      Top = 358
+      Width = 460
       Height = 311
       Margins.Left = 0
+      Margins.Top = 6
+      Margins.Right = 0
+      Margins.Bottom = 6
       Align = alTop
       AutoScroll = True
       Color = 13681583
@@ -302,35 +291,29 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabStop = True
       AutoHide = True
       Caption = 'Depricated preferences (may not be supported)'
-      BoxStyle = gbsLabel
-      Checked = False
-      ExplicitTop = 376
-      ExplicitWidth = 460
       object chkSort: TTntCheckBox
         Left = 0
         Top = 17
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 'Sort Contacts by their availability'
         TabOrder = 1
-        ExplicitWidth = 460
       end
       object chkOfflineGrp: TTntCheckBox
         Left = 0
         Top = 39
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 'Show offline contacts in an Offline group'
         TabOrder = 2
-        ExplicitWidth = 460
       end
       object pnlMinStatus: TExBrandPanel
         AlignWithMargins = True
         Left = 0
         Top = 175
-        Width = 454
+        Width = 457
         Height = 24
         Margins.Left = 0
         Align = alTop
@@ -346,8 +329,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 3
         TabStop = True
         AutoHide = True
-        ExplicitTop = 178
-        ExplicitWidth = 460
         object lblFilter: TTntLabel
           Left = 0
           Top = 3
@@ -375,7 +356,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         AlignWithMargins = True
         Left = 0
         Top = 205
-        Width = 454
+        Width = 457
         Height = 24
         Margins.Left = 0
         Align = alTop
@@ -391,8 +372,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 4
         TabStop = True
         AutoHide = True
-        ExplicitTop = 214
-        ExplicitWidth = 460
         object lblGatewayGrp: TTntLabel
           Left = 0
           Top = 3
@@ -412,61 +391,56 @@ inherited frmPrefRoster: TfrmPrefRoster
       object chkPresErrors: TTntCheckBox
         Left = 0
         Top = 105
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 'Detect contacts which are unreachable or no longer exist'
         TabOrder = 5
         Visible = False
-        ExplicitWidth = 460
       end
       object chkShowPending: TTntCheckBox
         Left = 0
         Top = 83
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 'Show contacts I have asked to add as "Pending"'
         TabOrder = 6
-        ExplicitWidth = 460
       end
       object chkShowUnsubs: TTntCheckBox
         Left = 0
         Top = 150
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 'Show contacts which I do not have a subscription to'
         TabOrder = 7
-        ExplicitWidth = 460
       end
       object chkRosterUnicode: TTntCheckBox
         Left = 0
         Top = 61
-        Width = 457
+        Width = 460
         Height = 22
         Align = alTop
         Caption = 
           'Allow Unicode characters in the contact list (requires 2000, ME,' +
           ' XP).'
         TabOrder = 8
-        ExplicitWidth = 460
       end
       object chkRosterAvatars: TTntCheckBox
         Left = 0
         Top = 127
-        Width = 457
+        Width = 460
         Height = 23
         Align = alTop
         Caption = 'Show Avatars in the contact list'
         TabOrder = 9
-        ExplicitWidth = 460
       end
       object pnlDblClickAction: TExBrandPanel
         AlignWithMargins = True
         Left = 0
         Top = 235
-        Width = 454
+        Width = 457
         Height = 24
         Margins.Left = 0
         Align = alTop
@@ -482,8 +456,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 10
         TabStop = True
         AutoHide = True
-        ExplicitTop = 250
-        ExplicitWidth = 460
         object lblDblClick: TTntLabel
           Left = 0
           Top = 3
@@ -509,7 +481,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         AlignWithMargins = True
         Left = 0
         Top = 265
-        Width = 454
+        Width = 457
         Height = 24
         Margins.Left = 0
         Align = alTop
@@ -525,8 +497,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         TabOrder = 11
         TabStop = True
         AutoHide = True
-        ExplicitTop = 283
-        ExplicitWidth = 457
         object lblGrpSeperator: TTntLabel
           Left = 0
           Top = 3
@@ -563,8 +533,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabOrder = 4
       TabStop = True
       AutoHide = True
-      ExplicitTop = 3
-      ExplicitWidth = 460
       DesignSize = (
         457
         24)
@@ -584,7 +552,6 @@ inherited frmPrefRoster: TfrmPrefRoster
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
-        ExplicitWidth = 219
       end
     end
     object pnlDefaultGroup: TExBrandPanel
@@ -607,8 +574,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       TabOrder = 5
       TabStop = True
       AutoHide = True
-      ExplicitTop = 4
-      ExplicitWidth = 460
       DesignSize = (
         457
         24)
