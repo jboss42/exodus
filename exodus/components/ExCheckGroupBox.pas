@@ -24,8 +24,8 @@ type
       Constructor Create(AOwner: TComponent);override;
       Destructor Destroy();override;
 
-      procedure updateState();override;
-      procedure initializeChildStates();override;
+      procedure checkAutoHide();override;
+      procedure captureChildStates();override;
   published
       Property Checked: boolean read getChecked write setChecked;
       property OnCheckChanged: TNotifyEvent read _checkChangeEvent write _checkChangeEvent;
@@ -49,7 +49,7 @@ begin
     if (Assigned(_checkChangeEvent)) then begin
         _checkChangeEvent(Sender);
     end;
-    UpdateState();
+    enableChildren(Checked, true, nil);
 end;
 
 Constructor TExCheckGroupBox.create(AOwner: TComponent);
@@ -68,33 +68,29 @@ end;
 
 procedure TExCheckGroupBox.setEnabled(enabled: boolean);
 begin
-    chkBox.Enabled := enabled;
+    chkBox.Enabled := InitiallyEnabled and enabled;
     inherited;
 end;
 
 function TExCheckGroupBox.getChecked(): boolean;
 begin
-  Result := chkBox.Checked
+    Result := chkBox.Checked
 end;
 
 procedure TExCheckGroupBox.setChecked(b: boolean);
 begin
-  chkBox.Checked := b;
-  if ((not (csDesigning in Self.ComponentState)) and _initialized) then begin
-      enableChildren(b);
-  end;
+    chkBox.Checked := b;
 end;
 
-procedure TExCheckGroupBox.updateState();
+procedure TExCheckGroupBox.checkAutoHide();
 begin
     if (not _initialized) then
-        initializeChildStates();
-    inherited;
+        captureChildStates();
 
-    enableChildren(Checked, true, nil);
+    inherited;
 end;
 
-procedure TExCheckGroupBox.initializeChildStates();
+procedure TExCheckGroupBox.captureChildStates();
 begin
     inherited;
     _initialized := true;
