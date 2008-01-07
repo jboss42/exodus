@@ -270,6 +270,8 @@ type
     splitRoster: TSplitter;
     Tabs: TTntPageControl;
     mnuOptions_Notifications_NewConversation: TTntMenuItem;
+    btnActivityWindow: TToolButton;
+    mnuWindows_View_ShowActivityWindow: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -389,6 +391,7 @@ type
     procedure btnFindClick(Sender: TObject);
     procedure splitRosterCanResize(Sender: TObject; var NewSize: Integer;
       var Accept: Boolean);
+    procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1371,9 +1374,13 @@ begin
     _dockWindow := TfrmDockWindow.Create(Application);
     _dockManager := _dockWindow;
     Self.DockSite := false;
+    btnActivityWindow.Visible := true;
+    mnuWindows_View_ShowActivityWindow.Visible := false;
 {$ELSE}
     _dockWindow := nil;
     _dockManager := frmExodus;
+    btnActivityWindow.Visible := false;
+    mnuWindows_View_ShowActivityWindow.Visible := false;
 {$ENDIF}
 
 end;
@@ -1747,6 +1754,8 @@ begin
 {$IFDEF USE_ACTIVITY_WINDOW}
         // Show the activity window
         _dockWindow.ShowDefault();
+        mnuWindows_View_ShowActivityWindow.Enabled := true;
+        btnActivityWindow.Enabled := true;
 {$ENDIF}
 
         // Accept files dragged from Explorer
@@ -3194,6 +3203,14 @@ begin
     _hidden := true;
 end;
 
+
+procedure TfrmExodus.mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
+begin
+    inherited;
+    if (_dockwindow = nil) then exit;
+
+    _dockwindow.ShowDefault();
+end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);

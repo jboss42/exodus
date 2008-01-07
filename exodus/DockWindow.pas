@@ -34,12 +34,13 @@ uses
 
 type
 
-  TSortStates = (ssUnsorted, ssAlpha, ssActive, ssRecent, ssUnread);
+  TSortStates = (ssUnsorted, ssAlpha, ssActive, ssRecent, ssType, ssUnread);
 
   TfrmDockWindow = class(TfrmState, IExodusDockManager)
     splAW: TTntSplitter;
     AWTabControl: TTntPageControl;
     pnlActivityList: TExGradientPanel;
+    timFlasher: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AWTabControlDockDrop(Sender: TObject; Source: TDragDockObject; X,
@@ -50,6 +51,7 @@ type
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
+    procedure timFlasherTimer(Sender: TObject);
   private
     { Private declarations }
 
@@ -74,7 +76,7 @@ type
     procedure FloatDocked(frm : TfrmDockable);
     function GetDockSite() : TWinControl;
     procedure BringDockedToTop(form: TfrmDockable);
-    function getTopDocked() : TfrmDockable;
+    function getTopDocked(): TfrmDockable;
     procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
     procedure OnNotify(frm: TForm; notifyEvents: integer);
     procedure UpdateDocked(frm: TfrmDockable);
@@ -84,6 +86,9 @@ type
     function getTabSheet(frm : TfrmDockable) : TTntTabSheet;
     function getTabForm(tab: TTabSheet): TForm;
     procedure updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
+    procedure setWindowCaption(txt: widestring);
+    procedure Flash();
+    procedure checkFlash();
   end;
 
 var
@@ -93,7 +98,7 @@ implementation
 
 uses
     RosterWindow, Session, PrefController,
-    ActivityWindow;
+    ActivityWindow, Jabber1;
 
 {$R *.dfm}
 
@@ -136,7 +141,11 @@ end;
 {---------------------------------------}
 function TfrmDockWindow.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
 begin
+    if (not Self.Showing) then begin
+        Self.ShowDefault(false);
+    end;
     frm.ManualDock(AWTabControl); //fires TabsDockDrop event
+    setWindowCaption(frm.Caption);
     Result := GetTabSheet(frm);
     frm.Visible := true;
     _removeTabs();
@@ -152,6 +161,7 @@ end;
 procedure TfrmDockWindow.FormCreate(Sender: TObject);
 begin
     inherited;
+    setWindowCaption('');
     _docked_forms := TList.Create;
     _dockState := dsUninitialized;
     _sortState := ssUnsorted;
@@ -246,8 +256,7 @@ begin
         tsheet := GetTabSheet(form);
         if (tsheet <> nil) then begin
             Self.AWTabControl.ActivePage := tsheet;
-            if (Self.Visible) then //focus if we can
-                form.gotActivate();
+            form.gotActivate();
         end;
     end;
 end;
@@ -275,26 +284,24 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.OnNotify(frm: TForm; notifyEvents: integer);
 begin
-//    //if dockmanager is being notified directly or the given form is docked
-//    //handle bring to front and flash
-//    if ((frm = nil) or (frm = Self) or
-//        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
-//        if ((notifyEvents and notify_front) > 0) then
-//            bringToFront()
-//        else if ((notifyEvents and notify_flash) > 0) then
-//            Self.Flash();
-//    end;
-//    //tray notifications are always directed and dockmanager
-//    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
-//        StartTrayAlert();
-//
-//    updateNextNotifyButton();
+    //if dockmanager is being notified directly or the given form is docked
+    //handle bring to front and flash
+    if ((frm = nil) or (frm = Self) or
+        ((frm is TfrmDockable) and (TfrmDockable(frm).Docked))) then begin
+        if ((notifyEvents and notify_front) > 0) then
+            bringToFront()
+        else if ((notifyEvents and notify_flash) > 0) then
+            Self.Flash();
+    end;
+    //tray notifications are always directed and dockmanager
+    if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
+        StartTrayAlert();
 end;
 
 {---------------------------------------}
 procedure TfrmDockWindow.UpdateDocked(frm: TfrmDockable);
 var
-//    tsheet: TTntTabSheet;
+    tsheet: TTntTabSheet;
     item: TAWTrackerItem;
     aw: TfrmActivityWindow;
 begin
@@ -312,16 +319,13 @@ begin
             item := aw.addItem(frm.UID, frm);
             if (item <> nil) then begin
                 // make sure this is the selected item.
-                item.awItem.OnClick(item.awItem);
+                aw.activateItem(item.awItem);
             end;
         end;
 
         if (item <> nil) then begin
             // Successful lookup or add
             item.awItem.imgIndex := frm.ImageIndex;
-            if (frm.UID <> '') then begin
-                item.awItem.name := frm.UID; //???dda
-            end;
 
             // Deal with msg count
             item.awItem.count := frm.UnreadMsgCount;
@@ -329,17 +333,20 @@ begin
             // Deal with priority
             item.awItem.priorityFlag(frm.PriorityFlag);
 
+            // Deal with docked/undocked for popup menu
+            item.awItem.docked := frm.Docked;
+
             // Deal with undocked window focus
             if (frm.Activating) then begin
-                item.awItem.OnClick(item.awItem);
+                if ((not Self.Showing) and
+                    (frm.Docked)) then begin
+                    Self.ShowDefault(true);
+                end;
+                aw.activateItem(item.awItem);
             end;
-        end;
 
-    //    tsheet := GetTabSheet(frm);
-    //    if (tsheet <> nil) then
-    //        tsheet.ImageIndex := frm.ImageIndex;
-    //    checkFlash();
-    //    updateNextNotifyButton();
+            checkFlash();
+        end;
     end;
 end;
 
@@ -409,6 +416,11 @@ procedure TfrmDockWindow.WMActivate(var msg: TMessage);
 var
     frm: TfrmDockable;
 begin
+    if (Msg.WParamLo <> WA_INACTIVE) then begin
+        checkFlash();
+        StopTrayAlert();
+    end;
+
     if (Self.Visible) then begin
         frm := getTopDocked();
         if (frm <> nil) then begin
@@ -575,6 +587,56 @@ begin
         MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_WIDTH, pnlActivityList.Width);
         MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_TAB_WIDTH, AWTabControl.Width);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.setWindowCaption(txt: widestring);
+begin
+    if (txt = '') then begin
+        Caption := MainSession.Prefs.getString('brand_caption');
+    end
+    else begin
+        Caption := MainSession.Prefs.getString('brand_caption') +
+                   ' - ' +
+                   txt;
+    end;
+end;
+
+procedure TfrmDockWindow.timFlasherTimer(Sender: TObject);
+begin
+    inherited;
+    // Flash the window
+    FlashWindow(Self.Handle, true);
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.Flash();
+begin
+    If (Self.Active and not MainSession.Prefs.getBool('notify_docked_flasher')) then begin
+        timFlasher.Enabled := false;
+        exit; //0.9.1.0 behavior
+    end;
+    // flash window
+    if (not Self.Showing) then begin
+        Self.WindowState := wsMinimized;
+        Self.Visible := true;
+        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
+    end;
+    if MainSession.Prefs.getBool('notify_flasher') then begin
+        timFlasher.Enabled := true;
+    end
+    else begin
+        timFlasher.Enabled := false;
+        timFlasherTimer(Self);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.checkFlash();
+begin
+    if (timFlasher.Enabled and
+       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
+        timFlasher.Enabled := false;
 end;
 
 

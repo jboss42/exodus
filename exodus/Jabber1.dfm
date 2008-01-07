@@ -3,7 +3,7 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 462
+  ClientHeight = 482
   ClientWidth = 388
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -21,7 +21,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 396
-  ExplicitHeight = 516
+  ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 13
   object Toolbar: TCoolBar
@@ -41,7 +41,7 @@ inherited frmExodus: TfrmExodus
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 227
+      Width = 250
       Height = 27
       Align = alNone
       AutoSize = True
@@ -155,21 +155,32 @@ inherited frmExodus: TfrmExodus
         ImageIndex = 78
         OnClick = Preferences1Click
       end
+      object btnActivityWindow: TToolButton
+        Left = 223
+        Top = 0
+        Hint = 'Show Activity Window'
+        Caption = 'Activity Window'
+        Enabled = False
+        ImageIndex = 32
+        Visible = False
+        OnClick = mnuWindows_View_ShowActivityWindowClick
+      end
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 31
     Width = 388
-    Height = 431
+    Height = 451
     Align = alClient
     ParentColor = True
     TabOrder = 1
+    ExplicitHeight = 431
     object splitRoster: TSplitter
       Left = 170
       Top = 1
       Width = 5
-      Height = 429
+      Height = 449
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -183,7 +194,7 @@ inherited frmExodus: TfrmExodus
       Left = 1
       Top = 1
       Width = 169
-      Height = 429
+      Height = 449
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
@@ -191,12 +202,13 @@ inherited frmExodus: TfrmExodus
       ParentColor = True
       TabOrder = 0
       OnDockDrop = FormDockDrop
+      ExplicitHeight = 429
     end
     object Tabs: TTntPageControl
       Left = 175
       Top = 1
       Width = 212
-      Height = 429
+      Height = 449
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -215,6 +227,7 @@ inherited frmExodus: TfrmExodus
       OnDragOver = TabsDragOver
       OnMouseDown = TabsMouseDown
       OnUnDock = TabsUnDock
+      ExplicitHeight = 429
     end
   end
   object MainMenu1: TTntMainMenu
@@ -784,6 +797,12 @@ inherited frmExodus: TfrmExodus
       Caption = '&Windows'
       object mnuWindows_View: TTntMenuItem
         Caption = '&View'
+        object mnuWindows_View_ShowActivityWindow: TTntMenuItem
+          Caption = 'Show &Activity Window'
+          Enabled = False
+          Visible = False
+          OnClick = mnuWindows_View_ShowActivityWindowClick
+        end
         object mnuWindows_View_ShowToolbar: TTntMenuItem
           Caption = 'Show &Toolbar'
           OnClick = mnuToolbarClick
