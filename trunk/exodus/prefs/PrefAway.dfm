@@ -15,14 +15,6 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 367
     Height = 577
     Align = alLeft
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 1
     TabStop = True
     AutoHide = False
@@ -31,21 +23,13 @@ inherited frmPrefAway: TfrmPrefAway
       Left = 0
       Top = 6
       Width = 367
-      Height = 123
+      Height = 124
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 0
       TabStop = True
       AutoHide = True
@@ -61,14 +45,6 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Left = 0
         Margins.Bottom = 0
         Align = alTop
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 1
         TabStop = True
         AutoHide = False
@@ -127,32 +103,24 @@ inherited frmPrefAway: TfrmPrefAway
         Left = 0
         Top = 99
         Width = 367
-        Height = 24
+        Height = 25
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 4
         TabStop = True
         AutoHide = True
         object lblAwayStatus: TTntLabel
           Left = 21
           Top = 3
-          Width = 99
-          Height = 16
+          Width = 108
+          Height = 17
           Caption = 'Away status text:'
         end
         object txtAway: TTntEdit
           Left = 138
           Top = 0
           Width = 226
-          Height = 24
+          Height = 25
           TabOrder = 0
         end
       end
@@ -160,28 +128,21 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 141
+      Top = 142
       Width = 367
-      Height = 73
+      Height = 76
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 1
       TabStop = True
       AutoHide = True
       Caption = 'Enable Auto Extended Away'
       Checked = False
+      ExplicitTop = 141
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
         Left = 3
@@ -192,22 +153,14 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Bottom = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 1
         TabStop = True
         AutoHide = True
         object lblXATime: TTntLabel
           Left = 18
           Top = 6
-          Width = 248
-          Height = 16
+          Width = 262
+          Height = 17
           Caption = 'Minutes to wait before setting status to XA:'
         end
         object txtXATime: TExNumericEdit
@@ -231,33 +184,25 @@ inherited frmPrefAway: TfrmPrefAway
         Left = 3
         Top = 48
         Width = 361
-        Height = 24
+        Height = 25
         Margins.Top = 0
         Align = alTop
         AutoSize = True
-        Color = 13681583
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentColor = False
-        ParentFont = False
         TabOrder = 2
         TabStop = True
         AutoHide = True
         object lblXAStatus: TTntLabel
           Left = 18
           Top = 3
-          Width = 155
-          Height = 16
+          Width = 171
+          Height = 17
           Caption = 'Extended Away status text:'
         end
         object txtXA: TTntEdit
           Left = 181
           Top = 0
           Width = 180
-          Height = 24
+          Height = 25
           TabOrder = 0
         end
       end
@@ -265,7 +210,7 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 226
+      Top = 230
       Width = 367
       Height = 51
       Margins.Left = 0
@@ -274,24 +219,17 @@ inherited frmPrefAway: TfrmPrefAway
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 2
       TabStop = True
       AutoHide = True
       Caption = 'Enable Auto Disconnect'
       Checked = False
+      ExplicitTop = 228
       object lblDisconnectTime: TTntLabel
         Left = 21
         Top = 26
-        Width = 214
-        Height = 16
+        Width = 227
+        Height = 17
         Caption = 'Minutes to wait before disconnecting:'
       end
       object txtDisconnectTime: TExNumericEdit

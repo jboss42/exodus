@@ -33,7 +33,7 @@ type
     procedure setProps(Value: TGradientProps);
   protected
     { Protected declarations }
-    procedure paint(); override;
+    procedure Paint(); override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;

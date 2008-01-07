@@ -1,3 +1,4 @@
 inherited ExBrandPanel: TExBrandPanel
-  Font.Height = -13
+  ParentColor = True
+  ParentFont = True
 end

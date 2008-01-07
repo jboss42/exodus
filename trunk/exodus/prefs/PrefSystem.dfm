@@ -5,11 +5,12 @@ inherited frmPrefSystem: TfrmPrefSystem
   Caption = 'frmPrefSystem'
   ClientHeight = 632
   ClientWidth = 381
+  ParentFont = True
   OldCreateOrder = True
   ExplicitWidth = 393
   ExplicitHeight = 644
   PixelsPerInch = 120
-  TextHeight = 17
+  TextHeight = 16
   inherited pnlHeader: TTntPanel
     Width = 381
     Font.Style = [fsBold]
@@ -33,14 +34,6 @@ inherited frmPrefSystem: TfrmPrefSystem
     Margins.Right = 0
     Margins.Bottom = 6
     Align = alLeft
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     AutoHide = True
@@ -56,14 +49,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 0
       TabStop = True
       AutoHide = True
@@ -79,12 +64,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Start Exodus'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
         TabOrder = 0
       end
     end
@@ -100,14 +79,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       Margins.Bottom = 4
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 1
       TabStop = True
       AutoHide = True
@@ -177,14 +148,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 2
       TabStop = True
       AutoHide = True
@@ -247,21 +210,13 @@ inherited frmPrefSystem: TfrmPrefSystem
       Left = 0
       Top = 290
       Width = 329
-      Height = 211
+      Height = 213
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 3
       TabStop = True
       AutoHide = True
@@ -355,7 +310,7 @@ inherited frmPrefSystem: TfrmPrefSystem
         Left = 0
         Top = 148
         Width = 326
-        Height = 60
+        Height = 62
         Margins.Left = 0
         Align = alTop
         AutoSize = True
@@ -365,16 +320,16 @@ inherited frmPrefSystem: TfrmPrefSystem
         object lblLang: TTntLabel
           Left = 3
           Top = 0
-          Width = 115
-          Height = 14
+          Width = 120
+          Height = 16
           Caption = '&Language file to use:'
           FocusControl = cboLocale
         end
         object lblLangScan: TTntLabel
           Left = 3
           Top = 46
-          Width = 146
-          Height = 14
+          Width = 155
+          Height = 16
           Cursor = crHandPoint
           Caption = 'Scan for language catalo&gs'
           OnClick = lblLangScanClick
@@ -383,9 +338,9 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 3
           Top = 18
           Width = 225
-          Height = 22
+          Height = 24
           Style = csDropDownList
-          ItemHeight = 14
+          ItemHeight = 16
           TabOrder = 0
           Items.Strings = (
             'English (American)')
