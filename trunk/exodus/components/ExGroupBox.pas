@@ -9,8 +9,6 @@ uses
 
 
 type
-  TExGroupBoxStyle = (gbsNone, gbsLabel{, gbsCheck});
-
   TExGroupBox = class(TExBrandPanel)
     pnlTop: TTntPanel;
     lblCaption: TTntLabel;
@@ -18,24 +16,18 @@ type
     TntBevel1: TTntBevel;
 
   private
-    _style: TExGroupBoxStyle;
 
   protected
     function getCaption(): WideString;
     procedure setCaption(c: widestring);
-    function getStyle(): TExGroupBoxStyle;
-    procedure setStyle(s: TExGroupBoxStyle);
-    function getChecked(): boolean;
-    procedure setChecked(b: boolean);
-
     function visibleChildren(): integer; override;
+    procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
+    procedure SetEnabled(enabled: boolean);override;
 
   public
     procedure updateState();override;
   published
     property Caption: WideString read getCaption write setCaption;
-    property BoxStyle: TExGroupBoxStyle read getStyle write setStyle;
-    Property Checked: boolean read getChecked write setChecked;
   end;
 
   procedure Register();
@@ -60,43 +52,19 @@ begin
   lblCaption.Caption := c;
 end;
 
-function TExGroupBox.getStyle(): TExGroupBoxStyle;
-begin
-  Result := _style;
-end;
-
-procedure TExGroupBox.setStyle(s: TExGroupBoxStyle);
-begin
-  _style := s;
-end;
-
-
-function TExGroupBox.getChecked(): boolean;
-begin
-  Result := false;//chkGroup.Checked;
-end;
-
-procedure TExGroupBox.setChecked(b: boolean);
-begin
-  //nop
-  {
-  chkGroup.Checked := b;
-  if ((_style = gbsCheck) and
-      (([csLoading, csDesigning] * Self.ComponentState) = [])) then
-    enableChildren(chkGroup.Checked);
-  }
-end;
-
 procedure TExGroupBox.updateState();
 begin
   if (csDesigning in Self.ComponentState) then exit;
 
   inherited updateState();
+end;
 
-  //set style bits
-  lblCaption.Visible := (_style <> gbsNone);
-//  chkGroup.Visible := (_style = gbsCheck);
-  pnlTop.Visible := (_style <> gbsNone);
+procedure TExGroupBox.setEnabled(enabled: boolean);
+begin
+    //disable/enable title as well as children
+    Self.lblCaption.Enabled := enabled;
+    Self.TntBevel1.Enabled := enabled;
+    inherited;
 end;
 
 function TExGroupBox.visibleChildren(): integer;
@@ -109,5 +77,21 @@ begin
       inc(Result);
   end;
 end;
+
+procedure TExGroupBox.enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil);
+var
+    tIgnore: TList;
+begin
+    //add top panel to ignore list and call inherited handler
+    if (ignore = nil) then
+      tIgnore := TList.Create()
+    else
+      tIgnore := ignore;
+    tIgnore.Add(pnlTop);
+    inherited enableChildren(e, UseInitial, tIgnore);
+    if (ignore = nil) then
+      tIgnore.Free();
+end; 
+
 
 end.

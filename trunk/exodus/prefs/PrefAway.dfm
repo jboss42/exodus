@@ -2,154 +2,322 @@ inherited frmPrefAway: TfrmPrefAway
   Left = 252
   Top = 255
   Caption = 'frmPrefAway'
-  ClientHeight = 251
-  ClientWidth = 300
+  ClientHeight = 604
+  ClientWidth = 496
   OldCreateOrder = True
-  ExplicitWidth = 312
-  ExplicitHeight = 263
-  PixelsPerInch = 96
-  TextHeight = 13
-  object lblAwayTime: TTntLabel [0]
-    Left = 8
-    Top = 125
-    Width = 224
-    Height = 13
-    Caption = 'Minutes to wait before setting status to Away:'
-  end
-  object lblXATime: TTntLabel [1]
-    Left = 8
-    Top = 149
-    Width = 210
-    Height = 13
-    Caption = 'Minutes to wait before setting status to XA:'
-  end
-  object lblAwayStatus: TTntLabel [2]
-    Left = 8
-    Top = 201
-    Width = 65
-    Height = 13
-    Caption = 'Away Status:'
-  end
-  object lblXAStatus: TTntLabel [3]
-    Left = 8
-    Top = 230
-    Width = 51
-    Height = 13
-    Caption = 'XA Status:'
-  end
-  object lblDisconnectTime: TTntLabel [4]
-    Left = 8
-    Top = 173
-    Width = 181
-    Height = 13
-    Caption = 'Minutes to wait before Disconnecting:'
-  end
-  object txtAwayTime: TExNumericEdit [5]
-    Left = 232
-    Top = 119
-    Width = 49
-    Height = 25
-    BevelOuter = bvNone
-    ParentColor = True
-    TabOrder = 2
-    Text = '5'
-    Min = 1
-    Max = 600
-    DesignSize = (
-      49
-      25)
+  ExplicitWidth = 508
+  ExplicitHeight = 616
+  PixelsPerInch = 120
+  TextHeight = 17
+  object ExBrandPanel1: TExBrandPanel [0]
+    Left = 0
+    Top = 27
+    Width = 367
+    Height = 577
+    Align = alLeft
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 1
+    TabStop = True
+    AutoHide = False
+    object chkAutoAway: TExCheckGroupBox
+      AlignWithMargins = True
+      Left = 0
+      Top = 6
+      Width = 367
+      Height = 123
+      Margins.Left = 0
+      Margins.Top = 6
+      Margins.Right = 0
+      Margins.Bottom = 6
+      Align = alTop
+      AutoSize = True
+      Color = 13681583
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 0
+      TabStop = True
+      AutoHide = True
+      Caption = 'Enable Auto Away'
+      Checked = False
+      OnCheckChanged = chkAutoAwayCheckChanged
+      object pnlAwayTime: TExBrandPanel
+        AlignWithMargins = True
+        Left = 0
+        Top = 20
+        Width = 364
+        Height = 29
+        Margins.Left = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Color = 13681583
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 1
+        TabStop = True
+        AutoHide = False
+        object lblAwayTime: TTntLabel
+          AlignWithMargins = True
+          Left = 21
+          Top = 6
+          Width = 277
+          Height = 22
+          Margins.Left = 20
+          AutoSize = False
+          Caption = 'Minutes to wait before setting status to Away:'
+        end
+        object txtAwayTime: TExNumericEdit
+          Left = 303
+          Top = 0
+          Width = 61
+          Height = 29
+          Align = alRight
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 0
+          Text = '5'
+          Min = 1
+          Max = 600
+          DesignSize = (
+            61
+            29)
+        end
+      end
+      object chkAAReducePri: TTntCheckBox
+        AlignWithMargins = True
+        Left = 21
+        Top = 49
+        Width = 343
+        Height = 22
+        Margins.Left = 21
+        Margins.Top = 0
+        Align = alTop
+        Caption = 'Reduce priority to 0 when Away'
+        TabOrder = 2
+      end
+      object chkAwayAutoResponse: TTntCheckBox
+        AlignWithMargins = True
+        Left = 21
+        Top = 74
+        Width = 343
+        Height = 22
+        Margins.Left = 21
+        Margins.Top = 0
+        Align = alTop
+        Caption = 'Send auto response message when away'
+        TabOrder = 3
+      end
+      object ExBrandPanel2: TExBrandPanel
+        Left = 0
+        Top = 99
+        Width = 367
+        Height = 24
+        Align = alTop
+        AutoSize = True
+        Color = 13681583
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 4
+        TabStop = True
+        AutoHide = True
+        object lblAwayStatus: TTntLabel
+          Left = 21
+          Top = 3
+          Width = 99
+          Height = 16
+          Caption = 'Away status text:'
+        end
+        object txtAway: TTntEdit
+          Left = 138
+          Top = 0
+          Width = 226
+          Height = 24
+          TabOrder = 0
+        end
+      end
+    end
+    object chkAutoXA: TExCheckGroupBox
+      AlignWithMargins = True
+      Left = 0
+      Top = 141
+      Width = 367
+      Height = 73
+      Margins.Left = 0
+      Margins.Top = 6
+      Margins.Right = 0
+      Margins.Bottom = 6
+      Align = alTop
+      AutoSize = True
+      Color = 13681583
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 1
+      TabStop = True
+      AutoHide = True
+      Caption = 'Enable Auto Extended Away'
+      Checked = False
+      object ExBrandPanel3: TExBrandPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 17
+        Width = 361
+        Height = 31
+        Margins.Top = 0
+        Margins.Bottom = 0
+        Align = alTop
+        AutoSize = True
+        Color = 13681583
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 1
+        TabStop = True
+        AutoHide = True
+        object lblXATime: TTntLabel
+          Left = 18
+          Top = 6
+          Width = 248
+          Height = 16
+          Caption = 'Minutes to wait before setting status to XA:'
+        end
+        object txtXATime: TExNumericEdit
+          Left = 300
+          Top = 0
+          Width = 61
+          Height = 31
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 0
+          Text = '30'
+          Min = 1
+          Max = 600
+          DesignSize = (
+            61
+            31)
+        end
+      end
+      object ExBrandPanel4: TExBrandPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 48
+        Width = 361
+        Height = 24
+        Margins.Top = 0
+        Align = alTop
+        AutoSize = True
+        Color = 13681583
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 2
+        TabStop = True
+        AutoHide = True
+        object lblXAStatus: TTntLabel
+          Left = 18
+          Top = 3
+          Width = 155
+          Height = 16
+          Caption = 'Extended Away status text:'
+        end
+        object txtXA: TTntEdit
+          Left = 181
+          Top = 0
+          Width = 180
+          Height = 24
+          TabOrder = 0
+        end
+      end
+    end
+    object chkAutoDisconnect: TExCheckGroupBox
+      AlignWithMargins = True
+      Left = 0
+      Top = 226
+      Width = 367
+      Height = 51
+      Margins.Left = 0
+      Margins.Top = 6
+      Margins.Right = 0
+      Margins.Bottom = 6
+      Align = alTop
+      AutoSize = True
+      Color = 13681583
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 2
+      TabStop = True
+      AutoHide = True
+      Caption = 'Enable Auto Disconnect'
+      Checked = False
+      object lblDisconnectTime: TTntLabel
+        Left = 21
+        Top = 26
+        Width = 214
+        Height = 16
+        Caption = 'Minutes to wait before disconnecting:'
+      end
+      object txtDisconnectTime: TExNumericEdit
+        Left = 303
+        Top = 20
+        Width = 61
+        Height = 31
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 0
+        Text = '60'
+        Min = 1
+        Max = 600
+        DesignSize = (
+          61
+          31)
+      end
+    end
   end
   inherited pnlHeader: TTntPanel
-    Width = 300
-    Caption = 'Auto-Away'
-    TabOrder = 7
-    ExplicitWidth = 300
-  end
-  object txtXATime: TExNumericEdit
-    Left = 232
-    Top = 143
-    Width = 49
-    Height = 25
-    BevelOuter = bvNone
-    ParentColor = True
-    TabOrder = 1
-    Text = '30'
-    Min = 1
-    Max = 600
-    DesignSize = (
-      49
-      25)
-  end
-  object chkAutoAway: TTntCheckBox
-    Left = 8
-    Top = 32
-    Width = 270
-    Height = 17
-    Caption = 'Enable Auto-Away'
-    TabOrder = 3
-    OnClick = chkAutoAwayClick
-  end
-  object txtAway: TTntEdit
-    Left = 80
-    Top = 199
-    Width = 201
-    Height = 21
-    TabOrder = 10
-  end
-  object txtXA: TTntEdit
-    Left = 80
-    Top = 223
-    Width = 201
-    Height = 21
-    TabOrder = 8
-  end
-  object chkAAReducePri: TTntCheckBox
-    Left = 8
-    Top = 81
-    Width = 273
-    Height = 17
-    Caption = 'Reduce priority to 0 during Auto-Away'
-    TabOrder = 6
-  end
-  object chkAutoXA: TTntCheckBox
-    Left = 8
-    Top = 48
-    Width = 270
-    Height = 17
-    Caption = 'Enable Auto Extended Away'
-    TabOrder = 4
-    OnClick = chkAutoAwayClick
-  end
-  object chkAutoDisconnect: TTntCheckBox
-    Left = 8
-    Top = 64
-    Width = 270
-    Height = 17
-    Caption = 'Enable Auto Disconnect'
-    TabOrder = 5
-    OnClick = chkAutoAwayClick
-  end
-  object txtDisconnectTime: TExNumericEdit
-    Left = 232
-    Top = 167
-    Width = 49
-    Height = 25
-    BevelOuter = bvNone
-    ParentColor = True
-    TabOrder = 0
-    Text = '60'
-    Min = 1
-    Max = 600
-    DesignSize = (
-      49
-      25)
-  end
-  object chkAwayAutoResponse: TTntCheckBox
-    Left = 8
-    Top = 98
-    Width = 273
-    Height = 17
-    Caption = 'Send auto response message when away'
-    TabOrder = 9
+    Width = 496
+    ExplicitWidth = 496
+    inherited lblHeader: TTntLabel
+      Width = 174
+      Caption = 'Auto Away Preferences'
+      ExplicitWidth = 174
+    end
   end
 end
