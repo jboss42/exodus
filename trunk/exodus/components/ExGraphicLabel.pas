@@ -7,7 +7,7 @@ uses
   Graphics, pngimage;
 
 type
-  TExGraphicLabel = class(TGraphicControl)
+  TExGraphicLabel = class(TCustomControl)
   private
     { Private declarations }
     _selected: boolean;
@@ -24,7 +24,6 @@ type
 
   protected
     { Protected declarations }
-    property Anchors default [akLeft, akTop, akRight, akBottom];
     property AutoSize default false;
 
     procedure Paint(); override;
@@ -35,6 +34,8 @@ type
 
   published
     { Published declarations }
+    property Align;
+    property Anchors default [akLeft, akTop];
     property BorderWidth: TBorderWidth read _border write SetBorder default 3;
     property Caption: Widestring read _caption write SetCaption;
     property Enabled default true;
