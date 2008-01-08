@@ -274,6 +274,7 @@ uses
 {$R manifest.res}
 {$R xtra.res}
 {$R xml.res}
+{$R resource.res}
 
 var
     continue: boolean;
