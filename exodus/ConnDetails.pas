@@ -26,92 +26,149 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
-	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm;
+	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm, pngimage,
+  ExGraphicLabel, Buttons, TntButtons, ExGroupBox, ExGradientPanel, ExFrame,
+  ExBrandPanel, ExCheckGroupBox;
+
+type
+  TOptionSelection = class(TObject)
+    private
+      _options: Array of TTntRadioButton;
+      _selected: Integer;
+
+      function GetSize() : Integer;
+      procedure SetSelected(sel : Integer);
+
+    public
+      constructor Create(opts: Array of TTntRadioButton);
+
+      property Selected : Integer read _selected write SetSelected default -1;
+      property Size : Integer read GetSize;
+
+      procedure Select(Target : TTntRadioButton);
+  end;
 
 type
   TfrmConnDetails = class(TExForm)
     PageControl1: TTntPageControl;
-    tbsSocket: TTntTabSheet;
-    tbsHttp: TTntTabSheet;
-    Label1: TTntLabel;
-    txtURL: TTntEdit;
-    txtTime: TTntEdit;
-    Label2: TTntLabel;
-    Label5: TTntLabel;
-    txtKeys: TTntEdit;
-    Label9: TTntLabel;
-    tbsProfile: TTntTabSheet;
-    lblSocksHost: TTntLabel;
-    lblSocksPort: TTntLabel;
-    lblSocksType: TTntLabel;
-    lblSocksUsername: TTntLabel;
-    lblSocksPassword: TTntLabel;
-    chkSocksAuth: TTntCheckBox;
-    txtSocksHost: TTntEdit;
-    txtSocksPort: TTntEdit;
-    txtSocksUsername: TTntEdit;
-    txtSocksPassword: TTntEdit;
-    cboJabberID: TTntComboBox;
-    chkSavePasswd: TTntCheckBox;
-    txtPassword: TTntEdit;
-    cboResource: TTntComboBox;
-    tbsConn: TTntTabSheet;
+    tbsAcctDetails: TTntTabSheet;
+    tbsConnection: TTntTabSheet;
+    tbsProxy: TTntTabSheet;
+    tbsHttpPolling: TTntTabSheet;
+    tbsAdvanced: TTntTabSheet;
     lblNote: TTntLabel;
-    lblUsername: TTntLabel;
-    Label10: TTntLabel;
-    Label12: TTntLabel;
-    lblServerList: TTntLabel;
-    chkRegister: TTntCheckBox;
-    tbsSSL: TTntTabSheet;
-    optSSL: TTntRadioGroup;
-    cboSocksType: TTntComboBox;
-    Label6: TTntLabel;
-    txtPriority: TExNumericEdit;
-    chkSRV: TTntCheckBox;
-    boxHost: TTntGroupBox;
-    Label4: TTntLabel;
-    Label7: TTntLabel;
-    txtHost: TTntEdit;
-    txtPort: TTntEdit;
-    chkPolling: TTntCheckBox;
-    chkWinLogin: TTntCheckBox;
     Panel2: TPanel;
     Panel1: TPanel;
     btnOK: TTntButton;
     btnCancel: TTntButton;
     btnConnect: TTntButton;
-    lblRename: TTntLabel;
-    chkKerberos: TTntCheckBox;
+    ExGradientPanel1: TExGradientPanel;
+    Panel5: TPanel;
+    pnlTabs: TExBrandPanel;
+    imgConnection: TExGraphicLabel;
+    imgProxy: TExGraphicLabel;
+    imgHttpPolling: TExGraphicLabel;
+    imgAdvanced: TExGraphicLabel;
+    imgAcctDetails: TExGraphicLabel;
+    pnlAccountDetails: TExBrandPanel;
+    btnRename: TTntButton;
+    chkSavePasswd: TTntCheckBox;
+    chkRegister: TTntCheckBox;
+    pnlPassword: TExBrandPanel;
+    lblPassword: TTntLabel;
+    txtPassword: TTntEdit;
+    pnlServer: TExBrandPanel;
+    lblServer: TTntLabel;
+    cboServer: TTntComboBox;
+    pnlUsername: TExBrandPanel;
+    lblUsername: TTntLabel;
+    txtUsername: TTntEdit;
+    lblServerList: TTntLabel;
+    pnlConnection: TExBrandPanel;
+    pnlSRV: TExBrandPanel;
+    optSRVManual: TTntRadioButton;
+    optSRVAuto: TTntRadioButton;
+    pnlManualDetails: TExBrandPanel;
+    pnlHost: TExBrandPanel;
+    Label4: TTntLabel;
+    txtHost: TTntEdit;
+    pnlPort: TExBrandPanel;
+    Label7: TTntLabel;
+    txtPort: TTntEdit;
+    pnlSSL: TExGroupBox;
+    optSSLoptional: TTntRadioButton;
+    optSSLrequired: TTntRadioButton;
+    optSSLlegacy: TTntRadioButton;
+    pnlPolling: TExCheckGroupBox;
+    pnlURL: TExBrandPanel;
+    Label1: TTntLabel;
+    txtURL: TTntEdit;
+    pnlTime: TExBrandPanel;
+    Label2: TTntLabel;
+    Label5: TTntLabel;
+    txtTime: TExNumericEdit;
+    pnlKeys: TExBrandPanel;
+    Label9: TTntLabel;
+    txtKeys: TExNumericEdit;
+    pnlProxy: TExBrandPanel;
+    pnlSocksType: TExBrandPanel;
+    lblSocksType: TTntLabel;
+    cboSocksType: TTntComboBox;
+    pnlSocksHost: TExBrandPanel;
+    lblSocksHost: TTntLabel;
+    txtSocksHost: TTntEdit;
+    pnlSocksPort: TExBrandPanel;
+    lblSocksPort: TTntLabel;
+    txtSocksPort: TTntEdit;
+    pnlSocksAuth: TExCheckGroupBox;
+    pnlSocksUsername: TExBrandPanel;
+    lblSocksUsername: TTntLabel;
+    txtSocksUsername: TTntEdit;
+    pnlSocksPassword: TExBrandPanel;
+    lblSocksPassword: TTntLabel;
+    txtSocksPassword: TTntEdit;
+    pnlAdvanced: TExBrandPanel;
+    pnlResource: TExBrandPanel;
+    Label12: TTntLabel;
+    cboResource: TTntComboBox;
+    pnlRealm: TExBrandPanel;
     TntLabel2: TTntLabel;
     txtRealm: TTntEdit;
-    chkx509: TTntCheckBox;
-    KerbGroupBox: TTntGroupBox;
-    x509GroupBox: TTntGroupBox;
-    txtx509: TTntEdit;
+    pnlPriority: TExBrandPanel;
+    Label6: TTntLabel;
+    txtPriority: TExNumericEdit;
+    pnlKerberos: TExCheckGroupBox;
+    chkWinLogin: TTntCheckBox;
+    pnlx509Auth: TExCheckGroupBox;
+    pnlx509Cert: TExBrandPanel;
     btnx509browse: TTntButton;
-    Label13: TTntLabel;
+    txtx509: TTntEdit;
     procedure frameButtons1btnOKClick(Sender: TObject);
-    procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
     procedure lblServerListClick(Sender: TObject);
     procedure optSSLClick(Sender: TObject);
-    procedure chkSRVClick(Sender: TObject);
-    procedure txtUsernameExit(Sender: TObject);
+    procedure SRVOptionClick(Sender: TObject);
+    procedure doJidExit(Sender: TObject);
     procedure chkWinLoginClick(Sender: TObject);
-    procedure lblRenameClick(Sender: TObject);
+    procedure btnRenameClick(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure chkSavePasswdClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
 	procedure chkCert(Sender: TObject);
     procedure btnx509browseClick(Sender: TObject);
     procedure chkx509Click(Sender: TObject);
+    procedure TabSelect(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
     _Canceled: boolean;
+    _cur_tab: TExGraphicLabel;
+
+    _sslOpts: TOptionSelection;
 
     _sslCertKey: string;
 
@@ -131,6 +188,10 @@ type
     procedure decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
     procedure _setConnectButtonEnabled(val: boolean);
     function _getConnectButtonEnabled(): boolean;
+    procedure brandControl(ctrl: TControl);
+    procedure brandPage(page: TExGraphicLabel);
+
+    function checkVisibility(ctrl: TControl): boolean;
 
   public
     { Public declarations }
@@ -193,7 +254,6 @@ begin
         RestoreConn(p);
         RestoreHttp(p);
         RestoreSocket(p);
-        PageControl1.ActivePage := tbsProfile;
     end;
 
     result := f.ShowModal();
@@ -221,7 +281,10 @@ var
 begin
     // Validate the JID..
     Result := true;
-    jid := cboJabberID.Text + '/' + cboResource.Text;
+    jid := TJabberID.applyJEP106(txtUsername.Text) +
+            '@' + cboServer.Text +
+            '/' + cboResource.Text;
+    //jid := cboJabberID.Text + '/' + cboResource.Text;
     valid := true;
 
     if (not isValidJid(jid)) then
@@ -230,7 +293,7 @@ begin
         tj := TJabberID.Create(jid);
         if (chkWinLogin.Checked or (_sslCertKey <> '')) then
         begin
-          cboJabberID.Text := tj.domain;
+          cboServer.Text := tj.domain;
         end else begin
           valid := (tj.user <> '');
         end;
@@ -271,6 +334,7 @@ begin
   end;
 end;
 
+
 procedure TfrmConnDetails.decodeCertKey(var key: Pointer; var decodedLength: Cardinal; encodedString: string);
 var
   decodedString: string;
@@ -291,7 +355,7 @@ end;
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 begin
     // Check that resource does not match password
-    if ((chkx509.Checked) and
+    if ((pnlx509auth.Checked) and
         (Trim(txtx509.Text) = ''))  then begin
         MessageDlgW(_(sMissingX509Cert), mtError, [mbOK], 0);
         ModalResult := mrNone;
@@ -319,46 +383,25 @@ begin
       end;
 end;
 
-procedure TfrmConnDetails.chkSocksAuthClick(Sender: TObject);
-begin
-    if (chkSocksAuth.Checked) then begin
-        lblSocksUsername.Enabled := true;
-        lblSocksPassword.Enabled := true;
-        txtSocksUsername.Enabled := true;
-        txtSocksPassword.Enabled := true;
-    end
-    else begin
-        lblSocksUsername.Enabled := false;
-        lblSocksPassword.Enabled := false;
-        txtSocksUsername.Enabled := false;
-        txtSocksPassword.Enabled := false;
-    end;
-end;
-
 {---------------------------------------}
 procedure TfrmConnDetails.cboSocksTypeChange(Sender: TObject);
+var
+    auth: boolean;
 begin
     if (cboSocksType.ItemIndex = proxy_none) or
        (cboSocksType.ItemIndex = proxy_http) then begin
-        txtSocksHost.Enabled := false;
-        txtSocksPort.Enabled := false;
-        txtSocksUsername.Enabled := false;
-        txtSocksPassword.Enabled := false;
-        chkSocksAuth.Enabled := false;
-        chkSocksAuth.Checked := false;
-        lblSocksHost.Enabled := false;
-        lblSocksPort.Enabled := false;
-        lblSocksUsername.Enabled := false;
-        lblSocksPassword.Enabled := false;
+        pnlSocksHost.Enabled := false;
+        pnlSocksPort.Enabled := false;
+        pnlSocksAuth.Enabled := false;
+        pnlSocksAuth.Checked := false;
     end
     else begin
-        if (not txtSocksHost.Enabled) then begin
-            txtSocksHost.Enabled := true;
-            txtSocksPort.Enabled := true;
-            chkSocksAuth.Enabled := true;
-            lblSocksHost.Enabled := true;
-            lblSocksPort.Enabled := true;
-        end;
+        pnlSocksHost.Enabled := true;
+        pnlSocksPort.Enabled := true;
+
+        auth := pnlSocksAuth.Checked;
+        pnlSocksAuth.Enabled := true;
+        pnlSocksAuth.Checked := auth;
     end;
 end;
 
@@ -370,8 +413,7 @@ begin
         cboSocksTypeChange(cboSocksType);
         txtSocksHost.Text := SocksHost;
         txtSocksPort.Text := IntToStr(SocksPort);
-        chkSocksAuth.Checked := SocksAuth;
-        chkSocksAuthClick(chkSocksAuth);
+        pnlSocksAuth.Checked := SocksAuth;
         txtSocksUsername.Text := SocksUsername;
         txtSocksPassword.Text := SocksPassword;
     end;
@@ -383,12 +425,13 @@ begin
     with profile do begin
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
-        ssl := optSSL.ItemIndex;
+        ssl := _sslOpts.Selected;
+        //ssl := optSSL.ItemIndex;
 
         SocksType := cboSocksType.ItemIndex;
         SocksHost := txtSocksHost.Text;
         SocksPort := StrToIntDef(txtSocksPort.Text, 0);
-        SocksAuth := chkSocksAuth.Checked;
+        SocksAuth := pnlSocksAuth.Checked;
         SocksUsername := txtSocksUsername.Text;
         SocksPassword := txtSocksPassword.Text;
     end;
@@ -400,20 +443,19 @@ var
   ps : TPrefState;
 begin
     // Enable/Disable Controls
-    btnx509browse.Enabled := chkx509.Checked;
-    txtx509.Enabled := chkx509.Checked;
-    optssl.Enabled := not chkx509.Checked;
-    txtPassword.Enabled := not chkx509.Checked;
-    txtRealm.Enabled := not chkx509.Checked;
-    ps := PrefController.getPrefState('brand_profile_register');
-    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
-      chkRegister.Enabled := not chkx509.Checked;
-    ps := PrefController.getPrefState('brand_profile_save_password');
-    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
-      chkSavePasswd.Enabled := not chkx509.Checked;
+    pnlPassword.Enabled := not pnlx509Auth.Checked;
+    pnlSSL.Enabled := not pnlx509Auth.Checked;
+    pnlRealm.Enabled := not pnlx509Auth.Checked;
+    brandControl(chkRegister);
+    if chkRegister.Visible and chkRegister.Enabled then
+        chkRegister.Enabled := not pnlx509Auth.Checked;
+    brandControl(chkSavePasswd);
+    if chkSavePasswd.Visible and chkSavePasswd.Enabled then
+      chkSavePasswd.Enabled := not pnlx509Auth.Checked;
 
-    if (chkx509.Checked) then begin
-        optssl.ItemIndex := 0;
+    if (pnlx509Auth.Checked) then begin
+        _sslOpts.Selected := 0;
+        //optssl.ItemIndex := 0;
         chkRegister.Checked := false;
         chkSavePasswd.Checked := false;
         txtPassword.Text := '';
@@ -431,7 +473,8 @@ procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
         // populate the fields
-        cboJabberID.Text := profile.getJabberID().getDisplayJID();
+        txtUsername.Text := profile.getJabberID().userDisplay;
+        cboServer.Text := profile.getJabberID().domain;
         cboResource.Text := Resource;
         if (SavePasswd) then
             txtPassword.Text := Password;
@@ -439,33 +482,29 @@ begin
         chkSavePasswd.Checked := SavePasswd;
         chkRegister.Checked := NewAccount;
         chkWinLogin.Checked := WinLogin;
-        chkKerberos.Checked := KerbAuth;
-        chkx509.Checked := x509Auth;
+        pnlKerberos.Checked := KerbAuth;
+        pnlx509Auth.Checked := x509Auth;
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.SaveProfile(profile: TJabberProfile);
-var
-    j: TJabberID;
 begin
     with Profile do begin
         // Update the profile
-        j := TJabberID.Create(cboJabberID.Text, false);
-        Server := j.domain;
-        Username := j.User;
+        Server := cboServer.Text;
+        Username := TJabberID.applyJEP106(txtUsername.Text);
         SavePasswd := chkSavePasswd.Checked;
         if (not SavePasswd) then
             password := ''
         else
-          password := txtPassword.Text;
+        password := txtPassword.Text;
         resource := cboResource.Text;
         SASLRealm := txtRealm.Text;
         NewAccount := chkRegister.Checked;
         WinLogin := chkWinLogin.Checked;
-        KerbAuth := chkKerberos.Checked;
-        x509Auth := chkx509.Checked;
-        j.Free();
+        KerbAuth := pnlKerberos.Checked;
+        x509Auth := pnlx509Auth.Checked;
     end;
 end;
 
@@ -473,18 +512,23 @@ end;
 procedure TfrmConnDetails.RestoreConn(profile: TJabberProfile);
 begin
     with profile do begin
+        optSRVAuto.Checked := srv;
+        optSRVManual.Checked := not srv;
         txtHost.Text := Host;
         txtPort.Text := IntToStr(Port);
+        if (not pnlSRV.Visible) and srv then
+            pnlManualDetails.Visible := false;
+
         if ((ExStartup.ssl_ok = false) and (ssl = ssl_port)) then begin
             MessageDlgW(_(sNoSSL), mtError, [mbOK], 0);
             ssl := ssl_tls;
         end;
-        optSSL.ItemIndex := ssl;
-        chkPolling.Checked := (ConnectionType = conn_http);
+        _sslOpts.Selected := ssl;
+        pnlPolling.Checked := (ConnectionType = conn_http);
         txtPriority.Text := IntToStr(Priority);
 		txtx509.Text := getCertFriendlyName;
-        chkSRV.Checked := srv;
     end;
+    //pnlConnection.initializeChildStates();
 
     chkCert(nil);
 end;
@@ -493,19 +537,20 @@ end;
 procedure TfrmConnDetails.SaveConn(profile: TJabberProfile);
 begin
     with profile do begin
-        srv := chkSRV.Checked;
+        srv := optSRVAuto.Checked;
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
-        ssl := optSSL.ItemIndex;
+        ssl := _sslOpts.Selected;
+        //ssl := optSSL.ItemIndex;
 
-        if (chkPolling.Checked) then
+        if (pnlPolling.Checked) then
             ConnectionType := conn_http
         else
             ConnectionType := conn_normal;
 
         Priority := StrToInt(txtPriority.Text);
 
-        if (chkx509.Checked) then
+        if (pnlx509Auth.Checked) then
             SSL_Cert := _sslCertKey
     end;
 end;
@@ -541,22 +586,66 @@ procedure TfrmConnDetails.FormCreate(Sender: TObject);
 var
     list : TWideStrings;
     i : integer;
-    ps : TPrefState;
 begin
     AssignUnicodeFont(Self, 8);
     TranslateComponent(Self);
 
     URLLabel(lblServerList);
-    URLLabel(lblRename);
+
     MainSession.Prefs.RestorePosition(Self, false);
 
+    //Setup account details page
+    imgAcctDetails.Target := tbsAcctDetails;
+
+    brandControl(pnlUsername);
+    brandControl(pnlServer);
+    brandControl(pnlPassword);
+    brandControl(chkSavePasswd);
+    brandControl(chkRegister);
     list := TWideStringList.Create();
     MainSession.Prefs.fillStringList('brand_profile_server_list', list);
     if (list.Count > 0) then begin
-        cboJabberID.Items.Clear();
+        cboServer.Items.Clear();
         for i := 0 to list.Count - 1 do
-            cboJabberID.Items.Add('@' + list[i]);
+            cboServer.Items.Add(list[i]);
     end;
+    if (MainSession.Prefs.getBool('brand_profile_show_download_public_servers')) then
+        lblServerList.Visible := true
+    else
+        lblServerList.Visible := false;
+    //pnlAccountDetails.captureChildStates();
+
+    //Setup connection page
+    imgConnection.Target := tbsConnection;
+    if (not ExStartup.ssl_ok) then
+        ExStartup.ssl_ok := checkSSL();
+    _sslOpts := TOptionSelection.Create([optSSLoptional, optSSLrequired, optSSLlegacy]);
+    brandControl(pnlSRV);
+    brandControl(pnlHost);
+    brandControl(pnlPort);
+    brandControl(pnlSSL);
+    //pnlConnection.captureChildStates();
+
+    //Setup proxy page
+    imgProxy.Target := tbsProxy;
+    brandControl(pnlSocksType);
+    brandControl(pnlSocksHost);
+    brandControl(pnlSocksPort);
+    brandControl(pnlSocksAuth);
+    brandControl(pnlSocksUsername);
+    brandControl(pnlSocksPassword);
+    //pnlProxy.captureChildStates();
+
+    //Setup HTTP-Polling page
+    imgHttpPolling.Target := tbsHttpPolling;
+    brandControl(pnlPolling);
+    brandControl(pnlURL);
+    brandControl(pnlTime);
+    brandControl(pnlKeys);
+    //pnlPolling.captureChildStates();
+
+    //Setup Advanced page
+    imgAdvanced.Target := tbsAdvanced;
     MainSession.Prefs.fillStringList('brand_profile_resource_list', list);
     if (list.Count > 0) then begin
         cboResource.Clear();
@@ -569,13 +658,16 @@ begin
         cboResource.Items.Add(_(resourceName));
     end;
     list.Free();
-
-    if (not ExStartup.ssl_ok) then
-        ExStartup.ssl_ok := checkSSL();
-
-    tbsSSL.TabVisible := ExStartup.ssl_ok;
-    if (not tbsSSL.TabVisible) then
-        optSSL.ItemIndex := ssl_tls;
+    brandControl(pnlResource);
+    brandControl(pnlRealm);
+    brandControl(pnlPriority);
+    brandControl(chkWinLogin);
+    pnlKerberos.captureChildStates();
+    brandControl(pnlKerberos);
+    brandControl(pnlx509Cert);
+    pnlx509Auth.captureChildStates();
+    brandControl(pnlx509Auth);
+    //pnlAdvanced.captureChildStates();
 
     _Canceled := false;
 
@@ -583,37 +675,6 @@ begin
         btnConnect.Enabled := true
     else
         btnConnect.Enabled := false;
-
-    if (MainSession.Prefs.getBool('brand_profile_show_download_public_servers')) then
-        lblServerList.Visible := true
-    else
-        lblServerList.Visible := false;
-
-    // Do the save password control
-
-    ps := PrefController.getPrefState('brand_profile_save_password');
-    if ( ps <> psInvisible) then begin
-          chkSavePasswd.Visible := true;
-        if ( ps = psReadOnly ) then
-          chkSavePasswd.Enabled	:= false
-        else
-          chkSavePasswd.Enabled := true;
-    end
-    else
-        chkSavePasswd.Visible := false;
-
-    // Do the "This is a new account" control
-    ps := PrefController.getPrefState('brand_profile_register');
-    if ( ps <> psInvisible) then begin
-          chkRegister.Visible := true;
-        if ( ps = psReadOnly ) then
-          chkRegister.Enabled	:= false
-        else
-          chkRegister.Enabled := true;
-    end
-    else
-        chkSavePasswd.Visible := false;
-
 end;
 
 {---------------------------------------}
@@ -622,6 +683,19 @@ procedure TfrmConnDetails.FormClose(Sender: TObject;
 begin
     MainSession.Prefs.SavePosition(Self);
     Action := caFree;
+end;
+
+procedure TfrmConnDetails.FormShow(Sender: TObject);
+begin
+    //update tab "displayability"
+    brandPage(imgAcctDetails);
+    brandPage(imgConnection);
+    brandPage(imgProxy);
+    brandPage(imgHttpPolling);
+    brandPage(imgAdvanced);
+
+    //select and display the appropriate page
+    TabSelect(_cur_tab);
 end;
 
 {---------------------------------------}
@@ -672,9 +746,9 @@ begin
         q := parser.popTag();
         items := q.QueryTags('item');
         if (items.Count > 0) then
-            cboJabberID.Items.Clear();
+            cboServer.Items.Clear();
         for i := 0 to items.Count - 1 do
-            cboJabberID.Items.Add(items[i].getAttribute('jid'));
+            cboServer.Items.Add(items[i].getAttribute('jid'));
         items.Free();
         q.Free();
     end;
@@ -690,7 +764,10 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.optSSLClick(Sender: TObject);
 begin
-    if (optSSL.ItemIndex = ssl_port) then begin
+    _sslOpts.Select(TTntRadioButton(Sender));
+
+    //if (optSSL.ItemIndex = ssl_port) then begin
+    if (_sslOpts.Selected = ssl_port) then begin
         if (txtPort.Text = '5222') then
             txtPort.Text := '5223';
     end
@@ -701,34 +778,47 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.chkSRVClick(Sender: TObject);
+procedure TfrmConnDetails.SRVOptionClick(Sender: TObject);
 begin
-    boxHost.Enabled := not chkSRV.Checked;
-    txtHost.Enabled := boxHost.Enabled;
-    txtPort.Enabled := boxHost.Enabled;
+   pnlManualDetails.Enabled := not optSRVAuto.Checked;
+   pnlManualDetails.Invalidate();
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.txtUsernameExit(Sender: TObject);
+procedure TfrmConnDetails.doJidExit(Sender: TObject);
 var
-    jid: TJabberID;
     inp, outp: Widestring;
 begin
     if (_Canceled) then exit;
 
     // stringprep txtUsername, cboServer, or cboResource.
-    if (Sender = cboJabberID) then begin
-        jid := TJabberID.Create(cboJabberID.Text, false);
-        if (not jid.isValid) then
-            MessageDlgW(_('The Jabber ID you entered is not allowed.'), mtError, [mbOK], 0)
+    if (Sender = txtUsername) then begin
+        inp := txtUsername.Text;
+        if (Trim(inp) = '') then
+            MessageDlgW(_('The Username you entered is not allowed.'), mtError, [mbOK], 0);
+
+        inp := TJabberID.applyJEP106(inp);
+        outp := xmpp_nodeprep(inp);
+        if (outp = '') then
+            MessageDlgW(_('The Username you entered is not allowed.'), mtError, [mbOK], 0)
         else
-            cboJabberID.Text := jid.getDisplayJID();
-        jid.Free();
+            txtUsername.Text := TJabberID.removeJEP106(outp);
+    end
+    else if (Sender = cboServer) then begin
+        inp := cboServer.Text;
+        if (Trim(inp) = '') then
+            MessageDlgW(_('The Domain you entered is not allowed.'), mtError, [mbOK], 0);
+
+        outp := xmpp_nameprep(inp);
+        if (outp = '') then
+            MessageDlgW(_('The Domain you entered is not allowed.'), mtError, [mbOK], 0)
+        else
+            cboServer.Text := outp;
     end
     else if (Sender = cboResource) then begin
         inp := cboResource.Text;
         if (Trim(inp) = '') then
-              inp := resourceName;
+            inp := resourceName;
 
         outp := xmpp_resourceprep(inp);
         if (outp = '') then
@@ -740,56 +830,46 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.chkWinLoginClick(Sender: TObject);
-var
-    p : integer;
-    ps : TPrefState;
 begin
-    if chkWinLogin.Checked then begin
-        txtPassword.Enabled := false;
-        Label10.Enabled := false;
-        chkRegister.Checked := false;
-        chkRegister.Enabled := false;
-        chkKerberos.Enabled := false;
-        chkKerberos.Checked := true;
-        chkSavePasswd.Enabled := false;
-        cboJabberID.Enabled := false;
-        lblUsername.Enabled := false;
-        lblServerList.Enabled := false;
-        txtRealm.Enabled := false;
-        TntLabel2.Enabled := false;
-        p := pos('@', cboJabberID.Text);
-        if (p <> -1) then
-            cboJabberID.Text := MidStr(cboJabberID.Text, p+1, length(cboJabberID.Text));
+    if pnlKerberos.Checked then begin
+        chkWinLogin.Enabled := true;
+        pnlx509Auth.Enabled := false
     end
     else begin
-        txtPassword.Enabled := true;
-        Label10.Enabled := true;
-        ps := PrefController.getPrefState('brand_profile_register');
-        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
-          chkRegister.Enabled := true;
-        chkKerberos.Enabled := true;
-        ps := PrefController.getPrefState('brand_profile_save_password');
-        if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
-          chkSavePasswd.Enabled := true;
-        cboJabberID.Enabled := true;
-        lblUsername.Enabled := true;
-        Label13.Enabled := true;
-        lblServerList.Enabled := true;
-        txtRealm.Enabled := true;
-        TntLabel2.Enabled := true;
+        chkWinLogin.Enabled := false;
+        chkWinLogin.Checked := false;
+        pnlx509Auth.Enabled := true;
     end;
 
-    if not txtPassword.Enabled then
-        txtPassword.Text := '';
+    if chkWinLogin.Checked then begin
+        pnlUsername.Enabled := false;
+        pnlServer.Enabled := false;
+        pnlPassword.Enabled := false;
+        chkRegister.Checked := false;
+        chkRegister.Enabled := false;
+        chkSavePasswd.Enabled := false;
+        lblServerList.Enabled := false;
+        //pnlRealm.Enabled := false;
+     end
+    else begin
+        pnlUsername.Enabled := true;
+        pnlServer.Enabled := true;
+        pnlPassword.Enabled := true;
+        brandControl(chkRegister);
+        brandControl(chkSavePasswd);
+        lblServerList.Enabled := true;
+        //pnlRealm.Enabled := true;
+    end;
 
-    if (chkKerberos.Checked) then
-        chkx509.Enabled := false
-    else
-        chkx509.Enabled := true;
+    {
+    if not pnlPassword.Enabled then
+        txtPassword.Text := '';
+    }
+
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.lblRenameClick(Sender: TObject);
+procedure TfrmConnDetails.btnRenameClick(Sender: TObject);
 var
     new: Widestring;
 begin
@@ -992,7 +1072,6 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.chkCert(Sender: TObject);
 var
-  p: Integer;
   certSelected: Boolean;
   ps : TPrefState;
 begin
@@ -1002,24 +1081,163 @@ begin
     ps := PrefController.getPrefState('brand_profile_register');
     if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
       chkRegister.Enabled := not certSelected;
-    chkWinLogin.Enabled := not certSelected;
-    chkKerberos.Enabled := not certSelected;
-    txtRealm.Enabled := not certSelected;
-    txtRealm.ReadOnly := certSelected;
-    ps := PrefController.getPrefState('brand_profile_save_password');
-    if ( (ps <> psInvisible) and (ps <> psReadOnly) ) then
-      chkSavePasswd.Enabled := not certSelected;
+    //chkWinLogin.Enabled := not certSelected;
+    pnlKerberos.Enabled := not certSelected;
+    //pnlRealm.Enabled := not certSelected;
+    brandControl(chkSavePasswd);
+    chkSavePasswd.Enabled := not certSelected;
+    brandControl(chkRegister);
+    chkRegister.Enabled := not certSelected;
 
     if certSelected then
-    begin
         chkRegister.Checked := false;
-        p := pos('@', cboJabberID.Text);
-        if (p <> -1) then
-            cboJabberID.Text := MidStr(cboJabberID.Text, p+1, length(cboJabberID.Text));
+
+    if not pnlPassword.Enabled then
+        txtPassword.Text := ''
+end;
+
+procedure TfrmConnDetails.TabSelect(Sender: TObject);
+var
+  lblNew: TExGraphicLabel;
+  tab: TTntTabSheet;
+begin
+  lblNew := TExGraphicLabel(Sender);
+  //Default to Account Details
+  if lblNew = nil then lblNew := imgAcctDetails;
+
+  //Unselect old label
+  if (_cur_tab <> nil) then begin
+    _cur_tab.Selected := false;
+  end;
+
+  //Remember and select new label
+  _cur_tab := lblNew;
+  _cur_tab.Selected := true;
+
+  //Display new tab
+  if (_cur_tab.Target <> nil) then begin
+    if PageControl1.Visible then
+      PageControl1.Visible := false;
+    tab := TTntTabSheet(_cur_tab.Target);
+    tab.Visible := true;
+    tab.BringToFront();
+  end;
+
+  //Make sure page control is visible!
+  if (not PageControl1.Visible) then
+    PageControl1.Visible := true;
+  PageControl1.BringToFront();
+
+end;
+
+constructor TOptionSelection.Create(opts : Array of TTntRadioButton);
+var
+  len: Integer;
+  idx: Integer;
+begin
+  len := Length(opts);
+  SetLength(_options, len);
+  for idx := 0 to len - 1 do
+    _options[idx] := opts[idx];
+
+  _selected := -1;
+end;
+
+function TOptionSelection.GetSize;
+begin
+  Result := Length(_options);
+end;
+procedure TOptionSelection.SetSelected(sel: Integer);
+var
+  oldSel: Integer;
+begin
+  oldSel := _selected;
+
+  if sel < -1 then
+    raise Exception.Create('selection less than 0')
+  else if sel > Size then
+    raise Exception.Create('selection greater than length')
+  else if sel <> oldSel then begin
+    _selected := sel;
+    
+    if oldSel > -1 then
+      _options[oldSel].Checked := False;
+    if sel > -1 then
+      _options[sel].Checked := True;
+  end;
+
+end;
+
+procedure TOptionSelection.Select(Target: TTntRadioButton);
+var
+  idx: Integer;
+  found: Integer;
+begin
+  found := -1;
+  for idx := 0 to Size - 1 do begin
+    if _options[idx] = target then found := idx;
+  end;
+
+  Selected := found;
+end;
+
+procedure TfrmConnDetails.brandControl(ctrl: TControl);
+var
+    pref: WideString;
+    ps: TPrefState;
+begin
+    pref := MainSession.prefs.getPref(ctrl.Name);
+    if (pref <> '') then begin
+        ps := PrefController.getPrefState(pref);
+            if (ps <> psInvisible) then begin
+                ctrl.Visible := true;
+                if ps = psReadOnly then
+                    ctrl.Enabled := false
+                else
+                    ctrl.Enabled := true;
+            end
+            else
+                ctrl.Visible := false;
+    end;
+end;
+procedure TfrmConnDetails.brandPage(page: TExGraphicLabel);
+var
+    pref: WideString;
+    show: Boolean;
+    tab: TTntTabSheet;
+    idx: Integer;
+begin
+    pref := MainSession.prefs.getPref(page.Name);
+    if (pref <> '') then
+        show := MainSession.Prefs.getBool(pref)
+    else
+        show := true;
+    
+    tab := TTntTabSheet(page.Target);
+    if show and (tab <> nil) then begin
+        show := false;
+        for idx := 0 to tab.ControlCount - 1 do begin
+            show := show or checkVisibility(tab.Controls[idx]);
+        end;
     end;
 
-    if not txtPassword.Enabled then
-        txtPassword.Text := ''
+    page.Visible := show;
+end;
+
+function TfrmConnDetails.checkVisibility(ctrl: TControl): boolean;
+var
+    win: TWinControl;
+    idx: integer;
+begin
+    Result := ctrl.Visible;
+
+    if Result and (ctrl is TWinControl) then begin
+        win := TWinControl(ctrl);
+        Result := false;
+        for idx := 0 to win.ControlCount - 1 do begin
+            Result := Result or checkVisibility(win.Controls[idx]);
+        end;
+    end;
 end;
 
 end.

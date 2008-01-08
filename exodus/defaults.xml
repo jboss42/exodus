@@ -1,92 +1,76 @@
 <exodus version="0.9">
   <prefs>
-
-    <!-------------------SYSTEM---------------------->
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.44 2004/09/08 17:15:03 hildjj Exp $"/>
     
-    <auto_start value="0" control="chkAutoStart" state="rw"/>
-    <min_start value="0" control="chkStartMin" state="rw"/>
-    <debug value="0" control="chkDebug" state="rw"/>
-    <autologin value="0" control="chkAutoLogin" state="rw"/>
-    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
-    <restore_desktop value="0" control="chkRestoreDesktop" state="rw"/>
-    <start_docked value="1" state="rw"/>
-
-    <!-- Advanced system prefs -->
+    <!-- System Options -->
     <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
     <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
-    <auto_updates value="1" control="chkAutoUpdate" state="rw"/>
-    <window_ontop value="0" control="chkOnTop" state="rw"/>
-    <window_toolbox value="0" control="chkToolbox" state="rw"/>
-    <close_min value="1" control="chkCloseMin" state="rw"/>
-    <single_instance value="1" control="chkSingleInstance" state="rw"/>
-    <locale value="Default" state="rw"/>
-
-    <!-- AutoAway Options -->
-    <auto_away value="1" control="chkAutoAway" state="rw"/>
-    <aa_reduce_pri value="1" control="chkAAReducePri" state="rw"/>
-    <auto_xa value="1" control="chkAutoXA" state="rw"/>
-    <auto_disconnect value="0" control="chkAutoDisconnect" state="rw"/>
-    <away_time value="5" control="txtAwayTime" state="rw">
-    	<control name="lblAwayTime"/>
-    </away_time>
-    <xa_time value="30" control="txtXATime" state="rw">
-    	<control name="lblXATime"/>
-    </xa_time>
-    <disconnect_time value="180" control="txtDisconnectTime" state="rw">
-    	<control name="lblDisconnectTime"/>
-    </disconnect_time>
-    <away_status control="txtAway" state="rw">
-      <control name="lblAwayStatus"/>
-    </away_status>
-    <xa_status control="txtXA" state="rw">
-      <control name="lblXAStatus" state="rw"/>
-    </xa_status>
-    <away_auto_response value="0" control="chkAwayAutoResponse" state="rw"/>
-
-     <!---------------------- ROSTER ------------------------->
-    <!-- Roster prefs -->
-    <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
-    <inline_status value="0" control="chkInlineStatus" state="rw"/>
-    <roster_collapsed value="0" control="chkCollapsed" state="rw"/>
-    <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
-    <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
-    <roster_default value="Friends" control="txtDefaultGrp" state="rw">
-      <control name="lblDefaultGrp"/>
-    </roster_default>
-    <default_nick control="txtDefaultNick" state="rw">
+    
+    <auto_updates value="1" control="chkAutoUpdate"/>
+    <auto_start value="0" control="chkAutoStart"/>
+    <debug value="0" control="chkDebug"/>
+    <min_start value="0" control="chkStartMin"/>        
+    <autologin value="0" control="chkAutoLogin"/>        
+    <window_ontop value="0" control="chkOnTop" state="inv"/>
+    <window_toolbox value="0" control="chkToolbox"/>        
+    <close_min value="0" control="chkCloseMin"/>
+	<single_instance value="1" control="chkSingleInstance"/>
+    <default_nick control="txtDefaultNick">
       <control name="lblDefaultNick"/>
     </default_nick>
+    
+    <!-- AutoAway Options -->
+    <auto_away value="1" control="chkAutoAway"/>
+    <aa_reduce_pri value="1" control="chkAAReducePri"/>
+    <auto_xa value="1" control="chkAutoXA"/>
+    <auto_disconnect value="0" control="chkAutoDisconnect"/>
+	<away_time value="5" control="txtAwayTime">
+	  <control name="lblAwayTime"/>
+	</away_time>
+	<xa_time value="30" control="txtXATime">
+	  <control name="lblXATime"/>
+	</xa_time>
+	<disconnect_time value="180" control="txtDisconnectTime">
+      <control name="lblDisconnectTime"/>
+	</disconnect_time>
+	<away_status control="txtAway">
+	  <control name="lblAwayStatus"/>
+    </away_status>
+    <xa_status control="txtXA">
+      <control name="lblXAStatus"/>
+    </xa_status>
+    <away_auto_response value="0" control="chkAwayAutoResponse"/>
 
-    <!-- advanced roster prefs -->
-    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap" state="rw">
-    	<control name="lblDNProfileMap"/>
-    </displayname_profile_map>
-    <inline_color value="$808000" control="cboStatusColor" state="rw">
-          <control name="lblStatusColor"/>
-    </inline_color>
-    <nested_groups value="0" control="chkNestedGrps" state="rw"/>
-
-    <!-- DEPRICATED (unsupported) roster prefs -->
-    <roster_avatars value="0" control="chkRosterAvatars" state="inv"/>
-    <roster_unicode value="1" control="chkRosterUnicode" state="inv"/>
-    <roster_chat value="2" control="cboDblClick" state="inv">
+    <!-- Roster Options -->                    	
+    <roster_show_unsub value="0" control="chkShowUnsubs"/>
+    <roster_show_pending value="1" control="chkShowPending"/>
+    <roster_hide_block value="0" control="chkHideBlocked"/>
+    <roster_pres_errors  value="0" control="chkPresErrors"/>
+    <roster_unicode value="true" control="chkRosterUnicode"/>
+    <roster_chat value="2" control="cboDblClick">
       <control name="lblDblClick"/>
     </roster_chat>
-    <roster_show_unsub value="0" control="chkShowUnsubs" state="inv"/>
-    <roster_show_pending value="1" control="chkShowPending" state="inv"/>
-    <roster_pres_errors  value="0" control="chkPresErrors" state="inv"/>
-    <group_seperator value="/" control="txtGrpSeperator" state="inv">
-    	<control name="lblGrpSeperator"/>
-    </group_seperator>
-    <roster_offline_group value="0" control="chkOfflineGrp" state="inv"/>
-    <roster_transport_grp value="Transports" control="txtGatewayGrp" state="inv">
+    <inline_status value="0" control="chkInlineStatus"/>
+	<inline_color value="$808000" control="cboInlineStatus"/>
+    <nested_groups value="0" control="chkNestedGrps"/>
+    <group_seperator value="/" control="txtGrpSeperator"/>
+    <roster_avatars value="false" control="chkRosterAvatars"/>
+    
+    <!-- Roster Group Options -->
+    <roster_sort value="0" control="chkSort"/>
+	<roster_groupcounts value="0" control="chkGroupCounts"/>
+    <roster_collapsed value="0" control="chkCollapsed"/>
+    <roster_offline_group value="0" control="chkOfflineGrp"/>
+	<roster_only_online value="1" control="chkOnlineOnly"/>
+    <roster_default value="Friends" control="txtDefaultGrp">
+      <control name="lblDefaultGrp"/>
+    </roster_default>
+    <roster_transport_grp value="Transports" control="txtGatewayGrp">
       <control name="lblGatewayGrp"/>
     </roster_transport_grp>
-    <roster_filter value="2" control="cboVisible" state="inv">
+    <roster_filter value="2" control="cboVisible">
       <control name="lblFilter"/>
-    </roster_filter>
-    <roster_sort value="0" control="chkSort" state="inv"/>
+    </roster_filter>            
     
     <!-- Dialog Options -->
     <roster_alpha value="0" control="chkRosterAlpha"/>
@@ -152,6 +136,17 @@
     <event_width value="400"/>
     <roster_width value="215"/>
 
+    <restore_window_state value="1" control="chkSaveWindowState"/>
+    <restore_desktop value="0" control="chkRestoreDesktop"/>
+
+    <start_docked value="1"/>
+
+    <!-- display name -->
+    <displayname_profile_enabled value='1' control="chkUseProfileDN"/>
+	<displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap">
+      <control name="lblDNProfileMap"/>
+	</displayname_profile_map>
+    
     <!-- Message Options -->
     <timestamp value="1" control="chkTimestamp"/>
 	<timestamp_format value="h:mm am/pm" control="txtTimestampFmt">
@@ -312,7 +307,6 @@
          in any of those contexts. Caption may be anything. -->
     <brand_application_id value="Exodus"></brand_application_id>
     <brand_caption value="Exodus"></brand_caption>
-    
     <brand_help_menu_list>
       <s>Jabber User Guide</s>
       <s>Exodus Website</s>
@@ -326,47 +320,57 @@
       <s>http://www.jabber.org/</s>
     </brand_help_url_list>
     <brand_icon ></brand_icon>
+
+    <!-- -->
+    <brand_profile_show_accountdetails control="imgAcctDetails" value="true"></brand_profile_show_accountdetails>
+    <brand_profile_show_connection control="imgConnection" value="true"></brand_profile_show_connection>
+    <brand_profile_show_proxy control="imgProxy" value="true"></brand_profile_show_proxy>
+    <brand_profile_show_httppolling control="imgHttpPolling" value="true"></brand_profile_show_httppolling>
+    <brand_profile_show_advanced control="imgAdvanced" value="true"></brand_profile_show_advanced>
+    
     <brand_profile_conn_type value="0"></brand_profile_conn_type>
-    <brand_profile_new_account_default value="true" control="chkRegister" state="rw"></brand_profile_new_account_default>
-    <brand_profile_host ></brand_profile_host>
-    <brand_profile_http_poll value="1000"></brand_profile_http_poll>
-    <brand_profile_http_url ></brand_profile_http_url>
-    <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
-    <brand_profile_password ></brand_profile_password>
-    <brand_profile_port value="5222"></brand_profile_port>
-    <brand_profile_priority value="1"></brand_profile_priority>
-    <brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
-    <brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
-    <brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
+    <brand_profile_username control="pnlUsername"></brand_profile_username>
+    <brand_profile_server control="pnlServer" value="jabber.org"></brand_profile_server>
+    <brand_profile_password control="pnlPassword"></brand_profile_password>
+    <brand_profile_save_password control="chkSavePasswd"></brand_profile_save_password>
+    <brand_profile_new_account_default value="true" control="chkRegister"></brand_profile_new_account_default>
+    <brand_profile_server_list>
+      <s>jabber.org</s>
+      <s>jabber.com</s>
+    </brand_profile_server_list>
+    <brand_profile_show_download_public_servers value="false"></brand_profile_show_download_public_servers>
 
-    <!--brand_profile_resource value="Exodus"></brand_profile_resource-->
-
+    <brand_profile_srv control="pnlSRV" value="true"></brand_profile_srv>
+    <brand_profile_host control="pnlHost"></brand_profile_host>
+    <brand_profile_port control="pnlPort" value="5222"></brand_profile_port>
+    <brand_profile_ssl control="pnlSSL" value="0"></brand_profile_ssl>
+    
+    <brand_profile_socks_type control="pnlSocksType" value="0"></brand_profile_socks_type>
+    <brand_profile_socks_host control="pnlSocksHost" ></brand_profile_socks_host>
+    <brand_profile_socks_port control="pnlSocksPort" value="1080"></brand_profile_socks_port>
+    <brand_profile_socks_auth control="pnlSocksAuth" value="false"></brand_profile_socks_auth>
+    <brand_profile_socks_user control="pnlSocksUsername"></brand_profile_socks_user>
+    <brand_profile_socks_password contorl="pnlSocksPassword"></brand_profile_socks_password>
+    
+    <brand_profile_http_allowpolling value="true"></brand_profile_http_allowpolling>
+    <brand_profile_http_poll control="pnlTime" value="1000"></brand_profile_http_poll>
+    <brand_profile_http_url control="pnlURL" ></brand_profile_http_url>
+    <brand_profile_num_poll_keys control="pnlKeys" value="256"></brand_profile_num_poll_keys>
+    
+    <brand_profile_resource control="pnlResource" value="Exodus"></brand_profile_resource>
     <brand_profile_resource_list>
       <s>Home</s>
       <s>Work</s>
       <s>Exodus</s>
     </brand_profile_resource_list>
+    <brand_profile_realm control="pnlRealm" value=""></brand_profile_realm>
+    <brand_profile_priority control="pnlPriority" value="1"></brand_profile_priority>
+    <brand_profile_kerberos control="pnlKerberos" value="false"></brand_profile_kerberos>
+    <brand_profile_winlogin control="chkWinLogin" value="false"></brand_profile_winlogin>
+    <brand_profile_x509auth control="pnlx509Auth" value="false"></brand_profile_x509auth>
+    <brand_profile_x509cert control="pnlx509Cert"></brand_profile_x509cert>
 
-    <brand_profile_save_password ></brand_profile_save_password>
-    <brand_profile_server value="jabber.org"></brand_profile_server>
-    <brand_profile_winlogin value="false"></brand_profile_winlogin>
-
-    <brand_profile_server_list>
-      <s>jabber.org</s>
-      <s>jabber.com</s>
-    </brand_profile_server_list>
-
-    <brand_profile_socks_auth value="false"></brand_profile_socks_auth>
-    <brand_profile_socks_host ></brand_profile_socks_host>
-    <brand_profile_socks_password ></brand_profile_socks_password>
-    <brand_profile_socks_port value="1080"></brand_profile_socks_port>
-    <brand_profile_socks_type value="0"></brand_profile_socks_type>
-    <brand_profile_socks_user ></brand_profile_socks_user>
-    <brand_profile_ssl value="false"></brand_profile_ssl>
-    <brand_profile_srv value="true"></brand_profile_srv>
-    <brand_profile_username ></brand_profile_username>
     <brand_profile_enable_connect_btn value="true"></brand_profile_enable_connect_btn>
-    <brand_profile_show_download_public_servers value="true"></brand_profile_show_download_public_servers>
 
     <brand_invisible_pres value="1"></brand_invisible_pres>
     <brand_muc value="1"></brand_muc>
@@ -428,7 +432,7 @@
 	<!-- indicates if priority notification feature should be used -->
 	<branding_priority_notifications value="1"></branding_priority_notifications>
   	<!-- indicates if nested subgroup feature should be available -->
-	<branding_nested_subgroup value="1"></branding_nested_subgroup>
+	<branding_nested_subgroup value="0"></branding_nested_subgroup>
 	<!-- indicates if all messages should be queued to offline queue when I am not available -->
 	<branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
 
