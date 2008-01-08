@@ -18,8 +18,8 @@ type
   private
 
   protected
-    function getCaption(): WideString;
-    procedure setCaption(c: widestring);
+    function getCaption(): WideString; virtual;
+    procedure setCaption(c: widestring); virtual;
     function visibleChildren(): integer; override;
     procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
     procedure SetEnabled(enabled: boolean);override;

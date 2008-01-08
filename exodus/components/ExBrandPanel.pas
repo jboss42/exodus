@@ -32,11 +32,14 @@ type
       procedure showChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil);virtual;
 
       procedure SetEnabled(enabled: boolean);override;
+
   public
       Constructor Create(AOwner: TComponent);override;
       Destructor Destroy; Override;
       procedure checkAutoHide();virtual;
       procedure captureChildStates();virtual;
+
+      function CanFocus: Boolean; override;
 
       property CanEnabled: boolean read _canEnable write _canEnable;
   published
@@ -221,4 +224,10 @@ begin
     if (_autoHide) then
         Self.Visible := (visibleChildren() > 0);
 end;
+
+function TExBrandPanel.CanFocus: Boolean;
+begin
+    Result := false;
+end;
+
 end.
