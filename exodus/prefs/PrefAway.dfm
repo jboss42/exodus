@@ -70,6 +70,9 @@ inherited frmPrefAway: TfrmPrefAway
           Text = '5'
           Min = 1
           Max = 600
+          DesignSize = (
+            61
+            29)
         end
       end
       object chkAAReducePri: TTntCheckBox
@@ -114,9 +117,9 @@ inherited frmPrefAway: TfrmPrefAway
           Caption = 'Away status text:'
         end
         object txtAway: TTntEdit
-          Left = 138
+          Left = 182
           Top = 0
-          Width = 226
+          Width = 182
           Height = 24
           TabOrder = 0
         end
@@ -170,6 +173,9 @@ inherited frmPrefAway: TfrmPrefAway
           Text = '30'
           Min = 1
           Max = 600
+          DesignSize = (
+            61
+            31)
         end
       end
       object ExBrandPanel4: TExBrandPanel
@@ -186,15 +192,15 @@ inherited frmPrefAway: TfrmPrefAway
         AutoHide = True
         object lblXAStatus: TTntLabel
           Left = 18
-          Top = 5
+          Top = 3
           Width = 155
           Height = 16
           Caption = 'Extended Away status text:'
         end
         object txtXA: TTntEdit
-          Left = 197
+          Left = 179
           Top = 0
-          Width = 164
+          Width = 182
           Height = 24
           TabOrder = 0
         end
@@ -235,6 +241,9 @@ inherited frmPrefAway: TfrmPrefAway
         Text = '60'
         Min = 1
         Max = 600
+        DesignSize = (
+          61
+          31)
       end
     end
   end

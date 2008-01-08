@@ -51,13 +51,12 @@ type
     txtDisconnectTime: TExNumericEdit;
     procedure chkAutoAwayCheckChanged(Sender: TObject);
   private
-    { Private declarations }
-//    procedure DoEnables();
-
+    _lastAutoXA: boolean;
+    _lastAutoDisconnect: boolean;
   public
     { Public declarations }
     procedure LoadPrefs(); override;
-    procedure SavePrefs(); override;
+    procedure SavePrefs();override;
   end;
 
 var
@@ -73,18 +72,38 @@ begin
     inherited;
 
     //set the initial visible, enabled states of the check group boxes
-    chkAutoAway.InitiallyEnabled := (getPrefState('auto_away') <> psReadOnly);
-    chkAutoXA.InitiallyEnabled := (getPrefState('auto_xa') <> psReadOnly);
-    chkAutoDisconnect.InitiallyEnabled := (getPrefState('auto_disconnect') <> psReadOnly);
+    chkAutoAway.CanEnabled := (getPrefState('auto_away') <> psReadOnly);
+    chkAutoXA.CanEnabled := (getPrefState('auto_xa') <> psReadOnly);
+    chkAutoDisconnect.CanEnabled := (getPrefState('auto_disconnect') <> psReadOnly);
 
     pnlContainer.captureChildStates();
     pnlContainer.checkAutoHide();
+
+    _lastAutoXA := chkAutoXA.Checked;
+    _lastAutoDisconnect := chkAutoDisconnect.Checked;
+
+    //fire the autoaway check click event to get initial states correct
+    chkAutoAway.chkBoxClick(Self);
 end;
 
 procedure TfrmPrefAway.SavePrefs();
+var
+    tb1, tb2: boolean;
 begin
+    //make sure disabled xa and disconnect have the correct values before save
+    tb1 := chkAutoXA.Checked;
+    tb2 := chkAutoDisconnect.Checked;
+    chkAutoXA.Checked := _lastAutoXA;
+    chkAutoDisconnect.Checked := _lastAutoDisconnect;
+
     inherited;
+
+    //and set them back (in case of apply)
+    chkAutoXA.Checked := tb1;
+    chkAutoDisconnect.Checked := tb2;
+
 end;
+
 {
 procedure TfrmPrefAway.DoEnables();
 var
@@ -132,6 +151,18 @@ end;
 
 procedure TfrmPrefAway.chkAutoAwayCheckChanged(Sender: TObject);
 begin
+    if (not chkAutoAway.Checked) then begin
+        _lastAutoXA := chkAutoXA.Checked;
+        _lastAutoDisconnect := chkAutoDisconnect.Checked;
+
+        chkAutoXA.Checked := false;
+        chkAutoDisconnect.Checked := false;
+    end
+    else begin
+        chkAutoXA.Checked := _lastAutoXA;
+        chkAutoDisconnect.Checked := _lastAutoDisconnect;
+    end;
+
     Self.chkAutoXA.Enabled := chkAutoAway.Checked;
     Self.chkAutoDisconnect.Enabled := chkAutoAway.Checked;
 end;

@@ -53,8 +53,8 @@ end;
 procedure TExGroupBox.setEnabled(enabled: boolean);
 begin
     //disable/enable title as well as children
-    Self.lblCaption.Enabled := InitiallyEnabled and enabled;
-    Self.TntBevel1.Enabled := InitiallyEnabled and enabled;
+    Self.lblCaption.Enabled := CanEnabled and enabled;
+    Self.TntBevel1.Enabled := CanEnabled and enabled;
     inherited;
 end;
 
