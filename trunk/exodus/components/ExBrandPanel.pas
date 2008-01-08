@@ -22,7 +22,7 @@ type
     //states of children
     _initialStates: TObjectList; //of TControlInfo
 
-    _initiallyEnabled: boolean;
+    _canEnable: boolean;
   protected
       function getAutoHide(): boolean;
       procedure setAutoHide(b: boolean);
@@ -38,7 +38,7 @@ type
       procedure checkAutoHide();virtual;
       procedure captureChildStates();virtual;
 
-      property InitiallyEnabled: boolean read _initiallyEnabled write _initiallyEnabled;
+      property CanEnabled: boolean read _canEnable write _canEnable;
   published
       property AutoHide: boolean read getAutoHide write setAutoHide;
   end;
@@ -96,10 +96,10 @@ end;
 
 procedure TExBrandPanel.setEnabled(enabled: boolean);
 begin
-    inherited SetEnabled(_initiallyEnabled and enabled);
+    inherited SetEnabled(_canEnable and enabled);
     
-    if (_initiallyEnabled) then
-        enableChildren(enabled);
+    if (_canEnable) then
+        enableChildren(enabled, true, nil);
 end;
 
 procedure TExBrandPanel.showChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil);
@@ -195,7 +195,7 @@ Constructor TExBrandPanel.create(AOwner: TComponent);
 begin
     inherited;
     _initialStates := nil;
-    _initiallyEnabled := true;
+    _canEnable := true;
 end;
 
 Destructor TExBrandPanel.Destroy;

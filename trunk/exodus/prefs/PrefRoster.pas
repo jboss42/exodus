@@ -92,7 +92,6 @@ uses
 
 procedure TfrmPrefRoster.LoadPrefs();
 var
-    s: TPrefState;
     gs: TWidestringList;
 begin
     inherited;
@@ -133,7 +132,7 @@ begin
         chkNestedGrps.Checked := false;
     end;
 
-    ExGroupBox1.updateState();
+    ExGroupBox1.checkAutoHide();
 end;
 
 procedure TfrmPrefRoster.SavePrefs();

@@ -45,6 +45,10 @@ end;
 procedure TExCheckGroupBox.chkBoxClick(Sender: TObject);
 begin
     inherited;
+    //only update children if we have been "initialized". We
+    //don't want to step on initial child states...
+    if (not _initialized) then exit;
+
     //relay event
     if (Assigned(_checkChangeEvent)) then begin
         _checkChangeEvent(Sender);
@@ -68,7 +72,7 @@ end;
 
 procedure TExCheckGroupBox.setEnabled(enabled: boolean);
 begin
-    chkBox.Enabled := InitiallyEnabled and enabled;
+    chkBox.Enabled := CanEnabled and enabled;
     inherited;
 end;
 
@@ -107,7 +111,8 @@ begin
       tIgnore := ignore;
 
     tIgnore.Add(chkBox);
-    inherited enableChildren(e, UseInitial, tIgnore);
+    //only enable children if we are checked.
+    inherited enableChildren(e and Checked, UseInitial, tIgnore);
     if (ignore = nil) then
       tIgnore.Free();
 end;
