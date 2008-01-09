@@ -84,6 +84,7 @@ end;
 procedure TExCheckGroupBox.setChecked(b: boolean);
 begin
     chkBox.Checked := b;
+    if _initialized then enableChildren(b, true, nil);
 end;
 
 procedure TExCheckGroupBox.checkAutoHide();
