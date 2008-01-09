@@ -457,8 +457,10 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
+    // Dockmanager stuff
     _dockManager: IExodusDockManager;
     _dockWindow: TfrmDockWindow;
+    _dockWindowGlued: boolean;
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
@@ -521,6 +523,7 @@ type
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
 
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
+    procedure OnMoving(var Msg: TWMMoving); message WM_MOVING;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -627,6 +630,8 @@ published
 
     procedure PreModal(frm: TForm);
     procedure PostModal();
+
+    procedure glueWindow(doGlue: boolean = true);
 
 
     {
@@ -1370,6 +1375,8 @@ begin
     // Eventually will have to actually remove menus
     Old1.Visible := false;
 
+    _dockWindowGlued := false;
+
 {$IFDEF USE_ACTIVITY_WINDOW}
     _dockWindow := TfrmDockWindow.Create(Application);
     _dockManager := _dockWindow;
@@ -1754,8 +1761,6 @@ begin
 {$IFDEF USE_ACTIVITY_WINDOW}
         // Show the activity window
         _dockWindow.ShowDefault();
-        mnuWindows_View_ShowActivityWindow.Enabled := true;
-        btnActivityWindow.Enabled := true;
 {$ENDIF}
 
         // Accept files dragged from Explorer
@@ -2965,6 +2970,17 @@ begin
     if (frmRosterWindow <> nil) then
         frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
+
+{$IFDEF USE_ACTIVITY_WINDOW}
+    if ((_dockWindow <> nil) and
+        (_dockWindow.Showing) and
+        (_dockWindowGlued)) then begin
+        // This will keep the glued window on top
+        // when this window is activated.
+        _dockWindow.BringToFront();
+        Self.BringToFront();
+    end;
+{$ENDIF}
 end;
 
 
@@ -3947,6 +3963,9 @@ begin
         CloseAllRooms();
         CloseAllChats();
         closeMsgQueue();
+{$IFDEF USE_ACTIVITY_WINDOW}
+        _dockWindow.Close();
+{$ENDIF}
         MainSession.Disconnect();
     end;
 end;
@@ -5168,6 +5187,25 @@ begin
   CallHelp := false;
   Result := true;
 end;
+
+procedure TfrmExodus.glueWindow(doGlue: boolean);
+begin
+    _dockWindowGlued := doGlue;
+end;
+
+procedure TfrmExodus.OnMoving(var Msg: TWMMoving);
+begin
+{$IFDEF USE_ACTIVITY_WINDOW}
+    if (_dockWindowGlued) then begin
+        if (_dockWindow <> nil) then begin
+            _dockWindow.moveGlued();
+        end;
+    end;
+{$ENDIF}
+    inherited;
+end;
+
+
 
 
 initialization

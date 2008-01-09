@@ -26,7 +26,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, Dockable, TntComCtrls, ComCtrls, ExtCtrls,
   TntExtCtrls, ExodusDockManager, StdCtrls, ExGradientPanel,
-  AWItem, Unicode, DockWindow;
+  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls;
 
 type
 
@@ -47,22 +47,34 @@ type
 
   TfrmActivityWindow = class(TExForm)
     pnlListBase: TExGradientPanel;
-    pnlListTop: TExGradientPanel;
-    pnlListBottom: TExGradientPanel;
-    Button1: TButton;
-    Button2: TButton;
+    pnlListScrollUp: TExGradientPanel;
+    pnlListScrollDown: TExGradientPanel;
     pnlList: TExGradientPanel;
-    Button3: TButton;
-    Button4: TButton;
     timSetActivePanel: TTimer;
+    pnlListSort: TExGradientPanel;
+    imgScrollUp: TImage;
+    imgScrollDown: TImage;
+    ScrollUpBevel: TBevel;
+    ScrollDownBevel: TBevel;
+    SortBevel: TBevel;
+    lblSort: TTntLabel;
+    popAWSort: TTntPopupMenu;
+    mnuAlphaSort: TTntMenuItem;
+    mnuRecentSort: TTntMenuItem;
+    mnuTypeSort: TTntMenuItem;
+    mnuUnreadSort: TTntMenuItem;
+    SortTopSpacer: TBevel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure timSetActivePanelTimer(Sender: TObject);
+    procedure pnlListScrollUpClick(Sender: TObject);
+    procedure pnlListScrollDownClick(Sender: TObject);
+    procedure mnuAlphaSortClick(Sender: TObject);
+    procedure mnuRecentSortClick(Sender: TObject);
+    procedure mnuTypeSortClick(Sender: TObject);
+    procedure mnuUnreadSortClick(Sender: TObject);
+    procedure pnlListSortClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -75,6 +87,8 @@ type
     _showingTopItem: integer;
     _newActivateSheet: TTntTabSheet;
     _curListSort: TSortStates;
+    _canScrollUp: boolean;
+    _canScrollDown: boolean;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
@@ -84,6 +98,8 @@ type
     procedure _sortList(var list: TWidestringList; sortType: TSortStates);
     procedure _updateDisplay();
     procedure _activateNextDockedItem(curitemindx: integer);
+    procedure _enableScrollUp(doenable: boolean = true);
+    procedure _enableScrollDown(doenable: boolean = true);
 
   public
     { Public declarations }
@@ -113,9 +129,18 @@ var
 implementation
 
 uses
-    Room, ChatWin, Session;
+    Room, ChatWin, Session,
+    Jabber1, RosterImages, gnugettext;
 
 {$R *.dfm}
+
+const
+    sSortBy         = 'Sort By:  ';
+    sSortAlpha      = 'Alpha';
+    sSortRecent     = 'Most Recent Activity';
+    sSortType       = 'Type';
+    sSortUnread     = 'Unread Messages';
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -155,7 +180,6 @@ begin
     // Make this window show up on the taskbar
     inherited CreateParams( params );
     params.ExStyle := params.ExStyle or WS_EX_APPWINDOW;
-//    params.WndParent := GetDesktopwindow;
 end;
 
 {---------------------------------------}
@@ -165,6 +189,13 @@ begin
     _trackingList := TWidestringList.Create;
     _showingTopItem := -1;
     _curListSort := ssAlpha;
+    _canScrollUp := false;
+    _canScrollDown := false;
+
+    lblSort.Caption := _(sSortBy) + _(sSortAlpha);
+
+    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_up'), imgScrollUp.Picture.Icon);
+    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
 end;
 
 {---------------------------------------}
@@ -175,38 +206,39 @@ begin
     _trackingList.Free;
 end;
 
+{---------------------------------------}
 procedure TfrmActivityWindow.FormResize(Sender: TObject);
 begin
+    imgScrollUp.Left := (pnlListScrollUp.Width div 2) - (imgScrollUp.Width div 2);
+    imgScrollDown.Left := (pnlListScrollDown.Width div 2) - (imgScrollDown.Width div 2);
     _updateDisplay();
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.Button1Click(Sender: TObject);
+procedure TfrmActivityWindow.mnuAlphaSortClick(Sender: TObject);
 begin
     _sortTrackingList(ssAlpha);
     _updateDisplay();
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.Button2Click(Sender: TObject);
+procedure TfrmActivityWindow.mnuRecentSortClick(Sender: TObject);
+begin
+    _sortTrackingList(ssRecent);
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.mnuTypeSortClick(Sender: TObject);
+begin
+    _sortTrackingList(ssType);
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.mnuUnreadSortClick(Sender: TObject);
 begin
     _sortTrackingList(ssUnread);
-    _updateDisplay();
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow.Button3Click(Sender: TObject);
-begin
-    if (_showingTopItem > 0) then begin
-        Dec(_showingTopItem);
-    end;
-    _updateDisplay();
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow.Button4Click(Sender: TObject);
-begin
-    Inc(_showingTopItem);
     _updateDisplay();
 end;
 
@@ -216,10 +248,15 @@ var
     i: integer;
     item: TAWTrackerItem;
 begin
-    for i := _trackingList.Count - 1 downto 0 do begin
-        item := TAWTrackerItem(_trackingList.Objects[i]);
-        removeItem(item);
-        _trackingList.Delete(i);
+    try
+        for i := _trackingList.Count - 1 downto 0 do begin
+            item := TAWTrackerItem(_trackingList.Objects[i]);
+            if (item <> nil) then begin
+                removeItem(item);
+            end;
+            _trackingList.Delete(i);
+        end;
+    except
     end;
 end;
 
@@ -288,7 +325,6 @@ begin
         // Setup item props
         Result.awItem.Parent := pnlList;
         Result.awItem.Align := alNone;
-//        Result.awItem.name := id;
         Result.awItem.Left := 0;
         Result.awItem.name := frm.Caption;
 
@@ -360,9 +396,6 @@ begin
         Application.processMessages();
         Self.Align := alClient;
         _docked := true;
-//        MainSession.dock_windows := Docked;
-//        _drop.DropEvent := onURLDrop;
-//        _drop.start(treeRoster);
     end;
 end;
 
@@ -401,6 +434,35 @@ begin
         end;
     except
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollDownClick(Sender: TObject);
+begin
+    if (_canScrollDown) then begin
+        Inc(_showingTopItem);
+        _updateDisplay();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListScrollUpClick(Sender: TObject);
+begin
+    if (_canScrollUp) then begin
+        if (_showingTopItem > 0) then begin
+            Dec(_showingTopItem);
+        end;
+        _updateDisplay();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.pnlListSortClick(Sender: TObject);
+var
+    p: TPoint;
+begin
+    GetCursorPos(p);
+    popAWSort.Popup(p.X, p.Y);
 end;
 
 {---------------------------------------}
@@ -502,6 +564,7 @@ var
     tempList: TWidestringList;
     itemadded: boolean;
     roomList, chatList, otherList: TWidestringList;
+    sortstring: widestring;
 begin
     if (sortType = ssUnsorted) then exit;
     if (list = nil) then exit;
@@ -509,7 +572,8 @@ begin
 
     _curListSort := sortType;
     tempList := TWidestringList.Create();
-    insertPoint := 0;
+
+    sortstring := _(sSortBy);
 
     // Always do an Alpha sort first
     if (sortType <> ssUnsorted) then begin
@@ -517,12 +581,13 @@ begin
         list.Sort;
     end;
 
-    // Refine sort if something other then Alpha
-    if (sortType = ssActive) then begin
-        // Sort by most active items, then by alpha for tied items
+    if (sortType = ssAlpha) then begin
+        sortstring := sortstring + _(sSortAlpha);
     end
+    // Refine sort if something other then Alpha
     else if (sortType = ssRecent) then begin
         // Sort by most Recent Activity, then by alpha for tied items
+        sortstring := sortstring + _(sSortRecent);
         for i := 0 to list.Count - 1 do begin
             // iterate over list to reorder
             itemadded := false;
@@ -550,6 +615,7 @@ begin
     end
     else if (sortType = ssType) then begin
         // Sort by the type of window (room, chat, etc.), then by alpha for tied items
+        sortstring := sortstring + _(sSortType);
         roomList := TWidestringList.Create();
         chatList := TWidestringList.Create();
         otherList := TWidestringList.Create();
@@ -592,6 +658,7 @@ begin
     end
     else if (sortType = ssUnread) then begin
         // Sort by Highest Unread msgs
+        sortstring := sortstring + _(sSortUnread);
         for i := 0 to list.Count - 1 do begin
             // iterate over list to reorder
             itemadded := false;
@@ -621,6 +688,8 @@ begin
         // Sort was Alpha which we did above
     end;
 
+    lblSort.Caption := sortstring;
+
     tempList.Clear;
     tempList.Free;
 end;
@@ -635,19 +704,31 @@ var
 begin
     try
         if (_trackingList.Count > 0) then begin
+            // Compute the maximum showing items
             numSlots := pnlList.Height div TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
             slotsFilled := 0;
+
+            // See if current showing top item needs to be changed so maximum number
+            // of items are visible
+            if (_showingTopItem > 0) then begin
+                if ((_trackingList.Count - _showingTopItem + 1) < numSlots) then begin
+                    // We can show more so change top showing
+                    _showingTopItem := _trackingList.Count - numSlots + 1;
+                end;
+            end;
+
+            // Crawl list to see what needs displayed
             for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (i < _showingTopItem) then begin
                     // Off the top of the viewable list
                     item.awItem.Visible := false;
-                    Button3.Enabled := true;
+                    _enableScrollUp(true);
                 end
                 else if (slotsFilled >= numSlots) then begin
                     // Off the bottom of the viewable list
                     item.awItem.Visible := false;
-                    Button4.Enabled := true;
+                    _enableScrollDown(true);
                 end
                 else begin
                     item.awItem.Width := pnlList.Width;
@@ -659,15 +740,15 @@ begin
 
             // Disable scroll buttons if not needed
             if (_showingTopItem <= 0) then begin
-                Button3.Enabled := false;
+                _enableScrollUp(false);
             end;
             if (TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) then begin
-                Button4.Enabled := false;
+                _enableScrollDown(false);
             end;
         end
         else begin
-            Button3.Enabled := false;
-            Button4.Enabled := false;
+            _enableScrollUp(false);
+            _enableScrollDown(false);
         end;
     except
     end;
@@ -677,7 +758,6 @@ end;
 procedure TfrmActivityWindow._activateNextDockedItem(curitemindx: integer);
 var
     newActiveItem: TAWTrackerItem;
-    tsheet: TTntTabSheet;
     i: integer;
 begin
     if (curitemindx < 0) then exit;
@@ -727,7 +807,6 @@ begin
     end;
 end;
 
-
 {---------------------------------------}
 procedure TfrmActivityWindow.scrollToActive();
 var
@@ -768,7 +847,19 @@ begin
     _updateDisplay();
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow._enableScrollUp(doenable: boolean);
+begin
+    _canScrollUp := doenable;
+    pnlListScrollUp.Visible := doenable;
+end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow._enableScrollDown(doenable: boolean);
+begin
+    _canScrollDown := doenable;
+    pnlListScrollDown.Visible := doenable;
+end;
 
 
 

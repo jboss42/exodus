@@ -190,14 +190,13 @@ inherited frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 32
-        Height = 20
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end

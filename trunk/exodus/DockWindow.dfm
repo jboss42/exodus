@@ -16,6 +16,7 @@ object frmDockWindow: TfrmDockWindow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDockDrop = FormDockDrop
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13

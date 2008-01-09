@@ -207,6 +207,10 @@ const
     RI_CHATBAR_COLORS_INDEX : Integer = 84;
     RI_OBSERVER_KEY         : Widestring = 'observer';
     RI_OBSERVER_INDEX       : Integer = 85;
+    RI_ARROWDOWN_KEY        : Widestring = 'arrow_down';
+    RI_ARROWDOWN_INDEX      : Integer = 86;
+    RI_ARROWUP_KEY          : Widestring = 'arrow_up';
+    RI_ARROWUP_INDEX        : Integer = 87;
 {$ENDIF}
 
 var
@@ -306,6 +310,8 @@ begin
     _ids.Insert(RI_CLOSETAB_INDEX, RI_CLOSETAB_KEY);
     _ids.Insert(RI_CHATBAR_COLORS_INDEX, RI_CHATBAR_COLORS_KEY);
     _ids.Insert(RI_OBSERVER_INDEX, RI_OBSERVER_KEY);
+    _ids.Insert(RI_ARROWDOWN_INDEX, RI_ARROWDOWN_KEY);
+    _ids.Insert(RI_ARROWUP_INDEX, RI_ARROWUP_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

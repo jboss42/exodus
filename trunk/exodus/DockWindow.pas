@@ -34,7 +34,8 @@ uses
 
 type
 
-  TSortStates = (ssUnsorted, ssAlpha, ssActive, ssRecent, ssType, ssUnread);
+  TSortStates = (ssUnsorted, ssAlpha, ssRecent, ssType, ssUnread);
+  TGlueEdge = (geNone, geTop, geRight, geLeft, geBottom);
 
   TfrmDockWindow = class(TfrmState, IExodusDockManager)
     splAW: TTntSplitter;
@@ -52,6 +53,9 @@ type
     procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
     procedure timFlasherTimer(Sender: TObject);
+    Procedure WMSyscommand(Var msg: TWmSysCommand); message WM_SYSCOMMAND;
+    procedure FormResize(Sender: TObject);
+    procedure OnMove(var Msg: TWMMove); message WM_MOVE;
   private
     { Private declarations }
 
@@ -60,12 +64,14 @@ type
     _docked_forms: TList;
     _dockState: TDockStates;
     _sortState: TSortStates;
+    _glueEdge: TGlueEdge;
 
     procedure CreateParams(Var params: TCreateParams); override;
     procedure _removeTabs(idx:integer = -1);
     procedure _layoutDock();
     procedure _layoutAWOnly();
     procedure _saveDockWidths();
+    function _withinGlueSnapRange(): TGlueEdge;
 
   public
     { Public declarations }
@@ -89,6 +95,7 @@ type
     procedure setWindowCaption(txt: widestring);
     procedure Flash();
     procedure checkFlash();
+    procedure moveGlued();
   end;
 
 var
@@ -98,7 +105,7 @@ implementation
 
 uses
     RosterWindow, Session, PrefController,
-    ActivityWindow, Jabber1;
+    ActivityWindow, Jabber1, ExUtils;
 
 {$R *.dfm}
 
@@ -165,6 +172,7 @@ begin
     _docked_forms := TList.Create;
     _dockState := dsUninitialized;
     _sortState := ssUnsorted;
+    _glueEdge := geNone;
     _layoutAWOnly();
 end;
 
@@ -186,6 +194,12 @@ begin
         // We got a new form dropped on us.
         OpenDocked(TfrmDockable(Source.Control));
     end;
+end;
+
+procedure TfrmDockWindow.FormResize(Sender: TObject);
+begin
+    inherited;
+    Self.Constraints.MaxWidth := 0;
 end;
 
 {---------------------------------------}
@@ -220,17 +234,21 @@ var
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
+
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
-        //msg queue is always first tab
-//        if (Source.Control is TfrmMsgQueue) then begin
-//            TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).PageIndex := 0;
-//        end;
         TfrmDockable(Source.Control).OnDocked();
         tabindx := _docked_forms.Add(TfrmDockable(Source.Control));
         _removeTabs();
         Self.AWTabControl.ActivePageIndex := tabindx;
+
+        if (Self.WindowState = wsMaximized) then begin
+            Self.Top := Self.Monitor.WorkareaRect.Top;
+            Self.Left := Self.Monitor.WorkareaRect.Top;
+            Self.Height := Self.Monitor.WorkareaRect.Bottom - Self.Monitor.WorkareaRect.Top;
+            Self.Width := Self.Monitor.WorkareaRect.Right - Self.Monitor.WorkareaRect.Left;
+        end;
     end;
 end;
 
@@ -301,7 +319,6 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.UpdateDocked(frm: TfrmDockable);
 var
-    tsheet: TTntTabSheet;
     item: TAWTrackerItem;
     aw: TfrmActivityWindow;
 begin
@@ -336,6 +353,9 @@ begin
             // Deal with docked/undocked for popup menu
             item.awItem.docked := frm.Docked;
 
+            // Deal with change of nickname
+            item.awItem.name := frm.Caption;
+
             // Deal with undocked window focus
             if (frm.Activating) then begin
                 if ((not Self.Showing) and
@@ -353,10 +373,9 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.BringToFront();
 begin
-//    Self.doRestore();
     ShowWindow(Self.Handle, SW_SHOWNORMAL);
     Self.Visible := true;
-//    ForceForegroundWindow(Self.Handle);
+    ForceForegroundWindow(Self.Handle);
 end;
 
 {---------------------------------------}
@@ -469,12 +488,10 @@ begin
       newState := dsRosterOnly;
 
     if (newState <> oldState) then begin
-//        _noMoveCheck := true;
           if (newState = dsDock) then
             _layoutDock()
           else
             _layoutAWOnly();
-//        _noMoveCheck := false;
     end;
 end;
 
@@ -488,9 +505,7 @@ var
   ratioRoster: real;
 begin
     if (_dockState <> dsDock) then begin
-//        _enforceConstraints := false;
         _saveDockWidths();
-//        _noMoveCheck := true;
         //this is a mess. To get splitter working with the correct control
         //we need to hide/de-align/set their relative positions/size them and show them
         pnlActivityList.align := alNone;
@@ -525,18 +540,9 @@ begin
         AWTabControl.Align := alClient;
         AWTabControl.Visible := true;
 
-//        _noMoveCheck := false;
-//        _currDockState := dsDock;
         Self.DockSite := false;
-        pnlActivityList.DockSite := false;        
+        pnlActivityList.DockSite := false;
         AWTabControl.DockSite := true;
-
-//         if (MainSession.Active) then
-//            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_docked')
-//         else
-//            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_docked');
-
-//         _enforceConstraints := true;
 
         _dockState := dsDock;
     end;
@@ -551,23 +557,13 @@ begin
     //if tabs were being shown, save tab size
     _saveDockWidths();
     if (_dockState <> dsRosterOnly) then begin
-//        _enforceConstraints := false;
         AWTabControl.Visible := false;
         pnlActivityList.Align := alClient;
         splAW.Visible := false;
-//        _noMoveCheck := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_WIDTH);
-//        _noMoveCheck := false;
-//        _currDockState := dsRosterOnly;
         Self.DockSite := true;
         pnlActivityList.DockSite := true;
         AWTabControl.DockSite := false;
-//         if (MainSession.Active) then
-//            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
-//         else
-//            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
-
-//         _enforceConstraints := true;
 
         _dockState := dsRosterOnly;
     end;
@@ -639,10 +635,141 @@ begin
         timFlasher.Enabled := false;
 end;
 
+{---------------------------------------}
+procedure TfrmDockWindow.WMSyscommand(var msg: TWmSysCommand);
+begin
+    case (msg.cmdtype and $FFF0) of
+        SC_MAXIMIZE: begin
+            if (_dockState = dsRosterOnly) then begin
+                Self.Constraints.MaxWidth := Self.Width;
+            end;
+            inherited;
+        end;
+        SC_RESTORE: begin
+            if (_dockState = dsRosterOnly) then begin
+                Self.Constraints.MaxWidth := Self.Width;
+            end;
+            inherited;
+        end;
+        else begin
+            inherited;
+        end;
+    end;
+end;
 
+{---------------------------------------}
+procedure TfrmDockWindow.OnMove(var Msg: TWMMove); 
+begin
+    _glueEdge := _withinGlueSnapRange();
 
+    if (_glueEdge <> geNone) then begin
+        frmExodus.glueWindow(true);
+    end
+    else begin
+        frmExodus.glueWindow(false);
+    end;
 
+    moveGlued();
+
+    inherited;
+end;
+
+{---------------------------------------}
+function TfrmDockWindow._withinGlueSnapRange(): TGlueEdge;
+var
+    mainfrmRect: TRect;
+    myRect: TRect;
+    glueRange: integer;
+begin
+    // Capture frmExodus rect.
+    mainfrmRect.Top := frmExodus.Top;
+    mainfrmRect.Left := frmExodus.Left;
+    mainfrmRect.Bottom := frmExodus.Top + frmExodus.Height;
+    mainfrmRect.Right := frmExodus.Left + frmExodus.Width;
+
+    // Capture My Rect
+    myRect.Top := Self.Top;
+    myRect.Left := Self.Left;
+    myRect.Bottom := Self.Top + Self.Height;
+    myRect.Right := Self.Left + Self.Width;
+
+    // Determine glue range
+    glueRange := 10;
+    if (MainSession.Prefs.getBool('snap_on')) then begin
+        glueRange := MainSession.Prefs.getInt('edge_snap');
+    end;
+
+    // Check to see if we are in range
+    //  - Need to be within glue range of a side
+    //  - Need to be within glue range of secondary trait, like the top
+    if ((myRect.Left <= (mainfrmRect.Right + glueRange)) and
+        (myRect.Left >= (mainfrmRect.Right - glueRange)) and
+        (myRect.Top <= (mainfrmRect.Top + glueRange)) and
+        (myRect.Top >= (mainfrmRect.Top - glueRange))) then begin
+        // Close to my left edge
+        Result := geLeft;
+    end
+    else if ((myRect.Right >= (mainfrmRect.Left - glueRange)) and
+            (myRect.Right <= (mainfrmRect.Left + glueRange)) and
+            (myRect.Top <= (mainfrmRect.Top + glueRange)) and
+            (myRect.Top >= (mainfrmRect.Top - glueRange))) then begin
+        // Close to my right edge
+        Result := geRight;
+    end
+    else if ((myRect.Top <= (mainfrmRect.Bottom + glueRange)) and
+            (myRect.Top >= (mainfrmRect.Bottom - glueRange)) and
+            (myRect.Left <= (mainfrmRect.Left + glueRange)) and
+            (myRect.Left >= (mainfrmRect.Left - glueRange))) then begin
+        // Close to my top edge
+        Result := geTop;
+    end
+    else if ((myRect.Bottom >= (mainfrmRect.Top - glueRange)) and
+            (myRect.Bottom <= (mainfrmRect.Top + glueRange)) and
+            (myRect.Left <= (mainfrmRect.Left + glueRange)) and
+            (myRect.Left >= (mainfrmRect.Left - glueRange))) then begin
+        // Close to my bottom edge
+        Result := geBottom;
+    end
+    else begin
+        // Not close enough to anything
+        Result := geNone;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.moveGlued();
+begin
+    if (Self.Showing) then begin
+        case (_glueEdge) of
+            geTop: begin
+                // Glued on my Top edge
+                Self.Top := frmExodus.Top + frmExodus.Height;
+                Self.Left := frmExodus.Left;
+            end;
+            geLeft: begin
+                // Glued on my Left edge
+                Self.Top := frmExodus.Top;
+                Self.Left := frmExodus.Left + frmExodus.Width;
+            end;
+            geRight: begin
+                // Glued on my Right edge
+                Self.Top := frmExodus.Top;
+                Self.Left := frmExodus.Left - Self.Width;
+            end;
+            geBottom: begin
+                // Glued on my Bottom edge
+                Self.Top := frmExodus.Top - Self.Height;
+                Self.Left := frmExodus.Left;
+            end;
+            else begin
+                // Not glued - nothing to do
+            end;
+        end;
+    end;
+end;
 
 
 end.
+
+
 
