@@ -559,6 +559,7 @@ end;
 procedure TfrmConnDetails.RestoreHttp(profile: TJabberProfile);
 begin
     with profile do begin
+        pnlPolling.Checked := (ConnectionType = conn_http);
         txtURL.Text := URL;
         txtTime.Text := FloatToStr(Poll / 1000.0);
         txtKeys.Text := IntToStr(NumPollKeys);
@@ -631,18 +632,18 @@ begin
     brandControl(pnlSocksType);
     brandControl(pnlSocksHost);
     brandControl(pnlSocksPort);
-    brandControl(pnlSocksAuth);
     brandControl(pnlSocksUsername);
     brandControl(pnlSocksPassword);
-    //pnlProxy.captureChildStates();
+    pnlSocksAuth.captureChildStates();
+    brandControl(pnlSocksAuth);
 
     //Setup HTTP-Polling page
     imgHttpPolling.Target := tbsHttpPolling;
-    brandControl(pnlPolling);
     brandControl(pnlURL);
     brandControl(pnlTime);
     brandControl(pnlKeys);
-    //pnlPolling.captureChildStates();
+    pnlPolling.captureChildStates();
+    brandControl(pnlPolling);
 
     //Setup Advanced page
     imgAdvanced.Target := tbsAdvanced;
@@ -667,7 +668,6 @@ begin
     brandControl(pnlx509Cert);
     pnlx509Auth.captureChildStates();
     brandControl(pnlx509Auth);
-    //pnlAdvanced.captureChildStates();
 
     _Canceled := false;
 
