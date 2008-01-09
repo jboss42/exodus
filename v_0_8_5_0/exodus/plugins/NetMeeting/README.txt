@@ -1,0 +1,1 @@
+Initiate and receive invitations to NetMeeting sessions.

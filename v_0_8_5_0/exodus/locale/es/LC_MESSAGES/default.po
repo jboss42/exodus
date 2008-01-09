@@ -1,0 +1,5570 @@
+# translation of es.po to Español
+# translation of default.po to Español
+# Jairo E. Serrano C. <jserrano@cutb.edu.co>, 2003
+#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlJID..Caption
+msgid ""
+msgstr ""
+"Project-Id-Version: es\n"
+"POT-Creation-Date: 2003-02-26 22:21\n"
+"PO-Revision-Date: 2003-03-27 14:46-0500\n"
+"Last-Translator: Jairo E. Serrano C. <jserrano@cutb.edu.co>\n"
+"Language-Team: Español <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0\n"
+
+#. frmBaseChat..popOut..N2..Caption
+#. frmBrowse..popContext..N1..Caption
+#. frmChat..popContact..N1..Caption
+#. frmChat..popContact..N3..Caption
+#. frmDebug..PopupMenu1..N1..Caption
+#. frmExodus..MainMenu1..WInJab1..N7..Caption
+#. frmExodus..MainMenu1..WInJab1..N14..Caption
+#. frmExodus..MainMenu1..WInJab1..N6..Caption
+#. frmExodus..MainMenu1..WInJab1..N9..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N13..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N8..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N10..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N11..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..N18..Caption
+#. frmExodus..MainMenu1..PGPTools1..N2..Caption
+#. frmExodus..MainMenu1..PGPTools1..N3..Caption
+#. frmExodus..MainMenu1..PGPTools1..N1..Caption
+#. frmExodus..MainMenu1..Help1..N12..Caption
+#. frmExodus..popTray..trayPresence..N15..Caption
+#. frmExodus..popTray..trayPresence..N5..Caption
+#. frmExodus..popTray..trayPresence..trayCustom..N16..Caption
+#. frmExodus..popTray..N4..Caption
+#. frmExodus..popTray..N01..Caption
+#. frmJUD..PopupMenu1..N1..Caption
+#. frmMsgRecv..popContact..N1..Caption
+#. frmMsgRecv..popContact..N2..Caption
+#. frmRoom..popRoom..popAdmin..N4..Caption
+#. frmRoom..popRoom..popAdmin..N5..Caption
+#. frmRoom..popRoom..N1..Caption
+#. frmRoom..popRoom..N6..Caption
+#. frmRoom..popRoomRoster..N3..Caption
+#. frmRosterWindow..popRoster..popPresence..N2..Caption
+#. frmRosterWindow..popRoster..N1..Caption
+#. frmRosterWindow..popRoster..N7..Caption
+#. frmRosterWindow..popGroup..N3..Caption
+#. frmRosterWindow..popGroup..N4..Caption
+#. frmRosterWindow..popBookmark..N5..Caption
+#. frmRosterWindow..popTransport..N6..Caption
+#: BaseChat.dfm:308
+#: Browser.dfm:4067
+#: ChatWin.dfm:140
+#: ChatWin.dfm:159
+#: Debug.dfm:321
+#: Jabber1.dfm:231
+#: Jabber1.dfm:259
+#: Jabber1.dfm:277
+#: Jabber1.dfm:288
+#: Jabber1.dfm:325
+#: Jabber1.dfm:337
+#: Jabber1.dfm:360
+#: Jabber1.dfm:436
+#: Jabber1.dfm:447
+#: Jabber1.dfm:457
+#: Jabber1.dfm:468
+#: Jabber1.dfm:507
+#: Jabber1.dfm:518
+#: Jabber1.dfm:2713
+#: Jabber1.dfm:2786
+#: Jabber1.dfm:2796
+#: Jabber1.dfm:2806
+#: Jabber1.dfm:2813
+#: jud.dfm:222
+#: MsgRecv.dfm:520
+#: MsgRecv.dfm:529
+#: Room.dfm:176
+#: Room.dfm:187
+#: Room.dfm:199
+#: Room.dfm:218
+#: Room.dfm:234
+#: RosterWindow.dfm:289
+#: RosterWindow.dfm:305
+#: RosterWindow.dfm:322
+#: RosterWindow.dfm:543
+#: RosterWindow.dfm:558
+#: RosterWindow.dfm:573
+#: RosterWindow.dfm:597
+msgid "-"
+msgstr "-"
+
+#: Jabber1.pas:448
+msgid " (Pending)"
+msgstr " (Pendiente)"
+
+#: Jabber1.pas:431
+msgid " -? \0x09\0x09 : Show Help\r\n"
+msgstr " -? \0x09\0x09 : Mostrar Ayuda\r\n"
+
+#: Jabber1.pas:438
+msgid " -c [file] \0x09 : Config path name\r\n"
+msgstr " -c [Archivo] \0x09 : Configurar nombre del directorio\r\n"
+
+#: Jabber1.pas:428
+msgid " -d \0x09\0x09 : Debug mode on\r\n"
+msgstr " -d \0x09\0x09 : Modo depuración on\r\n"
+
+#: Jabber1.pas:437
+msgid " -f [prof] \0x09 : Profile name\r\n"
+msgstr " -f [perfil] \0x09 : Nombre del perfil\r\n"
+
+#. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
+#: ChatWin.dfm:73
+msgid " Foo +fUh9SX1KfUs "
+msgstr " Foo +fUh9SX1KfUs "
+
+#. frmChat..Panel1..pnlJID..lblNick..Caption
+#: ChatWin.dfm:72
+msgid " Foo HIJK "
+msgstr " Foo HIJK "
+
+#: Jabber1.pas:436
+msgid " -i [pri] \0x09 : Priority\r\n"
+msgstr " -i [pri] \0x09 : Prioridad\r\n"
+
+#: Notify.pas:51
+msgid " is now offline."
+msgstr "está desconectado."
+
+#: Notify.pas:50
+msgid " is now online."
+msgstr "está en línea"
+
+#: ChatWin.pas:153
+msgid " is replying."
+msgstr "está respondiendo"
+
+#: Jabber1.pas:433
+msgid " -j [jid] \0x09\0x09 : Jid\r\n"
+msgstr ""
+"-j [jid] \0x09\0x09 : Jid\r\n"
+" "
+
+#. frmRoom..Panel1..pnlSubj..lblSubject..Caption
+#: Room.dfm:118
+msgid " lblSubject"
+msgstr " lblSubject"
+
+#: Jabber1.pas:429
+msgid " -m \0x09\0x09 : Start minimized\r\n"
+msgstr ""
+" -m \0x09\0x09 : Arrancar minimizado\r\n"
+" "
+
+#: Jabber1.pas:434
+msgid " -p [pass] \0x09 : Password\r\n"
+msgstr " -p [clave] \0x09 : Clave "
+
+#: Jabber1.pas:435
+msgid " -r [res] \0x09 : Resource\r\n"
+msgstr ""
+" -r [res] \0x09 : Recurso\r\n"
+" "
+
+#: Jabber1.pas:430
+msgid " -v \0x09\0x09 : invisible mode\r\n"
+msgstr ""
+" -v \0x09\0x09 : modo invisible\r\n"
+" "
+
+#: Jabber1.pas:432
+msgid " -x [yes|no] \0x09 : Expanded Mode\r\n"
+msgstr ""
+" -x [yes|no] \0x09 : Modo expandido\r\n"
+" "
+
+#. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
+#: ConnDetails.dfm:349
+msgid "# of Keys:"
+msgstr "# de teclas:"
+
+#: ExUtils.pas:131
+msgid "%d log files deleted."
+msgstr "%d archivos log borrados."
+
+#: xdata.pas:66
+msgid "%s cancelled your form."
+msgstr "%s cancelada su forma."
+
+#: ConnDetails.pas:107
+msgid "%s Details"
+msgstr "%s Detalles "
+
+#: Room.pas:219
+msgid "%s has a new role of %s."
+msgstr "%s tiene un nuevo rol de %s."
+
+#: Room.pas:224
+msgid "%s has been banned from this room. %s"
+msgstr "%s fue vedado en este salón. %s "
+
+#: Room.pas:227
+msgid "%s has been kicked from this room. %s"
+msgstr "%s fue expulsado de este salón. %s "
+
+#: Room.pas:217
+msgid "%s has entered the room."
+msgstr "%s entró al salón."
+
+#: Room.pas:218
+msgid "%s has left the room."
+msgstr "%s dejó el salón."
+
+#: Room.pas:226
+msgid "%s is now known as %s."
+msgstr "%s es conocido como %s."
+
+#: Transfer.pas:88
+msgid "%s is sending you a file."
+msgstr "%s está enviando un archivo."
+
+#: ExResponders.pas:122
+msgid "%s query from: %s"
+msgstr "%s consulta de: %s "
+
+#: getOpt.pas:123
+msgid "%s: a required option (-%s) is missing."
+msgstr "%s: no se encuentra una opción requerida (-%s)."
+
+#: getOpt.pas:122
+msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
+msgstr "%s: inapropiado uso de TGetOpts, una o más propiedades no fueron inicializadas."
+
+#: getOpt.pas:126
+msgid "%s: long option format not supported."
+msgstr "%s: no soportado el formato largo de opción."
+
+#: getOpt.pas:124
+msgid "%s: Option %s requires an argument."
+msgstr "%s: Opción %s requiere un argumento."
+
+#: getOpt.pas:125
+msgid "%s: Unknown option %s."
+msgstr "%s: Opción desconocida %s."
+
+#. frmLogin..btnDetails..Caption
+#: Login.dfm:84
+msgid "&Details..."
+msgstr "&Detalles..."
+
+#. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
+#: ConnDetails.dfm:63
+msgid "&Password:"
+msgstr "&Clave:"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
+#: ConnDetails.dfm:77
+msgid "&Resource:"
+msgstr "&Recurso:"
+
+#. frmMsgRecv..pnlReply..frameButtons2..Panel1..btnOK..Caption
+#: MsgRecv.dfm:57
+msgid "&Send"
+msgstr "&Enviar"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label11..Caption
+#: ConnDetails.dfm:70
+msgid "&Server:"
+msgstr "&Servidor:"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label3..Caption
+#: ConnDetails.dfm:56
+msgid "&Username:"
+msgstr "&Usuario:"
+
+#. frmDebug..pnlTop..lblJID..Caption
+#: Debug.dfm:279
+msgid "(Disconnected)"
+msgstr "(Desconectado)"
+
+#: fGeneric.pas:57
+msgid "(Required)"
+msgstr "(Requerido)"
+
+#. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
+#. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
+#. frmInputPass..txtPassword..PasswordChar
+#. frmJoinRoom..txtPassword..PasswordChar
+#. frmPassword..txtOldPassword..PasswordChar
+#. frmPassword..txtNewPassword..PasswordChar
+#. frmPassword..txtConfirmPassword..PasswordChar
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..txtProxyPassword..PasswordChar
+#: ConnDetails.dfm:112
+#: ConnDetails.dfm:314
+#: InputPassword.dfm:55
+#: JoinRoom.dfm:99
+#: Password.dfm:41
+#: Password.dfm:65
+#: Password.dfm:73
+#: Prefs.dfm:1874
+msgid "*"
+msgstr "*"
+
+#. frmRoom..dlgSave..DefaultExt
+#: Room.dfm:258
+msgid ".rtf"
+msgstr ".rtf"
+
+#: Room.pas:194
+msgid "/me has changed the subject to: "
+msgstr "/me cambió el asunto a: "
+
+#. frmRoom..Panel3..Panel6..Caption
+#: Room.dfm:35
+msgid "`"
+msgstr "`"
+
+#. frmAbout..InfoBox....AllowInPlace
+#: About.dfm:1549
+msgid ""
+"{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 MS Sans Serif;}}\r\n"
+"\\viewkind4\\uc1\\pard\\f0\\fs16 Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.\\par\r\n"
+"\\par\r\n"
+"Portions of this software are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.\\par\r\n"
+"\\par\r\n"
+"SAX XML Parser by: Stefan Heymann\\par\r\n"
+"Eschenweg 3, 72076 T\\'fcbingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de\\par\r\n"
+"\\par\r\n"
+"Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az).\\par\r\n"
+"\\par\r\n"
+"RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\\par\r\n"
+"\\par\r\n"
+"\\par\r\n"
+"}\r\n"
+"\r\n"
+msgstr ""
+"{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 MS Sans Serif;}}\r\n"
+"\\viewkind4\\uc1\\pard\\f0\\fs16 Exodus es una creación de Peter Millard  (mailto:me@pgmillard.com). Para más información visité el sitio http://exodus.jabberstudio.org. Cubierto bajo licencia GNU Public License (GPL) para más información acerca de GPL ver www.gnu.org .\\par\r\n"
+"\\par\r\n"
+"Partes de este software tienen derechos de autor (c) 1993 - 2002, Chad Z. Hower (Kudzu) y el Indy Pit Crew - http://www.nevrona.com/Indy/. La aplicación puede también estar usando los componentes IndySSL de Nevrona, y los binarios Open-SSL disponibles en Intellicom.si.\\par\r\n"
+"\\par\r\n"
+"SAX XML Parser por: Stefan Heymann\\par\r\n"
+"Eschenweg 3, 72076 T\\'fcbingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de\\par\r\n"
+"\\par\r\n"
+"Unicode library posee derechos de autor (c) 1999, 2000 Mike Lischke (public@lischke-online.de) y partes con derechos de autor (c) 1999, 2000 Azret Botash (az).\\par\r\n"
+"\\par\r\n"
+"Los componentes RichEdit98 y DBRichEdit98 para Delphi 3.0-4.0. version 1.40 Autor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\\par\r\n"
+"\\par\r\n"
+"\\par\r\n"
+"}\r\n"
+"\r\n"
+
+#. frmRegister..pnlBottom..pnlBtns..btnPrev..Caption
+#: RegForm.dfm:39
+msgid "< Previous"
+msgstr "< Previo"
+
+#. frmChat..Panel1..pnlJID..lblJID..Caption
+#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
+#. frmRosterRecv..pnlFrom..txtFrom..Caption
+#: ChatWin.dfm:82
+#: MsgRecv.dfm:394
+#: RosterRecv.dfm:82
+msgid "<JID>"
+msgstr "<JID>"
+
+#. frmBrowse..StatBar......Text
+#: Browser.dfm:1012
+msgid "0 Objects"
+msgstr "0 Objetos"
+
+#. frmAutoUpdateStatus..Label1....Height
+#: AutoUpdateStatus.dfm:31
+msgid "A new version of Exodus is available.  Would you like to install it?\r\n"
+msgstr "Una nueva versión de Exodus esta disponible. Le gustaría instalarla?\r\n"
+
+#. frmExodus..MainMenu1..Help1..About1..Caption
+#: Jabber1.dfm:521
+msgid "About"
+msgstr "Acerca"
+
+#. frmAbout..Caption
+#: About.dfm:7
+msgid "About Exodus"
+msgstr "Acerca Exodus"
+
+#. frmSubscribe..frameButtons1..Panel1..btnOK..Caption
+#: MsgRecv.pas:152
+#: subscribe.dfm:119
+msgid "Accept"
+msgstr "Aceptar"
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.Strings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:390
+#: vcard.dfm:242
+msgid ""
+"Accounting/Finance\r\n"
+"Computer related (IS, MIS, DP)\r\n"
+"Computer related (WWW)\r\n"
+"Consulting\r\n"
+"Education/training\r\n"
+"Engineering\r\n"
+"Executive/senior management\r\n"
+"General administrative/supervisory\r\n"
+"Government/Military\r\n"
+"Manufacturing/production/operations\r\n"
+"Professional services (medical, legal, etc.)\r\n"
+"Research and development\r\n"
+"Retired\r\n"
+"Sales/marketing/advertising\r\n"
+"Self-employed/owner\r\n"
+"Student\r\n"
+"Unemployed/Between Jobs\r\n"
+msgstr ""
+" Contabilidad /Financiero\r\n"
+"Relacionado con computación (IS, MIS, DP)\r\n"
+" Relacionado con computación (WWW)\r\n"
+"Consultor\r\n"
+"Educación/Entrenamiento\r\n"
+"Ingeniería\r\n"
+"Ejecutivo/Administrador Gerencial\r\n"
+"Administrador general/supervisor\r\n"
+"Gobierno/Militar\r\n"
+"Manufactura/producción/operaciones\r\n"
+"Servicios profesionales (médico , legal, etc.)\r\n"
+"Investigación y desarrollo\r\n"
+"Jubilado\r\n"
+"Ventas/mercadeo/publicidad\r\n"
+"Independiente/privado\r\n"
+"Estudiante\r\n"
+"Desempleado/Trabajos  varios\r\n"
+
+#: Room.pas:193
+msgid "Activity in "
+msgstr "Actividad en "
+
+#. frmInvite..pnlMain..Panel1..btnAdd..Caption
+#. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
+#: invite.dfm:105
+#: Jabber1.dfm:147
+msgid "Add"
+msgstr "Adicionar"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Hint
+#. frmExodus..MainMenu1..PGPTools1..mnuBookmark..Caption
+#: Browser.dfm:1130
+#: Jabber1.dfm:475
+msgid "Add a Bookmark"
+msgstr "Adicionar una referencia"
+
+#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Caption
+#. frmAdd..lblAddGrp..Caption
+#: jud.dfm:150
+#: RosterAdd.dfm:48
+msgid "Add a new Group"
+msgstr "Adicionar un nuevo Grupo"
+
+#. frmBrowse..popContext..mBookmark..Caption
+#: Browser.dfm:4063
+msgid "Add Bookmark to Roster"
+msgstr "Adicionar una referencia a la lista "
+
+#. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..AddPerson1..Caption
+#. frmJUD..PopupMenu1..popAdd..Caption
+#. frmAdd..Caption
+#. frmRosterWindow..popActions..popAddContact..Caption
+#: Jabber1.dfm:144
+#: Jabber1.dfm:301
+#: jud.dfm:214
+#: RosterAdd.dfm:6
+#: RosterWindow.dfm:508
+msgid "Add Contact"
+msgstr "Adicionar Contacto"
+
+#. frmRosterRecv..frameButtons1..Panel1..btnOK..Caption
+#: jud.pas:118
+#: RosterRecv.dfm:41
+msgid "Add Contacts"
+msgstr "Adicionar Contactos"
+
+#. frmJUD..pnlLeft..pnlResults..Label3..Caption
+#: jud.dfm:142
+msgid "Add Contacts to this group:"
+msgstr "Adicionar Contactos a este grupo:"
+
+#. frmProfile..PageControl1..TabSheet2..Panel3..btnAddGroup..Caption
+#. frmRosterWindow..popActions..popAddGroup..Caption
+#: Profile.dfm:290
+#: RosterWindow.dfm:512
+msgid "Add Group"
+msgstr "Adicionar Grupo"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..NewGroup2..Caption
+#: Jabber1.dfm:333
+msgid "Add Roster Group"
+msgstr "Adicionar Grupo a la Lista"
+
+#. frmSubscribe..chkSubscribe..Caption
+#: subscribe.dfm:61
+msgid "Add this person to my roster"
+msgstr "Adicionar esta persona a mi lista"
+
+#. frmChat..popContact..popAddContact..Caption
+#: ChatWin.dfm:124
+msgid "Add to roster ..."
+msgstr "Adicionar a la lista..."
+
+#. frmProfile..PageControl1..TabSheet6..Caption
+#: Profile.dfm:843
+msgid "Address"
+msgstr "Dirección"
+
+#. frmProfile..PageControl1..TabSheet4..Label30..Caption
+#. frmProfile..PageControl1..TabSheet6..Label18..Caption
+#. frmVCard..PageControl1..TabSheet4..Label30..Caption
+#. frmVCard..PageControl1..TabSheet6..Label18..Caption
+#: Profile.dfm:455
+#: Profile.dfm:871
+#: vcard.dfm:320
+#: vcard.dfm:791
+msgid "Address 1:"
+msgstr "Dirección 1:"
+
+#. frmProfile..PageControl1..TabSheet4..Label29..Caption
+#. frmProfile..PageControl1..TabSheet6..Label17..Caption
+#. frmVCard..PageControl1..TabSheet4..Label29..Caption
+#. frmVCard..PageControl1..TabSheet6..Label17..Caption
+#: Profile.dfm:448
+#: Profile.dfm:864
+#: vcard.dfm:313
+#: vcard.dfm:784
+msgid "Address 2:"
+msgstr "Dirección 2:"
+
+#. frmRoom..popRoom..popAdmin..Caption
+#: Room.dfm:161
+msgid "Admin"
+msgstr " Administrador"
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
+#: Profile.dfm:761
+#: Profile.dfm:1177
+msgid ""
+"Afghanistan  \r\n"
+"Albania  \r\n"
+"Algeria  \r\n"
+"American Samoa  \r\n"
+"Andorra  \r\n"
+"Angola  \r\n"
+"Anguilla  \r\n"
+"Antarctica  \r\n"
+"Antigua and Barbuda  \r\n"
+"Argentina  \r\n"
+"Armenia  \r\n"
+"Aruba  \r\n"
+"Australia  \r\n"
+"Austia  \r\n"
+"Azerbaijan  \r\n"
+"Bahamas  \r\n"
+"Bahrain  \r\n"
+"Bangladesh  \r\n"
+"Barbados  \r\n"
+"Belarus  \r\n"
+"Belgium  \r\n"
+"Belize  \r\n"
+"Benin  \r\n"
+"Bermuda  \r\n"
+"Bhutan  \r\n"
+"Bolivia  \r\n"
+"Bosnia and Herzogovina  \r\n"
+"Botswana  \r\n"
+"Bouvet Island  \r\n"
+"Brazil  \r\n"
+"British Indian Ocean Territory  \r\n"
+"Brunei Darussalam  \r\n"
+"Bulgaria  \r\n"
+"Burkina Faso  \r\n"
+"Burundi  \r\n"
+"Cambodia  \r\n"
+"Cameroon  \r\n"
+"Canada  \r\n"
+"Care Verde  \r\n"
+"Cayman Islands  \r\n"
+"Central African Republic  \r\n"
+"Chad  \r\n"
+"Chile  \r\n"
+"China  \r\n"
+"Christmas Island  \r\n"
+"Cocos (Keeling) \r\n"
+"Islands  \r\n"
+"Colobmia  \r\n"
+"Comoros  \r\n"
+"Congo (Republic of) \r\n"
+"Congo (Democratic Republic of) \r\n"
+"Cook Islands  \r\n"
+"Costa Rica  \r\n"
+"Cote d'Ivoire  \r\n"
+"Croatia  \r\n"
+"Cuba  \r\n"
+"Cyprus  \r\n"
+"Czech Republic  \r\n"
+"Denmark  \r\n"
+"Djibouti  \r\n"
+"Dominica  \r\n"
+"Dominican Republic  \r\n"
+"East Timor  \r\n"
+"Ecuador  \r\n"
+"Egypt  \r\n"
+"El Salvador  \r\n"
+"Equatorial Guinea  \r\n"
+"Eritrea  \r\n"
+"Estonia  \r\n"
+"Ethiopia  \r\n"
+"Falkland Islands (Malvinas) \r\n"
+"Faroe Islands  \r\n"
+"Fiji  \r\n"
+"Finland  \r\n"
+"France  \r\n"
+"French Guiana  \r\n"
+"French Polynesia  \r\n"
+"French Southern Territories  \r\n"
+"Gabon  \r\n"
+"Gambia  \r\n"
+"Georgia  \r\n"
+"Germany  \r\n"
+"Ghana  \r\n"
+"Gibraltar  \r\n"
+"Greece  \r\n"
+"Greenland  \r\n"
+"Grenada  \r\n"
+"Guadeloupe  \r\n"
+"Guam  \r\n"
+"Guatemala  \r\n"
+"Guinea  \r\n"
+"Guinea-Bissau  \r\n"
+"Guyana  \r\n"
+"Haiti  \r\n"
+"Heard Island and McDonald Islands  \r\n"
+"Holy See (Vatican City State) \r\n"
+"Honduras  \r\n"
+"Hong Kong  \r\n"
+"Hungary  \r\n"
+"Iceland  \r\n"
+"India  \r\n"
+"Indonesia  \r\n"
+"Iran, Islamic Republic of  \r\n"
+"Iraq  \r\n"
+"Ireland  \r\n"
+"Israel  \r\n"
+"Italy  \r\n"
+"Jamaica  \r\n"
+"Japan  \r\n"
+"Jordan  \r\n"
+"Kazakhstan  \r\n"
+"Kenya  \r\n"
+"Kiribati  \r\n"
+"Korea, Democratic People's Republic of  \r\n"
+"Korea, Republic of  \r\n"
+"Kuwait  \r\n"
+"Kyrgyzstan  \r\n"
+"Lao People's Democratic Republic  \r\n"
+"Latvia  \r\n"
+"Lebanon  \r\n"
+"Lesotho  \r\n"
+"Liberia  \r\n"
+"Libyan Arab Jamahiriya  \r\n"
+"Liechtenstein  \r\n"
+"Lithuania  \r\n"
+"Luxembourg  \r\n"
+"Macau  \r\n"
+"Macedonia  \r\n"
+"Madagascar  \r\n"
+"Malawi  \r\n"
+"Malaysia  \r\n"
+"Maldives  \r\n"
+"Mali  \r\n"
+"Malta  \r\n"
+"Marshall Islands  \r\n"
+"Martinique  \r\n"
+"Mauritania  \r\n"
+"Mauritius  \r\n"
+"Mayotte  \r\n"
+"Mexico  \r\n"
+"Micronesia, Federated States of  \r\n"
+"Moldova, Republic of  \r\n"
+"Monaco  \r\n"
+"Mongolia  \r\n"
+"Montserrat  \r\n"
+"Morocoo  \r\n"
+"Mozambique  \r\n"
+"Myanmar  \r\n"
+"Namibia  \r\n"
+"Nauru  \r\n"
+"Nepal  \r\n"
+"Netherlands  \r\n"
+"Netherlands Antilles  \r\n"
+"New Caledonia  \r\n"
+"New Zealand  \r\n"
+"Nicaragua  \r\n"
+"Niger  \r\n"
+"Nigeria  \r\n"
+"Niue  \r\n"
+"Norfolk Island  \r\n"
+"Nothern Mariana Islands  \r\n"
+"Norway  \r\n"
+"Oman  \r\n"
+"Pakistan  \r\n"
+"Palau  \r\n"
+"Palestinian Territory, Occupied  \r\n"
+"Panama  \r\n"
+"Papua New Guinea  \r\n"
+"Paraguay  \r\n"
+"Peru  \r\n"
+"Philippines  \r\n"
+"Pitcairn  \r\n"
+"Poland  \r\n"
+"Portugal  \r\n"
+"Puerto Rico  \r\n"
+"Qatar  \r\n"
+"Reunion  \r\n"
+"Romania  \r\n"
+"Russian Federation  \r\n"
+"Rwanda  \r\n"
+"Saint Helena  \r\n"
+"Saint Kitts and Nevis  \r\n"
+"Saint Lucia  \r\n"
+"Saint Pierre and Miquelon  \r\n"
+"Saint Vincent and the Grenadines  \r\n"
+"Samoa  \r\n"
+"San Marino  \r\n"
+"Sao Tome and Principe  \r\n"
+"Saudi Arabia  \r\n"
+"Senegal  \r\n"
+"Seychelles  \r\n"
+"Sierra Leone  \r\n"
+"Singapore  \r\n"
+"Slovakia  \r\n"
+"Slovenia  \r\n"
+"Solomon Islands  \r\n"
+"Somalia  \r\n"
+"South Africa  \r\n"
+"South Georgia and the South Sandwich Islands  \r\n"
+"Spain  \r\n"
+"Sri Lanka  \r\n"
+"Sudan  \r\n"
+"Suriname  \r\n"
+"Svalbard and Jan Mayen Islands  \r\n"
+"Swaziland  \r\n"
+"Sweden  \r\n"
+"Switzerland  \r\n"
+"Syrian Arab Republic  \r\n"
+"Taiwan, Province of China  \r\n"
+"Tajikistan  \r\n"
+"Tanzania, United Republic of  \r\n"
+"Thailand  \r\n"
+"Togo  \r\n"
+"Tokelau  \r\n"
+"Tonga  \r\n"
+"Trinidad and Tobago  \r\n"
+"Tunisia  \r\n"
+"Turkey  \r\n"
+"Turkmenistan  \r\n"
+"Turks and Caicos Islands  \r\n"
+"Tuvalu  \r\n"
+"Uganda  \r\n"
+"Ukraine  \r\n"
+"United Arab Emirates  \r\n"
+"United Kingdom  \r\n"
+"United States  \r\n"
+"United States Minor Outlying Islands  \r\n"
+"Uruguay  \r\n"
+"Uzbekistan  \r\n"
+"Vanuatu  \r\n"
+"Venezuela  \r\n"
+"Vietnam  \r\n"
+"Virgin Islands, British  \r\n"
+"Virgin Islands, U.S.  \r\n"
+"Wallis and Futuna  \r\n"
+"Western Sahara  \r\n"
+"Yemen  \r\n"
+"Yugoslavia  \r\n"
+"Zambia  \r\n"
+"Zimbabwe  \r\n"
+msgstr ""
+"Afghanistan  \r\n"
+"Albania  \r\n"
+"Algeria  \r\n"
+"American Samoa  \r\n"
+"Andorra  \r\n"
+"Angola  \r\n"
+"Anguilla  \r\n"
+"Antartica  \r\n"
+"Antigua y Barbuda  \r\n"
+"Argentina  \r\n"
+"Armenia  \r\n"
+"Aruba  \r\n"
+"Australia  \r\n"
+"Austria  \r\n"
+"Azerbaijan  \r\n"
+"Bahamas  \r\n"
+"Bahrain  \r\n"
+"Bangladesh  \r\n"
+"Barbados  \r\n"
+"Belicarus  \r\n"
+"Belgica  \r\n"
+"Belize  \r\n"
+"Benin  \r\n"
+"Bermuda  \r\n"
+"Bhutan  \r\n"
+"Bolivia  \r\n"
+"Bosnia and Herzogovina  \r\n"
+"Botswana  \r\n"
+"Bouvet Island  \r\n"
+"Brazil  \r\n"
+"British Indian Ocean Territory  \r\n"
+"Brunei Darussalam  \r\n"
+"Bulgaria  \r\n"
+"Burkina Faso  \r\n"
+"Burundi  \r\n"
+"Cambodia  \r\n"
+"Cameroon  \r\n"
+"Canada  \r\n"
+"Care Verde  \r\n"
+"Cayman Islands  \r\n"
+"Central African Republic  \r\n"
+"Chad  \r\n"
+"Chile  \r\n"
+"China  \r\n"
+"Christmas Island  \r\n"
+"Cocos (Keeling) \r\n"
+"Islands  \r\n"
+"Colobmia  \r\n"
+"Comoros  \r\n"
+"Congo (Republic of) \r\n"
+"Congo (Democratic Republic of) \r\n"
+"Cook Islands  \r\n"
+"Costa Rica  \r\n"
+"Cote d'Ivoire  \r\n"
+"Croatia  \r\n"
+"Cuba  \r\n"
+"Cyprus  \r\n"
+"Czech Republic  \r\n"
+"Denmark  \r\n"
+"Djibouti  \r\n"
+"Dominica  \r\n"
+"Dominican Republic  \r\n"
+"East Timor  \r\n"
+"Ecuador  \r\n"
+"Egypt  \r\n"
+"El Salvador  \r\n"
+"Equatorial Guinea  \r\n"
+"Eritrea  \r\n"
+"Estonia  \r\n"
+"Ethiopia  \r\n"
+"Falkland Islands (Malvinas) \r\n"
+"Faroe Islands  \r\n"
+"Fiji  \r\n"
+"Finland  \r\n"
+"France  \r\n"
+"French Guiana  \r\n"
+"French Polynesia  \r\n"
+"French Southern Territories  \r\n"
+"Gabon  \r\n"
+"Gambia  \r\n"
+"Georgia  \r\n"
+"Germany  \r\n"
+"Ghana  \r\n"
+"Gibraltar  \r\n"
+"Greece  \r\n"
+"Greenland  \r\n"
+"Grenada  \r\n"
+"Guadeloupe  \r\n"
+"Guam  \r\n"
+"Guatemala  \r\n"
+"Guinea  \r\n"
+"Guinea-Bissau  \r\n"
+"Guyana  \r\n"
+"Haiti  \r\n"
+"Heard Island and McDonald Islands  \r\n"
+"Holy See (Vatican City State) \r\n"
+"Honduras  \r\n"
+"Hong Kong  \r\n"
+"Hungary  \r\n"
+"Iceland  \r\n"
+"India  \r\n"
+"Indonesia  \r\n"
+"Iran, Islamic Republic of  \r\n"
+"Iraq  \r\n"
+"Ireland  \r\n"
+"Israel  \r\n"
+"Italy  \r\n"
+"Jamaica  \r\n"
+"Japan  \r\n"
+"Jordan  \r\n"
+"Kazakhstan  \r\n"
+"Kenya  \r\n"
+"Kiribati  \r\n"
+"Korea, Democratic People's Republic of  \r\n"
+"Korea, Republic of  \r\n"
+"Kuwait  \r\n"
+"Kyrgyzstan  \r\n"
+"Lao People's Democratic Republic  \r\n"
+"Latvia  \r\n"
+"Lebanon  \r\n"
+"Lesotho  \r\n"
+"Liberia  \r\n"
+"Libyan Arab Jamahiriya  \r\n"
+"Liechtenstein  \r\n"
+"Lithuania  \r\n"
+"Luxembourg  \r\n"
+"Macau  \r\n"
+"Macedonia  \r\n"
+"Madagascar  \r\n"
+"Malawi  \r\n"
+"Malaysia  \r\n"
+"Maldives  \r\n"
+"Mali  \r\n"
+"Malta  \r\n"
+"Marshall Islands  \r\n"
+"Martinique  \r\n"
+"Mauritania  \r\n"
+"Mauritius  \r\n"
+"Mayotte  \r\n"
+"Mexico  \r\n"
+"Micronesia, Federated States of  \r\n"
+"Moldova, Republic of  \r\n"
+"Monaco  \r\n"
+"Mongolia  \r\n"
+"Montserrat  \r\n"
+"Morocoo  \r\n"
+"Mozambique  \r\n"
+"Myanmar  \r\n"
+"Namibia  \r\n"
+"Nauru  \r\n"
+"Nepal  \r\n"
+"Netherlands  \r\n"
+"Netherlands Antilles  \r\n"
+"New Caledonia  \r\n"
+"New Zealand  \r\n"
+"Nicaragua  \r\n"
+"Niger  \r\n"
+"Nigeria  \r\n"
+"Niue  \r\n"
+"Norfolk Island  \r\n"
+"Nothern Mariana Islands  \r\n"
+"Norway  \r\n"
+"Oman  \r\n"
+"Pakistan  \r\n"
+"Palau  \r\n"
+"Palestinian Territory, Occupied  \r\n"
+"Panama  \r\n"
+"Papua New Guinea  \r\n"
+"Paraguay  \r\n"
+"Peru  \r\n"
+"Philippines  \r\n"
+"Pitcairn  \r\n"
+"Poland  \r\n"
+"Portugal  \r\n"
+"Puerto Rico  \r\n"
+"Qatar  \r\n"
+"Reunion  \r\n"
+"Romania  \r\n"
+"Russian Federation  \r\n"
+"Rwanda  \r\n"
+"Saint Helena  \r\n"
+"Saint Kitts and Nevis  \r\n"
+"Saint Lucia  \r\n"
+"Saint Pierre and Miquelon  \r\n"
+"Saint Vincent and the Grenadines  \r\n"
+"Samoa  \r\n"
+"San Marino  \r\n"
+"Sao Tome and Principe  \r\n"
+"Saudi Arabia  \r\n"
+"Senegal  \r\n"
+"Seychelles  \r\n"
+"Sierra Leone  \r\n"
+"Singapore  \r\n"
+"Slovakia  \r\n"
+"Slovenia  \r\n"
+"Solomon Islands  \r\n"
+"Somalia  \r\n"
+"South Africa  \r\n"
+"South Georgia and the South Sandwich Islands  \r\n"
+"Spain  \r\n"
+"Sri Lanka  \r\n"
+"Sudan  \r\n"
+"Suriname  \r\n"
+"Svalbard and Jan Mayen Islands  \r\n"
+"Swaziland  \r\n"
+"Sweden  \r\n"
+"Switzerland  \r\n"
+"Syrian Arab Republic  \r\n"
+"Taiwan, Province of China  \r\n"
+"Tajikistan  \r\n"
+"Tanzania, United Republic of  \r\n"
+"Thailand  \r\n"
+"Togo  \r\n"
+"Tokelau  \r\n"
+"Tonga  \r\n"
+"Trinidad and Tobago  \r\n"
+"Tunisia  \r\n"
+"Turkey  \r\n"
+"Turkmenistan  \r\n"
+"Turks and Caicos Islands  \r\n"
+"Tuvalu  \r\n"
+"Uganda  \r\n"
+"Ukraine  \r\n"
+"United Arab Emirates  \r\n"
+"United Kingdom  \r\n"
+"United States  \r\n"
+"United States Minor Outlying Islands  \r\n"
+"Uruguay  \r\n"
+"Uzbekistan  \r\n"
+"Vanuatu  \r\n"
+"Venezuela  \r\n"
+"Vietnam  \r\n"
+"Virgin Islands, British  \r\n"
+"Virgin Islands, U.S.  \r\n"
+"Wallis and Futuna  \r\n"
+"Western Sahara  \r\n"
+"Yemen  \r\n"
+"Yugoslavia  \r\n"
+"Zambia  \r\n"
+"Zimbabwe  \r\n"
+
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:591
+#: vcard.dfm:1062
+msgid ""
+"Afghanistan  \r\n"
+"Albania  \r\n"
+"Algeria  \r\n"
+"American Samoa  \r\n"
+"Andorra  \r\n"
+"Angola  \r\n"
+"Anguilla  \r\n"
+"Antarctica  \r\n"
+"Antigua and Barbuda  \r\n"
+"Argentina  \r\n"
+"Armenia  \r\n"
+"Aruba  \r\n"
+"Australia  \r\n"
+"Austria  \r\n"
+"Azerbaijan  \r\n"
+"Bahamas  \r\n"
+"Bahrain  \r\n"
+"Bangladesh  \r\n"
+"Barbados  \r\n"
+"Belarus  \r\n"
+"Belgium  \r\n"
+"Belize  \r\n"
+"Benin  \r\n"
+"Bermuda  \r\n"
+"Bhutan  \r\n"
+"Bolivia  \r\n"
+"Bosnia and Herzogovina  \r\n"
+"Botswana  \r\n"
+"Bouvet Island  \r\n"
+"Brazil  \r\n"
+"British Indian Ocean Territory  \r\n"
+"Brunei Darussalam  \r\n"
+"Bulgaria  \r\n"
+"Burkina Faso  \r\n"
+"Burundi  \r\n"
+"Cambodia  \r\n"
+"Cameroon  \r\n"
+"Canada  \r\n"
+"Care Verde  \r\n"
+"Cayman Islands  \r\n"
+"Central African Republic  \r\n"
+"Chad  \r\n"
+"Chile  \r\n"
+"China  \r\n"
+"Christmas Island  \r\n"
+"Cocos (Keeling) \r\n"
+"Islands  \r\n"
+"Colobmia  \r\n"
+"Comoros  \r\n"
+"Congo (Republic of) \r\n"
+"Congo (Democratic Republic of) \r\n"
+"Cook Islands  \r\n"
+"Costa Rica  \r\n"
+"Cote d'Ivoire  \r\n"
+"Croatia  \r\n"
+"Cuba  \r\n"
+"Cyprus  \r\n"
+"Czech Republic  \r\n"
+"Denmark  \r\n"
+"Djibouti  \r\n"
+"Dominica  \r\n"
+"Dominican Republic  \r\n"
+"East Timor  \r\n"
+"Ecuador  \r\n"
+"Egypt  \r\n"
+"El Salvador  \r\n"
+"Equatorial Guinea  \r\n"
+"Eritrea  \r\n"
+"Estonia  \r\n"
+"Ethiopia  \r\n"
+"Falkland Islands (Malvinas) \r\n"
+"Faroe Islands  \r\n"
+"Fiji  \r\n"
+"Finland  \r\n"
+"France  \r\n"
+"French Guiana  \r\n"
+"French Polynesia  \r\n"
+"French Southern Territories  \r\n"
+"Gabon  \r\n"
+"Gambia  \r\n"
+"Georgia  \r\n"
+"Germany  \r\n"
+"Ghana  \r\n"
+"Gibraltar  \r\n"
+"Greece  \r\n"
+"Greenland  \r\n"
+"Grenada  \r\n"
+"Guadeloupe  \r\n"
+"Guam  \r\n"
+"Guatemala  \r\n"
+"Guinea  \r\n"
+"Guinea-Bissau  \r\n"
+"Guyana  \r\n"
+"Haiti  \r\n"
+"Heard Island and McDonald Islands  \r\n"
+"Holy See (Vatican City State) \r\n"
+"Honduras  \r\n"
+"Hong Kong  \r\n"
+"Hungary  \r\n"
+"Iceland  \r\n"
+"India  \r\n"
+"Indonesia  \r\n"
+"Iran, Islamic Republic of  \r\n"
+"Iraq  \r\n"
+"Ireland  \r\n"
+"Israel  \r\n"
+"Italy  \r\n"
+"Jamaica  \r\n"
+"Japan  \r\n"
+"Jordan  \r\n"
+"Kazakhstan  \r\n"
+"Kenya  \r\n"
+"Kiribati  \r\n"
+"Korea, Democratic People's Republic of  \r\n"
+"Korea, Republic of  \r\n"
+"Kuwait  \r\n"
+"Kyrgyzstan  \r\n"
+"Lao People's Democratic Republic  \r\n"
+"Latvia  \r\n"
+"Lebanon  \r\n"
+"Lesotho  \r\n"
+"Liberia  \r\n"
+"Libyan Arab Jamahiriya  \r\n"
+"Liechtenstein  \r\n"
+"Lithuania  \r\n"
+"Luxembourg  \r\n"
+"Macau  \r\n"
+"Macedonia  \r\n"
+"Madagascar  \r\n"
+"Malawi  \r\n"
+"Malaysia  \r\n"
+"Maldives  \r\n"
+"Mali  \r\n"
+"Malta  \r\n"
+"Marshall Islands  \r\n"
+"Martinique  \r\n"
+"Mauritania  \r\n"
+"Mauritius  \r\n"
+"Mayotte  \r\n"
+"Mexico  \r\n"
+"Micronesia, Federated States of  \r\n"
+"Moldova, Republic of  \r\n"
+"Monaco  \r\n"
+"Mongolia  \r\n"
+"Montserrat  \r\n"
+"Morocoo  \r\n"
+"Mozambique  \r\n"
+"Myanmar  \r\n"
+"Namibia  \r\n"
+"Nauru  \r\n"
+"Nepal  \r\n"
+"Netherlands  \r\n"
+"Netherlands Antilles  \r\n"
+"New Caledonia  \r\n"
+"New Zealand  \r\n"
+"Nicaragua  \r\n"
+"Niger  \r\n"
+"Nigeria  \r\n"
+"Niue  \r\n"
+"Norfolk Island  \r\n"
+"Nothern Mariana Islands  \r\n"
+"Norway  \r\n"
+"Oman  \r\n"
+"Pakistan  \r\n"
+"Palau  \r\n"
+"Palestinian Territory, Occupied  \r\n"
+"Panama  \r\n"
+"Papua New Guinea  \r\n"
+"Paraguay  \r\n"
+"Peru  \r\n"
+"Philippines  \r\n"
+"Pitcairn  \r\n"
+"Poland  \r\n"
+"Portugal  \r\n"
+"Puerto Rico  \r\n"
+"Qatar  \r\n"
+"Reunion  \r\n"
+"Romania  \r\n"
+"Russian Federation  \r\n"
+"Rwanda  \r\n"
+"Saint Helena  \r\n"
+"Saint Kitts and Nevis  \r\n"
+"Saint Lucia  \r\n"
+"Saint Pierre and Miquelon  \r\n"
+"Saint Vincent and the Grenadines  \r\n"
+"Samoa  \r\n"
+"San Marino  \r\n"
+"Sao Tome and Principe  \r\n"
+"Saudi Arabia  \r\n"
+"Senegal  \r\n"
+"Seychelles  \r\n"
+"Sierra Leone  \r\n"
+"Singapore  \r\n"
+"Slovakia  \r\n"
+"Slovenia  \r\n"
+"Solomon Islands  \r\n"
+"Somalia  \r\n"
+"South Africa  \r\n"
+"South Georgia and the South Sandwich Islands  \r\n"
+"Spain  \r\n"
+"Sri Lanka  \r\n"
+"Sudan  \r\n"
+"Suriname  \r\n"
+"Svalbard and Jan Mayen Islands  \r\n"
+"Swaziland  \r\n"
+"Sweden  \r\n"
+"Switzerland  \r\n"
+"Syrian Arab Republic  \r\n"
+"Taiwan, Province of China  \r\n"
+"Tajikistan  \r\n"
+"Tanzania, United Republic of  \r\n"
+"Thailand  \r\n"
+"Togo  \r\n"
+"Tokelau  \r\n"
+"Tonga  \r\n"
+"Trinidad and Tobago  \r\n"
+"Tunisia  \r\n"
+"Turkey  \r\n"
+"Turkmenistan  \r\n"
+"Turks and Caicos Islands  \r\n"
+"Tuvalu  \r\n"
+"Uganda  \r\n"
+"Ukraine  \r\n"
+"United Arab Emirates  \r\n"
+"United Kingdom  \r\n"
+"United States  \r\n"
+"United States Minor Outlying Islands  \r\n"
+"Uruguay  \r\n"
+"Uzbekistan  \r\n"
+"Vanuatu  \r\n"
+"Venezuela  \r\n"
+"Vietnam  \r\n"
+"Virgin Islands, British  \r\n"
+"Virgin Islands, U.S.  \r\n"
+"Wallis and Futuna  \r\n"
+"Western Sahara  \r\n"
+"Yemen  \r\n"
+"Yugoslavia  \r\n"
+"Zambia  \r\n"
+"Zimbabwe  \r\n"
+msgstr ""
+"Afghanistan  \r\n"
+"Albania  \r\n"
+"Algeria  \r\n"
+"American Samoa  \r\n"
+"Andorra  \r\n"
+"Angola  \r\n"
+"Anguilla  \r\n"
+"Antarctica  \r\n"
+"Antigua and Barbuda  \r\n"
+"Argentina  \r\n"
+"Armenia  \r\n"
+"Aruba  \r\n"
+"Australia  \r\n"
+"Austria  \r\n"
+"Azerbaijan  \r\n"
+"Bahamas  \r\n"
+"Bahrain  \r\n"
+"Bangladesh  \r\n"
+"Barbados  \r\n"
+"Belarus  \r\n"
+"Belgium  \r\n"
+"Belize  \r\n"
+"Benin  \r\n"
+"Bermuda  \r\n"
+"Bhutan  \r\n"
+"Bolivia  \r\n"
+"Bosnia and Herzogovina  \r\n"
+"Botswana  \r\n"
+"Bouvet Island  \r\n"
+"Brazil  \r\n"
+"British Indian Ocean Territory  \r\n"
+"Brunei Darussalam  \r\n"
+"Bulgaria  \r\n"
+"Burkina Faso  \r\n"
+"Burundi  \r\n"
+"Cambodia  \r\n"
+"Cameroon  \r\n"
+"Canada  \r\n"
+"Care Verde  \r\n"
+"Cayman Islands  \r\n"
+"Central African Republic  \r\n"
+"Chad  \r\n"
+"Chile  \r\n"
+"China  \r\n"
+"Christmas Island  \r\n"
+"Cocos (Keeling) \r\n"
+"Islands  \r\n"
+"Colobmia  \r\n"
+"Comoros  \r\n"
+"Congo (Republic of) \r\n"
+"Congo (Democratic Republic of) \r\n"
+"Cook Islands  \r\n"
+"Costa Rica  \r\n"
+"Cote d'Ivoire  \r\n"
+"Croatia  \r\n"
+"Cuba  \r\n"
+"Cyprus  \r\n"
+"Czech Republic  \r\n"
+"Denmark  \r\n"
+"Djibouti  \r\n"
+"Dominica  \r\n"
+"Dominican Republic  \r\n"
+"East Timor  \r\n"
+"Ecuador  \r\n"
+"Egypt  \r\n"
+"El Salvador  \r\n"
+"Equatorial Guinea  \r\n"
+"Eritrea  \r\n"
+"Estonia  \r\n"
+"Ethiopia  \r\n"
+"Falkland Islands (Malvinas) \r\n"
+"Faroe Islands  \r\n"
+"Fiji  \r\n"
+"Finland  \r\n"
+"France  \r\n"
+"French Guiana  \r\n"
+"French Polynesia  \r\n"
+"French Southern Territories  \r\n"
+"Gabon  \r\n"
+"Gambia  \r\n"
+"Georgia  \r\n"
+"Germany  \r\n"
+"Ghana  \r\n"
+"Gibraltar  \r\n"
+"Greece  \r\n"
+"Greenland  \r\n"
+"Grenada  \r\n"
+"Guadeloupe  \r\n"
+"Guam  \r\n"
+"Guatemala  \r\n"
+"Guinea  \r\n"
+"Guinea-Bissau  \r\n"
+"Guyana  \r\n"
+"Haiti  \r\n"
+"Heard Island and McDonald Islands  \r\n"
+"Holy See (Vatican City State) \r\n"
+"Honduras  \r\n"
+"Hong Kong  \r\n"
+"Hungary  \r\n"
+"Iceland  \r\n"
+"India  \r\n"
+"Indonesia  \r\n"
+"Iran, Islamic Republic of  \r\n"
+"Iraq  \r\n"
+"Ireland  \r\n"
+"Israel  \r\n"
+"Italy  \r\n"
+"Jamaica  \r\n"
+"Japan  \r\n"
+"Jordan  \r\n"
+"Kazakhstan  \r\n"
+"Kenya  \r\n"
+"Kiribati  \r\n"
+"Korea, Democratic People's Republic of  \r\n"
+"Korea, Republic of  \r\n"
+"Kuwait  \r\n"
+"Kyrgyzstan  \r\n"
+"Lao People's Democratic Republic  \r\n"
+"Latvia  \r\n"
+"Lebanon  \r\n"
+"Lesotho  \r\n"
+"Liberia  \r\n"
+"Libyan Arab Jamahiriya  \r\n"
+"Liechtenstein  \r\n"
+"Lithuania  \r\n"
+"Luxembourg  \r\n"
+"Macau  \r\n"
+"Macedonia  \r\n"
+"Madagascar  \r\n"
+"Malawi  \r\n"
+"Malaysia  \r\n"
+"Maldives  \r\n"
+"Mali  \r\n"
+"Malta  \r\n"
+"Marshall Islands  \r\n"
+"Martinique  \r\n"
+"Mauritania  \r\n"
+"Mauritius  \r\n"
+"Mayotte  \r\n"
+"Mexico  \r\n"
+"Micronesia, Federated States of  \r\n"
+"Moldova, Republic of  \r\n"
+"Monaco  \r\n"
+"Mongolia  \r\n"
+"Montserrat  \r\n"
+"Morocoo  \r\n"
+"Mozambique  \r\n"
+"Myanmar  \r\n"
+"Namibia  \r\n"
+"Nauru  \r\n"
+"Nepal  \r\n"
+"Netherlands  \r\n"
+"Netherlands Antilles  \r\n"
+"New Caledonia  \r\n"
+"New Zealand  \r\n"
+"Nicaragua  \r\n"
+"Niger  \r\n"
+"Nigeria  \r\n"
+"Niue  \r\n"
+"Norfolk Island  \r\n"
+"Nothern Mariana Islands  \r\n"
+"Norway  \r\n"
+"Oman  \r\n"
+"Pakistan  \r\n"
+"Palau  \r\n"
+"Palestinian Territory, Occupied  \r\n"
+"Panama  \r\n"
+"Papua New Guinea  \r\n"
+"Paraguay  \r\n"
+"Peru  \r\n"
+"Philippines  \r\n"
+"Pitcairn  \r\n"
+"Poland  \r\n"
+"Portugal  \r\n"
+"Puerto Rico  \r\n"
+"Qatar  \r\n"
+"Reunion  \r\n"
+"Romania  \r\n"
+"Russian Federation  \r\n"
+"Rwanda  \r\n"
+"Saint Helena  \r\n"
+"Saint Kitts and Nevis  \r\n"
+"Saint Lucia  \r\n"
+"Saint Pierre and Miquelon  \r\n"
+"Saint Vincent and the Grenadines  \r\n"
+"Samoa  \r\n"
+"San Marino  \r\n"
+"Sao Tome and Principe  \r\n"
+"Saudi Arabia  \r\n"
+"Senegal  \r\n"
+"Seychelles  \r\n"
+"Sierra Leone  \r\n"
+"Singapore  \r\n"
+"Slovakia  \r\n"
+"Slovenia  \r\n"
+"Solomon Islands  \r\n"
+"Somalia  \r\n"
+"South Africa  \r\n"
+"South Georgia and the South Sandwich Islands  \r\n"
+"Spain  \r\n"
+"Sri Lanka  \r\n"
+"Sudan  \r\n"
+"Suriname  \r\n"
+"Svalbard and Jan Mayen Islands  \r\n"
+"Swaziland  \r\n"
+"Sweden  \r\n"
+"Switzerland  \r\n"
+"Syrian Arab Republic  \r\n"
+"Taiwan, Province of China  \r\n"
+"Tajikistan  \r\n"
+"Tanzania, United Republic of  \r\n"
+"Thailand  \r\n"
+"Togo  \r\n"
+"Tokelau  \r\n"
+"Tonga  \r\n"
+"Trinidad and Tobago  \r\n"
+"Tunisia  \r\n"
+"Turkey  \r\n"
+"Turkmenistan  \r\n"
+"Turks and Caicos Islands  \r\n"
+"Tuvalu  \r\n"
+"Uganda  \r\n"
+"Ukraine  \r\n"
+"United Arab Emirates  \r\n"
+"United Kingdom  \r\n"
+"United States  \r\n"
+"United States Minor Outlying Islands  \r\n"
+"Uruguay  \r\n"
+"Uzbekistan  \r\n"
+"Vanuatu  \r\n"
+"Venezuela  \r\n"
+"Vietnam  \r\n"
+"Virgin Islands, British  \r\n"
+"Virgin Islands, U.S.  \r\n"
+"Wallis and Futuna  \r\n"
+"Western Sahara  \r\n"
+"Yemen  \r\n"
+"Yugoslavia  \r\n"
+"Zambia  \r\n"
+"Zimbabwe  \r\n"
+
+#. frmRegister..Caption
+#: RegForm.dfm:6
+msgid "Agent Registration"
+msgstr "Agente de Registro"
+
+#: xdata.pas:62
+msgid "All required fields must be filled out"
+msgstr "Se debe llenar todos los campos obligatorios "
+
+#. frmChat..popContact..mnuOnTop..Caption
+#. frmRoom..popRoom..mnuOnTop..Caption
+#: ChatWin.dfm:147
+#: Room.dfm:210
+msgid "Always on Top"
+msgstr "Siempre Visible"
+
+#: Jabber1.pas:462
+msgid "An Error occurred trying to register your new account. This server may not allow open registration."
+msgstr "Ocurrió un error intentando registrar su nueva cuenta. Tal vez este servidor no permite el registro."
+
+#: Browser.pas:168
+msgid "Application"
+msgstr "Programa"
+
+#. frmPrefs..Panel1..Panel3..Button6..Caption
+#: Prefs.dfm:1964
+msgid "Apply"
+msgstr "Aplicar"
+
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..Label28..Caption
+#: Prefs.dfm:1832
+msgid "Approach:"
+msgstr "Utilizar:"
+
+#: ExUtils.pas:130
+msgid "Are you sure you want to delete all of your message and room logs?"
+msgstr "Esta seguro que quiere borrar todos los registros de mensajes y salones de conversación?"
+
+#. frmBrowse..Panel3..pnlInfo..lblHeader..Font.Name
+#. frmBrowse..Panel3..pnlInfo..pnlTitle..Font.Name
+#. frmBrowse..pnlTop..btnClose..Font.Name
+#. frmChat..Panel1..btnClose..Font.Name
+#. frmDebug..pnlTop..btnClose..Font.Name
+#. frmTracer..Panel1..Font.Name
+#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..btnClose..Font.Name
+#. frmPrefs..PageControl1..tbsKeywords..StaticText8..Font.Name
+#. frmPrefs..PageControl1..tbsBlockList..StaticText9..Font.Name
+#. frmPrefs..PageControl1..tbsNetwork..StaticText13..Font.Name
+#. frmPrefTransfer..StaticText7..Font.Name
+#. frmRegister..Tabs..tabWelcome..Label1..Font.Name
+#. frmRegister..Tabs..tabWelcome..lblIns..Font.Name
+#. frmRegister..Tabs..tabWait..Label2..Font.Name
+#. frmRegister..Tabs..tabResult..lblBad..Font.Name
+#. frmRegister..Tabs..tabResult..lblOK..Font.Name
+#. frmRoom..Panel1..btnClose..Font.Name
+#. frmRosterWindow..pnlConnect..lblStatus..Font.Name
+#. frmRosterWindow..pnlConnect..lblLogin..Font.Name
+#: Browser.dfm:902
+#: Browser.dfm:988
+#: Browser.dfm:1041
+#: ChatWin.dfm:40
+#: Debug.dfm:268
+#: ExceptTracer.dfm:52
+#: MsgRecv.dfm:365
+#: Prefs.dfm:1701
+#: Prefs.dfm:1770
+#: Prefs.dfm:1906
+#: PrefTransfer.dfm:50
+#: RegForm.dfm:93
+#: RegForm.dfm:109
+#: RegForm.dfm:161
+#: RegForm.dfm:184
+#: RegForm.dfm:203
+#: Room.dfm:79
+#: RosterWindow.dfm:195
+#: RosterWindow.dfm:212
+msgid "Arial"
+msgstr "Arial"
+
+#. frmChat..Font.Name
+#. frmChat..Panel1..pnlJID..lblJID..Font.Name
+#. frmConnDetails..Font.Name
+#. frmCustomPres..txtStatus..Font.Name
+#. frmDebug..Panel2..MsgDebug..Font.Name
+#. frmExodus..Tabs..Font.Name
+#. frmLogin..Font.Name
+#. frmRemove..lblJID..Font.Name
+#. frmRoom..Panel1..pnlSubj..lblSubject..Font.Name
+#. frmSubscribe..lblJID..Font.Name
+#. frmVCard..PageControl1..TabSheet1..txtNick..Font.Name
+#. frmVCard..PageControl1..TabSheet1..txtPriEmail..Font.Name
+#. frmVCard..PageControl1..TabSheet1..txtFirst..Font.Name
+#. frmVCard..PageControl1..TabSheet1..txtLast..Font.Name
+#. frmVCard..PageControl1..TabSheet1..txtWeb..Font.Name
+#. frmVCard..PageControl1..TabSheet3..cboOcc..Font.Name
+#. frmVCard..PageControl1..TabSheet3..txtBDay..Font.Name
+#. frmVCard..PageControl1..TabSheet3..txtHomeVoice..Font.Name
+#. frmVCard..PageControl1..TabSheet3..txtHomeFax..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeState..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeZip..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeCity..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeStreet2..Font.Name
+#. frmVCard..PageControl1..TabSheet4..txtHomeStreet1..Font.Name
+#. frmVCard..PageControl1..TabSheet5..txtOrgName..Font.Name
+#. frmVCard..PageControl1..TabSheet5..txtOrgUnit..Font.Name
+#. frmVCard..PageControl1..TabSheet5..txtOrgTitle..Font.Name
+#. frmVCard..PageControl1..TabSheet5..txtWorkVoice..Font.Name
+#. frmVCard..PageControl1..TabSheet5..txtWorkFax..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkState..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkZip..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkCity..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkStreet2..Font.Name
+#. frmVCard..PageControl1..TabSheet6..txtWorkStreet1..Font.Name
+#: ChatWin.dfm:7
+#: ChatWin.dfm:86
+#: ConnDetails.dfm:12
+#: CustomPres.dfm:86
+#: Debug.dfm:124
+#: Jabber1.dfm:47
+#: Login.dfm:12
+#: RemoveContact.dfm:102
+#: Room.dfm:122
+#: subscribe.dfm:51
+#: vcard.dfm:108
+#: vcard.dfm:121
+#: vcard.dfm:134
+#: vcard.dfm:147
+#: vcard.dfm:160
+#: vcard.dfm:219
+#: vcard.dfm:251
+#: vcard.dfm:264
+#: vcard.dfm:277
+#: vcard.dfm:344
+#: vcard.dfm:600
+#: vcard.dfm:613
+#: vcard.dfm:626
+#: vcard.dfm:639
+#: vcard.dfm:652
+#: vcard.dfm:704
+#: vcard.dfm:717
+#: vcard.dfm:730
+#: vcard.dfm:743
+#: vcard.dfm:756
+#: vcard.dfm:815
+#: vcard.dfm:1071
+#: vcard.dfm:1084
+#: vcard.dfm:1097
+#: vcard.dfm:1110
+#: vcard.dfm:1123
+msgid "Arial Unicode MS"
+msgstr "Arial Unicode MS"
+
+#: RosterWindow.pas:255
+msgid ""
+"Authenticated.\r\n"
+"Getting Settings..."
+msgstr ""
+"Autorizado.\r\n"
+"Obteniendo Configuración..."
+
+#. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..chkProxyAuth..Caption
+#: ConnDetails.dfm:262
+#: Prefs.dfm:1855
+msgid "Authentication Required"
+msgstr "Autorización Requerida"
+
+#. frmAutoUpdateStatus..Caption
+#: AutoUpdateStatus.dfm:7
+msgid "Auto Update"
+msgstr "Auto Actualizar"
+
+#. frmPrefs..ScrollBox1..lblAway..Caption
+#: Prefs.dfm:1260
+msgid "Auto-Away"
+msgstr "Cambiar Estado"
+
+#: Jabber1.pas:473
+msgid "AutoAway Setup FAILED!"
+msgstr "Cambiar Estado FALLÓ"
+
+#: ChatWin.pas:157
+msgid "available"
+msgstr "disponible"
+
+#: ExEvents.pas:73
+msgid "Available presence"
+msgstr "Estado disponible"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Away2..Caption
+#. frmExodus..popTray..trayPresence..Away1..Caption
+#. frmExodus..popTray..trayPresence..Away1..Away3..Caption
+#. frmRosterWindow..popStatus..presAway..Caption
+#: Jabber1.pas:451
+#: Jabber1.dfm:364
+#: Jabber1.dfm:368
+#: Jabber1.dfm:2717
+#: Jabber1.dfm:2721
+#: RosterWindow.dfm:342
+msgid "Away"
+msgstr "Ausente"
+
+#: ExEvents.pas:75
+msgid "Away presence"
+msgstr "Estado Ausente"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Caption
+#: Browser.dfm:1088
+msgid "Back"
+msgstr "Regrasar"
+
+#. frmRoom..popRoomRoster..popBan..Caption
+#: Room.dfm:242
+msgid "Ban"
+msgstr "Prohibir"
+
+#: Room.pas:208
+msgid "Ban Reason"
+msgstr "Razon de Prohibición"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Bank1..Caption
+#. frmExodus..popTray..trayPresence..Away1..Bank2..Caption
+#: Jabber1.dfm:386
+#: Jabber1.dfm:2736
+msgid "Bank"
+msgstr "Banco"
+
+#. frmProfile..PageControl1..TabSheet3..Label6..Caption
+#. frmVCard..PageControl1..TabSheet3..Label6..Caption
+#: Profile.dfm:326
+#: vcard.dfm:181
+msgid "Birthday:"
+msgstr "Cumpleaños:"
+
+#. frmRoom..popRoomRoster..popRosterBlock..Caption
+#. frmRosterWindow..popRoster..popBlock..Caption
+#. frmRosterWindow..popGroup..popGroupBlock..Caption
+#: Room.pas:201
+#: RosterWindow.pas:257
+#: Room.dfm:230
+#: RosterWindow.dfm:308
+#: RosterWindow.dfm:546
+msgid "Block"
+msgstr "Bloquear"
+
+#: RosterWindow.pas:248
+msgid "Block %d contacts?"
+msgstr "Bloquear contactos %d?"
+
+#. frmChat..popContact..mnuBlock..Caption
+#. frmMsgRecv..popContact..mnuBlock..Caption
+#: ChatWin.dfm:128
+#: MsgRecv.dfm:512
+msgid "Block Contact"
+msgstr "Bloquear Contacto"
+
+#. frmPrefs..ScrollBox1..lblBlockList..Caption
+#: Prefs.dfm:1354
+msgid "Block List"
+msgstr "Bloquear Lista"
+
+#: Room.pas:200
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#. frmPrefs..PageControl1..tbsBlockList..StaticText9..Caption
+#: Prefs.dfm:1765
+msgid "Blocked Jabber ID List"
+msgstr "Lista de Jabber ID Bloqueados"
+
+#. frmPrefs..PageControl1..tbsBlockList..Caption
+#: Prefs.dfm:1745
+msgid "BlockList"
+msgstr "Lista de Bloqueados"
+
+#. frmBookmark..Caption
+#: Bookmark.dfm:7
+msgid "Bookmark Properties"
+msgstr "Propiedades de la Referencia"
+
+#. frmRoom..popRoom..popBookmark..Caption
+#: Room.pas:198
+#: Room.dfm:145
+msgid "Bookmark Room"
+msgstr "Salón de Referencias"
+
+#: Jabber1.pas:444
+msgid "Bookmarks"
+msgstr "Referencias"
+
+#: Jabber1.pas:505
+msgid "Branding error!"
+msgstr "Error Acreditación"
+
+#. frmRosterWindow..popGroup..BroadcastMessage1..Caption
+#: RosterWindow.dfm:535
+msgid "Broadcast Message"
+msgstr "Difundir Mensaje"
+
+#. frmBrowse..popContext..mBrowse..Caption
+#. frmPrefTransfer..btnTransferBrowse..Caption
+#: ExResponders.pas:126
+#: Browser.dfm:4055
+#: PrefTransfer.dfm:69
+msgid "Browse"
+msgstr "Explorar"
+
+#. frmPathSelector..Caption
+#: PathSelector.dfm:8
+msgid "Browse for Folder"
+msgstr " Explorar Carpeta"
+
+#. frmBrowse..popContext..mBrowseNew..Caption
+#: Browser.dfm:4059
+msgid "Browse in New Window"
+msgstr "Explorar en una Nueva Ventana"
+
+#. frmBrowse..Panel3..pnlInfo..lblHeader..Caption
+#: Browser.dfm:898
+msgid "Browser"
+msgstr "Explorador"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Caption
+#: Browser.dfm:1131
+msgid "btnBookmark"
+msgstr "btnBookmark"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Caption
+#: Browser.dfm:1098
+msgid "btnFwd"
+msgstr "btnFwd"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Caption
+#: Browser.dfm:1114
+msgid "btnHome"
+msgstr "btnHome"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Busy1..Caption
+#. frmExodus..popTray..trayPresence..DoNotDisturb1..Busy2..Caption
+#: Jabber1.dfm:421
+#: Jabber1.dfm:2771
+msgid "Busy"
+msgstr "Ocupado"
+
+#. frameButtons..Panel1..btnCancel..Caption
+#. frmPrefs..Panel1..Panel3..btnCancel..Caption
+#. frmRegister..pnlBottom..pnlBtns..btnCancel..Caption
+#: RegForm.pas:94
+#: buttonFrame.dfm:40
+#: Prefs.dfm:1955
+#: RegForm.dfm:61
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: xdata.pas:65
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. frmExodus..MainMenu1..WInJab1..mnuPassword..Caption
+#: Jabber1.dfm:284
+msgid "Change Jabber Password"
+msgstr "Cambiar Clave"
+
+#. frmRoom..popRoom..popNick..Caption
+#: Room.dfm:153
+msgid "Change Nickname"
+msgstr "Cambiar Apodo"
+
+#: Room.pas:195
+msgid "Change room subject"
+msgstr "Cambiar Asunto del Salón"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Hint
+#: Browser.dfm:1121
+msgid "Change Views"
+msgstr "Cambiar Vista"
+
+#. frmRoom..popRoomRoster..popRosterChat..Caption
+#: Jabber1.pas:442
+#: Room.dfm:226
+msgid "Chat"
+msgstr "Conversación"
+
+#: ChatWin.pas:154
+msgid "Chat Activity: "
+msgstr "Actividad en la Conversación"
+
+#: ExEvents.pas:74
+msgid "Chat presence"
+msgstr "Estado de la Conversación"
+
+#. frmChat..Caption
+#: ChatWin.dfm:4
+msgid "Chat Window"
+msgstr "Ventana de la Conversación"
+
+#: Notify.pas:52
+msgid "Chat with "
+msgstr "Conversar con "
+
+#. frmCustomPres..cboType....Items.Strings
+#: CustomPres.dfm:77
+msgid ""
+"Chat\r\n"
+"Available\r\n"
+"Away\r\n"
+"Ext. Away\r\n"
+"Do Not Disturb\r\n"
+msgstr ""
+"Conversar\r\n"
+"Disponible\r\n"
+"Ausente\r\n"
+"No Disponible\r\n"
+"No Molestar\r\n"
+
+#. frmRosterWindow..popRoster..popChat..Caption
+#. frmProfile..PageControl1..TabSheet4..Label31..Caption
+#. frmProfile..PageControl1..TabSheet6..Label26..Caption
+#. frmVCard..PageControl1..TabSheet4..Label31..Caption
+#. frmVCard..PageControl1..TabSheet6..Label26..Caption
+#: RosterWindow.dfm:244
+#: Profile.dfm:462
+#: Profile.dfm:878
+#: vcard.dfm:327
+#: vcard.dfm:798
+msgid "City / Locality:"
+msgstr "Ciudad/Localidad:"
+
+#. frmBaseChat..popMsgList..Clear1..Caption
+#: BaseChat.dfm:288
+msgid "Clear"
+msgstr "Borrar"
+
+#. frmDebug..PopupMenu1..Clear1..Caption
+#: Debug.dfm:301
+msgid "Clear "
+msgstr "Borrar "
+
+#. frmExodus..MainMenu1..WInJab1..ClearMessages1..Caption
+#: Jabber1.dfm:254
+msgid "Clear Events"
+msgstr "Borrar Eventos"
+
+#. frmChat..popContact..popClearHistory..Caption
+#. frmMsgRecv..popContact..popClearHistory..Caption
+#. frmRoom..popRoom..popClearHistory..Caption
+#: ChatWin.dfm:101
+#: MsgRecv.dfm:489
+#: Room.dfm:141
+msgid "Clear History"
+msgstr "Borrar Historia"
+
+#. frmRoom..popRoom..popClear..Caption
+#: Room.dfm:133
+msgid "Clear Window"
+msgstr "Limpiar Ventana"
+
+#. frmRosterWindow..pnlConnect..lblLogin..Caption
+#: RosterWindow.dfm:208
+msgid "Click Here to Sign On"
+msgstr "Oprima Aquí para Iniciar Sesión"
+
+#: Jabber1.pas:465
+msgid "Click to Cancel Reconnect"
+msgstr "Oprima para Cancelar Reconexión"
+
+#: RosterWindow.pas:251
+msgid "Click to Cancel..."
+msgstr "Oprima para Cancelar..."
+
+#. frmChat..popContact..C1..Caption
+#. frmMsgRecv..popContact..C1..Caption
+#. frmRosterWindow..popRoster..popClientInfo..Caption
+#: RosterWindow.pas:250
+#: ChatWin.dfm:109
+#: MsgRecv.dfm:497
+#: RosterWindow.dfm:264
+msgid "Client Info"
+msgstr "Información del Cliente"
+
+#. frmProfile..PageControl1..TabSheet7..Panel2..btnTime..Caption
+#: Profile.dfm:236
+msgid "Client Time"
+msgstr "Hora del Cliente"
+
+#. frmProfile..PageControl1..TabSheet7..Panel2..btnVersion..Caption
+#: Profile.dfm:227
+msgid "Client Version"
+msgstr "Versión del Cliente"
+
+#. frmAbout..frameButtons1..Panel1..btnCancel..Caption
+#. frmInvalidRoster..frameButtons1..Panel1..btnCancel..Caption
+#. frmJUD..pnlLeft..pnlBottom..btnClose..Caption
+#. frmMsgRecv..frameButtons1..Panel1..btnCancel..Caption
+#. frmRosterRecv..frameButtons1..Panel1..btnCancel..Caption
+#: MsgRecv.pas:156
+#: Transfer.pas:94
+#: xdata.pas:64
+#: About.dfm:1420
+#: InvalidRoster.dfm:37
+#: jud.dfm:98
+#: MsgRecv.dfm:476
+#: RosterRecv.dfm:45
+msgid "Close"
+msgstr "Cerrar"
+
+#. frmRoom..popRoom..popClose..Caption
+#: Room.dfm:214
+msgid "Close Room"
+msgstr "Cerrar Salón"
+
+#. frmExodus..popTabs..popCloseTab..Caption
+#: Jabber1.dfm:2680
+msgid "Close Window"
+msgstr "Cerrar Ventana"
+
+#. frmProfile..PageControl1..TabSheet5..Label22..Caption
+#. frmVCard..PageControl1..TabSheet5..Label22..Caption
+#: Profile.dfm:771
+#: vcard.dfm:666
+msgid "Company Name:"
+msgstr "Nombre de la Compañía:"
+
+#: Browser.pas:166
+msgid "Conference"
+msgstr "Conferencia"
+
+#. frmRoom..Caption
+#: Room.dfm:4
+msgid "Conference Room"
+msgstr "Salón de Conferencia"
+
+#. frmBookmark..cboType....Items.Strings
+#: Bookmark.dfm:79
+msgid "Conference Room\r\n"
+msgstr "Salón de Conferencia\r\n"
+
+#: invite.pas:64
+msgid "Conference Room:"
+msgstr "Salón de Conferencia:"
+
+#. frmRoom..popRoom..popAdmin..popConfigure..Caption
+#: Room.dfm:190
+msgid "Configure Room"
+msgstr "Configurar Salón"
+
+#. frmPassword..Label3..Caption
+#: Password.dfm:34
+msgid "Confirm new password:"
+msgstr "Confirme nueva clave"
+
+#. frmExodus..Toolbar..ToolBar1..btnConnect..Hint
+#: Jabber1.dfm:184
+msgid "Connect/Disconnect"
+msgstr "Conectar/Desconectar"
+
+#: RosterWindow.pas:254
+msgid ""
+"Connected. \r\n"
+"Authenticating..."
+msgstr ""
+"Conectado. \r\n"
+"Autorizando..."
+
+#. frmConnDetails..PageControl1..tbsConn..Caption
+#: ConnDetails.dfm:126
+msgid "Connection"
+msgstr "Conexión"
+
+#. frmConnDetails..Caption
+#: ConnDetails.dfm:7
+msgid "Connection Details"
+msgstr "Detalles de la Conexión"
+
+#. frmInvalidRoster..ListView1......Caption
+#: InvalidRoster.dfm:52
+msgid "Contact ID"
+msgstr "ID del Contacto"
+
+#. frmAdd..Label1..Caption
+#: RosterAdd.dfm:26
+msgid "Contact ID:"
+msgstr "ID del Contacto:"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..Properties2..Caption
+#. frmProfile..Caption
+#: Jabber1.dfm:320
+#: Profile.dfm:7
+msgid "Contact Properties"
+msgstr "Propiedades del Contacto"
+
+#. frmAdd..Label4..Caption
+#: RosterAdd.dfm:64
+msgid "Contact Type:"
+msgstr "Tipo de Contacto:"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..Caption
+#: Jabber1.dfm:299
+msgid "Contacts"
+msgstr "Contactos"
+
+#: Jabber1.pas:480
+msgid "Contacts from "
+msgstr "Contactos de "
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..MessageHistory2..Caption
+#: Jabber1.dfm:315
+msgid "Contact's Message History"
+msgstr "Historia de Mensajes de los Contactos"
+
+#. frmBaseChat..popMsgList..Copy1..Caption
+#. frmBaseChat..popOut..Copy3..Caption
+#. frmMsgRecv..popClipboard..popCopy..Caption
+#: BaseChat.dfm:280
+#: BaseChat.dfm:300
+#: MsgRecv.dfm:537
+msgid "Copy"
+msgstr "Copiar"
+
+#. frmBaseChat..popMsgList..CopyAll1..Caption
+#: BaseChat.dfm:284
+msgid "Copy All"
+msgstr "Copiar Todo"
+
+#: jud.pas:115
+msgid "Could not contact the search agent."
+msgstr "No se puede contactar el agente de búsqueda."
+
+#: ExUtils.pas:127
+msgid "Could not delete history file."
+msgstr "No se puede borrar el archivo histórico"
+
+#. frmProfile..PageControl1..TabSheet4..Label13..Caption
+#. frmProfile..PageControl1..TabSheet6..Label16..Caption
+#. frmVCard..PageControl1..TabSheet4..Label13..Caption
+#. frmVCard..PageControl1..TabSheet6..Label16..Caption
+#: Profile.dfm:434
+#: Profile.dfm:857
+#: vcard.dfm:299
+#: vcard.dfm:777
+msgid "Country:"
+msgstr "País:"
+
+#. frmLogin..popProfiles..CreateNew1..Caption
+#: Login.dfm:92
+msgid "Create New Profile..."
+msgstr "Crear Nuevo Perfil..."
+
+#. frmDebug..pnlTop..Label1..Caption
+#: Debug.dfm:293
+msgid "Current JID:"
+msgstr "JID Actual:"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..Custom3..Caption
+#. frmExodus..popTray..trayPresence..trayCustom..Caption
+#. frmExodus..popTray..trayPresence..trayCustom..Custom2..Caption
+#: Jabber1.dfm:440
+#: Jabber1.dfm:442
+#: Jabber1.dfm:2790
+#: Jabber1.dfm:2792
+msgid "Custom"
+msgstr "Personal"
+
+#. frmCustomNotify..Caption
+#: CustomNotify.dfm:7
+msgid "Custom Notification Options"
+msgstr "Opciones de Notificación Personalizada"
+
+#. frmCustomPres..Caption
+#: CustomPres.dfm:5
+msgid "Custom Presence"
+msgstr "Estado Personalizada"
+
+#. frmBaseChat..popOut..Copy2..Caption
+#: BaseChat.dfm:296
+msgid "Cut"
+msgstr "Cortar"
+
+#. frmMsgQueue..lstEvents......Caption
+#: MsgQueue.dfm:40
+msgid "Date/Time"
+msgstr "Fecha/Hora"
+
+#. frmDebug..Caption
+#: Debug.dfm:6
+msgid "Debug"
+msgstr "Depurar"
+
+#: MsgRecv.pas:153
+msgid "Decline"
+msgstr "Declinar"
+
+#: Jabber1.pas:456
+#: Login.pas:61
+msgid "Default Profile"
+msgstr "Perfil por Defecto"
+
+#. frmLogin..cboProfiles....Items.WideStrings
+#: Login.dfm:69
+msgid "Default Profile\r\n"
+msgstr "Perfil por Defecto\r\n"
+
+#. frmMsgQueue..PopupMenu1..D1..Caption
+#: MsgQueue.dfm:160
+msgid "Delete"
+msgstr "Borrar"
+
+#. frmRegister..Tabs..tabAgent..Panel2..Panel3..btnDelete..Caption
+#: RegForm.dfm:140
+msgid "Delete My Registration"
+msgstr "Borrar Mi Inscripción"
+
+#. frmLogin..popProfiles..Delete1..Caption
+#: Login.dfm:96
+msgid "Delete Profile..."
+msgstr "Borrar Perfil..."
+
+#. frmSubscribe..frameButtons1..Panel1..btnCancel..Caption
+#: subscribe.dfm:123
+msgid "Deny"
+msgstr "Negar"
+
+#. frmProfile..PageControl1..TabSheet3..Label3..Caption
+#. frmVCard..PageControl1..TabSheet3..Label1..Caption
+#: Profile.dfm:354
+#: vcard.dfm:209
+msgid "Description:"
+msgstr "Descripción:"
+
+#: ExEvents.pas:88
+msgid "Description: "
+msgstr " Descripción: "
+
+# Esta traducción necesita revisión
+#: Room.pas:209
+msgid "Destroy Reason"
+msgstr "Razón para Destruir"
+
+# Esta traducción necesita revisión
+#. frmRoom..popRoom..popAdmin..popDestroy..Caption
+#: Room.pas:206
+#: Room.dfm:194
+msgid "Destroy Room"
+msgstr "Destruir Salón"
+
+#. frmBrowse..popViewStyle..Details1..Caption
+#: Browser.dfm:4035
+msgid "Details"
+msgstr "Detalles"
+
+#. frmPrefs..ScrollBox1..lblDialog..Caption
+#: Prefs.dfm:160
+msgid "Dialogs"
+msgstr "Diálogos"
+
+#. frmPathSelector..Label1..Caption
+#: PathSelector.dfm:25
+msgid "Directories"
+msgstr "Directorios"
+
+#: ExResponders.pas:127
+msgid "Disco"
+msgstr "Disco"
+
+#. frmRosterWindow..pnlConnect..lblStatus..Caption
+#: RosterWindow.pas:252
+#: RosterWindow.dfm:191
+msgid "Disconnected."
+msgstr "Desconectar"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Caption
+#. frmExodus..popTray..trayPresence..DoNotDisturb1..Caption
+#. frmRosterWindow..popStatus..presDND..Caption
+#: Jabber1.pas:453
+#: Jabber1.dfm:417
+#: Jabber1.dfm:2767
+#: RosterWindow.dfm:354
+msgid "Do Not Disturb"
+msgstr "No Molestar"
+
+#: ExEvents.pas:77
+msgid "Do Not Disturb presence"
+msgstr "Estado No Molestar"
+
+#: ExUtils.pas:129
+msgid "Do you really want to clear the log for %s?"
+msgstr "Desea usted borrar los historicos para %s?"
+
+#: Room.pas:221
+msgid "Do you really want to destroy the room? All users will be removed."
+msgstr "Desea destruir el salón? Todos los usuarios serán removidos."
+
+#: AutoUpdateStatus.pas:60
+msgid "Download Complete"
+msgstr "Descarga Completa"
+
+#: AutoUpdateStatus.pas:59
+msgid "Downloading..."
+msgstr "Descargando..."
+
+#. frmRoom..popRoom..popAdmin..popAdminList..Caption
+#: Room.pas:240
+#: Room.dfm:179
+msgid "Edit Admin List"
+msgstr "Editar Lista del Administrador"
+
+#. frmRoom..popRoom..popAdmin..popBanList..Caption
+#: Room.pas:238
+#: Room.dfm:168
+msgid "Edit Ban List"
+msgstr "Editar Lista de Prohibidos"
+
+#. frmRoom..popRoom..popAdmin..popMemberList..Caption
+#: Room.pas:239
+#: Room.dfm:172
+msgid "Edit Member List"
+msgstr "Editar Lista de Miembros"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuRegistration..Caption
+#: Jabber1.dfm:460
+msgid "Edit My Registration"
+msgstr "Editar Mi Inscripción"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuMyVCard..Caption
+#: Jabber1.dfm:464
+msgid "Edit My vCard / Profile"
+msgstr "Editar Mi vCard/Perfil"
+
+#. frmRoom..popRoom..popAdmin..popOwnerList..Caption
+#: Room.pas:241
+#: Room.dfm:183
+msgid "Edit Owner List"
+msgstr "Editar Lista de Propietario"
+
+#. frmRoom..popRoom..popAdmin..popVoiceList..Caption
+#: Room.pas:237
+#: Room.dfm:164
+msgid "Edit Voice List"
+msgstr "Editar Lista de Voz"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1445
+#: BaseChat.dfm:51
+#: BaseChat.dfm:173
+#: Debug.dfm:50
+#: Debug.dfm:152
+#: MsgQueue.dfm:70
+#: MsgRecv.dfm:71
+#: MsgRecv.dfm:169
+#: RosterRecv.dfm:103
+#: Transfer.dfm:98
+msgid "e-mail"
+msgstr "Correo"
+
+#. frmProfile..PageControl1..TabSheet1..lblEmail..Caption
+#. frmVCard..PageControl1..TabSheet1..lblEmail..Caption
+#: Profile.dfm:56
+#: vcard.dfm:52
+msgid "Email:"
+msgstr "Correo:"
+
+#. frmChat..popContact..mnuReturns..Caption
+#: ChatWin.dfm:151
+msgid "Embed Returns"
+msgstr "Embeber Enter"
+
+#. frmBaseChat..popOut..Emoticons2..Caption
+#: BaseChat.dfm:311
+msgid "Emoticons"
+msgstr "Iconos Gestuales"
+
+#: Room.pas:199
+msgid "Enter bookmark name:"
+msgstr "Entre el Nombre de la Referencia:"
+
+#. frmTransfer..pnlFrom..lblDesc..Caption
+#: Transfer.dfm:86
+msgid "Enter Description:"
+msgstr "Entre una Descripción:"
+
+#. frmPrefs..PageControl1..tbsBlockList..Label10....Align
+#: Prefs.dfm:1756
+msgid "Enter in the Jabber Address (JIDs) of the people to block from sending you messages. (Normal, chats, etc..)\r\n"
+msgstr "Entre las Direcciónes Jabber (JIDS) de las personas que desea bloquear el envio de mensajes. (Normal, Conversación, etc..)\r\n"
+
+#. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
+#: Prefs.dfm:1732
+msgid "Enter in the strings that you want Exodus to look for in messages.\r\n"
+msgstr "Entre las cadenas que desea buscar en los mensajes.\r\n"
+
+#: Jabber1.pas:494
+msgid "Enter Jabber ID of Service: "
+msgstr "Entre Jabber ID del Servicio"
+
+#: Jabber1.pas:493
+msgid "Enter Jabber ID: "
+msgstr "Entre Jabber ID"
+
+#: Jabber1.pas:484
+msgid "Enter new group name: "
+msgstr "Entre el nuevo nombre del grupo: "
+
+#. frmRoomAdminList..Label1..Caption
+#: RoomAdminList.dfm:35
+msgid "Enter New Jabber ID's for this list:"
+msgstr "Entre los Nuevos Jabber ID's para la lista:"
+
+#: Jabber1.pas:502
+msgid "Enter Password"
+msgstr "Entre Clave"
+
+#. frmInputPass..Label1..Caption
+#: InputPassword.dfm:30
+msgid "Enter password:"
+msgstr "Entre Clave:"
+
+#: Login.pas:64
+msgid "Enter Profile Name"
+msgstr "Entre el Nombre del Perfil"
+
+#: Jabber1.pas:497
+msgid "Error changing password."
+msgstr "Error Cambiando Clave."
+
+#: Jabber1.pas:475
+msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
+msgstr "ERROR OBTENIENDO LA DIRECCIÓN DE LA API WIN32 GetLastInputInfo!!"
+
+#: MsgRecv.pas:155
+msgid "Error:"
+msgstr "Error:"
+
+#: AutoUpdateStatus.pas:63
+msgid "Error: %s"
+msgstr "Error: %s"
+
+#. frmMsgQueue..Caption
+#: MsgQueue.dfm:6
+msgid "Events"
+msgstr "Eventos"
+
+#. frmExodus..MainMenu1..WInJab1..View1..ShowEventsWindow1..Caption
+#: Jabber1.dfm:249
+msgid "Events Window"
+msgstr "Ventana de Eventos"
+
+#. frmTracer..Panel1..Caption
+#: ExceptTracer.dfm:48
+msgid "Exception Tracer"
+msgstr "Traza de Excepción"
+
+#. frmExodus..MainMenu1..WInJab1..Exit2..Caption
+#: Jabber1.dfm:291
+msgid "Exit"
+msgstr "Salir"
+
+#. frmExodus..popTray..trayExit..Caption
+#: Jabber1.dfm:2816
+msgid "Exit Exodus"
+msgstr "Salir de Exodus"
+
+#. frmExodus..Caption
+#. frmExodus..MainMenu1..WInJab1..Caption
+#: Jabber1.pas:441
+#: Login.pas:59
+#: Jabber1.dfm:7
+#: Jabber1.dfm:219
+msgid "Exodus"
+msgstr "Exodus"
+
+#: MsgQueue.pas:71
+msgid "Exodus could not create or write to the spool directory specified in the options."
+msgstr "Exodus no puede crear o escribir a el directorio spool especificado en las opciones"
+
+#. frmInputPass..Caption
+#: Jabber1.pas:501
+#: InputPassword.dfm:8
+msgid "Exodus Password"
+msgstr "Clave para Exodus"
+
+#. frmPrefs..Caption
+#: Prefs.dfm:6
+msgid "Exodus Preferences"
+msgstr "Preferencias de Exodus"
+
+#. frmExodus..Toolbar..ToolBar1..btnExpanded..Caption
+#: Jabber1.dfm:177
+msgid "Expanded"
+msgstr "Expandido"
+
+#. frmExodus..MainMenu1..WInJab1..View1..mnuExpanded..Caption
+#: Jabber1.dfm:244
+msgid "Expanded Mode"
+msgstr "Modo Expandido"
+
+#. frmRosterWindow..popStatus..presXA..Caption
+#: Jabber1.pas:452
+#: RosterWindow.dfm:348
+msgid "Ext. Away"
+msgstr "No Disponible"
+
+#: ExEvents.pas:76
+msgid "Ext. Away presence"
+msgstr "Estado No Disponible"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..ExtendedAway1..Caption
+#. frmExodus..popTray..trayPresence..XtendedAway1..ExtendedAway2..Caption
+#: Jabber1.dfm:396
+#: Jabber1.dfm:2746
+msgid "Extended Away"
+msgstr "No Disponible"
+
+#. frmProfile..PageControl1..TabSheet3..Label9..Caption
+#. frmProfile..PageControl1..TabSheet5..Label20..Caption
+#. frmVCard..PageControl1..TabSheet3..Label9..Caption
+#. frmVCard..PageControl1..TabSheet5..Label20..Caption
+#: Profile.dfm:347
+#: Profile.dfm:799
+#: vcard.dfm:202
+#: vcard.dfm:694
+msgid "Fax Tel:"
+msgstr "Fax Tel:"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1457
+#: BaseChat.dfm:63
+#: BaseChat.dfm:185
+#: Debug.dfm:62
+#: Debug.dfm:164
+#: MsgQueue.dfm:82
+#: MsgRecv.dfm:83
+#: MsgRecv.dfm:181
+#: RosterRecv.dfm:115
+#: Transfer.dfm:110
+msgid "file"
+msgstr "archivo"
+
+#: Transfer.pas:90
+msgid "File Description: "
+msgstr "Descripción del Archivo: "
+
+#. frmTransfer..Caption
+#: Transfer.dfm:7
+msgid "File Transfer"
+msgstr "Transferencia de Archivo"
+
+#. frmPrefTransfer..Label15..Caption
+#: PrefTransfer.dfm:14
+msgid "File transfer download directory:"
+msgstr "Directorio de transferencia de archivo:"
+
+#. frmPrefTransfer..StaticText7..Caption
+#: PrefTransfer.dfm:45
+msgid "File Transfer Options"
+msgstr "Opciones de Transferencia de Archivo"
+
+#: Transfer.pas:89
+msgid "File transfer URL: "
+msgstr "URL de la Transferencia del Archivo"
+
+#. frmPrefs..ScrollBox1..lblTransfer..Caption
+#: Prefs.dfm:1669
+msgid "File Transfers"
+msgstr "Tranferencias de Archivo"
+
+#. frmTransfer..pnlFrom..Label5..Caption
+#: Transfer.dfm:73
+msgid "File:"
+msgstr "Archivo:"
+
+#. frmJUD..pnlLeft..lblInstructions..Caption
+#: jud.dfm:31
+msgid "Fill in the search criteria to find contacts on."
+msgstr "Llena el criterio de búsqueda para encontrar los contactos."
+
+#. frmDebug..PopupMenu1..Find1..Caption
+#. frmExodus..Toolbar..ToolBar1..btnFind..Caption
+#: Debug.dfm:310
+#: Jabber1.dfm:167
+msgid "Find"
+msgstr "Buscar"
+
+#: RegForm.pas:93
+msgid "Finish"
+msgstr "Finalizar"
+
+#. frmProfile..PageControl1..TabSheet1..Label7..Caption
+#. frmVCard..PageControl1..TabSheet1..Label7..Caption
+#: Profile.dfm:70
+#: vcard.dfm:65
+msgid "First (Given)"
+msgstr "Nombre"
+
+#. frmCustomNotify..optNotify..chkFlash..Caption
+#: CustomNotify.dfm:55
+msgid "Flash Taskbar button, or highlight tab"
+msgstr "Parpadear botón de la barra de herramientas, o resaltar carpeta"
+
+#. frmCustomNotify..optNotify..chkTrayNotify..Caption
+#: CustomNotify.dfm:73
+msgid "Flash tray icon"
+msgstr "Parpadear icono de la barra de tareas"
+
+#. frmExodus..popTabs..popFloatTab..Caption
+#: Jabber1.dfm:2685
+msgid "Float Window"
+msgstr "Ventana Flotante"
+
+#. frmPrefs..ScrollBox1..lblFonts..Caption
+#: Prefs.dfm:414
+msgid "Fonts, Colors"
+msgstr "Fuentes, Colores"
+
+#. frmRemove..lblJID..Caption
+#. frmRosterWindow..StatBar......Text
+#: RemoveContact.dfm:97
+#: RosterWindow.dfm:119
+msgid "foo@jabber.org"
+msgstr "foo@jabber.org"
+
+#. frmGrpRemove..chkUnsubed..Caption
+#: GrpRemove.dfm:84
+msgid "Force the contacts to remove me from their roster"
+msgstr "Forzar a los contactos a removerme de su lista"
+
+#. frmRemove..chkRemove2..Caption
+#: RemoveContact.dfm:86
+msgid "Force this person to remove me from their roster"
+msgstr "Forzar a esta persona a removerme de su lista"
+
+#: xdata.pas:63
+msgid "Form from %s"
+msgstr "Forma desde %s"
+
+#. frmVCard..PageControl1..TabSheet3..Label28..Caption
+#: vcard.dfm:188
+msgid "Format: YYYY-MM-DD"
+msgstr "Formato: YYYY-MM-DD"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presChat..Caption
+#. frmExodus..popTray..trayPresence..FreeforChat1..Caption
+#: Jabber1.dfm:355
+#: Jabber1.dfm:2708
+msgid "Free for Chat"
+msgstr "Libre para Conversar"
+
+#. frmDockable..Caption
+#: Dockable.dfm:6
+msgid "frmDockable"
+msgstr "frmDockable"
+
+#. frmEmoticons..Caption
+#: Emoticons.dfm:6
+msgid "frmEmoticons"
+msgstr "frmEmoticons"
+
+#. frmPrefTransfer..Caption
+#: PrefTransfer.dfm:4
+msgid "frmPrefTransfer"
+msgstr "frmPrefTransfer"
+
+#. frmMsgQueue..lstEvents......Caption
+#: MsgQueue.dfm:36
+msgid "From"
+msgstr "Desde"
+
+#. frmTransfer..pnlFrom..lblFrom..Caption
+#: Transfer.dfm:35
+msgid "From:"
+msgstr "Desde:"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1469
+#: BaseChat.dfm:75
+#: BaseChat.dfm:197
+#: Debug.dfm:74
+#: Debug.dfm:176
+#: MsgQueue.dfm:94
+#: MsgRecv.dfm:95
+#: MsgRecv.dfm:193
+#: RosterRecv.dfm:127
+#: Transfer.dfm:122
+msgid "ftp"
+msgstr "ftp"
+
+#. frmAdd..lblGateway..Caption
+#: RosterAdd.dfm:71
+msgid "Gateway Server:"
+msgstr "Servidor Enlace:"
+
+#. frmProfile..PageControl1..TabSheet1..Caption
+#. frmVCard..PageControl1..TabSheet1..Caption
+#: Profile.dfm:35
+#: vcard.dfm:38
+msgid "General"
+msgstr "General"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnGo..Caption
+#: Browser.dfm:1183
+msgid "GO"
+msgstr "Vamos"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..GoneHome1..Caption
+#. frmExodus..popTray..trayPresence..XtendedAway1..GoneHome2..Caption
+#: Jabber1.dfm:401
+#: Jabber1.dfm:2751
+msgid "Gone Home"
+msgstr "Ir a Casa"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..GonetoWork1..Caption
+#. frmExodus..popTray..trayPresence..XtendedAway1..GonetoWork2..Caption
+#: Jabber1.dfm:406
+#: Jabber1.dfm:2756
+msgid "Gone to Work"
+msgstr "Ir a Trabajar"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1481
+#: BaseChat.dfm:87
+#: BaseChat.dfm:209
+#: Debug.dfm:86
+#: Debug.dfm:188
+#: MsgQueue.dfm:106
+#: MsgRecv.dfm:107
+#: MsgRecv.dfm:205
+#: RosterRecv.dfm:139
+#: Transfer.dfm:134
+msgid "gopher"
+msgstr "gopher"
+
+#: Transfer.pas:101
+msgid "Got connection."
+msgstr "Obtener Conexión"
+
+#. frmAdd..Label3..Caption
+#. frmSubscribe..boxAdd..Label3..Caption
+#: RosterAdd.dfm:40
+#: subscribe.dfm:84
+msgid "Group:"
+msgstr "Grupo:"
+
+#. frmProfile..PageControl1..TabSheet2..Caption
+#: Profile.dfm:252
+msgid "Groups"
+msgstr "Grupos"
+
+#: Browser.pas:169
+msgid "Headline Svc."
+msgstr "Titulo Svc."
+
+#. frmExodus..MainMenu1..Help1..Caption
+#: Jabber1.dfm:516
+msgid "Help"
+msgstr "Ayuda"
+
+#. frmRosterWindow..popRoster..popHistory..Caption
+#: RosterWindow.dfm:301
+msgid "History"
+msgstr "Historia"
+
+#: ExUtils.pas:126
+msgid "History deleted."
+msgstr "Historia Borrada"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Hint
+#. frmProfile..PageControl1..TabSheet4..Caption
+#. frmVCard..PageControl1..TabSheet4..Caption
+#: ConnDetails.pas:110
+#: Browser.dfm:1113
+#: Profile.dfm:427
+#: vcard.dfm:292
+msgid "Home"
+msgstr "Inicio"
+
+#. frmConnDetails..PageControl1..tbsConn..Label4..Caption
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyHost..Caption
+#: ConnDetails.dfm:133
+#: ConnDetails.dfm:223
+#: Prefs.dfm:1800
+msgid "Host:"
+msgstr "Servidor"
+
+#. frmCustomPres..boxSave..lblHotkey..Caption
+#: CustomPres.dfm:128
+msgid "HotKey:"
+msgstr "Tecla Rápida:"
+
+#. frmChat..SaveDialog1..DefaultExt
+#: ChatWin.dfm:170
+msgid "html"
+msgstr "html"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1451
+#: BaseChat.dfm:57
+#: BaseChat.dfm:179
+#: Debug.dfm:56
+#: Debug.dfm:158
+#: MsgQueue.dfm:76
+#: MsgRecv.dfm:77
+#: MsgRecv.dfm:175
+#: RosterRecv.dfm:109
+#: Transfer.dfm:104
+msgid "http"
+msgstr "http"
+
+#. frmConnDetails..PageControl1..tbsHttp..Caption
+#: ConnDetails.dfm:319
+msgid "HTTP Polling"
+msgstr "HTTP Polling"
+
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..Caption
+#: Prefs.dfm:1793
+msgid "HTTP Proxy"
+msgstr "HTTP Proxy"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1475
+#: BaseChat.dfm:81
+#: BaseChat.dfm:203
+#: Debug.dfm:80
+#: Debug.dfm:182
+#: MsgQueue.dfm:100
+#: MsgRecv.dfm:101
+#: MsgRecv.dfm:199
+#: RosterRecv.dfm:133
+#: Transfer.dfm:128
+msgid "https"
+msgstr "https"
+
+#. frmRosterWindow..popStatus..presChat..Caption
+#: RosterWindow.dfm:330
+msgid "I Want to Chat"
+msgstr "Desea Conversar"
+
+#: ExEvents.pas:93
+msgid "Idle for "
+msgstr "Desocupado para"
+
+#. frmLogin..chkInvisible..Caption
+#: Login.dfm:75
+msgid "In&visible"
+msgstr "In&visible"
+
+#: AutoUpdateStatus.pas:61
+msgid "Initializing..."
+msgstr "Iniciando..."
+
+#: AutoUpdateStatus.pas:62
+msgid "Installing..."
+msgstr "Instalando..."
+
+#: Jabber1.pas:439
+msgid "Invalid command line:%s"
+msgstr "Línea de comando no válida: %s"
+
+#. frmInvalidRoster..Caption
+#: InvalidRoster.dfm:6
+msgid "Invalid Roster Items"
+msgstr "Ítems de la Lista Inválidos "
+
+#. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
+#: RosterWindow.dfm:526
+msgid "Invisible"
+msgstr "Invisible"
+
+#. frmRoom..popRoom..popInvite..Caption
+#: Room.dfm:149
+msgid "Invite Contacts"
+msgstr "Invitar Contactos"
+
+#: Jabber1.pas:479
+msgid "Invite from "
+msgstr "Invitado desde "
+
+#. frmInvite..pnlMain..Panel2..Label1..Caption
+#: invite.dfm:132
+msgid "Invite the following contacts to:"
+msgstr "Invitar los siguientes contactos a:"
+
+#. frmInvite..Caption
+#. frmRosterWindow..popRoster..InvitetoConference1..Caption
+#. frmRosterWindow..popGroup..popGrpInvite..Caption
+#: invite.dfm:5
+#: RosterWindow.dfm:256
+#: RosterWindow.dfm:531
+msgid "Invite to Conference"
+msgstr "Invitar a Conferencia"
+
+#. frmDebug..PopupMenu1..popIQGet..Caption
+#: Debug.dfm:328
+msgid "IQ Get"
+msgstr "Obtener IQ"
+
+#. frmDebug..PopupMenu1..popIQSet..Caption
+#: Debug.dfm:332
+msgid "IQ Set"
+msgstr "Fijar IQ"
+
+#: ChatWin.pas:156
+msgid "is now"
+msgstr "Es ahora"
+
+#. frmInvalidRoster..ListView1......Caption
+#: InvalidRoster.dfm:56
+msgid "Item"
+msgstr "Ítem"
+
+#. frmBaseChat..Panel3..MsgList......Name
+#: BaseChat.dfm:129
+msgid "jabber"
+msgstr " jabber "
+
+#. frmBrowse..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuBrowser..Caption
+#: Browser.dfm:6
+#: Jabber1.dfm:479
+msgid "Jabber Browser"
+msgstr "Explorador Jabber"
+
+#: RosterAdd.pas:68
+msgid "Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?"
+msgstr "Los Ids de Contactos Jabber típicamente no incluyen un  recurso. Esta usted seguro que desea adicionar este contacto?"
+
+#. frmBrowse..Panel3..vwBrowse......Caption
+#. frmInvite..pnlMain..lstJIDS......Caption
+#. frmRoomAdminList..lstItems......Caption
+#. frmRosterRecv..lvContacts......Caption
+#: Jabber1.pas:492
+#: Browser.dfm:50
+#: invite.dfm:72
+#: RoomAdminList.dfm:81
+#: RosterRecv.dfm:200
+msgid "Jabber ID"
+msgstr "Jabber ID"
+
+#. frmBookmark..Label3..Caption
+#: Bookmark.dfm:38
+msgid "Jabber ID:"
+msgstr "Jabber ID:"
+
+#: Browser.pas:173
+msgid "Jabber Object"
+msgstr "Objeto Jabber"
+
+#: Browser.pas:167
+msgid "Jabber User"
+msgstr "Usuario Jabber"
+
+#. frmAdd..cboType....Items.Strings
+#: RosterAdd.dfm:135
+msgid ""
+"Jabber\r\n"
+"MSN\r\n"
+"Yahoo\r\n"
+"AIM\r\n"
+"ICQ\r\n"
+msgstr ""
+"Jabber\r\n"
+"MSN\r\n"
+"Yahoo\r\n"
+"AIM\r\n"
+"ICQ\r\n"
+
+#. frmConnDetails..PageControl1..tbsProfile..cboServer....Items.WideStrings
+#: ConnDetails.dfm:90
+msgid ""
+"jabber.org\r\n"
+"jabber.com\r\n"
+msgstr ""
+"jabber.org\r\n"
+"jabber.com\r\n"
+
+#. frmProfile..PageControl1..TabSheet1..Label1..Caption
+#: Profile.dfm:41
+msgid "JID:"
+msgstr "JID:"
+
+#. frameObjectActions..pConf..lblConf..Caption
+#. frmExodus..Toolbar..ToolBar1..btnRoom..Hint
+#: fService.dfm:82
+#: Jabber1.dfm:154
+msgid "Join a conference"
+msgstr "Unirse a una conferencia"
+
+#. frmBrowse..popContext..mJoinConf..Caption
+#: Browser.dfm:4094
+msgid "Join Conference"
+msgstr "Unirse a una conferencia"
+
+#. frmRosterWindow..popBookmark..Join1..Caption
+#: RosterWindow.dfm:569
+msgid "Join Group"
+msgstr "Unirse al Grupo"
+
+#. frmBookmark..chkAutoJoin..Caption
+#: Bookmark.dfm:106
+msgid "Join on login"
+msgstr "Unirse al Conectar"
+
+#. frmJoinRoom..Caption
+#: JoinRoom.dfm:6
+msgid "Join Room"
+msgstr "Unirse al Salón"
+
+#: Room.pas:192
+msgid "Keyword in "
+msgstr "Palabra Clave en"
+
+#: Browser.pas:171
+msgid "Keyword Lookup"
+msgstr "Buscar de Palabra Clave"
+
+#. frmPrefs..PageControl1..tbsKeywords..StaticText8..Caption
+#: Prefs.dfm:1696
+msgid "Keyword Options"
+msgstr "Opciones de Palabra Clave"
+
+#. frmPrefs..ScrollBox1..lblKeywords..Caption
+#. frmPrefs..PageControl1..tbsKeywords..Caption
+#: Prefs.dfm:1307
+#: Prefs.dfm:1687
+msgid "Keywords"
+msgstr "Palabras Claves"
+
+#. frmRoom..popRoomRoster..popKick..Caption
+#: Room.dfm:237
+msgid "Kick"
+msgstr "Expulsar"
+
+#: Room.pas:207
+msgid "Kick Reason"
+msgstr "Razon para Expulsar"
+
+#. frmTransfer..pnlFrom..lblFile..Caption
+#: Transfer.dfm:57
+msgid "Label3"
+msgstr "Label3"
+
+#. frmBrowse..popViewStyle..LargeIcons1..Caption
+#: Browser.dfm:4039
+msgid "Large Icons"
+msgstr "Iconos Grandes"
+
+#: ExResponders.pas:125
+msgid "Last"
+msgstr "Último"
+
+#. frmProfile..PageControl1..TabSheet1..Label5..Caption
+#. frmVCard..PageControl1..TabSheet1..Label5..Caption
+#: Profile.dfm:90
+#: vcard.dfm:78
+msgid "Last (Family)"
+msgstr "Apellidos"
+
+#. frmChat..popContact..C1..mnuLastActivity..Caption
+#. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
+#. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
+#. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
+#: ExEvents.pas:92
+#: ChatWin.dfm:119
+#: MsgRecv.dfm:507
+#: Profile.dfm:245
+#: RosterWindow.dfm:274
+msgid "Last Activity"
+msgstr "Última Actividad"
+
+#. frmBrowse..popContext..mLast..Caption
+#: Browser.dfm:4082
+msgid "Last Time/Activity"
+msgstr " Última Hora/Actividad "
+
+#. frameTopLabel..Panel1..lbl..Caption
+#: fTopLabel.dfm:23
+msgid "lbl"
+msgstr "lbl"
+
+#. frmXData..lblIns..Caption
+#: xdata.dfm:35
+msgid "lblIns"
+msgstr "lblIns"
+
+#. frmSubscribe..lblJID..Caption
+#: subscribe.dfm:47
+msgid "lblJID"
+msgstr "lblJID"
+
+#. frameGeneric..lblLabel..Caption
+#: fGeneric.dfm:23
+msgid "lblLabel"
+msgstr "lblLabel"
+
+#. frmField..lblPrompt..Caption
+#: fLeftLabel.dfm:12
+msgid "lblPrompt"
+msgstr "lblPrompt"
+
+#. frmBrowse..popViewStyle..List1..Caption
+#: Browser.dfm:4047
+msgid "List"
+msgstr "Lista"
+
+#: ExEvents.pas:85
+msgid "Local Time: "
+msgstr "Tiempo Local: "
+
+#. frmRosterWindow..popTransport..popTransLogoff..Caption
+#: RosterWindow.dfm:589
+msgid "Log Off"
+msgstr "Desconectar"
+
+#. frmExodus..Toolbar..ToolBar1..btnConnect..Caption
+#. frmRosterWindow..popTransport..popTransLogon..Caption
+#: Jabber1.dfm:187
+#: RosterWindow.dfm:593
+msgid "Log On"
+msgstr "Conectar"
+
+#. frmExodus..popTray..trayConnect..Caption
+#: Jabber1.dfm:2809
+msgid "Log On/Off"
+msgstr "Conectar/Desconectar"
+
+#. frmLogin..Caption
+#: Login.dfm:7
+msgid "Login"
+msgstr "Conectar"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuVCard..Caption
+#: Jabber1.dfm:471
+msgid "Lookup a vCard"
+msgstr "Buscar una vCard"
+
+#: Jabber1.pas:487
+msgid "Lookup Profile"
+msgstr "Buscar Perfil"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Lunch3..Caption
+#. frmExodus..popTray..trayPresence..Away1..Lunch1..Caption
+#: Jabber1.dfm:374
+#: Jabber1.dfm:2726
+msgid "Lunch"
+msgstr "Almuerzo"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Mad1..Caption
+#. frmExodus..popTray..trayPresence..DoNotDisturb1..Mad2..Caption
+#: Jabber1.dfm:431
+#: Jabber1.dfm:2781
+msgid "Mad"
+msgstr "Furioso"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1463
+#: BaseChat.dfm:69
+#: BaseChat.dfm:191
+#: Debug.dfm:68
+#: Debug.dfm:170
+#: MsgQueue.dfm:88
+#: MsgRecv.dfm:89
+#: MsgRecv.dfm:187
+#: RosterRecv.dfm:121
+#: Transfer.dfm:116
+msgid "mailto"
+msgstr "mailto"
+
+#. frmRoom..popRoomRoster..popOwner..Caption
+#: Room.dfm:252
+msgid "Make Owner"
+msgstr "Crear Propietario"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Meeting1..Caption
+#. frmExodus..popTray..trayPresence..Away1..Meeting2..Caption
+#: Jabber1.dfm:380
+#: Jabber1.dfm:2731
+msgid "Meeting"
+msgstr "Reunión"
+
+#. frmDebug..PopupMenu1..popMsg..Caption
+#. frmMsgRecv..Caption
+#: Debug.dfm:324
+#: MsgRecv.dfm:6
+msgid "Message"
+msgstr "Mensaje"
+
+#: MsgRecv.pas:148
+msgid "Message from "
+msgstr "Mensaje desde "
+
+#: MsgRecv.pas:149
+msgid "Message to "
+msgstr "Mensaje a "
+
+#. frmRosterWindow..popRoster..popMsg..Caption
+#: RosterWindow.dfm:248
+msgid "Message..."
+msgstr "Mensaje..."
+
+#. frmPrefs..ScrollBox1..lblMessages..Caption
+#: Prefs.dfm:1448
+msgid "Messages"
+msgstr "Mensajes"
+
+#. frmExodus..Tabs..tbsRoster..Caption
+#: Jabber1.dfm:60
+msgid "Messenger"
+msgstr "Mensajero"
+
+#. frmProfile..PageControl1..TabSheet1..Label4..Caption
+#: Profile.dfm:83
+msgid "Middle "
+msgstr "Medio"
+
+#. frmGrpRemove..optMove..Caption
+#: GrpRemove.dfm:46
+msgid "Move contacts to another group:"
+msgstr "Mover contactos a otro grupo:"
+
+#. frmAutoUpdateStatus..HttpClient..Request.UserAgent
+#. frmTransfer..httpClient..Request.UserAgent
+#: AutoUpdateStatus.dfm:85
+#: Transfer.dfm:251
+msgid "Mozilla/3.0 (compatible; Indy Library)"
+msgstr "Mozilla/3.0 (compatible; Indy Library)"
+
+#. frmAbout..Font.Name
+#. frmAutoUpdateStatus..Font.Name
+#. frmBaseChat..Font.Name
+#. frmBookmark..Font.Name
+#. frmBrowse..Font.Name
+#. frmCustomNotify..Font.Name
+#. frmCustomNotify..Label1..Font.Name
+#. frmCustomPres..Font.Name
+#. frmDebug..Font.Name
+#. frmDebug..Panel2..MemoSend..Font.Name
+#. frmDebug..pnlTop..lblJID..Font.Name
+#. frmDockable..Font.Name
+#. frmEmoticons..Font.Name
+#. frmTracer..Font.Name
+#. frameGeneric..Font.Name
+#. frmField..lblPrompt..Font.Name
+#. frameListbox..lblCaption..Font.Name
+#. frameObjectActions..pRegister..lblRegister..Font.Name
+#. frameObjectActions..pSearch..lblSearch..Font.Name
+#. frameObjectActions..pConf..lblConf..Font.Name
+#. frameObjectActions..pnlTop..Label1..Font.Name
+#. frmGrpRemove..Font.Name
+#. frmInputPass..Font.Name
+#. frmInvalidRoster..Font.Name
+#. frmInvite..Font.Name
+#. frmExodus..Font.Name
+#. frmExodus..Tabs..tbsRoster..Font.Name
+#. frmJoinRoom..Font.Name
+#. frmJUD..pnlLeft..pnlResults..Label1..Font.Name
+#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Font.Name
+#. frmLogin..Label5..Font.Name
+#. frmMsgQueue..Font.Name
+#. frmMsgRecv..Font.Name
+#. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Font.Name
+#. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Font.Name
+#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Font.Name
+#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Font.Name
+#. frmMsgRecv..pnlTop..pnlError..Font.Name
+#. frmPathSelector..Font.Name
+#. frmPathSelector..Label1..Font.Name
+#. frmPrefs..Font.Name
+#. frmPrefs..ScrollBox1..lblRoster..Font.Name
+#. frmPrefs..ScrollBox1..lblSystem..Font.Name
+#. frmPrefTransfer..Label2..Font.Name
+#. frmProfile..Font.Name
+#. frmProfile..PageControl1..TabSheet1..lblEmail..Font.Name
+#. frmProfile..PageControl1..TabSheet1..Label7..Font.Name
+#. frmProfile..PageControl1..TabSheet1..Label5..Font.Name
+#. frmProfile..PageControl1..TabSheet1..lblUpdateNick..Font.Name
+#. frmProfile..PageControl1..TabSheet1..txtPriEmail..Font.Name
+#. frmProfile..PageControl1..TabSheet3..lblURL..Font.Name
+#. frmRegister..Font.Name
+#. frmRemove..Font.Name
+#. frmRiser..Font.Name
+#. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
+#. frmRoomAdminList..Font.Name
+#. frmAdd..Font.Name
+#. frmAdd..lblAddGrp..Font.Name
+#. frmRosterRecv..Font.Name
+#. frmRosterRecv..pnlFrom..StaticText1..Font.Name
+#. frmRosterRecv..pnlFrom..txtFrom..Font.Name
+#. frmRosterWindow..Font.Name
+#. frmRosterWindow..pnlShow..pnlStatus..Font.Name
+#. frmSelContact..Font.Name
+#. frmSubscribe..Font.Name
+#. frmTransfer..Font.Name
+#. frmTransfer..pnlFrom..lblFrom..Font.Name
+#. frmTransfer..pnlFrom..lblFile..Font.Name
+#. frmTransfer..pnlFrom..Label5..Font.Name
+#. frmVCard..Font.Name
+#. frmVCard..PageControl1..TabSheet1..lblEmail..Font.Name
+#. frmVCard..PageControl1..TabSheet1..Label7..Font.Name
+#. frmVCard..PageControl1..TabSheet1..Label5..Font.Name
+#. frmVCard..PageControl1..TabSheet1..lblURL..Font.Name
+#. frmXData..Font.Name
+#. frmXData..frameButtons1..Font.Name
+#: About.dfm:12
+#: AutoUpdateStatus.dfm:14
+#: BaseChat.dfm:10
+#: Bookmark.dfm:12
+#: Browser.dfm:13
+#: CustomNotify.dfm:12
+#: CustomNotify.dfm:29
+#: CustomPres.dfm:12
+#: Debug.dfm:13
+#: Debug.dfm:226
+#: Debug.dfm:283
+#: Dockable.dfm:13
+#: Emoticons.dfm:13
+#: ExceptTracer.dfm:12
+#: fGeneric.dfm:9
+#: fLeftLabel.dfm:16
+#: fListbox.dfm:26
+#: fService.dfm:32
+#: fService.dfm:59
+#: fService.dfm:86
+#: fService.dfm:113
+#: GrpRemove.dfm:11
+#: InputPassword.dfm:13
+#: InvalidRoster.dfm:11
+#: invite.dfm:12
+#: Jabber1.dfm:12
+#: Jabber1.dfm:64
+#: JoinRoom.dfm:13
+#: jud.dfm:132
+#: jud.dfm:155
+#: Login.dfm:34
+#: MsgQueue.dfm:11
+#: MsgRecv.dfm:11
+#: MsgRecv.dfm:294
+#: MsgRecv.dfm:339
+#: MsgRecv.dfm:381
+#: MsgRecv.dfm:399
+#: MsgRecv.dfm:419
+#: PathSelector.dfm:13
+#: PathSelector.dfm:30
+#: Prefs.dfm:11
+#: Prefs.dfm:812
+#: Prefs.dfm:1074
+#: PrefTransfer.dfm:33
+#: Profile.dfm:12
+#: Profile.dfm:60
+#: Profile.dfm:74
+#: Profile.dfm:94
+#: Profile.dfm:108
+#: Profile.dfm:151
+#: Profile.dfm:309
+#: RegForm.dfm:11
+#: RemoveContact.dfm:14
+#: RiserWindow.dfm:13
+#: Room.dfm:104
+#: RoomAdminList.dfm:12
+#: RosterAdd.dfm:13
+#: RosterAdd.dfm:53
+#: RosterRecv.dfm:11
+#: RosterRecv.dfm:70
+#: RosterRecv.dfm:87
+#: RosterWindow.dfm:15
+#: RosterWindow.dfm:154
+#: SelContact.dfm:11
+#: subscribe.dfm:14
+#: Transfer.dfm:12
+#: Transfer.dfm:39
+#: Transfer.dfm:61
+#: Transfer.dfm:77
+#: vcard.dfm:11
+#: vcard.dfm:56
+#: vcard.dfm:69
+#: vcard.dfm:82
+#: vcard.dfm:96
+#: xdata.dfm:13
+#: xdata.dfm:48
+msgid "MS Sans Serif"
+msgstr "MS Sans Serif"
+
+#: Jabber1.pas:478
+msgid "Msg from "
+msgstr "Msj Desde "
+
+#: ConnDetails.pas:106
+msgid "Must have a larger number of poll keys."
+msgstr "Debe tener un número más grande de poll keys"
+
+#. frmVCard..Caption
+#: vcard.dfm:6
+msgid "My Profile"
+msgstr "My Perfil"
+
+#: RosterWindow.pas:259
+msgid "My Resources"
+msgstr "Mis Recursos"
+
+#. frmBrowse..Panel3..vwBrowse......Caption
+#: Browser.dfm:46
+msgid "Name"
+msgstr "Nombre"
+
+#. frmBookmark..Label2..Caption
+#: Bookmark.dfm:31
+msgid "Name:"
+msgstr "Nombre:"
+
+#. frmPrefs..ScrollBox1..lblNetwork..Caption
+#. frmPrefs..PageControl1..tbsNetwork..Caption
+#: Prefs.dfm:1627
+#: Prefs.dfm:1786
+msgid "Network"
+msgstr "Red"
+
+#. frmPrefs..PageControl1..tbsNetwork..StaticText13..Caption
+#: Prefs.dfm:1901
+msgid "Network Options"
+msgstr "Opciones de Red"
+
+#. frmRosterWindow..popGroup..NewGroup1..Caption
+#: RosterWindow.dfm:561
+msgid "New Group"
+msgstr "Nuevo Grupo"
+
+#: RosterWindow.pas:245
+msgid "New group name:"
+msgstr "Nuevo Nombre del Grupo"
+
+#: Room.pas:197
+msgid "New nickname"
+msgstr "Nuevo Apodo"
+
+#: Jabber1.pas:500
+msgid "New password does not match."
+msgstr "La Clave Nueva no concuerda."
+
+#. frmPassword..Label2..Caption
+#: Password.dfm:27
+msgid "New password:"
+msgstr "Clave Nueva:"
+
+#: Login.pas:63
+msgid "New Profile"
+msgstr "Nuevo Perfil"
+
+#: Jabber1.pas:483
+msgid "New Roster Group"
+msgstr "Nuevo Grupo de la Lista"
+
+#: Room.pas:196
+msgid "New subject"
+msgstr "Nuevo Asunto"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1505
+#: BaseChat.dfm:111
+#: BaseChat.dfm:233
+#: Debug.dfm:110
+#: Debug.dfm:212
+#: MsgQueue.dfm:130
+#: MsgRecv.dfm:131
+#: MsgRecv.dfm:229
+#: RosterRecv.dfm:163
+#: Transfer.dfm:158
+msgid "news"
+msgstr "news"
+
+#: MsgRecv.pas:157
+msgid "Next"
+msgstr "Próximo"
+
+#. frmRegister..pnlBottom..pnlBtns..btnNext..Caption
+#: RegForm.dfm:49
+msgid "Next >"
+msgstr "Próximo >"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Hint
+#: Browser.dfm:1097
+msgid "Next JID"
+msgstr "Próximo JID"
+
+#. frmRoomAdminList..lstItems......Caption
+#: RoomAdminList.dfm:77
+msgid "Nick"
+msgstr "Apodo"
+
+#. frmProfile..PageControl1..TabSheet1..Label2..Caption
+#. frmVCard..PageControl1..TabSheet1..Label2..Caption
+#: Profile.dfm:48
+#: vcard.dfm:44
+msgid "Nick:"
+msgstr "Apodo:"
+
+#. frmInvite..pnlMain..lstJIDS......Caption
+#. frmRosterRecv..lvContacts......Caption
+#: invite.dfm:68
+#: RosterRecv.dfm:196
+msgid "Nickname"
+msgstr "Apodo"
+
+#. frmJoinRoom..Label3..Caption
+#. frmAdd..Label2..Caption
+#. frmSubscribe..boxAdd..Label2..Caption
+#: JoinRoom.dfm:40
+#: RosterAdd.dfm:33
+#: subscribe.dfm:77
+msgid "Nickname:"
+msgstr "Apodo:"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1487
+#: BaseChat.dfm:93
+#: BaseChat.dfm:215
+#: Debug.dfm:92
+#: Debug.dfm:194
+#: MsgQueue.dfm:112
+#: MsgRecv.dfm:113
+#: MsgRecv.dfm:211
+#: RosterRecv.dfm:145
+#: Transfer.dfm:140
+msgid "nntp"
+msgstr "nntp"
+
+#: ExUtils.pas:128
+msgid "No history file for this user."
+msgstr "Este usuario no tiene un archivo historico"
+
+#: jud.pas:117
+msgid "No Results were found."
+msgstr "No se encontró resultados "
+
+#: vcard.pas:116
+msgid "No vCard response was ever returned."
+msgstr "No se retorno una vCard como respuesta"
+
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType..Text
+#: ConnDetails.dfm:292
+msgid "None"
+msgstr "Ninguno"
+
+#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
+#: Profile.dfm:141
+msgid ""
+"None\r\n"
+"From\r\n"
+"To\r\n"
+"Both\r\n"
+msgstr ""
+"None\r\n"
+"From\r\n"
+"To\r\n"
+"Both\r\n"
+
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
+#: ConnDetails.dfm:299
+msgid ""
+"None\r\n"
+"Version 4\r\n"
+"Version 4a\r\n"
+"Version 5\r\n"
+msgstr ""
+"None\r\n"
+"Version 4\r\n"
+"Version 4a\r\n"
+"Version 5\r\n"
+
+#. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
+#: ConnDetails.dfm:192
+msgid "Normal"
+msgstr "Normal"
+
+#. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.Strings
+#: ConnDetails.dfm:197
+msgid ""
+"Normal\r\n"
+"HTTP\r\n"
+msgstr ""
+"Normal\r\n"
+"HTTP\r\n"
+
+#. frmPrefs..ScrollBox1..lblNotify..Caption
+#: Prefs.dfm:1213
+msgid "Notification"
+msgstr "Notificación"
+
+#. frmChat..popContact..NotificationOptions1..Caption
+#. frmRoom..popRoom..NotificationOptions1..Caption
+#: ChatWin.dfm:143
+#: Room.dfm:202
+msgid "Notification Options ..."
+msgstr "Opciones de Notificación ..."
+
+#. frmCustomNotify..optNotify..Caption
+#: CustomNotify.dfm:48
+msgid "Notify Options"
+msgstr "Opciones de Notificación"
+
+#: Browser.pas:174
+msgid "Objects"
+msgstr "Objetos"
+
+#. frmProfile..PageControl1..TabSheet3..Label12..Caption
+#. frmVCard..PageControl1..TabSheet3..Label12..Caption
+#: Profile.dfm:319
+#: vcard.dfm:174
+msgid "Occupation:"
+msgstr "Ocupación"
+
+#: ChatWin.pas:158
+msgid "offline"
+msgstr "desconectado"
+
+#. frameButtons..Panel1..btnOK..Caption
+#. frmTracer..frameButtons1..Panel1..btnCancel..Caption
+#. frmPrefs..Panel1..Panel3..btnOK..Caption
+#: buttonFrame.dfm:29
+#: ExceptTracer.dfm:36
+#: Prefs.dfm:1944
+msgid "OK"
+msgstr "Aceptar"
+
+#: Jabber1.pas:499
+msgid "Old password is incorrect."
+msgstr "Clave Anterior es incorrecta"
+
+#. frmPassword..Label1..Caption
+#: Password.dfm:20
+msgid "Old password:"
+msgstr "Clave Anterior"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presOnline..Caption
+#. frmExodus..popTray..trayPresence..Online1..Caption
+#: Jabber1.dfm:348
+#: Jabber1.dfm:2702
+msgid "Online"
+msgstr "Conectado"
+
+#. frmProfile..PageControl1..TabSheet7..Panel1..Caption
+#: Profile.dfm:211
+msgid "Online Resources"
+msgstr "Recursos"
+
+#: Transfer.pas:93
+msgid "Open"
+msgstr "Abrir"
+
+#. frmExodus..MainMenu1..PGPTools1..Preferences1..Caption
+#: Jabber1.dfm:510
+msgid "Options..."
+msgstr "Opciones"
+
+#. frmProfile..PageControl1..TabSheet5..Label23..Caption
+#. frmVCard..PageControl1..TabSheet5..Label23..Caption
+#: Profile.dfm:778
+#: vcard.dfm:673
+msgid "Org. Unit (Dept):"
+msgstr "Org. Depto."
+
+#: ExEvents.pas:90
+msgid "OS: "
+msgstr "OS: "
+
+#. frmDebug..Panel2..Caption
+#: Debug.dfm:31
+msgid "Panel2"
+msgstr "Panel2"
+
+#. frmProfile..PageControl1..TabSheet2..Panel3..Caption
+#. frmRegister..Tabs..tabAgent..Panel2..Panel3..Caption
+#: Profile.dfm:271
+#: RegForm.dfm:133
+msgid "Panel3"
+msgstr "Panel3"
+
+#: Jabber1.pas:498
+msgid "Password changed."
+msgstr "Clave Cambiada"
+
+#. frmPassword..Caption
+#: Password.dfm:6
+msgid "Password Dialog"
+msgstr "Cambiar Clave"
+
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
+#. frmJoinRoom..lblPassword..Caption
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyPassword..Caption
+#: ConnDetails.dfm:254
+#: JoinRoom.dfm:47
+#: Prefs.dfm:1824
+msgid "Password:"
+msgstr "Clave:"
+
+#. frmMsgRecv..popClipboard..popPaste..Caption
+#: MsgRecv.dfm:541
+msgid "Paste"
+msgstr "Pegar"
+
+#. frmBaseChat..popOut..Paste2..Caption
+#: BaseChat.dfm:304
+msgid "Paste "
+msgstr "Pegar "
+
+#. frmProfile..PageControl1..TabSheet3..Caption
+#. frmVCard..PageControl1..TabSheet3..Caption
+#: Profile.dfm:297
+#: vcard.dfm:167
+msgid "Personal Info."
+msgstr "Info. Personal"
+
+#. frmProfile..PageControl1..TabSheet3..lblURL..Caption
+#: Profile.dfm:305
+msgid "Personal URL:"
+msgstr "URL Personal:"
+
+#: Jabber1.pas:477
+msgid "Ping Time: %s seconds."
+msgstr "Tiempo de Respuesta: %s segundos."
+
+#. frmInvite..pnlMain..Panel2..memReason....Lines.Strings
+#: invite.dfm:142
+msgid "Please join us in this conference room.\r\n"
+msgstr "Por favor conectémonos en este salón de conferencia.\r\n"
+
+#. frmRegister..Tabs..tabWait..Label2..Caption
+#: RegForm.dfm:157
+msgid "Please wait, Sending your registration to the service...."
+msgstr "Espere, Enviando su registro al servicio..."
+
+#. frmJUD..pnlLeft..lblWait..Caption
+#: jud.dfm:52
+msgid "Please wait. Contacting search agent:"
+msgstr "Espere, Contactando el agente de búsqueda:"
+
+#: COMController.pas:174
+msgid "Plugin class could not be initialized. (%s)"
+msgstr "Clase Plugin no se pudo inicializar. (%s)"
+
+#: COMController.pas:173
+msgid "Plugin class does not support IExodusPlugin. (%s)"
+msgstr "Clase Plugin no soporta IExodusPlugin. (%s)"
+
+#: COMController.pas:172
+msgid "Plugin could not be created. (%s)"
+msgstr "Plugin no se pudo crear. (%s)"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPlugins..Caption
+#. frmPrefs..ScrollBox1..lblPlugins..Caption
+#: Jabber1.dfm:504
+#: Prefs.dfm:1584
+msgid "Plugins"
+msgstr "Plugins"
+
+#. frmBaseChat..Panel3..Caption
+#: BaseChat.dfm:40
+msgid "pnlMsgs"
+msgstr "pnlMsgs"
+
+#. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
+#: ConnDetails.dfm:335
+msgid "Poll Time:"
+msgstr "Tiempo de Encuesta:"
+
+#. frmPrefTransfer..Label1..Caption
+#: PrefTransfer.dfm:21
+msgid "Port to use for HTTP file transfers:"
+msgstr "Puerto HTTP para transferencia de archivos:"
+
+#. frmConnDetails..PageControl1..tbsConn..Label7..Caption
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyPort..Caption
+#: ConnDetails.dfm:140
+#: ConnDetails.dfm:231
+#: Prefs.dfm:1808
+msgid "Port:"
+msgstr "Puerto:"
+
+#. frmInvalidRoster..ListView1......Caption
+#: InvalidRoster.dfm:60
+msgid "Pres. Error"
+msgstr "Pres. Error"
+
+#. frmDebug..PopupMenu1..popPres..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..Caption
+#. frmExodus..popTray..trayPresence..Caption
+#. frmPrefs..ScrollBox1..lblCustomPres..Caption
+#. frmRosterWindow..popRoster..popPresence..Caption
+#: Debug.dfm:336
+#: Jabber1.dfm:345
+#: Jabber1.dfm:2699
+#: Prefs.dfm:1401
+#: RosterWindow.dfm:279
+msgid "Presence"
+msgstr "Estado"
+
+#. frmCustomPres..Label1..Caption
+#: CustomPres.dfm:25
+msgid "Presence Type:"
+msgstr "Tipo de Estado"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Hint
+#: Browser.dfm:1086
+msgid "Previous JID"
+msgstr "JID Anterior"
+
+#. frmCustomPres..Label3..Caption
+#: CustomPres.dfm:39
+msgid "Priority"
+msgstr "Prioridad"
+
+#. frmConnDetails..PageControl1..tbsConn..Label6..Caption
+#: ConnDetails.dfm:156
+msgid "Priority:"
+msgstr "Prioridad:"
+
+#. frmConnDetails..PageControl1..tbsProfile..Caption
+#: ConnDetails.dfm:49
+msgid "Profile"
+msgstr "Perfil"
+
+#. frmLogin..Label5..Caption
+#: Login.dfm:30
+msgid "Profile:"
+msgstr "Perfil:"
+
+#. frmTransfer..pnlProgress..Label1..Caption
+#: Transfer.dfm:222
+msgid "Progress:   "
+msgstr "Progreso"
+
+#. frmRosterWindow..popBookmark..Properties1..Caption
+#: RosterWindow.dfm:581
+msgid "Properties"
+msgstr "Propiedades"
+
+#. frmRosterWindow..popRoster..popProperties..Caption
+#: RosterWindow.dfm:317
+msgid "Properties..."
+msgstr "Propiedades..."
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1493
+#: BaseChat.dfm:99
+#: BaseChat.dfm:221
+#: Debug.dfm:98
+#: Debug.dfm:200
+#: MsgQueue.dfm:118
+#: MsgRecv.dfm:119
+#: MsgRecv.dfm:217
+#: RosterRecv.dfm:151
+#: Transfer.dfm:146
+msgid "prospero"
+msgstr "prospero"
+
+#. frmInvite..pnlMain..Panel2..Label2..Caption
+#: invite.dfm:124
+msgid "Reason:"
+msgstr "Motivo:"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnRefresh..Hint
+#: Browser.dfm:1192
+msgid "Re-Browse this object"
+msgstr "Refrescar este objeto"
+
+#. frmTransfer..frameButtons1..Panel1..btnOK..Caption
+#: Transfer.dfm:198
+msgid "Receive"
+msgstr "Recibir"
+
+#: Transfer.pas:99
+msgid "Receiver disconnected."
+msgstr "Receptor desconectado."
+
+#. frmRosterRecv..Caption
+#: RosterRecv.dfm:6
+msgid "Receiving Contacts"
+msgstr "Recibiendo Contactos"
+
+#: Jabber1.pas:466
+msgid "Reconnect in "
+msgstr "Reconectar"
+
+#. frmBrowse..popContext..mRegister..Caption
+#: Browser.dfm:4090
+msgid "Register"
+msgstr "Registrar"
+
+#. frmExodus..MainMenu1..WInJab1..mnuRegisterService..Caption
+#: Jabber1.dfm:280
+msgid "Register with a Service"
+msgstr "Registrar con un Servicio"
+
+#: Jabber1.pas:490
+msgid "Register with Service"
+msgstr "Registrar con Servicio"
+
+#. frameObjectActions..pRegister..lblRegister..Caption
+#: fService.dfm:28
+msgid "Register with this object"
+msgstr "Registrarse con este objeto"
+
+#. frmInvalidRoster..frameButtons1..Panel1..btnOK..Caption
+#. frmInvite..pnlMain..Panel1..btnRemove..Caption
+#. frmRosterWindow..popRoster..popRemove..Caption
+#. frmRosterWindow..popGroup..popGrpRemove..Caption
+#. frmRosterWindow..popBookmark..Delete1..Caption
+#. frmRosterWindow..popTransport..popTransUnRegister..Caption
+#: MsgRecv.pas:151
+#: InvalidRoster.dfm:32
+#: invite.dfm:96
+#: RosterWindow.dfm:312
+#: RosterWindow.dfm:554
+#: RosterWindow.dfm:576
+#: RosterWindow.dfm:604
+msgid "Remove"
+msgstr "Remover"
+
+#: GrpRemove.pas:53
+msgid "Remove %d contacts"
+msgstr "Remover Contactos %d"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..RemovePerson1..Caption
+#: Jabber1.dfm:306
+msgid "Remove a Contact"
+msgstr "Remover un Contacto"
+
+#. frmGrpRemove..optNuke..Caption
+#: GrpRemove.dfm:66
+msgid "Remove all contacts in this group:"
+msgstr "Remover todos los contactos de este grupo:"
+
+#. frmExodus..Toolbar..ToolBar1..btnDelContact..Hint
+#. frmRemove..Caption
+#: Jabber1.dfm:195
+#: RemoveContact.dfm:7
+msgid "Remove Contact"
+msgstr "Remover Contacto"
+
+#. frmGrpRemove..Caption
+#: GrpRemove.dfm:6
+msgid "Remove Contacts"
+msgstr "Remover Contactos"
+
+#: Transports.pas:46
+msgid "Remove Registration?"
+msgstr "Remover Registro ?"
+
+#: GrpRemove.pas:54
+msgid "Remove the %s group"
+msgstr "Remover el grupo %d"
+
+#. frmGrpRemove..chkUnsub..Caption
+#: GrpRemove.dfm:74
+msgid "Remove these contacts from my roster."
+msgstr "Remover contactos de mi lista."
+
+#: RosterWindow.pas:243
+msgid "Remove this bookmark?"
+msgstr "Remover esta referencia?"
+
+#. frmRemove..optRemove..Caption
+#: RemoveContact.dfm:65
+msgid "Remove this contact from my roster."
+msgstr "Remover contacto de mi lista."
+
+#: RemoveContact.pas:54
+msgid "Remove this contact from the %s group."
+msgstr "Remover contacto del grupo %d."
+
+#. frmRemove..optMove..Caption
+#: RemoveContact.dfm:56
+msgid "Remove this contact from this group"
+msgstr "Remover el contacto de este grupo"
+
+#. frmRemove..chkRemove1..Caption
+#: RemoveContact.dfm:76
+msgid "Remove this person from my roster."
+msgstr "Remover esta persona de mi lista"
+
+#: COMController.pas:175
+msgid "Remove this plugin from the list of plugins to be loaded at startup?"
+msgstr "Remover este plugin de la lista de plugins que se cargan al iniciar?"
+
+#: Login.pas:60
+msgid "Remove this profile?"
+msgstr "Remover este perfil ?"
+
+#. frmRosterWindow..popGroup..popGrpRename..Caption
+#: RosterWindow.dfm:550
+msgid "Rename"
+msgstr "Renombrar"
+
+#. frmRosterWindow..popTransport..popTransProperties..Caption
+#: RosterWindow.dfm:600
+msgid "Rename ..."
+msgstr "Renombrar ..."
+
+#: RosterWindow.pas:244
+msgid "Rename group"
+msgstr "Renombrar Grupo"
+
+#. frmRosterWindow..popRoster..popRename..Caption
+#: RosterWindow.dfm:297
+msgid "Rename..."
+msgstr "Renombrar ..."
+
+#: Browser.pas:170
+msgid "Rendering Svc."
+msgstr "Renderizando Svc"
+
+#. frmMsgRecv..frameButtons1..Panel1..btnOK..Caption
+#: MsgRecv.dfm:472
+msgid "Reply"
+msgstr "Responder"
+
+#. frmPrefTransfer..Label2..Caption
+#: PrefTransfer.dfm:29
+msgid "Reset all file transfer options to defaults"
+msgstr "Volver a los valores originales en las opciones de tranferencia de archivo?"
+
+#. frmCustomNotify..Label1..Caption
+#: CustomNotify.dfm:25
+msgid "Reset to default preferences ..."
+msgstr "Cambiar por los preferencias originales ..."
+
+#. frmMsgRecv..popContact..mnuResources..Caption
+#. frmProfile..PageControl1..TabSheet7..Caption
+#: MsgRecv.dfm:524
+#: Profile.dfm:192
+msgid "Resources"
+msgstr "Recursos"
+
+#. frmPathSelector..Folders..Root
+#: PathSelector.dfm:57
+msgid "rfDesktop"
+msgstr "rfDesktop"
+
+#: Room.pas:191
+msgid "Room"
+msgstr "Salón"
+
+#. frmRoomAdminList..Caption
+#: RoomAdminList.dfm:7
+msgid "Room List Modifier"
+msgstr "Modificar Lista del Salón"
+
+#. frmJoinRoom..Label1..Caption
+#: JoinRoom.dfm:26
+msgid "Room Name:"
+msgstr "Nombre del Salón:"
+
+#. frmBookmark..Label4..Caption
+#: Bookmark.dfm:45
+msgid "Room Nickname:"
+msgstr "Apodo para el Salón:"
+
+#. frmJoinRoom..Label2..Caption
+#: JoinRoom.dfm:33
+msgid "Room Server:"
+msgstr "Sevidor del Salón:"
+
+#. frmExodus..Toolbar..ToolBar1..btnRoom..Caption
+#: Jabber1.dfm:157
+msgid "Rooms"
+msgstr "Salones"
+
+#. frmPrefs..ScrollBox1..lblRoster..Caption
+#: Prefs.dfm:807
+msgid "Roster"
+msgstr "Lista"
+
+#. frmRosterWindow..Caption
+#: RosterWindow.dfm:8
+msgid "Roster - Exodus"
+msgstr "Lista - Exodus"
+
+#. frameTreeRoster..treeRoster..Hint
+#. frmRosterWindow..treeRoster..Hint
+#: fRosterTree.dfm:13
+#: RosterWindow.dfm:72
+msgid "Roster Hint"
+msgstr "Lista"
+
+#. frmRoom..dlgSave..Filter
+#: Room.dfm:259
+msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
+msgstr "RTF (*.rtf)|*.rtf|Texto (*.txt)|*.txt"
+
+#. frmChat..SaveDialog1..Filter
+#: ChatWin.dfm:171
+msgid "RTF Files|*.rtf|All Files|*.*"
+msgstr "Archivos RTF|*.rtf|Todos los archivos|*.*"
+
+#. frmRoom..popRoom..S1..Caption
+#: Room.dfm:157
+msgid "Save As..."
+msgstr "Grabar como ..."
+
+#. frmChat..popContact..mnuSave..Caption
+#: ChatWin.dfm:136
+msgid "Save Conversation"
+msgstr "Grabar Conversaciçón"
+
+#. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
+#: ConnDetails.dfm:96
+msgid "Save pass&word"
+msgstr "Grabar Cla&ve"
+
+#. frmRoom..dlgSave..Title
+#: Room.dfm:262
+msgid "Save Room Contents"
+msgstr "Grabar Contenido del Salon"
+
+#. frmCustomPres..chkSave..Caption
+#: CustomPres.dfm:105
+msgid "Save this presence to my preferences."
+msgstr "Grabar este estado a mis preferencias."
+
+#. frmBrowse..popContext..mSearch..Caption
+#. frmJUD..pnlLeft..pnlBottom..btnAction..Caption
+#: jud.pas:112
+#: Browser.dfm:4086
+#: jud.dfm:87
+msgid "Search"
+msgstr "Buscar"
+
+#. frmJUD..pnlLeft..pnlResults..Label1..Caption
+#: jud.dfm:128
+msgid "Search Again"
+msgstr "Buscar de Nuevo"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..SearchforPerson1..Caption
+#: Jabber1.dfm:310
+msgid "Search for a Contact"
+msgstr "Buscar un Contacto"
+
+#. frmExodus..Toolbar..ToolBar1..btnFind..Hint
+#. frmJUD..Caption
+#: Jabber1.dfm:164
+#: jud.dfm:7
+msgid "Search for Contacts"
+msgstr "Buscar Para Contactos"
+
+#. frameObjectActions..pSearch..lblSearch..Caption
+#: fService.dfm:55
+msgid "Search using this service or agent"
+msgstr "Buscar usando este servicio o un agente"
+
+#. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
+#: ConnDetails.dfm:342
+msgid "seconds"
+msgstr "segundos"
+
+#: Jabber1.pas:467
+msgid "seconds."
+msgstr "segundos."
+
+#. frameObjectActions..pnlTop..Label1..Caption
+#: fService.dfm:109
+msgid "See Also:"
+msgstr "Vea También:"
+
+#. frmSelContact..Caption
+#: SelContact.dfm:6
+msgid "Select Contact"
+msgstr "Seleccionar Contacto"
+
+#: PrefTransfer.pas:54
+msgid "Select download directory"
+msgstr "Seleccionar Directorio de Descarga"
+
+#. frmJUD..pnlLeft..lblSelect....Align
+#: jud.dfm:44
+msgid "Select the user database or enter in the Jabber ID of the search agent to use:\r\n"
+msgstr "Selecciona la base de datos de los usuarios ó ingrese el Jabber ID del agente de busqueda que va a utilizar:\r\n"
+
+#: Transfer.pas:92
+msgid "Send"
+msgstr "Enviar"
+
+#: Jabber1.pas:488
+msgid "Send a Message"
+msgstr "Enviar un Mensaje"
+
+#. frmRosterWindow..popRoster..popPresence..popSendPres..Caption
+#: RosterWindow.dfm:281
+msgid "Send Available"
+msgstr "Enviar Disponible"
+
+#. frmRosterWindow..popRoster..popSendContacts..Caption
+#: RosterWindow.dfm:260
+msgid "Send Contact To..."
+msgstr "Enviar Contacto a ..."
+
+#. frmRosterWindow..popGroup..SendContactsTo1..Caption
+#: RosterWindow.dfm:539
+msgid "Send Contacts To..."
+msgstr "Enviar Contactos a ...."
+
+#. frmMsgRecv..popContact..mnuSendFile..Caption
+#: MsgRecv.dfm:516
+msgid "Send File"
+msgstr "Enviar Archivos"
+
+#. frmChat..popContact..mnuSendFile..Caption
+#: ChatWin.dfm:132
+msgid "Send File ..."
+msgstr "Enviar Archivos ..."
+
+#. frmRosterWindow..popRoster..popSendFile..Caption
+#: RosterWindow.dfm:252
+msgid "Send File..."
+msgstr "Enviar Archivo ..."
+
+#. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
+#: RosterWindow.dfm:285
+msgid "Send Invisible"
+msgstr "Enviar Invisible"
+
+#. frmExodus..MainMenu1..WInJab1..mnuMessage..Caption
+#. frmExodus..popTray..trayMessage..Caption
+#. frmJUD..PopupMenu1..popMessage..Caption
+#. frmSubscribe..PopupMenu1..mnuMessage..Caption
+#: Jabber1.dfm:262
+#: Jabber1.dfm:2801
+#: jud.dfm:229
+#: subscribe.dfm:140
+msgid "Send Message"
+msgstr "Enviar Mensaje"
+
+#. frmRosterWindow..popGroup..popGrpPresence..Caption
+#: RosterWindow.dfm:520
+msgid "Send Presence"
+msgstr "Enviar Estado"
+
+#. frmDebug..PopupMenu1..SendXML1..Caption
+#: Debug.dfm:306
+msgid "Send XML"
+msgstr "Enviar XML"
+
+#: Transfer.pas:98
+msgid "Sending file..."
+msgstr "Enviando archivo ..."
+
+#: Transfer.pas:102
+msgid "Sending you a file."
+msgstr "Enviando archivo ..."
+
+#. frmExodus..MainMenu1..PGPTools1..mnuServer..Caption
+#: Jabber1.dfm:484
+msgid "Server Info"
+msgstr "Información del Servidor"
+
+#. frmBrowse..Panel3..pnlInfo..pnlTitle..lblTitle..Caption
+#: Browser.dfm:998
+msgid "Server: Jabber.org"
+msgstr "Servidor: Jabber.org"
+
+#: Browser.pas:165
+msgid "Service"
+msgstr "Servicio"
+
+#: Jabber1.pas:469
+msgid "Setting Auto Available"
+msgstr "Disponible automatico"
+
+#: Jabber1.pas:470
+msgid "Setting AutoAway"
+msgstr "Ausencia automática"
+
+#: Jabber1.pas:471
+msgid "Setting AutoXA"
+msgstr "Ausencia extendida automática"
+
+#. frmCustomNotify..optNotify..chkToast..Caption
+#: CustomNotify.dfm:64
+msgid "Show a \"Toast\" popup"
+msgstr "Mostar Aviso Emergente"
+
+#. frmExodus..MainMenu1..PGPTools1..ShowXML1..Caption
+#: Jabber1.dfm:499
+msgid "Show Debug XML"
+msgstr "Mostrar Depurador XML"
+
+#. frmExodus..popTray..trayShow..Caption
+#: Jabber1.dfm:2695
+msgid "Show Exodus"
+msgstr "Mostrar Exodus"
+
+#. frmMsgRecv..popContact..mnuHistory..Caption
+#. frmRoom..popRoom..popShowHistory..Caption
+#: MsgRecv.dfm:485
+#: Room.dfm:137
+msgid "Show History"
+msgstr "Mostrar Historia"
+
+#. frmChat..popContact..mnuHistory..Caption
+#: ChatWin.dfm:97
+msgid "Show History ..."
+msgstr "Mostrar Historia ..."
+
+#. frmSelContact..PopupMenu1..ShowOnlineOnly1..Caption
+#: SelContact.dfm:53
+msgid "Show Online Only"
+msgstr "Mostrar Solamente en Linea "
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..mnuOnline..Caption
+#: Jabber1.dfm:328
+msgid "Show Only Online"
+msgstr "Mostrar Solamente en Linea "
+
+#. frmMsgRecv..popContact..mnuProfile..Caption
+#. frmSubscribe..PopupMenu1..mnuProfile..Caption
+#: MsgRecv.dfm:493
+#: subscribe.dfm:132
+msgid "Show Profile"
+msgstr "Mostrar Perfil"
+
+#. frmChat..popContact..mnuProfile..Caption
+#: ChatWin.dfm:105
+msgid "Show Profile ..."
+msgstr "Mostrar Perfil ..."
+
+#. frmExodus..MainMenu1..WInJab1..View1..mnuStatBar..Caption
+#: Jabber1.dfm:240
+msgid "Show Status Bar"
+msgstr "Mostrar Barra de Estado"
+
+#. frmExodus..MainMenu1..WInJab1..View1..mnuToolbar..Caption
+#: Jabber1.dfm:236
+msgid "Show Toolbar"
+msgstr "Mostrar Barra de Herramientas"
+
+#. frmExodus..MainMenu1..WInJab1..Connect2..Caption
+#: Jabber1.dfm:226
+msgid "Sign On/Off"
+msgstr "Conectar / Desconectar"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..Sleeping1..Caption
+#. frmExodus..popTray..trayPresence..XtendedAway1..Sleeping2..Caption
+#: Jabber1.dfm:411
+#: Jabber1.dfm:2761
+msgid "Sleeping"
+msgstr "Durmiendo"
+
+#. frmBrowse..popViewStyle..SmallIcons1..Caption
+#: Browser.dfm:4043
+msgid "Small Icons"
+msgstr "Iconos Pequeños"
+
+#. frmConnDetails..PageControl1..tbsSocket..Caption
+#: ConnDetails.dfm:217
+msgid "SOCKS"
+msgstr "SOCKS"
+
+#. frmRiser..Label1..Caption
+#: RiserWindow.dfm:81
+msgid "something really long"
+msgstr "algo realmente largo"
+
+#: jud.pas:113
+msgid "Start"
+msgstr "Arrancar"
+
+#. frmExodus..MainMenu1..WInJab1..mnuChat..Caption
+#. frmJUD..PopupMenu1..popChat..Caption
+#. frmSubscribe..PopupMenu1..mnuChat..Caption
+#: Jabber1.pas:489
+#: Jabber1.dfm:267
+#: jud.dfm:225
+#: subscribe.dfm:136
+msgid "Start Chat"
+msgstr "Arrancar Conversación"
+
+#. frmProfile..PageControl1..TabSheet4..Label21..Caption
+#. frmProfile..PageControl1..TabSheet6..Label15..Caption
+#. frmVCard..PageControl1..TabSheet4..Label21..Caption
+#. frmVCard..PageControl1..TabSheet6..Label15..Caption
+#: Profile.dfm:441
+#: Profile.dfm:850
+#: vcard.dfm:306
+#: vcard.dfm:770
+msgid "State / Region:"
+msgstr "Estado / Región:"
+
+#. frmCustomPres..Label2..Caption
+#: CustomPres.dfm:32
+msgid "Status:"
+msgstr "Estado:"
+
+#: jud.pas:114
+msgid "Stop"
+msgstr "Detener"
+
+#. frmMsgQueue..lstEvents......Caption
+#: MsgQueue.dfm:44
+msgid "Subject"
+msgstr "Asunto"
+
+#. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
+#. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
+#: MsgRecv.dfm:334
+#: Room.dfm:100
+msgid "Subject:"
+msgstr "Asunto:"
+
+#. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
+#: MsgRecv.dfm:289
+msgid "Subject:    "
+msgstr "Asunto:"
+
+#. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
+#: RosterWindow.dfm:292
+msgid "Subscribe"
+msgstr "Registrar"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..SubscribetoPresence2..Caption
+#: Jabber1.dfm:340
+msgid "Subscribe to Presence"
+msgstr "Registrar a Estado"
+
+#: ExEvents.pas:80
+msgid "Subscription denied/revoked"
+msgstr "Registro Denegado/Revocado"
+
+#: ExEvents.pas:79
+msgid "Subscription granted"
+msgstr "Registro"
+
+#: ExEvents.pas:78
+msgid "Subscription request"
+msgstr "Pedir Subscripción"
+
+#. frmProfile..PageControl1..TabSheet1..optSubscrip..Caption
+#: Profile.dfm:133
+msgid "Subscription Type"
+msgstr "Tipo de Subscripción"
+
+#. frmPrefs..ScrollBox1..lblS10n..Caption
+#: Prefs.dfm:669
+msgid "Subscriptions"
+msgstr "Subscripciones"
+
+#. frameListbox..lblCaption..Caption
+#: fListbox.dfm:22
+msgid "Supported Namespaces:"
+msgstr "Namespaces soportados:"
+
+#. frmPrefs..ScrollBox1..lblSystem..Caption
+#: Prefs.dfm:1069
+msgid "System"
+msgstr "Sistema"
+
+#. frmRegister..Tabs..tabAgent..Caption
+#: RegForm.dfm:116
+msgid "tabAgent"
+msgstr "tabAgent"
+
+#. frmRegister..Tabs..tabResult..Caption
+#: RegForm.dfm:168
+msgid "tabResult"
+msgstr "tabResult"
+
+#. frmVCard..PageControl1..TabSheet6..Caption
+#: vcard.dfm:763
+msgid "TabSheet6"
+msgstr "TabSheet6"
+
+#. frmRegister..Tabs..tabWait..Caption
+#: RegForm.dfm:148
+msgid "tabWait"
+msgstr "tabWait"
+
+#. frmRegister..Tabs..tabWelcome..Caption
+#: RegForm.dfm:78
+msgid "tabWelcome"
+msgstr "tabWelcome"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1499
+#: BaseChat.dfm:105
+#: BaseChat.dfm:227
+#: Debug.dfm:104
+#: Debug.dfm:206
+#: MsgQueue.dfm:124
+#: MsgRecv.dfm:125
+#: MsgRecv.dfm:223
+#: RosterRecv.dfm:157
+#: Transfer.dfm:152
+msgid "telnet"
+msgstr "telnet"
+
+#. frmExodus..MainMenu1..WInJab1..Test1..Caption
+#: Jabber1.dfm:221
+msgid "Test"
+msgstr "Probar"
+
+#. frmAutoUpdateStatus..HttpClient..Request.ContentType
+#. frmTransfer..httpClient..Request.ContentType
+#: AutoUpdateStatus.dfm:82
+#: Transfer.dfm:248
+msgid "text/html"
+msgstr "texto/html"
+
+#. frmAutoUpdateStatus..HttpClient..Request.Accept
+#. frmTransfer..httpClient..Request.Accept
+#: AutoUpdateStatus.dfm:83
+#: Transfer.dfm:249
+msgid "text/html, */*"
+msgstr "texto/html, */*"
+
+#: RegForm.pas:96
+msgid "The agent you are trying to register with can not be reached."
+msgstr "El agente con el que se intenta registrar no puede ser localizado."
+
+#: RegForm.pas:95
+msgid "The agent you are trying to register with returned an error."
+msgstr "El agente con el que se intenta registrar retorno un error."
+
+#: RosterAdd.pas:67
+msgid "The contact ID you entered does not follow the standard user@host convention. Do you want to continue?"
+msgstr "El ID del contacto que usted ingreso no sigue el éstandar usuario@servidor. Desea Continuar ?"
+
+#: Transfer.pas:91
+msgid "The Contact must be online before you can send a file."
+msgstr "Los contactos deben estar en línea antes de enviar un archivo."
+
+#: Jabber1.pas:427
+msgid ""
+"The following command line parameters are available in Exodus: \r\n"
+"\r\n"
+msgstr ""
+"Las siguientes opciones de línea de comando estan disponibles en Exodus: \r\n"
+"\r\n"
+
+#: RosterAdd.pas:69
+msgid "The gateway server you requested does not have a transport for this contact type."
+msgstr "Este tipo de contacto no tiene transporte en el servidor de enlace que escogio."
+
+#: ConnDetails.pas:108
+msgid "The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource."
+msgstr "El Jabber ID que ingresaste (usuario@servidor/recurso) no es valido. Por favor ingrese un usuario valido."
+
+#: Jabber1.pas:495
+msgid "The Jabber ID you entered is invalid."
+msgstr "El ID Jabber que ingreso no es válido."
+
+#: ExEvents.pas:96
+msgid "The jabber server can not contact the server where this user is hosted.Click \"Remove\" to remove this contact from your roster."
+msgstr "El servidor Jabber no pude contactar con el servidor donde esta albergado el usuario. Pulsa \"Eliminar\" para remover este contacto de tu lista."
+
+#: ExUtils.pas:125
+msgid "The log directory you specified is invalid. Either turn off logging, or specify a valid path."
+msgstr "La carpeta para almacenar los archivos de registro es invalida. Desactiva el contador de registros o especifica una carpeta valida."
+
+#: Room.pas:212
+msgid "The owner has destroyed the room."
+msgstr "El propietario cerro el salón."
+
+#: Room.pas:204
+msgid "The Room Address you entered is invalid. It must be valid Jabber ID."
+msgstr "La dirección de la sala que ingresaste es invalida. "
+
+#: Room.pas:231
+msgid "The room is being created. Please try again later."
+msgstr "La sala esta siendo creada. Por favor intentelo mas tarde."
+
+#: jud.pas:116
+msgid "The search timed out."
+msgstr "Tiempo expiró para la busqueda"
+
+#: Transports.pas:47
+msgid "The transport could not be reached. Your request timed out."
+msgstr "No se pudo conectar con el transporte. La petición expiró."
+
+#: ExUtils.pas:124
+msgid "There is no history file for this contact."
+msgstr "No se encuentra historía para este contacto"
+
+#: Jabber1.pas:459
+msgid "There was an error during communication with the Jabber Server"
+msgstr "Ocurrío un error durante la comunicación con el Jabber Server"
+
+#: Transports.pas:48
+msgid "There was an error processing your request."
+msgstr "Ocurrío un error procesando su petición"
+
+#: Jabber1.pas:461
+msgid ""
+"There was an error trying to authenticate you.\r\n"
+"Either you used the wrong password, or this account is already in use by someone else."
+msgstr ""
+"Ocurrío un error intentando autenticarlo.\r\n"
+"Tal vez esta usando una clave equivocada, o su cuenta esta siendo utilizada por alguien más."
+
+#: Transfer.pas:104
+msgid "There was an error trying to create the file."
+msgstr "Ocurrío un error intentando crear el archivo."
+
+#: RegForm.pas:97
+msgid "There was an error trying to remove your registration."
+msgstr "Ocurrío un error intentando intentando remover su registro."
+
+#: Jabber1.pas:463
+msgid "This account does not exist on this server. Create a new account?"
+msgstr "La cuenta no existe en este servidor. Crear una cuenta nueva ?"
+
+#: ChatWin.pas:159
+msgid "This chat window is busy. Close anyways?"
+msgstr "La ventana de conversación esta ocupada. Cerrar de todas formas ?"
+
+#: Transfer.pas:103
+msgid "This directory does not exist. Create it?"
+msgstr "Directorio no existe. Crearlo ?"
+
+#: Transfer.pas:96
+msgid "This file already exists. Overwrite?"
+msgstr "Archivo ya existe. Sobreescribir ?"
+
+#: Jabber1.pas:485
+msgid "This group already exists!"
+msgstr "Grupo ya existe!"
+
+#. frmExodus..Tabs..tbsRoster..pnlRight..Caption
+#: Jabber1.dfm:95
+msgid "THIS IS PNLRIGHT"
+msgstr "THIS IS PNLRIGHT"
+
+#: Jabber1.pas:481
+msgid "This message contains %d roster items."
+msgstr "Este mensaje contiene %d items de lista."
+
+#. frmSubscribe..Label1....Align
+#: subscribe.dfm:31
+msgid "This person or agent would like to see your online presence and add you to their roster.\r\n"
+msgstr "Esta persona o agente desea adicionarlo a su lista.\r\n"
+
+#: Room.pas:225
+msgid "This room has been destroyed."
+msgstr "El salón fue cerrado."
+
+#: Room.pas:223
+msgid "This room is not anonymous"
+msgstr "Este salon no es anónimo"
+
+#: ChatWin.pas:155
+msgid "This user is now blocked."
+msgstr "Este usuario esta bloqueado."
+
+#. frmRegister..Tabs..tabWelcome..Label1....AutoSize
+#: RegForm.dfm:90
+msgid "This wizard will register you with a service or Agent. Use the Next button to advance through the steps. Use Cancel anytime to cancel this registration.\r\n"
+msgstr "Este ayudante lo registrará con el servicio o agente. Usar el boton Siguiente para avanzar. Use Cancelar en cualquier momente para cancelar el registro.\r\n"
+
+#. frmBrowse..popContext..mTime..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuTime..Caption
+#: ExResponders.pas:124
+#: Browser.dfm:4078
+#: Jabber1.dfm:490
+msgid "Time"
+msgstr "Hora"
+
+#. frmChat..popContact..C1..mnuTimeRequest..Caption
+#. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
+#. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
+#: ChatWin.dfm:115
+#: MsgRecv.dfm:503
+#: RosterWindow.dfm:270
+msgid "Time Request"
+msgstr "Pedir Hora"
+
+#: ExEvents.pas:83
+msgid "Time Response"
+msgstr "Tiempo de Respuesta"
+
+#: ExEvents.pas:84
+msgid "Time, Ping Response: "
+msgstr "Hora, Ping Respuesta:"
+
+#. frmCustomPres..boxSave..lblTitle..Caption
+#. frmProfile..PageControl1..TabSheet5..Label24..Caption
+#. frmVCard..PageControl1..TabSheet5..Label24..Caption
+#: CustomPres.dfm:120
+#: Profile.dfm:785
+#: vcard.dfm:680
+msgid "Title:"
+msgstr "Titulo:"
+
+#: MsgRecv.pas:154
+msgid "To:"
+msgstr "A:"
+
+#: Transfer.pas:95
+msgid "To:     "
+msgstr "A:"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presToggle..Caption
+#: Jabber1.dfm:451
+msgid "Toggle"
+msgstr "Intercambiar"
+
+#. frmInvalidRoster..popItems..oggleCheckboxes1..Caption
+#: InvalidRoster.dfm:71
+msgid "Toggle Checkboxes"
+msgstr "Pulsar cuadros de confirmación"
+
+#. frmExodus..Toolbar..ToolBar1..btnExpanded..Hint
+#: Jabber1.dfm:174
+msgid "Toggle Expanded Mode"
+msgstr "Ir a modo expandido."
+
+#. frmRoom..popRoomRoster..popVoice..Caption
+#: Room.dfm:247
+msgid "Toggle Voice"
+msgstr "Tomar voz"
+
+#. frmEmoticons..ToolBar1..Caption
+#: Emoticons.dfm:30
+msgid "ToolBar1"
+msgstr "ToolBar1"
+
+#. frmEmoticons..ToolBar2..Caption
+#: Emoticons.dfm:364
+msgid "ToolBar2"
+msgstr "ToolBar2"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Caption
+#. frmEmoticons..ToolBar1..ToolButton1..Caption
+#: Browser.dfm:1122
+#: Emoticons.dfm:39
+msgid "ToolButton1"
+msgstr "ToolButton1"
+
+#. frmEmoticons..ToolBar1..ToolButton10..Caption
+#: Emoticons.dfm:95
+msgid "ToolButton10"
+msgstr "ToolButton10"
+
+#. frmEmoticons..ToolBar1..ToolButton11..Caption
+#: Emoticons.dfm:181
+msgid "ToolButton11"
+msgstr "ToolButton11"
+
+#. frmEmoticons..ToolBar1..ToolButton12..Caption
+#: Emoticons.dfm:188
+msgid "ToolButton12"
+msgstr "ToolButton12"
+
+#. frmEmoticons..ToolBar1..ToolButton13..Caption
+#: Emoticons.dfm:195
+msgid "ToolButton13"
+msgstr "ToolButton13"
+
+#. frmEmoticons..ToolBar1..ToolButton14..Caption
+#: Emoticons.dfm:202
+msgid "ToolButton14"
+msgstr "ToolButton14"
+
+#. frmEmoticons..ToolBar1..ToolButton15..Caption
+#: Emoticons.dfm:152
+msgid "ToolButton15"
+msgstr "ToolButton15"
+
+#. frmEmoticons..ToolBar1..ToolButton16..Caption
+#: Emoticons.dfm:103
+msgid "ToolButton16"
+msgstr "ToolButton16"
+
+#. frmEmoticons..ToolBar1..ToolButton17..Caption
+#: Emoticons.dfm:216
+msgid "ToolButton17"
+msgstr "ToolButton17"
+
+#. frmEmoticons..ToolBar1..ToolButton18..Caption
+#: Emoticons.dfm:209
+msgid "ToolButton18"
+msgstr "ToolButton18"
+
+#. frmEmoticons..ToolBar1..ToolButton19..Caption
+#: Emoticons.dfm:223
+msgid "ToolButton19"
+msgstr "ToolButton19"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton2..Caption
+#. frmEmoticons..ToolBar1..ToolButton2..Caption
+#: Browser.dfm:1106
+#: Emoticons.dfm:46
+msgid "ToolButton2"
+msgstr "ToolButton2"
+
+#. frmEmoticons..ToolBar1..ToolButton20..Caption
+#: Emoticons.dfm:231
+msgid "ToolButton20"
+msgstr "ToolButton20"
+
+#. frmEmoticons..ToolBar1..ToolButton21..Caption
+#: Emoticons.dfm:238
+msgid "ToolButton21"
+msgstr "ToolButton21"
+
+#. frmEmoticons..ToolBar1..ToolButton22..Caption
+#: Emoticons.dfm:252
+msgid "ToolButton22"
+msgstr "ToolButton22"
+
+#. frmEmoticons..ToolBar1..ToolButton23..Caption
+#: Emoticons.dfm:110
+msgid "ToolButton23"
+msgstr "ToolButton23"
+
+#. frmEmoticons..ToolBar1..ToolButton24..Caption
+#: Emoticons.dfm:159
+msgid "ToolButton24"
+msgstr "ToolButton24"
+
+#. frmEmoticons..ToolBar1..ToolButton25..Caption
+#: Emoticons.dfm:259
+msgid "ToolButton25"
+msgstr "ToolButton25"
+
+#. frmEmoticons..ToolBar1..ToolButton26..Caption
+#: Emoticons.dfm:266
+msgid "ToolButton26"
+msgstr "ToolButton26"
+
+#. frmEmoticons..ToolBar2..ToolButton27..Caption
+#: Emoticons.dfm:373
+msgid "ToolButton27"
+msgstr "ToolButton27"
+
+#. frmEmoticons..ToolBar1..ToolButton28..Caption
+#: Emoticons.dfm:280
+msgid "ToolButton28"
+msgstr "ToolButton28"
+
+#. frmEmoticons..ToolBar1..ToolButton29..Caption
+#: Emoticons.dfm:295
+msgid "ToolButton29"
+msgstr "ToolButton29"
+
+#. frmEmoticons..ToolBar1..ToolButton3..Caption
+#: Emoticons.dfm:53
+msgid "ToolButton3"
+msgstr "ToolButton3"
+
+#. frmEmoticons..ToolBar1..ToolButton30..Caption
+#: Emoticons.dfm:145
+msgid "ToolButton30"
+msgstr "ToolButton30"
+
+#. frmEmoticons..ToolBar1..ToolButton31..Caption
+#: Emoticons.dfm:302
+msgid "ToolButton31"
+msgstr "ToolButton31"
+
+#. frmEmoticons..ToolBar1..ToolButton32..Caption
+#: Emoticons.dfm:309
+msgid "ToolButton32"
+msgstr "ToolButton32"
+
+#. frmEmoticons..ToolBar1..ToolButton33..Caption
+#: Emoticons.dfm:316
+msgid "ToolButton33"
+msgstr "ToolButton33"
+
+#. frmEmoticons..ToolBar1..ToolButton34..Caption
+#: Emoticons.dfm:273
+msgid "ToolButton34"
+msgstr "ToolButton34"
+
+#. frmEmoticons..ToolBar1..ToolButton35..Caption
+#: Emoticons.dfm:245
+msgid "ToolButton35"
+msgstr "ToolButton35"
+
+#. frmEmoticons..ToolBar1..ToolButton36..Caption
+#: Emoticons.dfm:323
+msgid "ToolButton36"
+msgstr "ToolButton36"
+
+#. frmEmoticons..ToolBar1..ToolButton37..Caption
+#: Emoticons.dfm:287
+msgid "ToolButton37"
+msgstr "ToolButton37"
+
+#. frmEmoticons..ToolBar1..ToolButton38..Caption
+#: Emoticons.dfm:330
+msgid "ToolButton38"
+msgstr "ToolButton38"
+
+#. frmEmoticons..ToolBar1..ToolButton39..Caption
+#: Emoticons.dfm:117
+msgid "ToolButton39"
+msgstr "ToolButton39"
+
+#. frmEmoticons..ToolBar1..ToolButton4..Caption
+#: Emoticons.dfm:60
+msgid "ToolButton4"
+msgstr "ToolButton4"
+
+#. frmEmoticons..ToolBar1..ToolButton40..Caption
+#: Emoticons.dfm:124
+msgid "ToolButton40"
+msgstr "ToolButton40"
+
+#. frmEmoticons..ToolBar1..ToolButton41..Caption
+#: Emoticons.dfm:337
+msgid "ToolButton41"
+msgstr "ToolButton41"
+
+#. frmEmoticons..ToolBar1..ToolButton42..Caption
+#: Emoticons.dfm:344
+msgid "ToolButton42"
+msgstr "ToolButton42"
+
+#. frmEmoticons..ToolBar1..ToolButton43..Caption
+#: Emoticons.dfm:67
+msgid "ToolButton43"
+msgstr "ToolButton43"
+
+#. frmEmoticons..ToolBar1..ToolButton44..Caption
+#: Emoticons.dfm:351
+msgid "ToolButton44"
+msgstr "ToolButton44"
+
+#. frmEmoticons..ToolBar1..ToolButton45..Caption
+#: Emoticons.dfm:74
+msgid "ToolButton45"
+msgstr "ToolButton45"
+
+#. frmEmoticons..ToolBar1..ToolButton46..Caption
+#: Emoticons.dfm:81
+msgid "ToolButton46"
+msgstr "ToolButton46"
+
+#. frmEmoticons..ToolBar2..ToolButton47..Caption
+#: Emoticons.dfm:380
+msgid "ToolButton47"
+msgstr "ToolButton47"
+
+#. frmEmoticons..ToolBar2..ToolButton48..Caption
+#: Emoticons.dfm:387
+msgid "ToolButton48"
+msgstr "ToolButton48"
+
+#. frmEmoticons..ToolBar2..ToolButton49..Caption
+#: Emoticons.dfm:394
+msgid "ToolButton49"
+msgstr "ToolButton49"
+
+#. frmEmoticons..ToolBar1..ToolButton5..Caption
+#: Emoticons.dfm:131
+msgid "ToolButton5"
+msgstr "ToolButton5"
+
+#. frmEmoticons..ToolBar2..ToolButton50..Caption
+#: Emoticons.dfm:401
+msgid "ToolButton50"
+msgstr "ToolButton50"
+
+#. frmEmoticons..ToolBar2..ToolButton51..Caption
+#: Emoticons.dfm:408
+msgid "ToolButton51"
+msgstr "ToolButton51"
+
+#. frmEmoticons..ToolBar2..ToolButton52..Caption
+#: Emoticons.dfm:415
+msgid "ToolButton52"
+msgstr "ToolButton52"
+
+#. frmEmoticons..ToolBar2..ToolButton53..Caption
+#: Emoticons.dfm:422
+msgid "ToolButton53"
+msgstr "ToolButton53"
+
+#. frmEmoticons..ToolBar2..ToolButton54..Caption
+#: Emoticons.dfm:429
+msgid "ToolButton54"
+msgstr "ToolButton54"
+
+#. frmEmoticons..ToolBar2..ToolButton55..Caption
+#: Emoticons.dfm:436
+msgid "ToolButton55"
+msgstr "ToolButton55"
+
+#. frmEmoticons..ToolBar1..ToolButton6..Caption
+#: Emoticons.dfm:138
+msgid "ToolButton6"
+msgstr "ToolButton6"
+
+#. frmEmoticons..ToolBar1..ToolButton7..Caption
+#: Emoticons.dfm:167
+msgid "ToolButton7"
+msgstr "ToolButton7"
+
+#. frmEmoticons..ToolBar1..ToolButton8..Caption
+#: Emoticons.dfm:174
+msgid "ToolButton8"
+msgstr "ToolButton8"
+
+#. frmEmoticons..ToolBar1..ToolButton9..Caption
+#: Emoticons.dfm:88
+msgid "ToolButton9"
+msgstr "ToolButton9"
+
+#. frmExodus..MainMenu1..PGPTools1..Caption
+#: Jabber1.dfm:297
+msgid "Tools"
+msgstr "Herramientas"
+
+#. frmTracer..Caption
+#: ExceptTracer.dfm:7
+msgid "Tracer"
+msgstr "Trazador"
+
+#: Transfer.pas:100
+msgid "Trying to close."
+msgstr "Intentando Cerrar."
+
+#: RosterWindow.pas:253
+msgid "Trying to connect..."
+msgstr "Intentando conectar ..."
+
+#: Jabber1.pas:472
+msgid "Trying to setup the Auto Away timer."
+msgstr "Iniciando el tiempo de ausencia automatica"
+
+#. frmTransfer..pnlFrom..txtFrom..Caption
+#: Transfer.dfm:48
+msgid "txtFrom"
+msgstr "txtFrom"
+
+#. frmJoinRoom..txtServer..Text
+#: JoinRoom.dfm:92
+msgid "txtServer"
+msgstr "txtServer"
+
+#. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
+#: MsgRecv.dfm:326
+msgid "txtSubject"
+msgstr "txtSubject"
+
+#. frmBrowse..Panel3..vwBrowse......Caption
+#: Browser.dfm:54
+msgid "Type"
+msgstr "Tipo"
+
+#. frmBookmark..Label1..Caption
+#: Bookmark.dfm:24
+msgid "Type of Bookmark:"
+msgstr "Tipo de marca"
+
+#. frmConnDetails..PageControl1..tbsConn..Label8..Caption
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
+#: ConnDetails.dfm:148
+#: ConnDetails.dfm:239
+msgid "Type:"
+msgstr "Tipo:"
+
+#. frmProfile..PageControl1..TabSheet3..Label28..Caption
+#: Profile.dfm:333
+msgid "Typical Format: YYYY-MM-DD"
+msgstr "Formato típico: AAAA-MM-DD"
+
+#: ExEvents.pas:72
+msgid "Unavailable presence"
+msgstr "Estado No Disponible"
+
+#: Room.pas:202
+#: RosterWindow.pas:258
+msgid "UnBlock"
+msgstr "Desbloquear"
+
+#: RosterWindow.pas:247
+msgid "Unblock %d contacts?"
+msgstr "Desbloquear %d Contactos?"
+
+#: Jabber1.pas:445
+msgid "Unfiled"
+msgstr "Sin Grupo"
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry..Text
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry..Text
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry..Text
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry..Text
+#: Profile.dfm:519
+#: Profile.dfm:935
+#: vcard.dfm:349
+#: vcard.dfm:820
+msgid "United States  "
+msgstr "Estados Unidos."
+
+#: Room.pas:203
+msgid "Unknown file type"
+msgstr "Tipo de archivo desconocido"
+
+#: ExEvents.pas:81
+msgid "Unsubscribe presence packet"
+msgstr "Unsubscribe presencia"
+
+#: Jabber1.pas:457
+msgid "Untitled Group"
+msgstr "Grupo sin Título"
+
+#: Login.pas:62
+msgid "Untitled Profile"
+msgstr "Perfil sin Título"
+
+#. frmProfile..PageControl1..TabSheet1..lblUpdateNick..Caption
+#: Profile.dfm:104
+msgid "Update nickname based on names."
+msgstr "Actualizar nick basandose en los nombre."
+
+#. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
+#: ConnDetails.dfm:327
+msgid "URL:"
+msgstr "URL:"
+
+#. frmPrefTransfer..chkIP..Caption
+#: PrefTransfer.dfm:78
+msgid "Use a custom IP address for HTTP transfers"
+msgstr "Usar una IP determinada para las transferencias HTTP"
+
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..cboProxyApproach..Text
+#: Prefs.dfm:1886
+msgid "Use IE settings"
+msgstr "Usar Configuración de IE"
+
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..cboProxyApproach....Items.Strings
+#: Prefs.dfm:1892
+msgid ""
+"Use IE settings\r\n"
+"Direct Connection\r\n"
+"Custom\r\n"
+msgstr ""
+"Usar Configuración de IE\r\n"
+"Conexión Directa\r\n"
+"Personalizada\r\n"
+
+#. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
+#: Prefs.dfm:1739
+msgid "Use Regular Expressions for Keyword matches"
+msgstr "Usar Expresiones Regulares para Encontrar Palabras Claves"
+
+#. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
+#: ConnDetails.dfm:178
+msgid "Use SSL"
+msgstr "Usar SSL"
+
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyUsername..Caption
+#: ConnDetails.dfm:246
+#: Prefs.dfm:1816
+msgid "Username:"
+msgstr "Usuario:"
+
+#: Jabber1.pas:474
+msgid "Using Win32 API for Autoaway checks!!"
+msgstr "Usar la API Win32 para Auto-Ausencias."
+
+#: Browser.pas:172
+msgid "Validator"
+msgstr "Validador"
+
+#. frmBrowse..popContext..mVCard..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuServerVCard..Caption
+#: Browser.dfm:4070
+#: Jabber1.dfm:494
+msgid "vCard"
+msgstr "vCard"
+
+#. frmRiser..Label1..Font.Name
+#: RiserWindow.dfm:85
+msgid "Verdana"
+msgstr "Verdana"
+
+#. frmBrowse..popContext..mVersion..Caption
+#: ExResponders.pas:123
+#: Browser.dfm:4074
+msgid "Version"
+msgstr "Versión"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuVersion..Caption
+#: Jabber1.dfm:486
+msgid "Version "
+msgstr "Versión"
+
+#. frmChat..popContact..C1..mnuVersionRequest..Caption
+#. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
+#. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
+#: ChatWin.dfm:111
+#: MsgRecv.dfm:499
+#: RosterWindow.dfm:266
+msgid "Version Request"
+msgstr "Pedir Versión"
+
+#: ExEvents.pas:87
+msgid "Version Response"
+msgstr "Respuesta de Versión"
+
+#. frmAbout..pnlVersion..Caption
+#: ExEvents.pas:89
+#: About.dfm:1432
+msgid "Version: "
+msgstr "Version:"
+
+#. frmExodus..Toolbar..ToolBar1..btnOnlineRoster..Caption
+#. frmExodus..MainMenu1..WInJab1..View1..Caption
+#: Jabber1.dfm:137
+#: Jabber1.dfm:234
+msgid "View"
+msgstr "Ver"
+
+#. frmExodus..Toolbar..ToolBar1..btnOnlineRoster..Hint
+#: Jabber1.dfm:134
+msgid "View Online/All"
+msgstr "Ver En Linea/Todos"
+
+#. frmJUD..PopupMenu1..popProfile..Caption
+#: jud.dfm:218
+msgid "View Profile"
+msgstr "Ver Perfil"
+
+#. frmProfile..PageControl1..TabSheet3..Label8..Caption
+#. frmProfile..PageControl1..TabSheet5..Label19..Caption
+#. frmVCard..PageControl1..TabSheet3..Label8..Caption
+#. frmVCard..PageControl1..TabSheet5..Label19..Caption
+#: Profile.dfm:340
+#: Profile.dfm:792
+#: vcard.dfm:195
+#: vcard.dfm:687
+msgid "Voice Tel:"
+msgstr "Telefono:"
+
+#. frmAbout..InfoBox......Name
+#. frmBaseChat..Panel3..MsgList......Name
+#. frmBaseChat..pnlInput..MsgOut......Name
+#. frmDebug..Panel2..MsgDebug......Name
+#. frmDebug..Panel2..MemoSend......Name
+#. frmMsgQueue..txtMsg......Name
+#. frmMsgRecv..pnlReply..MsgOut......Name
+#. frmMsgRecv..txtMsg......Name
+#. frmRosterRecv..txtMsg......Name
+#. frmTransfer..txtMsg......Name
+#: About.dfm:1511
+#: BaseChat.dfm:117
+#: BaseChat.dfm:239
+#: Debug.dfm:116
+#: Debug.dfm:218
+#: MsgQueue.dfm:136
+#: MsgRecv.dfm:137
+#: MsgRecv.dfm:235
+#: RosterRecv.dfm:169
+#: Transfer.dfm:164
+msgid "wais"
+msgstr "wais"
+
+#. frmRegister..Tabs..tabWelcome..lblIns..Caption
+#: RegForm.dfm:105
+msgid "Waiting for agent instructions....."
+msgstr "Esperando por la instrucciones del agente ..."
+
+#: Transfer.pas:97
+msgid "Waiting for connection..."
+msgstr "Esperando Conexión..."
+
+#: Jabber1.pas:450
+msgid "Wants to chat"
+msgstr "Desea Conversar"
+
+#. frmVCard..PageControl1..TabSheet1..lblURL..Caption
+#: vcard.dfm:92
+msgid "Web:"
+msgstr "Web:"
+
+#. frmDebug..PopupMenu1..WordWrap1..Caption
+#: Debug.dfm:315
+msgid "Word Wrap"
+msgstr "Ajuste de linea"
+
+#. frmChat..popContact..mnuWordwrap..Caption
+#. frmRoom..popRoom..mnuWordwrap..Caption
+#: ChatWin.dfm:155
+#: Room.dfm:206
+msgid "Word Wrap Input"
+msgstr "Entrada de ajuste de linea"
+
+#. frmProfile..PageControl1..TabSheet5..Caption
+#. frmVCard..PageControl1..TabSheet5..Caption
+#: ConnDetails.pas:109
+#: Profile.dfm:764
+#: vcard.dfm:659
+msgid "Work"
+msgstr "Trabajo"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Working1..Caption
+#. frmExodus..popTray..trayPresence..DoNotDisturb1..Working2..Caption
+#: Jabber1.dfm:426
+#: Jabber1.dfm:2776
+msgid "Working"
+msgstr "Trabajando"
+
+#. frmBrowse..pnlTop..btnClose..Caption
+#. frmChat..Panel1..btnClose..Caption
+#. frmDebug..pnlTop..btnClose..Caption
+#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..btnClose..Caption
+#. frmRoom..Panel1..btnClose..Caption
+#: Browser.dfm:1036
+#: ChatWin.dfm:35
+#: Debug.dfm:263
+#: MsgRecv.dfm:360
+#: Room.dfm:74
+msgid "X"
+msgstr "X"
+
+#. frmXData..Caption
+#: xdata.dfm:7
+msgid "x:data Form"
+msgstr "x:data Form"
+
+#. frmBaseChat..Panel3..MsgList......Name
+#: BaseChat.dfm:123
+msgid "xmpp"
+msgstr "xmpp"
+
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..Caption
+#. frmExodus..popTray..trayPresence..XtendedAway1..Caption
+#: Jabber1.dfm:392
+#: Jabber1.dfm:2742
+msgid "Xtended Away"
+msgstr "Ausencia extendida."
+
+#: Jabber1.pas:504
+msgid "You are already subscribed to this contact"
+msgstr "Ya estas subscrito a este contacto."
+
+#: Room.pas:232
+msgid "You are not allowed to create rooms."
+msgstr "No tienes permitido crear salas de conversación."
+
+#: Room.pas:233
+msgid "You are not allowed to enter the room. You must be on the member list."
+msgstr "Tienes que estar en la lista de miembros de sala, por lo tanto no puedes ingresar."
+
+#: Room.pas:234
+msgid "You are not on the member list for this room. Try and register?"
+msgstr "No estas en la lista de miembros de esta sala. Quieres intentar registrarte?"
+
+#: Transports.pas:49
+msgid "You are not registered with this transport."
+msgstr "No estas registrado con este transporte."
+
+#: Room.pas:230
+msgid "You are on the ban list for this room."
+msgstr "Estas en la lista de bloqueados de esta sala."
+
+#: RosterAdd.pas:70
+msgid "You can not add yourself to your roster."
+msgstr "No te puedes agregar a tu misma lista."
+
+#: ExUtils.pas:123
+msgid "You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)"
+msgstr "Actualmente no tienes activado el almacenamiento de registros. Quieres activarlo? (Recuerda que los registros no se encriptan)"
+
+#: Room.pas:211
+msgid "You have been banned."
+msgstr "Te bloquearon"
+
+#: Jabber1.pas:460
+msgid "You have been disconnected."
+msgstr "Te desconectaron"
+
+#: Room.pas:214
+msgid "You have been granted voice."
+msgstr "Te has ganado la voz"
+
+#: Room.pas:210
+msgid "You have been kicked."
+msgstr "Te expulsaron"
+
+#: MsgRecv.pas:158
+msgid "You have unread messages. Read all messages before closing the window."
+msgstr "Tienes mensajes sin leer. Lee todos los mensajes antes de cerrar la ventana."
+
+#: JoinRoom.pas:56
+msgid "You must enter a nickname"
+msgstr "Debes ingresar un nick"
+
+#: RosterWindow.pas:249
+msgid "You must select more than one online contact to broadcast."
+msgstr "Debes seleccionar más de un contacto en linea para enviar mensaje masivo."
+
+#: RosterWindow.pas:246
+msgid "You must select one or more contacts."
+msgstr "Debe seleccionar uno o más contactos."
+
+#: Room.pas:229
+msgid "You supplied an invalid password to enter this room."
+msgstr "La clave para ingresar a esta sala es invalido."
+
+#: RosterWindow.pas:261
+msgid "Your connection type does not support direct connections."
+msgstr "Tu conección no acepta transmición directa de datos."
+
+#: FileServer.pas:65
+msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
+msgstr "Tu nuevo puerto para transferencias no se activara hasta que las trasnferencias actuales paren. Deseas aplicar los cambios?"
+
+#: Jabber1.pas:464
+msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
+msgstr "Tu nueva cuenta en jabber esta activada. Quieres agregar información adicional?"
+
+#: Room.pas:235
+msgid "Your nickname is already being used. Please select another one."
+msgstr "Tu nombre de usuario ya esta siendo utilizado. Por favor intenta con otro diferente."
+
+#: RegForm.pas:98
+msgid "Your registration has been removed."
+msgstr "El registro ha sido removido."
+
+#. frmRegister..Tabs..tabResult..lblOK....AutoSize
+#: RegForm.dfm:200
+msgid "Your Registration to this service has been completed Successfully. Press the 'Next' button to Finish.\r\n"
+msgstr "Tu registro con este servicio esta completo. Presiona el boton de 'Siguiente' para finalizar.\r\n"
+
+#. frmRegister..Tabs..tabResult..lblBad....AutoSize
+#: RegForm.dfm:181
+msgid "Your Registration to this service has Failed! Press Previous to go back and verify that all of the parameters have been filled in correctly. Press Cancel to close this wizard.\r\n"
+msgstr "Tu registro con este servicio a fallado. Pulsa 'Anterior' para verificar los datos. Pulsa 'Cancelar' para cerrar el asistente.\r\n"
+
+#: Transports.pas:50
+msgid "Your request was successful."
+msgstr "Su petición fue exitosa."
+
+#: Room.pas:215
+msgid "Your voice has been revoked."
+msgstr "Te han quitado la voz."
+
+#. frmProfile..PageControl1..TabSheet4..Label32..Caption
+#. frmProfile..PageControl1..TabSheet6..Label14..Caption
+#. frmVCard..PageControl1..TabSheet4..Label32..Caption
+#. frmVCard..PageControl1..TabSheet6..Label14..Caption
+#: Profile.dfm:469
+#: Profile.dfm:885
+#: vcard.dfm:334
+#: vcard.dfm:805
+msgid "Zip / Postal Code:"
+msgstr "Zip/Código Postal:"
+
