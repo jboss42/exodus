@@ -3797,6 +3797,7 @@ begin
                 if (chatwin <> nil) then begin
                     chatwin.lblNick.Caption := nick;
                     chatwin.Caption := nick;
+                    getDockManager().UpdateDocked(chatwin);
                 end;
             end;
             p := MainSession.ppdb.NextPres(p);
