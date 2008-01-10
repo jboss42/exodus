@@ -265,7 +265,8 @@ uses
   ActivityWindow in 'ActivityWindow.pas' {frmActivityWindow},
   DockWindow in 'DockWindow.pas' {frmDockWindow},
   ExodusDockManager in 'ExodusDockManager.pas',
-  AWItem in 'AWItem.pas' {fAWItem: TTntFrame};
+  AWItem in 'AWItem.pas' {fAWItem: TTntFrame},
+  PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay};
 
 {$R *.TLB}
 
