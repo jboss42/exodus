@@ -27,7 +27,7 @@ uses
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
     TntComCtrls, TntExtCtrls, TntForms, ExNumericEdit, TntWindows, JclMime, IdCoderMIME,
 	CertSelector, JwaCryptUIApi, JwaWinCrypt, PrefFile, ExForm, pngimage,
-  ExGraphicLabel, Buttons, TntButtons, ExGroupBox, ExGradientPanel, ExFrame,
+  ExGraphicButton, Buttons, TntButtons, ExGroupBox, ExGradientPanel, ExFrame,
   ExBrandPanel, ExCheckGroupBox;
 
 type
@@ -65,11 +65,11 @@ type
     ExGradientPanel1: TExGradientPanel;
     Panel5: TPanel;
     pnlTabs: TExBrandPanel;
-    imgConnection: TExGraphicLabel;
-    imgProxy: TExGraphicLabel;
-    imgHttpPolling: TExGraphicLabel;
-    imgAdvanced: TExGraphicLabel;
-    imgAcctDetails: TExGraphicLabel;
+    imgConnection: TExGraphicButton;
+    imgProxy: TExGraphicButton;
+    imgHttpPolling: TExGraphicButton;
+    imgAdvanced: TExGraphicButton;
+    imgAcctDetails: TExGraphicButton;
     pnlAccountDetails: TExBrandPanel;
     btnRename: TTntButton;
     chkSavePasswd: TTntCheckBox;
@@ -166,7 +166,7 @@ type
     { Private declarations }
     _profile: TJabberProfile;
     _Canceled: boolean;
-    _cur_tab: TExGraphicLabel;
+    _cur_tab: TExGraphicButton;
 
     _sslOpts: TOptionSelection;
 
@@ -189,7 +189,7 @@ type
     procedure _setConnectButtonEnabled(val: boolean);
     function _getConnectButtonEnabled(): boolean;
     procedure brandControl(ctrl: TControl);
-    procedure brandPage(page: TExGraphicLabel);
+    procedure brandPage(page: TExGraphicButton);
 
     function checkVisibility(ctrl: TControl): boolean;
 
@@ -1098,10 +1098,10 @@ end;
 
 procedure TfrmConnDetails.TabSelect(Sender: TObject);
 var
-  lblNew: TExGraphicLabel;
+  lblNew: TExGraphicButton;
   tab: TTntTabSheet;
 begin
-  lblNew := TExGraphicLabel(Sender);
+  lblNew := TExGraphicButton(Sender);
   //Default to Account Details
   if lblNew = nil then lblNew := imgAcctDetails;
 
@@ -1200,7 +1200,7 @@ begin
                 ctrl.Visible := false;
     end;
 end;
-procedure TfrmConnDetails.brandPage(page: TExGraphicLabel);
+procedure TfrmConnDetails.brandPage(page: TExGraphicButton);
 var
     pref: WideString;
     show: Boolean;
