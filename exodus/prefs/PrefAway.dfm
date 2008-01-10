@@ -32,7 +32,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoSize = True
       TabOrder = 0
       TabStop = True
-      AutoHide = True
+      AutoHide = False
       Caption = 'Enable Auto Away'
       Checked = False
       OnCheckChanged = chkAutoAwayCheckChanged
@@ -47,7 +47,7 @@ inherited frmPrefAway: TfrmPrefAway
         Align = alTop
         TabOrder = 1
         TabStop = True
-        AutoHide = False
+        AutoHide = True
         object lblAwayTime: TTntLabel
           AlignWithMargins = True
           Left = 21
@@ -117,9 +117,9 @@ inherited frmPrefAway: TfrmPrefAway
           Caption = 'Away status text:'
         end
         object txtAway: TTntEdit
-          Left = 182
+          Left = 185
           Top = 0
-          Width = 182
+          Width = 179
           Height = 24
           TabOrder = 0
         end
@@ -139,7 +139,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoSize = True
       TabOrder = 1
       TabStop = True
-      AutoHide = True
+      AutoHide = False
       Caption = 'Enable Auto Extended Away'
       Checked = False
       object ExBrandPanel3: TExBrandPanel
@@ -198,9 +198,9 @@ inherited frmPrefAway: TfrmPrefAway
           Caption = 'Extended Away status text:'
         end
         object txtXA: TTntEdit
-          Left = 179
+          Left = 182
           Top = 0
-          Width = 182
+          Width = 179
           Height = 24
           TabOrder = 0
         end
@@ -220,7 +220,7 @@ inherited frmPrefAway: TfrmPrefAway
       AutoSize = True
       TabOrder = 2
       TabStop = True
-      AutoHide = True
+      AutoHide = False
       Caption = 'Enable Auto Disconnect'
       Checked = False
       object lblDisconnectTime: TTntLabel

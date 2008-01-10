@@ -40,9 +40,6 @@ type
     { Public declarations }
   end;
 
-var
-  frmModifyHotkeys: TfrmModifyHotkeys;
-
 implementation
 
 {$R *.dfm}
