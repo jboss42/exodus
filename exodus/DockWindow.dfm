@@ -2,8 +2,8 @@ object frmDockWindow: TfrmDockWindow
   Left = 0
   Top = 0
   Caption = 'frmDockWindow'
-  ClientHeight = 398
-  ClientWidth = 637
+  ClientHeight = 416
+  ClientWidth = 642
   Color = 13681583
   DockSite = True
   Font.Charset = DEFAULT_CHARSET
@@ -23,14 +23,15 @@ object frmDockWindow: TfrmDockWindow
   object splAW: TTntSplitter
     Left = 185
     Top = 0
-    Height = 398
+    Height = 416
     ResizeStyle = rsUpdate
+    ExplicitHeight = 398
   end
   object AWTabControl: TTntPageControl
     Left = 188
     Top = 0
-    Width = 449
-    Height = 398
+    Width = 454
+    Height = 416
     Align = alClient
     DockSite = True
     OwnerDraw = True
@@ -43,7 +44,7 @@ object frmDockWindow: TfrmDockWindow
     Left = 0
     Top = 0
     Width = 185
-    Height = 398
+    Height = 416
     Align = alLeft
     BevelOuter = bvNone
     ParentColor = True

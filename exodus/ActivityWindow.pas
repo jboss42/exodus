@@ -511,7 +511,6 @@ begin
         end;
 
     except
-        Sleep(1); //???dda
     end;
 end;
 

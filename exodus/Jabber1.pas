@@ -272,6 +272,7 @@ type
     mnuOptions_Notifications_NewConversation: TTntMenuItem;
     btnActivityWindow: TToolButton;
     mnuWindows_View_ShowActivityWindow: TTntMenuItem;
+    trayShowActivityWindow: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -392,6 +393,7 @@ type
     procedure splitRosterCanResize(Sender: TObject; var NewSize: Integer;
       var Accept: Boolean);
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
+    procedure trayShowActivityWindowClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1382,11 +1384,13 @@ begin
     _dockManager := _dockWindow;
     Self.DockSite := false;
     btnActivityWindow.Visible := true;
+    trayShowActivityWindow.Visible := true;
     mnuWindows_View_ShowActivityWindow.Visible := false;
 {$ELSE}
     _dockWindow := nil;
     _dockManager := frmExodus;
     btnActivityWindow.Visible := false;
+    trayShowActivityWindow.Visible := false;
     mnuWindows_View_ShowActivityWindow.Visible := false;
 {$ENDIF}
 
@@ -1466,6 +1470,11 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
+{$IFDEF USE_ACTIVITY_WINDOW}
+            if (_dockWindow <> nil) then begin
+                _dockWindow.ShowDefault();
+            end;
+{$ENDIF}
             ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
@@ -1661,6 +1670,7 @@ begin
         btnOptions.Enabled := false;
         mnuOptions_Options.Enabled := false;
         Preferences1.Enabled := false;
+        btnActivityWindow.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1813,6 +1823,9 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
+{$IFDEF USE_ACTIVITY_WINDOW}
+        btnActivityWindow.Enabled := true;
+{$ENDIF}
 
     end
 
@@ -1868,6 +1881,9 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
+{$IFDEF USE_ACTIVITY_WINDOW}
+        btnActivityWindow.Enabled := true;
+{$ENDIF}
 
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
@@ -2395,6 +2411,7 @@ begin
     Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
     frmRosterWindow.lblConnectClick(Sender);
+    btnActivityWindow.Enabled := false;
 end;
 
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
@@ -2948,6 +2965,14 @@ procedure TfrmExodus.presCustomClick(Sender: TObject);
 begin
     // Custom presence
     ShowCustomPresence();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.trayShowActivityWindowClick(Sender: TObject);
+begin
+{$IFDEF USE_ACTIVITY_WINDOW}
+    mnuWindows_View_ShowActivityWindowClick(Sender);
+{$ENDIF}
 end;
 
 {---------------------------------------}

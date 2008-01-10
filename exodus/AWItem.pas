@@ -76,6 +76,13 @@ type
         _startColor: TColor;
         _endColor: TColor;
         _docked: boolean;
+        _active: boolean;
+        _priority: boolean;
+        _activity_window_selected_font_color: TColor;
+        _activity_window_non_selected_font_color: TColor;
+        _activity_window_unread_msgs_font_color: TColor;
+        _activity_window_high_priority_font_color: TColor;
+        _activity_window_unread_msgs_high_priority_font_color: TColor;
 
         procedure _setCount(val:integer);
         function _getName(): widestring;
@@ -97,6 +104,8 @@ type
         property activeStartColor: TColor read _activeStartColor write _activeStartColor;
         property activeEndColor: TColor read _activeEndColor write _activeEndColor;
         property docked: boolean read _docked write _docked;
+        property active: boolean read _active;
+        property priority: boolean read _priority;
     published
         { published declarations }
     end;
@@ -104,7 +113,8 @@ type
 implementation
 
 uses
-    Jabber1, ActivityWindow;
+    Jabber1, ActivityWindow, Session,
+    XMLTag;
 
 
 {$R *.dfm}
@@ -126,14 +136,39 @@ begin
 end;
 
 constructor TfAWItem.Create(AOwner: TComponent);
+var
+    tag: TXMLTag;
 begin
     inherited;
+    // Set defaults
     _startColor := pnlAWItemGPanel.GradientProperites.startColor;
     _endColor := pnlAWItemGPanel.GradientProperites.endColor;
     _priorityStartColor := $000000ff;
     _priorityEndColor := $000000ff;
-    _activeStartColor := $0000ff00; //???dda
-    _activeEndColor := $0000ff00; //??dda
+    _activeStartColor := $0000ff00;
+    _activeEndColor := $0000ff00;
+    _activity_window_selected_font_color := $00000000;
+    _activity_window_non_selected_font_color := $00000000;
+    _activity_window_unread_msgs_font_color := $000000ff;
+    _activity_window_high_priority_font_color := $00000000;
+    _activity_window_unread_msgs_high_priority_font_color := $00000000;
+
+    // Set from prefs
+    tag := MainSession.Prefs.getXMLPref('activity_window_selected_color');
+    if (tag <> nil) then begin
+        _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _activeEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+    end;
+    tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
+    if (tag <> nil) then begin
+        _priorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _priorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+    end;
+    _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
+    _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
+    _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
+    _activity_window_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_high_priority_font_color'));
+    _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
 end;
 
 {---------------------------------------}
@@ -142,11 +177,21 @@ begin
     _count := val;
     lblCount.Caption := IntToStr(_count);
     if (_count > 0) then begin
-        lblCount.Font.Color := clRed;
+        if (_priority) then begin
+            lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+        end
+        else begin
+            lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+        end;
         lblCount.Font.Style := lblCount.Font.Style + [fsBold];
     end
     else begin
-        lblCount.Font.Color := clBlack;
+        if (_active) then begin
+            lblCount.Font.Color := _activity_window_selected_font_color;
+        end
+        else begin
+            lblCount.Font.Color := _activity_window_non_selected_font_color;
+        end;
         lblCount.Font.Style := lblCount.Font.Style - [fsBold];
     end;
 end;
@@ -249,25 +294,23 @@ begin
     if ((val >= 0) and
         (val < frmExodus.ImageList2.Count)) then begin
         _imgIndex := val;
-//        imgPresence.Picture := nil;
-//        frmExodus.ImageList2.GetBitmap(val, imgPresence.Picture.Bitmap);
-//        imgPresence.Picture.Graphic.Transparent := true;
-//        with imgPresence.Picture.Bitmap do begin
-//            TransparentColor := $00FF00FF;
-//            TransparentMode := tmFixed;
-//        end;
         frmExodus.ImageList2.GetIcon(_imgIndex, imgPresence.Picture.Icon);
       end;
 end;
 
 {---------------------------------------}
-procedure TfAWItem.activate(setActive:boolean);
+procedure TfAWItem.activate(setActive: boolean);
 begin
+    _active := setActive;
     if (setActive) then begin
         _setPnlColors(_activeStartColor, _activeEndColor);
+        lblName.Font.Color := _activity_window_selected_font_color;
+        lblCount.Font.Color := _activity_window_selected_font_color;
     end
     else begin
         _setPnlColors(_startColor, _endColor);
+        lblName.Font.Color := _activity_window_non_selected_font_color;
+        lblCount.Font.Color := _activity_window_non_selected_font_color;
     end;
 end;
 
@@ -280,8 +323,10 @@ end;
 
 procedure TfAWItem.priorityFlag(setPriority:boolean);
 begin
+    _priority := setPriority;
     if (setPriority) then begin
         _setPnlColors(_priorityStartColor, _priorityEndColor);
+        lblName.Font.Color := _activity_window_high_priority_font_color;
     end
     else begin
         if ((pnlAWItemGPanel.GradientProperites.startColor = _priorityStartColor) and

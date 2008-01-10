@@ -37,7 +37,7 @@ inherited fAWItem: TfAWItem
       AlignWithMargins = True
       Left = 24
       Top = 3
-      Width = 147
+      Width = 146
       Height = 13
       Align = alClient
       Alignment = taCenter
@@ -52,9 +52,9 @@ inherited fAWItem: TfAWItem
       ExplicitWidth = 142
     end
     object lblCount: TTntLabel
-      Left = 179
+      Left = 178
       Top = 0
-      Width = 6
+      Width = 7
       Height = 19
       Align = alRight
       Alignment = taRightJustify
@@ -62,7 +62,7 @@ inherited fAWItem: TfAWItem
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
-      ExplicitHeight = 13
+      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0
@@ -84,7 +84,7 @@ inherited fAWItem: TfAWItem
       Shape = bsSpacer
     end
     object RightSpacer: TBevel
-      Left = 174
+      Left = 173
       Top = 0
       Width = 5
       Height = 19

@@ -2,49 +2,49 @@ inherited frmRoom: TfrmRoom
   Left = 252
   Top = 264
   Caption = 'Conference Room'
-  ClientHeight = 416
-  ClientWidth = 492
+  ClientHeight = 384
+  ClientWidth = 454
   OldCreateOrder = True
-  ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitWidth = 462
+  ExplicitHeight = 418
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   inherited Splitter1: TSplitter
-    Top = 383
-    Width = 492
-    ExplicitTop = 243
-    ExplicitWidth = 382
+    Top = 325
+    Width = 454
+    ExplicitTop = 354
+    ExplicitWidth = 454
   end
   inherited pnlDockTop: TPanel
-    Width = 492
+    Width = 454
     TabOrder = 1
-    ExplicitWidth = 492
+    ExplicitWidth = 454
     inherited tbDockBar: TToolBar
-      Left = 443
-      ExplicitLeft = 443
+      Left = 405
+      ExplicitLeft = 405
     end
     inherited pnlChatTop: TPanel
-      Width = 440
-      ExplicitWidth = 440
+      Width = 402
+      ExplicitWidth = 402
       object pnlSubj: TPanel
         Left = 0
         Top = 0
-        Width = 352
-        Height = 32
+        Width = 325
+        Height = 30
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
         object lblSubject: TTntLabel
-          Left = 27
+          Left = 25
           Top = 5
-          Width = 289
-          Height = 21
+          Width = 267
+          Height = 19
           AutoSize = False
           Caption = ' lblSubject'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
@@ -55,8 +55,8 @@ inherited frmRoom: TfrmRoom
         object SpeedButton1: TSpeedButton
           Left = 1
           Top = 6
-          Width = 20
-          Height = 20
+          Width = 18
+          Height = 18
           Flat = True
           Glyph.Data = {
             F6000000424DF600000000000000760000002800000010000000100000000100
@@ -76,25 +76,24 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 492
-    Height = 322
+    Width = 454
+    Height = 295
     TabOrder = 2
-    ExplicitWidth = 492
-    ExplicitHeight = 322
+    ExplicitWidth = 454
+    ExplicitHeight = 295
     object Splitter2: TSplitter
-      Left = 380
+      Left = 351
       Top = 4
-      Height = 314
+      Height = 287
       Align = alRight
       ResizeStyle = rsUpdate
-      ExplicitLeft = 270
-      ExplicitHeight = 212
+      ExplicitHeight = 290
     end
     object Panel6: TPanel
-      Left = 383
+      Left = 354
       Top = 4
-      Width = 105
-      Height = 314
+      Width = 96
+      Height = 287
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -103,8 +102,8 @@ inherited frmRoom: TfrmRoom
       object lstRoster: TTntListView
         Left = 1
         Top = 1
-        Width = 103
-        Height = 312
+        Width = 94
+        Height = 285
         Align = alClient
         Columns = <
           item
@@ -136,20 +135,20 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 388
-    Width = 492
+    Top = 358
+    Width = 454
     TabOrder = 0
-    ExplicitTop = 388
-    ExplicitWidth = 492
+    ExplicitTop = 358
+    ExplicitWidth = 454
     inherited MsgOut: TExRichEdit
-      Width = 488
+      Width = 450
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 354
-    Width = 492
-    ExplicitTop = 354
-    ExplicitWidth = 492
+    Top = 329
+    Width = 454
+    ExplicitTop = 329
+    ExplicitWidth = 454
   end
   inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual
