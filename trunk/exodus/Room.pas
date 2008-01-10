@@ -588,6 +588,7 @@ var
     etag: TXMLTag;
     e: TJabberEntity;
     skip_notification: Boolean;
+    msgDelayTag: TXMLTag;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -597,8 +598,16 @@ begin
 
     // Check to see if we need to increment the
     // unread msg count
-    updateMsgCount(Msg);
-    updateLastActivity(Msg.Time);
+    msgDelayTag := Msg.Tag.QueryXPTag(XP_MSGDELAY);
+    if ((msgDelayTag = nil) and
+        (not Msg.IsMe) and
+        (Msg.FromJID <> self.jid)) then begin
+        // We don't want to update counts on delayed (history) msgs
+        // or on msgs from "me"
+        // or on msgs that are "system messages"
+        updateMsgCount(Msg);
+        updateLastActivity(Msg.Time);
+    end;
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -678,7 +687,7 @@ begin
                      RosterTreeImages.Find('conference'), 'notify_keyword');
             Msg.highlight := true;
         end
-        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (Msg.Tag.QueryXPTag(XP_MSGDELAY) = nil) then
+        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
           if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
             DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
                      GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,

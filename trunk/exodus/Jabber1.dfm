@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 502
-  ClientWidth = 388
+  ClientHeight = 483
+  ClientWidth = 358
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -20,14 +20,14 @@ inherited frmExodus: TfrmExodus
   OnDockDrop = FormDockDrop
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 396
-  ExplicitHeight = 556
+  ExplicitWidth = 366
+  ExplicitHeight = 537
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 388
+    Width = 358
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -36,7 +36,7 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 384
+        Width = 354
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -169,16 +169,16 @@ inherited frmExodus: TfrmExodus
   object Panel1: TPanel
     Left = 0
     Top = 31
-    Width = 388
-    Height = 471
+    Width = 358
+    Height = 452
     Align = alClient
     ParentColor = True
     TabOrder = 1
     object splitRoster: TSplitter
-      Left = 170
+      Left = 157
       Top = 1
       Width = 5
-      Height = 469
+      Height = 450
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -186,13 +186,13 @@ inherited frmExodus: TfrmExodus
       Visible = False
       OnCanResize = splitRosterCanResize
       OnMoved = splitRosterMoved
-      ExplicitHeight = 676
+      ExplicitHeight = 433
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
-      Width = 169
-      Height = 469
+      Width = 156
+      Height = 450
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
@@ -200,12 +200,13 @@ inherited frmExodus: TfrmExodus
       ParentColor = True
       TabOrder = 0
       OnDockDrop = FormDockDrop
+      ExplicitHeight = 430
     end
     object Tabs: TTntPageControl
-      Left = 175
+      Left = 162
       Top = 1
-      Width = 212
-      Height = 469
+      Width = 195
+      Height = 450
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -3933,6 +3934,11 @@ inherited frmExodus: TfrmExodus
     object trayShow: TTntMenuItem
       Caption = 'Show Exodus'
       OnClick = trayShowClick
+    end
+    object trayShowActivityWindow: TTntMenuItem
+      Caption = 'Show Activity Window'
+      Visible = False
+      OnClick = trayShowActivityWindowClick
     end
     object trayPresence: TTntMenuItem
       Caption = 'Presence'

@@ -124,6 +124,20 @@
     <msglist_type value="0" control="cboMsgList"/>
     <ie_css value="" control="cboIEStylesheet"/>
 
+    <activity_window_selected_color>
+    	<start>$0000ff00</start>
+        <end>$0000ff00</end>
+    </activity_window_selected_color>
+    <activity_window_high_priority_color>
+    	<start>$000000ff</start>
+        <end>$000000ff</end>
+    </activity_window_high_priority_color>
+    <activity_window_selected_font_color value="$00000000"/>
+    <activity_window_non_selected_font_color value="$00000000"/>
+    <activity_window_unread_msgs_font_color value="$000000ff"/>
+    <activity_window_high_priority_font_color value="$00000000"/>
+    <activity_window_unread_msgs_high_priority_font_color value="$00000000"/>
+
     <!-- Rich text -->
     <richtext_enabled value="1" control="chkRTEnabled"/>
     <richtext_ignored_font_styles value="font-size;font-family;"/>
@@ -135,6 +149,9 @@
 
     <event_width value="400"/>
     <roster_width value="215"/>
+
+    <activity_window_width value="215"/>
+    <activity_window_tab_width value="400"/>
 
     <restore_window_state value="1" control="chkSaveWindowState"/>
     <restore_desktop value="0" control="chkRestoreDesktop"/>

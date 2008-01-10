@@ -71,6 +71,7 @@ type
     procedure _layoutDock();
     procedure _layoutAWOnly();
     procedure _saveDockWidths();
+    procedure _glueCheck();
     function _withinGlueSnapRange(): TGlueEdge;
 
   public
@@ -215,6 +216,8 @@ begin
         aw.Show;
         aw.OnDockDrop := FormDockDrop;
     end;
+
+    _glueCheck();
 end;
 
 {---------------------------------------}
@@ -230,18 +233,24 @@ end;
 procedure TfrmDockWindow.AWTabControlDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
 var
-    tabindx: integer;
+    aw: TfrmActivityWindow;
+    item: TAWTrackerItem;
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
-
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
-        tabindx := _docked_forms.Add(TfrmDockable(Source.Control));
+        _docked_forms.Add(TfrmDockable(Source.Control));
         _removeTabs();
-        Self.AWTabControl.ActivePageIndex := tabindx;
+        aw := GetActivityWindow();
+        if (aw <> nil) then begin
+            item := aw.findItem(TfrmDockable(Source.Control));
+            if (item <> nil) then begin
+                aw.activateItem(item.awItem);
+            end;
+        end;
 
         if (Self.WindowState = wsMaximized) then begin
             Self.Top := Self.Monitor.WorkareaRect.Top;
@@ -493,6 +502,8 @@ begin
           else
             _layoutAWOnly();
     end;
+
+    _glueCheck();
 end;
 
 {
@@ -658,7 +669,15 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockWindow.OnMove(var Msg: TWMMove); 
+procedure TfrmDockWindow.OnMove(var Msg: TWMMove);
+begin
+    _glueCheck();
+    moveGlued();
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow._glueCheck();
 begin
     _glueEdge := _withinGlueSnapRange();
 
@@ -668,10 +687,6 @@ begin
     else begin
         frmExodus.glueWindow(false);
     end;
-
-    moveGlued();
-
-    inherited;
 end;
 
 {---------------------------------------}
@@ -767,6 +782,9 @@ begin
         end;
     end;
 end;
+
+
+
 
 
 end.
