@@ -23,9 +23,9 @@ interface
 
 uses
     // panels
-    PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
+    PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefDialogs,
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork, PrefGroups, PrefLayouts, PrefEmote, PrefHotkeys,
+    PrefNetwork, PrefGroups, PrefLayouts, PrefEmote, PrefHotkeys, PrefDisplay,
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -39,7 +39,7 @@ type
     imgDialog: TImage;
     lblDialog: TTntLabel;
     imgFonts: TImage;
-    lblFonts: TTntLabel;
+    lblDisplay: TTntLabel;
     imgS10n: TImage;
     lblS10n: TTntLabel;
     imgRoster: TImage;
@@ -113,7 +113,7 @@ type
     _roster: TfrmPrefRoster;
     _groups: TfrmPrefGroups;
     _subscription: TfrmPrefSubscription;
-    _font: TfrmPrefFont;
+    _display: TfrmPrefDisplay;
     _dialogs: TfrmPrefDialogs;
     _message: TfrmPrefMsg;
     _emote: TfrmPrefEmote;
@@ -140,7 +140,7 @@ const
     pref_roster = 'roster';
     pref_groups = 'groups';
     pref_s10n = 's10n';
-    pref_fonts = 'fonts';
+    pref_display = 'display';
     pref_layout = 'layout';
     pref_win = 'windows';
     pref_notify = 'notify';
@@ -188,7 +188,7 @@ begin
         else if (start_page = pref_roster) then l := f.lblRoster
         else if (start_page = pref_groups) then l := f.lblGroups
         else if (start_page = pref_s10n) then l := f.lbls10n
-        else if (start_page = pref_fonts) then l := f.lblFonts
+        else if (start_page = pref_display) then l := f.lblDisplay
         else if (start_page = pref_layout) then l := f.lblLayouts
         else if (start_page = pref_win) then l := f.lblDialog
         else if (start_page = pref_notify) then l := f.lblNotify
@@ -308,8 +308,8 @@ begin
         if (_subscription <> nil) then
             _subscription.SavePrefs();
 
-        if (_font <> nil) then
-            _font.SavePrefs();
+        if (_display <> nil) then
+            _display.SavePrefs();
 
         if (_dialogs <> nil) then
             _dialogs.SavePrefs();
@@ -409,7 +409,7 @@ begin
     _roster := nil;
     _groups := nil;
     _subscription := nil;
-    _font := nil;
+    _display := nil;
     _dialogs := nil;
     _layouts := nil;
     _message := nil;
@@ -506,14 +506,11 @@ begin
             f := _subscription;
         end;
     end
-    else if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
-        toggleSelector(lblFonts);
-        if (_font <> nil) then
-            f := _font
-        else begin
-            _font := TfrmPrefFont.Create(Self);
-            f := _font;
-        end;
+    else if ((Sender = imgFonts) or (Sender = lblDisplay)) then begin
+        toggleSelector(lblDisplay);
+        if (_display = nil) then
+            _display := TfrmPrefDisplay.Create(Self);
+        f := _display;
     end
     else if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
         toggleSelector(lblDialog);
@@ -657,7 +654,7 @@ begin
     _roster.Free();
     _groups.Free();
     _subscription.Free();
-    _font.Free();
+    _display.Free();
     _dialogs.Free();
     _message.Free();
     _emote.Free();

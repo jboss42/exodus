@@ -29,8 +29,6 @@ uses
 
 type
   TfrmPrefEmote = class(TfrmPrefPanel)
-    Panel1: TPanel;
-    chkEmoticons: TTntCheckBox;
     EmoteOpen: TOpenDialog;
     pageEmotes: TTntPageControl;
     TntTabSheet1: TTntTabSheet;
@@ -427,6 +425,7 @@ end;
 procedure TfrmPrefEmote.chkEmoticonsClick(Sender: TObject);
 begin
   inherited;
+  {
     btnEmoteAdd.Enabled := chkEmoticons.Checked;
     btnEmoteRemove.Enabled := chkEmoticons.Checked;
     btnEmoteClear.Enabled := chkEmoticons.Checked;
@@ -439,6 +438,7 @@ begin
         btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
     end;
     txtCustomEmoteFilename.Enabled := chkEmoticons.Checked;
+    }
 end;
 
 end.

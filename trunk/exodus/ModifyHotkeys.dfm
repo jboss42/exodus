@@ -1,29 +1,34 @@
 inherited frmModifyHotkeys: TfrmModifyHotkeys
   BorderStyle = bsDialog
   Caption = 'Modify Hotkey'
-  ClientHeight = 107
-  ClientWidth = 277
-  PixelsPerInch = 96
-  TextHeight = 13
+  ClientHeight = 99
+  ClientWidth = 392
+  ExplicitWidth = 398
+  ExplicitHeight = 137
+  PixelsPerInch = 120
+  TextHeight = 16
   object TntLabel1: TTntLabel
+    AlignWithMargins = True
     Left = 8
-    Top = 8
-    Width = 38
-    Height = 13
+    Top = 11
+    Width = 43
+    Height = 16
     Caption = 'Hotkey:'
   end
   object TntLabel2: TTntLabel
+    AlignWithMargins = True
     Left = 8
-    Top = 35
-    Width = 46
-    Height = 13
+    Top = 41
+    Width = 55
+    Height = 16
     Caption = 'Message:'
   end
   object btnOK: TTntButton
-    Left = 111
-    Top = 71
+    AlignWithMargins = True
+    Left = 228
+    Top = 68
     Width = 75
-    Height = 25
+    Height = 23
     Caption = 'OK'
     Default = True
     Enabled = False
@@ -31,31 +36,34 @@ inherited frmModifyHotkeys: TfrmModifyHotkeys
     TabOrder = 2
   end
   object btnCancel: TTntButton
-    Left = 192
-    Top = 71
+    AlignWithMargins = True
+    Left = 309
+    Top = 68
     Width = 75
-    Height = 25
+    Height = 23
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 3
   end
   object txtHotkeyMessage: TTntEdit
-    Left = 93
-    Top = 32
-    Width = 174
-    Height = 21
+    AlignWithMargins = True
+    Left = 74
+    Top = 38
+    Width = 310
+    Height = 24
     MaxLength = 80
     TabOrder = 1
     OnChange = txtHotkeyMessageChange
   end
   object cbhotkey: TTntComboBox
-    Left = 93
-    Top = 5
-    Width = 60
-    Height = 21
+    AlignWithMargins = True
+    Left = 74
+    Top = 8
+    Width = 95
+    Height = 24
     Style = csDropDownList
-    ItemHeight = 13
+    ItemHeight = 16
     Sorted = True
     TabOrder = 0
   end

@@ -3857,7 +3857,7 @@ end;
 
 procedure TfrmExodus.mnuOptions_FontClick(Sender: TObject);
 begin
-    Prefs.StartPrefs(pref_fonts);
+    Prefs.StartPrefs(pref_display);
 end;
 
 procedure TfrmExodus.mnuPeople_ConferenceClick(Sender: TObject);

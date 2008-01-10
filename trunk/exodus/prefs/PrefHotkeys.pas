@@ -26,15 +26,18 @@ uses
     Unicode, PrefPanel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ComCtrls,
-    TntComCtrls, ModifyHotkeys;
+    TntComCtrls, ModifyHotkeys, TntForms, ExFrame, ExBrandPanel;
 
 type
   TfrmPrefHotkeys = class(TfrmPrefPanel)
+    pnlContainer: TExBrandPanel;
     TntLabel1: TTntLabel;
-    btnRemoveHotkeys: TTntButton;
-    btnAddHotkeys: TTntButton;
     lstHotkeys: TTntListView;
     btnModifyHotkeys: TTntButton;
+    btnAddHotkeys: TTntButton;
+    btnRemoveHotkeys: TTntButton;
+    btnClearAll: TTntButton;
+    procedure btnClearAllClick(Sender: TObject);
     procedure btnRemoveHotkeysClick(Sender: TObject);
     procedure lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
@@ -67,6 +70,7 @@ const
     sBadLocale = ' is set to use a language which is not available on your system. Resetting language to default.';
     sNewLocale1 = 'You must exit ';
     sNewLocale2 = ' and restart it before your new locale settings will take affect.';
+    sAddHotkey = 'Add Hotkey';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -77,7 +81,7 @@ implementation
 uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
-    PathSelector, PrefController, Registry, Session, StrUtils,
+    PathSelector, PrefController, PrefFile, Registry, Session, StrUtils,
     Menus, Jabber1;
 
 {---------------------------------------}
@@ -87,10 +91,9 @@ var
     i: Integer;
     item: TTntListItem;
 begin
-
     dlg := TfrmModifyHotkeys.Create(Self.Owner);
     dlg.Position := poOwnerFormCenter;
-
+    dlg.Caption := _(sAddHotkey);
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
             case i of
@@ -141,6 +144,7 @@ var
     i: Integer;
 begin
     dlg := TfrmModifyHotkeys.Create(Self);
+    dlg.Position := poOwnerFormCenter;
 
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
@@ -193,6 +197,19 @@ begin
     lstHotkeys.Selected.Delete();
 end;
 
+procedure TfrmPrefHotkeys.btnClearAllClick(Sender: TObject);
+var
+    i: integer;
+begin
+    inherited;
+    for i := lstHotKeys.Items.Count - 1 downto 0 do begin
+        _set_usedkeys(lstHotkeys.items[i].Caption, false);
+        lstHotkeys.items[i].Delete();
+    end;
+    btnAddHotkeys.Enabled := true;
+end;
+
+
 procedure TfrmPrefHotkeys.FormDestroy(Sender: TObject);
 begin
   inherited;
@@ -210,6 +227,7 @@ procedure TfrmPrefHotkeys.LoadPrefs();
 var
     i: integer;
     item: TTntListItem;
+    s: TPrefState;
 begin
     if (_hotkeys_keys = nil) then
         _hotkeys_keys := TWidestringlist.Create();
@@ -238,8 +256,13 @@ begin
     for i := 1 to 12 do begin
         if (not _used_hotkeys[i]) then begin
             btnAddHotkeys.Enabled := true;
+            break;
         end;
     end;
+    //finally check state and set controls accordingly
+    s := getPrefState('hotkeys_keys');
+    pnlContainer.Enabled := (s <> psReadOnly);
+    pnlContainer.Visible := (s <> psInvisible);
 end;
 
 procedure TfrmPrefHotkeys.lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
