@@ -256,10 +256,11 @@ begin
         _removeTabs();
         aw := GetActivityWindow();
         if (aw <> nil) then begin
-            item := aw.findItem(TfrmDockable(Source.Control));
-            if (item <> nil) then begin
-                aw.activateItem(item.awItem);
-            end;
+//            item := aw.findItem(TfrmDockable(Source.Control));
+//            if (item <> nil) then begin
+//                aw.activateItem(item.awItem); //???dda
+//            end;
+            aw.resetCurrentSheet();
         end;
 
         if (Self.WindowState = wsMaximized) then begin
@@ -353,10 +354,6 @@ begin
             (frm.UID <> ''))then begin
             // Item NOT being tracked so let's add it
             item := aw.addItem(frm.UID, frm);
-            if (item <> nil) then begin
-                // make sure this is the selected item.
-                aw.activateItem(item.awItem);
-            end;
         end;
 
         if (item <> nil) then begin

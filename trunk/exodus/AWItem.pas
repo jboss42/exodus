@@ -65,6 +65,7 @@ type
     procedure mnuCloseWindowClick(Sender: TObject);
     procedure mnuDockWindowClick(Sender: TObject);
     procedure mnuFloatWindowClick(Sender: TObject);
+    procedure timNewItemFlashTimer(Sender: TObject);
     private
         { Private declarations }
     protected
@@ -73,6 +74,8 @@ type
         _imgIndex: integer;
         _priorityStartColor: TColor;
         _priorityEndColor: TColor;
+        _newWindowStartColor: TColor;
+        _newWindowEndColor: TColor;
         _activeStartColor: TColor;
         _activeEndColor: TColor;
         _startColor: TColor;
@@ -80,20 +83,26 @@ type
         _docked: boolean;
         _active: boolean;
         _priority: boolean;
+        _newWindowHighlight: boolean;
         _activity_window_selected_font_color: TColor;
         _activity_window_non_selected_font_color: TColor;
         _activity_window_unread_msgs_font_color: TColor;
         _activity_window_high_priority_font_color: TColor;
         _activity_window_unread_msgs_high_priority_font_color: TColor;
+        _timNewItemTimer: TTimer;
+        _flashcnt: integer;
 
         procedure _setCount(val:integer);
         function _getName(): widestring;
         procedure _setName(val:widestring);
         procedure _setImgIndex(val: integer);
         procedure _setPnlColors(startColor, endColor: TColor);
+        procedure _timNewItemTimerTimer(Sender: TObject);
+        procedure _stopTimer();
     public
         { Public declarations }
         constructor Create(AOwner: TComponent); reintroduce;
+        destructor Destroy(); reintroduce;
 
         procedure activate(setActive:boolean);
         procedure priorityFlag(setPriority:boolean);
@@ -110,6 +119,7 @@ type
         property priority: boolean read _priority;
         property defaultStartColor: TColor read _startColor write _startColor;
         property defaultEndColor: TColor read _endColor write _endColor;
+        property newWindowHighlight: boolean read _newWindowHighlight;
     published
         { published declarations }
     end;
@@ -139,6 +149,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 constructor TfAWItem.Create(AOwner: TComponent);
 var
     tag: TXMLTag;
@@ -149,6 +160,8 @@ begin
     _endColor := pnlAWItemGPanel.GradientProperites.endColor;
     _priorityStartColor := $000000ff;
     _priorityEndColor := $000000ff;
+    _newWindowStartColor := $0000ffff;
+    _newWindowEndColor := $0000aaaa;
     _activeStartColor := $0000ff00;
     _activeEndColor := $0000ff00;
     _activity_window_selected_font_color := $00000000;
@@ -172,11 +185,63 @@ begin
     end;
     tag.Free();
     tag := nil;
+    tag := MainSession.Prefs.getXMLPref('activity_window_new_window_color');
+    if (tag <> nil) then begin
+        _newWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _newWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+    end;
+    tag.Free();
+    tag := nil;
     _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
     _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
     _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
     _activity_window_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_high_priority_font_color'));
     _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
+
+    _timNewItemTimer := TTimer.Create(Self);
+    _timNewItemTimer.Enabled := true;
+    _timNewItemTimer.Interval := 500;
+    _timNewItemTimer.OnTimer := _timNewItemTimerTimer;
+    _flashcnt := 0;
+    _newWindowHighlight := true;
+end;
+
+{---------------------------------------}
+destructor TfAWItem.Destroy();
+begin
+    if (_timNewItemTimer <> nil) then begin
+        _timNewItemTimer.Enabled := false;
+    end;
+
+    _timNewItemTimer.Free;
+end;
+
+{---------------------------------------}
+procedure TfAWItem._timNewItemTimerTimer(Sender: TObject);
+begin
+    Inc(_flashcnt);
+    if (_flashcnt >= 6) then begin
+        _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+        _stopTimer();
+    end
+    else begin
+        if ((_flashcnt mod 2) = 0) then begin
+            _setPnlColors(_newWindowStartColor, _newWindowEndColor);
+        end
+        else begin
+            _setPnlColors(_startColor, _endColor);
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfAWItem._stopTimer();
+begin
+    if (_timNewItemTimer <> nil) then begin
+        _timNewItemTimer.Enabled := false;
+        _timNewItemTimer.Free();
+        _timNewItemTimer := nil;
+    end;
 end;
 
 {---------------------------------------}
@@ -311,6 +376,8 @@ procedure TfAWItem.activate(setActive: boolean);
 begin
     _active := setActive;
     if (setActive) then begin
+        _newWindowHighlight := false;
+        _stopTimer();
         _setPnlColors(_activeStartColor, _activeEndColor);
         lblName.Font.Color := _activity_window_selected_font_color;
         lblCount.Font.Color := _activity_window_selected_font_color;
@@ -345,6 +412,12 @@ begin
             _setPnlColors(_startColor, _endColor);
         end;
     end;
+end;
+
+procedure TfAWItem.timNewItemFlashTimer(Sender: TObject);
+begin
+    inherited;
+    Sleep(1);
 end;
 
 procedure TfAWItem.TntFrameClick(Sender: TObject);

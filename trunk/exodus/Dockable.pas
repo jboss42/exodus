@@ -117,6 +117,7 @@ type
     procedure showDockToggleButton(show: boolean);
     procedure updateMsgCount(msg: TJabberMessage);
     procedure updateLastActivity(lasttime: TDateTime);
+    procedure _doActivate();
   public
     { Public declarations }
     procedure DockForm; virtual;
@@ -303,6 +304,7 @@ begin
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmDockable.btnDockToggleClick(Sender: TObject);
 begin
     inherited;
@@ -311,8 +313,26 @@ begin
     else
         DockForm();
 
+    _doActivate();
 end;
 
+{---------------------------------------}
+procedure TfrmDockable._doActivate();
+begin
+    _activating := true;
+
+    ClearUnreadMsgCount();
+
+    try
+        GetDockManager().UpdateDocked(Self);
+    except
+
+    end;
+
+    _activating := false;
+end;
+
+{---------------------------------------}
 procedure TfrmDockable.DockForm;
 begin
     GetDockManager().OpenDocked(self);
@@ -329,17 +349,7 @@ procedure TfrmDockable.gotActivate();
 begin
     inherited;
 
-    _activating := true;
-
-    ClearUnreadMsgCount();
-
-    try
-        GetDockManager().UpdateDocked(Self);
-    except
-
-    end;
-
-    _activating := false;
+    _doActivate();
 end;
 
 {---------------------------------------}

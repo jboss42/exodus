@@ -79,7 +79,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 333
       object imgScrollDown: TImage
         Left = 73
         Top = 4
@@ -118,7 +117,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 45
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -164,17 +162,15 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitWidth = 183
       end
       object lblSort: TTntLabel
-        Left = 0
+        Left = 99
         Top = 5
-        Width = 187
-        Height = 15
+        Width = 72
+        Height = 13
         Align = alClient
-        Alignment = taCenter
+        Alignment = taRightJustify
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
-        ExplicitWidth = 72
-        ExplicitHeight = 13
       end
       object SortTopSpacer: TBevel
         Left = 0
@@ -186,6 +182,18 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitLeft = 1
         ExplicitTop = 30
         ExplicitWidth = 183
+      end
+      object imgSortArrow: TImage
+        Left = 171
+        Top = 5
+        Width = 16
+        Height = 15
+        Align = alRight
+        Transparent = True
+        OnClick = pnlListSortClick
+        ExplicitLeft = 75
+        ExplicitTop = 2
+        ExplicitHeight = 16
       end
     end
   end

@@ -294,6 +294,10 @@
     	<start>$000000ff</start>
         <end>$000000aa</end>
     </activity_window_high_priority_color>
+    <activity_window_new_window_color>
+    	<start>$0000ffff</start>
+        <end>$0000aaaa</end>
+    </activity_window_new_window_color>
 
     <!-- Activity Window Selection Colors -->
     <activity_window_selected_font_color value="$00000000"/>
