@@ -1385,7 +1385,7 @@ begin
     Self.DockSite := false;
     btnActivityWindow.Visible := true;
     trayShowActivityWindow.Visible := true;
-    mnuWindows_View_ShowActivityWindow.Visible := false;
+    mnuWindows_View_ShowActivityWindow.Visible := true;
 {$ELSE}
     _dockWindow := nil;
     _dockManager := frmExodus;
@@ -1671,6 +1671,7 @@ begin
         mnuOptions_Options.Enabled := false;
         Preferences1.Enabled := false;
         btnActivityWindow.Enabled := false;
+        mnuWindows_View_ShowActivityWindow.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -1825,6 +1826,7 @@ begin
         Preferences1.Enabled := true;
 {$IFDEF USE_ACTIVITY_WINDOW}
         btnActivityWindow.Enabled := true;
+        mnuWindows_View_ShowActivityWindow.Enabled := true;
 {$ENDIF}
 
     end
@@ -1883,6 +1885,7 @@ begin
         Preferences1.Enabled := true;
 {$IFDEF USE_ACTIVITY_WINDOW}
         btnActivityWindow.Enabled := true;
+        mnuWindows_View_ShowActivityWindow.Enabled := true;
 {$ENDIF}
 
         // Change back to profile width from roster width
@@ -2412,6 +2415,7 @@ begin
     mnuFile_Connect.Enabled := false;
     frmRosterWindow.lblConnectClick(Sender);
     btnActivityWindow.Enabled := false;
+    mnuWindows_View_ShowActivityWindow.Enabled := false;
 end;
 
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
@@ -2999,7 +3003,8 @@ begin
 {$IFDEF USE_ACTIVITY_WINDOW}
     if ((_dockWindow <> nil) and
         (_dockWindow.Showing) and
-        (_dockWindowGlued)) then begin
+        (_dockWindowGlued) and
+        (_dockWindow.WindowState = wsNormal)) then begin
         // This will keep the glued window on top
         // when this window is activated.
         _dockWindow.BringToFront();

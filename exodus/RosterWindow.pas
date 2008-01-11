@@ -989,6 +989,8 @@ begin
             frmExodus.btnOptions.Enabled := false;
             frmExodus.mnuOptions_Options.Enabled := false;
             frmExodus.Preferences1.Enabled := false;
+            frmExodus.btnActivityWindow.Enabled := false;
+            frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
         end;
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);

@@ -1,16 +1,16 @@
 inherited fAWItem: TfAWItem
   Width = 185
-  Height = 24
+  Height = 27
   ParentShowHint = False
   ShowHint = True
   OnClick = TntFrameClick
   ExplicitWidth = 185
-  ExplicitHeight = 24
+  ExplicitHeight = 27
   object pnlAWItemGPanel: TExGradientPanel
     Left = 0
     Top = 0
     Width = 185
-    Height = 24
+    Height = 27
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
@@ -24,7 +24,7 @@ inherited fAWItem: TfAWItem
     GradientProperites.orientation = gdHorizontal
     object AWItemBevel: TBevel
       Left = 0
-      Top = 19
+      Top = 22
       Width = 185
       Height = 5
       Align = alBottom
@@ -35,10 +35,10 @@ inherited fAWItem: TfAWItem
     end
     object lblName: TTntLabel
       AlignWithMargins = True
-      Left = 24
+      Left = 29
       Top = 3
-      Width = 146
-      Height = 13
+      Width = 136
+      Height = 16
       Align = alClient
       Alignment = taCenter
       AutoSize = False
@@ -47,15 +47,15 @@ inherited fAWItem: TfAWItem
       Transparent = True
       Layout = tlCenter
       OnClick = lblNameClick
-      ExplicitLeft = 22
-      ExplicitTop = 0
-      ExplicitWidth = 142
+      ExplicitLeft = 24
+      ExplicitWidth = 146
+      ExplicitHeight = 15
     end
     object lblCount: TTntLabel
-      Left = 178
+      Left = 173
       Top = 0
       Width = 7
-      Height = 19
+      Height = 22
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
@@ -66,7 +66,7 @@ inherited fAWItem: TfAWItem
     end
     object imgPresence: TImage
       Left = 0
-      Top = 2
+      Top = 3
       Width = 16
       Height = 16
       Align = alCustom
@@ -76,21 +76,42 @@ inherited fAWItem: TfAWItem
       ExplicitTop = 5
     end
     object LeftSpacer: TBevel
-      Left = 0
+      Left = 5
       Top = 0
       Width = 21
-      Height = 19
+      Height = 22
       Align = alLeft
       Shape = bsSpacer
+      ExplicitLeft = 0
+      ExplicitHeight = 19
     end
-    object RightSpacer: TBevel
-      Left = 173
+    object RightLBLSpacer: TBevel
+      Left = 168
       Top = 0
       Width = 5
-      Height = 19
+      Height = 22
       Align = alRight
       Shape = bsSpacer
       ExplicitLeft = 16
+      ExplicitHeight = 19
+    end
+    object FarRightSpacer: TBevel
+      Left = 180
+      Top = 0
+      Width = 5
+      Height = 22
+      Align = alRight
+      Shape = bsSpacer
+      ExplicitLeft = 184
+      ExplicitTop = 3
+    end
+    object FarLeftSpacer: TBevel
+      Left = 0
+      Top = 0
+      Width = 5
+      Height = 22
+      Align = alLeft
+      Shape = bsSpacer
     end
   end
   object AWItemPopupMenu: TTntPopupMenu

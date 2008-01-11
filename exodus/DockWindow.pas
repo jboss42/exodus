@@ -56,6 +56,7 @@ type
     Procedure WMSyscommand(Var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure FormResize(Sender: TObject);
     procedure OnMove(var Msg: TWMMove); message WM_MOVE;
+    procedure FormHide(Sender: TObject);
   private
     { Private declarations }
 
@@ -197,6 +198,14 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmDockWindow.FormHide(Sender: TObject);
+begin
+    inherited;
+    frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
+end;
+
+{---------------------------------------}
 procedure TfrmDockWindow.FormResize(Sender: TObject);
 begin
     inherited;
@@ -216,6 +225,7 @@ begin
         aw.Show;
         aw.OnDockDrop := FormDockDrop;
     end;
+    frmExodus.mnuWindows_View_ShowActivityWindow.Checked := true;
 
     _glueCheck();
 end;
@@ -350,14 +360,14 @@ begin
         end;
 
         if (item <> nil) then begin
+            // Deal with priority
+            item.awItem.priorityFlag(frm.PriorityFlag);
+
             // Successful lookup or add
             item.awItem.imgIndex := frm.ImageIndex;
 
             // Deal with msg count
             item.awItem.count := frm.UnreadMsgCount;
-
-            // Deal with priority
-            item.awItem.priorityFlag(frm.PriorityFlag);
 
             // Deal with docked/undocked for popup menu
             item.awItem.docked := frm.Docked;
@@ -374,6 +384,7 @@ begin
                 aw.activateItem(item.awItem);
             end;
 
+            aw.itemChangeUpdate();
             checkFlash();
         end;
     end;
@@ -514,6 +525,7 @@ procedure TfrmDockWindow._layoutDock();
 var
   mon: TMonitor;
   ratioRoster: real;
+  aw: TfrmActivityWindow;
 begin
     if (_dockState <> dsDock) then begin
         _saveDockWidths();
@@ -556,6 +568,11 @@ begin
         AWTabControl.DockSite := true;
 
         _dockState := dsDock;
+
+        aw := GetActivityWindow();
+        if (aw <> nil) then begin
+            aw.setDockingSpacers(_dockState);
+        end;
     end;
 end;
 
@@ -564,6 +581,8 @@ end;
 }
 {---------------------------------------}
 procedure TfrmDockWindow._layoutAWOnly();
+var
+  aw: TfrmActivityWindow;
 begin
     //if tabs were being shown, save tab size
     _saveDockWidths();
@@ -577,6 +596,11 @@ begin
         AWTabControl.DockSite := false;
 
         _dockState := dsRosterOnly;
+
+        aw := GetActivityWindow();
+        if (aw <> nil) then begin
+            aw.setDockingSpacers(_dockState);
+        end;
     end;
 end;
 

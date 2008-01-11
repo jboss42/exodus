@@ -64,6 +64,8 @@ type
     mnuTypeSort: TTntMenuItem;
     mnuUnreadSort: TTntMenuItem;
     SortTopSpacer: TBevel;
+    ListLeftSpacer: TBevel;
+    ListRightSpacer: TBevel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -89,6 +91,14 @@ type
     _curListSort: TSortStates;
     _canScrollUp: boolean;
     _canScrollDown: boolean;
+    _scrollPriorityStartColor: TColor;
+    _scrollPriorityEndColor: TColor;
+    _scrollDefaultStartColor: TColor;
+    _scrollDefaultEndColor: TColor;
+    _scrollEnabledStartColor: TColor;
+    _scrollEnabledEndColor: TColor;
+    _scrollUpPriority: boolean;
+    _scrollDownPriority: boolean;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
@@ -96,10 +106,12 @@ type
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
     procedure _sortTrackingList(sortType: TSortStates = ssUnsorted);
     procedure _sortList(var list: TWidestringList; sortType: TSortStates);
-    procedure _updateDisplay();
+    procedure _updateDisplay(allowPartialVisible: boolean = true);
     procedure _activateNextDockedItem(curitemindx: integer);
     procedure _enableScrollUp(doenable: boolean = true);
     procedure _enableScrollDown(doenable: boolean = true);
+    procedure _setScrollUpColorPriority(enable: boolean);
+    procedure _setScrollDownColorPriority(enable: boolean);
 
   public
     { Public declarations }
@@ -113,6 +125,8 @@ type
     function findItem(awitem: TfAWItem): TAWTrackerItem; overload;
     procedure activateItem(id:widestring); overload;
     procedure scrollToActive();
+    procedure setDockingSpacers(dockstate: TDockStates);
+    procedure itemChangeUpdate();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -130,12 +144,14 @@ implementation
 
 uses
     Room, ChatWin, Session,
-    Jabber1, RosterImages, gnugettext;
+    Jabber1, RosterImages, gnugettext,
+    XMLTag;
 
 {$R *.dfm}
 
 const
     sSortBy         = 'Sort By:  ';
+    sSortUnsorted   = 'Unsorted';  // Not currently supported
     sSortAlpha      = 'Alpha';
     sSortRecent     = 'Most Recent Activity';
     sSortType       = 'Type';
@@ -184,26 +200,73 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.FormCreate(Sender: TObject);
+var
+    tag: TXMLTag;
 begin
     inherited;
     _trackingList := TWidestringList.Create;
     _showingTopItem := -1;
-    _curListSort := ssAlpha;
     _canScrollUp := false;
     _canScrollDown := false;
 
-    lblSort.Caption := _(sSortBy) + _(sSortAlpha);
+    case MainSession.Prefs.getInt('activity_window_sort') of
+        0: begin
+            _curListSort := ssUnsorted;
+            lblSort.Caption := _(sSortBy) + _(sSortUnsorted);
+        end;
+        1: begin
+            _curListSort := ssAlpha;
+            lblSort.Caption := _(sSortBy) + _(sSortAlpha);
+        end;
+        2: begin
+            _curListSort := ssRecent;
+            lblSort.Caption := _(sSortBy) + _(sSortRecent);
+        end;
+        3: begin
+            _curListSort := ssType;
+            lblSort.Caption := _(sSortBy) + _(sSortType);
+        end;
+        4: begin
+            _curListSort := ssUnread;
+            lblSort.Caption := _(sSortBy) + _(sSortUnread);
+        end;
+    end;
 
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_up'), imgScrollUp.Picture.Icon);
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
+
+    _scrollDefaultStartColor := pnlListScrollUp.GradientProperites.startColor;
+    _scrollDefaultEndColor := pnlListScrollUp.GradientProperites.endColor;
+    _scrollEnabledStartColor := $00D0C3AF;
+    _scrollEnabledEndColor := $00D0C3AF;
+    _scrollPriorityStartColor := $000000ff;
+    _scrollPriorityEndColor := $000000ff;
+    tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
+    if (tag <> nil) then begin
+        _scrollPriorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _scrollPriorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+    end;
+    tag.Free();
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.FormDestroy(Sender: TObject);
+var
+    listsort: integer;
 begin
     inherited;
     _clearTrackingList();
     _trackingList.Free;
+    case _curListSort of
+        ssUnsorted: listSort := 0;
+        ssAlpha: listSort := 1;
+        ssRecent: listSort := 2;
+        ssType: listSort := 3;
+        ssUnread: listSort := 4;
+        else
+            listSort := 0;
+    end;
+    MainSession.Prefs.setInt('activity_window_sort', listSort);
 end;
 
 {---------------------------------------}
@@ -325,8 +388,11 @@ begin
         // Setup item props
         Result.awItem.Parent := pnlList;
         Result.awItem.Align := alNone;
-        Result.awItem.Left := 0;
+        Result.awItem.Left := ListLeftSpacer.Width;
+        Result.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
         Result.awItem.name := frm.Caption;
+        Result.awItem.defaultStartColor := pnlList.GradientProperites.startColor;
+        Result.awItem.defaultEndColor := pnlList.GradientProperites.endColor;
 
         if (_showingTopItem < 0) then begin
             _showingTopItem := 0;
@@ -441,7 +507,7 @@ procedure TfrmActivityWindow.pnlListScrollDownClick(Sender: TObject);
 begin
     if (_canScrollDown) then begin
         Inc(_showingTopItem);
-        _updateDisplay();
+        _updateDisplay(); 
     end;
 end;
 
@@ -505,9 +571,8 @@ begin
             end
             else begin
                 trackitem.frm.BringToFront;
+                scrollToActive();
             end;
-
-            scrollToActive();
         end;
 
     except
@@ -525,6 +590,7 @@ begin
             _dockwindow.AWTabControl.ActivePage := _newActivateSheet;
             _dockwindow.setWindowCaption(_newActivateSheet.Caption);
             _newActivateSheet := nil;
+            scrollToActive();
         end;
     except
     end;
@@ -567,7 +633,6 @@ var
 begin
     if (sortType = ssUnsorted) then exit;
     if (list = nil) then exit;
-    if (list.Count = 0) then exit;
 
     _curListSort := sortType;
     tempList := TWidestringList.Create();
@@ -594,7 +659,7 @@ begin
             for j := 0 to tempList.Count - 1 do begin
                 tempitem2 := TAWTrackerItem(tempList.Objects[j]);
                 insertPoint := j;
-                if (tempitem2.frm.LastActivity < tempitem1.frm.LastActivity) then begin
+                if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then begin
                     // We have an new item to add to the temp list that should be higher
                     // then the current item in the templist
                     tempList.InsertObject(insertPoint, list.Strings[i], list.Objects[i]);
@@ -694,17 +759,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow._updateDisplay();
+procedure TfrmActivityWindow._updateDisplay(allowPartialVisible: boolean);
 var
     numSlots: integer;
     i: integer;
     item: TAWTrackerItem;
     slotsFilled: integer;
+    remainder: integer;
+    highPriUpHidden: boolean;
+    highPriDownHidden: boolean;
 begin
     try
         if (_trackingList.Count > 0) then begin
             // Compute the maximum showing items
             numSlots := pnlList.Height div TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
+            remainder := pnlList.Height mod TAWTrackerItem(_trackingList.Objects[0]).awItem.Height;
             slotsFilled := 0;
 
             // See if current showing top item needs to be changed so maximum number
@@ -716,32 +785,55 @@ begin
                 end;
             end;
 
+            // see if we need to show partials
+            if ((allowPartialVisible) and
+                (remainder > 0)) then begin
+                Inc(numSlots);
+            end;
             // Crawl list to see what needs displayed
+            highPriUpHidden := false;
+            highPriDownHidden := false;
             for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (i < _showingTopItem) then begin
                     // Off the top of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollUp(true);
+                    if (item.awItem.priority) then begin
+                        highPriUpHidden := true;
+                    end;
                 end
                 else if (slotsFilled >= numSlots) then begin
                     // Off the bottom of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollDown(true);
+                    if (item.awItem.priority) then begin
+                        highPriDownHidden := true;
+                    end;
                 end
                 else begin
-                    item.awItem.Width := pnlList.Width;
+                    // Is in visible part of list (at least in part)
+                    item.awItem.Left := ListLeftSpacer.Width;
+                    item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
                     item.awItem.Top := item.awItem.Height * slotsFilled;
                     item.awItem.Visible := true;
                     Inc(slotsFilled);
                 end;
             end;
 
+            // Display priority on scroll bars
+            _setScrollUpColorPriority(highPriUpHidden);
+            _setScrollDownColorPriority(highPriDownHidden);
+
             // Disable scroll buttons if not needed
             if (_showingTopItem <= 0) then begin
+                // At top of list
                 _enableScrollUp(false);
             end;
-            if (TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) then begin
+            if ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Visible) and
+                ((TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Top +
+                 TAWTrackerItem(_trackingList.Objects[_trackingList.Count - 1]).awItem.Height) <= pnlList.Height)) then begin
+                // At bottom of list AND bottom element is fully visible (not partial)
                 _enableScrollDown(false);
             end;
         end
@@ -815,6 +907,9 @@ var
     tempitem: TAWTrackerItem;
 begin
     if (_activeitem = nil) then exit; // No active item
+
+    _updateDisplay(false); // don't want a partial at this instant
+
     if (_activeitem.Visible) then exit; // Active item is visible
 
     // Find where the item is in the tracking list
@@ -843,21 +938,111 @@ begin
         end;
     end;
 
-    _updateDisplay();
+    _updateDisplay(); // partials are fine now.
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._enableScrollUp(doenable: boolean);
 begin
     _canScrollUp := doenable;
-    pnlListScrollUp.Visible := doenable;
+    //pnlListScrollUp.Visible := doenable;
+    sortBevel.Visible := (not doenable);
+    if (not _scrollUpPriority) then begin
+        if (doenable) then begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
+        end
+        else begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+        pnlListScrollUp.Invalidate();
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._enableScrollDown(doenable: boolean);
 begin
     _canScrollDown := doenable;
-    pnlListScrollDown.Visible := doenable;
+    //pnlListScrollDown.Visible := doenable;
+    if (not _scrollDownPriority) then begin
+        if (doenable) then begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
+        end
+        else begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+        pnlListScrollDown.Invalidate();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.setDockingSpacers(dockstate: TDockStates);
+begin
+    case dockstate of
+        dsRosterOnly: begin
+            ListRightSpacer.Width := 5;
+        end;
+        dsDock: begin
+            ListRightSpacer.Width := 0;
+        end;
+        dsUninitialized: begin
+            ListRightSpacer.Width := 5;
+        end;
+    end;
+
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.itemChangeUpdate();
+begin
+    _sortTrackingList(_curListSort);
+    _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._setScrollUpColorPriority(enable: boolean);
+begin
+    _scrollUpPriority := enable;
+    if (enable) then begin
+        pnlListScrollUp.GradientProperites.startColor := _scrollPriorityStartColor;
+        pnlListScrollUp.GradientProperites.endColor := _scrollPriorityEndColor;
+    end
+    else begin
+        if (_canScrollUp) then begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
+        end
+        else begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+    end;
+    pnlListScrollUp.Invalidate();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow._setScrollDownColorPriority(enable: boolean);
+begin
+    _scrollDownPriority := enable;
+    if (enable) then begin
+        pnlListScrollDown.GradientProperites.startColor := _scrollPriorityStartColor;
+        pnlListScrollDown.GradientProperites.endColor := _scrollPriorityEndColor;
+    end
+    else begin
+        if (_canScrollDown) then begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
+        end
+        else begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+    end;
+    pnlListScrollDown.Invalidate();
 end;
 
 
