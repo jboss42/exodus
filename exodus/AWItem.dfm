@@ -19,8 +19,8 @@ inherited fAWItem: TfAWItem
     ShowHint = True
     TabOrder = 0
     OnClick = pnlAWItemGPanelClick
-    GradientProperites.startColor = 13681583
-    GradientProperites.endColor = 12495763
+    GradientProperites.startColor = 12891033
+    GradientProperites.endColor = 10848873
     GradientProperites.orientation = gdHorizontal
     object AWItemBevel: TBevel
       Left = 0
@@ -55,14 +55,13 @@ inherited fAWItem: TfAWItem
       Left = 173
       Top = 0
       Width = 7
-      Height = 22
+      Height = 16
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
-      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0

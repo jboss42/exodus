@@ -1,6 +1,6 @@
 inherited frmDockable: TfrmDockable
   Caption = 'frmDockable'
-  ClientWidth = 204
+  ClientWidth = 188
   DragKind = dkDock
   DragMode = dmAutomatic
   KeyPreview = True
@@ -11,22 +11,22 @@ inherited frmDockable: TfrmDockable
   ExplicitWidth = 212
   ExplicitHeight = 201
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object pnlDockTop: TPanel
     Left = 0
     Top = 0
-    Width = 204
-    Height = 32
+    Width = 188
+    Height = 30
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
     object tbDockBar: TToolBar
       AlignWithMargins = True
-      Left = 155
+      Left = 139
       Top = 3
       Width = 46
-      Height = 26
+      Height = 24
       Align = alRight
       AutoSize = True
       DockSite = True
