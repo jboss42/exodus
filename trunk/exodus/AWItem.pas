@@ -49,11 +49,13 @@ type
     lblCount: TTntLabel;
     imgPresence: TImage;
     LeftSpacer: TBevel;
-    RightSpacer: TBevel;
+    RightLBLSpacer: TBevel;
     AWItemPopupMenu: TTntPopupMenu;
     mnuCloseWindow: TTntMenuItem;
     mnuFloatWindow: TTntMenuItem;
     mnuDockWindow: TTntMenuItem;
+    FarRightSpacer: TBevel;
+    FarLeftSpacer: TBevel;
     procedure imgPresenceClick(Sender: TObject);
     procedure lblNameClick(Sender: TObject);
     procedure lblCountClick(Sender: TObject);
@@ -106,6 +108,8 @@ type
         property docked: boolean read _docked write _docked;
         property active: boolean read _active;
         property priority: boolean read _priority;
+        property defaultStartColor: TColor read _startColor write _startColor;
+        property defaultEndColor: TColor read _endColor write _endColor;
     published
         { published declarations }
     end;
@@ -141,7 +145,7 @@ var
 begin
     inherited;
     // Set defaults
-    _startColor := pnlAWItemGPanel.GradientProperites.startColor;
+    _startColor := pnlAWItemGPanel.GradientProperites.startColor;  
     _endColor := pnlAWItemGPanel.GradientProperites.endColor;
     _priorityStartColor := $000000ff;
     _priorityEndColor := $000000ff;
@@ -159,11 +163,15 @@ begin
         _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
         _activeEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
+    tag.Free();
+    tag := nil;
     tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
     if (tag <> nil) then begin
         _priorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
         _priorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
+    tag.Free();
+    tag := nil;
     _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
     _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
     _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));

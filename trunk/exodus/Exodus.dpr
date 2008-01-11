@@ -301,7 +301,6 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
-  Application.CreateForm(TfrmActivityWindow, frmActivityWindow);
   Application.OnHelp := frmExodus.DisableHelp;
   frmExodus.Startup();
   Application.Run;

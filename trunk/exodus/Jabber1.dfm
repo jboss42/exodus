@@ -200,7 +200,6 @@ inherited frmExodus: TfrmExodus
       ParentColor = True
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 430
     end
     object Tabs: TTntPageControl
       Left = 162

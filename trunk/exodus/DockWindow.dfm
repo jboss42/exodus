@@ -2,8 +2,8 @@ object frmDockWindow: TfrmDockWindow
   Left = 0
   Top = 0
   Caption = 'frmDockWindow'
-  ClientHeight = 416
-  ClientWidth = 642
+  ClientHeight = 412
+  ClientWidth = 638
   Color = 13681583
   DockSite = True
   Font.Charset = DEFAULT_CHARSET
@@ -16,6 +16,7 @@ object frmDockWindow: TfrmDockWindow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDockDrop = FormDockDrop
+  OnHide = FormHide
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
@@ -23,15 +24,15 @@ object frmDockWindow: TfrmDockWindow
   object splAW: TTntSplitter
     Left = 185
     Top = 0
-    Height = 416
+    Height = 412
     ResizeStyle = rsUpdate
     ExplicitHeight = 398
   end
   object AWTabControl: TTntPageControl
     Left = 188
     Top = 0
-    Width = 454
-    Height = 416
+    Width = 450
+    Height = 412
     Align = alClient
     DockSite = True
     OwnerDraw = True
@@ -44,7 +45,7 @@ object frmDockWindow: TfrmDockWindow
     Left = 0
     Top = 0
     Width = 185
-    Height = 416
+    Height = 412
     Align = alLeft
     BevelOuter = bvNone
     ParentColor = True
