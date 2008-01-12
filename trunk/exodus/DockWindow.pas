@@ -34,7 +34,7 @@ uses
 
 type
 
-  TSortStates = (ssUnsorted, ssAlpha, ssRecent, ssType, ssUnread);
+  TSortState = (ssUnsorted, ssAlpha, ssRecent, ssType, ssUnread);
   TGlueEdge = (geNone, geTop, geRight, geLeft, geBottom);
 
   TfrmDockWindow = class(TfrmState, IExodusDockManager)
@@ -64,7 +64,7 @@ type
     { Protected declarations }
     _docked_forms: TList;
     _dockState: TDockStates;
-    _sortState: TSortStates;
+    _sortState: TSortState;
     _glueEdge: TGlueEdge;
 
     procedure CreateParams(Var params: TCreateParams); override;
@@ -256,11 +256,11 @@ begin
         _removeTabs();
         aw := GetActivityWindow();
         if (aw <> nil) then begin
-//            item := aw.findItem(TfrmDockable(Source.Control));
-//            if (item <> nil) then begin
-//                aw.activateItem(item.awItem); //???dda
-//            end;
-            aw.resetCurrentSheet();
+            item := aw.findItem(TfrmDockable(Source.Control));
+            if (item <> nil) then begin
+                aw.activateItem(item.awItem); //???dda
+            end;
+//            aw.resetCurrentSheet();
         end;
 
         if (Self.WindowState = wsMaximized) then begin
@@ -341,6 +341,7 @@ procedure TfrmDockWindow.UpdateDocked(frm: TfrmDockable);
 var
     item: TAWTrackerItem;
     aw: TfrmActivityWindow;
+    dda: integer;
 begin
     if (frm = nil) then exit;
     
@@ -383,6 +384,13 @@ begin
 
             aw.itemChangeUpdate();
             checkFlash();
+
+            // Make sure SOMETHING is visible in the docked side
+            // assuming that something IS docked.
+//            if ((aw.currentActivePage = nil) and
+//                (_dockState = dsDock)) then begin
+//                aw.activateItem(item.awItem);
+//            end;
         end;
     end;
 end;
@@ -803,9 +811,6 @@ begin
         end;
     end;
 end;
-
-
-
 
 
 end.
