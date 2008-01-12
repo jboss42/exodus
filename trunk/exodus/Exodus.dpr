@@ -256,7 +256,8 @@ uses
   AWItem in 'AWItem.pas' {fAWItem: TTntFrame},
   PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay},
   toastsettings in 'prefs\toastsettings.pas',
-  ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1};
+  ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1},
+  ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2};
 
 {$R *.TLB}
 

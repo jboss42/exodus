@@ -47,8 +47,6 @@ type
     lblNotify: TTntLabel;
     imgAway: TImage;
     lblAway: TTntLabel;
-    imgKeywords: TImage;
-    lblKeywords: TTntLabel;
     imgCustompres: TImage;
     lblCustomPres: TTntLabel;
     Panel1: TPanel;
@@ -69,14 +67,6 @@ type
     imgHotkeys: TImage;
     imgPlugins: TImage;
     lblHotkeys: TTntLabel;
-    PageControl1: TTntPageControl;
-    tbsKeywords: TTntTabSheet;
-    memKeywords: TTntMemo;
-    Panel2: TPanel;
-    Label1: TTntLabel;
-    TntLabel1: TTntLabel;
-    chkRegex: TTntCheckBox;
-    pnlKeyword: TTntPanel;
     procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -121,7 +111,6 @@ const
     pref_msgs = 'msgs';
     pref_xfers = 'xfers';
     pref_away = 'away';
-    pref_keywords = 'keywords';
     pref_pres = 'presence';
     pref_network = 'network';
     pref_plugins = 'plugins';
@@ -140,8 +129,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils, Room, Keywords, RegExpr,
-    JabberUtils, XMLTag;
+    GnuGetText, PrefController, Session, ExUtils, Room, JabberUtils;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -163,7 +151,6 @@ begin
         else if (start_page = pref_msgs) then l := f.lblMessages
         else if (start_page = pref_xfers) then l := f.lblTransfer
         else if (start_page = pref_away) then l := f.lblAway
-        else if (start_page = pref_keywords) then l := f.lblKeywords
         else if (start_page = pref_pres) then l := f.lblCustomPres
         else if (start_page = pref_network) then l := f.lblNetwork
         else if (start_page = pref_plugins) then l := f.lblPlugins
@@ -218,44 +205,16 @@ begin
 end;
 {---------------------------------------}
 procedure TfrmPrefs.LoadPrefs;
-var
-    regex_pref_tag: TXmlTag;
 begin
-    // load prefs from the reg.
-    with MainSession.Prefs do begin
-
-        // Keywords and Blockers
-        fillStringList('keywords', memKeywords.Lines);
-        chkRegex.Checked := getBool('regex_keywords');
-        regex_pref_tag := MainSession.Prefs.getXMLPref('regex_keywords');
-        if (regex_pref_tag <> nil) then begin
-            if (regex_pref_tag.GetAttribute('state') = 'inv') then
-                chkRegex.Visible := false
-            else if (regex_pref_tag.GetAttribute('state') = 'ro') then
-                chkRegex.Enabled := false;
-        end;
-
-//        fillStringList('blockers', memBlocks.Lines);
-        regex_pref_tag.Free();
-   end;
 end;
 
 
 procedure TfrmPrefs.memKeywordsKeyPress(Sender: TObject; var Key: Char);
 begin
-    if ((Key = '(') or (Key = ')') or (Key = '[') or
-        (Key = ']') or (Key = '*') or (Key = '+') or
-        (Key = '\') or (Key = '?') or (Key = '.') or
-        (Key = '"')) then  begin
-           MessageDlgW(_('The following characters should not be used: ( ) [ ] * + \ ?.'), mtError, [mbOK], 0);
-           Key := #0;
-         end;
 end;
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
-var
-  kw_expr : TRegExpr;
 begin
     // save prefs to the reg
     with MainSession.Prefs do begin
@@ -295,15 +254,6 @@ begin
         if (_hotkeys <> nil) then
             _hotkeys.SavePrefs();
 
-        // Keywords
-        setStringList('keywords', memKeywords.Lines);
-        setBool('regex_keywords', chkRegex.Checked);
-        kw_expr := CreateKeywordsExpr(true); //Try to create/compile Keyword expression
-        FreeAndNil(kw_expr);
-
-        //Blocked JIDs
-//        setStringList('blockers', memBlocks.Lines);
-
         endUpdate();
     end;
     MainSession.FireEvent('/session/prefs', nil);
@@ -329,14 +279,8 @@ procedure TfrmPrefs.FormCreate(Sender: TObject);
 begin
     // Setup some fonts
     AssignUnicodeFont(Self);
-    AssignUnicodeFont(memKeywords.Font, 10);
-
-    // Our panels..
-    AssignUnicodeHighlight(pnlKeyword.Font, 10);
 
     TranslateComponent(Self);
-
-    tbsKeywords.TabVisible := false;
 
     // Load the system panel
     _system := nil;
@@ -498,10 +442,6 @@ begin
             f := _network;
         end;
     end
-    else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
-        PageControl1.ActivePage := tbsKeywords;
-        toggleSelector(lblKeywords);
-    end
     else if ((Sender = imgHotkeys) or (Sender = lblHotkeys)) then begin
         toggleSelector(lblHotkeys);
         if (_hotkeys <> nil) then
@@ -516,18 +456,11 @@ begin
 
     // setup the panel..
     if (f <> nil) then begin
-        if PageControl1.Visible then
-            PageControl1.Visible := false;
         f.Parent := Self;
         f.Align := alClient;
         f.Visible := true;
         f.BringToFront();
         _cur_panel := f;
-    end
-    else begin
-        if (not PageControl1.Visible) then
-            PageControl1.Visible := true;
-        PageControl1.BringToFront();
     end;
 end;
 

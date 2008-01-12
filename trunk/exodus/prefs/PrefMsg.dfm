@@ -73,7 +73,6 @@ inherited frmPrefMsg: TfrmPrefMsg
           Align = alTop
           Caption = 'Auto accept all requests'
           TabOrder = 0
-          ExplicitTop = 3
         end
         object rbAcceptContacts: TTntRadioButton
           AlignWithMargins = True
@@ -144,6 +143,30 @@ inherited frmPrefMsg: TfrmPrefMsg
         Align = alTop
         Caption = 'Block messages from people not on my contact list'
         TabOrder = 2
+      end
+    end
+    object gbAdvancedPrefs: TExGroupBox
+      AlignWithMargins = True
+      Left = 0
+      Top = 226
+      Width = 390
+      Height = 47
+      Margins.Left = 0
+      Margins.Top = 9
+      Align = alTop
+      AutoSize = True
+      TabOrder = 2
+      TabStop = True
+      AutoHide = True
+      Caption = 'Advanced message handling preferences'
+      object btnManageKeywords: TTntButton
+        Left = 3
+        Top = 22
+        Width = 161
+        Height = 25
+        Caption = 'Manage Keywords...'
+        TabOrder = 1
+        OnClick = btnManageKeywordsClick
       end
     end
   end

@@ -45,6 +45,9 @@ type
     chkInviteAutoJoin: TTntCheckBox;
     chkBlockNonRoster: TTntCheckBox;
     pnlS10NOpts: TExBrandPanel;
+    gbAdvancedPrefs: TExGroupBox;
+    btnManageKeywords: TTntButton;
+    procedure btnManageKeywordsClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,7 +60,17 @@ implementation
 {$R *.dfm}
 uses
     JabberUtils, ExUtils,  FileCtrl, Session, Unicode,
-    PrefFile, PrefController;
+    PrefFile, PrefController, ManageKeywordsDlg;
+
+procedure TfrmPrefMsg.btnManageKeywordsClick(Sender: TObject);
+var
+    tkw: TManageKeywordsDlg;
+begin
+    inherited;
+    tkw := TManageKeywordsDlg.Create(Self);
+    tkw.ShowModal();
+    tkw.Free();
+end;
 
 procedure TfrmPrefMsg.LoadPrefs();
 var
@@ -76,6 +89,10 @@ begin
         else rbPromptAll.checked := true;
     end;
     
+    s := getPrefState('keywords');
+    btnManageKeywords.Visible := (s <> psInvisible);
+    btnManageKeywords.Enabled := (s <> psReadOnly);
+
     pnlContainer.CaptureChildStates();
     pnlContainer.CheckAutoHide();
 end;
