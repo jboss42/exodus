@@ -40,7 +40,6 @@ type
     lblDisplay: TTntLabel;
     imgRoster: TImage;
     lblRoster: TTntLabel;
-    PageControl1: TTntPageControl;
     ColorDialog1: TColorDialog;
     imgSystem: TImage;
     lblSystem: TTntLabel;
@@ -48,14 +47,8 @@ type
     lblNotify: TTntLabel;
     imgAway: TImage;
     lblAway: TTntLabel;
-    tbsKeywords: TTntTabSheet;
-    memKeywords: TTntMemo;
-    tbsBlockList: TTntTabSheet;
-    memBlocks: TTntMemo;
     imgKeywords: TImage;
     lblKeywords: TTntLabel;
-    imgBlockList: TImage;
-    lblBlockList: TTntLabel;
     imgCustompres: TImage;
     lblCustomPres: TTntLabel;
     Panel1: TPanel;
@@ -63,9 +56,6 @@ type
     btnOK: TTntButton;
     btnCancel: TTntButton;
     Button6: TTntButton;
-    Panel2: TPanel;
-    Label1: TTntLabel;
-    chkRegex: TTntCheckBox;
     imgMessages: TImage;
     lblMessages: TTntLabel;
     lblPlugins: TTntLabel;
@@ -73,17 +63,20 @@ type
     imgTransfer: TImage;
     lblTransfer: TTntLabel;
     Bevel1: TBevel;
-    pnlBlocked: TTntPanel;
-    pnlKeyword: TTntPanel;
     Shape1: TShape;
     Shape2: TShape;
     lblNetwork: TTntLabel;
-    Panel4: TPanel;
-    lblBlockIns: TTntLabel;
     imgHotkeys: TImage;
     imgPlugins: TImage;
     lblHotkeys: TTntLabel;
+    PageControl1: TTntPageControl;
+    tbsKeywords: TTntTabSheet;
+    memKeywords: TTntMemo;
+    Panel2: TPanel;
+    Label1: TTntLabel;
     TntLabel1: TTntLabel;
+    chkRegex: TTntCheckBox;
+    pnlKeyword: TTntPanel;
     procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -129,7 +122,6 @@ const
     pref_xfers = 'xfers';
     pref_away = 'away';
     pref_keywords = 'keywords';
-    pref_block = 'block';
     pref_pres = 'presence';
     pref_network = 'network';
     pref_plugins = 'plugins';
@@ -172,7 +164,6 @@ begin
         else if (start_page = pref_xfers) then l := f.lblTransfer
         else if (start_page = pref_away) then l := f.lblAway
         else if (start_page = pref_keywords) then l := f.lblKeywords
-        else if (start_page = pref_block) then l := f.lblBlocklist
         else if (start_page = pref_pres) then l := f.lblCustomPres
         else if (start_page = pref_network) then l := f.lblNetwork
         else if (start_page = pref_plugins) then l := f.lblPlugins
@@ -244,7 +235,7 @@ begin
                 chkRegex.Enabled := false;
         end;
 
-        fillStringList('blockers', memBlocks.Lines);
+//        fillStringList('blockers', memBlocks.Lines);
         regex_pref_tag.Free();
    end;
 end;
@@ -311,7 +302,7 @@ begin
         FreeAndNil(kw_expr);
 
         //Blocked JIDs
-        setStringList('blockers', memBlocks.Lines);
+//        setStringList('blockers', memBlocks.Lines);
 
         endUpdate();
     end;
@@ -339,16 +330,13 @@ begin
     // Setup some fonts
     AssignUnicodeFont(Self);
     AssignUnicodeFont(memKeywords.Font, 10);
-    AssignUnicodeFont(memBlocks.Font, 10);
 
     // Our panels..
     AssignUnicodeHighlight(pnlKeyword.Font, 10);
-    AssignUnicodeHighlight(pnlBlocked.Font, 10);
 
     TranslateComponent(Self);
 
     tbsKeywords.TabVisible := false;
-    tbsBlockList.TabVisible := false;
 
     // Load the system panel
     _system := nil;
@@ -361,8 +349,6 @@ begin
         lblTransfer.Visible := getBool('brand_ft');
         imgPlugins.Visible := getBool('brand_plugs');
         lblPlugins.Visible := getBool('brand_plugs');
-        imgBlockList.Visible := getBool('brand_allow_blocking_jids');
-        lblBlockList.Visible := getBool('brand_allow_blocking_jids');
     end;
 
     // Init all the other panels
@@ -515,10 +501,6 @@ begin
     else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
         toggleSelector(lblKeywords);
-    end
-    else if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
-        PageControl1.ActivePage := tbsBlockList;
-        toggleSelector(lblBlocklist);
     end
     else if ((Sender = imgHotkeys) or (Sender = lblHotkeys)) then begin
         toggleSelector(lblHotkeys);
