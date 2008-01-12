@@ -70,7 +70,6 @@ type
     chkAllowFontFamily: TTntCheckBox;
     chkAllowFontSize: TTntCheckBox;
     chkAllowFontColor: TTntCheckBox;
-    chkEmoticons: TTntCheckBox;
     pnlTimeStamp: TExBrandPanel;
     chkTimestamp: TTntCheckBox;
     lblTimestampFmt: TTntLabel;
@@ -92,6 +91,11 @@ type
     lblMem1: TTntLabel;
     trkChatMemory: TTrackBar;
     txtChatMemory: TExNumericEdit;
+    pnlEmoticons: TExBrandPanel;
+    chkEmoticons: TTntCheckBox;
+    btnEmoSettings: TTntButton;
+    procedure btnEmoSettingsClick(Sender: TObject);
+    procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);
     procedure trkChatMemoryChange(Sender: TObject);
     procedure txtSnapChange(Sender: TObject);
@@ -175,6 +179,7 @@ uses
     PrefFile,
     PrefController,
     Unicode,
+    PrefEmoteDlg,
     JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo;
 
 {---------------------------------------}
@@ -279,8 +284,13 @@ begin
     txtSnap.Visible := chkSnap.Visible;
     if (chkSnap.Visible) then
       chkSnapClick(Self);
-      
+
+    s := GetPrefState('custom_icondefs');
+    btnEmoSettings.Visible := ((s <> psInvisible) and chkEmoticons.Visible);
+    btnEmoSettings.enabled := ((s <> psReadOnly) and chkEmoticons.enabled);
+    
     pnlContainer.captureChildStates();
+    btnEmoSettings.Enabled := btnEmoSettings.Enabled and chkEmoticons.Checked; 
     pnlContainer.checkAutoHide();
 end;
 
@@ -394,6 +404,16 @@ end;
 
 
 {---------------------------------------}
+procedure TfrmPrefDisplay.btnEmoSettingsClick(Sender: TObject);
+var
+    tdlg: TfrmPrefEmoteDlg;
+begin
+    inherited;
+    tdlg := TfrmPrefEmoteDlg.Create(Self);
+    tdlg.ShowModal();
+    tdlg.Free();
+end;
+
 procedure TfrmPrefDisplay.btnFontClick(Sender: TObject);
 begin
   inherited;
@@ -678,6 +698,15 @@ begin
             _lastAllowSize := chkAllowFontSize.Checked
         else if (sender = chkAllowFontColor) then
             _lastAllowColor := chkAllowFontColor.Checked;
+    end;
+end;
+
+procedure TfrmPrefDisplay.chkEmoticonsClick(Sender: TObject);
+begin
+    inherited;
+    if (btnEmoSettings.Visible) then begin
+        btnEmoSettings.Enabled := chkEmoticons.Checked and
+                                  (GetPrefState('custom_icondefs') <> psReadOnly);
     end;
 end;
 

@@ -1,4 +1,4 @@
-unit PrefEmote;
+unit PrefEmoteDlg;
 {
     Copyright 2004, Peter Millard
 
@@ -25,10 +25,10 @@ uses
     Emote, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls,
-    ComCtrls, TntComCtrls, ImgList;
+    ComCtrls, TntComCtrls, ImgList, ExForm;
 
 type
-  TfrmPrefEmote = class(TfrmPrefPanel)
+  TfrmPrefEmoteDlg = class(TExForm)
     EmoteOpen: TOpenDialog;
     pageEmotes: TTntPageControl;
     TntTabSheet1: TTntTabSheet;
@@ -50,6 +50,10 @@ type
     lstCustomEmotes: TTntListView;
     imagesCustom: TImageList;
     btnCustomEmoteEdit: TTntButton;
+    btnOK: TTntButton;
+    btnCancel: TTntButton;
+    procedure TntFormCreate(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
     procedure btnEmoteAddClick(Sender: TObject);
     procedure btnEmoteRemoveClick(Sender: TObject);
     procedure btnEmoteClearClick(Sender: TObject);
@@ -72,12 +76,9 @@ type
 
   public
     { Public declarations }
-    procedure LoadPrefs(); override;
-    procedure SavePrefs(); override;
+    procedure LoadPrefs();
+    procedure SavePrefs();
   end;
-
-var
-  frmPrefEmote: TfrmPrefEmote;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -89,14 +90,15 @@ uses
     XMLTag, XMLParser, GnuGetText, JabberUtils, ExUtils,  Session, PrefController;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.LoadPrefs();
+procedure TfrmPrefEmoteDlg.LoadPrefs();
 var
     path, fn: Widestring;
     i: integer;
     e: TEmoticon;
 begin
-    inherited;
     el := TEmoticonList.Create();
+    
+    Self.txtCustomEmoteFilename.Text := MainSession.Prefs.getString('custom_icondefs');
 
     MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 
@@ -123,11 +125,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.SavePrefs();
+procedure TfrmPrefEmoteDlg.SavePrefs();
 var
     fn: Widestring;
 begin
-    inherited;
     MainSession.Prefs.setStringlist('emoticon_dlls', lstEmotes.Items);
 
     // Save our custom list.
@@ -142,8 +143,14 @@ begin
     MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 end;
 
+procedure TfrmPrefEmoteDlg.TntFormCreate(Sender: TObject);
+begin
+    inherited;
+    LoadPrefs();
+end;
+
 {---------------------------------------}
-procedure TfrmPrefEmote.btnEmoteAddClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnEmoteAddClick(Sender: TObject);
 var
     i: integer;
 begin
@@ -157,7 +164,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnEmoteRemoveClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnEmoteRemoveClick(Sender: TObject);
 var
     i: integer;
 begin
@@ -169,8 +176,14 @@ begin
     lstEmotes.Items.Delete(i);
 end;
 
+procedure TfrmPrefEmoteDlg.btnOKClick(Sender: TObject);
+begin
+    inherited;
+    SavePrefs();
+end;
+
 {---------------------------------------}
-procedure TfrmPrefEmote.btnEmoteClearClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnEmoteClearClick(Sender: TObject);
 begin
   inherited;
     if (MessageDlgW(_('Remove all emoticon sets?'), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
@@ -178,7 +191,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnEmoteDefaultClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnEmoteDefaultClick(Sender: TObject);
 begin
   inherited;
     if (MessageDlgW(_('Reset emoticon sets back to defaults?'), mtConfirmation,
@@ -188,14 +201,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnCustomEmoteBrowseClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnCustomEmoteBrowseClick(Sender: TObject);
 begin
     if (XMLDialog1.Execute) then
         txtCustomEmoteFilename.Text := XMLDialog1.FileName;
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote._addListItem(e: TEmoticon);
+procedure TfrmPrefEmoteDlg._addListItem(e: TEmoticon);
 var
     li: TListItem;
 begin
@@ -206,7 +219,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnCustomEmoteAddClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnCustomEmoteAddClick(Sender: TObject);
 var
     f: TfrmEmoteProps;
     e: TEmoticon;
@@ -270,7 +283,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnCustomEmoteEditClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnCustomEmoteEditClick(Sender: TObject);
 var
     li: TListItem;
     e: TEmoticon;
@@ -339,7 +352,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.btnCustomEmoteRemoveClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.btnCustomEmoteRemoveClick(Sender: TObject);
 var
     e: TEmoticon;
     li: TListItem;
@@ -363,7 +376,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefEmote.lstCustomEmotesAdvancedCustomDrawItem(
+procedure TfrmPrefEmoteDlg.lstCustomEmotesAdvancedCustomDrawItem(
   Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
   Stage: TCustomDrawStage; var DefaultDraw: Boolean);
 var
@@ -409,7 +422,7 @@ begin
 
 end;
 
-procedure TfrmPrefEmote.lstCustomEmotesSelectItem(Sender: TObject;
+procedure TfrmPrefEmoteDlg.lstCustomEmotesSelectItem(Sender: TObject;
   Item: TListItem; Selected: Boolean);
 begin
   inherited;
@@ -422,7 +435,7 @@ begin
     
 end;
 
-procedure TfrmPrefEmote.chkEmoticonsClick(Sender: TObject);
+procedure TfrmPrefEmoteDlg.chkEmoticonsClick(Sender: TObject);
 begin
   inherited;
   {
