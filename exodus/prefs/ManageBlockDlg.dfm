@@ -1,7 +1,8 @@
 inherited ManageBlockDlg: TManageBlockDlg
+  BorderStyle = bsDialog
   Caption = 'Manage Blocked Contacts'
-  ClientHeight = 368
-  ClientWidth = 535
+  ClientHeight = 370
+  ClientWidth = 537
   OnCreate = TntFormCreate
   ExplicitWidth = 543
   ExplicitHeight = 408
@@ -10,17 +11,18 @@ inherited ManageBlockDlg: TManageBlockDlg
   object ExBrandPanel1: TExBrandPanel
     Left = 0
     Top = 0
-    Width = 535
+    Width = 537
     Height = 329
     Align = alTop
     TabOrder = 0
     TabStop = True
     AutoHide = False
+    ExplicitWidth = 535
     object lblBlockIns: TTntLabel
       AlignWithMargins = True
       Left = 3
       Top = 9
-      Width = 529
+      Width = 531
       Height = 32
       Margins.Top = 9
       Align = alTop
@@ -34,7 +36,7 @@ inherited ManageBlockDlg: TManageBlockDlg
       AlignWithMargins = True
       Left = 3
       Top = 47
-      Width = 529
+      Width = 531
       Height = 279
       Align = alClient
       TabOrder = 0
