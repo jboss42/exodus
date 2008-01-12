@@ -23,10 +23,6 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
-{$IFDEF USE_TWEBBROWSER}
-{$R 'iehtml.res' 'iehtml.rc'}
-{$ENDIF}
-
 {%File 'defaults.xml'}
 {$IFDEF USE_TWEBBROWSER}
 {%File 'iemsglist_style.css'}
@@ -100,7 +96,6 @@ uses
   PluginAuth in 'PluginAuth.pas',
   PrefAway in 'prefs\PrefAway.pas' {frmPrefAway},
   PrefController in '..\jopl\PrefController.pas',
-  PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
   PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg},
   PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify},
   PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
@@ -108,7 +103,6 @@ uses
   PrefPresence in 'prefs\PrefPresence.pas' {frmPrefPresence},
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster},
   Prefs in 'Prefs.pas' {frmPrefs},
-  PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
   Presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
@@ -177,7 +171,7 @@ uses
   RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
   Emote in 'Emote.pas',
   GIFImage in 'GIFImage.pas',
-  PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
+  PrefEmoteDlg in 'prefs\PrefEmoteDlg.pas' {frmPrefEmoteDlg},
   EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
   JabberUtils in '..\jopl\JabberUtils.pas',
   DockContainer in 'DockContainer.pas' {frmDockContainer},
@@ -253,10 +247,6 @@ uses
   COMMsgOutToolbar in 'COMMsgOutToolbar.pas',
   idSSLSchannel in 'idSSLSchannel.pas',
   DebugManager in '..\jopl\DebugManager.pas',
-{$IFDEF USE_TWEBBROWSER}
-  IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
-  MSHTMLEvents in 'MSHTMLEvents.pas',
-{$ENDIF}
   VistaAltFixUnit in 'VistaAltFixUnit.pas',
   ExFrame in 'components\base\ExFrame.pas' {baseFrame},
   ExForm in 'components\base\ExForm.pas' {baseForm},

@@ -1,32 +1,28 @@
-inherited frmPrefEmote: TfrmPrefEmote
+inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
   Left = 263
   Top = 185
-  Caption = 'frmPrefEmote'
-  ClientHeight = 401
+  Caption = 'frmPrefEmoteDlg'
+  ClientHeight = 440
   ClientWidth = 449
   OldCreateOrder = True
-  ExplicitWidth = 461
-  ExplicitHeight = 413
+  OnCreate = TntFormCreate
+  ExplicitWidth = 457
+  ExplicitHeight = 480
   PixelsPerInch = 120
   TextHeight = 16
-  inherited pnlHeader: TTntPanel
-    Width = 449
-    Caption = 'Emoticons'
-    ExplicitWidth = 449
-  end
   object pageEmotes: TTntPageControl
     Left = 0
-    Top = 27
+    Top = 0
     Width = 449
-    Height = 374
+    Height = 401
     ActivePage = TntTabSheet2
-    Align = alClient
-    TabOrder = 1
+    Align = alTop
+    TabOrder = 0
     object TntTabSheet1: TTntTabSheet
       Caption = 'Emoticon Packages'
       object pnlCustomPresButtons: TPanel
         Left = 0
-        Top = 301
+        Top = 328
         Width = 441
         Height = 42
         Align = alBottom
@@ -73,7 +69,7 @@ inherited frmPrefEmote: TfrmPrefEmote
         Left = 0
         Top = 0
         Width = 441
-        Height = 301
+        Height = 328
         Align = alClient
         ItemHeight = 16
         TabOrder = 1
@@ -83,7 +79,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Caption = 'Custom Emoticons'
       object Panel2: TPanel
         Left = 0
-        Top = 234
+        Top = 261
         Width = 441
         Height = 42
         Align = alBottom
@@ -122,7 +118,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       end
       object Panel3: TPanel
         Left = 0
-        Top = 276
+        Top = 303
         Width = 441
         Height = 67
         Align = alBottom
@@ -139,12 +135,12 @@ inherited frmPrefEmote: TfrmPrefEmote
         object txtCustomEmoteFilename: TTntEdit
           Left = 20
           Top = 27
-          Width = 306
+          Width = 314
           Height = 24
           TabOrder = 0
         end
         object btnCustomEmoteBrowse: TTntButton
-          Left = 332
+          Left = 344
           Top = 25
           Width = 93
           Height = 30
@@ -157,7 +153,7 @@ inherited frmPrefEmote: TfrmPrefEmote
         Left = 0
         Top = 0
         Width = 441
-        Height = 234
+        Height = 261
         Align = alClient
         Columns = <>
         IconOptions.AutoArrange = True
@@ -171,6 +167,27 @@ inherited frmPrefEmote: TfrmPrefEmote
         OnSelectItem = lstCustomEmotesSelectItem
       end
     end
+  end
+  object btnOK: TTntButton
+    Left = 285
+    Top = 407
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 1
+    OnClick = btnOKClick
+  end
+  object btnCancel: TTntButton
+    Left = 366
+    Top = 407
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
   end
   object EmoteOpen: TOpenDialog
     Filter = 'Resource Files|*.dll|All Files|*.*'

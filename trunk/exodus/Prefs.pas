@@ -25,7 +25,7 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster,  
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork, PrefEmote, PrefHotkeys, PrefDisplay,
+    PrefNetwork, PrefHotkeys, PrefDisplay,
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -78,8 +78,6 @@ type
     Shape1: TShape;
     Shape2: TShape;
     lblNetwork: TTntLabel;
-    imgEmote: TImage;
-    lblEmote: TTntLabel;
     Panel4: TPanel;
     lblBlockIns: TTntLabel;
     imgHotkeys: TImage;
@@ -105,7 +103,6 @@ type
     _roster: TfrmPrefRoster;
     _display: TfrmPrefDisplay;
     _message: TfrmPrefMsg;
-    _emote: TfrmPrefEmote;
     _notify: TfrmPrefNotify;
     _away: TfrmPrefAway;
     _pres: TfrmPrefPresence;
@@ -129,7 +126,6 @@ const
     pref_display = 'display';
     pref_notify = 'notify';
     pref_msgs = 'msgs';
-    pref_emoticons = 'emoticons';
     pref_xfers = 'xfers';
     pref_away = 'away';
     pref_keywords = 'keywords';
@@ -173,7 +169,6 @@ begin
         else if (start_page = pref_display) then l := f.lblDisplay
         else if (start_page = pref_notify) then l := f.lblNotify
         else if (start_page = pref_msgs) then l := f.lblMessages
-        else if (start_page = pref_emoticons) then l := f.lblEmote
         else if (start_page = pref_xfers) then l := f.lblTransfer
         else if (start_page = pref_away) then l := f.lblAway
         else if (start_page = pref_keywords) then l := f.lblKeywords
@@ -288,9 +283,6 @@ begin
         if (_message <> nil) then
             _message.SavePrefs();
 
-        if (_emote <> nil) then
-            _emote.SavePrefs();
-
         if (_notify <> nil) then
             _notify.SavePrefs();
 
@@ -377,7 +369,6 @@ begin
     _roster := nil;
     _display := nil;
     _message := nil;
-    _emote := nil;
     _notify := nil;
     _away := nil;
     _pres := nil;
@@ -465,15 +456,6 @@ begin
         else begin
             _message := TfrmPrefMsg.Create(Self);
             f := _message;
-        end;
-    end
-    else if ((Sender = imgEmote) or (Sender = lblEmote)) then begin
-        toggleSelector(lblEmote);
-        if (_emote <> nil) then
-            f := _emote
-        else begin
-            _emote := TfrmPrefEmote.Create(Self);
-            f := _emote;
         end;
     end
     else if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
@@ -582,7 +564,6 @@ begin
     _roster.Free();
     _display.Free();
     _message.Free();
-    _emote.Free();
     _notify.Free();
     _away.Free();
     _pres.Free();
