@@ -255,7 +255,8 @@ uses
   ExodusDockManager in 'ExodusDockManager.pas',
   AWItem in 'AWItem.pas' {fAWItem: TTntFrame},
   PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay},
-  toastsettings in 'prefs\toastsettings.pas';
+  toastsettings in 'prefs\toastsettings.pas',
+  ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1};
 
 {$R *.TLB}
 

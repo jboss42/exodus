@@ -24,7 +24,9 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, TntComCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
-  Buttons, TntButtons, TntForms, ExFrame, ExBrandPanel, ExNUmericEdit, ComCtrls;
+  Buttons, TntButtons, TntForms,
+  Unicode,
+  ExFrame, ExBrandPanel, ExNUmericEdit, ComCtrls;
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
@@ -76,11 +78,14 @@ type
     chkRosterAlpha: TTntCheckBox;
     trkRosterAlpha: TTrackBar;
     txtRosterAlpha: TExNumericEdit;
+    procedure TntFormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnManageBlockedClick(Sender: TObject);
     procedure txtRosterAlphaChange(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);
     procedure chkRosterAlphaClick(Sender: TObject);
   private
-    { Private declarations }
+    _blockedContacts: TWideStringList;
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -94,8 +99,21 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  Unicode, Session,
-    PrefFile, PrefController;
+    JabberUtils, ExUtils,  Session,
+    PrefFile, PrefController,
+    ManageBlockDlg;
+
+procedure TfrmPrefRoster.btnManageBlockedClick(Sender: TObject);
+var
+    bdlg: TManageBlockDlg;
+begin
+    inherited;
+    bdlg := TManageBlockDlg.Create(Self);
+    bdlg.setBlockers(_blockedContacts);
+    if (bdlg.ShowModal = mrOK) then
+        bdlg.getBlockers(_blockedContacts);
+    bdlg.Free();
+end;
 
 procedure TfrmPrefRoster.chkRosterAlphaClick(Sender: TObject);
 begin
@@ -104,11 +122,20 @@ begin
   txtRosterAlpha.Enabled := chkRosterAlpha.Checked;
 end;
 
+procedure TfrmPrefRoster.FormCreate(Sender: TObject);
+begin
+    _blockedContacts := TWideStringList.Create();
+    inherited;
+
+end;
+
 procedure TfrmPrefRoster.LoadPrefs();
 var
     gs: TWidestringList;
 begin
     inherited;
+    //blocked contacts
+    MainSession.prefs.fillStringlist('blockers', _blockedContacts);
 
     // populate grp drop-downs.
     gs := TWidestringList.Create();
@@ -131,7 +158,7 @@ begin
       chkRosterAlphaClick(Self);
 
     //disable/hide based on brand
-    if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then begin
+    if (not MainSession.Prefs.getBool('brand_allow_blocking_jids')) then begin
         chkHideBlocked.Enabled := false;
         chkHideBlocked.visible := false;
         btnManageBlocked.Visible := false;
@@ -156,8 +183,14 @@ end;
 procedure TfrmPrefRoster.SavePrefs();
 begin
     inherited;
-
+    MainSession.prefs.setStringlist('blockers', _blockedContacts);
     // XXX: save nested group seperator per JEP-48
+end;
+
+procedure TfrmPrefRoster.TntFormDestroy(Sender: TObject);
+begin
+    inherited;
+    _blockedContacts.Free();
 end;
 
 procedure TfrmPrefRoster.trkRosterAlphaChange(Sender: TObject);

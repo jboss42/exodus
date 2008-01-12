@@ -1,7 +1,7 @@
 inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
   Left = 263
   Top = 185
-  Caption = 'frmPrefEmoteDlg'
+  Caption = 'Advanced Emoticon Settings'
   ClientHeight = 440
   ClientWidth = 449
   OldCreateOrder = True
@@ -20,6 +20,10 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
     TabOrder = 0
     object TntTabSheet1: TTntTabSheet
       Caption = 'Emoticon Packages'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 328
