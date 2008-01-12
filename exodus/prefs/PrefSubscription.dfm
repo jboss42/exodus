@@ -2,31 +2,31 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   Left = 250
   Top = 222
   Caption = 'frmPrefSubscription'
-  ClientHeight = 180
-  ClientWidth = 324
+  ClientHeight = 222
+  ClientWidth = 399
   OldCreateOrder = True
-  ExplicitWidth = 336
-  ExplicitHeight = 192
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 411
+  ExplicitHeight = 234
+  PixelsPerInch = 120
+  TextHeight = 16
   inherited pnlHeader: TTntPanel
-    Width = 324
+    Width = 399
     Caption = 'Subscriptions'
-    ExplicitWidth = 324
+    ExplicitWidth = 399
   end
   object chkIncomingS10nAdd: TTntCheckBox
-    Left = 16
-    Top = 159
-    Width = 300
-    Height = 17
+    Left = 20
+    Top = 196
+    Width = 369
+    Height = 21
     Caption = 'Add requestor to default contact list group when accepted'
     TabOrder = 1
   end
   object optIncomingS10n: TTntRadioGroup
-    Left = 8
-    Top = 32
-    Width = 313
-    Height = 121
+    Left = 6
+    Top = 41
+    Width = 385
+    Height = 149
     Caption = 'Incoming Behavior'
     Items.Strings = (
       'Ask me for all requests'

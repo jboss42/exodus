@@ -25,7 +25,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls,
   TntStdCtrls, TntExtCtrls, TntComCtrls, ExGroupBox, TntForms, ExFrame,
-  ExBrandPanel;
+  ExBrandPanel, ExNumericEdit;
 
 type
   TfrmPrefDisplay = class(TfrmPrefPanel)
@@ -78,6 +78,25 @@ type
     chkShowPriority: TTntCheckBox;
     chkChatAvatars: TTntCheckBox;
     Label5: TTntLabel;
+    pnlSnapTo: TExBrandPanel;
+    chkSnap: TTntCheckBox;
+    trkSnap: TTrackBar;
+    txtSnap: TExNumericEdit;
+    gbChatOptions: TExGroupBox;
+    chkBusy: TTntCheckBox;
+    chkEscClose: TTntCheckBox;
+    pnlChatHotkey: TExBrandPanel;
+    lblClose: TTntLabel;
+    txtCloseHotkey: THotKey;
+    pnlChatMemory: TExBrandPanel;
+    lblMem1: TTntLabel;
+    trkChatMemory: TTrackBar;
+    txtChatMemory: TExNumericEdit;
+    procedure txtChatMemoryChange(Sender: TObject);
+    procedure trkChatMemoryChange(Sender: TObject);
+    procedure txtSnapChange(Sender: TObject);
+    procedure trkSnapChange(Sender: TObject);
+    procedure chkSnapClick(Sender: TObject);
     procedure btnRosterFontClick(Sender: TObject);
     procedure cbChatFontChange(Sender: TObject);
     procedure cbChatBGChange(Sender: TObject);
@@ -255,6 +274,12 @@ begin
     cboChatElement.Text := sMessageText;
     cboChatElementChange(nil);
 
+
+    trkSnap.Visible := chkSnap.Visible;
+    txtSnap.Visible := chkSnap.Visible;
+    if (chkSnap.Visible) then
+      chkSnapClick(Self);
+      
     pnlContainer.captureChildStates();
     pnlContainer.checkAutoHide();
 end;
@@ -307,6 +332,36 @@ begin
         setBool('font_underline', (fsUnderline in colorChat.Font.Style));
     end;
 
+end;
+
+procedure TfrmPrefDisplay.trkChatMemoryChange(Sender: TObject);
+begin
+    inherited;
+    txtChatMemory.Text := IntToStr(trkChatMemory.Position);
+end;
+
+procedure TfrmPrefDisplay.trkSnapChange(Sender: TObject);
+begin
+    inherited;
+    txtSnap.Text := IntToStr(trkSnap.Position);
+end;
+
+procedure TfrmPrefDisplay.txtChatMemoryChange(Sender: TObject);
+begin
+    inherited;
+    try
+        trkChatMemory.Position := StrToInt(txtChatMemory.Text);
+    except
+    end;
+end;
+
+procedure TfrmPrefDisplay.txtSnapChange(Sender: TObject);
+begin
+    inherited;
+    try
+        trkSnap.Position := StrToInt(txtSnap.Text);
+    except
+    end;
 end;
 
 procedure TfrmPrefDisplay.loadAllowedFontProps();
@@ -630,6 +685,13 @@ procedure TfrmPrefDisplay.chkRTEnabledClick(Sender: TObject);
 begin
     inherited;
     loadAllowedFontProps();
+end;
+
+procedure TfrmPrefDisplay.chkSnapClick(Sender: TObject);
+begin
+    inherited;
+    txtSnap.Enabled := chkSnap.Checked;
+    trkSnap.Enabled := chkSnap.Checked;
 end;
 
 {---------------------------------------}

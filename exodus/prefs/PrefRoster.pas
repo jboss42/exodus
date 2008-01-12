@@ -23,8 +23,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
-  Buttons, TntButtons, TntForms, ExFrame, ExBrandPanel;
+  Dialogs, PrefPanel, StdCtrls, TntComCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
+  Buttons, TntButtons, TntForms, ExFrame, ExBrandPanel, ExNUmericEdit, ComCtrls;
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
@@ -72,6 +72,13 @@ type
     pnlDefaultGroup: TExBrandPanel;
     lblDefaultGrp: TTntLabel;
     txtDefaultGrp: TTntComboBox;
+    pnlAlpha: TExBrandPanel;
+    chkRosterAlpha: TTntCheckBox;
+    trkRosterAlpha: TTrackBar;
+    txtRosterAlpha: TExNumericEdit;
+    procedure txtRosterAlphaChange(Sender: TObject);
+    procedure trkRosterAlphaChange(Sender: TObject);
+    procedure chkRosterAlphaClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -89,6 +96,13 @@ implementation
 uses
     JabberUtils, ExUtils,  Unicode, Session,
     PrefFile, PrefController;
+
+procedure TfrmPrefRoster.chkRosterAlphaClick(Sender: TObject);
+begin
+  inherited;
+  trkRosterAlpha.Enabled := chkRosterAlpha.Checked;
+  txtRosterAlpha.Enabled := chkRosterAlpha.Checked;
+end;
 
 procedure TfrmPrefRoster.LoadPrefs();
 var
@@ -111,6 +125,10 @@ begin
     AssignTntStrings(gs, txtGatewayGrp.Items);
     gs.Free();
 
+    trkRosterAlpha.Visible := chkRosterAlpha.Visible;
+    txtRosterAlpha.Visible := chkRosterAlpha.Visible;
+    if (chkRosterAlpha.Visible) then
+      chkRosterAlphaClick(Self);
 
     //disable/hide based on brand
     if (MainSession.Prefs.getBool('brand_allow_blocking_jids') = false) then begin
@@ -140,6 +158,21 @@ begin
     inherited;
 
     // XXX: save nested group seperator per JEP-48
+end;
+
+procedure TfrmPrefRoster.trkRosterAlphaChange(Sender: TObject);
+begin
+    inherited;
+    txtRosterAlpha.Text := IntToStr(trkRosterAlpha.Position);
+end;
+
+procedure TfrmPrefRoster.txtRosterAlphaChange(Sender: TObject);
+begin
+    inherited;
+    try
+        trkRosterAlpha.Position := StrToInt(txtRosterAlpha.Text);
+    except
+    end;
 end;
 
 end.
