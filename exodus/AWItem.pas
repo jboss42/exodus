@@ -155,55 +155,62 @@ var
     tag: TXMLTag;
 begin
     inherited;
-    // Set defaults
-    _startColor := pnlAWItemGPanel.GradientProperites.startColor;  
-    _endColor := pnlAWItemGPanel.GradientProperites.endColor;
-    _priorityStartColor := $000000ff;
-    _priorityEndColor := $000000ff;
-    _newWindowStartColor := $0000ffff;
-    _newWindowEndColor := $0000aaaa;
-    _activeStartColor := $0000ff00;
-    _activeEndColor := $0000ff00;
-    _activity_window_selected_font_color := $00000000;
-    _activity_window_non_selected_font_color := $00000000;
-    _activity_window_unread_msgs_font_color := $000000ff;
-    _activity_window_high_priority_font_color := $00000000;
-    _activity_window_unread_msgs_high_priority_font_color := $00000000;
 
-    // Set from prefs
-    tag := MainSession.Prefs.getXMLPref('activity_window_selected_color');
-    if (tag <> nil) then begin
-        _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
-        _activeEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
-    end;
-    tag.Free();
-    tag := nil;
-    tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
-    if (tag <> nil) then begin
-        _priorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
-        _priorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
-    end;
-    tag.Free();
-    tag := nil;
-    tag := MainSession.Prefs.getXMLPref('activity_window_new_window_color');
-    if (tag <> nil) then begin
-        _newWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
-        _newWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
-    end;
-    tag.Free();
-    tag := nil;
-    _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
-    _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
-    _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
-    _activity_window_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_high_priority_font_color'));
-    _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
+    try
+        // Set defaults
+        _startColor := pnlAWItemGPanel.GradientProperites.startColor;
+        _endColor := pnlAWItemGPanel.GradientProperites.endColor;
+        _priorityStartColor := $000000ff;
+        _priorityEndColor := $000000ff;
+        _newWindowStartColor := $0000ffff;
+        _newWindowEndColor := $0000aaaa;
+        _activeStartColor := $0000ff00;
+        _activeEndColor := $0000ff00;
+        _activity_window_selected_font_color := $00000000;
+        _activity_window_non_selected_font_color := $00000000;
+        _activity_window_unread_msgs_font_color := $000000ff;
+        _activity_window_high_priority_font_color := $00000000;
+        _activity_window_unread_msgs_high_priority_font_color := $00000000;
 
-    _timNewItemTimer := TTimer.Create(Self);
-    _timNewItemTimer.Enabled := true;
-    _timNewItemTimer.Interval := 500;
-    _timNewItemTimer.OnTimer := _timNewItemTimerTimer;
-    _flashcnt := 0;
-    _newWindowHighlight := true;
+        // Set from prefs
+        tag := MainSession.Prefs.getXMLPref('activity_window_selected_color');
+        if (tag <> nil) then begin
+            _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+            _activeEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        end;
+        tag.Free();
+        tag := nil;
+        tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
+        if (tag <> nil) then begin
+            _priorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+            _priorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        end;
+        tag.Free();
+        tag := nil;
+        tag := MainSession.Prefs.getXMLPref('activity_window_new_window_color');
+        if (tag <> nil) then begin
+            _newWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+            _newWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        end;
+        tag.Free();
+        tag := nil;
+        _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
+        _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
+        _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
+        _activity_window_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_high_priority_font_color'));
+        _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
+
+        // Set timer for new window notification
+        _timNewItemTimer := TTimer.Create(Self);
+        if (_timNewItemTimer <> nil) then begin
+            _timNewItemTimer.Enabled := true;
+            _timNewItemTimer.Interval := 500;
+            _timNewItemTimer.OnTimer := _timNewItemTimerTimer;
+            _flashcnt := 0;
+            _newWindowHighlight := true;
+        end;
+    except
+    end;
 end;
 
 {---------------------------------------}

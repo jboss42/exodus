@@ -30,6 +30,8 @@ uses
 
 type
 
+  TScrollState = (ssDisabled, ssEnabled, ssPriority, ssNewWindow);
+
   TAWTrackerItem = class
   private
     { Private declarations }
@@ -90,7 +92,7 @@ type
     _showingTopItem: integer;
     _newActivateSheet: TTntTabSheet;
     _oldActivateSheet: TTntTabSheet;
-    _curListSort: TSortStates;
+    _curListSort: TSortState;
     _canScrollUp: boolean;
     _canScrollDown: boolean;
     _scrollPriorityStartColor: TColor;
@@ -101,25 +103,22 @@ type
     _scrollDefaultEndColor: TColor;
     _scrollEnabledStartColor: TColor;
     _scrollEnabledEndColor: TColor;
-    _scrollUpPriority: boolean;
-    _scrollDownPriority: boolean;
-    _scrollUpNewWindow: boolean;
-    _scrollDownNewWindow: boolean;
+    _scrollUpState: TScrollState;
+    _scrollDownState: TScrollState;
+    _currentActivePage: TTntTabSheet;
 
     procedure _clearTrackingList();
     procedure CreateParams(Var params: TCreateParams); override;
     procedure onItemClick(Sender: TObject);
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
-    procedure _sortTrackingList(sortType: TSortStates = ssUnsorted);
-    procedure _sortList(var list: TWidestringList; sortType: TSortStates);
+    procedure _sortTrackingList(sortType: TSortState = ssUnsorted);
+    procedure _sortList(var list: TWidestringList; sortType: TSortState);
     procedure _updateDisplay(allowPartialVisible: boolean = true);
     procedure _activateNextDockedItem(curitemindx: integer);
     procedure _enableScrollUp(doenable: boolean = true);
     procedure _enableScrollDown(doenable: boolean = true);
-    procedure _setScrollUpColorPriority(enable: boolean);
-    procedure _setScrollDownColorPriority(enable: boolean);
-    procedure _setScrollUpColorNewWindow(enable: boolean);
-    procedure _setScrollDownColorNewWindow(enable: boolean);
+    procedure _setScrollUpColor();
+    procedure _setScrollDownColor();
 
   public
     { Public declarations }
@@ -139,6 +138,7 @@ type
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
+    property currentActivePage: TTntTabSheet read _currentActivePage;
   end;
 
   // Global Functions
@@ -246,6 +246,8 @@ begin
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgSortArrow.Picture.Icon);
 
+    _scrollUpState := ssDisabled;
+    _scrollDownState := ssEnabled;
     _scrollDefaultStartColor := pnlListScrollUp.GradientProperites.startColor;
     _scrollDefaultEndColor := pnlListScrollUp.GradientProperites.endColor;
     _scrollEnabledStartColor := $00D0C3AF;
@@ -600,19 +602,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.timSetActivePanelTimer(Sender: TObject);
+var
+f:TfrmDockable;
+s:widestring;
+
 begin
     inherited;
-
     try
         timSetActivePanel.Enabled := false;
         if (_newActivateSheet <> nil) then begin
-            if (_dockwindow.AWTabControl.ActivePage <> nil) then begin
-                _oldActivateSheet := TTntTabSheet(_dockwindow.AWTabControl.ActivePage);
-            end
-            else begin
-                _oldActivateSheet := nil;
-            end;
+            _oldActivateSheet := _currentActivePage;
             _dockwindow.AWTabControl.ActivePage := _newActivateSheet;
+            _currentActivePage := _newActivateSheet;
             _dockwindow.setWindowCaption(_newActivateSheet.Caption);
             _newActivateSheet := nil;
             scrollToActive();
@@ -640,13 +641,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow._sortTrackingList(sortType: TSortStates);
+procedure TfrmActivityWindow._sortTrackingList(sortType: TSortState);
 begin
     _sortList(_trackingList, sortType);
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow._sortList(var list: TWidestringList; sortType: TSortStates);
+procedure TfrmActivityWindow._sortList(var list: TWidestringList; sortType: TSortState);
 var
     i,j: integer;
     insertPoint: integer;
@@ -791,10 +792,10 @@ var
     item: TAWTrackerItem;
     slotsFilled: integer;
     remainder: integer;
-    highPriUpHidden: boolean;
-    highPriDownHidden: boolean;
-    newWindowUpHidden: boolean;
-    newWindowDownHidden: boolean;
+    havePriUpHidden: boolean;
+    havePriDownHidden: boolean;
+    haveNewWindowUpHidden: boolean;
+    haveNewWindowDownHidden: boolean;
 begin
     try
         if (_trackingList.Count > 0) then begin
@@ -818,10 +819,10 @@ begin
                 Inc(numSlots);
             end;
             // Crawl list to see what needs displayed
-            highPriUpHidden := false;
-            highPriDownHidden := false;
-            newWindowUpHidden := false;
-            newWindowDownHidden := false;
+            havePriUpHidden := false;
+            havePriDownHidden := false;
+            haveNewWindowUpHidden := false;
+            haveNewWindowDownHidden := false;
             for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (i < _showingTopItem) then begin
@@ -829,10 +830,10 @@ begin
                     item.awItem.Visible := false;
                     _enableScrollUp(true);
                     if (item.awItem.priority) then begin
-                        highPriUpHidden := true;
+                        havePriUpHidden := true;
                     end;
                     if (item.awItem.newWindowHighlight) then begin
-                        newWindowUpHidden := true;
+                        haveNewWindowUpHidden := true;
                     end;
                 end
                 else if (slotsFilled >= numSlots) then begin
@@ -840,10 +841,10 @@ begin
                     item.awItem.Visible := false;
                     _enableScrollDown(true);
                     if (item.awItem.priority) then begin
-                        highPriDownHidden := true;
+                        havePriDownHidden := true
                     end;
                     if (item.awItem.newWindowHighlight) then begin
-                        newWindowDownHidden := true;
+                        haveNewWindowDownHidden := true
                     end;
                 end
                 else begin
@@ -856,13 +857,33 @@ begin
                 end;
             end;
 
-            // Display priority on scroll bars
-            _setScrollUpColorPriority(highPriUpHidden);
-            _setScrollDownColorPriority(highPriDownHidden);
-
-            // Display new window on scroll bars
-            _setScrollUpColorNewWindow(newWindowUpHidden);
-            _setScrollDownColorNewWindow(newWindowDownHidden);
+            // Change scroll state
+            if (_canScrollUp) then begin
+                _scrollUpState := ssEnabled;
+            end
+            else begin
+                _scrollUpState := ssDisabled;
+            end;
+            if (_canScrollDown) then begin
+                _scrollDownState := ssEnabled;
+            end
+            else begin
+                _scrollDownState := ssDisabled;
+            end;
+            if (havePriUpHidden) then begin
+                _scrollUpState := ssPriority;
+            end;
+            if (havePriDownHidden) then begin
+                _scrollDownState := ssPriority;
+            end;
+            if (haveNewWindowUpHidden) then begin
+                _scrollUpState := ssNewWindow;
+            end;
+            if (haveNewWindowDownHidden) then begin
+                _scrollDownState := ssNewWindow;
+            end;
+            _setScrollUpColor();
+            _setScrollDownColor();
 
             // Disable scroll buttons if not needed
             if (_showingTopItem <= 0) then begin
@@ -984,39 +1005,34 @@ end;
 procedure TfrmActivityWindow._enableScrollUp(doenable: boolean);
 begin
     _canScrollUp := doenable;
-    //pnlListScrollUp.Visible := doenable;
     sortBevel.Visible := (not doenable);
-    if ((not _scrollUpPriority) and
-        (not _scrollUpNewWindow)) then begin
-        if (doenable) then begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
-        end
-        else begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+
+    if (doenable) then begin
+        if (_scrollUpState = ssDisabled) then begin
+            _scrollUpState := ssEnabled;
         end;
-        pnlListScrollUp.Invalidate();
+    end
+    else begin
+        _scrollUpState := ssDisabled;
     end;
+
+    _setScrollUpColor();
 end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._enableScrollDown(doenable: boolean);
 begin
     _canScrollDown := doenable;
-    //pnlListScrollDown.Visible := doenable;
-    if ((not _scrollDownPriority) and
-        (not _scrollDownNewWindow)) then begin
-        if (doenable) then begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
-        end
-        else begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
+
+    if (doenable) then begin
+        if (_scrollDownState = ssDisabled) then begin
+            _scrollDownState := ssEnabled;
         end;
-        pnlListScrollDown.Invalidate();
+    end
+    else begin
+        _scrollDownState := ssDisabled;
     end;
+    _setScrollDownColor();
 end;
 
 {---------------------------------------}
@@ -1045,84 +1061,48 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow._setScrollUpColorPriority(enable: boolean);
+procedure TfrmActivityWindow._setScrollUpColor();
 begin
-    _scrollUpPriority := enable;
-    if (enable) then begin
-        pnlListScrollUp.GradientProperites.startColor := _scrollPriorityStartColor;
-        pnlListScrollUp.GradientProperites.endColor := _scrollPriorityEndColor;
-    end
-    else begin
-        if (_canScrollUp) then begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
-        end
-        else begin
+    case _scrollUpState of
+        ssDisabled: begin
             pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
             pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+        ssEnabled: begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
+        end;
+        ssPriority: begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollPriorityStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollPriorityEndColor;
+        end;
+        ssNewWindow: begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollNewWindowStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollNewWindowEndColor;
         end;
     end;
     pnlListScrollUp.Invalidate();
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow._setScrollDownColorPriority(enable: boolean);
+procedure TfrmActivityWindow._setScrollDownColor();
 begin
-    _scrollDownPriority := enable;
-    if (enable) then begin
-        pnlListScrollDown.GradientProperites.startColor := _scrollPriorityStartColor;
-        pnlListScrollDown.GradientProperites.endColor := _scrollPriorityEndColor;
-    end
-    else begin
-        if (_canScrollDown) then begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
-        end
-        else begin
+    case _scrollDownState of
+        ssDisabled: begin
             pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
             pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
         end;
-    end;
-    pnlListScrollDown.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow._setScrollUpColorNewWindow(enable: boolean);
-begin
-    _scrollUpNewWindow := enable;
-    if (enable) then begin
-        pnlListScrollUp.GradientProperites.startColor := _scrollNewWindowStartColor;
-        pnlListScrollUp.GradientProperites.endColor := _scrollNewWindowEndColor;
-    end
-    else begin
-        if (_canScrollUp) then begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollEnabledEndColor;
-        end
-        else begin
-            pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
-        end;
-    end;
-    pnlListScrollUp.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow._setScrollDownColorNewWindow(enable: boolean);
-begin
-    _scrollDownNewWindow := enable;
-    if (enable) then begin
-        pnlListScrollDown.GradientProperites.startColor := _scrollNewWindowStartColor;
-        pnlListScrollDown.GradientProperites.endColor := _scrollNewWindowEndColor;
-    end
-    else begin
-        if (_canScrollDown) then begin
+        ssEnabled: begin
             pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
             pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
-        end
-        else begin
-            pnlListScrollDown.GradientProperites.startColor := _scrollDefaultStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollDefaultEndColor;
+        end;
+        ssPriority: begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollPriorityStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollPriorityEndColor;
+        end;
+        ssNewWindow: begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollNewWindowStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollNewWindowEndColor;
         end;
     end;
     pnlListScrollDown.Invalidate();
@@ -1130,9 +1110,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.resetCurrentSheet();
+var
+    frm: TfrmDockable;
 begin
-    _newActivateSheet := _oldActivateSheet;
-    timSetActivePanel.Enabled := true;
+    frm := TfrmDockable(_dockWindow.getTabForm(_oldActivateSheet));
+    if (frm <> nil) then begin
+        _dockwindow.BringDockedToTop(frm);
+    end;
 end;
 
 
