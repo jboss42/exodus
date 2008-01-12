@@ -23,7 +23,7 @@ interface
 
 uses
     // panels
-    PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefDialogs,
+    PrefPanel, PrefSystem, PrefRoster,  
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
     PrefNetwork, PrefEmote, PrefHotkeys, PrefDisplay,
 
@@ -36,12 +36,8 @@ uses
 type
   TfrmPrefs = class(TExForm)
     Scroller: TScrollBox;
-    imgDialog: TImage;
-    lblDialog: TTntLabel;
     imgFonts: TImage;
     lblDisplay: TTntLabel;
-    imgS10n: TImage;
-    lblS10n: TTntLabel;
     imgRoster: TImage;
     lblRoster: TTntLabel;
     PageControl1: TTntPageControl;
@@ -107,9 +103,7 @@ type
     _cur_label: TTntLabel;
     _system: TfrmPrefSystem;
     _roster: TfrmPrefRoster;
-    _subscription: TfrmPrefSubscription;
     _display: TfrmPrefDisplay;
-    _dialogs: TfrmPrefDialogs;
     _message: TfrmPrefMsg;
     _emote: TfrmPrefEmote;
     _notify: TfrmPrefNotify;
@@ -132,11 +126,7 @@ var
 const
     pref_system = 'system';
     pref_roster = 'roster';
-    pref_groups = 'groups';
-    pref_s10n = 's10n';
     pref_display = 'display';
-    pref_layout = 'layout';
-    pref_win = 'windows';
     pref_notify = 'notify';
     pref_msgs = 'msgs';
     pref_emoticons = 'emoticons';
@@ -180,9 +170,7 @@ begin
         l := nil;
         if (start_page = pref_system) then l := f.lblSystem
         else if (start_page = pref_roster) then l := f.lblRoster
-        else if (start_page = pref_s10n) then l := f.lbls10n
         else if (start_page = pref_display) then l := f.lblDisplay
-        else if (start_page = pref_win) then l := f.lblDialog
         else if (start_page = pref_notify) then l := f.lblNotify
         else if (start_page = pref_msgs) then l := f.lblMessages
         else if (start_page = pref_emoticons) then l := f.lblEmote
@@ -294,14 +282,8 @@ begin
         if (_system <> nil) then
             _system.SavePrefs();
 
-        if (_subscription <> nil) then
-            _subscription.SavePrefs();
-
         if (_display <> nil) then
             _display.SavePrefs();
-
-        if (_dialogs <> nil) then
-            _dialogs.SavePrefs();
 
         if (_message <> nil) then
             _message.SavePrefs();
@@ -393,9 +375,7 @@ begin
 
     // Init all the other panels
     _roster := nil;
-    _subscription := nil;
     _display := nil;
-    _dialogs := nil;
     _message := nil;
     _emote := nil;
     _notify := nil;
@@ -472,29 +452,11 @@ begin
             f := _roster;
         end;
     end
-    else if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
-        toggleSelector(lblS10n);
-        if (_subscription <> nil) then
-            f := _subscription
-        else begin
-            _subscription := TfrmPrefSubscription.Create(Self);
-            f := _subscription;
-        end;
-    end
     else if ((Sender = imgFonts) or (Sender = lblDisplay)) then begin
         toggleSelector(lblDisplay);
         if (_display = nil) then
             _display := TfrmPrefDisplay.Create(Self);
         f := _display;
-    end
-    else if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
-        toggleSelector(lblDialog);
-        if (_dialogs <> nil) then
-            f := _dialogs
-        else begin
-            _dialogs := TfrmPrefDialogs.Create(Self);
-            f := _dialogs;
-        end;
     end
     else if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
         toggleSelector(lblMessages);
@@ -618,9 +580,7 @@ begin
     // destroy all panels we have..
     _system.Free();
     _roster.Free();
-    _subscription.Free();
     _display.Free();
-    _dialogs.Free();
     _message.Free();
     _emote.Free();
     _notify.Free();

@@ -3903,7 +3903,6 @@ end;
 
 procedure TfrmExodus.mnuWindows_LayoutClick(Sender: TObject);
 begin
-    StartPrefs(pref_layout);
 end;
 
 {---------------------------------------}
