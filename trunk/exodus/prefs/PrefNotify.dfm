@@ -37,6 +37,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 0
+      TabStop = True
       AutoHide = True
       object imgSound: TImage
         Left = 3
@@ -142,6 +143,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 1
+      TabStop = True
       AutoHide = False
       object lblNotifySources: TTntLabel
         AlignWithMargins = True
@@ -193,6 +195,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 2
+      TabStop = True
       AutoHide = True
       Caption = 'Take the following actions:'
       object chkFlash: TTntCheckBox
@@ -228,6 +231,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Align = alTop
         AutoSize = True
         TabOrder = 4
+        TabStop = True
         AutoHide = True
         object chkPlaySound: TTntCheckBox
           Left = 3
@@ -250,6 +254,7 @@ inherited frmPrefNotify: TfrmPrefNotify
           Align = alRight
           AutoSize = True
           TabOrder = 1
+          TabStop = True
           AutoHide = True
           object txtSoundFile: TTntEdit
             Left = 0
@@ -344,6 +349,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Align = alTop
         AutoSize = True
         TabOrder = 1
+        TabStop = True
         AutoHide = True
         object chkToast: TTntCheckBox
           AlignWithMargins = True
@@ -378,6 +384,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       AutoScroll = True
       AutoSize = True
       TabOrder = 3
+      TabStop = True
       AutoHide = True
       Caption = 'Advanced notification preferences'
       object chkNotifyActive: TTntCheckBox

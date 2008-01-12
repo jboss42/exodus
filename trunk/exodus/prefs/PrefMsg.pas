@@ -23,18 +23,34 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, ExGroupBox,
+  TntForms, ExFrame, ExBrandPanel;
 
+const
+    S10N_PROMPT_ALL = 0;
+    S10N_AUTO_ACCEPT_CONTACTS = 1;
+    S10N_AUTO_ACCEPT_ALL = 2;
+    S10N_AUTO_DENY_ALL = 3;
+    
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
+    pnlContainer: TExBrandPanel;
+    gbSubscriptions: TExGroupBox;
+    chkIncomingS10nAdd: TTntCheckBox;
+    rbAcceptContacts: TTntRadioButton;
+    rbAcceptAll: TTntRadioButton;
+    rbDenyAll: TTntRadioButton;
+    rbPromptAll: TTntRadioButton;
+    pnlOtherPrefs: TExGroupBox;
+    chkInviteAutoJoin: TTntCheckBox;
+    chkBlockNonRoster: TTntCheckBox;
+    pnlS10NOpts: TExBrandPanel;
   private
     { Private declarations }
   public
-    { Public declarations }
+    procedure LoadPrefs(); override;
+    procedure SavePrefs(); override;
   end;
-
-var
-  frmPrefMsg: TfrmPrefMsg;
 
 implementation
 {$WARN UNIT_PLATFORM OFF}
@@ -42,5 +58,42 @@ implementation
 uses
     JabberUtils, ExUtils,  FileCtrl, Session, Unicode,
     PrefFile, PrefController;
+
+procedure TfrmPrefMsg.LoadPrefs();
+var
+    s: TPrefState;
+begin
+    inherited;
+
+    s := GetPrefState('s10n_auto_accept');
+    pnlS10NOpts.Visible := (s <> psInvisible);
+    pnlS10NOpts.enabled := (s <> psReadOnly);
+
+    case (MainSession.prefs.getInt('s10n_auto_accept')) of
+        S10N_AUTO_ACCEPT_CONTACTS: rbAcceptContacts.checked := true;
+        S10N_AUTO_ACCEPT_ALL: rbAcceptAll.checked := true;
+        S10N_AUTO_DENY_ALL: rbDenyAll.checked := true;
+        else rbPromptAll.checked := true;
+    end;
+    
+    pnlContainer.CaptureChildStates();
+    pnlContainer.CheckAutoHide();
+end;
+
+procedure TfrmPrefMsg.SavePrefs();
+var
+    sval: widestring;
+begin
+    inherited;
+    if (rbAcceptContacts.checked) then
+        sval := '1'
+    else if (rbAcceptAll.checked) then
+        sval := '2'
+    else if (rbDenyAll.checked) then
+        sval := '3'
+    else
+        sval := '0';
+    MainSession.Prefs.setString('s10n_auto_accept', sval);
+end;
 
 end.

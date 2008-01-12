@@ -1,21 +1,23 @@
 inherited frmPrefDisplay: TfrmPrefDisplay
-  Left = 320
-  Top = 256
+  Left = 400
+  Top = 120
   Align = alLeft
   Caption = 'frmPrefFont'
-  ClientHeight = 994
+  ClientHeight = 1015
   ClientWidth = 594
   OldCreateOrder = True
+  Position = poDesigned
   ShowHint = True
+  ExplicitTop = -22
   ExplicitWidth = 606
-  ExplicitHeight = 1006
+  ExplicitHeight = 1027
   PixelsPerInch = 120
   TextHeight = 16
   object pnlContainer: TExBrandPanel [0]
     Left = 0
     Top = 27
     Width = 551
-    Height = 967
+    Height = 988
     Align = alLeft
     AutoSize = True
     Color = 13681583
@@ -29,7 +31,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     TabOrder = 1
     TabStop = True
     AutoHide = False
-    ExplicitHeight = 755
+    ExplicitHeight = 967
     object gbContactList: TExGroupBox
       AlignWithMargins = True
       Left = 0
@@ -633,10 +635,11 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       Left = 0
       Top = 606
       Width = 548
-      Height = 118
+      Height = 346
       Margins.Left = 0
       Margins.Top = 12
       Align = alTop
+      AutoScroll = True
       AutoSize = True
       TabOrder = 3
       TabStop = True
@@ -645,10 +648,11 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3
-        Top = 20
-        Width = 320
-        Height = 95
+        Top = 73
+        Width = 382
+        Height = 270
         Align = alLeft
+        AutoScroll = True
         AutoSize = True
         TabOrder = 1
         TabStop = True
@@ -657,20 +661,20 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           AlignWithMargins = True
           Left = 0
           Top = 3
-          Width = 317
+          Width = 379
           Height = 89
           Margins.Left = 0
           Align = alTop
-          AutoSize = True
           TabOrder = 0
           TabStop = True
           AutoHide = True
           Caption = 'Messages may include:'
+          ExplicitWidth = 539
           object chkAllowFontFamily: TTntCheckBox
             AlignWithMargins = True
             Left = 0
             Top = 20
-            Width = 267
+            Width = 376
             Height = 18
             Margins.Left = 0
             Align = alTop
@@ -683,7 +687,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             AlignWithMargins = True
             Left = 0
             Top = 44
-            Width = 267
+            Width = 376
             Height = 18
             Margins.Left = 0
             Align = alTop
@@ -696,7 +700,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             AlignWithMargins = True
             Left = 0
             Top = 68
-            Width = 267
+            Width = 376
             Height = 18
             Margins.Left = 0
             Align = alTop
@@ -705,6 +709,185 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             OnClick = chkAllowFontFamilyClick
             ExplicitWidth = 314
           end
+        end
+        object gbChatOptions: TExGroupBox
+          AlignWithMargins = True
+          Left = 0
+          Top = 98
+          Width = 379
+          Height = 169
+          Margins.Left = 0
+          Align = alTop
+          AutoSize = True
+          TabOrder = 1
+          TabStop = True
+          AutoHide = True
+          Caption = 'Chat Preferences'
+          ExplicitTop = 95
+          ExplicitWidth = 539
+          object chkBusy: TTntCheckBox
+            Left = 0
+            Top = 17
+            Width = 379
+            Height = 21
+            Align = alTop
+            Caption = 'Warn when trying to close busy chat windows'
+            TabOrder = 1
+            ExplicitWidth = 539
+          end
+          object chkEscClose: TTntCheckBox
+            Left = 0
+            Top = 38
+            Width = 379
+            Height = 20
+            Align = alTop
+            Caption = 'Use ESC key to close chat windows'
+            TabOrder = 2
+            ExplicitLeft = -81
+            ExplicitTop = 35
+            ExplicitWidth = 539
+          end
+          object pnlChatHotkey: TExBrandPanel
+            AlignWithMargins = True
+            Left = 0
+            Top = 61
+            Width = 376
+            Height = 45
+            Margins.Left = 0
+            Align = alTop
+            AutoSize = True
+            TabOrder = 3
+            TabStop = True
+            AutoHide = True
+            ExplicitWidth = 542
+            object lblClose: TTntLabel
+              Left = 0
+              Top = 0
+              Width = 279
+              Height = 16
+              Caption = 'Use this hotkey sequence to close chat windows:'
+            end
+            object txtCloseHotkey: THotKey
+              Left = 0
+              Top = 22
+              Width = 177
+              Height = 23
+              HotKey = 57431
+              InvalidKeys = []
+              Modifiers = [hkShift, hkCtrl, hkAlt]
+              TabOrder = 0
+            end
+          end
+          object pnlChatMemory: TExBrandPanel
+            AlignWithMargins = True
+            Left = 0
+            Top = 118
+            Width = 376
+            Height = 48
+            Margins.Left = 0
+            Margins.Top = 9
+            Align = alTop
+            AutoSize = True
+            TabOrder = 4
+            TabStop = True
+            AutoHide = True
+            ExplicitWidth = 536
+            object lblMem1: TTntLabel
+              Left = 0
+              Top = 0
+              Width = 376
+              Height = 16
+              Align = alTop
+              Caption = 
+                'Minutes to keep displayed chat history (0 to destroy immediately' +
+                '):'
+              ExplicitWidth = 377
+            end
+            object trkChatMemory: TTrackBar
+              Left = -5
+              Top = 22
+              Width = 168
+              Height = 24
+              Max = 120
+              PageSize = 15
+              Frequency = 15
+              Position = 60
+              TabOrder = 1
+              ThumbLength = 15
+              TickStyle = tsNone
+              OnChange = trkChatMemoryChange
+            end
+            object txtChatMemory: TExNumericEdit
+              Left = 169
+              Top = 17
+              Width = 70
+              Height = 31
+              BevelOuter = bvNone
+              ParentColor = True
+              TabOrder = 0
+              Text = '60'
+              Min = 0
+              Max = 360
+              OnChange = txtChatMemoryChange
+              DesignSize = (
+                70
+                31)
+            end
+          end
+        end
+      end
+      object pnlSnapTo: TExBrandPanel
+        Left = 0
+        Top = 17
+        Width = 548
+        Height = 53
+        Align = alTop
+        AutoSize = True
+        TabOrder = 2
+        TabStop = True
+        AutoHide = True
+        ExplicitTop = 8
+        object chkSnap: TTntCheckBox
+          Left = 3
+          Top = 0
+          Width = 336
+          Height = 21
+          Caption = 'Make the main window snap to screen edges'
+          TabOrder = 1
+          OnClick = chkSnapClick
+        end
+        object trkSnap: TTrackBar
+          Left = 23
+          Top = 27
+          Width = 168
+          Height = 24
+          Enabled = False
+          Max = 120
+          Min = 10
+          PageSize = 15
+          Frequency = 15
+          Position = 15
+          TabOrder = 2
+          ThumbLength = 15
+          TickStyle = tsNone
+          OnChange = trkSnapChange
+        end
+        object txtSnap: TExNumericEdit
+          Left = 197
+          Top = 22
+          Width = 70
+          Height = 31
+          BevelOuter = bvNone
+          Enabled = False
+          ParentColor = True
+          TabOrder = 0
+          Text = '15'
+          Min = 10
+          Max = 120
+          OnChange = txtSnapChange
+          DesignSize = (
+            70
+            31)
         end
       end
     end

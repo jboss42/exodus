@@ -26,6 +26,7 @@ program Exodus;
 {$IFDEF USE_TWEBBROWSER}
 {$R 'iehtml.res' 'iehtml.rc'}
 {$ENDIF}
+
 {%File 'defaults.xml'}
 {$IFDEF USE_TWEBBROWSER}
 {%File 'iemsglist_style.css'}
@@ -100,7 +101,6 @@ uses
   PrefAway in 'prefs\PrefAway.pas' {frmPrefAway},
   PrefController in '..\jopl\PrefController.pas',
   PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
-  PrefFont in 'prefs\PrefFont.pas' {frmPrefFont},
   PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg},
   PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify},
   PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
@@ -150,9 +150,7 @@ uses
   ExSession in 'ExSession.pas',
   WebGet in 'WebGet.pas' {frmWebDownload},
   PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
-  PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
-  PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
   LocalUtils in 'LocalUtils.pas',
   SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
@@ -266,7 +264,8 @@ uses
   DockWindow in 'DockWindow.pas' {frmDockWindow},
   ExodusDockManager in 'ExodusDockManager.pas',
   AWItem in 'AWItem.pas' {fAWItem: TTntFrame},
-  PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay};
+  PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay},
+  toastsettings in 'prefs\toastsettings.pas';
 
 {$R *.TLB}
 

@@ -348,7 +348,6 @@ end;
 procedure TfrmPrefNotify.SavePrefs();
 var
     i: integer;
-    oneNI: TNotifyInfo;
 begin
     inherited;
     for i := 0 to _notifyList.Count - 1 do begin
