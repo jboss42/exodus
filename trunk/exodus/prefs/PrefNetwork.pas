@@ -23,29 +23,36 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
-  TntExtCtrls, ExNumericEdit;
+  TntExtCtrls, ExNumericEdit, ExGroupBox, TntForms, ExFrame, ExBrandPanel;
 
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
-    GroupBox1: TTntGroupBox;
+    pnlContainer: TExBrandPanel;
+    gbReconnect: TExGroupBox;
+    pnlAttempts: TExBrandPanel;
     lblAttempts: TTntLabel;
-    lblTime: TTntLabel;
-    lblTime2: TTntLabel;
     txtAttempts: TExNumericEdit;
+    pnlTime: TExBrandPanel;
+    lblTime: TTntLabel;
     txtTime: TExNumericEdit;
-    GroupBox2: TTntGroupBox;
+    lblTime2: TTntLabel;
+    lblSeconds: TTntLabel;
+    gbProxy: TExGroupBox;
+    rbIE: TTntRadioButton;
+    rbNone: TTntRadioButton;
+    rbCustom: TTntRadioButton;
+    pnlProxyInfo: TExBrandPanel;
     lblProxyHost: TTntLabel;
-    lblProxyPort: TTntLabel;
-    lblProxyUsername: TTntLabel;
-    lblProxyPassword: TTntLabel;
-    lblProxyApproach: TLabel;
     txtProxyHost: TTntEdit;
+    lblProxyPort: TTntLabel;
     txtProxyPort: TTntEdit;
+    pnlAuthInfo: TExBrandPanel;
     chkProxyAuth: TTntCheckBox;
+    lblProxyUsername: TTntLabel;
     txtProxyUsername: TTntEdit;
+    lblProxyPassword: TTntLabel;
     txtProxyPassword: TTntEdit;
-    cboProxyApproach: TTntComboBox;
-    procedure cboProxyApproachChange(Sender: TObject);
+    procedure rbIEClick(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);
   private
     { Private declarations }
@@ -65,14 +72,50 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, JabberUtils, ExUtils,  PrefController, Session, Registry;
+    GnuGetText, JabberUtils, ExUtils,  PrefFile, PrefController, Session, Registry;
 
 {---------------------------------------}
 procedure TfrmPrefNetwork.LoadPrefs();
+var
+    pType: integer;
+    s: TPrefState;
 begin
     inherited;
+    ptype := MainSession.Prefs.getInt('http_proxy_approach');
+    case (ptype) of
+        http_proxy_ie: rbIE.Checked := true;
+        http_proxy_none: rbNone.Checked := true;
+        else rbCustom.Checked := true;
+    end;
+
+    s := getPrefState('http_proxy_approach');
+    rbIe.Visible := (s <> psInvisible);
+    rbIE.Enabled := (s <> psReadOnly);
+    rbNone.Visible := (s <> psInvisible);
+    rbNone.enabled := (s <> psReadOnly);
+    rbCustom.Visible := (s <> psInvisible);
+    rbCustom.Enabled := (s <> psReadOnly);
+    pnlProxyInfo.Visible := (s <> psInvisible);
+    pnlProxyInfo.Enabled := (s <> psReadOnly);
+    pnlAuthInfo.Visible := (s <> psInvisible);
+    pnlAuthInfo.Enabled := (s <> psReadOnly);
+
     if (StrToInt(txtAttempts.Text) < 0) then txtAttempts.Text := '3';
-    cboProxyApproachChange(Self);
+
+    pnlContainer.captureChildStates();
+
+    rbIEClick(Self);
+
+    pnlContainer.checkAutoHide();
+end;
+
+procedure TfrmPrefNetwork.rbIEClick(Sender: TObject);
+begin
+    inherited;
+    pnlProxyInfo.Enabled := rbCustom.Checked;
+    pnlAuthInfo.Enabled := rbCustom.Checked;
+    if (not rbCustom.Checked) then
+        chkProxyAuth.Checked := false;
     chkProxyAuthClick(Self);
 end;
 
@@ -80,17 +123,24 @@ end;
 procedure TfrmPrefNetwork.SavePrefs();
 var
     reg: TRegistry;
+    ptype: integer;
 begin
     inherited;
+    if (rbIE.Checked) then
+        ptype := http_proxy_ie
+    else if (rbNone.Checked) then
+        ptype := http_proxy_none
+    else
+        ptype := http_proxy_custom;
 
-    if (cboProxyApproach.ItemIndex = http_proxy_ie) then begin
+    if (ptype = http_proxy_ie) then begin
         reg := TRegistry.Create();
         try
             reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
             if (reg.ValueExists('AutoConfigURL')) then begin
-                MainSession.Prefs.setInt('http_proxy_approach', http_proxy_custom);
-                cboProxyApproach.ItemIndex := http_proxy_custom;
-                cboProxyApproachChange(Self);
+                ptype := http_proxy_custom;
+                rbCustom.Checked := true;
+                rbIEClick(Self);
                 txtProxyHost.SetFocus();
                 MessageDlgW(_(sBadProxy), mtWarning, [mbOK], 0);
             end;
@@ -98,49 +148,17 @@ begin
             reg.Free();
         end;
     end;
-
+    MainSession.prefs.setInt('http_proxy_approach', ptype);
 end;
 
-
-{---------------------------------------}
-procedure TfrmPrefNetwork.cboProxyApproachChange(Sender: TObject);
-begin
-    if (cboProxyApproach.ItemIndex = http_proxy_custom) then begin
-        txtProxyHost.Enabled := true;
-        txtProxyPort.Enabled := true;
-        chkProxyAuth.Enabled := true;
-        lblProxyHost.Enabled := true;
-        lblProxyPort.Enabled := true;
-    end
-    else begin
-        txtProxyHost.Enabled := false;
-        txtProxyPort.Enabled := false;
-        chkProxyAuth.Enabled := false;
-        chkProxyAuth.Checked := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-        lblProxyHost.Enabled := false;
-        lblProxyPort.Enabled := false;
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-    end;
-end;
 
 {---------------------------------------}
 procedure TfrmPrefNetwork.chkProxyAuthClick(Sender: TObject);
 begin
-    if (chkProxyAuth.Checked) then begin
-        lblProxyUsername.Enabled := true;
-        lblProxyPassword.Enabled := true;
-        txtProxyUsername.Enabled := true;
-        txtProxyPassword.Enabled := true;
-    end
-    else begin
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-    end;
+    lblProxyUsername.Enabled := chkProxyAuth.Checked;
+    lblProxyPassword.Enabled := chkProxyAuth.Checked;
+    txtProxyUsername.Enabled := chkProxyAuth.Checked;
+    txtProxyPassword.Enabled := chkProxyAuth.Checked;
 end;
 
 

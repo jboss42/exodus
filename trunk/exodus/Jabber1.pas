@@ -1451,8 +1451,10 @@ begin
     if (MainSession.Prefs.getBool('brand_plugs')) then
     begin
         InitPlugins();
+        {JJF todo fix this
         if ( IsRequiredPluginsSelected() = false ) then
             StartPrefs(pref_plugins);
+        }
     end;
 
     // If they had logging turned on, warn them that they need to
@@ -3970,7 +3972,7 @@ end;
 procedure TfrmExodus.mnuPluginOptsClick(Sender: TObject);
 begin
     // Show the prefs/plugins page.
-    StartPrefs(pref_plugins);
+//    StartPrefs(pref_plugins);
 end;
 
 {---------------------------------------}
