@@ -68,7 +68,7 @@ type
     _glueEdge: TGlueEdge;
 
     procedure CreateParams(Var params: TCreateParams); override;
-    procedure _removeTabs(idx:integer = -1);
+    procedure _removeTabs(idx:integer = -1; oldtsheet: TTntTabSheet = nil);
     procedure _layoutDock();
     procedure _layoutAWOnly();
     procedure _saveDockWidths();
@@ -149,7 +149,10 @@ end;
 
 {---------------------------------------}
 function TfrmDockWindow.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
+var
+    oldsheet: TTntTabSheet;
 begin
+    oldsheet := TTntTabSheet(AWTabControl.ActivePage);
     if (not Self.Showing) then begin
         Self.ShowDefault(false);
     end;
@@ -157,7 +160,7 @@ begin
     setWindowCaption(frm.Caption);
     Result := GetTabSheet(frm);
     frm.Visible := true;
-    _removeTabs();
+    _removeTabs(-1, oldsheet);
 end;
 
 {---------------------------------------}
@@ -243,25 +246,18 @@ end;
 procedure TfrmDockWindow.AWTabControlDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
 var
-    aw: TfrmActivityWindow;
     item: TAWTrackerItem;
+    oldsheet: TTntTabSheet;
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
+        oldsheet := TTntTabSheet(AWTabControl.ActivePage);
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
         TfrmDockable(Source.Control).OnDocked();
         _docked_forms.Add(TfrmDockable(Source.Control));
-        _removeTabs();
-        aw := GetActivityWindow();
-        if (aw <> nil) then begin
-            item := aw.findItem(TfrmDockable(Source.Control));
-            if (item <> nil) then begin
-                aw.activateItem(item.awItem); //???dda
-            end;
-//            aw.resetCurrentSheet();
-        end;
+        _removeTabs(-1, oldsheet);
 
         if (Self.WindowState = wsMaximized) then begin
             Self.Top := Self.Monitor.WorkareaRect.Top;
@@ -341,7 +337,6 @@ procedure TfrmDockWindow.UpdateDocked(frm: TfrmDockable);
 var
     item: TAWTrackerItem;
     aw: TfrmActivityWindow;
-    dda: integer;
 begin
     if (frm = nil) then exit;
     
@@ -440,7 +435,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockWindow._removeTabs(idx: integer);
+procedure TfrmDockWindow._removeTabs(idx: integer; oldtsheet: TTntTabSheet);
 var
     i: integer;
 begin
@@ -452,6 +447,9 @@ begin
         for i := 0 to AWTabControl.PageCount - 1 do begin
             AWTabControl.Pages[i].TabVisible := false
         end;
+    end;
+    if (oldtsheet <> nil) then begin
+        AWTabControl.ActivePage := oldtsheet;
     end;
 end;
 

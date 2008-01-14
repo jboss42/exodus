@@ -134,7 +134,6 @@ type
     procedure scrollToActive();
     procedure setDockingSpacers(dockstate: TDockStates);
     procedure itemChangeUpdate();
-    procedure resetCurrentSheet();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -602,10 +601,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.timSetActivePanelTimer(Sender: TObject);
-var
-f:TfrmDockable;
-s:widestring;
-
 begin
     inherited;
     try
@@ -1106,17 +1101,6 @@ begin
         end;
     end;
     pnlListScrollDown.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow.resetCurrentSheet();
-var
-    frm: TfrmDockable;
-begin
-    frm := TfrmDockable(_dockWindow.getTabForm(_oldActivateSheet));
-    if (frm <> nil) then begin
-        _dockwindow.BringDockedToTop(frm);
-    end;
 end;
 
 
