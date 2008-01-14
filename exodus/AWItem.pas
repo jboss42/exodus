@@ -128,7 +128,7 @@ implementation
 
 uses
     Jabber1, ActivityWindow, Session,
-    XMLTag;
+    XMLTag, StateForm;
 
 
 {$R *.dfm}
@@ -201,13 +201,18 @@ begin
         _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
 
         // Set timer for new window notification
-        _timNewItemTimer := TTimer.Create(Self);
-        if (_timNewItemTimer <> nil) then begin
-            _timNewItemTimer.Enabled := true;
-            _timNewItemTimer.Interval := 500;
-            _timNewItemTimer.OnTimer := _timNewItemTimerTimer;
-            _flashcnt := 0;
-            _newWindowHighlight := true;
+        if (not StateForm.restoringDesktopFlag) then begin
+            _timNewItemTimer := TTimer.Create(Self);
+            if (_timNewItemTimer <> nil) then begin
+                _timNewItemTimer.Enabled := true;
+                _timNewItemTimer.Interval := 500;
+                _timNewItemTimer.OnTimer := _timNewItemTimerTimer;
+                _flashcnt := 0;
+                _newWindowHighlight := true;
+            end;
+        end
+        else begin
+            _timNewItemTimer := nil;
         end;
     except
     end;

@@ -305,6 +305,8 @@ type
 var
   frmState: TfrmState;
 
+  restoringDesktopFlag: boolean;
+
 
 implementation
 
@@ -398,6 +400,7 @@ begin
     end
     else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
         discovered := TWideStringList.create();
+        restoringDesktopFlag := true;
 
         if (prefHelper.getAutoOpenEvent(event, profileList, MainSession.Profile.Name)) then
             for i := 0 to profileList.Count - 1 do
@@ -406,6 +409,8 @@ begin
         if (prefHelper.getAutoOpenEvent(event, defaultList)) then
             for i := 0 to defaultList.Count - 1 do
                 OpenWindow(defaultList[i]);
+
+        restoringDesktopFlag := false;
     end;
 end;
 
@@ -953,5 +958,7 @@ begin
      end;
 end;
 
+initialization
+    restoringDesktopFlag := false;
 
 end.
