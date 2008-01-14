@@ -99,7 +99,7 @@ uses
   PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg},
   PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify},
   PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
-  PrefPlugins in 'prefs\PrefPlugins.pas' {frmPrefPlugins},
+  ManagePluginsDlg in 'prefs\ManagePluginsDlg.pas' {frmPrefPlugins},
   PrefPresence in 'prefs\PrefPresence.pas' {frmPrefPresence},
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster},
   Prefs in 'Prefs.pas' {frmPrefs},
