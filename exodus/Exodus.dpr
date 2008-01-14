@@ -186,6 +186,7 @@ uses
   NewUser in 'NewUser.pas' {frmNewUser},
   pngimage in '..\jopl\png\pngimage.pas',
   pnglang in '..\jopl\png\pnglang.pas',
+  pngextra in '..\jopl\png\pngextra.pas',
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
