@@ -24,7 +24,7 @@ interface
 uses
     // panels
     PrefPanel, PrefSystem, PrefRoster,  
-    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
+    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefTransfer,
     PrefNetwork, PrefHotkeys, PrefDisplay,
 
     // other stuff
@@ -133,6 +133,7 @@ begin
     else if (start_page = pref_network) then s := f.imgProfile
     else if (start_page = pref_hotkeys) then s := f.imgHotkeys
     else s := f.imgSystem;
+    
     f.TabSelect(s);
     f.ShowModal;
     f.Free();
@@ -279,7 +280,7 @@ var
     f: TfrmPrefPanel;
 begin
     f := nil;
-    if (not (Sender is TExGraphicButton)) then exit; //paranoid
+    if ((Sender = nil) or (not (Sender is TExGraphicButton))) then exit; //paranoid
 
 
     if (Sender = imgSystem)  then begin

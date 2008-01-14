@@ -1,4 +1,4 @@
-unit PrefPlugins;
+unit ManagePluginsDlg;
 {
     Copyright 2003, Peter Millard
 
@@ -25,18 +25,21 @@ uses
     Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls,
-  ExtCtrls, TntExtCtrls;
+  ExtCtrls, TntExtCtrls,
+  ExForm;
 
 type
-  TfrmPrefPlugins = class(TfrmPrefPanel)
+  TfrmPrefPlugins = class(TExForm)
     Label6: TTntLabel;
     lblPluginScan: TTntLabel;
-    btnAddPlugin: TTntButton;
     btnConfigPlugin: TTntButton;
-    btnRemovePlugin: TTntButton;
     txtPluginDir: TTntEdit;
     btnBrowsePluginPath: TTntButton;
     lstPlugins: TTntListView;
+    btnCancel: TTntButton;
+    btnOK: TTntButton;
+    procedure btnOKClick(Sender: TObject);
+    procedure TntFormCreate(Sender: TObject);
     procedure lstPluginsSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure btnBrowsePluginPathClick(Sender: TObject);
@@ -52,8 +55,8 @@ type
 
   public
     { Public declarations }
-    procedure LoadPrefs(); override;
-    procedure SavePrefs(); override;
+    procedure LoadPrefs();
+    procedure SavePrefs();
   end;
 
 type
@@ -63,14 +66,22 @@ const
     sRegPluginError = 'The plugin could not be registered with windows.';
     sExternalLibrary = 'External Library';
 
-var
-  frmPrefPlugins: TfrmPrefPlugins;
+procedure showManagePluginDlg(AOwner: TComponent);
 
 implementation
 {$R *.dfm}
 uses
     ActiveX, COMController, ComObj, Exodus_TLB, JabberUtils, ExUtils,
     GnuGetText, PathSelector, Registry, Session, PrefController, BrowseForFolderU;
+
+procedure showManagePluginDlg(AOwner: TComponent);
+var
+    td: TfrmPrefPlugins;
+begin
+    td := TfrmPrefPlugins.create(AOwner);
+    td.ShowModal();
+    td.Free();
+end;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -124,13 +135,19 @@ begin
     // Scan the director
     scanPluginDir(sl);
 
-    with lstPlugins do begin
-        btnRemovePlugin.Enabled := (Items.Count > 0);
-    end;
+//    with lstPlugins do begin
+//        btnRemovePlugin.Enabled := (Items.Count > 0);
+//    end;
 
     btnConfigPlugin.Enabled := false; // no item selected when rescaned. 
 
     sl.Free();
+end;
+
+procedure TfrmPrefPlugins.TntFormCreate(Sender: TObject);
+begin
+    inherited;
+    LoadPrefs();
 end;
 
 {---------------------------------------}
@@ -236,7 +253,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPlugins.lblPluginScanClick(Sender: TObject);
 begin
-  inherited;
+    inherited;
     scanPlugins();
 end;
 
@@ -250,6 +267,12 @@ begin
     if (li = nil) then exit;
     com_name := li.Caption;
     ConfigurePlugin(com_name);
+end;
+
+procedure TfrmPrefPlugins.btnOKClick(Sender: TObject);
+begin
+    inherited;
+    SavePrefs();
 end;
 
 procedure TfrmPrefPlugins.FormCreate(Sender: TObject);

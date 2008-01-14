@@ -140,7 +140,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       Left = 0
       Top = 176
       Width = 329
-      Height = 102
+      Height = 133
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -203,11 +203,35 @@ inherited frmPrefSystem: TfrmPrefSystem
           TabStop = True
         end
       end
+      object ExBrandPanel1: TExBrandPanel
+        AlignWithMargins = True
+        Left = 0
+        Top = 105
+        Width = 326
+        Height = 25
+        Margins.Left = 0
+        Align = alTop
+        AutoSize = True
+        TabOrder = 3
+        TabStop = True
+        AutoHide = True
+        ExplicitTop = 102
+        ExplicitWidth = 329
+        object btnPlugins: TTntButton
+          Left = 3
+          Top = 0
+          Width = 120
+          Height = 25
+          Caption = 'Manage Plugins...'
+          TabOrder = 0
+          OnClick = btnPluginsClick
+        end
+      end
     end
     object ExGroupBox3: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 290
+      Top = 321
       Width = 329
       Height = 213
       Margins.Left = 0
@@ -220,6 +244,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       TabStop = True
       AutoHide = True
       Caption = 'Advanced system preferences:'
+      ExplicitTop = 290
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3

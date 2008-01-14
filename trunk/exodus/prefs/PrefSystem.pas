@@ -55,6 +55,9 @@ type
     lblLang: TTntLabel;
     lblLangScan: TTntLabel;
     cboLocale: TTntComboBox;
+    ExBrandPanel1: TExBrandPanel;
+    btnPlugins: TTntButton;
+    procedure btnPluginsClick(Sender: TObject);
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -98,7 +101,7 @@ uses
     LocalUtils, JabberUtils, ExUtils,  GnuGetText,
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils,
-    jabber1, PrefFile;
+    jabber1, PrefFile, ManagePluginsDlg;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -280,6 +283,8 @@ begin
           chkAutoLogin.Visible := false;
         end;
 
+        btnPlugins.Visible := GetBool('brand_plugs');
+        
         //<<DEBUG>> enabled/visiblity already set in inherited, check branding override
         chkDebug.Visible := getBool('brand_show_debug_in_menu');
 
@@ -364,6 +369,12 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmPrefSystem.btnPluginsClick(Sender: TObject);
+begin
+    inherited;
+    ManagePluginsDlg.showManagePluginDlg(Self);
+end;
+
 procedure TfrmPrefSystem.btnUpdateCheckClick(Sender: TObject);
 var
     available : boolean;
