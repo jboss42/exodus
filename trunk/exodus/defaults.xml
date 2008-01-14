@@ -380,47 +380,53 @@
       <s>http://www.jabber.org/</s>
     </brand_help_url_list>
     <brand_icon ></brand_icon>
+    
+    <!-- PROFILE OPTIONS -->
+    <brand_profile_show_accountdetails control="imgAcctDetails" value="true"></brand_profile_show_accountdetails>
+    <brand_profile_show_connection control="imgConnection" value="true"></brand_profile_show_connection>
+    <brand_profile_show_proxy control="imgProxy" value="true"></brand_profile_show_proxy>
+    <brand_profile_show_httppolling control="imgHttpPolling" value="true"></brand_profile_show_httppolling>
+    <brand_profile_show_advanced control="imgAdvanced" value="true"></brand_profile_show_advanced>
+    
     <brand_profile_conn_type value="0"></brand_profile_conn_type>
-    <brand_profile_new_account_default value="true" control="chkRegister" state="rw"></brand_profile_new_account_default>
-    <brand_profile_host ></brand_profile_host>
-    <brand_profile_http_poll value="1000"></brand_profile_http_poll>
-    <brand_profile_http_url ></brand_profile_http_url>
-    <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
-    <brand_profile_password ></brand_profile_password>
-    <brand_profile_port value="5222"></brand_profile_port>
-    <brand_profile_priority value="1"></brand_profile_priority>
-    <brand_profile_realm value="" control="txtRealm"></brand_profile_realm>
-    <brand_profile_kerberos value="false" control="chkKerberos"></brand_profile_kerberos>
-    <brand_profile_x509auth value="false" control="chkx509"></brand_profile_x509auth>
+    <brand_profile_username control="pnlUsername"></brand_profile_username>
+    <brand_profile_server control="pnlServer"></brand_profile_server>
+    <brand_profile_password control="pnlPassword"></brand_profile_password>
+    <brand_profile_save_password control="chkSavePasswd"></brand_profile_save_password>
+    <brand_profile_new_account_default control="chkRegister" value="true"></brand_profile_new_account_default>
+    <brand_profile_server_list>
+    </brand_profile_server_list>
+    <brand_profile_show_download_public_servers value="false"></brand_profile_show_download_public_servers>
 
-    <!--brand_profile_resource value="Exodus"></brand_profile_resource-->
-
+    <brand_profile_srv control="pnlSRV" value="true"></brand_profile_srv>
+    <brand_profile_host control="pnlHost" ></brand_profile_host>
+    <brand_profile_port control="pnlPort" value="5222"></brand_profile_port>
+    <brand_profile_ssl control="pnlSSL" value="0"></brand_profile_ssl>
+    
+    <brand_profile_socks_type control="pnlSocksType" value="0"></brand_profile_socks_type>
+    <brand_profile_socks_host control="pnlSocksHost" ></brand_profile_socks_host>
+    <brand_profile_socks_port control="pnlSocksPort" value="1080"></brand_profile_socks_port>
+    <brand_profile_socks_auth control="pnlSocksAuth" value="false"></brand_profile_socks_auth>
+    <brand_profile_socks_user control="pnlSocksUsername" ></brand_profile_socks_user>
+    <brand_profile_socks_password control="pnlSocksPassword" ></brand_profile_socks_password>
+    
+    <brand_profile_http_allowpolling control="pnlPolling" value="true"></brand_profile_http_allowpolling>
+    <brand_profile_http_poll control="pnlTime" value="1000"></brand_profile_http_poll>
+    <brand_profile_http_url control="pnlURL" ></brand_profile_http_url>
+    <brand_profile_num_poll_keys control="pnlKeys" value="256"></brand_profile_num_poll_keys>
+    
+    <brand_profile_resource control="pnlResource" value="Exodus"></brand_profile_resource>
     <brand_profile_resource_list>
       <s>Home</s>
       <s>Work</s>
-      <s>Exodus</s>
+      <s>Jabber MomentIM</s>
     </brand_profile_resource_list>
-
-    <brand_profile_save_password ></brand_profile_save_password>
-    <brand_profile_server value="jabber.org"></brand_profile_server>
-    <brand_profile_winlogin value="false"></brand_profile_winlogin>
-
-    <brand_profile_server_list>
-      <s>jabber.org</s>
-      <s>jabber.com</s>
-    </brand_profile_server_list>
-
-    <brand_profile_socks_auth value="false"></brand_profile_socks_auth>
-    <brand_profile_socks_host ></brand_profile_socks_host>
-    <brand_profile_socks_password ></brand_profile_socks_password>
-    <brand_profile_socks_port value="1080"></brand_profile_socks_port>
-    <brand_profile_socks_type value="0"></brand_profile_socks_type>
-    <brand_profile_socks_user ></brand_profile_socks_user>
-    <brand_profile_ssl value="false"></brand_profile_ssl>
-    <brand_profile_srv value="true"></brand_profile_srv>
-    <brand_profile_username ></brand_profile_username>
-    <brand_profile_enable_connect_btn value="true"></brand_profile_enable_connect_btn>
-    <brand_profile_show_download_public_servers value="true"></brand_profile_show_download_public_servers>
+    <brand_profile_realm control="pnlRealm" value=""></brand_profile_realm>
+    <brand_profile_priority control="pnlPriority" value="1"></brand_profile_priority>
+    <brand_profile_kerberos control="pnlKerberos" value="false"></brand_profile_kerberos>
+    <brand_profile_winlogin control="chkWinLogin" value="false"></brand_profile_winlogin>
+    <brand_profile_x509auth control="pnlx509Auth" value="false"></brand_profile_x509auth>
+    <brand_profile_x509cert control="pnlx509Cert" value=""></brand_profile_x509cert>
 
     <brand_invisible_pres value="1"></brand_invisible_pres>
     <brand_muc value="1"></brand_muc>

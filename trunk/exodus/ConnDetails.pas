@@ -593,7 +593,7 @@ begin
 
     URLLabel(lblServerList);
 
-    MainSession.Prefs.RestorePosition(Self, false);
+    //MainSession.Prefs.RestorePosition(Self, false);
 
     //Setup account details page
     imgAcctDetails.Target := tbsAcctDetails;
@@ -662,9 +662,11 @@ begin
     brandControl(pnlResource);
     brandControl(pnlRealm);
     brandControl(pnlPriority);
+
     brandControl(chkWinLogin);
     pnlKerberos.captureChildStates();
     brandControl(pnlKerberos);
+
     brandControl(pnlx509Cert);
     pnlx509Auth.captureChildStates();
     brandControl(pnlx509Auth);
