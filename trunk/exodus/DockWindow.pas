@@ -438,6 +438,9 @@ end;
 procedure TfrmDockWindow._removeTabs(idx: integer; oldtsheet: TTntTabSheet);
 var
     i: integer;
+    aw: TfrmActivityWindow;
+    frm: TfrmDockable;
+    item: TAWTrackerItem;
 begin
     if ((idx >= 0) and
         (idx < AWTabControl.PageCount)) then begin
@@ -448,9 +451,31 @@ begin
             AWTabControl.Pages[i].TabVisible := false
         end;
     end;
+
     if (oldtsheet <> nil) then begin
+        // Workaround for problem with hidden tabs on TPageControl
+        // Restore the sheet that was showing
         AWTabControl.ActivePage := oldtsheet;
+    end
+    else if (AWTabControl.PageCount > 0) then begin
+        try
+            // No old sheet was showing but one should be now
+            // as the PageCount is positive, so force the page
+            // at index 0 to show.
+            aw := GetActivityWindow();
+            if (aw <> nil) then begin
+                frm := TfrmDockable(getTabForm(AWTabControl.Pages[0]));
+                if (frm <> nil) then begin
+                    item := aw.findItem(frm);
+                    if (item <> nil) then begin
+                        aw.activateItem(item.awItem);
+                    end;
+                end;
+            end;
+        except
+        end;
     end;
+
 end;
 
 {---------------------------------------}
