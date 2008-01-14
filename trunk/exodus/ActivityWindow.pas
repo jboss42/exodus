@@ -162,7 +162,7 @@ uses
 const
     sSortBy         = 'Sort By:  ';
     sSortUnsorted   = 'Unsorted';  // Not currently supported
-    sSortAlpha      = 'Alpha';
+    sSortAlpha      = 'Alphabetical';
     sSortRecent     = 'Most Recent Activity';
     sSortType       = 'Type';
     sSortUnread     = 'Unread Messages';

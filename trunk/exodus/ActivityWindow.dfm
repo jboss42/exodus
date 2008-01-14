@@ -211,7 +211,7 @@ object frmActivityWindow: TfrmActivityWindow
     Left = 104
     Top = 144
     object mnuAlphaSort: TTntMenuItem
-      Caption = 'Alpha'
+      Caption = 'Alphabetical'
       OnClick = mnuAlphaSortClick
     end
     object mnuRecentSort: TTntMenuItem
