@@ -24,34 +24,36 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
-  TntComCtrls, TntExtCtrls, ExNumericEdit;
+  TntComCtrls, TntExtCtrls, ExNumericEdit, ExGroupBox, TntForms, ExFrame,
+  ExBrandPanel;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
+    ExBrandPanel1: TExBrandPanel;
+    chkClientCaps: TTntCheckBox;
+    chkRoomJoins: TTntCheckBox;
+    chkPresenceSync: TTntCheckBox;
+    ExGroupBox1: TExGroupBox;
+    rbAllPres: TTntRadioButton;
+    rbLastPres: TTntRadioButton;
+    rbNoPres: TTntRadioButton;
+    ExGroupBox2: TExGroupBox;
     lstCustomPres: TTntListBox;
-    pnlCustomPresButtons: TPanel;
     btnCustomPresAdd: TTntButton;
     btnCustomPresRemove: TTntButton;
     btnCustomPresClear: TTntButton;
-    Panel1: TPanel;
-    chkPresenceSync: TTntCheckBox;
-    lblPresTracking: TTntLabel;
-    cboPresTracking: TTntComboBox;
-    Label1: TTntLabel;
-    chkClientCaps: TTntCheckBox;
     btnDefaults: TTntButton;
-    GroupBox1: TTntGroupBox;
+    pnlProperties: TExBrandPanel;
     Label11: TTntLabel;
-    Label12: TTntLabel;
-    Label13: TTntLabel;
-    Label14: TTntLabel;
-    lblHotkey: TTntLabel;
     txtCPTitle: TTntEdit;
+    Label12: TTntLabel;
     txtCPStatus: TTntEdit;
+    Label13: TTntLabel;
     cboCPType: TTntComboBox;
+    Label14: TTntLabel;
     txtCPPriority: TExNumericEdit;
+    lblHotkey: TTntLabel;
     txtCPHotkey: THotKey;
-    chkRoomJoins: TTntCheckBox;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
@@ -99,10 +101,19 @@ begin
     inherited;
 
     with MainSession.Prefs do begin
+        i := GetInt('pres_tracking');
+        if (i = 2) then
+            rbNoPres.Checked := true
+        else if (i = 1) then
+            rbLastPres.Checked := true
+        else
+            rbAllPres.Checked := true;
+
         // Custom Presence options
         lstCustomPres.Items.Clear();
         ws := getAllPresence();
         _pres_list := TList.Create();
+
         for i := 0 to ws.Count - 1 do begin
             cp := TJabberCustomPres(ws.Objects[i]);
             lstCustomPres.Items.Add(cp.title);
@@ -118,6 +129,13 @@ var
     cp: TJabberCustomPres;
 begin
     with MainSession.Prefs do begin
+        i := 0;
+        if (rbNoPres.Checked) then
+            i := 2
+        else if (rbLastPres.Checked) then
+            i := 1;
+        SetInt('pres_tracking', i);
+
         // Custom presence list
         RemoveAllPresence();
         for i := 0 to _pres_list.Count - 1 do begin
@@ -159,7 +177,7 @@ begin
     _no_pres_change := true;
 
     e := ((lstCustomPres.Items.Count > 0) and (lstCustomPres.ItemIndex >= 0));
-    GroupBox1.Enabled := e;
+    pnlProperties.Enabled := e;
 
     if (not e) then begin
         txtCPTitle.Text := '';
