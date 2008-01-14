@@ -124,17 +124,15 @@ begin
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
 
-    if (start_page <> '') then begin
-        if (start_page = pref_roster) then s := f.imgContactList
-        else if (start_page = pref_display) then s := f.imgDisplay
-        else if (start_page = pref_notify) then s := f.imgNotifications
-        else if (start_page = pref_msgs) then s := f.imgMessages
-        else if (start_page = pref_away) then s := f.imgAutoAway
-        else if (start_page = pref_pres) then s := f.imgPresence
-        else if (start_page = pref_network) then s := f.imgProfile
-        else if (start_page = pref_hotkeys) then s := f.imgHotkeys
-        else s := f.imgSystem;
-    end;
+    if (start_page = pref_roster) then s := f.imgContactList
+    else if (start_page = pref_display) then s := f.imgDisplay
+    else if (start_page = pref_notify) then s := f.imgNotifications
+    else if (start_page = pref_msgs) then s := f.imgMessages
+    else if (start_page = pref_away) then s := f.imgAutoAway
+    else if (start_page = pref_pres) then s := f.imgPresence
+    else if (start_page = pref_network) then s := f.imgProfile
+    else if (start_page = pref_hotkeys) then s := f.imgHotkeys
+    else s := f.imgSystem;
     f.TabSelect(s);
     f.ShowModal;
     f.Free();
