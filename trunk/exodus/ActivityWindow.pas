@@ -134,6 +134,8 @@ type
     procedure scrollToActive();
     procedure setDockingSpacers(dockstate: TDockStates);
     procedure itemChangeUpdate();
+    procedure selectNextItem();
+    procedure selectPrevItem();
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -1103,6 +1105,61 @@ begin
     pnlListScrollDown.Invalidate();
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow.selectNextItem();
+var
+    i:integer;
+    item: TAWTrackerItem;
+begin
+    try
+        // Scan through list to find active item.
+        // No need to check last item (count - 1) as
+        // we cannot go to the next item when it is
+        // the last item.
+        for i := 0 to _trackingList.Count - 2 do begin
+            item := TAWTrackerItem(_trackingList.Objects[i]);
+            if (item <> nil) then begin
+                if (item.awItem.active) then begin
+                    item := TAWTrackerItem(_trackingList.Objects[i + 1]);
+                    if (item <> nil) then begin
+                        activateItem(item.awItem);
+                    end;
+                    break;
+                end;
+            end;
+        end;
+    except
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.selectPrevItem();
+var
+    i:integer;
+    item: TAWTrackerItem;
+begin
+    try
+        // Scan through list to find active item.
+        // No need to check first item (item 0) as
+        // we cannot go to the next item when it is
+        // the last item.
+        if (_trackingList.Count > 1) then begin
+            for i := 1 to _trackingList.Count - 1 do begin
+                item := TAWTrackerItem(_trackingList.Objects[i]);
+                if (item <> nil) then begin
+                    if (item.awItem.active) then begin
+                        item := TAWTrackerItem(_trackingList.Objects[i - 1]);
+                        if (item <> nil) then begin
+                            activateItem(item.awItem);
+                        end;
+                        break;
+                    end;
+                end;
+            end;
+        end;
+    except
+    end;
+end;
 
 
 

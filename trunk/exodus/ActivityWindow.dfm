@@ -162,15 +162,18 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitWidth = 183
       end
       object lblSort: TTntLabel
-        Left = 99
+        Left = 0
         Top = 5
-        Width = 72
-        Height = 13
+        Width = 171
+        Height = 15
         Align = alClient
         Alignment = taRightJustify
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
+        ExplicitLeft = 99
+        ExplicitWidth = 72
+        ExplicitHeight = 13
       end
       object SortTopSpacer: TBevel
         Left = 0

@@ -57,6 +57,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure OnMove(var Msg: TWMMove); message WM_MOVE;
     procedure FormHide(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
 
@@ -102,6 +103,9 @@ type
 
 var
   frmDockWindow: TfrmDockWindow;
+  dockWindowKBHook: HHook; {this intercepts keyboard input}
+
+  function dockWindowKeyboardHookProc(code: Integer; wParam: Word; lParam: LongInt): LongInt; stdcall;
 
 implementation
 
@@ -112,7 +116,107 @@ uses
 {$R *.dfm}
 
 {---------------------------------------}
+function dockWindowKeyboardHookProc(code: Integer; wParam: Word; lParam: LongInt) : LongInt;
+var
+    keyUp: boolean;
+    ctrl_down: boolean;
+    shift_down: boolean;
+    aw: TfrmActivityWindow;
+begin
+    // To prevent Windows from passing the keystrokes
+    // to the target window, the Result value must
+    // be a nonzero value.
+    Result:=0;
+
+    ctrl_down := false;
+    shift_down := false;
+
+    if (code < 0) then begin
+        // MUST call CallNextHookEx according to MSDN
+        Result := CallNextHookEx(dockWindowKBHook, code, wParam, lParam);
+    end
+    else begin
+        case Code of
+            HC_ACTION: begin
+                keyUp := ((lParam and (1 shl 31)) <> 0);
+
+                // Is the Control key pressed
+                if ((GetKeyState(VK_CONTROL) and (1 shl 15)) <> 0) then begin
+                    ctrl_down := true;
+                end
+                else begin
+                    ctrl_down := false;
+                end;
+                // Is the Shift key pressed
+                if ((GetKeyState(VK_SHIFT) and (1 shl 15)) <> 0) then begin
+                    shift_down := true;
+                end
+                else begin
+                    shift_down := false;
+                end;
+
+                if (keyUP) then begin
+                    // Only process KeyUp as we can get many
+                    // KeyDowns, but only one KeyUp per press.
+                    case wParam of
+                        VK_TAB: begin
+                            if ((ctrl_down) and (not shift_down)) then begin
+                                // Doing a Ctrl-Tab, so go to next item
+                                aw := GetActivityWindow();
+                                if (aw <> nil) then begin
+                                    aw.selectNextItem();
+                                end;
+                                Result := 1;
+                            end
+                            else if ((ctrl_down) and (shift_down)) then begin
+                                // Doing a Ctrl-Shift-Tab, so go to prev item
+                                aw := GetActivityWindow();
+                                if (aw <> nil) then begin
+                                    aw.selectPrevItem();
+                                end;
+                                Result := 1;
+                            end;
+                        end;
+                    end;
+                end;
+            end;
+            HC_NOREMOVE: begin
+              {This is a keystroke message, but the keystroke message}
+              {has not been removed from the message queue, since an}
+              {application has called PeekMessage() specifying PM_NOREMOVE}
+              Result := 0;
+              exit;
+            end;
+        end;
+    end;
+end;
+
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TfrmDockWindow.FormCreate(Sender: TObject);
+begin
+    inherited;
+    setWindowCaption('');
+    _docked_forms := TList.Create;
+    _dockState := dsUninitialized;
+    _sortState := ssUnsorted;
+    _glueEdge := geNone;
+    _layoutAWOnly();
+    dockWindowKBHook := SetWindowsHookEx(WH_KEYBOARD, @dockWindowKeyboardHookProc, HInstance, GetCurrentThreadId()) ;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow.FormDestroy(Sender: TObject);
+begin
+    try
+        inherited;
+        _docked_forms.Free;
+        UnHookWindowsHookEx(dockWindowKBHook) ;
+    except
+    end;
+end;
+
 {---------------------------------------}
 procedure TfrmDockWindow.CreateParams(Var params: TCreateParams);
 begin
@@ -170,28 +274,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockWindow.FormCreate(Sender: TObject);
-begin
-    inherited;
-    setWindowCaption('');
-    _docked_forms := TList.Create;
-    _dockState := dsUninitialized;
-    _sortState := ssUnsorted;
-    _glueEdge := geNone;
-    _layoutAWOnly();
-end;
-
-{---------------------------------------}
-procedure TfrmDockWindow.FormDestroy(Sender: TObject);
-begin
-    try
-        inherited;
-        _docked_forms.Free;
-    except
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmDockWindow.FormDockDrop(Sender: TObject; Source: TDragDockObject;
   X, Y: Integer);
 begin
@@ -206,6 +288,20 @@ procedure TfrmDockWindow.FormHide(Sender: TObject);
 begin
     inherited;
     frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
+end;
+
+procedure TfrmDockWindow.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    inherited;
+    if (ssAlt in Shift) then begin
+        if (Key = VK_DOWN)  then begin
+            Sleep(1);
+        end
+        else if (Key = VK_UP) then begin
+            Sleep(1);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -834,6 +930,10 @@ begin
         end;
     end;
 end;
+
+
+
+
 
 
 end.
