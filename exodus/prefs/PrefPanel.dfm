@@ -6,7 +6,6 @@ inherited frmPrefPanel: TfrmPrefPanel
   Caption = 'frmPrefPanel'
   ClientHeight = 394
   ClientWidth = 353
-  ParentFont = True
   OnCreate = FormCreate
   ExplicitWidth = 365
   ExplicitHeight = 406

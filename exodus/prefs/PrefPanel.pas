@@ -116,8 +116,10 @@ begin
         else if ((c.InheritsFrom(TTntButton)) or
                  (c.InheritsFrom(TButton))) then
             // do nothing
-        else
-            assert(false);
+        else begin
+            exit;
+//            assert(false);
+        end;
 
         // Make sure to set state for this control
         if (s = psReadOnly) then begin
