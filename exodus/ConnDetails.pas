@@ -161,17 +161,19 @@ type
 	procedure chkCert(Sender: TObject);
     procedure btnx509browseClick(Sender: TObject);
     procedure chkx509Click(Sender: TObject);
-    procedure TabSelect(Sender: TObject);
+    procedure selectPage(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
     _Canceled: boolean;
     _cur_tab: TExGraphicButton;
+    _avail_tabs: Integer;
 
     _sslOpts: TOptionSelection;
 
     _sslCertKey: string;
 
+    function findEnabledPage(): TExGraphicButton;
     function FNStringGetOperatingSystemVersionMicrosoftWindowsS: string;
     function getCertFriendlyName(): string;
     function reallyGetCertFriendlyName(cert: PCCERT_CONTEXT): string;
@@ -192,6 +194,7 @@ type
     procedure brandPage(page: TExGraphicButton);
 
     function checkVisibility(ctrl: TControl): boolean;
+    function updatePages(): Integer;
 
   public
     { Public declarations }
@@ -256,7 +259,10 @@ begin
         RestoreSocket(p);
     end;
 
-    result := f.ShowModal();
+    if (f.updatePages() <> 0) then
+        result := f.ShowModal()
+    else
+        result := mrNone;
     f.Free();
 end;
 
@@ -683,21 +689,14 @@ end;
 procedure TfrmConnDetails.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    MainSession.Prefs.SavePosition(Self);
+    //MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
 
 procedure TfrmConnDetails.FormShow(Sender: TObject);
 begin
-    //update tab "displayability"
-    brandPage(imgAcctDetails);
-    brandPage(imgConnection);
-    brandPage(imgProxy);
-    brandPage(imgHttpPolling);
-    brandPage(imgAdvanced);
-
     //select and display the appropriate page
-    TabSelect(_cur_tab);
+    selectPage(_cur_tab);
 end;
 
 {---------------------------------------}
@@ -1098,14 +1097,14 @@ begin
         txtPassword.Text := ''
 end;
 
-procedure TfrmConnDetails.TabSelect(Sender: TObject);
+procedure TfrmConnDetails.selectPage(Sender: TObject);
 var
   lblNew: TExGraphicButton;
   tab: TTntTabSheet;
 begin
   lblNew := TExGraphicButton(Sender);
   //Default to Account Details
-  if lblNew = nil then lblNew := imgAcctDetails;
+  if lblNew = nil then lblNew := findEnabledPage();
 
   //Unselect old label
   if (_cur_tab <> nil) then begin
@@ -1240,6 +1239,53 @@ begin
             Result := Result or checkVisibility(win.Controls[idx]);
         end;
     end;
+end;
+
+function TfrmConnDetails.findEnabledPage(): TExGraphicButton;
+var
+    curr: TExGraphicButton;
+begin
+    result := nil;
+
+    repeat
+        if (curr = nil) then curr := imgAcctDetails
+        else if (curr = imgAcctDetails) then
+            curr := imgConnection
+        else if (curr = imgConnection) then
+            curr := imgProxy
+        else if (curr = imgProxy) then
+            curr := imgHttpPolling
+        else if (curr = imgHttpPolling) then
+            curr := imgAdvanced
+        else
+            curr := nil;
+             
+        if (curr <> nil) and (curr.Visible) then begin
+            result := curr;
+        end;
+
+
+    until (result <> nil) and (curr = nil);
+end;
+
+function TfrmConnDetails.updatePages(): Integer;
+begin
+    result := 0;
+
+    brandPage(imgAcctDetails);
+    if (imgAcctDetails.Visible) then result := result + 1;
+
+    brandPage(imgConnection);
+    if (imgConnection.Visible) then result := result + 1;
+
+    brandPage(imgProxy);
+    if (imgProxy.Visible) then result := result + 1;
+
+    brandPage(imgHttpPolling);
+    if (imgHttpPolling.Visible) then result := result + 1;
+
+    brandPage(imgAdvanced);
+    if (imgAdvanced.Visible) then result := result + 1;
 end;
 
 end.
