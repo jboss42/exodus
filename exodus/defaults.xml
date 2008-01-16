@@ -323,15 +323,15 @@
         <end>$000000aa</end>
     </activity_window_high_priority_color>
     <activity_window_new_window_color>
-    	<start>$0000ffff</start>
-        <end>$0000aaaa</end>
+    	<start>$0045b1fe</start>
+        <end>$000189ed</end>
     </activity_window_new_window_color>
 
     <!-- Activity Window Selection Colors -->
     <activity_window_selected_font_color value="$00000000"/>
     <activity_window_non_selected_font_color value="$00000000"/>
     <activity_window_unread_msgs_font_color value="$000000ff"/>
-    <activity_window_high_priority_font_color value="$00000000"/>
+    <activity_window_high_priority_font_color value="$00ffffff"/>
     <activity_window_unread_msgs_high_priority_font_color value="$000000ff"/>
 
     <!-- Sort type -->
@@ -351,8 +351,7 @@
     <search_component_only value="0"/>
 
 <!--
-    These values only matter if USE_TWEBBROWSER is defined on compile
-    and msglist_type has a value of 1 and not 0
+    These values only matter if msglist_type has a value of 1 and not 0
 -->
     <display_date_seperator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
     <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->

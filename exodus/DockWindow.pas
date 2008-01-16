@@ -60,21 +60,23 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
-
-  protected
-    { Protected declarations }
     _docked_forms: TList;
     _dockState: TDockStates;
     _sortState: TSortState;
     _glueEdge: TGlueEdge;
+    _undocking: boolean; 
 
-    procedure CreateParams(Var params: TCreateParams); override;
     procedure _removeTabs(idx:integer = -1; oldtsheet: TTntTabSheet = nil);
     procedure _layoutDock();
     procedure _layoutAWOnly();
     procedure _saveDockWidths();
+    procedure _needToBeShowingCheck();
     procedure _glueCheck();
     function _withinGlueSnapRange(): TGlueEdge;
+
+  protected
+    { Protected declarations }
+    procedure CreateParams(Var params: TCreateParams); override;
 
   public
     { Public declarations }
@@ -202,6 +204,7 @@ begin
     _dockState := dsUninitialized;
     _sortState := ssUnsorted;
     _glueEdge := geNone;
+    _undocking := false;
     _layoutAWOnly();
     dockWindowKBHook := SetWindowsHookEx(WH_KEYBOARD, @dockWindowKeyboardHookProc, HInstance, GetCurrentThreadId()) ;
 end;
@@ -325,6 +328,8 @@ begin
         aw.OnDockDrop := FormDockDrop;
     end;
     frmExodus.mnuWindows_View_ShowActivityWindow.Checked := true;
+    frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
+    frmExodus.btnActivityWindow.Enabled := true;
 
     _glueCheck();
 end;
@@ -347,6 +352,7 @@ var
 begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
+        _undocking := false;
         oldsheet := TTntTabSheet(AWTabControl.ActivePage);
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
@@ -371,9 +377,12 @@ begin
     // check to see if the tab is a frmDockable
     Allow := true;
     if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
+        setWindowCaption('');
+        _undocking := true;
         CloseDocked(TfrmDockable(Client));
         TfrmDockable(Client).Docked := false;
         TfrmDockable(Client).OnFloat();
+        _undocking := false;
     end;
 end;
 
@@ -475,13 +484,6 @@ begin
 
             aw.itemChangeUpdate();
             checkFlash();
-
-            // Make sure SOMETHING is visible in the docked side
-            // assuming that something IS docked.
-//            if ((aw.currentActivePage = nil) and
-//                (_dockState = dsDock)) then begin
-//                aw.activateItem(item.awItem);
-//            end;
         end;
     end;
 end;
@@ -622,22 +624,23 @@ begin
     //figure out what state we are moving to...
     if (docking) then begin
        if (FirstOrLastDock) then begin
-         newState := dsRosterOnly;
+         newState := dsUnDocked;
        end
        else begin
-         newState := dsDock;
+         newState := dsDocked;
        end
     end
     else
-      newState := dsRosterOnly;
+      newState := dsUnDocked;
 
     if (newState <> oldState) then begin
-          if (newState = dsDock) then
+          if (newState = dsDocked) then
             _layoutDock()
           else
             _layoutAWOnly();
     end;
 
+    _needToBeShowingCheck();
     _glueCheck();
 end;
 
@@ -651,7 +654,7 @@ var
   ratioRoster: real;
   aw: TfrmActivityWindow;
 begin
-    if (_dockState <> dsDock) then begin
+    if (_dockState <> dsDocked) then begin
         _saveDockWidths();
         //this is a mess. To get splitter working with the correct control
         //we need to hide/de-align/set their relative positions/size them and show them
@@ -691,7 +694,7 @@ begin
         pnlActivityList.DockSite := false;
         AWTabControl.DockSite := true;
 
-        _dockState := dsDock;
+        _dockState := dsDocked;
 
         aw := GetActivityWindow();
         if (aw <> nil) then begin
@@ -710,7 +713,7 @@ var
 begin
     //if tabs were being shown, save tab size
     _saveDockWidths();
-    if (_dockState <> dsRosterOnly) then begin
+    if (_dockState <> dsUnDocked) then begin
         AWTabControl.Visible := false;
         pnlActivityList.Align := alClient;
         splAW.Visible := false;
@@ -719,7 +722,7 @@ begin
         pnlActivityList.DockSite := true;
         AWTabControl.DockSite := false;
 
-        _dockState := dsRosterOnly;
+        _dockState := dsUnDocked;
 
         aw := GetActivityWindow();
         if (aw <> nil) then begin
@@ -736,9 +739,9 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow._saveDockWidths();
 begin
-    if (_dockState = dsRosterOnly) then
+    if (_dockState = dsUnDocked) then
         MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_WIDTH, pnlActivityList.Width)
-    else if (_dockState = dsDock) then begin
+    else if (_dockState = dsDocked) then begin
         MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_WIDTH, pnlActivityList.Width);
         MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_TAB_WIDTH, AWTabControl.Width);
     end;
@@ -751,10 +754,11 @@ begin
         Caption := MainSession.Prefs.getString('brand_caption');
     end
     else begin
-        Caption := MainSession.Prefs.getString('brand_caption') +
+        Caption := txt +
                    ' - ' +
-                   txt;
+                   MainSession.Prefs.getString('brand_caption');
     end;
+    OutputDebugMsg('---------------------------------------------------' + txt);
 end;
 
 procedure TfrmDockWindow.timFlasherTimer(Sender: TObject);
@@ -799,13 +803,13 @@ procedure TfrmDockWindow.WMSyscommand(var msg: TWmSysCommand);
 begin
     case (msg.cmdtype and $FFF0) of
         SC_MAXIMIZE: begin
-            if (_dockState = dsRosterOnly) then begin
+            if (_dockState = dsUnDocked) then begin
                 Self.Constraints.MaxWidth := Self.Width;
             end;
             inherited;
         end;
         SC_RESTORE: begin
-            if (_dockState = dsRosterOnly) then begin
+            if (_dockState = dsUnDocked) then begin
                 Self.Constraints.MaxWidth := Self.Width;
             end;
             inherited;
@@ -822,6 +826,31 @@ begin
     _glueCheck();
     moveGlued();
     inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmDockWindow._needToBeShowingCheck();
+var
+    aw: TfrmActivityWindow;
+begin
+    // This check is here to hide the activity
+    // window if nothing is docked or undocked
+    // (nothing in list).  There is no reason to
+    // show the activity list if there are no
+    // windows to track.  Note, check for undocking
+    // exists to prevent flashing when an undock
+    // closes the docked item and readds the undocked
+    // item.
+    aw := GetActivityWindow();
+    if (aw <> nil) then begin
+        if ((aw.itemCount <= 0) and
+            (not _undocking)) then begin
+            Self.Hide();
+            frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
+            frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
+            frmExodus.btnActivityWindow.Enabled := false;
+        end;
+    end;
 end;
 
 {---------------------------------------}

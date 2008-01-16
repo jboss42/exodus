@@ -19,15 +19,15 @@ object frmActivityWindow: TfrmActivityWindow
   TextHeight = 13
   object pnlListBase: TExGradientPanel
     Left = 0
-    Top = 0
+    Top = 10
     Width = 187
-    Height = 394
+    Height = 374
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
     GradientProperites.startColor = 13681583
-    GradientProperites.endColor = 12495763
+    GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdHorizontal
     object pnlListScrollUp: TExGradientPanel
       Left = 0
@@ -38,6 +38,7 @@ object frmActivityWindow: TfrmActivityWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      Visible = False
       OnClick = pnlListScrollUpClick
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
@@ -60,7 +61,6 @@ object frmActivityWindow: TfrmActivityWindow
         Height = 5
         Align = alBottom
         Shape = bsBottomLine
-        Visible = False
         ExplicitLeft = 1
         ExplicitTop = 30
         ExplicitWidth = 183
@@ -68,13 +68,14 @@ object frmActivityWindow: TfrmActivityWindow
     end
     object pnlListScrollDown: TExGradientPanel
       Left = 0
-      Top = 372
+      Top = 352
       Width = 187
       Height = 22
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      Visible = False
       OnClick = pnlListScrollDownClick
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
@@ -98,7 +99,6 @@ object frmActivityWindow: TfrmActivityWindow
         Height = 5
         Align = alTop
         Shape = bsTopLine
-        Visible = False
         ExplicitLeft = 1
         ExplicitTop = 30
         ExplicitWidth = 183
@@ -108,7 +108,7 @@ object frmActivityWindow: TfrmActivityWindow
       Left = 0
       Top = 47
       Width = 187
-      Height = 325
+      Height = 305
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -120,18 +120,16 @@ object frmActivityWindow: TfrmActivityWindow
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
-        Width = 5
-        Height = 325
+        Width = 10
+        Height = 305
         Align = alLeft
         Shape = bsSpacer
-        ExplicitTop = 322
-        ExplicitHeight = 189
       end
       object ListRightSpacer: TBevel
         Left = 187
         Top = 0
         Width = 0
-        Height = 325
+        Height = 305
         Align = alRight
         Shape = bsSpacer
         ExplicitLeft = 184
@@ -147,8 +145,8 @@ object frmActivityWindow: TfrmActivityWindow
       BevelOuter = bvNone
       TabOrder = 3
       OnClick = pnlListSortClick
-      GradientProperites.startColor = 13681583
-      GradientProperites.endColor = 13681583
+      GradientProperites.startColor = 12891033
+      GradientProperites.endColor = 10848873
       GradientProperites.orientation = gdHorizontal
       object SortBevel: TBevel
         Left = 0
@@ -200,6 +198,34 @@ object frmActivityWindow: TfrmActivityWindow
       end
     end
   end
+  object pnlBorderTop: TExGradientPanel
+    Left = 0
+    Top = 0
+    Width = 187
+    Height = 10
+    Align = alTop
+    BevelOuter = bvNone
+    Caption = 'pnlBorderTop'
+    Color = 13681583
+    TabOrder = 1
+    GradientProperites.startColor = 13681583
+    GradientProperites.endColor = 13681583
+    GradientProperites.orientation = gdVertical
+  end
+  object pnlBorderBottom: TExGradientPanel
+    Left = 0
+    Top = 384
+    Width = 187
+    Height = 10
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'ExGradientPanel1'
+    Color = 13681583
+    TabOrder = 2
+    GradientProperites.startColor = 13681583
+    GradientProperites.endColor = 13681583
+    GradientProperites.orientation = gdVertical
+  end
   object timSetActivePanel: TTimer
     Enabled = False
     Interval = 100
@@ -215,7 +241,7 @@ object frmActivityWindow: TfrmActivityWindow
       OnClick = mnuAlphaSortClick
     end
     object mnuRecentSort: TTntMenuItem
-      Caption = 'Most Recent Activity'
+      Caption = 'Recent Activity'
       OnClick = mnuRecentSortClick
     end
     object mnuTypeSort: TTntMenuItem

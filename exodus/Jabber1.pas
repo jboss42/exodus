@@ -1771,11 +1771,6 @@ begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
         setTrayInfo(Self.Caption);
 
-{$IFDEF USE_ACTIVITY_WINDOW}
-        // Show the activity window
-        _dockWindow.ShowDefault();
-{$ENDIF}
-
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
         if ((MainSession.Profile.ConnectionType = conn_normal) and
@@ -1826,10 +1821,6 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-{$IFDEF USE_ACTIVITY_WINDOW}
-        btnActivityWindow.Enabled := true;
-        mnuWindows_View_ShowActivityWindow.Enabled := true;
-{$ENDIF}
 
     end
 
@@ -1885,10 +1876,6 @@ begin
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
-{$IFDEF USE_ACTIVITY_WINDOW}
-        btnActivityWindow.Enabled := true;
-        mnuWindows_View_ShowActivityWindow.Enabled := true;
-{$ENDIF}
 
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
@@ -3257,7 +3244,12 @@ begin
     inherited;
     if (_dockwindow = nil) then exit;
 
-    _dockwindow.ShowDefault();
+    if (_dockWindow.Showing) then begin
+        _dockwindow.Hide();
+    end
+    else begin
+        _dockwindow.ShowDefault();
+    end;
 end;
 
 {---------------------------------------}
@@ -4881,18 +4873,18 @@ begin
     //figure out what state we are moving to...
     if (docking) then begin
        if (FirstOrLastDock) then begin
-         newState := dsRosterOnly;
+         newState := dsUnDocked;
        end
        else begin
-         newState := dsDock;
+         newState := dsDocked;
        end
     end
     else
-      newState := dsRosterOnly;
+      newState := dsUnDocked;
 
     if (newState <> oldState) then begin
         _noMoveCheck := true;
-          if (newState = dsDock) then
+          if (newState = dsDocked) then
             layoutDock()
           else
             layoutRosterOnly();
@@ -4908,7 +4900,7 @@ var
   mon: TMonitor;
   ratioRoster: real;
 begin
-    if (DockState <> dsDock) then begin
+    if (DockState <> dsDocked) then begin
         _enforceConstraints := false;
         saveRosterDockWidths();
         _noMoveCheck := true;
@@ -4947,7 +4939,7 @@ begin
         Tabs.Visible := true;
 
         _noMoveCheck := false;
-        _currDockState := dsDock;
+        _currDockState := dsDocked;
         Self.DockSite := false;
 {$IFDEF USE_ACTIVITY_WINDOW}
         Tabs.DockSite := false;
@@ -4971,7 +4963,7 @@ procedure TfrmExodus.layoutRosterOnly();
 begin
     //if tabs were being shown, save tab size
     saveRosterDockWidths();
-    if (DockState <> dsRosterOnly) then begin
+    if (DockState <> dsUnDocked) then begin
         _enforceConstraints := false;
         Tabs.Visible := false;
         pnlRoster.Align := alClient;
@@ -4979,7 +4971,7 @@ begin
         _noMoveCheck := true;
         Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
         _noMoveCheck := false;
-        _currDockState := dsRosterOnly;
+        _currDockState := dsUnDocked;
 {$IFDEF USE_ACTIVITY_WINDOW}
         Self.DockSite := false;
 {$ELSE}
@@ -5003,9 +4995,9 @@ end;
 }
 procedure TfrmExodus.saveRosterDockWidths();
 begin
-    if (DockState = dsRosterOnly) then
+    if (DockState = dsUnDocked) then
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
-    else if (DockState = dsDock) then begin
+    else if (DockState = dsDocked) then begin
         MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
         MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, Tabs.Width);
     end;

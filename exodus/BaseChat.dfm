@@ -1,39 +1,38 @@
 inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  ClientHeight = 260
-  ClientWidth = 415
+  ClientHeight = 240
+  ClientWidth = 383
   OnDestroy = FormDestroy
-  ExplicitWidth = 423
-  ExplicitHeight = 294
+  ExplicitWidth = 391
+  ExplicitHeight = 274
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object Splitter1: TSplitter [0]
     Left = 0
-    Top = 227
-    Width = 415
-    Height = 5
+    Top = 181
+    Width = 383
+    Height = 4
     Cursor = crVSplit
     Align = alBottom
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
-    ExplicitTop = 192
-    ExplicitWidth = 355
+    ExplicitTop = 210
   end
   inherited pnlDockTop: TPanel
-    Width = 415
+    Width = 383
     TabOrder = 2
-    ExplicitWidth = 415
+    ExplicitWidth = 383
     inherited tbDockBar: TToolBar
-      Left = 366
-      ExplicitLeft = 366
+      Left = 334
+      ExplicitLeft = 334
     end
     object pnlChatTop: TPanel
       Left = 0
       Top = 0
-      Width = 363
-      Height = 32
+      Width = 331
+      Height = 30
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -42,9 +41,9 @@ inherited frmBaseChat: TfrmBaseChat
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 32
-    Width = 415
-    Height = 166
+    Top = 30
+    Width = 383
+    Height = 151
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -53,9 +52,9 @@ inherited frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 232
-    Width = 415
-    Height = 28
+    Top = 214
+    Width = 383
+    Height = 26
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
@@ -63,8 +62,8 @@ inherited frmBaseChat: TfrmBaseChat
     object MsgOut: TExRichEdit
       Left = 2
       Top = 2
-      Width = 411
-      Height = 24
+      Width = 379
+      Height = 22
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -168,8 +167,8 @@ inherited frmBaseChat: TfrmBaseChat
   end
   object tbMsgOutToolbar: TTntToolBar
     Left = 0
-    Top = 198
-    Width = 415
+    Top = 185
+    Width = 383
     Height = 29
     Align = alBottom
     ButtonWidth = 25
@@ -287,7 +286,7 @@ inherited frmBaseChat: TfrmBaseChat
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ItemHeight = 0
+      ItemHeight = 13
       ParentFont = False
       TabOrder = 0
     end

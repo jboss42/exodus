@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 644
-  ClientWidth = 477
+  ClientHeight = 503
+  ClientWidth = 358
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -21,14 +21,14 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 366
-  ExplicitHeight = 537
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitHeight = 557
+  PixelsPerInch = 96
+  TextHeight = 12
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 477
-    Height = 41
+    Width = 358
+    Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <
@@ -168,17 +168,17 @@ inherited frmExodus: TfrmExodus
   end
   object Panel1: TPanel
     Left = 0
-    Top = 41
-    Width = 477
-    Height = 603
+    Top = 31
+    Width = 358
+    Height = 472
     Align = alClient
     ParentColor = True
     TabOrder = 1
     object splitRoster: TSplitter
-      Left = 209
+      Left = 157
       Top = 1
-      Width = 7
-      Height = 601
+      Width = 5
+      Height = 470
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -186,13 +186,13 @@ inherited frmExodus: TfrmExodus
       Visible = False
       OnCanResize = splitRosterCanResize
       OnMoved = splitRosterMoved
-      ExplicitHeight = 600
+      ExplicitHeight = 451
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
-      Width = 208
-      Height = 601
+      Width = 156
+      Height = 470
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
@@ -200,13 +200,13 @@ inherited frmExodus: TfrmExodus
       ParentColor = True
       TabOrder = 0
       OnDockDrop = FormDockDrop
-      ExplicitHeight = 600
+      ExplicitHeight = 450
     end
     object Tabs: TTntPageControl
-      Left = 216
+      Left = 162
       Top = 1
-      Width = 260
-      Height = 601
+      Width = 195
+      Height = 470
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0

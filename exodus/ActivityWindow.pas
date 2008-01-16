@@ -35,11 +35,11 @@ type
   TAWTrackerItem = class
   private
     { Private declarations }
+    _dockable_frm: TfrmDockable;
+    _awItem: TfAWItem;
 
   protected
     { Protected declarations }
-    _dockable_frm: TfrmDockable;
-    _awItem: TfAWItem;
 
   public
     { Public declarations }
@@ -69,6 +69,8 @@ type
     ListLeftSpacer: TBevel;
     ListRightSpacer: TBevel;
     imgSortArrow: TImage;
+    pnlBorderTop: TExGradientPanel;
+    pnlBorderBottom: TExGradientPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -82,9 +84,6 @@ type
     procedure pnlListSortClick(Sender: TObject);
   private
     { Private declarations }
-
-  protected
-    { Protected declarations }
     _trackingList: TWidestringList;
     _docked: boolean;
     _activeitem: TfAWItem;
@@ -108,17 +107,19 @@ type
     _currentActivePage: TTntTabSheet;
 
     procedure _clearTrackingList();
-    procedure CreateParams(Var params: TCreateParams); override;
-    procedure onItemClick(Sender: TObject);
     function _findItem(awitem: TfAWItem): TAWTrackerItem;
     procedure _sortTrackingList(sortType: TSortState = ssUnsorted);
-    procedure _sortList(var list: TWidestringList; sortType: TSortState);
     procedure _updateDisplay(allowPartialVisible: boolean = true);
     procedure _activateNextDockedItem(curitemindx: integer);
     procedure _enableScrollUp(doenable: boolean = true);
     procedure _enableScrollDown(doenable: boolean = true);
     procedure _setScrollUpColor();
     procedure _setScrollDownColor();
+    function _getItemCount(): integer;
+  protected
+    { Protected declarations }
+    procedure CreateParams(Var params: TCreateParams); override;
+    procedure onItemClick(Sender: TObject);
 
   public
     { Public declarations }
@@ -140,6 +141,7 @@ type
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
     property currentActivePage: TTntTabSheet read _currentActivePage;
+    property itemCount: integer read _getItemCount;
   end;
 
   // Global Functions
@@ -163,7 +165,7 @@ const
     sSortBy         = 'Sort By:  ';
     sSortUnsorted   = 'Unsorted';  // Not currently supported
     sSortAlpha      = 'Alphabetical';
-    sSortRecent     = 'Most Recent Activity';
+    sSortRecent     = 'Recent Activity';
     sSortType       = 'Type';
     sSortUnread     = 'Unread Messages';
 
@@ -251,8 +253,8 @@ begin
     _scrollDownState := ssEnabled;
     _scrollDefaultStartColor := pnlListScrollUp.GradientProperites.startColor;
     _scrollDefaultEndColor := pnlListScrollUp.GradientProperites.endColor;
-    _scrollEnabledStartColor := $00D0C3AF;
-    _scrollEnabledEndColor := $00D0C3AF;
+    _scrollEnabledStartColor := $00C4B399;
+    _scrollEnabledEndColor := $00A58A69;
     _scrollPriorityStartColor := $000000ff;
     _scrollPriorityEndColor := $000000ff;
     _scrollNewWindowStartColor := $0000ffff;
@@ -639,12 +641,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow._sortTrackingList(sortType: TSortState);
-begin
-    _sortList(_trackingList, sortType);
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow._sortList(var list: TWidestringList; sortType: TSortState);
 var
     i,j: integer;
     insertPoint: integer;
@@ -655,7 +651,6 @@ var
     sortstring: widestring;
 begin
     if (sortType = ssUnsorted) then exit;
-    if (list = nil) then exit;
 
     _curListSort := sortType;
     tempList := TWidestringList.Create();
@@ -663,10 +658,7 @@ begin
     sortstring := _(sSortBy);
 
     // Always do an Alpha sort first
-    if (sortType <> ssUnsorted) then begin
-        // Sort by Alpha so use TWidestringList default sort
-        list.Sort;
-    end;
+    _trackingList.Sort;
 
     if (sortType = ssAlpha) then begin
         sortstring := sortstring + _(sSortAlpha);
@@ -675,7 +667,7 @@ begin
     else if (sortType = ssRecent) then begin
         // Sort by most Recent Activity, then by alpha for tied items
         sortstring := sortstring + _(sSortRecent);
-        for i := 0 to list.Count - 1 do begin
+        for i := 0 to _trackingList.Count - 1 do begin
             // iterate over list to reorder
             itemadded := false;
             tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
@@ -685,19 +677,19 @@ begin
                 if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then begin
                     // We have an new item to add to the temp list that should be higher
                     // then the current item in the templist
-                    tempList.InsertObject(insertPoint, list.Strings[i], list.Objects[i]);
+                    tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
                     itemadded := true;
                     break;
                 end;
             end;
             if (not itemadded) then begin
                 // We didn't insert the item into the temp list so add to end
-                tempList.AddObject(list.Strings[i], list.Objects[i]);
+                tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
             end;
         end;
-        list.Clear;
+        _trackingList.Clear;
         for i := 0 to tempList.Count - 1 do begin
-            list.AddObject(tempList.Strings[i], tempList.Objects[i]);
+            _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
         end;
     end
     else if (sortType = ssType) then begin
@@ -708,7 +700,7 @@ begin
         otherList := TWidestringList.Create();
 
         // Split them up by group
-        for i := 0 to list.Count - 1 do begin
+        for i := 0 to _trackingList.Count - 1 do begin
             tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
             if (tempitem1.frm is TfrmRoom) then begin
                 roomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
@@ -746,7 +738,7 @@ begin
     else if (sortType = ssUnread) then begin
         // Sort by Highest Unread msgs
         sortstring := sortstring + _(sSortUnread);
-        for i := 0 to list.Count - 1 do begin
+        for i := 0 to _trackingList.Count - 1 do begin
             // iterate over list to reorder
             itemadded := false;
             tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
@@ -756,19 +748,19 @@ begin
                 if (tempitem2.awItem.count < tempitem1.awItem.count) then begin
                     // We have an new item to add to the temp list that should be higher
                     // then the current item in the templist
-                    tempList.InsertObject(insertPoint, list.Strings[i], list.Objects[i]);
+                    tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
                     itemadded := true;
                     break;
                 end;
             end;
             if (not itemadded) then begin
                 // We didn't insert the item into the temp list so add to end
-                tempList.AddObject(list.Strings[i], list.Objects[i]);
+                tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
             end;
         end;
-        list.Clear;
+        _trackingList.Clear;
         for i := 0 to tempList.Count - 1 do begin
-            list.AddObject(tempList.Strings[i], tempList.Objects[i]);
+            _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
         end;
     end
     else begin
@@ -1002,7 +994,7 @@ end;
 procedure TfrmActivityWindow._enableScrollUp(doenable: boolean);
 begin
     _canScrollUp := doenable;
-    sortBevel.Visible := (not doenable);
+    pnlListScrollUp.Visible := doenable;
 
     if (doenable) then begin
         if (_scrollUpState = ssDisabled) then begin
@@ -1020,6 +1012,7 @@ end;
 procedure TfrmActivityWindow._enableScrollDown(doenable: boolean);
 begin
     _canScrollDown := doenable;
+    pnlListScrollDown.Visible := doenable;
 
     if (doenable) then begin
         if (_scrollDownState = ssDisabled) then begin
@@ -1036,14 +1029,20 @@ end;
 procedure TfrmActivityWindow.setDockingSpacers(dockstate: TDockStates);
 begin
     case dockstate of
-        dsRosterOnly: begin
-            ListRightSpacer.Width := 5;
+        dsUnDocked: begin
+            ListRightSpacer.Width := 10;
+            pnlBorderTop.Height := 0;
+            pnlBorderBottom.Height := 0;
         end;
-        dsDock: begin
+        dsDocked: begin
             ListRightSpacer.Width := 0;
+            pnlBorderTop.Height := 10;
+            pnlBorderBottom.Height := 10;
         end;
         dsUninitialized: begin
-            ListRightSpacer.Width := 5;
+            ListRightSpacer.Width := 10;
+            pnlBorderTop.Height := 0;
+            pnlBorderBottom.Height := 0;
         end;
     end;
 
@@ -1091,7 +1090,7 @@ begin
         end;
         ssEnabled: begin
             pnlListScrollDown.GradientProperites.startColor := _scrollEnabledStartColor;
-            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollEnabledEndColor;
         end;
         ssPriority: begin
             pnlListScrollDown.GradientProperites.startColor := _scrollPriorityStartColor;
@@ -1161,7 +1160,11 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
+function TfrmActivityWindow._getItemCount(): integer;
+begin
+    Result := _trackingList.Count;
+end;
 
 
 
