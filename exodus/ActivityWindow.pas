@@ -758,10 +758,6 @@ var
     item: TAWTrackerItem;
     slotsFilled: integer;
     remainder: integer;
-    havePriUpHidden: boolean;
-    havePriDownHidden: boolean;
-    haveNewWindowUpHidden: boolean;
-    haveNewWindowDownHidden: boolean;
 begin
     try
         if (_trackingList.Count > 0) then begin
@@ -785,10 +781,19 @@ begin
                 Inc(numSlots);
             end;
             // Crawl list to see what needs displayed
-            havePriUpHidden := false;
-            havePriDownHidden := false;
-            haveNewWindowUpHidden := false;
-            haveNewWindowDownHidden := false;
+            if (_canScrollUp) then begin
+                _scrollUpState := ssEnabled;
+            end
+            else begin
+                _scrollUpState := ssDisabled;
+            end;
+            if (_canScrollDown) then begin
+                _scrollDownState := ssEnabled;
+            end
+            else begin
+                _scrollDownState := ssDisabled;
+            end;
+
             for i := 0 to _trackingList.Count - 1 do begin
                 item := TAWTrackerItem(_trackingList.Objects[i]);
                 if (i < _showingTopItem) then begin
@@ -796,10 +801,10 @@ begin
                     item.awItem.Visible := false;
                     _enableScrollUp(true);
                     if (item.awItem.priority) then begin
-                        havePriUpHidden := true;
+                        _scrollUpState := ssPriority;
                     end;
                     if (item.awItem.newWindowHighlight) then begin
-                        haveNewWindowUpHidden := true;
+                        _scrollUpState := ssNewWindow;
                     end;
                 end
                 else if (slotsFilled >= numSlots) then begin
@@ -807,10 +812,10 @@ begin
                     item.awItem.Visible := false;
                     _enableScrollDown(true);
                     if (item.awItem.priority) then begin
-                        havePriDownHidden := true
+                        _scrollDownState := ssPriority;
                     end;
                     if (item.awItem.newWindowHighlight) then begin
-                        haveNewWindowDownHidden := true
+                        _scrollDownState := ssNewWindow;
                     end;
                 end
                 else begin
@@ -824,30 +829,6 @@ begin
             end;
 
             // Change scroll state
-            if (_canScrollUp) then begin
-                _scrollUpState := ssEnabled;
-            end
-            else begin
-                _scrollUpState := ssDisabled;
-            end;
-            if (_canScrollDown) then begin
-                _scrollDownState := ssEnabled;
-            end
-            else begin
-                _scrollDownState := ssDisabled;
-            end;
-            if (havePriUpHidden) then begin
-                _scrollUpState := ssPriority;
-            end;
-            if (havePriDownHidden) then begin
-                _scrollDownState := ssPriority;
-            end;
-            if (haveNewWindowUpHidden) then begin
-                _scrollUpState := ssNewWindow;
-            end;
-            if (haveNewWindowDownHidden) then begin
-                _scrollDownState := ssNewWindow;
-            end;
             _setScrollUpColor();
             _setScrollDownColor();
 
