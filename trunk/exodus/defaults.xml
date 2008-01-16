@@ -1,70 +1,59 @@
 <exodus version="0.9">
   <prefs>
+    <!-- Use the following tags to brand default preference values. These
+         sections control what is shown in the clients preference dialog. -->
+    <!--------------------------- Preference Screens -------------------------->
+    <show_system_preferences value="1"/>
+    <show_contact_list_preferences value="1"/>
+    <show_display_preferences value="1"/>
+    <show_notification_preferences value="1"/>
+    <show_message_preferences value="1"/>
+    <show_auto_away_preferences value="1"/>
+    <show_presence_preferences value="1"/>
+    <show_hot_key_preferences value="1"/>
 
-    <!-------------------SYSTEM---------------------->
-    
+    <!--------------------------- System Preferences -------------------------->
     <auto_start value="0" control="chkAutoStart" state="rw"/>
-    <min_start value="0" control="chkStartMin" state="rw"/>
-    <debug value="0" control="chkDebug" state="rw"/>
     <autologin value="0" control="chkAutoLogin" state="rw"/>
-    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
+    <min_start value="0" control="chkStartMin" state="rw"/>
     <restore_desktop value="0" control="chkRestoreDesktop" state="rw"/>
+    <debug value="0" control="chkDebug" state="rw"/>
+    <!-- Other System Preferences -->
+    <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
     <start_docked value="1" state="rw"/>
 
     <!-- Advanced system prefs -->
-    <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
-    <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
-    <auto_updates value="1" control="chkAutoUpdate" state="rw"/>
-    <window_ontop value="0" control="chkOnTop" state="rw"/>
-    <window_toolbox value="0" control="chkToolbox" state="rw"/>
     <close_min value="1" control="chkCloseMin" state="rw"/>
     <single_instance value="1" control="chkSingleInstance" state="rw"/>
+    <window_toolbox value="0" control="chkToolbox" state="rw"/>
+    <auto_updates value="1" control="chkAutoUpdate" state="rw"/>
+    <window_ontop value="0" control="chkOnTop" state="rw"/>
     <locale value="Default" state="rw"/>
 
-    <!-- AutoAway Options -->
-    <auto_away value="1" control="chkAutoAway" state="rw"/>
-    <aa_reduce_pri value="1" control="chkAAReducePri" state="rw"/>
-    <auto_xa value="1" control="chkAutoXA" state="rw"/>
-    <auto_disconnect value="0" control="chkAutoDisconnect" state="rw"/>
-    <away_time value="5" control="txtAwayTime" state="rw">
-    	<control name="lblAwayTime"/>
-    </away_time>
-    <xa_time value="30" control="txtXATime" state="rw">
-    	<control name="lblXATime"/>
-    </xa_time>
-    <disconnect_time value="180" control="txtDisconnectTime" state="rw">
-    	<control name="lblDisconnectTime"/>
-    </disconnect_time>
-    <away_status control="txtAway" state="rw">
-      <control name="lblAwayStatus"/>
-    </away_status>
-    <xa_status control="txtXA" state="rw">
-      <control name="lblXAStatus" state="rw"/>
-    </xa_status>
-    <away_auto_response value="0" control="chkAwayAutoResponse" state="rw"/>
+    <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
+    <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
 
-     <!---------------------- ROSTER ------------------------->
-    <!-- Roster prefs -->
-    <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
-    <inline_status value="0" control="chkInlineStatus" state="rw"/>
-    <roster_collapsed value="0" control="chkCollapsed" state="rw"/>
-    <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
-    <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
-    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
-    <roster_default value="Friends" control="txtDefaultGrp" state="rw">
-      <control name="lblDefaultGrp"/>
-    </roster_default>
+    <!---------------------- Contact List Preferences ------------------------->
     <default_nick control="txtDefaultNick" state="rw">
       <control name="lblDefaultNick"/>
     </default_nick>
+    <roster_default value="Friends" control="txtDefaultGrp" state="rw">
+      <control name="lblDefaultGrp"/>
+    </roster_default>
+    <inline_status value="0" control="chkInlineStatus" state="rw"/>
+    <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
+    <roster_collapsed value="0" control="chkCollapsed" state="rw"/>
+    <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
+    <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
+    <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
 
     <!-- advanced roster prefs -->
-    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap" state="rw">
-    	<control name="lblDNProfileMap"/>
-    </displayname_profile_map>
     <inline_color value="$808000" control="cboStatusColor" state="rw">
           <control name="lblStatusColor"/>
     </inline_color>
+    <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap" state="rw">
+    	<control name="lblDNProfileMap"/>
+    </displayname_profile_map>
     <nested_groups value="0" control="chkNestedGrps" state="rw"/>
 
     <!-- DEPRICATED (unsupported) roster prefs -->
@@ -92,14 +81,17 @@
       <control name="trkRosterAlpha"/>
     </roster_alpha_val>
 
-
-
-    <hotkeys_keys state='rw'/>
-    <hotkeys_text state='rw'/>
-
-
     <!---------------------- Display Preferences ------------------------->
-    <font_name value="Arial"/>
+    <roster_font_name value="Arial" state="rw"/>
+    <roster_font_color value="$000000"/>
+    <roster_font_size value="10"/>
+    <roster_font_bold value="0"/>
+    <roster_font_italic value="0"/>
+    <roster_font_underline value="0"/>
+    <roster_roster_font_charset value="1"/>
+    <roster_roster_bg value="$80000005"/>
+
+    <font_name value="Arial" state="rw"/>
     <font_size value="10"/>
     <font_color value="$000000"/>
     <font_charset value="1"/>
@@ -113,134 +105,52 @@
     <color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
-    <roster_bg value="$80000005"/>
-    <roster_font_color value="$000000"/>
-    <roster_font_size value="10"/>
-    <roster_font_charset value="1"/>
 
     <!-- other display preferences -->
-    <msglist_type value="0" control="cboMsgList"/>
-    <ie_css value="" control="cboIEStylesheet"/>
-    <timestamp value="1" control="chkTimestamp"/>
-    <timestamp_format value="h:mm am/pm" control="txtTimestampFmt">
+    <richtext_enabled value="1" control="chkRTEnabled" state="rw"/>
+    <chat_avatars value="0" control="chkChatAvatars" state="rw"/>
+    <emoticons value="1" control="chkEmoticons" state="rw"/>
+    <!-- emosettings button keys off of this pref for show state -->
+    <custom_icondefs value="custom-icons.xml" state="rw"/>
+    <show_priority value="1" control="chkShowPriority" state="rw"/>
+    <timestamp value="1" control="chkTimestamp" state="rw"/>
+    <timestamp_format value="h:mm am/pm" control="txtTimestampFmt state="rw"">
     	<control name="lblTimestampFmt"/>
     </timestamp_format>
-    <richtext_enabled value="1" control="chkRTEnabled"/>
-    <emoticons value="1" control="chkEmoticons"/>
-    <chat_avatars value="0" control="chkChatAvatars"/>
-    <show_priority value="1" control="chkShowPriority"/>
 
     <!-- advanced Display prefs -->
-    <richtext_ignored_font_styles value="font-size;font-family;"/>
-    <snap_on value="1" control="chkSnap"/>
-    <edge_snap value="15" control="txtSnap">
+    <snap_on value="1" control="chkSnap" state="rw"/>
+    <edge_snap value="15" control="txtSnap" state="rw">
     	<control name="trkSnap"/>
     </edge_snap>
-    <warn_closebusy value="1" control="chkBusy"/>
-    <chat_memory value="60" control="txtChatMemory">
+    <richtext_ignored_font_styles value="font-size;font-family;" state="rw"/>
+    <warn_closebusy value="1" control="chkBusy" state="rw"/>
+    <esc_close value="1" control="chkEscClose" state="rw"/>
+    <close_hotkey value="None" control="txtCloseHotkey" state="rw">
+    	<control name="lblClose"/>
+    </close_hotkey>
+    <chat_memory value="60" control="txtChatMemory" state="rw">
     	<control name="trkChatMemory"/>
 	<control name="lblMem1"/>
 	<control name="lblMem2"/>
     </chat_memory>
-    <esc_close value="1" control="chkEscClose"/>
-    <close_hotkey value="None" control="txtCloseHotkey">
-    	<control name="lblClose"/>
-    </close_hotkey>
 
     <emoticon_dlls>
     	<s>msn_emoticons.dll</s>
       	<s>yahoo_emoticons.dll</s>
     </emoticon_dlls>
-    <!-- emosettings button keys off of this pref for show state -->
-    <custom_icondefs value="custom-icons.xml"/>
 
-    <!-- Message Handling Options -->
-    <block_nonroster value="1" control="chkBlockNonRoster" state="rw"/>
-    <auto_join_on_invite value="2" control="chkInviteAutoJoin" state="rw"/>
-    <s10n_auto_accept value="2" state="rw"/>
-    <s10n_auto_add value="1" control="chkIncomingS10nAdd" state="rw"/>
+    <!----------------- Notification Preferences ------------------------------>
+    <notify_sounds value="0" control="chkSound" state="rw"/>
 
-    <!-- deprecated message handling options -->
-    <msg_queue value="0" control="chkMsgQueue"/>
-    <log value="1" control="chkLog"/>
-    <log_rooms value="0" control="chkLogRooms"/>
-    <log_roster value="0" control="chkLogRoster"/>
-    <log_path control="txtLogPath"/>
-
-    <spool_path control="txtSpoolPath">
-      <control name="lblSpoolPath"/>
-    </spool_path>
-
-    <invite_treatment value="0" control="cboInviteOptions">
-      <control name="lblInviteOptions"/>
-    </invite_treatment>
-
-    <msg_treatment value="0" control="cboMsgOptions">
-      <control name="lblMsgOptions"/>
-    </msg_treatment>
-
-    <queue_offline value="0" control="chkQueueOffline"/>
-    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
-    <queue_not_avail value="1" control="chkQueueNotAvail"/>
-
-    <!-- Emoticon Options -->
-
-
-    <!-- Layouts DEPRICATED -->
-    <expanded value="1"/>
-    <dock_locked value="0"/>
-    <stacked_tabs value="1" control="chkStacked" state="inv"/>
-
-    <event_width value="400"/>
-    <roster_width value="215"/>
-
-    <!-- Network Options -->
-    <recon_tries value="25" control="txtAttempts">
-      <control name="lblAttempts"/>
-    </recon_tries>
-    <recon_time value="0" control="txtTime">
-      	<control name="lblTime"/>
-	<control name="lblTime2"/>
-        <control name="lblSeconds"/>
-    </recon_time>
-
-    <!-- proxy approach is used to set the state of all proxy info -->
-    <http_proxy_approach value="0" />
-    <http_proxy_auth value="false" control="chkProxyAuth"/>
-    <http_proxy_host control="txtProxyHost">
-      <control name="lblProxyHost"/>
-    </http_proxy_host>
-    <http_proxy_port value="8080" control="txtProxyPort">
-      <control name="lblProxyPort"/>
-    </http_proxy_port>
-    <http_proxy_password control="txtProxyPassword">
-      <control name="lblProxyPassword"/>
-    </http_proxy_password>
-    <http_proxy_user control="txtProxyUsername">
-      <control name="lblProxyUsername"/>
-    </http_proxy_user>
-
-    <!-- Notification Options -->
-    <notify_sounds value="0" control="chkSound"/>
-    <!-- send notifications if application is active? -->
-    <notify_active value="1" control="chkNotifyActive"/>
-    <!-- send notifications to currently active form? -->
-    <notify_active_win value="0" control="chkNotifyActiveWindow"/>
-    <!-- flash taskbar until form receives focus, if flase, flashes N times and stops --> 
-    <notify_flasher value="1" control="chkFlashInfinite"/>
-    <!-- flash dock manager taskbar until all notified tabs have been seen -->
-    <notify_docked_flasher value="0" control="chkFlashTabInfinite"/>
-    <!-- actually flash the tab's image until no longer notifying -->
-    <notify_tab_flasher value="1"/> <!-- control="chkFlashTabInfinite"/> -->
-    
     <!-- types of notifications. This section allows branders to hide
          types. NOTE  If a noptification type is not allowed make sure
          the values set for the sources below do not contain that type--> 
-    <notify_type_toast/>
-    <notify_type_flash/>
-    <notify_type_tray/>
-    <notify_type_front/>
-    <notify_type_sound/>
+    <notify_type_toast state="rw"/>
+    <notify_type_flash state="rw"/>
+    <notify_type_front state="rw"/>
+    <notify_type_sound state="rw"/>
+    <notify_type_tray state="rw"/>
 
     <!-- events that cause notifications (sources). Value is a bit flag
     	 indicating what type of notification should occur, where
@@ -251,36 +161,153 @@
     	 tray  = 16;
     	 front = 32;
          for example, toast + flash + sound = 13 -->
-         
-    <notify_online value="0"/>
-    <notify_offline value="0"/>
-    <notify_newchat value="1"/>
-    <notify_normalmsg value="1"/>
-    <notify_s10n value="1"/>
-    <notify_invite value="1"/>
-    <notify_keyword value="1"/>
-    <notify_chatactivity value="4"/>
-    <notify_priority_chatactivity value="4"/>
-    <notify_roomactivity value="4"/>
-    <notify_priority_roomactivity value="4"/>
-    <notify_oob value="1"/>
-    <notify_autoresponse value="0"/>
 
-    <toast_alpha value="0"/>
-    <toast_alpha_val value="255"/>
-    <toast_duration value="5"/>
+    <notify_online value="0" state="rw"/>
+    <notify_offline value="0" state="rw"/>
+    <notify_newchat value="1" state="rw"/>
+    <notify_normalmsg value="1" state="rw"/>
+    <notify_s10n value="1" state="rw"/>
+    <notify_invite value="1" state="rw"/>
+    <notify_keyword value="1" state="rw"/>
+    <notify_chatactivity value="4" state="rw"/>
+    <notify_priority_chatactivity value="4" state="rw"/>
+    <notify_roomactivity value="4" state="rw"/>
+    <notify_priority_roomactivity value="4" state="rw"/>
+    <notify_oob value="1" state="rw"/>
+    <notify_autoresponse value="0" state="rw"/>
 
-    <!-- Presence Options -->
-    <pres_tracking value="0" control="cboPresTracking">
-      <control name="lblPresTracking"/>
-    </pres_tracking>
-    <presence_message_listen value="1" control="chkPresenceSync"/>
-    <presence_message_send value="1" control="chkPresenceSync"/>
-    <client_caps value="1" control="chkClientCaps"/>
+    <!-- sound files for notifications -->
+    <notify_online_sound value=""/>
+    <notify_offline_sound value=""/>
+    <notify_newchat_sound value=""/>
+    <notify_normalmsg_sound value=""/>
+    <notify_s10n_sound value=""/>
+    <notify_invite_sound value=""/>
+    <notify_keyword_sound value=""/>
+    <notify_chatactivity_sound value=""/>
+    <notify_priority_chatactivity_sound value=""/>
+    <notify_roomactivity_sound value=""/>
+    <notify_priority_roomactivity_sound value=""/>
+    <notify_oob_sound value=""/>
+    <notify_autoresponse_sound value=""/>
+
+    <!-- Advanced Notification Preferences -->
+    <notify_active value="1" control="chkNotifyActive" state="rw"/>
+    <notify_active_win value="0" control="chkNotifyActiveWindow" state="rw"/>
+    <notify_flasher value="1" control="chkFlashInfinite" state="rw"/>
+    <notify_docked_flasher value="0" control="chkFlashTabInfinite" state="rw"/>
+    <notify_tab_flasher value="1" state="rw"/>
+
+    <!-- desktop alert preferences (toast) -->
+    <toast_alpha value="0" state="rw"/>
+    <toast_alpha_val value="255" state="rw"/>
+    <toast_duration value="5" state="rw"/>
+
+    <!----------------------- Message Preferences ----------------------------->
+    <s10n_auto_accept value="2" state="rw"/>
+    <s10n_auto_add value="1" control="chkIncomingS10nAdd" state="rw"/>
+
+    <!-- other message preferences -->
+    <block_nonroster value="1" control="chkBlockNonRoster" state="rw"/>
+    <auto_join_on_invite value="2" control="chkInviteAutoJoin" state="rw"/>
+
+    <!-- advanced Message Handling preferences -->
+    <regex_keywords value="1" state="rw"/>
+    <keywords state="rw"/> <!-- value is ignored -->
+
+    <!-- deprecated message handling options -->
+    <msg_queue value="0" control="chkMsgQueue" state="inv"/>
+    <log value="1" control="chkLog" state="inv"/>
+    <log_rooms value="0" control="chkLogRooms" state="inv"/>
+    <log_roster value="0" control="chkLogRoster" state="inv"/>
+    <log_path control="txtLogPath" state="inv"/>
+
+    <spool_path control="txtSpoolPath" state="inv">
+      <control name="lblSpoolPath"/>
+    </spool_path>
+
+    <invite_treatment value="0" control="cboInviteOptions" state="inv">
+      <control name="lblInviteOptions"/>
+    </invite_treatment>
+
+    <msg_treatment value="0" control="cboMsgOptions" state="inv">
+      <control name="lblMsgOptions"/>
+    </msg_treatment>
+
+    <queue_offline value="0" control="chkQueueOffline" state="inv"/>
+    <queue_dnd_chats value="0" control="chkQueueDNDChats" state="inv"/>
+    <queue_not_avail value="1" control="chkQueueNotAvail" state="inv"/>
+
+    <!------------------- AutoAway Preferences -------------------------------->
+    <auto_away value="1" control="chkAutoAway" state="rw"/>
+    <away_time value="5" control="txtAwayTime" state="rw">
+    	<control name="lblAwayTime"/>
+    </away_time>
+    <aa_reduce_pri value="1" control="chkAAReducePri" state="rw"/>
+    <away_auto_response value="0" control="chkAwayAutoResponse" state="rw"/>
+    <away_status control="txtAway" value="Away as a result of idle" state="rw">
+      <control name="lblAwayStatus"/>
+    </away_status>
+    <auto_xa value="1" control="chkAutoXA" state="rw"/>
+    <xa_time value="30" control="txtXATime" state="rw">
+    	<control name="lblXATime"/>
+    </xa_time>
+    <xa_status control="txtXA" value="Extended Away as a result of idle" state="rw">
+      <control name="lblXAStatus" state="rw"/>
+    </xa_status>
+    <auto_disconnect value="0" control="chkAutoDisconnect" state="rw"/>
+    <disconnect_time value="180" control="txtDisconnectTime" state="rw">
+    	<control name="lblDisconnectTime"/>
+    </disconnect_time>
+
+    <!--------------------- Presence Preferences _----------------------------->
+    <client_caps value="1" control="chkClientCaps" state="rw"/>
+    <room_joins value="0" control="chkRoomJoins" state="rw"/>
+    <!-- hmm, why two of these? -->
+    <presence_message_listen value="1" control="chkPresenceSync" state="rw"/>
+    <presence_message_send value="1" control="chkPresenceSync" state="rw"/>
+    <pres_tracking value="0" state="rw"/>
+    <!-- custom presence state, value is ignored -->
+    <pres_custom state="rw"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
-    <room_joins value="0" control="chkRoomJoins"/>
 
-    <!-- Subscription Options -->
+    <!--------------------- Hotkey Preferences _------------------------------->
+    <hotkeys_keys state='rw'/>
+    <hotkeys_text state='rw'/>
+
+    <!--------------------- Network Preferences ------------------------------->
+    <recon_tries value="25" control="txtAttempts" state="rw">
+      <control name="lblAttempts"/>
+    </recon_tries>
+    <recon_time value="0" control="txtTime" state="rw">
+      	<control name="lblTime"/>
+	<control name="lblTime2"/>
+        <control name="lblSeconds"/>
+    </recon_time>
+
+    <!-- proxy approach is used to set the state of all proxy info -->
+    <http_proxy_approach value="0" state="rw"/>
+    <http_proxy_auth value="false" control="chkProxyAuth" state="rw"/>
+    <http_proxy_host control="txtProxyHost" state="rw">
+      <control name="lblProxyHost"/>
+    </http_proxy_host>
+    <http_proxy_port value="8080" control="txtProxyPort" state="rw">
+      <control name="lblProxyPort"/>
+    </http_proxy_port>
+    <http_proxy_password control="txtProxyPassword" state="rw">
+      <control name="lblProxyPassword"/>
+    </http_proxy_password>
+    <http_proxy_user control="txtProxyUsername" state="rw">
+      <control name="lblProxyUsername"/>
+    </http_proxy_user>
+
+    <!-- Layouts DEPRICATED -->
+    <expanded value="1"/>
+    <dock_locked value="0"/>
+    <stacked_tabs value="1" control="chkStacked" state="inv"/>
+
+    <event_width value="400"/>
+    <roster_width value="215"/>
 
     <!-- file xfer Options -->
     <xfer_path control="txtXferPath">
@@ -339,12 +366,16 @@
     <!-- /ACTIVITY WINDOW PREFS -->
 
     <!-- unfiled -->
-    <toolbar value="1" />
-    <chat_toolbar value="1" />
-    <always_lang value="0"></always_lang>
+    <toolbar value="1"/>
+    <chat_toolbar value="1"/>
+    <always_lang value="0"/>
+    <msglist_type value="0" control="cboMsgList"/>
+    <ie_css value="" control="cboIEStylesheet"/>
+
 
     <!-- temp password used by auth plugins -->
-    <temp-pw encoded="yes"></temp-pw>
+    <temp-pw encoded="yes"/>
+
     <!-- Only show searchable jids that have no node. Default value is false,
          all searchable jids are shown.
         This option is never exposed to the user -->
@@ -358,14 +389,14 @@
     <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
 
     <!-- Branding items -->
-    <brand_ad ></brand_ad>
-    <brand_ad_url ></brand_ad_url>
+    <brand_ad />
+    <brand_ad_url />
     <!-- application ID is different than caption. It is used for
          file, path, resource identification and must be a legal value
          in any of those contexts. Caption may be anything. -->
-    <brand_application_id value="Exodus"></brand_application_id>
-    <brand_caption value="Exodus"></brand_caption>
-    
+    <brand_application_id value="Exodus"/>
+    <brand_caption value="Exodus"/>
+
     <brand_help_menu_list>
       <s>Jabber User Guide</s>
       <s>Exodus Website</s>
@@ -378,64 +409,63 @@
       <s>http://code.google.com/p/exodus/issues/list</s>
       <s>http://www.jabber.org/</s>
     </brand_help_url_list>
-    <brand_icon ></brand_icon>
-    
-    <!-- PROFILE OPTIONS -->
-    <brand_profile_show_accountdetails control="imgAcctDetails" value="true"></brand_profile_show_accountdetails>
-    <brand_profile_show_connection control="imgConnection" value="true"></brand_profile_show_connection>
-    <brand_profile_show_proxy control="imgProxy" value="true"></brand_profile_show_proxy>
-    <brand_profile_show_httppolling control="imgHttpPolling" value="true"></brand_profile_show_httppolling>
-    <brand_profile_show_advanced control="imgAdvanced" value="true"></brand_profile_show_advanced>
-    
-    <brand_profile_conn_type value="0"></brand_profile_conn_type>
-    <brand_profile_username control="pnlUsername"></brand_profile_username>
-    <brand_profile_server control="pnlServer"></brand_profile_server>
-    <brand_profile_password control="pnlPassword"></brand_profile_password>
-    <brand_profile_save_password control="chkSavePasswd"></brand_profile_save_password>
-    <brand_profile_new_account_default control="chkRegister" value="true"></brand_profile_new_account_default>
-    <brand_profile_server_list>
-    </brand_profile_server_list>
-    <brand_profile_show_download_public_servers value="false"></brand_profile_show_download_public_servers>
+    <brand_icon />
 
-    <brand_profile_srv control="pnlSRV" value="true"></brand_profile_srv>
-    <brand_profile_host control="pnlHost" ></brand_profile_host>
-    <brand_profile_port control="pnlPort" value="5222"></brand_profile_port>
-    <brand_profile_ssl control="pnlSSL" value="0"></brand_profile_ssl>
+    <!-- PROFILE OPTIONS -->
+    <brand_profile_show_accountdetails control="imgAcctDetails" value="true"/>
+    <brand_profile_show_connection control="imgConnection" value="true"/>
+    <brand_profile_show_proxy control="imgProxy" value="true"/>
+    <brand_profile_show_httppolling control="imgHttpPolling" value="true"/>
+    <brand_profile_show_advanced control="imgAdvanced" value="true"/>
     
-    <brand_profile_socks_type control="pnlSocksType" value="0"></brand_profile_socks_type>
-    <brand_profile_socks_host control="pnlSocksHost" ></brand_profile_socks_host>
-    <brand_profile_socks_port control="pnlSocksPort" value="1080"></brand_profile_socks_port>
-    <brand_profile_socks_auth control="pnlSocksAuth" value="false"></brand_profile_socks_auth>
-    <brand_profile_socks_user control="pnlSocksUsername" ></brand_profile_socks_user>
-    <brand_profile_socks_password control="pnlSocksPassword" ></brand_profile_socks_password>
-    
-    <brand_profile_http_allowpolling control="pnlPolling" value="true"></brand_profile_http_allowpolling>
-    <brand_profile_http_poll control="pnlTime" value="1000"></brand_profile_http_poll>
-    <brand_profile_http_url control="pnlURL" ></brand_profile_http_url>
-    <brand_profile_num_poll_keys control="pnlKeys" value="256"></brand_profile_num_poll_keys>
-    
-    <brand_profile_resource control="pnlResource" value="Exodus"></brand_profile_resource>
+    <brand_profile_conn_type value="0"/>
+    <brand_profile_username control="pnlUsername"/>
+    <brand_profile_server control="pnlServer"/>
+    <brand_profile_password control="pnlPassword"/>
+    <brand_profile_save_password control="chkSavePasswd"/>
+    <brand_profile_new_account_default control="chkRegister" value="true"/>
+    <brand_profile_server_list/>
+    <brand_profile_show_download_public_servers value="false"/>
+
+    <brand_profile_srv control="pnlSRV" value="true"/>
+    <brand_profile_host control="pnlHost" />
+    <brand_profile_port control="pnlPort" value="5222"/>
+    <brand_profile_ssl control="pnlSSL" value="0"/>
+
+    <brand_profile_socks_type control="pnlSocksType" value="0"/>
+    <brand_profile_socks_host control="pnlSocksHost" />
+    <brand_profile_socks_port control="pnlSocksPort" value="1080"/>
+    <brand_profile_socks_auth control="pnlSocksAuth" value="false"/>
+    <brand_profile_socks_user control="pnlSocksUsername" />
+    <brand_profile_socks_password control="pnlSocksPassword" />
+
+    <brand_profile_http_allowpolling control="pnlPolling" value="true"/>
+    <brand_profile_http_poll control="pnlTime" value="1000"/>
+    <brand_profile_http_url control="pnlURL" />
+    <brand_profile_num_poll_keys control="pnlKeys" value="256"/>
+
+    <brand_profile_resource control="pnlResource" value="Exodus"/>
     <brand_profile_resource_list>
       <s>Home</s>
       <s>Work</s>
       <s>Jabber MomentIM</s>
     </brand_profile_resource_list>
-    <brand_profile_realm control="pnlRealm" value=""></brand_profile_realm>
-    <brand_profile_priority control="pnlPriority" value="1"></brand_profile_priority>
-    <brand_profile_kerberos control="pnlKerberos" value="false"></brand_profile_kerberos>
-    <brand_profile_winlogin control="chkWinLogin" value="false"></brand_profile_winlogin>
-    <brand_profile_x509auth control="pnlx509Auth" value="false"></brand_profile_x509auth>
-    <brand_profile_x509cert control="pnlx509Cert" value=""></brand_profile_x509cert>
+    <brand_profile_realm control="pnlRealm" value=""/>
+    <brand_profile_priority control="pnlPriority" value="1"/>
+    <brand_profile_kerberos control="pnlKerberos" value="false"/>
+    <brand_profile_winlogin control="chkWinLogin" value="false"/>
+    <brand_profile_x509auth control="pnlx509Auth" value="false"/>
+    <brand_profile_x509cert control="pnlx509Cert" value=""/>
 
-    <brand_invisible_pres value="1"></brand_invisible_pres>
-    <brand_muc value="1"></brand_muc>
-    <brand_ft value="1"></brand_ft>
-    <brand_print value="1"></brand_print>
-    <brand_plugs value="1"></brand_plugs>
+    <brand_invisible_pres value="1"/>
+    <brand_muc value="1"/>
+    <brand_ft value="1"/>
+    <brand_print value="1"/>
+    <brand_plugs value="1"/>
     <brand_addcontact_gateways value="1"/>
     <brand_registration value="1"/>
     <brand_browser value="1"/>
-    <brand_vcard value="1"></brand_vcard>
+    <brand_vcard value="1"/>
     <!-- lock down our nickname -->
     <brand_prevent_change_nick value="0"/>
     <!-- add roster network prefs.
@@ -474,23 +504,22 @@
     <!-- use JID autocompletion where possible -->
     <brand_auto_complete_jids value="1"/>
     
-    <browse_view value="0"></browse_view>
+    <browse_view value="0"/>
 
-    <fade_limit value="100"></fade_limit>
-    <profile_active value="0"></profile_active>
-    <wrap_input value="1"></wrap_input>
+    <fade_limit value="100"/>
+    <profile_active value="0"/>
+    <wrap_input value="1"/>
 
-    <brand_required_plugins>
-    </brand_required_plugins>
+    <brand_required_plugins/>
     <brand_required_plugins_message
       value ="This installation is not in compliance with Hermes Instant Messaging Policy: A mandatory component %s has been disabled." />
-    <branding_disable_outflow value="0"></branding_disable_outflow>
+    <branding_disable_outflow value="0"/>
     <!-- indicates if priority notification feature should be used -->
-    <branding_priority_notifications value="1"></branding_priority_notifications>
+    <branding_priority_notifications value="1"/>
     <!-- indicates if nested subgroup feature should be available -->
-    <branding_nested_subgroup value="1"></branding_nested_subgroup>
+    <branding_nested_subgroup value="1"/>
     <!-- indicates if all messages should be queued to offline queue when I am not available -->
-    <branding_queue_not_available_msgs value="1"></branding_queue_not_available_msgs>
+    <branding_queue_not_available_msgs value="1"/>
 
     <!-- Should Exodus display a error box when trying to close when Exodus is being used as a COM server? -->
     <brand_warn_close_com_server value="1"/>
@@ -549,12 +578,10 @@
 	<brand_min_profiles_window_width_undocked value="250"/> <!-- No docked windows -->
         <brand_min_profiles_spliter_width value="250"/>
 
-  <!-- Stringlist with additional data to be added to the about box -->
-  <brand_about_additional_list/>
+  	<!-- Stringlist with additional data to be added to the about box -->
+  	<brand_about_additional_list/>
   </prefs>
 
   <!-- default custom presence stuff -->
-  <presii>
-  </presii>
-
+  <presii/>
 </exodus>
