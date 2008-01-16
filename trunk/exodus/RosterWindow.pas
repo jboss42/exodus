@@ -989,9 +989,16 @@ begin
             frmExodus.btnOptions.Enabled := false;
             frmExodus.mnuOptions_Options.Enabled := false;
             frmExodus.Preferences1.Enabled := false;
-            frmExodus.btnActivityWindow.Enabled := false;
-            frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
-            frmExodus.trayShowActivityWindow.Enabled := false;
+            if (isDebugShowing()) then begin
+                frmExodus.btnActivityWindow.Enabled := true;
+                frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
+                frmExodus.trayShowActivityWindow.Enabled := true;
+            end
+            else begin
+                frmExodus.btnActivityWindow.Enabled := false;
+                frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
+                frmExodus.trayShowActivityWindow.Enabled := false;
+            end;
         end;
         lblStatus.Visible := true;
         lblStatus.Caption := _(sConnecting);
