@@ -65,11 +65,8 @@ type
     procedure mnuCloseWindowClick(Sender: TObject);
     procedure mnuDockWindowClick(Sender: TObject);
     procedure mnuFloatWindowClick(Sender: TObject);
-    procedure timNewItemFlashTimer(Sender: TObject);
     private
         { Private declarations }
-    protected
-        { Protected declarations }
         _count: integer;
         _imgIndex: integer;
         _priorityStartColor: TColor;
@@ -99,6 +96,8 @@ type
         procedure _setPnlColors(startColor, endColor: TColor);
         procedure _timNewItemTimerTimer(Sender: TObject);
         procedure _stopTimer();
+    protected
+        { Protected declarations }
     public
         { Public declarations }
         constructor Create(AOwner: TComponent); reintroduce;
@@ -408,6 +407,7 @@ begin
     Self.OnClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfAWItem.priorityFlag(setPriority:boolean);
 begin
     _priority := setPriority;
@@ -426,12 +426,7 @@ begin
     end;
 end;
 
-procedure TfAWItem.timNewItemFlashTimer(Sender: TObject);
-begin
-    inherited;
-    Sleep(1);
-end;
-
+{---------------------------------------}
 procedure TfAWItem.TntFrameClick(Sender: TObject);
 begin
     inherited;

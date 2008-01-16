@@ -44,7 +44,7 @@ type
     {
       Dock states
     }
-    TDockStates = (dsRosterOnly, dsDock, dsUninitialized);
+    TDockStates = (dsUnDocked, dsDocked, dsUninitialized);
 
     IExodusDockManager = interface
     {
