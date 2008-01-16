@@ -31,7 +31,7 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.orientation = gdHorizontal
     object pnlListScrollUp: TExGradientPanel
       Left = 0
-      Top = 25
+      Top = 30
       Width = 187
       Height = 22
       Align = alTop
@@ -43,6 +43,7 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
       GradientProperites.orientation = gdHorizontal
+      ExplicitTop = 25
       object imgScrollUp: TImage
         Left = 73
         Top = 2
@@ -106,9 +107,9 @@ object frmActivityWindow: TfrmActivityWindow
     end
     object pnlList: TExGradientPanel
       Left = 0
-      Top = 47
+      Top = 52
       Width = 187
-      Height = 305
+      Height = 300
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -117,19 +118,21 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 12891033
       GradientProperites.endColor = 10848873
       GradientProperites.orientation = gdHorizontal
+      ExplicitTop = 50
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
         Width = 10
-        Height = 305
+        Height = 300
         Align = alLeft
         Shape = bsSpacer
+        ExplicitHeight = 305
       end
       object ListRightSpacer: TBevel
         Left = 187
         Top = 0
         Width = 0
-        Height = 305
+        Height = 300
         Align = alRight
         Shape = bsSpacer
         ExplicitLeft = 184
@@ -140,7 +143,7 @@ object frmActivityWindow: TfrmActivityWindow
       Left = 0
       Top = 0
       Width = 187
-      Height = 25
+      Height = 30
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
@@ -150,7 +153,7 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.orientation = gdHorizontal
       object SortBevel: TBevel
         Left = 0
-        Top = 20
+        Top = 25
         Width = 187
         Height = 5
         Align = alBottom
@@ -160,15 +163,18 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitWidth = 183
       end
       object lblSort: TTntLabel
-        Left = 99
+        Left = 21
         Top = 5
-        Width = 72
-        Height = 13
+        Width = 145
+        Height = 20
         Align = alClient
         Alignment = taRightJustify
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
+        ExplicitLeft = 99
+        ExplicitWidth = 72
+        ExplicitHeight = 13
       end
       object SortTopSpacer: TBevel
         Left = 0
@@ -182,16 +188,44 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitWidth = 183
       end
       object imgSortArrow: TImage
-        Left = 171
+        Left = 166
         Top = 5
         Width = 16
-        Height = 15
+        Height = 20
         Align = alRight
         Transparent = True
         OnClick = pnlListSortClick
         ExplicitLeft = 75
         ExplicitTop = 2
         ExplicitHeight = 16
+      end
+      object imgShowRoster: TImage
+        Left = 5
+        Top = 5
+        Width = 16
+        Height = 20
+        Align = alLeft
+        Transparent = True
+        OnClick = imgShowRosterClick
+        ExplicitLeft = 149
+        ExplicitTop = 4
+      end
+      object SortLeftSpacer: TBevel
+        Left = 0
+        Top = 5
+        Width = 5
+        Height = 20
+        Align = alLeft
+        Shape = bsSpacer
+      end
+      object SortRightSpacer: TBevel
+        Left = 182
+        Top = 5
+        Width = 5
+        Height = 20
+        Align = alRight
+        Shape = bsSpacer
+        ExplicitLeft = 177
       end
     end
   end

@@ -34,7 +34,6 @@ unit MSHTMLEvents;
 
 interface
 
-{$IFDEF USE_TWEBBROWSER}
 
 uses
   Windows, ActiveX, Classes, ComObj, OleCtrls
@@ -1960,11 +1959,9 @@ type
 
 procedure Register;
 
-{$ENDIF}
 
 implementation
 
-{$IFDEF USE_TWEBBROWSER}
 
 uses
   SysUtils;
@@ -6900,7 +6897,6 @@ begin
   //SinkRegisterEnd//
 end;
 
-{$ENDIF}
 
 end.
 

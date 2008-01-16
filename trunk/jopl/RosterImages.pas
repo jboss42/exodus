@@ -211,6 +211,11 @@ const
     RI_ARROWDOWN_INDEX      : Integer = 86;
     RI_ARROWUP_KEY          : Widestring = 'arrow_up';
     RI_ARROWUP_INDEX        : Integer = 87;
+    RI_SHOWAW_KEY           : Widestring = 'show_activity_window';
+    RI_SHOWAW_INDEX         : Integer = 88;
+    RI_SHOWROSTER_KEY       : Widestring = 'show_roster';
+    RI_SHOWROSTER_INDEX     : Integer = 89;
+
 {$ENDIF}
 
 var
@@ -312,6 +317,8 @@ begin
     _ids.Insert(RI_OBSERVER_INDEX, RI_OBSERVER_KEY);
     _ids.Insert(RI_ARROWDOWN_INDEX, RI_ARROWDOWN_KEY);
     _ids.Insert(RI_ARROWUP_INDEX, RI_ARROWUP_KEY);
+    _ids.Insert(RI_SHOWAW_INDEX, RI_SHOWAW_KEY);
+    _ids.Insert(RI_SHOWROSTER_INDEX, RI_SHOWROSTER_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;

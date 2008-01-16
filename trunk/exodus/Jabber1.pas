@@ -741,6 +741,7 @@ published
     procedure RemoveMenuShortCut(value: integer);
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
+    procedure doHide();
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -972,6 +973,14 @@ begin
         Self.AutoSize := false;
         _was_max := false;
     end;
+
+{$IFDEF USE_ACTIVITY_WINDOW}
+    if ((_dockwindow <> nil) and
+        (not _dockwindow.Showing)) then begin
+        _dockwindow.ShowDefault();
+    end;
+{$ENDIF}
+
     SetForegroundWindow(Self.Handle);
 end;
 
@@ -1085,9 +1094,7 @@ begin
         end
         else begin
             // minimize our app
-            _hidden := true;
-            Self.Visible := false;
-            PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+            doHide();
         end;
     end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
@@ -1674,6 +1681,7 @@ begin
         Preferences1.Enabled := false;
         btnActivityWindow.Enabled := false;
         mnuWindows_View_ShowActivityWindow.Enabled := false;
+        trayShowActivityWindow.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
@@ -2405,6 +2413,7 @@ begin
     frmRosterWindow.lblConnectClick(Sender);
     btnActivityWindow.Enabled := false;
     mnuWindows_View_ShowActivityWindow.Enabled := false;
+    trayShowActivityWindow.Enabled := false;
 end;
 
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
@@ -5228,6 +5237,12 @@ begin
     inherited;
 end;
 
+procedure TfrmExodus.doHide();
+begin
+    _hidden := true;
+    Self.Visible := false;
+    PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+end;
 
 
 

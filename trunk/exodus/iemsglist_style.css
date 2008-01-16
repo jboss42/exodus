@@ -74,9 +74,9 @@ body {
   overflow: auto;
 }
 
-#splash {
+/*#splash {
     z-index: -1;
-    position: absolute; 
+    position: absolute;
     left: 0;
     top: 50%;
     width: 100%;
@@ -85,4 +85,4 @@ body {
     font-size: 24pt;
     font-weight: bold;
     color: #ddd;
-}
+} */

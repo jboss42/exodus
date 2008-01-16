@@ -23,10 +23,9 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
+{$R 'iehtml.res' 'iehtml.rc'}
 {%File 'defaults.xml'}
-{$IFDEF USE_TWEBBROWSER}
 {%File 'iemsglist_style.css'}
-{$ENDIF}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -258,7 +257,9 @@ uses
   PrefDisplay in 'prefs\PrefDisplay.pas' {frmPrefDisplay},
   toastsettings in 'prefs\toastsettings.pas',
   ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1},
-  ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2};
+  ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2},
+  IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
+  MSHTMLEvents in 'MSHTMLEvents.pas';
 
 {$R *.TLB}
 

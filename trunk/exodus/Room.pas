@@ -425,9 +425,7 @@ uses
     xData,
     XMLNode,
     XMLUtils,
-{$IFDEF USE_TWEBBROWSER}
     IEMsgList,
-{$ENDIF}
     KeyWords, Dockable;
 
 {$R *.DFM}
@@ -2976,9 +2974,7 @@ var
     cap: Widestring;
     ml: TfBaseMsgList;
     msglist: TfRTFMsgList;
-{$IFDEF USE_TWEBBROWSER}
     htmlmsglist: TfIEMsgList;
-{$ENDIF}
 begin
   inherited;
     ml := getMsgList();
@@ -2993,12 +2989,10 @@ begin
 
             PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
         end;
-{$IFDEF USE_TWEBBROWSER}
     end
     else if (ml is TfIEMsgList) then begin
         htmlmsglist := TfIEMsgList(ml);
         htmlmsglist.print(true);
-{$ENDIF}        
     end;
 end;
 

@@ -21,14 +21,13 @@ unit IEMsgList;
 }
 
 // To use IE (TWebBrowser) as the history window in chats/rooms
-// Define USE_TWEBBROWSER and set <msglist_type value="1"/> in the defaults
+// set <msglist_type value="1"/> in the defaults
 // or a branding file.  If msglist_type is left at a value of 0, then the
 // history window will still be RTF and not HTML even though HTML support is
 // compiled in.
 
 interface
 
-{$IFDEF USE_TWEBBROWSER}
 
 uses
     TntMenus, JabberMsg,
@@ -141,13 +140,11 @@ var
   style_tags: THashedStringList;
   style_props: THashedStringList;
 
-{$ENDIF}
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 
-{$IFDEF USE_TWEBBROWSER}
 
 uses
     JabberConst,
@@ -885,18 +882,18 @@ end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setTitle(title: Widestring);
-var
-    splash : IHTMLElement;
+//var
+//    splash : IHTMLElement;
 begin
-    if (_doc = nil) then begin
-        _title := title;
-        exit;
-    end;
-
-    splash :=  _doc.all.item('splash', 0) as IHTMLElement;
-    if (splash = nil) then exit;
-
-    splash.innerText := _title;
+//    if (_doc = nil) then begin
+//        _title := title;
+//        exit;
+//    end;
+//
+//    splash :=  _doc.all.item('splash', 0) as IHTMLElement;
+//    if (splash = nil) then exit;
+//
+//    splash.innerText := _title;
 end;
 
 {---------------------------------------}
@@ -1090,7 +1087,6 @@ finalization
     style_tags.Free();
     style_props.Free();
 
-{$ENDIF}
 
 end.
 
