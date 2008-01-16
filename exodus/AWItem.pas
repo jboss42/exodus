@@ -127,7 +127,7 @@ implementation
 
 uses
     Jabber1, ActivityWindow, Session,
-    XMLTag, StateForm;
+    XMLTag, StateForm, ExUtils;
 
 
 {$R *.dfm}

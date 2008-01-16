@@ -586,14 +586,14 @@ begin
         StopTrayAlert();
     end;
 
-    if (Self.Visible) then begin
-        frm := getTopDocked();
-        if (frm <> nil) then begin
-            frm.Activating := true;
-            UpdateDocked(frm);
-            frm.Activating := false;
-        end;
-    end;
+//    if (Self.Visible) then begin
+//        frm := getTopDocked();
+//        if (frm <> nil) then begin
+//            frm.Activating := true;
+//            UpdateDocked(frm);
+//            frm.Activating := false;
+//        end;
+//    end;
 
     inherited;
 end;
@@ -758,7 +758,6 @@ begin
                    ' - ' +
                    MainSession.Prefs.getString('brand_caption');
     end;
-    OutputDebugMsg('---------------------------------------------------' + txt);
 end;
 
 procedure TfrmDockWindow.timFlasherTimer(Sender: TObject);
