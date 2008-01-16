@@ -52,7 +52,6 @@ type
     pnlListScrollUp: TExGradientPanel;
     pnlListScrollDown: TExGradientPanel;
     pnlList: TExGradientPanel;
-    timSetActivePanel: TTimer;
     pnlListSort: TExGradientPanel;
     imgScrollUp: TImage;
     imgScrollDown: TImage;
@@ -74,7 +73,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure timSetActivePanelTimer(Sender: TObject);
     procedure pnlListScrollUpClick(Sender: TObject);
     procedure pnlListScrollDownClick(Sender: TObject);
     procedure mnuAlphaSortClick(Sender: TObject);
@@ -157,7 +155,7 @@ implementation
 uses
     Room, ChatWin, Session,
     Jabber1, RosterImages, gnugettext,
-    XMLTag;
+    XMLTag, ExUtils;
 
 {$R *.dfm}
 
@@ -518,10 +516,6 @@ begin
     try
         awitem := TfAWItem(Sender);
         activateItem(awitem);
-        trackitem := _findItem(awitem);
-        if (trackitem <> nil)then begin
-            trackitem.frm.gotActivate();
-        end;
     except
     end;
 end;
@@ -560,6 +554,7 @@ procedure TfrmActivityWindow.activateItem(awitem: TfAWItem);
 var
     trackitem: TAWTrackerItem;
     tsheet: TTntTabSheet;
+    i: integer;
 begin
     if (awitem = nil) then exit;
 
@@ -583,14 +578,14 @@ begin
             if (trackitem.frm.Docked) then begin
                 tsheet := _dockwindow.getTabSheet(trackitem.frm);
                 if (tsheet <> nil) then begin
-                    // Set the active page.
-                    // Have to do this through timer because for some
-                    // undetermined reason, there are times when
-                    // setting the active page here doesn't seem
-                    // to actually show the new active page.
-                    // An example is when closing a docked window.
-                    _newActivateSheet := tsheet;
-                    timSetActivePanel.Enabled := true;
+                    try
+                        for I := 0 to _dockWindow.AWTabControl.PageCount - 1 do begin
+                            _dockWindow.AWTabControl.Pages[i].Visible := false;
+                        end;
+                        tsheet.Visible := true;
+                        _oldActivateSheet := tsheet;
+                    except
+                    end;
                 end;
             end
             else begin
@@ -599,24 +594,6 @@ begin
             end;
         end;
 
-    except
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow.timSetActivePanelTimer(Sender: TObject);
-begin
-    inherited;
-    try
-        timSetActivePanel.Enabled := false;
-        if (_newActivateSheet <> nil) then begin
-            _oldActivateSheet := _currentActivePage;
-            _dockwindow.AWTabControl.ActivePage := _newActivateSheet;
-            _currentActivePage := _newActivateSheet;
-            _dockwindow.setWindowCaption(_newActivateSheet.Caption);
-            _newActivateSheet := nil;
-            scrollToActive();
-        end;
     except
     end;
 end;
@@ -937,7 +914,8 @@ begin
 
         if (newActiveItem <> nil) then begin
             // Got an item, so activate it
-            OnItemClick(newactiveitem.awItem);
+            //OnItemClick(newactiveitem.awItem);
+            activateItem(newactiveitem.awItem);
         end
         else begin
             // Deactivate all items

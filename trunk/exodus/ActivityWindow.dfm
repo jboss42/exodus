@@ -226,13 +226,6 @@ object frmActivityWindow: TfrmActivityWindow
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdVertical
   end
-  object timSetActivePanel: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = timSetActivePanelTimer
-    Left = 72
-    Top = 144
-  end
   object popAWSort: TTntPopupMenu
     Left = 104
     Top = 144
