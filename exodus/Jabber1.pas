@@ -1679,9 +1679,6 @@ begin
         btnOptions.Enabled := false;
         mnuOptions_Options.Enabled := false;
         Preferences1.Enabled := false;
-        btnActivityWindow.Enabled := false;
-        mnuWindows_View_ShowActivityWindow.Enabled := false;
-        trayShowActivityWindow.Enabled := false;
     end
 
     else if event = '/session/error/auth' then begin
