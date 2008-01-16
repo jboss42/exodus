@@ -388,7 +388,8 @@ begin
     _active := setActive;
     if (setActive) then begin
         _newWindowHighlight := false;
-        _stopTimer();
+        _priority := false;
+        _stopTimer();                
         _setPnlColors(_activeStartColor, _activeEndColor);
         lblName.Font.Color := _activity_window_selected_font_color;
         lblCount.Font.Color := _activity_window_selected_font_color;
