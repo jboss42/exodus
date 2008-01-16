@@ -26,7 +26,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, Dockable, TntComCtrls, ComCtrls, ExtCtrls,
   TntExtCtrls, ExodusDockManager, StdCtrls, ExGradientPanel,
-  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls;
+  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls, Buttons, TntButtons;
 
 type
 
@@ -70,6 +70,9 @@ type
     imgSortArrow: TImage;
     pnlBorderTop: TExGradientPanel;
     pnlBorderBottom: TExGradientPanel;
+    imgShowRoster: TImage;
+    SortLeftSpacer: TBevel;
+    SortRightSpacer: TBevel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -80,6 +83,7 @@ type
     procedure mnuTypeSortClick(Sender: TObject);
     procedure mnuUnreadSortClick(Sender: TObject);
     procedure pnlListSortClick(Sender: TObject);
+    procedure imgShowRosterClick(Sender: TObject);
   private
     { Private declarations }
     _trackingList: TWidestringList;
@@ -87,7 +91,6 @@ type
     _activeitem: TfAWItem;
     _dockwindow: TfrmDockWindow;
     _showingTopItem: integer;
-    _newActivateSheet: TTntTabSheet;
     _oldActivateSheet: TTntTabSheet;
     _curListSort: TSortState;
     _canScrollUp: boolean;
@@ -246,6 +249,7 @@ begin
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_up'), imgScrollUp.Picture.Icon);
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
     frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgSortArrow.Picture.Icon);
+    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('show_roster'), imgShowRoster.Picture.Icon);
 
     _scrollUpState := ssDisabled;
     _scrollDownState := ssEnabled;
@@ -509,7 +513,6 @@ end;
 procedure TfrmActivityWindow.onItemClick(Sender: TObject);
 var
     awitem: TfAWItem;
-    trackitem: TAWTrackerItem;
 begin
     if (Sender = nil) then exit;
 
@@ -1006,6 +1009,17 @@ begin
     end;
 
     _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.imgShowRosterClick(Sender: TObject);
+begin
+    if (frmExodus.Showing) then begin
+        frmExodus.doHide();
+    end
+    else begin
+        frmExodus.Show();
+    end;
 end;
 
 {---------------------------------------}

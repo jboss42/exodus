@@ -188,9 +188,7 @@ uses
     Jabber1,
     ExUtils,
     JabberMsg,
-{$IFDEF USE_TWEBBROWSER}
     IEMsgList,
-{$ENDIF}
     TypInfo;
 
 const
@@ -422,16 +420,12 @@ begin
         _esc := false;
 
         // Pick which frame to build
-{$IFDEF USE_TWEBBROWSER}
         _msglist_type := MainSession.prefs.getInt('msglist_type');
         case _msglist_type of
             RTF_MSGLIST  : _msgframe := TfRTFMsgList.Create(Self);
             HTML_MSGLIST : _msgframe := TfIEMsgList.Create(Self);
         end;
-{$ELSE}
-        _msglist_type := RTF_MSGLIST;
-        _msgframe := TfRTFMsgList.Create(Self);
-{$ENDIF}
+
         with MsgList do begin
             Name := 'msg_list_frame';
             Parent := pnlMsgList;

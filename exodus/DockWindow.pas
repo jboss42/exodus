@@ -130,9 +130,6 @@ begin
     // be a nonzero value.
     Result:=0;
 
-    ctrl_down := false;
-    shift_down := false;
-
     if (code < 0) then begin
         // MUST call CallNextHookEx according to MSDN
         Result := CallNextHookEx(dockWindowKBHook, code, wParam, lParam);
@@ -329,6 +326,7 @@ begin
     end;
     frmExodus.mnuWindows_View_ShowActivityWindow.Checked := true;
     frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
+    frmExodus.trayShowActivityWindow.Enabled := true;
     frmExodus.btnActivityWindow.Enabled := true;
 
     _glueCheck();
@@ -347,7 +345,6 @@ end;
 procedure TfrmDockWindow.AWTabControlDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
 var
-    item: TAWTrackerItem;
     oldsheet: TTntTabSheet;
 begin
     // We got a new form dropped on us.
@@ -578,22 +575,11 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockWindow.WMActivate(var msg: TMessage);
-var
-    frm: TfrmDockable;
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         checkFlash();
         StopTrayAlert();
     end;
-
-//    if (Self.Visible) then begin
-//        frm := getTopDocked();
-//        if (frm <> nil) then begin
-//            frm.Activating := true;
-//            UpdateDocked(frm);
-//            frm.Activating := false;
-//        end;
-//    end;
 
     inherited;
 end;
@@ -847,6 +833,7 @@ begin
             Self.Hide();
             frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
+            frmExodus.trayShowActivityWindow.Enabled := false;
             frmExodus.btnActivityWindow.Enabled := false;
         end;
     end;

@@ -3,43 +3,43 @@ inherited frmChat: TfrmChat
   Top = 384
   ActiveControl = MsgOut
   Caption = 'Chat Window'
-  ClientHeight = 416
-  ClientWidth = 492
+  ClientHeight = 384
+  ClientWidth = 454
   OldCreateOrder = True
   ExplicitWidth = 500
   ExplicitHeight = 450
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   inherited Splitter1: TSplitter
-    Top = 383
-    Width = 492
-    ExplicitTop = 383
-    ExplicitWidth = 492
+    Top = 325
+    Width = 454
+    ExplicitTop = 354
+    ExplicitWidth = 454
   end
   inherited pnlDockTop: TPanel
-    Width = 492
-    ExplicitWidth = 492
+    Width = 454
+    ExplicitWidth = 454
     inherited tbDockBar: TToolBar
       Left = 443
       ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
-      Width = 440
-      ExplicitWidth = 440
+      Width = 406
+      ExplicitWidth = 406
       object pnlJID: TPanel
         Left = 0
         Top = 0
-        Width = 351
-        Height = 32
+        Width = 324
+        Height = 30
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
         object lblNick: TTntLabel
-          Left = 43
+          Left = 40
           Top = 0
-          Width = 45
-          Height = 13
+          Width = 44
+          Height = 12
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -51,18 +51,17 @@ inherited frmChat: TfrmChat
         object imgAvatar: TPaintBox
           Left = 0
           Top = 0
-          Width = 35
-          Height = 32
+          Width = 32
+          Height = 30
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-          ExplicitLeft = 2
         end
         object Panel3: TPanel
-          Left = 35
+          Left = 32
           Top = 0
           Width = 8
-          Height = 32
+          Height = 30
           Align = alLeft
           BevelOuter = bvNone
           ParentColor = True
@@ -72,27 +71,27 @@ inherited frmChat: TfrmChat
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 492
-    Height = 322
-    ExplicitWidth = 492
-    ExplicitHeight = 322
+    Width = 454
+    Height = 295
+    ExplicitWidth = 454
+    ExplicitHeight = 295
   end
   inherited pnlInput: TPanel
-    Top = 388
-    Width = 492
-    ExplicitTop = 388
-    ExplicitWidth = 492
+    Top = 358
+    Width = 454
+    ExplicitTop = 358
+    ExplicitWidth = 454
     inherited MsgOut: TExRichEdit
-      Width = 488
+      Width = 450
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited tbMsgOutToolbar: TTntToolBar
-    Top = 354
-    Width = 492
-    ExplicitTop = 354
-    ExplicitWidth = 492
+    Top = 329
+    Width = 454
+    ExplicitTop = 329
+    ExplicitWidth = 454
   end
   object SaveDialog1: TSaveDialog [5]
     DefaultExt = 'html'

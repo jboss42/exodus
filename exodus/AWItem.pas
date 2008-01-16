@@ -177,22 +177,19 @@ begin
             _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
             _activeEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
         end;
-        tag.Free();
-        tag := nil;
+        FreeAndNil(tag);
         tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
         if (tag <> nil) then begin
             _priorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
             _priorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
         end;
-        tag.Free();
-        tag := nil;
+        FreeAndNil(tag);
         tag := MainSession.Prefs.getXMLPref('activity_window_new_window_color');
         if (tag <> nil) then begin
             _newWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
             _newWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
         end;
-        tag.Free();
-        tag := nil;
+        FreeAndNil(tag);
         _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
         _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
         _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
