@@ -742,6 +742,9 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
+{$IFDEF USE_ACTIVITY_WINDOW}
+    procedure ShowActivityWindow(show: boolean = true; bringtofront: boolean = true);
+{$ENDIF}
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -977,7 +980,7 @@ begin
 {$IFDEF USE_ACTIVITY_WINDOW}
     if ((_dockwindow <> nil) and
         (not _dockwindow.Showing)) then begin
-        _dockwindow.ShowDefault();
+        ShowActivityWindow();
     end;
 {$ENDIF}
 
@@ -1481,7 +1484,7 @@ begin
         if (ExStartup.debug) then begin
 {$IFDEF USE_ACTIVITY_WINDOW}
             if (_dockWindow <> nil) then begin
-                _dockWindow.ShowDefault();
+                ShowActivityWindow();
             end;
 {$ENDIF}
             ShowDebugForm(false);
@@ -2273,6 +2276,7 @@ begin
 
     CloseAllRooms();
     CloseAllChats();
+    CloseDebugForm();
 
     // Unload all of the remaining plugins
     UnloadPlugins();
@@ -3251,10 +3255,10 @@ begin
     if (_dockwindow = nil) then exit;
 
     if (_dockWindow.Showing) then begin
-        _dockwindow.Hide();
+        ShowActivityWindow(false);
     end
     else begin
-        _dockwindow.ShowDefault();
+        ShowActivityWindow();
     end;
 end;
 
@@ -3993,7 +3997,9 @@ begin
         CloseAllChats();
         closeMsgQueue();
 {$IFDEF USE_ACTIVITY_WINDOW}
-        _dockWindow.Close();
+        if (not isDebugShowing()) then begin
+            ShowActivityWindow(false);
+        end;
 {$ENDIF}
         MainSession.Disconnect();
     end;
@@ -5241,7 +5247,19 @@ begin
     PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
 end;
 
+{$IFDEF USE_ACTIVITY_WINDOW}
+procedure TfrmExodus.ShowActivityWindow(show: boolean; bringtofront: boolean);
+begin
+    if (_dockwindow = nil) then exit;
 
+    if (show) then begin
+        _dockwindow.ShowDefault(bringtofront);
+    end
+    else begin
+        _dockwindow.Hide();
+    end;
+end;
+{$ENDIF}
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
