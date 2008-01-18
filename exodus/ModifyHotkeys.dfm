@@ -13,7 +13,8 @@ inherited frmModifyHotkeys: TfrmModifyHotkeys
     Top = 11
     Width = 43
     Height = 16
-    Caption = 'Hotkey:'
+    Caption = '&Hotkey:'
+    FocusControl = cbhotkey
   end
   object TntLabel2: TTntLabel
     AlignWithMargins = True
@@ -21,7 +22,8 @@ inherited frmModifyHotkeys: TfrmModifyHotkeys
     Top = 41
     Width = 55
     Height = 16
-    Caption = 'Message:'
+    Caption = '&Message:'
+    FocusControl = txtHotkeyMessage
   end
   object btnOK: TTntButton
     AlignWithMargins = True

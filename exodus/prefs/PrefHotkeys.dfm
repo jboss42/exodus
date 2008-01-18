@@ -20,10 +20,14 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
     end
   end
   object pnlContainer: TExBrandPanel
+    AlignWithMargins = True
     Left = 0
-    Top = 27
-    Width = 482
+    Top = 33
+    Width = 479
     Height = 259
+    Margins.Left = 0
+    Margins.Top = 6
+    Margins.Bottom = 0
     Align = alTop
     AutoSize = True
     TabOrder = 1
@@ -33,17 +37,18 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 476
+      Width = 473
       Height = 16
       Align = alTop
-      Caption = 'Pressing a hotkey will enter the associated message'
+      Caption = '&Pressing a hotkey will enter the associated message'
+      FocusControl = lstHotkeys
       ExplicitWidth = 298
     end
     object lstHotkeys: TTntListView
       AlignWithMargins = True
       Left = 3
       Top = 25
-      Width = 476
+      Width = 473
       Height = 205
       Align = alTop
       Columns = <
@@ -66,9 +71,9 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       Top = 236
       Width = 75
       Height = 23
-      Caption = 'Edit...'
+      Caption = '&Edit...'
       Enabled = False
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnModifyHotkeysClick
     end
     object btnAddHotkeys: TTntButton
@@ -76,8 +81,8 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       Top = 236
       Width = 75
       Height = 23
-      Caption = 'Add...'
-      TabOrder = 2
+      Caption = '&Add...'
+      TabOrder = 1
       OnClick = btnAddHotkeysClick
     end
     object btnRemoveHotkeys: TTntButton
@@ -85,7 +90,7 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       Top = 236
       Width = 75
       Height = 23
-      Caption = 'Remove'
+      Caption = '&Remove'
       Enabled = False
       TabOrder = 3
       OnClick = btnRemoveHotkeysClick
@@ -95,7 +100,7 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       Top = 236
       Width = 75
       Height = 23
-      Caption = 'Clear All'
+      Caption = '&Clear All'
       TabOrder = 4
       OnClick = btnClearAllClick
     end

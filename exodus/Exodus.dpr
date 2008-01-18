@@ -100,7 +100,6 @@ uses
   PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
   ManagePluginsDlg in 'prefs\ManagePluginsDlg.pas' {frmPrefPlugins},
   PrefPresence in 'prefs\PrefPresence.pas' {frmPrefPresence},
-  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster},
   Prefs in 'Prefs.pas' {frmPrefs},
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
   Presence in '..\jopl\Presence.pas',
@@ -142,7 +141,6 @@ uses
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
   ExSession in 'ExSession.pas',
   WebGet in 'WebGet.pas' {frmWebDownload},
-  PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
   Wizard in 'Wizard.pas' {frmWizard},
   LocalUtils in 'LocalUtils.pas',
@@ -259,7 +257,8 @@ uses
   ManageBlockDlg in 'prefs\ManageBlockDlg.pas' {Form1},
   ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2},
   IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
-  MSHTMLEvents in 'MSHTMLEvents.pas';
+  MSHTMLEvents in 'MSHTMLEvents.pas',
+  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm};
 
 {$R *.TLB}
 

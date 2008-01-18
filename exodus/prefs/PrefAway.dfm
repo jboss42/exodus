@@ -10,30 +10,32 @@ inherited frmPrefAway: TfrmPrefAway
   PixelsPerInch = 120
   TextHeight = 16
   object pnlContainer: TExBrandPanel [0]
+    AlignWithMargins = True
     Left = 0
-    Top = 27
+    Top = 30
     Width = 367
-    Height = 577
+    Height = 574
+    Margins.Left = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alLeft
     TabOrder = 1
-    TabStop = True
     AutoHide = False
     object chkAutoAway: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 6
+      Top = 3
       Width = 367
       Height = 123
       Margins.Left = 0
-      Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
       TabOrder = 0
       TabStop = True
-      AutoHide = False
-      Caption = 'Enable Auto Away'
+      AutoHide = True
+      Caption = 'Enable Auto &Away'
       Checked = False
       OnCheckChanged = chkAutoAwayCheckChanged
       object pnlAwayTime: TExBrandPanel
@@ -56,7 +58,8 @@ inherited frmPrefAway: TfrmPrefAway
           Height = 22
           Margins.Left = 20
           AutoSize = False
-          Caption = 'Minutes to wait before setting status to Away:'
+          Caption = '&Minutes to wait before setting status to Away:'
+          FocusControl = txtAwayTime
         end
         object txtAwayTime: TExNumericEdit
           Left = 303
@@ -84,7 +87,7 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Left = 21
         Margins.Top = 0
         Align = alTop
-        Caption = 'Reduce priority to 0 when Away'
+        Caption = 'Reduce &priority to 0 when Away'
         TabOrder = 2
       end
       object chkAwayAutoResponse: TTntCheckBox
@@ -96,7 +99,7 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Left = 21
         Margins.Top = 0
         Align = alTop
-        Caption = 'Send auto response message when away'
+        Caption = '&Send auto response message when away'
         TabOrder = 3
       end
       object ExBrandPanel2: TExBrandPanel
@@ -114,7 +117,8 @@ inherited frmPrefAway: TfrmPrefAway
           Top = 3
           Width = 99
           Height = 16
-          Caption = 'Away status text:'
+          Caption = 'Away status &text:'
+          FocusControl = txtAway
         end
         object txtAway: TTntEdit
           Left = 185
@@ -128,19 +132,19 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 141
+      Top = 132
       Width = 367
       Height = 75
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
       TabOrder = 1
       TabStop = True
       AutoHide = False
-      Caption = 'Enable Auto Extended Away'
+      Caption = 'Enable Auto E&xtended Away'
       Checked = False
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
@@ -160,7 +164,8 @@ inherited frmPrefAway: TfrmPrefAway
           Top = 5
           Width = 248
           Height = 16
-          Caption = 'Minutes to wait before setting status to XA:'
+          Caption = 'Minutes to &wait before setting status to XA:'
+          FocusControl = txtXATime
         end
         object txtXATime: TExNumericEdit
           Left = 300
@@ -195,7 +200,8 @@ inherited frmPrefAway: TfrmPrefAway
           Top = 3
           Width = 155
           Height = 16
-          Caption = 'Extended Away status text:'
+          Caption = '&Extended Away status text:'
+          FocusControl = txtXA
         end
         object txtXA: TTntEdit
           Left = 182
@@ -209,26 +215,27 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 228
+      Top = 213
       Width = 367
       Height = 51
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
       TabOrder = 2
       TabStop = True
       AutoHide = False
-      Caption = 'Enable Auto Disconnect'
+      Caption = 'Enable Auto &Disconnect'
       Checked = False
       object lblDisconnectTime: TTntLabel
         Left = 21
         Top = 25
         Width = 214
         Height = 16
-        Caption = 'Minutes to wait before disconnecting:'
+        Caption = 'Minutes to wait &before disconnecting:'
+        FocusControl = txtDisconnectTime
       end
       object txtDisconnectTime: TExNumericEdit
         Left = 303

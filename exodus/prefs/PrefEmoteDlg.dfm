@@ -4,6 +4,7 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
   Caption = 'Advanced Emoticon Settings'
   ClientHeight = 440
   ClientWidth = 449
+  ParentFont = True
   OldCreateOrder = True
   OnCreate = TntFormCreate
   ExplicitWidth = 457

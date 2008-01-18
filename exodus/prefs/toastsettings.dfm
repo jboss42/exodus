@@ -3,6 +3,7 @@ inherited ToastSettings: TToastSettings
   Caption = 'Desktop Alert Settings'
   ClientHeight = 193
   ClientWidth = 340
+  ParentFont = True
   ExplicitWidth = 346
   ExplicitHeight = 231
   PixelsPerInch = 120
@@ -18,7 +19,6 @@ inherited ToastSettings: TToastSettings
     Caption = '&Use alpha blending for desktop alerts'
     TabOrder = 0
     OnClick = chkToastAlphaClick
-    ExplicitWidth = 379
   end
   object pnlAlphaSlider: TExBrandPanel
     AlignWithMargins = True
@@ -31,7 +31,6 @@ inherited ToastSettings: TToastSettings
     TabOrder = 1
     TabStop = True
     AutoHide = True
-    ExplicitWidth = 379
     object lblSliderTitle: TTntLabel
       Left = 3
       Top = 0
@@ -82,8 +81,6 @@ inherited ToastSettings: TToastSettings
     TabOrder = 2
     TabStop = True
     AutoHide = True
-    ExplicitWidth = 379
-    ExplicitHeight = 53
     object lblToastDuration: TTntLabel
       Left = 3
       Top = 0
@@ -103,7 +100,7 @@ inherited ToastSettings: TToastSettings
       Left = 5
       Top = 22
       Width = 75
-      Height = 24
+      Height = 31
       BevelOuter = bvNone
       Enabled = False
       ParentColor = True
@@ -113,7 +110,7 @@ inherited ToastSettings: TToastSettings
       Max = 15
       DesignSize = (
         75
-        24)
+        31)
     end
   end
   object btnOK: TTntButton

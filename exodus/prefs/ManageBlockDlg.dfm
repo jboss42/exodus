@@ -17,7 +17,6 @@ inherited ManageBlockDlg: TManageBlockDlg
     TabOrder = 0
     TabStop = True
     AutoHide = False
-    ExplicitWidth = 535
     object lblBlockIns: TTntLabel
       AlignWithMargins = True
       Left = 3
@@ -40,10 +39,6 @@ inherited ManageBlockDlg: TManageBlockDlg
       Height = 279
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 102
-      ExplicitWidth = 568
-      ExplicitHeight = 367
     end
   end
   object btnOK: TTntButton
