@@ -247,6 +247,8 @@ begin
             if (idx >= 0) then
                 _docked_forms.Delete(idx);
         end;
+
+        _needToBeShowingCheck();
     except
     end;
 end;
