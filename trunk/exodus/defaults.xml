@@ -22,6 +22,15 @@
     <restore_window_state value="1" control="chkSaveWindowState" state="rw"/>
     <start_docked value="1" state="rw"/>
 
+    <recon_tries value="25" control="txtAttempts" state="rw">
+      <control name="lblAttempts"/>
+    </recon_tries>
+    <recon_time value="0" control="txtTime" state="rw">
+      	<control name="lblTime"/>
+	<control name="lblTime2"/>
+        <control name="lblSeconds"/>
+    </recon_time>
+    
     <!-- Advanced system prefs -->
     <close_min value="1" control="chkCloseMin" state="rw"/>
     <single_instance value="1" control="chkSingleInstance" state="rw"/>
@@ -89,7 +98,7 @@
     <roster_font_italic value="0"/>
     <roster_font_underline value="0"/>
     <roster_roster_font_charset value="1"/>
-    <roster_roster_bg value="$80000005"/>
+    <roster_bg value="$80000005"/>
 
     <font_name value="Arial" state="rw"/>
     <font_size value="10"/>
@@ -275,16 +284,6 @@
     <hotkeys_keys state='rw'/>
     <hotkeys_text state='rw'/>
 
-    <!--------------------- Network Preferences ------------------------------->
-    <recon_tries value="25" control="txtAttempts" state="rw">
-      <control name="lblAttempts"/>
-    </recon_tries>
-    <recon_time value="0" control="txtTime" state="rw">
-      	<control name="lblTime"/>
-	<control name="lblTime2"/>
-        <control name="lblSeconds"/>
-    </recon_time>
-
     <!-- proxy approach is used to set the state of all proxy info -->
     <http_proxy_approach value="0" state="rw"/>
     <http_proxy_auth value="false" control="chkProxyAuth" state="rw"/>
@@ -371,7 +370,10 @@
     <always_lang value="0"/>
     <msglist_type value="0" control="cboMsgList"/>
     <ie_css value="" control="cboIEStylesheet"/>
-
+    <browse_view value="0"/>
+    <fade_limit value="100"/>
+    <profile_active value="0"/>
+    <wrap_input value="1"/>
 
     <!-- temp password used by auth plugins -->
     <temp-pw encoded="yes"/>
@@ -448,7 +450,7 @@
     <brand_profile_resource_list>
       <s>Home</s>
       <s>Work</s>
-      <s>Jabber MomentIM</s>
+      <s>Exodus</s>
     </brand_profile_resource_list>
     <brand_profile_realm control="pnlRealm" value=""/>
     <brand_profile_priority control="pnlPriority" value="1"/>
@@ -466,6 +468,8 @@
     <brand_registration value="1"/>
     <brand_browser value="1"/>
     <brand_vcard value="1"/>
+    <branding_roster_hide_new_wizard value="1"/>
+    
     <!-- lock down our nickname -->
     <brand_prevent_change_nick value="0"/>
     <!-- add roster network prefs.
@@ -499,20 +503,12 @@
         <s>|ICQ|transport|icq|</s>
     </brand_networks>
 
-    <!-- end roster network prefs -->
-
     <!-- use JID autocompletion where possible -->
     <brand_auto_complete_jids value="1"/>
-    
-    <browse_view value="0"/>
-
-    <fade_limit value="100"/>
-    <profile_active value="0"/>
-    <wrap_input value="1"/>
 
     <brand_required_plugins/>
     <brand_required_plugins_message
-      value ="This installation is not in compliance with Hermes Instant Messaging Policy: A mandatory component %s has been disabled." />
+      value ="This installation is not in compliance with Exodus Instant Messaging Policy: A mandatory component %s has been disabled." />
     <branding_disable_outflow value="0"/>
     <!-- indicates if priority notification feature should be used -->
     <branding_priority_notifications value="1"/>
@@ -580,6 +576,7 @@
 
   	<!-- Stringlist with additional data to be added to the about box -->
   	<brand_about_additional_list/>
+
   </prefs>
 
   <!-- default custom presence stuff -->
