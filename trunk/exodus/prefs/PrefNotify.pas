@@ -26,36 +26,48 @@ uses
   Dialogs, PrefPanel, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst,
   ExtCtrls, TntExtCtrls, pngextra, ExGroupBox, TntForms, ExFrame, ExBrandPanel,
   Buttons, TntButtons, TntDialogs,
+  Registry,
   Contnrs;
 
 type
     TNotifyInfo = class
     private
-        _key: widestring;
-        _strValue: WideString;
+        _Key: widestring;
+        _StrValue: WideString;
 
-        _caption: WideString;
-        _isReadonly: boolean;
-        _isVisible: boolean;
+        _Caption: WideString;
+        _IsReadOnly: boolean;
+        _IsVisible: boolean;
 
-        function getStringValue(): widestring;
-        function getBoolValue(): Boolean;
-        function getIntValue(): Integer;
-        function getWriteable(): boolean;
-        procedure setStringValue(str: widestring);
-        procedure setBoolValue(bool: boolean);
-        procedure setIntValue(int: Integer);
-
+        _SoundFile: widestring;
+        _SoundKey: TRegistry;
+        _DefaultSoundKey: TRegistry;
+        
+        function GetStringValue(): widestring;
+        function GetBoolValue(): Boolean;
+        function GetIntValue(): Integer;
+        function GetWriteable(): boolean;
+        function GetSoundFile(): widestring;
+        function GetSoundEnabled(): boolean;
+        
+        procedure SetStringValue(Str: widestring);
+        procedure SetBoolValue(Bool: boolean);
+        procedure SetIntValue(Int: Integer);
+        procedure SetSoundFile(FName: widestring);
     public
-        constructor create(Caption: widestring; key: widestring);overload;
-        constructor create(src: TNotifyInfo);overload;
-        procedure saveValue();
-        property IntValue: Integer read getIntValue write setIntValue;
-        property Value: WideString read getStringValue write setStringValue;
-        property BoolValue: boolean read getBoolValue write setBoolValue;
-        property IsVisible: boolean read _isVisible;
-        property IsReadOnly: boolean read _isReadOnly;
-        property IsWriteable: boolean read getWriteable;
+        constructor Create(Caption: widestring; Key: widestring);overload;
+        constructor Create(Src: TNotifyInfo);overload;
+        destructor Destroy(); override;
+
+        procedure SaveValue();
+        property IntValue: Integer read GetIntValue write SetIntValue;
+        property Value: WideString read GetStringValue write SetStringValue;
+        property BoolValue: boolean read GetBoolValue write SetBoolValue;
+        property IsVisible: boolean read _IsVisible;
+        property IsReadOnly: boolean read _IsReadOnly;
+        property IsWriteable: boolean read GetWriteable;
+        property SoundFile: widestring read GetSoundFile write SetSoundFile;
+        property IsGetSoundEnabled: boolean read GetSoundEnabled;
     end;
 
   TfrmPrefNotify = class(TfrmPrefPanel)
@@ -85,6 +97,7 @@ type
     pnlToast: TExBrandPanel;
     chkToast: TTntCheckBox;
     btnToastSettings: TTntButton;
+    procedure txtSoundFileExit(Sender: TObject);
     procedure btnToastSettingsClick(Sender: TObject);
     procedure TntFormDestroy(Sender: TObject);
     procedure btnPlaySoundClick(Sender: TObject);
@@ -96,29 +109,25 @@ type
     procedure chkSoundClick(Sender: TObject);
   private
     { Private declarations }
-    _no_notify_update: boolean;
-    _loading: boolean;
+    _NoNotifyUpdate: boolean;
+    _Loading: boolean;
 
-    _notifyList: TObjectList;
+    _NotifyList: TObjectList;
 
-    _canEnableToast: boolean;
-    _canEnableFlash: boolean;
-    _canEnableTray: boolean;
-    _canEnableSound: boolean;
-    _canEnableFront: boolean;
+    _CanEnableToast: boolean;
+    _CanEnableFlash: boolean;
+    _CanEnableTray: boolean;
+    _CanEnableSound: boolean;
+    _CanEnableFront: boolean;
 
-    _toastAlpha: TNotifyInfo;
-    _toastAlphaValue: TNotifyInfo;
-    _toastDuration: TNotifyInfo;
-    
+    _ToastAlpha: TNotifyInfo;
+    _ToastAlphaValue: TNotifyInfo;
+    _ToastDuration: TNotifyInfo;
   public
     { Public declarations }
     procedure LoadPrefs(); override;
     procedure SavePrefs(); override;
   end;
-
-var
-  frmPrefNotify: TfrmPrefNotify;
 
 implementation
 {$R *.dfm}
@@ -150,177 +159,214 @@ const
     NUM_NOTIFIES = 13;
 
 
-constructor TNotifyInfo.create(Caption: widestring; key: widestring);
+constructor TNotifyInfo.create(Caption: widestring; Key: widestring);
 var
     s: TPrefState;
-
 begin
-    _caption := Caption;
-    _key := key;
-    _strValue := MainSession.Prefs.getString(_key);
-    s := getPrefState(_key);
-    _isReadOnly := (s = psReadOnly);
-    _isVisible := (s <> psInvisible);
+    _Caption := Caption;
+    _Key := key;
+    _StrValue := MainSession.Prefs.getString(_Key);
+    s := getPrefState(_Key);
+    _IsReadOnly := (s = psReadOnly);
+    _IsVisible := (s <> psInvisible);
+    _SoundKey := TRegistry.Create();
+    _SoundKey.OpenKey('AppEvents\Schemes\Apps\' +
+                      MainSession.Prefs.getString('brand_caption') +
+                      '\exodus_' + Key + '\.current', true);
+    _DefaultSoundKey := TRegistry.Create();
+    _DefaultSoundKey.OpenKey('AppEvents\Schemes\Apps\' +
+                             MainSession.Prefs.getString('brand_caption') +
+                             '\exodus_' + Key + '\.default', true);
 end;
 
-constructor TNotifyInfo.create(src: TNotifyInfo);
+constructor TNotifyInfo.create(Src: TNotifyInfo);
 begin
     if (src <> nil) then begin
-        _caption := src._caption;
-        _key := src._key;
-        _strValue := src._strValue;
-        _isReadOnly := src._isReadonly;
-        _isVisible := src._isVisible;
+        _Caption := Src._Caption;
+        _Key := Src._Key;
+        _StrValue := Src._StrValue;
+        _IsReadOnly := Src._IsReadOnly;
+        _IsVisible := Src._IsVisible;
+        _SoundKey := TRegistry.Create();
+        _SoundKey.OpenKey(src._SoundKey.CurrentPath, true);
     end
     else begin
-        _caption := '';
-        _key := '';
-        _strValue := '';
-        _isReadOnly := false;
-        _isVisible := true;
+        _Caption := '';
+        _Key := '';
+        _StrValue := '';
+        _IsReadOnly := false;
+        _IsVisible := true;
+        _SoundKey := nil;
     end;
 end;
 
-function TNotifyInfo.getStringValue(): widestring;
+destructor TNotifyInfo.Destroy();
 begin
-    Result := _strValue;
+    if (_SoundKey <> nil) then
+        _SoundKey.free();
 end;
 
-function TNotifyInfo.getBoolValue(): Boolean;
+function TNotifyInfo.GetStringValue(): widestring;
 begin
-    Result := safeBool(_strValue);
+    Result := _StrValue;
 end;
 
-function TNotifyInfo.getIntValue(): Integer;
+function TNotifyInfo.GetBoolValue(): Boolean;
 begin
-    Result := safeInt(_strValue);
+    Result := SafeBool(_StrValue);
 end;
 
-function TNotifyInfo.getWriteable(): boolean;
+function TNotifyInfo.GetIntValue(): Integer;
+begin
+    Result := SafeInt(_StrValue);
+end;
+
+function TNotifyInfo.GetWriteable(): boolean;
 begin
     Result := IsVisible and not IsReadOnly;
 end;
 
-procedure TNotifyInfo.setStringValue(str: widestring);
+procedure TNotifyInfo.SetStringValue(Str: widestring);
 begin
-    if (_isVisible and not _isReadonly) then
-        _strValue := str;
+    if (_IsVisible and not _IsReadOnly) then
+        _StrValue := Str;
 end;
 
-procedure TNotifyInfo.setBoolValue(bool: boolean);
+procedure TNotifyInfo.SetBoolValue(Bool: boolean);
 begin
     if (bool) then
-        setStringValue('1')
+        SetStringValue('1')
     else
-        setStringValue('0');
+        SetStringValue('0');
 end;
 
-procedure TNotifyInfo.setIntValue(int: Integer);
+procedure TNotifyInfo.SetIntValue(Int: Integer);
 begin
     try
-        setStringValue(IntToStr(int));
+        SetStringValue(IntToStr(Int));
     except
-        setStringValue('');
+        SetStringValue('');
     end;
 end;
 
-procedure TNotifyInfo.saveValue();
+procedure TNotifyInfo.SaveValue();
 begin
-    if (_isVisible and not _isReadonly) then
-        MainSession.Prefs.setString(_key, _strValue);
+    if (_IsVisible and not _IsReadOnly) then
+        MainSession.Prefs.SetString(_Key, _StrValue);
+    _SoundKey.WriteString('', _SoundFile);
 end;
 
-procedure loadNotificationPrefs(list: TObjectList);
-var
-    oobNI: TNotifyInfo;
+function TNotifyInfo.GetSoundFile(): widestring;
 begin
-    if (list = nil) then exit;
-    list.Clear();
+    Result := _SoundKey.ReadString('');
+    if (Result = '') then
+        Result := _DefaultSoundKey.ReadString('');
+end;
 
-    list.add(TNotifyInfo.create(_(sSoundOnline), 'notify_online'));
-    list.add(TNotifyInfo.create(_(sSoundOffline), 'notify_offline'));
-    list.add(TNotifyInfo.create(_(sSoundNewchat), 'notify_newchat'));
-    list.add(TNotifyInfo.create(_(sSoundNormalmsg), 'notify_normalmsg'));
-    list.add(TNotifyInfo.create(_(sSoundS10n), 'notify_s10n'));
-    list.add(TNotifyInfo.create(_(sSoundInvite), 'notify_invite'));
-    list.add(TNotifyInfo.create(_(sSoundKeyword), 'notify_keyword'));
-    list.add(TNotifyInfo.create(_(sSoundChatactivity), 'notify_chatactivity'));
-    list.add(TNotifyInfo.create(_(sSoundPriorityChatactivity), 'notify_priority_chatactivity'));
-    list.add(TNotifyInfo.create(_(sSoundRoomactivity), 'notify_roomactivity'));
-    list.add(TNotifyInfo.create(_(sSoundPriorityRoomactivity), 'notify_priority_roomactivity'));
-    list.add(TNotifyInfo.create(_(sSoundAutoResponse), 'notify_autoresponse'));
-    oobNI := TNotifyInfo.create(_(sSoundOOB), 'notify_oob');
+procedure TNotifyInfo.SetSoundFile(FName: widestring);
+begin
+    _soundFile := FName;
+end;
+
+function TNotifyInfo.GetSoundEnabled(): boolean;
+begin
+    Result := SoundFile <> '';
+end;
+
+procedure loadNotificationPrefs(List: TObjectList);
+var
+    OOBNI: TNotifyInfo;
+begin
+    if (List = nil) then exit;
+    List.Clear();
+
+    List.add(TNotifyInfo.create(_(sSoundOnline), 'notify_online'));
+    List.add(TNotifyInfo.create(_(sSoundOffline), 'notify_offline'));
+    List.add(TNotifyInfo.create(_(sSoundNewchat), 'notify_newchat'));
+    List.add(TNotifyInfo.create(_(sSoundNormalmsg), 'notify_normalmsg'));
+    List.add(TNotifyInfo.create(_(sSoundS10n), 'notify_s10n'));
+    List.add(TNotifyInfo.create(_(sSoundInvite), 'notify_invite'));
+    List.add(TNotifyInfo.create(_(sSoundKeyword), 'notify_Keyword'));
+    List.add(TNotifyInfo.create(_(sSoundChatactivity), 'notify_chatactivity'));
+    List.add(TNotifyInfo.create(_(sSoundPriorityChatactivity), 'notify_priority_chatactivity'));
+    List.add(TNotifyInfo.create(_(sSoundRoomactivity), 'notify_roomactivity'));
+    List.add(TNotifyInfo.create(_(sSoundPriorityRoomactivity), 'notify_priority_roomactivity'));
+    List.add(TNotifyInfo.create(_(sSoundAutoResponse), 'notify_autoresponse'));
+    OOBNI := TNotifyInfo.create(_(sSoundOOB), 'notify_oob');
     //check oob branding as well
-    oobNI._isVisible := (oobNI._isVisible and mainSession.Prefs.getBool('brand_ft'));
-    list.add(oobNI);
+    OOBNI._IsVisible := (OOBNI._IsVisible and MainSession.Prefs.GetBool('brand_ft'));
+    List.add(OOBNI);
 end;
 
 procedure TfrmPrefNotify.LoadPrefs();
 var
     i: integer;
-    oneNI: TNotifyInfo;
+    OneNI: TNotifyInfo;
     s: TPrefState;
-    foundOne: boolean;
+    FoundOne: boolean;
 begin
-    _loading := true;
+    _Loading := true;
 
-    _notifyList := TObjectList.Create(true);
-    loadNotificationPrefs(_notifyList);
+    _NotifyList := TObjectList.Create(true);
+    LoadNotificationPrefs(_notifyList);
     chkNotify.Items.Clear();
-    foundOne := false;
-    for i := 0 to _notifyList.Count - 1 do begin
-        oneNI := TNotifyInfo(_notifyList[i]);
-        if (oneNI._isVisible) then begin
-            foundOne := true;
-            chkNotify.AddItem(oneNI._caption, oneNI);
-            chkNotify.ItemEnabled[i] := not oneNI._isReadonly;
-            chkNotify.Checked[i] := (oneNI.IntValue > 0);
+    FoundOne := false;
+    for i := 0 to _NotifyList.Count - 1 do
+    begin
+        OneNI := TNotifyInfo(_NotifyList[i]);
+        if (OneNI._IsVisible) then
+        begin
+            FoundOne := true;
+            chkNotify.AddItem(OneNI._Caption, oneNI);
+            chkNotify.ItemEnabled[i] := not OneNI._IsReadOnly;
+            chkNotify.Checked[i] := (OneNI.IntValue > 0);
         end;
     end;
 
-    _toastAlpha := TNotifyInfo.create('', 'toast_alpha');
-    _toastAlphaValue := TNotifyInfo.create('', 'toast_alpha_val');
-    _toastDuration := TNotifyInfo.create('', 'toast_duration');
+    _ToastAlpha := TNotifyInfo.create('', 'toast_alpha');
+    _ToastAlphaValue := TNotifyInfo.create('', 'toast_alpha_val');
+    _ToastDuration := TNotifyInfo.create('', 'toast_duration');
 
     inherited;
 
     chkNotify.Visible := foundOne;
     lblNotifySources.Visible := foundOne;
-    
+
     //visiblity and read status of sound has been set by parent...
     imgSound.Visible := chkSound.Visible;
-//    pnlSoundEnable.Visible := chkSound.Visible;
+    pnlSoundEnable.Visible := chkSound.Visible;
     //set visiblity and read status of actions
     s := GetPrefState('notify_type_toast');
-    _canEnableToast := (s <> psReadOnly);
+    _CanEnableToast := (s <> psReadOnly);
     chkToast.Visible := (s <> psInvisible);
     s := GetPrefState('notify_type_flash');
-    _canEnableFlash := (s <> psReadOnly);
+    _CanEnableFlash := (s <> psReadOnly);
     chkFlash.Visible := (s <> psInvisible);
     s := GetPrefState('notify_type_tray');
-    _canEnableTray := (s <> psReadOnly);
+    _CanEnableTray := (s <> psReadOnly);
     chkTrayNotify.Visible := (s <> psInvisible);
     s := GetPrefState('notify_type_sound');
-    _canEnableSound := (s <> psReadOnly);
+    _CanEnableSound := (s <> psReadOnly);
     chkPlaySound.Visible := (s <> psInvisible);
     Self.txtSoundFile.Visible := chkPlaySound.Visible;
     Self.btnPlaySound.Visible := chkPlaySound.Visible;
     Self.btnBrowse.Visible := chkPlaySound.Visible;
     s := GetPrefState('notify_type_front');
-    _canEnableFront := (s <> psReadOnly);
+    _CanEnableFront := (s <> psReadOnly);
     chkFront.Visible := (s <> psInvisible);
 
-        //alpha value is locked because of locked use alpha pref?
+    //alpha value is locked because of locked use alpha pref?
     btnToastSettings.Visible := true;
-    if (_toastAlphaValue.IsWriteable and
-        (not _toastAlpha.IsWriteable) and
-        (not _toastAlpha.BoolValue)) then
+    if (_ToastAlphaValue.IsWriteable and
+        (not _ToastAlpha.IsWriteable) and
+        (not _ToastAlpha.BoolValue)) then
         btnToastSettings.Visible := false;
+
     //is any setting available?
     btnToastSettings.Visible := (btnToastSettings.Visible and
-                                (_toastAlpha.IsWriteable or
-                                 _toastAlphaValue.IsWriteable or
-                                 _toastDuration.IsWriteable));
+                                (_ToastAlpha.IsWriteable or
+                                 _ToastAlphaValue.IsWriteable or
+                                 _ToastDuration.IsWriteable));
 
     chkToast.Checked := false;
     chkFlash.Checked := false;
@@ -351,20 +397,33 @@ var
 begin
     inherited;
     for i := 0 to _notifyList.Count - 1 do begin
-        TNotifyInfo(_notifyList[i]).saveValue();
+        TNotifyInfo(_notifyList[i]).SaveValue();
     end;
-    _toastAlpha.saveValue();
-    _toastAlphaValue.saveValue();
-    _toastDuration.saveValue();
+    _ToastAlpha.SaveValue();
+    _ToastAlphaValue.SaveValue();
+    _ToastDuration.SaveValue();
 end;
 
 procedure TfrmPrefNotify.TntFormDestroy(Sender: TObject);
 begin
     inherited;
-    _notifyList.Free();
-    _toastAlpha.Free();
-    _toastAlphaValue.Free();
-    _toastDuration.Free();
+    _NotifyList.Free();
+    _ToastAlpha.Free();
+    _ToastAlphaValue.Free();
+    _ToastDuration.Free();
+end;
+
+procedure TfrmPrefNotify.txtSoundFileExit(Sender: TObject);
+var
+    OneNI: TNotifyInfo;
+    i: integer;
+begin
+    inherited;
+    i := chkNotify.ItemIndex;
+    if (i = -1) then exit;
+    
+    OneNI := TNotifyInfo(chkNotify.Items.Objects[i]);
+    oneNI.SoundFile := txtSoundFile.Text;
 end;
 
 procedure TfrmPrefNotify.lblConfigSoundsClick(Sender: TObject);
@@ -390,7 +449,7 @@ end;
 
 procedure TfrmPrefNotify.FormCreate(Sender: TObject);
 begin
-    _notifyList := TObjectList.Create();
+    _NotifyList := TObjectList.Create();
     inherited; //will call loadprefs
 end;
 
@@ -429,35 +488,37 @@ procedure TfrmPrefNotify.chkNotifyClick(Sender: TObject);
 var
     e: boolean;
     i: integer;
-    oneNI: TNotifyInfo;
+    OneNI: TNotifyInfo;
 begin
     // Show this item's options in the optNotify box.
     i := chkNotify.ItemIndex;
     if (i = -1) then exit;
-    oneNI := TNotifyInfo(chkNotify.Items.Objects[i]);
 
-    _no_notify_update := true; //stop checkbox click processing
+    OneNI := TNotifyInfo(chkNotify.Items.Objects[i]);
 
-    e := chkNotify.Checked[i] and not oneNI._isReadonly;
-    pnlToast.Enabled := e and _canEnableToast;
-    chkFlash.Enabled := e and _canEnableFlash;
-    chkTrayNotify.Enabled := e and _canEnableTray;
-    chkFront.Enabled := e and _canEnableFront;
-    chkPlaySound.Enabled := e and _canEnableSound;
+    _NoNotifyUpdate := true; //stop checkbox click processing
+
+    e := chkNotify.Checked[i] and not OneNI._IsReadOnly;
+    pnlToast.Enabled := e and _CanEnableToast;
+    chkFlash.Enabled := e and _CanEnableFlash;
+    chkTrayNotify.Enabled := e and _CanEnableTray;
+    chkFront.Enabled := e and _CanEnableFront;
+    chkPlaySound.Enabled := e and _CanEnableSound;
 
     if (not chkNotify.Checked[i]) then
-        oneNI.IntValue := 0;
+        OneNI.IntValue := 0;
 
-    chkToast.Checked := ((oneNI.IntValue and notify_toast) > 0);
-    chkFlash.Checked := ((oneNI.IntValue and notify_flash) > 0);
-    chkTrayNotify.Checked := ((oneNI.IntValue and notify_tray) > 0);
-    chkFront.Checked := ((oneNI.IntValue and notify_front) > 0);
-    chkPlaySound.Checked := ((oneNI.IntValue and notify_sound) > 0);
+    chkToast.Checked := ((OneNI.IntValue and notify_toast) > 0);
+    chkFlash.Checked := ((OneNI.IntValue and notify_flash) > 0);
+    chkTrayNotify.Checked := ((OneNI.IntValue and notify_tray) > 0);
+    chkFront.Checked := ((OneNI.IntValue and notify_front) > 0);
+    chkPlaySound.Checked := ((OneNI.IntValue and notify_sound) > 0);
 
     pnlSoundFile.enabled := chkPlaySound.Checked;
     btnToastSettings.Enabled := chkToast.Checked;
+    txtSoundFile.Text := OneNI.SoundFile;
 
-    _no_notify_update := false;
+    _NoNotifyUpdate := false;
 end;
 
 procedure TfrmPrefNotify.chkToastClick(Sender: TObject);
@@ -466,17 +527,23 @@ var
     oneNI: TNotifyInfo;
 begin
     // update the current notify selection
-    if (_no_notify_update) or (chkNotify.ItemIndex = -1) then exit;
+    if (_NoNotifyUpdate) or (chkNotify.ItemIndex = -1) then exit;
 
     i := chkNotify.ItemIndex;
     oneNI := TNotifyInfo(chkNotify.Items.Objects[i]);
 
     oneNI.IntValue := 0;
-    if (chkToast.Checked) then oneNI.IntValue := notify_toast;
-    if (chkFlash.Checked) then oneNI.IntValue := oneNI.IntValue + notify_flash;
-    if (chkTrayNotify.Checked) then oneNI.IntValue := oneNI.IntValue + notify_tray;
-    if (chkFront.Checked) then oneNI.IntValue := oneNI.IntValue + notify_front;
-    if (chkPlaySound.Checked) then oneNI.IntValue := oneNI.IntValue + notify_sound;
+    if (chkToast.Checked) then
+        oneNI.IntValue := notify_toast;
+    if (chkFlash.Checked) then
+        oneNI.IntValue := oneNI.IntValue + notify_flash;
+    if (chkTrayNotify.Checked) then
+        oneNI.IntValue := oneNI.IntValue + notify_tray;
+    if (chkFront.Checked) then
+        oneNI.IntValue := oneNI.IntValue + notify_front;
+    if (chkPlaySound.Checked) then
+        oneNI.IntValue := oneNI.IntValue + notify_sound;
+
     if (Sender = chkPlaySound) then
         pnlSoundFile.Enabled := chkPlaySound.Checked
     else if (Sender = chkToast) then

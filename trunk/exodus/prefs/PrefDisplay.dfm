@@ -1,23 +1,28 @@
 inherited frmPrefDisplay: TfrmPrefDisplay
   Left = 400
   Top = 120
+  Width = 540
+  Height = 999
+  ActiveControl = cbRosterFont
   Align = alLeft
   Caption = 'frmPrefFont'
-  ClientHeight = 1015
-  ClientWidth = 594
   OldCreateOrder = True
   Position = poDesigned
   ShowHint = True
-  ExplicitWidth = 606
-  ExplicitHeight = 1027
+  ExplicitWidth = 540
+  ExplicitHeight = 999
   PixelsPerInch = 120
   TextHeight = 16
   object pnlContainer: TExBrandPanel [0]
+    AlignWithMargins = True
     Left = 0
-    Top = 27
-    Width = 551
-    Height = 988
+    Top = 30
+    Width = 513
+    Height = 957
+    Margins.Left = 0
+    Margins.Bottom = 0
     Align = alLeft
+    AutoScroll = True
     AutoSize = True
     Color = 13681583
     Font.Charset = DEFAULT_CHARSET
@@ -29,36 +34,26 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     ParentFont = False
     TabOrder = 1
     TabStop = True
-    AutoHide = False
+    AutoHide = True
     object gbContactList: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 6
-      Width = 551
-      Height = 166
+      Top = 3
+      Width = 513
+      Height = 145
       Margins.Left = 0
-      Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
-      AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
       TabOrder = 0
       TabStop = True
       AutoHide = True
-      Caption = 'Contact List:'
+      Caption = 's'
       object pnlContactLeft: TExBrandPanel
         Left = 0
         Top = 17
         Width = 166
-        Height = 149
+        Height = 128
         AutoSize = True
         Color = 13681583
         Font.Charset = DEFAULT_CHARSET
@@ -73,11 +68,12 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AutoHide = True
         object pnlBackColor: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 6
-          Width = 160
-          Height = 47
-          Margins.Top = 6
+          Left = 0
+          Top = 0
+          Width = 163
+          Height = 44
+          Margins.Left = 0
+          Margins.Top = 0
           Align = alTop
           AutoSize = True
           Color = 13681583
@@ -92,9 +88,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           TabStop = True
           AutoHide = True
           object lblRosterBG: TTntLabel
-            AlignWithMargins = True
             Left = 0
-            Top = 3
+            Top = 0
             Width = 103
             Height = 16
             Margins.Left = 0
@@ -102,9 +97,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             FocusControl = cbRosterBG
           end
           object cbRosterBG: TColorBox
-            AlignWithMargins = True
             Left = 0
-            Top = 25
+            Top = 22
             Width = 154
             Height = 22
             Margins.Left = 0
@@ -121,20 +115,19 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
         object pnlRosterFG: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 65
-          Width = 160
-          Height = 50
-          Margins.Top = 9
+          Left = 0
+          Top = 50
+          Width = 163
+          Height = 44
+          Margins.Left = 0
           Align = alTop
           AutoSize = True
           TabOrder = 1
           TabStop = True
           AutoHide = True
           object lblRosterFG: TTntLabel
-            AlignWithMargins = True
             Left = 0
-            Top = 3
+            Top = 0
             Width = 62
             Height = 16
             Margins.Left = 0
@@ -142,9 +135,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             FocusControl = cbRosterFont
           end
           object cbRosterFont: TColorBox
-            AlignWithMargins = True
             Left = 0
-            Top = 25
+            Top = 22
             Width = 154
             Height = 22
             Margins.Left = 0
@@ -159,16 +151,18 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
         object pnlContactFontBtn: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 118
-          Width = 160
+          Left = 0
+          Top = 97
+          Width = 163
           Height = 28
+          Margins.Left = 0
           Margins.Top = 0
           Align = alTop
           AutoSize = True
           TabOrder = 2
           TabStop = True
           AutoHide = True
+          ExplicitTop = 106
           object btnRosterFont: TTntButton
             AlignWithMargins = True
             Left = 0
@@ -186,32 +180,35 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         Left = 172
         Top = 17
         Width = 335
-        Height = 128
+        Height = 131
         AutoSize = True
         TabOrder = 2
         TabStop = True
         AutoHide = True
         object pnlRosterPreview: TExBrandPanel
-          Left = 0
+          AlignWithMargins = True
+          Left = 3
           Top = 0
-          Width = 335
+          Width = 329
           Height = 128
+          Margins.Top = 0
           Align = alTop
           TabOrder = 0
           TabStop = True
           AutoHide = True
           object lblRosterPreview: TTntLabel
-            Left = 23
-            Top = 9
+            Left = 14
+            Top = 0
             Width = 50
             Height = 16
-            Caption = 'Preview:'
+            Caption = '&Preview:'
+            FocusControl = colorRoster
           end
           object colorRoster: TTntTreeView
-            Left = 23
-            Top = 31
+            Left = 14
+            Top = 22
             Width = 201
-            Height = 106
+            Height = 100
             BevelWidth = 10
             Indent = 19
             ReadOnly = True
@@ -225,34 +222,41 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object grpActivityWindow: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 190
-      Width = 548
-      Height = 219
+      Top = 151
+      Width = 513
+      Height = 191
       Margins.Left = 0
-      Margins.Top = 12
+      Margins.Right = 0
+      Margins.Bottom = 0
       Align = alTop
-      AutoSize = True
       TabOrder = 1
       TabStop = True
       AutoHide = True
       Caption = 'Activity window:'
+      ExplicitTop = 154
       object pnlActivityLeft: TExBrandPanel
+        AlignWithMargins = True
         Left = 0
         Top = 17
         Width = 169
-        Height = 202
+        Height = 174
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Bottom = 0
         Align = alLeft
         AutoSize = True
         TabOrder = 1
         TabStop = True
         AutoHide = True
+        ExplicitHeight = 194
         object pnlChatBG: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 6
-          Width = 163
-          Height = 47
-          Margins.Top = 6
+          Left = 0
+          Top = 3
+          Width = 166
+          Height = 42
+          Margins.Left = 0
+          Margins.Bottom = 0
           Align = alTop
           AutoSize = True
           Color = 13681583
@@ -267,9 +271,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           TabStop = True
           AutoHide = True
           object lblChatBG: TTntLabel
-            AlignWithMargins = True
             Left = 0
-            Top = 3
+            Top = 0
             Width = 103
             Height = 16
             Margins.Left = 0
@@ -277,9 +280,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             FocusControl = cbChatBG
           end
           object cbChatBG: TColorBox
-            AlignWithMargins = True
             Left = 0
-            Top = 25
+            Top = 20
             Width = 154
             Height = 22
             Margins.Left = 0
@@ -296,19 +298,22 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
         object pnlChatElement: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 59
-          Width = 163
-          Height = 52
+          Left = 0
+          Top = 48
+          Width = 166
+          Height = 46
+          Margins.Left = 0
+          Margins.Bottom = 0
           Align = alTop
           AutoSize = True
           TabOrder = 1
           TabStop = True
           AutoHide = True
+          ExplicitTop = 45
+          ExplicitWidth = 169
           object lblChatWindowElement: TTntLabel
-            AlignWithMargins = True
             Left = 0
-            Top = 3
+            Top = 0
             Width = 154
             Height = 16
             Margins.Left = 0
@@ -316,9 +321,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             FocusControl = cboChatElement
           end
           object cboChatElement: TTntComboBox
-            AlignWithMargins = True
             Left = 0
-            Top = 25
+            Top = 22
             Width = 154
             Height = 24
             Margins.Left = 0
@@ -330,26 +334,33 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
         object pnlChatFont: TExBrandPanel
           AlignWithMargins = True
-          Left = 3
-          Top = 117
-          Width = 163
-          Height = 81
+          Left = 0
+          Top = 97
+          Width = 166
+          Height = 75
+          Margins.Left = 0
+          Margins.Bottom = 0
           Align = alTop
           AutoSize = True
           TabOrder = 2
           TabStop = True
           AutoHide = True
+          ExplicitLeft = 3
+          ExplicitWidth = 163
           object pnlChatFG: TExBrandPanel
             AlignWithMargins = True
-            Left = 3
+            Left = 0
             Top = 3
-            Width = 157
-            Height = 47
+            Width = 163
+            Height = 44
+            Margins.Left = 0
+            Margins.Bottom = 0
             Align = alTop
             AutoSize = True
             TabOrder = 0
             TabStop = True
             AutoHide = True
+            ExplicitWidth = 160
             object lblChatFG: TTntLabel
               Left = 25
               Top = 0
@@ -359,7 +370,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               FocusControl = cbChatFont
             end
             object cbChatFont: TColorBox
-              AlignWithMargins = True
               Left = 25
               Top = 22
               Width = 129
@@ -376,14 +386,18 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           object pnlChatFontBtn: TExBrandPanel
             AlignWithMargins = True
             Left = 3
-            Top = 56
-            Width = 157
+            Top = 53
+            Width = 160
             Height = 22
+            Margins.Top = 6
+            Margins.Bottom = 0
             Align = alTop
             AutoSize = True
             TabOrder = 1
             TabStop = True
             AutoHide = True
+            ExplicitTop = 56
+            ExplicitWidth = 157
             object btnChatFont: TTntButton
               Left = 25
               Top = 0
@@ -397,25 +411,31 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
       end
       object pnlChatPreview: TExBrandPanel
-        Left = 175
+        AlignWithMargins = True
+        Left = 172
         Top = 17
-        Width = 373
-        Height = 202
-        Align = alRight
+        Width = 328
+        Height = 174
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Bottom = 0
+        Align = alLeft
         TabOrder = 2
         TabStop = True
         AutoHide = True
+        ExplicitLeft = 169
+        ExplicitHeight = 194
         object lblChatPreview: TTntLabel
-          Left = 20
-          Top = 9
+          Left = 17
+          Top = 3
           Width = 50
           Height = 16
-          Caption = '&Preview:'
+          Caption = 'Pre&view:'
           FocusControl = colorChat
         end
         object Label5: TTntLabel
-          Left = 20
-          Top = 141
+          Left = 17
+          Top = 142
           Width = 266
           Height = 13
           Caption = 'Elements can also be directly selected from the preview'
@@ -427,10 +447,10 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           ParentFont = False
         end
         object colorChat: TExRichEdit
-          Left = 20
-          Top = 31
-          Width = 303
-          Height = 106
+          Left = 17
+          Top = 26
+          Width = 312
+          Height = 108
           AutoURLDetect = adNone
           CustomURLs = <
             item
@@ -527,22 +547,24 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object gbOtherPrefs: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 424
-      Width = 548
+      Top = 348
+      Width = 510
       Height = 168
       Margins.Left = 0
-      Margins.Top = 12
+      Margins.Top = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
       TabOrder = 2
       TabStop = True
       AutoHide = True
       Caption = 'Other display preferences:'
+      ExplicitTop = 380
       object chkRTEnabled: TTntCheckBox
         AlignWithMargins = True
         Left = 0
         Top = 20
-        Width = 545
+        Width = 507
         Height = 18
         Hint = 'Send and display messages with different fonts, colors etc.'
         Margins.Left = 0
@@ -555,15 +577,14 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AlignWithMargins = True
         Left = 0
         Top = 117
-        Width = 545
+        Width = 507
         Height = 48
         Margins.Left = 0
         Align = alTop
         AutoSize = True
-        TabOrder = 3
+        TabOrder = 4
         TabStop = True
         AutoHide = True
-        ExplicitTop = 116
         object lblTimestampFmt: TTntLabel
           Left = 23
           Top = 27
@@ -599,19 +620,18 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         AlignWithMargins = True
         Left = 0
         Top = 93
-        Width = 545
+        Width = 507
         Height = 18
         Margins.Left = 0
         Align = alTop
         Caption = 'Show &message priority in chat windows'
-        TabOrder = 2
-        ExplicitTop = 68
+        TabOrder = 3
       end
       object chkChatAvatars: TTntCheckBox
         AlignWithMargins = True
         Left = 0
         Top = 44
-        Width = 545
+        Width = 507
         Height = 18
         Margins.Left = 0
         Align = alTop
@@ -621,15 +641,13 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object pnlEmoticons: TExBrandPanel
         Left = 0
         Top = 65
-        Width = 548
+        Width = 510
         Height = 25
         Align = alTop
         AutoSize = True
-        TabOrder = 5
+        TabOrder = 2
         TabStop = True
         AutoHide = True
-        ExplicitLeft = -3
-        ExplicitTop = 61
         object chkEmoticons: TTntCheckBox
           AlignWithMargins = True
           Left = 0
@@ -655,25 +673,25 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object gbAdvancedPrefs: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 607
-      Width = 548
+      Top = 522
+      Width = 510
       Height = 346
       Margins.Left = 0
-      Margins.Top = 12
+      Margins.Top = 6
+      Margins.Bottom = 0
       Align = alTop
-      AutoScroll = True
       AutoSize = True
       TabOrder = 3
       TabStop = True
       AutoHide = True
       Caption = 'Advanced display preferences:'
-      ExplicitTop = 606
+      ExplicitTop = 554
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3
-        Top = 73
+        Top = 76
         Width = 382
-        Height = 270
+        Height = 267
         Align = alLeft
         AutoScroll = True
         AutoSize = True
@@ -687,7 +705,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Width = 379
           Height = 89
           Margins.Left = 0
+          Margins.Bottom = 0
           Align = alTop
+          AutoSize = True
           TabOrder = 0
           TabStop = True
           AutoHide = True
@@ -732,7 +752,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         object gbChatOptions: TExGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 98
+          Top = 95
           Width = 379
           Height = 169
           Margins.Left = 0
@@ -848,17 +868,20 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
       end
       object pnlSnapTo: TExBrandPanel
+        AlignWithMargins = True
         Left = 0
-        Top = 17
-        Width = 548
+        Top = 20
+        Width = 507
         Height = 53
+        Margins.Left = 0
+        Margins.Bottom = 0
         Align = alTop
         AutoSize = True
         TabOrder = 2
         TabStop = True
         AutoHide = True
         object chkSnap: TTntCheckBox
-          Left = 3
+          Left = 0
           Top = 0
           Width = 336
           Height = 21
@@ -903,8 +926,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     end
   end
   inherited pnlHeader: TTntPanel
-    Width = 594
-    ExplicitWidth = 594
+    Width = 528
+    ExplicitWidth = 528
     inherited lblHeader: TTntLabel
       Width = 151
       Caption = 'Display Preferences'

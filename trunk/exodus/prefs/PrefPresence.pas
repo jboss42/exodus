@@ -101,6 +101,7 @@ begin
     inherited;
 
     with MainSession.Prefs do begin
+        //jjf todo check state
         i := GetInt('pres_tracking');
         if (i = 2) then
             rbNoPres.Checked := true

@@ -25,14 +25,14 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster,  
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefTransfer,
-    PrefNetwork, PrefHotkeys, PrefDisplay,
+    PrefHotkeys, PrefDisplay,
 
     // other stuff
     Menus, ShellAPI, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
     ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls, ExForm,
-    ExGraphicButton, TntForms, ExFrame, ExBrandPanel;
+    ExGraphicButton, TntForms, ExFrame, ExBrandPanel, ExGradientPanel;
 
 type
   TfrmPrefs = class(TExForm)
@@ -40,17 +40,24 @@ type
     btnOK: TTntButton;
     btnCancel: TTntButton;
     Button6: TTntButton;
-    TntPanel1: TTntPanel;
-    pnlTabs: TExBrandPanel;
+    ExGradientPanel1: TExGradientPanel;
     imgSystem: TExGraphicButton;
+    imgContactList: TExGraphicButton;
     imgDisplay: TExGraphicButton;
     imgNotifications: TExGraphicButton;
-    imgProfile: TExGraphicButton;
-    imgContactList: TExGraphicButton;
-    imgHotKeys: TExGraphicButton;
-    imgPresence: TExGraphicButton;
-    imgAutoAway: TExGraphicButton;
     imgMessages: TExGraphicButton;
+    imgAutoAway: TExGraphicButton;
+    imgPresence: TExGraphicButton;
+    imgHotKeys: TExGraphicButton;
+    pcPrefs: TTntPageControl;
+    tsSystem: TTntTabSheet;
+    tsContactList: TTntTabSheet;
+    tsDisplay: TTntTabSheet;
+    tsNotifications: TTntTabSheet;
+    tsMessages: TTntTabSheet;
+    tsAutoAway: TTntTabSheet;
+    tsPresence: TTntTabSheet;
+    tsHotKeys: TTntTabSheet;
     procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -73,9 +80,7 @@ type
     _notify: TfrmPrefNotify;
     _away: TfrmPrefAway;
     _pres: TfrmPrefPresence;
-//    _plugs: TfrmPrefPlugins;
 //    _xfer: TfrmPrefTransfer;
-    _network: TfrmPrefNetwork;
     _hotkeys: TfrmPrefHotkeys;
 
   public
@@ -95,7 +100,6 @@ const
     pref_msgs = 'msgs';
     pref_away = 'away';
     pref_pres = 'presence';
-    pref_network = 'network';
     pref_hotkeys = 'hotkeys';
 
 
@@ -130,10 +134,9 @@ begin
     else if (start_page = pref_msgs) then s := f.imgMessages
     else if (start_page = pref_away) then s := f.imgAutoAway
     else if (start_page = pref_pres) then s := f.imgPresence
-    else if (start_page = pref_network) then s := f.imgProfile
     else if (start_page = pref_hotkeys) then s := f.imgHotkeys
     else s := f.imgSystem;
-    
+
     f.TabSelect(s);
     f.ShowModal;
     f.Free();
@@ -214,9 +217,6 @@ begin
         if (_pres <> nil) then
             _pres.SavePrefs();
 
-        if (_network <> nil) then
-            _network.SavePrefs();
-
         if (_hotkeys <> nil) then
             _hotkeys.SavePrefs();
 
@@ -268,9 +268,25 @@ begin
     _notify := nil;
     _away := nil;
     _pres := nil;
-    _network := nil;
     _hotkeys := nil;
     _lastSelButton := nil;
+    //map or graphics to pages
+    imgSystem.Target := tsSystem;
+    imgSystem.Visible := MainSession.Prefs.getBool('show_system_preferences');
+    imgContactList.Target := tsContactList;
+    imgContactList.Visible := MainSession.Prefs.getBool('show_contact_list_preferences');
+    imgDisplay.Target := tsDisplay;
+    imgDisplay.Visible := MainSession.Prefs.getBool('show_display_preferences');
+    imgNotifications.Target := tsNotifications;
+    imgNotifications.Visible := MainSession.Prefs.getBool('show_notification_preferences');
+    imgMessages.Target := tsMessages;
+    imgMessages.Visible := MainSession.Prefs.getBool('show_message_preferences');
+    imgAutoAway.Target := tsAutoAway;
+    imgAutoAway.Visible := MainSession.Prefs.getBool('show_auto_away_preferences');
+    imgPresence.Target := tsPresence;
+    imgPresence.Visible := MainSession.Prefs.getBool('show_presence_preferences');
+    imgHotKeys.Target := tsHotKeys;
+    imgHotKeys.Visible := MainSession.Prefs.getBool('show_hot_key_preferences');
 //    MainSession.Prefs.RestorePosition(Self);
 end;
 
@@ -284,63 +300,81 @@ begin
 
 
     if (Sender = imgSystem)  then begin
-        if (_system = nil) then
+        if (_system = nil) then begin
             _system := TfrmPrefSystem.Create(Self);
+            _system.parent := tsSystem;
+        end;
         f := _system;
     end
     else if (Sender = imgContactList)then begin
-        if (_roster = nil) then
+        if (_roster = nil) then begin
             _roster := TfrmPrefRoster.Create(Self);
+            _roster.parent := tsCOntactList;
+        end;
         f := _roster;
     end
     else if (Sender = imgDisplay) then begin
-        if (_display = nil) then
+        if (_display = nil) then begin
             _display := TfrmPrefDisplay.Create(Self);
+            _display.parent := tsDisplay;
+        end;
         f := _display;
     end
     else if (Sender = imgMessages) then begin
-        if (_message = nil) then
+        if (_message = nil) then begin
             _message := TfrmPrefMsg.Create(Self);
-        f := _message
+            _message.parent := tsMessages;
+        end;
+        f := _message;
     end
     else if (Sender = imgNotifications) then begin
-        if (_notify = nil) then
+        if (_notify = nil) then begin
             _notify := TfrmPrefNotify.Create(Self);
+            _notify.parent := tsNotifications;
+        end;
         f := _notify;
     end
     else if (Sender = imgAutoAway)then begin
-        if (_away = nil) then
+        if (_away = nil) then begin
             _away := TfrmPrefAway.Create(Self);
-        f := _away
+            _away.parent := tsAutoAway;
+        end;
+        f := _away;
     end
     else if (Sender = imgPresence) then begin
-        if (_pres = nil) then
+        if (_pres = nil) then begin
             _pres := TfrmPrefPresence.Create(Self);
+            _pres.parent := tsPresence;
+        end;
         f := _pres;
     end
-    else if (Sender = imgProfile) then begin
-        if (_network = nil) then
-            _network := TfrmPrefNetwork.Create(Self);
-        f := _network
-    end
     else if (Sender = imgHotkeys)then begin
-        if (_hotkeys = nil) then
+        if (_hotkeys = nil) then begin
             _hotkeys := TfrmPrefHotkeys.Create(Self);
-        f := _hotkeys
+            _hotKeys.parent := tsHotKeys;
+        end;
+        f := _hotkeys;
     end;
 
     // setup the panel..
     if (f <> nil) then begin
-        if (_lastSelButton <> nil) then
+
+        if (_lastSelButton <> nil) then begin
             _lastSelButton.Selected := false;
+            TTabSheet(_lastSelButton.Target).Visible := false;
+        end;
 
-        TExGraphicButton(Sender).Selected := true;
         _lastSelButton := TExGraphicButton(Sender);
-
-        f.Parent := Self;
+        _lastSelButton.Selected := true;
+        
         f.Align := alClient;
         f.Visible := true;
-        f.BringToFront();
+        pcPrefs.Visible := false;
+        TTabSheet(_lastSelButton.Target).Visible := true;
+        TTabSheet(_lastSelButton.Target).BringToFront();
+        pcPrefs.ActivePage := TTabSheet(_lastSelButton.Target);
+        pcPrefs.Visible := true;
+        pcPrefs.BringToFront();        
     end;
 end;
 
@@ -362,7 +396,6 @@ begin
     _notify.Free();
     _away.Free();
     _pres.Free();
-    _network.Free();
     _hotkeys.Free();
 end;
 

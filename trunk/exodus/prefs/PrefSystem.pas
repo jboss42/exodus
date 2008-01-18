@@ -25,7 +25,7 @@ uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag, ExGroupBox,
-  TntForms, ExFrame, ExBrandPanel;
+  TntForms, ExFrame, ExBrandPanel, ExNumericEdit;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
@@ -57,6 +57,15 @@ type
     cboLocale: TTntComboBox;
     ExBrandPanel1: TExBrandPanel;
     btnPlugins: TTntButton;
+    gbReconnect: TExGroupBox;
+    pnlAttempts: TExBrandPanel;
+    lblAttempts: TTntLabel;
+    txtAttempts: TExNumericEdit;
+    pnlTime: TExBrandPanel;
+    lblTime: TTntLabel;
+    lblTime2: TTntLabel;
+    lblSeconds: TTntLabel;
+    txtTime: TExNumericEdit;
     procedure btnPluginsClick(Sender: TObject);
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
@@ -307,6 +316,8 @@ begin
         lblDockPref.Enabled := (s <> psReadOnly);
         rbDocked.Enabled := lblDockPref.Enabled;
         rbUndocked.Enabled := lblDockPref.Enabled;
+
+        if (StrToInt(txtAttempts.Text) < 0) then txtAttempts.Text := '3';
     end;
     gbParentGroup.checkAutoHide();
 end;

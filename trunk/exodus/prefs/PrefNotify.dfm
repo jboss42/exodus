@@ -2,17 +2,17 @@ inherited frmPrefNotify: TfrmPrefNotify
   Left = 267
   Top = 154
   Caption = 'frmPrefNotify'
-  ClientHeight = 715
-  ClientWidth = 471
+  ClientHeight = 631
+  ClientWidth = 466
   OldCreateOrder = True
   OnDestroy = TntFormDestroy
-  ExplicitWidth = 483
-  ExplicitHeight = 727
+  ExplicitWidth = 478
+  ExplicitHeight = 643
   PixelsPerInch = 120
   TextHeight = 16
   inherited pnlHeader: TTntPanel
-    Width = 471
-    ExplicitWidth = 471
+    Width = 466
+    ExplicitWidth = 466
     inherited lblHeader: TTntLabel
       Width = 97
       Caption = 'Notifications'
@@ -24,10 +24,9 @@ inherited frmPrefNotify: TfrmPrefNotify
     Left = 0
     Top = 27
     Width = 457
-    Height = 688
+    Height = 604
     Align = alLeft
     TabOrder = 1
-    TabStop = True
     AutoHide = False
     object pnlSoundEnable: TExBrandPanel
       Left = 0
@@ -37,7 +36,6 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 0
-      TabStop = True
       AutoHide = True
       object imgSound: TImage
         Left = 3
@@ -143,7 +141,6 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 1
-      TabStop = True
       AutoHide = False
       object lblNotifySources: TTntLabel
         AlignWithMargins = True
@@ -164,7 +161,6 @@ inherited frmPrefNotify: TfrmPrefNotify
         Width = 451
         Height = 231
         Margins.Left = 0
-        TabStop = False
         Align = alTop
         ItemHeight = 16
         Items.Strings = (
@@ -195,7 +191,6 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 2
-      TabStop = True
       AutoHide = True
       Caption = 'Take the following actions:'
       object chkFlash: TTntCheckBox
@@ -208,7 +203,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Flash taskbar button or Activity List tab'
-        TabOrder = 2
+        TabOrder = 1
         OnClick = chkToastClick
       end
       object chkFront: TTntCheckBox
@@ -220,7 +215,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Bring &window to front'
-        TabOrder = 3
+        TabOrder = 2
         OnClick = chkToastClick
       end
       object pnlSoundAction: TExBrandPanel
@@ -230,8 +225,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Height = 24
         Align = alTop
         AutoSize = True
-        TabOrder = 4
-        TabStop = True
+        TabOrder = 3
         AutoHide = True
         object chkPlaySound: TTntCheckBox
           Left = 3
@@ -254,7 +248,6 @@ inherited frmPrefNotify: TfrmPrefNotify
           Align = alRight
           AutoSize = True
           TabOrder = 1
-          TabStop = True
           AutoHide = True
           object txtSoundFile: TTntEdit
             Left = 0
@@ -263,6 +256,7 @@ inherited frmPrefNotify: TfrmPrefNotify
             Height = 24
             ReadOnly = True
             TabOrder = 0
+            OnExit = txtSoundFileExit
           end
           object btnPlaySound: TTntBitBtn
             Left = 229
@@ -335,7 +329,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Height = 21
         Align = alTop
         Caption = 'Flash tray &icon'
-        TabOrder = 5
+        TabOrder = 4
         OnClick = chkToastClick
       end
       object pnlToast: TExBrandPanel
@@ -348,8 +342,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Margins.Bottom = 0
         Align = alTop
         AutoSize = True
-        TabOrder = 1
-        TabStop = True
+        TabOrder = 0
         AutoHide = True
         object chkToast: TTntCheckBox
           AlignWithMargins = True
@@ -384,7 +377,6 @@ inherited frmPrefNotify: TfrmPrefNotify
       AutoScroll = True
       AutoSize = True
       TabOrder = 3
-      TabStop = True
       AutoHide = True
       Caption = 'Advanced notification preferences'
       object chkNotifyActive: TTntCheckBox

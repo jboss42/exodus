@@ -22,19 +22,18 @@ inherited frmPrefRoster: TfrmPrefRoster
   object ExGroupBox1: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 33
+    Top = 30
     Width = 433
-    Height = 708
+    Height = 717
     Margins.Left = 0
-    Margins.Top = 6
     Margins.Right = 0
-    Margins.Bottom = 6
+    Margins.Bottom = 0
     Align = alLeft
+    AutoScroll = True
     AutoSize = True
     TabOrder = 1
     TabStop = True
     AutoHide = True
-    ExplicitHeight = 944
     object pnlRosterPrefs: TExBrandPanel
       AlignWithMargins = True
       Left = 0
@@ -44,20 +43,19 @@ inherited frmPrefRoster: TfrmPrefRoster
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 0
+      TabOrder = 2
       TabStop = True
       AutoHide = True
-      ExplicitTop = 68
       object chkInlineStatus: TTntCheckBox
         Left = 0
         Top = 0
         Width = 433
         Height = 21
         Align = alTop
-        Caption = 'Show contact status'
+        Caption = 'Show &contact status'
         TabOrder = 0
       end
       object chkUseProfileDN: TTntCheckBox
@@ -66,7 +64,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 433
         Height = 21
         Align = alTop
-        Caption = 'Get display name from contact profile'
+        Caption = 'Get &display name from contact profile'
         TabOrder = 1
       end
       object chkCollapsed: TTntCheckBox
@@ -75,7 +73,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 433
         Height = 21
         Align = alTop
-        Caption = 'Collapse all contact groups initially'
+        Caption = 'Collapse &all contact groups initially'
         TabOrder = 2
       end
       object chkHideBlocked: TTntCheckBox
@@ -84,7 +82,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 433
         Height = 22
         Align = alTop
-        Caption = 'Hide blocked contacts '
+        Caption = '&Hide blocked contacts '
         TabOrder = 3
       end
       object chkGroupCounts: TTntCheckBox
@@ -93,7 +91,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 433
         Height = 20
         Align = alTop
-        Caption = 'Show group members online status at group level (e.g., 5/10)'
+        Caption = 'Show group &members online status at group level (e.g., 5/10)'
         TabOrder = 4
       end
       object chkOnlineOnly: TTntCheckBox
@@ -102,29 +100,29 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 433
         Height = 21
         Align = alTop
-        Caption = 'Show offline contacts'
+        Caption = 'Show &offline contacts'
         TabOrder = 5
       end
     end
     object pnlManageBtn: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 201
+      Top = 195
       Width = 430
       Height = 24
       Margins.Left = 0
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 1
+      TabOrder = 3
       TabStop = True
       AutoHide = True
-      ExplicitTop = 203
       object btnManageBlocked: TTntButton
         Left = 24
         Top = 0
-        Width = 202
+        Width = 180
         Height = 24
-        Caption = 'Manage Blocked Contacts...'
+        Caption = 'Manage &Blocked Contacts...'
         TabOrder = 0
         OnClick = btnManageBlockedClick
       end
@@ -132,32 +130,30 @@ inherited frmPrefRoster: TfrmPrefRoster
     object grpAdvanced: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 234
+      Top = 225
       Width = 433
-      Height = 102
+      Height = 93
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 3
+      TabOrder = 4
       TabStop = True
       AutoHide = True
       Caption = 'Advanced Contact List Preferences'
-      ExplicitTop = 236
-      ExplicitHeight = 103
       object chkNestedGrps: TTntCheckBox
         AlignWithMargins = True
         Left = 0
-        Top = 78
+        Top = 72
         Width = 430
         Height = 21
         Margins.Left = 0
+        Margins.Bottom = 0
         Align = alTop
-        Caption = 'Use nested groups'
-        TabOrder = 1
-        ExplicitTop = 79
+        Caption = '&Use nested groups'
+        TabOrder = 3
       end
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
@@ -166,9 +162,10 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 430
         Height = 22
         Margins.Left = 0
+        Margins.Bottom = 0
         Align = alTop
         AutoSize = True
-        TabOrder = 2
+        TabOrder = 1
         TabStop = True
         AutoHide = True
         DesignSize = (
@@ -179,7 +176,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           Top = 3
           Width = 118
           Height = 16
-          Caption = 'Contact status color:'
+          Caption = 'Contact s&tatus color:'
         end
         object cboStatusColor: TColorBox
           Left = 191
@@ -198,13 +195,14 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDNFields: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 48
+        Top = 45
         Width = 430
         Height = 24
         Margins.Left = 0
+        Margins.Bottom = 0
         Align = alTop
         AutoSize = True
-        TabOrder = 3
+        TabOrder = 2
         TabStop = True
         AutoHide = True
         DesignSize = (
@@ -215,7 +213,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           Top = 3
           Width = 155
           Height = 16
-          Caption = 'Display name profile fields:'
+          Caption = 'Display name &profile fields:'
         end
         object txtDNProfileMap: TTntEdit
           Left = 191
@@ -230,20 +228,19 @@ inherited frmPrefRoster: TfrmPrefRoster
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 348
+      Top = 324
       Width = 433
       Height = 370
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoScroll = True
-      TabOrder = 2
+      TabOrder = 5
       TabStop = True
       AutoHide = True
       Caption = 'Depricated preferences (may not be supported)'
-      ExplicitTop = 351
       object chkSort: TTntCheckBox
         Left = 0
         Top = 17
@@ -267,7 +264,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 166
         Width = 430
-        Height = 35
+        Height = 24
         Margins.Left = 0
         Align = alTop
         AutoSize = True
@@ -277,8 +274,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         object lblFilter: TTntLabel
           Left = 0
           Top = 3
-          Width = 103
-          Height = 32
+          Width = 150
+          Height = 16
           Caption = '"Online" minimum status: '
           WordWrap = True
         end
@@ -300,7 +297,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGatewayGroup: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 207
+        Top = 196
         Width = 430
         Height = 24
         Margins.Left = 0
@@ -376,7 +373,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDblClickAction: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 237
+        Top = 226
         Width = 430
         Height = 24
         Margins.Left = 0
@@ -409,7 +406,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGroupSeperator: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 267
+        Top = 256
         Width = 430
         Height = 24
         Margins.Left = 0
@@ -435,7 +432,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       end
       object pnlAlpha: TExBrandPanel
         Left = 0
-        Top = 294
+        Top = 283
         Width = 433
         Height = 57
         Align = alTop
@@ -455,7 +452,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         object trkRosterAlpha: TTrackBar
           Left = 9
           Top = 30
-          Width = 168
+          Width = 176
           Height = 22
           Enabled = False
           Max = 255
@@ -469,7 +466,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           OnChange = trkRosterAlphaChange
         end
         object txtRosterAlpha: TExNumericEdit
-          Left = 183
+          Left = 191
           Top = 26
           Width = 70
           Height = 31
@@ -490,16 +487,17 @@ inherited frmPrefRoster: TfrmPrefRoster
     object pnlDefaultNIck: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 33
+      Top = 6
       Width = 430
       Height = 24
       Margins.Left = 0
+      Margins.Top = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 4
+      TabOrder = 0
       TabStop = True
       AutoHide = True
-      ExplicitTop = 34
       DesignSize = (
         430
         24)
@@ -509,7 +507,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 157
         Height = 16
         Margins.Left = 0
-        Caption = 'Default nickname for chats:'
+        Caption = 'Default &nickname for chats:'
         FocusControl = txtDefaultNick
       end
       object txtDefaultNick: TTntEdit
@@ -524,13 +522,15 @@ inherited frmPrefRoster: TfrmPrefRoster
     object pnlDefaultGroup: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 3
+      Top = 36
       Width = 430
       Height = 24
       Margins.Left = 0
+      Margins.Top = 6
+      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 5
+      TabOrder = 1
       TabStop = True
       AutoHide = True
       DesignSize = (
@@ -542,7 +542,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 184
         Height = 16
         AutoSize = False
-        Caption = 'Default group for new contacts:'
+        Caption = 'Default &group for new contacts:'
         FocusControl = txtDefaultGrp
       end
       object txtDefaultGrp: TTntComboBox
