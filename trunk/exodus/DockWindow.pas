@@ -481,6 +481,7 @@ begin
 
             aw.itemChangeUpdate();
             checkFlash();
+            _needToBeShowingCheck();
         end;
     end;
 end;
@@ -626,7 +627,6 @@ begin
             _layoutAWOnly();
     end;
 
-    _needToBeShowingCheck();
     _glueCheck();
 end;
 
@@ -830,11 +830,20 @@ begin
     if (aw <> nil) then begin
         if ((aw.itemCount <= 0) and
             (not _undocking)) then begin
+            // We shouldn't be showing
             Self.Hide();
             frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
             frmExodus.trayShowActivityWindow.Enabled := false;
             frmExodus.btnActivityWindow.Enabled := false;
+        end
+        else begin
+            // We CAN be shown, but don't HAVE to be shown so
+            // enable window access
+            frmExodus.mnuWindows_View_ShowActivityWindow.Checked := true;
+            frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
+            frmExodus.trayShowActivityWindow.Enabled := true;
+            frmExodus.btnActivityWindow.Enabled := true;
         end;
     end;
 end;
