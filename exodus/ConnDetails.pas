@@ -143,7 +143,6 @@ type
     pnlx509Cert: TExBrandPanel;
     btnx509browse: TTntButton;
     txtx509: TTntEdit;
-    procedure pnlSocksTypeClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -601,6 +600,7 @@ begin
     URLLabel(lblServerList);
 
     //MainSession.Prefs.RestorePosition(Self, false);
+    _cur_tab := nil;
 
     //Setup account details page
     imgAcctDetails.Target := tbsAcctDetails;
@@ -777,12 +777,6 @@ begin
         if (txtPort.Text = '5223') then
             txtPort.Text := '5222';
     end;
-end;
-
-procedure TfrmConnDetails.pnlSocksTypeClick(Sender: TObject);
-begin
-  inherited;
-
 end;
 
 {---------------------------------------}
@@ -1255,7 +1249,8 @@ begin
     result := nil;
 
     repeat
-        if (curr = nil) then curr := imgAcctDetails
+        if (curr = nil) then
+            curr := imgAcctDetails
         else if (curr = imgAcctDetails) then
             curr := imgConnection
         else if (curr = imgConnection) then
@@ -1272,7 +1267,7 @@ begin
         end;
 
 
-    until (result <> nil) and (curr = nil);
+    until (result <> nil) or (curr = nil);
 end;
 
 function TfrmConnDetails.updatePages(): Integer;
