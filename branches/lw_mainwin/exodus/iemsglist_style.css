@@ -1,0 +1,88 @@
+/*
+ * The comments in this CSS are replaced programmatically with the
+ * values specified in the prefs.
+ */
+
+
+body {
+    font-family: /*font_name*/,Arial Unicode MS, Verdana;
+    font-size: /*font_size*/;
+    background: /*color_bg*/;
+    margin: 0pt;
+    overflow: hidden;
+}
+
+.date {
+    width: 100%;
+    text-align: center;
+    color: red;
+}
+
+.composing {
+    width: 100%;
+    text-align: center;
+    color: purple;
+}
+
+.pri_high {
+    color: /*color_priority*/;
+    white-space nowrap;
+    padding-right: 3;
+}
+
+.pri_low {
+    color: /*color_time*/;
+    white-space nowrap;
+    padding-right: 3;
+}
+
+.ts {
+    color: /*color_time*/;
+    white-space: nowrap;
+    padding-right: 3;
+}
+
+.me {
+    color: /*color_me*/;
+    white-space: nowrap;
+    padding-right: 3;
+}
+
+.other {
+    color: /*color_other*/;
+    white-space: nowrap;
+    padding-right: 3;
+}
+
+.line {
+   text-indent: -20;
+   margin-left: 25;
+   padding-top: 3;
+}
+
+.msg {
+    color: /*font_color*/;
+}
+
+.svr {color:/*color_server*/}
+.alert {color:blue}
+.action {color:/*color_action*/}
+.pres {color:gray}
+
+#content {
+  height: 100%;
+  overflow: auto;
+}
+
+/*#splash {
+    z-index: -1;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-family:Arial Unicode MS;
+    font-size: 24pt;
+    font-weight: bold;
+    color: #ddd;
+} */
