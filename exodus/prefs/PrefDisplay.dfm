@@ -1,11 +1,11 @@
 inherited frmPrefDisplay: TfrmPrefDisplay
   Left = 400
   Top = 120
-  Width = 540
-  Height = 999
   ActiveControl = cbRosterFont
   Align = alLeft
   Caption = 'frmPrefFont'
+  ClientHeight = 987
+  ClientWidth = 528
   OldCreateOrder = True
   Position = poDesigned
   ShowHint = True
@@ -162,7 +162,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           TabOrder = 2
           TabStop = True
           AutoHide = True
-          ExplicitTop = 106
           object btnRosterFont: TTntButton
             AlignWithMargins = True
             Left = 0
@@ -233,7 +232,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       TabStop = True
       AutoHide = True
       Caption = 'Activity window:'
-      ExplicitTop = 154
       object pnlActivityLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 0
@@ -248,7 +246,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         TabOrder = 1
         TabStop = True
         AutoHide = True
-        ExplicitHeight = 194
         object pnlChatBG: TExBrandPanel
           AlignWithMargins = True
           Left = 0
@@ -309,8 +306,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           TabOrder = 1
           TabStop = True
           AutoHide = True
-          ExplicitTop = 45
-          ExplicitWidth = 169
           object lblChatWindowElement: TTntLabel
             Left = 0
             Top = 0
@@ -345,8 +340,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           TabOrder = 2
           TabStop = True
           AutoHide = True
-          ExplicitLeft = 3
-          ExplicitWidth = 163
           object pnlChatFG: TExBrandPanel
             AlignWithMargins = True
             Left = 0
@@ -360,7 +353,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             TabOrder = 0
             TabStop = True
             AutoHide = True
-            ExplicitWidth = 160
             object lblChatFG: TTntLabel
               Left = 25
               Top = 0
@@ -396,14 +388,12 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             TabOrder = 1
             TabStop = True
             AutoHide = True
-            ExplicitTop = 56
-            ExplicitWidth = 157
             object btnChatFont: TTntButton
               Left = 25
               Top = 0
               Width = 68
               Height = 22
-              Caption = 'Fo&nt...'
+              Caption = 's'
               TabOrder = 0
               OnClick = btnFontClick
             end
@@ -423,8 +413,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         TabOrder = 2
         TabStop = True
         AutoHide = True
-        ExplicitLeft = 169
-        ExplicitHeight = 194
         object lblChatPreview: TTntLabel
           Left = 17
           Top = 3
@@ -559,7 +547,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       TabStop = True
       AutoHide = True
       Caption = 'Other display preferences:'
-      ExplicitTop = 380
       object chkRTEnabled: TTntCheckBox
         AlignWithMargins = True
         Left = 0
@@ -685,7 +672,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       TabStop = True
       AutoHide = True
       Caption = 'Advanced display preferences:'
-      ExplicitTop = 554
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3

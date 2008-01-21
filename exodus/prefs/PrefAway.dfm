@@ -20,6 +20,7 @@ inherited frmPrefAway: TfrmPrefAway
     Margins.Bottom = 0
     Align = alLeft
     TabOrder = 1
+    TabStop = True
     AutoHide = False
     object chkAutoAway: TExCheckGroupBox
       AlignWithMargins = True
@@ -244,7 +245,7 @@ inherited frmPrefAway: TfrmPrefAway
         Height = 31
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 0
+        TabOrder = 1
         Text = '60'
         Min = 1
         Max = 600

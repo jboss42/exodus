@@ -358,6 +358,7 @@ type
         procedure SetSession(js: TObject);
         procedure FetchServerPrefs();
         procedure SaveServerPrefs();
+        function GetSoundFile(key: widestring): widestring;
 
 //        function getXMLTag(name: Widestring): TXMLTag;
 
@@ -2141,6 +2142,36 @@ begin
         Result := TJabberProfile(_profiles.Objects[i]).ProfilePrefs;
     end;
 end;
+
+function TPrefController.GetSoundFile(key: widestring): widestring;
+var
+    uf: TPrefFile;
+    Reg: TRegistry;
+    regKey: widestring;
+begin
+    //check prefs file first, if not there try regigistry
+    uf := getBestFile(_pref_file, key + '_sound');
+    Result := uf.getString(key + '_sound');
+    if (Result = '') then begin
+        regKey := 'AppEvents\Schemes\Apps\'+getString('brand_caption')+'\exodus_'+key;
+
+        Reg := TRegistry.Create();
+        try
+            if (Reg.OpenKey(RegKey, false)) then begin
+                Result := Reg.ReadString('');
+                if (Result <> '') then begin
+                    //if we found it here, write it to the pefs file and delete reg key
+                    SetString(key + '_sound', Result);
+                    Reg.DeleteKey(RegKey);
+                end;
+            end;
+        finally
+            Reg.Free();
+        end;
+    end;
+
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

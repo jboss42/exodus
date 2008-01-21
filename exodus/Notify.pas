@@ -195,6 +195,8 @@ end;
 {---------------------------------------}
 procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string);
+var
+    tstr: string;
 begin
     //bail if paused
     if (MainSession.IsPaused) then exit;
@@ -311,9 +313,12 @@ begin
     // NOTE:    sound keys in registry MUST be no more then 31 chars
     //          due to Windows limitations.  Thus the first param to
     //          PlaySound() is hard coded to exodus_
-    if (MainSession.prefs.getBool('notify_sounds')) then
-        PlaySound(pchar('exodus_' + sound_name), 0,
-                  SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
+    if (MainSession.prefs.getBool('notify_sounds')) then begin
+        tstr := MainSession.Prefs.GetSoundFile(sound_name);
+        if (tstr <> '') then
+            PlaySound(pchar(tstr), 0,
+                      SND_FILENAME or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
+    end;
 end;
 
 

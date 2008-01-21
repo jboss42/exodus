@@ -1,19 +1,21 @@
 inherited ExCheckGroupBox: TExCheckGroupBox
   inherited pnlTop: TTntPanel
-    inherited lblCaption: TTntLabel
-      Left = 20
-      Height = 16
-      Margins.Left = 3
-      ExplicitLeft = 20
-    end
     inherited pnlBevel: TTntPanel
-      Left = 87
-      Width = 233
-      ExplicitLeft = 87
-      ExplicitWidth = 233
+      Left = 84
+      Width = 236
+      ExplicitLeft = 84
+      ExplicitWidth = 236
       inherited TntBevel1: TTntBevel
-        Width = 227
+        Width = 230
         ExplicitWidth = 227
+      end
+    end
+    inherited pnlLabel: TTntPanel
+      Left = 17
+      ExplicitLeft = 17
+      inherited lblCaption: TTntLabel
+        Height = 17
+        FocusControl = chkBox
       end
     end
     object chkBox: TTntCheckBox
@@ -22,7 +24,7 @@ inherited ExCheckGroupBox: TExCheckGroupBox
       Width = 17
       Height = 17
       Align = alLeft
-      TabOrder = 1
+      TabOrder = 2
       OnClick = chkBoxClick
     end
   end
