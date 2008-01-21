@@ -32,6 +32,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     AutoSize = True
     TabOrder = 1
+    TabStop = True
     AutoHide = False
     object chkClientCaps: TTntCheckBox
       AlignWithMargins = True
@@ -87,6 +88,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     AutoSize = True
     TabOrder = 2
+    TabStop = True
     AutoHide = True
     Caption = 'Presence tracking in chat windows:'
     object rbAllPres: TTntRadioButton
@@ -134,6 +136,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     AutoSize = True
     TabOrder = 3
+    TabStop = True
     AutoHide = True
     Caption = 'Custom presence entries:'
     object lstCustomPres: TTntListBox
@@ -193,6 +196,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Margins.Left = 6
       AutoSize = True
       TabOrder = 6
+      TabStop = True
       AutoHide = False
       object Label11: TTntLabel
         Left = 0

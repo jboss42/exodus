@@ -3,7 +3,7 @@ unit ExCheckGroupBox;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   ExGroupBox, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
@@ -20,6 +20,7 @@ type
       procedure setChecked(b: boolean);
       procedure SetEnabled(enabled: boolean);override;
       procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
+      procedure Loaded();override;
   public
       Constructor Create(AOwner: TComponent);override;
       Destructor Destroy();override;
@@ -40,6 +41,23 @@ implementation
 procedure Register();
 begin
     RegisterComponents('Win32', [TExCheckGroupBox]);
+end;
+
+procedure OutputDebugMsg(Message : String);
+begin
+    OutputDebugString(PChar(Message));
+end;
+
+procedure TExCheckGroupBox.Loaded();
+begin
+    inherited;
+    if (lblCaption.Visible and
+       (lblCaption.Caption <> 'ExGroupBox') and
+       (not (csDesigning in ComponentState))) then begin
+        chkBox.Caption := lblCaption.Caption;
+        chkBox.Width := chkBox.Width + lblCaption.Width + 9;
+        lblCaption.Visible := false;
+    end;
 end;
 
 procedure TExCheckGroupBox.chkBoxClick(Sender: TObject);

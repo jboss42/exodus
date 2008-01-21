@@ -14,6 +14,7 @@ type
     lblCaption: TTntLabel;
     pnlBevel: TTntPanel;
     TntBevel1: TTntBevel;
+    pnlLabel: TTntPanel;
 
   private
 
@@ -48,6 +49,7 @@ end;
 procedure TExGroupBox.setCaption(c: widestring);
 begin
   lblCaption.Caption := c;
+
 end;
 
 procedure TExGroupBox.setEnabled(enabled: boolean);

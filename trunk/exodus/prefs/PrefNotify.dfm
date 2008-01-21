@@ -27,6 +27,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 604
     Align = alLeft
     TabOrder = 1
+    TabStop = True
     AutoHide = False
     object pnlSoundEnable: TExBrandPanel
       Left = 0
@@ -36,6 +37,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 0
+      TabStop = True
       AutoHide = True
       object imgSound: TImage
         Left = 3
@@ -128,7 +130,6 @@ inherited frmPrefNotify: TfrmPrefNotify
         Height = 21
         Caption = '&Use sound alerts'
         TabOrder = 0
-        OnClick = chkSoundClick
       end
     end
     object pnlAlertSources: TExBrandPanel
@@ -141,6 +142,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 1
+      TabStop = True
       AutoHide = False
       object lblNotifySources: TTntLabel
         AlignWithMargins = True
@@ -191,6 +193,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Align = alTop
       AutoSize = True
       TabOrder = 2
+      TabStop = True
       AutoHide = True
       Caption = 'Take the following actions:'
       object chkFlash: TTntCheckBox
@@ -226,6 +229,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Align = alTop
         AutoSize = True
         TabOrder = 3
+        TabStop = True
         AutoHide = True
         object chkPlaySound: TTntCheckBox
           Left = 3
@@ -248,6 +252,7 @@ inherited frmPrefNotify: TfrmPrefNotify
           Align = alRight
           AutoSize = True
           TabOrder = 1
+          TabStop = True
           AutoHide = True
           object txtSoundFile: TTntEdit
             Left = 0
@@ -343,6 +348,7 @@ inherited frmPrefNotify: TfrmPrefNotify
         Align = alTop
         AutoSize = True
         TabOrder = 0
+        TabStop = True
         AutoHide = True
         object chkToast: TTntCheckBox
           AlignWithMargins = True
@@ -377,6 +383,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       AutoScroll = True
       AutoSize = True
       TabOrder = 3
+      TabStop = True
       AutoHide = True
       Caption = 'Advanced notification preferences'
       object chkNotifyActive: TTntCheckBox

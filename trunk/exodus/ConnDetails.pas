@@ -143,6 +143,7 @@ type
     pnlx509Cert: TExBrandPanel;
     btnx509browse: TTntButton;
     txtx509: TTntEdit;
+    procedure pnlSocksTypeClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -776,6 +777,12 @@ begin
         if (txtPort.Text = '5223') then
             txtPort.Text := '5222';
     end;
+end;
+
+procedure TfrmConnDetails.pnlSocksTypeClick(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}

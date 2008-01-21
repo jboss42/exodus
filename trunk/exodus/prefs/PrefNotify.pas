@@ -39,9 +39,7 @@ type
         _IsReadOnly: boolean;
         _IsVisible: boolean;
 
-        _SoundFile: widestring;
-        _SoundKey: TRegistry;
-        _DefaultSoundKey: TRegistry;
+        _soundFile: widestring;
         
         function GetStringValue(): widestring;
         function GetBoolValue(): Boolean;
@@ -102,11 +100,9 @@ type
     procedure TntFormDestroy(Sender: TObject);
     procedure btnPlaySoundClick(Sender: TObject);
     procedure btnBrowseClick(Sender: TObject);
-    procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
     procedure chkToastClick(Sender: TObject);
-    procedure chkSoundClick(Sender: TObject);
   private
     { Private declarations }
     _NoNotifyUpdate: boolean;
@@ -169,26 +165,19 @@ begin
     s := getPrefState(_Key);
     _IsReadOnly := (s = psReadOnly);
     _IsVisible := (s <> psInvisible);
-    _SoundKey := TRegistry.Create();
-    _SoundKey.OpenKey('AppEvents\Schemes\Apps\' +
-                      MainSession.Prefs.getString('brand_caption') +
-                      '\exodus_' + Key + '\.current', true);
-    _DefaultSoundKey := TRegistry.Create();
-    _DefaultSoundKey.OpenKey('AppEvents\Schemes\Apps\' +
-                             MainSession.Prefs.getString('brand_caption') +
-                             '\exodus_' + Key + '\.default', true);
+    _soundFile := MainSession.Prefs.GetSoundFile(_Key);
 end;
 
 constructor TNotifyInfo.create(Src: TNotifyInfo);
 begin
+    inherited Create();;
     if (src <> nil) then begin
         _Caption := Src._Caption;
         _Key := Src._Key;
         _StrValue := Src._StrValue;
         _IsReadOnly := Src._IsReadOnly;
         _IsVisible := Src._IsVisible;
-        _SoundKey := TRegistry.Create();
-        _SoundKey.OpenKey(src._SoundKey.CurrentPath, true);
+        _SoundFile := Src._soundFile;
     end
     else begin
         _Caption := '';
@@ -196,14 +185,13 @@ begin
         _StrValue := '';
         _IsReadOnly := false;
         _IsVisible := true;
-        _SoundKey := nil;
+        _SoundFIle := '';
     end;
 end;
 
 destructor TNotifyInfo.Destroy();
 begin
-    if (_SoundKey <> nil) then
-        _SoundKey.free();
+    inherited;
 end;
 
 function TNotifyInfo.GetStringValue(): widestring;
@@ -251,16 +239,15 @@ end;
 
 procedure TNotifyInfo.SaveValue();
 begin
-    if (_IsVisible and not _IsReadOnly) then
+    if (_IsVisible and not _IsReadOnly) then begin
         MainSession.Prefs.SetString(_Key, _StrValue);
-    _SoundKey.WriteString('', _SoundFile);
+        MainSession.Prefs.SetString(_Key + '_sound', _SoundFile);
+    end;
 end;
 
 function TNotifyInfo.GetSoundFile(): widestring;
 begin
-    Result := _SoundKey.ReadString('');
-    if (Result = '') then
-        Result := _DefaultSoundKey.ReadString('');
+    Result := _soundFile;
 end;
 
 procedure TNotifyInfo.SetSoundFile(FName: widestring);
@@ -270,7 +257,7 @@ end;
 
 function TNotifyInfo.GetSoundEnabled(): boolean;
 begin
-    Result := SoundFile <> '';
+    Result := ((IntValue and notify_sound) > 0);
 end;
 
 procedure loadNotificationPrefs(List: TObjectList);
@@ -426,27 +413,6 @@ begin
     oneNI.SoundFile := txtSoundFile.Text;
 end;
 
-procedure TfrmPrefNotify.lblConfigSoundsClick(Sender: TObject);
-var
-    ver : integer;
-    win : String;
-begin
-    // pop open the proper control panel applet.
-    // It sure was nice of MS to change this for various versions
-    // of the OS. *SIGH*
-    ver := WindowsVersion(win);
-    if (ver = cWIN_XP) then
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-          'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW)
-    else if ((ver = cWIN_98) or (ver = cWIN_NT)) then
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-            'shell32.dll,Control_RunDLL mmsys.cpl,sounds,0', nil, SW_SHOW)
-    else
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-          'shell32.dll,Control_RunDLL mmsys.cpl,,0', nil, SW_SHOW);
-
-end;
-
 procedure TfrmPrefNotify.FormCreate(Sender: TObject);
 begin
     _NotifyList := TObjectList.Create();
@@ -456,12 +422,19 @@ end;
 procedure TfrmPrefNotify.btnBrowseClick(Sender: TObject);
 var
     tmps: string;
+    oneNI: TNotifyInfo;
 begin
     inherited;
     tmps := txtSoundFile.Text;
     dlgOpenSoundFile.FileName := tmps;
-    if (dlgOpenSoundFile.Execute) then
+
+    if (dlgOpenSoundFile.Execute) then begin
         txtSoundFile.Text := dlgOpenSoundFile.FileName;
+        if (chkNotify.ItemIndex = -1) then exit;
+
+        OneNI := TNotifyInfo(chkNotify.Items.Objects[chkNotify.ItemIndex]);
+        OneNI.SoundFile := txtSoundFile.Text;
+    end;
 end;
 
 procedure TfrmPrefNotify.btnPlaySoundClick(Sender: TObject);
@@ -548,15 +521,6 @@ begin
         pnlSoundFile.Enabled := chkPlaySound.Checked
     else if (Sender = chkToast) then
         btnToastSettings.Enabled := chkToast.checked;
-end;
-
-procedure TfrmPrefNotify.chkSoundClick(Sender: TObject);
-begin
-  inherited;
-    if (_loading) then exit;
-
-    if (chkSound.Checked) then
-        MessageDlgW(_(sSoundSetup), mtInformation, [mbOK], 0);
 end;
 
 end.
