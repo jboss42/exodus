@@ -40,10 +40,9 @@ object frmActivityWindow: TfrmActivityWindow
       TabOrder = 0
       Visible = False
       OnClick = pnlListScrollUpClick
-      GradientProperites.startColor = 12891033
-      GradientProperites.endColor = 10848873
+      GradientProperites.startColor = 13746091
+      GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 25
       object imgScrollUp: TImage
         Left = 73
         Top = 2
@@ -78,9 +77,11 @@ object frmActivityWindow: TfrmActivityWindow
       TabOrder = 1
       Visible = False
       OnClick = pnlListScrollDownClick
-      GradientProperites.startColor = 12891033
-      GradientProperites.endColor = 10848873
+      GradientProperites.startColor = 13746091
+      GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitLeft = -6
+      ExplicitTop = 346
       object imgScrollDown: TImage
         Left = 73
         Top = 4
@@ -115,8 +116,8 @@ object frmActivityWindow: TfrmActivityWindow
       ParentColor = True
       TabOrder = 2
       TabStop = True
-      GradientProperites.startColor = 12891033
-      GradientProperites.endColor = 10848873
+      GradientProperites.startColor = 13746091
+      GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       ExplicitTop = 50
       object ListLeftSpacer: TBevel
@@ -148,8 +149,8 @@ object frmActivityWindow: TfrmActivityWindow
       BevelOuter = bvNone
       TabOrder = 3
       OnClick = pnlListSortClick
-      GradientProperites.startColor = 12891033
-      GradientProperites.endColor = 10848873
+      GradientProperites.startColor = 13746091
+      GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       object SortBevel: TBevel
         Left = 0
@@ -172,7 +173,7 @@ object frmActivityWindow: TfrmActivityWindow
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
-        ExplicitLeft = 99
+        ExplicitLeft = 94
         ExplicitWidth = 72
         ExplicitHeight = 13
       end
