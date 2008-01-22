@@ -40,7 +40,6 @@ inherited fAWItem: TfAWItem
       Width = 136
       Height = 16
       Align = alClient
-      Alignment = taCenter
       AutoSize = False
       Caption = 'item name'
       EllipsisPosition = epEndEllipsis
@@ -55,13 +54,14 @@ inherited fAWItem: TfAWItem
       Left = 173
       Top = 0
       Width = 7
-      Height = 16
+      Height = 22
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
+      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0
