@@ -361,7 +361,7 @@
     <activity_window_unread_msgs_high_priority_font_color value="$000000ff"/>
 
     <!-- Sort type -->
-    <activity_window_sort value="2"/>
+    <activity_window_sort value="1"/>
     <!-- /ACTIVITY WINDOW PREFS -->
 
     <!-- unfiled -->

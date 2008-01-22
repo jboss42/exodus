@@ -166,9 +166,9 @@ const
     sSortBy         = 'Sort By:  ';
     sSortUnsorted   = 'Unsorted';  // Not currently supported
     sSortAlpha      = 'Alphabetical';
-    sSortRecent     = 'Recent Activity';
+    sSortRecent     = 'Activity';
     sSortType       = 'Type';
-    sSortUnread     = 'Unread Messages';
+    sSortUnread     = 'Unread';
 
 
 {---------------------------------------}
