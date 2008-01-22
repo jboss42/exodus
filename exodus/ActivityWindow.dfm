@@ -80,8 +80,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitLeft = -6
-      ExplicitTop = 346
       object imgScrollDown: TImage
         Left = 73
         Top = 4
@@ -119,7 +117,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 50
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -261,20 +258,20 @@ object frmActivityWindow: TfrmActivityWindow
   object popAWSort: TTntPopupMenu
     Left = 104
     Top = 144
+    object mnuRecentSort: TTntMenuItem
+      Caption = 'Activity'
+      OnClick = mnuRecentSortClick
+    end
     object mnuAlphaSort: TTntMenuItem
       Caption = 'Alphabetical'
       OnClick = mnuAlphaSortClick
-    end
-    object mnuRecentSort: TTntMenuItem
-      Caption = 'Recent Activity'
-      OnClick = mnuRecentSortClick
     end
     object mnuTypeSort: TTntMenuItem
       Caption = 'Type'
       OnClick = mnuTypeSortClick
     end
     object mnuUnreadSort: TTntMenuItem
-      Caption = 'Unread Messages'
+      Caption = 'Unread'
       OnClick = mnuUnreadSortClick
     end
   end

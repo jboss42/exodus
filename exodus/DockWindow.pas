@@ -202,8 +202,20 @@ begin
     _sortState := ssUnsorted;
     _glueEdge := geNone;
     _undocking := false;
-    _layoutAWOnly();
     dockWindowKBHook := SetWindowsHookEx(WH_KEYBOARD, @dockWindowKeyboardHookProc, HInstance, GetCurrentThreadId()) ;
+
+    if ((MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_WIDTH) = 0) and
+        (MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_TAB_WIDTH) = 0)) then begin
+        // If both settings are 0, then this must be the first time ever
+        // activity window has been ever created and thus we need to preset
+        // these items.
+        Self.Height := 557; // Match Jabber1 height with first time startup.
+        Self.Width  := 185;
+        MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_WIDTH, 185);
+        MainSession.Prefs.setInt(PrefController.P_ACTIVITY_WINDOW_TAB_WIDTH, 450);
+    end;
+
+    _layoutAWOnly();
 end;
 
 {---------------------------------------}
