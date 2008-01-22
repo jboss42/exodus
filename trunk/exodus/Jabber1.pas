@@ -3254,12 +3254,10 @@ begin
     inherited;
     if (_dockwindow = nil) then exit;
 
-    if (_dockWindow.Showing) then begin
-        ShowActivityWindow(false);
-    end
-    else begin
+    if (not _dockWindow.Showing) then begin
         ShowActivityWindow();
     end;
+    _dockWindow.BringToFront();
 end;
 
 {---------------------------------------}
