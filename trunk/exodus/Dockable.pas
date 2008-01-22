@@ -355,7 +355,9 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.ClearUnreadMsgCount();
 begin
-    _unreadmsg := 0;
+    if (_unreadmsg > 0) then begin
+        _unreadmsg := 0;
+    end;
     _priorityflag := false;
 end;
 
