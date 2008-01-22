@@ -256,24 +256,30 @@ end;
 procedure TfAWItem._setCount(val:integer);
 begin
     _count := val;
-    lblCount.Caption := IntToStr(_count);
-    if (_count > 0) then begin
-        if (_priority) then begin
-            lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+    if (_count >= 0) then begin
+        lblCount.Caption := IntToStr(_count);
+        if (_count > 0) then begin
+            if (_priority) then begin
+                lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
+            end
+            else begin
+                lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+            end;
+            lblCount.Font.Style := lblCount.Font.Style + [fsBold];
         end
         else begin
-            lblCount.Font.Color := _activity_window_unread_msgs_font_color;
+            if (_active) then begin
+                lblCount.Font.Color := _activity_window_selected_font_color;
+            end
+            else begin
+                lblCount.Font.Color := _activity_window_non_selected_font_color;
+            end;
+            lblCount.Font.Style := lblCount.Font.Style - [fsBold];
         end;
-        lblCount.Font.Style := lblCount.Font.Style + [fsBold];
     end
     else begin
-        if (_active) then begin
-            lblCount.Font.Color := _activity_window_selected_font_color;
-        end
-        else begin
-            lblCount.Font.Color := _activity_window_non_selected_font_color;
-        end;
-        lblCount.Font.Style := lblCount.Font.Style - [fsBold];
+        // Count < 0, thus hide count indicator
+        lblCount.Caption := ' ';
     end;
 end;
 

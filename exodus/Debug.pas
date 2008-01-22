@@ -155,6 +155,7 @@ begin
     inherited;
 
     setUID('dbgwindow');
+    _unreadmsg := -1;
 
     dbgManager.AddDebugger('dbgwindow', Self);
 
