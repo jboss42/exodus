@@ -226,7 +226,7 @@
 
     <!-- deprecated message handling options -->
     <msg_queue value="0" control="chkMsgQueue" state="inv"/>
-    <log value="1" control="chkLog" state="inv"/>
+    <log value="1" control="chkLog"/>
     <log_rooms value="0" control="chkLogRooms" state="inv"/>
     <log_roster value="0" control="chkLogRoster" state="inv"/>
     <log_path control="txtLogPath" state="inv"/>
@@ -345,8 +345,8 @@
         <end>$00D0C3AF</end>
     </activity_window_selected_color>
     <activity_window_high_priority_color>
-    	<start>$000000ff</start>
-        <end>$000000aa</end>
+    	<start>$005856D4</start>
+        <end>$005856D4</end>
     </activity_window_high_priority_color>
     <activity_window_new_window_color>
     	<start>$0045b1fe</start>
