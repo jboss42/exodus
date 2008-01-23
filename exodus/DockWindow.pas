@@ -471,12 +471,11 @@ begin
 
     if (aw <> nil) then begin
         // See if item is in list
-        //item := aw.findItem(frm.UID);
         item := aw.findItem(frm);
         if ((item = nil) and
             (frm.UID <> ''))then begin
             // Item NOT being tracked so let's add it
-            item := aw.addItem(frm.UID, frm);
+            item := aw.addItem(frm);
         end;
 
         if (item <> nil) then begin
@@ -493,7 +492,7 @@ begin
             item.awItem.docked := frm.Docked;
 
             // Deal with change of nickname
-            item.awItem.name := frm.Caption;
+            aw.SetItemName(item.awItem, frm.Caption);
 
             // Deal with undocked window focus
             if (frm.Activating) then begin
