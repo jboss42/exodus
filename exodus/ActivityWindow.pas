@@ -582,6 +582,7 @@ begin
                         end;
                         tsheet.Visible := true;
                         _oldActivateSheet := tsheet;
+                        _dockWindow.setWindowCaption(trackitem.frm.Caption);
                         scrollToActive();
                     except
                     end;
