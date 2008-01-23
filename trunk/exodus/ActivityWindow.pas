@@ -126,20 +126,20 @@ type
 
   public
     { Public declarations }
-    procedure activateItem(awitem: TfAWItem); overload;
+    procedure activateItem(awitem: TfAWItem);
     procedure DockActivityWindow(dockSite : TWinControl);
-    procedure removeItem(item:TAWTrackerItem); overload;
-    procedure removeItem(id:widestring); overload;
-    function addItem(id:widestring; frm:TfrmDockable): TAWTrackerItem;
+    procedure removeItem(item:TAWTrackerItem); 
+    function addItem(frm:TfrmDockable): TAWTrackerItem;
     function findItem(id:widestring): TAWTrackerItem; overload;
     function findItem(frm:TfrmDockable): TAWTrackerItem; overload;
     function findItem(awitem: TfAWItem): TAWTrackerItem; overload;
-    procedure activateItem(id:widestring); overload;
+    function findItemIndex(awitem: TfAWItem): integer;
     procedure scrollToActive();
     procedure setDockingSpacers(dockstate: TDockStates);
     procedure itemChangeUpdate();
     procedure selectNextItem();
     procedure selectPrevItem();
+    procedure SetItemName(awitem: TfAWItem; name: widestring);
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -390,27 +390,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.removeItem(id:widestring);
-var
-    item: TAWTrackerItem;
+function TfrmActivityWindow.addItem(frm:TfrmDockable): TAWTrackerItem;
 begin
-    item := findItem(id);
-    if (item <> nil) then begin
-        removeItem(item);
-    end;
-end;
-
-{---------------------------------------}
-function TfrmActivityWindow.addItem(id:widestring; frm:TfrmDockable): TAWTrackerItem;
-begin
-    Result := findItem(id);
+    Result := findItem(frm);     //dda
 
     if ((Result = nil) and
         (frm <> nil)) then begin
         Result := TAWTrackerItem.Create();
         Result.awItem := TfAWItem.Create(nil);
         Result.frm := frm;
-        _trackingList.AddObject(id, Result);
+        if (frm.Caption <> '') then begin
+            _trackingList.AddObject(frm.Caption, Result);
+        end
+        else begin
+            _trackingList.AddObject(frm.UID, Result);
+        end;
         Result.awItem.OnClick := Self.onItemClick;
 
         // Setup item props
@@ -481,6 +475,23 @@ begin
     end;
 end;
 
+{---------------------------------------}
+function TfrmActivityWindow.findItemIndex(awitem: TfAWItem): integer;
+var
+    i: integer;
+    item: TAWTrackerItem;
+begin
+    Result := -1;
+
+    for i := 0 to _trackingList.Count - 1 do begin
+        item := TAWTrackerItem(_trackingList.Objects[i]);
+        if (item.awitem = awitem) then begin
+            Result := i;
+            exit;
+        end;
+    end;
+end;
+
 
 {---------------------------------------}
 procedure TfrmActivityWindow.DockActivityWindow(dockSite : TWinControl);
@@ -492,24 +503,6 @@ begin
         _docked := true;
     end;
 end;
-
-{---------------------------------------}
-procedure TfrmActivityWindow.activateItem(id:widestring);
-var
-    awitem: TfAWItem;
-    trackeritem: TAWTrackerItem;
-begin
-    if (id = '') then exit;
-
-    trackeritem := findItem(id);
-    if (trackeritem <> nil) then begin
-        awitem := trackeritem.awItem;
-        if (awitem <> nil) then begin
-            activateItem(awitem);
-        end;
-    end;
-end;
-
 
 {---------------------------------------}
 procedure TfrmActivityWindow.onItemClick(Sender: TObject);
@@ -1170,6 +1163,24 @@ begin
     Result := _trackingList.Count;
 end;
 
+{---------------------------------------}
+procedure TfrmActivityWindow.SetItemName(awitem: TfAWItem; name: widestring);
+var
+    idx: integer;
+    trackeritem: TAWTrackerItem;
+begin
+    if (awitem = nil) then exit;
+    if (name = '') then exit;
+
+    idx := findItemIndex(awitem);
+    if (trackeritem <> nil) then begin
+        _trackingList.Strings[idx] := name;
+        trackeritem := TAWTrackerItem(_trackingList.Objects[idx]);
+        if (trackeritem <> nil) then begin
+            trackeritem.awItem.name := name;
+        end;
+    end;     
+end;
 
 
 
