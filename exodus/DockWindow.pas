@@ -243,13 +243,15 @@ procedure TfrmDockWindow.CloseDocked(frm: TfrmDockable);
 var
     idx: integer;
     aw: TfrmActivityWindow;
+    item: TAWTrackerItem;
 begin
     if (frm = nil) then exit;
 
     try
         aw := GetActivityWindow();
         if (aw <> nil) then begin
-            aw.removeItem(frm.UID);
+            item := aw.findItem(frm);
+            aw.removeItem(item);
         end;
 
         if (frm.Docked) then begin
