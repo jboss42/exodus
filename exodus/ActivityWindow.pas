@@ -589,6 +589,9 @@ begin
                 end;
             end
             else begin
+                if (trackitem.frm.WindowState = wsMinimized) then begin
+                    ShowWindow(trackitem.frm.Handle, SW_RESTORE); 
+                end; 
                 trackitem.frm.BringToFront;
                 scrollToActive();
             end;
