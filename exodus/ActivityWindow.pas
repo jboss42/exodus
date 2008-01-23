@@ -587,6 +587,7 @@ begin
                         end;
                         tsheet.Visible := true;
                         _oldActivateSheet := tsheet;
+                        scrollToActive();
                     except
                     end;
                 end;
@@ -778,11 +779,6 @@ begin
                 end;
             end;
 
-            // see if we need to show partials
-            if ((allowPartialVisible) and
-                (remainder > 0)) then begin
-                Inc(numSlots);
-            end;
             // Crawl list to see what needs displayed
             if (_canScrollUp) then begin
                 _scrollUpState := ssEnabled;
@@ -820,9 +816,21 @@ begin
                     if (item.awItem.newWindowHighlight) then begin
                         _scrollDownState := ssNewWindow;
                     end;
+
+                    if ((slotsFilled = numSlots) and
+                        (remainder > 0) and
+                        (allowPartialVisible)) then begin
+                        // we are off the bottom, so we showed the
+                        // scroll, but still want to show partial item
+                        item.awItem.Left := ListLeftSpacer.Width;
+                        item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
+                        item.awItem.Top := item.awItem.Height * slotsFilled;
+                        item.awItem.Visible := true;
+                        Inc(slotsFilled);
+                    end;
                 end
                 else begin
-                    // Is in visible part of list (at least in part)
+                    // Is in visible part of list
                     item.awItem.Left := ListLeftSpacer.Width;
                     item.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
                     item.awItem.Top := item.awItem.Height * slotsFilled;
