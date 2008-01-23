@@ -671,6 +671,8 @@ var
 begin
     Result := true;
 
+    setUID(cjid);
+
     _receivedXIMNode := false;
     _receivedMessage := false;
     _supportsXIM := false;
@@ -681,8 +683,6 @@ begin
     _jid := TJabberID.Create(cjid);
     _avatar := nil;
     pnlDockTop.ClientHeight := 28;
-
-    setUID(_jid.jid);
 
     // check for an avatar
     if (MainSession.Prefs.getBool('chat_avatars')) then begin
