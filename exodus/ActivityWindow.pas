@@ -73,6 +73,7 @@ type
     imgShowRoster: TImage;
     SortLeftSpacer: TBevel;
     SortRightSpacer: TBevel;
+    timShowActiveDocked: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -84,6 +85,7 @@ type
     procedure mnuUnreadSortClick(Sender: TObject);
     procedure pnlListSortClick(Sender: TObject);
     procedure imgShowRosterClick(Sender: TObject);
+    procedure timShowActiveDockedTimer(Sender: TObject);
   private
     { Private declarations }
     _trackingList: TWidestringList;
@@ -1020,6 +1022,27 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmActivityWindow.timShowActiveDockedTimer(Sender: TObject);
+begin
+    inherited;
+
+    try
+        // This timer has to be here because there are cases where
+        // with the TPageControl having all tabs hiden, sometimes,
+        // the TPageControl will not show one of its sheets even though
+        // the activateitem() code has told it to by code.  But, it will show
+        // a sheet if told to from an "external" event like this timer. This
+        // looks to be a bug in TPageControl (TTntPageControl) and this is
+        // a workaround.
+        if ((_oldActivateSheet <> nil) and
+            (_dockWindow.AWTabControl.PageCount > 0))then begin
+            _oldActivateSheet.Visible := true;
+        end;
+    except
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmActivityWindow.imgShowRosterClick(Sender: TObject);
 begin
     if (frmExodus.Showing) then begin
@@ -1146,6 +1169,10 @@ function TfrmActivityWindow._getItemCount(): integer;
 begin
     Result := _trackingList.Count;
 end;
+
+
+
+
 
 
 
