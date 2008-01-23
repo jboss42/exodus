@@ -275,4 +275,10 @@ object frmActivityWindow: TfrmActivityWindow
       OnClick = mnuUnreadSortClick
     end
   end
+  object timShowActiveDocked: TTimer
+    Interval = 100
+    OnTimer = timShowActiveDockedTimer
+    Left = 72
+    Top = 144
+  end
 end
