@@ -26,8 +26,10 @@ uses
     ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
     XMLTag, ToolWin, ImgList, buttonFrame, Buttons, JabberMsg;
 
+  function generateUID(): widestring;
 
 type
+
   TDockNotify = procedure of object;
 
   TDockbarButton = class
@@ -197,6 +199,7 @@ type
   end;
 
 var
+  dockable_uid: integer;
   frmDockable: TfrmDockable;
 
 implementation
@@ -207,6 +210,12 @@ uses
     PrefController,
     RosterImages,
     XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
+
+function generateUID(): widestring;
+begin
+    Inc(dockable_uid);
+    Result := 'dockableUID_' + inttostr(dockable_uid);
+end;
 
 constructor TDockbarButton.create();
 begin
@@ -265,6 +274,9 @@ begin
     _unreadmsg := 0;
     _priorityflag := false;
     activating := false;
+    if (MainSession <> nil) then begin
+        _uid := generateUID();
+    end;
     inherited;
 end;
 
@@ -573,6 +585,8 @@ begin
     end;
 end;
 
+initialization
+    dockable_uid := 0;
 
 
 end.
