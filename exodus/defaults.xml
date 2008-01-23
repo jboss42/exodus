@@ -420,6 +420,9 @@
     <brand_profile_show_httppolling control="imgHttpPolling" value="true"/>
     <brand_profile_show_advanced control="imgAdvanced" value="true"/>
     
+    <brand_profile_allow_rename value="1"/>
+    <brand_profile_enable_connect_btn value="1"/>
+    
     <brand_profile_conn_type value="0"/>
     <brand_profile_username control="pnlUsername"/>
     <brand_profile_server control="pnlServer"/>

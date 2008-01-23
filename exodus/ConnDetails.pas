@@ -621,7 +621,10 @@ begin
         lblServerList.Visible := true
     else
         lblServerList.Visible := false;
-    //pnlAccountDetails.captureChildStates();
+    if (MainSession.Prefs.getBool('brand_profile_allow_rename')) then
+        btnRename.Visible := true
+    else
+        btnRename.Visible := false;
 
     //Setup connection page
     imgConnection.Target := tbsConnection;
