@@ -1034,8 +1034,11 @@ begin
 
     // Check to see if we need to increment the
     // unread msg count
-    updateMsgCount(msg);
-    updateLastActivity(msg.Time);
+    if ((not msg.isMe) and
+        (msg.Body <> '')) then begin
+        updateMsgCount(msg);
+        updateLastActivity(msg.Time);
+    end;
 
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin
