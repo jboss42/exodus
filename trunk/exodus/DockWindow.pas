@@ -417,12 +417,21 @@ end;
 function TfrmDockWindow.getTopDocked() : TfrmDockable;
 var
     top : TForm;
+    i: integer;
 begin
     Result := nil;
     try
-        top := getTabForm(Self.AWTabControl.ActivePage);
-        if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then
-            Result := TfrmDockable(top);
+        // Find the visible tab as we cannot use ActivePage reliably with hidden tabs
+
+        for i := 0 to AWTabControl.PageCount - 1 do begin
+            if (AWTabControl.Pages[i].Visible) then begin
+                top := getTabForm(AWTabControl.Pages[i]);
+                if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then begin
+                    Result := TfrmDockable(top);
+                    exit;
+                end;
+            end;
+        end;
     finally
     end;
 end;
@@ -592,10 +601,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockWindow.WMActivate(var msg: TMessage);
+var
+    frm: TfrmDockable;
 begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         checkFlash();
         StopTrayAlert();
+        if (_dockState = dsDocked) then begin
+            frm := getTopDocked();
+            if (frm <> nil) then begin
+                frm.gotActivate();
+            end;
+        end;
     end;
 
     inherited;
