@@ -23,7 +23,7 @@ interface
 
 uses
     // Exodus stuff
-    BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
+    BaseChat, ExResponders, ExEvents, LoginWindow, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry, SelContact, Emote, NodeItem,
     Dockable,
     // Delphi stuff
@@ -75,7 +75,7 @@ type
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
 
-  TfrmExodus = class(TExForm, IExodusDockManager)
+  TfrmExodus = class(TExForm)
     MainMenu1: TTntMainMenu;
     ImageList2: TImageList;
     timFlasher: TTimer;
@@ -265,14 +265,13 @@ type
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
     mnuWindows_View_ShowDebugXML: TTntMenuItem;
-    Panel1: TPanel;
-    pnlRoster: TPanel;
-    splitRoster: TSplitter;
-    Tabs: TTntPageControl;
     mnuOptions_Notifications_NewConversation: TTntMenuItem;
     btnActivityWindow: TToolButton;
     mnuWindows_View_ShowActivityWindow: TTntMenuItem;
     trayShowActivityWindow: TTntMenuItem;
+    tbsView: TPageControl;
+    tabLogin: TTabSheet;
+    tabRoster: TTabSheet;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -300,10 +299,6 @@ type
     procedure Properties2Click(Sender: TObject);
     procedure mnuVCardClick(Sender: TObject);
     procedure mnuSearchClick(Sender: TObject);
-    procedure TabsMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure popCloseTabClick(Sender: TObject);
-    procedure popFloatTabClick(Sender: TObject);
     procedure mnuChatClick(Sender: TObject);
     procedure mnuBookmarkClick(Sender: TObject);
     procedure presCustomClick(Sender: TObject);
@@ -316,10 +311,6 @@ type
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuRegisterServiceClick(Sender: TObject);
-    procedure TabsUnDock(Sender: TObject; Client: TControl;
-      NewTarget: TWinControl; var Allow: Boolean);
-    procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
-      Y: Integer);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
     procedure trayMessageClick(Sender: TObject);
@@ -329,10 +320,6 @@ type
     procedure presToggleClick(Sender: TObject);
     procedure AppEventsActivate(Sender: TObject);
     procedure AppEventsDeactivate(Sender: TObject);
-    procedure TabsChange(Sender: TObject);
-    procedure TabsDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
     procedure mnuPluginDummyClick(Sender: TObject);
@@ -348,9 +335,6 @@ type
       const AStatusText: String);
     procedure mnuPluginOptsClick(Sender: TObject);
     procedure mnuDisconnectClick(Sender: TObject);
-    procedure FormDockDrop(Sender: TObject; Source: TDragDockObject; X,
-      Y: Integer);
-    procedure splitRosterMoved(Sender: TObject);
 
     {
         Event fired when programaticvally undocking
@@ -361,8 +345,6 @@ type
     procedure TabsUnDockNoLayoutChange(Sender: TObject; Client: TControl;
                                        NewTarget: TWinControl; var Allow: Boolean);
     procedure mnuChatToolbarClick(Sender: TObject);
-    procedure TabsContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
     procedure mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
@@ -405,7 +387,6 @@ type
     _auto_login: boolean;
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
-    _nextNotifyButton: TDockbarButton;
     // Various state flags
     _windows_ver: integer;
     _is_broadcast: boolean;             // Should this copy broadcast pres changes
@@ -448,8 +429,7 @@ type
     _sessioncb: integer;
     _rostercb: integer;
     _dns_cb: integer;
-    _currDockState: TDockStates;
-
+    
     // Reconnect variables
     _reconnect_interval: integer;
     _reconnect_cur: integer;
@@ -494,13 +474,8 @@ type
     {
         Forces a focus to the active tabs's docked form
     }
-    procedure focusActiveTab();
 
-    function getNextDockedNotifying(start: TTabSheet): TfrmDockable;
-
-    procedure updateNextNotifyButton();
     procedure checkFlash();
-    procedure OnNextNotifyClick();
 
   protected
     // Hooks for the keyboard and the mouse
@@ -543,31 +518,8 @@ type
     procedure updateLayoutPrefChange();
 
     {
-        Update UI after some dock event has occurred.
-
-        HideDock if last tab was undocked, ShowNormalDock if moving from
-        no tabs to at least one tab, handle embedded roster state changes.
-
-        Since it can be difficult to know exactly when to perform a
-        change in the DockState (in some instances this method may be called
-        before the TPageControl has had a chance to cleanup an tab), a
-        flag is passed to force a state change.
-
-        @param frm the form that was just docked/undocked
-        @param toggleState if true, toggle UI docked.undocked. If moving to
-                docked, use frm to figure out if embedded or not.
-    }
-    procedure updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
-
-    {
         Adjust layout so roster panel and dock panel are shown
     }
-//    procedure layoutRosterDock();
-//
-//    {
-//        Adjust layout so only dock panel is shown
-//    }
-    procedure layoutDock();
 
     {
         Adjust layout so only roster panel is shown
@@ -575,19 +527,11 @@ type
     procedure layoutRosterOnly();
 
     {
-        Save the current roster and dock panel widths.
-
-        Depending on current state...
-    }
-    procedure saveRosterDockWidths();
-
-    {
         Undock all docked forms.
 
         Prevents tab change, onundock events from firing. Does not update
         layout.
     }
-    procedure undockAllForms();
     procedure DoDisconnect();
 
 published
@@ -603,16 +547,12 @@ published
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
-
-    property DockState : TDockStates read _currDockState;
   public
     ActiveChat: TfrmBaseChat;
 //    Tabs: TExodusTabs;
 
     function getLastTick(): dword;
     function screenStatus(): integer;
-    function getTabForm(tab: TTabSheet): TForm;
-    function getTabSheet(frm : TfrmDockable) : TTntTabSheet;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
     function isMinimized(): boolean;
@@ -635,55 +575,6 @@ published
 
     procedure glueWindow(doGlue: boolean = true);
 
-
-    {
-        Close the tab for the given form.
-
-        Adjust layout as needed
-    }
-    procedure CloseDocked(frm: TfrmDockable);
-
-    {
-        Open a tab and dock the given form
-
-        Adjust the layout as needed (none docked, embedded roster etc)
-    }
-    function OpenDocked(frm : TfrmDockable) : TTntTabSheet;
-
-
-    {
-        Float the given form.
-
-        Adjust layout as needed
-    }
-    procedure FloatDocked(frm : TfrmDockable);
-
-    {
-        Get the current docksite for the main window.
-
-        Pretty much the window itself but this absctraction
-        should allow us to have a free floting dock manager
-    }
-    function GetDockSite() : TWinControl;
-
-    {
-        Bring the given docked form to the front of the tab list
-
-        If form is currently docked, make it the active tab.
-        Sets focus to the new tab
-    }
-    procedure BringDockedToTop(form: TfrmDockable);
-
-    {
-        Get the currently top docked form.
-
-        May return nil if topmost docked form is not TfrmDockable(????) or
-        nothing is docked.
-    }
-    function getTopDocked() : TfrmDockable;
-
-    procedure SelectNext(goforward: boolean; visibleOnly:boolean=false);
-
     {
         Do notifyEvents notification events in the context of frm.
 
@@ -704,15 +595,6 @@ published
 
     }
     procedure OnNotify(frm: TForm; notifyEvents: integer);
-
-
-    {
-        frm has had some kind of state change and its presentation needs to
-        be updated.
-
-        form may have changed tab icon, notification state.  
-    }
-    procedure UpdateDocked(frm: TfrmDockable);
 
     procedure BringToFront();
 
@@ -742,9 +624,7 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-{$IFDEF USE_ACTIVITY_WINDOW}
     procedure ShowActivityWindow(show: boolean = true; bringtofront: boolean = true);
-{$ENDIF}
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -977,12 +857,10 @@ begin
         _was_max := false;
     end;
 
-{$IFDEF USE_ACTIVITY_WINDOW}
     if ((_dockwindow <> nil) and
         (not _dockwindow.Showing)) then begin
         ShowActivityWindow();
     end;
-{$ENDIF}
 
     SetForegroundWindow(Self.Handle);
 end;
@@ -1190,17 +1068,12 @@ begin
 end;
 
  procedure TfrmExodus.WMActivate(var msg: TMessage);
- var
-    f: TfrmDockable;
  begin
 
     if (Msg.WParamLo <> WA_INACTIVE) then begin
 //        outputdebugMsg('TfrmExodus.WMActivate');
         checkFlash();
         StopTrayAlert();
-        f := getTopDocked();
-        if ((f <> nil) and f.IsNotifying) then
-            f.gotActivate();
     end;
     inherited;
  end;
@@ -1220,7 +1093,6 @@ begin
     _killshow := false;
 
     Randomize();
-    _currDockState := dsUninitialized;
 
     ActiveChat := nil;
     _docked_forms := TList.Create;
@@ -1279,13 +1151,7 @@ begin
 
         _enforceConstraints := true;
         frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-        if ((splitRoster.Visible) and
-            (MainSession.Prefs.getBool('expanded'))) then begin
-            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked');
-        end
-        else begin
-            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
-        end;
+        frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
     end;
 
     // Setup our session callback
@@ -1334,7 +1200,6 @@ begin
     // Setup the Tabs, toolbar, panel, and roster madness
     restoreMenus(false);
     restoreToolbar();
-    Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
 
     // some gui related flags
     _appclosing := false;
@@ -1369,7 +1234,6 @@ begin
         // at this point.
         _killshow := true;
     end;
-
     Self.Visible := true;
 
     // Set our default presence info.
@@ -1389,21 +1253,21 @@ begin
 
     _dockWindowGlued := false;
 
-{$IFDEF USE_ACTIVITY_WINDOW}
     _dockWindow := TfrmDockWindow.Create(Application);
     _dockManager := _dockWindow;
     Self.DockSite := false;
     btnActivityWindow.Visible := true;
     trayShowActivityWindow.Visible := true;
     mnuWindows_View_ShowActivityWindow.Visible := true;
-{$ELSE}
-    _dockWindow := nil;
-    _dockManager := frmExodus;
-    btnActivityWindow.Visible := false;
-    trayShowActivityWindow.Visible := false;
-    mnuWindows_View_ShowActivityWindow.Visible := false;
-{$ENDIF}
 
+    with GetLoginWindow() do begin
+        DockWindow(tabLogin);
+        Visible := true;
+    end;
+    with GetRosterWindow() do begin
+        DockWindow(tabRoster);
+        Visible := true;
+    end;
 end;
 
 {---------------------------------------}
@@ -1454,8 +1318,11 @@ begin
 
 
     updateLayoutPrefChange();
-    RosterWindow.DockRoster(pnlRoster);
-    RosterWindow.GetRosterWindow().Show;
+
+    with tabLogin do begin
+        Visible := true;
+        BringToFront();
+    end;
 
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
@@ -1482,11 +1349,9 @@ begin
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
-{$IFDEF USE_ACTIVITY_WINDOW}
             if (_dockWindow <> nil) then begin
                 ShowActivityWindow();
             end;
-{$ENDIF}
             ShowDebugForm(false);
         end;
         if (ExStartup.auto_login) then begin
@@ -1794,6 +1659,20 @@ begin
         // 7. check for new version
         Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
+        with GetLoginWindow() do begin
+            Visible := false;
+        end;
+
+        with tabLogin do begin
+            Visible := false;
+            SendToBack();
+        end;
+
+        with tabRoster do begin
+            Visible := true;
+            BringToFront();
+        end;
+
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
         InitUpdateBranding();
@@ -1812,19 +1691,11 @@ begin
         // We are logged in, so change main form to roster witdth
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_roster_window_height');
-            if (splitRoster.Visible) then
-                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_docked')
-            else
-                frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_undocked');
+            frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_undocked');
         end;
 
-        if (not splitRoster.Visible) then begin
-            // We don't have a docked window (for example, the debug window)
-            _profileScreenLastWidth := Self.Width;
-            Self.Width := MainSession.Prefs.getInt('roster_width');
-        end
-        else
-            _profileScreenLastWidth := 0;
+        _profileScreenLastWidth := Self.Width;
+        Self.Width := MainSession.Prefs.getInt('roster_width');
 
         btnOptions.Enabled := true;
         mnuOptions_Options.Enabled := true;
@@ -1885,28 +1756,25 @@ begin
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
 
+        with tabRoster do begin
+            Visible := false;
+            SendToBack();
+        end;
+
+        with tabLogin do begin
+            Visible := true;
+            BringToFront();
+        end;
+
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-            if (splitRoster.Visible) then
-                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_docked')
-            else
-                frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
         end;
 
-        if (not splitRoster.Visible) then begin
-            // We don't have a docked window so free to muck with sizes.
-            if (_profileScreenLastWidth > 0) then
-                // Didn't have a docked window at login so restore to width at that time.
-                Self.Width := _profileScreenLastWidth
-            else
-                // had a docked window at login so restore to roster_width
-                Self.Width := MainSession.Prefs.getInt('roster_width');
-        end
-        else begin
-            if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then
-                pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
-        end;
+        if (_profileScreenLastWidth > 0) then
+            //Didn't have a docked window at login so restore to width at that time.
+            Self.Width := _profileScreenLastWidth;
     end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
@@ -1980,7 +1848,6 @@ begin
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
-        Tabs.MultiLine := MainSession.Prefs.getBool('stacked_tabs');
         //add or remove xhtml-im caps feature based on pref. Push presence if
         //cpas ext modified.
         extExists := (MainSession.GetExtList.IndexOf('xhtml-im') <> -1);
@@ -2281,10 +2148,8 @@ begin
     // Unload all of the remaining plugins
     UnloadPlugins();
 
-{$IFDEF USE_ACTIVITY_WINDOW}
     // Close the Activity Window
     _dockWindow.Close();
-{$ENDIF}
 
     // Unregister callbacks, etc.
     MainSession.UnRegisterCallback(_sessioncb);
@@ -2576,21 +2441,6 @@ begin
             Accept := false;
         end;
     end;
-end;
-
-procedure TfrmExodus.splitRosterMoved(Sender: TObject);
-begin
-    if (MainSession.Active) then begin
-        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
-            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_roster_spliter_width');
-        end;
-    end
-    else begin
-        if (pnlRoster.Width < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
-            pnlRoster.Width := MainSession.Prefs.getInt('brand_min_profiles_spliter_width');
-        end;
-    end;
-    mainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
 end;
 
 {---------------------------------------}
@@ -2973,9 +2823,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.trayShowActivityWindowClick(Sender: TObject);
 begin
-{$IFDEF USE_ACTIVITY_WINDOW}
     mnuWindows_View_ShowActivityWindowClick(Sender);
-{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -2999,7 +2847,6 @@ begin
         frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
 
-{$IFDEF USE_ACTIVITY_WINDOW}
     if ((_dockWindow <> nil) and
         (_dockWindow.Showing) and
         (_dockWindowGlued) and
@@ -3009,7 +2856,6 @@ begin
         _dockWindow.BringToFront();
         Self.BringToFront();
     end;
-{$ENDIF}
 end;
 
 
@@ -3100,12 +2946,10 @@ var
     i,
     nCount     : integer;
     acFileName : array [0..cnMaxFileNameLen] of char;
-    p, orig_p  : TPoint;
+    p          : TPoint;
     Node       : TTreeNode;
     ri         : TJabberRosterItem;
-    f          : TForm;
     j          : TJabberID;
-    pageIndex  : integer;
 begin
     // Accept some files being dropped on this form
     // If we are expaned, and not showing the roster tab,
@@ -3122,32 +2966,6 @@ begin
 }
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
-    orig_p := p;
-    //First check if file is dragged to the chat window
-    //Convert dropping point to tab coordinates
-    p := tabs.ParentToClient(p, Self);
-    if (PtInRect(tabs.ClientRect, p)) then begin
-      //File is draged to the tab area (active or not active)
-      pageIndex := Tabs.IndexOfTabAt(p.X, p.Y);
-      if ((pageIndex >= 0) and (pageIndex <= Tabs.PageCount)) then begin
-        f := getTabForm(Tabs.Pages[pageIndex]);
-        if (f is TfrmChat) then begin
-           TfrmChat(f).AcceptFiles(msg);
-        end;
-        exit;
-      end;
-
-      //File has been dragged to active page
-      if (PtInRect(tabs.ActivePage.ClientRect, p)) then begin
-         f := getTabForm(Tabs.ActivePage);
-         if (f is TfrmChat) then begin
-            TfrmChat(f).AcceptFiles(msg);
-         end;
-         exit;
-      end;
-    end;
-
-    p := orig_p;
     // Translate to screen coordinates, then back to client coordinates
     // for the roster window.  This would have been easier if RosterWindow
     // had worked as the target of DragAcceptFiles.
@@ -3187,15 +3005,15 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
+    //TODO:  save dimensions?
+
     if (not _cleanupComplete) then
         cleanup();
 
-{$IFDEF USE_ACTIVITY_WINDOW}
     try
         _dockWindow.Free();
     except
     end;
-{$ENDIF}
 end;
 
 {---------------------------------------}
@@ -3996,11 +3814,9 @@ begin
         CloseAllRooms();
         CloseAllChats();
         closeMsgQueue();
-{$IFDEF USE_ACTIVITY_WINDOW}
         if (not isDebugShowing()) then begin
             ShowActivityWindow(false);
         end;
-{$ENDIF}
         MainSession.Disconnect();
     end;
 end;
@@ -4436,233 +4252,7 @@ begin
     end;
 end;
 
-
-
-
-
-procedure TfrmExodus.focusActiveTab();
-var
-    f: TForm;
-begin
-    // Don't show any notification images on the current tab
-    if (Tabs.ActivePage = nil) then exit;
-    if (not Tabs.Visible or not Tabs.Enabled) then exit;
-    if (not Self.Visible or not Self.Enabled) then exit;
-
-    f := getTabForm(Tabs.ActivePage);
-    if (f <> nil) then
-        if (f.InheritsFrom(TfrmDockable)) then
-            TfrmDockable(f).gotActivate()
-        else
-            f.SetFocus();
-end;
-
-
-{
-    Get the currently top docked form.
-
-    May return nil if topmost docked form is not TfrmDockable(????) or
-    nothing is docked.
-}
-function TfrmExodus.getTopDocked() : TfrmDockable;
-var
-    top : TForm;
-begin
-    Result := nil;
-    try
-        top := getTabForm(Self.Tabs.ActivePage);
-        if ((top is TfrmDockable) and (TfrmDockable(top).Docked)) then
-            Result := TfrmDockable(top);
-    finally
-    end;
-end;
-
-procedure TfrmExodus.SelectNext(goforward: boolean; visibleOnly:boolean=false);
-begin
-    Tabs.SelectNextPage(goforward, visibleonly);
-end;
-
-
-
-{
-    Get the current docksite for the main window.
-
-    Pretty much the window itself but this absctraction
-    should allow us to have a free floting dock manager
-}
-function TfrmExodus.GetDockSite() : TWinControl;
-begin
-{$IFDEF USE_ACTIVITY_WINDOW}
-    Result := nil;
-{$ELSE}
-    if (Self.DockSite) then
-        Result := Self
-    else
-        Result := nil;
-{$ENDIF}
-end;
-
-function TfrmExodus.getTabSheet(frm : TfrmDockable) : TTntTabSheet;
-var
-    i : integer;
-    tf : TForm;
-begin
-    //walk currently docked sheets and try to find a match
-    Result := nil;
-    for i := 0 to Tabs.PageCount - 1 do begin
-        tf := getTabForm(Tabs.Pages[i]);
-        if (tf = frm) then begin
-            Result := TTntTabSheet(Tabs.Pages[i]);
-            exit;
-        end;
-    end;
-end;
-
-{---------------------------------------}
-function TfrmExodus.getTabForm(tab: TTabSheet): TForm;
-begin
-    // Get an associated form for a specific tabsheet
-    Result := nil;
-    if ((tab <> nil) and (tab.ControlCount = 1)) then begin
-        if (tab.Controls[0] is TForm) then begin
-            Result := TForm(tab.Controls[0]);
-            exit;
-        end;
-    end;
-end;
-
 {************************** component bound events ****************************}
-{---------------------------------------}
-{
-    Event fired from Tabs when a user right clicks on a tab
-}
-procedure TfrmExodus.TabsMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-var
-    v, i, tab: integer;
-    R: TRect;
-    cp: TTabSheet;
-begin
-    // select a tab automatically if we have a right click.
-    if Button = mbRight then begin
-        {
-        pgm: EEK! this is really gross because the pagecontrol sucks.
-        Make sure the tab is visible before fetching it's bounding rect,
-        and checking the hit test.
-
-        BUT, the pageindex we need is the "raw" tabindex. Apparently,
-        the pagecontrol just makes tabs invisible when something gets
-        undocked, or somthing equally insane.
-
-        JJF: I believe tabs become invisible if they are not viewable,
-            scrolled off the single row of tabs if mutiLine is false.
-        }
-        tab := -1;
-        v := 0;
-        for i := 0 to Tabs.PageCount - 1 do begin
-            if (Tabs.Pages[i].TabVisible) then begin
-                SendMessage(Tabs.Handle, TCM_GETITEMRECT, v, lParam(@R));
-                if PtInRect(R, Point(x, y)) then begin
-                    tab := i;
-                    break;
-                end;
-                inc(v);
-            end;
-        end;
-
-        if (tab = -1) then exit;
-        cp := Tabs.Pages[tab];
-        if (cp <> Tabs.ActivePage) then
-            Tabs.ActivePage := cp;
-    end;
-end;
-
-{---------------------------------------}
-{
-    Event fired when a tab selection change occurs. May be fired by user selection
-    or by changig the activepage property
-
-    Sets focus to the new tab
-}
-procedure TfrmExodus.TabsChange(Sender: TObject);
-begin
-//    outputdebugmsg('TfrmExodus.Tabs.OnChange');
-    outputdebugmsg('TfrmExodus.TabsChange');
-    focusActiveTab();
-end;
-
-procedure TfrmExodus.TabsContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: Boolean);
-begin
-    //a hack. Tabs.OnChange doesn't seem to fire when right clicking tab.
-    inherited;
-    outputdebugmsg('TfrmExodus.TabsContextPopup');
-    focusActiveTab();
-end;
-
-{---------------------------------------}
-{
-    Event fired from Tabs when a Source is dragged over a tab.
-
-    Fires when Source is dragged over the actual tab part of a docked
-    form. Fires OnDockedDragOver event in TfrmDockable
-}
-procedure TfrmExodus.TabsDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
-var
-    form: TForm;
-    dest_tab: integer;
-begin
-    inherited;
-    // drag if the source is the roster,
-    // and the target is a conf room tab
-    Accept := false;
-    dest_tab := Tabs.IndexOfTabAt(X,Y);
-    if (dest_tab > -1) then begin
-        form := getTabForm(Tabs.Pages[dest_tab]);
-        if (form <> nil) then
-            TfrmDockable(form).OnDockedDragOver(Sender, Source, X, Y, State, Accept);
-    end;
-end;
-
-{---------------------------------------}
-{
-    Event fired from Tabs when a Source is dropped on a tab.
-
-    Fires when Source is dropped on the actual tab part of a docked
-    form. Fires OnDockedDragDrop event in TfrmDockable
-}
-procedure TfrmExodus.TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
-    dest_tab: integer;
-    form: TForm;
-begin
-    inherited;
-    // dropping something on a tab.
-    dest_tab := Tabs.IndexOfTabAt(X,Y);
-    if (dest_tab > -1) then begin
-        form := getTabForm(Tabs.Pages[dest_tab]);
-        if (form <> nil) then
-            TfrmDockable(form).OnDockedDragDrop(Sender, Source, X, Y);
-    end;
-end;
-
-{---------------------------------------}
-{
-    Event fired when user drags a TfrmDockable off of Tabs.
-}
-procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
-  NewTarget: TWinControl; var Allow: Boolean);
-begin
-outputdebugmsg('TfrmExodus.TabsUnDock');
-    // check to see if the tab is a frmDockable
-    Allow := true;
-    if ((Client is TfrmDockable) and TfrmDockable(Client).Docked)then begin
-        CloseDocked(TfrmDockable(Client));
-        TfrmDockable(Client).Docked := false;
-        TfrmDockable(Client).OnFloat();
-    end;
-end;
 
 {
     Event fired when programaticvally undocking
@@ -4690,146 +4280,7 @@ outputdebugmsg('TfrmExodus.TabsUnDockNoLayoutChange');
 end;
 
 
-{---------------------------------------}
-{
-    Event fired when the user has dropped a TfrmDockable on to Tabs.
-
-    This event also fires when ManualDock is invoked with Tabs as the
-    dock target. Because this is fired as a result of user action or
-    manualdock, assume the layout is correct (that Tabs is shown etc).
-}
-procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
-  Y: Integer);
-begin
-outputdebugmsg('TfrmExodus.TabsDockDrop');
-    // We got a new form dropped on us.
-    if (Source.Control is TfrmDockable) then begin
-        updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
-        TfrmDockable(Source.Control).Docked := true;
-        TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
-        //msg queue is always first tab
-        if (Source.Control is TfrmMsgQueue) then begin
-            TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]).PageIndex := 0;
-        end;
-        TfrmDockable(Source.Control).OnDocked();
-        _docked_forms.Add(TfrmDockable(Source.Control));
-    end;
-end;
-
-{---------------------------------------}
-{
-    Event fired when a TfrmDockable has been dropped onto frmExodus.
-}
-procedure TfrmExodus.FormDockDrop(Sender: TObject; Source: TDragDockObject;
-  X, Y: Integer);
-begin
-outputdebugmsg('TfrmExodus.FormDockDrop');
-    if (Source.Control is TfrmDockable) then begin
-        // We got a new form dropped on us.
-        OpenDocked(TfrmDockable(Source.Control));
-    end;
-end;
-
-{tab context menus}
-
-procedure TfrmExodus.popCloseTabClick(Sender: TObject);
-var
-    f: TForm;
-begin
-outputdebugmsg('TfrmExodus.popCloseTabClick');
-    // Close the window docked to this tab..
-    f := getTabForm(Tabs.ActivePage);
-    if (f <> nil) then
-        f.Close();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.popFloatTabClick(Sender: TObject);
-var
-    f: TForm;
-begin
-outputdebugmsg('TfrmExodus.popFloatTabClick');
-    // Undock this window
-    f := getTabForm(Tabs.ActivePage);
-    if ((f <> nil) and (f is TfrmDockable)) then
-        TfrmDockable(f).FloatForm();
-end;
-
 {**************************** state change requests ***************************}
-{
-    Bring the given docked form to the front of the tab list
-
-    If form is currently docked, make it the active tab.
-    Sets focus to the new tab
-}
-procedure TfrmExodus.BringDockedToTop(form: TfrmDockable);
-var
-    tsheet: TTntTabSheet;
-begin
-    if (Self.Tabs.PageCount > 0) then begin
-        tsheet := GetTabSheet(form);
-        if (tsheet <> nil) then begin
-            Self.Tabs.ActivePage := tsheet;
-            if (Self.Visible) then //focus if we can
-                form.gotActivate();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-
-
-{
-    Cleanup the TTabSheet associated with frm.
-}
-procedure TfrmExodus.CloseDocked(frm: TfrmDockable);
-var
-    idx: integer;
-    frmWasDocked: boolean;
-begin
-outputdebugmsg('TfrmExodus.CloseDocked');
-    frmWasDocked := frm.Docked;
-    frm.Docked := false;
-//    frm.Visible := false;
-    if ((_nextNotifyButton <> nil) and (_nextNotifyButton.Parent = frm)) then begin
-        frm.removeDockbarButton(_nextNotifyButton);
-    end;
-
-    if (frmWasDocked) then begin
-        updateLayoutDockChange(frm, true, _docked_forms.Count = 1);
-        idx := _docked_forms.IndexOf(frm);
-        if (idx >= 0) then
-            _docked_forms.Delete(idx);
-    end;
-end;
-
-function TfrmExodus.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
-begin
-outputdebugmsg('TfrmExodus.OpenDocked');
-//    updateLayoutDockChange(frm, true, tabs.PageCount = 0);
-    frm.ManualDock(Tabs); //fires TabsDockDrop event
-    Result := GetTabSheet(frm);
-    frm.Visible := true;
-end;
-
-procedure TfrmExodus.FloatDocked(frm : TfrmDockable);
-begin
-outputdebugmsg('TfrmExodus.FloatDocked');
-    frm.ManualFloat(frm.FloatPos);
-end;
-
-
-procedure TfrmExodus.UpdateDocked(frm: TfrmDockable);
-var
-    tsheet: TTntTabSheet;
-begin
-    tsheet := GetTabSheet(frm);
-    if (tsheet <> nil) then
-        tsheet.ImageIndex := frm.ImageIndex;
-    checkFlash();
-    updateNextNotifyButton();
-end;
-
 {************************************ layout **********************************}
 {---------------------------------------}
 {
@@ -4839,134 +4290,15 @@ end;
     Docking was not allowed but the user now chooses to allow docking.
 }
 procedure TfrmExodus.updateLayoutPrefChange();
-var
-    dockAllowed: boolean;
 begin
     if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
     // make sure the roster is docked in the appropriate place.
-    dockAllowed := (Jabber1.getAllowedDockState() <> adsForbidden);
 
-    if ((not dockAllowed) or (Tabs.PageCount = 0)) then begin
-       layoutRosterOnly();
-       undockAllForms();
-{$IFDEF USE_ACTIVITY_WINDOW}
-       Self.DockSite := false;
-{$ELSE}
-       Self.DockSite := dockAllowed;
-{$ENDIF}
-    end
-    else
-        layoutDock();
-
+    layoutRosterOnly();
+    //undockAllForms();
+    Self.DockSite := false;
 end;
 
-{
-    Update UI after some dock event has occurred.
-
-    HideDock if last tab was undocked, ShowNormalDock if moving from
-    no tabs to at least one tab, handle embedded roster state changes.
-
-    Since it can be difficult to know exactly when to perform a
-    change in the DockState (in some instances this method may be called
-    before the TPageControl has had a chance to cleanup an tab), a
-    flag is passed to force a state change.
-
-    @param frm the form that was just docked/undocked
-    @param docking  is the form beign docked or undocked?
-    @toggleDockState moving from (dsDockOnly or dsRosterDock) to dsRosterOnly or vice versa
-}
-procedure TfrmExodus.updateLayoutDockChange(frm: TfrmDockable; docking: boolean; FirstOrLastDock: boolean);
-
-var
-    oldState : TDockStates;
-    newState : TDockStates;
-begin
-    oldState := DockState;
-    //figure out what state we are moving to...
-    if (docking) then begin
-       if (FirstOrLastDock) then begin
-         newState := dsUnDocked;
-       end
-       else begin
-         newState := dsDocked;
-       end
-    end
-    else
-      newState := dsUnDocked;
-
-    if (newState <> oldState) then begin
-        _noMoveCheck := true;
-          if (newState = dsDocked) then
-            layoutDock()
-          else
-            layoutRosterOnly();
-        _noMoveCheck := false;
-    end;
-end;
-
-{
-    Adjust layout so roster panel and dock panel are shown
-}
-procedure TfrmExodus.layoutDock();
-var
-  mon: TMonitor;
-  ratioRoster: real;
-begin
-    if (DockState <> dsDocked) then begin
-        _enforceConstraints := false;
-        saveRosterDockWidths();
-        _noMoveCheck := true;
-        //this is a mess. To get splitter working with the correct control
-        //we need to hide/de-align/set their relative positions/size them and show them
-        pnlRoster.align := alNone;
-        splitRoster.align := alNone;
-        Tabs.align := alNone;
-
-        splitRoster.Visible := false; //hide this first or will expand and throw widths off
-        pnlRoster.Visible := false;
-        Tabs.Visible := false;
-
-        //Obtain the width of the monitor
-        //If we exceed the width of the monitor,
-        //recalculate widths for roster based on the same ratio
-        mon := Screen.MonitorFromWindow(Self.Handle, mdNearest);
-        if (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH) >= mon.Width) then begin
-          ratioRoster := (MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3)/(MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH));
-          Self.ClientWidth  := mon.Width;
-          pnlRoster.Width := Trunc(Self.ClientWidth * ratioRoster);
-        end
-        else begin
-            Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH) + 3 + MainSession.Prefs.getInt(PrefController.P_TAB_WIDTH);
-            pnlRoster.Width := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-        end;
-
-        pnlRoster.Left := 0;
-        pnlRoster.Align := alLeft;
-        pnlRoster.Visible := true;
-        splitRoster.Left := pnlRoster.BoundsRect.Right + 1;
-        splitRoster.Align := alLeft;
-        splitRoster.Visible := true;
-        Tabs.Left := pnlRoster.BoundsRect.Right + 4;
-        Tabs.Align := alClient;
-        Tabs.Visible := true;
-
-        _noMoveCheck := false;
-        _currDockState := dsDocked;
-        Self.DockSite := false;
-{$IFDEF USE_ACTIVITY_WINDOW}
-        Tabs.DockSite := false;
-{$ELSE}
-        Tabs.DockSite := true;
-{$ENDIF}
-
-         if (MainSession.Active) then
-            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_docked')
-         else
-            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_docked');
-
-         _enforceConstraints := true;
-    end;
-end;
 
 {
     Adjust layout so only roster panel is shown
@@ -4974,81 +4306,18 @@ end;
 procedure TfrmExodus.layoutRosterOnly();
 begin
     //if tabs were being shown, save tab size
-    saveRosterDockWidths();
-    if (DockState <> dsUnDocked) then begin
-        _enforceConstraints := false;
-        Tabs.Visible := false;
-        pnlRoster.Align := alClient;
-        splitRoster.Visible := false;
-        _noMoveCheck := true;
-        Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
-        _noMoveCheck := false;
-        _currDockState := dsUnDocked;
-{$IFDEF USE_ACTIVITY_WINDOW}
-        Self.DockSite := false;
-{$ELSE}
-        Self.DockSite := true;
-{$ENDIF}
-        Tabs.DockSite := false;
+    _enforceConstraints := false;
+    _noMoveCheck := true;
+    Self.ClientWidth := MainSession.Prefs.getInt(PrefController.P_ROSTER_WIDTH);
+    _noMoveCheck := false;
+    Self.DockSite := false;
 
-         if (MainSession.Active) then
-            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
-         else
-            frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
+    if (MainSession.Active) then
+        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
+    else
+        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
 
-         _enforceConstraints := true;
-    end;
-end;
-
-{
-    Save the current roster and dock panel widths.
-
-    Depending on current state...
-}
-procedure TfrmExodus.saveRosterDockWidths();
-begin
-    if (DockState = dsUnDocked) then
-        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width)
-    else if (DockState = dsDocked) then begin
-        MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, pnlRoster.Width);
-        MainSession.Prefs.setInt(PrefController.P_TAB_WIDTH, Tabs.Width);
-    end;
-end;
-
-{
-    Undock all docked forms.
-
-    Prevents tab change, onundock events from firing. Does not update
-    layout.
-}
-procedure TfrmExodus.undockAllForms();
-var
-    tf: TfrmDockable;
-    ts: TTabSheet;
-    idx: integer;
-begin
-    ts := Tabs.FindNextPage(nil, true, false);
-    if (ts <> nil) then begin
-        //stop layout update events
-        tabs.OnUnDock := nil;
-        tabs.OnChange := nil;
-        while (ts <> nil) do begin
-            tf := TfrmDockable(GetTabForm(ts));
-            if (tf <> nil) then begin
-                tf.ManualFloat(tf.FloatPos);
-                tf.Docked := false;
-                idx := _docked_forms.IndexOf(tf);
-                if (idx >= 0) then
-                    _docked_forms.Delete(idx);
-
-                tf.OnFloat();
-            end;
-            ts := Tabs.FindNextPage(nil, true, false);
-        end;
-        //enable layout update events
-        tabs.OnUnDock := Self.TabsUnDock;
-        tabs.OnChange := Self.TabsChange;
-    end;
+    _enforceConstraints := true;
 end;
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
@@ -5066,7 +4335,7 @@ begin
     if (((notifyEvents and notify_tray) > 0) and ((notifyEvents and notify_front) = 0))then
         StartTrayAlert();
 
-    updateNextNotifyButton();
+    //updateNextNotifyButton();
 end;
 
 function TfrmExodus.isActive(): boolean;
@@ -5097,63 +4366,12 @@ begin
     mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
-function TfrmExodus.getNextDockedNotifying(start: TTabSheet): TfrmDockable;
-var
-    nextPage: TTabSheet;
-begin
-    nextPage := start;
-    Result := nil;
-    if (start <> nil) then begin
-        while (true) do begin
-            nextPage := Self.Tabs.FindNextPage(nextPage, true, false);
-            if (nextPage = start) then exit; //no next
-            if ((nextPage.ControlCount = 1) and
-                 nextPage.Controls[0].InheritsFrom(TfrmDockable) and
-                 TfrmDockable(nextPage.Controls[0]).isNotifying) then begin
-                 Result := TfrmDockable(nextPage.Controls[0]);
-                 exit;
-            end;
-        end;
-    end;
-end;
-
-procedure TfrmExodus.updateNextNotifyButton();
-var
-    f: TfrmDockable;
-begin
-    if ((getNextDockedNotifying(Tabs.ActivePage) <> nil)) then begin
-        f := Self.getTopDocked();
-        if (f <> nil) then begin
-            if (_nextNotifyButton = nil) then begin
-                _nextNotifyButton := TDockbarButton.create();
-                _nextNotifyButton.OnClick := Self.OnNextNotifyClick;
-            end;
-            f.addDockbarButton(_nextNotifyButton);
-            _nextNotifyButton.ImageIndex := RosterImages.RosterTreeImages.Find(RI_ATTN_KEY);
-            _nextNotifyButton.Hint := _('Bring the next notified tab to front');
-        end;
-    end
-    else if (_nextNotifyButton <> nil) then begin
-        _nextNotifyButton.Free();
-        _nextNotifyButton := nil;
-    end;
-end;
 
 procedure TfrmExodus.checkFlash();
 begin
     if (timFlasher.Enabled and
-       (not MainSession.Prefs.getBool('notify_docked_flasher') or
-       (getNextDockedNotifying(Tabs.ActivePage) = nil))) then
+       (not MainSession.Prefs.getBool('notify_docked_flasher'))) then
         timFlasher.Enabled := false;
-end;
-
-procedure TfrmExodus.OnNextNotifyClick();
-var
-    f: TfrmDockable;
-begin
-    f := getNextDockedNotifying(Tabs.ActivePage);
-    if (f <> nil) then
-        BringDockedToTop(f);
 end;
 
 //Reset menu items for contacts and groups based on the roster selection
@@ -5230,13 +4448,12 @@ end;
 
 procedure TfrmExodus.OnMoving(var Msg: TWMMoving);
 begin
-{$IFDEF USE_ACTIVITY_WINDOW}
     if (_dockWindowGlued) then begin
         if (_dockWindow <> nil) then begin
             _dockWindow.moveGlued();
         end;
     end;
-{$ENDIF}
+    
     inherited;
 end;
 
@@ -5247,7 +4464,6 @@ begin
     PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
 end;
 
-{$IFDEF USE_ACTIVITY_WINDOW}
 procedure TfrmExodus.ShowActivityWindow(show: boolean; bringtofront: boolean);
 begin
     if (_dockwindow = nil) then exit;
@@ -5259,7 +4475,6 @@ begin
         _dockwindow.Hide();
     end;
 end;
-{$ENDIF}
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause

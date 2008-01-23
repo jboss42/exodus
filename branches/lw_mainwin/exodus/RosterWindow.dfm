@@ -15,8 +15,8 @@ inherited frmRosterWindow: TfrmRosterWindow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitWidth = 248
-  ExplicitHeight = 539
+  ExplicitWidth = 230
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 12
   object imgAd: TImage
@@ -69,7 +69,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       Left = 52
       Top = 1
       Width = 93
-      Height = 21
+      Height = 20
       Hint = 'Esc to quit, Enter to select current,  F3 to search again'
       ParentShowHint = False
       ShowHint = True
@@ -126,17 +126,18 @@ inherited frmRosterWindow: TfrmRosterWindow
       Left = 2
       Top = 2
       Width = 21
-      Height = 18
+      Height = 19
       Align = alLeft
       ParentShowHint = False
       ShowHint = True
       OnPaint = imgStatusPaint
+      ExplicitHeight = 18
     end
     object imgSSL: TImage
       Left = 202
       Top = 2
       Width = 18
-      Height = 18
+      Height = 19
       Align = alRight
       Center = True
       Picture.Data = {
@@ -169,12 +170,13 @@ inherited frmRosterWindow: TfrmRosterWindow
         FFFF}
       Transparent = True
       Visible = False
+      ExplicitHeight = 18
     end
     object pnlStatus: TTntPanel
       Left = 23
       Top = 2
       Width = 179
-      Height = 18
+      Height = 19
       Cursor = crArrow
       Align = alClient
       Alignment = taLeftJustify
@@ -187,13 +189,14 @@ inherited frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 29
-        Height = 12
+        Height = 19
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
+        ExplicitHeight = 12
       end
     end
   end
@@ -283,7 +286,6 @@ inherited frmRosterWindow: TfrmRosterWindow
       OnInfoTip = lstProfilesInfoTip
       OnKeyPress = lstProfilesKeyPress
       OnSelectItem = lstProfilesSelectItem
-      ExplicitHeight = 34
     end
     object pnlConnectLogo: TPanel
       Left = 5
@@ -295,7 +297,6 @@ inherited frmRosterWindow: TfrmRosterWindow
       ParentColor = True
       TabOrder = 2
       OnResize = pnlConnectLogoResize
-      ExplicitTop = 130
       object ImageLogo: TImage
         Left = 0
         Top = 0

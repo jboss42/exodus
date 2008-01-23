@@ -27,6 +27,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'Account Details'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         332
         306)
@@ -199,6 +203,10 @@ inherited frmConnDetails: TfrmConnDetails
     object tbsAdvanced: TTntTabSheet
       Caption = 'Advanced'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAdvanced: TExBrandPanel
         Left = 0
         Top = 0
@@ -236,7 +244,7 @@ inherited frmConnDetails: TfrmConnDetails
             Top = 15
             Width = 230
             Height = 20
-            ItemHeight = 12
+            ItemHeight = 0
             TabOrder = 0
             OnExit = doJidExit
             OnKeyPress = txtUsernameKeyPress
@@ -305,9 +313,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 127
-            DesignSize = (
-              94
-              25)
           end
         end
         object pnlKerberos: TExCheckGroupBox
@@ -401,6 +406,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'Connection'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlConnection: TExBrandPanel
         Left = 0
         Top = 0
@@ -596,6 +605,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'Proxy'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlProxy: TExBrandPanel
         Left = 0
         Top = 0
@@ -792,6 +805,9 @@ inherited frmConnDetails: TfrmConnDetails
       ImageIndex = -1
       TabVisible = False
       ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblNote: TTntLabel
         Left = 0
         Top = 246
@@ -888,9 +904,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 1000000
-            DesignSize = (
-              86
-              25)
           end
         end
         object pnlKeys: TExBrandPanel
@@ -923,9 +936,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 1000000
-            DesignSize = (
-              86
-              25)
           end
         end
       end

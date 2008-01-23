@@ -258,7 +258,8 @@ uses
   ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2},
   IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
   MSHTMLEvents in 'MSHTMLEvents.pas',
-  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm};
+  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
+  LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm};
 
 {$R *.TLB}
 

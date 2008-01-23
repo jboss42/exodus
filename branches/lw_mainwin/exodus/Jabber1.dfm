@@ -4,7 +4,7 @@ inherited frmExodus: TfrmExodus
   AlphaBlendValue = 240
   Caption = 'Exodus'
   ClientHeight = 503
-  ClientWidth = 358
+  ClientWidth = 264
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -17,17 +17,16 @@ inherited frmExodus: TfrmExodus
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnDockDrop = FormDockDrop
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 366
+  ExplicitWidth = 272
   ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 12
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 358
+    Width = 264
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -36,7 +35,7 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 354
+        Width = 260
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -167,64 +166,24 @@ inherited frmExodus: TfrmExodus
       end
     end
   end
-  object Panel1: TPanel
+  object tbsView: TPageControl
     Left = 0
     Top = 31
-    Width = 358
+    Width = 264
     Height = 472
     Align = alClient
-    ParentColor = True
+    Style = tsFlatButtons
     TabOrder = 1
-    object splitRoster: TSplitter
-      Left = 157
-      Top = 1
-      Width = 5
-      Height = 470
-      AutoSnap = False
-      Beveled = True
-      MinSize = 1
-      ResizeStyle = rsUpdate
-      Visible = False
-      OnCanResize = splitRosterCanResize
-      OnMoved = splitRosterMoved
-      ExplicitHeight = 451
+    object tabLogin: TTabSheet
+      TabVisible = False
+      ExplicitTop = 26
+      ExplicitHeight = 442
     end
-    object pnlRoster: TPanel
-      Left = 1
-      Top = 1
-      Width = 156
-      Height = 470
-      Align = alLeft
-      BevelOuter = bvNone
-      BorderWidth = 1
-      UseDockManager = False
-      ParentColor = True
-      TabOrder = 0
-      OnDockDrop = FormDockDrop
-    end
-    object Tabs: TTntPageControl
-      Left = 162
-      Top = 1
-      Width = 195
-      Height = 470
-      Margins.Left = 0
-      Margins.Top = 0
-      Margins.Right = 0
-      Margins.Bottom = 0
-      Align = alClient
-      DockSite = True
-      Images = ImageList2
-      MultiLine = True
-      PopupMenu = popTabs
-      RaggedRight = True
-      TabOrder = 1
-      OnChange = TabsChange
-      OnContextPopup = TabsContextPopup
-      OnDockDrop = TabsDockDrop
-      OnDragDrop = TabsDragDrop
-      OnDragOver = TabsDragOver
-      OnMouseDown = TabsMouseDown
-      OnUnDock = TabsUnDock
+    object tabRoster: TTabSheet
+      ImageIndex = 1
+      TabVisible = False
+      ExplicitTop = 26
+      ExplicitHeight = 442
     end
   end
   object MainMenu1: TTntMainMenu
@@ -4051,11 +4010,9 @@ inherited frmExodus: TfrmExodus
     object popCloseTab: TTntMenuItem
       Caption = 'Close Window'
       ShortCut = 16499
-      OnClick = popCloseTabClick
     end
     object popFloatTab: TTntMenuItem
       Caption = 'Float Window'
-      OnClick = popFloatTabClick
     end
   end
   object popTray: TTntPopupMenu

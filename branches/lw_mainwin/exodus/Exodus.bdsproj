@@ -121,14 +121,14 @@
 			<Linker Name="AutoGenImportAssembly">False</Linker>
 		</Linker>
 		<Directories>
-			<Directories Name="OutputDir"></Directories>
-			<Directories Name="UnitOutputDir">.\output</Directories>
+			<Directories Name="OutputDir">Z:\repos\jinc-p4\Devel\Clients\Hermes\build\redist-files\bin</Directories>
+			<Directories Name="UnitOutputDir"></Directories>
 			<Directories Name="PackageDLLOutputDir"></Directories>
-			<Directories Name="PackageDCPOutputDir">.\output</Directories>
-			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;C:\Projects\exodus\exodus\components\tntUnicode;C:\Projects\exodus\exodus\components\jcl\source;c:\projects\exodus\exodus\components\jcl\lib\d10;.\components\tntUnicode;.\components\jcl\source;.\components\jcl\source\windows;.\components\jcl\source\common;.\components\tntUnicode\source</Directories>
+			<Directories Name="PackageDCPOutputDir"></Directories>
+			<Directories Name="SearchPath">$(DELPHI)\Lib\Debug;.\components;.\components\tntUnicode;.\components\jcl\source;.\components\jcl\source\windows;.\components\jcl\source\common;.\components\tntUnicode\source;..\jopl;.\</Directories>
 			<Directories Name="Packages">vcl;rtl</Directories>
-			<Directories Name="Conditionals">Exodus;INDY9;TRACE_EXCEPTIONS</Directories>
-			<Directories Name="DebugSourceDirs">c:\src\exodus\exodus\components\;D:\src\Indy\Source\</Directories>
+			<Directories Name="Conditionals">Exodus;INDY9;TRACE_EXCEPTIONS;DEFAULTS_FROM_FILE;USE_ACTIVITY_WINDOW</Directories>
+			<Directories Name="DebugSourceDirs">.\components\;.\components\jcl\source\;.\components\tntUnicode\Source\;.\;..\jopl</Directories>
 			<Directories Name="UsePackages">True</Directories>
 		</Directories>
 		<Parameters>
@@ -172,6 +172,11 @@
 			<Language Name="ActiveLang"></Language>
 			<Language Name="ProjectLang">$00000000</Language>
 			<Language Name="RootDir"></Language>
-		</Language>
-	</Delphi.Personality>
+		</Language>  <Excluded_Packages>
+      <Excluded_Packages Name="c:\program files\borland\bds\4.0\Bin\dclofficexp100.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+      <Excluded_Packages Name="C:\DOCUME~1\ADMINI~1\MYDOCU~1\BORLAN~1\Bpl\JclProjectAnalysisExpert100.bpl">JCL Project Analyzer</Excluded_Packages>
+      <Excluded_Packages Name="C:\DOCUME~1\ADMINI~1\MYDOCU~1\BORLAN~1\Bpl\JclUsesExpert100.bpl">JCL Uses Wizard</Excluded_Packages>
+      <Excluded_Packages Name="C:\DOCUME~1\ADMINI~1\MYDOCU~1\BORLAN~1\Bpl\JclSIMDViewExpert100.bpl">JCL Debug Window of XMM registers</Excluded_Packages>
+    </Excluded_Packages>
+  </Delphi.Personality>
 </BorlandProject>

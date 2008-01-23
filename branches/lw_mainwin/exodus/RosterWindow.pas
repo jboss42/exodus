@@ -339,7 +339,7 @@ type
     procedure Redraw;
 
 //    procedure DockRoster;overload;
-    procedure DockRoster(dockSite : TWinControl);
+    procedure DockWindow(dockSite : TWinControl);
 
     {
         Returns the first parent derived from TForm.
@@ -372,11 +372,6 @@ type
     code.
 }
 //function isEmbeddedRoster() : boolean;
-
-{
-    If a roster instance exists, dock it in the given docksite
-}
-procedure DockRoster(docksite : TWinControl);
 
 {
     Get the singleton ibnstance of the roster
@@ -497,16 +492,6 @@ end;
 //begin
 //    Result := (MainSession <> nil) and MainSession.Prefs.getBool('roster_messenger');
 //end;
-
-{
-    If a roster instance exists, dock it in the given docksite
-}
-procedure DockRoster(docksite : TWinControl);
-begin
-    if (frmRosterWindow <> nil) then
-        frmRosterWindow.DockRoster(docksite);
-end;
-
 {
     Get the singleton instance of the roster
 }
@@ -2110,7 +2095,7 @@ begin
     end;
 end;
 
-procedure TfrmRosterWindow.DockRoster(dockSite : TWinControl);
+procedure TfrmRosterWindow.DockWindow(dockSite : TWinControl);
 begin
     if (dockSite <> Self.Parent) then begin
         StatBar.Visible := false;
