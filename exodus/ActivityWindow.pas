@@ -632,125 +632,134 @@ var
 begin
     if (sortType = ssUnsorted) then exit;
 
-    _curListSort := sortType;
-    tempList := TWidestringList.Create();
+    try
+        _curListSort := sortType;
+        tempList := TWidestringList.Create();
 
-    sortstring := _(sSortBy);
+        sortstring := _(sSortBy);
 
-    // Always do an Alpha sort first
-    _trackingList.Sort;
+        // Always do an Alpha sort first
+        _trackingList.Sort;
 
-    if (sortType = ssAlpha) then begin
-        sortstring := sortstring + _(sSortAlpha);
-    end
-    // Refine sort if something other then Alpha
-    else if (sortType = ssRecent) then begin
-        // Sort by most Recent Activity, then by alpha for tied items
-        sortstring := sortstring + _(sSortRecent);
-        for i := 0 to _trackingList.Count - 1 do begin
-            // iterate over list to reorder
-            itemadded := false;
-            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-            for j := 0 to tempList.Count - 1 do begin
-                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
-                insertPoint := j;
-                if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then begin
-                    // We have an new item to add to the temp list that should be higher
-                    // then the current item in the templist
-                    tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
-                    itemadded := true;
-                    break;
+        if (sortType = ssAlpha) then begin
+            sortstring := sortstring + _(sSortAlpha);
+        end
+        // Refine sort if something other then Alpha
+        else if (sortType = ssRecent) then begin
+            // Sort by most Recent Activity, then by alpha for tied items
+            sortstring := sortstring + _(sSortRecent);
+            for i := 0 to _trackingList.Count - 1 do begin
+                // iterate over list to reorder
+                itemadded := false;
+                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+                if (tempitem1 <> nil) then begin
+                    for j := 0 to tempList.Count - 1 do begin
+                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                        insertPoint := j;
+                        if (tempitem1.frm.LastActivity > tempitem2.frm.LastActivity) then begin
+                            // We have an new item to add to the temp list that should be higher
+                            // then the current item in the templist
+                            tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
+                            itemadded := true;
+                            break;
+                        end;
+                    end;
+                end;
+                if (not itemadded) then begin
+                    // We didn't insert the item into the temp list so add to end
+                    tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
                 end;
             end;
-            if (not itemadded) then begin
-                // We didn't insert the item into the temp list so add to end
-                tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+            _trackingList.Clear;
+            for i := 0 to tempList.Count - 1 do begin
+                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
             end;
-        end;
-        _trackingList.Clear;
-        for i := 0 to tempList.Count - 1 do begin
-            _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-        end;
-    end
-    else if (sortType = ssType) then begin
-        // Sort by the type of window (room, chat, etc.), then by alpha for tied items
-        sortstring := sortstring + _(sSortType);
-        roomList := TWidestringList.Create();
-        chatList := TWidestringList.Create();
-        otherList := TWidestringList.Create();
+        end
+        else if (sortType = ssType) then begin
+            // Sort by the type of window (room, chat, etc.), then by alpha for tied items
+            sortstring := sortstring + _(sSortType);
+            roomList := TWidestringList.Create();
+            chatList := TWidestringList.Create();
+            otherList := TWidestringList.Create();
 
-        // Split them up by group
-        for i := 0 to _trackingList.Count - 1 do begin
-            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-            if (tempitem1.frm is TfrmRoom) then begin
-                roomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-            end
-            else if (tempitem1.frm is TfrmChat) then begin
-                chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-            end
-            else begin
-                otherList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
-            end;
-        end;
-
-        // Reassemble list
-        _trackingList.Clear();
-
-        for i := 0 to roomList.Count - 1 do begin
-            _trackingList.AddObject(roomList.Strings[i], roomList.Objects[i]);
-        end;
-        for i := 0 to chatList.Count - 1 do begin
-            _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
-        end;
-        for i := 0 to otherList.Count - 1 do begin
-            _trackingList.AddObject(otherList.Strings[i], otherList.Objects[i]);
-        end;
-
-        // Cleanup
-        roomList.Clear();
-        chatList.Clear();
-        otherList.Clear();
-
-        roomList.Free();
-        chatList.Free();
-        otherList.Free();
-    end
-    else if (sortType = ssUnread) then begin
-        // Sort by Highest Unread msgs
-        sortstring := sortstring + _(sSortUnread);
-        for i := 0 to _trackingList.Count - 1 do begin
-            // iterate over list to reorder
-            itemadded := false;
-            tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
-            for j := 0 to tempList.Count - 1 do begin
-                tempitem2 := TAWTrackerItem(tempList.Objects[j]);
-                insertPoint := j;
-                if (tempitem2.awItem.count < tempitem1.awItem.count) then begin
-                    // We have an new item to add to the temp list that should be higher
-                    // then the current item in the templist
-                    tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
-                    itemadded := true;
-                    break;
+            // Split them up by group
+            for i := 0 to _trackingList.Count - 1 do begin
+                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+                if (tempitem1 <> nil) then begin
+                    if (tempitem1.frm is TfrmRoom) then begin
+                        roomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                    end
+                    else if (tempitem1.frm is TfrmChat) then begin
+                        chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                    end
+                    else begin
+                        otherList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                    end;
                 end;
             end;
-            if (not itemadded) then begin
-                // We didn't insert the item into the temp list so add to end
-                tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+
+            // Reassemble list
+            _trackingList.Clear();
+
+            for i := 0 to roomList.Count - 1 do begin
+                _trackingList.AddObject(roomList.Strings[i], roomList.Objects[i]);
             end;
+            for i := 0 to chatList.Count - 1 do begin
+                _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
+            end;
+            for i := 0 to otherList.Count - 1 do begin
+                _trackingList.AddObject(otherList.Strings[i], otherList.Objects[i]);
+            end;
+
+            // Cleanup
+            roomList.Clear();
+            chatList.Clear();
+            otherList.Clear();
+
+            roomList.Free();
+            chatList.Free();
+            otherList.Free();
+        end
+        else if (sortType = ssUnread) then begin
+            // Sort by Highest Unread msgs
+            sortstring := sortstring + _(sSortUnread);
+            for i := 0 to _trackingList.Count - 1 do begin
+                // iterate over list to reorder
+                itemadded := false;
+                tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
+                if (tempitem1 <> nil) then begin
+                    for j := 0 to tempList.Count - 1 do begin
+                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                        insertPoint := j;
+                        if (tempitem2.awItem.count < tempitem1.awItem.count) then begin
+                            // We have an new item to add to the temp list that should be higher
+                            // then the current item in the templist
+                            tempList.InsertObject(insertPoint, _trackingList.Strings[i], _trackingList.Objects[i]);
+                            itemadded := true;
+                            break;
+                        end;
+                    end;
+                end;
+                if (not itemadded) then begin
+                    // We didn't insert the item into the temp list so add to end
+                    tempList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                end;
+            end;
+            _trackingList.Clear;
+            for i := 0 to tempList.Count - 1 do begin
+                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
+            end;
+        end
+        else begin
+            // Sort was Alpha which we did above
         end;
-        _trackingList.Clear;
-        for i := 0 to tempList.Count - 1 do begin
-            _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
-        end;
-    end
-    else begin
-        // Sort was Alpha which we did above
+
+        lblSort.Caption := sortstring;
+
+        tempList.Clear;
+        tempList.Free;
+    except
     end;
-
-    lblSort.Caption := sortstring;
-
-    tempList.Clear;
-    tempList.Free;
 end;
 
 {---------------------------------------}
