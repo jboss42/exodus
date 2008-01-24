@@ -152,7 +152,6 @@ type
     procedure lblServerListClick(Sender: TObject);
     procedure optSSLClick(Sender: TObject);
     procedure SRVOptionClick(Sender: TObject);
-    procedure doJidExit(Sender: TObject);
     procedure chkWinLoginClick(Sender: TObject);
     procedure btnRenameClick(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -290,7 +289,6 @@ begin
     jid := TJabberID.applyJEP106(txtUsername.Text) +
             '@' + cboServer.Text +
             '/' + cboResource.Text;
-    //jid := cboJabberID.Text + '/' + cboResource.Text;
     valid := true;
 
     if (not isValidJid(jid)) then
@@ -787,50 +785,6 @@ procedure TfrmConnDetails.SRVOptionClick(Sender: TObject);
 begin
    pnlManualDetails.Enabled := not optSRVAuto.Checked;
    pnlManualDetails.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfrmConnDetails.doJidExit(Sender: TObject);
-var
-    inp, outp: Widestring;
-begin
-    if (_Canceled) then exit;
-
-    // stringprep txtUsername, cboServer, or cboResource.
-    if (Sender = txtUsername) then begin
-        inp := txtUsername.Text;
-        if (Trim(inp) = '') then
-            MessageDlgW(_('The Username you entered is not allowed.'), mtError, [mbOK], 0);
-
-        inp := TJabberID.applyJEP106(inp);
-        outp := xmpp_nodeprep(inp);
-        if (outp = '') then
-            MessageDlgW(_('The Username you entered is not allowed.'), mtError, [mbOK], 0)
-        else
-            txtUsername.Text := TJabberID.removeJEP106(outp);
-    end
-    else if (Sender = cboServer) then begin
-        inp := cboServer.Text;
-        if (Trim(inp) = '') then
-            MessageDlgW(_('The Domain you entered is not allowed.'), mtError, [mbOK], 0);
-
-        outp := xmpp_nameprep(inp);
-        if (outp = '') then
-            MessageDlgW(_('The Domain you entered is not allowed.'), mtError, [mbOK], 0)
-        else
-            cboServer.Text := outp;
-    end
-    else if (Sender = cboResource) then begin
-        inp := cboResource.Text;
-        if (Trim(inp) = '') then
-            inp := resourceName;
-
-        outp := xmpp_resourceprep(inp);
-        if (outp = '') then
-            MessageDlgW(_('The resource you entered is not allowed.'), mtError, [mbOK], 0)
-        else
-            cboResource.Text := outp;
-    end;
 end;
 
 {---------------------------------------}

@@ -155,7 +155,6 @@ inherited frmConnDetails: TfrmConnDetails
             Height = 20
             ItemHeight = 12
             TabOrder = 0
-            OnExit = doJidExit
             OnKeyPress = txtUsernameKeyPress
             Items.Strings = (
               'jabber.org'
@@ -191,7 +190,6 @@ inherited frmConnDetails: TfrmConnDetails
             Width = 206
             Height = 20
             TabOrder = 0
-            OnExit = doJidExit
           end
         end
       end
@@ -221,6 +219,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 0
+          TabStop = True
           AutoHide = False
           object Label12: TTntLabel
             Left = 3
@@ -237,7 +236,6 @@ inherited frmConnDetails: TfrmConnDetails
             Height = 20
             ItemHeight = 12
             TabOrder = 0
-            OnExit = doJidExit
             OnKeyPress = txtUsernameKeyPress
           end
         end
@@ -253,6 +251,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 1
+          TabStop = True
           AutoHide = False
           object TntLabel2: TTntLabel
             Left = 3
@@ -282,6 +281,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 2
+          TabStop = True
           AutoHide = False
           object Label6: TTntLabel
             Left = 3
@@ -421,6 +421,7 @@ inherited frmConnDetails: TfrmConnDetails
           Align = alTop
           AutoSize = True
           TabOrder = 0
+          TabStop = True
           AutoHide = True
           object optSRVManual: TTntRadioButton
             AlignWithMargins = True
@@ -436,7 +437,6 @@ inherited frmConnDetails: TfrmConnDetails
             TabOrder = 1
             TabStop = True
             OnClick = SRVOptionClick
-            ExplicitLeft = 2
           end
           object optSRVAuto: TTntRadioButton
             AlignWithMargins = True
@@ -467,6 +467,7 @@ inherited frmConnDetails: TfrmConnDetails
           Align = alTop
           AutoSize = True
           TabOrder = 1
+          TabStop = True
           AutoHide = True
           object pnlHost: TExBrandPanel
             AlignWithMargins = True
@@ -480,6 +481,7 @@ inherited frmConnDetails: TfrmConnDetails
             Margins.Bottom = 0
             Align = alTop
             TabOrder = 0
+            TabStop = True
             AutoHide = False
             object Label4: TTntLabel
               AlignWithMargins = True
@@ -511,8 +513,8 @@ inherited frmConnDetails: TfrmConnDetails
             Margins.Bottom = 0
             Align = alTop
             TabOrder = 1
+            TabStop = True
             AutoHide = False
-            ExplicitLeft = 22
             object Label7: TTntLabel
               Left = 3
               Top = 0
@@ -544,6 +546,7 @@ inherited frmConnDetails: TfrmConnDetails
           Align = alTop
           AutoSize = True
           TabOrder = 2
+          TabStop = True
           AutoHide = True
           Caption = 'SSL modes:'
           object optSSLoptional: TTntRadioButton
@@ -603,6 +606,7 @@ inherited frmConnDetails: TfrmConnDetails
         AutoSize = True
         Padding.Bottom = 12
         TabOrder = 0
+        TabStop = True
         AutoHide = True
         object pnlSocksType: TExBrandPanel
           AlignWithMargins = True
@@ -616,6 +620,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 0
+          TabStop = True
           AutoHide = False
           object lblSocksType: TTntLabel
             Left = 3
@@ -654,6 +659,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 1
+          TabStop = True
           AutoHide = False
           object lblSocksHost: TTntLabel
             Left = 3
@@ -683,6 +689,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Bottom = 6
           Align = alTop
           TabOrder = 2
+          TabStop = True
           AutoHide = False
           object lblSocksPort: TTntLabel
             Left = 3
@@ -729,6 +736,7 @@ inherited frmConnDetails: TfrmConnDetails
             Margins.Bottom = 6
             Align = alTop
             TabOrder = 1
+            TabStop = True
             AutoHide = False
             object lblSocksUsername: TTntLabel
               Left = 3
@@ -758,6 +766,7 @@ inherited frmConnDetails: TfrmConnDetails
             Margins.Bottom = 6
             Align = alTop
             TabOrder = 2
+            TabStop = True
             AutoHide = False
             object lblSocksPassword: TTntLabel
               Left = 3
@@ -825,6 +834,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Right = 0
           Align = alTop
           TabOrder = 1
+          TabStop = True
           AutoHide = False
           object Label1: TTntLabel
             Left = 3
@@ -852,6 +862,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Right = 0
           Align = alTop
           TabOrder = 2
+          TabStop = True
           AutoHide = False
           object Label2: TTntLabel
             Left = 3
@@ -893,6 +904,7 @@ inherited frmConnDetails: TfrmConnDetails
           Margins.Right = 0
           Align = alTop
           TabOrder = 3
+          TabStop = True
           AutoHide = False
           object Label9: TTntLabel
             Left = 3
