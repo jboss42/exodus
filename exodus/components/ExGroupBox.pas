@@ -99,7 +99,7 @@ begin
     _bevel.Align := alNone;
     _bevel.Left := 3;
     _bevel.Width := _pnlBevel.Width - 3;
-    _bevel.Top := 9;
+    _bevel.Top := 7;
     _bevel.Anchors := [akTop, akleft, akRight];
 
     inherited;
