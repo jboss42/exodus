@@ -908,7 +908,9 @@ uses
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser, DisplayName,
-    ComServ, PrefFile, DebugManager;
+    ComServ, PrefFile,
+    ManagePluginsDlg,
+    DebugManager;
 
 {$R *.DFM}
 
@@ -3973,7 +3975,7 @@ end;
 procedure TfrmExodus.mnuPluginOptsClick(Sender: TObject);
 begin
     // Show the prefs/plugins page.
-//    StartPrefs(pref_plugins);
+    ManagePluginsDlg.showManagePluginDlg(Self);
 end;
 
 {---------------------------------------}
