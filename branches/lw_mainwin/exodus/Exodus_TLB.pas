@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2008-01-23 08:56:34 from Type Library described below.
+// File generated on 2008-01-23 15:37:50 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)

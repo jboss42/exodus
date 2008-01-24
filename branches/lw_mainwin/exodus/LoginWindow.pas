@@ -4,19 +4,29 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExForm, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls;
+  Dialogs, ExForm, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls,
+  pngextra, XMLTag, pngimage, ExImagedButton;
 
 type
   TfrmLoginWindow = class(TExForm)
     lblStatus: TTntLabel;
     lblConnect: TTntLabel;
     lstProfiles: TTntListView;
-    pnlMetadata: TPanel;
+    pnlLogoStuff: TPanel;
     imgLogo: TImage;
+    pnlNewUser: TPanel;
+    Image1: TImage;
+    TntLabel1: TTntLabel;
+    pnlCreateProfile: TPanel;
+    Image2: TImage;
+    TntLabel2: TTntLabel;
+    ExImagedButton1: TExImagedButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
-    procedure ShowProfiles();
+    procedure LoadProfiles();
+    function LoadLogo(): Integer;
+    function LoadDisclaimer(): Integer;
     
   public
     { Public declarations }
@@ -52,7 +62,8 @@ begin
         Self.Align := alClient;
     end;
 end;
-procedure TfrmLoginWindow.ShowProfiles;
+
+procedure TfrmLoginWindow.LoadProfiles;
 var
     c, i: integer;
     li: TTntListItem;
@@ -67,12 +78,92 @@ begin
         li.Caption := MainSession.Prefs.Profiles[i];
     end;
 end;
+function TfrmLoginWindow.LoadDisclaimer(): Integer;
+begin
+    result := 0;
+end;
+function TfrmLoginWindow.LoadLogo() : Integer;
+var
+    tag: TXMLTag;
+    restype : Widestring;
+    resname : Widestring;
+    ressrc  : Widestring;
+    inst    : cardinal;
+begin
+    Result := 0;
+    restype := '';
+    resname := '';
+    ressrc  := '';
+
+    //Load tag info
+    tag := MainSession.Prefs.getXMLPref('brand_logo');
+    if (tag <> nil) then with tag do begin
+        restype := GetAttribute('type');
+        resname := GetAttribute('resname');
+        ressrc  := GetAttribute('source');
+
+        try
+            Result := StrToInt(GetAttribute('height'));
+        except
+            Result := 0;
+        end;
+    end;
+
+    with imgLogo do begin
+        try
+            if (restype = 'dll') and (ressrc <> '') and (resname <> '') then begin
+                inst := LoadLibraryW(PWChar(ressrc));
+                if (inst = 0) then
+                    inst := LoadLibraryA(PChar(String(ressrc)));
+                if (inst > 0) then begin
+                    Picture.Bitmap.LoadFromResourceName(inst, resname);
+                    FreeLibrary(inst);
+                end;
+            end
+            else if (restype = 'file') and (ressrc <> '') then begin
+                if FileExists(ressrc) then
+                    Picture.LoadFromFile(ressrc)
+                else
+                    Picture.LoadFromFile(ExtractFilePath(Application.ExeName) + ressrc);
+            end;
+        except
+            //Could not load logo
+        end;
+
+        if Picture.Bitmap.HandleAllocated() then begin
+            if (Result = 0) then
+                Result := Picture.Bitmap.Height;
+            imgLogo.Visible := true;
+        end;
+    end;
+end;
 
 procedure TfrmLoginWindow.FormCreate(Sender: TObject);
+var
+    metaHeight: integer;
 begin
-  inherited;
+    inherited;
 
-  ShowProfiles();
+    LoadProfiles();
+
+    metaHeight := 0;
+
+    //Brand logo
+    metaHeight := metaHeight + LoadLogo();
+
+    //Brand "new user wizard" button
+    if not MainSession.Prefs.getBool('branding_roster_hide_new_wizard') then begin
+        pnlNewUser.Visible := true;
+    end else begin
+        pnlNewUser.Visible := false;
+    end;
+
+    //Brand "create profile" button
+    if True then begin
+        pnlCreateProfile.Visible := true;
+    end else begin
+        pnlCreateProfile.Visible := false;
+    end;
 end;
 
 end.
