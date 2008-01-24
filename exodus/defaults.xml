@@ -2,7 +2,7 @@
   <prefs>
     <!-- Use the following tags to brand default preference values. These
          sections control what is shown in the clients preference dialog. -->
-    <!--------------------------- Preference Screens -------------------------->
+    <!-- Preference Screens -->
     <show_system_preferences value="1"/>
     <show_contact_list_preferences value="1"/>
     <show_display_preferences value="1"/>
@@ -12,7 +12,7 @@
     <show_presence_preferences value="1"/>
     <show_hot_key_preferences value="1"/>
 
-    <!--------------------------- System Preferences -------------------------->
+    <!-- System Preferences -->
     <auto_start value="0" control="chkAutoStart" state="rw"/>
     <autologin value="0" control="chkAutoLogin" state="rw"/>
     <min_start value="0" control="chkStartMin" state="rw"/>
@@ -42,7 +42,7 @@
     <auto_update_url value="http://exodus.googlecode.com/files/exodus-released.exe"/>
     <auto_update_changelog_url value="http://code.google.com/p/exodus/wiki/ChangeLog"/>
 
-    <!---------------------- Contact List Preferences ------------------------->
+    <!-- Contact List Preferences -->
     <default_nick control="txtDefaultNick" state="rw">
       <control name="lblDefaultNick"/>
     </default_nick>
@@ -90,7 +90,7 @@
       <control name="trkRosterAlpha"/>
     </roster_alpha_val>
 
-    <!---------------------- Display Preferences ------------------------->
+    <!-- Display Preferences -->
     <roster_font_name value="Arial" state="rw"/>
     <roster_font_color value="$000000"/>
     <roster_font_size value="10"/>
@@ -123,7 +123,7 @@
     <custom_icondefs value="custom-icons.xml" state="rw"/>
     <show_priority value="1" control="chkShowPriority" state="rw"/>
     <timestamp value="1" control="chkTimestamp" state="rw"/>
-    <timestamp_format value="h:mm am/pm" control="txtTimestampFmt state="rw"">
+    <timestamp_format value="h:mm am/pm" control="txtTimestampFmt" state="rw">
     	<control name="lblTimestampFmt"/>
     </timestamp_format>
 
@@ -149,7 +149,7 @@
       	<s>yahoo_emoticons.dll</s>
     </emoticon_dlls>
 
-    <!----------------- Notification Preferences ------------------------------>
+    <!-- Notification Preferences -->
     <notify_sounds value="0" control="chkSound" state="rw"/>
 
     <!-- types of notifications. This section allows branders to hide
@@ -212,7 +212,7 @@
     <toast_alpha_val value="255" state="rw"/>
     <toast_duration value="5" state="rw"/>
 
-    <!----------------------- Message Preferences ----------------------------->
+    <!-- Message Preferences -->
     <s10n_auto_accept value="2" state="rw"/>
     <s10n_auto_add value="1" control="chkIncomingS10nAdd" state="rw"/>
 
@@ -247,7 +247,7 @@
     <queue_dnd_chats value="0" control="chkQueueDNDChats" state="inv"/>
     <queue_not_avail value="1" control="chkQueueNotAvail" state="inv"/>
 
-    <!------------------- AutoAway Preferences -------------------------------->
+    <!-- AutoAway Preferences -->
     <auto_away value="1" control="chkAutoAway" state="rw"/>
     <away_time value="5" control="txtAwayTime" state="rw">
     	<control name="lblAwayTime"/>
@@ -269,7 +269,7 @@
     	<control name="lblDisconnectTime"/>
     </disconnect_time>
 
-    <!--------------------- Presence Preferences _----------------------------->
+    <!-- Presence Preferences -->
     <client_caps value="1" control="chkClientCaps" state="rw"/>
     <room_joins value="0" control="chkRoomJoins" state="rw"/>
     <!-- hmm, why two of these? -->
@@ -280,7 +280,7 @@
     <pres_custom state="rw"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
 
-    <!--------------------- Hotkey Preferences _------------------------------->
+    <!-- Hotkey Preferences -->
     <hotkeys_keys state='rw'/>
     <hotkeys_text state='rw'/>
 
