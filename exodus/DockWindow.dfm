@@ -42,7 +42,7 @@ object frmDockWindow: TfrmDockWindow
     OnDockDrop = AWTabControlDockDrop
     OnUnDock = AWTabControlUnDock
   end
-  object pnlActivityList: TExGradientPanel
+  object pnlActivityList: TPanel
     Left = 0
     Top = 0
     Width = 185

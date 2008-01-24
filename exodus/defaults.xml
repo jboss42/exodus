@@ -340,6 +340,10 @@
 
     <!-- ACTIVITY WINDOW PREFS -->
     <!-- Activity Window Colors -->
+    <activity_window_default_color>
+    	<start>$00D1BFAB</start>
+        <end>$00BDAA92</end>
+    </activity_window_default_color>
     <activity_window_selected_color>
     	<start>$00D0C3AF</start>
         <end>$00D0C3AF</end>
@@ -350,7 +354,7 @@
     </activity_window_high_priority_color>
     <activity_window_new_window_color>
     	<start>$0045b1fe</start>
-        <end>$000189ed</end>
+        <end>$0045b1fe</end>
     </activity_window_new_window_color>
 
     <!-- Activity Window Selection Colors -->
