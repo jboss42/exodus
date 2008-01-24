@@ -92,7 +92,6 @@ type
     _docked: boolean;
     _initiallyDocked: boolean;  //start docked?
     _normalImageIndex: integer;//image shown when not notifying
-    _notifyImageIndex: integer;//image shown when notifying
     _prefs_callback_id: integer; //ID for prefs events
 
     function  getImageIndex(): Integer;
@@ -111,7 +110,6 @@ type
     procedure OnFlash();override;
 
     property NormalImageIndex: integer read _normalImageIndex write _normalImageIndex;
-    property NotifyImageIndex: integer read _notifyImageIndex write _notifyImageIndex;
 
     procedure showDockbar(show: boolean);
     procedure showTopbar(show: boolean);
@@ -173,17 +171,6 @@ type
     property Docked: boolean read _docked write _docked;
     property FloatPos: TRect read getPosition;
 
-    {
-        Index into the TRosterImages list for image mapping
-
-        ImageIndex controls what image appears on a tab for a docked
-        form. @see jopl/RosterImages for complete image map
-
-        Base class will use either normalImageIndex (not notifying) or
-        notifyImageIndex when this property is read. When this property
-        is set, normalImageIndex is set and dock manager refreshTab is
-        called.
-    }
     property ImageIndex: Integer read getImageIndex write setImageIndex;
 
     {
@@ -264,7 +251,6 @@ end;
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
-    _notifyImageIndex := RosterImages.RI_ATTN_INDEX;
     btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
     btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     _docked := false;
@@ -289,9 +275,6 @@ end;
 
 function TfrmDockable.getImageIndex(): Integer;
 begin
-    if (isNotifying and (GetDockmanager().getTopDocked() <> Self)) then
-        Result := _notifyImageIndex
-    else
         Result := _normalImageIndex;
 end;
 
