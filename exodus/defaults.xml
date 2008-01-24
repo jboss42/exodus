@@ -356,15 +356,19 @@
     	<start>$0045b1fe</start>
         <end>$0045b1fe</end>
     </activity_window_new_window_color>
+    <activity_window_bevel_color>
+    	<shadow>$00ab9d8b</shadow>
+        <highlight>$00e1d6c9</highlight>
+    </activity_window_bevel_color>
 
-    <!-- Activity Window Selection Colors -->
+    <!-- Activity Window Font Colors -->
     <activity_window_selected_font_color value="$00000000"/>
     <activity_window_non_selected_font_color value="$00000000"/>
     <activity_window_unread_msgs_font_color value="$000000ff"/>
     <activity_window_high_priority_font_color value="$00ffffff"/>
     <activity_window_unread_msgs_high_priority_font_color value="$000000ff"/>
 
-    <!-- Sort type -->
+    <!-- Activity Window Sort type -->
     <activity_window_sort value="1"/>
     <!-- /ACTIVITY WINDOW PREFS -->
 
