@@ -54,16 +54,19 @@ object frmActivityWindow: TfrmActivityWindow
         OnClick = pnlListScrollUpClick
         ExplicitLeft = 75
       end
-      object ScrollUpBevel: TBevel
+      object ScrollUpBevel: TColorBevel
         Left = 0
-        Top = 17
+        Top = -28
         Width = 187
-        Height = 5
+        Height = 50
         Align = alBottom
         Shape = bsBottomLine
-        ExplicitLeft = 1
-        ExplicitTop = 30
-        ExplicitWidth = 183
+        HighLight = clBtnHighlight
+        Shadow = clBtnShadow
+        FrameColor = frUser
+        ExplicitLeft = 137
+        ExplicitTop = 0
+        ExplicitWidth = 22
       end
     end
     object pnlListScrollDown: TExGradientPanel
@@ -92,16 +95,16 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitLeft = 75
         ExplicitTop = 2
       end
-      object ScrollDownBevel: TBevel
+      object ScrollDownBevel: TColorBevel
         Left = 0
         Top = 0
         Width = 187
         Height = 5
         Align = alTop
         Shape = bsTopLine
-        ExplicitLeft = 1
-        ExplicitTop = 30
-        ExplicitWidth = 183
+        HighLight = clBtnHighlight
+        Shadow = clBtnShadow
+        FrameColor = frUser
       end
     end
     object pnlList: TExGradientPanel
@@ -117,6 +120,7 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitTop = 54
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -149,17 +153,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      object SortBevel: TBevel
-        Left = 0
-        Top = 25
-        Width = 187
-        Height = 5
-        Align = alBottom
-        Shape = bsBottomLine
-        ExplicitLeft = 1
-        ExplicitTop = 30
-        ExplicitWidth = 183
-      end
       object lblSort: TTntLabel
         Left = 21
         Top = 5
@@ -224,6 +217,20 @@ object frmActivityWindow: TfrmActivityWindow
         Align = alRight
         Shape = bsSpacer
         ExplicitLeft = 177
+      end
+      object SortBevel: TColorBevel
+        Left = 0
+        Top = 25
+        Width = 187
+        Height = 5
+        Align = alBottom
+        Shape = bsBottomLine
+        HighLight = clBtnHighlight
+        Shadow = clBtnShadow
+        FrameColor = frUser
+        ExplicitLeft = 104
+        ExplicitTop = 32
+        ExplicitWidth = 50
       end
     end
   end

@@ -152,7 +152,7 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('Win32', [TExRichEdit]);
+  RegisterComponents('Exodus Components', [TExRichEdit]);
 end;
 
 function BitmapToRTF(pict: Graphics.TBitmap): string;

@@ -49,7 +49,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Win32', [TExGradientPanel]);
+  RegisterComponents('Exodus Components', [TExGradientPanel]);
 end;
 
 procedure TGradientProps.Assign(Source: TPersistent);

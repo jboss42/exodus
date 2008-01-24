@@ -67,7 +67,7 @@ uses SysUtils, Windows, Dialogs, Forms, CommCtrl, StdCtrls, GnuGetText, Messages
 Math;
 procedure Register;
 begin
-   RegisterComponents('Win32', [TExNumericEdit]);
+   RegisterComponents('Exodus Components', [TExNumericEdit]);
 end;
 
 procedure TExUpDown.CreateWindowHandle(const Params: TCreateParams);

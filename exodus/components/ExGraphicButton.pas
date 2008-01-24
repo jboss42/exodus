@@ -65,7 +65,7 @@ uses Types, Windows, TnTWindows;
 
 procedure Register;
 begin
-    RegisterComponents('Win32', [TExGraphicButton]);
+    RegisterComponents('Exodus Components', [TExGraphicButton]);
 end;
 
 constructor TExGraphicButton.Create(AOwner: TComponent);

@@ -53,7 +53,7 @@ implementation
 {$R *.dfm}
 procedure Register();
 begin
-  RegisterComponents('Win32', [TExBrandPanel]);
+  RegisterComponents('Exodus Components', [TExBrandPanel]);
 end;
 
 //protected methods

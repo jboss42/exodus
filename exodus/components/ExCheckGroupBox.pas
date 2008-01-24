@@ -40,7 +40,7 @@ implementation
 
 procedure Register();
 begin
-    RegisterComponents('Win32', [TExCheckGroupBox]);
+    RegisterComponents('Exodus Components', [TExCheckGroupBox]);
 end;
 
 procedure OutputDebugMsg(Message : String);

@@ -39,11 +39,10 @@ uses
     ExtCtrls,
     ExFrame,
     ExGradientPanel,
-    Graphics, Menus, TntMenus;
+    Graphics, Menus, TntMenus, SClrRGrp;
 
 type
     TfAWItem = class(TExFrame)
-    AWItemBevel: TBevel;
     pnlAWItemGPanel: TExGradientPanel;
     lblName: TTntLabel;
     lblCount: TTntLabel;
@@ -56,6 +55,7 @@ type
     mnuDockWindow: TTntMenuItem;
     FarRightSpacer: TBevel;
     FarLeftSpacer: TBevel;
+    AWItemBevel: TColorBevel;
     procedure imgPresenceClick(Sender: TObject);
     procedure lblNameClick(Sender: TObject);
     procedure lblCountClick(Sender: TObject);
@@ -86,6 +86,8 @@ type
         _activity_window_unread_msgs_font_color: TColor;
         _activity_window_high_priority_font_color: TColor;
         _activity_window_unread_msgs_high_priority_font_color: TColor;
+        _activity_window_bevel_shadow_color: TColor;
+        _activity_window_bevel_highlight_color: TColor;
         _timNewItemTimer: TTimer;
         _flashcnt: integer;
 
@@ -170,6 +172,9 @@ begin
         _activity_window_unread_msgs_font_color := $000000ff;
         _activity_window_high_priority_font_color := $00000000;
         _activity_window_unread_msgs_high_priority_font_color := $00000000;
+        _activity_window_bevel_shadow_color := AWItemBevel.Shadow;
+        _activity_window_bevel_highlight_color := AWItemBevel.HighLight;
+
 
         // Set from prefs
         tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
@@ -196,6 +201,14 @@ begin
         if (tag <> nil) then begin
             _newWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
             _newWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        end;
+        FreeAndNil(tag);
+        tag := MainSession.Prefs.getXMLPref('activity_window_bevel_color');
+        if (tag <> nil) then begin
+            _activity_window_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
+            _activity_window_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
+            AWItemBevel.Shadow := _activity_window_bevel_shadow_color;
+            AWItemBevel.HighLight := _activity_window_bevel_highlight_color;
         end;
         FreeAndNil(tag);
         _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
