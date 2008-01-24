@@ -99,7 +99,6 @@ end;
 procedure TExCheckGroupBox.CreateWindowHandle(const Params: TCreateParams);
 begin
     inherited;
-OutputDebugMsg('Calling AutoSizeCheckBox from CreateWindowHandle');    
     AutoSizeCheckBox();
 end;
 
@@ -156,20 +155,17 @@ begin
     InitializeControls();
     Self.Canvas.Font := Self.Font;
 
-    //if caption has n accellerator defined, don't add additional & char...
+    //if caption has accellerator defined, don't add additional & char...
     extra := '';
     if (Pos('&', _chkBox.Caption) = 0) then
-        extra := '&';
+        extra := 'WWW';
 
     _chkBox.Width := Self.Canvas.TextWidth(_chkBox.Caption + extra) + BOX_SIZE + MARGIN_SIZE;
     _pnlTop.Realign();
-
-OutputDebugMsg('Computed width: ' + IntToStr(_chkBox.Width) + ', font size: ' + IntToStr(Font.Size) + ', for caption: ' + _chkBox.Caption);
 end;
 
 procedure TExCheckGroupBox.SetCaption(c: widestring);
 begin
-OutputDebugMsg('Calling AutoSizeCheckBox from SetCaption: ' + c);
     _chkBox.Caption := c;    
     AutoSizeCheckBox();
 end;

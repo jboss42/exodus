@@ -3,23 +3,23 @@ inherited frmConnDetails: TfrmConnDetails
   Top = 170
   BorderStyle = bsDialog
   Caption = 'Connection Details'
-  ClientHeight = 354
-  ClientWidth = 449
-  Constraints.MinWidth = 378
+  ClientHeight = 384
+  ClientWidth = 487
+  Constraints.MinWidth = 410
   DefaultMonitor = dmDesktop
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  ExplicitWidth = 455
-  ExplicitHeight = 386
+  ExplicitWidth = 493
+  ExplicitHeight = 416
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   object PageControl1: TTntPageControl
-    Left = 111
+    Left = 120
     Top = 0
-    Width = 340
-    Height = 316
-    ActivePage = tbsAcctDetails
+    Width = 368
+    Height = 342
+    ActivePage = tbsProxy
     Anchors = [akLeft, akTop, akRight]
     Style = tsButtons
     TabOrder = 0
@@ -28,35 +28,35 @@ inherited frmConnDetails: TfrmConnDetails
       ImageIndex = -1
       TabVisible = False
       DesignSize = (
-        332
-        306)
+        360
+        332)
       object lblServerList: TTntLabel
-        Left = 176
-        Top = 292
-        Width = 145
-        Height = 12
+        Left = 191
+        Top = 316
+        Width = 154
+        Height = 13
         Cursor = crHandPoint
         Anchors = [akRight, akBottom]
         Caption = 'Download a list of public servers'
         OnClick = lblServerListClick
-        ExplicitLeft = 215
       end
       object pnlAccountDetails: TExBrandPanel
         Left = 0
         Top = 0
-        Width = 215
-        Height = 213
+        Width = 251
+        Height = 226
         AutoSize = True
+        BevelOuter = bvNone
         Padding.Bottom = 12
+        ParentColor = True
         TabOrder = 0
-        TabStop = True
         AutoHide = True
         object btnRename: TTntButton
           AlignWithMargins = True
           Left = 0
-          Top = 175
-          Width = 119
-          Height = 23
+          Top = 186
+          Width = 155
+          Height = 25
           Margins.Left = 0
           Margins.Top = 6
           Margins.Right = 96
@@ -68,9 +68,9 @@ inherited frmConnDetails: TfrmConnDetails
         object chkSavePasswd: TTntCheckBox
           AlignWithMargins = True
           Left = 0
-          Top = 132
-          Width = 215
-          Height = 15
+          Top = 141
+          Width = 251
+          Height = 16
           Margins.Left = 0
           Margins.Top = 6
           Margins.Right = 0
@@ -83,9 +83,9 @@ inherited frmConnDetails: TfrmConnDetails
         object chkRegister: TTntCheckBox
           AlignWithMargins = True
           Left = 0
-          Top = 153
-          Width = 215
-          Height = 16
+          Top = 163
+          Width = 251
+          Height = 17
           Margins.Left = 0
           Margins.Top = 6
           Margins.Right = 0
@@ -97,31 +97,32 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlPassword: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 84
-          Width = 215
-          Height = 36
+          Top = 90
+          Width = 251
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 2
-          TabStop = True
           AutoHide = False
           object lblPassword: TTntLabel
             Left = 3
             Top = 0
-            Width = 47
-            Height = 12
+            Width = 50
+            Height = 13
             Caption = 'Password:'
             FocusControl = txtPassword
             Transparent = True
           end
           object txtPassword: TTntEdit
             Left = 0
-            Top = 15
-            Width = 208
-            Height = 20
+            Top = 16
+            Width = 225
+            Height = 21
             PasswordChar = '*'
             TabOrder = 0
           end
@@ -129,31 +130,32 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlServer: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 42
-          Width = 215
-          Height = 36
+          Top = 45
+          Width = 251
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 1
-          TabStop = True
           AutoHide = False
           object lblServer: TTntLabel
             Left = 3
             Top = 0
-            Width = 34
-            Height = 12
+            Width = 36
+            Height = 13
             Caption = 'Server:'
             FocusControl = cboServer
           end
           object cboServer: TTntComboBox
             Left = 0
-            Top = 15
-            Width = 208
-            Height = 20
-            ItemHeight = 12
+            Top = 16
+            Width = 225
+            Height = 21
+            ItemHeight = 13
             TabOrder = 0
             OnKeyPress = txtUsernameKeyPress
             Items.Strings = (
@@ -165,30 +167,31 @@ inherited frmConnDetails: TfrmConnDetails
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 215
-          Height = 36
+          Width = 251
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
-          TabStop = True
           AutoHide = False
           object lblUsername: TTntLabel
             Left = 3
             Top = 0
-            Width = 48
-            Height = 12
+            Width = 52
+            Height = 13
             Caption = 'Username:'
             FocusControl = txtUsername
             Transparent = True
           end
           object txtUsername: TTntEdit
             Left = 0
-            Top = 15
-            Width = 206
-            Height = 20
+            Top = 16
+            Width = 223
+            Height = 21
             TabOrder = 0
           end
         end
@@ -200,41 +203,43 @@ inherited frmConnDetails: TfrmConnDetails
       object pnlAdvanced: TExBrandPanel
         Left = 0
         Top = 0
-        Width = 341
-        Height = 258
+        Width = 370
+        Height = 267
         AutoSize = True
+        BevelOuter = bvNone
         Padding.Bottom = 12
+        ParentColor = True
         TabOrder = 0
-        TabStop = True
         AutoHide = True
         object pnlResource: TExBrandPanel
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 341
-          Height = 36
+          Width = 370
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
-          TabStop = True
           AutoHide = False
           object Label12: TTntLabel
             Left = 3
             Top = 0
-            Width = 45
-            Height = 12
+            Width = 49
+            Height = 13
             Caption = 'Resource:'
             Transparent = True
           end
           object cboResource: TTntComboBox
             Left = 0
-            Top = 15
-            Width = 230
-            Height = 20
-            ItemHeight = 12
+            Top = 16
+            Width = 249
+            Height = 21
+            ItemHeight = 13
             TabOrder = 0
             OnKeyPress = txtUsernameKeyPress
           end
@@ -242,60 +247,62 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlRealm: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 42
-          Width = 341
-          Height = 36
+          Top = 45
+          Width = 370
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 1
-          TabStop = True
           AutoHide = False
           object TntLabel2: TTntLabel
             Left = 3
             Top = 0
-            Width = 57
-            Height = 12
+            Width = 60
+            Height = 13
             Caption = 'SASL Realm:'
             Transparent = True
           end
           object txtRealm: TTntEdit
             Left = 0
-            Top = 15
-            Width = 230
-            Height = 20
+            Top = 16
+            Width = 249
+            Height = 21
             TabOrder = 0
           end
         end
         object pnlPriority: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 84
-          Width = 341
-          Height = 38
+          Top = 90
+          Width = 370
+          Height = 41
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 2
-          TabStop = True
           AutoHide = False
           object Label6: TTntLabel
             Left = 3
             Top = 0
-            Width = 37
-            Height = 12
+            Width = 38
+            Height = 13
             Caption = 'Priority:'
             Transparent = True
           end
           object txtPriority: TExNumericEdit
             Left = 0
-            Top = 15
-            Width = 94
-            Height = 25
+            Top = 16
+            Width = 102
+            Height = 21
             BevelOuter = bvNone
             ParentColor = True
             TabOrder = 0
@@ -303,34 +310,35 @@ inherited frmConnDetails: TfrmConnDetails
             Min = 0
             Max = 127
             DesignSize = (
-              94
-              25)
+              102
+              21)
           end
         end
         object pnlKerberos: TExCheckGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 140
-          Width = 341
-          Height = 39
+          Top = 149
+          Width = 370
+          Height = 38
           Margins.Left = 0
           Margins.Top = 12
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
           AutoSize = True
+          BevelOuter = bvNone
+          Caption = 'Use &Kerberos Authentication'
+          ParentColor = True
           TabOrder = 3
-          TabStop = True
           AutoHide = False
-          Caption = 'Use Kerberos Authentication'
           Checked = False
           OnCheckChanged = chkWinLoginClick
           object chkWinLogin: TTntCheckBox
             AlignWithMargins = True
             Left = 0
-            Top = 23
-            Width = 341
-            Height = 16
+            Top = 21
+            Width = 370
+            Height = 17
             Margins.Left = 0
             Margins.Top = 6
             Margins.Right = 0
@@ -344,40 +352,42 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlx509Auth: TExCheckGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 197
-          Width = 341
-          Height = 43
+          Top = 205
+          Width = 370
+          Height = 44
           Margins.Left = 0
           Margins.Top = 12
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
           AutoSize = True
+          BevelOuter = bvNone
+          Caption = 'Use &x.509 Certificate Authentication'
+          ParentColor = True
           TabOrder = 4
-          TabStop = True
           AutoHide = True
-          Caption = 'Use x.509 Certificate Authentication'
           Checked = False
           OnCheckChanged = chkx509Click
           object pnlx509Cert: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 20
-            Width = 341
-            Height = 23
+            Top = 18
+            Width = 370
+            Height = 26
             Margins.Left = 0
             Margins.Right = 0
             Margins.Bottom = 0
             Align = alTop
             AutoSize = True
+            BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 1
-            TabStop = True
             AutoHide = False
             object btnx509browse: TTntButton
-              Left = 183
+              Left = 198
               Top = 0
-              Width = 120
-              Height = 23
+              Width = 130
+              Height = 25
               Caption = 'Select Certificate...'
               TabOrder = 0
               OnClick = btnx509browseClick
@@ -385,8 +395,8 @@ inherited frmConnDetails: TfrmConnDetails
             object txtx509: TTntEdit
               Left = 0
               Top = 2
-              Width = 177
-              Height = 20
+              Width = 192
+              Height = 21
               ReadOnly = True
               TabOrder = 1
             end
@@ -401,34 +411,36 @@ inherited frmConnDetails: TfrmConnDetails
       object pnlConnection: TExBrandPanel
         Left = 0
         Top = 0
-        Width = 222
-        Height = 222
+        Width = 241
+        Height = 228
         AutoSize = True
+        BevelOuter = bvNone
         Padding.Bottom = 12
+        ParentColor = True
         TabOrder = 0
-        TabStop = True
         AutoHide = True
         object pnlSRV: TExBrandPanel
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 222
-          Height = 38
+          Width = 241
+          Height = 40
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alTop
           AutoSize = True
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
-          TabStop = True
           AutoHide = True
           object optSRVManual: TTntRadioButton
             AlignWithMargins = True
             Left = 0
-            Top = 19
-            Width = 222
-            Height = 16
+            Top = 20
+            Width = 241
+            Height = 17
             Margins.Left = 0
             Margins.Top = 0
             Margins.Right = 0
@@ -442,8 +454,8 @@ inherited frmConnDetails: TfrmConnDetails
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 222
-            Height = 16
+            Width = 241
+            Height = 17
             Margins.Left = 0
             Margins.Top = 0
             Margins.Right = 0
@@ -457,77 +469,80 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlManualDetails: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 38
-          Width = 222
-          Height = 72
+          Top = 40
+          Width = 241
+          Height = 78
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
           AutoSize = True
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 1
-          TabStop = True
           AutoHide = True
           object pnlHost: TExBrandPanel
             AlignWithMargins = True
             Left = 20
             Top = 0
-            Width = 202
-            Height = 36
+            Width = 221
+            Height = 39
             Margins.Left = 20
             Margins.Top = 0
             Margins.Right = 0
             Margins.Bottom = 0
             Align = alTop
+            BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 0
-            TabStop = True
             AutoHide = False
             object Label4: TTntLabel
               AlignWithMargins = True
               Left = 3
               Top = 3
-              Width = 24
-              Height = 12
+              Width = 26
+              Height = 13
               Caption = 'Host:'
               Transparent = True
             end
             object txtHost: TTntEdit
               AlignWithMargins = True
               Left = 0
-              Top = 16
-              Width = 200
-              Height = 20
+              Top = 17
+              Width = 217
+              Height = 21
               TabOrder = 0
             end
           end
           object pnlPort: TExBrandPanel
             AlignWithMargins = True
             Left = 20
-            Top = 36
-            Width = 202
-            Height = 36
+            Top = 39
+            Width = 221
+            Height = 39
             Margins.Left = 20
             Margins.Top = 0
             Margins.Right = 0
             Margins.Bottom = 0
             Align = alTop
+            BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 1
-            TabStop = True
             AutoHide = False
             object Label7: TTntLabel
               Left = 3
               Top = 0
-              Width = 23
-              Height = 12
+              Width = 24
+              Height = 13
               Caption = 'Port:'
               Transparent = True
             end
             object txtPort: TTntEdit
               Left = 0
-              Top = 16
-              Width = 57
-              Height = 20
+              Top = 17
+              Width = 62
+              Height = 21
               TabOrder = 0
               Text = '5222'
             end
@@ -536,25 +551,26 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlSSL: TExGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 128
-          Width = 222
-          Height = 82
+          Top = 136
+          Width = 241
+          Height = 86
           Margins.Left = 0
           Margins.Top = 12
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alTop
           AutoSize = True
-          TabOrder = 2
-          TabStop = True
-          AutoHide = True
+          BevelOuter = bvNone
           Caption = 'SSL modes:'
+          ParentColor = True
+          TabOrder = 2
+          AutoHide = True
           object optSSLoptional: TTntRadioButton
             AlignWithMargins = True
             Left = 0
-            Top = 20
-            Width = 222
-            Height = 16
+            Top = 21
+            Width = 241
+            Height = 17
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -566,9 +582,9 @@ inherited frmConnDetails: TfrmConnDetails
           object optSSLrequired: TTntRadioButton
             AlignWithMargins = True
             Left = 0
-            Top = 42
-            Width = 222
-            Height = 15
+            Top = 44
+            Width = 241
+            Height = 16
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -580,9 +596,9 @@ inherited frmConnDetails: TfrmConnDetails
           object optSSLlegacy: TTntRadioButton
             AlignWithMargins = True
             Left = 0
-            Top = 63
-            Width = 222
-            Height = 16
+            Top = 66
+            Width = 241
+            Height = 17
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -601,42 +617,44 @@ inherited frmConnDetails: TfrmConnDetails
       object pnlProxy: TExBrandPanel
         Left = 0
         Top = 0
-        Width = 237
-        Height = 271
+        Width = 257
+        Height = 284
         AutoSize = True
+        BevelOuter = bvNone
         Padding.Bottom = 12
+        ParentColor = True
         TabOrder = 0
-        TabStop = True
         AutoHide = True
         object pnlSocksType: TExBrandPanel
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 237
-          Height = 36
+          Width = 257
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 0
-          TabStop = True
           AutoHide = False
           object lblSocksType: TTntLabel
             Left = 3
             Top = 0
-            Width = 27
-            Height = 12
+            Width = 28
+            Height = 13
             Caption = 'Type:'
             Transparent = True
           end
           object cboSocksType: TTntComboBox
             Left = 0
-            Top = 15
-            Width = 234
-            Height = 20
+            Top = 16
+            Width = 254
+            Height = 21
             Style = csDropDownList
-            ItemHeight = 12
+            ItemHeight = 13
             TabOrder = 0
             OnChange = cboSocksTypeChange
             Items.Strings = (
@@ -650,137 +668,142 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlSocksHost: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 42
-          Width = 237
-          Height = 36
+          Top = 45
+          Width = 257
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 1
-          TabStop = True
           AutoHide = False
           object lblSocksHost: TTntLabel
             Left = 3
             Top = 0
-            Width = 24
-            Height = 12
+            Width = 26
+            Height = 13
             Caption = 'Host:'
             Transparent = True
           end
           object txtSocksHost: TTntEdit
             Left = 0
-            Top = 15
-            Width = 234
-            Height = 20
+            Top = 16
+            Width = 254
+            Height = 21
             TabOrder = 0
           end
         end
         object pnlSocksPort: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 84
-          Width = 237
-          Height = 36
+          Top = 90
+          Width = 257
+          Height = 39
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 2
-          TabStop = True
           AutoHide = False
           object lblSocksPort: TTntLabel
             Left = 3
             Top = 0
-            Width = 23
-            Height = 12
+            Width = 24
+            Height = 13
             Caption = 'Port:'
             Transparent = True
           end
           object txtSocksPort: TTntEdit
             Left = 0
-            Top = 15
-            Width = 82
-            Height = 20
+            Top = 16
+            Width = 89
+            Height = 21
             TabOrder = 0
           end
         end
         object pnlSocksAuth: TExCheckGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 146
-          Width = 237
-          Height = 107
+          Top = 155
+          Width = 257
+          Height = 111
           Margins.Left = 0
           Margins.Top = 20
           Margins.Right = 0
           Margins.Bottom = 6
           Align = alTop
           AutoSize = True
+          BevelOuter = bvNone
+          Caption = '&Authentication Required'
+          ParentColor = True
           TabOrder = 3
-          TabStop = True
           AutoHide = True
-          Caption = 'Authentication Required'
           Checked = False
           object pnlSocksUsername: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 23
-            Width = 237
-            Height = 36
+            Top = 21
+            Width = 257
+            Height = 39
             Margins.Left = 0
             Margins.Top = 6
             Margins.Right = 0
             Margins.Bottom = 6
             Align = alTop
+            BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 1
-            TabStop = True
             AutoHide = False
             object lblSocksUsername: TTntLabel
               Left = 3
               Top = 0
-              Width = 48
-              Height = 12
+              Width = 52
+              Height = 13
               Caption = 'Username:'
               Transparent = True
             end
             object txtSocksUsername: TTntEdit
               Left = 0
-              Top = 15
-              Width = 234
-              Height = 20
+              Top = 16
+              Width = 254
+              Height = 21
               TabOrder = 0
             end
           end
           object pnlSocksPassword: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 65
-            Width = 237
-            Height = 36
+            Top = 66
+            Width = 257
+            Height = 39
             Margins.Left = 0
             Margins.Top = 0
             Margins.Right = 0
             Margins.Bottom = 6
             Align = alTop
+            BevelOuter = bvNone
+            ParentColor = True
             TabOrder = 2
-            TabStop = True
             AutoHide = False
             object lblSocksPassword: TTntLabel
               Left = 3
               Top = 0
-              Width = 47
-              Height = 12
+              Width = 50
+              Height = 13
               Caption = 'Password:'
               Transparent = True
             end
             object txtSocksPassword: TTntEdit
               Left = 0
-              Top = 15
-              Width = 234
-              Height = 20
+              Top = 16
+              Width = 254
+              Height = 21
               PasswordChar = '*'
               TabOrder = 0
             end
@@ -795,9 +818,9 @@ inherited frmConnDetails: TfrmConnDetails
       TabVisible = False
       object lblNote: TTntLabel
         Left = 0
-        Top = 246
-        Width = 328
-        Height = 56
+        Top = 267
+        Width = 356
+        Height = 61
         Align = alBottom
         AutoSize = False
         Caption = 
@@ -807,126 +830,130 @@ inherited frmConnDetails: TfrmConnDetails
           'ion.'
         Visible = False
         WordWrap = True
-        ExplicitTop = 247
-        ExplicitWidth = 368
+        ExplicitTop = 270
+        ExplicitWidth = 358
       end
       object pnlPolling: TExCheckGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 0
-        Width = 213
-        Height = 155
+        Width = 231
+        Height = 162
         Margins.Left = 0
         AutoSize = True
+        BevelOuter = bvNone
+        Caption = '&Use HTTP Polling'
         Padding.Bottom = 12
+        ParentColor = True
         TabOrder = 0
-        TabStop = True
         AutoHide = True
-        Caption = 'Use HTTP Polling'
         Checked = False
         object pnlURL: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 20
-          Width = 213
-          Height = 36
+          Top = 18
+          Width = 231
+          Height = 39
           Margins.Left = 0
           Margins.Right = 0
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 1
-          TabStop = True
           AutoHide = False
           object Label1: TTntLabel
             Left = 3
             Top = 0
-            Width = 22
-            Height = 12
+            Width = 23
+            Height = 13
             Caption = 'URL:'
             Transparent = True
           end
           object txtURL: TTntEdit
             Left = 0
-            Top = 13
-            Width = 208
-            Height = 20
+            Top = 14
+            Width = 225
+            Height = 21
             TabOrder = 0
           end
         end
         object pnlTime: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 62
-          Width = 213
-          Height = 36
+          Top = 63
+          Width = 231
+          Height = 39
           Margins.Left = 0
           Margins.Right = 0
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 2
-          TabStop = True
           AutoHide = False
           object Label2: TTntLabel
             Left = 3
             Top = 0
-            Width = 44
-            Height = 12
+            Width = 45
+            Height = 13
             Caption = 'Poll Time:'
             Transparent = True
           end
           object Label5: TTntLabel
-            Left = 92
-            Top = 19
-            Width = 36
-            Height = 12
+            Left = 100
+            Top = 20
+            Width = 39
+            Height = 13
             Caption = 'seconds'
           end
           object txtTime: TExNumericEdit
             Left = 0
-            Top = 13
-            Width = 86
-            Height = 25
+            Top = 14
+            Width = 93
+            Height = 21
             BevelOuter = bvNone
             TabOrder = 0
             Text = '0'
             Min = 0
             Max = 1000000
             DesignSize = (
-              86
-              25)
+              93
+              21)
           end
         end
         object pnlKeys: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 104
-          Width = 213
-          Height = 36
+          Top = 108
+          Width = 231
+          Height = 39
           Margins.Left = 0
           Margins.Right = 0
           Align = alTop
+          BevelOuter = bvNone
+          ParentColor = True
           TabOrder = 3
-          TabStop = True
           AutoHide = False
           object Label9: TTntLabel
             Left = 3
             Top = 0
-            Width = 76
-            Height = 12
+            Width = 80
+            Height = 13
             Caption = 'Number of Keys:'
             Transparent = True
           end
           object txtKeys: TExNumericEdit
             Left = 0
-            Top = 13
-            Width = 86
-            Height = 25
+            Top = 14
+            Width = 93
+            Height = 21
             BevelOuter = bvNone
             TabOrder = 0
             Text = '0'
             Min = 0
             Max = 1000000
             DesignSize = (
-              86
-              25)
+              93
+              21)
           end
         end
       end
@@ -934,29 +961,29 @@ inherited frmConnDetails: TfrmConnDetails
   end
   object Panel2: TPanel
     Left = 0
-    Top = 317
-    Width = 449
-    Height = 37
+    Top = 344
+    Width = 487
+    Height = 40
     Align = alBottom
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
     TabStop = True
     object Panel1: TPanel
-      Left = 207
+      Left = 224
       Top = 0
-      Width = 242
-      Height = 37
+      Width = 263
+      Height = 40
       Align = alRight
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
       TabStop = True
       object btnOK: TTntButton
-        Left = 12
+        Left = 13
         Top = 7
-        Width = 69
-        Height = 23
+        Width = 75
+        Height = 26
         Caption = 'OK'
         Default = True
         ModalResult = 1
@@ -964,10 +991,10 @@ inherited frmConnDetails: TfrmConnDetails
         OnClick = frameButtons1btnOKClick
       end
       object btnCancel: TTntButton
-        Left = 87
+        Left = 94
         Top = 7
-        Width = 69
-        Height = 23
+        Width = 75
+        Height = 26
         Cancel = True
         Caption = 'Cancel'
         ModalResult = 2
@@ -975,10 +1002,10 @@ inherited frmConnDetails: TfrmConnDetails
         OnClick = btnCancelClick
       end
       object btnConnect: TTntButton
-        Left = 162
+        Left = 176
         Top = 7
-        Width = 69
-        Height = 23
+        Width = 74
+        Height = 26
         Cancel = True
         Caption = 'Connect'
         ModalResult = 6
@@ -989,8 +1016,8 @@ inherited frmConnDetails: TfrmConnDetails
     object ExGradientPanel1: TExGradientPanel
       Left = 0
       Top = 0
-      Width = 488
-      Height = 5
+      Width = 529
+      Height = 6
       BevelOuter = bvNone
       TabOrder = 1
       GradientProperites.startColor = clTeal
@@ -1001,44 +1028,37 @@ inherited frmConnDetails: TfrmConnDetails
   object Panel5: TPanel
     Left = 0
     Top = 0
-    Width = 114
-    Height = 316
+    Width = 124
+    Height = 342
     BevelInner = bvLowered
     BevelOuter = bvNone
     BorderWidth = 8
     ParentColor = True
     TabOrder = 2
     DesignSize = (
-      114
-      316)
+      124
+      342)
     object pnlTabs: TExBrandPanel
-      Left = 9
-      Top = 9
-      Width = 94
-      Height = 295
+      Left = 10
+      Top = 10
+      Width = 101
+      Height = 319
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
       Anchors = [akTop]
       AutoSize = True
-      Color = 13681583
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
-      TabStop = True
       AutoHide = True
       object imgConnection: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 59
-        Width = 94
-        Height = 59
+        Top = 64
+        Width = 101
+        Height = 64
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -1482,9 +1502,9 @@ inherited frmConnDetails: TfrmConnDetails
       object imgProxy: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 118
-        Width = 94
-        Height = 59
+        Top = 128
+        Width = 101
+        Height = 64
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -1817,9 +1837,9 @@ inherited frmConnDetails: TfrmConnDetails
       object imgHttpPolling: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 177
-        Width = 94
-        Height = 59
+        Top = 192
+        Width = 101
+        Height = 64
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -2172,9 +2192,9 @@ inherited frmConnDetails: TfrmConnDetails
       object imgAdvanced: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 236
-        Width = 94
-        Height = 59
+        Top = 256
+        Width = 101
+        Height = 63
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -2558,8 +2578,8 @@ inherited frmConnDetails: TfrmConnDetails
         AlignWithMargins = True
         Left = 0
         Top = 0
-        Width = 94
-        Height = 59
+        Width = 101
+        Height = 64
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
