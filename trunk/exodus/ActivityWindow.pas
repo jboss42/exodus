@@ -26,7 +26,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, Dockable, TntComCtrls, ComCtrls, ExtCtrls,
   TntExtCtrls, ExodusDockManager, StdCtrls, ExGradientPanel,
-  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls, Buttons, TntButtons;
+  AWItem, Unicode, DockWindow, Menus, TntMenus, TntStdCtrls, Buttons, TntButtons,
+  SClrRGrp;
 
 type
 
@@ -55,9 +56,6 @@ type
     pnlListSort: TExGradientPanel;
     imgScrollUp: TImage;
     imgScrollDown: TImage;
-    ScrollUpBevel: TBevel;
-    ScrollDownBevel: TBevel;
-    SortBevel: TBevel;
     lblSort: TTntLabel;
     popAWSort: TTntPopupMenu;
     mnuAlphaSort: TTntMenuItem;
@@ -74,6 +72,9 @@ type
     SortLeftSpacer: TBevel;
     SortRightSpacer: TBevel;
     timShowActiveDocked: TTimer;
+    SortBevel: TColorBevel;
+    ScrollUpBevel: TColorBevel;
+    ScrollDownBevel: TColorBevel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -109,6 +110,13 @@ type
     _scrollDefaultEndColor: TColor;
     _scrollEnabledStartColor: TColor;
     _scrollEnabledEndColor: TColor;
+    _sort_bevel_shadow_color: TColor;
+    _sort_bevel_highlight_color: TColor;
+    _scrollup_bevel_shadow_color: TColor;
+    _scrollup_bevel_highlight_color: TColor;
+    _scrolldown_bevel_shadow_color: TColor;
+    _scrolldown_bevel_highlight_color: TColor;
+
     _scrollUpState: TScrollState;
     _scrollDownState: TScrollState;
     _currentActivePage: TTntTabSheet;
@@ -309,6 +317,22 @@ begin
         _scrollNewWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
     FreeAndNil(tag);
+    tag := MainSession.Prefs.getXMLPref('activity_window_bevel_color');
+    if (tag <> nil) then begin
+        _sort_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
+        _sort_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
+        _scrollup_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
+        _scrollup_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
+        _scrolldown_bevel_shadow_color := TColor(StrToInt(tag.GetFirstTag('shadow').Data));
+        _scrolldown_bevel_highlight_color := TColor(StrToInt(tag.GetFirstTag('highlight').Data));
+        SortBevel.Shadow := _sort_bevel_shadow_color;
+        SortBevel.HighLight := _sort_bevel_highlight_color;
+        ScrollUpBevel.Shadow := _scrollup_bevel_shadow_color;
+        ScrollUpBevel.HighLight := _scrollup_bevel_highlight_color;
+        ScrollDownBevel.Shadow := _scrolldown_bevel_shadow_color;
+        ScrollDownBevel.HighLight := _scrolldown_bevel_highlight_color;
+    end;
+
 end;
 
 {---------------------------------------}

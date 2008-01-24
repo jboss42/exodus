@@ -19,20 +19,9 @@ inherited fAWItem: TfAWItem
     ShowHint = True
     TabOrder = 0
     OnClick = pnlAWItemGPanelClick
-    GradientProperites.startColor = 12891033
-    GradientProperites.endColor = 10848873
+    GradientProperites.startColor = 13746091
+    GradientProperites.endColor = 12429970
     GradientProperites.orientation = gdHorizontal
-    object AWItemBevel: TBevel
-      Left = 0
-      Top = 22
-      Width = 185
-      Height = 5
-      Align = alBottom
-      Shape = bsBottomLine
-      ExplicitLeft = 1
-      ExplicitTop = 30
-      ExplicitWidth = 183
-    end
     object lblName: TTntLabel
       AlignWithMargins = True
       Left = 29
@@ -54,13 +43,14 @@ inherited fAWItem: TfAWItem
       Left = 173
       Top = 0
       Width = 7
-      Height = 16
+      Height = 22
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
+      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0
@@ -110,6 +100,18 @@ inherited fAWItem: TfAWItem
       Height = 22
       Align = alLeft
       Shape = bsSpacer
+    end
+    object AWItemBevel: TColorBevel
+      Left = 0
+      Top = 22
+      Width = 185
+      Height = 5
+      Align = alBottom
+      Shape = bsBottomLine
+      HighLight = clBtnHighlight
+      Shadow = clBtnShadow
+      FrameColor = frUser
+      ExplicitTop = -23
     end
   end
   object AWItemPopupMenu: TTntPopupMenu

@@ -14,7 +14,6 @@ inherited ExCheckGroupBox: TExCheckGroupBox
       Left = 17
       ExplicitLeft = 17
       inherited lblCaption: TTntLabel
-        Height = 17
         FocusControl = chkBox
       end
     end

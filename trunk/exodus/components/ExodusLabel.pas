@@ -379,7 +379,7 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('Win32', [TExodusLabel]);
+  RegisterComponents('Exodus Components', [TExodusLabel]);
 end;
 
 initialization

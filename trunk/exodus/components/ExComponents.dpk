@@ -78,6 +78,7 @@ contains
   ExBrandPanel in 'ExBrandPanel.pas',
   ExGradientPanel in 'ExGradientPanel.pas',
   ExCheckGroupBox in 'ExCheckGroupBox.pas',
-  ExGraphicButton in 'ExGraphicButton.pas';
+  ExGraphicButton in 'ExGraphicButton.pas',
+  SClrRGrp in 'SClrRGrp.pas';
 
 end.
