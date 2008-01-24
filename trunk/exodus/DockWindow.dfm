@@ -52,9 +52,6 @@ object frmDockWindow: TfrmDockWindow
     ParentColor = True
     TabOrder = 1
     OnDockDrop = FormDockDrop
-    GradientProperites.startColor = 13681583
-    GradientProperites.endColor = 12495763
-    GradientProperites.orientation = gdHorizontal
   end
   object timFlasher: TTimer
     Enabled = False
