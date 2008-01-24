@@ -97,6 +97,10 @@ type
     _curListSort: TSortState;
     _canScrollUp: boolean;
     _canScrollDown: boolean;
+    _StartColor: TColor;
+    _EndColor: TColor;
+    _sortDefaultStartColor: TColor;
+    _sortDefaultEndColor: TColor;
     _scrollPriorityStartColor: TColor;
     _scrollPriorityEndColor: TColor;
     _scrollNewWindowStartColor: TColor;
@@ -255,26 +259,56 @@ begin
 
     _scrollUpState := ssDisabled;
     _scrollDownState := ssEnabled;
+    _startColor := pnlList.GradientProperites.startColor;
+    _endColor := pnlList.GradientProperites.endColor;
     _scrollDefaultStartColor := pnlListScrollUp.GradientProperites.startColor;
     _scrollDefaultEndColor := pnlListScrollUp.GradientProperites.endColor;
+    _sortDefaultStartColor := pnlListSort.GradientProperites.startColor;
+    _sortDefaultEndColor := pnlListSort.GradientProperites.endColor;
     _scrollEnabledStartColor := $00C4B399;
     _scrollEnabledEndColor := $00A58A69;
     _scrollPriorityStartColor := $000000ff;
     _scrollPriorityEndColor := $000000ff;
     _scrollNewWindowStartColor := $0000ffff;
     _scrollNewWindowEndColor := $0000aaaa;
+    tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
+    if (tag <> nil) then begin
+        _startColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _endColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+         pnlList.GradientProperites.startColor := _startColor;
+         pnlList.GradientProperites.endColor := _endColor;
+         pnlListBase.GradientProperites.startColor := _startColor;
+         pnlListBase.GradientProperites.endColor := _endColor;
+    end;
+    FreeAndNil(tag);
+    tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
+    if (tag <> nil) then begin
+        _sortDefaultStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _sortDefaultEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+         pnlListSort.GradientProperites.startColor := _sortDefaultStartColor;
+         pnlListSort.GradientProperites.endColor := _sortDefaultEndColor;
+    end;
+    FreeAndNil(tag);
+    tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
+    if (tag <> nil) then begin
+        _scrollDefaultStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _scrollDefaultEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        pnlListScrollUp.GradientProperites.startColor := _scrollDefaultStartColor;
+        pnlListScrollUp.GradientProperites.endColor := _scrollDefaultEndColor;
+    end;
+    FreeAndNil(tag);
     tag := MainSession.Prefs.getXMLPref('activity_window_high_priority_color');
     if (tag <> nil) then begin
         _scrollPriorityStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
         _scrollPriorityEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
-    tag.Free();
+    FreeAndNil(tag);
     tag := MainSession.Prefs.getXMLPref('activity_window_new_window_color');
     if (tag <> nil) then begin
         _scrollNewWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
         _scrollNewWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
-    tag.Free();
+    FreeAndNil(tag);
 end;
 
 {---------------------------------------}

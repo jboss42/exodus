@@ -172,6 +172,14 @@ begin
         _activity_window_unread_msgs_high_priority_font_color := $00000000;
 
         // Set from prefs
+        tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
+        if (tag <> nil) then begin
+            _startColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+            _endColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+            pnlAWItemGPanel.GradientProperites.startColor := _startColor;
+            pnlAWItemGPanel.GradientProperites.endColor := _endColor;
+        end;
+        FreeAndNil(tag);
         tag := MainSession.Prefs.getXMLPref('activity_window_selected_color');
         if (tag <> nil) then begin
             _activeStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
