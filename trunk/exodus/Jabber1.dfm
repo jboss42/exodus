@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 503
-  ClientWidth = 358
+  ClientHeight = 545
+  ClientWidth = 388
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -23,12 +23,12 @@ inherited frmExodus: TfrmExodus
   ExplicitWidth = 366
   ExplicitHeight = 557
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 358
-    Height = 31
+    Width = 388
+    Height = 34
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <
@@ -169,17 +169,17 @@ inherited frmExodus: TfrmExodus
   end
   object Panel1: TPanel
     Left = 0
-    Top = 31
-    Width = 358
-    Height = 472
+    Top = 34
+    Width = 388
+    Height = 511
     Align = alClient
     ParentColor = True
     TabOrder = 1
     object splitRoster: TSplitter
-      Left = 157
+      Left = 170
       Top = 1
-      Width = 5
-      Height = 470
+      Width = 6
+      Height = 509
       AutoSnap = False
       Beveled = True
       MinSize = 1
@@ -187,13 +187,12 @@ inherited frmExodus: TfrmExodus
       Visible = False
       OnCanResize = splitRosterCanResize
       OnMoved = splitRosterMoved
-      ExplicitHeight = 451
     end
     object pnlRoster: TPanel
       Left = 1
       Top = 1
-      Width = 156
-      Height = 470
+      Width = 169
+      Height = 509
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 1
@@ -203,10 +202,10 @@ inherited frmExodus: TfrmExodus
       OnDockDrop = FormDockDrop
     end
     object Tabs: TTntPageControl
-      Left = 162
+      Left = 176
       Top = 1
-      Width = 195
-      Height = 470
+      Width = 211
+      Height = 509
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
