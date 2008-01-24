@@ -3253,10 +3253,11 @@ procedure TfrmExodus.mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
 begin
     inherited;
     if (_dockwindow = nil) then exit;
-
+{$IFDEF USE_ACTIVITY_WINDOW}
     if (not _dockWindow.Showing) then begin
         ShowActivityWindow();
     end;
+{$ENDIF}
     _dockWindow.BringToFront();
 end;
 
