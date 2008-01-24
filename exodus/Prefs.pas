@@ -83,6 +83,7 @@ type
 //    _xfer: TfrmPrefTransfer;
     _hotkeys: TfrmPrefHotkeys;
 
+    _defaultPage: TExGraphicButton;
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -137,6 +138,9 @@ begin
     else if (start_page = pref_hotkeys) then s := f.imgHotkeys
     else s := f.imgSystem;
 
+    if (not s.Visible) then
+        s := f._defaultPage;
+        
     f.TabSelect(s);
     f.ShowModal;
     f.Free();
@@ -270,6 +274,9 @@ begin
     _pres := nil;
     _hotkeys := nil;
     _lastSelButton := nil;
+
+    _defaultPage := nil;
+
     //map or graphics to pages
     imgSystem.Target := tsSystem;
     imgSystem.Visible := MainSession.Prefs.getBool('show_system_preferences');
@@ -287,6 +294,25 @@ begin
     imgPresence.Visible := MainSession.Prefs.getBool('show_presence_preferences');
     imgHotKeys.Target := tsHotKeys;
     imgHotKeys.Visible := MainSession.Prefs.getBool('show_hot_key_preferences');
+
+    //pick a default page...
+    if (imgSystem.Visible) then
+        _defaultPage := imgSystem
+    else if (imgContactList.Visible) then
+        _defaultPage := imgContactList
+    else if (imgDisplay.Visible) then
+        _defaultPage := imgDisplay
+    else if (imgNotifications.Visible) then
+        _defaultPage := imgNotifications
+    else if (imgMessages.Visible) then
+        _defaultPage := imgMessages
+    else if (imgAutoAway.Visible) then
+        _defaultPage := imgAutoAway
+    else if (imgPresence.Visible) then
+        _defaultPage := imgPresence
+    else if (imgHotKeys.Visible) then
+        _defaultPage := imgHotKeys;
+
 //    MainSession.Prefs.RestorePosition(Self);
 end;
 
