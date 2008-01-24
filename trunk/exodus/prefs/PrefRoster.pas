@@ -34,14 +34,12 @@ type
     pnlRosterPrefs: TExBrandPanel;
     chkInlineStatus: TTntCheckBox;
     chkUseProfileDN: TTntCheckBox;
-    chkCollapsed: TTntCheckBox;
     chkHideBlocked: TTntCheckBox;
     chkGroupCounts: TTntCheckBox;
     chkOnlineOnly: TTntCheckBox;
     pnlManageBtn: TExBrandPanel;
     btnManageBlocked: TTntButton;
     grpAdvanced: TExGroupBox;
-    chkNestedGrps: TTntCheckBox;
     gbDepricated: TExGroupBox;
     chkSort: TTntCheckBox;
     chkOfflineGrp: TTntCheckBox;
@@ -78,6 +76,8 @@ type
     chkRosterAlpha: TTntCheckBox;
     trkRosterAlpha: TTrackBar;
     txtRosterAlpha: TExNumericEdit;
+    chkCollapsed: TTntCheckBox;
+    chkNestedGrps: TTntCheckBox;
     procedure TntFormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnManageBlockedClick(Sender: TObject);

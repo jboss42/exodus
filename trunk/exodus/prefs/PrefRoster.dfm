@@ -2,126 +2,135 @@ inherited frmPrefRoster: TfrmPrefRoster
   Left = 254
   Top = 162
   Caption = 'frmPrefRoster'
-  ClientHeight = 747
-  ClientWidth = 488
+  ClientHeight = 837
+  ClientWidth = 458
   OldCreateOrder = True
   OnDestroy = TntFormDestroy
-  ExplicitWidth = 500
-  ExplicitHeight = 759
+  ExplicitWidth = 470
+  ExplicitHeight = 849
   PixelsPerInch = 120
   TextHeight = 16
   inherited pnlHeader: TTntPanel
-    Width = 488
-    ExplicitWidth = 488
+    Width = 458
+    ExplicitWidth = 458
     inherited lblHeader: TTntLabel
-      Width = 184
+      Width = 208
       Caption = 'Contact List Preferences'
-      ExplicitWidth = 184
+      ExplicitLeft = 6
+      ExplicitWidth = 208
     end
   end
   object ExGroupBox1: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 30
-    Width = 433
-    Height = 717
+    Top = 31
+    Width = 434
+    Height = 806
     Margins.Left = 0
     Margins.Right = 0
     Margins.Bottom = 0
     Align = alLeft
-    AutoScroll = True
-    AutoSize = True
+    BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 1
-    TabStop = True
     AutoHide = True
     object pnlRosterPrefs: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 66
-      Width = 433
-      Height = 126
+      Top = 60
+      Width = 434
+      Height = 114
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alTop
       AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 2
-      TabStop = True
       AutoHide = True
+      ExplicitTop = 69
       object chkInlineStatus: TTntCheckBox
+        AlignWithMargins = True
         Left = 0
         Top = 0
-        Width = 433
-        Height = 21
+        Width = 431
+        Height = 20
+        Margins.Left = 0
+        Margins.Top = 0
         Align = alTop
         Caption = 'Show &contact status'
         TabOrder = 0
       end
       object chkUseProfileDN: TTntCheckBox
+        AlignWithMargins = True
         Left = 0
-        Top = 21
-        Width = 433
-        Height = 21
+        Top = 23
+        Width = 431
+        Height = 20
+        Margins.Left = 0
+        Margins.Top = 0
         Align = alTop
         Caption = 'Get &display name from contact profile'
         TabOrder = 1
       end
-      object chkCollapsed: TTntCheckBox
-        Left = 0
-        Top = 42
-        Width = 433
-        Height = 21
-        Align = alTop
-        Caption = 'Collapse &all contact groups initially'
-        TabOrder = 2
-      end
       object chkHideBlocked: TTntCheckBox
+        AlignWithMargins = True
         Left = 0
-        Top = 63
-        Width = 433
-        Height = 22
+        Top = 46
+        Width = 431
+        Height = 21
+        Margins.Left = 0
+        Margins.Top = 0
         Align = alTop
         Caption = '&Hide blocked contacts '
-        TabOrder = 3
+        TabOrder = 2
       end
       object chkGroupCounts: TTntCheckBox
+        AlignWithMargins = True
         Left = 0
-        Top = 85
-        Width = 433
-        Height = 20
+        Top = 70
+        Width = 431
+        Height = 19
+        Margins.Left = 0
+        Margins.Top = 0
         Align = alTop
         Caption = 'Show group &members online status at group level (e.g., 5/10)'
-        TabOrder = 4
+        TabOrder = 3
       end
       object chkOnlineOnly: TTntCheckBox
+        AlignWithMargins = True
         Left = 0
-        Top = 105
-        Width = 433
-        Height = 21
+        Top = 92
+        Width = 431
+        Height = 19
+        Margins.Left = 0
+        Margins.Top = 0
         Align = alTop
         Caption = 'Show &offline contacts'
-        TabOrder = 5
+        TabOrder = 4
       end
     end
     object pnlManageBtn: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 195
-      Width = 430
-      Height = 24
+      Top = 177
+      Width = 431
+      Height = 26
       Margins.Left = 0
-      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 3
-      TabStop = True
       AutoHide = True
+      ExplicitTop = 186
       object btnManageBlocked: TTntButton
-        Left = 24
+        Left = 21
         Top = 0
-        Width = 180
-        Height = 24
+        Width = 194
+        Height = 26
         Caption = 'Manage &Blocked Contacts...'
         TabOrder = 0
         OnClick = btnManageBlockedClick
@@ -130,58 +139,49 @@ inherited frmPrefRoster: TfrmPrefRoster
     object grpAdvanced: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 225
-      Width = 433
-      Height = 93
+      Top = 212
+      Width = 434
+      Height = 67
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
-      Margins.Bottom = 0
       Align = alTop
       AutoSize = True
+      BevelOuter = bvNone
+      Caption = 'Advanced contact list preferences'
+      ParentColor = True
       TabOrder = 4
-      TabStop = True
       AutoHide = True
-      Caption = 'Advanced Contact List Preferences'
-      object chkNestedGrps: TTntCheckBox
-        AlignWithMargins = True
-        Left = 0
-        Top = 72
-        Width = 430
-        Height = 21
-        Margins.Left = 0
-        Margins.Bottom = 0
-        Align = alTop
-        Caption = '&Use nested groups'
-        TabOrder = 3
-      end
+      ExplicitTop = 221
+      ExplicitHeight = 71
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 20
-        Width = 430
+        Top = 21
+        Width = 431
         Height = 22
         Margins.Left = 0
         Margins.Bottom = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 1
-        TabStop = True
         AutoHide = True
         DesignSize = (
-          430
+          431
           22)
         object lblStatusColor: TTntLabel
           Left = 0
-          Top = 3
+          Top = 2
           Width = 118
           Height = 16
           Caption = 'Contact s&tatus color:'
         end
         object cboStatusColor: TColorBox
-          Left = 191
+          Left = 183
           Top = 0
-          Width = 203
+          Width = 224
           Height = 22
           DefaultColorColor = clBlue
           Selected = clBlue
@@ -195,30 +195,31 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDNFields: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 45
-        Width = 430
-        Height = 24
+        Top = 46
+        Width = 431
+        Height = 21
         Margins.Left = 0
         Margins.Bottom = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 2
-        TabStop = True
         AutoHide = True
         DesignSize = (
-          430
-          24)
+          431
+          21)
         object lblDNProfileMap: TTntLabel
           Left = 0
-          Top = 3
+          Top = 2
           Width = 155
           Height = 16
           Caption = 'Display name &profile fields:'
         end
         object txtDNProfileMap: TTntEdit
-          Left = 191
+          Left = 183
           Top = 0
-          Width = 203
+          Width = 224
           Height = 24
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -228,24 +229,25 @@ inherited frmPrefRoster: TfrmPrefRoster
     object gbDepricated: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 324
-      Width = 433
-      Height = 370
+      Top = 288
+      Width = 434
+      Height = 342
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alTop
-      AutoScroll = True
-      TabOrder = 5
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'Depricated preferences (may not be supported)'
+      ParentColor = True
+      TabOrder = 5
+      AutoHide = True
+      ExplicitTop = 301
       object chkSort: TTntCheckBox
         Left = 0
-        Top = 17
-        Width = 433
-        Height = 21
+        Top = 18
+        Width = 434
+        Height = 20
         Align = alTop
         Caption = 'Sort Contacts by their availability'
         TabOrder = 1
@@ -253,8 +255,8 @@ inherited frmPrefRoster: TfrmPrefRoster
       object chkOfflineGrp: TTntCheckBox
         Left = 0
         Top = 38
-        Width = 433
-        Height = 20
+        Width = 434
+        Height = 18
         Align = alTop
         Caption = 'Show offline contacts in an Offline group'
         TabOrder = 2
@@ -262,27 +264,28 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlMinStatus: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 166
-        Width = 430
-        Height = 24
+        Top = 193
+        Width = 431
+        Height = 50
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 3
-        TabStop = True
         AutoHide = True
         object lblFilter: TTntLabel
           Left = 0
-          Top = 3
-          Width = 150
-          Height = 16
+          Top = 2
+          Width = 53
+          Height = 48
           Caption = '"Online" minimum status: '
           WordWrap = True
         end
         object cboVisible: TTntComboBox
-          Left = 191
+          Left = 176
           Top = 0
-          Width = 206
+          Width = 191
           Height = 24
           Style = csDropDownList
           ItemHeight = 16
@@ -297,26 +300,27 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGatewayGroup: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 196
-        Width = 430
-        Height = 24
+        Top = 249
+        Width = 431
+        Height = 21
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 4
-        TabStop = True
         AutoHide = True
         object lblGatewayGrp: TTntLabel
           Left = 0
-          Top = 3
+          Top = 2
           Width = 91
           Height = 16
           Caption = 'Gateway group:'
         end
         object txtGatewayGrp: TTntComboBox
-          Left = 191
+          Left = 176
           Top = 0
-          Width = 206
+          Width = 191
           Height = 24
           ItemHeight = 16
           TabOrder = 0
@@ -324,9 +328,9 @@ inherited frmPrefRoster: TfrmPrefRoster
       end
       object chkPresErrors: TTntCheckBox
         Left = 0
-        Top = 100
-        Width = 433
-        Height = 21
+        Top = 133
+        Width = 434
+        Height = 19
         Align = alTop
         Caption = 'Detect contacts which are unreachable or no longer exist'
         TabOrder = 5
@@ -334,27 +338,27 @@ inherited frmPrefRoster: TfrmPrefRoster
       end
       object chkShowPending: TTntCheckBox
         Left = 0
-        Top = 79
-        Width = 433
-        Height = 21
+        Top = 113
+        Width = 434
+        Height = 20
         Align = alTop
         Caption = 'Show contacts I have asked to add as "Pending"'
         TabOrder = 6
       end
       object chkShowUnsubs: TTntCheckBox
         Left = 0
-        Top = 142
-        Width = 433
-        Height = 21
+        Top = 172
+        Width = 434
+        Height = 18
         Align = alTop
         Caption = 'Show contacts which I do not have a subscription to'
         TabOrder = 7
       end
       object chkRosterUnicode: TTntCheckBox
         Left = 0
-        Top = 58
-        Width = 433
-        Height = 21
+        Top = 75
+        Width = 434
+        Height = 18
         Align = alTop
         Caption = 
           'Allow Unicode characters in the contact list (requires 2000, ME,' +
@@ -363,9 +367,9 @@ inherited frmPrefRoster: TfrmPrefRoster
       end
       object chkRosterAvatars: TTntCheckBox
         Left = 0
-        Top = 121
-        Width = 433
-        Height = 21
+        Top = 152
+        Width = 434
+        Height = 20
         Align = alTop
         Caption = 'Show Avatars in the contact list'
         TabOrder = 9
@@ -373,26 +377,27 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDblClickAction: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 226
-        Width = 430
+        Top = 276
+        Width = 431
         Height = 24
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 10
-        TabStop = True
         AutoHide = True
         object lblDblClick: TTntLabel
           Left = 0
-          Top = 3
+          Top = 2
           Width = 128
           Height = 16
           Caption = 'Default dblclick action:'
         end
         object cboDblClick: TTntComboBox
-          Left = 191
+          Left = 176
           Top = 0
-          Width = 206
+          Width = 191
           Height = 24
           Style = csDropDownList
           ItemHeight = 16
@@ -406,54 +411,56 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGroupSeperator: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 256
-        Width = 430
-        Height = 24
+        Top = 306
+        Width = 431
+        Height = 21
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 11
-        TabStop = True
         AutoHide = True
         object lblGrpSeperator: TTntLabel
           Left = 0
-          Top = 3
+          Top = 2
           Width = 140
           Height = 16
           Caption = 'Nested group seperator:'
         end
         object txtGrpSeperator: TTntEdit
-          Left = 191
+          Left = 176
           Top = 0
-          Width = 206
+          Width = 191
           Height = 24
           TabOrder = 0
         end
       end
       object pnlAlpha: TExBrandPanel
         Left = 0
-        Top = 283
-        Width = 433
-        Height = 57
+        Top = 330
+        Width = 434
+        Height = 55
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 12
-        TabStop = True
         AutoHide = True
         object chkRosterAlpha: TTntCheckBox
           Left = 0
           Top = 0
-          Width = 258
-          Height = 20
+          Width = 239
+          Height = 18
           Caption = 'Use Alpha Blending'
           TabOrder = 1
           OnClick = chkRosterAlphaClick
         end
         object trkRosterAlpha: TTrackBar
           Left = 9
-          Top = 30
-          Width = 176
-          Height = 22
+          Top = 28
+          Width = 162
+          Height = 20
           Enabled = False
           Max = 255
           Min = 100
@@ -466,10 +473,10 @@ inherited frmPrefRoster: TfrmPrefRoster
           OnChange = trkRosterAlphaChange
         end
         object txtRosterAlpha: TExNumericEdit
-          Left = 191
-          Top = 26
-          Width = 70
-          Height = 31
+          Left = 176
+          Top = 25
+          Width = 65
+          Height = 38
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -479,31 +486,52 @@ inherited frmPrefRoster: TfrmPrefRoster
           Max = 255
           OnChange = txtRosterAlphaChange
           DesignSize = (
-            70
-            31)
+            65
+            38)
         end
+      end
+      object chkCollapsed: TTntCheckBox
+        Left = 0
+        Top = 56
+        Width = 434
+        Height = 19
+        Align = alTop
+        Caption = 'Collapse &all contact groups initially'
+        TabOrder = 13
+      end
+      object chkNestedGrps: TTntCheckBox
+        Left = 0
+        Top = 93
+        Width = 434
+        Height = 20
+        Margins.Left = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = '&Use nested groups'
+        TabOrder = 14
       end
     end
     object pnlDefaultNIck: TExBrandPanel
       AlignWithMargins = True
       Left = 0
       Top = 6
-      Width = 430
-      Height = 24
+      Width = 431
+      Height = 21
       Margins.Left = 0
       Margins.Top = 6
       Margins.Bottom = 0
       Align = alTop
       AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 0
-      TabStop = True
       AutoHide = True
       DesignSize = (
-        430
-        24)
+        431
+        21)
       object lblDefaultNick: TTntLabel
         Left = 0
-        Top = 3
+        Top = 4
         Width = 157
         Height = 16
         Margins.Left = 0
@@ -511,9 +539,9 @@ inherited frmPrefRoster: TfrmPrefRoster
         FocusControl = txtDefaultNick
       end
       object txtDefaultNick: TTntEdit
-        Left = 191
+        Left = 198
         Top = 0
-        Width = 203
+        Width = 209
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
@@ -522,33 +550,33 @@ inherited frmPrefRoster: TfrmPrefRoster
     object pnlDefaultGroup: TExBrandPanel
       AlignWithMargins = True
       Left = 0
-      Top = 36
-      Width = 430
-      Height = 24
+      Top = 33
+      Width = 431
+      Height = 21
       Margins.Left = 0
       Margins.Top = 6
       Margins.Bottom = 0
       Align = alTop
       AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
       TabOrder = 1
-      TabStop = True
       AutoHide = True
       DesignSize = (
-        430
-        24)
+        431
+        21)
       object lblDefaultGrp: TTntLabel
         Left = 0
-        Top = 3
-        Width = 184
+        Top = 4
+        Width = 181
         Height = 16
-        AutoSize = False
         Caption = 'Default &group for new contacts:'
         FocusControl = txtDefaultGrp
       end
       object txtDefaultGrp: TTntComboBox
-        Left = 191
+        Left = 198
         Top = 0
-        Width = 206
+        Width = 209
         Height = 24
         Anchors = [akLeft, akTop, akRight]
         ItemHeight = 16

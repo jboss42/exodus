@@ -5,38 +5,53 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
-  ExGroupBox, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+  ExBrandPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
-  TExCheckGroupBox = class(TExGroupBox)
-    chkBox: TTntCheckBox;
+  TExCheckGroupBox = class(TExBrandPanel)
     procedure chkBoxClick(Sender: TObject);
   private
-      _ignoreList: TList;
-      _initialized: boolean;
-      _checkChangeEvent: TNotifyEvent;
-  protected
-      function getChecked(): boolean;
-      procedure setChecked(b: boolean);
-      procedure SetEnabled(enabled: boolean);override;
-      procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
-      procedure Loaded();override;
-  public
-      Constructor Create(AOwner: TComponent);override;
-      Destructor Destroy();override;
+    _ignoreList: TList;
+    _initialized: boolean;
+    _checkChangeEvent: TNotifyEvent;
 
-      procedure checkAutoHide();override;
-      procedure captureChildStates();override;
+    _chkBox: TTntCheckBox;
+    _pnlTop: TTntPanel;
+    _pnlBevel: TTntPanel;
+    _bevel: TTntBevel;
+
+    _ControlsInitialized: boolean;
+    
+    procedure InitializeControls();
+  protected
+    //creates top panel and caption label
+    procedure CreateWindowHandle(const Params: TCreateParams); override;
+
+    procedure AutoSizeCheckBox();
+    function GetChecked(): boolean;
+    procedure SetChecked(b: boolean);
+
+    procedure SetEnabled(enabled: boolean);override;
+    procedure EnableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); override;
+    function VisibleChildren(): integer; override;
+    function GetCaption(): WideString;
+    procedure SetCaption(c: widestring);
+  public
+    Constructor Create(AOwner: TComponent);override;
+    Destructor Destroy();override;
+
+
+    procedure CheckAutoHide();override;
+    procedure CaptureChildStates();override;
   published
-      Property Checked: boolean read getChecked write setChecked;
-      property OnCheckChanged: TNotifyEvent read _checkChangeEvent write _checkChangeEvent;
+    Property Checked: boolean read getChecked write setChecked;
+    Property Caption: Widestring read GetCaption write SetCaption;
+    property OnCheckChanged: TNotifyEvent read _checkChangeEvent write _checkChangeEvent;
   end;
 
   procedure Register();
 
 implementation
-
-{$R *.dfm}
 
 procedure Register();
 begin
@@ -48,16 +63,115 @@ begin
     OutputDebugString(PChar(Message));
 end;
 
-procedure TExCheckGroupBox.Loaded();
+Constructor TExCheckGroupBox.Create(AOwner: TComponent);
 begin
     inherited;
-    if (lblCaption.Visible and
-       (lblCaption.Caption <> 'ExGroupBox') and
-       (not (csDesigning in ComponentState))) then begin
-        chkBox.Caption := lblCaption.Caption;
-        chkBox.Width := chkBox.Width + lblCaption.Width + 9;
-        lblCaption.Visible := false;
+    _pnlTop := TTntPanel.Create(Self);
+    _pnlTop.Parent := Self;
+    _pnlTop.Name := 'pnlTop';
+
+    _pnlBevel := TTntPanel.Create(_pnlTop);
+    _pnlBevel.Parent := _pnlTop;
+    _pnlBevel.Name := 'pnlBevel';
+    _pnlBevel.Caption := '';
+
+    _bevel := TTntBevel.Create(_pnlBevel);
+    _bevel.parent := _pnlBevel;
+    _bevel.Shape := bsTopLine;
+    _bevel.Name := 'bevel';
+
+    _chkBox := TTntCheckBox.Create(_pnlTop);
+    _chkBox.Parent := _pnlTop;
+    _chkBox.Name := 'chkBox';
+
+    _ignoreList := nil;
+    _initialized := false;
+    _ControlsInitialized := false;
+end;
+
+Destructor TExCheckGroupBox.Destroy;
+begin
+    if (_ignoreList <> nil) then
+        _ignoreList.Free();
+    inherited;
+end;
+
+procedure TExCheckGroupBox.CreateWindowHandle(const Params: TCreateParams);
+begin
+    inherited;
+OutputDebugMsg('Calling AutoSizeCheckBox from CreateWindowHandle');    
+    AutoSizeCheckBox();
+end;
+
+procedure TExCheckGroupBox.InitializeControls();
+begin
+    if (not _ControlsInitialized) then begin
+        Self.ParentFont := True;
+        Self.ParentColor := True;
+        
+        _pnlTop.Height := 18;
+        _pnlTop.Align := alTop;
+        _pnlTop.caption := '';
+        _pnlTop.BevelOuter := bvNone;
+        _pnlTop.ParentFont := true;
+        _pnlTop.ParentColor := True;
+        _pnlTop.TabStop := false;
+
+        _chkBox.Align := alLeft;
+        _chkBox.ParentFont := True;
+        _chkBox.ParentColor := True;
+        _chkBox.TabStop := True;
+        _chkBox.TabOrder := 0;
+        _chkBox.OnClick := Self.chkBoxClick;
+
+        _pnlBevel.Align := alClient;
+        _pnlBevel.BevelOuter := bvNone;
+        _pnlBevel.ParentFont := True;
+        _pnlBevel.ParentColor := True;
+        _pnlBevel.TabStop := False;
+
+        _bevel.Align := alNone;
+        _bevel.Left := 3;
+        _bevel.Width := _pnlBevel.Width - 3;
+        _bevel.Top := 8;
+        _bevel.Anchors := [akTop, akleft, akRight];
+
+        _ControlsInitialized := true;
     end;
+end;
+
+function TExCheckGroupBox.GetCaption(): WideString;
+begin
+    Result := _chkBox.Caption;
+end;
+
+const
+    BOX_SIZE = 6;
+    MARGIN_SIZE = 6;
+
+procedure TExCheckGroupBox.AutoSizeCheckBox();
+var
+    extra: WideString;
+begin
+    InitializeControls();
+    Self.Canvas.Font := Self.Font;
+
+    //if caption has n accellerator defined, don't add additional & char...
+    extra := '';
+    if (Pos('&', _chkBox.Caption) = 0) then
+        extra := '&';
+
+    _chkBox.Width := Self.Canvas.TextWidth(_chkBox.Caption + extra) + BOX_SIZE + MARGIN_SIZE;
+    _pnlTop.Realign();
+
+OutputDebugMsg('Computed width: ' + IntToStr(_chkBox.Width) + ', font size: ' + IntToStr(Font.Size) + ', for caption: ' + _chkBox.Caption);
+end;
+
+procedure TExCheckGroupBox.SetCaption(c: widestring);
+begin
+OutputDebugMsg('Calling AutoSizeCheckBox from SetCaption: ' + c);
+    _chkBox.Caption := c;    
+    AutoSizeCheckBox();
 end;
 
 procedure TExCheckGroupBox.chkBoxClick(Sender: TObject);
@@ -74,38 +188,27 @@ begin
     enableChildren(Checked, true, nil);
 end;
 
-Constructor TExCheckGroupBox.create(AOwner: TComponent);
-begin
-    inherited;
-    _ignoreList := nil;
-    _initialized := false;
-end;
 
-Destructor TExCheckGroupBox.Destroy;
+procedure TExCheckGroupBox.SetEnabled(enabled: boolean);
 begin
-  if (_ignoreList <> nil) then
-    _ignoreList.Free();
-  inherited;
-end;
-
-procedure TExCheckGroupBox.setEnabled(enabled: boolean);
-begin
-    chkBox.Enabled := CanEnabled and enabled;
+    _chkBox.Enabled := CanEnabled and enabled;
+    _bevel.Enabled := CanEnabled and enabled;
+    
     inherited;
 end;
 
-function TExCheckGroupBox.getChecked(): boolean;
+function TExCheckGroupBox.GetChecked(): boolean;
 begin
-    Result := chkBox.Checked
+    Result := _chkBox.Checked
 end;
 
-procedure TExCheckGroupBox.setChecked(b: boolean);
+procedure TExCheckGroupBox.SetChecked(b: boolean);
 begin
-    chkBox.Checked := b;
+    _chkBox.Checked := b;
     if _initialized then enableChildren(b, true, nil);
 end;
 
-procedure TExCheckGroupBox.checkAutoHide();
+procedure TExCheckGroupBox.CheckAutoHide();
 begin
     if (not _initialized) then
         captureChildStates();
@@ -113,13 +216,24 @@ begin
     inherited;
 end;
 
-procedure TExCheckGroupBox.captureChildStates();
+function TExCheckGroupBox.VisibleChildren(): integer;
+var
+    i: integer;
+begin
+    Result := 0;
+    for i := 0 to Self.ControlCount -1 do begin
+        if (Self.Controls[i].Visible and (Self.Controls[i].Name <> 'pnlTop')) then
+            inc(Result);
+    end;
+end;
+
+procedure TExCheckGroupBox.CaptureChildStates();
 begin
     inherited;
     _initialized := true;
 end;
 
-procedure TExCheckGroupBox.enableChildren(e: boolean; useInitial: boolean; ignore: TList);
+procedure TExCheckGroupBox.EnableChildren(e: boolean; useInitial: boolean; ignore: TList);
 var
     tIgnore: TList;
 begin
@@ -129,9 +243,10 @@ begin
     else
       tIgnore := ignore;
 
-    tIgnore.Add(chkBox);
+    tIgnore.Add(_pnlTop);
     //only enable children if we are checked.
     inherited enableChildren(e and Checked, UseInitial, tIgnore);
+
     if (ignore = nil) then
       tIgnore.Free();
 end;

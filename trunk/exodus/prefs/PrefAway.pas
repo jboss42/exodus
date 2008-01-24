@@ -49,6 +49,8 @@ type
     chkAutoDisconnect: TExCheckGroupBox;
     lblDisconnectTime: TTntLabel;
     txtDisconnectTime: TExNumericEdit;
+    procedure chkAutoDisconnectCheckChanged(Sender: TObject);
+    procedure chkAutoXACheckChanged(Sender: TObject);
     procedure chkAutoAwayCheckChanged(Sender: TObject);
   private
     _lastAutoXA: boolean;
@@ -66,6 +68,20 @@ implementation
 {$R *.dfm}
 uses
     Session, PrefFile, PrefController;
+
+procedure TfrmPrefAway.chkAutoDisconnectCheckChanged(Sender: TObject);
+begin
+    inherited;
+    if (chkAutoAway.Checked) then
+        _lastAutoDisconnect := chkAutoDisconnect.Checked;
+end;
+
+procedure TfrmPrefAway.chkAutoXACheckChanged(Sender: TObject);
+begin
+    inherited;
+    if (chkAutoAway.Checked) then
+        _lastAutoXA := chkAutoXA.Checked;
+end;
 
 procedure TfrmPrefAway.LoadPrefs();
 begin
@@ -104,50 +120,6 @@ begin
 
 end;
 
-{
-procedure TfrmPrefAway.DoEnables();
-var
-    aro, xro, e, xa, dis: boolean;
-    s: TPrefState;
-begin
-    e := chkAutoAway.Checked;
-    if (e) then begin
-        xa := chkAutoXA.Checked;
-        dis := chkAutoDisconnect.Checked;
-    end
-    else begin
-        xa := false;
-        dis := false;
-    end;
-
-    aro := txtAway.ReadOnly;
-    xro := txtXA.ReadOnly;
-
-    s := PrefController.getPrefState('aa_reduce_pri');
-    chkAAReducePri.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('auto_xa');
-    chkAutoXA.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('auto_disconnect');
-    chkAutoDisconnect.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-
-    s := PrefController.getPrefState('away_time');
-    txtAwayTime.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-    lblAwayTime.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('away_status');
-    lblAwayStatus.Enabled := e and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('xa_time');
-    txtXATime.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
-    lblXATime.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('xa_status');
-    lblXAStatus.Enabled := xa and (s <> psReadOnly) and (s <> psInvisible);
-    s := PrefController.getPrefState('disconnect_time');
-    txtDisconnectTime.Enabled := dis and (s <> psReadOnly) and (s <> psInvisible);
-    lblDisconnectTime.Enabled := dis and (s <> psReadOnly) and (s <> psInvisible);
-
-    txtAway.Enabled := e and (not aro);
-    txtXA.Enabled := xa and (not xro);
-end;
-}
 
 procedure TfrmPrefAway.chkAutoAwayCheckChanged(Sender: TObject);
 begin

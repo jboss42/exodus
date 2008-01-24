@@ -28,6 +28,7 @@ type
   protected
     { Protected declarations }
     procedure CreateWindowHandle(const Params: TCreateParams); override;
+    procedure SetEnabled(enabled: boolean); override;
 
     procedure editNumKeyPress(Sender: TObject; var Key: Char);
     procedure editNumExit(Sender: TObject);
@@ -107,6 +108,13 @@ begin
     spnNum.Associate := editNum;
     _onChange := nil;
 end;    {Create}
+
+procedure TExNumericEdit.SetEnabled(enabled: boolean);
+begin
+    inherited;
+    editNum.Enabled := enabled;
+    spnNum.Enabled := enabled;
+end;
 
 procedure TExNumericEdit.SetFocus();
 begin

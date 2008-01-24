@@ -25,7 +25,7 @@ uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls, XmlTag, ExGroupBox,
-  TntForms, ExFrame, ExBrandPanel, ExNumericEdit;
+    TntForms, ExFrame, ExBrandPanel, ExNumericEdit;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)

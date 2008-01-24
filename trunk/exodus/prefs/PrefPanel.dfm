@@ -1,22 +1,23 @@
 inherited frmPrefPanel: TfrmPrefPanel
   Left = 408
   Top = 423
-  Width = 365
-  Height = 406
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
+  ClientHeight = 576
+  ClientWidth = 516
+  ParentFont = True
   OnCreate = FormCreate
-  ExplicitWidth = 365
-  ExplicitHeight = 406
+  ExplicitWidth = 528
+  ExplicitHeight = 588
   PixelsPerInch = 120
   TextHeight = 16
   object pnlHeader: TTntPanel
     AlignWithMargins = True
     Left = 0
     Top = 2
-    Width = 353
-    Height = 22
+    Width = 516
+    Height = 23
     Margins.Left = 0
     Margins.Top = 2
     Margins.Right = 0
@@ -26,7 +27,7 @@ inherited frmPrefPanel: TfrmPrefPanel
     Color = 14460499
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite
-    Font.Height = -15
+    Font.Height = -17
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentBackground = False
@@ -36,17 +37,19 @@ inherited frmPrefPanel: TfrmPrefPanel
       AlignWithMargins = True
       Left = 6
       Top = 1
-      Width = 4
-      Height = 18
+      Width = 5
+      Height = 19
       Margins.Left = 6
       Margins.Top = 1
       Align = alLeft
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
-      Font.Height = -15
+      Font.Height = -17
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitLeft = 9
+      ExplicitHeight = 21
     end
   end
 end

@@ -51,7 +51,6 @@
     </roster_default>
     <inline_status value="0" control="chkInlineStatus" state="rw"/>
     <displayname_profile_enabled value='1' control="chkUseProfileDN" state="rw"/>
-    <roster_collapsed value="0" control="chkCollapsed" state="rw"/>
     <roster_hide_block value="0" control="chkHideBlocked" state="rw"/>
     <roster_groupcounts value="0" control="chkGroupCounts" state="rw"/>
     <roster_only_online value="1" control="chkOnlineOnly" state="rw"/>
@@ -63,9 +62,10 @@
     <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap" state="rw">
     	<control name="lblDNProfileMap"/>
     </displayname_profile_map>
-    <nested_groups value="0" control="chkNestedGrps" state="rw"/>
 
     <!-- DEPRICATED (unsupported) roster prefs -->
+    <nested_groups value="0" control="chkNestedGrps" state="inv"/>
+    <roster_collapsed value="0" control="chkCollapsed" state="inv"/>
     <roster_avatars value="0" control="chkRosterAvatars" state="inv"/>
     <roster_unicode value="1" control="chkRosterUnicode" state="inv"/>
     <roster_chat value="2" control="cboDblClick" state="inv">
@@ -218,7 +218,7 @@
 
     <!-- other message preferences -->
     <block_nonroster value="1" control="chkBlockNonRoster" state="rw"/>
-    <auto_join_on_invite value="2" control="chkInviteAutoJoin" state="rw"/>
+    <auto_join_on_invite value="0" control="chkInviteAutoJoin" state="rw"/>
 
     <!-- advanced Message Handling preferences -->
     <regex_keywords value="1" state="rw"/>
@@ -470,6 +470,7 @@
     <brand_profile_x509auth control="pnlx509Auth" value="false"/>
     <brand_profile_x509cert control="pnlx509Cert" value=""/>
 
+    <!-- misc. branded options -->
     <brand_invisible_pres value="1"/>
     <brand_muc value="1"/>
     <brand_ft value="1"/>
@@ -480,7 +481,7 @@
     <brand_browser value="1"/>
     <brand_vcard value="1"/>
     <branding_roster_hide_new_wizard value="1"/>
-    
+
     <!-- lock down our nickname -->
     <brand_prevent_change_nick value="0"/>
     <!-- add roster network prefs.
@@ -587,6 +588,18 @@
 
   	<!-- Stringlist with additional data to be added to the about box -->
   	<brand_about_additional_list/>
+
+        <!-- default font and window background colors.
+             All font pref state key off of font name -->
+        <brand_default_font_name value="Arial" state="rw"/>
+        <brand_default_font_color value="$000000"/>
+        <brand_default_font_size value="8"/>
+        <brand_default_font_bold value="0"/>
+        <brand_default_font_italic value="0"/>
+        <brand_default_font_underline value="0"/>
+
+        <!-- comment out or set to 0 to use default window colors -->
+        <brand_default_window_color value="$00D0C3AF" state="rw"/>
 
   </prefs>
 

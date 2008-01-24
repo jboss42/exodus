@@ -4,53 +4,53 @@ inherited frmPrefs: TfrmPrefs
   BorderStyle = bsDialog
   BorderWidth = 1
   Caption = 'Preferences'
-  ClientHeight = 609
-  ClientWidth = 654
+  ClientHeight = 613
+  ClientWidth = 641
   DefaultMonitor = dmMainForm
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitWidth = 662
-  ExplicitHeight = 649
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 649
+  ExplicitHeight = 647
+  PixelsPerInch = 96
+  TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 566
-    Width = 654
-    Height = 43
+    Top = 579
+    Width = 641
+    Height = 34
     Align = alBottom
     BevelOuter = bvLowered
     BorderWidth = 1
     ParentColor = True
     TabOrder = 0
     object btnCancel: TTntButton
-      Left = 469
-      Top = 9
-      Width = 86
-      Height = 29
+      Left = 492
+      Top = 8
+      Width = 69
+      Height = 23
       Cancel = True
       Caption = 'Cancel'
       ModalResult = 2
       TabOrder = 1
     end
     object btnOK: TTntButton
-      Left = 378
-      Top = 9
-      Width = 85
-      Height = 29
+      Left = 418
+      Top = 8
+      Width = 68
+      Height = 23
       Caption = 'OK'
       ModalResult = 1
       TabOrder = 0
       OnClick = frameButtons1btnOKClick
     end
     object Button6: TTntButton
-      Left = 561
-      Top = 8
-      Width = 86
-      Height = 29
+      Left = 567
+      Top = 7
+      Width = 69
+      Height = 23
       Caption = 'Apply'
       TabOrder = 2
       OnClick = frameButtons1btnOKClick
@@ -60,8 +60,8 @@ inherited frmPrefs: TfrmPrefs
     AlignWithMargins = True
     Left = 3
     Top = 6
-    Width = 119
-    Height = 554
+    Width = 98
+    Height = 567
     Margins.Top = 6
     Margins.Bottom = 6
     Align = alLeft
@@ -69,15 +69,15 @@ inherited frmPrefs: TfrmPrefs
     Caption = 'ExGradientPanel1'
     ParentColor = True
     TabOrder = 1
-    GradientProperites.startColor = 12891033
+    GradientProperites.startColor = 13681583
     GradientProperites.endColor = 13681583
     GradientProperites.orientation = gdHorizontal
     object imgSystem: TExGraphicButton
       AlignWithMargins = True
       Left = 1
       Top = 1
-      Width = 117
-      Height = 69
+      Width = 96
+      Height = 56
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -542,9 +542,9 @@ inherited frmPrefs: TfrmPrefs
     object imgContactList: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 70
-      Width = 117
-      Height = 69
+      Top = 57
+      Width = 96
+      Height = 56
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -946,9 +946,9 @@ inherited frmPrefs: TfrmPrefs
     object imgDisplay: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 139
-      Width = 117
-      Height = 69
+      Top = 113
+      Width = 96
+      Height = 56
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1301,9 +1301,9 @@ inherited frmPrefs: TfrmPrefs
     object imgNotifications: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 208
-      Width = 117
-      Height = 69
+      Top = 169
+      Width = 96
+      Height = 56
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1584,9 +1584,9 @@ inherited frmPrefs: TfrmPrefs
     object imgMessages: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 277
-      Width = 117
-      Height = 69
+      Top = 225
+      Width = 96
+      Height = 57
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1978,9 +1978,9 @@ inherited frmPrefs: TfrmPrefs
     object imgAutoAway: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 346
-      Width = 117
-      Height = 69
+      Top = 282
+      Width = 96
+      Height = 55
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -2375,9 +2375,9 @@ inherited frmPrefs: TfrmPrefs
     object imgPresence: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 415
-      Width = 117
-      Height = 69
+      Top = 337
+      Width = 96
+      Height = 56
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -2758,9 +2758,9 @@ inherited frmPrefs: TfrmPrefs
     object imgHotKeys: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 484
-      Width = 117
-      Height = 69
+      Top = 393
+      Width = 96
+      Height = 57
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -3135,76 +3135,44 @@ inherited frmPrefs: TfrmPrefs
     end
   end
   object pcPrefs: TTntPageControl
-    Left = 125
+    Left = 104
     Top = 0
-    Width = 529
-    Height = 566
+    Width = 537
+    Height = 579
     Align = alClient
     Style = tsButtons
     TabOrder = 2
     object tsSystem: TTntTabSheet
       Caption = 'tsSystem'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsContactList: TTntTabSheet
       Caption = 'tsContactList'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsDisplay: TTntTabSheet
       Caption = 'tsDisplay'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsNotifications: TTntTabSheet
       Caption = 'tsNotifications'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsMessages: TTntTabSheet
       Caption = 'tsMessages'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsAutoAway: TTntTabSheet
       Caption = 'tsAutoAway'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsPresence: TTntTabSheet
       Caption = 'tsPresence'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
     object tsHotKeys: TTntTabSheet
       Caption = 'tsHotKeys'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 30
-      ExplicitWidth = 0
-      ExplicitHeight = 532
     end
   end
 end

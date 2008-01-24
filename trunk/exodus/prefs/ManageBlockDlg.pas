@@ -7,7 +7,7 @@ uses
   Dialogs,
   Unicode,
   TnTClasses,
-  ExForm, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExBrandPanel;
+  ExForm, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExBrandPanel, ExtCtrls;
 
 type
   TManageBlockDlg = class(TExForm)

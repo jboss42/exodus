@@ -25,8 +25,8 @@ uses
     Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls,
-  ExtCtrls, TntExtCtrls,
-  ExForm;
+    ExtCtrls, TntExtCtrls,
+    ExForm;
 
 type
   TfrmPrefPlugins = class(TExForm)

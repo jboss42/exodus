@@ -128,10 +128,11 @@ function GetParentForm(c: TWinControl): TForm;
 implementation
 uses
     Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
-    IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
+    IniFiles, StrUtils, IdGlobal, ShellAPI, Types,
     XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay,
     RT_XIMConversion,
+    ExForm,
     Debug;
 
 type
@@ -411,25 +412,9 @@ end;
 {---------------------------------------}
 procedure AssignUnicodeFont(f: TFont; font_size: short);
 begin
-    // Assign either Arial or Arial Unicode MS to this form.
-    if (unicode_font = nil) then begin
-        unicode_font := TFont.Create();
-        if (Screen.Fonts.IndexOf('Arial Unicode MS') < 0) then begin
-            unicode_font.name := 'Arial';
-            unicode_font.size := 8;
-        end
-        else begin
-            unicode_font.Name := 'Arial Unicode MS';
-            unicode_font.Size := 8;
-        end;
-    end;
-
-    f.Name := unicode_font.name;
-
-    if ((font_size = 0) or (font_size < 5)) then
-        f.size := unicode_font.size
-    else
-        f.size := font_size;
+    TExForm.GetDefaultFont(f);
+//    if (font_size >= 5) then
+//        f.size := font_size;
 end;
 
 {---------------------------------------}
@@ -451,7 +436,8 @@ end;
 {---------------------------------------}
 procedure AssignUnicodeFont(form: TForm; font_size: short);
 begin
-    AssignUnicodeFont(form.font, font_size);
+    if (not (form is TExForm)) then //if exform, font, color already assigned
+        AssignUnicodeFont(form.font, font_size);
 end;
 
 {---------------------------------------}

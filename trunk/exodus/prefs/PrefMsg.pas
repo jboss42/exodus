@@ -88,7 +88,7 @@ begin
         S10N_AUTO_DENY_ALL: rbDenyAll.checked := true;
         else rbPromptAll.checked := true;
     end;
-    
+
     s := getPrefState('keywords');
     btnManageKeywords.Visible := (s <> psInvisible);
     btnManageKeywords.Enabled := (s <> psReadOnly);
