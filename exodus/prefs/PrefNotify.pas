@@ -129,7 +129,7 @@ implementation
 {$R *.dfm}
 uses
     MMSystem,
-    PrefFile,
+    PrefFile,                                      
     XMLUtils,
     ToastSettings,
     GnuGetText, JabberUtils, ExUtils,  PrefController, Session, ShellAPI;
@@ -140,7 +140,7 @@ const
     sSoundInvite = 'Invitation to a conference room is received';
     sSoundKeyword = 'Keyword appears in a conference room';
     sSoundNewchat = 'New conversation is initiated';
-    sSoundNormalmsg = 'Message is received';
+    sSoundNormalmsg = 'Broadcast message is received';
     sSoundOffline = 'Contact goes offline';
     sSoundOnline = 'Contact comes online';
     sSoundRoomactivity = 'Activity in a conference room';
