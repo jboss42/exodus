@@ -2,69 +2,67 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
   Left = 263
   Top = 185
   Caption = 'Advanced Emoticon Settings'
-  ClientHeight = 440
-  ClientWidth = 449
+  ClientHeight = 358
+  ClientWidth = 365
   ParentFont = True
   OldCreateOrder = True
   OnCreate = TntFormCreate
-  ExplicitWidth = 457
-  ExplicitHeight = 480
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 373
+  ExplicitHeight = 392
+  PixelsPerInch = 96
+  TextHeight = 13
   object pageEmotes: TTntPageControl
     Left = 0
     Top = 0
-    Width = 449
-    Height = 401
+    Width = 365
+    Height = 326
     ActivePage = TntTabSheet2
     Align = alTop
     TabOrder = 0
     object TntTabSheet1: TTntTabSheet
       Caption = 'Emoticon Packages'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlCustomPresButtons: TPanel
         Left = 0
-        Top = 328
-        Width = 441
-        Height = 42
+        Top = 264
+        Width = 357
+        Height = 34
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitTop = 267
+        ExplicitWidth = 358
         object btnEmoteAdd: TTntButton
-          Left = 5
-          Top = 5
-          Width = 92
-          Height = 31
+          Left = 4
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Add'
           TabOrder = 0
           OnClick = btnEmoteAddClick
         end
         object btnEmoteRemove: TTntButton
-          Left = 103
-          Top = 5
-          Width = 93
-          Height = 31
+          Left = 84
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Remove'
           TabOrder = 1
           OnClick = btnEmoteRemoveClick
         end
         object btnEmoteClear: TTntButton
-          Left = 202
-          Top = 5
-          Width = 92
-          Height = 31
+          Left = 164
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Clear'
           TabOrder = 2
           OnClick = btnEmoteClearClick
         end
         object btnEmoteDefault: TTntButton
-          Left = 302
-          Top = 5
-          Width = 92
-          Height = 31
+          Left = 245
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Defaults'
           TabOrder = 3
           OnClick = btnEmoteDefaultClick
@@ -73,8 +71,8 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
       object lstEmotes: TTntListBox
         Left = 0
         Top = 0
-        Width = 441
-        Height = 328
+        Width = 357
+        Height = 264
         Align = alClient
         ItemHeight = 16
         TabOrder = 1
@@ -84,37 +82,37 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
       Caption = 'Custom Emoticons'
       object Panel2: TPanel
         Left = 0
-        Top = 261
-        Width = 441
-        Height = 42
+        Top = 209
+        Width = 357
+        Height = 34
         Align = alBottom
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
         object btnCustomEmoteAdd: TTntButton
-          Left = 5
-          Top = 5
-          Width = 92
-          Height = 31
+          Left = 4
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Add ...'
           TabOrder = 0
           OnClick = btnCustomEmoteAddClick
         end
         object btnCustomEmoteRemove: TTntButton
-          Left = 202
-          Top = 5
-          Width = 92
-          Height = 31
+          Left = 164
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Remove'
           Enabled = False
           TabOrder = 1
           OnClick = btnCustomEmoteRemoveClick
         end
         object btnCustomEmoteEdit: TTntButton
-          Left = 103
-          Top = 5
-          Width = 93
-          Height = 31
+          Left = 84
+          Top = 4
+          Width = 75
+          Height = 25
           Caption = 'Edit ...'
           Enabled = False
           TabOrder = 2
@@ -123,32 +121,32 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
       end
       object Panel3: TPanel
         Left = 0
-        Top = 303
-        Width = 441
-        Height = 67
+        Top = 243
+        Width = 357
+        Height = 55
         Align = alBottom
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
         object TntLabel3: TTntLabel
           Left = 2
-          Top = 10
-          Width = 235
-          Height = 16
+          Top = 8
+          Width = 194
+          Height = 13
           Caption = 'Filename of custom emoticon definitions:'
         end
         object txtCustomEmoteFilename: TTntEdit
-          Left = 20
-          Top = 27
-          Width = 314
-          Height = 24
+          Left = 16
+          Top = 22
+          Width = 255
+          Height = 21
           TabOrder = 0
         end
         object btnCustomEmoteBrowse: TTntButton
-          Left = 344
-          Top = 25
-          Width = 93
-          Height = 30
+          Left = 280
+          Top = 20
+          Width = 75
+          Height = 25
           Caption = 'Browse'
           TabOrder = 1
           OnClick = btnCustomEmoteBrowseClick
@@ -157,8 +155,8 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
       object lstCustomEmotes: TTntListView
         Left = 0
         Top = 0
-        Width = 441
-        Height = 261
+        Width = 357
+        Height = 209
         Align = alClient
         Columns = <>
         IconOptions.AutoArrange = True
@@ -174,10 +172,10 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
     end
   end
   object btnOK: TTntButton
-    Left = 285
-    Top = 407
-    Width = 75
-    Height = 25
+    Left = 232
+    Top = 331
+    Width = 61
+    Height = 20
     Caption = 'OK'
     Default = True
     ModalResult = 1
@@ -185,10 +183,10 @@ inherited frmPrefEmoteDlg: TfrmPrefEmoteDlg
     OnClick = btnOKClick
   end
   object btnCancel: TTntButton
-    Left = 366
-    Top = 407
-    Width = 75
-    Height = 25
+    Left = 297
+    Top = 331
+    Width = 61
+    Height = 20
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2

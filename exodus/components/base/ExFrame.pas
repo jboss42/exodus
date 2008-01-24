@@ -9,13 +9,22 @@ uses
 type
   TExFrame = class(TTntFrame)
   private
-    { Private declarations }
+  protected
+    procedure CreateWindowHandle(const Params: TCreateParams); override;
   public
-    { Public declarations }
   end;
 
-implementation
 
+implementation
 {$R *.dfm}
+
+uses
+    ExForm;
+procedure TExFrame.CreateWindowHandle(const Params: TCreateParams);
+begin
+    inherited;
+    Self.Color := TExForm.GetDefaultWindowColor();
+    TExForm.GetDefaultFont(Self.Font);
+end;
 
 end.

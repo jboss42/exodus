@@ -112,13 +112,14 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, NewUser, RosterImages, RosterWindow,   
+    Avatar, NewUser, RosterImages, RosterWindow,
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
-    XMLParser, XMLUtils, DebugLogger, DebugManager;
+    XMLParser, XMLUtils, DebugLogger, DebugManager,
+    ExForm;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -207,6 +208,10 @@ var
 
     inloop: Boolean;
 
+    tf: TFont;
+    tc: TColor;
+    tstr: widestring;
+    
 begin
     // setup all the session stuff, parse cmd line params, etc..
     // Initialize random # generator
@@ -354,6 +359,27 @@ begin
 
     // Create our main Session object
     MainSession := TJabberSession.Create(config);
+
+    //set default font and window color
+    tstr := MainSession.Prefs.getString('brand_default_font_name');
+    if ((tstr <> '') and (Screen.Fonts.IndexOf(tstr) <> -1)) then begin
+        tf := TFont.Create();
+        tf.Name := tstr;
+        tf.Size := MainSession.Prefs.getInt('brand_default_font_size');
+        tf.Style := [];
+        if (MainSession.Prefs.getBool('brand_default_font_bold')) then
+            tf.Style := tf.Style + [fsBold];
+        if (MainSession.Prefs.getBool('brand_default_font_italic')) then
+            tf.Style := tf.Style + [fsItalic];
+        if (MainSession.Prefs.getBool('brand_default_font_underline')) then
+            tf.Style := tf.Style + [fsUnderline];
+        TExForm.SetDefaultFont(tf);
+        tf.Free();
+    end;
+
+    tc := TColor(MainSession.Prefs.getInt('brand_default_window_color'));
+    if (tc <> clBlack) then //gonna assume they didn't brand if == 0
+        TExForm.SetDefaultWindowColor(tc);
 
     // Get our over-riding locale..
     // Normally, the GNUGetText stuff will try to find

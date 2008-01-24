@@ -3,8 +3,8 @@ unit ExBrandPanel;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
-  Dialogs, Contnrs, ExFrame;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Contnrs, ExtCtrls, ExFrame;
 
 type
   TControlInfo = class
@@ -14,34 +14,36 @@ type
   end;
 
   //A simple panel that autohides, mass enables/disables
-  TExBrandPanel = class(TExFrame)
+  TExBrandPanel = class(TPanel)
   private
       _autoHide: boolean;
     //since we may be "disabling" an already disabled child, we don't want to
     //enable that child when mass enabling. track initial enabled and visible
     //states of children
-    _initialStates: TObjectList; //of TControlInfo
+    _InitialStates: TObjectList; //of TControlInfo
 
-    _canEnable: boolean;
+    _CanEnable: boolean;
+    _CanShow: boolean; //are children allowed to be shown? entire panel may be hidden.
   protected
-      function getAutoHide(): boolean;
-      procedure setAutoHide(b: boolean);
+    procedure CreateWindowHandle(const Params: TCreateParams); override;
 
-      function visibleChildren(): integer;virtual;
-      procedure enableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
-      procedure showChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil);virtual;
+      function GetAutoHide(): boolean;
+      procedure SetAutoHide(b: boolean);
 
-      procedure SetEnabled(enabled: boolean);override;
+      function VisibleChildren(): integer; virtual;
+      procedure EnableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
+      procedure ShowChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
 
+      procedure SetEnabled(enabled: boolean); override;
   public
-      Constructor Create(AOwner: TComponent);override;
+      Constructor Create(AOwner: TComponent); override;
       Destructor Destroy; Override;
-      procedure checkAutoHide();virtual;
-      procedure captureChildStates();virtual;
 
-      function CanFocus: Boolean; override;
+      procedure CheckAutoHide(); virtual;
+      procedure CaptureChildStates(); virtual;
 
       property CanEnabled: boolean read _canEnable write _canEnable;
+      property CanShow: boolean read _CanShow write _CanShow;
   published
       property AutoHide: boolean read getAutoHide write setAutoHide;
   end;
@@ -50,22 +52,32 @@ type
 
 implementation
 
-{$R *.dfm}
 procedure Register();
 begin
-  RegisterComponents('Exodus Components', [TExBrandPanel]);
+    RegisterComponents('Exodus Components', [TExBrandPanel]);
+end;
+
+procedure TExBrandPanel.CreateWindowHandle(const Params: TCreateParams);
+begin
+    Self.Caption := '';
+    Self.ParentColor := True;
+    Self.ParentFont := True;
+
+    Self.BevelOuter := bvNone;
+    Self.TabStop := false;
+    inherited;
 end;
 
 //protected methods
 function TExBrandPanel.visibleChildren(): integer;
 var
-  i: integer;
+    i: integer;
 begin
-  Result := 0;
-  for i := 0 to Self.ControlCount -1 do begin
-    if (Self.Controls[i].Visible) then
-      inc(Result);
-  end;
+    Result := 0;
+    for i := 0 to Self.ControlCount -1 do begin
+        if (Self.Controls[i].Visible) then
+            inc(Result);
+    end;
 end;
 
 function findControlInfo(list: TList; child: TControl): TControlInfo;
@@ -100,36 +112,36 @@ end;
 procedure TExBrandPanel.setEnabled(enabled: boolean);
 begin
     inherited SetEnabled(_canEnable and enabled);
-    
+
     if (_canEnable) then
         enableChildren(enabled, true, nil);
 end;
 
 procedure TExBrandPanel.showChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil);
 var
-  i: integer;
-  oneT: TControl;
-  oneI: TControlInfo;
-  initialVisible: boolean;
+    i: integer;
+    oneT: TControl;
+    oneI: TControlInfo;
+    initialVisible: boolean;
 begin
-  for i := 0 to Self.ControlCount -1 do begin
-      oneT := Self.Controls[i];
-      if (not controlInList(ignore, oneT)) then begin
-          if (oneT is TExBrandPanel) then
-              TExBrandPanel(oneT).showChildren(v, useInitial, ignore)
-          else begin
-            initialVisible := true;
-            if (v) then begin
-                if (useInitial) then begin
-                    oneI := findControlInfo(_initialStates, oneT);
-                    if (oneI <> nil) then
-                        initialVisible := oneI._visible;
+    for i := 0 to Self.ControlCount -1 do begin
+        oneT := Self.Controls[i];
+        if (not controlInList(ignore, oneT)) then begin
+            if (oneT is TExBrandPanel) then
+                TExBrandPanel(oneT).showChildren(v, useInitial, ignore)
+            else begin
+                initialVisible := true;
+                if (v) then begin
+                    if (useInitial) then begin
+                        oneI := findControlInfo(_initialStates, oneT);
+                        if (oneI <> nil) then
+                            initialVisible := oneI._visible;
+                    end;
                 end;
+                oneT.Visible := v and initialVisible;
             end;
-            oneT.Visible := v and initialVisible;
-          end;
-      end;
-  end;
+        end;
+    end;
 end;
 
 procedure TExBrandPanel.enableChildren(e: boolean; useInitial: boolean; ignore: TList);
@@ -161,7 +173,7 @@ end;
 
 function TExBrandPanel.getAutoHide(): boolean;
 begin
-  Result := _autoHide;
+    Result := _autoHide;
 end;
 
 procedure TExBrandPanel.setAutoHide(b: boolean);
@@ -197,8 +209,11 @@ end;
 Constructor TExBrandPanel.create(AOwner: TComponent);
 begin
     inherited;
-    _initialStates := nil;
-    _canEnable := true;
+    _InitialStates := nil;
+    _CanEnable := true;
+    _CanShow := true;
+
+    TabStop := false; //never want to be a tab stop.
 end;
 
 Destructor TExBrandPanel.Destroy;
@@ -212,7 +227,7 @@ procedure TExBrandPanel.checkAutoHide();
 var
     i: integer;
 begin
-    if (csDesigning in Self.ComponentState) then exit;
+    if ((csDesigning in Self.ComponentState) or ((not _CanShow) and (not Self.Visible))) then exit;
     //update any TExBrandPanel children we have first so we can reliably check
     //visiblity states
     for i := 0 to Self.ControlCount - 1 do begin
@@ -223,11 +238,6 @@ begin
     //don't mess with visiblity if not autohiding
     if (_autoHide) then
         Self.Visible := (visibleChildren() > 0);
-end;
-
-function TExBrandPanel.CanFocus: Boolean;
-begin
-    Result := false;
 end;
 
 end.

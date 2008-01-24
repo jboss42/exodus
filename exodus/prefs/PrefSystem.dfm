@@ -1,203 +1,211 @@
 inherited frmPrefSystem: TfrmPrefSystem
   Left = 259
   Top = 156
-  Width = 398
-  Height = 685
   ActiveControl = chkAutoStart
   Caption = 'frmPrefSystem'
+  ClientHeight = 548
   OldCreateOrder = True
-  ExplicitWidth = 398
-  ExplicitHeight = 685
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitHeight = 560
+  PixelsPerInch = 96
+  TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 386
     Font.Style = [fsBold]
     TabOrder = 1
-    ExplicitWidth = 386
     inherited lblHeader: TTntLabel
-      Width = 150
+      Width = 114
       Caption = 'System Preferences'
-      ExplicitTop = 3
-      ExplicitWidth = 150
+      ExplicitWidth = 114
     end
   end
   object gbParentGroup: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 30
-    Width = 377
-    Height = 643
+    Top = 24
+    Width = 305
+    Height = 524
     Margins.Left = 0
     Margins.Right = 0
     Margins.Bottom = 0
     Align = alLeft
-    AutoScroll = True
+    BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 0
-    TabStop = True
     AutoHide = True
     object ExGroupBox2: TExGroupBox
       AlignWithMargins = True
       Left = 0
       Top = 3
-      Width = 377
-      Height = 42
+      Width = 305
+      Height = 37
       Margins.Left = 0
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 0
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'When I start my computer:'
-      ExplicitTop = 0
+      ParentColor = True
+      TabOrder = 0
+      AutoHide = True
+      ExplicitWidth = 283
       object chkAutoStart: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 17
-        Width = 374
-        Height = 25
+        Top = 18
+        Width = 302
+        Height = 19
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Start Exodus'
         TabOrder = 0
+        ExplicitWidth = 280
       end
     end
     object gbOnStart: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 51
-      Width = 377
-      Height = 106
+      Top = 46
+      Width = 305
+      Height = 85
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 4
       Align = alTop
       AutoSize = True
-      TabOrder = 1
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'When I start Exodus:'
+      ParentColor = True
+      TabOrder = 1
+      AutoHide = True
+      ExplicitWidth = 283
       object chkAutoLogin: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 17
-        Width = 374
-        Height = 22
+        Top = 18
+        Width = 302
+        Height = 16
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Automatically login with the last active profile'
         TabOrder = 0
+        ExplicitWidth = 280
       end
       object chkStartMin: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 39
-        Width = 374
-        Height = 23
+        Top = 34
+        Width = 302
+        Height = 18
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Start &minimized to the System Tray'
         TabOrder = 1
+        ExplicitTop = 33
+        ExplicitWidth = 280
       end
       object chkRestoreDesktop: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 62
-        Width = 374
-        Height = 22
+        Top = 52
+        Width = 302
+        Height = 16
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Restore desktop to previous state'
         TabOrder = 2
+        ExplicitWidth = 280
       end
       object chkDebug: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 84
-        Width = 374
-        Height = 22
+        Top = 68
+        Width = 302
+        Height = 17
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Show the debug &window'
         TabOrder = 3
+        ExplicitWidth = 280
       end
     end
     object ExGroupBox4: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 167
-      Width = 377
-      Height = 133
+      Top = 141
+      Width = 305
+      Height = 108
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      TabOrder = 2
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'Other:'
+      ParentColor = True
+      TabOrder = 2
+      AutoHide = True
+      ExplicitWidth = 283
       object chkSaveWindowState: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 17
-        Width = 374
-        Height = 22
+        Top = 18
+        Width = 302
+        Height = 16
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Save window &positions'
         TabOrder = 0
+        ExplicitWidth = 280
       end
       object pnlDockPref: TTntPanel
         AlignWithMargins = True
         Left = 0
-        Top = 42
-        Width = 374
-        Height = 57
+        Top = 37
+        Width = 302
+        Height = 43
         Margins.Left = 0
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        ExplicitWidth = 280
         object lblDockPref: TTntLabel
           Left = 3
           Top = 0
-          Width = 108
-          Height = 16
+          Width = 87
+          Height = 13
           Caption = 'Show all windows:'
           FocusControl = rbDocked
         end
         object rbDocked: TTntRadioButton
-          Left = 17
-          Top = 19
-          Width = 310
-          Height = 17
+          Left = 13
+          Top = 14
+          Width = 232
+          Height = 13
           Caption = '&Docked'
           TabOrder = 0
           TabStop = True
         end
         object rbUndocked: TTntRadioButton
-          Left = 17
-          Top = 38
-          Width = 310
-          Height = 19
+          Left = 13
+          Top = 29
+          Width = 232
+          Height = 14
           Caption = '&Undocked'
           TabOrder = 1
           TabStop = True
@@ -206,20 +214,22 @@ inherited frmPrefSystem: TfrmPrefSystem
       object ExBrandPanel1: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 105
-        Width = 374
-        Height = 25
+        Top = 86
+        Width = 302
+        Height = 19
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 3
-        TabStop = True
         AutoHide = True
+        ExplicitWidth = 280
         object btnPlugins: TTntButton
           Left = 3
           Top = 0
-          Width = 120
-          Height = 25
+          Width = 109
+          Height = 19
           Caption = 'Manage Plu&gins...'
           TabOrder = 0
           OnClick = btnPluginsClick
@@ -229,65 +239,70 @@ inherited frmPrefSystem: TfrmPrefSystem
     object ExGroupBox3: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 406
-      Width = 377
-      Height = 213
+      Top = 341
+      Width = 305
+      Height = 165
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
       Margins.Bottom = 6
       Align = alTop
       AutoSize = True
-      TabOrder = 4
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'Advanced system preferences:'
-      ExplicitTop = 404
+      ParentColor = True
+      TabOrder = 4
+      AutoHide = True
+      ExplicitTop = 343
+      ExplicitWidth = 283
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 61
-        Width = 374
-        Height = 22
+        Top = 51
+        Width = 302
+        Height = 16
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Small titlebar for main window'
         TabOrder = 2
+        ExplicitWidth = 280
       end
       object chkCloseMin: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 17
-        Width = 374
-        Height = 22
+        Top = 18
+        Width = 302
+        Height = 16
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Close button minimizes to the System Tray'
         TabOrder = 0
+        ExplicitWidth = 280
       end
       object chkSingleInstance: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 39
-        Width = 374
-        Height = 22
+        Top = 34
+        Width = 302
+        Height = 17
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Only allow a single, running instance'
         TabOrder = 1
+        ExplicitWidth = 280
       end
       object chkOnTop: TTntCheckBox
         AlignWithMargins = True
         Left = 3
-        Top = 83
-        Width = 374
-        Height = 23
+        Top = 67
+        Width = 302
+        Height = 17
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
@@ -295,32 +310,34 @@ inherited frmPrefSystem: TfrmPrefSystem
         Caption = 'Always on top'
         TabOrder = 3
         Visible = False
+        ExplicitWidth = 280
       end
       object pnlAutoUpdates: TTntPanel
         AlignWithMargins = True
         Left = 0
-        Top = 109
-        Width = 374
-        Height = 33
+        Top = 87
+        Width = 302
+        Height = 21
         Margins.Left = 0
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 4
+        ExplicitWidth = 280
         object chkAutoUpdate: TTntCheckBox
-          Left = 3
-          Top = 5
-          Width = 242
-          Height = 22
+          Left = 2
+          Top = 4
+          Width = 182
+          Height = 16
           Caption = 'Check for updates automatically'
           TabOrder = 0
         end
         object btnUpdateCheck: TTntButton
-          Left = 229
+          Left = 187
           Top = 0
-          Width = 98
-          Height = 33
+          Width = 73
+          Height = 21
           Caption = 'Check Now'
           TabOrder = 1
           OnClick = btnUpdateCheckClick
@@ -330,39 +347,41 @@ inherited frmPrefSystem: TfrmPrefSystem
       object pnlLocale: TTntPanel
         AlignWithMargins = True
         Left = 0
-        Top = 148
-        Width = 374
-        Height = 62
+        Top = 114
+        Width = 302
+        Height = 48
         Margins.Left = 0
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 5
+        ExplicitTop = 118
+        ExplicitWidth = 280
         object lblLang: TTntLabel
-          Left = 3
+          Left = 2
           Top = 0
-          Width = 120
-          Height = 16
+          Width = 101
+          Height = 13
           Caption = 'Language file to use:'
           FocusControl = cboLocale
         end
         object lblLangScan: TTntLabel
-          Left = 3
-          Top = 46
-          Width = 155
-          Height = 16
+          Left = 2
+          Top = 35
+          Width = 130
+          Height = 13
           Cursor = crHandPoint
           Caption = 'Scan for language catalo&gs'
           OnClick = lblLangScanClick
         end
         object cboLocale: TTntComboBox
-          Left = 3
-          Top = 18
-          Width = 225
-          Height = 24
+          Left = 2
+          Top = 14
+          Width = 169
+          Height = 21
           Style = csDropDownList
-          ItemHeight = 16
+          ItemHeight = 13
           TabOrder = 0
           Items.Strings = (
             'English (American)')
@@ -372,42 +391,44 @@ inherited frmPrefSystem: TfrmPrefSystem
     object gbReconnect: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 309
-      Width = 374
-      Height = 88
+      Top = 258
+      Width = 302
+      Height = 74
       Margins.Left = 0
       Align = alTop
       AutoSize = True
-      TabOrder = 3
-      TabStop = True
-      AutoHide = True
+      BevelOuter = bvNone
       Caption = 'Reconnect options:'
+      ParentColor = True
+      TabOrder = 3
+      AutoHide = True
       object pnlAttempts: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 20
-        Width = 371
-        Height = 31
+        Top = 21
+        Width = 299
+        Height = 20
         Margins.Left = 0
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 1
-        TabStop = True
         AutoHide = True
         object lblAttempts: TTntLabel
           Left = 0
-          Top = 7
-          Width = 179
-          Height = 16
+          Top = 3
+          Width = 151
+          Height = 13
           Caption = 'Num&ber of reconnect attempts:'
           FocusControl = txtAttempts
           Transparent = False
         end
         object txtAttempts: TExNumericEdit
-          Left = 229
+          Left = 171
           Top = 0
-          Width = 60
-          Height = 31
+          Width = 45
+          Height = 20
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -415,55 +436,57 @@ inherited frmPrefSystem: TfrmPrefSystem
           Min = 0
           Max = 1000000
           DesignSize = (
-            60
-            31)
+            45
+            20)
         end
       end
       object pnlTime: TExBrandPanel
         Left = 0
-        Top = 54
-        Width = 374
-        Height = 34
+        Top = 44
+        Width = 302
+        Height = 30
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 2
-        TabStop = True
         AutoHide = True
+        ExplicitWidth = 280
         object lblTime: TTntLabel
           Left = 0
           Top = 3
-          Width = 175
-          Height = 16
-          Caption = 'Time &lapse between attempts:'
+          Width = 145
+          Height = 13
+          Caption = '&Time lapse between attempts:'
           FocusControl = txtTime
           Transparent = False
         end
         object lblTime2: TTntLabel
           Left = 0
-          Top = 18
-          Width = 186
-          Height = 16
+          Top = 17
+          Width = 154
+          Height = 13
           Caption = 'Use 0 for a random time interval'
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = cl3DDkShadow
-          Font.Height = -13
+          Font.Color = clGray
+          Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
           Transparent = False
         end
         object lblSeconds: TTntLabel
-          Left = 295
+          Left = 223
           Top = 3
-          Width = 48
-          Height = 16
+          Width = 40
+          Height = 13
           Caption = 'Seconds'
         end
         object txtTime: TExNumericEdit
-          Left = 229
+          Left = 171
           Top = 0
-          Width = 60
-          Height = 31
+          Width = 45
+          Height = 20
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -471,8 +494,8 @@ inherited frmPrefSystem: TfrmPrefSystem
           Min = 0
           Max = 3600
           DesignSize = (
-            60
-            31)
+            45
+            20)
         end
       end
     end

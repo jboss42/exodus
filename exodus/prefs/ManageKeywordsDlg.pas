@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   ExForm,
-  Dialogs, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExBrandPanel;
+  Dialogs, StdCtrls, TntStdCtrls, TntForms, ExFrame, ExBrandPanel, ExtCtrls;
 
 type
   TManageKeywordsDlg = class(TExForm)

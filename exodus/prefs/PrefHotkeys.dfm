@@ -2,63 +2,64 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
   Left = 259
   Top = 156
   Caption = 'frmPrefHotkeys'
-  ClientHeight = 473
-  ClientWidth = 482
+  ClientHeight = 343
+  ClientWidth = 392
   OldCreateOrder = True
   OnDestroy = FormDestroy
-  ExplicitWidth = 494
-  ExplicitHeight = 485
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 404
+  ExplicitHeight = 355
+  PixelsPerInch = 96
+  TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 482
-    ExplicitWidth = 482
+    Width = 392
+    ExplicitWidth = 392
     inherited lblHeader: TTntLabel
-      Width = 61
+      Width = 47
+      Height = 12
       Caption = 'Hotkeys'
-      ExplicitWidth = 61
+      ExplicitWidth = 47
     end
   end
   object pnlContainer: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 33
-    Width = 479
-    Height = 259
+    Top = 27
+    Width = 389
+    Height = 216
     Margins.Left = 0
     Margins.Top = 6
     Margins.Bottom = 0
     Align = alTop
     AutoSize = True
+    BevelOuter = bvNone
+    ParentColor = True
     TabOrder = 1
-    TabStop = True
     AutoHide = True
     object TntLabel1: TTntLabel
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 473
-      Height = 16
+      Width = 383
+      Height = 13
       Align = alTop
       Caption = '&Pressing a hotkey will enter the associated message'
       FocusControl = lstHotkeys
-      ExplicitWidth = 298
+      ExplicitWidth = 249
     end
     object lstHotkeys: TTntListView
       AlignWithMargins = True
       Left = 3
-      Top = 25
-      Width = 473
-      Height = 205
+      Top = 22
+      Width = 383
+      Height = 167
       Align = alTop
       Columns = <
         item
           Caption = 'Hotkey'
-          Width = 62
         end
         item
           Caption = 'Message'
-          Width = 410
+          Width = 333
         end>
       RowSelect = True
       SortType = stData
@@ -67,10 +68,10 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
       OnSelectItem = lstHotkeysSelectItem
     end
     object btnModifyHotkeys: TTntButton
-      Left = 84
-      Top = 236
-      Width = 75
-      Height = 23
+      Left = 70
+      Top = 195
+      Width = 61
+      Height = 21
       Caption = '&Edit...'
       Enabled = False
       TabOrder = 2
@@ -78,28 +79,28 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
     end
     object btnAddHotkeys: TTntButton
       Left = 3
-      Top = 236
-      Width = 75
-      Height = 23
+      Top = 195
+      Width = 61
+      Height = 21
       Caption = '&Add...'
       TabOrder = 1
       OnClick = btnAddHotkeysClick
     end
     object btnRemoveHotkeys: TTntButton
-      Left = 165
-      Top = 236
-      Width = 75
-      Height = 23
+      Left = 137
+      Top = 195
+      Width = 61
+      Height = 21
       Caption = '&Remove'
       Enabled = False
       TabOrder = 3
       OnClick = btnRemoveHotkeysClick
     end
     object btnClearAll: TTntButton
-      Left = 246
-      Top = 236
-      Width = 75
-      Height = 23
+      Left = 204
+      Top = 195
+      Width = 61
+      Height = 21
       Caption = '&Clear All'
       TabOrder = 4
       OnClick = btnClearAllClick

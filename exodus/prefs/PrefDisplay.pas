@@ -32,36 +32,7 @@ type
     FontDialog1: TFontDialog;
     pnlContainer: TExBrandPanel;
     gbContactList: TExGroupBox;
-    pnlContactLeft: TExBrandPanel;
-    pnlBackColor: TExBrandPanel;
-    lblRosterBG: TTntLabel;
-    cbRosterBG: TColorBox;
-    pnlRosterFG: TExBrandPanel;
-    lblRosterFG: TTntLabel;
-    cbRosterFont: TColorBox;
-    pnlContactRight: TExBrandPanel;
-    pnlRosterPreview: TExBrandPanel;
-    lblRosterPreview: TTntLabel;
-    colorRoster: TTntTreeView;
-    pnlContactFontBtn: TExBrandPanel;
-    btnRosterFont: TTntButton;
-    grpActivityWindow: TExGroupBox;
-    pnlActivityLeft: TExBrandPanel;
-    pnlChatBG: TExBrandPanel;
-    lblChatBG: TTntLabel;
-    cbChatBG: TColorBox;
-    pnlChatElement: TExBrandPanel;
-    lblChatWindowElement: TTntLabel;
-    cboChatElement: TTntComboBox;
-    pnlChatFont: TExBrandPanel;
-    pnlChatFG: TExBrandPanel;
-    lblChatFG: TTntLabel;
-    cbChatFont: TColorBox;
-    pnlChatFontBtn: TExBrandPanel;
-    btnChatFont: TTntButton;
-    pnlChatPreview: TExBrandPanel;
-    lblChatPreview: TTntLabel;
-    colorChat: TExRichEdit;
+    gbActivityWindow: TExGroupBox;
     gbOtherPrefs: TExGroupBox;
     chkRTEnabled: TTntCheckBox;
     gbAdvancedPrefs: TExGroupBox;
@@ -76,7 +47,6 @@ type
     txtTimestampFmt: TTntComboBox;
     chkShowPriority: TTntCheckBox;
     chkChatAvatars: TTntCheckBox;
-    Label5: TTntLabel;
     pnlSnapTo: TExBrandPanel;
     chkSnap: TTntCheckBox;
     trkSnap: TTrackBar;
@@ -94,6 +64,23 @@ type
     pnlEmoticons: TExBrandPanel;
     chkEmoticons: TTntCheckBox;
     btnEmoSettings: TTntButton;
+    lblRosterBG: TTntLabel;
+    cbRosterBG: TColorBox;
+    lblRosterFG: TTntLabel;
+    cbRosterFont: TColorBox;
+    btnRosterFont: TTntButton;
+    colorRoster: TTntTreeView;
+    lblRosterPreview: TTntLabel;
+    lblChatPreview: TTntLabel;
+    colorChat: TExRichEdit;
+    Label5: TTntLabel;
+    lblChatBG: TTntLabel;
+    cbChatBG: TColorBox;
+    lblChatWindowElement: TTntLabel;
+    cboChatElement: TTntComboBox;
+    btnChatFont: TTntButton;
+    cbChatFont: TColorBox;
+    lblChatFG: TTntLabel;
     procedure btnEmoSettingsClick(Sender: TObject);
     procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);
@@ -212,12 +199,25 @@ begin
     end;
     date_time_formats.free();
 
-    chkShowPriority.Visible := MainSession.Prefs.getBool('branding_priority_notifications');
+
 
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
     colorRoster.Items.AddChild(n, _('Cowboy Neal'));
 
+    //hide/disable entire contact or activity groups if needed
+    s := GetPrefState('roster_font_name');
+    gbContactList.Visible:= (s <> psInvisible);
+    gbContactList.CanShow := (s <> psInvisible);
+    gbContactList.Enabled := (s <> psReadOnly);
+    gbContactList.CanEnabled := (s <> psReadOnly);
+
+    s := GetPrefState('font_name');
+    gbActivityWindow.Visible:= (s <> psInvisible);
+    gbActivityWindow.CanShow := (s <> psInvisible);
+    gbActivityWindow.Enabled := (s <> psReadOnly);
+    gbActivityWindow.CanEnabled := (s <> psReadOnly);
+    
     with MainSession.Prefs do begin
         _color_me := getInt('color_me');
         _color_other := getInt('color_other');
@@ -227,7 +227,7 @@ begin
         _color_time := getInt('color_time');
         _color_priority := getInt('color_priority');
         _color_bg := getInt('color_bg');
-        
+
         _roster_bg := getInt('roster_bg');
         _roster_font_color := getInt('roster_font_color');
 
@@ -273,12 +273,13 @@ begin
 
         cbRosterBG.Selected := _roster_bg;
         cbRosterFont.Selected := _roster_font_color;
+        
+        chkShowPriority.Visible := getBool('branding_priority_notifications');
     end;
 //    colorChatSelectionChange(nil);
     cboChatElement.ItemIndex := cboChatElement.Items.IndexOf(sMessageText);
     cboChatElement.Text := sMessageText;
     cboChatElementChange(nil);
-
 
     trkSnap.Visible := chkSnap.Visible;
     txtSnap.Visible := chkSnap.Visible;
@@ -288,9 +289,9 @@ begin
     s := GetPrefState('custom_icondefs');
     btnEmoSettings.Visible := ((s <> psInvisible) and chkEmoticons.Visible);
     btnEmoSettings.enabled := ((s <> psReadOnly) and chkEmoticons.enabled);
-    
+
     pnlContainer.captureChildStates();
-    btnEmoSettings.Enabled := btnEmoSettings.Enabled and chkEmoticons.Checked; 
+    btnEmoSettings.Enabled := btnEmoSettings.Enabled and chkEmoticons.Checked;
     pnlContainer.checkAutoHide();
 end;
 
