@@ -273,7 +273,7 @@ begin
     List.add(TNotifyInfo.create(_(sSoundNormalmsg), 'notify_normalmsg'));
     List.add(TNotifyInfo.create(_(sSoundS10n), 'notify_s10n'));
     List.add(TNotifyInfo.create(_(sSoundInvite), 'notify_invite'));
-    List.add(TNotifyInfo.create(_(sSoundKeyword), 'notify_Keyword'));
+    List.add(TNotifyInfo.create(_(sSoundKeyword), 'notify_keyword'));
     List.add(TNotifyInfo.create(_(sSoundChatactivity), 'notify_chatactivity'));
     List.add(TNotifyInfo.create(_(sSoundPriorityChatactivity), 'notify_priority_chatactivity'));
     List.add(TNotifyInfo.create(_(sSoundRoomactivity), 'notify_roomactivity'));
