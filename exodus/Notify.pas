@@ -315,7 +315,7 @@ begin
     //          PlaySound() is hard coded to exodus_
     if (MainSession.prefs.getBool('notify_sounds')) then begin
         tstr := MainSession.Prefs.GetSoundFile(sound_name);
-        if (tstr <> '') then
+        if (tstr <> '') and ((notify and notify_sound) > 0) then
             PlaySound(pchar(tstr), 0,
                       SND_FILENAME or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
     end;
