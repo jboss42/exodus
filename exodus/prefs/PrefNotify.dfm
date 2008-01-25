@@ -15,9 +15,9 @@ inherited frmPrefNotify: TfrmPrefNotify
     ExplicitWidth = 379
     inherited lblHeader: TTntLabel
       Width = 97
+      Height = 17
       Caption = 'Notifications'
       FocusControl = chkSound
-      ExplicitLeft = 6
       ExplicitWidth = 97
     end
   end
