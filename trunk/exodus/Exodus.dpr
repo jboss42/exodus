@@ -280,6 +280,9 @@ begin
   except
   end;
 
+{$IFDEF VER185}
+  Application.MainFormOnTaskbar := True;
+{$ENDIF}
   Application.Title := '';
   Application.ShowMainForm := false;
 
