@@ -108,12 +108,14 @@
     <font_italic value="0"/>
     <font_underline value="0"/>
     <color_bg value="$ffffff"/>
+    <color_alt_bg value="$ededed"/>
     <color_me value="$ff0000"/>
     <color_other value="$0000ff"/>
     <color_time value="$808080"/>
     <color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
+    <color_date_bg value="$d3d3d3"/>
 
     <!-- other display preferences -->
     <richtext_enabled value="1" control="chkRTEnabled" state="rw"/>

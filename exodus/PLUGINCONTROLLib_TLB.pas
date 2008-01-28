@@ -22,39 +22,39 @@ const
 
   LIBID_PLUGINCONTROLLib: TGUID = '{D11520D5-FB89-4274-903C-33C011EA81F3}';
 
-  IID_IMyControl: TGUID = '{F476FEEF-2622-4BB2-BA35-1DDE736F469D}';
-  CLASS_MyControl: TGUID = '{524459CD-5F81-4825-96E8-2EA2573B9A14}';
+  IID_IAXControl: TGUID = '{F476FEEF-2622-4BB2-BA35-1DDE736F469D}';
+  CLASS_AXControl: TGUID = '{524459CD-5F81-4825-96E8-2EA2573B9A14}';
 type
 
 // *********************************************************************//
 // Forward declaration of types defined in TypeLibrary                    
 // *********************************************************************//
-  IMyControl = interface;
-  IMyControlDisp = dispinterface;
+  IAXControl = interface;
+  IAXControlDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  MyControl = IMyControl;
+  AXControl = IAXControl;
 
 // *********************************************************************//
-// Interface: IMyControl
+// Interface: IAXControl
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {F476FEEF-2622-4BB2-BA35-1DDE736F469D}
 // *********************************************************************//
-  IMyControl = interface(IDispatch)
+  IAXControl = interface(IDispatch)
     ['{F476FEEF-2622-4BB2-BA35-1DDE736F469D}']
     procedure Connect; safecall;
     procedure Disconnect; safecall;
   end;
 
 // *********************************************************************//
-// DispIntf:  IMyControlDisp
+// DispIntf:  IAXControlDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {F476FEEF-2622-4BB2-BA35-1DDE736F469D}
 // *********************************************************************//
-  IMyControlDisp = dispinterface
+  IAXControlDisp = dispinterface
     ['{F476FEEF-2622-4BB2-BA35-1DDE736F469D}']
     procedure Connect; dispid 1;
     procedure Disconnect; dispid 2;
@@ -63,18 +63,18 @@ type
 
 // *********************************************************************//
 // OLE Control Proxy class declaration
-// Control Name     : TMyControl
-// Help String      : MyControl Class
-// Default Interface: IMyControl
+// Control Name     : TAXControl
+// Help String      : AXControl Class
+// Default Interface: IAXControl
 // Def. Intf. DISP? : No
 // Event   Interface: 
 // TypeFlags        : (2) CanCreate
 // *********************************************************************//
-  TMyControl = class(TOleControl)
+  TAXControl = class(TOleControl)
   private
     ClassId:  TGuid;
-    FIntf:    IMyControl;
-    function  GetControlInterface: IMyControl;
+    FIntf:    IAXControl;
+    function  GetControlInterface: IAXControl;
     function  Get_GUID: WideString; safecall;
 
   protected
@@ -87,8 +87,8 @@ type
 
     procedure Connect;
     procedure Disconnect;
-    property  ControlInterface: IMyControl read GetControlInterface;
-    property  DefaultInterface: IMyControl read GetControlInterface;
+    property  ControlInterface: IAXControl read GetControlInterface;
+    property  DefaultInterface: IAXControl read GetControlInterface;
   published
     property Anchors;
     property  TabStop;
@@ -121,18 +121,18 @@ implementation
 
 uses ComObj;
 
-constructor TMyControl.Create(AOwner: TComponent; ClassId: TGuid);
+constructor TAXControl.Create(AOwner: TComponent; ClassId: TGuid);
 begin
       Self.ClassID := ClassId;
       inherited Create(AOwner);
 end;
 
-function TMyControl.Get_GUID: WideString; safecall;
+function TAXControl.Get_GUID: WideString; safecall;
 begin
   Result := GuidToString(Self.ClassID);
 end;
 
-procedure TMyControl.InitControlData;
+procedure TAXControl.InitControlData;
 const
   CControlData: TControlData2 = (
     ClassID: '{524459CD-5F81-4825-96E8-2EA2573B9A14}';
@@ -148,24 +148,24 @@ begin
        ControlData.ClassID := Self.ClassId;
 end;
 
-procedure TMyControl.CreateControl;
+procedure TAXControl.CreateControl;
 
   procedure DoCreate;
   begin
-    FIntf := IUnknown(OleObject) as IMyControl;
+    FIntf := IUnknown(OleObject) as IAXControl;
   end;
 
 begin
   if FIntf = nil then DoCreate;
 end;
 
-function TMyControl.GetControlInterface: IMyControl;
+function TAXControl.GetControlInterface: IAXControl;
 begin
   CreateControl;
   Result := FIntf;
 end;
 
-procedure TMyControl.Connect;
+procedure TAXControl.Connect;
 begin
   try
     DefaultInterface.Connect();
@@ -174,7 +174,7 @@ begin
   end;
 end;
 
-procedure TMyControl.Disconnect;
+procedure TAXControl.Disconnect;
 begin
   try
     DefaultInterface.Disconnect;
@@ -185,7 +185,7 @@ end;
 {
 procedure Register;
 begin
-  RegisterComponents(dtlOcxPage, [TMyControl]);
+  RegisterComponents(dtlOcxPage, [TAXControl]);
 end;
 }
 end.

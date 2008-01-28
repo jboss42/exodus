@@ -85,6 +85,10 @@ type
     _dragDrop: TDragDropEvent;
     _dragOver: TDragOverEvent;
 
+    _lastLineClass: WideString;
+    _lastMsgNick: WideString;
+    _exeName: Widestring;
+
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
 
@@ -96,6 +100,8 @@ type
     procedure _ClearOldMessages();
     function _getHistory(includeCount: boolean = true): WideString;
     function _processUnicode(txt: widestring): WideString;
+    function _getLineClass(Msg: TJabberMessage): WideString;
+    function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
 
   protected
       procedure writeHTML(html: WideString);
@@ -187,6 +193,7 @@ begin
     else
         _doMessageLimiting := false;
     _displayDateSeperator := MainSession.Prefs.getBool('display_date_seperator');
+    _exeName := MainSession.Prefs.getString('exe_FullPath');
 end;
 
 {---------------------------------------}
@@ -384,6 +391,35 @@ begin
 end;
 
 {---------------------------------------}
+function TfIEMsgList._checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
+begin
+    if (Msg.Nick = _lastMsgNick) then begin
+        Result := true;
+    end
+    else begin
+        Result := false;
+    end;
+end;
+
+{---------------------------------------}
+function TfIEMsgList._getLineClass(Msg: TJabberMessage): WideString;
+begin
+    if (_checkLastNickForMsgGrouping(Msg)) then begin
+        Result := _lastLineClass;
+        exit;
+    end;
+
+    if (_lastLineClass = 'line1') then begin
+        _lastLineClass := 'line2';
+        Result := _lastLineClass;
+    end
+    else begin
+        _lastLineClass := 'line1';
+        Result := _lastLineClass;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfIEMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     txt: WideString;
@@ -394,6 +430,7 @@ var
     dv: WideString;
     t: TDateTime;
     id: WideString;
+    exe_name: widestring;
 begin
     try
         if (_displayDateSeperator) then begin
@@ -401,16 +438,16 @@ begin
             if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
                 (msg.Subject = '') and
                 (msg.Nick <> ''))then begin
-                txt := '<div class="date"><span><br />';
-                txt := txt +
-                       ' -= ' +
+                txt := '<div class="date">' +
+                       '<span>' +
                        DateToStr(t) +
-                       ' =- ' +
-                       '<br /></span></div>';
+                       '</span>' +
+                       '</div>';
 
                 writeHTML(txt);
                 _lastTimeStamp := msg.Time;
                 txt := '';
+                _lastMsgNick := '';
                 if (_doMessageLimiting) then
                     Inc(_msgCount);
             end;
@@ -450,43 +487,67 @@ begin
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
     // canonicalizing HTML as it gets inserted.
     id := _genElementID();
-    dv := '<div id="' + id + '" class="line">';
+    dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
+
+    // Author Stamp
+    if ((Msg.Nick <> '') and
+        (not Msg.Action)) then begin
+        // This is a normal message
+        if (not _checkLastNickForMsgGrouping(Msg)) then begin
+            if Msg.isMe then begin
+                // Our own msgs
+                dv := dv + '<span class="me">' + Msg.Nick + '</span>';
+            end
+            else begin
+                // Msgs from "others"
+                dv := dv + '<span class="other">' + Msg.Nick + '</span>';
+            end;
+        end;
+
+        dv := dv + '<div class="msgts">';
+        _lastMsgNick := Msg.Nick;
+    end;
+
+    // Timestamp
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
-            dv := dv + '<span class="ts">[' +
+            dv := dv + '<span class="ts">' +
                 FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
-                ']</span>';
+                '</span>';
         except
             on EConvertError do begin
-                dv := dv + '<span class="ts">[' +
+                dv := dv + '<span class="ts">' +
                     FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                    Now()) + ']</span>';
+                    Now()) + '</span>';
             end;
         end;
     end;
 
+    // MSG Content
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         dv := dv + '<span class="svr">' + txt + '</span>';
     end
     else if not Msg.Action then begin
-        // This is a normal message
-
-        if (Msg.Priority = high) then
-            dv := dv + '<span class="pri_high">[' + GetDisplayPriority(Msg.Priority) + ']</span>'
-        else if (Msg.Priority = low) then
-            dv := dv + '<span class="pri_low">[' + GetDisplayPriority(Msg.Priority) + ']</span>';
-
-        if Msg.isMe then
-            // our own msgs
-            dv := dv + '<span class="me">&lt;' + Msg.Nick + '&gt;</span>'
-        else
-            dv := dv + '<span class="other">&lt;' + Msg.Nick + '&gt;</span>';
+        if (_exeName <> '') then begin
+            if (Msg.Priority = high) then begin
+                dv := dv +
+                      '<img class="priorityimg" src="res://' +
+                      _exeName +
+                      '/GIF/HIGH_PRI"/>';
+            end
+            else if (Msg.Priority = low) then begin
+                dv := dv +
+                      '<img class="priorityimg" src="res://' +
+                      _exeName +
+                      '/GIF/LOW_PRI"/>';
+            end;
+        end;
 
         if (Msg.Highlight) then
-            dv := dv + '<span class="alert"> ' + txt + '</span>'
+            dv := dv + '<span class="alert"> ' + txt + '</span></div>'
         else
-            dv := dv + '<span class="msg">' + txt + '</span>';
+            dv := dv + '<span class="msg">' + txt + '</span></div>';
     end
     else
         // This is an action
@@ -535,7 +596,7 @@ begin
     end;
 
     if timestamp <> '' then
-        writeHTML('<div class="line"><span class="ts">[' + timestamp + ']</span><span class="pres">' + txt + '</span></div>')
+        writeHTML('<div class="line"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div>')
     else
         writeHTML('<div class="line"><span class="pres">' + txt + '</span></div>');
 
@@ -699,6 +760,8 @@ begin
             css := replaceString(css, '/*font_size*/', MainSession.Prefs.getString('font_size') + 'pt');
             css := replaceString(css, '/*font_color*/', HTMLColor(MainSession.Prefs.getInt('font_color')));
             css := replaceString(css, '/*color_bg*/', HTMLColor(MainSession.Prefs.getInt('color_bg')));
+            css := replaceString(css, '/*color_alt_bg*/', HTMLColor(MainSession.Prefs.getInt('color_alt_bg')));
+            css := replaceString(css, '/*color_date_bg*/', HTMLColor(MainSession.Prefs.getInt('color_date_bg')));
             css := replaceString(css, '/*color_me*/', HTMLColor(MainSession.Prefs.getInt('color_me')));
             css := replaceString(css, '/*color_other*/', HTMLColor(MainSession.Prefs.getInt('color_other')));
             css := replaceString(css, '/*color_time*/', HTMLColor(MainSession.Prefs.getInt('color_time')));

@@ -1,29 +1,28 @@
 inherited frmBaseChat: TfrmBaseChat
   Left = 414
   Top = 474
-  ClientHeight = 240
-  ClientWidth = 383
+  ClientHeight = 260
+  ClientWidth = 415
   OnDestroy = FormDestroy
   ExplicitWidth = 391
   ExplicitHeight = 274
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   object Splitter1: TSplitter [0]
     Left = 0
-    Top = 176
-    Width = 383
+    Top = 191
+    Width = 415
     Height = 4
     Cursor = crVSplit
     Align = alBottom
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
-    ExplicitTop = 210
   end
   inherited pnlDockTop: TPanel
-    Width = 383
+    Width = 415
     TabOrder = 2
-    ExplicitWidth = 383
+    ExplicitWidth = 415
     inherited tbDockBar: TToolBar
       Left = 334
       ExplicitLeft = 334
@@ -31,8 +30,8 @@ inherited frmBaseChat: TfrmBaseChat
     object pnlChatTop: TPanel
       Left = 0
       Top = 0
-      Width = 331
-      Height = 30
+      Width = 359
+      Height = 33
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -41,30 +40,29 @@ inherited frmBaseChat: TfrmBaseChat
   end
   object pnlMsgList: TPanel
     Left = 0
-    Top = 30
-    Width = 383
-    Height = 146
+    Top = 33
+    Width = 415
+    Height = 158
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     ParentColor = True
     TabOrder = 0
-    ExplicitHeight = 151
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 180
-    Width = 383
-    Height = 60
+    Top = 195
+    Width = 415
+    Height = 65
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
-      Top = 31
-      Width = 379
-      Height = 27
+      Top = 34
+      Width = 411
+      Height = 29
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -287,7 +285,7 @@ inherited frmBaseChat: TfrmBaseChat
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
-        ItemHeight = 13
+        ItemHeight = 0
         ParentFont = False
         TabOrder = 0
       end

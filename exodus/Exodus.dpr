@@ -24,6 +24,7 @@ program Exodus;
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
 {$R 'iehtml.res' 'iehtml.rc'}
+{$R 'priority_images.res' 'priority_images.rc'}
 {%File 'defaults.xml'}
 {%File 'iemsglist_style.css'}
 
@@ -258,7 +259,9 @@ uses
   ManageKeywordsDlg in 'prefs\ManageKeywordsDlg.pas' {Form2},
   IEMsgList in 'IEMsgList.pas' {fIEMsgList: TFrame},
   MSHTMLEvents in 'MSHTMLEvents.pas',
-  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm};
+  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
+  ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
+  COMAXControl in 'COMAXControl.pas';
 
 {$R *.TLB}
 

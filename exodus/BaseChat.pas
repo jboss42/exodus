@@ -200,6 +200,8 @@ const
     PREF_FONT_ITALIC = 'font_italic';
     PREF_FONT_UNDERLINE = 'font_underline';
     PREF_BACKGROUND_COLOR = 'color_bg';
+    PREF_ALT_BACKGROUND_COLOR = 'color_alt_bg';
+    PREF_DATE_BACKGROUND_COLOR = 'color_alt_bg';
 
 {
     Set the left and top properties of the given form.
