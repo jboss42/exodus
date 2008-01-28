@@ -121,14 +121,14 @@ end;
 {---------------------------------------}
 function TExodusDockToolbar.addControl(const ClassId: WideString): IExodusToolbarControl;
 var
-  MyControl: TMyControl;
+  AXControl: TAXControl;
   ParentControl: TWinControl;
 begin
   ParentControl := frmExodus.Toolbar;
 
-  MyControl := TMyControl.Create(ParentControl, StringToGuid(ClassId));
-  MyControl.Parent := ParentControl;
-  Result := TExodusToolbarControl.Create(MyControl);
+  AXControl := TAXControl.Create(ParentControl, StringToGuid(ClassId));
+  AXControl.Parent := ParentControl;
+  Result := TExodusToolbarControl.Create(AXControl);
 
   frmExodus.Toolbar.Bands.Items[frmExodus.Toolbar.Bands.Count-1].Text := ClassId;
   frmExodus.Toolbar.ShowText := false;

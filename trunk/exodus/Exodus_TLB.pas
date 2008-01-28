@@ -11,11 +11,11 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : 1.2
-// File generated on 11/7/2007 3:05:44 PM from Type Library described below.
+// $Rev: 8291 $
+// File generated on 1/28/2008 10:24:50 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -112,6 +112,9 @@ const
   CLASS_ExodusChat: TGUID = '{C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6}';
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
   CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
+  IID_IExodusAXControl: TGUID = '{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}';
+  IID_IExodusController2: TGUID = '{FDAB329F-09F2-4AEA-8C72-319059E66389}';
+  CLASS_ExodusAXControl: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -257,6 +260,10 @@ type
   IExodusMsgOutToolbarDisp = dispinterface;
   IExodusDockToolbar = interface;
   IExodusDockToolbarDisp = dispinterface;
+  IExodusAXControl = interface;
+  IExodusAXControlDisp = dispinterface;
+  IExodusController2 = interface;
+  IExodusController2Disp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -280,6 +287,7 @@ type
   ExodusChat = IExodusChat;
   ExodusToolbarButton = IExodusToolbarButton;
   ExodusRoster = IExodusRoster;
+  ExodusAXControl = IExodusAXControl;
 
 
 // *********************************************************************//
@@ -4312,6 +4320,48 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusAXControl
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2F00A2EC-7826-4BAA-AD1E-7B83183E802C}
+// *********************************************************************//
+  IExodusAXControl = interface(IDispatch)
+    ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
+    function Get_Property1: Integer; safecall;
+    procedure Set_Property1(value: Integer); safecall;
+    property Property1: Integer read Get_Property1 write Set_Property1;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusAXControlDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2F00A2EC-7826-4BAA-AD1E-7B83183E802C}
+// *********************************************************************//
+  IExodusAXControlDisp = dispinterface
+    ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
+    property Property1: Integer dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusController2
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FDAB329F-09F2-4AEA-8C72-319059E66389}
+// *********************************************************************//
+  IExodusController2 = interface(IDispatch)
+    ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusController2Disp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {FDAB329F-09F2-4AEA-8C72-319059E66389}
+// *********************************************************************//
+  IExodusController2Disp = dispinterface
+    ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; dispid 223;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -4527,6 +4577,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusRoster;
   end;
 
+// *********************************************************************//
+// The Class CoExodusAXControl provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusAXControl exposed by              
+// the CoClass ExodusAXControl. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusAXControl = class
+    class function Create: IExodusAXControl;
+    class function CreateRemote(const MachineName: string): IExodusAXControl;
+  end;
+
 implementation
 
 uses ComObj;
@@ -4709,6 +4771,16 @@ end;
 class function CoExodusRoster.CreateRemote(const MachineName: string): IExodusRoster;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusAXControl.Create: IExodusAXControl;
+begin
+  Result := CreateComObject(CLASS_ExodusAXControl) as IExodusAXControl;
+end;
+
+class function CoExodusAXControl.CreateRemote(const MachineName: string): IExodusAXControl;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusAXControl) as IExodusAXControl;
 end;
 
 end.

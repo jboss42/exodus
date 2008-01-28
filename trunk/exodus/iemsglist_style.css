@@ -9,13 +9,14 @@ body {
     font-size: /*font_size*/;
     background: /*color_bg*/;
     margin: 0pt;
-    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .date {
     width: 100%;
     text-align: center;
-    color: red;
+    background: /*color_date_bg*/;
+    font-weight: bold;
 }
 
 .composing {
@@ -24,44 +25,52 @@ body {
     color: purple;
 }
 
-.pri_high {
-    color: /*color_priority*/;
-    white-space nowrap;
-    padding-right: 3;
-}
-
-.pri_low {
-    color: /*color_time*/;
-    white-space nowrap;
-    padding-right: 3;
-}
-
 .ts {
     color: /*color_time*/;
     white-space: nowrap;
     padding-right: 3;
+    font-size: smaller;
 }
 
 .me {
     color: /*color_me*/;
     white-space: nowrap;
     padding-right: 3;
+    font-weight: bold;
+    display: block;
+    font-size: larger;
 }
 
 .other {
     color: /*color_other*/;
     white-space: nowrap;
     padding-right: 3;
+    font-weight: bold;
+    display: block;
+    font-size: larger;
 }
 
-.line {
-   text-indent: -20;
-   margin-left: 25;
+.line1 {
    padding-top: 3;
+   background: /*color_bg*/;
+}
+
+.line2 {
+   padding-top: 3;
+   background: /*color_alt_bg*/;
 }
 
 .msg {
     color: /*font_color*/;
+}
+
+.msgts {
+    margin-left: 25;
+}
+
+.priorityimg {
+    position: absolute;
+    left: 5;
 }
 
 .svr {color:/*color_server*/}
@@ -71,7 +80,6 @@ body {
 
 #content {
   height: 100%;
-  overflow: auto;
 }
 
 /*#splash {

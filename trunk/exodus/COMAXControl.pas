@@ -1,4 +1,4 @@
-unit COMToolbarControl;
+unit COMAXControl;
 {
     Copyright 2001, Peter Millard
 
@@ -27,18 +27,17 @@ uses
   SysUtils, Variants, ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB ;
 
 type
-  TExodusToolbarControl = class(TAutoObject, IExodusToolbarControl)
+  TExodusAXControl = class(TAutoObject, IExodusAXControl)
   private
     AXControl: TAXControl;
+    prop1: integer;
 
   public
     constructor Create(AXControl: TAXControl);
 
   protected
-    function  Get_Visible: WordBool; safecall;
-    procedure Set_Visible(Value: WordBool); safecall;
-    function  Get_Enabled: WordBool; safecall;
-    procedure Set_Enabled(Value: WordBool); safecall;
+    function Get_Property1: Integer; safecall;
+    procedure Set_Property1(value: Integer); safecall;
 
   end;
 
@@ -47,32 +46,23 @@ implementation
 uses
     RosterImages, ComServ;
 
-constructor TExodusToolbarControl.Create(AXControl: TAXControl);
+constructor TExodusAXControl.Create(AXControl: TAXControl);
 begin
       Self.AXControl := AXControl;
 end;
 
-function TExodusToolbarControl.Get_Visible: WordBool;
+
+function TExodusAXControl.Get_Property1: Integer;
 begin
-    Result := AXControl.Visible;
+    Result := prop1;
 end;
 
-procedure TExodusToolbarControl.Set_Visible(Value: WordBool);
+procedure TExodusAXControl.Set_Property1(value: Integer);
 begin
-    AXControl.Visible := Value;
-end;
-
-function TExodusToolbarControl.Get_Enabled: WordBool;
-begin
-    Result := AXControl.Enabled;
-end;
-
-procedure TExodusToolbarControl.Set_Enabled(Value: WordBool);
-begin
-    AXControl.Enabled := Value;
+    prop1 := value;
 end;
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TExodusToolbarControl, Class_ExodusToolbarControl,
+  TAutoObjectFactory.Create(ComServer, TExodusAXControl, Class_ExodusAXControl,
     ciMultiInstance, tmApartment);
 end.

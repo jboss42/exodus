@@ -29,7 +29,7 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
 
 type
-  TExodusController = class(TAutoObject, IExodusController)
+  TExodusController = class(TAutoObject, IExodusController, IExodusController2)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
@@ -138,6 +138,9 @@ type
       safecall;
     procedure RemoveStringlistValue(const key, value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
+
+    // IExodusController2
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
 
     { Protected declarations }
   private
@@ -255,7 +258,8 @@ uses
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
-    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ;
+    Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
+    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXControl;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -2094,6 +2098,26 @@ function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
     //ExCOMBookmarkManager.ObjAddRef();
     Result := COMBookmarkManager;
+end;
+
+// IExodusController2
+function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
+var
+    frm: TfrmActiveXDockable;
+    AXControl: TAXControl;
+    ParentControl: TWinControl;
+begin
+    try
+        frm := StartActiveX(ActiveXWindow_Title, true);
+
+        ParentControl := frm.pnlMsgList;
+
+        AXControl := AXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
+        AXControl.Parent := ParentControl;
+        AXControl.Align := alClient;
+        Result := TExodusAXControl.Create(AXControl);
+    except
+    end;
 end;
 
 

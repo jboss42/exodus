@@ -112,12 +112,14 @@ const
     P_FONT_ULINE = 'font_underline';
 
     P_COLOR_BG     = 'color_bg';
+    P_COLOR_ALT_BG = 'color_alt_bg';
     P_COLOR_ME     = 'color_me';
     P_COLOR_OTHER  = 'color_other';
     P_COLOR_TIME   = 'color_time';
     P_COLOR_ACTION = 'color_action';
     P_COLOR_SERVER = 'color_server';
     P_COLOR_PRIORITY = 'color_priority';
+    P_COLOR_DATE_BG = 'color_date_bg';
 
     P_TAB_WIDTH    = 'event_width';
     P_ROSTER_WIDTH = 'roster_width';

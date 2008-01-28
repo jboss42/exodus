@@ -1763,7 +1763,7 @@ begin
     _passwd_from_join_room := true;
     _insertTab := true;
 
-    ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
+    ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
 
     _notify[NOTIFY_ROOM_ACTIVITY] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[NOTIFY_KEYWORD] := MainSession.Prefs.getInt('notify_keyword');
@@ -2755,7 +2755,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
+var
+    e: TJabberEntity;
 begin
+    e := jEntityCache.getByJid(self.jid);
+    if (e <> nil) then begin
+        if (e.hasFeature('muc_persistent')) then begin
+            // This is a Persistent room
+            Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
+        end
+        else begin
+            // This is a temp room
+            Self.ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
+        end;
+    end;
+
     if (_pending_start = false) then begin
         // Not starting so we don't want to send start presence.
         // We probably have new disco info (like change of room config).

@@ -47,6 +47,32 @@ library Exodus
   };
 
   [
+    uuid(A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRoster2: IDispatch
+  {
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall EnableContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL enable );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall ShowContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL Show );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall SetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [in] BSTR Caption );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall GetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [out, retval] BSTR * Caption );
+  };
+
+  [
     uuid(BDD5493D-440F-4376-802B-070B5A4ABFF3), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusRosterItem Object"), 
@@ -671,16 +697,6 @@ library Exodus
   };
 
   [
-    uuid(027E1B53-59A9-4FA4-9610-AC6CA2561248), 
-    version(1.0), 
-    hidden
-  ]
-  coclass ExodusRoster
-  {
-    [default] interface IExodusRoster;
-  };
-
-  [
     uuid(9ED8C497-1121-4C9E-B586-C7DFDB35B581), 
     version(1.0), 
     hidden
@@ -1013,34 +1029,47 @@ library Exodus
     [default] interface IExodusToolbarButton;
   };
 
-  
-  typedef BSTR * PWideString1;
+  [
+    uuid(027E1B53-59A9-4FA4-9610-AC6CA2561248), 
+    version(1.0), 
+    hidden
+  ]
+  coclass ExodusRoster
+  {
+    [default] interface IExodusRoster;
+  };
 
   [
-    uuid(A9C4F6FB-2ACA-4B09-A9F5-F3BDDD763AAF), 
+    uuid(2F00A2EC-7826-4BAA-AD1E-7B83183E802C), 
     version(1.0), 
     dual, 
     oleautomation
   ]
-   interface IExodusRoster2: IDispatch
+   interface IExodusAXControl: IDispatch
   {
     [
-    id(0x000000D5)
+    propget, 
+    id(0x000000C9)
     ]
-    HRESULT _stdcall EnableContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL enable );
+    HRESULT _stdcall Property1([out, retval] long * value );
     [
-    id(0x000000D6)
+    propput, 
+    id(0x000000C9)
     ]
-    HRESULT _stdcall ShowContextMenuItem([in] BSTR menuID, [in] BSTR itemID, [in] VARIANT_BOOL show );
-    [
-    id(0x000000D7)
-    ]
-    HRESULT _stdcall SetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [in] BSTR caption );
-    [
-    id(0x000000D8)
-    ]
-    HRESULT _stdcall GetContextMenuItemCaption([in] BSTR menuID, [in] BSTR itemID, [out, retval] BSTR * caption );
+    HRESULT _stdcall Property1([in] long value );
   };
+
+  [
+    uuid(E11594EF-419A-498F-ACF3-D3382D22F048), 
+    version(1.0)
+  ]
+  coclass ExodusAXControl
+  {
+    [default] interface IExodusAXControl;
+  };
+
+  
+  typedef BSTR * PWideString1;
 
   [
     uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
@@ -1495,86 +1524,6 @@ library Exodus
     id(0x000000C9)
     ]
     HRESULT _stdcall OnKeyDown([in] long key, [in] long shiftState, [out, retval] VARIANT_BOOL * handled );
-  };
-
-  [
-    uuid(29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9), 
-    version(1.0), 
-    helpstring("Dispatch interface for ExodusRoster Object"), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusRoster: IExodusRoster2
-  {
-    [
-    id(0x00000001)
-    ]
-    HRESULT _stdcall Fetch( void );
-    [
-    id(0x00000003)
-    ]
-    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR Nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
-    [
-    id(0x00000006)
-    ]
-    HRESULT _stdcall Find([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
-    [
-    id(0x00000007)
-    ]
-    HRESULT _stdcall Item([in] long index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
-    [
-    id(0x00000008)
-    ]
-    HRESULT _stdcall Count([out, retval] long * itemCount );
-    [
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall RemoveItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000CA)
-    ]
-    HRESULT _stdcall AddGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000CB)
-    ]
-    HRESULT _stdcall GetGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000CC)
-    ]
-    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
-    [
-    propget, 
-    id(0x000000CD)
-    ]
-    HRESULT _stdcall GroupsCount([out, retval] long * value );
-    [
-    id(0x000000CE)
-    ]
-    HRESULT _stdcall Groups([in] long index, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000D0), 
-    helpstring("Add a context menu, managed by context ID")
-    ]
-    HRESULT _stdcall AddContextMenu([in] BSTR ID, [out, retval] VARIANT_BOOL * ret );
-    [
-    id(0x000000D1), 
-    helpstring("Remove a context menu, managed by context ID")
-    ]
-    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
-    [
-    id(0x000000D2), 
-    helpstring("Add a menu item to the specified context menu")
-    ]
-    HRESULT _stdcall AddContextMenuItem([in] BSTR menuID, [in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * itemID );
-    [
-    id(0x000000D3), 
-    helpstring("Remove an item from the specified context menu")
-    ]
-    HRESULT _stdcall RemoveContextMenuItem([in] BSTR menuID, [in] BSTR itemID );
-    [
-    id(0x000000D4)
-    ]
-    HRESULT _stdcall AddItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** ret /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -5703,6 +5652,86 @@ library Exodus
   };
 
   [
+    uuid(29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusRoster Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusRoster: IExodusRoster2
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Fetch( void );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Subscribe([in] BSTR JabberID, [in] BSTR Nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Find([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Item([in] long index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Count([out, retval] long * itemCount );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall RemoveItem([in] IExodusRosterItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall GetGroup([in] BSTR grp, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall RemoveGroup([in] IExodusRosterGroup * grp /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GroupsCount([out, retval] long * value );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Groups([in] long index, [out, retval] IExodusRosterGroup ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D0), 
+    helpstring("Add a context menu, managed by context ID")
+    ]
+    HRESULT _stdcall AddContextMenu([in] BSTR ID, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000D1), 
+    helpstring("Remove a context menu, managed by context ID")
+    ]
+    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    [
+    id(0x000000D2), 
+    helpstring("Add a menu item to the specified context menu")
+    ]
+    HRESULT _stdcall AddContextMenuItem([in] BSTR menuID, [in] BSTR Caption, [in] IExodusMenuListener * MenuListener /*Warning: unable to validate structure name: */, [out, retval] BSTR * itemID );
+    [
+    id(0x000000D3), 
+    helpstring("Remove an item from the specified context menu")
+    ]
+    HRESULT _stdcall RemoveContextMenuItem([in] BSTR menuID, [in] BSTR itemID );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall AddItem([in] BSTR JabberID, [out, retval] IExodusRosterItem ** ret /*Warning: unable to validate structure name: */ );
+  };
+
+  [
     uuid(2954B16B-64BA-4441-A476-918CCCCA9B46), 
     version(1.0), 
     dual, 
@@ -7951,7 +7980,7 @@ library Exodus
     id(0x00000001), 
     helpstring("Exodus is starting the plugin")
     ]
-    HRESULT _stdcall Startup([in] IExodusController * exodusController /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall Startup([in] IExodusController2 * exodusController /*Warning: unable to validate structure name: */ );
     [
     id(0x00000002), 
     helpstring("Exodus is shutting down the plugin")
@@ -8068,6 +8097,20 @@ library Exodus
     id(0x000000CD)
     ]
     HRESULT _stdcall RemoveButton([in] BSTR button );
+  };
+
+  [
+    uuid(FDAB329F-09F2-4AEA-8C72-319059E66389), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusController2: IDispatch
+  {
+    [
+    id(0x000000DF)
+    ]
+    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Title, [out, retval] IExodusAXControl ** ActiveX_Control /*Warning: unable to validate structure name: */ );
   };
 
 };

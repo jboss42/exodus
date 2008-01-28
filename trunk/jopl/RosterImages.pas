@@ -215,6 +215,8 @@ const
     RI_SHOWAW_INDEX         : Integer = 88;
     RI_SHOWROSTER_KEY       : Widestring = 'show_roster';
     RI_SHOWROSTER_INDEX     : Integer = 89;
+    RI_TEMP_CONFERENCE_KEY  : WideString = 'temp_conference';
+    RI_TEMP_CONFERENCE_INDEX: Integer = 90;
 
 {$ENDIF}
 
@@ -319,6 +321,7 @@ begin
     _ids.Insert(RI_ARROWUP_INDEX, RI_ARROWUP_KEY);
     _ids.Insert(RI_SHOWAW_INDEX, RI_SHOWAW_KEY);
     _ids.Insert(RI_SHOWROSTER_INDEX, RI_SHOWROSTER_KEY);
+    _ids.Insert(RI_TEMP_CONFERENCE_INDEX, RI_TEMP_CONFERENCE_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
