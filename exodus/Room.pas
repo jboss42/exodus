@@ -459,14 +459,12 @@ begin
         // Make sure we have TC..
         if (not MainSession.Prefs.getBool('brand_muc')) then exit;
 
-{$IFDEF USE_ACTIVITY_WINDOW}
         // Make sure activity window is showing.
         // This is a work around for a weird issue where
         // sometimes, if the activity window hasn't been shown
         // yet, then the room being joined will not be (no presence sent).
         // The EntityCallback never triggers.
         frmExodus.ShowActivityWindow(true, bring_to_front);
-{$ENDIF}
 
         // is there already a room window?
         i := room_list.IndexOf(rjid);

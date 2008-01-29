@@ -166,7 +166,6 @@ type
     _profile: TJabberProfile;
     _Canceled: boolean;
     _cur_tab: TExGraphicButton;
-    _avail_tabs: Integer;
 
     _sslOpts: TOptionSelection;
 
@@ -443,8 +442,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.chkx509Click(Sender: TObject);
-var
-  ps : TPrefState;
 begin
     // Enable/Disable Controls
     pnlPassword.Enabled := not pnlx509Auth.Checked;
@@ -1204,6 +1201,7 @@ var
     curr: TExGraphicButton;
 begin
     result := nil;
+    curr := nil;
 
     repeat
         if (curr = nil) then

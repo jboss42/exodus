@@ -5,22 +5,18 @@ inherited frmNewUser: TfrmNewUser
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 416
-  ExplicitHeight = 390
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   inherited TntPanel1: TTntPanel
-    ParentColor = True
     inherited Panel3: TPanel
-      ParentColor = True
       inherited btnBack: TTntButton
         OnClick = btnBackClick
       end
       inherited btnNext: TTntButton
-        Left = 90
+        Left = 83
         Top = 6
         OnClick = btnNextClick
-        ExplicitLeft = 90
+        ExplicitLeft = 83
         ExplicitTop = 6
       end
       inherited btnCancel: TTntButton
@@ -29,7 +25,6 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Panel1: TPanel
-    ParentColor = True
     inherited lblWizardTitle: TTntLabel
       Width = 99
       Caption = 'New User Wizard'
@@ -48,40 +43,39 @@ inherited frmNewUser: TfrmNewUser
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
-        Height = 39
+        Width = 360
+        Height = 36
         Align = alTop
         Caption = 
           'You must select a server to use for your jabber account. This se' +
           'rver may be a local server provided by your internet service pro' +
           'vider, or you may use one of the public jabber servers.'
         WordWrap = True
-        ExplicitWidth = 392
       end
       object cboServer: TTntComboBox
-        Left = 40
-        Top = 80
-        Width = 249
+        Left = 37
+        Top = 74
+        Width = 230
         Height = 21
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         Text = 'jabber.org'
       end
       object optServer: TTntRadioButton
-        Left = 16
-        Top = 60
-        Width = 321
-        Height = 17
+        Left = 15
+        Top = 55
+        Width = 296
+        Height = 16
         Caption = 'Select a Jabber Server'
         Checked = True
         TabOrder = 1
         TabStop = True
       end
       object optPublic: TTntRadioButton
-        Left = 16
-        Top = 124
-        Width = 321
-        Height = 17
+        Left = 15
+        Top = 114
+        Width = 296
+        Height = 16
         Caption = 'Get a list of public Jabber Servers'
         TabOrder = 2
       end
@@ -89,44 +83,48 @@ inherited frmNewUser: TfrmNewUser
     object tbsUser: TTabSheet
       Caption = 'tbsUser'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblUsername: TTntLabel
-        Left = 16
-        Top = 64
-        Width = 143
-        Height = 13
+        Left = 15
+        Top = 59
+        Width = 134
+        Height = 12
         Caption = 'Enter your desired username:'
         Visible = False
       end
       object lblPassword: TTntLabel
-        Left = 16
-        Top = 121
-        Width = 142
-        Height = 13
+        Left = 15
+        Top = 112
+        Width = 134
+        Height = 12
         Caption = 'Enter your desired password:'
         Visible = False
       end
       object txtUsername: TTntEdit
-        Left = 41
-        Top = 80
-        Width = 248
+        Left = 38
+        Top = 74
+        Width = 229
         Height = 21
         TabOrder = 0
         Visible = False
       end
       object txtPassword: TTntEdit
-        Left = 41
-        Top = 137
-        Width = 248
+        Left = 38
+        Top = 126
+        Width = 229
         Height = 21
         PasswordChar = '*'
         TabOrder = 1
         Visible = False
       end
       object optNewAccount: TTntRadioButton
-        Left = 16
-        Top = 8
-        Width = 305
-        Height = 17
+        Left = 15
+        Top = 7
+        Width = 281
+        Height = 16
         Caption = 'I need to create a new Jabber account'
         Checked = True
         TabOrder = 2
@@ -134,10 +132,10 @@ inherited frmNewUser: TfrmNewUser
         OnClick = optExistingAccountClick
       end
       object optExistingAccount: TTntRadioButton
-        Left = 16
-        Top = 32
-        Width = 305
-        Height = 17
+        Left = 15
+        Top = 30
+        Width = 281
+        Height = 15
         Caption = 'I already have a Jabber account'
         TabOrder = 3
         OnClick = optExistingAccountClick
@@ -146,21 +144,24 @@ inherited frmNewUser: TfrmNewUser
     object tbsWait: TTabSheet
       Caption = 'tbsWait'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
-        Height = 13
+        Width = 57
+        Height = 12
         Align = alTop
         Caption = 'Please wait...'
         WordWrap = True
-        ExplicitWidth = 66
       end
       object aniWait: TAnimate
         Left = 0
-        Top = 13
-        Width = 402
-        Height = 50
+        Top = 12
+        Width = 371
+        Height = 46
         Align = alTop
         CommonAVI = aviFindFolder
         StopFrame = 29
@@ -169,34 +170,38 @@ inherited frmNewUser: TfrmNewUser
     object tbsXData: TTabSheet
       Caption = 'tbsXData'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline xData: TframeXData
         Left = 0
         Top = 0
-        Width = 402
-        Height = 226
+        Width = 370
+        Height = 208
         Align = alClient
         Color = 13681583
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentColor = False
         ParentFont = False
         TabOrder = 0
         TabStop = True
-        ExplicitWidth = 402
-        ExplicitHeight = 226
+        ExplicitWidth = 371
+        ExplicitHeight = 209
         inherited Panel1: TPanel
-          Width = 402
-          Height = 226
-          ExplicitWidth = 402
-          ExplicitHeight = 226
+          Width = 370
+          Height = 208
+          ExplicitWidth = 371
+          ExplicitHeight = 209
           inherited ScrollBox1: TScrollBox
-            Width = 392
-            Height = 216
-            ExplicitWidth = 392
-            ExplicitHeight = 216
+            Width = 360
+            Height = 198
+            ExplicitWidth = 361
+            ExplicitHeight = 199
           end
         end
       end
@@ -204,15 +209,23 @@ inherited frmNewUser: TfrmNewUser
     object tbsReg: TTabSheet
       Caption = 'tbsReg'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tbsFinish: TTabSheet
       Caption = 'tbsFinish'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblBad: TTntLabel
         Left = 0
-        Top = 65
-        Width = 402
-        Height = 90
+        Top = 60
+        Width = 371
+        Height = 83
         Align = alTop
         AutoSize = False
         Caption = 
@@ -221,7 +234,7 @@ inherited frmNewUser: TfrmNewUser
           'ess Cancel to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -12
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
@@ -231,8 +244,8 @@ inherited frmNewUser: TfrmNewUser
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
-        Height = 65
+        Width = 371
+        Height = 60
         Align = alTop
         AutoSize = False
         Caption = 
@@ -241,7 +254,7 @@ inherited frmNewUser: TfrmNewUser
           'ols | Contacts from the main menu.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -12
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
