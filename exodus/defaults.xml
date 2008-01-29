@@ -62,6 +62,8 @@
     <displayname_profile_map value='{GIVEN} {FAMILY}' control="txtDNProfileMap" state="rw">
     	<control name="lblDNProfileMap"/>
     </displayname_profile_map>
+    <roster_show_pending value="1" control="chkShowPending" state="rw"/>
+    <roster_show_observers value="1" control="chkObservers" state="rw"/>
 
     <!-- DEPRICATED (unsupported) roster prefs -->
     <nested_groups value="0" control="chkNestedGrps" state="inv"/>
@@ -72,7 +74,6 @@
       <control name="lblDblClick"/>
     </roster_chat>
     <roster_show_unsub value="0" control="chkShowUnsubs" state="inv"/>
-    <roster_show_pending value="1" control="chkShowPending" state="inv"/>
     <roster_pres_errors  value="0" control="chkPresErrors" state="inv"/>
     <group_seperator value="/" control="txtGrpSeperator" state="inv">
     	<control name="lblGrpSeperator"/>

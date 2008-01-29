@@ -50,7 +50,6 @@ type
     lblGatewayGrp: TTntLabel;
     txtGatewayGrp: TTntComboBox;
     chkPresErrors: TTntCheckBox;
-    chkShowPending: TTntCheckBox;
     chkShowUnsubs: TTntCheckBox;
     chkRosterUnicode: TTntCheckBox;
     chkRosterAvatars: TTntCheckBox;
@@ -78,6 +77,8 @@ type
     txtRosterAlpha: TExNumericEdit;
     chkCollapsed: TTntCheckBox;
     chkNestedGrps: TTntCheckBox;
+    chkShowPending: TTntCheckBox;
+    chkObservers: TTntCheckBox;
     procedure TntFormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnManageBlockedClick(Sender: TObject);
