@@ -217,6 +217,10 @@ const
     RI_SHOWROSTER_INDEX     : Integer = 89;
     RI_TEMP_CONFERENCE_KEY  : WideString = 'temp_conference';
     RI_TEMP_CONFERENCE_INDEX: Integer = 90;
+    RI_FOLDER_OPEN_KEY      : Widestring = 'folder_open';
+    RI_FOLDER_OPEN_INDEX    : Integer = 91;
+    RI_FOLDER_CLOSED_KEY    : Widestring = 'folder_closed';
+    RI_FOLDER_CLOSED_INDEX  : Integer = 92;
 
 {$ENDIF}
 
@@ -322,6 +326,8 @@ begin
     _ids.Insert(RI_SHOWAW_INDEX, RI_SHOWAW_KEY);
     _ids.Insert(RI_SHOWROSTER_INDEX, RI_SHOWROSTER_KEY);
     _ids.Insert(RI_TEMP_CONFERENCE_INDEX, RI_TEMP_CONFERENCE_KEY);
+    _ids.Insert(RI_FOLDER_OPEN_INDEX, RI_FOLDER_OPEN_KEY);
+    _ids.Insert(RI_FOLDER_CLOSED_INDEX, RI_FOLDER_CLOSED_KEY);    
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
