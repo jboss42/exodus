@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 503
-  ClientWidth = 264
+  ClientHeight = 545
+  ClientWidth = 286
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -19,14 +19,14 @@ inherited frmExodus: TfrmExodus
   OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 272
-  ExplicitHeight = 557
+  ExplicitWidth = 294
+  ExplicitHeight = 599
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 264
+    Width = 286
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -35,10 +35,10 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 260
+        Width = 280
       end>
     object ToolBar1: TToolBar
-      Left = 9
+      Left = 12
       Top = 0
       Width = 250
       Height = 27
@@ -169,25 +169,89 @@ inherited frmExodus: TfrmExodus
   object tbsView: TPageControl
     Left = 0
     Top = 31
-    Width = 264
-    Height = 472
+    Width = 286
+    Height = 514
+    ActivePage = tabRoster
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 26
-      ExplicitWidth = 0
-      ExplicitHeight = 442
+      object pnlLogin: TPanel
+        Left = 0
+        Top = 0
+        Width = 278
+        Height = 504
+        Align = alClient
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 0
+      end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 26
-      ExplicitWidth = 0
-      ExplicitHeight = 442
+      object pnlStatusBar: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 272
+        Height = 49
+        Align = alTop
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 0
+        object imgSSL: TImage
+          Left = 256
+          Top = 0
+          Width = 16
+          Height = 49
+          Hint = 'Secure Connection'
+          Align = alRight
+          Center = True
+          Picture.Data = {
+            07544269746D617036030000424D360300000000000036000000280000001000
+            0000100000000100180000000000000300000000000000000000000000000000
+            000080FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF
+            80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FF
+            FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
+            FFFF80FFFF2699D0007DC2007DC2007DC2007DC2007DC200629B00629B00629B
+            00629B00478900478900478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+            FF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD0799DE00478980FFFF80
+            FFFF80FFFF08A5EF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD0799DE
+            0799DE067EB7067EB700478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+            FF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD00478980FFFF80
+            FFFF80FFFF08A5EF4ACEFF15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD15B4FD
+            15B4FD0799DE067EB700478980FFFF80FFFF80FFFF08A5EF4ACEFF4ACEFF4ACE
+            FF4ACEFF4ACEFF15B4FD15B4FD15B4FD00B5FF15B4FD15B4FD00478980FFFF80
+            FFFF80FFFF08A5EF08A5EF08A5EF08A5EF0799DE0799DE0799DE0799DE067EB7
+            067EB7067EB7067EB700629B80FFFF80FFFF80FFFF80FFFF90917ADFE1BD7576
+            5F80FFFF80FFFF80FFFF80FFFF80FFFF90917AC9CBAB75765F80FFFF80FFFF80
+            FFFF80FFFF80FFFFA6A883EBEDC775765F80FFFF80FFFF80FFFF80FFFF80FFFF
+            90917AC9CBAB75765F80FFFF80FFFF80FFFF80FFFF80FFFFAFB370EBEDC79498
+            5580FFFF80FFFF80FFFF80FFFF80FFFF90917ADFE1BD75765F80FFFF80FFFF80
+            FFFF80FFFF80FFFFAFB370EBEDC7C4C6A294985575765F75765F75765F90917A
+            EBEDC7DFE1BD90917A80FFFF80FFFF80FFFF80FFFF80FFFF80FFFFAFB370EBED
+            C7EBEDC7EBEDC7EBEDC7EBEDC7EBEDC7DFE1BD90917A80FFFF80FFFF80FFFF80
+            FFFF80FFFF80FFFF80FFFF80FFFFAFB370AFB370A9AC78A9AC7890917A90917A
+            90917A80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FF
+            FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
+            FFFF}
+          Transparent = True
+          Visible = False
+          ExplicitLeft = 253
+        end
+      end
+      object pnlRoster: TPanel
+        Left = 0
+        Top = 55
+        Width = 278
+        Height = 449
+        Align = alClient
+        BevelOuter = bvNone
+        ParentColor = True
+        TabOrder = 1
+      end
     end
   end
   object MainMenu1: TTntMainMenu
