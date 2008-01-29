@@ -117,6 +117,7 @@
     <color_action value="$800080"/>
     <color_server value="$008000"/>
     <color_date_bg value="$d3d3d3"/>
+    <color_date value="$000000"/>
 
     <!-- other display preferences -->
     <richtext_enabled value="1" control="chkRTEnabled" state="rw"/>
@@ -379,8 +380,8 @@
     <toolbar value="1"/>
     <chat_toolbar value="1"/>
     <always_lang value="0"/>
-    <msglist_type value="0" control="cboMsgList"/>
-    <ie_css value="" control="cboIEStylesheet"/>
+    <msglist_type value="0"/>
+    <ie_css value="iemsglist_style"/>
     <browse_view value="0"/>
     <fade_limit value="100"/>
     <profile_active value="0"/>

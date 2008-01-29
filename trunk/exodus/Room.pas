@@ -185,6 +185,8 @@ type
 
     _notify: array[0..2] of integer;
 
+    _session_callback: integer;
+
     function  checkCommand(txt: Widestring): boolean;
     function _countPossibleNicks(tmps: Widestring): integer;
     function _selectNick(wsl: TWidestringlist): Widestring;
@@ -237,6 +239,8 @@ type
     mynick: Widestring;
     useRegisteredNick: boolean;
     COMController: TObject;
+
+    procedure OnSessionCallback(event: string; tag: TXMLTag);
 
     procedure SendMsg; override;
     procedure pluginMenuClick(Sender: TObject); override;
@@ -696,24 +700,24 @@ begin
                           (MainSession.Show = 'dnd'));
     if (skip_notification = false) then begin
       // this check is needed only to prevent extraneous regexing.
-      if ((not server) and (not MainSession.IsPaused)) then begin
-        // check for keywords
-        if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
-            DoNotify(Self, _notify[NOTIFY_KEYWORD],
-                     _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
-                     RosterTreeImages.Find('conference'), 'notify_keyword');
-            Msg.highlight := true;
-        end
-        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
-          if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
-            DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
-                     GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
-                     RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
-          else
-            DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
-                     _(sNotifyActivity) + Self.Caption,
-                     RosterTreeImages.Find('conference'), 'notify_roomactivity');
-      end;
+        if ((not server) and (not MainSession.IsPaused)) then begin
+            // check for keywords
+            if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
+                DoNotify(Self, _notify[NOTIFY_KEYWORD],
+                         _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
+                         RosterTreeImages.Find('conference'), 'notify_keyword');
+                Msg.highlight := true;
+            end
+            else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) and (msgDelayTag = nil) then
+              if (((Msg.Priority = High) or (Msg.Priority = Low)) and (_notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] > 0)) then
+                DoNotify(Self, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY],
+                         GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyActivity) + Self.Caption,
+                         RosterTreeImages.Find('conference'), 'notify_priority_roomactivity')
+              else
+                DoNotify(Self, _notify[NOTIFY_ROOM_ACTIVITY],
+                         _(sNotifyActivity) + Self.Caption,
+                         RosterTreeImages.Find('conference'), 'notify_roomactivity');
+        end;
     end;
 
     if (Msg.Subject <> '') then begin
@@ -1802,6 +1806,8 @@ begin
     end;
 
     popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
+
+    _session_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
 end;
 
 {---------------------------------------}
@@ -2544,6 +2550,7 @@ begin
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
         MainSession.UnRegisterCallback(_dcallback);
+        MainSession.UnRegisterCallback(_session_callback);
 
         if (MainSession.Invisible) then
             MainSession.removeAvailJid(jid);
@@ -3260,6 +3267,13 @@ begin
        rm.hideUnavailable := false;
    end;
 
+end;
+
+procedure TfrmRoom.OnSessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/prefs') then begin
+        lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    end;
 end;
 
 initialization

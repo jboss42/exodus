@@ -9,6 +9,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
   OldCreateOrder = True
   Position = poDesigned
   ShowHint = True
+  OnClose = FormClose
   ExplicitWidth = 526
   ExplicitHeight = 946
   PixelsPerInch = 96
@@ -16,9 +17,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
   object pnlContainer: TExBrandPanel [0]
     AlignWithMargins = True
     Left = 0
-    Top = 26
+    Top = 29
     Width = 505
-    Height = 908
+    Height = 905
     Margins.Left = 0
     Margins.Bottom = 0
     Align = alLeft
@@ -138,7 +139,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       ParentColor = True
       TabOrder = 1
       AutoHide = True
-      ExplicitTop = 163
       object lblChatPreview: TTntLabel
         Left = 171
         Top = 21
@@ -148,8 +148,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         FocusControl = colorChat
       end
       object Label5: TTntLabel
-        Left = 171
-        Top = 144
+        Left = 173
+        Top = 145
         Width = 266
         Height = 13
         Caption = 'Elements can also be directly selected from the preview'
@@ -349,7 +349,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       ParentColor = True
       TabOrder = 2
       AutoHide = True
-      ExplicitTop = 380
       object chkRTEnabled: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -378,8 +377,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 4
         AutoHide = True
-        ExplicitLeft = 0
-        ExplicitTop = 119
         object lblTimestampFmt: TTntLabel
           Left = 26
           Top = 25
@@ -452,8 +449,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 2
         AutoHide = True
-        ExplicitLeft = 0
-        ExplicitTop = 68
         object chkEmoticons: TTntCheckBox
           AlignWithMargins = True
           Left = 0
@@ -492,7 +487,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       ParentColor = True
       TabOrder = 3
       AutoHide = True
-      ExplicitTop = 546
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3
@@ -504,8 +498,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 1
         AutoHide = True
-        ExplicitTop = 81
-        ExplicitHeight = 297
         object gbRTIncludes: TExGroupBox
           AlignWithMargins = True
           Left = 0
@@ -563,7 +555,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Left = 0
           Top = 91
           Width = 339
-          Height = 166
+          Height = 155
           Margins.Left = 0
           Align = alTop
           AutoSize = True
@@ -664,7 +656,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               Left = 151
               Top = 15
               Width = 62
-              Height = 21
+              Height = 25
               BevelOuter = bvNone
               ParentColor = True
               TabOrder = 0
@@ -674,7 +666,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               OnChange = txtChatMemoryChange
               DesignSize = (
                 62
-                21)
+                25)
             end
           end
         end
@@ -722,7 +714,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Left = 176
           Top = 20
           Width = 61
-          Height = 21
+          Height = 25
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -733,7 +725,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           OnChange = txtSnapChange
           DesignSize = (
             61
-            21)
+            25)
         end
       end
     end
@@ -742,9 +734,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Width = 514
     ExplicitWidth = 514
     inherited lblHeader: TTntLabel
-      Left = 6
       Width = 151
-      Height = 14
+      Height = 17
       Caption = 'Display Preferences'
       ExplicitWidth = 151
     end
