@@ -272,6 +272,10 @@ type
     tbsView: TPageControl;
     tabLogin: TTabSheet;
     tabRoster: TTabSheet;
+    pnlLogin: TPanel;
+    pnlStatusBar: TPanel;
+    pnlRoster: TPanel;
+    imgSSL: TImage;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1268,11 +1272,11 @@ begin
     mnuWindows_View_ShowActivityWindow.Visible := true;
 
     with GetLoginWindow() do begin
-        DockWindow(tabLogin);
+        DockWindow(pnlLogin);
         Visible := true;
     end;
     with GetRosterWindow() do begin
-        DockWindow(tabRoster);
+        DockWindow(pnlRoster);
         Visible := true;
     end;
 end;
