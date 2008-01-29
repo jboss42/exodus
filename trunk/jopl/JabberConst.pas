@@ -41,6 +41,7 @@ const
 
     XMLNS_BM         = 'storage:bookmarks';
     XMLNS_PREFS      = 'storage:imprefs';
+    XMLNS_GROUPS     = 'storage:groups';
 
     XMLNS_XEVENT     = 'jabber:x:event';
     XMLNS_DELAY      = 'jabber:x:delay';
