@@ -11,11 +11,11 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// $Rev: 8291 $
-// File generated on 2008-01-29 08:34:19 from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 1/29/2008 12:01:11 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -115,6 +115,10 @@ const
   IID_IExodusAXControl: TGUID = '{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}';
   IID_IExodusController2: TGUID = '{FDAB329F-09F2-4AEA-8C72-319059E66389}';
   CLASS_ExodusAXControl: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
+  IID_IExodusItem: TGUID = '{44410CB8-2AD7-4D58-8067-2E795EB28E60}';
+  IID_IExodusItemController: TGUID = '{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}';
+  CLASS_ExodusItem: TGUID = '{7F9132F5-838F-423C-A334-F28AA8E2E597}';
+  CLASS_ExodusItemController: TGUID = '{5BA92396-E45E-4311-A4F9-B0154DB0445A}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -264,6 +268,10 @@ type
   IExodusAXControlDisp = dispinterface;
   IExodusController2 = interface;
   IExodusController2Disp = dispinterface;
+  IExodusItem = interface;
+  IExodusItemDisp = dispinterface;
+  IExodusItemController = interface;
+  IExodusItemControllerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -288,6 +296,8 @@ type
   ExodusToolbarButton = IExodusToolbarButton;
   ExodusRoster = IExodusRoster;
   ExodusAXControl = IExodusAXControl;
+  ExodusItem = IExodusItem;
+  ExodusItemController = IExodusItemController;
 
 
 // *********************************************************************//
@@ -4362,6 +4372,155 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusItem
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {44410CB8-2AD7-4D58-8067-2E795EB28E60}
+// *********************************************************************//
+  IExodusItem = interface(IDispatch)
+    ['{44410CB8-2AD7-4D58-8067-2E795EB28E60}']
+    function Get_Text: WideString; safecall;
+    procedure Set_Text(const value: WideString); safecall;
+    function Get_Type_: WideString; safecall;
+    procedure Set_Type_(const value: WideString); safecall;
+    function Get_ExtendedText: WideString; safecall;
+    procedure Set_ExtendedText(const value: WideString); safecall;
+    function Get_uid: WideString; safecall;
+    procedure Set_uid(const value: WideString); safecall;
+    function Get_Active: WordBool; safecall;
+    procedure Set_Active(value: WordBool); safecall;
+    function Get_ImageIndex: Integer; safecall;
+    procedure Set_ImageIndex(value: Integer); safecall;
+    function Get_GroupCount: Integer; safecall;
+    function Get_Group(index: Integer): WideString; safecall;
+    function Get_PropertyCount: Integer; safecall;
+    procedure AddProperty(const propertyName: WideString; const propertyValue: WideString); safecall;
+    procedure RemoveProperty(const Property_: WideString); safecall;
+    procedure AddGroup(const Group: WideString); safecall;
+    procedure RemoveGroup(const Group: WideString); safecall;
+    procedure ClearProperties; safecall;
+    procedure ClearGroups; safecall;
+    procedure renameGroup(const oldGroup: WideString; const newGroup: WideString); safecall;
+    procedure moveGroup(const groupFrom: WideString; const groupTo: WideString); safecall;
+    procedure copyGroup(const groupTo: WideString); safecall;
+    function Get_Action(index: Integer): WideString; safecall;
+    function Get_ActionCount: Integer; safecall;
+    function Get_Property_(index: Integer): WideString; safecall;
+    procedure Set_Property_(index: Integer; const value: WideString); safecall;
+    function groupsChanged(const Groups: WideString): WordBool; safecall;
+    function belongsToGroup(const Group: WideString): WordBool; safecall;
+    function Get_value(const Name: WideString): WideString; safecall;
+    procedure Set_value(const Name: WideString; const value: WideString); safecall;
+    function Get_IsVisible: WordBool; safecall;
+    procedure Set_IsVisible(value: WordBool); safecall;
+    property Text: WideString read Get_Text write Set_Text;
+    property Type_: WideString read Get_Type_ write Set_Type_;
+    property ExtendedText: WideString read Get_ExtendedText write Set_ExtendedText;
+    property uid: WideString read Get_uid write Set_uid;
+    property Active: WordBool read Get_Active write Set_Active;
+    property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+    property GroupCount: Integer read Get_GroupCount;
+    property Group[index: Integer]: WideString read Get_Group;
+    property PropertyCount: Integer read Get_PropertyCount;
+    property Action[index: Integer]: WideString read Get_Action;
+    property ActionCount: Integer read Get_ActionCount;
+    property Property_[index: Integer]: WideString read Get_Property_ write Set_Property_;
+    property value[const Name: WideString]: WideString read Get_value write Set_value;
+    property IsVisible: WordBool read Get_IsVisible write Set_IsVisible;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusItemDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {44410CB8-2AD7-4D58-8067-2E795EB28E60}
+// *********************************************************************//
+  IExodusItemDisp = dispinterface
+    ['{44410CB8-2AD7-4D58-8067-2E795EB28E60}']
+    property Text: WideString dispid 202;
+    property Type_: WideString dispid 203;
+    property ExtendedText: WideString dispid 204;
+    property uid: WideString dispid 201;
+    property Active: WordBool dispid 205;
+    property ImageIndex: Integer dispid 206;
+    property GroupCount: Integer readonly dispid 207;
+    property Group[index: Integer]: WideString readonly dispid 208;
+    property PropertyCount: Integer readonly dispid 209;
+    procedure AddProperty(const propertyName: WideString; const propertyValue: WideString); dispid 211;
+    procedure RemoveProperty(const Property_: WideString); dispid 212;
+    procedure AddGroup(const Group: WideString); dispid 213;
+    procedure RemoveGroup(const Group: WideString); dispid 214;
+    procedure ClearProperties; dispid 215;
+    procedure ClearGroups; dispid 216;
+    procedure renameGroup(const oldGroup: WideString; const newGroup: WideString); dispid 217;
+    procedure moveGroup(const groupFrom: WideString; const groupTo: WideString); dispid 218;
+    procedure copyGroup(const groupTo: WideString); dispid 219;
+    property Action[index: Integer]: WideString readonly dispid 221;
+    property ActionCount: Integer readonly dispid 220;
+    property Property_[index: Integer]: WideString dispid 222;
+    function groupsChanged(const Groups: WideString): WordBool; dispid 223;
+    function belongsToGroup(const Group: WideString): WordBool; dispid 224;
+    property value[const Name: WideString]: WideString dispid 225;
+    property IsVisible: WordBool dispid 226;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusItemController
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {7E8D248E-F7E3-4541-A72A-37E1E87C4C93}
+// *********************************************************************//
+  IExodusItemController = interface(IDispatch)
+    ['{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}']
+    function Get_ItemsCount: Integer; safecall;
+    function Get_GroupsCount: Integer; safecall;
+    function Get_Group(index: Integer): WideString; safecall;
+    function Get_Item(index: Integer): IExodusItem; safecall;
+    procedure RemoveItem(const uid: WideString); safecall;
+    function AddItemByUid(const uid: WideString): IExodusItem; safecall;
+    procedure copyItem(const uid: WideString; const Group: WideString); safecall;
+    procedure moveItem(const uid: WideString; const groupFrom: WideString; const groupTo: WideString); safecall;
+    procedure removeGroupMoveContent(const Group: WideString; const groupTo: WideString); safecall;
+    procedure removeItemFromGroup(const uid: WideString; const Group: WideString); safecall;
+    function getGroupItems(const Group: WideString): OleVariant; safecall;
+    procedure AddGroup(const Group: WideString); safecall;
+    procedure RemoveGroup(const Group: WideString); safecall;
+    function getItem(const uid: WideString): IExodusItem; safecall;
+    function AddItem(const Item: IExodusItem): Integer; safecall;
+    procedure ClearGroups; safecall;
+    procedure clearItems; safecall;
+    function SaveGroups: WordBool; safecall;
+    property ItemsCount: Integer read Get_ItemsCount;
+    property GroupsCount: Integer read Get_GroupsCount;
+    property Group[index: Integer]: WideString read Get_Group;
+    property Item[index: Integer]: IExodusItem read Get_Item;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusItemControllerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {7E8D248E-F7E3-4541-A72A-37E1E87C4C93}
+// *********************************************************************//
+  IExodusItemControllerDisp = dispinterface
+    ['{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}']
+    property ItemsCount: Integer readonly dispid 202;
+    property GroupsCount: Integer readonly dispid 203;
+    property Group[index: Integer]: WideString readonly dispid 204;
+    property Item[index: Integer]: IExodusItem readonly dispid 205;
+    procedure RemoveItem(const uid: WideString); dispid 206;
+    function AddItemByUid(const uid: WideString): IExodusItem; dispid 201;
+    procedure copyItem(const uid: WideString; const Group: WideString); dispid 207;
+    procedure moveItem(const uid: WideString; const groupFrom: WideString; const groupTo: WideString); dispid 208;
+    procedure removeGroupMoveContent(const Group: WideString; const groupTo: WideString); dispid 209;
+    procedure removeItemFromGroup(const uid: WideString; const Group: WideString); dispid 210;
+    function getGroupItems(const Group: WideString): OleVariant; dispid 211;
+    procedure AddGroup(const Group: WideString); dispid 212;
+    procedure RemoveGroup(const Group: WideString); dispid 213;
+    function getItem(const uid: WideString): IExodusItem; dispid 214;
+    function AddItem(const Item: IExodusItem): Integer; dispid 215;
+    procedure ClearGroups; dispid 216;
+    procedure clearItems; dispid 217;
+    function SaveGroups: WordBool; dispid 218;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -4589,6 +4748,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusAXControl;
   end;
 
+// *********************************************************************//
+// The Class CoExodusItem provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusItem exposed by              
+// the CoClass ExodusItem. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusItem = class
+    class function Create: IExodusItem;
+    class function CreateRemote(const MachineName: string): IExodusItem;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusItemController provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusItemController exposed by              
+// the CoClass ExodusItemController. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusItemController = class
+    class function Create: IExodusItemController;
+    class function CreateRemote(const MachineName: string): IExodusItemController;
+  end;
+
 implementation
 
 uses ComObj;
@@ -4781,6 +4964,26 @@ end;
 class function CoExodusAXControl.CreateRemote(const MachineName: string): IExodusAXControl;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusAXControl) as IExodusAXControl;
+end;
+
+class function CoExodusItem.Create: IExodusItem;
+begin
+  Result := CreateComObject(CLASS_ExodusItem) as IExodusItem;
+end;
+
+class function CoExodusItem.CreateRemote(const MachineName: string): IExodusItem;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusItem) as IExodusItem;
+end;
+
+class function CoExodusItemController.Create: IExodusItemController;
+begin
+  Result := CreateComObject(CLASS_ExodusItemController) as IExodusItemController;
+end;
+
+class function CoExodusItemController.CreateRemote(const MachineName: string): IExodusItemController;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusItemController) as IExodusItemController;
 end;
 
 end.
