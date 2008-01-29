@@ -45,10 +45,10 @@ type
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
        procedure _ParseContact(Contact: IExodusItem; Tag: TXMLTag);
-       procedure _IQCallback(Event: String; Tag: TXMLTag);
-       procedure _SessionCallback(Event: string; Tag: TXMLTag);
-       procedure _RemoveCallback(Event: String; ContactItem: IExodusItem);
-       procedure _PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
+       //procedure _IQCallback(Event: String; Tag: TXMLTag);
+       //procedure _SessionCallback(Event: string; Tag: TXMLTag);
+       //procedure _RemoveCallback(Event: String; ContactItem: IExodusItem);
+       //procedure _PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
        procedure _SetPresenceImage(Show: Widestring; Item: IExodusItem);
        function  _GetPresenceImage(Show: Widestring; Prefix: WideString): integer;
        procedure _UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
@@ -73,10 +73,10 @@ uses IQ, JabberConst, JabberID, DisplayName, SysUtils, Unicode,
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
-    _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
-    _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
+   // _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
+  //  _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
     //_RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
-    _PresCB := TJabberSession(_JS).RegisterCallback(_PresCallback);
+   // _PresCB := TJabberSession(_JS).RegisterCallback(_PresCallback);
     _HideBlocked := false;
     _HideOffline := false;
     _HidePending := false;
@@ -88,9 +88,9 @@ end;
 destructor  TContactController.Destroy();
 begin
     with TJabberSession(_js) do begin
-        UnregisterCallback(_IQCB);
-        UnregisterCallback(_RMCB);
-        UnregisterCallback(_PresCB);
+//        UnregisterCallback(_IQCB);
+//        UnregisterCallback(_RMCB);
+//        UnregisterCallback(_PresCB);
     end;
 end;
 
@@ -201,39 +201,39 @@ begin
 end;
 
 {---------------------------------------}
-procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
-begin
-     if Event = '/session/authenticated'  then
-     begin
-         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
-         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-         _GetContacts();
-     end
-     else if Event = '/session/prefs' then
-     begin
-         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
-         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-         _UpdateContacts();
-     end;
-end;
+//procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
+//begin
+//     if Event = '/session/authenticated'  then
+//     begin
+//         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+//         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
+//         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+//         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+//         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+//         _GetContacts();
+//     end
+//     else if Event = '/session/prefs' then
+//     begin
+//         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+//         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
+//         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+//         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+//         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+//         _UpdateContacts();
+//     end;
+//end;
 
 {---------------------------------------}
-procedure TContactController._IQCallback(Event: String; Tag: TXMLTag);
-begin
-
-end;
-
-{---------------------------------------}
-procedure TContactController._RemoveCallback(Event: String; ContactItem: IExodusItem);
-begin
-
-end;
+//procedure TContactController._IQCallback(Event: String; Tag: TXMLTag);
+//begin
+//
+//end;
+//
+//{---------------------------------------}
+//procedure TContactController._RemoveCallback(Event: String; ContactItem: IExodusItem);
+//begin
+//
+//end;
 
 {---------------------------------------}
 //This function will iterate though all contacts and
@@ -400,40 +400,40 @@ begin
 end;
 
 {---------------------------------------}
-procedure TContactController._PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
-var
-    Item: IExodusItem;
-    Tmp: TJabberID;
-    wasVisible: Boolean;
-begin
-
-    if (Event = '/presence/error') then
-        exit;
-
-    if (Event = '/presence/subscription') then
-        exit;
-
-    //If my user own presence, ignore
-    Tmp := TJabberID.Create(Pres.FromJid);
-    if (Tmp.jid = TJabberSession(_JS).BareJid) then
-        exit;
-
-    Item := ItemController.GetItem(Pres.fromJid.jid);
-    //Is this possible?
-    if (Item = nil) then exit;
-
-    wasVisible := Item.IsVisible;
-
-    _UpdateContact(Item, Pres);
-
-  if (Item.IsVisible) then
-      if (wasVisible) then
-          TJabberSession(_JS).FireEvent('/item/gui/item/update', Item)
-      else
-          // notify the window that this item needs to be updated
-          TJabberSession(_JS).FireEvent('/item/gui/item/add', Item);
-
-end;
+//procedure TContactController._PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
+//var
+//    Item: IExodusItem;
+//    Tmp: TJabberID;
+//    wasVisible: Boolean;
+//begin
+//
+//    if (Event = '/presence/error') then
+//        exit;
+//
+//    if (Event = '/presence/subscription') then
+//        exit;
+//
+//    //If my user own presence, ignore
+//    Tmp := TJabberID.Create(Pres.FromJid);
+//    if (Tmp.jid = TJabberSession(_JS).BareJid) then
+//        exit;
+//
+//    Item := ItemController.GetItem(Pres.fromJid.jid);
+//    //Is this possible?
+//    if (Item = nil) then exit;
+//
+//    wasVisible := Item.IsVisible;
+//
+//    _UpdateContact(Item, Pres);
+//
+//  if (Item.IsVisible) then
+//      if (wasVisible) then
+//          TJabberSession(_JS).FireEvent('/item/gui/item/update', Item)
+//      else
+//          // notify the window that this item needs to be updated
+//          TJabberSession(_JS).FireEvent('/item/gui/item/add', Item);
+//
+//end;
 
 {---------------------------------------}
 procedure TContactController.Clear();
