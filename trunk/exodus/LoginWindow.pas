@@ -16,6 +16,16 @@ type
     lblStatus: TTntLabel;
     lblConnect: TTntLabel;
     lstProfiles: TTntListView;
+    popProfiles: TTntPopupMenu;
+    mnuModifyProfile: TTntMenuItem;
+    mnuDeleteProfile: TTntMenuItem;
+    mnuRenameProfile: TTntMenuItem;
+    pnlAnimate: TGridPanel;
+    aniWait: TAnimate;
+    pnlBottomInfo: TPanel;
+    pnlInfomercial: TPanel;
+    imgLogo: TImage;
+    txtDisclaimer: TExRichEdit;
     pnlProfileActions: TPanel;
     pnlNewUser: TPanel;
     Image1: TImage;
@@ -23,15 +33,6 @@ type
     pnlCreateProfile: TPanel;
     Image2: TImage;
     TntLabel2: TTntLabel;
-    popProfiles: TTntPopupMenu;
-    mnuModifyProfile: TTntMenuItem;
-    mnuDeleteProfile: TTntMenuItem;
-    mnuRenameProfile: TTntMenuItem;
-    pnlAnimate: TGridPanel;
-    aniWait: TAnimate;
-    pnlInfomercial: TPanel;
-    txtDisclaimer: TExRichEdit;
-    imgLogo: TImage;
     
     procedure lstProfilesClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -39,6 +40,8 @@ type
     procedure mnuModifyProfileClick(Sender: TObject);
     procedure mnuDeleteProfileClick(Sender: TObject);
     procedure mnuRenameProfileClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure lblConnectClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -191,8 +194,8 @@ begin
     if ((res = mrOK) or (res = mrYES)) then begin
         li := lstProfiles.Items[idx];
         li.Caption := p.Name;
-        //if (res = mrYES) then
-            //lblConnectClick(Self);
+        if (res = mrYES) then
+            DoLogin(idx);
     end;
 end;
 
@@ -301,9 +304,11 @@ begin
 
         if (valid) and (Result <> 0) then begin
             Visible := true;
+            Height := Result;
         end
         else begin
             Visible := false;
+            Height := 0;
             Result := 0;
         end;
     end;
@@ -463,6 +468,49 @@ begin
     frmExodus.DoConnect();
 end;
 
+procedure TfrmLoginWindow.FormShow(Sender: TObject);
+var
+    val: Integer;
+begin
+    //resize bottom panel now
+    val := 0;
+
+    with pnlInfomercial do begin
+        val := val + Height + Margins.Bottom + Margins.Top + Padding.Bottom + Padding.Top;
+    end;
+    with pnlProfileActions do begin
+        val := val + Height + Margins.Bottom + Margins.Top + Padding.Bottom + Padding.Top;
+    end;
+
+    pnlBottomInfo.Align := alNone;
+    pnlBottomInfo.Height := val;
+    pnlBottomInfo.Align := alBottom;
+end;
+
+procedure TfrmLoginWindow.lblConnectClick(Sender: TObject);
+begin
+    if (Sender = lblConnect) then begin
+        if (lblConnect.Caption = _(sCancelLogin)) then begin
+            // Cancel the connection
+            frmExodus.CancelConnect();
+        end
+        else if (lblConnect.Caption = _(sCancelReconnect)) then begin
+            // cancel reconnect
+            frmExodus.timReconnect.Enabled := false;
+            ToggleGUI(lgsDisconnected);
+        end;
+    end
+    else if (lstProfiles.ItemIndex >= 0) then
+        // Item is actively selected OR we have a "last logged in"
+        DoLogin(lstProfiles.ItemIndex)
+    else if ((lstProfiles.Items.Count > 0) and
+             (Sender <> lstProfiles)) then
+        // Do NOT have an actively selected item OR a "last logged in"
+        // Do NOT have a click on the "whitespace" of profile list
+        // BUT we do have an item (at least default). So, try item 0
+        DoLogin(0);
+end;
+
 procedure TfrmLoginWindow.ToggleGUI(state: TLoginGuiState);
 begin
     case state of
@@ -470,35 +518,39 @@ begin
             aniWait.Active := false;
             pnlAnimate.Visible := false;
             lblConnect.Caption := _(sSignOn);
+            lblConnect.Cursor := crDefault;
             lblStatus.Caption := _(sDisconnected);
             pnlProfileActions.Visible := true;
+            lstProfiles.Visible := true;
             LoadProfiles();
-            Self.Invalidate;
         end;
         lgsConnecting: begin
             aniWait.Active := true;
             pnlAnimate.Visible := true;
             lblConnect.Caption := _(sCancelLogin);
+            lblConnect.Cursor := crHandPoint;
             lblStatus.Caption := _(sConnecting);
             lstProfiles.Visible := false;
             pnlProfileActions.Visible := false;
-            Self.Invalidate;
         end;
         lgsConnected: begin
             aniWait.Active := true;
             lblConnect.Caption := _(sCancelLogin);
+            lblConnect.Cursor := crHandPoint;
             lblStatus.Caption := _(sAuthenticating);
             lstProfiles.Visible := false;
-            pnlProfileActions.Visible := false;
         end;
         lgsAuthenticated: begin
             //Let's not waste animation cycles on hidden things...
             aniWait.Active := false;
+            lblConnect.Cursor := crDefault;
         end
         else begin
-        
+
         end;
     end;
+
+    Self.Invalidate();
 end;
 procedure TfrmLoginWindow.SessionCallback(event: string; tag: TXMLTag);
 begin
