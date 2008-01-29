@@ -261,7 +261,7 @@ uses
   MSHTMLEvents in 'MSHTMLEvents.pas',
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
   ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
-  COMAXControl in 'COMAXControl.pas';
+  COMAXControl in 'COMAXControl.pas',
   LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm};
 
 {$R *.TLB}
