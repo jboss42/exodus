@@ -105,7 +105,7 @@ function ShowNewUserWizard(): integer;
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, fTopLabel, JabberConst, Jabber1, RosterWindow,   
+    GnuGetText, fTopLabel, JabberConst, Jabber1, LoginWindow,   
     WebGet, XMLParser, PrefController, Session, ExUtils;
 
 const
@@ -555,7 +555,7 @@ begin
         // make sure we don't try to reconnect underneath the hood:
         frmExodus.CancelConnect();
         frmExodus.timReconnect.Enabled := false;
-        frmRosterWindow.ToggleGUI(gui_disconnected);
+        GetLoginWindow().ToggleGUI(lgsDisconnected);
     end;
 
     end;

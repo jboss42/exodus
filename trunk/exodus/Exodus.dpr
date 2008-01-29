@@ -262,6 +262,7 @@ uses
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
   ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
   COMAXControl in 'COMAXControl.pas';
+  LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm};
 
 {$R *.TLB}
 
@@ -274,7 +275,8 @@ uses
 var
     continue: boolean;
 
-begin
+
+    begin
 
   // Sometimes OLE registration fails if the user don't
   // have sufficient privs.. Just silently eat these.
