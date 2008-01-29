@@ -25,7 +25,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls,
   TntStdCtrls, TntExtCtrls, TntComCtrls, ExGroupBox, TntForms, ExFrame,
-  ExBrandPanel, ExNumericEdit;
+  ExBrandPanel, ExNumericEdit, IEMsgList;
 
 type
   TfrmPrefDisplay = class(TfrmPrefPanel)
@@ -95,13 +95,13 @@ type
     procedure cbRosterBGChange(Sender: TObject);
     procedure btnFontClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure cboMsgListChange(Sender: TObject);
     procedure colorChatSelectionChange(Sender: TObject);
     procedure colorChatMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure chkRTEnabledClick(Sender: TObject);
     procedure chkAllowFontFamilyClick(Sender: TObject);
     procedure cboChatElementChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     _color_me: integer;
     _color_other: integer;
@@ -111,13 +111,20 @@ type
     _color_time: integer;
     _color_priority: integer;
     _color_bg: integer;
-    
+    _color_alt_bg: integer;
+    _color_date: integer;
+    _color_date_bg: integer;
+
     _roster_bg: integer;
     _roster_font_color: integer;
 
     _lastAllowFont: boolean;
     _lastAllowSize: boolean;
     _lastAllowColor: boolean;
+
+    _msglist_type: integer;
+    _htmlmsglist: TfIEMsgList;
+    _HTMLContentAlreadyShowing: boolean;
 
     type TRange = record
        Min: Integer;
@@ -148,6 +155,10 @@ type
 
 const
     sActionText = 'Action text';
+    sBGColor1 = 'Background color 1';
+    sBGColor2 = 'Background color 2';
+    sDateSeperator = 'Date seperator';
+    sDateSeperatorBG = 'Date seperator background';
     sMessageLabelMe = 'Messages from me';
     sMessageLabelOthers = 'Messages from others';
     sMessagePriority = 'Message priority';
@@ -155,6 +166,8 @@ const
     sSystemMessages = 'System messages';
     sTimestamp = 'Timestamp';
 
+    sBackgroundColorFG = 'Background &color:';
+    sFontColorFG = 'Font &color:';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -169,6 +182,11 @@ uses
     PrefEmoteDlg,
     JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo;
 
+const
+    RTF_MSGLIST = 0;
+    HTML_MSGLIST = 1;
+
+
 {---------------------------------------}
 procedure TfrmPrefDisplay.LoadPrefs();
 var
@@ -178,12 +196,21 @@ var
     date_time_formats: TWideStringList;
 begin
     cboChatElement.AddItem(sActionText, nil);
+    case _msglist_type of
+        HTML_MSGLIST: begin
+            cboChatElement.AddItem(sBGColor1, nil);
+            cboChatElement.AddItem(sBGColor2, nil);
+            cboChatElement.AddItem(sDateSeperator, nil);
+            cboChatElement.AddItem(sDateSeperatorBG, nil);
+        end;
+    end;
     cboChatElement.AddItem(sMessageLabelMe, nil);
     cboChatElement.AddItem(sMessageLabelOthers, nil);
     cboChatElement.AddItem(sMessagePriority, nil);
     cboChatElement.AddItem(sMessageText, nil);
     cboChatElement.AddItem(sSystemMessages, nil);
     cboChatElement.AddItem(sTimestamp, nil);
+
 
     tstr := MainSession.Prefs.getString('richtext_ignored_font_styles');
     _lastAllowFont := Pos('font-family;', tstr) = 0;
@@ -227,6 +254,9 @@ begin
         _color_time := getInt('color_time');
         _color_priority := getInt('color_priority');
         _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
 
         _roster_bg := getInt('roster_bg');
         _roster_font_color := getInt('roster_font_color');
@@ -315,6 +345,9 @@ begin
         setInt('color_time', _color_time);
         setInt('color_priority', _color_priority);
         setInt('color_bg', _color_bg);
+        setInt('color_alt_bg', _color_alt_bg);
+        setInt('color_date_bg', _color_date_bg);
+        setInt('color_date', _color_date);
 
         setInt('roster_bg', _roster_bg);
         setInt('roster_font_color', _roster_font_color);
@@ -343,6 +376,13 @@ begin
         setBool('font_underline', (fsUnderline in colorChat.Font.Style));
     end;
 
+end;
+
+procedure TfrmPrefDisplay.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    inherited;
+    _htmlmsglist.Free();
 end;
 
 procedure TfrmPrefDisplay.trkChatMemoryChange(Sender: TObject);
@@ -451,83 +491,181 @@ begin
     dl := length(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), n)) + 2;
     my_nick := MainSession.getDisplayUsername();
 
-    with colorChat do begin
-        Lines.Clear;
 
-        _time_ranges[0].Min := 0;
-        _time_ranges[0].Max := _time_ranges[0].Min + dl - 1;
+    case _msglist_type of
+        RTF_MSGLIST: begin
+            with colorChat do begin
+                Lines.Clear;
+
+                _time_ranges[0].Min := 0;
+                _time_ranges[0].Max := _time_ranges[0].Min + dl - 1;
 
 
-        m := TJabberMessage.Create();
-        with m do begin
-            Body := _('Some text from me');
-            isMe := true;
-            Nick := my_nick;
-            Time := n;
-            Priority := High;
+                m := TJabberMessage.Create();
+                with m do begin
+                    Body := _('Some text from me');
+                    isMe := true;
+                    Nick := my_nick;
+                    Time := n;
+                    Priority := High;
+                end;
+
+                _priority_ranges[0].Min := _time_ranges[0].Max + 1;
+                _priority_ranges[0].Max := _priority_ranges[0].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
+                _me_ranges[0].Min := _priority_ranges[0].Max + 1;
+                _me_ranges[0].Max := _me_ranges[0].Min + length(my_nick) + 2 - 1;
+                DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
+                m.Free();
+
+                _time_ranges[1].Min := Length(WideLines.Text) - WideLines.Count;
+                _time_ranges[1].Max :=  _time_ranges[1].Min + dl - 1;
+
+
+                m := TJabberMessage.Create();
+                with m do begin
+                    Body := _('Some reply text');
+                    isMe := false;
+                    Nick := _('Friend');
+                    Time := n;
+                    Priority := High;
+                end;
+
+                _priority_ranges[1].Min := _time_ranges[1].Max + 1;
+                _priority_ranges[1].Max := _priority_ranges[1].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
+                _other_ranges[0].Min := _priority_ranges[1].Max + 1;
+                _other_ranges[0].Max :=  _other_ranges[0].Min + length(_('Friend')) + 2 - 1;
+                DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
+                m.Free();
+
+                _time_ranges[2].Min := Length(WideLines.Text) - WideLines.Count;
+                _time_ranges[2].Max := _time_ranges[2].Min + dl - 1;
+
+                _action_ranges[0].Min := _time_ranges[2].Max + 1;
+
+                m := TJabberMessage.Create();
+                with m do begin
+                    Body := _('/me does action');
+                    Nick := my_nick;
+                    Time := n;
+                end;
+                DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
+                m.Free();
+
+                _action_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
+                _time_ranges[3].Min :=_action_ranges[0].Max + 1;
+                _time_ranges[3].Max := _time_ranges[3].Min + dl - 1;
+
+                m := TJabberMessage.Create();
+                _server_ranges[0].Min := _time_ranges[3].Max + 1;
+                with m do begin
+                    Body := _('Server says something');
+                    Nick := '';
+                    Time := n;
+                end;
+                DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
+                _server_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
+                m.Free();
+            end;
         end;
+        HTML_MSGLIST: begin
+            with _htmlmsglist do begin
+                font_name := colorChat.Font.Name;
+                font_size := IntToStr(colorChat.Font.Size);
+                font_bold := (fsBold in colorChat.Font.Style);
+                font_italic := (fsItalic in colorChat.Font.Style);
+                font_underline := (fsUnderline in colorChat.Font.Style);
+                font_color :=  _font_color;
+                color_bg := _color_bg;
+                color_alt_bg := _color_alt_bg;
+                color_date_bg := _color_date_bg;
+                color_date := _color_date;
+                color_me := _color_me;
+                color_other := _color_other;
+                color_time := _color_time;
+                color_action := _color_action;
+                color_server := _color_server;
+                ResetStylesheet();
 
-        _priority_ranges[0].Min := _time_ranges[0].Max + 1;
-        _priority_ranges[0].Max := _priority_ranges[0].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
-        _me_ranges[0].Min := _priority_ranges[0].Max + 1;
-        _me_ranges[0].Max := _me_ranges[0].Min + length(my_nick) + 2 - 1;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
-        m.Free();
+                if (not _HTMLContentAlreadyShowing) then begin
+                    ForceIgnoreScrollToBottom := true;
+                    _HTMLContentAlreadyShowing := true;
+                    
+                    m := TJabberMessage.Create();
+                    with m do begin
+                        Body := _('Some text from me');
+                        isMe := true;
+                        Nick := my_nick;
+                        Time := n;
+                        Priority := High;
+                    end;
 
-        _time_ranges[1].Min := Length(WideLines.Text) - WideLines.Count;
-        _time_ranges[1].Max :=  _time_ranges[1].Min + dl - 1;
+                    DisplayMsg(m, false);
+                    m.Free();
 
+                    m := TJabberMessage.Create();
+                    with m do begin
+                        Body := _('Some reply text');
+                        isMe := false;
+                        Nick := _('Friend');
+                        Time := n;
+                        Priority := High;
+                    end;
 
-        m := TJabberMessage.Create();
-        with m do begin
-            Body := _('Some reply text');
-            isMe := false;
-            Nick := _('Friend');
-            Time := n;
-            Priority := High;
+                    DisplayMsg(m, false);
+                    m.Free();
+
+                    m := TJabberMessage.Create();
+                    with m do begin
+                        Body := _('/me does action');
+                        Nick := my_nick;
+                        Time := n;
+                    end;
+                    DisplayMsg(m, false);
+                    m.Free();
+
+                    m := TJabberMessage.Create();
+                    with m do begin
+                        Body := _('Server says something');
+                        Nick := '';
+                        Time := n;
+                    end;
+                    DisplayMsg(m, false);
+                    m.Free();
+                end;
+
+                refresh();
+            end;
         end;
-
-        _priority_ranges[1].Min := _time_ranges[1].Max + 1;
-        _priority_ranges[1].Max := _priority_ranges[1].Min + length(GetDisplayPriority(m.Priority)) + 2 - 1;
-        _other_ranges[0].Min := _priority_ranges[1].Max + 1;
-        _other_ranges[0].Max :=  _other_ranges[0].Min + length(_('Friend')) + 2 - 1;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
-        m.Free();
-
-        _time_ranges[2].Min := Length(WideLines.Text) - WideLines.Count;
-        _time_ranges[2].Max := _time_ranges[2].Min + dl - 1;
-
-        _action_ranges[0].Min := _time_ranges[2].Max + 1;
-
-        m := TJabberMessage.Create();
-        with m do begin
-            Body := _('/me does action');
-            Nick := my_nick;
-            Time := n;
-        end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
-        m.Free();
-
-        _action_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
-        _time_ranges[3].Min :=_action_ranges[0].Max + 1;
-        _time_ranges[3].Max := _time_ranges[3].Min + dl - 1;
-
-        m := TJabberMessage.Create();
-        _server_ranges[0].Min := _time_ranges[3].Max + 1;
-        with m do begin
-            Body := _('Server says something');
-            Nick := '';
-            Time := n;
-        end;
-        DisplayRTFMsg(colorChat, m, true, _color_time, _color_priority, _color_server, _color_action, _color_me, _color_other, _font_color);
-        _server_ranges[0].Max := Length(WideLines.Text) - WideLines.Count;
-        m.Free();
     end;
 end;
 
 {---------------------------------------}
 procedure TfrmPrefDisplay.FormCreate(Sender: TObject);
 begin
+    _msglist_type := MainSession.Prefs.getInt('msglist_type');
+    case _msglist_type of
+        RTF_MSGLIST: begin
+            _htmlmsglist := nil;
+        end;
+        HTML_MSGLIST: begin
+            colorChat.Visible := false;
+            Label5.Visible := false;
+            cbChatBG.Visible := false;
+            lblChatBG.Visible := false;
+
+            _htmlmsglist := TfIEMsgList.Create(Self);
+            if (_htmlmsglist <> nil) then begin
+                with _htmlmsglist do begin
+                    Left := colorChat.Left;
+                    Top := colorChat.Top;
+                    Height := colorChat.Height;
+                    Width := colorChat.Width;
+                    Parent := colorChat.Parent;
+                    Visible := true;
+                end;
+            end;
+        end;
+    end;
 
     inherited;
 
@@ -581,7 +719,20 @@ begin
     end
     else if (currElement = 'color_priority') then begin
         _color_priority := integer(cbChatFont.Selected);
+    end
+    else if (currElement = 'color_bg') then begin
+        _color_bg := integer(cbChatFont.Selected);
+    end
+    else if (currElement = 'color_alt_bg') then begin
+        _color_alt_bg := integer(cbChatFont.Selected);
+    end
+    else if (currElement = 'color_date') then begin
+        _color_date := integer(cbChatFont.Selected);
+    end
+    else if (currElement = 'color_date_bg') then begin
+        _color_date_bg := integer(cbChatFont.Selected);
     end;
+    
     redrawChat();
 end;
 
@@ -614,7 +765,23 @@ begin
     else if(index = cboChatElement.Items.IndexOf(sMessageText)) then begin
         // normal window, font_color
        Result := 'font_color';
-    end;
+    end
+    else if(index = cboChatElement.Items.IndexOf(sBGColor1)) then begin
+        // normal window, font_color
+       Result := 'color_bg';
+    end
+    else if(index = cboChatElement.Items.IndexOf(sBGColor2)) then begin
+        // normal window, font_color
+       Result := 'color_alt_bg';
+    end
+    else if(index = cboChatElement.Items.IndexOf(sDateSeperator)) then begin
+        // normal window, font_color
+       Result := 'color_date';
+    end
+    else if(index = cboChatElement.Items.IndexOf(sDateSeperatorBG)) then begin
+        // normal window, font_color
+       Result := 'color_date_bg';
+    end
 end;
 
 procedure TfrmPrefDisplay.cboChatElementChange(Sender: TObject);
@@ -625,6 +792,7 @@ begin
 
     index := cboChatElement.ItemIndex;
     btnChatFont.enabled := false;
+    lblChatFG.Caption := sFontColorFG;
     if (index = cboChatElement.Items.IndexOf(sTimestamp)) then begin
         cbChatFont.Selected := TColor(_color_time);
     end
@@ -649,30 +817,23 @@ begin
         // normal window, font_color
        cbChatFont.Selected := TColor(_font_color);
        btnChatFont.enabled := true;
+    end
+    else if(index = cboChatElement.Items.IndexOf(sBGColor1)) then begin
+        cbChatFont.Selected := TColor(_color_bg);
+        lblChatFG.Caption := sBackgroundColorFG;
+    end
+    else if(index = cboChatElement.Items.IndexOf(sBGColor2)) then begin
+        cbChatFont.Selected := TColor(_color_alt_bg);
+        lblChatFG.Caption := sBackgroundColorFG;
+    end
+    else if(index = cboChatElement.Items.IndexOf(sDateSeperator)) then begin
+        cbChatFont.Selected := TColor(_color_date);
+        lblChatFG.Caption := sFontColorFG;
+    end
+    else if(index = cboChatElement.Items.IndexOf(sDateSeperatorBG)) then begin
+        cbChatFont.Selected := TColor(_color_date_bg);
+        lblChatFG.Caption := sBackgroundColorFG;
     end;
-end;
-
-procedure TfrmPrefDisplay.cboMsgListChange(Sender: TObject);
-var
-    idx: integer;
-begin
-  inherited;
-    // When we use IE, disable the color & font stuff
-    // idx := cboMsgList.ItemIndex;
-    idx := 0;
-
-    // Richedit stuff
-    colorChat.Enabled := (idx = 0);
-//    cbChatBG.Enabled := (idx = 0);
-//    cbChatFont.Enabled := (idx = 0);
-    btnChatFont.Enabled := (idx = 0);
-
-    // IE stuff
-    {
-    cboIEStylesheet.Enabled := (idx = 1);
-    btnCSSBrowse.Enabled := (idx = 1);
-    btnCSSEdit.Enabled := (idx = 1);
-    }
 end;
 
 procedure TfrmPrefDisplay.cbRosterBGChange(Sender: TObject);

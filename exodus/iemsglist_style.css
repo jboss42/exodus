@@ -7,6 +7,9 @@
 body {
     font-family: /*font_name*/,Arial Unicode MS, Verdana;
     font-size: /*font_size*/;
+    font-weight: /*font_weight*/;
+    font-style: /*font_style*/;
+    text-decoration: /*text_decoration*/;
     background: /*color_bg*/;
     margin: 0pt;
     word-wrap: break-word;
@@ -17,6 +20,7 @@ body {
     text-align: center;
     background: /*color_date_bg*/;
     font-weight: bold;
+    color: /*color_date*/;
 }
 
 .composing {

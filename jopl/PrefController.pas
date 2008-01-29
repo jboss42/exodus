@@ -119,6 +119,7 @@ const
     P_COLOR_ACTION = 'color_action';
     P_COLOR_SERVER = 'color_server';
     P_COLOR_PRIORITY = 'color_priority';
+    P_COLOR_DATE   = 'color_date';
     P_COLOR_DATE_BG = 'color_date_bg';
 
     P_TAB_WIDTH    = 'event_width';

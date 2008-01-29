@@ -89,6 +89,25 @@ type
     _lastMsgNick: WideString;
     _exeName: Widestring;
 
+    _font_name: widestring;
+    _font_size: widestring;
+    _font_color: integer;
+    _color_bg: integer;
+    _color_alt_bg: integer;
+    _color_date_bg: integer;
+    _color_date: integer;
+    _color_me: integer;
+    _color_other: integer;
+    _color_time: integer;
+    _color_action: integer;
+    _color_server: integer;
+    _font_bold: boolean;
+    _font_italic: boolean;
+    _font_underline: boolean;
+    _stylesheet_name: widestring;
+
+    _ForceIgnoreScrollToBottom: boolean;
+
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
 
@@ -115,6 +134,7 @@ type
     procedure CopyAll(); override;
     procedure Copy(); override;
     procedure ScrollToBottom(); override;
+    procedure ScrollToTop();
     procedure Clear(); override;
     procedure setContextMenu(popup: TTntPopupMenu); override;
     procedure setDragOver(event: TDragOverEvent); override;
@@ -135,8 +155,28 @@ type
     procedure HideComposing(); override;
     function  isComposing(): boolean; override;
 
-    procedure ChangeStylesheet(resname: WideString);
+    procedure ChangeStylesheet( resname: WideString);
+    procedure ResetStylesheet();
     procedure print(ShowDialog: boolean);
+
+    property font_name: widestring read _font_name write _font_name;
+    property font_size: widestring read _font_size write _font_size;
+    property font_color: integer read _font_color write _font_color;
+    property color_bg: integer read _color_bg write _color_bg;
+    property color_alt_bg: integer read _color_alt_bg write _color_alt_bg;
+    property color_date_bg: integer read _color_date_bg write _color_date_bg;
+    property color_date: integer read _color_date write _color_date;
+    property color_me: integer read _color_me write _color_me;
+    property color_other: integer read _color_other write _color_other;
+    property color_time: integer read _color_time write _color_time;
+    property color_action: integer read _color_action write _color_action;
+    property color_server: integer read _color_server write _color_server;
+    property stylesheet_name: widestring read _stylesheet_name write _stylesheet_name;
+    property font_bold: boolean read _font_bold write _font_bold;
+    property font_italic: boolean read _font_italic write _font_italic;
+    property font_underline: boolean read _font_underline write _font_underline;
+    property ForceIgnoreScrollToBottom: boolean read _ForceIgnoreScrollToBottom write _ForceIgnoreScrollToBottom;
+
   end;
 
 var
@@ -184,16 +224,36 @@ begin
     _idCount := 0;
     _composing := -1;
     _msgCount := 0;
-    _maxMsgCountHigh := MainSession.Prefs.getInt('maximum_displayed_messages');
-    _maxMsgCountLow := MainSession.Prefs.getInt('maximum_displayed_messages_drop_down_to');
-    if ((_maxMsgCountHigh <> 0) and
-        (_maxMsgCountLow <> 0) and
-        (_maxMsgCountHigh >= _maxMsgCountLow))then
-        _doMessageLimiting := true
-    else
-        _doMessageLimiting := false;
-    _displayDateSeperator := MainSession.Prefs.getBool('display_date_seperator');
-    _exeName := MainSession.Prefs.getString('exe_FullPath');
+    _doMessageLimiting := false;
+
+    with MainSession.Prefs do begin
+        _maxMsgCountHigh := getInt('maximum_displayed_messages');
+        _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
+        if ((_maxMsgCountHigh <> 0) and
+            (_maxMsgCountLow <> 0) and
+            (_maxMsgCountHigh >= _maxMsgCountLow))then begin
+            _doMessageLimiting := true
+        end;
+        _displayDateSeperator := getBool('display_date_seperator');
+        _exeName := getString('exe_FullPath');
+
+        _stylesheet_name := getString('ie_css');
+        _font_name := getString('font_name');
+        _font_size := getString('font_size');
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_time := getInt('color_time');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+    end;
 end;
 
 {---------------------------------------}
@@ -248,6 +308,8 @@ var
     last: IHTMLElement;
 begin
     if (_win = nil) then exit;
+    if (_ForceIgnoreScrollToBottom) then exit;
+    
 
     // this is a slowness for large histories, I think, but it is the only
     // thing that seems to work, since we are now scrolling the _content
@@ -258,6 +320,24 @@ begin
         last.ScrollIntoView(false);
     end;
 end;
+
+{---------------------------------------}
+procedure TfIEMsgList.ScrollToTop();
+var
+    tags: IHTMLElementCollection;
+    first: IHTMLElement;
+begin
+    if (_win = nil) then exit;
+
+    // this is a slowness for large histories, I think, but it is the only
+    // thing that seems to work, since we are now scrolling the _content
+    // element, rather than the window, as Bill intended.
+    tags := _content.children as IHTMLElementCollection;
+    if (tags.length > 0) then begin
+        first := tags.Item(0, 0) as IHTMLElement;
+        first.ScrollIntoView(false);
+    end;
+end;     
 
 {---------------------------------------}
 procedure TfIEMsgList.Clear();
@@ -556,7 +636,12 @@ begin
     dv := dv + '</div>';
     writeHTML(dv);
 
-    _lastelement := _doc.all.item(id, 0) as IHTMLElement;
+    if (_doc <> nil) then begin
+        _lastelement := _doc.all.item(id, 0) as IHTMLElement;
+    end
+    else begin
+        _lastelement := nil;
+    end;
 
     if (_doMessageLimiting) then
         Inc(_msgCount);
@@ -670,7 +755,24 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
 begin
-    // XXX: IE MsgList should pick up stylesheet prefs
+    with MainSession.Prefs do begin
+        _stylesheet_name := getString('ie_css');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+        _color_time := getInt('color_time');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _font_name := getString('font_name');
+        _font_size := IntToStr(getInt('font_size'));
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+    end;
 end;
 
 {---------------------------------------}
@@ -716,6 +818,13 @@ end;
 
 {---------------------------------------}
 procedure TfIEMsgList.ChangeStylesheet(resname: WideString);
+begin
+    _stylesheet_name := resname;
+    ResetStylesheet();
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.ResetStylesheet();
     function replaceString(source, key, newtxt: Widestring): widestring;
     var
         offset: integer;
@@ -732,7 +841,7 @@ procedure TfIEMsgList.ChangeStylesheet(resname: WideString);
             source := MidStr(source, offset + Length(key), Length(source));
             offset := Pos(key, source);
         end;
-        Result := Result + source;        
+        Result := Result + source;
     end;
 var
     stream: TResourceStream;
@@ -742,7 +851,7 @@ var
 begin
     try
         // Get CSS template from resouce
-        stream := TResourceStream.Create(HInstance, resname, 'CSS');
+        stream := TResourceStream.Create(HInstance, _stylesheet_name, 'CSS');
 
         tmp := TWideStringList.Create;
         tmp.LoadFromStream(stream);
@@ -756,22 +865,41 @@ begin
 
         // Place colors in CSS
         if (css <> '') then begin
-            css := replaceString(css, '/*font_name*/', MainSession.Prefs.getString('font_name'));
-            css := replaceString(css, '/*font_size*/', MainSession.Prefs.getString('font_size') + 'pt');
-            css := replaceString(css, '/*font_color*/', HTMLColor(MainSession.Prefs.getInt('font_color')));
-            css := replaceString(css, '/*color_bg*/', HTMLColor(MainSession.Prefs.getInt('color_bg')));
-            css := replaceString(css, '/*color_alt_bg*/', HTMLColor(MainSession.Prefs.getInt('color_alt_bg')));
-            css := replaceString(css, '/*color_date_bg*/', HTMLColor(MainSession.Prefs.getInt('color_date_bg')));
-            css := replaceString(css, '/*color_me*/', HTMLColor(MainSession.Prefs.getInt('color_me')));
-            css := replaceString(css, '/*color_other*/', HTMLColor(MainSession.Prefs.getInt('color_other')));
-            css := replaceString(css, '/*color_time*/', HTMLColor(MainSession.Prefs.getInt('color_time')));
-            css := replaceString(css, '/*color_priority*/', HTMLColor(MainSession.Prefs.getInt('color_priority')));
-            css := replaceString(css, '/*color_action*/', HTMLColor(MainSession.Prefs.getInt('color_action')));
-            css := replaceString(css, '/*color_server*/', HTMLColor(MainSession.Prefs.getInt('color_server')));
+            css := replaceString(css, '/*font_name*/', _font_name);
+            css := replaceString(css, '/*font_size*/', _font_size + 'pt');
+            if (_font_bold) then begin
+                css := replaceString(css, '/*font_weight*/', 'bold');
+            end
+            else begin
+                css := replaceString(css, '/*font_weight*/', 'normal');
+            end;
+            if (_font_italic) then begin
+                css := replaceString(css, '/*font_style*/', 'italic');
+            end
+            else begin
+                css := replaceString(css, '/*font_style*/', 'normal');
+            end;
+            if (_font_underline) then begin
+                css := replaceString(css, '/*text_decoration*/', 'underline');
+            end
+            else begin
+                css := replaceString(css, '/*text_decoration*/', 'none');
+            end; 
+            css := replaceString(css, '/*font_color*/', HTMLColor(_font_color));
+            css := replaceString(css, '/*color_bg*/', HTMLColor(_color_bg));
+            css := replaceString(css, '/*color_alt_bg*/', HTMLColor(_color_alt_bg));
+            css := replaceString(css, '/*color_date_bg*/', HTMLColor(_color_date_bg));
+            css := replaceString(css, '/*color_date*/', HTMLColor(_color_date));
+            css := replaceString(css, '/*color_me*/', HTMLColor(_color_me));
+            css := replaceString(css, '/*color_other*/', HTMLColor(_color_other));
+            css := replaceString(css, '/*color_time*/', HTMLColor(_color_time));
+            css := replaceString(css, '/*color_action*/', HTMLColor(_color_action));
+            css := replaceString(css, '/*color_server*/', HTMLColor(_color_server));
         end;
 
         // put CSS into page
-        if (css <> '') then begin
+        if ((css <> '') and
+            (_doc <> nil)) then begin
             _style := _doc.createStyleSheet('', 0);
             _style.cssText := css;
             _style.disabled := false;
@@ -881,7 +1009,9 @@ begin
 
         _ready := false;
         _doc := browser.Document as IHTMLDocument2;
-        ChangeStylesheet('iemsglist_style');
+
+        ResetStylesheet();
+
 
         _content := _doc.all.item('content', 0) as IHTMLElement;
         _content2 := _content as IHTMLElement2;
