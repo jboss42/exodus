@@ -262,7 +262,12 @@ uses
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
   ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
   COMAXControl in 'COMAXControl.pas',
-  LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm};
+  LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
+  ContactController in '..\jopl\ContactController.pas',
+  COMExodusItem in '..\jopl\COMExodusItem.pas',
+  COMExodusItemController in '..\jopl\COMExodusItemController.pas',
+  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas',
+  ExTreeView in 'components\ExTreeView.pas';
 
 {$R *.TLB}
 
