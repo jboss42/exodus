@@ -272,7 +272,8 @@ uses
 var
     continue: boolean;
 
-begin
+
+    begin
 
   // Sometimes OLE registration fails if the user don't
   // have sufficient privs.. Just silently eat these.

@@ -11,8 +11,8 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : 1.2
-// File generated on 2008-01-23 15:37:50 from Type Library described below.
+// $Rev: 8291 $
+// File generated on 2008-01-28 14:27:46 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)

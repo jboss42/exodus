@@ -458,6 +458,9 @@ type
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
 
+    procedure ShowLogin();
+    procedure ShowRoster();
+
     function win32TrackerIndex(windows_msg: integer): integer;
 
     procedure _sendInitPresence();
@@ -1019,6 +1022,8 @@ begin
     // Show the login window
     _reconnect_tries := 0;
     _new_account := false;
+
+    //TODO:  display login window
 end;
 
 {---------------------------------------}
@@ -1318,11 +1323,7 @@ begin
 
 
     updateLayoutPrefChange();
-
-    with tabLogin do begin
-        Visible := true;
-        BringToFront();
-    end;
+    ShowLogin();
 
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
@@ -1389,7 +1390,7 @@ begin
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
             (pw = '')) then
             begin
-                frmRosterWindow.ToggleGUI(gui_disconnected);
+                GetLoginWindow().ToggleGUI(lgsDisconnected);
                 exit;
             end;
         MainSession.Password := pw;
@@ -1659,19 +1660,8 @@ begin
         // 7. check for new version
         Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
-        with GetLoginWindow() do begin
-            Visible := false;
-        end;
 
-        with tabLogin do begin
-            Visible := false;
-            SendToBack();
-        end;
-
-        with tabRoster do begin
-            Visible := true;
-            BringToFront();
-        end;
+        ShowRoster();
 
         restoreMenus(true);
         if (_valid_aa) then timAutoAway.Enabled := true;
@@ -1756,15 +1746,7 @@ begin
         mnuOptions_Options.Enabled := true;
         Preferences1.Enabled := true;
 
-        with tabRoster do begin
-            Visible := false;
-            SendToBack();
-        end;
-
-        with tabLogin do begin
-            Visible := true;
-            BringToFront();
-        end;
+        ShowLogin();
 
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
@@ -3819,6 +3801,8 @@ begin
         end;
         MainSession.Disconnect();
     end;
+
+    ShowLogin();
 end;
 
 procedure TfrmExodus.mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
@@ -4473,6 +4457,31 @@ begin
     end
     else begin
         _dockwindow.Hide();
+    end;
+end;
+
+procedure TfrmExodus.ShowLogin();
+begin
+    if tabRoster.Visible then with tabRoster do begin
+        Visible := false;
+        SendToBack();
+    end;
+
+    with tabLogin do begin
+        if not Visible then Visible := true;
+        BringToFront();
+    end;
+end;
+procedure TfrmExodus.ShowRoster();
+begin
+    if tabLogin.Visible then with tabLogin do begin
+        Visible := false;
+        SendToBack();
+    end;
+
+    with tabRoster do begin
+        if not Visible then Visible := true;
+        BringToFront();
     end;
 end;
 

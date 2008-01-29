@@ -318,7 +318,7 @@ type
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
-    procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
+    //procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
 
   published
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
@@ -853,10 +853,12 @@ begin
 end;
 
 {---------------------------------------}
+{
 procedure TfrmRosterWindow.WMShowLogin(var msg: TMessage);
 begin
     ShowProfiles();
 end;
+}
 
 {---------------------------------------}
 procedure TfrmRosterWindow.ShowProfiles();

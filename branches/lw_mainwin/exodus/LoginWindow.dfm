@@ -1,7 +1,8 @@
 inherited frmLoginWindow: TfrmLoginWindow
+  BorderStyle = bsNone
   Caption = ''
-  ClientHeight = 493
-  ClientWidth = 229
+  ClientHeight = 527
+  ClientWidth = 237
   Color = clWhite
   Font.Height = -13
   Padding.Left = 6
@@ -16,8 +17,8 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lblStatus: TTntLabel
     AlignWithMargins = True
     Left = 9
-    Top = 6
-    Width = 211
+    Top = 41
+    Width = 219
     Height = 16
     Margins.Top = 0
     Margins.Bottom = 0
@@ -34,8 +35,8 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lblConnect: TTntLabel
     AlignWithMargins = True
     Left = 9
-    Top = 22
-    Width = 211
+    Top = 57
+    Width = 219
     Height = 16
     Margins.Top = 0
     Margins.Bottom = 0
@@ -52,14 +53,16 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lstProfiles: TTntListView
     AlignWithMargins = True
     Left = 6
-    Top = 50
-    Width = 217
+    Top = 85
+    Width = 225
     Height = 73
     Margins.Left = 0
     Margins.Top = 12
     Margins.Right = 0
     Margins.Bottom = 12
     Align = alTop
+    BevelInner = bvNone
+    BevelOuter = bvNone
     BorderStyle = bsNone
     Columns = <
       item
@@ -67,17 +70,20 @@ inherited frmLoginWindow: TfrmLoginWindow
       end>
     HotTrackStyles = [htHandPoint, htUnderlineHot]
     ParentColor = True
+    PopupMenu = popProfiles
     ShowColumnHeaders = False
     SmallImages = frmExodus.ImageList2
     TabOrder = 0
     ViewStyle = vsReport
+    OnClick = lstProfilesClick
+    OnDblClick = lstProfilesClick
   end
-  object pnlLogoStuff: TPanel
+  object pnlProfileActions: TPanel
     AlignWithMargins = True
     Left = 6
-    Top = 354
-    Width = 217
-    Height = 127
+    Top = 467
+    Width = 225
+    Height = 48
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -87,27 +93,10 @@ inherited frmLoginWindow: TfrmLoginWindow
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    object imgLogo: TImage
-      AlignWithMargins = True
-      Left = 0
-      Top = 0
-      Width = 217
-      Height = 67
-      Margins.Left = 0
-      Margins.Top = 0
-      Margins.Right = 0
-      Margins.Bottom = 12
-      Align = alTop
-      AutoSize = True
-      Center = True
-      Transparent = True
-      ExplicitLeft = 35
-      ExplicitWidth = 160
-    end
     object pnlNewUser: TPanel
       Left = 0
-      Top = 79
-      Width = 217
+      Top = 0
+      Width = 225
       Height = 24
       Margins.Left = 0
       Margins.Top = 0
@@ -118,7 +107,6 @@ inherited frmLoginWindow: TfrmLoginWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitTop = 80
       object Image1: TImage
         Left = 1
         Top = 0
@@ -170,6 +158,7 @@ inherited frmLoginWindow: TfrmLoginWindow
           B3BE00FC136389F37D063E6E6F058B9975556011B0BA6D5298ED987F4FD1523F
           FDFF6AFF00FFBE81D53A4850CA0000000049454E44AE426082}
         Stretch = True
+        OnClick = clickCreateProfile
       end
       object TntLabel1: TTntLabel
         Left = 28
@@ -177,13 +166,14 @@ inherited frmLoginWindow: TfrmLoginWindow
         Width = 147
         Height = 16
         Caption = 'Run the New User Wizard'
+        OnClick = clickCreateProfile
       end
     end
     object pnlCreateProfile: TPanel
       AlignWithMargins = True
       Left = 0
-      Top = 103
-      Width = 217
+      Top = 24
+      Width = 225
       Height = 24
       Margins.Left = 0
       Margins.Top = 0
@@ -245,6 +235,7 @@ inherited frmLoginWindow: TfrmLoginWindow
           619A35816199013F94C0E573E7D4DB02AC2E29E1E6143E4C0B944921D02C0C4B
           A209B5CA68AC488157F40CD32F8505FFE868F0DF03FECBB8E3803F019C057530
           27E670310000000049454E44AE426082}
+        OnClick = clickCreateProfile
       end
       object TntLabel2: TTntLabel
         Left = 28
@@ -252,7 +243,199 @@ inherited frmLoginWindow: TfrmLoginWindow
         Width = 118
         Height = 16
         Caption = 'Create a New Profile'
+        OnClick = clickCreateProfile
       end
+    end
+  end
+  object pnlAnimate: TGridPanel
+    AlignWithMargins = True
+    Left = 6
+    Top = 6
+    Width = 225
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    Align = alTop
+    BevelOuter = bvNone
+    ColumnCollection = <
+      item
+        Value = 100.000000000000000000
+      end>
+    ControlCollection = <
+      item
+        Column = 0
+        Control = aniWait
+        Row = 0
+      end>
+    ParentColor = True
+    RowCollection = <
+      item
+        Value = 100.000000000000000000
+      end>
+    TabOrder = 2
+    Visible = False
+    DesignSize = (
+      225
+      35)
+    object aniWait: TAnimate
+      Left = 98
+      Top = 3
+      Width = 28
+      Height = 28
+      Anchors = []
+    end
+  end
+  object pnlInfomercial: TPanel
+    AlignWithMargins = True
+    Left = 6
+    Top = 295
+    Width = 225
+    Height = 160
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 12
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    ParentColor = True
+    TabOrder = 3
+    ExplicitTop = 307
+    object imgLogo: TImage
+      AlignWithMargins = True
+      Left = 0
+      Top = 0
+      Width = 225
+      Height = 71
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      Align = alTop
+      AutoSize = True
+      Center = True
+      Transparent = True
+      Visible = False
+      ExplicitLeft = -8
+      ExplicitTop = -8
+    end
+    object txtDisclaimer: TExRichEdit
+      AlignWithMargins = True
+      Left = 0
+      Top = 71
+      Width = 225
+      Height = 89
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      Align = alTop
+      AutoURLDetect = adDefault
+      CustomURLs = <
+        item
+          Name = 'e-mail'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'http'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'file'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'mailto'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'ftp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'https'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'gopher'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'nntp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'prospero'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'telnet'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'news'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'wais'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end>
+      LangOptions = [loAutoFont]
+      Language = 1033
+      ParentColor = True
+      ScrollBars = ssVertical
+      ShowSelectionBar = False
+      TabOrder = 0
+      URLColor = clBlue
+      URLCursor = crHandPoint
+      InputFormat = ifRTF
+      OutputFormat = ofRTF
+      SelectedInOut = False
+      PlainRTF = False
+      UndoLimit = 0
+      AllowInPlace = False
+    end
+  end
+  object popProfiles: TTntPopupMenu
+    Left = 16
+    Top = 160
+    object mnuModifyProfile: TTntMenuItem
+      Caption = 'Modify Profile'
+      OnClick = mnuModifyProfileClick
+    end
+    object mnuRenameProfile: TTntMenuItem
+      Caption = 'Rename Profile'
+      OnClick = mnuRenameProfileClick
+    end
+    object mnuDeleteProfile: TTntMenuItem
+      Caption = 'Delete Profile'
+      OnClick = mnuDeleteProfileClick
     end
   end
 end
