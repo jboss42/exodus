@@ -4,8 +4,8 @@ inherited frmBaseChat: TfrmBaseChat
   ClientHeight = 260
   ClientWidth = 415
   OnDestroy = FormDestroy
-  ExplicitWidth = 391
-  ExplicitHeight = 274
+  ExplicitWidth = 423
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -24,13 +24,23 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 2
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
-      Left = 334
-      ExplicitLeft = 334
+      Left = 366
+      Height = 27
+      ExplicitLeft = 366
+      ExplicitHeight = 27
+      inherited btnDockToggle: TToolButton
+        ParentShowHint = False
+        ShowHint = True
+      end
+      inherited btnCloseDock: TToolButton
+        ParentShowHint = False
+        ShowHint = True
+      end
     end
     object pnlChatTop: TPanel
       Left = 0
       Top = 0
-      Width = 359
+      Width = 363
       Height = 33
       Align = alClient
       BevelOuter = bvNone
@@ -60,9 +70,9 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
-      Top = 34
+      Top = 31
       Width = 411
-      Height = 29
+      Height = 32
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -166,20 +176,18 @@ inherited frmBaseChat: TfrmBaseChat
     object tbMsgOutToolbar: TTntToolBar
       Left = 2
       Top = 2
-      Width = 379
+      Width = 411
       Height = 29
       ButtonWidth = 25
       Images = frmExodus.ImageList2
       TabOrder = 1
-      ExplicitLeft = -6
-      ExplicitTop = 6
       object ChatToolbarButtonBold: TTntToolButton
         Left = 0
         Top = 0
-        Hint = 'Bold'
         AllowAllUp = True
-        Caption = 'Bold'
         ImageIndex = 70
+        ParentShowHint = False
+        ShowHint = True
         Style = tbsCheck
         OnClick = ChatToolbarButtonBoldClick
       end
@@ -190,6 +198,8 @@ inherited frmBaseChat: TfrmBaseChat
         AllowAllUp = True
         Caption = 'Underline'
         ImageIndex = 71
+        ParentShowHint = False
+        ShowHint = True
         Style = tbsCheck
         OnClick = ChatToolbarButtonUnderlineClick
       end
@@ -200,6 +210,8 @@ inherited frmBaseChat: TfrmBaseChat
         AllowAllUp = True
         Caption = 'Color'
         ImageIndex = 72
+        ParentShowHint = False
+        ShowHint = True
         Style = tbsCheck
         Visible = False
         OnClick = ItalicsClick
@@ -207,9 +219,12 @@ inherited frmBaseChat: TfrmBaseChat
       object ChatToolbarButtonColors: TTntToolButton
         Left = 75
         Top = 0
+        Hint = 'Colors'
         AllowAllUp = True
         Caption = 'Color'
         ImageIndex = 84
+        ParentShowHint = False
+        ShowHint = True
         OnClick = ChatToolbarButtonColorsClick
       end
       object ChatToolbarButtonSeperator1: TTntToolButton
@@ -225,6 +240,8 @@ inherited frmBaseChat: TfrmBaseChat
         Hint = 'Cut'
         Caption = 'Cut'
         ImageIndex = 73
+        ParentShowHint = False
+        ShowHint = True
         OnClick = Copy2Click
       end
       object ChatToolbarButtonCopy: TTntToolButton
@@ -233,6 +250,8 @@ inherited frmBaseChat: TfrmBaseChat
         Hint = 'Copy'
         Caption = 'Copy'
         ImageIndex = 74
+        ParentShowHint = False
+        ShowHint = True
         OnClick = Copy3Click
       end
       object ChatToolbarButtonPaste: TTntToolButton
@@ -241,6 +260,8 @@ inherited frmBaseChat: TfrmBaseChat
         Hint = 'Paste'
         Caption = 'Paste'
         ImageIndex = 75
+        ParentShowHint = False
+        ShowHint = True
         OnClick = Paste1Click
       end
       object ChatToolbarButtonSeperator2: TTntToolButton
@@ -256,6 +277,8 @@ inherited frmBaseChat: TfrmBaseChat
         Hint = 'Emoticons'
         Caption = 'Emoticons'
         ImageIndex = 76
+        ParentShowHint = False
+        ShowHint = True
         OnClick = Emoticons1Click
       end
       object ChatToolbarButtonHotkeys: TTntToolButton
@@ -264,7 +287,9 @@ inherited frmBaseChat: TfrmBaseChat
         Hint = 'Hotkeys'
         Caption = 'Hotkeys'
         ImageIndex = 77
+        ParentShowHint = False
         PopupMenu = popHotkeys
+        ShowHint = True
         OnClick = ChatToolbarButtonHotkeysClick
       end
       object TntToolButton1: TTntToolButton
@@ -279,14 +304,17 @@ inherited frmBaseChat: TfrmBaseChat
         Top = 0
         Width = 72
         Height = 21
+        Hint = 'Hotkeys'
         Style = csDropDownList
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
-        ItemHeight = 0
+        ItemHeight = 13
         ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
       end
     end

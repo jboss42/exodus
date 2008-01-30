@@ -66,6 +66,7 @@ var
 begin
     btn := TToolButton.Create(frmExodus);
     btn.Parent := _toolbar;
+    btn.ShowHint := true;
 
     idx := RosterTreeImages.Find(ImageID);
     if (idx >= 0) then
