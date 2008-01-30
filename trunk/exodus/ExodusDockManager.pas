@@ -113,6 +113,7 @@ type
     procedure BringToFront();
 
     function isActive(): boolean;
+    function getHWND(): THandle;
   end;
 
 implementation

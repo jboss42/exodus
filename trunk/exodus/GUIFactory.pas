@@ -104,6 +104,8 @@ begin
         ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
     end
     else if (event = '/session/gui/conference') then begin
+        ShowWindow(getDockManager().getHWND(), SW_RESTORE);
+
         StartRoom(tag.GetAttribute('jid'),
                   tag.GetBasicText('nick'),
                   tag.GetBasicText('password'),
@@ -128,6 +130,8 @@ begin
                 end;
             end;
         end;
+
+        ShowWindow(getDockManager().getHWND(), SW_RESTORE);
 
         if ((r = 0) or (r = 2)) then begin
             if (tmp_jid.resource <> '') then

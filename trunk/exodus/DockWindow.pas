@@ -93,6 +93,7 @@ type
     procedure UpdateDocked(frm: TfrmDockable);
     procedure BringToFront();
     function isActive(): boolean;
+    function getHWND(): THandle;
 
     function getTabSheet(frm : TfrmDockable) : TTntTabSheet;
     function getTabForm(tab: TTabSheet): TForm;
@@ -883,6 +884,8 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow._glueCheck();
 begin
+    if (Self.WindowState = wsMaximized) then exit;
+
     _glueEdge := _withinGlueSnapRange();
 
     if (_glueEdge <> geNone) then begin
@@ -958,6 +961,8 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.moveGlued();
 begin
+    if (Self.WindowState = wsMaximized) then exit;
+    
     if (Self.Showing) then begin
         case (_glueEdge) of
             geTop: begin
@@ -987,7 +992,10 @@ begin
     end;
 end;
 
-
+function TfrmDockWindow.getHWND(): THandle;
+begin
+    Result := Self.Handle;
+end;
 
 
 
