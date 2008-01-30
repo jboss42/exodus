@@ -209,6 +209,7 @@ begin
     inherited create();
     _button := TToolButton.create(nil);
     _button.OnClick := OnClickEvent;
+    _button.ShowHint := true;
     _callback := nil;
     _parentForm := nil;
 end;

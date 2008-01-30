@@ -62,6 +62,7 @@ begin
     old_left := _toolbar.Buttons[_toolbar.ButtonCount - 1].Left +
                     _toolbar.Buttons[_toolbar.ButtonCount - 1].Width;
     btn := TToolButton.Create(frmExodus);
+    btn.ShowHint := true;
     btn.Top := _toolbar.Buttons[_toolbar.ButtonCount - 1].Top;
     btn.Left := old_left + 1;
     _toolbar.Width := _toolbar.Width +
