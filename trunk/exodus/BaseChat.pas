@@ -518,6 +518,7 @@ begin
   inherited;
     // save the new position to use on all new windows
     MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+    Self.Invalidate();
 end;
 
 {---------------------------------------}
