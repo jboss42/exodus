@@ -342,9 +342,12 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.Clear();
 begin
-    _ready := true;
-    _home := 'res://' + URL_EscapeChars(Application.ExeName);
-    browser.Navigate(_home + '/iemsglist');
+    try
+        _ready := true;
+        _home := 'res://' + URL_EscapeChars(Application.ExeName);
+        browser.Navigate(_home + '/iemsglist');
+    except
+    end;
 end;
 
 {---------------------------------------}
