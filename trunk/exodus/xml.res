@@ -130,6 +130,8 @@
     <timestamp_format value="h:mm am/pm" control="txtTimestampFmt" state="rw">
     	<control name="lblTimestampFmt"/>
     </timestamp_format>
+    <msglist_type value="1"/>
+    <ie_css value="iemsglist_style"/>
 
     <!-- advanced Display prefs -->
     <snap_on value="1" control="chkSnap" state="rw"/>
@@ -380,8 +382,6 @@
     <toolbar value="1"/>
     <chat_toolbar value="1"/>
     <always_lang value="0"/>
-    <msglist_type value="0"/>
-    <ie_css value="iemsglist_style"/>
     <browse_view value="0"/>
     <fade_limit value="100"/>
     <profile_active value="0"/>
