@@ -258,7 +258,7 @@ begin
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
-    _unreadmsg := 0;
+    _unreadmsg := -1;
     _priorityflag := false;
     activating := false;
     if (MainSession <> nil) then begin
