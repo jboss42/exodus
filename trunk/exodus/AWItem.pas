@@ -231,6 +231,9 @@ begin
         else begin
             _timNewItemTimer := nil;
         end;
+
+        AssignUnicodeFont(lblCount.Font);
+        AssignUnicodeFont(lblName.Font);
     except
     end;
 end;
