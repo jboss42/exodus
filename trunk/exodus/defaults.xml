@@ -109,14 +109,14 @@
     <font_italic value="0"/>
     <font_underline value="0"/>
     <color_bg value="$ffffff"/>
-    <color_alt_bg value="$ededed"/>
+    <color_alt_bg value="$f4f4f4"/>
     <color_me value="$ff0000"/>
-    <color_other value="$0000ff"/>
+    <color_other value="$008000"/>
     <color_time value="$808080"/>
     <color_priority value="$00ff00"/>
     <color_action value="$800080"/>
     <color_server value="$008000"/>
-    <color_date_bg value="$d3d3d3"/>
+    <color_date_bg value="$dcdcdc"/>
     <color_date value="$000000"/>
 
     <!-- other display preferences -->
