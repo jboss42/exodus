@@ -77,7 +77,6 @@ type
         _activeEndColor: TColor;
         _startColor: TColor;
         _endColor: TColor;
-        _docked: boolean;
         _active: boolean;
         _priority: boolean;
         _newWindowHighlight: boolean;
@@ -115,7 +114,6 @@ type
         property priorityEndColor: TColor read _priorityEndColor write _priorityEndColor;
         property activeStartColor: TColor read _activeStartColor write _activeStartColor;
         property activeEndColor: TColor read _activeEndColor write _activeEndColor;
-        property docked: boolean read _docked write _docked;
         property active: boolean read _active;
         property priority: boolean read _priority;
         property defaultStartColor: TColor read _startColor write _startColor;
@@ -138,9 +136,25 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 procedure TfAWItem.AWItemPopupMenuPopup(Sender: TObject);
+var
+    aw: TfrmActivityWindow;
+    docked: boolean;
+    item: TAWTrackerItem;
 begin
     inherited;
-    if (_docked) then begin
+
+    docked := true;
+    aw := GetActivityWindow();
+
+    if (aw <> nil) then begin
+        item := aw.findItem(self);
+        if ((item <> nil) and
+            (item.frm <> nil))then begin
+            docked := item.frm.Docked;
+        end;
+    end;
+
+    if (docked) then begin
         mnuDockWindow.Visible := false;
         mnuFloatWindow.Visible := true;
     end
@@ -148,6 +162,7 @@ begin
         mnuDockWindow.Visible := true;
         mnuFloatWindow.Visible := false;
     end;
+
 end;
 
 {---------------------------------------}
@@ -362,7 +377,6 @@ begin
             ShowWindow(item.frm.Handle, SW_RESTORE);
             item.frm.DockForm();
             aw.activateItem(Self);
-            _docked := true;
         end;
     end;
 end;
@@ -382,7 +396,6 @@ begin
         if (item <> nil) then begin
             item.frm.FloatForm();
             aw.activateItem(Self);
-            _docked := false;
         end;
     end;
 end;

@@ -489,9 +489,6 @@ begin
             // Deal with msg count
             item.awItem.count := frm.UnreadMsgCount;
 
-            // Deal with docked/undocked for popup menu
-            item.awItem.docked := frm.Docked;
-
             // Deal with change of nickname
             aw.SetItemName(item.awItem, frm.Caption);
 
