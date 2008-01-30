@@ -33,7 +33,7 @@ body {
     color: /*color_time*/;
     white-space: nowrap;
     padding-right: 3;
-    font-size: smaller;
+    /*font-size: smaller;*/
 }
 
 .me {
@@ -42,7 +42,7 @@ body {
     padding-right: 3;
     font-weight: bold;
     display: block;
-    font-size: larger;
+    /*font-size: larger;*/
 }
 
 .other {
@@ -51,7 +51,7 @@ body {
     padding-right: 3;
     font-weight: bold;
     display: block;
-    font-size: larger;
+    /*font-size: larger;*/
 }
 
 .line1 {
