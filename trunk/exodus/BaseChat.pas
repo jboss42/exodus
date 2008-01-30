@@ -456,6 +456,8 @@ begin
 
         _scroll := true;
 
+        _unreadmsg := 0;
+
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');

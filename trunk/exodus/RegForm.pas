@@ -22,10 +22,13 @@ unit RegForm;
 interface
 
 uses
-    IQ, XMLTag, fLeftLabel, Presence, Entity,  
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, DockWizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls,
-    TntExtCtrls, ToolWin;
+    IQ, XMLTag, fLeftLabel,
+    Presence, Entity, Windows,
+    Messages, SysUtils, Variants,
+    Classes, Graphics, Controls,
+    Forms, Dialogs, DockWizard,
+    ComCtrls, ExtCtrls, StdCtrls,
+    TntStdCtrls, TntExtCtrls, ToolWin;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
@@ -103,9 +106,12 @@ procedure StartServiceReg(jid: Widestring);
 implementation
 {$R *.DFM}
 uses
-    NodeItem, EntityCache, fGeneric, 
-    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, JabberUtils, ExUtils, 
-    Jabber1, Room, PrefController;
+    NodeItem, EntityCache, fGeneric,
+    GnuGetText, Math, JabberConst,
+    Transports, S10n, Roster,
+    Session, JabberUtils, ExUtils,
+    Jabber1, Room, PrefController,
+    RosterImages;
 
 {---------------------------------------}
 procedure StartServiceReg(jid: Widestring);
@@ -140,7 +146,9 @@ begin
     cur_key := '';
     pres_cb := -1;
     entity := nil;
-    Image1.Picture.Icon.Handle := Application.Icon.Handle;    
+    Image1.Picture.Icon.Handle := Application.Icon.Handle;
+
+    Self.ImageIndex := RosterImages.RI_PREFS_INDEX;
 end;
 
 {---------------------------------------}

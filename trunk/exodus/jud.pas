@@ -21,12 +21,19 @@ unit Jud;
 interface
 
 uses
-    IQ, XMLTag, Contnrs, Unicode, 
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
-    TntExtCtrls, Menus, Wizard, TntMenus, fXData, ToolWin, TntForms, ExFrame;
+    IQ, XMLTag, Contnrs,
+    Unicode, Windows, Messages,
+    SysUtils, Variants, Classes,
+    Graphics, Controls, Forms,
+    Dialogs, DockWizard, ComCtrls,
+    TntComCtrls, StdCtrls, TntStdCtrls,
+    ExtCtrls, TntExtCtrls, Menus,
+    Wizard, TntMenus, fXData,
+    ToolWin, TntForms, ExFrame;
+
 const
    WM_FIELDS_UPDATED = WM_USER + 6000;
+   
 type
 
   TJUDItem = class
@@ -149,14 +156,14 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    XData,
-    ChatWin, MsgRecv, Entity, EntityCache,
-    InputPassword, NodeItem, GnuGetText, 
-    JabberConst, Profile, Roster, JabberID, fGeneric,
-    Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel,
-    TntClasses,
-    DisplayName,
-    Jabber1;
+    XData, ChatWin, MsgRecv,
+    Entity, EntityCache, InputPassword,
+    NodeItem, GnuGetText, JabberConst,
+    Profile, Roster, JabberID,
+    fGeneric, Session, JabberUtils,
+    ExUtils,  XMLUtils, fTopLabel,
+    TntClasses, DisplayName, Jabber1,
+    RosterImages;
 
 var
     cur_sort: integer;
@@ -259,6 +266,7 @@ begin
     cur_dir := true;
     MainSession.Roster.AssignGroups(cboGroup.Items);
     dflt_grp := MainSession.Prefs.getString('roster_default');
+    Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
     if (dflt_grp <> '') then
         cboGroup.ItemIndex := cboGroup.Items.IndexOf(dflt_grp);
