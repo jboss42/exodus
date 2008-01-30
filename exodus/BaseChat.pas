@@ -426,6 +426,9 @@ begin
         case _msglist_type of
             RTF_MSGLIST  : _msgframe := TfRTFMsgList.Create(Self);
             HTML_MSGLIST : _msgframe := TfIEMsgList.Create(Self);
+            else begin
+                _msgframe := TfRTFMsgList.Create(Self);
+            end;
         end;
 
         with MsgList do begin
@@ -757,9 +760,10 @@ begin
         end;
     end;
     PopulatePriority();
-    AssignDefaultFont(Self.Font);
+
     MsgList.setupPrefs();
-    //msgout will pickup parent font by default, but we need to change bg color
+
+    AssignDefaultFont(MsgOut.Font);
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 end;
 
