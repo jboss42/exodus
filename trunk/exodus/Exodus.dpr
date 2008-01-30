@@ -263,11 +263,10 @@ uses
   ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
   COMAXControl in 'COMAXControl.pas',
   LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
-  ContactController in '..\jopl\ContactController.pas',
   COMExodusItem in '..\jopl\COMExodusItem.pas',
   COMExodusItemController in '..\jopl\COMExodusItemController.pas',
-  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas',
-  ExTreeView in 'components\ExTreeView.pas';
+  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas';
+  
 
 {$R *.TLB}
 
