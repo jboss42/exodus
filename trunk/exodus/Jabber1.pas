@@ -25,7 +25,7 @@ uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, LoginWindow, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry, SelContact, Emote, NodeItem,
-    Dockable,
+    Dockable, DisplayName,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -190,7 +190,7 @@ type
     mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem;
     mnuFile_MyProfiles_DeleteProfile: TTntMenuItem;
     mnuFile_MyProfiles_ModifyProfile: TTntMenuItem;
-    File_Exit: TTntMenuItem;
+    mnuFile_Exit: TTntMenuItem;
     mnuPeople_Search: TTntMenuItem;
     mnuPeople_Contacts: TTntMenuItem;
     mnuPeople_Contacts_AddContact: TTntMenuItem;
@@ -226,7 +226,6 @@ type
     mnuPeople_Conference_RenamePeopleFromConferenceRoom: TTntMenuItem;
     mnuPeople_Conference_ViewHistory: TTntMenuItem;
     mnuOptions_Password: TTntMenuItem;
-    mnuOptions_Password_ChangePassword: TTntMenuItem;
     mnuOptions_Registration: TTntMenuItem;
     mnuOptions_Registration_EditRegistration: TTntMenuItem;
     mnuOptions_Registration_EditAvatar: TTntMenuItem;
@@ -242,7 +241,6 @@ type
     mnuOptions_Plugins: TTntMenuItem;
     mnuWindows_CloseAll: TTntMenuItem;
     mnuWindows_List1: TTntMenuItem;
-    mnuWindows_Layout: TTntMenuItem;
     mnuWindows_MinimizetoSystemTray: TTntMenuItem;
     mnuWindows_MinimizetoTaskBar: TTntMenuItem;
     mnuFile_MyProfiles_RenameProfile: TTntMenuItem;
@@ -292,6 +290,14 @@ type
     Custom1: TTntMenuItem;
     TntMenuItem7: TTntMenuItem;
     imgPresence: TImage;
+    N19: TTntMenuItem;
+    N20: TTntMenuItem;
+    mnuFile_Password: TTntMenuItem;
+    N21: TTntMenuItem;
+    mnuFile_Preferences: TTntMenuItem;
+    mnuFile_Registration: TTntMenuItem;
+    mnuFile_Registration_EditReg: TTntMenuItem;
+    mnuFile_Registration_VCard: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -386,7 +392,6 @@ type
     procedure mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
     procedure mnuOpenNewConferenceRoom1Click(Sender: TObject);
     procedure mnuFile_ConnectClick(Sender: TObject);
-    procedure mnuWindows_LayoutClick(Sender: TObject);
     procedure mnuPeople_Contacts_SendFileClick(Sender: TObject);
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
@@ -396,7 +401,7 @@ type
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
     procedure trayShowActivityWindowClick(Sender: TObject);
     procedure lblStatusClick(Sender: TObject);
-
+  
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -422,6 +427,8 @@ type
     _pending_passwd: Widestring;
     _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
+
+    _dnListener: TDisplayNameListener;
 
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
@@ -571,6 +578,7 @@ published
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
+    procedure OnDisplayNameChange(jid, dn: Widestring);
   public
     ActiveChat: TfrmBaseChat;
 //    Tabs: TExodusTabs;
@@ -811,7 +819,7 @@ uses
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
-    XMLUtils, XMLParser, DisplayName,
+    XMLUtils, XMLParser,
     ComServ, PrefFile,
     ManagePluginsDlg,
     DebugManager;
@@ -1123,6 +1131,7 @@ var
     mi: TMenuItem;
     s: TXMLTag;
     prefstate: TPrefState;
+    appId: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1158,6 +1167,9 @@ begin
     // Init our emoticons
     InitializeEmoticonLists();
 
+    _dnListener := TDisplayNameListener.Create();
+    _dnListener.OnDisplayNameChange := OnDisplayNameChange;
+
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
         self.Caption := GetString('brand_caption');
@@ -1165,6 +1177,10 @@ begin
         trayExit.Caption := _('Exit ') + getAppInfo.Caption;
         Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
+
+        appId := GetString('brand_application_id');
+        File1.Caption := appId;
+        About1.Caption := _('About ') + getAppInfo.Caption;
 
         menu_list := TWideStringList.Create();
         fillStringlist('brand_help_menu_list', menu_list);
@@ -1674,8 +1690,14 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
-        lblDisplayName.Caption := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID());
+
+        with MainSession.Profile do begin
+            lblDisplayName.Caption := _dnListener.getDisplayName(getJabberID());
+            lblDisplayName.Hint := getJabberID().getDisplayFull();
+        end;
+
         setTrayInfo(Self.Caption);
+        imgSSL.Visible := MainSession.SSLEnabled;
 
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
@@ -1737,6 +1759,11 @@ begin
         Self.Caption := getAppInfo().Caption;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
+
+        imgSSL.Visible := false;
+
+        lblDisplayName.Caption := '';
+        lblDisplayName.Hint := '';
 
         _new_account := false;
         restoreMenus(false);
@@ -2062,7 +2089,9 @@ begin
     mnuFile_Connect.Visible := not enable;
     mnuFile_Disconnect.Visible := enable;
     mnuFile_MyStatus.Enabled := enable;
-    mnuFile_MyProfiles.Enabled := not enable;
+    //mnuFile_MyProfiles.Enabled := not enable;
+    mnuFile_Password.Enabled := enable;
+    mnuFile_Registration.Enabled := enable;
 
     // Build the custom presence menus.
     if (enable) then begin
@@ -2282,7 +2311,8 @@ begin
     mnuOptions_Options.Enabled := false;
     Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
-    frmRosterWindow.lblConnectClick(Sender);
+
+    GetLoginWindow().lstProfilesClick(Sender);
     btnActivityWindow.Enabled := false;
     mnuWindows_View_ShowActivityWindow.Enabled := false;
     trayShowActivityWindow.Enabled := false;
@@ -3013,6 +3043,7 @@ end;
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
     //TODO:  save dimensions?
+    FreeAndNil(_dnListener);
 
     if (not _cleanupComplete) then
         cleanup();
@@ -3425,6 +3456,7 @@ begin
 end;
 
 {---------------------------------------}
+
 procedure TfrmExodus.PostModal();
 begin
     // make on top if applicable.
@@ -3724,9 +3756,6 @@ begin
     frmRosterWindow.popGrpInvite.Click();
 end;
 
-procedure TfrmExodus.mnuWindows_LayoutClick(Sender: TObject);
-begin
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
@@ -4458,6 +4487,17 @@ end;
 procedure TfrmExodus.glueWindow(doGlue: boolean);
 begin
     _dockWindowGlued := doGlue;
+end;
+
+procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
+var
+    us: TJabberID;
+begin
+    us := MainSession.Profile.getJabberID();
+
+    if jid = us.jid then begin
+        lblDisplayName.Caption := _dnListener.getDisplayName(us);
+    end;
 end;
 
 procedure TfrmExodus.OnMoving(var Msg: TWMMoving);

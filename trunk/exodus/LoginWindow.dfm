@@ -1,19 +1,22 @@
-inherited frmLoginWindow: TfrmLoginWindow
+object frmLoginWindow: TfrmLoginWindow
+  Left = 0
+  Top = 0
   BorderStyle = bsNone
-  Caption = ''
   ClientHeight = 527
   ClientWidth = 237
   Color = clWhite
-  ParentFont = False
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
   Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
   Padding.Left = 6
   Padding.Top = 6
   Padding.Right = 6
   Padding.Bottom = 6
+  OldCreateOrder = False
   OnCreate = FormCreate
   OnShow = FormShow
-  ExplicitWidth = 237
-  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 16
   object lblStatus: TTntLabel
@@ -59,12 +62,12 @@ inherited frmLoginWindow: TfrmLoginWindow
     Left = 6
     Top = 117
     Width = 225
-    Height = 73
+    Height = 166
     Margins.Left = 0
     Margins.Top = 12
     Margins.Right = 0
     Margins.Bottom = 12
-    Align = alTop
+    Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
@@ -81,6 +84,7 @@ inherited frmLoginWindow: TfrmLoginWindow
     ViewStyle = vsReport
     OnClick = lstProfilesClick
     OnDblClick = lstProfilesClick
+    ExplicitHeight = 73
   end
   object pnlAnimate: TGridPanel
     AlignWithMargins = True
