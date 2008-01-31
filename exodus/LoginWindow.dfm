@@ -19,7 +19,7 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lblStatus: TTntLabel
     AlignWithMargins = True
     Left = 9
-    Top = 41
+    Top = 73
     Width = 219
     Height = 16
     Margins.Top = 0
@@ -37,7 +37,7 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lblConnect: TTntLabel
     AlignWithMargins = True
     Left = 9
-    Top = 57
+    Top = 89
     Width = 219
     Height = 16
     Cursor = crHandPoint
@@ -57,7 +57,7 @@ inherited frmLoginWindow: TfrmLoginWindow
   object lstProfiles: TTntListView
     AlignWithMargins = True
     Left = 6
-    Top = 85
+    Top = 117
     Width = 225
     Height = 73
     Margins.Left = 0
@@ -87,7 +87,7 @@ inherited frmLoginWindow: TfrmLoginWindow
     Left = 6
     Top = 6
     Width = 225
-    Height = 35
+    Height = 67
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -113,10 +113,10 @@ inherited frmLoginWindow: TfrmLoginWindow
     Visible = False
     DesignSize = (
       225
-      35)
+      67)
     object aniWait: TAnimate
       Left = 98
-      Top = 3
+      Top = 19
       Width = 28
       Height = 28
       Anchors = []
@@ -136,7 +136,6 @@ inherited frmLoginWindow: TfrmLoginWindow
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    ExplicitTop = 293
     object pnlInfomercial: TPanel
       AlignWithMargins = True
       Left = 0
@@ -152,9 +151,6 @@ inherited frmLoginWindow: TfrmLoginWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 215
       object imgLogo: TImage
         AlignWithMargins = True
         Left = 0
@@ -289,9 +285,6 @@ inherited frmLoginWindow: TfrmLoginWindow
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitLeft = 1
-      ExplicitTop = 173
-      ExplicitWidth = 233
       object pnlNewUser: TPanel
         Left = 0
         Top = 0
@@ -306,7 +299,6 @@ inherited frmLoginWindow: TfrmLoginWindow
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitWidth = 233
         object Image1: TImage
           Left = 1
           Top = 0
@@ -384,7 +376,6 @@ inherited frmLoginWindow: TfrmLoginWindow
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitWidth = 233
         object Image2: TImage
           Left = 0
           Top = 0

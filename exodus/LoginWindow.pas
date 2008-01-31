@@ -6,14 +6,14 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls,
   pngextra, XMLTag, pngimage, Menus, TntMenus, RichEdit2, ExRichEdit, Buttons,
-  TntButtons;
+  TntButtons, TntForms;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
 
 type
   TLoginGuiState = (lgsDisconnected, lgsConnecting, lgsConnected, lgsAuthenticated);
-  TfrmLoginWindow = class(TExForm)
+  TfrmLoginWindow = class(TTntForm)
     lblStatus: TTntLabel;
     lblConnect: TTntLabel;
     lstProfiles: TTntListView;

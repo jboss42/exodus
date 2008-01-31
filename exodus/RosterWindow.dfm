@@ -4,9 +4,9 @@ inherited frmRosterWindow: TfrmRosterWindow
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'contact list - Exodus'
-  ClientHeight = 466
-  ClientWidth = 222
-  Constraints.MinWidth = 120
+  ClientHeight = 505
+  ClientWidth = 241
+  Constraints.MinWidth = 130
   DefaultMonitor = dmDesktop
   DragKind = dkDock
   OnActivate = FormActivate
@@ -15,14 +15,14 @@ inherited frmRosterWindow: TfrmRosterWindow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitWidth = 230
-  ExplicitHeight = 500
+  ExplicitWidth = 249
+  ExplicitHeight = 539
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 438
-    Width = 222
+    Top = 475
+    Width = 241
     Height = 9
     Align = alBottom
     AutoSize = True
@@ -36,8 +36,8 @@ inherited frmRosterWindow: TfrmRosterWindow
   object pnlFind: TPanel
     Left = 0
     Top = 0
-    Width = 222
-    Height = 45
+    Width = 241
+    Height = 49
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
@@ -47,29 +47,29 @@ inherited frmRosterWindow: TfrmRosterWindow
       Left = 3
       Top = 4
       Width = 24
-      Height = 12
+      Height = 13
       Caption = 'Find:'
     end
     object btnFindClose: TSpeedButton
-      Left = 150
+      Left = 163
       Top = 2
-      Width = 21
-      Height = 19
+      Width = 22
+      Height = 21
       Caption = 'X'
       Flat = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
       OnClick = btnFindCloseClick
     end
     object txtFind: TTntEdit
-      Left = 52
+      Left = 56
       Top = 1
-      Width = 93
-      Height = 20
+      Width = 101
+      Height = 21
       Hint = 'Esc to quit, Enter to select current,  F3 to search again'
       ParentShowHint = False
       ShowHint = True
@@ -78,18 +78,18 @@ inherited frmRosterWindow: TfrmRosterWindow
       OnKeyUp = txtFindKeyUp
     end
     object radJID: TTntRadioButton
-      Left = 50
-      Top = 23
-      Width = 38
-      Height = 16
+      Left = 54
+      Top = 25
+      Width = 41
+      Height = 17
       Caption = 'JID'
       TabOrder = 1
     end
     object radNick: TTntRadioButton
-      Left = 94
-      Top = 23
-      Width = 74
-      Height = 16
+      Left = 102
+      Top = 25
+      Width = 80
+      Height = 17
       Caption = 'Nickname'
       Checked = True
       TabOrder = 2
@@ -98,9 +98,9 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 447
-    Width = 222
-    Height = 19
+    Top = 484
+    Width = 241
+    Height = 21
     Panels = <
       item
         Alignment = taCenter
@@ -113,9 +113,9 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 415
-    Width = 222
-    Height = 23
+    Top = 450
+    Width = 241
+    Height = 25
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
@@ -125,19 +125,18 @@ inherited frmRosterWindow: TfrmRosterWindow
     object imgStatus: TPaintBox
       Left = 2
       Top = 2
-      Width = 21
-      Height = 19
+      Width = 23
+      Height = 21
       Align = alLeft
       ParentShowHint = False
       ShowHint = True
       OnPaint = imgStatusPaint
-      ExplicitHeight = 18
     end
     object imgSSL: TImage
-      Left = 202
+      Left = 220
       Top = 2
-      Width = 18
-      Height = 19
+      Width = 19
+      Height = 21
       Align = alRight
       Center = True
       Picture.Data = {
@@ -170,13 +169,13 @@ inherited frmRosterWindow: TfrmRosterWindow
         FFFF}
       Transparent = True
       Visible = False
-      ExplicitHeight = 18
+      ExplicitLeft = 219
     end
     object pnlStatus: TTntPanel
-      Left = 23
+      Left = 25
       Top = 2
-      Width = 179
-      Height = 19
+      Width = 195
+      Height = 21
       Cursor = crArrow
       Align = alClient
       Alignment = taLeftJustify
@@ -188,23 +187,23 @@ inherited frmRosterWindow: TfrmRosterWindow
       object lblStatusLink: TTntLabel
         Left = 0
         Top = 0
-        Width = 29
-        Height = 19
+        Width = 32
+        Height = 21
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 12
+        ExplicitHeight = 13
       end
     end
   end
   object pnlConnect: TPanel
     Left = 0
-    Top = 45
-    Width = 222
-    Height = 273
+    Top = 49
+    Width = 241
+    Height = 296
     Align = alTop
     BevelOuter = bvLowered
     BorderWidth = 4
@@ -215,9 +214,9 @@ inherited frmRosterWindow: TfrmRosterWindow
     TabOrder = 2
     object lblStatus: TTntLabel
       Left = 5
-      Top = 45
-      Width = 212
-      Height = 30
+      Top = 49
+      Width = 231
+      Height = 32
       Align = alTop
       Alignment = taCenter
       AutoSize = False
@@ -225,12 +224,13 @@ inherited frmRosterWindow: TfrmRosterWindow
       Transparent = False
       Layout = tlCenter
       WordWrap = True
+      ExplicitWidth = 230
     end
     object lblConnect: TTntLabel
       Left = 5
-      Top = 75
-      Width = 212
-      Height = 21
+      Top = 81
+      Width = 231
+      Height = 23
       Cursor = crHandPoint
       Align = alTop
       Alignment = taCenter
@@ -240,23 +240,22 @@ inherited frmRosterWindow: TfrmRosterWindow
       Layout = tlCenter
       WordWrap = True
       OnClick = lblConnectClick
+      ExplicitWidth = 230
     end
     object pnlAnimation: TPanel
       Left = 5
       Top = 5
-      Width = 212
-      Height = 40
+      Width = 231
+      Height = 44
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 8
-      ExplicitTop = 6
       object aniWait: TAnimate
-        Left = 44
+        Left = 48
         Top = 3
-        Width = 28
-        Height = 27
+        Width = 30
+        Height = 30
         Color = clWhite
         ParentColor = False
         StopFrame = 12
@@ -265,9 +264,9 @@ inherited frmRosterWindow: TfrmRosterWindow
     end
     object lstProfiles: TTntListView
       Left = 5
-      Top = 96
-      Width = 212
-      Height = 33
+      Top = 104
+      Width = 231
+      Height = 37
       Align = alClient
       BorderStyle = bsNone
       Columns = <
@@ -291,9 +290,9 @@ inherited frmRosterWindow: TfrmRosterWindow
     end
     object pnlConnectLogo: TPanel
       Left = 5
-      Top = 129
-      Width = 212
-      Height = 139
+      Top = 141
+      Width = 231
+      Height = 150
       Align = alBottom
       BevelOuter = bvNone
       ParentColor = True
@@ -302,40 +301,41 @@ inherited frmRosterWindow: TfrmRosterWindow
       object ImageLogo: TImage
         Left = 0
         Top = 0
-        Width = 212
-        Height = 30
+        Width = 231
+        Height = 33
         Align = alTop
         Center = True
+        ExplicitWidth = 230
       end
       object lblNewUser: TTntLabel
         Left = 0
-        Top = 115
-        Width = 212
-        Height = 12
+        Top = 124
+        Width = 231
+        Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Run the New User Wizard'
         Transparent = False
         OnClick = lblNewUserClick
-        ExplicitWidth = 115
+        ExplicitWidth = 123
       end
       object lblCreate: TTntLabel
         Left = 0
-        Top = 127
-        Width = 212
-        Height = 12
+        Top = 137
+        Width = 231
+        Height = 13
         Cursor = crHandPoint
         Align = alBottom
         Caption = 'Create a New Profile'
         Transparent = False
         OnClick = lblCreateClick
-        ExplicitWidth = 91
+        ExplicitWidth = 99
       end
       object txtDisclaimer: TExRichEdit
         Left = 0
-        Top = 30
-        Width = 212
-        Height = 37
+        Top = 33
+        Width = 231
+        Height = 40
         Align = alTop
         AutoURLDetect = adDefault
         CustomURLs = <
@@ -432,9 +432,9 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object treeRoster: TTntTreeView
     Left = 0
-    Top = 318
-    Width = 222
-    Height = 97
+    Top = 345
+    Width = 241
+    Height = 105
     Cursor = crArrow
     Hint = 'Contact List Hint'
     Align = alClient
