@@ -381,6 +381,11 @@
 
     <!-- Activity Window Sort type -->
     <activity_window_sort value="1"/>
+
+    <!-- Minimum Activty Window Item Unread Msg Count to show.  Usually 0 or 1 -->
+    <lowest_unread_msg_cnt value="0"/>
+    <lowest_unread_msg_cnt_color_change value="1"/>
+    
     <!-- /ACTIVITY WINDOW PREFS -->
 
     <!-- unfiled -->
