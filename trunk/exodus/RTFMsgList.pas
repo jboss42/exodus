@@ -51,7 +51,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(txt: string; timestamp: string); override;
+    procedure DisplayPresence(txt: Widestring; timestamp: string); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -231,7 +231,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfRTFMsgList.DisplayPresence(txt: string; timestamp: string);
+procedure TfRTFMsgList.DisplayPresence(txt: Widestring; timestamp: string);
 var
     pt : integer;
     at_bottom: boolean;
