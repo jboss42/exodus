@@ -106,7 +106,7 @@ type
         constructor Create(AOwner: TComponent); reintroduce;
         destructor Destroy(); reintroduce;
 
-        procedure activate(setActive:boolean);
+        procedure activate(setActive:boolean; docked:boolean = true);
         procedure priorityFlag(setPriority:boolean);
 
         property name: WideString read _getName write _setName;
@@ -431,16 +431,23 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfAWItem.activate(setActive: boolean);
+procedure TfAWItem.activate(setActive: boolean; docked: boolean);
 begin
     _active := setActive;
     if (setActive) then begin
         _newWindowHighlight := false;
         _priority := false;
-        _stopTimer();                
-        _setPnlColors(_activeStartColor, _activeEndColor);
-        lblName.Font.Color := _activity_window_selected_font_color;
-        lblCount.Font.Color := _activity_window_selected_font_color;
+        _stopTimer();
+        if (docked) then begin
+            _setPnlColors(_activeStartColor, _activeEndColor);
+            lblName.Font.Color := _activity_window_selected_font_color;
+            lblCount.Font.Color := _activity_window_selected_font_color;
+        end
+        else begin
+            _setPnlColors(_startColor, _endColor);
+            lblName.Font.Color := _activity_window_non_selected_font_color;
+            lblCount.Font.Color := _activity_window_non_selected_font_color;
+        end;
     end
     else begin
         _setPnlColors(_startColor, _endColor);

@@ -422,7 +422,8 @@ begin
             if (_activeitem = item.awItem) then begin
                 _activeitem := nil;
             end;
-            if (_trackingList.Count > 1) then begin
+            if ((_trackingList.Count > 1) and
+                (item.frm.Docked)) then begin
                 _activateNextDockedItem(i);
             end;
 
@@ -615,18 +616,23 @@ begin
     if (awitem = nil) then exit;
 
     try
-        // Set the active state of the List Item
+        trackitem := _findItem(awitem);
+
+        // Deactivate old item if new item docked
         try
-            if (_activeitem <> nil) then begin
+            if ((trackitem.frm.Docked) and
+                (_activeitem <> nil)) then begin
                 _activeitem.activate(false);
             end;
         except
             _activeitem := nil;
         end;
-        awitem.activate(true);
-        _activeitem := awitem;
 
-        trackitem := _findItem(awitem);
+        // Activate if Docked
+        awitem.activate(true, trackitem.frm.Docked);
+        if (trackitem.frm.Docked) then begin
+            _activeitem := awitem;
+        end;
 
         if (trackitem <> nil) then begin
             trackitem.frm.ClearUnreadMsgCount();
