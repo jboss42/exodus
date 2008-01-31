@@ -35,10 +35,10 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 282
+        Width = 280
       end>
     object ToolBar1: TToolBar
-      Left = 9
+      Left = 12
       Top = 0
       Width = 250
       Height = 27
@@ -176,23 +176,17 @@ inherited frmExodus: TfrmExodus
     object tabLogin: TTabSheet
       TabVisible = False
       object pnlLogin: TPanel
-        AlignWithMargins = True
-        Left = 6
-        Top = 6
-        Width = 266
-        Height = 492
-        Margins.Left = 6
-        Margins.Top = 6
-        Margins.Right = 6
-        Margins.Bottom = 6
+        Left = 0
+        Top = 0
+        Width = 278
+        Height = 504
         Align = alClient
+        BevelInner = bvSpace
         BevelOuter = bvNone
+        Ctl3D = True
         ParentColor = True
+        ParentCtl3D = False
         TabOrder = 0
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 278
-        ExplicitHeight = 504
       end
     end
     object tabRoster: TTabSheet
@@ -253,7 +247,7 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         RowCollection = <
           item
-            Value = 50.000002980242360000
+            Value = 50.000002980242350000
           end
           item
             Value = 49.999997019757640000
@@ -312,21 +306,21 @@ inherited frmExodus: TfrmExodus
           Height = 12
           Align = alClient
           Caption = 'user@host'
-          ExplicitLeft = 22
-          ExplicitTop = 1
           ExplicitWidth = 52
           ExplicitHeight = 13
         end
         object Panel1: TPanel
           Left = 21
           Top = 18
-          Width = 241
+          Width = 52
           Height = 19
-          Align = alClient
+          Cursor = crHandPoint
+          Align = alLeft
           AutoSize = True
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
+          OnClick = lblStatusClick
           object lblStatus: TTntLabel
             AlignWithMargins = True
             Left = 3
@@ -669,6 +663,110 @@ inherited frmExodus: TfrmExodus
             OnClick = Preferences1Click
           end
         end
+        object mnuFile_MyProfiles: TTntMenuItem
+          Caption = 'My &Profiles'
+          object mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem
+            Caption = 'Create New Profile...'
+            OnClick = mnuFile_MyProfiles_CreateNewProfileClick
+          end
+          object mnuFile_MyProfiles_ModifyProfile: TTntMenuItem
+            Caption = 'Modify Profile...'
+            Enabled = False
+            OnClick = mnuFile_MyProfiles_ModifyProfileClick
+          end
+          object mnuFile_MyProfiles_RenameProfile: TTntMenuItem
+            Caption = 'Rename Profile...'
+            Enabled = False
+            OnClick = mnuFile_MyProfiles_RenameProfileClick
+          end
+          object mnuFile_MyProfiles_DeleteProfile: TTntMenuItem
+            Caption = 'Delete Profile'
+            Enabled = False
+            OnClick = mnuFile_MyProfiles_DeleteProfileClick
+          end
+        end
+        object Options: TTntMenuItem
+          Caption = '&Options'
+          OnClick = OptionsClick
+          object mnuOptions_Password: TTntMenuItem
+            Caption = 'P&assword'
+            Enabled = False
+            object mnuOptions_Password_ChangePassword: TTntMenuItem
+              Caption = '&Change Password...'
+              OnClick = mnuPasswordClick
+            end
+          end
+          object mnuOptions_Registration: TTntMenuItem
+            Caption = '&Registration'
+            Enabled = False
+            object mnuOptions_Registration_EditRegistration: TTntMenuItem
+              Caption = 'Edit &Registration...'
+              OnClick = mnuRegistrationClick
+            end
+            object mnuOptions_Registration_EditAvatar: TTntMenuItem
+              Caption = 'Edit &Profile, Avatar...'
+              OnClick = mnuMyVCardClick
+            end
+          end
+          object mnuOptions_EnableHTMLLinks: TTntMenuItem
+            Caption = 'Enable &HTML Links'
+            Enabled = False
+            Visible = False
+          end
+          object mnuOptions_EnableEmoticonDisplays: TTntMenuItem
+            Caption = 'Enable &Emoticon Displays'
+            OnClick = mnuOptions_EnableEmoticonDisplaysClick
+          end
+          object mnuOptions_Enablenotificationsall: TTntMenuItem
+            Caption = 'Enable Notifications (all)'
+            Enabled = False
+            Visible = False
+          end
+          object mnuOptions_EnableStartupWithWindows: TTntMenuItem
+            Caption = 'Enable &Startup With Windows'
+            OnClick = mnuOptions_EnableStartupWithWindowsClick
+          end
+          object mnuOptions_Font: TTntMenuItem
+            Caption = '&Fonts, Colors...'
+            OnClick = mnuOptions_FontClick
+          end
+          object mnuOptions_Notifications: TTntMenuItem
+            Caption = '&Notifications'
+            object mnuOptions_Notifications_NewMessage: TTntMenuItem
+              Caption = 'Received New &Message'
+              OnClick = mnuOptions_Notifications_NewMessageClick
+            end
+            object mnuOptions_Notifications_NewConversation: TTntMenuItem
+              Caption = 'New &Conversation'
+              OnClick = mnuOptions_Notifications_NewConversationClick
+            end
+            object mnuOptions_Notifications_ContactOnline: TTntMenuItem
+              Caption = 'Contact Comes &Online'
+              OnClick = mnuOptions_Notifications_ContactOnlineClick
+            end
+            object mnuOptions_Notifications_ContactOffline: TTntMenuItem
+              Caption = 'Contact Goes O&ffline'
+              OnClick = mnuOptions_Notifications_ContactOfflineClick
+            end
+          end
+          object mnuOptions_Plugins: TTntMenuItem
+            Caption = '&Plug-ins'
+            object mnuOptions_Plugins_Options: TTntMenuItem
+              Caption = '&Options...'
+              OnClick = mnuPluginOptsClick
+            end
+            object N18: TTntMenuItem
+              Caption = '-'
+            end
+          end
+          object N17: TTntMenuItem
+            Caption = '-'
+          end
+          object mnuOptions_Options: TTntMenuItem
+            Caption = '&Settings...'
+            OnClick = Preferences1Click
+          end
+        end
       end
       object mnuFile_Connect: TTntMenuItem
         Caption = '&Connect'
@@ -723,39 +821,47 @@ inherited frmExodus: TfrmExodus
           Visible = False
         end
       end
-      object mnuFile_MyProfiles: TTntMenuItem
-        Caption = 'My &Profiles'
-        object mnuFile_MyProfiles_CreateNewProfile: TTntMenuItem
-          Caption = 'Create New Profile...'
-          OnClick = mnuFile_MyProfiles_CreateNewProfileClick
+      object N20: TTntMenuItem
+        Caption = '-'
+      end
+      object mnuFile_Password: TTntMenuItem
+        Caption = 'C&hange Password...'
+        Enabled = False
+        OnClick = mnuPasswordClick
+      end
+      object mnuFile_Registration: TTntMenuItem
+        Caption = '&Registration'
+        Enabled = False
+        object mnuFile_Registration_EditReg: TTntMenuItem
+          Caption = 'Edit &Registration...'
+          OnClick = mnuRegistrationClick
         end
-        object mnuFile_MyProfiles_ModifyProfile: TTntMenuItem
-          Caption = 'Modify Profile...'
-          Enabled = False
-          OnClick = mnuFile_MyProfiles_ModifyProfileClick
-        end
-        object mnuFile_MyProfiles_RenameProfile: TTntMenuItem
-          Caption = 'Rename Profile...'
-          Enabled = False
-          OnClick = mnuFile_MyProfiles_RenameProfileClick
-        end
-        object mnuFile_MyProfiles_DeleteProfile: TTntMenuItem
-          Caption = 'Delete Profile'
-          Enabled = False
-          OnClick = mnuFile_MyProfiles_DeleteProfileClick
+        object mnuFile_Registration_VCard: TTntMenuItem
+          Caption = 'Edit &Profile, Avatar...'
+          OnClick = mnuMyVCardClick
         end
       end
-      object File_Exit: TTntMenuItem
+      object mnuFile_Preferences: TTntMenuItem
+        Caption = 'Pr&eferences'
+        OnClick = Preferences1Click
+      end
+      object N21: TTntMenuItem
+        Caption = '-'
+      end
+      object mnuFile_Exit: TTntMenuItem
         Caption = 'E&xit'
         OnClick = Exit2Click
       end
     end
     object People: TTntMenuItem
-      Caption = '&People'
+      Caption = '&Contacts'
       Enabled = False
       object mnuPeople_Search: TTntMenuItem
         Caption = '&Search...'
         OnClick = btnFindClick
+      end
+      object N19: TTntMenuItem
+        Caption = '-'
       end
       object mnuPeople_Contacts: TTntMenuItem
         Caption = '&Contacts'
@@ -888,92 +994,11 @@ inherited frmExodus: TfrmExodus
         end
       end
     end
-    object Options: TTntMenuItem
-      Caption = '&Options'
-      OnClick = OptionsClick
-      object mnuOptions_Password: TTntMenuItem
-        Caption = 'P&assword'
-        Enabled = False
-        object mnuOptions_Password_ChangePassword: TTntMenuItem
-          Caption = '&Change Password...'
-          OnClick = mnuPasswordClick
-        end
-      end
-      object mnuOptions_Registration: TTntMenuItem
-        Caption = '&Registration'
-        Enabled = False
-        object mnuOptions_Registration_EditRegistration: TTntMenuItem
-          Caption = 'Edit &Registration...'
-          OnClick = mnuRegistrationClick
-        end
-        object mnuOptions_Registration_EditAvatar: TTntMenuItem
-          Caption = 'Edit &Profile, Avatar...'
-          OnClick = mnuMyVCardClick
-        end
-      end
-      object mnuOptions_EnableHTMLLinks: TTntMenuItem
-        Caption = 'Enable &HTML Links'
-        Enabled = False
-        Visible = False
-      end
-      object mnuOptions_EnableEmoticonDisplays: TTntMenuItem
-        Caption = 'Enable &Emoticon Displays'
-        OnClick = mnuOptions_EnableEmoticonDisplaysClick
-      end
-      object mnuOptions_Enablenotificationsall: TTntMenuItem
-        Caption = 'Enable Notifications (all)'
-        Enabled = False
-        Visible = False
-      end
-      object mnuOptions_EnableStartupWithWindows: TTntMenuItem
-        Caption = 'Enable &Startup With Windows'
-        OnClick = mnuOptions_EnableStartupWithWindowsClick
-      end
-      object mnuOptions_Font: TTntMenuItem
-        Caption = '&Fonts, Colors...'
-        OnClick = mnuOptions_FontClick
-      end
-      object mnuOptions_Notifications: TTntMenuItem
-        Caption = '&Notifications'
-        object mnuOptions_Notifications_NewMessage: TTntMenuItem
-          Caption = 'Received New &Message'
-          OnClick = mnuOptions_Notifications_NewMessageClick
-        end
-        object mnuOptions_Notifications_NewConversation: TTntMenuItem
-          Caption = 'New &Conversation'
-          OnClick = mnuOptions_Notifications_NewConversationClick
-        end
-        object mnuOptions_Notifications_ContactOnline: TTntMenuItem
-          Caption = 'Contact Comes &Online'
-          OnClick = mnuOptions_Notifications_ContactOnlineClick
-        end
-        object mnuOptions_Notifications_ContactOffline: TTntMenuItem
-          Caption = 'Contact Goes O&ffline'
-          OnClick = mnuOptions_Notifications_ContactOfflineClick
-        end
-      end
-      object mnuOptions_Plugins: TTntMenuItem
-        Caption = '&Plug-ins'
-        object mnuOptions_Plugins_Options: TTntMenuItem
-          Caption = '&Options...'
-          OnClick = mnuPluginOptsClick
-        end
-        object N18: TTntMenuItem
-          Caption = '-'
-        end
-      end
-      object N17: TTntMenuItem
-        Caption = '-'
-      end
-      object mnuOptions_Options: TTntMenuItem
-        Caption = '&Settings...'
-        OnClick = Preferences1Click
-      end
-    end
     object Windows1: TTntMenuItem
       Caption = '&Windows'
       object mnuWindows_View: TTntMenuItem
         Caption = '&View'
+        Visible = False
         object mnuWindows_View_ShowActivityWindow: TTntMenuItem
           Caption = 'Show &Activity Window'
           Visible = False
@@ -1005,10 +1030,6 @@ inherited frmExodus: TfrmExodus
         Caption = 'List'
         Enabled = False
         Visible = False
-      end
-      object mnuWindows_Layout: TTntMenuItem
-        Caption = '&Layout...'
-        OnClick = mnuWindows_LayoutClick
       end
       object mnuWindows_MinimizetoSystemTray: TTntMenuItem
         Caption = '&Minimize to System Tray'
