@@ -194,7 +194,10 @@ object frmActivityWindow: TfrmActivityWindow
         Top = 5
         Width = 16
         Height = 20
+        Hint = 'Back to Roster'
         Align = alLeft
+        ParentShowHint = False
+        ShowHint = True
         Transparent = True
         OnClick = imgShowRosterClick
         ExplicitLeft = 149
