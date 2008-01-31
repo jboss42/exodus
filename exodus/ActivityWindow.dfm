@@ -120,7 +120,6 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 54
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -154,9 +153,9 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       object lblSort: TTntLabel
-        Left = 21
+        Left = 26
         Top = 5
-        Width = 145
+        Width = 140
         Height = 20
         Align = alClient
         Alignment = taRightJustify
@@ -191,7 +190,7 @@ object frmActivityWindow: TfrmActivityWindow
         ExplicitHeight = 16
       end
       object imgShowRoster: TImage
-        Left = 5
+        Left = 10
         Top = 5
         Width = 16
         Height = 20
@@ -204,7 +203,7 @@ object frmActivityWindow: TfrmActivityWindow
       object SortLeftSpacer: TBevel
         Left = 0
         Top = 5
-        Width = 5
+        Width = 10
         Height = 20
         Align = alLeft
         Shape = bsSpacer
