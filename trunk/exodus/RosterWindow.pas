@@ -1044,7 +1044,7 @@ begin
             aniWait.Visible := false;
             pnlConnect.Visible := false;
             treeRoster.Visible := true;
-            pnlShow.Visible := true;
+            //pnlShow.Visible := true;
             if (_avatars) then begin
                 _show_status := true;
                 treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);

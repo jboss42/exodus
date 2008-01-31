@@ -32,7 +32,9 @@ uses
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
-    TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow;
+    TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
+  ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
+  XPStyleActnCtrls, ActnColorMaps;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -273,9 +275,23 @@ type
     tabLogin: TTabSheet;
     tabRoster: TTabSheet;
     pnlLogin: TPanel;
-    pnlStatusBar: TPanel;
     pnlRoster: TPanel;
+    GridPanel1: TGridPanel;
     imgSSL: TImage;
+    lblDisplayName: TTntLabel;
+    Panel1: TPanel;
+    lblStatus: TTntLabel;
+    Image1: TImage;
+    popPresence: TTntPopupMenu;
+    TntMenuItem1: TTntMenuItem;
+    TntMenuItem2: TTntMenuItem;
+    TntMenuItem3: TTntMenuItem;
+    TntMenuItem4: TTntMenuItem;
+    TntMenuItem5: TTntMenuItem;
+    TntMenuItem6: TTntMenuItem;
+    Custom1: TTntMenuItem;
+    TntMenuItem7: TTntMenuItem;
+    imgPresence: TImage;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -353,7 +369,6 @@ type
     procedure mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
     procedure mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
-    procedure StatusClick(Sender: TObject);
     procedure mnuPeople_Contacts_BlockContactClick(Sender: TObject);
     procedure mnuOptions_FontClick(Sender: TObject);
     procedure mnuOptions_EnableEmoticonDisplaysClick(Sender: TObject);
@@ -380,6 +395,7 @@ type
       var Accept: Boolean);
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
     procedure trayShowActivityWindowClick(Sender: TObject);
+    procedure lblStatusClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -464,6 +480,7 @@ type
 
     procedure ShowLogin();
     procedure ShowRoster();
+    procedure UpdatePresenceDisplay();
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
@@ -801,6 +818,14 @@ uses
 
 {$R *.DFM}
 
+const
+    sRosterAvail = 'Available';
+    sRosterChat = 'Free to Chat';
+    sRosterAway = 'Away';
+    sRosterXA = 'Xtended Away';
+    sRosterDND = 'Do Not Disturb';
+    sRosterOffline = 'Offline';
+
 function getDockManager(): IExodusDockManager;
 begin
     Result := frmExodus.dockManager;
@@ -809,7 +834,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuFile_MyProfiles_CreateNewProfileClick(Sender: TObject);
 begin
-    frmRosterWindow.lblCreateClick(Sender);
+    GetLoginWindow().clickCreateProfile(Sender);
 end;
 
 procedure TfrmExodus.CreateParams(var Params: TCreateParams);
@@ -1649,6 +1674,7 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
+        lblDisplayName.Caption := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID());
         setTrayInfo(Self.Caption);
 
         // Accept files dragged from Explorer
@@ -1852,17 +1878,8 @@ begin
     end
 
     else if (event = '/session/presence') then begin
-        // Our presence was changed.. reflect that in the tray icon
-        if (MainSession.Show = '') then
-            SetTrayIcon(1)
-        else if (MainSession.Show = 'away') then
-            SetTrayIcon(2)
-        else if (MainSession.Show = 'dnd') then
-            SetTrayIcon(3)
-        else if (MainSession.Show = 'chat') then
-            SetTrayIcon(4)
-        else if (MainSession.Show = 'xa') then
-            SetTrayIcon(10);
+        //ShowPresence(MainSession.show);
+        UpdatePresenceDisplay();
 
         // don't send message on autoaway
         if (_is_autoaway or _is_autoxa) then exit;
@@ -2037,9 +2054,9 @@ begin
         btnSendFile.Enabled := false;
 
     // Build the custom presence menus.
-    if (enable) then begin
-        BuildPresMenus(mnuPresence, presOnlineClick);
-    end;
+    //if (enable) then begin
+    //    BuildPresMenus(mnuPresence, presOnlineClick);
+    //end;
 
     // File Menu
     mnuFile_Connect.Visible := not enable;
@@ -2051,6 +2068,7 @@ begin
     if (enable) then begin
         BuildPresMenus(mnuFile_MyStatus, presOnlineClick);
         BuildPresMenus(trayPresence, presOnlineClick);
+        BuildPresMenus(popPresence, presOnlineClick);
     end;
 
     // deal with connect tool bar buttons.
@@ -2873,7 +2891,7 @@ end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
 begin
-    frmRosterWindow.ModifyProfile1.Click();
+    GetLoginWindow().mnuModifyProfileClick(Sender);
 end;
 
 {---------------------------------------}
@@ -2989,6 +3007,7 @@ begin
         DragFinish( msg.Drop );
     end;
 end;
+
 
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
@@ -3332,7 +3351,7 @@ end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
 begin
-    frmRosterWindow.DeleteProfile1.Click();
+    GetLoginWindow().mnuDeleteProfileClick(Sender);
 end;
 
 
@@ -3423,11 +3442,6 @@ begin
     end;
 end;
 
-
-procedure TfrmExodus.StatusClick(Sender: TObject);
-begin
-    frmRosterWindow.presDNDClick(Sender);
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
@@ -3765,7 +3779,7 @@ end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
 begin
-    frmRosterWindow.RenameProfile1.Click();
+    GetLoginWindow().mnuRenameProfileClick(Sender);
 end;
 
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
@@ -4309,6 +4323,17 @@ begin
     _enforceConstraints := true;
 end;
 
+procedure TfrmExodus.lblStatusClick(Sender: TObject);
+var
+    cp : TPoint;
+begin
+    // popup the menu and to change our status
+    if MainSession.Active then begin
+        GetCursorPos(cp);
+        popPresence.Popup(cp.x, cp.y);
+    end;
+end;
+
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
 begin
     //if dockmanager is being notified directly or the given form is docked
@@ -4488,6 +4513,51 @@ begin
         if not Visible then Visible := true;
         BringToFront();
     end;
+end;
+
+procedure TfrmExodus.UpdatePresenceDisplay;
+var
+    show: WideString;
+    stat: WideString;
+    cap:  WideString;
+    idx:  Integer;
+begin
+    show := MainSession.Show;
+    stat := MainSession.Status;
+    idx  := 0;
+
+    if (show = '') then begin
+        idx := RosterTreeImages.Find('available');
+        cap := _(sRosterAvail);
+    end
+    else if (MainSession.Show = 'away') then begin
+        idx := RosterTreeImages.Find('away');
+        cap := _(sRosterAway);
+    end
+    else if (MainSession.Show = 'dnd') then begin
+        idx := RosterTreeImages.Find('dnd');
+        cap := _(sRosterDND);
+    end
+    else if (MainSession.Show = 'chat') then begin
+        idx := RosterTreeImages.Find('chat');
+        cap := _(sRosterChat);
+    end
+    else if (MainSession.Show = 'xa') then begin
+        idx := RosterTreeImages.Find('xa');
+        cap := _(sRosterXA);
+    end
+    else if (MainSession.Show = 'offline') then begin
+        idx := RosterTreeImages.Find('offline');
+        cap := _(sRosterOffline);
+        stat := '';
+    end;
+
+    if (stat <> '') then
+        cap := cap + ' (' + stat + ')';
+
+    lblStatus.Caption := cap;
+    setTrayIcon(idx);
+    ImageList2.GetIcon(idx, imgPresence.Picture.Icon);
 end;
 
 initialization

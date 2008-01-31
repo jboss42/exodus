@@ -35,10 +35,10 @@ inherited frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 280
+        Width = 282
       end>
     object ToolBar1: TToolBar
-      Left = 12
+      Left = 9
       Top = 0
       Width = 250
       Height = 27
@@ -47,8 +47,6 @@ inherited frmExodus: TfrmExodus
       BorderWidth = 1
       ButtonHeight = 23
       DragKind = dkDock
-      EdgeInner = esNone
-      EdgeOuter = esNone
       Images = ImageList2
       TabOrder = 0
       Transparent = True
@@ -171,43 +169,107 @@ inherited frmExodus: TfrmExodus
     Top = 31
     Width = 286
     Height = 514
-    ActivePage = tabRoster
+    ActivePage = tabLogin
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
       object pnlLogin: TPanel
-        Left = 0
-        Top = 0
-        Width = 278
-        Height = 504
+        AlignWithMargins = True
+        Left = 6
+        Top = 6
+        Width = 266
+        Height = 492
+        Margins.Left = 6
+        Margins.Top = 6
+        Margins.Right = 6
+        Margins.Bottom = 6
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 278
+        ExplicitHeight = 504
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      object pnlStatusBar: TPanel
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 272
-        Height = 49
-        Align = alTop
+      object pnlRoster: TPanel
+        Left = 0
+        Top = 37
+        Width = 278
+        Height = 467
+        Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+      end
+      object GridPanel1: TGridPanel
+        Left = 0
+        Top = 0
+        Width = 278
+        Height = 37
+        Align = alTop
+        BevelOuter = bvNone
+        ColumnCollection = <
+          item
+            SizeStyle = ssAbsolute
+            Value = 21.000000000000000000
+          end
+          item
+            Value = 100.000000000000000000
+          end
+          item
+            SizeStyle = ssAbsolute
+            Value = 16.000000000000000000
+          end>
+        ControlCollection = <
+          item
+            Column = 2
+            Control = imgSSL
+            Row = 0
+            RowSpan = 2
+          end
+          item
+            Column = 1
+            Control = lblDisplayName
+            Row = 0
+          end
+          item
+            Column = 1
+            Control = Panel1
+            Row = 1
+          end
+          item
+            Column = 0
+            Control = imgPresence
+            Row = 0
+            RowSpan = 2
+          end>
+        ParentColor = True
+        RowCollection = <
+          item
+            Value = 50.000002980242360000
+          end
+          item
+            Value = 49.999997019757640000
+          end>
+        TabOrder = 1
         object imgSSL: TImage
-          Left = 256
+          Left = 262
           Top = 0
           Width = 16
-          Height = 49
+          Height = 37
           Hint = 'Secure Connection'
-          Align = alRight
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alClient
           Center = True
           Picture.Data = {
             07544269746D617036030000424D360300000000000036000000280000001000
@@ -238,19 +300,110 @@ inherited frmExodus: TfrmExodus
             FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
             FFFF}
           Transparent = True
-          Visible = False
-          ExplicitLeft = 253
+          ExplicitLeft = 256
+          ExplicitTop = 1
+          ExplicitHeight = 47
         end
-      end
-      object pnlRoster: TPanel
-        Left = 0
-        Top = 55
-        Width = 278
-        Height = 449
-        Align = alClient
-        BevelOuter = bvNone
-        ParentColor = True
-        TabOrder = 1
+        object lblDisplayName: TTntLabel
+          AlignWithMargins = True
+          Left = 24
+          Top = 3
+          Width = 235
+          Height = 12
+          Align = alClient
+          Caption = 'user@host'
+          ExplicitLeft = 22
+          ExplicitTop = 1
+          ExplicitWidth = 52
+          ExplicitHeight = 13
+        end
+        object Panel1: TPanel
+          Left = 21
+          Top = 18
+          Width = 241
+          Height = 19
+          Align = alClient
+          AutoSize = True
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 0
+          object lblStatus: TTntLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 30
+            Height = 13
+            Cursor = crHandPoint
+            Align = alLeft
+            Caption = 'status'
+            OnClick = lblStatusClick
+            ExplicitLeft = 0
+            ExplicitTop = 0
+          end
+          object Image1: TImage
+            Left = 36
+            Top = 0
+            Width = 16
+            Height = 19
+            Cursor = crHandPoint
+            Align = alLeft
+            AutoSize = True
+            Center = True
+            Picture.Data = {
+              07544269746D617036040000424D360400000000000036000000280000001000
+              0000100000000100200000000000000400000000000000000000000000000000
+              0000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF0000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF000000
+              00008484840000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000008484
+              8400848484008484840000000000FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000848484008484
+              840084848400848484008484840000000000FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000000000000000000000
+              00000000000000000000000000000000000000000000FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+              FF00}
+            Transparent = True
+            OnClick = lblStatusClick
+            ExplicitHeight = 16
+          end
+        end
+        object imgPresence: TImage
+          Left = 0
+          Top = 0
+          Width = 21
+          Height = 37
+          Align = alClient
+          AutoSize = True
+          Center = True
+          Transparent = True
+          ExplicitLeft = 8
+          ExplicitTop = 16
+          ExplicitWidth = 105
+          ExplicitHeight = 105
+        end
       end
     end
   end
@@ -12655,5 +12808,53 @@ inherited frmExodus: TfrmExodus
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
+  end
+  object popPresence: TTntPopupMenu
+    AutoHotkeys = maManual
+    Images = ImageList2
+    Left = 48
+    Top = 168
+    object TntMenuItem1: TTntMenuItem
+      Caption = 'Available'
+      ImageIndex = 1
+      OnClick = presDNDClick
+    end
+    object TntMenuItem2: TTntMenuItem
+      Tag = 1
+      Caption = 'Free to Chat'
+      ImageIndex = 4
+      OnClick = presDNDClick
+    end
+    object TntMenuItem3: TTntMenuItem
+      Tag = 2
+      Caption = 'Away'
+      ImageIndex = 2
+      OnClick = presDNDClick
+    end
+    object TntMenuItem4: TTntMenuItem
+      Tag = 3
+      Caption = 'Xtended Away'
+      ImageIndex = 10
+      OnClick = presDNDClick
+    end
+    object TntMenuItem5: TTntMenuItem
+      Tag = 4
+      Caption = 'Do Not Disturb'
+      ImageIndex = 3
+      OnClick = presDNDClick
+    end
+    object TntMenuItem6: TTntMenuItem
+      Tag = 99
+      Caption = '-'
+    end
+    object Custom1: TTntMenuItem
+      Tag = 99
+      Caption = 'Custom ...'
+      OnClick = presCustomClick
+    end
+    object TntMenuItem7: TTntMenuItem
+      Tag = 99
+      Caption = '-'
+    end
   end
 end
