@@ -56,17 +56,15 @@ object frmActivityWindow: TfrmActivityWindow
       end
       object ScrollUpBevel: TColorBevel
         Left = 0
-        Top = -28
+        Top = 17
         Width = 187
-        Height = 50
+        Height = 5
         Align = alBottom
         Shape = bsBottomLine
         HighLight = clBtnHighlight
         Shadow = clBtnShadow
         FrameColor = frUser
-        ExplicitLeft = 137
-        ExplicitTop = 0
-        ExplicitWidth = 22
+        ExplicitTop = -28
       end
     end
     object pnlListScrollDown: TExGradientPanel
@@ -120,6 +118,7 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
+      ExplicitTop = 54
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
