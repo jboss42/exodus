@@ -25,9 +25,7 @@ inherited frmBaseChat: TfrmBaseChat
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
       Left = 366
-      Height = 27
       ExplicitLeft = 366
-      ExplicitHeight = 27
       inherited btnDockToggle: TToolButton
         ParentShowHint = False
         ShowHint = True
@@ -70,9 +68,9 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
-      Top = 31
+      Top = 24
       Width = 411
-      Height = 32
+      Height = 39
       Align = alClient
       AutoURLDetect = adNone
       Ctl3D = True
@@ -177,7 +175,7 @@ inherited frmBaseChat: TfrmBaseChat
       Left = 2
       Top = 2
       Width = 411
-      Height = 29
+      Height = 22
       ButtonWidth = 25
       Images = frmExodus.ImageList2
       TabOrder = 1
