@@ -89,6 +89,8 @@ type
         _activity_window_bevel_highlight_color: TColor;
         _timNewItemTimer: TTimer;
         _flashcnt: integer;
+        _LowestUnreadMsgCnt: integer;
+        _LowestUnreadMsgCntColorChange: integer;
 
         procedure _setCount(val:integer);
         function _getName(): widestring;
@@ -189,7 +191,8 @@ begin
         _activity_window_unread_msgs_high_priority_font_color := $00000000;
         _activity_window_bevel_shadow_color := AWItemBevel.Shadow;
         _activity_window_bevel_highlight_color := AWItemBevel.HighLight;
-
+        _LowestUnreadMsgCnt := 0;
+        _LowestUnreadMsgCntColorChange := 1;
 
         // Set from prefs
         tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
@@ -226,11 +229,15 @@ begin
             AWItemBevel.HighLight := _activity_window_bevel_highlight_color;
         end;
         FreeAndNil(tag);
+
         _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
         _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
         _activity_window_unread_msgs_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_font_color'));
         _activity_window_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_high_priority_font_color'));
         _activity_window_unread_msgs_high_priority_font_color := TColor(MainSession.Prefs.GetInt('activity_window_unread_msgs_high_priority_font_color'));
+
+        _LowestUnreadMsgCnt := Mainsession.Prefs.getInt('lowest_unread_msg_cnt');
+        _LowestUnreadMsgCntColorChange := Mainsession.Prefs.getInt('lowest_unread_msg_cnt_color_change');
 
         // Set timer for new window notification
         if (not StateForm.restoringDesktopFlag) then begin
@@ -295,9 +302,9 @@ end;
 procedure TfAWItem._setCount(val:integer);
 begin
     _count := val;
-    if (_count >= 0) then begin
+    if (_count >= _LowestUnreadMsgCnt) then begin
         lblCount.Caption := IntToStr(_count);
-        if (_count > 0) then begin
+        if (_count >= _LowestUnreadMsgCntColorChange) then begin
             if (_priority) then begin
                 lblCount.Font.Color := _activity_window_unread_msgs_high_priority_font_color;
             end
