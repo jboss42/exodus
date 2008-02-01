@@ -133,6 +133,7 @@ end;
 procedure TfrmPrefRoster.LoadPrefs();
 var
     gs: TWidestringList;
+    i: Integer;
 begin
     inherited;
     //blocked contacts
@@ -140,7 +141,7 @@ begin
 
     // populate grp drop-downs.
     gs := TWidestringList.Create();
-    MainSession.Roster.AssignGroups(gs);
+    
     gs.Sorted := true;
     gs.Sort();
 

@@ -102,8 +102,9 @@ procedure ShowAddContact(contact: Widestring); overload;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, JabberUtils, ExUtils,  PrefController, NodeItem,
-    GnuGetText, Jabber1, Presence, Session, Unicode;
+    InputPassword, ExSession, JabberUtils, ExUtils,  PrefController, 
+    GnuGetText, Jabber1, Presence, Session, Unicode, COMExodusItem,
+    Exodus_TLB;
 
 const
     sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
@@ -267,7 +268,8 @@ begin
             if MessageDlgW(_(sNoDomain), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         if (tmp_jid.resource <> '') then
             if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-        MainSession.FireEvent('/roster/add/in-network/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
+{ TODO : Roster refactor }
+        //MainSession.FireEvent('/roster/add/in-network/' + addInfo.name, IExodusItem(nil));
         doAdd();
         tmp_jid.Free();
     end
@@ -281,7 +283,8 @@ begin
             self.Hide();
         end
         else begin
-            MainSession.FireEvent('/roster/add/gateway/' + addInfo.name, tmp_xml, TJabberRosterItem(nil));
+ { TODO : Roster refactor }       
+        //    MainSession.FireEvent('/roster/add/gateway/' + addInfo.name, nil);
             doAdd();
         end;
     end;
@@ -303,13 +306,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.lblAddGrpClick(Sender: TObject);
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
     // Add a new group to the list...
-    go := promptNewGroup();
-    if (go <> nil) then
-        MainSession.Roster.AssignGroups(cboGroup.Items);
+ { TODO : Roster refactor }   
+//    go := promptNewGroup();
+//    if (go <> nil) then
+//        MainSession.Roster.AssignGroups(cboGroup.Items);
 end;
 
 {---------------------------------------}
@@ -320,7 +324,8 @@ var
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    MainSession.Roster.AssignGroups(cboGroup.Items);
+  { TODO : Roster refactor }  
+    //MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
     dnListener := TDisplayNameListener.Create();
@@ -423,7 +428,8 @@ begin
     // check to see if there is an agent for this type
     // of contact type
     if (AddInfo.isInNetwork()) then begin
-        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+         { TODO : Roster refactor }
+        //MainSession.Roster.AddItem(sjid, snick, sgrp, true);
         Self.Close;
     end
     else begin
@@ -439,7 +445,8 @@ begin
             end;
             sjid := j + '@' + a.jid.full;
             ExRegController.MonitorJid(sjid, false);
-            MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+              { TODO : Roster refactor }
+            //MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;
         end
         else begin

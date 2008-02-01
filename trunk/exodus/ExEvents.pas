@@ -90,7 +90,7 @@ uses
     RosterRecv,
     GnuGetText,
     JabberUtils, ExUtils,  JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
-    MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
+    MsgQueue, Notify, PrefController, ContactController, Session, XMLUtils,
 
     // delphi stuff
     Messages, Windows;
@@ -249,22 +249,23 @@ end;
 
 {---------------------------------------}
 procedure LogMsgEvent(e: TJabberEvent);
-var
-    m: TJabberMessage;
-    ritem: TJabberRosterItem;
-    tmp_jid: TJabberID;
+//var
+//    m: TJabberMessage;
+//    ritem: TJabberRosterItem;
+//    tmp_jid: TJabberID;
 begin
-    tmp_jid := TJabberID.Create(e.from);
-
-    m := TJabberMessage.Create(e.tag);
-    m.isMe := false;
-    ritem := MainSession.roster.Find(tmp_jid.jid);
-    if (ritem <> nil) then
-        m.Nick := ritem.Text
-    else
-        m.Nick := m.FromJID;
-    LogMessage(m);
-    m.Free();
+       { TODO : Roster refactor }
+//    tmp_jid := TJabberID.Create(e.from);
+//
+//    m := TJabberMessage.Create(e.tag);
+//    m.isMe := false;
+//    ritem := MainSession.roster.Find(tmp_jid.jid);
+//    if (ritem <> nil) then
+//        m.Nick := ritem.Text
+//    else
+//        m.Nick := m.FromJID;
+//    LogMessage(m);
+//    m.Free();
 end;
                                                                                               
 {---------------------------------------}
@@ -412,7 +413,7 @@ var
     delay, tmp_tag: TXMLTag;
     i_tags: TXMLTagList;
     j: integer;
-    ri: TJabberRosterItem;
+//    ri: TJabberRosterItem;
     url_tags: TXMLTagList;
     cjid: TJabberID;
     c: TChatController;
@@ -520,11 +521,12 @@ begin
             tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
             str_content := tag.GetBasicText('body');
             i_tags := tmp_tag.QueryTags('item');
-            for j := 0 to i_tags.Count - 1 do begin
-                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
-                MainSession.roster.parseItem(ri, i_tags[j]);
-                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
-            end;
+            { TODO : Roster refactor }
+//            for j := 0 to i_tags.Count - 1 do begin
+//                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
+//                MainSession.roster.parseItem(ri, i_tags[j]);
+//                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
+//            end;
             i_tags.Free();
         end
 

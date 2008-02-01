@@ -25,8 +25,8 @@ interface
 
 uses
     ExtCtrls, ChatController,
-    Presence, NodeItem, XMLParser, XMLTag, Unicode, Menus,
-    Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
+    Presence, XMLParser, XMLTag, Unicode, Menus,
+    Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
   TExodusController = class(TAutoObject, IExodusController, IExodusController2)
@@ -202,7 +202,7 @@ type
         constructor Create(xpath: Widestring; obj: IExodusListener); overload;
 
         destructor Destroy; override;
-        procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+        procedure RosterCallback(event: string; tag: TXMLTag; ritem: IExodusItem);
         procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
         procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
         procedure ChatCallback(event: string; tag: TXMLTag; controller: TChatController);
@@ -257,7 +257,7 @@ uses
     Chat, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
-    Jabber1, Session, RemoveContact, Roster, RosterAdd, RosterWindow, PluginAuth, PrefController,
+    Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
     ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXControl;
 
@@ -811,9 +811,11 @@ begin
     _xpath := xpath;
 
     // check for special signals
-    if (LeftStr(xpath, Length('/roster')) = '/roster') then
-        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
-    else if (LeftStr(xpath, Length('/presence')) = '/presence') then
+//    if (LeftStr(xpath, Length('/roster')) = '/roster') then
+//        id := MainSession.RegisterCallback(Self.RosterCallback, xpath)
+//    else if (LeftStr(xpath, Length('/presence')) = '/presence') then
+ { TODO : Roster refactor }
+    if (LeftStr(xpath, Length('/presence')) = '/presence') then
         id := MainSession.RegisterCallback(Self.PresenceCallback)
     else if (LeftStr(xpath, Length('/data')) = '/data') then
         id := MainSession.RegisterCallback(Self.DataCallback)
@@ -874,7 +876,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPluginProxy.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+procedure TPluginProxy.RosterCallback(event: string; tag: TXMLTag; ritem: IExodusItem);
 begin
     Callback(event, tag);
 end;
@@ -1203,7 +1205,8 @@ end;
 procedure TExodusController.AddRosterItem(const jid, nickname,
   group: WideString);
 begin
-    MainSession.roster.AddItem(jid, nickname, group, true);
+    { TODO : Roster refactor }
+    //MainSession.roster.AddItem(jid, nickname, group, true);
 end;
 
 {---------------------------------------}
@@ -1217,21 +1220,23 @@ end;
 {---------------------------------------}
 function TExodusController.isRosterJID(const jid: WideString): WordBool;
 begin
-    Result := (MainSession.Roster.Find(jid) <> nil);
+        { TODO : Roster refactor }
+   // Result := (MainSession.Roster.Find(jid) <> nil);
 end;
 
 {---------------------------------------}
 function TExodusController.isSubscribed(const jid: WideString): WordBool;
-var
-    ritem: TJabberRosterItem;
+//var
+//    ritem: TJabberRosterItem;
 begin
-    Result := false;
-    ritem := MainSession.Roster.Find(jid);
-    if (ritem <> nil) then begin
-        if (ritem.subscription = 'to') or
-        (ritem.subscription = 'both') then
-            Result := true;
-    end;
+          { TODO : Roster refactor }
+//    Result := false;
+//    ritem := MainSession.Roster.Find(jid);
+//    if (ritem <> nil) then begin
+//        if (ritem.subscription = 'to') or
+//        (ritem.subscription = 'both') then
+//            Result := true;
+//    end;
 end;
 
 {---------------------------------------}
@@ -1695,21 +1700,21 @@ end;
 {---------------------------------------}
 function TExodusController.AddContactMenu(const caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
-var
-    id: Widestring;
-    mi: TMenuItem;
+//var
+//    id: Widestring;
+//    mi: TMenuItem;
 begin
     // add a new TMenuItem to the Plugins menu
-    mi := TMenuItem.Create(frmRosterWindow);
-    frmRosterWindow.popRoster.Items.Add(mi);
-    mi.Caption := caption;
-    mi.OnClick := frmRosterWindow.pluginClick;
-    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
-    mi.Name := id;
-    //add menu listener as menu items tag
-    mi.Tag := Integer(menuListener);
-    _roster_menus.AddObject(id, mi);
-    Result := id;
+//    mi := TMenuItem.Create(frmRosterWindow);
+//    frmRosterWindow.popRoster.Items.Add(mi);
+//    mi.Caption := caption;
+//    mi.OnClick := frmRosterWindow.pluginClick;
+//    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
+//    mi.Name := id;
+//    //add menu listener as menu items tag
+//    mi.Tag := Integer(menuListener);
+//    _roster_menus.AddObject(id, mi);
+//    Result := id;
 end;
 
 {---------------------------------------}
@@ -1727,39 +1732,43 @@ end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContact: WideString;
-var
-    ritem: TJabberRosterItem;
+//var
+//    ritem: TJabberRosterItem;
+//begin
+//    ritem := frmRosterWindow.CurRosterItem;
+//    if (ritem <> nil) then
+//        Result := ritem.jid.full
+//    else
+//        Result := '';
+//end;
 begin
-    ritem := frmRosterWindow.CurRosterItem;
-    if (ritem <> nil) then
-        Result := ritem.jid.full
-    else
-        Result := '';
+
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveGroup: WideString;
 begin
-    Result := frmRosterWindow.CurGroup;
+    //Result := frmRosterWindow.CurGroup;
 end;
 
 {---------------------------------------}
 function TExodusController.GetActiveContacts(Online: WordBool): OleVariant;
-var
-    clist: TList;
-    i: integer;
-    ritem: TJabberRosterItem;
-    va : Variant;
+//var
+//    clist: TList;
+//    i: integer;
+//    ritem: TJabberRosterItem;
+//    va : Variant;
 begin
-    clist := frmRosterWindow.getSelectedContacts(Online);
-    va := VarArrayCreate([0,clist.Count], varOleStr);
-
-    for i := 0 to clist.count - 1 do begin
-        ritem := TJabberRosterItem(clist[i]);
-        VarArrayPut(va, ritem.jid.full, i);
-    end;
-    clist.Free();
-    result := va;
+ { TODO : Roster refactor }
+//    clist := frmRosterWindow.getSelectedContacts(Online);
+//    va := VarArrayCreate([0,clist.Count], varOleStr);
+//
+//    for i := 0 to clist.count - 1 do begin
+//        ritem := TJabberRosterItem(clist[i]);
+//        VarArrayPut(va, ritem.jid.full, i);
+//    end;
+//    clist.Free();
+//    result := va;
 end;
 
 {---------------------------------------}
@@ -1845,20 +1854,20 @@ end;
 {---------------------------------------}
 function TExodusController.AddGroupMenu(const caption: WideString;
   const menuListener: IExodusMenuListener): WideString;
-var
-    id: Widestring;
-    mi: TMenuItem;
+//var
+//    id: Widestring;
+//    mi: TMenuItem;
 begin
     // add a new TMenuItem to the Plugins menu
-    mi := TMenuItem.Create(frmRosterWindow);
-    frmRosterWindow.popGroup.Items.Add(mi);
-    mi.Caption := caption;
-    mi.OnClick := frmRosterWindow.pluginClick;
-    id := 'group_menu_' + IntToStr(_roster_menus.Count);
-    mi.Name := id;
-    mi.Tag := Integer(menuListener);
-    _roster_menus.AddObject(id, mi);
-    Result := id;
+//    mi := TMenuItem.Create(frmRosterWindow);
+//    frmRosterWindow.popGroup.Items.Add(mi);
+//    mi.Caption := caption;
+//    mi.OnClick := frmRosterWindow.pluginClick;
+//    id := 'group_menu_' + IntToStr(_roster_menus.Count);
+//    mi.Name := id;
+//    mi.Tag := Integer(menuListener);
+//    _roster_menus.AddObject(id, mi);
+//    Result := id;
 end;
 
 {---------------------------------------}
@@ -1957,7 +1966,7 @@ procedure TExodusController.FireEvent(const Event, XML, Arg: WideString);
 var
     jid: TJabberID;
     x: TXMLTag;
-    ri: TJabberRosterItem;
+//    ri: TJabberRosterItem;
     p: TJabberPres;
 begin
     _parser.Clear();
@@ -1969,12 +1978,13 @@ begin
     _parser.Clear();
 
     if (LeftStr(Event, Length('/roster')) = '/roster') then begin
-        ri := nil;
-        if (Arg <> '') then begin
-            ri := MainSession.roster.Find(Arg);
-            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
-        end;
-        MainSession.FireEvent(Event, x, ri);
+            { TODO : Roster refactor }
+//        ri := nil;
+//        if (Arg <> '') then begin
+//            ri := MainSession.roster.Find(Arg);
+//            x := TXmlTag.Create(ri.Tag); // copy the ri tag so it is good for freeing below
+//        end;
+        //MainSession.FireEvent(Event, x, ri);
     end
     else if (LeftStr(Event, Length('/presence')) = '/presence') then begin
         p := nil;
@@ -2097,7 +2107,9 @@ end;
 function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
     //ExCOMBookmarkManager.ObjAddRef();
-    Result := COMBookmarkManager;
+    //Result := COMBookmarkManager;
+  { TODO : Roster refactor }  
+    Result := nil;
 end;
 
 // IExodusController2

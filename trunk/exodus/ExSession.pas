@@ -95,8 +95,8 @@ var
     COMEntityCache: IExodusEntityCache;
     ExCOMToolbar: TExodusToolbar;
     COMToolbar: IExodusToolbar;
-    ExCOMBookmarkManager: TExodusBookmarkManager;
-    COMBookmarkManager: IExodusBookmarkManager;
+    //ExCOMBookmarkManager: TExodusBookmarkManager;
+    //COMBookmarkManager: IExodusBookmarkManager;
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
@@ -112,7 +112,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Avatar, NewUser, RosterImages, RosterWindow,
+    Avatar, NewUser, RosterImages, RosterForm,
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
@@ -623,8 +623,8 @@ begin
     COMEntityCache := ExCOMEntityCache;
     ExCOMToolbar := TExodusToolbar.Create();
     COMToolbar := ExCOMToolbar;
-    ExCOMBookmarkManager := TExodusBookmarkManager.Create(MainSession.bookmarks);
-    COMBookmarkManager := ExCOMBookmarkManager;
+    //ExCOMBookmarkManager := TExodusBookmarkManager.Create(MainSession.bookmarks);
+    //COMBookmarkManager := ExCOMBookmarkManager;
 
     // Setup the ExStartup object props
     ExStartup.priority := cli_priority;
@@ -636,7 +636,7 @@ begin
     Avatars.setSession(MainSession);
 
     //create a roster early so all other windows can get east access
-    RosterWindow.GetRosterWindow();
+    RosterForm.GetRosterWindow();
     Result := true;
 end;
 

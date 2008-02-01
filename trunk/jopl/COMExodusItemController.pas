@@ -34,12 +34,13 @@ type
      interface allows group and item management in the contact list.
   }
   protected
-    function SaveGroups: WordBool; safecall;
+      function GetGroups: OleVariant; safecall;
+      function SaveGroups: WordBool; safecall;
       function Get_GroupsLoaded: WordBool; safecall;
       procedure ClearGroups; safecall;
       procedure ClearItems; safecall;
       function AddItem(const Item: IExodusItem): Integer; safecall;
-      function GetItem(const Uid: WideString): IExodusItem; safecall;
+      function GetItem(const UID: WideString): IExodusItem; safecall;
       procedure RemoveGroup(const Group: WideString); safecall;
       function Get_Group(Index: Integer): WideString; safecall;
       function Get_GroupsCount: Integer; safecall;
@@ -48,11 +49,11 @@ type
       function GetGroupItems(const Group: WideString): OleVariant; safecall;
       procedure AddGroup(const Group: WideString); safecall;
       function AddItemByUid(const Uid: WideString): IExodusItem; safecall;
-      procedure CopyItem(const Uid, Group: WideString); safecall;
-      procedure MoveItem(const GroupFrom, GroupTo, Uid: WideString); safecall;
-      procedure RemoveGroupMoveContent(const Group, GroupTo: WideString); safecall;
+      procedure CopyItem(const UID, Group: WideString); safecall;
+      procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
+      procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
       procedure RemoveItem(const Uid: WideString); safecall;
-      procedure RemoveItemFromGroup(const Uid, Group: WideString); safecall;
+      procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
   private
       _Groups: TWideStringList;
       _Items: TWideStringList;
@@ -76,7 +77,8 @@ var
 
 implementation
 
-uses ComServ, COMExodusItemWrapper, Classes, JabberConst, IQ, Session, GroupInfo;
+uses ComServ, COMExodusItemWrapper, Classes,
+     JabberConst, IQ, Session, GroupInfo, Variants, Contnrs;
 
 {---------------------------------------}
 constructor TExodusItemController.Create(JS: TObject);
@@ -262,22 +264,20 @@ end;
 
 {---------------------------------------}
 function TExodusItemController.GetGroupItems(
-  const group: WideString): OleVariant;
-//var
-//    items: Variant;
-//    list: TWideStringList;
-//    i: Integer;
-//    item: IExodusItem;
+  const Group: WideString): OleVariant;
+var
+    List: TWideStringList;
+    Items: Variant;
+    i: Integer;
 begin
-//    list := _GetGroupItems(group);
-//    items := VarArrayCreate([0,list.Count], varOleStr);
-//
-//    for i := 0 to list.Count - 1 do begin
-//        item := TJabberRosterItem(clist[i]);
-//        VarArrayPut(va, ritem.jid.full, i);
-//    end;
-//    list.Free();
-//    Result := items;
+    List := _GetGroupItems(group);
+    Items := VarArrayCreate([0,List.Count], varOleStr);
+
+    for i := 0 to List.Count - 1 do begin
+        VarArrayPut(Items, List[i], i);
+    end;
+    list.Free();
+    Result := items;
 end;
 
 {---------------------------------------}
@@ -320,7 +320,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItemController.CopyItem(const Uid, Group: WideString);
+procedure TExodusItemController.CopyItem(const UID, Group: WideString);
 var
     Item: IExodusItem;
     Idx: Integer;
@@ -336,8 +336,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItemController.MoveItem(const GroupFrom, GroupTo,
-  Uid: WideString);
+procedure TExodusItemController.MoveItem(const UID, GroupFrom,
+  GroupTo: WideString);
 var
     Idx: Integer;
     Item: IExodusItem;
@@ -353,7 +353,7 @@ end;
 
 {---------------------------------------}
 procedure TExodusItemController.RemoveGroupMoveContent(const Group,
-  GroupTo: WideString);
+  groupTo: WideString);
 var
     Items: TWideStringList;
     Item: IExodusItem;
@@ -388,8 +388,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItemController.RemoveItemFromGroup(const Uid,
-  group: WideString);
+procedure TExodusItemController.RemoveItemFromGroup(const UID,
+  Group: WideString);
 var
     Item: IExodusItem;
     Idx: Integer;
@@ -422,7 +422,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusItemController.GetItem(const Uid: WideString): IExodusItem;
+function TExodusItemController.GetItem(const UID: WideString): IExodusItem;
 var
     Idx: Integer;
 begin
@@ -475,6 +475,20 @@ end;
 function TExodusItemController.SaveGroups: WordBool;
 begin
 
+end;
+
+function TExodusItemController.GetGroups: OleVariant;
+var
+    Groups : Variant;
+    i: Integer;
+begin
+    Groups := VarArrayCreate([0,_Groups.Count], varOleStr);
+
+    for i := 0 to _Groups.Count - 1 do begin
+        VarArrayPut(Groups, _Groups[i], i);
+    end;
+
+    Result := Groups;
 end;
 
 initialization

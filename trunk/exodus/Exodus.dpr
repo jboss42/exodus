@@ -43,7 +43,6 @@ uses
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   BaseChat in 'BaseChat.pas' {frmBaseChat},
-  Bookmark in 'Bookmark.pas' {frmBookmark},
   Browser in 'Browser.pas' {frmBrowse},
   Chat in '..\jopl\Chat.pas',
   ChatController in '..\jopl\ChatController.pas',
@@ -112,10 +111,8 @@ uses
   RiserWindow in 'RiserWindow.pas' {frmRiser},
   Room in 'Room.pas' {frmRoom},
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
-  Roster in '..\jopl\Roster.pas',
   RosterAdd in 'RosterAdd.pas' {frmAdd},
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
-  RosterWindow in 'RosterWindow.pas' {frmRosterWindow},
   S10n in '..\jopl\S10n.pas',
   SecHash in '..\jopl\SecHash.pas',
   SelContact in 'SelContact.pas' {frmSelContact},
@@ -150,7 +147,6 @@ uses
   RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
   GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
   CapPresence in '..\jopl\CapPresence.pas',
-  NodeItem in '..\jopl\NodeItem.pas',
   Jud in 'Jud.pas' {frmJud},
   DockWizard in 'DockWizard.pas' {frmDockWizard},
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
@@ -188,7 +184,6 @@ uses
   DiscoIdentity in '..\jopl\DiscoIdentity.pas',
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
-  Bookmarks in '..\jopl\Bookmarks.pas',
   RosterImages in '..\jopl\RosterImages.pas',
   COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass},
   COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass},
@@ -265,8 +260,11 @@ uses
   LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
   COMExodusItem in '..\jopl\COMExodusItem.pas',
   COMExodusItemController in '..\jopl\COMExodusItemController.pas',
-  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas';
-  
+  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas',
+  GroupInfo in '..\jopl\GroupInfo.pas',
+  ContactController in '..\jopl\ContactController.pas',
+  ExTreeView in 'components\ExTreeView.pas',
+  RosterForm in 'RosterForm.pas' {Form3};
 
 {$R *.TLB}
 

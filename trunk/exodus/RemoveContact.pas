@@ -65,14 +65,14 @@ procedure QuietRemoveRosterItem(sjid: Widestring);
 implementation
 uses
     DisplayName,
-    GnuGetText, JabberUtils, ExUtils,  JabberConst, S10n, NodeItem, Roster, Session, XMLTag, JabberID;
+    GnuGetText, JabberUtils, ExUtils,  JabberConst, S10n, ContactController, Session, XMLTag, JabberID;
 {$R *.DFM}
 
 {---------------------------------------}
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
 var
     f: TfrmRemove;
-    ritem: TJabberRosterItem;
+    //ritem: TJabberRosterItem;
     itemJID: TJabberID;
 begin
     f := TfrmRemove.Create(Application);
@@ -82,8 +82,9 @@ begin
         sel_grp := grp;
         jid := sjid;
         optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);
-        ritem := MainSession.Roster.Find(sjid);
-        optMove.Enabled := ((ritem <> nil) and (ritem.GroupCount > 1));
+{ TODO : Roster refactor }
+        //ritem := MainSession.Roster.Find(sjid);
+        //optMove.Enabled := ((ritem <> nil) and (ritem.GroupCount > 1));
         itemJID.Free();
         Show;
     end;
@@ -152,33 +153,34 @@ begin
 end;
 
 procedure TfrmRemove.RosterItemRemove(temp_jid: WideString);
-var
-    ritem: TJabberRosterItem;
+//var
+//    ritem: TJabberRosterItem;
 begin
-    // Handle removing from a single grp
-    ritem := MainSession.roster.Find(temp_jid);
-    assert(ritem <> nil);
-    
-    if (optMove.Checked) then begin
-        if ((ritem <> nil) and (ritem.IsInGroup(sel_grp))) then begin
-            ritem.DelGroup(sel_grp);
-            ritem.update();
-        end;
-    end
-
-    // Really remove or unsub
-    else if ((chkRemove1.Checked) and (chkRemove2.Checked)) then begin
-        // send a subscription='remove'
-        ritem.Remove();
-    end
-    else if chkRemove1.Checked then begin
-        // send an unsubscribe
-        SendUnSubscribe(ritem.Jid.full, MainSession);
-    end
-    else if chkRemove2.Checked then begin
-        // send an unsubscribed
-        SendUnSubscribed(ritem.jid.full, MainSession);
-    end;
+{ TODO : Roster refactor }
+//    // Handle removing from a single grp
+//    ritem := MainSession.roster.Find(temp_jid);
+//    assert(ritem <> nil);
+//
+//    if (optMove.Checked) then begin
+//        if ((ritem <> nil) and (ritem.IsInGroup(sel_grp))) then begin
+//            ritem.DelGroup(sel_grp);
+//            ritem.update();
+//        end;
+//    end
+//
+//    // Really remove or unsub
+//    else if ((chkRemove1.Checked) and (chkRemove2.Checked)) then begin
+//        // send a subscription='remove'
+//        ritem.Remove();
+//    end
+//    else if chkRemove1.Checked then begin
+//        // send an unsubscribe
+//        SendUnSubscribe(ritem.Jid.full, MainSession);
+//    end
+//    else if chkRemove2.Checked then begin
+//        // send an unsubscribed
+//        SendUnSubscribed(ritem.jid.full, MainSession);
+//    end;
 end;
 
 {---------------------------------------}

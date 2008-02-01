@@ -56,7 +56,7 @@ implementation
 
 {$R *.dfm}
 uses
-    NodeItem, Roster, Session, JabberUtils, ExUtils,  GnuGetText;
+    ContactController, Session, JabberUtils, ExUtils,  GnuGetText;
 
 {---------------------------------------}
 function ShowGrpManagement(items: TList): TfrmGrpManagement;
@@ -71,7 +71,8 @@ procedure TfrmGrpManagement.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    MainSession.Roster.AssignGroups(lstGroups.Items);
+        { TODO : Roster refactor }
+    //MainSession.Roster.AssignGroups(lstGroups.Items);
     lstGroups.ItemIndex := lstGroups.Items.IndexOf(MainSession.Prefs.getString('roster_default'));
 end;
 
@@ -83,34 +84,35 @@ end;
 
 {---------------------------------------}
 procedure TfrmGrpManagement.frameButtons1btnOKClick(Sender: TObject);
-var
-    new_grp: Widestring;
-    i: integer;
-    ritem: TJabberRosterItem;
+//var
+//    new_grp: Widestring;
+//    i: integer;
+//    ritem: TJabberRosterItem;
 begin
-    // Move or copy _items;
-    if ((_items = nil) or (_items.Count <= 0)) then begin
-        Self.Close();
-        exit;
-    end;
+ { TODO : Roster refactor }
+//    // Move or copy _items;
+//    if ((_items = nil) or (_items.Count <= 0)) then begin
+//        Self.Close();
+//        exit;
+//    end;
+//
+//    new_grp := lstGroups.Items[lstGroups.ItemIndex];
+//    for i := 0 to _items.Count - 1 do begin
+//        ritem := TJabberRosterItem(_items[i]);
+//        if (optMove.Checked) then begin
+//            ritem.ClearGroups();
+//            ritem.AddGroup(new_grp);
+//            ritem.Update();
+//        end
+//        else begin
+//            if (not ritem.IsInGroup(new_grp)) then begin
+//                ritem.AddGroup(new_grp);
+//                ritem.Update();
+//            end;
+//        end;
+//    end;
 
-    new_grp := lstGroups.Items[lstGroups.ItemIndex];
-    for i := 0 to _items.Count - 1 do begin
-        ritem := TJabberRosterItem(_items[i]);
-        if (optMove.Checked) then begin
-            ritem.ClearGroups();
-            ritem.AddGroup(new_grp);
-            ritem.Update();
-        end
-        else begin
-            if (not ritem.IsInGroup(new_grp)) then begin
-                ritem.AddGroup(new_grp);
-                ritem.Update();
-            end;
-        end;
-    end;
-
-    Self.Close();
+//    Self.Close();
 end;
 
 {---------------------------------------}

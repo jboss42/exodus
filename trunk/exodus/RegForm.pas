@@ -106,9 +106,9 @@ procedure StartServiceReg(jid: Widestring);
 implementation
 {$R *.DFM}
 uses
-    NodeItem, EntityCache, fGeneric,
+    EntityCache, fGeneric,
     GnuGetText, Math, JabberConst,
-    Transports, S10n, Roster,
+    Transports, S10n, 
     Session, JabberUtils, ExUtils,
     Jabber1, Room, PrefController,
     RosterImages;
@@ -377,8 +377,8 @@ end;
 {---------------------------------------}
 procedure TfrmRegister.PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
 var
-    i: integer;
-    ritem: TJabberRosterItem;
+//    i: integer;
+//    ritem: TJabberRosterItem;
     tmps: Widestring;
 begin
     // getting some pres packet
@@ -402,22 +402,23 @@ begin
                 tmps := entity.name;
             if (tmps = '') then
                 tmps := pres.fromJid.domain;
-
-            MainSession.roster.AddItem(pres.fromJID.full, tmps,
-                MainSession.Prefs.getString('roster_transport_grp'), false);
+    { TODO : Roster refactor }
+//            MainSession.roster.AddItem(pres.fromJID.full, tmps,
+//                MainSession.Prefs.getString('roster_transport_grp'), false);
         end
         else begin
+{ TODO : Roster refactor }        
             // ok registration, check all pendings and re-subscribe to them
-            with MainSession do begin
-                for i := 0 to roster.Count - 1 do begin
-                    ritem := TJabberRosterItem(Roster.Objects[i]);
-                    if ((ritem <> nil) and
-                        (ritem.ask = 'subscribe') and
-                        (ritem.jid.domain = self.jid)) then begin
-                        SendSubscribe(ritem.jid.jid, MainSession);
-                    end;
-                end;
-            end;
+//            with MainSession do begin
+//                for i := 0 to roster.Count - 1 do begin
+//                    ritem := TJabberRosterItem(Roster.Objects[i]);
+//                    if ((ritem <> nil) and
+//                        (ritem.ask = 'subscribe') and
+//                        (ritem.jid.domain = self.jid)) then begin
+//                        SendSubscribe(ritem.jid.jid, MainSession);
+//                    end;
+//                end;
+//            end;
         end;
     end;
 end;

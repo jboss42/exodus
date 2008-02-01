@@ -141,7 +141,7 @@ uses
     MsgQueue,
     RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
-    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
+    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify;
 
 const
     sNotifyAutoResponse = '%s query from: %s';
@@ -169,18 +169,19 @@ var
 
 {---------------------------------------}
 function getNick(j: Widestring): Widestring;
-var
-    jid: TJabberID;
-    ritem: TJabberRosterItem;
+//var
+//    jid: TJabberID;
+//    ritem: TJabberRosterItem;
 begin
-    jid := TJabberID.Create(j);
-    Result := DisplayName.getDisplayNameCache().getDisplayName(jid);
-    ritem := MainSession.roster.Find(jid.jid);
-    if (ritem = nil) then
-        result := jid.getDisplayJID()
-    else
-        result := ritem.Text;
-    jid.Free();
+     { TODO : Roster refactor }
+//    jid := TJabberID.Create(j);
+//    Result := DisplayName.getDisplayNameCache().getDisplayName(jid);
+//    ritem := MainSession.roster.Find(jid.jid);
+//    if (ritem = nil) then
+//        result := jid.getDisplayJID()
+//    else
+//        result := ritem.Text;
+//    jid.Free();
 end;
 
 {---------------------------------------}

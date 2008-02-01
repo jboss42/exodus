@@ -96,11 +96,10 @@ implementation
 {$R *.dfm}
 
 uses
-    RosterWindow, //for roster rendering
     DisplayName,
     MsgList, MsgController, ChatWin, ChatController,
     ShellAPI, CommCtrl, GnuGetText,
-    NodeItem, Roster, JabberID, XMLUtils, XMLParser,
+    JabberID, XMLUtils, XMLParser,
     JabberUtils, ExUtils,  MsgRecv, Session, PrefController,
     RosterImages, EventQueue;
 

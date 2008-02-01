@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 1/29/2008 12:01:11 PM from Type Library described below.
+// File generated on 2/1/2008 10:08:36 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -4384,8 +4384,8 @@ type
     procedure Set_Type_(const value: WideString); safecall;
     function Get_ExtendedText: WideString; safecall;
     procedure Set_ExtendedText(const value: WideString); safecall;
-    function Get_uid: WideString; safecall;
-    procedure Set_uid(const value: WideString); safecall;
+    function Get_UID: WideString; safecall;
+    procedure Set_UID(const value: WideString); safecall;
     function Get_Active: WordBool; safecall;
     procedure Set_Active(value: WordBool); safecall;
     function Get_ImageIndex: Integer; safecall;
@@ -4399,15 +4399,15 @@ type
     procedure RemoveGroup(const Group: WideString); safecall;
     procedure ClearProperties; safecall;
     procedure ClearGroups; safecall;
-    procedure renameGroup(const oldGroup: WideString; const newGroup: WideString); safecall;
-    procedure moveGroup(const groupFrom: WideString; const groupTo: WideString); safecall;
-    procedure copyGroup(const groupTo: WideString); safecall;
+    procedure RenameGroup(const OldGroup: WideString; const NewGroup: WideString); safecall;
+    procedure MoveGroup(const GroupFrom: WideString; const GroupTo: WideString); safecall;
+    procedure CopyGroup(const GroupTo: WideString); safecall;
     function Get_Action(index: Integer): WideString; safecall;
     function Get_ActionCount: Integer; safecall;
     function Get_Property_(index: Integer): WideString; safecall;
     procedure Set_Property_(index: Integer; const value: WideString); safecall;
-    function groupsChanged(const Groups: WideString): WordBool; safecall;
-    function belongsToGroup(const Group: WideString): WordBool; safecall;
+    function GroupsChanged(const Groups: WideString): WordBool; safecall;
+    function BelongsToGroup(const Group: WideString): WordBool; safecall;
     function Get_value(const Name: WideString): WideString; safecall;
     procedure Set_value(const Name: WideString; const value: WideString); safecall;
     function Get_IsVisible: WordBool; safecall;
@@ -4415,7 +4415,7 @@ type
     property Text: WideString read Get_Text write Set_Text;
     property Type_: WideString read Get_Type_ write Set_Type_;
     property ExtendedText: WideString read Get_ExtendedText write Set_ExtendedText;
-    property uid: WideString read Get_uid write Set_uid;
+    property UID: WideString read Get_UID write Set_UID;
     property Active: WordBool read Get_Active write Set_Active;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
     property GroupCount: Integer read Get_GroupCount;
@@ -4438,7 +4438,7 @@ type
     property Text: WideString dispid 202;
     property Type_: WideString dispid 203;
     property ExtendedText: WideString dispid 204;
-    property uid: WideString dispid 201;
+    property UID: WideString dispid 201;
     property Active: WordBool dispid 205;
     property ImageIndex: Integer dispid 206;
     property GroupCount: Integer readonly dispid 207;
@@ -4450,14 +4450,14 @@ type
     procedure RemoveGroup(const Group: WideString); dispid 214;
     procedure ClearProperties; dispid 215;
     procedure ClearGroups; dispid 216;
-    procedure renameGroup(const oldGroup: WideString; const newGroup: WideString); dispid 217;
-    procedure moveGroup(const groupFrom: WideString; const groupTo: WideString); dispid 218;
-    procedure copyGroup(const groupTo: WideString); dispid 219;
+    procedure RenameGroup(const OldGroup: WideString; const NewGroup: WideString); dispid 217;
+    procedure MoveGroup(const GroupFrom: WideString; const GroupTo: WideString); dispid 218;
+    procedure CopyGroup(const GroupTo: WideString); dispid 219;
     property Action[index: Integer]: WideString readonly dispid 221;
     property ActionCount: Integer readonly dispid 220;
     property Property_[index: Integer]: WideString dispid 222;
-    function groupsChanged(const Groups: WideString): WordBool; dispid 223;
-    function belongsToGroup(const Group: WideString): WordBool; dispid 224;
+    function GroupsChanged(const Groups: WideString): WordBool; dispid 223;
+    function BelongsToGroup(const Group: WideString): WordBool; dispid 224;
     property value[const Name: WideString]: WideString dispid 225;
     property IsVisible: WordBool dispid 226;
   end;
@@ -4473,20 +4473,21 @@ type
     function Get_GroupsCount: Integer; safecall;
     function Get_Group(index: Integer): WideString; safecall;
     function Get_Item(index: Integer): IExodusItem; safecall;
-    procedure RemoveItem(const uid: WideString); safecall;
-    function AddItemByUid(const uid: WideString): IExodusItem; safecall;
-    procedure copyItem(const uid: WideString; const Group: WideString); safecall;
-    procedure moveItem(const uid: WideString; const groupFrom: WideString; const groupTo: WideString); safecall;
-    procedure removeGroupMoveContent(const Group: WideString; const groupTo: WideString); safecall;
-    procedure removeItemFromGroup(const uid: WideString; const Group: WideString); safecall;
-    function getGroupItems(const Group: WideString): OleVariant; safecall;
+    procedure RemoveItem(const UID: WideString); safecall;
+    function AddItemByUid(const UID: WideString): IExodusItem; safecall;
+    procedure CopyItem(const UID: WideString; const Group: WideString); safecall;
+    procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); safecall;
+    procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); safecall;
+    procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); safecall;
+    function GetGroupItems(const Group: WideString): OleVariant; safecall;
     procedure AddGroup(const Group: WideString); safecall;
     procedure RemoveGroup(const Group: WideString); safecall;
-    function getItem(const uid: WideString): IExodusItem; safecall;
+    function GetItem(const UID: WideString): IExodusItem; safecall;
     function AddItem(const Item: IExodusItem): Integer; safecall;
     procedure ClearGroups; safecall;
-    procedure clearItems; safecall;
+    procedure ClearItems; safecall;
     function SaveGroups: WordBool; safecall;
+    function GetGroups: OleVariant; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Group[index: Integer]: WideString read Get_Group;
@@ -4504,20 +4505,21 @@ type
     property GroupsCount: Integer readonly dispid 203;
     property Group[index: Integer]: WideString readonly dispid 204;
     property Item[index: Integer]: IExodusItem readonly dispid 205;
-    procedure RemoveItem(const uid: WideString); dispid 206;
-    function AddItemByUid(const uid: WideString): IExodusItem; dispid 201;
-    procedure copyItem(const uid: WideString; const Group: WideString); dispid 207;
-    procedure moveItem(const uid: WideString; const groupFrom: WideString; const groupTo: WideString); dispid 208;
-    procedure removeGroupMoveContent(const Group: WideString; const groupTo: WideString); dispid 209;
-    procedure removeItemFromGroup(const uid: WideString; const Group: WideString); dispid 210;
-    function getGroupItems(const Group: WideString): OleVariant; dispid 211;
+    procedure RemoveItem(const UID: WideString); dispid 206;
+    function AddItemByUid(const UID: WideString): IExodusItem; dispid 201;
+    procedure CopyItem(const UID: WideString; const Group: WideString); dispid 207;
+    procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); dispid 208;
+    procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); dispid 209;
+    procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); dispid 210;
+    function GetGroupItems(const Group: WideString): OleVariant; dispid 211;
     procedure AddGroup(const Group: WideString); dispid 212;
     procedure RemoveGroup(const Group: WideString); dispid 213;
-    function getItem(const uid: WideString): IExodusItem; dispid 214;
+    function GetItem(const UID: WideString): IExodusItem; dispid 214;
     function AddItem(const Item: IExodusItem): Integer; dispid 215;
     procedure ClearGroups; dispid 216;
-    procedure clearItems; dispid 217;
+    procedure ClearItems; dispid 217;
     function SaveGroups: WordBool; dispid 218;
+    function GetGroups: OleVariant; dispid 219;
   end;
 
 // *********************************************************************//

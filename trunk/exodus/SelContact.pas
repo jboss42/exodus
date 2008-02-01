@@ -58,7 +58,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Session, NodeItem, Roster;
+    GnuGetText, Session, ContactController;
 
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);
@@ -112,8 +112,8 @@ procedure TfrmSelContact.frameTreeRoster1treeRosterChange(Sender: TObject;
 begin
     if (Node = nil) then exit;
     if (Node.Level = 0) then exit;
-
-    txtJid.Text := TJabberRosterItem(Node.Data).jid.getDisplayFull();
+{ TODO : Roster refactor } 
+   // txtJid.Text := TJabberRosterItem(Node.Data).jid.getDisplayFull();
 end;
 
 end.

@@ -23,8 +23,8 @@ interface
 
 uses
     // Exodus stuff
-    BaseChat, ExResponders, ExEvents, LoginWindow, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, SelContact, Emote, NodeItem,
+    BaseChat, ExResponders, ExEvents, LoginWindow, RosterForm, Presence, XMLTag,
+    ShellAPI, Registry, SelContact, Emote, 
     Dockable, DisplayName,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -34,7 +34,7 @@ uses
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
   ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
-  XPStyleActnCtrls, ActnColorMaps;
+  XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -569,7 +569,7 @@ published
     // Callbacks
     procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
+    procedure RosterCallback(event: string; item: IExodusItem);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
     // This is only used for testing..
@@ -806,8 +806,8 @@ uses
     RosterImages,
     ExodusImageList,
     COMToolbar, COMToolbarButton, COMToolbarControl,
-    NewUser, CommandWizard, Exodus_TLB, Notify,
-    About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
+    NewUser, CommandWizard, Notify,
+    About, AutoUpdate, AutoUpdateStatus, Browser, Chat,
     ChatController,
     ChatWin,
     Debug, DNSUtils, Entity,
@@ -818,7 +818,7 @@ uses
     JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
-    Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
+    RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser,
     ComServ, PrefFile,
     ManagePluginsDlg,
@@ -1205,11 +1205,11 @@ begin
         frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
         frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
     end;
-
-    // Setup our session callback
+//
+//    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/roster/end');
-
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/item/end');
+//
     // setup some branding stuff
     with (MainSession.Prefs) do begin
         mnuConference.Visible := getBool('brand_muc');
@@ -1240,16 +1240,16 @@ begin
     prefstate := PrefController.getPrefState('auto_start');
     mnuOptions_EnableStartupWithWindows.Enabled := (prefstate <> psReadOnly);
     mnuOptions_EnableStartupWithWindows.Visible := (prefstate <> psInvisible);
-
-    // Make sure presence menus have unified captions
-    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
-    setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
-                            mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
-                            mnuFile_MyStatus_DoNotDisturb);
-    setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
-        trayPresXA, trayPresDND);
-
-    // Setup the Tabs, toolbar, panel, and roster madness
+//
+//    // Make sure presence menus have unified captions
+////    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
+////    setRosterMenuCaptions(mnuFile_MyStatus_Available, mnuFile_MyStatus_FreeToChat,
+////                            mnuFile_MyStatus_Away, mnuFile_MyStatus_XtendedAway,
+////                            mnuFile_MyStatus_DoNotDisturb);
+////    setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
+////        trayPresXA, trayPresDND);
+//
+//    // Setup the Tabs, toolbar, panel, and roster madness
     restoreMenus(false);
     restoreToolbar();
 
@@ -1263,8 +1263,8 @@ begin
     _shutdown := false;
     _cleanupComplete := false;
     _close_min := MainSession.prefs.getBool('close_min');
-
-    // Setup the IdleUI stuff..
+//
+//    // Setup the IdleUI stuff..
     _is_autoaway := false;
     _is_autoxa := false;
     _is_broadcast := false;
@@ -1298,9 +1298,9 @@ begin
     sExodusGMHook := 0;
 
     OptionsMenuItemsChecks();
-
-    // Remove the "old menus" from user view
-    // Eventually will have to actually remove menus
+//
+//    // Remove the "old menus" from user view
+//    // Eventually will have to actually remove menus
     Old1.Visible := false;
 
     _dockWindowGlued := false;
@@ -1567,7 +1567,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Contacts_SendFileClick(Sender: TObject);
 begin
-    frmRosterWindow.popSendFile.Click();
+//    frmRosterWindow.popSendFile.Click();
 end;
 
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
@@ -1712,7 +1712,8 @@ begin
         // 5. turn on the auto-away timer
         // 6. check for new brand.xml file
         // 7. check for new version
-        Roster.Fetch;
+{ TODO : Roster refactor }        
+        //Roster.Fetch;
         jEntityCache.fetch(MainSession.Server, MainSession);
 
         ShowRoster();
@@ -1959,7 +1960,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.RosterCallback(event: string; tag: TXMLTag; ri: TJabberRosterItem);
+procedure TfrmExodus.RosterCallback(event: string; item: IExodusItem);
 begin
     _sendInitPresence();
 end;
@@ -2001,7 +2002,7 @@ begin
     DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
 
     _reconnect_cur := 0;
-    frmRosterWindow.aniWait.Visible := false;
+//    frmRosterWindow.aniWait.Visible := false;
     PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
 end;
 
@@ -2203,7 +2204,7 @@ begin
     Shell_NotifyIcon(NIM_DELETE, @_tray);
 
     // Close the roster window
-    RosterWindow.CloseRosterWindow();
+    RosterForm.CloseRosterWindow();
 
     _cleanupComplete := true;
 end;
@@ -2278,7 +2279,7 @@ begin
     end;
 
     if MainSession.Active then begin
-        frmRosterWindow.SessionCallback('/session/prefs', nil);
+        frmRoster.SessionCallback('/session/prefs', nil);
         {
         if ((Jabber1.GetDockState() <> dsForbidden) and
             (Tabs.ActivePage <> tbsRoster)) then
@@ -2311,7 +2312,6 @@ begin
     mnuOptions_Options.Enabled := false;
     Preferences1.Enabled := false;
     mnuFile_Connect.Enabled := false;
-
     GetLoginWindow().lstProfilesClick(Sender);
     btnActivityWindow.Enabled := false;
     mnuWindows_View_ShowActivityWindow.Enabled := false;
@@ -2446,7 +2446,7 @@ end;
 procedure TfrmExodus.btnDelPersonClick(Sender: TObject);
 begin
     // delete the current contact
-    frmRosterWindow.popRemoveClick(Self);
+    //frmRosterWindow.popRemoveClick(Self);
 end;
 
 procedure TfrmExodus.btnFindClick(Sender: TObject);
@@ -2748,40 +2748,40 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
-var
-    go: TJabberGroup;
-    x: TXMLTag;
+//var
+//    go: TJabberGroup;
+//    x: TXMLTag;
 begin
-    // Add a roster grp.
-    go := promptNewGroup();
-    if (go = nil) then exit;
-    if (go.Data <> nil) then exit;
-    
-    with frmRosterWindow do begin
-        RenderGroup(go);
-        treeRoster.AlphaSort(true);
-    end;
-    x := TXMLTag.Create('group');
-    x.setAttribute('name', go.FullName);
-
-    // XXX: is this event right for new groups?
-    MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
-    x.Free();
-
+//    // Add a roster grp.
+//    go := promptNewGroup();
+//    if (go = nil) then exit;
+//    if (go.Data <> nil) then exit;
+//    
+//    with frmRosterWindow do begin
+//        RenderGroup(go);
+//        treeRoster.AlphaSort(true);
+//    end;
+//    x := TXMLTag.Create('group');
+//    x.setAttribute('name', go.FullName);
+//
+//    // XXX: is this event right for new groups?
+//    MainSession.FireEvent('/roster/group', x, TExodusItem(nil));
+//    x.Free();
+//
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.MessageHistory2Click(Sender: TObject);
 begin
     // show a history dialog
-    frmRosterWindow.popHistoryClick(Sender);
+    //frmRosterWindow.popHistoryClick(Sender);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.Properties2Click(Sender: TObject);
 begin
     // Show a properties dialog
-    frmRosterWindow.popPropertiesClick(Sender);
+    //frmRosterWindow.popPropertiesClick(Sender);
 end;
 
 {---------------------------------------}
@@ -2804,49 +2804,50 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuChatClick(Sender: TObject);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
-    jid: WideString;
-    tjid: TJabberID;
+//var
+//    n: TTreeNode;
+//    ritem: TJabberRosterItem;
+//    jid: WideString;
+//    tjid: TJabberID;
 begin
     // Start a chat w/ a specific JID
-    jid := '';
-    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
-        n := frmRosterWindow.treeRoster.Selected;
-        if (TObject(n.Data) is TJabberRosterItem) then begin
-            ritem := TJabberRosterItem(n.Data);
-            if ritem <> nil then
-            begin
-                jid := ritem.jid.getDisplayJID();
-            end;
-        end;
-    end;
-
-    if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
-    begin
-        tjid := TJabberID.Create(jid, false);
-        jid := tjid.jid();
-        StartChat(jid, tjid.resource, true);
-        tjid.Free();
-    end;
+//    jid := '';
+//    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+//        n := frmRosterWindow.treeRoster.Selected;
+//        if (TObject(n.Data) is TJabberRosterItem) then begin
+//            ritem := TJabberRosterItem(n.Data);
+//            if ritem <> nil then
+//            begin
+//                jid := ritem.jid.getDisplayJID();
+//            end;
+//        end;
+//    end;
+//
+//    if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
+//    begin
+//        tjid := TJabberID.Create(jid, false);
+//        jid := tjid.jid();
+//        StartChat(jid, tjid.resource, true);
+//        tjid.Free();
+//    end;
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Group_AddNewRosterClick(Sender: TObject);
 begin
-    frmRosterWindow.popAddGroup.Click();
+    //frmRosterWindow.popAddGroup.Click();
 end;
 
 procedure TfrmExodus.mnuPeople_Contacts_BlockContactClick(Sender: TObject);
 begin
-    frmRosterWindow.popBlock.Click();
+    //frmRosterWindow.popBlock.Click();
 end;
 
 procedure TfrmExodus.mnuBookmarkClick(Sender: TObject);
 begin
     // Add a new bookmark to our list..
-    ShowBookmark('');
+ { TODO : Roster refactor }
+    //ShowBookmark('');
 end;
 
 {---------------------------------------}
@@ -2879,8 +2880,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    if (frmRosterWindow <> nil) then
-        frmRosterWindow.treeRoster.Invalidate();
+//    if (frmRoster <> nil) then
+//        frmRoster.RosterTree.Invalidate();
     StopTrayAlert();
 
     if ((_dockWindow <> nil) and
@@ -2978,64 +2979,93 @@ end;
 procedure TfrmExodus.AcceptFiles( var msg : TWMDropFiles );
 const
   cnMaxFileNameLen = 255;
-var
-    i,
-    nCount     : integer;
-    acFileName : array [0..cnMaxFileNameLen] of char;
-    p          : TPoint;
-    Node       : TTreeNode;
-    ri         : TJabberRosterItem;
-    j          : TJabberID;
+//var
+//    i,
+//    nCount     : integer;
+//    acFileName : array [0..cnMaxFileNameLen] of char;
+//    p, orig_p  : TPoint;
+//    Node       : TTreeNode;
+//    ri         : TJabberRosterItem;
+//    f          : TForm;
+//    j          : TJabberID;
+//    pageIndex  : integer;
 begin
-    // Accept some files being dropped on this form
-    // If we are expaned, and not showing the roster tab,
-    // and the current tab has a chat window, then
-    // call the chat window's AcceptFiles() method.
-{    if ((Jabber1.GetDockState() <> dsForbidden) and
-        (Tabs.ActivePage <> tbsRoster)) then begin
-        f := getTabForm(Tabs.ActivePage);
-        if (f is TfrmChat) then begin
-            TfrmChat(f).AcceptFiles(msg);
-        end;
-        exit;
-    end;
-}
-    // figure out which node was the drop site.
-    if (DragQueryPoint(msg.Drop, p) = false) then exit;
-    // Translate to screen coordinates, then back to client coordinates
-    // for the roster window.  This would have been easier if RosterWindow
-    // had worked as the target of DragAcceptFiles.
-    p := ClientToScreen(p);
-    p := frmRosterWindow.treeRoster.ScreenToClient(p);
-    Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
-    if ((Node = nil) or (Node.Level = 0)) then exit;
-
-    // get the roster item attached to this node.
-    if (Node.Data = nil) then
-        exit
-    else if (TObject(Node.Data) is TJabberRosteritem) then begin
-        ri := TJabberRosterItem(Node.Data);
-        if (not ri.IsContact) then exit;
-        if (not ri.IsNative) then exit;
-        
-        j := ri.jid;
-
-        // find out how many files we're accepting
-        nCount := DragQueryFile( msg.Drop,
-                                 $FFFFFFFF,
-                                 acFileName,
-                                 cnMaxFileNameLen );
-
-        // query Windows one at a time for the file name
-        for i := 0 to nCount-1 do begin
-            DragQueryFile( msg.Drop, i,
-                           acFileName, cnMaxFileNameLen );
-            FileSend(j.full, acFileName);
-        end;
-
-        // let Windows know that we're done
-        DragFinish( msg.Drop );
-    end;
+   { TODO : Roster refactor }
+//    // Accept some files being dropped on this form
+//    // If we are expaned, and not showing the roster tab,
+//    // and the current tab has a chat window, then
+//    // call the chat window's AcceptFiles() method.
+//{    if ((Jabber1.GetDockState() <> dsForbidden) and
+//        (Tabs.ActivePage <> tbsRoster)) then begin
+//        f := getTabForm(Tabs.ActivePage);
+//        if (f is TfrmChat) then begin
+//            TfrmChat(f).AcceptFiles(msg);
+//        end;
+//        exit;
+//    end;
+//}
+//    // figure out which node was the drop site.
+//    if (DragQueryPoint(msg.Drop, p) = false) then exit;
+//    orig_p := p;
+//    //First check if file is dragged to the chat window
+//    //Convert dropping point to tab coordinates
+//    p := tabs.ParentToClient(p, Self);
+//    if (PtInRect(tabs.ClientRect, p)) then begin
+//      //File is draged to the tab area (active or not active)
+//      pageIndex := Tabs.IndexOfTabAt(p.X, p.Y);
+//      if ((pageIndex >= 0) and (pageIndex <= Tabs.PageCount)) then begin
+//        f := getTabForm(Tabs.Pages[pageIndex]);
+//        if (f is TfrmChat) then begin
+//           TfrmChat(f).AcceptFiles(msg);
+//        end;
+//        exit;
+//      end;
+//
+//      //File has been dragged to active page
+//      if (PtInRect(tabs.ActivePage.ClientRect, p)) then begin
+//         f := getTabForm(Tabs.ActivePage);
+//         if (f is TfrmChat) then begin
+//            TfrmChat(f).AcceptFiles(msg);
+//         end;
+//         exit;
+//      end;
+//    end;
+//
+//    p := orig_p;
+//    // Translate to screen coordinates, then back to client coordinates
+//    // for the roster window.  This would have been easier if RosterWindow
+//    // had worked as the target of DragAcceptFiles.
+//    p := ClientToScreen(p);
+//    p := frmRosterWindow.treeRoster.ScreenToClient(p);
+//    Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
+//    if ((Node = nil) or (Node.Level = 0)) then exit;
+//
+//    // get the roster item attached to this node.
+//    if (Node.Data = nil) then
+//        exit
+//    else if (TObject(Node.Data) is TJabberRosteritem) then begin
+//        ri := TJabberRosterItem(Node.Data);
+//        if (not ri.IsContact) then exit;
+//        if (not ri.IsNative) then exit;
+//
+//        j := ri.jid;
+//
+//        // find out how many files we're accepting
+//        nCount := DragQueryFile( msg.Drop,
+//                                 $FFFFFFFF,
+//                                 acFileName,
+//                                 cnMaxFileNameLen );
+//
+//        // query Windows one at a time for the file name
+//        for i := 0 to nCount-1 do begin
+//            DragQueryFile( msg.Drop, i,
+//                           acFileName, cnMaxFileNameLen );
+//            FileSend(j.full, acFileName);
+//        end;
+//
+//        // let Windows know that we're done
+//        DragFinish( msg.Drop );
+//    end;
 end;
 
 
@@ -3070,32 +3100,33 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuMessageClick(Sender: TObject);
-var
-    jid: WideString;
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
-    tjid: TJabberID;
+//var
+//    jid: WideString;
+//    n: TTreeNode;
+//    ritem: TJabberRosterItem;
+//    tjid: TJabberID;
 begin
-    // Message someone
-    jid := '';
-    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
-        n := frmRosterWindow.treeRoster.Selected;
-        if (TObject(n.Data) is TJabberRosterItem) then begin
-            ritem := TJabberRosterItem(n.Data);
-            if ritem <> nil then
-            begin
-                jid := ritem.jid.getDisplayJID()
-            end;
-        end;
-    end;
-
-    if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
-    begin
-        tjid := TJabberID.Create(jid, false);
-        jid := tjid.jid();
-        tjid.Free();
-        StartMsg(jid);
-    end;
+   { TODO : Roster refactor }
+//    // Message someone
+//    jid := '';
+//    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+//        n := frmRosterWindow.treeRoster.Selected;
+//        if (TObject(n.Data) is TJabberRosterItem) then begin
+//            ritem := TJabberRosterItem(n.Data);
+//            if ritem <> nil then
+//            begin
+//                jid := ritem.jid.getDisplayJID()
+//            end;
+//        end;
+//    end;
+//
+//    if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
+//    begin
+//        tjid := TJabberID.Create(jid, false);
+//        jid := tjid.jid();
+//        tjid.Free();
+//        StartMsg(jid);
+//    end;
 end;
 
 procedure TfrmExodus.mnuWindows_MinimizetoSystemTrayClick(Sender: TObject);
@@ -3377,7 +3408,7 @@ end;
 
 procedure TfrmExodus.mnuPeople_Group_DeleteGroupClick(Sender: TObject);
 begin
-    frmRosterWindow.popGrpRemove.Click();
+    //frmRosterWindow.popGrpRemove.Click();
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_DeleteProfileClick(Sender: TObject);
@@ -3412,10 +3443,10 @@ begin
             if (_reconnect_cur >= _reconnect_interval) then begin
                 timReconnect.Enabled := false;
                 DoConnect();
-            end
-            else begin
-                frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
             end;
+            //else begin
+                //frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
+            //end;
         end;
     end;
 end;
@@ -3737,7 +3768,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuFindClick(Sender: TObject);
 begin
-    frmRosterWindow.StartFind();
+    //frmRosterWindow.StartFind();
 end;
 
 procedure TfrmExodus.mnuOptions_FontClick(Sender: TObject);
@@ -3753,14 +3784,14 @@ end;
 
 procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
 begin
-    frmRosterWindow.popGrpInvite.Click();
+    //frmRosterWindow.popGrpInvite.Click();
 end;
 
 
 {---------------------------------------}
 procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
 begin
-    frmRosterWindow.FindAgain();
+    //frmRosterWindow.FindAgain();
 end;
 
 {---------------------------------------}
@@ -3798,12 +3829,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuPeople_Contacts_RenameContactClick(Sender: TObject);
 begin
-    frmRosterWindow.popRenameClick(Sender);
+    //frmRosterWindow.popRenameClick(Sender);
 end;
 
 procedure TfrmExodus.mnuPeople_Group_RenameGroupClick(Sender: TObject);
 begin
-    frmRosterWindow.popGrpRename.Click();
+    //frmRosterWindow.popGrpRename.Click();
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_RenameProfileClick(Sender: TObject);
@@ -4323,7 +4354,7 @@ end;
 }
 procedure TfrmExodus.updateLayoutPrefChange();
 begin
-    if (RosterWindow.frmRosterWindow = nil) then exit; //nop, not initialized yet
+    if (frmRoster = nil) then exit; //nop, not initialized yet
     // make sure the roster is docked in the appropriate place.
 
     layoutRosterOnly();
@@ -4420,42 +4451,42 @@ end;
 //Reset menu items for contacts and groups based on the roster selection
 procedure TfrmExodus.ResetMenuItems(Node: TTnTTreeNode);
 begin
-   if (Node = nil) then begin
-     mnuPeople_Group_RenameGroup.Enabled := false;
-     mnuPeople_Group_DeleteGroup.Enabled := false;
-     mnuPeople_Contacts_RenameContact.Enabled := false;
-     mnuPeople_Contacts_DeleteContact.Enabled := false;
-     mnuPeople_Contacts_BlockContact.Enabled := false;
-     mnuPeople_Contacts_ContactProperties.Enabled := false;
-     mnuPeople_Contacts_SendFile.Enabled := false;
-     mnuPeople_Contacts_SendFile.Enabled := false;
-     mnuPeople_Contacts_SendMessage.Enabled := false;
-     mnuPeople_Contacts_ViewHistory.Enabled := false;
-   end
-   else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
-     mnuPeople_Group_RenameGroup.Enabled := true;
-     mnuPeople_Group_DeleteGroup.Enabled := true;
-     mnuPeople_Contacts_RenameContact.Enabled := false;
-     mnuPeople_Contacts_DeleteContact.Enabled := false;
-     mnuPeople_Contacts_BlockContact.Enabled := false;
-     mnuPeople_Contacts_ContactProperties.Enabled := false;
-     mnuPeople_Contacts_SendFile.Enabled := false;
-     mnuPeople_Contacts_SendMessage.Enabled := false;
-     mnuPeople_Contacts_ViewHistory.Enabled := false;
-   end
-   else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
-     mnuPeople_Group_RenameGroup.Enabled := false;
-     mnuPeople_Group_DeleteGroup.Enabled := false;
-     mnuPeople_Contacts_RenameContact.Enabled := true;
-     mnuPeople_Contacts_DeleteContact.Enabled := true;
-     mnuPeople_Contacts_BlockContact.Enabled := true;
-     mnuPeople_Contacts_ContactProperties.Enabled := true;
-     mnuPeople_Contacts_SendFile.Enabled := true;
-     mnuPeople_Contacts_SendMessage.Enabled := true;
-     mnuPeople_Contacts_ViewHistory.Enabled := true;
-   end;
-   //invite to room should only be available if rooms are open.
-   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
+//   if (Node = nil) then begin
+//     mnuPeople_Group_RenameGroup.Enabled := false;
+//     mnuPeople_Group_DeleteGroup.Enabled := false;
+//     mnuPeople_Contacts_RenameContact.Enabled := false;
+//     mnuPeople_Contacts_DeleteContact.Enabled := false;
+//     mnuPeople_Contacts_BlockContact.Enabled := false;
+//     mnuPeople_Contacts_ContactProperties.Enabled := false;
+//     mnuPeople_Contacts_SendFile.Enabled := false;
+//     mnuPeople_Contacts_SendFile.Enabled := false;
+//     mnuPeople_Contacts_SendMessage.Enabled := false;
+//     mnuPeople_Contacts_ViewHistory.Enabled := false;
+//   end
+//   else if (frmRosterWindow.getNodeType(Node) = node_grp) then begin
+//     mnuPeople_Group_RenameGroup.Enabled := true;
+//     mnuPeople_Group_DeleteGroup.Enabled := true;
+//     mnuPeople_Contacts_RenameContact.Enabled := false;
+//     mnuPeople_Contacts_DeleteContact.Enabled := false;
+//     mnuPeople_Contacts_BlockContact.Enabled := false;
+//     mnuPeople_Contacts_ContactProperties.Enabled := false;
+//     mnuPeople_Contacts_SendFile.Enabled := false;
+//     mnuPeople_Contacts_SendMessage.Enabled := false;
+//     mnuPeople_Contacts_ViewHistory.Enabled := false;
+//   end
+//   else if (frmRosterWindow.getNodeType(Node) = node_ritem) then begin
+//     mnuPeople_Group_RenameGroup.Enabled := false;
+//     mnuPeople_Group_DeleteGroup.Enabled := false;
+//     mnuPeople_Contacts_RenameContact.Enabled := true;
+//     mnuPeople_Contacts_DeleteContact.Enabled := true;
+//     mnuPeople_Contacts_BlockContact.Enabled := true;
+//     mnuPeople_Contacts_ContactProperties.Enabled := true;
+//     mnuPeople_Contacts_SendFile.Enabled := true;
+//     mnuPeople_Contacts_SendMessage.Enabled := true;
+//     mnuPeople_Contacts_ViewHistory.Enabled := true;
+//   end;
+//   //invite to room should only be available if rooms are open.
+//   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 end;
 
 procedure TfrmExodus.RemoveMenuShortCut(value: integer);
