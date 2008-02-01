@@ -45,10 +45,10 @@ type
 implementation
 
 uses
-    RosterImages, PrefController, MsgRecv, Room, Bookmark,  
+    RosterImages, PrefController, MsgRecv, Room,
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
-    MsgQueue, NodeItem, Roster, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
+    MsgQueue, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
     ChatController, Presence;
 
 const
@@ -88,22 +88,24 @@ var
     sjid: Widestring;
     tmp_jid: TJabberID;
     chat: TfrmChat;
-    sub: TfrmSubscribe;
-    ri: TJabberRosterItem;
-    ir: TfrmInvalidRoster;
+//    sub: TfrmSubscribe;
+ //   ri: TJabberRosterItem;
+ //   ir: TfrmInvalidRoster;
     e: TJabberEvent;
     msg: TJabberMessage;
     c: TChatController;
     p: TJabberPres;
 begin
     // check for various events to start GUIS
-    if (event = '/session/gui/conference-props') then begin
-        ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
-    end
-    else if (event = '/session/gui/conference-props-rename') then begin
-        ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
-    end
-    else if (event = '/session/gui/conference') then begin
+   { TODO : Roster refactor }
+  //  if (event = '/session/gui/conference-props') then begin
+  //      ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'));
+  //  end
+  //  else if (event = '/session/gui/conference-props-rename') then begin
+  //      ShowBookmark(tag.GetAttribute('jid'), tag.GetAttribute('name'), true);
+  //  end
+  //else if (event = '/session/gui/conference') then begin
+  if (event = '/session/gui/conference') then begin
         ShowWindow(getDockManager().getHWND(), SW_RESTORE);
 
         StartRoom(tag.GetAttribute('jid'),
@@ -121,15 +123,16 @@ begin
         //0 -> A new one to one chat window
         //1 -> An instant message window
         //2 -> A new or existing chat window
-        ri := MainSession.Roster.Find(tmp_jid.jid);
-        if (ri <> nil) then begin
-            if (not ri.IsNative) then begin
-                if (not ri.IsOnline) then begin
-                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
-                    exit;
-                end;
-            end;
-        end;
+{ TODO : Roster refactor }
+//        ri := MainSession.Roster.Find(tmp_jid.jid);
+//        if (ri <> nil) then begin
+//            if (not ri.IsNative) then begin
+//                if (not ri.IsOnline) then begin
+//                    MessageBoxW(Application.Handle, PWideChar(_(sCannotOffline)), PWideChar(PrefController.getAppInfo.Caption), MB_OK);
+//                    exit;
+//                end;
+//            end;
+//        end;
 
         ShowWindow(getDockManager().getHWND(), SW_RESTORE);
 
@@ -241,12 +244,13 @@ begin
 
     else if (event = '/session/error/presence') then begin
         // Presence errors
-        ri := MainSession.Roster.Find(tag.GetAttribute('from'));
-        if ((ri <> nil) and
-        MainSession.Prefs.getBool('roster_pres_errors')) then begin
-            ir := getInvalidRoster();
-            ir.AddPacket(tag);
-        end;
+ { TODO : Roster refactor }       
+//        ri := MainSession.Roster.Find(tag.GetAttribute('from'));
+//        if ((ri <> nil) and
+//        MainSession.Prefs.getBool('roster_pres_errors')) then begin
+//            ir := getInvalidRoster();
+//            ir.AddPacket(tag);
+//        end;
     end
 
     else if (event = '/session/error/prefs-write') then begin
@@ -271,13 +275,13 @@ begin
         sjid := tag.getAttribute('from');
         tmp_jid := TJabberID.Create(sjid);
         sjid := tmp_jid.getDisplayJID();
-
-        ri := MainSession.Roster.Find(sjid);
-
-        if (ri <> nil) then begin
-            if ((ri.subscription = 'from') or (ri.subscription = 'both')) then
-                exit;
-        end;
+{ TODO : Roster refactor }
+//        ri := MainSession.Roster.Find(sjid);
+//
+//        if (ri <> nil) then begin
+//            if ((ri.subscription = 'from') or (ri.subscription = 'both')) then
+//                exit;
+//        end;
 
         // block list?
         // Don't use MainSession.IsBlocked since it also
@@ -290,11 +294,13 @@ begin
             p.PresType := 'unsubscribed';
 
             MainSession.SendTag(p);
-        end
-        else begin
-            sub := TfrmSubscribe.Create(Application);
-            sub.setup(tmp_jid, ri, tag);
         end;
+//
+//        else begin
+//            sub := TfrmSubscribe.Create(Application);
+{ TODO : Roster refactor }
+            //sub.setup(tmp_jid, ri, tag);
+//        end;
         tmp_jid.Free();
     end;
 end;

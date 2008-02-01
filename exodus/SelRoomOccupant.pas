@@ -62,7 +62,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Session, NodeItem, Roster, Room, ExUtils, RosterImages;
+    GnuGetText, Session, ContactController, Room, ExUtils, RosterImages;
 
 {---------------------------------------}
 procedure TfrmSelRoomOccupant.FormCreate(Sender: TObject);

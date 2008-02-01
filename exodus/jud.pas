@@ -158,8 +158,8 @@ implementation
 uses
     XData, ChatWin, MsgRecv,
     Entity, EntityCache, InputPassword,
-    NodeItem, GnuGetText, JabberConst,
-    Profile, Roster, JabberID,
+    GnuGetText, JabberConst,
+    Profile, JabberID,
     fGeneric, Session, JabberUtils,
     ExUtils,  XMLUtils, fTopLabel,
     TntClasses, DisplayName, Jabber1,
@@ -264,7 +264,8 @@ begin
     cur_state := 'get_fields';
     cur_sort := -1;
     cur_dir := true;
-    MainSession.Roster.AssignGroups(cboGroup.Items);
+     { TODO : Roster refactor }
+    //MainSession.Roster.AssignGroups(cboGroup.Items);
     dflt_grp := MainSession.Prefs.getString('roster_default');
     Self.ImageIndex := RosterImages.RI_SEARCH_INDEX;
 
@@ -745,16 +746,17 @@ var
     procedure doAdd(item: TListItem);
     var
         nick: Widestring;
-        ritem: TJabberRosterItem;
+//        ritem: TJabberRosterItem;
         jid: TJabberID;
     begin
         // do the actual add stuff
         jid := TJabberID.Create(item.caption, false); // item may be escaped
-        ritem := MainSession.roster.Find(jid.jid);
-        if (ritem <> nil) then begin
-            if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
-                exit;
-        end;
+   { TODO : Roster refactor }
+//        ritem := MainSession.roster.Find(jid.jid);
+//        if (ritem <> nil) then begin
+//            if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
+//                exit;
+//        end;
 
         // add the item
         nick := '';
@@ -762,8 +764,8 @@ var
             nick := item.SubItems[nick_col];
 
         if (nick = '') then nick := DisplayName.getDisplayNameCache().getDisplayName(jid);
-
-        MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
+        { TODO : Roster refactor }
+        //MainSession.roster.AddItem(jid.jid, nick, cboGroup.Text, true);
         jid.Free();
         
     end;
@@ -798,14 +800,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmJUD.lblAddGrpClick(Sender: TObject);
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
   inherited;
     // Add a new group to the list...
-    go := promptNewGroup();
-    if (go <> nil) then
-        MainSession.Roster.AssignGroups(cboGroup.Items);
+    //go := promptNewGroup();
+{ TODO : Roster refactor }    
+//    if (go <> nil) then
+//        MainSession.Roster.AssignGroups(cboGroup.Items);
 end;
 
 {---------------------------------------}

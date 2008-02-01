@@ -3,7 +3,7 @@ unit Main;
 interface
 
 uses
-    Presence, Roster, XMLTag,
+    Presence, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls;
 
@@ -27,7 +27,7 @@ type
     { Private declarations }
     procedure DebugCallback(event: string; tag: TXMLTag; data: WideString);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure RosterCallback(event: string; tag: TXMLTag; roster_item: TJabberRosterItem);
+//    procedure RosterCallback(event: string; tag: TXMLTag; roster_item: TJabberRosterItem);
     procedure PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
 
   public
@@ -70,7 +70,7 @@ begin
 
     MainSession.RegisterCallback(DebugCallback);
     MainSession.RegisterCallback(SessionCallback, '/session');
-    MainSession.RegisterCallback(RosterCallback);
+    //MainSession.RegisterCallback(RosterCallback);
     MainSession.RegisterCallback(PresenceCallback);
 end;
 
@@ -111,58 +111,59 @@ begin
     end;
 end;
 
-procedure TForm1.RosterCallback(event: string; tag: TXMLTag; roster_item: TJabberRosterItem);
-var
-    itm_index: integer;
-begin
-    // we are getting some kind of roster item
-    // store a reference to the roster item in the listbox's item
-    // this way, we can find them.
-
-    if (event = '/roster/start') then
-        Listbox1.Items.Clear
-    else if (event = '/roster/end') then exit
-    else if ((event = '/roster/item') and (roster_item <> nil)) then begin
-        itm_index := Listbox1.Items.IndexOfObject(roster_item);
-        if (itm_index = -1) then
-            itm_index := Listbox1.Items.AddObject('', roster_item);
-
-        if (roster_item.Nickname <> '') then
-            // if the roster item has a nickname, show it
-            Listbox1.Items[itm_index] := roster_item.Nickname
-        else
-            // otherwise, just show the JID.
-            Listbox1.Items[itm_index] := roster_item.jid.jid;
-    end;
-end;
+//procedure TForm1.RosterCallback(event: string; tag: TXMLTag; roster_item: TJabberRosterItem);
+//var
+//    itm_index: integer;
+//begin
+//    // we are getting some kind of roster item
+//    // store a reference to the roster item in the listbox's item
+//    // this way, we can find them.
+//
+//    if (event = '/roster/start') then
+//        Listbox1.Items.Clear
+//    else if (event = '/roster/end') then exit
+//    else if ((event = '/roster/item') and (roster_item <> nil)) then begin
+//        itm_index := Listbox1.Items.IndexOfObject(roster_item);
+//        if (itm_index = -1) then
+//            itm_index := Listbox1.Items.AddObject('', roster_item);
+//
+//        if (roster_item.Nickname <> '') then
+//            // if the roster item has a nickname, show it
+//            Listbox1.Items[itm_index] := roster_item.Nickname
+//        else
+//            // otherwise, just show the JID.
+//            Listbox1.Items[itm_index] := roster_item.jid.jid;
+//    end;
+//end;
 
 procedure TForm1.PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
-var
-    ritem: TJabberRosterItem;
-    idx: integer;
-    cap: string;
+//var
+//    ritem: TJabberRosterItem;
+//    idx: integer;
+//    cap: string;
 begin
-    // we want to ignore subscription packets
-    if (tag = nil) then exit;
-    if (p.isSubscription) then exit;
-
-    ritem := MainSession.Roster.Find(p.fromJID.jid);
-    if (ritem <> nil) then begin
-        idx := Listbox1.Items.IndexOfObject(ritem);
-        if (idx = -1) then exit;
-
-        if (ritem.Nickname <> '') then
-            // if the roster item has a nickname, show it
-            cap := ritem.Nickname
-        else
-            // otherwise, just show the JID.
-            cap := ritem.jid.jid;
-
-        if MainSession.ppdb.FindPres(p.fromJID.jid, '') = nil then
-            Listbox1.Items[idx] := cap
-        else
-            Listbox1.Items[idx] := '** ' + cap;
-        end;
+      { TODO : Roster refactor }
+//    // we want to ignore subscription packets
+//    if (tag = nil) then exit;
+//    if (p.isSubscription) then exit;
+//
+//    ritem := MainSession.Roster.Find(p.fromJID.jid);
+//    if (ritem <> nil) then begin
+//        idx := Listbox1.Items.IndexOfObject(ritem);
+//        if (idx = -1) then exit;
+//
+//        if (ritem.Nickname <> '') then
+//            // if the roster item has a nickname, show it
+//            cap := ritem.Nickname
+//        else
+//            // otherwise, just show the JID.
+//            cap := ritem.jid.jid;
+//
+//        if MainSession.ppdb.FindPres(p.fromJID.jid, '') = nil then
+//            Listbox1.Items[idx] := cap
+//        else
+//            Listbox1.Items[idx] := '** ' + cap;
+//        end;
 end;
 
 end.

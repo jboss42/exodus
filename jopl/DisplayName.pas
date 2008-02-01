@@ -25,7 +25,9 @@ uses
     XMLTag,
     JabberID,
     IQ,     //profile request
-    NodeItem; //TJabberRosterItem
+    COMExodusItem,
+    ContactController,
+    Exodus_TLB; 
 //    Roster; //roster callback
 const
     PREF_PROFILE_DN = 'displayname_profile_enabled';
@@ -106,7 +108,7 @@ type
     private
         _dnCache:   TWideStringList;
         _sessionCB: Integer;
-        _rosterCB:  Integer;
+        //_rosterCB:  Integer;
         _js:        TObject; //TjabberSession, use TObject to avoid circular ref issues
                              //DNCache is initialized in session object
         _profileParser: TProfileParser;
@@ -131,9 +133,10 @@ type
 
         function getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
         procedure setSession(js: TObject); //TObject to avoid circular reference\
+        procedure UpdateDisplayName(uid: WideString);
     published
             //callbacks
-        procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+        //procedure RosterCallback(event: string; item: IExodusItem);
         procedure SessionCallback(event: string; tag: TXMLTag);
 
         property ProfileParser: TProfileParser read _profileParser;
@@ -433,7 +436,7 @@ begin
     _dnCache := TWideStringList.Create();
     _js := nil;
     _sessioncb := -1;
-    _rostercb := -1;
+    //_rostercb := -1;
     _profileParser := TProfileParser.Create();
 end;
 
@@ -459,15 +462,15 @@ begin
     if (_js <> nil) then begin
         if (_sessionCB <> -1) then
             TJabberSession(_js).UnRegisterCallback(_sessionCB);
-        if (_rosterCB <> -1) then
-            TJabberSession(_js).UnRegisterCallback(_rosterCB);
+//        if (_rosterCB <> -1) then
+//            TJabberSession(_js).UnRegisterCallback(_rosterCB);
     end;
     clearDNCache();
 
     _js := js;
     if (_js <> nil) then begin
         _sessioncb := TJabberSession(_js).RegisterCallback(SessionCallback, '/session');
-        _rostercb := TJabberSession(_js).RegisterCallback(RosterCallback, '/roster');
+        //_rostercb := TJabberSession(_js).RegisterCallback(RosterCallback, '/item/update');
     end;
 end;
 
@@ -479,44 +482,46 @@ end;
     to the new roster name. Fire an update event if displayname actually changed.
 
 }
-procedure TDisplayNameCache.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+procedure TDisplayNameCache.UpdateDisplayName(uid: WideString);
 var
     dnItem: TDisplayNameItem;
     foundName: WideString;
     fireChange: boolean;
     changeTag: TXMLTag;
+    jid: TJabberID;
+    Item: IExodusItem;
 begin
-    if (event = '/roster/item') then begin
-        if (ritem <> nil) then begin
-            if ((ritem.Subscription = '') or (rItem.Subscription = 'remove')) then
-                //roster name becomes node?
-                //foundName := rItem.Jid.userDisplay
-                exit //don't add
-            else foundName := ritem.text;
-        end
-        else
-            foundName := tag.GetAttribute('name');
+    Item := TJabberSession(_js).ItemController.GetItem(uid);
+    if (Item = nil) then exit;
+    if (Item.Type_ <> EI_TYPE_CONTACT) then exit;
 
-        //add item to cache
-        dnItem := getDNItem(rItem.Jid);
-        fireChange := (dnItem <> nil) and (foundName <> '') and (dnItem._displayName[dntRoster] <> foundName);
-        if (dnItem = nil) then begin
-            dnItem := TDisplayNameItem.create(rItem.Jid, _profileParser);
-            addDNItem(dnItem);
-        end;
+    if ((Item.Value['Subscription'] = '') or (Item.Value['Subscription'] = 'remove')) then exit;
 
-        if ((foundName <> '') and (dnItem._displayName[dntRoster] <> foundName)) then
-            dnItem._displayName[dntRoster] := foundName;
+    foundName := Item.Text;
 
-        //fire a displayname updated event
-        if (fireChange) then begin
-            changeTag := TXMLtag.Create('dispname');
-            changeTag.setAttribute('jid', dnItem._jid.jid);
-            changeTag.setAttribute('dn', dnItem._displayName[dntRoster]);
-            TJabberSession(_js).FireEvent('/session/displayname', changeTag);
-            changeTag.Free();
-        end;
+    jid := TJabberID.Create(Item.Uid);
+    //add item to cache
+    dnItem := getDNItem(jid);
+
+    fireChange := (dnItem <> nil) and (foundName <> '') and (dnItem._displayName[dntRoster] <> foundName);
+    if (dnItem = nil) then begin
+        dnItem := TDisplayNameItem.create(jid, _profileParser);
+        addDNItem(dnItem);
     end;
+
+    if ((foundName <> '') and (dnItem._displayName[dntRoster] <> foundName)) then
+        dnItem._displayName[dntRoster] := foundName;
+
+    //fire a displayname updated event
+    if (fireChange) then begin
+        changeTag := TXMLtag.Create('dispname');
+        changeTag.setAttribute('jid', dnItem._jid.jid);
+        changeTag.setAttribute('dn', dnItem._displayName[dntRoster]);
+        TJabberSession(_js).FireEvent('/session/displayname', changeTag);
+        changeTag.Free();
+    end;
+    jid.Free();
+
 end;
 
 procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);

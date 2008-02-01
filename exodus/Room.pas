@@ -415,7 +415,6 @@ uses
     JoinRoom,
     MsgDisplay,
     MsgRecv,
-    NodeItem,
     Notify,
     PrefController,
     Presence,
@@ -427,9 +426,9 @@ uses
     RichEdit,
     RiserWindow,
     RoomAdminList,
-    Roster,
+    ContactController,
     RosterImages,
-    RosterWindow,
+    RosterForm,
     Session,
     ShellAPI,
     Signals,
@@ -552,7 +551,8 @@ var
  bm: TXMLTag;                                 
 begin
     //don't auto-open rooms we have bookmoarked for join on login
-    bm := MainSession.Bookmarks.FindBookmark(getJID);
+ { TODO : Roster refactor }
+    //bm := MainSession.Bookmarks.FindBookmark(getJID);
     if ((event = 'disconnected') and ((bm = nil) or (bm.GetAttribute('autojoin') <> 'true'))) then begin
         //check to see if this room is bokmarked and join on startup
         Result := TXMLTag.Create(Self.classname);
@@ -1700,7 +1700,6 @@ procedure TfrmRoom.RenderMember(member: TRoomMember; tag: TXMLTag);
 var
     i: integer;
     p: TJabberPres;
-    ptype, show: Widestring;
 begin
     // show the member
     if member = nil then exit;
@@ -2077,7 +2076,8 @@ begin
     bm_name := tmp_jid.getDisplayJID();
 
     if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
-        MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false, false);
+        { TODO : Roster refactor }
+        //MainSession.Bookmarks.AddBookmark(Self.jid, bm_name, myNick, false, false);
     end;
 end;
 
@@ -2710,7 +2710,6 @@ end;
 procedure TfrmRoom.lstRosterData(Sender: TObject; Item: TListItem);
 var
     rm: TRoomMember;
-    cnt: Integer;
     hiddenMembersCount, idx: Integer;
 begin
   inherited;
@@ -2941,22 +2940,23 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.popRosterSubscribeClick(Sender: TObject);
-var
-    j: TJabberID;
-    rm: TRoomMember;
-    dgrp: Widestring;
+//var
+//    j: TJabberID;
+//    rm: TRoomMember;
+//    dgrp: Widestring;
 begin
-  inherited;
-    // subscribe to this person
-    if (lstRoster.Selected = nil) then exit;
-
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
-    if ((rm <> nil) and (rm.real_jid <> '')) then begin
-        j := TJabberID.Create(rm.real_jid);
-        dgrp := MainSession.Prefs.getString('roster_default');
-        MainSession.Roster.AddItem(j.jid, rm.nick, dgrp, true);
-        j.Free();
-    end;
+     { TODO : Roster refactor }
+//  inherited;
+//    // subscribe to this person
+//    if (lstRoster.Selected = nil) then exit;
+//
+//    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
+//    if ((rm <> nil) and (rm.real_jid <> '')) then begin
+//        j := TJabberID.Create(rm.real_jid);
+//        dgrp := MainSession.Prefs.getString('roster_default');
+//        MainSession.Roster.AddItem(j.jid, rm.nick, dgrp, true);
+//        j.Free();
+//    end;
 end;
 
 {---------------------------------------}
@@ -3040,39 +3040,40 @@ procedure TfrmRoom.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
                                State: TDragState; var Accept: Boolean);
 begin
     inherited;
-    Accept := (Source = frmRosterWindow.treeRoster);
+    Accept := (Source = frmRoster.RosterTree);
 end;
 
 procedure TfrmRoom.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
-    i: integer;
-    jids: TList;
-    o: TObject;
+//var
+//    n: TTreeNode;
+//    ritem: TJabberRosterItem;
+//    i: integer;
+//    jids: TList;
+//    o: TObject;
 begin
-  inherited;
-    // drag drop
-    if (Source = frmRosterWindow.treeRoster) then begin
-        // We want to invite someone into this TC room
-        jids := TList.Create();
-        with frmRosterWindow.treeRoster do begin
-            for i := 0 to SelectionCount - 1 do begin
-                n := Selections[i];
-                o := TObject(n.Data);
-                assert(o <> nil);
-
-                if (o is TJabberRosterItem) then begin
-                    ritem := TJabberRosterItem(n.Data);
-                    jids.Add(ritem);
-                end
-                else if (o is TJabberGroup) then begin
-                    TJabberGroup(o).getRosterItems(jids, true);
-                end;
-            end;
-        end;
-        ShowInvite(Self.jid, jids);
-    end;
+         { TODO : Roster refactor }
+//  inherited;
+//    // drag drop
+//    if (Source = frmRosterWindow.treeRoster) then begin
+//        // We want to invite someone into this TC room
+//        jids := TList.Create();
+//        with frmRosterWindow.treeRoster do begin
+//            for i := 0 to SelectionCount - 1 do begin
+//                n := Selections[i];
+//                o := TObject(n.Data);
+//                assert(o <> nil);
+//
+//                if (o is TJabberRosterItem) then begin
+//                    ritem := TJabberRosterItem(n.Data);
+//                    jids.Add(ritem);
+//                end
+//                else if (o is TJabberGroup) then begin
+//                    TJabberGroup(o).getRosterItems(jids, true);
+//                end;
+//            end;
+//        end;
+//        ShowInvite(Self.jid, jids);
+//    end;
 end;
 
 {

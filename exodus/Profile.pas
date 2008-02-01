@@ -147,75 +147,77 @@ implementation
 {$R *.DFM}
 uses
     JabberConst, JabberUtils, ExUtils,  GnuGetText,
-    Presence, NodeItem, Roster, JabberID, Session, Unicode, Jabber1;
+    Presence, ContactController, JabberID, Session, Unicode, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 function ShowProfile(jid: Widestring): TfrmProfile;
-var
-    tmp_jid: TJabberID;
-    ritem: TJabberRosterItem;
-    f: TfrmProfile;
-    p: TJabberPres;
-    tmps: string;
-    i, gi: integer;
+//var
+//    tmp_jid: TJabberID;
+//    ritem: TJabberRosterItem;
+//    f: TfrmProfile;
+//    p: TJabberPres;
+//    tmps: string;
+//    i, gi: integer;
 begin
-    tmp_jid := TJabberID.Create(jid);
-    f := TfrmProfile.Create(Application);
-
-    with f do begin
-        MainSession.Roster.AssignGroups(GrpListBox.Items);
-        ResListBox.Items.Clear;
-        optSubscrip.ItemIndex := 0;
-        txtJID.Text := tmp_jid.getDisplayJID();
-
-        ritem := MainSession.Roster.Find(tmp_jid.jid);
-        if (ritem <> nil) then begin
-            txtNick.Text := ritem.Text;
-            if ritem.subscription = 'from' then
-                optSubscrip.ItemIndex := 2
-            else if ritem.subscription = 'to' then
-                optSubscrip.ItemIndex := 1
-            else if ritem.subscription = 'both' then
-                optSubscrip.ItemIndex := 3;
-
-            for i := 0 to ritem.GroupCount - 1 do begin
-                gi := GrpListBox.Items.IndexOf(ritem.Group[i]);
-                if (gi = -1) then
-                    gi := GrpListBox.Items.Add(ritem.Group[i]);
-                GrpListBox.Checked[gi] := true;
-            end;
-        end;
-
-        _origSubIdx := optSubscrip.ItemIndex;
-
-        // Show all the resources
-        p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
-        while p <> nil do begin
-            ResListBox.Items.Add(p.fromJID.resource);
-            p := MainSession.ppdb.NextPres(p)
-        end;
-
-        tmps := MainSession.generateID();
-        iq := TJabberIQ.Create(MainSession, tmps, vcard);
-        iq.Namespace := 'vcard-temp';
-        iq.qTag.Name := 'vCard';
-        iq.iqType := 'get';
-        iq.toJid := tmp_jid.jid;
-        iq.Send;
-
-        TreeView1.Selected := TreeView1.Items[0];
-        TreeView1.FullExpand();
-        PageControl1.ActivePageIndex := 0;
-    end;
-
-    tmp_jid.Free();
-
-    f.Show;
-    f.aniProfile.Visible := true;
-    f.aniProfile.Active := true;
-    Result := f;
+{ TODO : Roster refactor }
+//    tmp_jid := TJabberID.Create(jid);
+//    f := TfrmProfile.Create(Application);
+//
+//    with f do begin
+//
+//        //MainSession.Roster.AssignGroups(GrpListBox.Items);
+//        ResListBox.Items.Clear;
+//        optSubscrip.ItemIndex := 0;
+//        txtJID.Text := tmp_jid.getDisplayJID();
+//
+//        //ritem := MainSession.Roster.Find(tmp_jid.jid);
+//        if (ritem <> nil) then begin
+//            txtNick.Text := ritem.Text;
+//            if ritem.subscription = 'from' then
+//                optSubscrip.ItemIndex := 2
+//            else if ritem.subscription = 'to' then
+//                optSubscrip.ItemIndex := 1
+//            else if ritem.subscription = 'both' then
+//                optSubscrip.ItemIndex := 3;
+//
+//            for i := 0 to ritem.GroupCount - 1 do begin
+//                gi := GrpListBox.Items.IndexOf(ritem.Group[i]);
+//                if (gi = -1) then
+//                    gi := GrpListBox.Items.Add(ritem.Group[i]);
+//                GrpListBox.Checked[gi] := true;
+//            end;
+//        end;
+//
+//        _origSubIdx := optSubscrip.ItemIndex;
+//
+//        // Show all the resources
+//        p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
+//        while p <> nil do begin
+//            ResListBox.Items.Add(p.fromJID.resource);
+//            p := MainSession.ppdb.NextPres(p)
+//        end;
+//
+//        tmps := MainSession.generateID();
+//        iq := TJabberIQ.Create(MainSession, tmps, vcard);
+//        iq.Namespace := 'vcard-temp';
+//        iq.qTag.Name := 'vCard';
+//        iq.iqType := 'get';
+//        iq.toJid := tmp_jid.jid;
+//        iq.Send;
+//
+//        TreeView1.Selected := TreeView1.Items[0];
+//        TreeView1.FullExpand();
+//        PageControl1.ActivePageIndex := 0;
+//    end;
+//
+//    tmp_jid.Free();
+//
+//    f.Show;
+//    f.aniProfile.Visible := true;
+//    f.aniProfile.Active := true;
+//    Result := f;
 end;
 
 {---------------------------------------}
@@ -347,33 +349,34 @@ end;
 
 {---------------------------------------}
 procedure TfrmProfile.frameButtons1btnOKClick(Sender: TObject);
-var
-    ritem: TJabberRosterItem;
-    changed: boolean;
-    i: integer;
+//var
+//    ritem: TJabberRosterItem;
+//    changed: boolean;
+//    i: integer;
 begin
     // if the nick has changed then change the roster item
-    ritem := MainSession.roster.Find(txtJID.Text);
-    changed := false;
-
-    if (ritem <> nil) then begin
-
-        if (ritem.Text <> txtNick.Text) then begin
-            ritem.Text := txtNick.Text;
-            changed := true;
-        end;
-
-        // just clear the grps, and add all the selected ones
-        ritem.ClearGroups();
-        for i := 0 to GrpListBox.Items.Count - 1 do begin
-            if GrpListBox.Checked[i] then
-                ritem.AddGroup(grpListBox.Items[i]);
-        end;
-
-        if ((changed) or (ritem.AreGroupsDirty())) then
-            ritem.update();
-    end;
-    Self.Close;
+{ TODO : Roster refactor }    
+//    ritem := MainSession.roster.Find(txtJID.Text);
+//    changed := false;
+//
+//    if (ritem <> nil) then begin
+//
+//        if (ritem.Text <> txtNick.Text) then begin
+//            ritem.Text := txtNick.Text;
+//            changed := true;
+//        end;
+//
+//        // just clear the grps, and add all the selected ones
+//        ritem.ClearGroups();
+//        for i := 0 to GrpListBox.Items.Count - 1 do begin
+//            if GrpListBox.Checked[i] then
+//                ritem.AddGroup(grpListBox.Items[i]);
+//        end;
+//
+//        if ((changed) or (ritem.AreGroupsDirty())) then
+//            ritem.update();
+//    end;
+//    Self.Close;
 end;
 
 {---------------------------------------}

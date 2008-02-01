@@ -187,7 +187,7 @@ uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
     XferManager, GnuGetText,
     ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
-    RosterWindow, RemoveContact, Room, NodeItem, Roster,
+    RemoveContact, Room, ContactController,
     Presence, Session, Jabber1, InputPassword, MsgDisplay;
 
 {$R *.DFM}
@@ -480,31 +480,32 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.SetupRecips(jid: Widestring);
-var
-    msg: Widestring;
-    id: TJabberID;
-    p: TJabberPres;
-    ri: TJabberRosterItem;
+//var
+//    msg: Widestring;
+//    id: TJabberID;
+//    p: TJabberPres;
+//    ri: TJabberRosterItem;
 begin
     // check to see if this user is online, can receive offlines, etc
-    id := TJabberID.Create(jid);
-    p := MainSession.ppdb.FindPres(id.jid, id.resource);
-    if (p = nil) then begin
-        ri := MainSession.Roster.Find(id.jid);
-        if (ri = nil) then
-            ri := MainSession.Roster.Find(id.full);
-
-        if ((ri <> nil) and (not ri.CanOffline)) then begin
-            msg := _('This contact (%s) can not receive offline messages.');
-            msg := WideFormat(msg, [id.full]);
-            MessageDlgW(msg, mtError, [mbOK], 0);
-            id.Free();
-            exit;
-        end;
-    end;
-
-    id.Free();
-    recips.add(jid);
+{ TODO : Roster refactor }    
+//    id := TJabberID.Create(jid);
+//    p := MainSession.ppdb.FindPres(id.jid, id.resource);
+//    if (p = nil) then begin
+//        ri := MainSession.Roster.Find(id.jid);
+//        if (ri = nil) then
+//            ri := MainSession.Roster.Find(id.full);
+//
+//        if ((ri <> nil) and (not ri.CanOffline)) then begin
+//            msg := _('This contact (%s) can not receive offline messages.');
+//            msg := WideFormat(msg, [id.full]);
+//            MessageDlgW(msg, mtError, [mbOK], 0);
+//            id.Free();
+//            exit;
+//        end;
+//    end;
+//
+//    id.Free();
+//    recips.add(jid);
 end;
 
 {---------------------------------------}

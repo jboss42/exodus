@@ -27,6 +27,9 @@ interface
 uses
   ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode;
 
+const
+    EI_TYPE_CONTACT = 'contact';
+
 type
   TExodusItem = class(TAutoObject, IExodusItem)
   {
@@ -38,10 +41,10 @@ type
   protected
       function Get_IsVisible: WordBool; safecall;
       procedure Set_IsVisible(Value: WordBool); safecall;
-      function Get_Value(const Name: WideString): WideString; safecall;
-      procedure Set_Value(const Name, Value: WideString); safecall;
-      function BelongsToGroup(const Group: WideString): WordBool; safecall;
-      function GroupsChanged(const Groups: WideString): WordBool; safecall;
+    function Get_Value(const Name: WideString): WideString; safecall;
+    procedure Set_Value(const Name, value: WideString); safecall;
+    function BelongsToGroup(const Group: WideString): WordBool; safecall;
+    function GroupsChanged(const Groups: WideString): WordBool; safecall;
       procedure Set_Property_(Index: Integer; const Value: WideString); safecall;
       function Get_Action(Index: Integer): WideString; safecall;
       function Get_ActionCount: Integer; safecall;
@@ -59,11 +62,11 @@ type
       procedure AddGroup(const group: WideString); safecall;
       procedure ClearGroups; safecall;
       procedure ClearProperties; safecall;
-      procedure CopyGroup(const GroupTo: WideString); safecall;
-      procedure MoveGroup(const GroupFrom, GroupTo: WideString); safecall;
+    procedure CopyGroup(const GroupTo: WideString); safecall;
+    procedure MoveGroup(const GroupFrom, GroupTo: WideString); safecall;
       procedure RemoveGroup(const Group: WideString); safecall;
       procedure RemoveProperty(const Property_: WideString); safecall;
-      procedure RenameGroup(const OldGroup, NewGroup: WideString); safecall;
+    procedure RenameGroup(const OldGroup, NewGroup: WideString); safecall;
       procedure Set_Active(Value: WordBool); safecall;
       procedure Set_ExtendedText(const Value: WideString); safecall;
       procedure Set_ImageIndex(Value: Integer); safecall;
@@ -371,7 +374,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItem.Set_Value(const Name, Value: WideString);
+procedure TExodusItem.Set_Value(const Name, value: WideString);
 var
    Idx: Integer;
    OldValue, NewValue: PWideChar;

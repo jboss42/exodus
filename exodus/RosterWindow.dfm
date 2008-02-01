@@ -471,7 +471,6 @@ inherited frmRosterWindow: TfrmRosterWindow
     OnEndDrag = treeRosterEndDrag
     OnExit = treeRosterExit
     OnExpanded = treeRosterExpanded
-    OnKeyDown = treeRosterKeyDown
     OnKeyPress = treeRosterKeyPress
     OnMouseDown = treeRosterMouseDown
     OnMouseMove = treeRosterMouseMove

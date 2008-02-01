@@ -53,12 +53,12 @@ procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer
 implementation
 uses
     RosterImages,
-    RosterWindow,
+    RosterForm,
     StateForm,
     DisplayName,
     BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
     Jabber1, PrefController, RiserWindow,
-    Room, NodeItem, Roster, MMSystem, Debug, Session;
+    Room, ContactController, MMSystem, Debug, Session;
 
 const
     sNotifyOnline = ' is now online.';
@@ -100,7 +100,7 @@ var
     idx: integer;
     sess: TJabberSession;
     nick, j, from, notifyMessage: Widestring;
-    ritem: TJabberRosterItem;
+    //ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
     f: TForm;
 begin
@@ -116,7 +116,7 @@ begin
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
-    f := nil;
+//    f := nil;
     idx := -1;
     try
         j := tmp_jid.jid;
@@ -124,46 +124,49 @@ begin
         // don't display notifications for rooms, here.
         if (IsRoom(j)) then exit;
         // someone is coming online for the first time..
-        if (event = '/presence/online') then begin
-            ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
-            if (ritem <> nil) then begin
-                idx := ritem.getPresenceImage('available');
-                if ((ritem = MainSession.roster.ActiveItem) and
-                    (MainSession.Roster.ActiveItem.IsContact) and
-                    (MainSession.Roster.ActiveItem.IsNative) and
-                    (frmrosterWindow.treeRoster.SelectionCount < 2)) then begin
-                    frmExodus.btnSendFile.Enabled := true;
-                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
-                end;
-            end
-            else
-                idx := RosterTreeImages.Find('available');
+            { TODO : Roster refactor }
+//       if (event = '/presence/online') then begin
+//            ritem := MainSession.roster.Find(tmp_jid.getDisplayJID());
+//           if (ritem <> nil) then begin
+//                idx := ritem.getPresenceImage('available');
+//                if ((ritem = MainSession.roster.ActiveItem) and
+//                    (MainSession.Roster.ActiveItem.IsContact) and
+//                    (MainSession.Roster.ActiveItem.IsNative) and
+//                    (frmrosterWindow.treeRoster.SelectionCount < 2)) then begin
+//                    frmExodus.btnSendFile.Enabled := true;
+//                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
+//                end;
+//            end
+//            else
+//                idx := RosterTreeImages.Find('available');
             //Presence notifications should be routed to the parent form of the
             //roster. may be mainform or roster is embedded in a tab
             f := GetRosterWindow();
             if (f <> nil) then
-                f := TfrmRosterWindow(f).GetDockParent();
+                 f := TRosterForm(f).GetDockParent();
             if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
                 f := nil; //route to mainform
             notifyMessage := sNotifyOnline;
-        end
+//        end
 
         // someone is going offline
-        else if (event = '/presence/offline') then begin
-            ritem := sess.roster.Find(j);
-            if (ritem <> nil) then begin
-                idx := ritem.getPresenceImage('offline');
-                if (ritem = MainSession.roster.ActiveItem) then begin
-                    frmExodus.btnSendFile.Enabled := false;
-                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
-                end;
-            end
-            else
-                idx := RosterTreeImages.Find('offline');
+//        else if (event = '/presence/offline') then begin
+        if (event = '/presence/offline') then begin
+ { TODO : Roster refactor }       
+//            ritem := sess.roster.Find(j);
+//            if (ritem <> nil) then begin
+//                idx := ritem.getPresenceImage('offline');
+//                if (ritem = MainSession.roster.ActiveItem) then begin
+//                    frmExodus.btnSendFile.Enabled := false;
+//                    frmExodus.mnuPeople_Contacts_SendFile.Enabled := false;
+//                end;
+//            end
+//            else
+//                idx := RosterTreeImages.Find('offline');
 
             f := GetRosterWindow();
             if (f <> nil) then
-                f := TfrmRosterWindow(f).GetDockParent();
+                f := TRosterForm(f).GetDockParent();
             if (f <> nil) and (not f.inheritsFrom(TfrmDockable)) then
                 f := nil; //route to mainform
             notifyMessage := sNotifyOffline;

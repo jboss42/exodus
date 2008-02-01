@@ -167,7 +167,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 uses
     EntityCache, GnuGetText, CommandWizard, DiscoIdentity,
-    JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
+    JabberConst, JoinRoom, Room, ContactController, JabberID, 
     JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1,
     RosterImages;
 
@@ -549,8 +549,8 @@ var
 begin
     itm := vwBrowse.Selected;
     if itm = nil then exit;
-
-    ShowBookmark(itm.SubItems[0], itm.Caption);
+     { TODO : Roster refactor }
+    //ShowBookmark(itm.SubItems[0], itm.Caption);
 end;
 
 {---------------------------------------}

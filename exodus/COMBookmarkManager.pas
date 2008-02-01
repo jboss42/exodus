@@ -22,7 +22,7 @@ unit COMBookmarkManager;
 interface
 
 uses
-  COMObj,ActiveX, Exodus_TLB, StdVcl, Bookmarks, SysUtils;
+  COMObj,ActiveX, Exodus_TLB, StdVcl, SysUtils;
 
 type
   TExodusBookmarkManager = class(TAutoObject, IExodusBookmarkManager)
@@ -32,9 +32,9 @@ type
       UseRegisteredNick: WordBool); safecall;
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     private
-      _bookmarks: TBookmarkManager;
+      //_bookmarks: TBookmarkManager;
     public
-      constructor Create(bookmarks: TBookmarkManager);
+      //constructor Create(bookmarks: TBookmarkManager);
   end;
 
 implementation
@@ -42,39 +42,41 @@ uses
   ComServ, XMLTag;
 
 {-----------------------------------------------}
-constructor TExodusBookmarkManager.Create(bookmarks: TBookmarkManager);
-begin
-  _bookmarks := bookmarks;
-end;
+//constructor TExodusBookmarkManager.Create(bookmarks: TBookmarkManager);
+//begin
+       { TODO : Roster refactor }
+  //_bookmarks := bookmarks;
+//end;
 
 {----------------------------------------------}
 procedure TExodusBookmarkManager.AddBookmark(const JabberID, bmName,
   Nickname: WideString; AutoJoin, UseRegisteredNick: WordBool);
-var
-  i: integer;
+//var
+//  i: integer;
 begin
-  i := _bookmarks.IndexOf(JabberID);
-  if ( i >= 0 ) then
-    exit;
-  _bookmarks.AddBookmark(JabberID, bmName, Nickname, autojoin, UseRegisteredNick);
+ { TODO : Roster refactor }
+//  i := _bookmarks.IndexOf(JabberID);
+//  if ( i >= 0 ) then
+//    exit;
+//  _bookmarks.AddBookmark(JabberID, bmName, Nickname, autojoin, UseRegisteredNick);
 end;
 
 {-----------------------------------------------}
 procedure TExodusBookmarkManager.RemoveBookmark(const JabberID: WideString);
 begin
-  _bookmarks.RemoveBookmark(JabberID);
+  //_bookmarks.RemoveBookmark(JabberID);
 end;
 
 {------------------------------------------------}
 function TExodusBookmarkManager.FindBookmark(const JabberID: WideString): WideString;
-var
-  bmTag: TXMLTag;
+//var
+//  bmTag: TXMLTag;
 begin
-   bmTag := _bookmarks.FindBookmark(JabberID);
-   if ( bmTag <> nil ) then
-      Result := bmTag.XML
-   else
-      Result := '';
+//   bmTag := _bookmarks.FindBookmark(JabberID);
+//   if ( bmTag <> nil ) then
+//      Result := bmTag.XML
+//   else
+//      Result := '';
 end;
 
 {-------------------------------------}

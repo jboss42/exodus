@@ -80,7 +80,7 @@ implementation
 uses
     ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
     JabberConst, InputPassword,
-    Session, Room, RosterWindow, NodeItem, Roster;
+    Session, Room, RosterForm, ContactController;
 
 const
     sConfRoom = 'Conference Room:';
@@ -124,11 +124,12 @@ end;
 procedure ShowInvite(room_jid: WideString; items: TList);
 var
     jids: TWideStringlist;
-    i: integer;
+//    i: integer;
 begin
     jids := TWideStringList.Create();
-    for i := 0 to items.Count - 1 do
-        jids.add(TJabberRosterItem(items[i]).jid.jid);
+    { TODO : Roster refactor }    
+    //for i := 0 to items.Count - 1 do
+    //    jids.add(TJabberRosterItem(items[i]).jid.jid);
     ShowInvite(room_jid, jids);
     jids.Free();
 end;
@@ -166,41 +167,42 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvite.AddRecip(jid: WideString);
-var
-    i: integer;
-    cap: WideString;
-    ritem: TJabberRosterItem;
-    n: TListItem;
+//var
+//    i: integer;
+//    cap: WideString;
+//    ritem: TJabberRosterItem;
+//    n: TListItem;
 begin
-    ritem := MainSession.roster.Find(jid);
-    if ritem <> nil then
-        cap := ritem.Text
-    else
-        cap := jid;
-
-    // make sure this JID supports MUC
-    if ((ritem <> nil) and
-        (ritem.tag <> nil) and
-        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
-
-        // if this person can not do offline msgs, and they are offline, bail
-        { TODO : if (not ritem.CanMUC) then begin }
-        if (not ritem.IsNative) then begin
-            MessageDlgW(_('This contact can not join chat rooms.'), mtError,
-                [mbOK], 0);
-            exit;
-        end;
-    end;
-    // make sure we don't already have an item w/ this caption
-    for i := 0 to lstJIDS.Items.Count - 1 do
-        if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
-
-    n := lstJIDS.Items.Add();
-    n.Caption := cap;
-    if ritem <> nil then
-        n.SubItems.Add(ritem.Jid.getDisplayFull())
-    else
-        n.SubItems.Add(jid);
+  { TODO : Roster refactor }
+//    ritem := MainSession.roster.Find(jid);
+//    if ritem <> nil then
+//        cap := ritem.Text
+//    else
+//        cap := jid;
+//
+//    // make sure this JID supports MUC
+//    if ((ritem <> nil) and
+//        (ritem.tag <> nil) and
+//        (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster')) then begin
+//
+//        // if this person can not do offline msgs, and they are offline, bail
+//        { TODO : if (not ritem.CanMUC) then begin }
+//        if (not ritem.IsNative) then begin
+//            MessageDlgW(_('This contact can not join chat rooms.'), mtError,
+//                [mbOK], 0);
+//            exit;
+//        end;
+//    end;
+//    // make sure we don't already have an item w/ this caption
+//    for i := 0 to lstJIDS.Items.Count - 1 do
+//        if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
+//
+//    n := lstJIDS.Items.Add();
+//    n.Caption := cap;
+//    if ritem <> nil then
+//        n.SubItems.Add(ritem.Jid.getDisplayFull())
+//    else
+//        n.SubItems.Add(jid);
 end;
 
 {---------------------------------------}
@@ -299,7 +301,7 @@ procedure TfrmInvite.lstJIDSDragOver(Sender, Source: TObject; X,
 begin
     // accept roster items from the main roster as well
     // as the string grid on this form
-    Accept := (Source = frmRosterWindow.treeRoster) or
+    Accept := (Source = frmRoster.RosterTree) or
         (Source = _selector.frameTreeRoster1.treeRoster);
 end;
 
@@ -325,31 +327,31 @@ end;
 
 procedure TfrmInvite.lstJIDSDragDrop(Sender, Source: TObject; X,
   Y: Integer);
-var
-    tree: TTreeView;
-    r, n: TTreeNode;
-    i,j: integer;
+//var
+//    tree: TTreeView;
+//    r, n: TTreeNode;
+//    i,j: integer;
 begin
     // dropping from main roster window
-
-    tree := TTreeView(Source);
-
-    with tree do begin
-        for i := 0 to SelectionCount - 1 do begin
-            n := Selections[i];
-            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
-                // We have a roster item
-                Self.AddRecip(TJabberRosterItem(n.Data).jid.jid)
-            else if (n.Level = 0) then begin
-                // we prolly have a grp
-                for j := 0 to n.Count - 1 do begin
-                    r := n.Item[j];
-                    if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
-                        Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
-                end;
-            end;
-        end;
-    end;
+    { TODO : Roster refactor }
+//    tree := TTreeView(Source);
+//
+//    with tree do begin
+//        for i := 0 to SelectionCount - 1 do begin
+//            n := Selections[i];
+//            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
+//                // We have a roster item
+//                Self.AddRecip(TJabberRosterItem(n.Data).jid.jid)
+//            else if (n.Level = 0) then begin
+//                // we prolly have a grp
+//                for j := 0 to n.Count - 1 do begin
+//                    r := n.Item[j];
+//                    if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+//                        Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
+//                end;
+//            end;
+//        end;
+//    end;
 end;
 
 {---------------------------------------}

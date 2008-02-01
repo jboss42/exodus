@@ -113,7 +113,7 @@ var
 implementation
 
 uses
-    RosterWindow, Session, PrefController,
+    RosterForm, Session, PrefController,
     ActivityWindow, Jabber1, ExUtils;
 
 {$R *.dfm}

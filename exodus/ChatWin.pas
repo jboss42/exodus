@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Avatar, Chat, ChatController, COMChatController, JabberID, XMLTag, IQ, Unicode, NodeItem,
+    Avatar, Chat, ChatController, COMChatController, JabberID, XMLTag, IQ, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
@@ -147,7 +147,7 @@ type
 
     procedure SetupPrefs();
     procedure SetupMenus();
-    procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
+    //procedure ChangePresImage(ritem: TJabberRosterItem; show: widestring; status: widestring);
     procedure freeChatObject();
     function  _sendMsg(txt: Widestring; xml: Widestring = ''; priority: PriorityType = None): boolean;
     procedure _sendComposing(id: Widestring);
@@ -244,8 +244,8 @@ uses
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
-    Roster, Session, XMLUtils,
-    ShellAPI, RosterWindow, Emoticons,
+    ContactController, Session, XMLUtils,
+    ShellAPI, RosterForm, Emoticons,
     Entity,
     XMLParser,
     RT_XIMConversion,
@@ -575,24 +575,25 @@ begin
 end;
 
 procedure TfrmChat.updatePresenceImage();
-var
-    ritem: TJabberRosterItem;
-    p: TJabberPres;
-    inRoster: boolean;
+//var
+//    ritem: TJabberRosterItem;
+//    p: TJabberPres;
+//    inRoster: boolean;
 begin
+    { TODO : Roster refactor }
     // setup the captions, etc..
-    ritem := MainSession.Roster.Find(_jid.jid);
-    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
-    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
-
-    if (inRoster) and (p <> nil) then
-        ChangePresImage(ritem, p.show, p.status)
-    else if (inRoster) then
-        ChangePresImage(ritem, 'offline', 'offline')
-    else if (p <> nil) then
-        ChangePresImage(nil, p.show, p.status)
-    else
-        ChangePresImage(nil, 'unknown', 'Unknown Presence')
+//    ritem := MainSession.Roster.Find(_jid.jid);
+//    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
+//    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
+//
+//    if (inRoster) and (p <> nil) then
+//        ChangePresImage(ritem, p.show, p.status)
+//    else if (inRoster) then
+//        ChangePresImage(ritem, 'offline', 'offline')
+//    else if (p <> nil) then
+//        ChangePresImage(nil, p.show, p.status)
+//    else
+//        ChangePresImage(nil, 'unknown', 'Unknown Presence')
 end;
 
 {---------------------------------------}
@@ -663,7 +664,7 @@ end;
 {---------------------------------------}
 function TfrmChat.SetJID(cjid: widestring): boolean;
 var
-    ritem: TJabberRosterItem;
+    //ritem: TJabberRosterItem;
     m, i: integer;
     a: TAvatar;
     nickjid: Widestring;
@@ -723,14 +724,14 @@ begin
                 '/packet/presence[@from="' + nickjid + '*"]');
         end;
     end;
-
-    ritem := MainSession.roster.Find(cjid);
-    if (rItem <> nil) then begin
-        mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
-        C1.Enabled := ritem.IsNative;
-        if (not ritem.IsNative) then
-            DragAcceptFiles(Handle, false);
-    end;
+     { TODO : Roster refactor }
+//    ritem := MainSession.roster.Find(cjid);
+//    if (rItem <> nil) then begin
+//        mnuSendFile.Enabled := (ritem.IsNative and (not _isRoom));
+//        C1.Enabled := ritem.IsNative;
+//        if (not ritem.IsNative) then
+//            DragAcceptFiles(Handle, false);
+//    end;
 
     updateDisplayName();
     updatePresenceImage();
@@ -1121,16 +1122,17 @@ var
     xhtml: TXMLTag;
     xml: Widestring;
     priority: PriorityType;
-    ri: TJabberRosterItem;
+//    ri: TJabberRosterItem;
 begin
-    ri := MainSession.roster.Find(_jid.jid);
-    if (ri <> nil) then begin
-        if ((not ri.IsNative) and (not ri.IsOnline)) then begin
-            MsgOut.Clear;
-            MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
-            exit;
-        end;
-    end;
+         { TODO : Roster refactor }
+//    ri := MainSession.roster.Find(_jid.jid);
+//    if (ri <> nil) then begin
+//        if ((not ri.IsNative) and (not ri.IsOnline)) then begin
+//            MsgOut.Clear;
+//            MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
+//            exit;
+//        end;
+//    end;
     
     // Get the text from the UI
     // and send the actual message out
@@ -1252,44 +1254,45 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.ChangePresImage(ritem: TJabberRosterItem; show: WideString; status: WideString);
-var
-    nickHint: Widestring;
-    newPresIdx: integer;
-begin
-    // Change the bulb
-    if (ritem = nil) then begin
-        // TODO: get image prefix from prefs
-        if (show = _('offline')) then
-            newPresIdx := RosterTreeImages.Find('offline')
-        else if (show = _('unknown')) then
-            newPresIdx := RosterTreeImages.Find('unknown')
-        else if (show = _('away')) then
-            newPresIdx := RosterTreeImages.Find('away')
-        else if (show = _('xa')) then
-            newPresIdx := RosterTreeImages.Find('xa')
-        else if (show = _('dnd')) then
-            newPresIdx := RosterTreeImages.Find('dnd')
-        else if (show = _('chat')) then
-            newPresIdx := RosterTreeImages.Find('chat')
-        else
-            newPresIdx := RosterTreeImages.Find('available')
-    end
-    else begin
-        // Always use the image from the roster item
-        newPresIdx := ritem.getPresenceImage(show);
-    end;
-
-    _show := show;
-    _status := status;
-
-    nickHint := show;
-    if (status <> '') then nickHint := nickHint + ', ' + status;
-    nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
-    lblNick.Hint := nickHint;
-
-    Self.ImageIndex := newPresIdx;
-end;
+  { TODO : Roster refactor }
+//procedure TfrmChat.ChangePresImage(ritem: TJabberRosterItem; show: WideString; status: WideString);
+//var
+//    nickHint: Widestring;
+//    newPresIdx: integer;
+//begin
+//    // Change the bulb
+//    if (ritem = nil) then begin
+//        // TODO: get image prefix from prefs
+//        if (show = _('offline')) then
+//            newPresIdx := RosterTreeImages.Find('offline')
+//        else if (show = _('unknown')) then
+//            newPresIdx := RosterTreeImages.Find('unknown')
+//        else if (show = _('away')) then
+//            newPresIdx := RosterTreeImages.Find('away')
+//        else if (show = _('xa')) then
+//            newPresIdx := RosterTreeImages.Find('xa')
+//        else if (show = _('dnd')) then
+//            newPresIdx := RosterTreeImages.Find('dnd')
+//        else if (show = _('chat')) then
+//            newPresIdx := RosterTreeImages.Find('chat')
+//        else
+//            newPresIdx := RosterTreeImages.Find('available')
+//    end
+//    else begin
+//        // Always use the image from the roster item
+//        newPresIdx := ritem.getPresenceImage(show);
+//    end;
+//
+//    _show := show;
+//    _status := status;
+//
+//    nickHint := show;
+//    if (status <> '') then nickHint := nickHint + ', ' + status;
+//    nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
+//    lblNick.Hint := nickHint;
+//
+//    Self.ImageIndex := newPresIdx;
+//end;
 
 
 
@@ -1339,7 +1342,8 @@ begin
         end;
 
         // modify presnece image - right not make everyone offline
-        ChangePresImage(nil, 'offline', 'offline')
+     { TODO : Roster refactor }
+        //ChangePresImage(nil, 'offline', 'offline')
 
     end
 end;
@@ -1352,17 +1356,17 @@ var
     status, show, User, ts  : String;
     p: TJabberPres;
     j: TJabberID;
-    ritem: TJabberRosterItem;
+//    ritem: TJabberRosterItem;
 begin
     // Get the user
     user := tag.GetAttribute('from');
 
     // make sure the user is still connected
     j := TJabberID.Create(jid);
-
-    ritem := MainSession.Roster.Find(j.jid);
-    if (ritem = nil) then
-        ritem := MainSession.Roster.Find(j.full);
+      { TODO : Roster refactor }
+//    ritem := MainSession.Roster.Find(j.jid);
+//    if (ritem = nil) then
+//        ritem := MainSession.Roster.Find(j.full);
 
     // Get the pres for this resource
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
@@ -1377,7 +1381,7 @@ begin
     //process if show or status has changed. Ignore things like caps updates
     j.Free();
     if ((_show <> show) or (_status <> status)) then begin
-        ChangePresImage(ritem, show, status);
+        //ChangePresImage(ritem, show, status);
 
         if (status = '') then
             txt := show
@@ -1412,20 +1416,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.doAddToRoster(Sender: TObject);
-var
-    ritem: TJabberRosterItem;
+//var
+//    ritem: TJabberRosterItem;
 begin
   inherited;
+  { TODO : Roster refactor }
     // check to see if we're already subscribed...
-    ritem := MainSession.roster.find(_jid.jid);
-    if ((ritem <> nil) and ((ritem.subscription = 'both') or (ritem.subscription = 'to'))) then begin
-        MessageDlgW(_(sAlreadySubscribed), mtInformation,
-            [mbOK], 0);
-        exit;
-    end
-    else begin
-        ShowAddContact(TJabberID.Create(_jid.full));
-    end;
+//    ritem := MainSession.roster.find(_jid.jid);
+//    if ((ritem <> nil) and ((ritem.subscription = 'both') or (ritem.subscription = 'to'))) then begin
+//        MessageDlgW(_(sAlreadySubscribed), mtInformation,
+//            [mbOK], 0);
+//        exit;
+//    end
+//    else begin
+//        ShowAddContact(TJabberID.Create(_jid.full));
+//    end;
 
 end;
 
@@ -1435,15 +1440,17 @@ var
     cp: TPoint;
     p: TJabberPres;
     inRoster: boolean;
-    ritem: TJabberRosterItem;
+//    ritem: TJabberRosterItem;
 begin
   inherited;
     GetCursorPos(cp);
     p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
-    ritem := MainSession.Roster.Find(_jid.jid);
-    inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
+          { TODO : Roster refactor }
+    //ritem := MainSession.Roster.Find(_jid.jid);
+    //inRoster := ((ritem <> nil) and (ritem.tag <> nil) and (ritem.tag.GetAttribute('xmlns') = 'jabber:iq:roster'));
 
-    if (inRoster) and (p <> nil) and (ritem.IsNative) then begin
+    //if (inRoster) and (p <> nil) and (ritem.IsNative) then begin
+    if (inRoster) and (p <> nil) then begin
         mnuSendFile.Enabled := true;
         DragAcceptFiles(Handle, true);
     end
@@ -1527,30 +1534,31 @@ end;
 procedure TfrmChat.AcceptFiles( var msg : TWMDropFiles );
 const
     cnMaxFileNameLen = 255;
-var
-    i,
-    nCount     : integer;
-    acFileName : array [0..cnMaxFileNameLen] of char;
-    ritem: TJabberRosterItem;
+//var
+//    i,
+//    nCount     : integer;
+//    acFileName : array [0..cnMaxFileNameLen] of char;
+//    ritem: TJabberRosterItem;
 begin
-    ritem := MainSession.roster.Find(jid);
-
-    if ((ritem <> nil) and ritem.IsNative) then begin
-        // find out how many files we're accepting
-        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
-
-        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
-
-        // query Windows one at a time for the file name
-        for i := 0 to nCount-1 do begin
-            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
-            // do your thing with the acFileName
-            FileSend(_jid.full, acFileName);
-        end;
-
-        // let Windows know that you're done
-        DragFinish( msg.Drop );
-    end;
+        { TODO : Roster refactor }
+//    ritem := MainSession.roster.Find(jid);
+//
+//    if ((ritem <> nil) and ritem.IsNative) then begin
+//        // find out how many files we're accepting
+//        if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
+//
+//        nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+//
+//        // query Windows one at a time for the file name
+//        for i := 0 to nCount-1 do begin
+//            DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
+//            // do your thing with the acFileName
+//            FileSend(_jid.full, acFileName);
+//        end;
+//
+//        // let Windows know that you're done
+//        DragFinish( msg.Drop );
+//    end;
 end;
 
 {---------------------------------------}
@@ -1938,7 +1946,7 @@ procedure TfrmChat.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
 
 begin
     inherited;
-    Accept := (Source = frmRosterWindow.treeRoster);
+    Accept := (Source = frmRoster.RosterTree);
 end;
 
 procedure TfrmChat.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -1946,9 +1954,10 @@ var
  sel_contacts: TList;
 begin
     inherited;
-    if (Source = frmRosterWindow.treeRoster) then begin
+    if (Source = frmRoster.RosterTree) then begin
         // send roster items to this contact.
-        sel_contacts := frmRosterWindow.getSelectedContacts(false);
+    { TODO : Roster refactor }
+        //sel_contacts := frmRoster.RosterTree.getSelectedContacts(false);
         if (sel_contacts.count > 0) then
             jabberSendRosterItems(TfrmChat(Self).getJid, sel_contacts)
         else

@@ -83,7 +83,7 @@ implementation
 
 uses
     JabberUtils, ExUtils,  GnuGetText, JabberConst, JabberID, Session, Room,
-    NodeItem, RosterWindow;
+    RosterForm;
 
 {$R *.dfm}
 
@@ -339,7 +339,7 @@ end;
 procedure TfrmRoomAdminList.btnAddClick(Sender: TObject);
 var
     j: Widestring;
-    ritem: TJabberRosterItem;
+//    ritem: TJabberRosterItem;
 begin
     // Add a JID
     if (role) then begin
@@ -356,10 +356,11 @@ begin
         // Select by JID
         if (_selector.ShowModal = mrOK) then begin
             j := _selector.GetSelectedJID();
-            ritem := MainSession.Roster.Find(j);
-            if (ritem <> nil) then
-                AddJid(j, ritem.Text)
-            else
+{ TODO : Roster refactor }            
+//            ritem := MainSession.Roster.Find(j);
+//            if (ritem <> nil) then
+//                AddJid(j, ritem.Text)
+//            else
                 AddJid(j, '');
         end;
     end;
@@ -403,42 +404,43 @@ procedure TfrmRoomAdminList.lstItemsDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
     // Accept roster items
-    Accept := (Source = frmRosterWindow.treeRoster) or
+    Accept := (Source = frmRoster.RosterTree) or
         (Source = _selector.frameTreeRoster1.treeRoster);
 end;
 
 {---------------------------------------}
 procedure TfrmRoomAdminList.lstItemsDragDrop(Sender, Source: TObject; X,
   Y: Integer);
-var
-    tree: TTreeView;
-    n: TTreeNode;
-    i,j: integer;
-    ritem: TJabberRosterItem;
-    gitems: TList;
-    grp: TJabberGroup;
+//var
+//    tree: TTreeView;
+//    n: TTreeNode;
+//    i,j: integer;
+//    ritem: TJabberRosterItem;
+//    gitems: TList;
+//    grp: TJabberGroup;
 begin
-    // dropping from main roster window
-    tree := TTreeView(Source);
-    with tree do begin
-        for i := 0 to SelectionCount - 1 do begin
-            n := Selections[i];
-            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
-                // We have a roster item
-                ritem := TJabberRosterItem(n.Data);
-                AddJid(ritem.jid.jid, ritem.Text);
-            end
-            else if ((n.Data <> nil) and (TObject(n.Data) is TJabberGroup)) then begin
-                // We have a roster grp
-                grp := TJabberGroup(n.Data);
-                gitems := MainSession.roster.getGroupItems(grp.FullName, false);
-                for j := 0 to gitems.count - 1 do begin
-                    ritem := TJabberRosterItem(gitems[j]);
-                    AddJid(ritem.Jid.jid, ritem.Text);
-                end;
-            end;
-        end;
-    end;
+{ TODO : Roster refactor }
+//    // dropping from main roster window
+//    tree := TTreeView(Source);
+//    with tree do begin
+//        for i := 0 to SelectionCount - 1 do begin
+//            n := Selections[i];
+//            if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
+//                // We have a roster item
+//                ritem := TJabberRosterItem(n.Data);
+//                AddJid(ritem.jid.jid, ritem.Text);
+//            end
+//            else if ((n.Data <> nil) and (TObject(n.Data) is TJabberGroup)) then begin
+//                // We have a roster grp
+//                grp := TJabberGroup(n.Data);
+//                gitems := MainSession.roster.getGroupItems(grp.FullName, false);
+//                for j := 0 to gitems.count - 1 do begin
+//                    ritem := TJabberRosterItem(gitems[j]);
+//                    AddJid(ritem.Jid.jid, ritem.Text);
+//                end;
+//            end;
+//        end;
+//    end;
 end;
 
 {---------------------------------------}

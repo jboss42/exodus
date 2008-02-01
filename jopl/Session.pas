@@ -27,9 +27,10 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Chat, ChatController, MsgList, Presence, Roster, Bookmarks, NodeItem,
+    JabberAuth, Chat, ChatController, MsgList, Presence, COMExodusItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue;
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue,
+    COMExodusItemController, ContactController, Exodus_TLB;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -68,7 +69,7 @@ type
         _unhandledSignal: TBasicSignal;
 
         // other signals
-        _rosterSignal: TRosterSignal;
+        _itemSignal: TItemSignal;
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
         _winSignal: TPacketSignal;
@@ -86,6 +87,7 @@ type
         _avails: TWidestringlist;
         _auth_agent: TJabberAuth;
         _no_auth: boolean;
+        //_intfItemController: IExodusItemController;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -123,8 +125,9 @@ type
 
     public
         ppdb: TJabberPPDB;
-        roster: TJabberRoster;
-        bookmarks: TBookmarkManager;
+        ItemController: IExodusItemController;
+        roster: TContactController;
+        //bookmarks: TBookmarkManager;
         MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
@@ -156,7 +159,7 @@ type
         procedure RemoveExtension(ext: WideString);
 
         function RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer; overload;
-        function RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer; overload;
+        function RegisterCallback(callback: TItemEvent; event: Widestring): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         function RegisterCallback(callback: TDataStringEvent): integer; overload;
         function RegisterCallback(callback: TChatEvent): integer; overload;
@@ -164,7 +167,9 @@ type
 
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
-        procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
+        //procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
+        //procedure FireEvent(event: string; tag: TXMLTag; const ritem: IExodusItem); overload;
+        procedure FireEvent(event: string; const item: IExodusItem); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const data: WideString); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const controller: TChatController); overload;
 
@@ -271,13 +276,13 @@ begin
 
     // other signals
     _sessionSignal := TBasicSignal.Create('/session');
-    _rosterSignal := TRosterSignal.Create('/roster');
+    _itemSignal := TItemSignal.Create('/roster');
     _presSignal := TPresenceSignal.Create('/presence');
     _dataSignal := TStringSignal.Create('/data');
     _winSignal := TPacketSignal.Create('/windows');
     _chatSignal := TChatSignal.Create('/chat');
     _dispatcher.AddSignal(_sessionSignal);
-    _dispatcher.AddSignal(_rosterSignal);
+    _dispatcher.AddSignal(_itemSignal);
     _dispatcher.AddSignal(_presSignal);
     _dispatcher.AddSignal(_dataSignal);
     _dispatcher.AddSignal(_winSignal);
@@ -305,12 +310,15 @@ begin
     ppdb.SetSession(Self);
 
     // Create the Roster
-    roster := TJabberRoster.Create;
-    roster.SetSession(Self);
+    ItemController := TExodusItemController.create(Self);
+    //_intfItemController := itemController;
+
+    roster := TContactController.create(Self);
+    //roster.ItemController := ItemController;
 
     // Create the bookmark manager
-    bookmarks := TBookmarkManager.Create();
-    bookmarks.SetSession(Self);
+    //bookmarks := TBookmarkManager.Create();
+    //bookmarks.SetSession(Self);
 
     // Create the msg & chat controllers
     MsgList := TJabberMsgList.Create();
@@ -351,8 +359,9 @@ begin
     ppdb.Clear();
     Prefs.Free();
     ppdb.Free();
+    //itemController.Free();
     roster.Free();
-    bookmarks.Free();
+    //bookmarks.Free();
     MsgList.Free();
     ChatList.Free();
     ClearStringListObjects(_extensions);
@@ -592,7 +601,9 @@ begin
     FreeAndNil(_features);
 
     ppdb.Clear;
-    Roster.Clear;
+    ItemController.ClearGroups;
+    ItemController.ClearItems;
+    //roster.Clear;
     ppdb.Clear;
 
     _stream.Free();
@@ -881,12 +892,12 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TRosterEvent; xplite: Widestring): integer;
+function TJabberSession.RegisterCallback(callback: TItemEvent; event: Widestring): integer;
 var
-    l: TRosterListener;
+    l: TItemListener;
 begin
-    // add a callback to the roster signal
-    l := _rosterSignal.addListener(callback, xplite);
+    // add a callback to the item signal
+    l := _itemSignal.addListener(event, callback);
     Result := l.cb_id;
 end;
 
@@ -935,10 +946,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem);
+//procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const ritem: IExodusItem);
+procedure TJabberSession.FireEvent(event: string; const item: IExodusItem);
 begin
     // dispatch a roster event directly
-    _rosterSignal.Invoke(event, tag, ritem);
+    //_itemSignal.Invoke(event, tag, ritem);
+    _itemSignal.Invoke(event, item);
 end;
 
 {---------------------------------------}
@@ -1148,7 +1161,7 @@ end;
 {---------------------------------------}
 function TJabberSession.IsBlocked(jid : TJabberID): boolean;
 var
-    r1, r2: TJabberRosterItem;
+    r1: IExodusItem;
     blockers: TWideStringList;
 begin
     blockers := TWideStringList.Create();
@@ -1161,11 +1174,9 @@ begin
 
     if ((not result) and (Prefs.getBool('block_nonroster'))) then begin
         // block this jid if they are not in my roster
-        r1 := Roster.Find(jid.jid);
-        r2 := nil;
-        if (r1 = nil) then
-            r2 := Roster.Find(jid.full);
-        Result := ((r1 = nil) and (r2 = nil));
+         r1 := ItemController.getItem(jid.jid);
+         if (r1 = nil) then
+             result := true;
     end;
 end;
 

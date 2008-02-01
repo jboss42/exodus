@@ -24,11 +24,11 @@ interface
 uses
     JabberID, GraphUtil,
     Dockable,
-    DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
+    DropTarget, Unicode, XMLTag, Presence, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
     CommCtrl, TntExtCtrls, TntMenus, Grids, TntGrids, TntComCtrls, TntForms,
-  RichEdit2, ExRichEdit, ExForm;
+  RichEdit2, ExRichEdit, ExForm, Exodus_TLB, ExTreeView;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -142,6 +142,8 @@ type
     ImageLogo: TImage;
     pnlConnectLogo: TPanel;
     txtDisclaimer: TExRichEdit;
+    procedure treeRosterChanging(Sender: TObject; Node: TTreeNode;
+      var AllowChange: Boolean);
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -219,8 +221,6 @@ type
     procedure treeRosterEndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure treeRosterStartDrag(Sender: TObject;
       var DragObject: TDragObject);
-    procedure treeRosterKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure lstProfilesKeyPress(Sender: TObject; var Key: Char);
     procedure lstProfilesInfoTip(Sender: TObject; Item: TListItem;
       var InfoTip: String);
@@ -245,17 +245,18 @@ type
     _away: TTntTreeNode;
     _xa: TTntTreeNode;
     _dnd: TTntTreeNode;
+    _tree: TExTreeView;
+    { TODO : Roster refactor }
+//    _online_go: TJabberGroup;
+//    _chat_go: TJabberGroup;
+//    _away_go: TJabberGroup;
+//    _xa_go: TJabberGroup;
+//    _dnd_go: TJabberGroup;
 
-    _online_go: TJabberGroup;
-    _chat_go: TJabberGroup;
-    _away_go: TJabberGroup;
-    _xa_go: TJabberGroup;
-    _dnd_go: TJabberGroup;
-
-    _hint_text : WideString;        // the hint text for the current node
-    _cur_ritem: TJabberRosterItem;  // current roster item selected
-    _cur_grp: Widestring;           // current group selected
-    _cur_go: TJabberGroup;          // current group object
+    //_hint_text : WideString;        // the hint text for the current node
+    //_cur_ritem: TJabberRosterItem;  // current roster item selected
+    //_cur_grp: Widestring;           // current group selected
+    //_cur_go: TJabberGroup;          // current group object
     _cur_status: integer;           // current status for the current item
     _last_search: integer;          // last item found by search
 
@@ -299,29 +300,30 @@ type
     g_bookmarks: Widestring;
     g_myres: Widestring;
 
-    procedure popUnBlockClick(Sender: TObject);
-    procedure ExpandNodes();
-    procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
-    procedure RemoveItemNodes(ritem: TJabberRosterItem);
-    procedure RemoveGroupNode(node: TTreeNode);
+    //procedure popUnBlockClick(Sender: TObject);
+    //rocedure ExpandNodes();
+ { TODO : Roster refactor }
+    //procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
+    //procedure RemoveItemNodes(ritem: TJabberRosterItem);
+    //procedure RemoveGroupNode(node: TTreeNode);
     procedure ResetPanels;
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
-    procedure DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState; c1, c2: Widestring);
-    procedure InvalidateGrps(node: TTntTreeNode);
-    procedure ExpandGrpNode(n: TTntTreeNode);
-    procedure DrawAvatar(Node: TTntTreeNode; a: TAvatar);
+    { TODO : Roster refactor }
+    //procedure DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState; c1, c2: Widestring);
+    //procedure InvalidateGrps(node: TTntTreeNode);
+    //procedure ExpandGrpNode(n: TTntTreeNode);
+    //procedure DrawAvatar(Node: TTntTreeNode; a: TAvatar);
     procedure DoLogin(idx: integer);
-
-    function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
-    procedure SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
+    //function GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
+    //procedure SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     //procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
 
   published
-    procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+    procedure RosterCallback(event: string; item: IExodusItem);
     procedure SessionCallback(event: string; tag: TXMLTag);
 
     procedure onURLDrop(p: TPoint; url: Widestring);
@@ -354,11 +356,11 @@ type
     procedure ShowProfiles();
     procedure ToggleGUI(state: integer);
 
-    function RenderGroup(grp: TJabberGroup): TTntTreeNode;
+    //function RenderGroup(grp: TJabberGroup): TTntTreeNode;
     function getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
 
-    property CurRosterItem: TJabberRosterItem read _cur_ritem;
-    property CurGroup: Widestring read _cur_grp;
+    //property CurRosterItem: TJabberRosterItem read _cur_ritem;
+    //property CurGroup: Widestring read _cur_grp;
   end;
 
 {
@@ -395,7 +397,7 @@ uses
     fProfile, ConnDetails, NewUser, RosterImages,
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
-    SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
+    SelContact, Invite, S10n, MsgRecv, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
     Transports, Session, StrUtils;
@@ -532,6 +534,15 @@ begin
 
     // Deal with fonts & stuff
     inherited;
+    _tree := TExTreeView.Create(Self, MainSession);
+    _tree.Visible := false;
+    _tree.parent := Self;
+    _tree.Left := treeRoster.Left;
+    _tree.Width := treeRoster.Width;
+    _tree.Top := treeRoster.Top;
+    _tree.Height := treeRoster.Height;
+    _tree.Canvas.Pen.Width := 1;
+    _tree.SetFontsAndColors();
 
     AssignUnicodeFont(Self, 9);
     AssignUnicodeFont(lblConnect.Font, 8);
@@ -562,7 +573,7 @@ begin
     _FullRoster := false;
     _collapsed_grps := TWideStringList.Create();
     _blockers := TWideStringlist.Create();
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/roster');
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
     ChangeStatusImage(0);
 
@@ -613,7 +624,7 @@ begin
 
     ToggleGUI(gui_disconnected);
 
-    treeRoster.Canvas.Pen.Width := 1;
+    //treeRoster.Canvas.Pen.Width := 1;
 
     s := MainSession.Prefs.getString('brand_ad');
     if (s <> '') then begin
@@ -821,6 +832,8 @@ end;
 procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    _tree.Free();
+    _tree := nil;
     // Cleanup memory
     _caps_xp.Free();
 
@@ -934,9 +947,10 @@ begin
     if (state = gui_disconnected) then begin
         ClearNodes();
         ShowPresence('offline');
-        MainSession.Roster.Clear();
+        //MainSession.Roster.Clear();
         pnlAnimation.Visible := false;
-        treeRoster.Visible := false;
+        //treeRoster.Visible := false;
+        _tree.Visible := false;
         pnlShow.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
@@ -961,11 +975,12 @@ begin
         lblStatus.Caption := _(sDisconnected);
         imgSSL.Visible := false;
         AssignUnicodeFont(lblConnect.Font, 8);
-        _online_go := nil;
-        _chat_go := nil;
-        _away_go := nil;
-        _xa_go := nil;
-        _dnd_go := nil;
+        _tree.Items.Clear();
+//        _online_go := nil;
+//        _chat_go := nil;
+//        _away_go := nil;
+//        _xa_go := nil;
+//        _dnd_go := nil;
     end
     else if (state = gui_connecting) then begin
         pnlAnimation.Visible := true;
@@ -999,290 +1014,127 @@ begin
 end;
 
 
+
+
 {---------------------------------------}
-procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
-var
-    ritem: TJabberRosterItem;
-    b_jid: Widestring;
-    imgsrc, restype, resname : Widestring;
-    ins: cardinal;
+procedure TfrmRosterWindow.RosterCallback(event: string; item: IExodusItem);
+//var
+//    go: TJabberGroup;
+//    grp_node: TTntTreeNode;
+//    grp_rect: TRect;
+//    p: TJabberPres;
 begin
-    // catch session events
-    if event = '/session/disconnected' then begin
-        ToggleGUI(gui_disconnected);
-    end
-
-    // We are in the process of connecting
-    else if event = '/session/connecting' then begin
-        ToggleGUI(gui_connecting);
-    end
-
-    // we've got a socket connection
-    else if event = '/session/connected' then begin
-        lblConnect.Caption := _(sCancelLogin);
-        lblStatus.Caption := _(sAuthenticating);
-        Self.showAniStatus();
-        lstProfiles.Visible := false;
-        pnlConnectLogo.Visible := false;
-        ShowPresence('online');
-        ResetPanels();
-    end
-
-    // we've been authenticated
-    else if event = '/session/authenticated' then begin
-        lblConnect.Caption := _(sCancelLogin);
-        lblStatus.Caption := _(sAuthenticated);
-        Self.showAniStatus();
-        lstProfiles.Visible := false;
-        pnlConnectLogo.Visible := false;
-    end
-
-    // it's the end of the roster, update the GUI
-    else if event = '/roster/end' then begin
-        if (not treeRoster.Visible) then begin
-            aniWait.Active := false;
-            aniWait.Visible := false;
-            pnlConnect.Visible := false;
-            treeRoster.Visible := true;
-            //pnlShow.Visible := true;
-            if (_avatars) then begin
-                _show_status := true;
-                treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
-            end
-            else
-                treeRoster.Perform(TVM_SETITEMHEIGHT, -1, 0);
-        end;
-    end
-
-    // our own presence has changed
-    else if event = '/session/presence' then begin
-        ShowPresence(MainSession.show);
-        imgStatus.Hint := MainSession.Status;
-    end
-
-    // preferences have been changed, refresh the roster
-    else if event = '/session/prefs' then begin
-        MainSession.Prefs.fillStringlist('blockers', _blockers);
-
-        _show_status := MainSession.Prefs.getBool('inline_status');
-        _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
-        _transports := MainSession.Prefs.getString('roster_transport_grp');
-        _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
-        _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
-        _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
-
-        treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
-        treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
-        treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
-        treeRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
-
-        pnlFind.Font.Name := treeRoster.Font.Name;
-        pnlFind.Font.Size := treeRoster.Font.Size;
-
-        if (treeRoster.Font.Charset = 0) then
-            treeRoster.Font.Charset := 1;
-
-        pnlConnect.Color := TColor(MainSession.prefs.getInt('roster_bg'));
-        pnlAnimation.Color := pnlConnect.Color;
-        lblStatus.Color := pnlConnect.Color;
-        aniWait.Color := pnlConnect.Color;
-
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
-
-        _show_online := MainSession.Prefs.getBool('roster_only_online');
-        _show_filter := MainSession.Prefs.getInt('roster_filter');
-        if (_show_filter = show_offline) then begin
-            _show_filter := show_dnd;
-            MainSession.Prefs.setInt('roster_filter', _show_filter);
-        end;
-
-        _sort_roster := MainSession.Prefs.getBool('roster_sort');
-        _show_pending := MainSession.Prefs.getBool('roster_show_pending');
-        _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
-        _show_unsub := MainSession.Prefs.getBool('roster_show_unsub');
-        _avatars := MainSession.Prefs.getBool('roster_avatars');
-
-//todo JJF MUST FIX THIS        frmExodus.pnlRoster.ShowHint := not _show_status;
-
-        BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
-
-        Redraw();
-        MainSession.RefreshBlockers;
-    end
-
-    // someone has been blocked
-    else if ((event = '/session/block') or (event = '/session/unblock')) then begin
-        // re-render this jid if it's in our roster
-        b_jid := tag.GetAttribute('jid');
-        ritem := MainSession.Roster.Find(b_jid);
-        if (ritem <> nil) then begin
-            RenderNode(ritem, MainSession.ppdb.FindPres(b_jid, ''));
-        end;
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
-    end
-
-    // we are getting server side prefs
-    else if event = '/session/server_prefs' then begin
-    end
-
-    // we got a new avatar in the cache
-    else if (event = '/session/avatars') then begin
-        treeRoster.Refresh();
-    end
-
-    // image on/off
-    else if (event = '/session/adimage/on') then begin
-        if (tag <> nil) then begin
-            restype := tag.GetAttribute('type');
-            resname := tag.GetAttribute('resname');
-            imgsrc  := tag.GetAttribute('source');
-
-            if (restype = 'dll') then begin
-                ins := LoadLibraryW(PWChar(imgsrc));
-                if (ins = 0) then
-                    ins := LoadLibrary(PChar(String(imgsrc)));
-                if (ins > 0) then begin
-                    imgAd.Picture.Bitmap.LoadFromResourceName(ins, resname);
-                    FreeLibrary(ins);
-                end;
-            end;
-            {Todo:
-            else if (restype = 'file') then begin
-
-            end
-            else if (restype = 'resource') then begin
-
-
-            end;
-            }
-        end
-        else begin
-            resname := MainSession.Prefs.getString('brand_ad');
-            if (resname <> '') then begin
-                imgAd.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + resname);
-            end;
-            _adURL := MainSession.Prefs.getString('brand_ad_url');
-            if (_adURL <> '') then
-                imgAd.Cursor := crHandPoint;
-        end;
-
-        imgAd.Visible := true;
-    end
-    else if ((event = '/session/adimage/off') and Self.Visible) then begin
-        imgAd.Visible := false;
-    end;
+    if event = '/item/end' then
+        Self.SessionCallback('/item/end', nil);
+//    // callback from the session
+//    if event = '/roster/start' then begin
+//        //frmExodus.tabs.ActivePage := frmExodus.tbsRoster;
+//        _FullRoster := true;
+//        _tree.Items.BeginUpdate;
+//        // Don't clear the nodes here so mod_groups works ok..
+//        // maybe a better way to handle this??
+//        ClearNodes();
+//    end
+//    else if event = '/roster/end' then begin
+//        _FullRoster := false;
+//        Self.SessionCallback('/roster/end', nil);
+//        _tree.Items.EndUpdate;
+//    end
+//    else if event = '/roster/item' then begin
+//        if ritem <> nil then begin
+//            //p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
+//           // RenderNode(ritem, p);
+//        end;
+//    end;
+//
+//        if (not MainSession.Prefs.getBool('roster_collapsed')) then
+//            Self.ExpandNodes();
+//
+//        if (treeRoster.items.Count > 0) then
+//            treeRoster.TopItem := treeRoster.Items[0];
+//
+//        treeRoster.AlphaSort();
+//    end
+//    else if event = '/roster/item' then begin
+//        if ritem <> nil then begin
+//            p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
+//            RenderNode(ritem, p);
+//        end;
+//    end
+//    else if (event = '/roster/group') then begin
+//        if (tag = nil) then exit;
+//        
+//        if (tag.Name = 'group') then begin
+//            go := MainSession.roster.getGroup(tag.GetAttribute('name'));
+//            if (go <> nil) then begin
+//                grp_node := TTntTreeNode(go.Data);
+//                if (grp_node = nil) then begin
+//                    grp_node := RenderGroup(go);
+//                    go.Data := grp_node;
+//                end;
+//
+//                // force a redraw
+//                grp_rect := grp_node.DisplayRect(false);
+//                InvalidateRect(treeRoster.Handle, @grp_rect, true);
+//            end;
+//        end;
+//    end
+//    else if (event = '/roster/remove') then begin
+//        // only care if this is a bookmark
+//        if (ritem <> nil) then begin
+//            if (ritem.Group[0] = g_bookmarks) then begin
+//                RemoveItemNodes(ritem);
+//                MainSession.roster.RemoveItem(ritem.Jid.jid);
+//            end
+//        end;
+//    end;
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
-var
-    go: TJabberGroup;
-    grp_node: TTntTreeNode;
-    grp_rect: TRect;
-    p: TJabberPres;
-begin
-    // callback from the session
-    if event = '/roster/start' then begin
-//        frmExodus.tabs.ActivePage := frmExodus.tbsRoster;
-        _FullRoster := true;
-        treeRoster.Items.BeginUpdate;
-        // Don't clear the nodes here so mod_groups works ok..
-        // maybe a better way to handle this??
-        // ClearNodes();
-    end
-    else if event = '/roster/end' then begin
-        _FullRoster := false;
-        Self.SessionCallback('/roster/end', nil);
-        treeRoster.Items.EndUpdate;
-
-        if (not MainSession.Prefs.getBool('roster_collapsed')) then
-            Self.ExpandNodes();
-
-        if (treeRoster.items.Count > 0) then
-            treeRoster.TopItem := treeRoster.Items[0];
-
-        treeRoster.AlphaSort();
-    end
-    else if event = '/roster/item' then begin
-        if ritem <> nil then begin
-            p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
-            RenderNode(ritem, p);
-        end;
-    end
-    else if (event = '/roster/group') then begin
-        if (tag = nil) then exit;
-        
-        if (tag.Name = 'group') then begin
-            go := MainSession.roster.getGroup(tag.GetAttribute('name'));
-            if (go <> nil) then begin
-                grp_node := TTntTreeNode(go.Data);
-                if (grp_node = nil) then begin
-                    grp_node := RenderGroup(go);
-                    go.Data := grp_node;
-                end;
-
-                // force a redraw
-                grp_rect := grp_node.DisplayRect(false);
-                InvalidateRect(treeRoster.Handle, @grp_rect, true);
-            end;
-        end;
-    end
-    else if (event = '/roster/remove') then begin
-        // only care if this is a bookmark
-        if (ritem <> nil) then begin
-            if (ritem.Group[0] = g_bookmarks) then begin
-                RemoveItemNodes(ritem);
-                MainSession.roster.RemoveItem(ritem.Jid.jid);
-            end
-        end;
-    end;
-end;
-
+//procedure TfrmRosterWindow.ExpandGrpNode(n: TTntTreeNode);
+//var
+//    p: TTntTreeNode;
+//    pi: TJabberNodeItem;
+//    p_grp: Widestring;
+//begin
+//    // This sucks, but we have to check for OUR grp, and all possible
+//    // parents above us are in the collapsed list
+//    p := n.Parent;
+//    while (p <> nil) do begin
+//        if (not p.Expanded) then begin
+//            pi := TJabberNodeItem(p.Data);
+//            if (pi is TJabberGroup) then begin
+//                p_grp := TJabberGroup(pi).Fullname;
+//                if (_collapsed_grps.indexOf(p_grp) >= 0) then
+//                    exit;
+//            end;
+//            p.Expand(false);
+//        end;
+//        p := p.parent;
+//    end;
+//    n.Expand(false);
+//end;
+{ TODO : Roster refactor }
 {---------------------------------------}
-procedure TfrmRosterWindow.ExpandGrpNode(n: TTntTreeNode);
-var
-    p: TTntTreeNode;
-    pi: TJabberNodeItem;
-    p_grp: Widestring;
-begin
-    // This sucks, but we have to check for OUR grp, and all possible
-    // parents above us are in the collapsed list
-    p := n.Parent;
-    while (p <> nil) do begin
-        if (not p.Expanded) then begin
-            pi := TJabberNodeItem(p.Data);
-            if (pi is TJabberGroup) then begin
-                p_grp := TJabberGroup(pi).Fullname;
-                if (_collapsed_grps.indexOf(p_grp) >= 0) then
-                    exit;
-            end;
-            p.Expand(false);
-        end;
-        p := p.parent;
-    end;
-    n.Expand(false);
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.ExpandNodes;
-var
-    i: integer;
-    n: TTntTreeNode;
-    ni: TJabberNodeItem;
-    cur_grp: Widestring;
-begin
-    // expand all nodes except special nodes
-    for i := 0 to treeRoster.Items.Count - 1 do begin
-        n := treeRoster.Items[i];
-        ni := TJabberNodeItem(n.Data);
-        assert(ni <> nil);
-        if ((ni is TJabberGroup) and (TJabberGroup(ni).AutoExpand)) then begin
-            cur_grp := TJabberGroup(ni).Fullname;
-            if ((_collapsed_grps.indexOf(cur_grp) = -1)) then
-                ExpandGrpNode(n);
-        end;
-    end;
-end;
+//procedure TfrmRosterWindow.ExpandNodes;
+//var
+//    i: integer;
+//    n: TTntTreeNode;
+//    ni: TJabberNodeItem;
+//    cur_grp: Widestring;
+//begin
+//    // expand all nodes except special nodes
+//    for i := 0 to treeRoster.Items.Count - 1 do begin
+//        n := treeRoster.Items[i];
+//        ni := TJabberNodeItem(n.Data);
+//        assert(ni <> nil);
+//        if ((ni is TJabberGroup) and (TJabberGroup(ni).AutoExpand)) then begin
+//            cur_grp := TJabberGroup(ni).Fullname;
+//            if ((_collapsed_grps.indexOf(cur_grp) = -1)) then
+//                ExpandGrpNode(n);
+//        end;
+//    end;
+//end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.StartFind;
@@ -1307,647 +1159,651 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.ClearNodes;
-var
-    i:          integer;
-    ri:         TJabberRosterItem;
-    node_list:  TWideStringlist;
-    go:         TJabberGroup;
+//var
+//    i:          integer;
+//    ri:         TJabberRosterItem;
+//    node_list:  TWideStringlist;
+//    go:         TJabberGroup;
 begin
-    treeRoster.Items.BeginUpdate;
-    treeRoster.Items.Clear;
+//    treeRoster.Items.BeginUpdate;
+//    treeRoster.Items.Clear;
+//
+//    with MainSession.Roster do begin
+//        // remove the grp list node pointers
+//        for i := 0 to GroupsCount - 1 do begin
+//            go := Groups[i];
+//            go.Data := nil;
+//        end;
+//
+//        // remove all item pointers to tree nodes
+//        for i := 0 to Count - 1 do begin
+//            ri := TJabberRosterItem(Objects[i]);
+//            node_list := TWidestringlist(ri.Data);
+//            if (node_list <> nil) then node_list.Clear;
+//        end;
+//    end;
 
-    with MainSession.Roster do begin
-        // remove the grp list node pointers
-        for i := 0 to GroupsCount - 1 do begin
-            go := Groups[i];
-            go.Data := nil;
-        end;
-
-        // remove all item pointers to tree nodes
-        for i := 0 to Count - 1 do begin
-            ri := TJabberRosterItem(Objects[i]);
-            node_list := TWidestringlist(ri.Data);
-            if (node_list <> nil) then node_list.Clear;
-        end;
-    end;
-
-    treeRoster.Items.EndUpdate;
-
-    //Reset members
-    _online := nil;
-    _chat := nil;
-    _away := nil;
-    _dnd  := nil;
-    _xa   := nil;
+//    treeRoster.Items.EndUpdate;
+//
+//    //Reset members
+//    _online := nil;
+//    _chat := nil;
+//    _away := nil;
+//    _dnd  := nil;
+//    _xa   := nil;
 
 
 end;
 
 {---------------------------------------}
 function TfrmRosterWindow.getNodeType(Node: TTntTreeNode): integer;
-var
-    o: TObject;
-    n: TTntTreeNode;
-    go: TJabberGroup;
+//var
+//    o: TObject;
+//    n: TTntTreeNode;
+//    go: TJabberGroup;
 begin
-    // return the type of node this is..
-    if (Node = nil) then
-        n := treeRoster.Selected
-    else
-        n := Node;
-
-    Result := node_none;
-    _cur_ritem := nil;
-    _cur_grp := '';
-
-    if (n = nil) then exit;
-
-    o := TObject(n.Data);
-    if (o = nil) then exit;
-
-    if ((o is TJabberGroup) or
-        ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
-        Result := node_grp;
-
-        if (o is TJabberGroup) then begin
-            go := TJabberGroup(n.Data);
-            _cur_grp := go.FullName;
-            _cur_go := go;
-        end;
-
-    end
-    else if (TObject(n.Data) is TJabberRosterItem) then begin
-        Result := node_ritem;
-        _cur_ritem := TJabberRosterItem(n.Data);
-
-        // check to see if it's a transport
-        if (n.Level > 0) then begin
-            go := TJabberGroup(n.Parent.Data);
-            if (go.FullName = _transports) then
-                Result := node_transport;
-        end;
-    end;
+//    // return the type of node this is..
+//    if (Node = nil) then
+//        n := treeRoster.Selected
+//    else
+//        n := Node;
+//
+//    Result := node_none;
+//    _cur_ritem := nil;
+//    _cur_grp := '';
+//
+//    if (n = nil) then exit;
+//
+//    o := TObject(n.Data);
+//    if (o = nil) then exit;
+//
+//    if ((o is TJabberGroup) or
+//        ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
+//        Result := node_grp;
+//
+//        if (o is TJabberGroup) then begin
+//            go := TJabberGroup(n.Data);
+//            _cur_grp := go.FullName;
+//            _cur_go := go;
+//        end;
+//
+//    end
+//    else if (TObject(n.Data) is TJabberRosterItem) then begin
+//        Result := node_ritem;
+//        _cur_ritem := TJabberRosterItem(n.Data);
+//
+//        // check to see if it's a transport
+//        if (n.Level > 0) then begin
+//            go := TJabberGroup(n.Parent.Data);
+//            if (go.FullName = _transports) then
+//                Result := node_transport;
+//        end;
+//    end;
 end;
 
 {---------------------------------------}
 function TfrmRosterWindow.getSelectedContacts(online: boolean = true; observer: boolean = true): TList;
-var
-    c, i: integer;
-    ri: TJabberRosterItem;
-    node: TTntTreeNode;
-    ntype: integer;
+//var
+//    c, i: integer;
+//    ri: TJabberRosterItem;
+//    node: TTntTreeNode;
+//    ntype: integer;
 begin
-    // return a list of the selected roster items
-    Result := TList.Create();
-
-    case getNodeType() of
-    node_ritem: begin
-        if (((online) and (_cur_ritem.IsOnline)) or (not online)) then
-            Result.Add(_cur_ritem);
-    end;
-    node_grp: begin
-        // add all online contacts in this grp to the Result list
-        c := treeRoster.SelectionCount;
-        if (c = 0) then exit;
-        for i := 0 to c - 1 do begin
-            node := treeRoster.Selections[i];
-            ntype := getNodeType(node);
-            if (ntype = node_ritem) then begin
-                // add this roster item to the selection
-                ri := TJabberRosterItem(node.Data);
-                if (((online) and (ri.IsOnline)) or (not online)) then
-                    Result.Add(TJabberRosterItem(node.Data));
-            end
-            else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
-                // add this grp to the selection
-                _cur_go.getRosterItems(Result, online, observer);
-            end;
-        end;
-    end;
-end;
+//    // return a list of the selected roster items
+//    Result := TList.Create();
+//
+//    case getNodeType() of
+//    node_ritem: begin
+//        if (((online) and (_cur_ritem.IsOnline)) or (not online)) then
+//            Result.Add(_cur_ritem);
+//    end;
+//    node_grp: begin
+//        // add all online contacts in this grp to the Result list
+//        c := treeRoster.SelectionCount;
+//        if (c = 0) then exit;
+//        for i := 0 to c - 1 do begin
+//            node := treeRoster.Selections[i];
+//            ntype := getNodeType(node);
+//            if (ntype = node_ritem) then begin
+//                // add this roster item to the selection
+//                ri := TJabberRosterItem(node.Data);
+//                if (((online) and (ri.IsOnline)) or (not online)) then
+//                    Result.Add(TJabberRosterItem(node.Data));
+//            end
+//            else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
+//                // add this grp to the selection
+//                _cur_go.getRosterItems(Result, online, observer);
+//            end;
+//        end;
+//    end;
+//end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.Redraw;
-var
-    i: integer;
-    ri: TJabberRosterItem;
-    p: TJabberPres;
-    go: TJabberGroup;
+//var
+//    i: integer;
+//    ri: TJabberRosterItem;
+//    p: TJabberPres;
+//    go: TJabberGroup;
 begin
     // Make sure we have current settings
     // SessionCallback('/session/prefs', nil);
 
     // loop through all roster items and draw them
-    _FullRoster := true;
-    treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
-
-    if (not _sort_roster) then begin
-        // remove availability grps
-        if (_online <> nil) then begin
-            assert(_online_go <> nil);
-            MainSession.roster.removeGroup(_online_go);
-            _online_go := nil;
-            _online.Free();
-            _online := nil;
-        end;
-        if (_chat <> nil) then begin
-            assert(_chat_go <> nil);
-            Mainsession.roster.removeGroup(_chat_go);
-            _chat_go := nil;
-            _chat.Free();
-            _chat := nil;
-        end;
-        if (_xa <> nil) then begin
-            assert(_xa_go <> nil);
-            Mainsession.roster.removeGroup(_xa_go);
-            _xa_go := nil;
-            _xa.Free();
-            _xa := nil;
-        end;
-        if (_dnd <> nil) then begin
-            assert(_dnd_go <> nil);
-            Mainsession.roster.removeGroup(_dnd_go);
-            _dnd_go := nil;
-            _dnd.Free();
-            _dnd := nil;
-        end;
-    end;
-
-    // Clear out associated nodes
-    ClearNodes;
-
-    // make sure our item heights are setup correctly.
-    if (_avatars) then begin
-        _item_height := Round(1.7 * (treeRoster.Canvas.TextHeight('Ag'))) + 2;
-        treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
-    end
-    else begin
-        _item_height := treeRoster.Canvas.TextHeight('Ag') + 2;
-        treeRoster.Perform(TVM_SETITEMHEIGHT, -1, 0);
-    end;
-
-    // Render everything
-    treeRoster.Items.BeginUpdate;
-
-    with MainSession.Roster do begin
-        // iterate across all items and render them
-        for i := 0 to Count - 1 do begin
-            ri := TJabberRosterItem(Objects[i]);
-            p := MainSession.ppdb.FindPres(ri.JID.jid, '');
-            RenderNode(ri, p);
-        end;
-
-        // iterate across the grps, render any empty ones
-        for i := 0 to GroupsCount - 1 do begin
-            go := Groups[i];
-            if ((go.Parent = nil) and (go.isEmpty())) then begin
-                if ((go.KeepEmpty) and (go.Data = nil)) then
-                    RenderGroup(go)
-            end;
-        end;
-    end;
-
-    _FullRoster := false;
-    treeRoster.AlphaSort;
-    ExpandNodes();
-    if (treeRoster.Items.Count > 0) then
-        treeRoster.TopItem := treeRoster.Items[0];
-    treeRoster.Items.EndUpdate;
+//    _FullRoster := true;
+//    treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
+//
+//    if (not _sort_roster) then begin
+//        // remove availability grps
+//        if (_online <> nil) then begin
+//            assert(_online_go <> nil);
+//            MainSession.roster.removeGroup(_online_go);
+//            _online_go := nil;
+//            _online.Free();
+//            _online := nil;
+//        end;
+//        if (_chat <> nil) then begin
+//            assert(_chat_go <> nil);
+//            Mainsession.roster.removeGroup(_chat_go);
+//            _chat_go := nil;
+//            _chat.Free();
+//            _chat := nil;
+//        end;
+//        if (_xa <> nil) then begin
+//            assert(_xa_go <> nil);
+//            Mainsession.roster.removeGroup(_xa_go);
+//            _xa_go := nil;
+//            _xa.Free();
+//            _xa := nil;
+//        end;
+//        if (_dnd <> nil) then begin
+//            assert(_dnd_go <> nil);
+//            Mainsession.roster.removeGroup(_dnd_go);
+//            _dnd_go := nil;
+//            _dnd.Free();
+//            _dnd := nil;
+//        end;
+//    end;
+//
+//    // Clear out associated nodes
+//    ClearNodes;
+//
+//    // make sure our item heights are setup correctly.
+//    if (_avatars) then begin
+//        _item_height := Round(1.7 * (treeRoster.Canvas.TextHeight('Ag'))) + 2;
+//        treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
+//    end
+//    else begin
+//        _item_height := treeRoster.Canvas.TextHeight('Ag') + 2;
+//        treeRoster.Perform(TVM_SETITEMHEIGHT, -1, 0);
+//    end;
+//
+//    // Render everything
+//    treeRoster.Items.BeginUpdate;
+//
+//    with MainSession.Roster do begin
+//        // iterate across all items and render them
+//        for i := 0 to Count - 1 do begin
+//            ri := TJabberRosterItem(Objects[i]);
+//            p := MainSession.ppdb.FindPres(ri.JID.jid, '');
+//            RenderNode(ri, p);
+//        end;
+//
+//        // iterate across the grps, render any empty ones
+//        for i := 0 to GroupsCount - 1 do begin
+//            go := Groups[i];
+//            if ((go.Parent = nil) and (go.isEmpty())) then begin
+//                if ((go.KeepEmpty) and (go.Data = nil)) then
+//                    RenderGroup(go)
+//            end;
+//        end;
+//    end;
+//
+//    _FullRoster := false;
+//    treeRoster.AlphaSort;
+//    ExpandNodes();
+//    if (treeRoster.Items.Count > 0) then
+//        treeRoster.TopItem := treeRoster.Items[0];
+//    treeRoster.Items.EndUpdate;
 end;
 
+{ TODO : Roster refactor }
 {---------------------------------------}
-procedure TfrmRosterWindow.RemoveItemNodes(ritem: TJabberRosterItem);
-var
-    n, p: TTreeNode;
-    node_list: TWidestringlist;
-    i: integer;
-begin
-    // Remove the nodes for this item..
-    node_list := TWideStringlist(ritem.Data);
-    treeRoster.Items.BeginUpdate();
-    if node_list <> nil then begin
-        for i := node_list.count - 1 downto 0 do begin
-            n := TTreeNode(node_list.Objects[i]);
-            p := n.Parent;
-            node_list.Delete(i);
-            n.Free;
-            if ((p <> nil) and (p.Count <= 0)) then
-                Self.RemoveGroupNode(p);
-        end;
-    end;
-    treeRoster.Items.EndUpdate();
-end;
+//procedure TfrmRosterWindow.RemoveItemNodes(ritem: TJabberRosterItem);
+//var
+//    n, p: TTreeNode;
+//    node_list: TWidestringlist;
+//    i: integer;
+//begin
+//    // Remove the nodes for this item..
+//    node_list := TWideStringlist(ritem.Data);
+//    treeRoster.Items.BeginUpdate();
+//    if node_list <> nil then begin
+//        for i := node_list.count - 1 downto 0 do begin
+//            n := TTreeNode(node_list.Objects[i]);
+//            p := n.Parent;
+//            node_list.Delete(i);
+//            n.Free;
+//            if ((p <> nil) and (p.Count <= 0)) then
+//                Self.RemoveGroupNode(p);
+//        end;
+//    end;
+//    treeRoster.Items.EndUpdate();
+//end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.RemoveGroupNode(node: TTreeNode);
-var
-    go: TJabberGroup;
-begin
-    go := TJabberGroup(node.Data);
-    if (go = nil) then exit;
-    go.Data := nil;
-
-    //Clean up the members
-    if (node = _online) then begin
-        _online := nil;
-    end
-    else if (node = _chat) then begin
-         _chat := nil;
-    end
-    else if (node = _away) then begin
-         _away := nil;
-    end
-    else if (node = _xa) then begin
-         _xa := nil;
-    end
-    else if (node = _dnd) then begin
-         _dnd := nil;
-    end;
+//procedure TfrmRosterWindow.RemoveGroupNode(node: TTreeNode);
+//var
+//    go: TJabberGroup;
+//begin
+//    go := TJabberGroup(node.Data);
+//    if (go = nil) then exit;
+//    go.Data := nil;
+//
+//    //Clean up the members
+//    if (node = _online) then begin
+//        _online := nil;
+//    end
+//    else if (node = _chat) then begin
+//         _chat := nil;
+//    end
+//    else if (node = _away) then begin
+//         _away := nil;
+//    end
+//    else if (node = _xa) then begin
+//         _xa := nil;
+//    end
+//    else if (node = _dnd) then begin
+//         _dnd := nil;
+//    end;
 
     //Free node
-    node.Free();
+//    node.Free();
 
-end;
+//end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
-var
-    i, g: integer;
-    cur_grp, tmps: Widestring;
-    top_item, cur_node, grp_node, n: TTntTreeNode;
-    node_list, tmp_grps: TWideStringlist;
-    is_blocked: boolean;
-    is_transport: boolean;
-    exp_grpnode: boolean;
-    resort: boolean;
-    node_rect: TRect;
-    plevel: integer;
-    go: TJabberGroup;
-    pres: TJabberPres;
-begin
+{ TODO : Roster refactor }
+//procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
+//var
+//    i, g: integer;
+//    cur_grp, tmps: Widestring;
+//    top_item, cur_node, grp_node, n: TTntTreeNode;
+//    node_list, tmp_grps: TWideStringlist;
+//    is_blocked: boolean;
+//    is_transport: boolean;
+//    exp_grpnode: boolean;
+//    resort: boolean;
+//    node_rect: TRect;
+//    plevel: integer;
+//    go: TJabberGroup;
+//    pres: TJabberPres;
+//begin
     // Render a specific roster item, with the givenode_listn presence info.
-    is_blocked := MainSession.isBlocked(ritem.jid);
-    if (is_blocked) then begin
-        if MainSession.Prefs.getBool('roster_hide_block') then exit;
-    end;
-
-    // some flags
-    is_transport := false;
-    resort := false;
-
-    // cache the current top item
-    top_item := treeRoster.TopItem;
-
-    {
-    --------------- Stage #1 ----------------------
-    Here we want to bail on some circumstances
-    if the roster item is NOT supposed to be shown
-    based on preferences, and the state of the roster
-    item, and the current presence info, etc..
-    }
-    if (not ritem.IsContact) then begin
-        // always let non-contact items thru
-    end
-
-    else if (ritem.subscription = 'remove') or (ritem.Removed) then begin
-        // something is getting removed.. ALWAYS remove it
-        RemoveItemNodes(ritem);
-        exit;
-    end
-
-    else if (ritem.ask = 'subscribe') and (_show_pending) then begin
-        // allow these items to pass thru if showing offline, 
-        // But, make sure they are hidden if
-        // not showing offline contacts
-        if ((_show_online) and (_show_filter > show_offline)) then begin
-            RemoveItemNodes(ritem);
-            exit
-        end;
-
-    end
-
-    else if ((ritem.IsInGroup(_transports)) and
-        (ritem.GroupCount = 1)) then begin
-        // we have a transport... always let them pass
-        is_transport := true;
-    end
-
-    else if (ritem.jid.user = '') then begin
-        // maybe a transport? let them pass
-    end
-
-    else if ((_show_online) and (_show_filter > show_offline)) then begin
-        // we are filtering visible contacts
-
-        if (p = nil) then plevel := show_offline
-        else if (p.show = 'dnd') then plevel := show_dnd
-        else if (p.show = 'xa') then plevel := show_xa
-        else if (p.show = 'away') then plevel := show_away
-        else plevel := show_available;
-
-        if (plevel < _show_filter) then begin
-            // we shouldn't show this ritem
-            RemoveItemNodes(ritem);
-            exit;
-        end;
-    end
-
-    else if (_show_unsub) then begin
-        // Show all nodes no matter the s10n state
-    end
-
-    else if ((ritem.subscription = 'none') or
-        (ritem.subscription = '') or
-        (ritem.subscription = 'from')) then begin
-        // We aren't subscribed to these people,
-        // or we are removing them from the roster
-        RemoveItemNodes(ritem);
-        exit;
-    end;
-
-    {
-    ------------------- Stage #2 -----------------------
-    OK, now deal with groups and existing roster nodes.
-    Create a list to contain all nodes for this
-    roster item, and assign it to the .Data property
-    of the roster item object
-    }
-    node_list := TWideStringlist(ritem.Data);
-    if node_list = nil then begin
-        node_list := TWideStringlist.Create;
-        node_list.CaseSensitive := true;
-        ritem.Data := node_list;
-    end;
-
-    // Create a temporary list of grps that this
-    // contact should be in.
-    tmp_grps := TWideStringlist.Create;
-    tmp_grps.CaseSensitive := true;
-
-    if (((p = nil) or (p.PresType = 'unavailble')) and (_offline_grp)
-        and (ritem.isContact) and (is_transport = false)) then
-        // they are offline, and we want an offline grp
-        tmp_grps.Add(g_offline)
-    else if ((_sort_roster) and (not is_transport) and (ritem.isContact)) then begin
-        // We are sorting the roster by <show>
-        if (p = nil) then begin
-            tmp_grps.Add(g_offline);
-        end
-        else if (p.Show = 'chat') then begin
-           tmp_grps.Add(g_chat);
-        end
-        else if (p.Show = 'away') then begin
-            tmp_grps.Add(g_away);
-        end
-        else if (p.Show = 'xa') then begin
-            tmp_grps.Add(g_xa);
-        end
-        else if (p.Show = 'dnd') then begin
-            tmp_grps.Add(g_dnd);
-        end
-        else begin
-            tmp_grps.Add(g_online);
-        end;
-    end
-
-    else
-        // otherwise, assign the grps from the roster item
-        ritem.AssignGroups(tmp_grps);
-
-    // If they aren't in any grps, put them into the Unfiled grp
-    if (tmp_grps.Count <= 0) then begin
-        go := MainSession.Roster.AddGroup(g_unfiled);
-        go.DragTarget := false;
-        if (not go.inGroup(ritem.jid)) then
-            go.AddJid(ritem.jid);
-        go.setPresence(ritem.jid, p);
-        tmp_grps.Add(g_unfiled);
-    end;
-
-    // Remove nodes that are in node_list but aren't in the grp list
-    // This takes care of changing grps, or going to the offline grp
-    for i := node_list.Count - 1 downto 0 do begin
-        cur_grp  := node_list[i];
-        cur_node := TTntTreeNode(node_list.Objects[i]);
-        if (tmp_grps.IndexOf(cur_grp) < 0) then begin
-            grp_node := cur_node.Parent;
-            node_list.Delete(i);
-            cur_node.Free();
-            if (grp_node.Count = 0) then begin
-                RemoveGroupNode(grp_node);
-            end;
-        end;
-    end;
-
-    // determine the caption for the node
-    if (ritem.Text <> '') then
-        tmps := ritem.Text
-    else
-        tmps := ritem.jid.Full;
-
-    // ---------------------- Stage #3 -------------------------
-    // For each grp in the temp. grp list,
-    // make sure a node already exists, or create one.
-    // For my resources, we need to add each PPDB entry
-    for g := 0 to tmp_grps.Count - 1 do begin
-        cur_grp := tmp_grps[g];
-
-        // The offline grp is special, we keep a pointer to
-        // it at all times (if it exists).
-        if (cur_grp = g_online) then begin
-            _online := GetSpecialGroup(_online, _online_go, g_online);
-            SetJidInPresenceGroup(_online_go, ritem.Jid);
-            resort := true;
-            grp_node := _online;
-        end
-        else if (cur_grp = g_chat) then begin
-            _chat := GetSpecialGroup(_chat, _chat_go, g_chat);
-            SetJidInPresenceGroup(_chat_go, ritem.Jid);
-            resort := true;
-            grp_node := _chat;
-        end
-        else if (cur_grp = g_away) then begin
-            _away := GetSpecialGroup(_away, _away_go, g_away);
-            SetJidInPresenceGroup(_away_go, ritem.Jid);
-            resort := true;
-            grp_node := _away;
-        end
-        else if (cur_grp = g_xa) then begin
-            _xa := GetSpecialGroup(_xa, _xa_go, g_xa);
-            SetJidInPresenceGroup(_xa_go, ritem.Jid);
-            resort := true;
-            grp_node := _xa;
-        end
-        else if (cur_grp = g_dnd) then begin
-            _dnd := GetSpecialGroup(_dnd, _dnd_go, g_dnd);
-            SetJidInPresenceGroup(_dnd_go, ritem.Jid);
-            resort := true;
-            grp_node := _dnd;
-        end
-
-        else begin
-            SetJidInPresenceGroup(nil, ritem.Jid);
-            // Make sure the grp exists
-            go := MainSession.Roster.addGroup(cur_grp);
-
-            // Make sure we have a node for this grp and keep
-            // a pointer to the node in the Roster's grp list
-            grp_node := TTntTreeNode(go.Data);
-            if (grp_node = nil) then begin
-                grp_node := RenderGroup(go);
-            end;
-        end;
-
-        // Expand any grps that are not supposed to be collapsed
-        if ((not _FullRoster) and
-            (_collapsed_grps.IndexOf(cur_grp) < 0) and
-            (not _collapse_all)) then
-            exp_grpnode := true
-        else
-            exp_grpnode := false;
-
-        // Now that we are sure we have a grp_node,
-        // check to see if this jid node exists under it
-        cur_node := nil;
-
-        // find the node for this grp
-        i := node_list.indexOf(cur_grp);
-        if (i >= 0) then begin
-            n := TTntTreeNode(node_list.Objects[i]);
-            cur_node := n;
-        end;
-
-        if (cur_node = nil) then begin
-            // add a node for this person under this group
-            cur_node := treeRoster.Items.AddChild(grp_node, tmps);
-            node_list.AddObject(cur_grp, cur_node);
-        end;
-
-        cur_node.Text := String(tmps);
-        cur_node.Data := ritem;
-        if (ritem.Subscription = 'from') then
-            ritem.setPresenceImage('observer');
-        if (ritem.Ask = 'subscribe') then
-            ritem.setPresenceImage('pending');
-
-        // Deal with blocked users
-        if (MainSession.isBlocked(ritem.jid)) then begin
-            if (ritem.IsOnline()) then
-                ritem.setPresenceImage('online_blocked')
-            else
-                ritem.setPresenceImage('offline_blocked');
-        end
-        else begin
-            if (ritem.ImageIndex = ritem.getPresenceImage('online_blocked')) then begin
-                // Was blocked but not blocked any more
-                // Online so need to figure out what icon to show based on current presence
-                 pres := MainSession.ppdb.FindPres(ritem.Jid.jid, ritem.Jid.resource);
-                 ritem.setPresenceImage(pres.Show);
-            end
-            else if (ritem.ImageIndex = ritem.getPresenceImage('offline_blocked')) then begin
-                // Was blocked but not blocked anymore
-                // Offline, so just show the offline icon
-                ritem.setPresenceImage('offline');       
-            end;
-        end;
-
-
-        cur_node.ImageIndex := ritem.ImageIndex;
-
-        cur_node.SelectedIndex := ritem.ImageIndex;
-
-        // only invalid if we're not doing a full roster draw.
-        if ((not _FullRoster) and (grp_node <> nil)) then begin
-            if (exp_grpnode) then ExpandGrpNode(grp_node);
-            node_rect := cur_node.DisplayRect(false);
-
-            // invalidate just the rect which contains our node
-            if (cur_node.IsVisible) then begin
-                InvalidateRect(treeRoster.Handle, @node_rect, true);
-                treeRoster.Repaint();
-            end;
-
-            // if we showing grp counts, then invalidate the grp rect as well.
-            if ((_group_counts) and (grp_node.isVisible)) then
-                InvalidateGrps(cur_node);
-        end;
-    end;
-
-    tmp_grps.Free();
+//    is_blocked := MainSession.isBlocked(ritem.jid);
+//    if (is_blocked) then begin
+//        if MainSession.Prefs.getBool('roster_hide_block') then exit;
+//    end;
+//
+//    // some flags
+//    is_transport := false;
+//    resort := false;
+//
+//    // cache the current top item
+//    top_item := treeRoster.TopItem;
+//
+//    {
+//    --------------- Stage #1 ----------------------
+//    Here we want to bail on some circumstances
+//    if the roster item is NOT supposed to be shown
+//    based on preferences, and the state of the roster
+//    item, and the current presence info, etc..
+//    }
+//    if (not ritem.IsContact) then begin
+//        // always let non-contact items thru
+//    end
+//
+//    else if (ritem.subscription = 'remove') or (ritem.Removed) then begin
+//        // something is getting removed.. ALWAYS remove it
+//        RemoveItemNodes(ritem);
+//        exit;
+//    end
+//
+//    else if (ritem.ask = 'subscribe') and (_show_pending) then begin
+//        // allow these items to pass thru if showing offline,
+//        // But, make sure they are hidden if
+//        // not showing offline contacts
+//        if ((_show_online) and (_show_filter > show_offline)) then begin
+//            RemoveItemNodes(ritem);
+//            exit
+//        end;
+//
+//    end
+//
+//    else if ((ritem.IsInGroup(_transports)) and
+//        (ritem.GroupCount = 1)) then begin
+//        // we have a transport... always let them pass
+//        is_transport := true;
+//    end
+//
+//    else if (ritem.jid.user = '') then begin
+//        // maybe a transport? let them pass
+//    end
+//
+//    else if ((_show_online) and (_show_filter > show_offline)) then begin
+//        // we are filtering visible contacts
+//
+//        if (p = nil) then plevel := show_offline
+//        else if (p.show = 'dnd') then plevel := show_dnd
+//        else if (p.show = 'xa') then plevel := show_xa
+//        else if (p.show = 'away') then plevel := show_away
+//        else plevel := show_available;
+//
+//        if (plevel < _show_filter) then begin
+//            // we shouldn't show this ritem
+//            RemoveItemNodes(ritem);
+//            exit;
+//        end;
+//    end
+//
+//    else if (_show_unsub) then begin
+//        // Show all nodes no matter the s10n state
+//    end
+//
+//    else if ((ritem.subscription = 'none') or
+//        (ritem.subscription = '') or
+//        (ritem.subscription = 'from')) then begin
+//        // We aren't subscribed to these people,
+//        // or we are removing them from the roster
+//        RemoveItemNodes(ritem);
+//        exit;
+//    end;
+//
+//    {
+//    ------------------- Stage #2 -----------------------
+//    OK, now deal with groups and existing roster nodes.
+//    Create a list to contain all nodes for this
+//    roster item, and assign it to the .Data property
+//    of the roster item object
+//    }
+//    node_list := TWideStringlist(ritem.Data);
+//    if node_list = nil then begin
+//        node_list := TWideStringlist.Create;
+//        node_list.CaseSensitive := true;
+//        ritem.Data := node_list;
+//    end;
+//
+//    // Create a temporary list of grps that this
+//    // contact should be in.
+//    tmp_grps := TWideStringlist.Create;
+//    tmp_grps.CaseSensitive := true;
+//
+//    if (((p = nil) or (p.PresType = 'unavailble')) and (_offline_grp)
+//        and (ritem.isContact) and (is_transport = false)) then
+//        // they are offline, and we want an offline grp
+//        tmp_grps.Add(g_offline)
+//    else if ((_sort_roster) and (not is_transport) and (ritem.isContact)) then begin
+//        // We are sorting the roster by <show>
+//        if (p = nil) then begin
+//            tmp_grps.Add(g_offline);
+//        end
+//        else if (p.Show = 'chat') then begin
+//           tmp_grps.Add(g_chat);
+//        end
+//        else if (p.Show = 'away') then begin
+//            tmp_grps.Add(g_away);
+//        end
+//        else if (p.Show = 'xa') then begin
+//            tmp_grps.Add(g_xa);
+//        end
+//        else if (p.Show = 'dnd') then begin
+//            tmp_grps.Add(g_dnd);
+//        end
+//        else begin
+//            tmp_grps.Add(g_online);
+//        end;
+//    end
+//
+//    else
+//        // otherwise, assign the grps from the roster item
+//        ritem.AssignGroups(tmp_grps);
+//
+//    // If they aren't in any grps, put them into the Unfiled grp
+//    if (tmp_grps.Count <= 0) then begin
+//        go := MainSession.Roster.AddGroup(g_unfiled);
+//        go.DragTarget := false;
+//        if (not go.inGroup(ritem.jid)) then
+//            go.AddJid(ritem.jid);
+//        go.setPresence(ritem.jid, p);
+//        tmp_grps.Add(g_unfiled);
+//    end;
+//
+//    // Remove nodes that are in node_list but aren't in the grp list
+//    // This takes care of changing grps, or going to the offline grp
+//    for i := node_list.Count - 1 downto 0 do begin
+//        cur_grp  := node_list[i];
+//        cur_node := TTntTreeNode(node_list.Objects[i]);
+//        if (tmp_grps.IndexOf(cur_grp) < 0) then begin
+//            grp_node := cur_node.Parent;
+//            node_list.Delete(i);
+//            cur_node.Free();
+//            if (grp_node.Count = 0) then begin
+//                RemoveGroupNode(grp_node);
+//            end;
+//        end;
+//    end;
+//
+//    // determine the caption for the node
+//    if (ritem.Text <> '') then
+//        tmps := ritem.Text
+//    else
+//        tmps := ritem.jid.Full;
+//
+//    // ---------------------- Stage #3 -------------------------
+//    // For each grp in the temp. grp list,
+//    // make sure a node already exists, or create one.
+//    // For my resources, we need to add each PPDB entry
+//    for g := 0 to tmp_grps.Count - 1 do begin
+//        cur_grp := tmp_grps[g];
+//
+//        // The offline grp is special, we keep a pointer to
+//        // it at all times (if it exists).
+//        if (cur_grp = g_online) then begin
+//            _online := GetSpecialGroup(_online, _online_go, g_online);
+//            SetJidInPresenceGroup(_online_go, ritem.Jid);
+//            resort := true;
+//            grp_node := _online;
+//        end
+//        else if (cur_grp = g_chat) then begin
+//            _chat := GetSpecialGroup(_chat, _chat_go, g_chat);
+//            SetJidInPresenceGroup(_chat_go, ritem.Jid);
+//            resort := true;
+//            grp_node := _chat;
+//        end
+//        else if (cur_grp = g_away) then begin
+//            _away := GetSpecialGroup(_away, _away_go, g_away);
+//            SetJidInPresenceGroup(_away_go, ritem.Jid);
+//            resort := true;
+//            grp_node := _away;
+//        end
+//        else if (cur_grp = g_xa) then begin
+//            _xa := GetSpecialGroup(_xa, _xa_go, g_xa);
+//            SetJidInPresenceGroup(_xa_go, ritem.Jid);
+//            resort := true;
+//            grp_node := _xa;
+//        end
+//        else if (cur_grp = g_dnd) then begin
+//            _dnd := GetSpecialGroup(_dnd, _dnd_go, g_dnd);
+//            SetJidInPresenceGroup(_dnd_go, ritem.Jid);
+//            resort := true;
+//            grp_node := _dnd;
+//        end
+//
+//        else begin
+//            SetJidInPresenceGroup(nil, ritem.Jid);
+//            // Make sure the grp exists
+//            go := MainSession.Roster.addGroup(cur_grp);
+//
+//            // Make sure we have a node for this grp and keep
+//            // a pointer to the node in the Roster's grp list
+//            grp_node := TTntTreeNode(go.Data);
+//            if (grp_node = nil) then begin
+//                grp_node := RenderGroup(go);
+//            end;
+//        end;
+//
+//        // Expand any grps that are not supposed to be collapsed
+//        if ((not _FullRoster) and
+//            (_collapsed_grps.IndexOf(cur_grp) < 0) and
+//            (not _collapse_all)) then
+//            exp_grpnode := true
+//        else
+//            exp_grpnode := false;
+//
+//        // Now that we are sure we have a grp_node,
+//        // check to see if this jid node exists under it
+//        cur_node := nil;
+//
+//        // find the node for this grp
+//        i := node_list.indexOf(cur_grp);
+//        if (i >= 0) then begin
+//            n := TTntTreeNode(node_list.Objects[i]);
+//            cur_node := n;
+//        end;
+//
+//        if (cur_node = nil) then begin
+//            // add a node for this person under this group
+//            cur_node := treeRoster.Items.AddChild(grp_node, tmps);
+//            node_list.AddObject(cur_grp, cur_node);
+//        end;
+//
+//        cur_node.Text := String(tmps);
+//        cur_node.Data := ritem;
+//        if (ritem.Subscription = 'from') then
+//            ritem.setPresenceImage('observer');
+//        if (ritem.Ask = 'subscribe') then
+//            ritem.setPresenceImage('pending');
+//
+//        // Deal with blocked users
+//        if (MainSession.isBlocked(ritem.jid)) then begin
+//            if (ritem.IsOnline()) then
+//                ritem.setPresenceImage('online_blocked')
+//            else
+//                ritem.setPresenceImage('offline_blocked');
+//        end
+//        else begin
+//            if (ritem.ImageIndex = ritem.getPresenceImage('online_blocked')) then begin
+//                // Was blocked but not blocked any more
+//                // Online so need to figure out what icon to show based on current presence
+//                 pres := MainSession.ppdb.FindPres(ritem.Jid.jid, ritem.Jid.resource);
+//                 ritem.setPresenceImage(pres.Show);
+//            end
+//            else if (ritem.ImageIndex = ritem.getPresenceImage('offline_blocked')) then begin
+//                // Was blocked but not blocked anymore
+//                // Offline, so just show the offline icon
+//                ritem.setPresenceImage('offline');
+//            end;
+//        end;
+//
+//
+//        cur_node.ImageIndex := ritem.ImageIndex;
+//
+//        cur_node.SelectedIndex := ritem.ImageIndex;
+//
+//        // only invalid if we're not doing a full roster draw.
+//        if ((not _FullRoster) and (grp_node <> nil)) then begin
+//            if (exp_grpnode) then ExpandGrpNode(grp_node);
+//            node_rect := cur_node.DisplayRect(false);
+//
+//            // invalidate just the rect which contains our node
+//            if (cur_node.IsVisible) then begin
+//                InvalidateRect(treeRoster.Handle, @node_rect, true);
+//                treeRoster.Repaint();
+//            end;
+//
+//            // if we showing grp counts, then invalidate the grp rect as well.
+//            if ((_group_counts) and (grp_node.isVisible)) then
+//                InvalidateGrps(cur_node);
+//        end;
+//    end;
+//
+//    tmp_grps.Free();
 
     {
     Finally, If this isn't a full roster push,
     Make sure the roster is alpha sorted, and
     check for any empty groups
     }
-    if not _FullRoster then begin
-        if (resort) then
-            treeRoster.AlphaSort;
-        if ((treeRoster.Items.Count > 0) and (top_item <> nil)) then
-            treeRoster.TopItem := top_item;
-    end;
-end;
+//    if not _FullRoster then begin
+//        if (resort) then
+//            treeRoster.AlphaSort;
+//        if ((treeRoster.Items.Count > 0) and (top_item <> nil)) then
+//            treeRoster.TopItem := top_item;
+//    end;
+//end;
+
+{ TODO : Roster refactor }
+{---------------------------------------}
+//function TfrmRosterWindow.GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
+//begin
+//    if (node = nil) then begin
+//        node := treeRoster.Items.AddChild(nil, caption);
+//        node.ImageIndex := RosterTreeImages.Find('closed_group');
+//        node.SelectedIndex := node.ImageIndex;
+//        grp := MainSession.Roster.addGroup(caption);
+//        node.Data := grp;
+//    end;
+//
+//    Result := node;
+//end;
 
 {---------------------------------------}
-function TfrmRosterWindow.GetSpecialGroup(var node: TTntTreeNode; var grp: TJabberGroup; caption: Widestring): TTntTreeNode;
-begin
-    if (node = nil) then begin
-        node := treeRoster.Items.AddChild(nil, caption);
-        node.ImageIndex := RosterTreeImages.Find('closed_group');
-        node.SelectedIndex := node.ImageIndex;
-        grp := MainSession.Roster.addGroup(caption);
-        node.Data := grp;
-    end;
-
-    Result := node;
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
-begin
-    if (_online_go <> nil) then
-        _online_go.removeJid(Jid);
-    if (_chat_go <> nil) then
-        _chat_go.removeJid(Jid);
-    if (_away_go <> nil) then
-        _away_go.removeJid(Jid);
-    if (_xa_go <> nil) then
-        _xa_go.removeJid(Jid);
-    if (_dnd_go <> nil) then
-        _dnd_go.removeJid(Jid);
-
-    if (grp <> nil) then
-        grp.AddJid(Jid);
-end;
+//procedure TfrmRosterWindow.SetJidInPresenceGroup(grp:TJabberGroup; Jid: TJabberID);
+//begin
+//    if (_online_go <> nil) then
+//        _online_go.removeJid(Jid);
+//    if (_chat_go <> nil) then
+//        _chat_go.removeJid(Jid);
+//    if (_away_go <> nil) then
+//        _away_go.removeJid(Jid);
+//    if (_xa_go <> nil) then
+//        _xa_go.removeJid(Jid);
+//    if (_dnd_go <> nil) then
+//        _dnd_go.removeJid(Jid);
+//
+//    if (grp <> nil) then
+//        grp.AddJid(Jid);
+//end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.InvalidateGrps(node: TTntTreeNode);
-var
-    n: TTntTreeNode;
-    grp_rect: TRect;
-begin
-    // invalidate all grp nodes above this roster item
-    n := node.Parent;
-    while (n <> nil) do begin
-        grp_rect := n.DisplayRect(false);
-        InvalidateRect(treeRoster.Handle, @grp_rect, false);
-        n := n.Parent;
-    end;
-end;
+//procedure TfrmRosterWindow.InvalidateGrps(node: TTntTreeNode);
+//var
+//    n: TTntTreeNode;
+//    grp_rect: TRect;
+//begin
+//    // invalidate all grp nodes above this roster item
+//    n := node.Parent;
+//    while (n <> nil) do begin
+//        grp_rect := n.DisplayRect(false);
+//        InvalidateRect(treeRoster.Handle, @grp_rect, false);
+//        n := n.Parent;
+//    end;
+//end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.JoinAllRooms1Click(Sender: TObject);
-var
-    recips: TList;
-    i: integer;
-    ri: TJabberRosterItem;
+//var
+//    recips: TList;
+//    i: integer;
+//    ri: TJabberRosterItem;
 begin
-    recips := getSelectedContacts(false);
-    for i := 0 to recips.Count - 1 do begin
-        ri := TJabberRosterItem(recips[i]);
-        MainSession.FireEvent(ri.Action, ri.Tag);
-    end;
+  { TODO : Roster refactor }
+//    recips := getSelectedContacts(false);
+//    for i := 0 to recips.Count - 1 do begin
+//        ri := TJabberRosterItem(recips[i]);
+//        MainSession.FireEvent(ri.Action, ri.Tag);
+//    end;
 end;
 
 {---------------------------------------}
@@ -1990,93 +1846,93 @@ begin
         end;
     end;
 end;
-
-function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTntTreeNode;
-var
-    n: integer;
-    p, grp_node: TTntTreeNode;
-    sep, path, part, cur_grp: Widestring;
-    sub: TJabberGroup;
-begin
-    // Show this group node
-    cur_grp := grp.getText();
-
-    treeRoster.Items.BeginUpdate();
-
-    n := 0;
-    p := nil;
-    path := '';
-    repeat
-        part := grp.Parts[n];
-        sep := MainSession.prefs.getString('group_seperator');
-        if (path <> '') then path := path + sep;
-        path := path + part;
-        if (n = (grp.NestLevel - 1)) then begin
-            // create the final grp
-            grp_node := treeRoster.Items.AddChild(p, part);
-            grp_node.Data := grp;
-        end
-        else begin
-            sub := MainSession.Roster.addGroup(path);
-            grp_node := TTntTreeNode(sub.Data);
-            if (grp_node = nil) then begin
-                grp_node := treeRoster.Items.AddChild(p, part);
-                grp_node.Data := sub;
-                sub.Data := grp_node;
-            end;
-        end;
-
-        p := grp_node;
-        grp_node.ImageIndex := RosterTreeImages.Find('closed_group');
-        grp_node.SelectedIndex := grp_node.ImageIndex;
-        inc(n);
-    until (n = grp.NestLevel);
-
-    grp.Data := grp_node;
-    treeRoster.AlphaSort(true);
-    treeRoster.Items.EndUpdate();
-
-    result := grp_node;
-end;
+{ TODO : Roster refactor }
+//function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTntTreeNode;
+//var
+//    n: integer;
+//    p, grp_node: TTntTreeNode;
+//    sep, path, part, cur_grp: Widestring;
+//    sub: TJabberGroup;
+//begin
+//    // Show this group node
+//    cur_grp := grp.getText();
+//
+//    treeRoster.Items.BeginUpdate();
+//
+//    n := 0;
+//    p := nil;
+//    path := '';
+//    repeat
+//        part := grp.Parts[n];
+//        sep := MainSession.prefs.getString('group_seperator');
+//        if (path <> '') then path := path + sep;
+//        path := path + part;
+//        if (n = (grp.NestLevel - 1)) then begin
+//            // create the final grp
+//            grp_node := treeRoster.Items.AddChild(p, part);
+//            grp_node.Data := grp;
+//        end
+//        else begin
+//            sub := MainSession.Roster.addGroup(path);
+//            grp_node := TTntTreeNode(sub.Data);
+//            if (grp_node = nil) then begin
+//                grp_node := treeRoster.Items.AddChild(p, part);
+//                grp_node.Data := sub;
+//                sub.Data := grp_node;
+//            end;
+//        end;
+//
+//        p := grp_node;
+//        grp_node.ImageIndex := RosterTreeImages.Find('closed_group');
+//        grp_node.SelectedIndex := grp_node.ImageIndex;
+//        inc(n);
+//    until (n = grp.NestLevel);
+//
+//    grp.Data := grp_node;
+//    treeRoster.AlphaSort(true);
+//    treeRoster.Items.EndUpdate();
+//
+//    result := grp_node;
+//end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 begin
-    // Chat with this person
-    _change_node := nil;
-    if (getNodeType() = node_ritem) then
-        // Fire the associated event with this item
-        MainSession.FireEvent(_cur_ritem.Action, _cur_ritem.Tag);
+//    // Chat with this person
+//    _change_node := nil;
+//    if (getNodeType() = node_ritem) then
+//        // Fire the associated event with this item
+//        MainSession.FireEvent(_cur_ritem.Action, _cur_ritem.Tag);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
-var
-    Node : TTntTreeNode;
-    ri  : TJabberRosterItem;
+//var
+//    Node : TTntTreeNode;
+//    ri  : TJabberRosterItem;
 begin
-    // Handle the changing of the treeview Hints
-    // Based on the current node we are hovering over.
-    _hint_text := '';
-    Node := treeRoster.GetNodeAt(x,y);
-    if (Node = nil) then exit;
-
-    // For groups just display the group name:
-    if (TObject(Node.Data) is TJabberGroup) then begin
-        _hint_text := TJabberGroup(Node.Data).getText();
-    end
-    else if (TObject(Node.Data) is TJabberRosterItem) then begin
-        ri := TJabberRosterItem(Node.Data);
-        if ri = nil then exit;
-        _hint_text := ri.Tooltip;
-    end
-    else
-        _hint_text := '';
-
-    if _hint_text = treeRoster.Hint then exit;
-    treeRoster.Hint := _hint_text;
-    Application.CancelHint;
+//    // Handle the changing of the treeview Hints
+//    // Based on the current node we are hovering over.
+//    _hint_text := '';
+//    Node := treeRoster.GetNodeAt(x,y);
+//    if (Node = nil) then exit;
+//
+//    // For groups just display the group name:
+//    if (TObject(Node.Data) is TJabberGroup) then begin
+//        _hint_text := TJabberGroup(Node.Data).getText();
+//    end
+//    else if (TObject(Node.Data) is TJabberRosterItem) then begin
+//        ri := TJabberRosterItem(Node.Data);
+//        if ri = nil then exit;
+//        _hint_text := ri.Tooltip;
+//    end
+//    else
+//        _hint_text := '';
+//
+//    if _hint_text = treeRoster.Hint then exit;
+//    treeRoster.Hint := _hint_text;
+//    Application.CancelHint;
 end;
 
 {---------------------------------------}
@@ -2221,108 +2077,108 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterCollapsed(Sender: TObject;
   Node: TTreeNode);
-var
-    x: TXMLTag;
-    go: TJabberGroup;
+//var
+//    x: TXMLTag;
+//    go: TJabberGroup;
 begin
-    if (Node.Data = nil) then exit;
-
-    if (TObject(Node.Data) is TJabberGroup) then begin
-        Node.ImageIndex := RosterTreeImages.Find('closed_group');
-        Node.SelectedIndex := Node.ImageIndex;
-        go := TJabberGroup(Node.Data);
-
-        if (_collapsed_grps.indexOf(go.FullName) = -1) then begin
-            _collapsed_grps.Add(go.FullName);
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
-        end;
-
-        x := TXMLTag.Create('collapse');
-        x.setAttribute('name', go.FullName);
-        MainSession.FireEvent('/roster/collapse', x, TJabberRosterItem(nil));
-        x.Free();
-    end;
+//    if (Node.Data = nil) then exit;
+//
+//    if (TObject(Node.Data) is TJabberGroup) then begin
+//        Node.ImageIndex := RosterTreeImages.Find('closed_group');
+//        Node.SelectedIndex := Node.ImageIndex;
+//        go := TJabberGroup(Node.Data);
+//
+//        if (_collapsed_grps.indexOf(go.FullName) = -1) then begin
+//            _collapsed_grps.Add(go.FullName);
+//            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
+//        end;
+//
+//        x := TXMLTag.Create('collapse');
+//        x.setAttribute('name', go.FullName);
+//        MainSession.FireEvent('/roster/collapse', x, TExodusItem(nil));
+//        x.Free();
+//    end;
 
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterExpanded(Sender: TObject;
   Node: TTreeNode);
-var
-    x: TXMLTag;
-    i: integer;
-    dirty: boolean;
-    go: TJabberGroup;
+//var
+//    x: TXMLTag;
+//    i: integer;
+//    dirty: boolean;
+//    go: TJabberGroup;
 begin
-    if (TObject(Node.Data) is TJabberGroup) then begin
-        go := TJabberGroup(Node.Data);
-        Node.ImageIndex := RosterTreeImages.Find('open_group');
-        Node.SelectedIndex := Node.ImageIndex;
-        dirty := false;
-        repeat
-            i := _collapsed_grps.IndexOf(go.Fullname);
-            if (i >= 0) then begin
-                dirty := true;
-                _collapsed_grps.Delete(i);
-            end;
-        until (i < 0);
-
-        if (dirty) then
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
-
-        x := TXMLTag.Create('expand');
-        x.setAttribute('name', go.FullName);
-        MainSession.FireEvent('/roster/expand', x, TJabberRosterItem(nil));
-        x.Free();
-    end;
+//    if (TObject(Node.Data) is TJabberGroup) then begin
+//        go := TJabberGroup(Node.Data);
+//        Node.ImageIndex := RosterTreeImages.Find('open_group');
+//        Node.SelectedIndex := Node.ImageIndex;
+//        dirty := false;
+//        repeat
+//            i := _collapsed_grps.IndexOf(go.Fullname);
+//            if (i >= 0) then begin
+//                dirty := true;
+//                _collapsed_grps.Delete(i);
+//            end;
+//        until (i < 0);
+//
+//        if (dirty) then
+//            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
+//
+//        x := TXMLTag.Create('expand');
+//        x.setAttribute('name', go.FullName);
+//        MainSession.FireEvent('/roster/expand', x, TExodusItem(nil));
+//        x.Free();
+//    end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-    msg: string;
-    al, ar: integer;
-    n: TTntTreeNode;
+//var
+//    msg: string;
+//    al, ar: integer;
+//    n: TTntTreeNode;
 begin
-    // check to see if we're hitting a button
-    n := treeRoster.GetNodeAt(X, Y);
-    if n = nil then begin
-        n := treeRoster.GetNodeAt((treeRoster.Indent * 2), Y);
-        if (n = nil) then begin
-            treeRoster.Selected := nil;
-            exit;
-        end;
-    end;
-
-    // check for clicking on grp widget
-    al := (treeRoster.Indent * (n.Level));
-    ar := (al + frmExodus.ImageList2.Width + 5);
-    if ((TObject(n.Data) is TJabberGroup) and
-        (X > al) and (X < ar)) then begin
-        if n.Expanded then
-            n.Collapse(false)
-        else
-            n.Expand(false);
-    end;
-
-    // if we have a legit node.... make sure it's selected..
-    if (treeRoster.SelectionCount = 1) then begin
-        if (treeRoster.Selected <> n) then
-            treeRoster.Selected := n;
-
-        if ((n = _change_node) and (Button = mbLeft)) then begin
-            if ((getNodeType(n) = node_ritem) and
-                MainSession.Prefs.getBool('inline_status')) then begin
-                n.Text := _cur_ritem.Text;
-            end;
-            n.EditText();
-        end
-    end;
-
-    _drop_copy :=  (ssCtrl in Shift);
-    msg := 'onMouseDown: _drop_copy = ' + BoolToStr(_drop_copy);
-    OutputDebugString(PChar(msg));
+//    // check to see if we're hitting a button
+//    n := treeRoster.GetNodeAt(X, Y);
+//    if n = nil then begin
+//        n := treeRoster.GetNodeAt((treeRoster.Indent * 2), Y);
+//        if (n = nil) then begin
+//            treeRoster.Selected := nil;
+//            exit;
+//        end;
+//    end;
+//
+//    // check for clicking on grp widget
+//    al := (treeRoster.Indent * (n.Level));
+//    ar := (al + frmExodus.ImageList2.Width + 5);
+//    if ((TObject(n.Data) is TJabberGroup) and
+//        (X > al) and (X < ar)) then begin
+//        if n.Expanded then
+//            n.Collapse(false)
+//        else
+//            n.Expand(false);
+//    end;
+//
+//    // if we have a legit node.... make sure it's selected..
+//    if (treeRoster.SelectionCount = 1) then begin
+//        if (treeRoster.Selected <> n) then
+//            treeRoster.Selected := n;
+//
+//        if ((n = _change_node) and (Button = mbLeft)) then begin
+//            if ((getNodeType(n) = node_ritem) and
+//                MainSession.Prefs.getBool('inline_status')) then begin
+//                n.Text := _cur_ritem.Text;
+//            end;
+//            n.EditText();
+//        end
+//    end;
+//
+//    _drop_copy :=  (ssCtrl in Shift);
+//    msg := 'onMouseDown: _drop_copy = ' + BoolToStr(_drop_copy);
+//    OutputDebugString(PChar(msg));
 
 end;
 
@@ -2338,38 +2194,39 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popVersionClick(Sender: TObject);
-var
-    jid: Widestring;
-    p: TJabberPres;
+     { TODO : Roster refactor }
+//var
+//    jid: Widestring;
+//    p: TJabberPres;
 begin
-    // send a client info request
-    jid := '';
-    if (getNodeType() = node_ritem) then begin
-        if (_cur_ritem = nil) then exit;
-
-        // if the ritem has a res, then always lookup pres for it.
-        if (_cur_ritem.jid.resource <> '') then
-            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid,
-                _cur_ritem.Jid.resource)
-        else
-            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-
-        if p = nil then
-            // this person isn't online.
-            jid := _cur_ritem.jid.jid
-        else
-            // they are online, send directly to the resource
-            jid := p.fromJID.full;
-    end;
-
-    if (jid = '') then exit;
-
-    if Sender = popVersion then
-        jabberSendCTCP(jid, XMLNS_VERSION)
-    else if Sender = popTime then
-        jabberSendCTCP(jid, XMLNS_TIME)
-    else if Sender = popLast then
-        jabberSendCTCP(jid, XMLNS_LAST);
+//    // send a client info request
+//    jid := '';
+//    if (getNodeType() = node_ritem) then begin
+//        if (_cur_ritem = nil) then exit;
+//
+//        // if the ritem has a res, then always lookup pres for it.
+//        if (_cur_ritem.jid.resource <> '') then
+//            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid,
+//                _cur_ritem.Jid.resource)
+//        else
+//            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+//
+//        if p = nil then
+//            // this person isn't online.
+//            jid := _cur_ritem.jid.jid
+//        else
+//            // they are online, send directly to the resource
+//            jid := p.fromJID.full;
+//    end;
+//
+//    if (jid = '') then exit;
+//
+//    if Sender = popVersion then
+//        jabberSendCTCP(jid, XMLNS_VERSION)
+//    else if Sender = popTime then
+//        jabberSendCTCP(jid, XMLNS_TIME)
+//    else if Sender = popLast then
+//        jabberSendCTCP(jid, XMLNS_LAST);
 end;
 
 {---------------------------------------}
@@ -2395,485 +2252,485 @@ end;
 procedure TfrmRosterWindow.popPropertiesClick(Sender: TObject);
 begin
     // Show properties for this roster item
-    if (getNodeType() = node_ritem) then
-            ShowProfile(_cur_ritem.jid.jid);
+//    if (getNodeType() = node_ritem) then
+//            ShowProfile(_cur_ritem.jid.jid);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRemoveClick(Sender: TObject);
-var
-    n: TTntTreeNode;
-    g: Widestring;
-    go: TJabberGroup;
+//var
+//    n: TTntTreeNode;
+//    g: Widestring;
+//    go: TJabberGroup;
 begin
-    // Remove this roster item.
-    if (getNodeType() = node_ritem) then begin
-        // remove a roster item
-        if _cur_ritem <> nil then begin
-            go := nil;
-            n := treeRoster.Selected.Parent;
-            if (n.Data <> nil) then
-                go := TJabberGroup(n.Data);
-            if (go <> nil) then g := go.FullName else g := '';
-            RemoveRosterItem(_cur_ritem.jid.full, g);
-        end;
-    end;
+//    // Remove this roster item.
+//    if (getNodeType() = node_ritem) then begin
+//        // remove a roster item
+//        if _cur_ritem <> nil then begin
+//            go := nil;
+//            n := treeRoster.Selected.Parent;
+//            if (n.Data <> nil) then
+//                go := TJabberGroup(n.Data);
+//            if (go <> nil) then g := go.FullName else g := '';
+//            RemoveRosterItem(_cur_ritem.jid.full, g);
+//        end;
+//    end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDragDrop(Sender, Source: TObject; X,
   Y: Integer);
-var
-    i,j: integer;
-    ritem: TJabberRosterItem;
-    sep, d_grp: Widestring;
-    s_node, d_node: TTntTreeNode;
-    go, s_grp: TJabberGroup;
-    items: TList;
+//var
+//    i,j: integer;
+//    ritem: TJabberRosterItem;
+//    sep, d_grp: Widestring;
+//    s_node, d_node: TTntTreeNode;
+//    go, s_grp: TJabberGroup;
+//    items: TList;
 begin
     // Drop the roster items onto the roster
     // d_node   : the new group node
     // d_grp    : the new group name
     // s_node   : selected node we are changing (the thing that was dropped)
-    d_node := treeRoster.GetNodeAt(X, Y);
-    if d_node = nil then exit;
-
-    if (TObject(d_node.Data) is TJabberGroup) then begin
-        // they dropped on a grp
-        // leave d_node assigned
-    end
-    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
-        // they dropped on another item
-        d_node := d_node.Parent;
-    end
-    else
-        exit;
-
-    // see if we can drop on this group
-    go := TJabberGroup(d_node.Data);
-    d_grp := go.FullName;
-    if (go.DragTarget = false) then exit;
-
-    for i := 0 to treeRoster.SelectionCount - 1 do begin
-        s_node := treeRoster.Selections[i];
-        if (TObject(s_node.Data) is TJabberGroup) then begin
-            s_grp := TJabberGroup(s_node.Data);
-            // Make sure we're not dropping on ourself.
-            if (d_grp = s_grp.FullName) then exit;
-            if (TJabberGroup(d_node.Data) = s_grp.parent) then exit;
-
-            // move all the items a new subgrp in this grp.
-            items := TList.Create();
-            TJabberGroup(s_node.Data).getRosterItems(items, false);
-
-            sep := MainSession.prefs.getString('group_seperator');
-            d_grp := d_grp + sep + TJabberGroup(s_node.Data).getText();
-            for j := 0 to items.count - 1 do begin
-                ritem := TJabberRosterItem(items[j]);
-                if (not _drop_copy) then
-                    ritem.ClearGroups;
-                ritem.AddGroup(d_grp);
-                ritem.Update();
-            end;
-        end
-        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
-            ritem := TJabberRosterItem(s_node.Data);
-
-            // invalidate the old parent
-            if (s_node.Parent <> nil) then begin
-                InvalidateGrps(s_node);
-            end;
-
-            // change the ritem object
-            if ritem <> nil then begin
-                if (not ritem.IsInGroup(d_grp)) then begin
-                    if (not _drop_copy) then
-                        ritem.ClearGroups;
-                    ritem.AddGroup(d_grp);
-                    ritem.update;
-                end;
-            end;
-        end
-    end;
-
-    _drop_copy := false;
-
-    // Make sure d_grp is expanded if it's not in _collapsed_grps
-    if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
-        ExpandGrpNode(d_node);
-
-    // Re-Draw both group nodes
-    InvalidateGrps(d_node);
-
-    treeRoster.Repaint();
+//    d_node := treeRoster.GetNodeAt(X, Y);
+//    if d_node = nil then exit;
+//
+//    if (TObject(d_node.Data) is TJabberGroup) then begin
+//        // they dropped on a grp
+//        // leave d_node assigned
+//    end
+//    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
+//        // they dropped on another item
+//        d_node := d_node.Parent;
+//    end
+//    else
+//        exit;
+//
+//    // see if we can drop on this group
+//    go := TJabberGroup(d_node.Data);
+//    d_grp := go.FullName;
+//    if (go.DragTarget = false) then exit;
+//
+//    for i := 0 to treeRoster.SelectionCount - 1 do begin
+//        s_node := treeRoster.Selections[i];
+//        if (TObject(s_node.Data) is TJabberGroup) then begin
+//            s_grp := TJabberGroup(s_node.Data);
+//            // Make sure we're not dropping on ourself.
+//            if (d_grp = s_grp.FullName) then exit;
+//            if (TJabberGroup(d_node.Data) = s_grp.parent) then exit;
+//
+//            // move all the items a new subgrp in this grp.
+//            items := TList.Create();
+//            TJabberGroup(s_node.Data).getRosterItems(items, false);
+//
+//            sep := MainSession.prefs.getString('group_seperator');
+//            d_grp := d_grp + sep + TJabberGroup(s_node.Data).getText();
+//            for j := 0 to items.count - 1 do begin
+//                ritem := TJabberRosterItem(items[j]);
+//                if (not _drop_copy) then
+//                    ritem.ClearGroups;
+//                ritem.AddGroup(d_grp);
+//                ritem.Update();
+//            end;
+//        end
+//        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
+//            ritem := TJabberRosterItem(s_node.Data);
+//
+//            // invalidate the old parent
+//            if (s_node.Parent <> nil) then begin
+//                InvalidateGrps(s_node);
+//            end;
+//
+//            // change the ritem object
+//            if ritem <> nil then begin
+//                if (not ritem.IsInGroup(d_grp)) then begin
+//                    if (not _drop_copy) then
+//                        ritem.ClearGroups;
+//                    ritem.AddGroup(d_grp);
+//                    ritem.update;
+//                end;
+//            end;
+//        end
+//    end;
+//
+//    _drop_copy := false;
+//
+//    // Make sure d_grp is expanded if it's not in _collapsed_grps
+//    if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
+//        ExpandGrpNode(d_node);
+//
+//    // Re-Draw both group nodes
+//    InvalidateGrps(d_node);
+//
+//    treeRoster.Repaint();
 
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
-var
-    s_node, d_node: TTntTreeNode;
-    go: TJabberGroup;
-    i: integer;
+//var
+//    s_node, d_node: TTntTreeNode;
+//    go: TJabberGroup;
+//    i: integer;
 begin
 
-    // Only accept items from the roster
-    if (Source = treeRoster) then begin
-        Accept := true;
-    end
-    else
-        Accept := false;
-
-    if (Y < treeRoster.Top + 20) then begin
-        _auto_dir := +1;
-        autoScroll.Enabled := true;
-    end
-    else if (Y > (treeRoster.Top + treeRoster.Height - 20)) then begin
-        _auto_dir := -1;
-        autoScroll.Enabled := true;
-    end
-    else
-        autoScroll.Enabled := false;
-
-    // check the items being dragged
-    for i := 0 to treeRoster.SelectionCount - 1 do begin
-        s_node := treeRoster.Selections[i];
-
-        // If we don't allow nested groups, you certainly can't drag and drop one.
-        if (TObject(s_node.Data) is TJabberGroup) then begin
-            if (not MainSession.Prefs.getBool('nested_groups')) then begin
-              Accept := false;
-              exit;
-            end;
-
-            go := TJabberGroup(s_node.Data);
-            if (go.DragSource = false) then begin
-                Accept := false;
-                exit;
-            end;
-        end
-        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
-            go := TJabberGroup(s_node.Parent.Data);
-            if (go.DragSource = false) then begin
-                Accept := false;
-                exit;
-            end;
-        end
-        else begin
-            Accept := false;
-            exit;
-        end;
-    end;
-
-
-    // Check to see if we are allowed to drop here
-    d_node := treeRoster.GetNodeAt(X, Y);
-    if d_node = nil then exit;
-
-    if (TObject(d_node.Data) is TJabberGroup) then begin
-        // they dropped on a grp
-        go := TJabberGroup(d_node.Data);
-    end
-    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
-        // they dropped on another item
-        go := TJabberGroup(d_node.Parent.Data);
-    end
-    else
-        exit;
-
-
-    Accept := go.DragTarget;
+//    // Only accept items from the roster
+//    if (Source = treeRoster) then begin
+//        Accept := true;
+//    end
+//    else
+//        Accept := false;
+//
+//    if (Y < treeRoster.Top + 20) then begin
+//        _auto_dir := +1;
+//        autoScroll.Enabled := true;
+//    end
+//    else if (Y > (treeRoster.Top + treeRoster.Height - 20)) then begin
+//        _auto_dir := -1;
+//        autoScroll.Enabled := true;
+//    end
+//    else
+//        autoScroll.Enabled := false;
+//
+//    // check the items being dragged
+//    for i := 0 to treeRoster.SelectionCount - 1 do begin
+//        s_node := treeRoster.Selections[i];
+//
+//        // If we don't allow nested groups, you certainly can't drag and drop one.
+//        if (TObject(s_node.Data) is TJabberGroup) then begin
+//            if (not MainSession.Prefs.getBool('nested_groups')) then begin
+//              Accept := false;
+//              exit;
+//            end;
+//
+//            go := TJabberGroup(s_node.Data);
+//            if (go.DragSource = false) then begin
+//                Accept := false;
+//                exit;
+//            end;
+//        end
+//        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
+//            go := TJabberGroup(s_node.Parent.Data);
+//            if (go.DragSource = false) then begin
+//                Accept := false;
+//                exit;
+//            end;
+//        end
+//        else begin
+//            Accept := false;
+//            exit;
+//        end;
+//    end;
+//
+//
+//    // Check to see if we are allowed to drop here
+//    d_node := treeRoster.GetNodeAt(X, Y);
+//    if d_node = nil then exit;
+//
+//    if (TObject(d_node.Data) is TJabberGroup) then begin
+//        // they dropped on a grp
+//        go := TJabberGroup(d_node.Data);
+//    end
+//    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
+//        // they dropped on another item
+//        go := TJabberGroup(d_node.Parent.Data);
+//    end
+//    else
+//        exit;
+//
+//
+//    Accept := go.DragTarget;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
-var
-    offline, native, me, o, e: boolean;
-    r: integer;
-    n: TTntTreeNode;
-    ri: TJabberRosterItem;
-    pri: TJabberPres;
-    contextMenuTag: TXMLTag;
-    menuname: Widestring;
-    i: integer;
-    transcnt, bookcnt, rescnt, contactcnt: integer;
+//var
+//    offline, native, me, o, e: boolean;
+//    r: integer;
+//    n: TTntTreeNode;
+//    ri: TJabberRosterItem;
+//    pri: TJabberPres;
+//    contextMenuTag: TXMLTag;
+//    menuname: Widestring;
+//    i: integer;
+//    transcnt, bookcnt, rescnt, contactcnt: integer;
 begin
     // Figure out what popup menu to show
     // based on the selection
-    menuname := '';
-    ri := nil;
-    n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
-    if (n <> nil) then begin
-        if (treeRoster.SelectionCount > 1) then
-            r := node_multiselect
-        else
-            r := getNodeType(n);
-    end
-    else begin
-        treeRoster.Selected := nil;
-        r := node_none;
-    end;
-
-    case r of
-    node_none: begin
-        // show the actions popup when no node is hit
-        treeRoster.PopupMenu := popActions;
-        popProperties.Enabled := false;
-        menuname := sPredefinedActions;
-    end;
-    node_transport: begin
-        treeRoster.PopupMenu := popTransport;
-        treeRoster.Selected := n;
-        menuname := sPredefinedTransport;
-    end;
-    node_ritem: begin
-        // show the roster menu when a node is hit
-        if (_cur_ritem.CustomContext <> nil) then begin
-            treeRoster.PopupMenu := _cur_ritem.CustomContext;
-            if (leftstr(treeRoster.PopupMenu.name, length('pluginContext_')) = 'pluginContext_') then begin
-                menuname := rightstr(treeRoster.PopupMenu.Name, length(treeRoster.PopupMenu.Name) - length('pluginContext_'));
-            end;
-        end
-        else begin
-            treeRoster.PopupMenu := popRoster;
-            treeRoster.Selected := n;
-            menuname := sPredefinedRoster;
-
-            o := false;         // online?
-            me := false;        // is this me?
-            native := true;     // are they native jabber?
-            offline := true;    // can they do offline?
-
-            e := (_cur_ritem <> nil);
-            if (e) then begin
-                // check to see if this person is online
-                ri := TJabberRosterItem(n.Data);
-                pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
-                o := (pri <> nil);
-                native := ri.IsNative;
-                offline := ri.CanOffline;
-                if (ri.IsInGroup(g_myres)) then
-                    me := true;
-            end;
-
-            popChat.Enabled := (e and (o or offline));
-            popMsg.Enabled := (e and (o or offline));
-            popProperties.Enabled := true;
-            popSendFile.Enabled := (o) and (native) and
-                (MainSession.Profile.ConnectionType = conn_normal);
-            frmExodus.mnuPeople_Contacts_SendFile.Enabled := popSendFile.Enabled;
-            frmExodus.btnSendFile.Enabled := popSendFile.Enabled;
-            popInvite.Enabled := native and (room.room_list.Count > 0);
-
-            popPresence.Enabled := (e and (not me));
-//            popClientInfo.Enabled := true;
-            popClientInfo.Enabled := (native);
-            popVersion.Enabled := (o) and (native);
-            popTime.Enabled := (o) and (native);
-            popRename.Enabled := (not me);
-            popHistory.Enabled := e;
-            popBlock.Enabled := (not me);
-            popRemove.Enabled := (not me);
-
-            // only enable this if we have a logger.
-            popHistory.Enabled := (ExCOMController.ContactLogger <> nil);
-
-            if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
-                popBlock.Caption := _(sBtnUnBlock) + ' ' + _(sContact);
-                popBlock.OnClick := popUnblockClick;
-            end
-            else begin
-                popBlock.Caption := _(sBtnBlock) + ' ' + _(sContact);
-                popBlock.OnClick := popBlockClick;
-            end;
-            popGroupBlock.OnClick := popBlock.OnClick;
-        end;
-    end;
-    node_grp: begin
-        // check to see if we have the Transports grp selected
-        if ((_cur_go <> nil) and (_cur_go.FullName = _transports)) then begin
-            treeRoster.PopupMenu := popActions;
-            popProperties.Enabled := false;
-            exit;
-        end;
-        // check to see if we have the Bookmarks grp selected
-        if ((_cur_go <> nil) and (_cur_go.FullName = g_bookmarks)) then begin
-            treeRoster.PopupMenu := popBookmarkGrp;
-            exit;
-        end;
-        // check to se if we have the My Resources grp selected
-        if ((_cur_go <> nil) and (_cur_go.FullName = g_myres)) then begin
-            // Not much we can do with the My Resources group, so just
-            // show the Actions menu
-            treeRoster.PopupMenu := popActions;
-            popProperties.Enabled := false;
-            menuname := sPredefinedActions;
-            exit;
-        end;
-
-        // check to see if we have multiple contacts or a group selected
-        treeRoster.PopupMenu := popGroup;
-        menuname := sPredefinedGroup;
-        if (treeRoster.SelectionCount <= 1) then begin
-            treeRoster.Selected := n;
-        end;
-        popGrpRename.Enabled := (treeRoster.SelectionCount <= 1);
-
-        // do blocking
-        // --   Block and Unblock are always available for a group
-        //      even if all contacts are blocked or unblocked.
-        //      It doesn't hurt to block an already blocked
-        //      contact, same for unblocking.
-        popBlock.OnClick := popBlockClick;
-        popGroupBlock.OnClick := popBlock.OnClick;
-        popBlock.OnClick := popUnBlockClick;
-        popGroupUnBlock.OnClick := popBlock.OnClick;
-
-        // Should contacts be able to be invited to rooms
-        popGrpInvite.Enabled := (room.room_list.Count > 0);
-    end;
-    node_multiselect: begin
-        // Go through selctions to find out if we have any "special" groups/items
-        transcnt := 0;
-        bookcnt := 0;
-        rescnt := 0;
-        contactcnt := 0;
-        for i := 0 to treeRoster.SelectionCount - 1 do begin
-            if (TObject(treeRoster.Selections[i].Data) <> nil) then begin
-                if (TObject(treeRoster.Selections[i].Data) is TJabberRosterItem) then begin
-                    if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(_transports)) then
-                        inc(transcnt)
-                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_bookmarks)) then
-                        inc(bookcnt)
-                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_myres)) then
-                        inc(rescnt)
-                    else
-                        inc(contactcnt);
-                end
-                else if (TObject(treeRoster.Selections[i].Data) is TJabberGroup) then begin
-                    if (TJabberGroup(treeRoster.Selections[i].Data).FullName = _transports) then
-                        inc(transcnt)
-                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_bookmarks) then
-                        inc(bookcnt)
-                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_myres) then
-                        inc(rescnt)
-                    else
-                        inc(contactcnt);
-                end;
-            end;
-        end;
-
-        if ((transcnt = 0) and
-            (bookcnt = 0) and
-            (rescnt = 0)) then begin
-            // Everything is a "regular" group and/or regular contacts
-            // so show group menu.
-            treeRoster.PopupMenu := popGroup;
-            menuname := sPredefinedGroup;
-            popGrpRename.Enabled := false;
-
-            // do blocking
-            // --   Block and Unblock are always available for a group
-            //      even if all contacts are blocked or unblocked.
-            //      It doesn't hurt to block an already blocked
-            //      contact, same for unblocking.
-            popBlock.OnClick := popBlockClick;
-            popGroupBlock.OnClick := popBlock.OnClick;
-            popBlock.OnClick := popUnBlockClick;
-            popGroupUnBlock.OnClick := popBlock.OnClick;
-
-            // Should contacts be able to be invited to rooms
-            popGrpInvite.Enabled := (room.room_list.Count > 0);
-        end
-        else if ((transcnt > 0) and
-                 (bookcnt = 0) and
-                 (rescnt = 0) and
-                 (contactcnt = 0)) then begin
-            // all transports - do miminal for now
-            treeRoster.PopupMenu := popActions;
-            popProperties.Enabled := false;
-        end
-        else if ((transcnt = 0) and
-                 (bookcnt > 0) and
-                 (rescnt = 0) and
-                 (contactcnt = 0)) then begin
-            // all bookmarks
-            treeRoster.PopupMenu := popBookmarkGrp;
-        end
-        else if ((transcnt = 0) and
-                 (bookcnt = 0) and
-                 (rescnt > 0) and
-                 (contactcnt = 0)) then begin
-            // all my resources - do minimal for now.
-            treeRoster.PopupMenu := popActions;
-            popProperties.Enabled := false;
-        end
-        else begin
-           // A mix - do only minimal
-            treeRoster.PopupMenu := popActions;
-            popProperties.Enabled := false;
-        end;
-    end;
-    end;
-
-    if (menuname = '') then menuname := treeRoster.PopupMenu.Name;
-
-    contextMenuTag := TXMLTag.Create('context_menu');
-    contextMenuTag.setAttribute('menu_id', menuname);
-    MainSession.FireEvent('/roster/context_menu', contextMenuTag);
-    contextMenuTag.Free();
+//    menuname := '';
+//    ri := nil;
+//    n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
+//    if (n <> nil) then begin
+//        if (treeRoster.SelectionCount > 1) then
+//            r := node_multiselect
+//        else
+//            r := getNodeType(n);
+//    end
+//    else begin
+//        treeRoster.Selected := nil;
+//        r := node_none;
+//    end;
+//
+//    case r of
+//    node_none: begin
+//        // show the actions popup when no node is hit
+//        treeRoster.PopupMenu := popActions;
+//        popProperties.Enabled := false;
+//        menuname := sPredefinedActions;
+//    end;
+//    node_transport: begin
+//        treeRoster.PopupMenu := popTransport;
+//        treeRoster.Selected := n;
+//        menuname := sPredefinedTransport;
+//    end;
+//    node_ritem: begin
+//        // show the roster menu when a node is hit
+//        if (_cur_ritem.CustomContext <> nil) then begin
+//            treeRoster.PopupMenu := _cur_ritem.CustomContext;
+//            if (leftstr(treeRoster.PopupMenu.name, length('pluginContext_')) = 'pluginContext_') then begin
+//                menuname := rightstr(treeRoster.PopupMenu.Name, length(treeRoster.PopupMenu.Name) - length('pluginContext_'));
+//            end;
+//        end
+//        else begin
+//            treeRoster.PopupMenu := popRoster;
+//            treeRoster.Selected := n;
+//            menuname := sPredefinedRoster;
+//
+//            o := false;         // online?
+//            me := false;        // is this me?
+//            native := true;     // are they native jabber?
+//            offline := true;    // can they do offline?
+//
+//            e := (_cur_ritem <> nil);
+//            if (e) then begin
+//                // check to see if this person is online
+//                ri := TJabberRosterItem(n.Data);
+//                pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
+//                o := (pri <> nil);
+//                native := ri.IsNative;
+//                offline := ri.CanOffline;
+//                if (ri.IsInGroup(g_myres)) then
+//                    me := true;
+//            end;
+//
+//            popChat.Enabled := (e and (o or offline));
+//            popMsg.Enabled := (e and (o or offline));
+//            popProperties.Enabled := true;
+//            popSendFile.Enabled := (o) and (native) and
+//                (MainSession.Profile.ConnectionType = conn_normal);
+//            frmExodus.mnuPeople_Contacts_SendFile.Enabled := popSendFile.Enabled;
+//            frmExodus.btnSendFile.Enabled := popSendFile.Enabled;
+//            popInvite.Enabled := native and (room.room_list.Count > 0);
+//
+//            popPresence.Enabled := (e and (not me));
+////            popClientInfo.Enabled := true;
+//            popClientInfo.Enabled := (native);
+//            popVersion.Enabled := (o) and (native);
+//            popTime.Enabled := (o) and (native);
+//            popRename.Enabled := (not me);
+//            popHistory.Enabled := e;
+//            popBlock.Enabled := (not me);
+//            popRemove.Enabled := (not me);
+//
+//            // only enable this if we have a logger.
+//            popHistory.Enabled := (ExCOMController.ContactLogger <> nil);
+//
+//            if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
+//                popBlock.Caption := _(sBtnUnBlock) + ' ' + _(sContact);
+//                popBlock.OnClick := popUnblockClick;
+//            end
+//            else begin
+//                popBlock.Caption := _(sBtnBlock) + ' ' + _(sContact);
+//                popBlock.OnClick := popBlockClick;
+//            end;
+//            popGroupBlock.OnClick := popBlock.OnClick;
+//        end;
+//    end;
+//    node_grp: begin
+//        // check to see if we have the Transports grp selected
+//        if ((_cur_go <> nil) and (_cur_go.FullName = _transports)) then begin
+//            treeRoster.PopupMenu := popActions;
+//            popProperties.Enabled := false;
+//            exit;
+//        end;
+//        // check to see if we have the Bookmarks grp selected
+//        if ((_cur_go <> nil) and (_cur_go.FullName = g_bookmarks)) then begin
+//            treeRoster.PopupMenu := popBookmarkGrp;
+//            exit;
+//        end;
+//        // check to se if we have the My Resources grp selected
+//        if ((_cur_go <> nil) and (_cur_go.FullName = g_myres)) then begin
+//            // Not much we can do with the My Resources group, so just
+//            // show the Actions menu
+//            treeRoster.PopupMenu := popActions;
+//            popProperties.Enabled := false;
+//            menuname := sPredefinedActions;
+//            exit;
+//        end;
+//
+//        // check to see if we have multiple contacts or a group selected
+//        treeRoster.PopupMenu := popGroup;
+//        menuname := sPredefinedGroup;
+//        if (treeRoster.SelectionCount <= 1) then begin
+//            treeRoster.Selected := n;
+//        end;
+//        popGrpRename.Enabled := (treeRoster.SelectionCount <= 1);
+//
+//        // do blocking
+//        // --   Block and Unblock are always available for a group
+//        //      even if all contacts are blocked or unblocked.
+//        //      It doesn't hurt to block an already blocked
+//        //      contact, same for unblocking.
+//        popBlock.OnClick := popBlockClick;
+//        popGroupBlock.OnClick := popBlock.OnClick;
+//        popBlock.OnClick := popUnBlockClick;
+//        popGroupUnBlock.OnClick := popBlock.OnClick;
+//
+//        // Should contacts be able to be invited to rooms
+//        popGrpInvite.Enabled := (room.room_list.Count > 0);
+//    end;
+//    node_multiselect: begin
+//        // Go through selctions to find out if we have any "special" groups/items
+//        transcnt := 0;
+//        bookcnt := 0;
+//        rescnt := 0;
+//        contactcnt := 0;
+//        for i := 0 to treeRoster.SelectionCount - 1 do begin
+//            if (TObject(treeRoster.Selections[i].Data) <> nil) then begin
+//                if (TObject(treeRoster.Selections[i].Data) is TJabberRosterItem) then begin
+//                    if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(_transports)) then
+//                        inc(transcnt)
+//                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_bookmarks)) then
+//                        inc(bookcnt)
+//                    else if (TJabberRosterItem(treeRoster.Selections[i].Data).IsInGroup(g_myres)) then
+//                        inc(rescnt)
+//                    else
+//                        inc(contactcnt);
+//                end
+//                else if (TObject(treeRoster.Selections[i].Data) is TJabberGroup) then begin
+//                    if (TJabberGroup(treeRoster.Selections[i].Data).FullName = _transports) then
+//                        inc(transcnt)
+//                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_bookmarks) then
+//                        inc(bookcnt)
+//                    else if (TJabberGroup(treeRoster.Selections[i].Data).FullName = g_myres) then
+//                        inc(rescnt)
+//                    else
+//                        inc(contactcnt);
+//                end;
+//            end;
+//        end;
+//
+//        if ((transcnt = 0) and
+//            (bookcnt = 0) and
+//            (rescnt = 0)) then begin
+//            // Everything is a "regular" group and/or regular contacts
+//            // so show group menu.
+//            treeRoster.PopupMenu := popGroup;
+//            menuname := sPredefinedGroup;
+//            popGrpRename.Enabled := false;
+//
+//            // do blocking
+//            // --   Block and Unblock are always available for a group
+//            //      even if all contacts are blocked or unblocked.
+//            //      It doesn't hurt to block an already blocked
+//            //      contact, same for unblocking.
+//            popBlock.OnClick := popBlockClick;
+//            popGroupBlock.OnClick := popBlock.OnClick;
+//            popBlock.OnClick := popUnBlockClick;
+//            popGroupUnBlock.OnClick := popBlock.OnClick;
+//
+//            // Should contacts be able to be invited to rooms
+//            popGrpInvite.Enabled := (room.room_list.Count > 0);
+//        end
+//        else if ((transcnt > 0) and
+//                 (bookcnt = 0) and
+//                 (rescnt = 0) and
+//                 (contactcnt = 0)) then begin
+//            // all transports - do miminal for now
+//            treeRoster.PopupMenu := popActions;
+//            popProperties.Enabled := false;
+//        end
+//        else if ((transcnt = 0) and
+//                 (bookcnt > 0) and
+//                 (rescnt = 0) and
+//                 (contactcnt = 0)) then begin
+//            // all bookmarks
+//            treeRoster.PopupMenu := popBookmarkGrp;
+//        end
+//        else if ((transcnt = 0) and
+//                 (bookcnt = 0) and
+//                 (rescnt > 0) and
+//                 (contactcnt = 0)) then begin
+//            // all my resources - do minimal for now.
+//            treeRoster.PopupMenu := popActions;
+//            popProperties.Enabled := false;
+//        end
+//        else begin
+//           // A mix - do only minimal
+//            treeRoster.PopupMenu := popActions;
+//            popProperties.Enabled := false;
+//        end;
+//    end;
+//    end;
+//
+//    if (menuname = '') then menuname := treeRoster.PopupMenu.Name;
+//
+//    contextMenuTag := TXMLTag.Create('context_menu');
+//    contextMenuTag.setAttribute('menu_id', menuname);
+//    MainSession.FireEvent('/roster/context_menu', contextMenuTag);
+//    contextMenuTag.Free();
 end;
 
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popHistoryClick(Sender: TObject);
-var
-    nt: integer;
-    n: TTntTreeNode;
-    ritem: TJabberRosterItem;
+//var
+//    nt: integer;
+//    n: TTntTreeNode;
+//    ritem: TJabberRosterItem;
 begin
-    // Show history for this user
-    n := treeRoster.Selected;
-    nt := getNodeType(n);
-    if (nt = node_ritem) then begin
-        ritem := TJabberRosterItem(n.Data);
-        if ritem <> nil then
-            ShowLog(ritem.jid.jid);
-    end;
+//    // Show history for this user
+//    n := treeRoster.Selected;
+//    nt := getNodeType(n);
+//    if (nt = node_ritem) then begin
+//        ritem := TJabberRosterItem(n.Data);
+//        if ritem <> nil then
+//            ShowLog(ritem.jid.jid);
+//    end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popChatClick(Sender: TObject);
 begin
-    // chat w/ contact
-    if (getNodeType() = node_ritem) then
-        StartChat(_cur_ritem.jid.jid, _cur_ritem.Jid.resource, true)
+//    // chat w/ contact
+//    if (getNodeType() = node_ritem) then
+//        StartChat(_cur_ritem.jid.jid, _cur_ritem.Jid.resource, true)
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popMsgClick(Sender: TObject);
-var
-    nt: integer;
+//var
+//    nt: integer;
 begin
-    // send a normal msg
-    nt := getNodeType();
-    if (nt = node_ritem) then
-        StartMsg(_cur_ritem.jid.full);
+//    // send a normal msg
+//    nt := getNodeType();
+//    if (nt = node_ritem) then
+//        StartMsg(_cur_ritem.jid.full);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendFileClick(Sender: TObject);
-var
-    node: TTntTreeNode;
+//var
+//    node: TTntTreeNode;
 begin
-    node := treeRoster.Selected;
-    if node = nil then exit;
-    if node.Data = nil then exit;
-
-    if (TObject(node.Data) is TJabberRosterItem) then
-        FileSend(TJabberRosterItem(node.Data).jid.full)
+//    node := treeRoster.Selected;
+//    if node = nil then exit;
+//    if node.Data = nil then exit;
+//
+//    if (TObject(node.Data) is TJabberRosterItem) then
+//        FileSend(TJabberRosterItem(node.Data).jid.full)
 end;
 
 {---------------------------------------}
@@ -2912,7 +2769,8 @@ begin
 
         // Send pres to everyone in the list.
         for i := 0 to recips.Count - 1 do begin
-            cur_jid := TJabberRosterItem(recips[i]).jid.full;
+{ TODO : Roster refactor }
+            //cur_jid := TJabberRosterItem(recips[i]).jid.full;
             t := TXMLTag.Create('presence');
 
             // do insane invisible hacking to keep our own
@@ -2939,271 +2797,272 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendSubscribeClick(Sender: TObject);
-var
-    node: TTntTreeNode;
+//var
+//    node: TTntTreeNode;
 begin
-    // send subscribe to this person
-    node := treeRoster.Selected;
-    if node = nil then exit;
-    if node.Data = nil then exit;
-
-    if (TObject(node.Data) is TJabberRosterItem) then
-        SendSubscribe(TJabberRosterItem(node.Data).jid.jid, MainSession);
+//    // send subscribe to this person
+//    node := treeRoster.Selected;
+//    if node = nil then exit;
+//    if node.Data = nil then exit;
+//
+//    if (TObject(node.Data) is TJabberRosterItem) then
+//        SendSubscribe(TJabberRosterItem(node.Data).jid.jid, MainSession);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterCustomDrawItem(
   Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
   var DefaultDraw: Boolean);
-var
-    c1, c2: WideString;
-    p: TJabberPres;
-    ntype: integer;
-    go: TJabberGroup;
-    o: TObject;
-    a: TAvatar;
+//var
+//    c1, c2: WideString;
+//    p: TJabberPres;
+//    ntype: integer;
+//    go: TJabberGroup;
+//    o: TObject;
+//    a: TAvatar;
 begin
     // Try drawing the roster custom..
-    if (not Node.isVisible) then exit;
-
-    DefaultDraw := true;
-    o := TObject(Node.Data);
-
-    if (o is TJabberGroup) then begin
-        if (not _group_counts) then exit;
-
-        go := TJabberGroup(o);
-        if (Win32Platform <> Ver_Platform_Win32_Windows) then
-            treeRoster.Canvas.Font.Style := [fsBold];
-
-        if ((not go.ShowPresence) or
-            (_sort_roster)) then begin
-            // If we aren't showing pres, then just show the total
-            c1 := go.getText();
-            c2 := '(' + IntToStr(Node.Count) + ')';
-            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
-        end
-        else begin
-            // Otherwise, show online/total for presence enabled grps
-            c1 := go.Parts[Node.Level] + ' ';
-            if (Node.Level + 1 = go.NestLevel) then
-                c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')'
-            else
-                c2 := '';
-            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
-        end;
-        DefaultDraw := false;
-    end
-    else begin
-        // we are drawing some kind of node
-        treeRoster.Canvas.Font.Style := [];
-        if (not Node.isVisible) then exit;
-
-        ntype := getNodeType(TTnTTreeNode(Node));
-        if (_avatars) then
-            DefaultDraw := false
-        else if (ntype = node_transport) then begin
-            DefaultDraw := true;
-            exit;
-        end
-        else if ((_roster_unicode = false) and (_show_status = false)) then begin
-            DefaultDraw := true;
-            exit;
-        end
-        else
-            DefaultDraw := false;
-
-        // always custom draw roster items to get unicode goodness
-        // determine the captions (c1 is nick, c2 is status)
-        c2 := '';
-
-        if (ntype = node_transport) then begin
-            c1 := _cur_ritem.Text;
-            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
-        end
-        else if (_cur_ritem <> nil) then begin
-            c1 := _cur_ritem.Text;
-            c2 := _cur_ritem.Status;
-
-            if (_cur_ritem.Text <> '') then
-                c1 := _cur_ritem.Text
-            else
-                // remove JID escaping as this is displayed jid text.
-                c1 := _cur_ritem.jid.removeJEP106(_cur_ritem.jid.Full);
-
-            if (_cur_ritem.IsContact) then begin
-                if (_cur_ritem.ask = 'subscribe') then begin
-                    c1 := c1 + _(sRosterPending);
-                    _cur_ritem.setPresenceImage('pending');
-                end;
-
-
-                if (_cur_ritem.Jid.jid = MainSession.BareJid) then
-                    // Is a resource contact, not standard contact
-                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, _cur_ritem.Jid.resource)
-                else
-                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-                if (_show_status) then begin
-                  if (p <> nil) then
-                    if (p.Status <> '') then
-                      c2 := '(' + p.Status + ')'
-                    else if (p.Show <> '') then
-                      c2 := '(' + p.Show + ')'
-                    else
-                      c2 := '';
-                end;
-            end;
-
-            DrawNodeText(TTnTTreeNode(Node), State, c1, c2);
-            if (_avatars) then begin
-                a := Avatars.Find(_cur_ritem.jid.jid);
-                if (a <> nil) then
-                    // draw the avatar
-                    DrawAvatar(TTnTTreeNode(Node), a);
-            end;
-        end;
-    end;
+//    if (not Node.isVisible) then exit;
+//
+//    DefaultDraw := true;
+//    o := TObject(Node.Data);
+//
+//    if (o is TJabberGroup) then begin
+//        if (not _group_counts) then exit;
+//
+//        go := TJabberGroup(o);
+//        if (Win32Platform <> Ver_Platform_Win32_Windows) then
+//            treeRoster.Canvas.Font.Style := [fsBold];
+//
+//        if ((not go.ShowPresence) or
+//            (_sort_roster)) then begin
+//            // If we aren't showing pres, then just show the total
+//            c1 := go.getText();
+//            c2 := '(' + IntToStr(Node.Count) + ')';
+//            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
+//        end
+//        else begin
+//            // Otherwise, show online/total for presence enabled grps
+//            c1 := go.Parts[Node.Level] + ' ';
+//            if (Node.Level + 1 = go.NestLevel) then
+//                c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')'
+//            else
+//                c2 := '';
+//            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
+//        end;
+//        DefaultDraw := false;
+//    end
+//    else begin
+//        // we are drawing some kind of node
+//        treeRoster.Canvas.Font.Style := [];
+//        if (not Node.isVisible) then exit;
+//
+//        ntype := getNodeType(TTnTTreeNode(Node));
+//        if (_avatars) then
+//            DefaultDraw := false
+//        else if (ntype = node_transport) then begin
+//            DefaultDraw := true;
+//            exit;
+//        end
+//        else if ((_roster_unicode = false) and (_show_status = false)) then begin
+//            DefaultDraw := true;
+//            exit;
+//        end
+//        else
+//            DefaultDraw := false;
+//
+//        // always custom draw roster items to get unicode goodness
+//        // determine the captions (c1 is nick, c2 is status)
+//        c2 := '';
+//
+//        if (ntype = node_transport) then begin
+//            c1 := _cur_ritem.Text;
+//            DrawNodeText(TTntTreeNode(Node), State, c1, c2);
+//        end
+//        else if (_cur_ritem <> nil) then begin
+//            c1 := _cur_ritem.Text;
+//            c2 := _cur_ritem.Status;
+//
+//            if (_cur_ritem.Text <> '') then
+//                c1 := _cur_ritem.Text
+//            else
+//                // remove JID escaping as this is displayed jid text.
+//                c1 := _cur_ritem.jid.removeJEP106(_cur_ritem.jid.Full);
+//
+//            if (_cur_ritem.IsContact) then begin
+//                if (_cur_ritem.ask = 'subscribe') then begin
+//                    c1 := c1 + _(sRosterPending);
+//                    _cur_ritem.setPresenceImage('pending');
+//                end;
+//
+//
+//                if (_cur_ritem.Jid.jid = MainSession.BareJid) then
+//                    // Is a resource contact, not standard contact
+//                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, _cur_ritem.Jid.resource)
+//                else
+//                    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+//                if (_show_status) then begin
+//                  if (p <> nil) then
+//                    if (p.Status <> '') then
+//                      c2 := '(' + p.Status + ')'
+//                    else if (p.Show <> '') then
+//                      c2 := '(' + p.Show + ')'
+//                    else
+//                      c2 := '';
+//                end;
+//            end;
+//
+//            DrawNodeText(TTnTTreeNode(Node), State, c1, c2);
+//            if (_avatars) then begin
+//                a := Avatars.Find(_cur_ritem.jid.jid);
+//                if (a <> nil) then
+//                    // draw the avatar
+//                    DrawAvatar(TTnTTreeNode(Node), a);
+//            end;
+//        end;
+//    end;
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.DrawAvatar(Node: TTntTreeNode; a: TAvatar);
-var
-    r: TRect;
-begin
-    //
-    r := Node.DisplayRect(false);
-    r.Right := r.Right - 2;
-    r.Left := r.Right - _item_height;
-    r.Bottom := r.Top + _item_height;
-    if ((a.valid) and (not a.pending)) then
-        a.Draw(treeRoster.Canvas, r);
-end;
+//procedure TfrmRosterWindow.DrawAvatar(Node: TTntTreeNode; a: TAvatar);
+//var
+//    r: TRect;
+//begin
+//    //
+//    r := Node.DisplayRect(false);
+//    r.Right := r.Right - 2;
+//    r.Left := r.Right - _item_height;
+//    r.Bottom := r.Top + _item_height;
+//    if ((a.valid) and (not a.pending)) then
+//        a.Draw(treeRoster.Canvas, r);
+//end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState;
-    c1, c2: Widestring);
-var
-    top_margin, lines, rr, maxr, ico, tw, th: integer;
-    nRect, xRect, sRect: TRect;
-    main_color, stat_color: TColor;
-    is_grp: boolean;
-    tmps: Widestring;
-begin
-    with treeRoster.Canvas do begin
-        tmps := c1;
-        tw := CanvasTextWidthW(treeRoster.Canvas, tmps);
-        th := treeRoster.Canvas.TextHeight(tmps);
-        is_grp := (TObject(Node.Data) is TJabberGroup);
-
-        // this is madness to determine the text rectangle,
-        // based on our mode, text widths, etc..
-        xRect := Node.DisplayRect(true);
-        xRect.Left := xRect.Left - 1;
-        lines := 1;
-        if ((_avatars) and (not is_grp)) then begin
-            // normal, c1 (c2)
-            if (c2 <> '') then lines := 2;
-            rr := Max(xRect.Left + tw + 3,
-                xRect.Left + CanvasTextWidthW(treeRoster.Canvas, c2) + 5);
-            maxr := treeRoster.ClientWidth - _item_height - 2;
-        end
-        else begin
-            // avatar mode, c2 under c1
-            rr := xRect.Left + tw + 2 +
-                CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
-            maxr := treeRoster.ClientWidth - 2;
-        end;
-
-        // make sure our rect isn't bigger than the treeview
-        if (rr >= maxr) then
-            xRect.Right := maxr
-        else
-            xRect.Right := rr;
-        nRect := xRect;
-        nRect.Left := nRect.Left - (2 * treeRoster.Indent);
-
-        // if selected, draw a solid rect
-        if (cdsSelected in State) then begin
-            Font.Color := clHighlightText;
-            Brush.Color := clHighlight;
-            FillRect(xRect);
-        end;
-
-        // draw the left hand image
-        top_margin := (_item_height - frmExodus.ImageList2.Height) div 2;
-        if (top_margin < 0) then top_margin := 0;
-
-        if (Node.Level > 0) then begin
-            // this is an item or a group
-            frmExodus.ImageList2.Draw(treeRoster.Canvas,
-                nRect.Left + treeRoster.Indent,
-                nRect.Top + top_margin, Node.ImageIndex);
-        end
-        else begin
-            // this is a group
-            if (Node.Expanded) then
-                ico := RosterTreeImages.Find('open_group')
-            else
-                ico := RosterTreeImages.Find('closed_group');
-
-            frmExodus.ImageList2.Draw(treeRoster.Canvas,
-                nRect.Left + treeRoster.Indent,
-                nRect.Top + top_margin, ico);
-        end;
-
-        // draw the text
-        if (cdsSelected in State) then begin
-            main_color := clHighlightText;
-            stat_color := main_color;
-        end
-        else begin
-            main_color := treeRoster.Font.Color;
-            stat_color := _status_color;
-        end;
-        if ((_avatars) and (lines = 1)) then begin
-            top_margin := (_item_height - th) div 2;
-            if (top_margin < 0) then top_margin := 0;
-        end
-        else
-            top_margin := 1;
-
-        SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
-        CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
-            xRect.Top + top_margin, tmps, maxr);
-
-        if (c2 <> '') then begin
-            SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
-            if ((not _avatars) or (is_grp)) then begin
-                Font.Style := [];
-                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
-                CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 4,
-                    xRect.Top + top_margin, c2, maxr)
-            end
-            else begin
-                Font.Size := Font.Size - 3;
-                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
-                CanvasTextOutW(treeRoster.Canvas, xRect.Left + 2,
-                    xRect.Top + 1 + th, c2, maxr);
-                Font.Size := Font.Size + 3;
-                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
-            end;
-        end
-        else if (not (cdsSelected in State)) then begin
-            { Sometimes the UI doesn't remove the "status"
-              Also have to check for selected to not select maxr }
-            sRect        := xRect;
-            sRect.Left   := xRect.Right;
-            sRect.Right  := maxr;
-            sRect.Top    := xRect.Top + 1;
-            sRect.Bottom := xRect.Bottom - 1;
-            FillRect(sRect);
-        end;
-
-        if (cdsSelected in State) then
-            // Draw the focus box.
-            treeRoster.Canvas.DrawFocusRect(xRect);
-    end;
-end;
+//procedure TfrmRosterWindow.DrawNodeText(Node: TTntTreeNode; State: TCustomDrawState;
+//    c1, c2: Widestring);
+//var
+//    top_margin, lines, rr, maxr, ico, tw, th: integer;
+//    nRect, xRect, sRect: TRect;
+//    main_color, stat_color: TColor;
+//    is_grp: boolean;
+//    tmps: Widestring;
+//begin
+//    with treeRoster.Canvas do begin
+//        tmps := c1;
+//        tw := CanvasTextWidthW(treeRoster.Canvas, tmps);
+//        th := treeRoster.Canvas.TextHeight(tmps);
+// { TODO : Roster refactor }
+//        //is_grp := (TObject(Node.Data) is TJabberGroup);
+//
+//        // this is madness to determine the text rectangle,
+//        // based on our mode, text widths, etc..
+//        xRect := Node.DisplayRect(true);
+//        xRect.Left := xRect.Left - 1;
+//        lines := 1;
+//        if ((_avatars) and (not is_grp)) then begin
+//            // normal, c1 (c2)
+//            if (c2 <> '') then lines := 2;
+//            rr := Max(xRect.Left + tw + 3,
+//                xRect.Left + CanvasTextWidthW(treeRoster.Canvas, c2) + 5);
+//            maxr := treeRoster.ClientWidth - _item_height - 2;
+//        end
+//        else begin
+//            // avatar mode, c2 under c1
+//            rr := xRect.Left + tw + 2 +
+//                CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
+//            maxr := treeRoster.ClientWidth - 2;
+//        end;
+//
+//        // make sure our rect isn't bigger than the treeview
+//        if (rr >= maxr) then
+//            xRect.Right := maxr
+//        else
+//            xRect.Right := rr;
+//        nRect := xRect;
+//        nRect.Left := nRect.Left - (2 * treeRoster.Indent);
+//
+//        // if selected, draw a solid rect
+//        if (cdsSelected in State) then begin
+//            Font.Color := clHighlightText;
+//            Brush.Color := clHighlight;
+//            FillRect(xRect);
+//        end;
+//
+//        // draw the left hand image
+//        top_margin := (_item_height - frmExodus.ImageList2.Height) div 2;
+//        if (top_margin < 0) then top_margin := 0;
+//
+//        if (Node.Level > 0) then begin
+//            // this is an item or a group
+//            frmExodus.ImageList2.Draw(treeRoster.Canvas,
+//                nRect.Left + treeRoster.Indent,
+//                nRect.Top + top_margin, Node.ImageIndex);
+//        end
+//        else begin
+//            // this is a group
+//            if (Node.Expanded) then
+//                ico := RosterTreeImages.Find('open_group')
+//            else
+//                ico := RosterTreeImages.Find('closed_group');
+//
+//            frmExodus.ImageList2.Draw(treeRoster.Canvas,
+//                nRect.Left + treeRoster.Indent,
+//                nRect.Top + top_margin, ico);
+//        end;
+//
+//        // draw the text
+//        if (cdsSelected in State) then begin
+//            main_color := clHighlightText;
+//            stat_color := main_color;
+//        end
+//        else begin
+//            main_color := treeRoster.Font.Color;
+//            stat_color := _status_color;
+//        end;
+//        if ((_avatars) and (lines = 1)) then begin
+//            top_margin := (_item_height - th) div 2;
+//            if (top_margin < 0) then top_margin := 0;
+//        end
+//        else
+//            top_margin := 1;
+//
+//        SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
+//        CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
+//            xRect.Top + top_margin, tmps, maxr);
+//
+//        if (c2 <> '') then begin
+//            SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
+//            if ((not _avatars) or (is_grp)) then begin
+//                Font.Style := [];
+//                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
+//                CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 4,
+//                    xRect.Top + top_margin, c2, maxr)
+//            end
+//            else begin
+//                Font.Size := Font.Size - 3;
+//                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
+//                CanvasTextOutW(treeRoster.Canvas, xRect.Left + 2,
+//                    xRect.Top + 1 + th, c2, maxr);
+//                Font.Size := Font.Size + 3;
+//                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
+//            end;
+//        end
+//        else if (not (cdsSelected in State)) then begin
+//            { Sometimes the UI doesn't remove the "status"
+//              Also have to check for selected to not select maxr }
+//            sRect        := xRect;
+//            sRect.Left   := xRect.Right;
+//            sRect.Right  := maxr;
+//            sRect.Top    := xRect.Top + 1;
+//            sRect.Bottom := xRect.Bottom - 1;
+//            FillRect(sRect);
+//        end;
+//
+//        if (cdsSelected in State) then
+//            // Draw the focus box.
+//            treeRoster.Canvas.DrawFocusRect(xRect);
+//    end;
+//end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.imgStatusPaint(Sender: TObject);
@@ -3213,147 +3072,147 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
-var
-    go, grp_exists: TJabberGroup;
-    old_grp, new_grp, grp_exists_msg, special_grp_msg: WideString;
-    i: integer;
-    ri: TJabberRosterItem;
-    x: TXMLTag;
+//var
+//    go, grp_exists: TJabberGroup;
+//    old_grp, new_grp, grp_exists_msg, special_grp_msg: WideString;
+//    i: integer;
+//    ri: TJabberRosterItem;
+//    x: TXMLTag;
 begin
-    // Rename some grp.
-    if (treeRoster.Selected = nil) then exit;
-    go := TJabberGroup(treeRoster.Selected.Data);
-    if (go = nil) then exit;
-
-    new_grp := go.FullName;
-    if (InputQueryW(_(sRenameGrp), _(sRenameGrpPrompt), new_grp)) then begin
-        old_grp := go.FullName;
-        new_grp := Trim(new_grp);
-        if (new_grp <> old_grp) then begin
-            //If new group name is empty treat it as 'Unfiled'
-            if (new_grp = '') then
-              new_grp := g_unfiled;
-            // We should not let the user rename special groups
-            if  ((old_grp = g_unfiled) or (old_grp = g_offline) or (old_grp = g_bookmarks)) then begin
-                special_grp_msg := _(sSpecialGroup);
-                special_grp_msg := WideFormat(special_grp_msg, [old_grp]);
-                MessageDlgW(special_grp_msg, mtError, [mbOK], 0);
-                exit;
-            end;
-
-            grp_exists := MainSession.Roster.getGroup(new_grp);
-            // Do not allow renaming to the group that already exists
-            if (grp_exists <> nil) then begin
-                grp_exists_msg := _(sGrpAlreadyExists);
-                grp_exists_msg := WideFormat(grp_exists_msg, [new_grp]);
-                MessageDlgW(grp_exists_msg, mtError, [mbOK], 0);
-                exit;
-            end;
-
-            if (go.isEmpty) then begin
-              MainSession.Roster.removeGroup(go);
-              TTntTreeNode(go.Data).Free();
-              MainSession.Roster.addGroup(new_grp);
-              x := TXMLTag.Create('group');
-              x.setAttribute('name', new_grp);
-              MainSession.FireEvent('/roster/group', x, TJabberRosterItem(nil));
-              exit;
-            end;
-
-            for i := 0 to MainSession.Roster.Count - 1 do begin
-                ri := MainSession.Roster.Items[i];
-                if (ri.IsInGroup(old_grp)) then begin
-                    ri.DelGroup(old_grp);
-                    ri.AddGroup(new_grp);
-                    ri.update();
-                end;
-            end;
-        end;
-     end;
+//    // Rename some grp.
+//    if (treeRoster.Selected = nil) then exit;
+//    go := TJabberGroup(treeRoster.Selected.Data);
+//    if (go = nil) then exit;
+//
+//    new_grp := go.FullName;
+//    if (InputQueryW(_(sRenameGrp), _(sRenameGrpPrompt), new_grp)) then begin
+//        old_grp := go.FullName;
+//        new_grp := Trim(new_grp);
+//        if (new_grp <> old_grp) then begin
+//            //If new group name is empty treat it as 'Unfiled'
+//            if (new_grp = '') then
+//              new_grp := g_unfiled;
+//            // We should not let the user rename special groups
+//            if  ((old_grp = g_unfiled) or (old_grp = g_offline) or (old_grp = g_bookmarks)) then begin
+//                special_grp_msg := _(sSpecialGroup);
+//                special_grp_msg := WideFormat(special_grp_msg, [old_grp]);
+//                MessageDlgW(special_grp_msg, mtError, [mbOK], 0);
+//                exit;
+//            end;
+//
+//            grp_exists := MainSession.Roster.getGroup(new_grp);
+//            // Do not allow renaming to the group that already exists
+//            if (grp_exists <> nil) then begin
+//                grp_exists_msg := _(sGrpAlreadyExists);
+//                grp_exists_msg := WideFormat(grp_exists_msg, [new_grp]);
+//                MessageDlgW(grp_exists_msg, mtError, [mbOK], 0);
+//                exit;
+//            end;
+//
+//            if (go.isEmpty) then begin
+//              MainSession.Roster.removeGroup(go);
+//              TTntTreeNode(go.Data).Free();
+//              MainSession.Roster.addGroup(new_grp);
+//              x := TXMLTag.Create('group');
+//              x.setAttribute('name', new_grp);
+//              MainSession.FireEvent('/roster/group', x, TExodusItem(nil));
+//              exit;
+//            end;
+//
+//            for i := 0 to MainSession.Roster.Count - 1 do begin
+//                ri := MainSession.Roster.Items[i];
+//                if (ri.IsInGroup(old_grp)) then begin
+//                    ri.DelGroup(old_grp);
+//                    ri.AddGroup(new_grp);
+//                    ri.update();
+//                end;
+//            end;
+//        end;
+//     end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
-var
-    go: TJabberGroup;
-    special_grp_rmv_msg : WideString;
-    i: Cardinal;
-    parent:  TTntTreeNode;
-    rosterItems: TWideStringList;
-    removeAsGroup: boolean;
+//var
+//    go: TJabberGroup;
+//    special_grp_rmv_msg : WideString;
+//    i: Cardinal;
+//    parent:  TTntTreeNode;
+//    rosterItems: TWideStringList;
+//    removeAsGroup: boolean;
 begin
-    // Remove the grp..
-    if (treeRoster.SelectionCount = 1) then begin
-        go := _cur_go;
-        //Do not allow to remove offline group
-        //Bookmarks and Unfiled will not show up emtpy
-        if (go.FullName = g_offline) then begin
-            special_grp_rmv_msg := _(sSpecialGroupRmv);
-            special_grp_rmv_msg := WideFormat(special_grp_rmv_msg, [go.FullName]);
-            MessageDlgW(special_grp_rmv_msg, mtError, [mbOK], 0);
-            exit;
-        end;
-
-        if (go.isEmpty()) then begin
-            // just remove the node, ad remove it from the roster
-            TTntTreeNode(go.Data).Free();
-            MainSession.roster.removeGroup(go);
-        end
-        else
-            RemoveGroup(_cur_grp)
-    end
-    else begin
-
-//        //We have several nodes selected, we will only display one
-//        //dialog if all selected nodes belonging to the same parent.
-//        //If selected nodes are from different groups
-//        //we display roster item/group removal dialog for each node.
-        parent := nil;
-        rosterItems := TWideStringList.Create;
-        removeAsGroup := false;
-        for i := 0 to treeRoster.SelectionCount - 1 do begin
-          if (i = 0) then begin
-            parent := TTntTreeNode(treeRoster.Selections[i]).Parent;
-            continue;
-          end;
-
-          if (treeRoster.Selections[i].Parent <> parent) then
-              break;
-          //If there are any group nodes, will have to use group removal
-          //dialogs for each selected group.
-          if (getNodeType(TTntTreeNode(treeRoster.Selections[i])) <> node_ritem) then 
-              break;
-
-        end;
-        //If we reached end of loop, we have the same parent.
-        //We will remove items as a group.
-        if (i = treeRoster.SelectionCount) then
-           removeAsGroup := true;
-
-        //Build a list of strings with selected roster items
-        for i := 0 to treeRoster.SelectionCount - 1 do
-          if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
-             rosterItems.Add(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full);
-
-        if (removeAsGroup) then
-             if (treeRoster.Selections[0].Parent <> nil) then
-               RemoveRosterItems(rosterItems, treeRoster.Selections[0].Parent.Text)
-             else
-               RemoveRosterItems(rosterItems)
-        else begin
-           for i := 0 to treeRoster.SelectionCount - 1 do begin
-            // Remove this roster item.
-            if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
-              if (treeRoster.Selections[i].Parent <> nil) then
-                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full, treeRoster.Selections[i].Parent.Text)
-              else
-                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full)
-            else
-              RemoveGroup(TJabberGroup(treeRoster.Selections[i].Data).FullName);
-          end;
-        end;
-
-      end;
+//    // Remove the grp..
+//    if (treeRoster.SelectionCount = 1) then begin
+//        go := _cur_go;
+//        //Do not allow to remove offline group
+//        //Bookmarks and Unfiled will not show up emtpy
+//        if (go.FullName = g_offline) then begin
+//            special_grp_rmv_msg := _(sSpecialGroupRmv);
+//            special_grp_rmv_msg := WideFormat(special_grp_rmv_msg, [go.FullName]);
+//            MessageDlgW(special_grp_rmv_msg, mtError, [mbOK], 0);
+//            exit;
+//        end;
+//
+//        if (go.isEmpty()) then begin
+//            // just remove the node, ad remove it from the roster
+//            TTntTreeNode(go.Data).Free();
+//            MainSession.roster.removeGroup(go);
+//        end
+//        else
+//            RemoveGroup(_cur_grp)
+//    end
+//    else begin
+//
+////        //We have several nodes selected, we will only display one
+////        //dialog if all selected nodes belonging to the same parent.
+////        //If selected nodes are from different groups
+////        //we display roster item/group removal dialog for each node.
+//        parent := nil;
+//        rosterItems := TWideStringList.Create;
+//        removeAsGroup := false;
+//        for i := 0 to treeRoster.SelectionCount - 1 do begin
+//          if (i = 0) then begin
+//            parent := TTntTreeNode(treeRoster.Selections[i]).Parent;
+//            continue;
+//          end;
+//
+//          if (treeRoster.Selections[i].Parent <> parent) then
+//              break;
+//          //If there are any group nodes, will have to use group removal
+//          //dialogs for each selected group.
+//          if (getNodeType(TTntTreeNode(treeRoster.Selections[i])) <> node_ritem) then
+//              break;
+//
+//        end;
+//        //If we reached end of loop, we have the same parent.
+//        //We will remove items as a group.
+//        if (i = treeRoster.SelectionCount) then
+//           removeAsGroup := true;
+//
+//        //Build a list of strings with selected roster items
+//        for i := 0 to treeRoster.SelectionCount - 1 do
+//          if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+//             rosterItems.Add(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full);
+//
+//        if (removeAsGroup) then
+//             if (treeRoster.Selections[0].Parent <> nil) then
+//               RemoveRosterItems(rosterItems, treeRoster.Selections[0].Parent.Text)
+//             else
+//               RemoveRosterItems(rosterItems)
+//        else begin
+//           for i := 0 to treeRoster.SelectionCount - 1 do begin
+//            // Remove this roster item.
+//            if (getNodeType(treeRoster.Selections[i]) = node_ritem) then
+//              if (treeRoster.Selections[i].Parent <> nil) then
+//                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full, treeRoster.Selections[i].Parent.Text)
+//              else
+//                RemoveRosterItem(TJabberRosterItem(treeRoster.Selections[i].Data).Jid.full)
+//            else
+//              RemoveGroup(TJabberGroup(treeRoster.Selections[i].Data).FullName);
+//          end;
+//        end;
+//
+//      end;
 end;
 
 {---------------------------------------}
@@ -3370,45 +3229,45 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popInviteClick(Sender: TObject);
-var
-    jids: TWideStringList;
+//var
+//    jids: TWideStringList;
 begin
-    //Show the invite window w/ this JID
-    if (_cur_ritem = nil) then exit;
-
-    jids := TWideStringlist.Create();
-    jids.Add(_cur_ritem.jid.jid);
-
-    ShowInvite('', jids);
-    jids.Free();
+//    //Show the invite window w/ this JID
+//    if (_cur_ritem = nil) then exit;
+//
+//    jids := TWideStringlist.Create();
+//    jids.Add(_cur_ritem.jid.jid);
+//
+//    ShowInvite('', jids);
+//    jids.Free();
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpInviteClick(Sender: TObject);
-var
-    i: integer;
-    sel: TList;
-    jids: TWideStringlist;
-    observer: boolean;
+//var
+//    i: integer;
+//    sel: TList;
+//    jids: TWideStringlist;
+//    observer: boolean;
 begin
-    if (MainSession.Prefs.getBool('roster_show_unsub')) then
-        observer := true
-    else
-        observer := false;
-
-    // Invite the whole group to the conference.
-    if ((_show_online) and (_show_filter > show_offline)) then
-        sel := getSelectedContacts(true, observer)
-    else
-        sel := getSelectedContacts(false, observer);
-
-    jids := TWideStringlist.Create();
-    for i := 0 to sel.Count - 1 do
-        jids.Add(TJabberRosterItem(sel[i]).jid.full);
-
-    ShowInvite('', jids);
-    sel.Free();
-    jids.Free();
+//    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+//        observer := true
+//    else
+//        observer := false;
+//
+//    // Invite the whole group to the conference.
+//    if ((_show_online) and (_show_filter > show_offline)) then
+//        sel := getSelectedContacts(true, observer)
+//    else
+//        sel := getSelectedContacts(false, observer);
+//
+//    jids := TWideStringlist.Create();
+//    for i := 0 to sel.Count - 1 do
+//        jids.Add(TJabberRosterItem(sel[i]).jid.full);
+//
+//    ShowInvite('', jids);
+//    sel.Free();
+//    jids.Free();
 end;
 
 {---------------------------------------}
@@ -3449,65 +3308,65 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popBlockClick(Sender: TObject);
-var
-    recips: TList;
-    i: integer;
-    ri: TJabberRosterItem;
-    p: TJabberPres;
+//var
+//    recips: TList;
+//    i: integer;
+//    ri: TJabberRosterItem;
+//    p: TJabberPres;
 begin
-    // Block or Unblock this user
-    recips := getSelectedContacts(false);
-    if (recips.Count > 1) then begin
-        if (MessageDlgW(WideFormat(_(sBlockContacts), [recips.Count]), mtConfirmation,
-            [mbYes, mbNo], 0) = mrNo) then exit;
-    end;
-    for i := 0 to recips.Count - 1 do begin
-        ri := TJabberRosterItem(recips[i]);
-        MainSession.Block(ri.jid);
-        if MainSession.Prefs.getBool('roster_hide_block') then
-            RemoveItemNodes(ri)
-        else begin
-            p := MainSession.ppdb.FindPres(ri.jid.jid, '');
-            if (p = nil) then
-                ri.setPresenceImage('offline_blocked')
-            else
-                ri.setPresenceImage('online_blocked');
-            RenderNode(ri, p);
-        end;
-    end;
-
-    recips.Clear();
-    recips.Free();
+//    // Block or Unblock this user
+//    recips := getSelectedContacts(false);
+//    if (recips.Count > 1) then begin
+//        if (MessageDlgW(WideFormat(_(sBlockContacts), [recips.Count]), mtConfirmation,
+//            [mbYes, mbNo], 0) = mrNo) then exit;
+//    end;
+//    for i := 0 to recips.Count - 1 do begin
+//        ri := TJabberRosterItem(recips[i]);
+//        MainSession.Block(ri.jid);
+//        if MainSession.Prefs.getBool('roster_hide_block') then
+//            RemoveItemNodes(ri)
+//        else begin
+//            p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+//            if (p = nil) then
+//                ri.setPresenceImage('offline_blocked')
+//            else
+//                ri.setPresenceImage('online_blocked');
+//            RenderNode(ri, p);
+//        end;
+//    end;
+//
+//    recips.Clear();
+//    recips.Free();
 end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.popUnBlockClick(Sender: TObject);
-var
-    recips: TList;
-    i: integer;
-    ri: TJabberRosterItem;
-    p: TJabberPres;
-begin
-    // Block or Unblock this user
-    recips := getSelectedContacts(false);
-    if (recips.Count > 1) then begin
-        if (MessageDlgW(WideFormat(_(sUnblockContacts), [recips.Count]), mtConfirmation,
-            [mbYes, mbNo], 0) = mrNo) then exit;
-    end;
-    for i := 0 to recips.Count - 1 do begin
-        ri := TJabberRosterItem(recips[i]);
-        MainSession.UnBlock(ri.jid);
-        p := MainSession.ppdb.FindPres(ri.jid.jid, '');
-        if (p = nil) then
-            ri.setPresenceImage('offline')
-        else
-            ri.setPresenceImage(p.Show);
-        RenderNode(ri, p);
-    end;
-
-    recips.Clear();
-    recips.Free();
-end;
+//
+//{---------------------------------------}
+//procedure TfrmRosterWindow.popUnBlockClick(Sender: TObject);
+//var
+//    recips: TList;
+//    i: integer;
+//    ri: TJabberRosterItem;
+//    p: TJabberPres;
+//begin
+//    // Block or Unblock this user
+//    recips := getSelectedContacts(false);
+//    if (recips.Count > 1) then begin
+//        if (MessageDlgW(WideFormat(_(sUnblockContacts), [recips.Count]), mtConfirmation,
+//            [mbYes, mbNo], 0) = mrNo) then exit;
+//    end;
+//    for i := 0 to recips.Count - 1 do begin
+//        ri := TJabberRosterItem(recips[i]);
+//        MainSession.UnBlock(ri.jid);
+//        p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+//        if (p = nil) then
+//            ri.setPresenceImage('offline')
+//        else
+//            ri.setPresenceImage(p.Show);
+//        RenderNode(ri, p);
+//    end;
+//
+//    recips.Clear();
+//    recips.Free();
+//end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.BroadcastMessage1Click(Sender: TObject);
@@ -3533,7 +3392,8 @@ begin
     else begin
         jl := TWideStringlist.Create();
         for i := 0 to r.Count - 1 do
-            jl.Add(TJabberRosterItem(r[i]).jid.full);
+  { TODO : Roster refactor }      
+        //    jl.Add(TJabberRosterItem(r[i]).jid.full);
         BroadcastMsg(jl);
         jl.Free();
     end;
@@ -3653,31 +3513,33 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterEditing(Sender: TObject;
   Node: TTreeNode; var AllowEdit: Boolean);
-var
-    ntype: integer;
+//var
+//    ntype: integer;
+//begin
+//    // user is trying to change a node caption
+//    ntype := getNodeType(TTntTreeNode(Node));
+//    if (ntype = node_ritem) then
+//        AllowEdit := _cur_ritem.InlineEdit
+//    else
+//        AllowEdit := false;
+//end;
 begin
-    // user is trying to change a node caption
-    ntype := getNodeType(TTntTreeNode(Node));
-    if (ntype = node_ritem) then
-        AllowEdit := _cur_ritem.InlineEdit
-    else
-        AllowEdit := false;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterEdited(Sender: TObject;
   Node: TTreeNode; var S: String);
-var
-    update: TXMLTag;
+//var
+//    update: TXMLTag;
 begin
-    // user is done editing a node's text
-    assert(getNodeType(TTnTTreeNode(Node)) = node_ritem);
-
-    _cur_ritem.Text := S;
-    update := TXMLTag.Create('update');
-    update.AddTag(TXMLTag.Create(_cur_ritem.tag));
-    MainSession.FireEvent('/roster/update', update, _cur_ritem);
-    update.Free();
+//    // user is done editing a node's text
+//    assert(getNodeType(TTnTTreeNode(Node)) = node_ritem);
+//
+//    _cur_ritem.Text := S;
+//    update := TXMLTag.Create('update');
+//    update.AddTag(TXMLTag.Create(_cur_ritem.tag));
+//    MainSession.FireEvent('/roster/update', update, _cur_ritem);
+//    update.Free();
 end;
 
 {---------------------------------------}
@@ -3695,12 +3557,15 @@ begin
     if (Node <> nil) then begin
         _last_search := Node.AbsoluteIndex;
         if (getNodeType(TTnTTreeNode(Node)) = node_ritem) then begin
-            MainSession.Roster.ActiveItem := TJabberRosterItem(Node.Data);
+    { TODO : Roster refactor }    
+            //MainSession.Roster.ActiveItem := TJabberRosterItem(Node.Data);
 
-            if ((MainSession.Roster.ActiveItem.IsNative) and
-                (MainSession.Roster.ActiveItem.IsOnline) and
-                (MainSession.Profile.ConnectionType = conn_normal) and
-                (treeRoster.SelectionCount < 2))then begin
+            //if ((MainSession.Roster.ActiveItem.IsNative) and
+            //    (MainSession.Roster.ActiveItem.IsOnline) and
+            //    (MainSession.Profile.ConnectionType = conn_normal) and
+            //    (treeRoster.SelectionCount < 2))then begin
+            if    (MainSession.Profile.ConnectionType = conn_normal) and
+                (treeRoster.SelectionCount < 2) then begin
                 frmExodus.btnSendFile.Enabled := true;
                 frmExodus.mnuPeople_Contacts_SendFile.Enabled := true;
             end;
@@ -3709,7 +3574,14 @@ begin
         end;
     end;
 
-    MainSession.Roster.ActiveItem := nil;
+    //MainSession.Roster.ActiveItem := nil;
+end;
+
+procedure TfrmRosterWindow.treeRosterChanging(Sender: TObject; Node: TTreeNode;
+  var AllowChange: Boolean);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}
@@ -3726,25 +3598,28 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popTransLogoffClick(Sender: TObject);
-var
-    p: TXMLTag;
+//var
+//    p: TXMLTag;
+//begin
+//    // send unavail pres to this jid..
+//    if (_cur_ritem <> nil) then begin
+//        p := TXMLTag.Create('presence');
+//        if (Sender = popTransLogoff) then
+//            p.setAttribute('type', 'unavailable');
+//        p.setAttribute('to', _cur_ritem.jid.full);
+//        MainSession.SendTag(p);
+//    end;
+//end;
 begin
-    // send unavail pres to this jid..
-    if (_cur_ritem <> nil) then begin
-        p := TXMLTag.Create('presence');
-        if (Sender = popTransLogoff) then
-            p.setAttribute('type', 'unavailable');
-        p.setAttribute('to', _cur_ritem.jid.full);
-        MainSession.SendTag(p);
-    end;
+
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popTransUnRegisterClick(Sender: TObject);
 begin
     // unregister from the transport.
-    RemoveTransport(_cur_ritem.jid.jid, true);
-    QuietRemoveRosterItem(_cur_ritem.jid.full);
+    //RemoveTransport(_cur_ritem.jid.jid, true);
+    //QuietRemoveRosterItem(_cur_ritem.jid.full);
 end;
 
 {---------------------------------------}
@@ -3766,104 +3641,131 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRenameClick(Sender: TObject);
-var
-    ri: TJabberRosterItem;
-    nick: Widestring;
-    chatwin: TfrmChat;
-    chatcontrol: TChatController;
-    p: TJabberPres;
+//var
+//    ri: TJabberRosterItem;
+//    nick: Widestring;
+//    chatwin: TfrmChat;
+//    chatcontrol: TChatController;
+//    p: TJabberPres;
+//begin
+//    // Do this since the treeview doesn't use WideStrings for
+//    // processing of Editing events
+//    getNodeType();
+//    ri := _cur_ritem;
+//
+//    if (ri = nil) then begin
+//        MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
+//        exit;
+//    end;
+//
+//    nick := ri.Text;
+//    if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
+//        p := MainSession.ppdb.FindPres(ri.jid.getDisplayJID(), '');
+//        while (p <> nil) do begin
+//            chatcontrol := MainSession.ChatList.FindChat(ri.Jid.getDisplayJID(),
+//                                                         p.fromJID.resource, '');
+//            if (chatcontrol <> nil) then begin
+//                chatwin := TfrmChat(chatcontrol.Window);
+//                if (chatwin <> nil) then begin
+//                    chatwin.lblNick.Caption := nick;
+//                    chatwin.Caption := nick;
+//                end;
+//            end;
+//            p := MainSession.ppdb.NextPres(p);
+//        end;
+//        ri.Text := nick;
+//        ri.update();
+//    end;
+//end;
 begin
-    // Do this since the treeview doesn't use WideStrings for
-    // processing of Editing events
-    getNodeType();
-    ri := _cur_ritem;
-
-    if (ri = nil) then begin
-        MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
-        exit;
-    end;
-
-    nick := ri.Text;
-    if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
-        p := MainSession.ppdb.FindPres(ri.jid.getDisplayJID(), '');
-        while (p <> nil) do begin
-            chatcontrol := MainSession.ChatList.FindChat(ri.Jid.getDisplayJID(),
-                                                         p.fromJID.resource, '');
-            if (chatcontrol <> nil) then begin
-                chatwin := TfrmChat(chatcontrol.Window);
-                if (chatwin <> nil) then begin
-                    chatwin.lblNick.Caption := nick;
-                    chatwin.Caption := nick;
-                    getDockManager().UpdateDocked(chatwin);
-                end;
-            end;
-            p := MainSession.ppdb.NextPres(p);
-        end;
-        ri.Text := nick;
-        ri.update();
-    end;
+//    if (ri = nil) then begin
+//        MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
+//        exit;
+//    end;
+//
+//    nick := ri.Text;
+//    if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
+//        p := MainSession.ppdb.FindPres(ri.jid.getDisplayJID(), '');
+//        while (p <> nil) do begin
+//            chatcontrol := MainSession.ChatList.FindChat(ri.Jid.getDisplayJID(),
+//                                                         p.fromJID.resource, '');
+//            if (chatcontrol <> nil) then begin
+//                chatwin := TfrmChat(chatcontrol.Window);
+//                if (chatwin <> nil) then begin
+//                    chatwin.lblNick.Caption := nick;
+//                    chatwin.Caption := nick;
+//                    getDockManager().UpdateDocked(chatwin);
+//                end;
+//            end;
+//            p := MainSession.ppdb.NextPres(p);
+//        end;
+//        ri.Text := nick;
+//        ri.update();
+//    end;
+//
 end;
-
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterCompare(Sender: TObject; Node1,
   Node2: TTreeNode; Data: Integer; var Compare: Integer);
-var
-    //trans1: boolean;
-    //trans2: boolean;
-    t1, t2: Widestring;
-    o1, o2: TObject;
-    lev1, lev2: integer;
+//var
+//    //trans1: boolean;
+//    //trans2: boolean;
+//    t1, t2: Widestring;
+//    o1, o2: TObject;
+//    lev1, lev2: integer;
+//begin
+//    Assert(Node1 <> nil);
+//    Assert(Node2 <> nil);
+//    Assert(Node1.Data <> nil);
+//    Assert(Node2.Data <> nil);
+//
+//    // define a custom sort routine for two roster nodes
+//    // handle normal cases.
+//    if (Node1.Level = Node2.Level) then begin
+//        o1 := TObject(Node1.Data);
+//        o2 := TObject(Node2.Data);
+//
+//        if ((o1 is TJabberGroup) and
+//            (o2 is TJabberGroup)) then begin
+//            lev1 := TJabberGroup(o1).SortPriority;
+//            lev2 := TJabberGroup(o2).SortPriority;
+//
+//            t1 := TJabberGroup(o1).getText();
+//            t2 := TJabberGroup(o2).getText();
+//
+//            if (lev1 < lev2) then
+//                Compare := -1
+//            else if (lev1 > lev2) then
+//                Compare := +1
+//            else
+//                Compare := AnsiCompareText(t1, t2);
+//        end
+//        else if (o1 is TJabberGroup) then
+//            Compare := +1
+//        else if (o2 is TJabberGroup) then
+//            Compare := -1
+//        else begin
+//            if (o1 is TJabberNodeItem) then
+//                t1 := TJabberNodeItem(o1).GetText()
+//            else
+//                t1 := Node1.Text;
+//            if (o2 is TJabberNodeItem) then
+//                t2 := TJabberNodeItem(o2).GetText()
+//            else
+//                t2 := Node2.Text;
+//            Compare := AnsiCompareText(t1, t2);
+//        end;
+//    end
+//    else begin
+//        if (Node1.Level < Node2.Level) then
+//            Compare := -1
+//        else
+//            Compare := +1;
+//    end;
+//end;
 begin
-    Assert(Node1 <> nil);
-    Assert(Node2 <> nil);
-    Assert(Node1.Data <> nil);
-    Assert(Node2.Data <> nil);
 
-    // define a custom sort routine for two roster nodes
-    // handle normal cases.
-    if (Node1.Level = Node2.Level) then begin
-        o1 := TObject(Node1.Data);
-        o2 := TObject(Node2.Data);
-
-        if ((o1 is TJabberGroup) and
-            (o2 is TJabberGroup)) then begin
-            lev1 := TJabberGroup(o1).SortPriority;
-            lev2 := TJabberGroup(o2).SortPriority;
-
-            t1 := TJabberGroup(o1).getText();
-            t2 := TJabberGroup(o2).getText();
-
-            if (lev1 < lev2) then
-                Compare := -1
-            else if (lev1 > lev2) then
-                Compare := +1
-            else
-                Compare := AnsiCompareText(t1, t2);
-        end
-        else if (o1 is TJabberGroup) then
-            Compare := +1
-        else if (o2 is TJabberGroup) then
-            Compare := -1
-        else begin
-            if (o1 is TJabberNodeItem) then
-                t1 := TJabberNodeItem(o1).GetText()
-            else
-                t1 := Node1.Text;
-            if (o2 is TJabberNodeItem) then
-                t2 := TJabberNodeItem(o2).GetText()
-            else
-                t2 := Node2.Text;
-            Compare := AnsiCompareText(t1, t2);
-        end;
-    end
-    else begin
-        if (Node1.Level < Node2.Level) then
-            Compare := -1
-        else
-            Compare := +1;
-    end;
 end;
-
 {---------------------------------------}
 procedure TfrmRosterWindow.pluginClick(Sender: TObject);
 begin
@@ -3873,58 +3775,60 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.onURLDrop(p: TPoint; url: Widestring);
-var
-    tp: TPoint;
-    n: TTntTreeNode;
-    i, nt: integer;
-    r: TList;
-    jl: TWidestringlist;
-    f: TfrmMsgRecv;
-    xtag: Widestring;
+//var
+//    tp: TPoint;
+//    n: TTntTreeNode;
+//    i, nt: integer;
+//    r: TList;
+//    jl: TWidestringlist;
+//    f: TfrmMsgRecv;
+//    xtag: Widestring;
+//begin
+//    // we got a URL drop
+//    tp := treeRoster.ScreenToClient(p);
+//    n := treeRoster.GetNodeAt(tp.X, tp.Y);
+//    if (n = nil) then begin
+//        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
+//        exit;
+//    end;
+//
+//    xtag := '<x xmlns="jabber:x:oob"><url>' + url + '</url></x>';
+//
+//    nt := getNodeType(n);
+//    case nt of
+//    node_ritem: begin
+//        // send a msg to this user, with the URL in the body.
+//        f := StartMsg(TJabberRosterItem(n.Data).jid.jid);
+//        f.AddOutgoing(url);
+//        f.AddXTagXML(xtag);
+//        f.txtSendSubject.Text := 'URL';
+//        end;
+//    node_grp: begin
+//        // we have to pretend to select the group..
+//        treeRoster.Selected := n;
+//        r := getSelectedContacts(true);
+//        jl := TWideStringlist.Create();
+//        for i := 0 to r.Count - 1 do
+//            jl.Add(TJabberRosterItem(r[i]).jid.full);
+//
+//        f := BroadcastMsg(jl);
+//        f.AddOutgoing(url);
+//        f.AddXTagXML(xtag);
+//        f.txtSendSubject.Text := 'URL';
+//
+//        jl.Free();
+//        r.Free();
+//        end
+//    else begin
+//        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
+//        exit;
+//        end;
+//    end;
+//
+//end;
 begin
-    // we got a URL drop
-    tp := treeRoster.ScreenToClient(p);
-    n := treeRoster.GetNodeAt(tp.X, tp.Y);
-    if (n = nil) then begin
-        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
-        exit;
-    end;
-
-    xtag := '<x xmlns="jabber:x:oob"><url>' + url + '</url></x>';
-
-    nt := getNodeType(n);
-    case nt of
-    node_ritem: begin
-        // send a msg to this user, with the URL in the body.
-        f := StartMsg(TJabberRosterItem(n.Data).jid.jid);
-        f.AddOutgoing(url);
-        f.AddXTagXML(xtag);
-        f.txtSendSubject.Text := 'URL';
-        end;
-    node_grp: begin
-        // we have to pretend to select the group..
-        treeRoster.Selected := n;
-        r := getSelectedContacts(true);
-        jl := TWideStringlist.Create();
-        for i := 0 to r.Count - 1 do
-            jl.Add(TJabberRosterItem(r[i]).jid.full);
-
-        f := BroadcastMsg(jl);
-        f.AddOutgoing(url);
-        f.AddXTagXML(xtag);
-        f.txtSendSubject.Text := 'URL';
-
-        jl.Free();
-        r.Free();
-        end
-    else begin
-        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
-        exit;
-        end;
-    end;
 
 end;
-
 {---------------------------------------}
 procedure TfrmRosterWindow.FormDestroy(Sender: TObject);
 begin
@@ -3933,23 +3837,24 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.MoveorCopyContacts1Click(Sender: TObject);
-var
-    sel: TList;
-    observer: boolean;
+//var
+//    sel: TList;
+//    observer: boolean;
+//begin
+//    if (MainSession.Prefs.getBool('roster_show_unsub')) then
+//        observer := true
+//    else
+//        observer := false;
+//
+//    if ((_show_online) and (_show_filter > show_offline)) then
+//        sel := Self.getSelectedContacts(true, observer)
+//    else
+//        sel := Self.getSelectedContacts(false, observer);
+//
+//    ShowGrpManagement(sel);
+//end;
 begin
-    if (MainSession.Prefs.getBool('roster_show_unsub')) then
-        observer := true
-    else
-        observer := false;
-
-    if ((_show_online) and (_show_filter > show_offline)) then
-        sel := Self.getSelectedContacts(true, observer)
-    else
-        sel := Self.getSelectedContacts(false, observer);
-
-    ShowGrpManagement(sel);
 end;
-
 {---------------------------------------}
 procedure TfrmRosterWindow.presCustomClick(Sender: TObject);
 begin
@@ -3986,35 +3891,37 @@ begin
 end;
 
 procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
-var
-    i:         integer;
-    ri:        TJabberRosterItem;
-    node:      TTntTreeNode;
-    comp:      WideString;
-    search:    WideString;
+//var
+//    i:         integer;
+//    ri:        TJabberRosterItem;
+//    node:      TTntTreeNode;
+//    comp:      WideString;
+//    search:    WideString;
+//begin
+//    search := WideLowercase(txtFind.Text);
+//    if (search = '') then begin
+//        exit;
+//    end;
+//
+//    for i := _last_search to treeRoster.Items.Count - 1 do begin
+//        node := treeRoster.Items[i];
+//        if (not (TObject(node.Data) is TJabberRosterItem)) then continue;
+//        ri := TJabberRosterItem(node.Data);
+//        if radNick.Checked then
+//            comp := WideLowercase(ri.Text)
+//        else
+//            comp := WideLowercase(ri.jid.jid);
+//
+//        if Pos(search, comp) > 0 then begin
+//            treeRoster.Select(node, []);
+//            _last_search := i;
+//            exit;
+//        end;
+//    end;
+//    _last_search := 0;
+//    txtFind.Color := clRed;
+//end;
 begin
-    search := WideLowercase(txtFind.Text);
-    if (search = '') then begin
-        exit;
-    end;
-
-    for i := _last_search to treeRoster.Items.Count - 1 do begin
-        node := treeRoster.Items[i];
-        if (not (TObject(node.Data) is TJabberRosterItem)) then continue;
-        ri := TJabberRosterItem(node.Data);
-        if radNick.Checked then
-            comp := WideLowercase(ri.Text)
-        else
-            comp := WideLowercase(ri.jid.jid);
-
-        if Pos(search, comp) > 0 then begin
-            treeRoster.Select(node, []);
-            _last_search := i;
-            exit;
-        end;
-    end;
-    _last_search := 0;
-    txtFind.Color := clRed;
 end;
 
 {---------------------------------------}
@@ -4055,11 +3962,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popTransEditClick(Sender: TObject);
+//begin
+//    // Bring up a iq:register form for this transport
+//    if (_cur_ritem <> nil) then begin
+//        StartServiceReg(_cur_ritem.jid.full);
+//    end;
+//end;
 begin
-    // Bring up a iq:register form for this transport
-    if (_cur_ritem <> nil) then begin
-        StartServiceReg(_cur_ritem.jid.full);
-    end;
 end;
 
 {---------------------------------------}
@@ -4124,45 +4033,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.treeRosterKeyDown(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
-var
-    msg: string;
-    Node: TTreeNode;
-    ri: TJabberRosterItem;
-begin
-    Node := treeRoster.Selected;
-
-    if (Node = nil) then exit;
-
-    if (TObject(Node.Data) is TJabberRosterItem) then begin
-        ri := TJabberRosterItem(Node.Data);
-
-        case Key of
-            VK_F2: begin
-                if (ri.IsContact) then
-                    popRenameClick(Sender)
-                else if (ri.Tag.Name = 'conference') then
-                    MainSession.FireEvent('/session/gui/conference-props-rename', ri.Tag);
-            end;
-            VK_F10: popPropertiesClick(Sender);
-            VK_DELETE: popRemoveClick(Sender);
-        end;
-    end
-    else if (TObject(Node.Data) is TJabberGroup) then begin
-         case Key of
-            VK_F2: popGrpRenameClick(Sender);
-            VK_DELETE: popGrpRemoveClick(Sender);
-         end;
-    end;
-
-    if (_drag_op) then begin
-        _drop_copy := (ssCtrl in Shift);
-        msg := 'onKeyDown: _drop_copy = ' + BoolToStr(_drop_copy);
-        OutputDebugString(PChar(msg));
-    end;
-end;
-
 procedure TfrmRosterWindow.lstProfilesKeyPress(Sender: TObject;
   var Key: Char);
 begin

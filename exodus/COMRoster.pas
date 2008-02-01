@@ -87,8 +87,8 @@ implementation
 
 uses
     XMLTag, StrUtils, SysUtils, XMLUtils, COMRosterGroup,
-    COMRosterItem, NodeItem, Roster, JabberID, Session,
-    Jabber1, ComServ,RosterWindow;
+    COMRosterItem, ContactController, JabberID, Session,
+    Jabber1, ComServ,RosterForm;
 
 {---------------------------------------}
 constructor TExodusRoster.Create();
@@ -172,170 +172,185 @@ end;
 
 {---------------------------------------}
 procedure TExodusRoster.MenuClick(Sender: TObject);
-var
-    idx: integer;
-{$IFDEF OLD_MENU_EVENTS}
-    ri: TJabberRosterItem;
-{$ELSE}
-    mi : TTnTMenuItem;
-    sel: TList;
-    resultset, newtag: TXMLTag;
-    i: integer;
-{$ENDIF}
+//var
+//    idx: integer;
+//{$IFDEF OLD_MENU_EVENTS}
+//    ri: TJabberRosterItem;
+//{$ELSE}
+//    mi : TTnTMenuItem;
+//    sel: TList;
+//    resultset, newtag: TXMLTag;
+//    i: integer;
+//{$ENDIF}
 begin
-    idx := _items.IndexOfObject(Sender);
-    if (idx >= 0) then begin
-{$IFDEF OLD_MENU_EVENTS}
-        ri := MainSession.Roster.ActiveItem;
-        MainSession.FireEvent(_items[idx], ri.Tag);
-{$ELSE}
-        mi := TTntMenuItem(_items.Objects[idx]);
-        resultset:= TXMLTag.Create('selected_roster_list'); //freed by
-        sel := frmRosterWindow.getSelectedContacts(false);
-        if (sel.Count > 0) then begin
-            for i := 0 to sel.Count - 1 do begin
-                newtag := TXMLTag.Create(TJabberRosterItem(sel[i]).Tag);
-                resultset.AddTag(newtag);
-            end;
-            IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, resultset.XML);
-        end;
-        resultset.Free();
-        sel.Free();
-{$ENDIF}
-    end;
+{ TODO : Roster refactor }
+//    idx := _items.IndexOfObject(Sender);
+//    if (idx >= 0) then begin
+//{$IFDEF OLD_MENU_EVENTS}
+//        ri := MainSession.Roster.ActiveItem;
+//        MainSession.FireEvent(_items[idx], ri.Tag);
+//{$ELSE}
+//        mi := TTntMenuItem(_items.Objects[idx]);
+//        resultset:= TXMLTag.Create('selected_roster_list'); //freed by
+//        sel := frmRosterWindow.getSelectedContacts(false);
+//        if (sel.Count > 0) then begin
+//            for i := 0 to sel.Count - 1 do begin
+//                newtag := TXMLTag.Create(TJabberRosterItem(sel[i]).Tag);
+//                resultset.AddTag(newtag);
+//            end;
+//            IExodusMenuListener(mi.Tag).OnMenuItemClick(mi.Name, resultset.XML);
+//        end;
+//        resultset.Free();
+//        sel.Free();
+//{$ENDIF}
+//    end;
 end;
 
 {---------------------------------------}
 function TExodusRoster.addItem(
   const JabberID: WideString): IExodusRosterItem;
-var
-    x: TXMLTag;
-    ri: TJabberRosterItem;
+//var
+//    x: TXMLTag;
+//    ri: TJabberRosterItem;
 begin
-    x := TXMLTag.Create('item');
-    x.setAttribute('jid', JabberID);
-    x.setAttribute('xmlns', 'exodus:plugin-item');
-    ri := MainSession.Roster.newItem(JabberID);
-    ri.Tag := x;
-    
-    Result := TExodusRosterItem.Create(ri);
+           { TODO : Roster refactor }
+//    x := TXMLTag.Create('item');
+//    x.setAttribute('jid', JabberID);
+//    x.setAttribute('xmlns', 'exodus:plugin-item');
+//    ri := MainSession.Roster.newItem(JabberID);
+//    ri.Tag := x;
+//
+//    Result := TExodusRosterItem.Create(ri);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Subscribe(const JabberID, nickname,
   Group: WideString; Subscribe: WordBool): IExodusRosterItem;
-var
-    ri: TJabberRosterItem;
+//var
+//    ri: TJabberRosterItem;
 begin
-    MainSession.roster.AddItem(JabberID, Nickname, Group, Subscribe);
-    ri := MainSession.Roster.Find(JabberID);
-    if (ri <> nil) then
-        Result := TExodusRosterItem.Create(ri)
-    else
-        Result := nil;
+{ TODO : Roster refactor }
+
+//    MainSession.roster.AddItem(JabberID, Nickname, Group, Subscribe);
+//    ri := MainSession.Roster.Find(JabberID);
+//    if (ri <> nil) then
+//        Result := TExodusRosterItem.Create(ri)
+//    else
+//        Result := nil;
 end;
 
 {---------------------------------------}
 function TExodusRoster.Find(const JabberID: WideString): IExodusRosterItem;
-var
-    ri: TJabberRosterItem;
+//var
+//    ri: TJabberRosterItem;
 begin
-    // Should we be spinning up new COM objects for every item??
-    // they should go away via RefCounting.
-    ri := MainSession.roster.Find(JabberID);
-    if (ri <> nil) then
-        Result := TExodusRosterItem.Create(ri)
-    else
-        Result := nil;
+ { TODO : Roster refactor }
+//    // Should we be spinning up new COM objects for every item??
+//    // they should go away via RefCounting.
+//    ri := MainSession.roster.Find(JabberID);
+//    if (ri <> nil) then
+//        Result := TExodusRosterItem.Create(ri)
+//    else
+//        Result := nil;
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.Fetch;
 begin
-    MainSession.roster.Fetch();
+   { TODO : Roster refactor }
+    //MainSession.roster.Fetch();
 end;
 
 {---------------------------------------}
 function TExodusRoster.Item(Index: Integer): IExodusRosterItem;
-var
-    ri: TJabberRosterItem;
+//var
+//    ri: TJabberRosterItem;
 begin
-    if ((Index >= 0) and (Index < MainSession.roster.Count)) then
-        ri := MainSession.roster.Items[Index]
-    else
-        ri := nil;
-
-    if (ri <> nil) then
-        Result := TExodusRosterItem.Create(ri)
-    else
-        Result := nil;
+      { TODO : Roster refactor }
+//    if ((Index >= 0) and (Index < MainSession.roster.Count)) then
+//        ri := MainSession.roster.Items[Index]
+//    else
+//        ri := nil;
+//
+//    if (ri <> nil) then
+//        Result := TExodusRosterItem.Create(ri)
+//    else
+//        Result := nil;
 end;
 
 {---------------------------------------}
 function TExodusRoster.Count: Integer;
 begin
-    Result := MainSession.roster.Count;
+   { TODO : Roster refactor }
+//    Result := MainSession.roster.Count;
 end;
 
 {---------------------------------------}
 function TExodusRoster.addGroup(const grp: WideString): IExodusRosterGroup;
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
-    go := MainSession.Roster.addGroup(grp);
-    Result := TExodusRosterGroup.Create(go);
+    { TODO : Roster refactor }
+//    go := MainSession.Roster.addGroup(grp);
+//    Result := TExodusRosterGroup.Create(go);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Get_GroupsCount: Integer;
 begin
-    Result := MainSession.Roster.GroupsCount;
+        { TODO : Roster refactor }
+    //Result := MainSession.Roster.GroupsCount;
 end;
 
 {---------------------------------------}
 function TExodusRoster.getGroup(const grp: WideString): IExodusRosterGroup;
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
-    go := MainSession.Roster.getGroup(grp);
-    if (go <> nil) then
-        Result := TExodusRosterGroup.Create(go)
-    else
-        Result := nil;
+   { TODO : Roster refactor }
+//    go := MainSession.Roster.getGroup(grp);
+//    if (go <> nil) then
+//        Result := TExodusRosterGroup.Create(go)
+//    else
+//        Result := nil;
 end;
 
 {---------------------------------------}
 function TExodusRoster.Groups(Index: Integer): IExodusRosterGroup;
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
-    go := MainSession.Roster.Groups[Index];
-    Result := TExodusRosterGroup.Create(go);
+     { TODO : Roster refactor }
+//    go := MainSession.Roster.Groups[Index];
+//    Result := TExodusRosterGroup.Create(go);
 end;
 
 {---------------------------------------}
 function TExodusRoster.Items(Index: Integer): IExodusRosterItem;
-var
-    ri: TJabberRosterItem;
+//var
+//    ri: TJabberRosterItem;
 begin
-    ri := MainSession.Roster.Items[index];
-    Result := TExodusRosterItem.Create(ri);
+      { TODO : Roster refactor }
+//    ri := MainSession.Roster.Items[index];
+//    Result := TExodusRosterItem.Create(ri);
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeGroup(const grp: IExodusRosterGroup);
-var
-    go: TJabberGroup;
+//var
+//    go: TJabberGroup;
 begin
-    go := MainSession.Roster.getGroup(grp.FullName);
-    if (go <> nil) then
-        MainSession.roster.removeGroup(go);
+   { TODO : Roster refactor }
+//    go := MainSession.Roster.getGroup(grp.FullName);
+//    if (go <> nil) then
+//        MainSession.roster.removeGroup(go);
 end;
 
 {---------------------------------------}
 procedure TExodusRoster.removeItem(const Item: IExodusRosterItem);
 begin
-    MainSession.Roster.RemoveItem(Item.JabberID);
+       { TODO : Roster refactor }
+    //MainSession.Roster.RemoveItem(Item.JabberID);
 end;
 
 {---------------------------------------}

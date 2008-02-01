@@ -30,7 +30,7 @@ type
 
    TContactController = class
    private
-       _ItemController: IExodusItemController;
+       //_ItemController: IExodusItemController;
        _JS: TObject;
        _PresCB: Integer;
        _IQCB: Integer;
@@ -41,18 +41,20 @@ type
        _HidePending: Boolean;
        _HideObservers: Boolean;
        _UseDisplayName: Boolean;
+       _DNListener: TObject;
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
        procedure _ParseContact(Contact: IExodusItem; Tag: TXMLTag);
-       //procedure _IQCallback(Event: String; Tag: TXMLTag);
-       //procedure _SessionCallback(Event: string; Tag: TXMLTag);
-       //procedure _RemoveCallback(Event: String; ContactItem: IExodusItem);
-       //procedure _PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
+       procedure _IQCallback(Event: String; Tag: TXMLTag);
+       procedure _SessionCallback(Event: string; Tag: TXMLTag);
+       procedure _RemoveCallback(Event: String; ContactItem: IExodusItem);
+       procedure _PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
        procedure _SetPresenceImage(Show: Widestring; Item: IExodusItem);
        function  _GetPresenceImage(Show: Widestring; Prefix: WideString): integer;
        procedure _UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
        procedure _UpdateContacts();
+       procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
        //procedure _SynchronizeGroups(Item: IExodusItem);
        //function  _GroupExists(Group: WideString): Boolean;
    public
@@ -60,7 +62,7 @@ type
        destructor Destroy; override;
        procedure Clear();
        //Properties
-       property ItemController: IExodusItemController read _ItemController write _ItemController;
+       //property ItemController: IExodusItemController read _ItemController write _ItemController;
 
 
    end;
@@ -73,25 +75,28 @@ uses IQ, JabberConst, JabberID, DisplayName, SysUtils, Unicode,
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
-   // _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
-  //  _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
-    //_RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
-   // _PresCB := TJabberSession(_JS).RegisterCallback(_PresCallback);
+    _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
+    _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
+    _RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
+    _PresCB := TJabberSession(_JS).RegisterCallback(_PresCallback);
     _HideBlocked := false;
     _HideOffline := false;
     _HidePending := false;
     _HideObservers := false;
     _UseDisplayName := false;
+    _DNListener := TDisplayNameListener.Create();
+    TDisplayNameListener(_DNListener).OnDisplayNameChange := _OnDisplayNameChange;
 end;
 
 {---------------------------------------}
 destructor  TContactController.Destroy();
 begin
     with TJabberSession(_js) do begin
-//        UnregisterCallback(_IQCB);
-//        UnregisterCallback(_RMCB);
-//        UnregisterCallback(_PresCB);
+        UnregisterCallback(_IQCB);
+        UnregisterCallback(_RMCB);
+        UnregisterCallback(_PresCB);
     end;
+    TDisplayNameListener(_DNListener).Free;
 end;
 
 {---------------------------------------}
@@ -121,35 +126,35 @@ var
     Item: IExodusItem;
 begin
         Item := nil;
-        //ItemTag := TXMLTag.Create('start');
-        TJabberSession(_JS).FireEvent('/item/start', Item);
-        TJabberSession(_JS).FireEvent('/item/gui/begin/update', Item);
+        TJabberSession(_JS).FireEvent('/item/begin', Item);
+        //TJabberSession(_JS).FireEvent('/item/gui/begin/update', Item);
         ContactItemTags := Tag.QueryXPTags('/iq/query/item');
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
             TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
-            Item := ItemController.GetItem(TmpJID.full);
+            Item := TJabberSession(_js).ItemController.GetItem(TmpJID.full);
             //Make sure item exists
             if (Item = nil) then
             begin
-                Item := ItemController.AddItemByUid(TmpJID.full);
+                Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full);
                 _ParseContact(Item, ContactTag);
 
                 if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/gui/item/add', Item);
+                    TJabberSession(_JS).FireEvent('/item/add', Item);
             end
             else
             begin
                 _ParseContact(Item, ContactTag);
                 if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/gui/item/update', Item);
+                    TJabberSession(_JS).FireEvent('/item/update', Item);
             end;
+            //DisplayName.getDisplayNameCache().UpdateDisplayName(TmpJID.jid);
             TmpJID.Free();
         end;
-        ItemController.SaveGroups();
+        TJabberSession(_js).ItemController.SaveGroups();
         Item := nil;
         TJabberSession(_JS).FireEvent('/item/end', Item);
-        TJabberSession(_JS).FireEvent('/item/gui/end/update', Item);
+        //TJabberSession(_JS).FireEvent('/item/gui/end/update', Item);
         //ItemTag.Free();
         //ItemController.ItemsLoaded := true;
 end;
@@ -164,8 +169,10 @@ var
     i: Integer;
     Grp, Groups: WideString;
 begin
+    Contact.Type_ := EI_TYPE_CONTACT;
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
+    Contact.AddProperty('Name', Tag.GetAttribute('name'));
     Contact.AddProperty('Subscription', Tag.GetAttribute('subscription'));
     Contact.AddProperty('Ask', Tag.GetAttribute('ask'));
     _UpdateContact(Contact);
@@ -187,7 +194,7 @@ begin
             Grp := WideTrim(TXMLTag(Grps[i]).Data);
             if (Grp <> '') then begin
                 Contact.AddGroup(grp);
-                ItemController.AddGroup(grp);
+                TJabberSession(_js).ItemController.AddGroup(grp);
             end;
 
         end;
@@ -201,39 +208,38 @@ begin
 end;
 
 {---------------------------------------}
-//procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
-//begin
-//     if Event = '/session/authenticated'  then
-//     begin
-//         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-//         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
-//         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-//         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-//         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-//         _GetContacts();
-//     end
-//     else if Event = '/session/prefs' then
-//     begin
-//         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-//         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
-//         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
-//         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
-//         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
-//         _UpdateContacts();
-//     end;
-//end;
+procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
+begin
+     if Event = '/session/authenticated'  then
+     begin
+         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
+         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+         _GetContacts();
+     end
+     else if Event = '/session/prefs' then
+     begin
+         _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
+         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
+         _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
+         _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
+         _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+         _UpdateContacts();
+     end;
+end;
 
 {---------------------------------------}
-//procedure TContactController._IQCallback(Event: String; Tag: TXMLTag);
-//begin
-//
-//end;
-//
-//{---------------------------------------}
-//procedure TContactController._RemoveCallback(Event: String; ContactItem: IExodusItem);
-//begin
-//
-//end;
+procedure TContactController._IQCallback(Event: String; Tag: TXMLTag);
+begin
+end;
+
+{---------------------------------------}
+procedure TContactController._RemoveCallback(Event: String; ContactItem: IExodusItem);
+begin
+
+end;
 
 {---------------------------------------}
 //This function will iterate though all contacts and
@@ -250,19 +256,19 @@ var
 begin
     Tag := TXMLTag.Create();
     Item := nil;
-    TJabberSession(_JS).FireEvent('/item/gui/begin/update', Item);
-    for i := 0 to ItemController.ItemsCount - 1 do
+    TJabberSession(_JS).FireEvent('/item/begin', Item);
+    for i := 0 to TJabberSession(_js).ItemController.ItemsCount - 1 do
     begin
-        Item := ItemController.Item[i];
+        Item := TJabberSession(_js).ItemController.Item[i];
         pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
         _UpdateContact(Item, pres);
         if (Item.IsVisible) then
-            TJabberSession(_JS).FireEvent('/item/gui/item/add',  Item)
+            TJabberSession(_JS).FireEvent('/item/add',  Item)
         else
-            TJabberSession(_JS).FireEvent('/item/gui/item/remove', Item)
+            TJabberSession(_JS).FireEvent('/item/remove', Item)
 
     end;
-    TJabberSession(_JS).FireEvent('/item/gui/end/update', Item);
+    TJabberSession(_JS).FireEvent('/item/end', Item);
     Tag.Free();
 
 end;
@@ -273,7 +279,7 @@ end;
 procedure TContactController._UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
 var
     IsBlocked, IsOffline, IsPending, IsObserver, IsNone: boolean;
-    ImagePrefix, Subs, Ask, Show: Widestring;
+    ImagePrefix, Subs, Ask, Show, Name: Widestring;
     Tag: TXMLTag;
     Jid: TJabberID;
 begin
@@ -287,18 +293,20 @@ begin
 
     Show := '';
     Tag := TXMLTag.Create();
+    Name :=  Item.Value['Name'];
+    // if there is no nickname, just use the user portion of the jid
+    if (Name = '') then  begin
+        Jid := TJabberID.Create(Item.Uid);
+        if (Item.Value['Subscription'] <> '') then
+            if (TDisplayNameListener(_DNListener).ProfileEnabled) then
+                Item.Text := TDisplayNameListener(_DNListener).getDisplayName(Jid)
+            else
+                Item.Text := Jid.userDisplay
+        else
+            Item.Text := Jid.userDisplay;
+        Jid.Free();
+    end;
 
-    //Set display name if preference requires
-    Jid := TJabberID.Create(Item.Uid);
-    if (_UseDisplayName) then
-    begin
-        Item.Text := DisplayName.getDisplayNameCache().getDisplayName(Jid);
-        if (WideTrim(Item.Text) = '') then
-            Item.Text := jid.removeJEP106(Jid.user);
-    end
-    else
-        Item.Text := jid.removeJEP106(Jid.user);
-    Jid.Free();
     // is contact offline?
     //Set contact unavailable by default
     if (Pres <> nil) then
@@ -400,46 +408,46 @@ begin
 end;
 
 {---------------------------------------}
-//procedure TContactController._PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
-//var
-//    Item: IExodusItem;
-//    Tmp: TJabberID;
-//    wasVisible: Boolean;
-//begin
-//
-//    if (Event = '/presence/error') then
-//        exit;
-//
-//    if (Event = '/presence/subscription') then
-//        exit;
-//
-//    //If my user own presence, ignore
-//    Tmp := TJabberID.Create(Pres.FromJid);
-//    if (Tmp.jid = TJabberSession(_JS).BareJid) then
-//        exit;
-//
-//    Item := ItemController.GetItem(Pres.fromJid.jid);
-//    //Is this possible?
-//    if (Item = nil) then exit;
-//
-//    wasVisible := Item.IsVisible;
-//
-//    _UpdateContact(Item, Pres);
-//
-//  if (Item.IsVisible) then
-//      if (wasVisible) then
-//          TJabberSession(_JS).FireEvent('/item/gui/item/update', Item)
-//      else
-//          // notify the window that this item needs to be updated
-//          TJabberSession(_JS).FireEvent('/item/gui/item/add', Item);
-//
-//end;
+procedure TContactController._PresCallback(Event: String; Tag: TXMLTag; Pres: TJabberPres);
+var
+    Item: IExodusItem;
+    Tmp: TJabberID;
+    wasVisible: Boolean;
+begin
+
+    if (Event = '/presence/error') then
+        exit;
+
+    if (Event = '/presence/subscription') then
+        exit;
+
+    //If my user own presence, ignore
+    Tmp := TJabberID.Create(Pres.FromJid);
+    if (Tmp.jid = TJabberSession(_JS).BareJid) then
+        exit;
+
+    Item := TJabberSession(_js).ItemController.GetItem(Pres.fromJid.jid);
+    //Is this possible?
+    if (Item = nil) then exit;
+
+    wasVisible := Item.IsVisible;
+
+    _UpdateContact(Item, Pres);
+
+  if (Item.IsVisible) then
+      if (wasVisible) then
+          TJabberSession(_JS).FireEvent('/item/update', Item)
+      else
+          // notify the window that this item needs to be updated
+          TJabberSession(_JS).FireEvent('/item/add', Item);
+
+end;
 
 {---------------------------------------}
 procedure TContactController.Clear();
 begin
-    ItemController.ClearGroups();
-    ItemController.ClearItems();
+    TJabberSession(_js).ItemController.ClearGroups();
+    TJabberSession(_js).ItemController.ClearItems();
 end;
 
 {---------------------------------------}
@@ -475,6 +483,16 @@ begin
 end;
 
 {---------------------------------------}
+procedure TContactController._OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
+var
+    Item: IExodusItem;
+begin
+    Item := TJabberSession(_js).ItemController.GetItem(bareJID);
+    if (Item = nil) then exit;
+    Item.Text := DisplayName;
+    TJabberSession(_JS).FireEvent('/item/update', Item);
+end;
+
 //Makes sure that group exists in the global list and add it
 //to the global list if neccessary
 //procedure TContactController._SynchronizeGroups(Item: IExodusItem);

@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, NodeItem,  
+    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs,   
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows,
     TntSysUtils;
 
@@ -97,7 +97,8 @@ procedure centerMainForm(f: TForm);
 procedure CenterChildForm(f: TForm; anchor: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
-function promptNewGroup: TJabberGroup;
+{ TODO : Roster refactor }
+//function promptNewGroup: TJabberGroup;
 
 function IsUnicodeEnabled(): boolean;
 
@@ -129,7 +130,7 @@ implementation
 uses
     Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
     IniFiles, StrUtils, IdGlobal, ShellAPI, Types,
-    XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
+    XMLUtils, Session, JabberUtils, JabberID, Jabber1, 
     JabberConst, MsgDisplay,
     RT_XIMConversion,
     ExForm,
@@ -630,10 +631,11 @@ var
     i,j : integer;
     b: WideString;
     msg, x, item: TXMLTag;
-    ri: TJabberRosterItem;
+//    ri: TJabberRosterItem;
     noi, noi_domain, noi_parameter: Widestring;
     offset: Cardinal;
 begin
+  { TODO : Roster refactor }
     msg := TXMLTag.Create('message');
     msg.setAttribute('id', MainSession.generateID());
     msg.setAttribute('to', to_jid);
@@ -642,21 +644,21 @@ begin
     x := msg.AddTag('x');
     x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin
-        ri := TJabberRosterItem(items[i]);
+        //ri := TJabberRosterItem(items[i]);
         item := x.AddTag('item');
-        item.setAttribute('jid', ri.jid.full);
-        item.setAttribute('name', ri.Text);
+        //item.setAttribute('jid', ri.jid.full);
+        //item.setAttribute('name', ri.Text);
         for j := 0 to MainSession.Prefs.getStringlistCount('send_contact_noi') - 1 do begin
             noi_parameter := MainSession.Prefs.getStringlistValue('send_contact_noi', j);
             offset := Pos('=', noi_parameter);
             if (offset > 0) then begin
                 noi_domain := Trim(LeftStr(noi_parameter, offset -1));
                 noi := Trim(RightStr(noi_parameter, StrLenW(PWideChar(noi_parameter)) - offset));
-                if (noi_domain = ri.jid.domain) then
+                //if (noi_domain = ri.jid.domain) then
                     item.setAttribute('noi', noi);
             end;
         end;
-        b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
+        //b := b + Chr(13) + Chr(10) + ri.Text + ': ' + ri.jid.getDisplayFull();
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');
@@ -1050,38 +1052,39 @@ begin
 end;
 
 {---------------------------------------}
-function promptNewGroup: TJabberGroup;
-var
-    msg: Widestring;
-    new_grp: WideString;
-    go: TJabberGroup;
-begin
-    // Add a roster grp.
-    Result := nil;
-
-    new_grp := _(sDefaultGroup);
-    msg := _(sNewGroupPrompt);
-
-    if (MainSession.Prefs.getBool('nested_groups')) then
-        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
-            [MainSession.Prefs.getString('group_seperator')]);
-    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
-
-    // add the new grp.
-    go := MainSession.Roster.getGroup(new_grp);
-    if (go <> nil) then begin
-       if (go.Data <> nil) then begin
-         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
-         Result := nil;
-       end
-       else
-         Result := go;
-    end
-    else begin
-        // add the new grp.
-        Result := MainSession.Roster.addGroup(new_grp);
-    end;
-end;
+{ TODO : Roster refactor }
+//function promptNewGroup: TJabberGroup;
+//var
+//    msg: Widestring;
+//    new_grp: WideString;
+//    go: TJabberGroup;
+//begin
+//    // Add a roster grp.
+//    Result := nil;
+//
+//    new_grp := _(sDefaultGroup);
+//    msg := _(sNewGroupPrompt);
+//
+//    if (MainSession.Prefs.getBool('nested_groups')) then
+//        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
+//            [MainSession.Prefs.getString('group_seperator')]);
+//    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
+//
+//    // add the new grp.
+//    go := MainSession.Roster.getGroup(new_grp);
+//    if (go <> nil) then begin
+//       if (go.Data <> nil) then begin
+//         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+//         Result := nil;
+//       end
+//       else
+//         Result := go;
+//    end
+//    else begin
+//        // add the new grp.
+//        Result := MainSession.Roster.addGroup(new_grp);
+//    end;
+//end;
 
 {---------------------------------------}
 procedure checkAndCenterForm(f: TForm);
