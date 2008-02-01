@@ -444,7 +444,6 @@ type
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
-    _killshow: boolean;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -456,7 +455,7 @@ type
     _sessioncb: integer;
     _rostercb: integer;
     _dns_cb: integer;
-    
+
     // Reconnect variables
     _reconnect_interval: integer;
     _reconnect_cur: integer;
@@ -470,6 +469,10 @@ type
     _dockManager: IExodusDockManager;
     _dockWindow: TfrmDockWindow;
     _dockWindowGlued: boolean;
+
+    // Other
+    _killshow: boolean;
+
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
 
@@ -656,7 +659,6 @@ published
     function DisableHelp(Command: Word; Data: Longint;
      var CallHelp: Boolean): Boolean;
     procedure doHide();
-    procedure ShowActivityWindow(show: boolean = true; bringtofront: boolean = true);
 
     property dockManager:IExodusDockManager read _dockManager;
   end;
@@ -901,7 +903,7 @@ begin
 
     if ((_dockwindow <> nil) and
         (not _dockwindow.Showing)) then begin
-        ShowActivityWindow();
+        getDockManager().ShowDockManagerWindow(true, false);
     end;
 
     SetForegroundWindow(Self.Handle);
@@ -1398,7 +1400,7 @@ begin
     with MainSession.Prefs do begin
         if (ExStartup.debug) then begin
             if (_dockWindow <> nil) then begin
-                ShowActivityWindow();
+                getDockManager().ShowDockManagerWindow(true, false);
             end;
             ShowDebugForm(false);
         end;
@@ -3140,12 +3142,12 @@ procedure TfrmExodus.mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
 begin
     inherited;
     if (_dockwindow = nil) then exit;
-{$IFDEF USE_ACTIVITY_WINDOW}
+
     if (not _dockWindow.Showing) then begin
-        ShowActivityWindow();
+        getDockManager().ShowDockManagerWindow(true, false);
     end;
-{$ENDIF}
-    _dockWindow.BringToFront();
+
+    getDockManager().BringToFront();
 end;
 
 {---------------------------------------}
@@ -3504,7 +3506,6 @@ begin
         Self.ActiveChat := nil;
     end;
 end;
-
 
 {---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
@@ -3876,7 +3877,7 @@ begin
         CloseAllChats();
         closeMsgQueue();
         if (not isDebugShowing()) then begin
-            ShowActivityWindow(false);
+            getDockManager().ShowDockManagerWindow(false, false);
         end;
         MainSession.Disconnect();
     end;
@@ -4547,18 +4548,6 @@ begin
     _hidden := true;
     Self.Visible := false;
     PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-end;
-
-procedure TfrmExodus.ShowActivityWindow(show: boolean; bringtofront: boolean);
-begin
-    if (_dockwindow = nil) then exit;
-
-    if (show) then begin
-        _dockwindow.ShowDefault(bringtofront);
-    end
-    else begin
-        _dockwindow.Hide();
-    end;
 end;
 
 procedure TfrmExodus.ShowLogin();

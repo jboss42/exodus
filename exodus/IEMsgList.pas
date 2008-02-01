@@ -953,8 +953,12 @@ begin
     if (key = 22) then begin
         // paste, Ctrl-V
         if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            bc.MsgOut.PasteFromClipboard();
-            bc.MsgOut.SetFocus();
+            try
+                bc.MsgOut.PasteFromClipboard();
+                bc.MsgOut.SetFocus();
+            except
+                // To handle Cannot focus exception
+            end;
         end;
     end
     else if ((MainSession.Prefs.getBool('esc_close')) and (key = 27)) then begin
@@ -966,12 +970,20 @@ begin
     end
     else if (key < 32) then begin
         // Not a "printable" key
-        bc.MsgOut.SetFocus();
+        try
+            bc.MsgOut.SetFocus();
+        except
+            // To handle Cannot focus exception
+        end;
     end
     else if (bc.pnlInput.Visible) then begin
         if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            bc.MsgOut.WideSelText := WideChar(Key);
-            bc.MsgOut.SetFocus();
+            try
+                bc.MsgOut.WideSelText := WideChar(Key);
+                bc.MsgOut.SetFocus();
+            except
+                // To handle Cannot focus exception
+            end;
         end;
     end;
     pEvtObj.returnValue := false;

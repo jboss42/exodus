@@ -112,6 +112,14 @@ type
     }
     procedure BringToFront();
 
+    {
+        Show or hide the dockmanager.
+
+        Result is if the window was shown or hidden as desired.
+        It is possible for the window to have reason to refuse request to show/hide.
+    }
+    function ShowDockManagerWindow(Show: boolean = true; BringWindowToFront: boolean = true): boolean;
+
     function isActive(): boolean;
     function getHWND(): THandle;
   end;

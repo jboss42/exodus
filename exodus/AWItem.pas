@@ -381,6 +381,8 @@ begin
     if (aw <> nil) then begin
         item := aw.findItem(self);
         if (item <> nil) then begin
+            // Force window to show before docking which helps some oddities when
+            // docking a minimized window.
             ShowWindow(item.frm.Handle, SW_RESTORE);
             item.frm.DockForm();
             aw.activateItem(Self);

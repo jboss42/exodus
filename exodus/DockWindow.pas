@@ -30,7 +30,7 @@ uses
   ComCtrls, ExtCtrls, TntExtCtrls,
   ExodusDockManager, StdCtrls,
   ExGradientPanel, AWItem, Unicode,
-  StateForm;
+  StateForm, XMLTag;
 
 type
 
@@ -57,14 +57,15 @@ type
     procedure FormResize(Sender: TObject);
     procedure OnMove(var Msg: TWMMove); message WM_MOVE;
     procedure FormHide(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     _docked_forms: TList;
     _dockState: TDockStates;
     _sortState: TSortState;
     _glueEdge: TGlueEdge;
-    _undocking: boolean; 
+    _undocking: boolean;
+    _sessionCB: integer;
+    _suppressShow: boolean;
 
     procedure _removeTabs(idx:integer = -1; oldtsheet: TTntTabSheet = nil);
     procedure _layoutDock();
@@ -73,6 +74,7 @@ type
     procedure _needToBeShowingCheck();
     procedure _glueCheck();
     function _withinGlueSnapRange(): TGlueEdge;
+    function _canShowWindow(): boolean;
 
   protected
     { Protected declarations }
@@ -94,6 +96,7 @@ type
     procedure BringToFront();
     function isActive(): boolean;
     function getHWND(): THandle;
+    function ShowDockManagerWindow(Show: boolean = true; BringWindowToFront: boolean = true): boolean;
 
     function getTabSheet(frm : TfrmDockable) : TTntTabSheet;
     function getTabForm(tab: TTabSheet): TForm;
@@ -102,6 +105,7 @@ type
     procedure Flash();
     procedure checkFlash();
     procedure moveGlued();
+    procedure SessionCallback(event: string; tag: TXMLTag);
   end;
 
 var
@@ -205,6 +209,10 @@ begin
     _undocking := false;
     dockWindowKBHook := SetWindowsHookEx(WH_KEYBOARD, @dockWindowKeyboardHookProc, HInstance, GetCurrentThreadId()) ;
 
+    _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
+
+    Self.RestoreWindowState();
+
     if ((MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_WIDTH) = 0) and
         (MainSession.Prefs.getInt(PrefController.P_ACTIVITY_WINDOW_TAB_WIDTH) = 0)) then begin
         // If both settings are 0, then this must be the first time ever
@@ -225,6 +233,7 @@ begin
     try
         inherited;
         _docked_forms.Free;
+        MainSession.UnRegisterCallback(_sessionCB);
         UnHookWindowsHookEx(dockWindowKBHook) ;
     except
     end;
@@ -275,7 +284,7 @@ var
 begin
     oldsheet := TTntTabSheet(AWTabControl.ActivePage);
     if (not Self.Showing) then begin
-        Self.ShowDefault(false);
+        ShowDockManagerWindow(true, false);
     end;
     frm.ManualDock(AWTabControl); //fires TabsDockDrop event
     setWindowCaption(frm.Caption);
@@ -305,20 +314,6 @@ procedure TfrmDockWindow.FormHide(Sender: TObject);
 begin
     inherited;
     frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
-end;
-
-procedure TfrmDockWindow.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    inherited;
-    if (ssAlt in Shift) then begin
-        if (Key = VK_DOWN)  then begin
-            Sleep(1);
-        end
-        else if (Key = VK_UP) then begin
-            Sleep(1);
-        end;
-    end;
 end;
 
 {---------------------------------------}
@@ -496,7 +491,7 @@ begin
             if (frm.Activating) then begin
                 if ((not Self.Showing) and
                     (frm.Docked)) then begin
-                    Self.ShowDefault(true);
+                    ShowDockManagerWindow(true, true);
                 end;
                 aw.activateItem(item.awItem);
             end;
@@ -511,15 +506,35 @@ end;
 {---------------------------------------}
 procedure TfrmDockWindow.BringToFront();
 begin
-    ShowWindow(Self.Handle, SW_SHOWNORMAL);
-    Self.Visible := true;
-    ForceForegroundWindow(Self.Handle);
+    ShowDockManagerWindow(true, true);
 end;
 
 {---------------------------------------}
 function TfrmDockWindow.isActive(): boolean;
 begin
     Result := Self.Active;
+end;
+
+{---------------------------------------}
+function TfrmDockWindow.getHWND(): THandle;
+begin
+    Result := Self.Handle;
+end;
+
+{---------------------------------------}
+function TfrmDockWindow.ShowDockManagerWindow(Show: boolean = true; BringWindowToFront: boolean = true): boolean;
+begin
+    Result := false;
+
+    if ((Show) and
+        (_canShowWindow())) then begin
+        Self.ShowDefault(BringWindowToFront);
+        Result := true;
+    end
+    else if (not Show) then begin
+        ShowWindow(Self.Handle, SW_HIDE);
+        Result := true;
+    end;
 end;
 
 {---------------------------------------}
@@ -794,7 +809,9 @@ begin
     if (not Self.Showing) then begin
         Self.WindowState := wsMinimized;
         Self.Visible := true;
-        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
+        if (_canShowWindow()) then begin
+            ShowWindow(Handle, SW_SHOWMINNOACTIVE);
+        end;
     end;
     if MainSession.Prefs.getBool('notify_flasher') then begin
         timFlasher.Enabled := true;
@@ -861,7 +878,7 @@ begin
         if ((aw.itemCount <= 0) and
             (not _undocking)) then begin
             // We shouldn't be showing
-            Self.Hide();
+            ShowDockManagerWindow(false, false);
             frmExodus.mnuWindows_View_ShowActivityWindow.Checked := false;
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
             frmExodus.trayShowActivityWindow.Enabled := false;
@@ -956,6 +973,22 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmDockWindow._canShowWindow(): boolean;
+var
+    aw: TfrmActivityWindow;
+begin
+    Result := false;
+
+    aw := GetActivityWindow();
+    if (aw <> nil) then begin
+        if ((aw.itemCount > 0) and
+            (not _suppressShow)) then begin
+            Result := true;
+        end;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmDockWindow.moveGlued();
 begin
     if (Self.WindowState = wsMaximized) then exit;
@@ -989,12 +1022,17 @@ begin
     end;
 end;
 
-function TfrmDockWindow.getHWND(): THandle;
+{---------------------------------------}
+procedure TfrmDockWindow.SessionCallback(event: string; tag: TXMLTag);
 begin
-    Result := Self.Handle;
+    if (event = '/session/dockwindow/disableshow') then begin
+        _suppressShow := true;
+    end
+    else if (event = '/session/dockwindow/enableshow') then begin
+        _suppressShow := false;
+    end;
+
 end;
-
-
 
 
 end.

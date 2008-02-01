@@ -467,7 +467,7 @@ begin
         // sometimes, if the activity window hasn't been shown
         // yet, then the room being joined will not be (no presence sent).
         // The EntityCallback never triggers.
-        frmExodus.ShowActivityWindow(true, bring_to_front);
+        getDockManager().ShowDockManagerWindow(true, bring_to_front);
 
         // is there already a room window?
         i := room_list.IndexOf(rjid);
@@ -746,8 +746,13 @@ begin
         Msg.isMe := False;
         LogMessage(Msg);
 
-        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then
-            MsgOut.SetFocus();
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) and (MsgOut.Enabled) then begin
+            try
+                MsgOut.SetFocus();
+            except
+                // To handle Cannot focus exception
+            end;
+        end;
     end;
 
 
@@ -2854,8 +2859,12 @@ begin
     if (Ord(key) < 32) then exit;
 
     if (MsgOut.Visible) and (MsgOut.Enabled) and (not MsgOut.ReadOnly) then begin
-        MsgOut.SetFocus();
-        MsgOut.WideSelText := Key;
+        try
+            MsgOut.SetFocus();
+            MsgOut.WideSelText := Key;
+        except
+            // To handle Cannot focus exception
+        end;
     end;
 end;
 
