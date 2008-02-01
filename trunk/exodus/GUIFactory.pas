@@ -106,7 +106,7 @@ begin
   //  end
   //else if (event = '/session/gui/conference') then begin
   if (event = '/session/gui/conference') then begin
-        ShowWindow(getDockManager().getHWND(), SW_RESTORE);
+        getDockManager().ShowDockManagerWindow(true, false);
 
         StartRoom(tag.GetAttribute('jid'),
                   tag.GetBasicText('nick'),
@@ -134,7 +134,7 @@ begin
 //            end;
 //        end;
 
-        ShowWindow(getDockManager().getHWND(), SW_RESTORE);
+        getDockManager().ShowDockManagerWindow(true, false);
 
         if ((r = 0) or (r = 2)) then begin
             if (tmp_jid.resource <> '') then

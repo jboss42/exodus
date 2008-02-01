@@ -269,8 +269,14 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
     begin
         MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
-        if (MsgOut.Visible and MsgOut.Enabled) then
-            MsgOut.SetFocus();
+        if (MsgOut.Visible and MsgOut.Enabled) then begin
+            try
+                MsgOut.SetFocus();
+            except
+                // To handle Cannot focus exception
+            end;
+        end;
+
     end;
 
 begin
@@ -385,8 +391,13 @@ begin
     UpdateToolbarState();
     if (MainSession.Prefs.getBool('show_priority')) then
       SetPriorityNormal;
-    if (MsgOut.Visible and MsgOut.Enabled) then
-        MsgOut.SetFocus;
+    if (MsgOut.Visible and MsgOut.Enabled) then begin
+        try
+            MsgOut.SetFocus();
+        except
+            // To handle Cannot focus exception
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -395,8 +406,13 @@ begin
     inherited;
     frmExodus.ActiveChat := Self;
 
-    if (MsgOut.Visible and MsgOut.Enabled) then
-        MsgOut.SetFocus();
+    if (MsgOut.Visible and MsgOut.Enabled) then begin
+        try
+            MsgOut.SetFocus();
+        except
+            // To handle Cannot focus exception
+        end;
+    end;
 end;
 
 procedure TfrmBaseChat.FormCreate(Sender: TObject);

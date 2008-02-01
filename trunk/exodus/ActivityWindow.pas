@@ -451,7 +451,7 @@ end;
 {---------------------------------------}
 function TfrmActivityWindow.addItem(frm:TfrmDockable): TAWTrackerItem;
 begin
-    Result := findItem(frm);     //dda
+    Result := findItem(frm);     
 
     if ((Result = nil) and
         (frm <> nil)) then begin
@@ -638,6 +638,7 @@ begin
             trackitem.frm.ClearUnreadMsgCount();
             trackitem.awItem.count := trackitem.frm.UnreadMsgCount;
             if (trackitem.frm.Docked) then begin
+                // Docked Window
                 tsheet := _dockwindow.getTabSheet(trackitem.frm);
                 if (tsheet <> nil) then begin
                     try
@@ -653,11 +654,11 @@ begin
                 end;
             end
             else begin
+                // Undocked Window
                 if (trackitem.frm.WindowState = wsMinimized) then begin
-                    ShowWindow(trackitem.frm.Handle, SW_RESTORE); 
-                end; 
+                    ShowWindow(trackitem.frm.Handle, SW_RESTORE);
+                end;
                 trackitem.frm.BringToFront;
-                scrollToActive();
             end;
         end;
 
@@ -1093,6 +1094,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmActivityWindow.timShowActiveDockedTimer(Sender: TObject);
+var
+    i: integer;
+    item: TAWTrackerItem;
 begin
     inherited;
 
@@ -1104,9 +1108,22 @@ begin
         // a sheet if told to from an "external" event like this timer. This
         // looks to be a bug in TPageControl (TTntPageControl) and this is
         // a workaround.
-        if ((_oldActivateSheet <> nil) and
-            (_dockWindow.AWTabControl.PageCount > 0))then begin
-            _oldActivateSheet.Visible := true;
+        if (_dockWindow.AWTabControl.PageCount > 0) then begin
+            if (_oldActivateSheet = nil) then begin
+                // We don't currently have a active sheet, so get
+                // a hold of the tsheet associated with the active, docked item.
+                for i := 0 to _trackingList.Count - 1 do begin
+                    item := TAWTrackerItem(_trackingList.Objects[i]);
+                    if ((item.awItem.active) and
+                        (item.frm.Docked)) then begin
+                        _oldActivateSheet := _dockWindow.getTabSheet(item.frm);
+                    end;
+                end;
+            end;
+
+            if (_oldActivateSheet <> nil) then begin
+                _oldActivateSheet.Visible := true;
+            end;
         end;
     except
     end;
@@ -1250,7 +1267,7 @@ begin
     if (name = '') then exit;
 
     idx := findItemIndex(awitem);
-    if (trackeritem <> nil) then begin
+    if (idx >= 0) then begin
         _trackingList.Strings[idx] := name;
         trackeritem := TAWTrackerItem(_trackingList.Objects[idx]);
         if (trackeritem <> nil) then begin

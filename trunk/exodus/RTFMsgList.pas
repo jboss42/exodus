@@ -164,8 +164,12 @@ begin
     if (Ord(key) = 22) then begin
         // paste, Ctrl-V
         if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            bc.MsgOut.SetFocus();
-            bc.MsgOut.PasteFromClipboard();
+            try
+                bc.MsgOut.SetFocus();
+                bc.MsgOut.PasteFromClipboard();
+            except
+                // To handle Cannot focus exception
+            end;
         end;
         Key := #0;
         exit;
@@ -182,8 +186,12 @@ begin
 
     if (bc.pnlInput.Visible) then begin
         if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
-            bc.MsgOut.SetFocus();
-            bc.MsgOut.WideSelText := Key;
+            try
+                bc.MsgOut.SetFocus();
+                bc.MsgOut.WideSelText := Key;
+            except
+                // To handle Cannot focus exception
+            end;
         end;
     end;
 

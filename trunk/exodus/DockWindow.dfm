@@ -17,7 +17,6 @@ object frmDockWindow: TfrmDockWindow
   OnDestroy = FormDestroy
   OnDockDrop = FormDockDrop
   OnHide = FormHide
-  OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96

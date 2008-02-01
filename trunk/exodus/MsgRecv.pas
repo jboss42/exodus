@@ -635,8 +635,13 @@ begin
         pnlReply.Align := alBottom;
         pnlReply.Visible := true;
         Splitter1.Visible := true;
-        if (MsgOut.Visible and MsgOut.Enabled) then        
-            MsgOut.SetFocus;
+        if (MsgOut.Visible and MsgOut.Enabled) then begin
+            try
+                MsgOut.SetFocus;
+            except
+               // To handle Cannot focus exception
+            end;
+        end;
     end;
 end;
 
