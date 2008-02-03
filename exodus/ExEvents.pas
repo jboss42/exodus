@@ -28,7 +28,6 @@ type
     TJabberEventType = (
         evt_None,
         evt_Message,
-        evt_Invite,
         evt_AffilChange,
         evt_RosterItems,
         evt_OOB,
@@ -97,7 +96,6 @@ uses
 
 const
     sMsgMessage = 'Msg from ';
-    sMsgInvite = 'Invite from ';
     sMsgTime = 'Time Response';
     sMsgTimeInfo = 'Time, Ping Response: ';
     sMsgLocalTime = 'Local Time: ';
@@ -177,14 +175,6 @@ begin
                 // log the msg if we're logging.
                 LogMsgEvent(e);
             end;
-        end;
-
-        evt_Invite: begin
-            img_idx := 21;
-            msg := e.str_content;
-            notify := true;
-            notifyMsg := _(sMsgInvite) + DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
-            notifyType := 'notify_invite';
         end;
 
         evt_RosterItems: begin
@@ -487,32 +477,6 @@ begin
             from := tag.getAttribute('from');
             str_content := _('Your affiliation with the room has changed.');
             _data_list.Add(tag.GetBasicText('body'));
-        end
-        else if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then begin
-            // This is a MUC invite
-            eType := evt_Invite;
-            tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
-            from := tmp_tag.QueryXPData('/x/invite@from');
-            cjid := TJabberID.Create(tag.getAttribute('from'));
-            str_content := cjid.jid;
-            cjid.Free();
-            _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
-            password := tmp_tag.QueryXPData('/x/password');
-        end
-
-        else if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then begin
-            // conference invite
-            eType := evt_Invite;
-            tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
-            cjid := TJabberID.Create(tmp_tag.getAttribute('jid'));
-            str_content := cjid.jid;
-            cjid.Free();
-        end
-
-        else if (tag.QueryXPTag(XP_JCFINVITE) <> nil) then begin
-            // GC Invite
-            eType := evt_Invite;
-            str_content := tag.GetAttribute('from')
         end
 
         else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin

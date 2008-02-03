@@ -119,6 +119,7 @@ uses
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
+    InviteReceived,
     ExForm;
 
 const
@@ -579,8 +580,8 @@ begin
 
     // Initialize the global responders/xpath events
     initResponders();
-
     StartDBGManager();
+
     if (log_debug) then begin
         StartDebugLogger(log_filename);
     end;
@@ -634,6 +635,8 @@ begin
 
     // Setup our avatar cache
     Avatars.setSession(MainSession);
+
+    InviteReceived.OnSessionStart(MainSession);
 
     //create a roster early so all other windows can get east access
     RosterForm.GetRosterWindow();
@@ -808,6 +811,9 @@ begin
         _guiBuilder.Free();
         ExRegController.Free();
         _SubController.Free();
+
+        InviteReceived.OnSessionEnd();
+                
         MainSession.Free();
         MainSession := nil;
     end;

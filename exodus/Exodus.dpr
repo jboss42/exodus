@@ -264,7 +264,9 @@ uses
   GroupInfo in '..\jopl\GroupInfo.pas',
   ContactController in '..\jopl\ContactController.pas',
   ExTreeView in 'components\ExTreeView.pas',
-  RosterForm in 'RosterForm.pas' {Form3};
+  RosterForm in 'RosterForm.pas' {Form3},
+  InviteDeclined in 'InviteDeclined.pas' {FrmInviteDeclined: TTntForm},
+  InviteReceived in 'InviteReceived.pas' {frmInviteReceived: TTntForm};
 
 {$R *.TLB}
 

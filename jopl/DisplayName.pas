@@ -36,18 +36,23 @@ const
     PROFILE_DN_MAP_END_DELIM = '}';
 
 type
+    //JJF TODO add some kind of generic support for rooms (bookmark names), other items
     TDisplayNameType = (dntRoster, dntProfile, dntNode);
 
     TDisplayNameChangeEvent = procedure(bareJID: Widestring; displayName: WideString) of object;
 
+    //for another JID, not the one we wanted the DN for. add a tracking JID here!
     TDisplayNameListener = class
     private
         _DNCB: Integer;
         _OnDisplayNameChange: TDisplayNameChangeEvent;
+        //listen for exactly one DN event after a call to GetDisplayName?
+        _OneTimeListener: boolean; //F -> fire OnDN whenever a matching event occurs
+        _ListeningJID: TJabberID; //JID we are listening for
     protected
         procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);virtual;
     public
-        Constructor Create();
+        Constructor Create(OneTimeListener: boolean = true);
         Destructor Destroy();override;
 
         function getDisplayName(bareJID: TJabberID; out pendingNameChange: boolean): WideString;overload;
@@ -276,10 +281,11 @@ end;
 {-------------------------------------------------------------------------------
  ------------------------ TDisplayNameListener ---------------------------------
  ------------------------------------------------------------------------------}
-Constructor TDisplayNameListener.Create();
+Constructor TDisplayNameListener.Create(OneTimeListener: boolean);
 begin
-    inherited;
+    _OneTimeListener := OneTimeListener;
     _DNCB := -1;
+    _ListeningJID := nil;
 end;
 
 Destructor TDisplayNameListener.Destroy();
@@ -287,21 +293,33 @@ begin
     if (_DNCB <> -1) then
         MainSession.UnRegisterCallback(_DNCB);
     _DNCB := -1;
+    if (_ListeningJID <> nil) then
+        _ListeningJID.Free();
     inherited;
 end;
 
 
 function TDisplayNameListener.getDisplayName(bareJID: TJabberID; out pendingNameChange: boolean): WideString;
 begin
+    if (_ListeningJID <> nil) then
+    begin
+        _ListeningJID.Free();
+        _ListeningJID := nil;
+    end;
     Result := getDisplayNameCache().getDisplayName(bareJID, pendingNameChange);
-    if (pendingNameChange and (_DNCB = -1)) then
-        _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
+    if (pendingNameChange) then
+    begin
+        _ListeningJID := TJabberID.create(bareJID);
+        if (_DNCB = -1) then
+            _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
+    end;
 end;
 
 function TDisplayNameListener.getDisplayName(bareJID: TJabberID): WideString;
 var
     ignored: boolean;
 begin
+
     Result := Self.getDisplayName(bareJID, ignored);
 end;
 
@@ -313,12 +331,23 @@ begin
 end;
 
 procedure TDisplayNameListener.DNCallback(event: string; tag: TXMLTag);
+var
+    JIDStr: WideString;
 begin
     try
-        if (_DNCB <> -1) and (tag <> nil) then begin
-            fireOnDisplaynameChange(tag.GetAttribute('jid'), tag.GetAttribute('dn'));
-            MainSession.UnRegisterCallback(_DNCB);
-            _DNCB := -1;
+        JIDStr := '';
+        if (tag <> nil) then
+            JIDStr := tag.GetAttribute('jid');
+        if (_DNCB <> -1) and (_ListeningJID <> nil) and (_ListeningJID.jid = JIDStr) then
+        begin
+            fireOnDisplaynameChange(JIDStr, tag.GetAttribute('dn'));
+            if (_OneTimeListener) then
+            begin
+                MainSession.UnRegisterCallback(_DNCB);
+                _DNCB := -1;
+                _ListeningJID.Free();
+                _ListeningJID := nil;
+            end;
         end;
     except
     end;
@@ -326,9 +355,18 @@ end;
 
 function TDisplayNameListener.getProfileDisplayName(bareJID: TJabberID; out pendingNameChange: boolean): WideString;
 begin
+    if (_ListeningJID <> nil) then
+    begin
+        _ListeningJID.Free();
+        _ListeningJID := nil;
+    end;
     Result := getDisplayNameCache().getProfileDisplayName(bareJID, pendingNameChange);
-    if (pendingNameChange and (_DNCB = -1)) then
-        _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
+    if (pendingNameChange) then
+    begin
+        _ListeningJID := TJabberID.create(bareJID);
+        if (_DNCB = -1) then
+            _DNCB := MainSession.RegisterCallback(DNCallback, '/session/displayname');
+    end;
 end;
 
 function TDisplayNameListener.ProfileEnabled(): Boolean;
@@ -409,7 +447,7 @@ begin
         tTag := tag.GetFirstTag('vCard');
         if (tTag = nil) then
             tTag := tag.GetFirstTag('vcard');
-        if ((ttAg <> nil) and _profileParser.parseProfile(ttag, tstr) and (tstr <> '')) then
+        if ((ttag <> nil) and _profileParser.parseProfile(ttag, tstr) and (tstr <> '')) then
             _fetchfailed := false;
     end;
 
@@ -493,35 +531,39 @@ var
 begin
     Item := TJabberSession(_js).ItemController.GetItem(uid);
     if (Item = nil) then exit;
-    if (Item.Type_ <> EI_TYPE_CONTACT) then exit;
 
-    if ((Item.Value['Subscription'] = '') or (Item.Value['Subscription'] = 'remove')) then exit;
+    if (Item.Type_ = EI_TYPE_CONTACT) then
+    begin
+        //don't need display names for things not shown
+        if ((Item.Value['Subscription'] = '') or (Item.Value['Subscription'] = 'remove')) then
+            exit;
 
-    foundName := Item.Text;
+        foundName := Item.Value['Name'];//Item.Text; //need to know if nickname has been set in the roster
 
-    jid := TJabberID.Create(Item.Uid);
-    //add item to cache
-    dnItem := getDNItem(jid);
+        jid := TJabberID.Create(Item.Uid);
+        //add item to cache
+        dnItem := getDNItem(jid);
 
-    fireChange := (dnItem <> nil) and (foundName <> '') and (dnItem._displayName[dntRoster] <> foundName);
-    if (dnItem = nil) then begin
-        dnItem := TDisplayNameItem.create(jid, _profileParser);
-        addDNItem(dnItem);
-    end;
+        fireChange := (dnItem <> nil) and (foundName <> '') and
+                      (dnItem._displayName[dntRoster] <> foundName);
+        if (dnItem = nil) then begin
+            dnItem := TDisplayNameItem.create(jid, _profileParser);
+            addDNItem(dnItem);
+        end;
 
-    if ((foundName <> '') and (dnItem._displayName[dntRoster] <> foundName)) then
-        dnItem._displayName[dntRoster] := foundName;
+        if ((foundName <> '') and (dnItem._displayName[dntRoster] <> foundName)) then
+            dnItem._displayName[dntRoster] := foundName;
 
-    //fire a displayname updated event
-    if (fireChange) then begin
-        changeTag := TXMLtag.Create('dispname');
-        changeTag.setAttribute('jid', dnItem._jid.jid);
-        changeTag.setAttribute('dn', dnItem._displayName[dntRoster]);
-        TJabberSession(_js).FireEvent('/session/displayname', changeTag);
-        changeTag.Free();
-    end;
-    jid.Free();
-
+        //fire a displayname updated event
+        if (fireChange) then begin
+            changeTag := TXMLtag.Create('dispname');
+            changeTag.setAttribute('jid', dnItem._jid.jid);
+            changeTag.setAttribute('dn', dnItem._displayName[dntRoster]);
+            TJabberSession(_js).FireEvent('/session/displayname', changeTag);
+            changeTag.Free();
+        end;
+        jid.Free();
+    end;//if contact
 end;
 
 procedure TDisplayNameCache.SessionCallback(event: string; tag: TXMLTag);
@@ -558,6 +600,7 @@ begin
         if (ProfileParser.ProfileMapString <>  getProfileDNMap()) then
             ProfileParser.setProfileParseMap(getProfileDNMap());
         { JJF not updating for now, not sure what to do here
+        todo: check prefs and fire session/displayname event for each actual change
         for idx := 0 to _dnCache.Count - 1 do begin
             TDisplayNameItem(_dnCache.Objects[idx]).OnPrefChange();
         end;
