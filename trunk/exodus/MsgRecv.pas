@@ -111,7 +111,6 @@ type
     _events: TQueue;
     _controller: TExMsgController;
     _callback_id: integer;
-    _password: Widestring;
 
     procedure SetupResources();
     procedure DisablePopup();
@@ -165,15 +164,12 @@ const
     sMessageTo = 'Message to ';
 
     sRemove = 'Remove';
-    sAccept = 'Accept';
-    sDecline = 'Decline';
     sTo = 'To:';
     sError = 'Error:';
     sBtnClose = 'Close';
     sBtnNext = 'Next';
     sMsgsPending = 'You have unread messages. Read all messages before closing the window.';
 
-    sDeclineReason = 'Reason for declining invitation';
     SE_DISCONNECTED = '/session/disconnected';
 
 {---------------------------------------}
@@ -436,20 +432,12 @@ begin
 
     DisablePopup();
 
-    if (eType = evt_Invite) then begin
-        // Change button captions for TC Invites
-        _password := e.password;
-        frameButtons1.btnOK.Caption := _(sAccept);
-        frameButtons1.btnCancel.Caption := _(sDecline);
-    end
-
-    else if (e.error) then begin
+    if (e.error) then begin
         // This is an error.. show the error panel
         frameButtons1.btnOK.Visible := false;
         pnlError.Visible := true;
         lblSubject2.Caption := _(sError);
     end
-
     else
         // normally, we don't want a REPLY button
         frameButtons1.btnOK.Visible := (eType = evt_Message);
@@ -574,73 +562,24 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnCancelClick(Sender: TObject);
-var
-    messagetag: TXmlTag;
-    xTag: TXmlTag;
-    declineTag: TXmlTag;
-    reasonTag: TXmlTag;
-    rjid: TJabberID;
-    reason: Widestring;
 begin
-    if eType = evt_Invite then begin
-        // send back a decline message.
-        messagetag := TXmlTag.Create('message');
-        xTag := TXmlTag.Create('x');
-        declineTag := TXmlTag.Create('decline');
-        reasonTag := TXMLTag.Create('reason');
-
-        rjid := TJabberID.Create(_base_jid, false);
-        messagetag.setAttribute('from', MainSession.JID);
-        messagetag.setAttribute('to', rjid.jid);
-        xTag.setAttribute('xmlns', 'http://jabber.org/protocol/muc#user');
-        declineTag.setAttribute('to', JID);
-        reason := '';
-        if (not InputQueryW(_(sDeclineReason), _(sDeclineReason), reason, False, False)) then begin
-            reasonTag.Free();
-            declineTag.Free();
-            xTag.Free();
-            messagetag.Free();
-        end
-        else begin
-            reasonTag.AddCData(reason);
-            declineTag.AddTag(reasonTag);
-            xTag.AddTag(declineTag);
-            messagetag.AddTag(xTag);
-            MainSession.SendTag(messagetag);
-            NextOrClose();
-        end;
-    end
-    else
-        NextOrClose();
+    NextOrClose();
 end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnOKClick(Sender: TObject);
-var
-    jid: TJabberID;
 begin
-    // Do something...
-    if eType = evt_Invite then begin
-        // join this grp... grp is in the subject
-        jid := TJabberID.Create(_base_jid, false);
-        StartRoom(jid.jid, '', _password, True, False, True);
-        jid.Free();
-        Self.Close();
-    end
-
-    else begin
-        // reply
-        pnlReply.ClientHeight := Self.ClientHeight div 2;
-        frameButtons1.btnOK.Enabled := false;
-        pnlReply.Align := alBottom;
-        pnlReply.Visible := true;
-        Splitter1.Visible := true;
-        if (MsgOut.Visible and MsgOut.Enabled) then begin
-            try
-                MsgOut.SetFocus;
-            except
-               // To handle Cannot focus exception
-            end;
+    // reply
+    pnlReply.ClientHeight := Self.ClientHeight div 2;
+    frameButtons1.btnOK.Enabled := false;
+    pnlReply.Align := alBottom;
+    pnlReply.Visible := true;
+    Splitter1.Visible := true;
+    if (MsgOut.Visible and MsgOut.Enabled) then begin
+        try
+            MsgOut.SetFocus;
+        except
+           // To handle Cannot focus exception
         end;
     end;
 end;

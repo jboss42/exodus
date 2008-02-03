@@ -68,8 +68,6 @@ type
 var
   frmInvite: TfrmInvite;
 
-procedure showConfInvite(tag: TXMLTag);
-procedure showRecvInvite(tag: TXMLTag);
 procedure ShowInvite(room_jid: WideString; items: TList); overload;
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 
@@ -88,37 +86,6 @@ const
     sInvalidRoomJID = 'The Conference Room Address you entered is invalid. It must be valid Jabber ID.';
 
 {$R *.dfm}
-
-{---------------------------------------}
-procedure showConfInvite(tag: TXMLTag);
-begin
-    // if this also has a muc-invite, then just bail.
-    if (tag.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite') = nil) then
-        showRecvInvite(tag);
-end;
-
-{---------------------------------------}
-procedure showRecvInvite(tag: TXMLTag);
-var
-    e: TJabberEvent;
-    from: Widestring;
-begin
-    // factory for GUI
-    // kick and ban get here.. because of status codes
-
-    // check to see if we're already in the room.
-    e := CreateJabberEvent(tag);
-    from := tag.getAttribute('from');
-    if (room_list.IndexOf(from) <  0) then begin
-        if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
-            // auto-join the room
-            StartRoom(from, '', '', True, False, True);
-            e.Free();
-        end
-        else //msg queue now own event, don't free
-            RenderEvent(e);
-    end;
-end;
 
 {---------------------------------------}
 procedure ShowInvite(room_jid: WideString; items: TList);

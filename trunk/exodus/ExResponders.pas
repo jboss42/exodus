@@ -141,7 +141,7 @@ uses
     MsgQueue,
     RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
-    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify;
+    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, InviteReceived;
 
 const
     sNotifyAutoResponse = '%s query from: %s';
@@ -160,8 +160,7 @@ var
     _last: TLastResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
-    _muc_invite: TFactoryResponder;
-    _conf_invite: TFactoryResponder;
+    //_muc_invite: TFactoryResponder;
     _unhandled: TUnhandledResponder;
     _sistart: TFactoryResponder;
     _avatar: TAvatarResponder;
@@ -198,12 +197,7 @@ begin
     _iqoob := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
         FileReceive);
-    _muc_invite := TFactoryResponder.Create(MainSession,
-        '/pre/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite',
-        showRecvInvite);
-    _conf_invite := TFactoryResponder.Create(MainSession,
-        '/pre/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
-        showConfInvite);
+
     _unhandled := TUnhandledResponder.Create(MainSession);
     _sistart := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
@@ -316,8 +310,7 @@ begin
     FreeAndNil(Exodus_Browse);
 
     FreeAndNil(_unhandled);
-    FreeAndNil(_conf_invite);
-    FreeAndNil(_muc_invite);
+    //FreeAndNil(_muc_invite);
     FreeAndNil(_iqoob);
     FreeAndNil(_xdata);
     FreeAndNil(_last);
@@ -357,7 +350,7 @@ begin
 //for now, just notify the "dock manager" (notify to nil)
 //    if (IsMsgQueueShowing()) then
 //        f := GetMsgQueue(false);
-        
+
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sVersion),
                                           getNick(tag.getAttribute('from'))]),
