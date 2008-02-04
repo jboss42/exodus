@@ -1108,7 +1108,7 @@ begin
         // a sheet if told to from an "external" event like this timer. This
         // looks to be a bug in TPageControl (TTntPageControl) and this is
         // a workaround.
-        if (_dockWindow.AWTabControl.PageCount > 0) then begin
+        if ((_dockWindow <> nil) and (_dockWindow.AWTabControl.PageCount > 0)) then begin
             if (_oldActivateSheet = nil) then begin
                 // We don't currently have a active sheet, so get
                 // a hold of the tsheet associated with the active, docked item.
