@@ -2916,7 +2916,7 @@ begin
             Font.Style := [];
 
         // draw the image
-        frmExodus.Imagelist2.Draw(lstRoster.Canvas,
+        frmExodus.ImageList1.Draw(lstRoster.Canvas,
             nRect.Left, nRect.Top, Item.ImageIndex);
 
         // draw the text

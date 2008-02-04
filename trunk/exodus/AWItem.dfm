@@ -43,14 +43,13 @@ inherited fAWItem: TfAWItem
       Left = 173
       Top = 0
       Width = 7
-      Height = 22
+      Height = 16
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
-      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0

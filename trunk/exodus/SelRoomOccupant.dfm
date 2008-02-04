@@ -5,7 +5,6 @@ inherited frmSelRoomOccupant: TfrmSelRoomOccupant
   ClientHeight = 287
   ClientWidth = 219
   DefaultMonitor = dmDesktop
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -94,7 +93,7 @@ inherited frmSelRoomOccupant: TfrmSelRoomOccupant
     ShowColumnHeaders = False
     ShowWorkAreas = True
     ShowHint = True
-    SmallImages = frmExodus.ImageList2
+    SmallImages = frmExodus.ImageList1
     SortType = stText
     TabOrder = 2
     ViewStyle = vsReport

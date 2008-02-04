@@ -426,9 +426,9 @@ end;
 procedure TfAWItem._setImgIndex(val: Integer);
 begin
     if ((val >= 0) and
-        (val < frmExodus.ImageList2.Count)) then begin
+        (val < frmExodus.ImageList1.Count)) then begin
         _imgIndex := val;
-        frmExodus.ImageList2.GetIcon(_imgIndex, imgPresence.Picture.Icon);
+        frmExodus.ImageList1.GetIcon(_imgIndex, imgPresence.Picture.Icon);
       end;
 end;
 

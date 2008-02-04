@@ -260,10 +260,10 @@ begin
         end;
     end;
 
-    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_up'), imgScrollUp.Picture.Icon);
-    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
-    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('arrow_down'), imgSortArrow.Picture.Icon);
-    frmExodus.ImageList2.GetIcon(RosterTreeImages.Find('show_roster'), imgShowRoster.Picture.Icon);
+    frmExodus.ImageList1.GetIcon(RosterTreeImages.Find('arrow_up'), imgScrollUp.Picture.Icon);
+    frmExodus.ImageList1.GetIcon(RosterTreeImages.Find('arrow_down'), imgScrollDown.Picture.Icon);
+    frmExodus.ImageList1.GetIcon(RosterTreeImages.Find('arrow_down'), imgSortArrow.Picture.Icon);
+    frmExodus.ImageList1.GetIcon(RosterTreeImages.Find('show_roster'), imgShowRoster.Picture.Icon);
 
     _scrollUpState := ssDisabled;
     _scrollDownState := ssEnabled;

@@ -188,14 +188,13 @@ inherited frmRosterWindow: TfrmRosterWindow
         Left = 0
         Top = 0
         Width = 32
-        Height = 21
+        Height = 13
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
         Layout = tlCenter
         OnClick = pnlStatusClick
-        ExplicitHeight = 13
       end
     end
   end
@@ -279,7 +278,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       PopupMenu = popProfiles
       ShowColumnHeaders = False
       ShowHint = False
-      SmallImages = frmExodus.ImageList2
+      SmallImages = frmExodus.ImageList1
       TabOrder = 1
       ViewStyle = vsReport
       OnClick = lblConnectClick
@@ -443,7 +442,7 @@ inherited frmRosterWindow: TfrmRosterWindow
     Ctl3D = True
     DragMode = dmAutomatic
     HideSelection = False
-    Images = frmExodus.ImageList2
+    Images = frmExodus.ImageList1
     Indent = 19
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
@@ -567,7 +566,7 @@ inherited frmRosterWindow: TfrmRosterWindow
   end
   object popStatus: TTntPopupMenu
     AutoHotkeys = maManual
-    Images = frmExodus.ImageList2
+    Images = frmExodus.ImageList1
     Left = 8
     Top = 376
     object presOnline: TTntMenuItem
@@ -613,7 +612,7 @@ inherited frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
   end
-  object ImageList2: TImageList
+  object ImageList1: TImageList
     BkColor = clWhite
     ShareImages = True
     Left = 104
