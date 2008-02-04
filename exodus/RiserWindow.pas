@@ -144,7 +144,7 @@ begin
     with singleToast.Image1 do begin
         Canvas.Brush.Color := clBtnFace;
         Canvas.FillRect(Rect(0, 0,  Width, Height));
-        frmExodus.ImageList2.GetBitmap(imgIndex, Picture.Bitmap);
+        frmExodus.ImageList1.GetBitmap(imgIndex, Picture.Bitmap);
         if (not animate) then Repaint();
     end;
 

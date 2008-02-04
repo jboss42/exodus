@@ -79,19 +79,13 @@ type
 
   TfrmExodus = class(TExForm)
     MainMenu1: TTntMainMenu;
-    ImageList2: TImageList;
+    ImageList1: TImageList;
     timFlasher: TTimer;
     timAutoAway: TTimer;
     popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
     AppEvents: TApplicationEvents;
     Toolbar: TCoolBar;
-    ToolBar1: TToolBar;
-    btnOnlineRoster: TToolButton;
-    btnAddContact: TToolButton;
-    btnRoom: TToolButton;
-    btnBrowser: TToolButton;
-    btnFind: TToolButton;
     timReconnect: TTimer;
     timTrayAlert: TTimer;
     XMPPAction: TDdeServerConv;
@@ -254,19 +248,12 @@ type
     mnuFile_MyStatus_XtendedAway: TTntMenuItem;
     mnuFile_MyStatus_Invisible: TTntMenuItem;
     N6: TTntMenuItem;
-    btnOptions: TToolButton;
-    btnSendFile: TToolButton;
-    ToolButtonSep1: TToolButton;
-    btnConnect: TToolButton;
-    ToolButtonSep2: TToolButton;
-    btnDisconnect: TToolButton;
     mnuWindows_View: TTntMenuItem;
     mnuWindows_View_ShowToolbar: TTntMenuItem;
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
     mnuWindows_View_ShowDebugXML: TTntMenuItem;
     mnuOptions_Notifications_NewConversation: TTntMenuItem;
-    btnActivityWindow: TToolButton;
     mnuWindows_View_ShowActivityWindow: TTntMenuItem;
     trayShowActivityWindow: TTntMenuItem;
     tbsView: TPageControl;
@@ -298,6 +285,23 @@ type
     mnuFile_Registration: TTntMenuItem;
     mnuFile_Registration_EditReg: TTntMenuItem;
     mnuFile_Registration_VCard: TTntMenuItem;
+    pnlToolbar: TPanel;
+    ToolBar1: TToolBar;
+    btnConnect: TToolButton;
+    btnDisconnect: TToolButton;
+    btnOnlineRoster: TToolButton;
+    btnAddContact: TToolButton;
+    btnRoom: TToolButton;
+    btnFind: TToolButton;
+    btnSendFile: TToolButton;
+    btnBrowser: TToolButton;
+    ToolButtonSep1: TToolButton;
+    btnOptions: TToolButton;
+    btnActivityWindow: TToolButton;
+    Bevel1: TBevel;
+    popCreate: TTntPopupMenu;
+    Folder1: TTntMenuItem;
+    Contact1: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -491,6 +495,7 @@ type
     procedure ShowLogin();
     procedure ShowRoster();
     procedure UpdatePresenceDisplay();
+    procedure UpdateDisplayName();
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
@@ -1153,7 +1158,7 @@ begin
     _tray_icon := TIcon.Create();
 
     // setup our master image list
-    RosterTreeImages.setImageList(Imagelist2);
+    RosterTreeImages.setImageList(ImageList1);
 
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
@@ -1169,7 +1174,7 @@ begin
     // Init our emoticons
     InitializeEmoticonLists();
 
-    _dnListener := TDisplayNameListener.Create();
+    _dnListener := TDisplayNameListener.Create(false);
     _dnListener.OnDisplayNameChange := OnDisplayNameChange;
 
     // Setup our caption and the help menus.
@@ -1180,8 +1185,7 @@ begin
         Exodus1.Caption := getAppInfo.ID;
         RestorePosition(Self);
 
-        appId := GetString('brand_application_id');
-        File1.Caption := appId;
+        File1.Caption := GetString('brand_application_id');
         About1.Caption := _('About ') + getAppInfo.Caption;
 
         menu_list := TWideStringList.Create();
@@ -1340,7 +1344,7 @@ var
 begin
     // Create the tray icon, etc..
     picon := TIcon.Create();
-    ImageList2.GetIcon(0, picon);
+    ImageList1.GetIcon(0, picon);
     with _tray do begin
         Wnd := Self.Handle;
         uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
@@ -1543,7 +1547,7 @@ procedure TfrmExodus.setTrayIcon(iconNum: integer);
 begin
     // setup the tray icon based on a specific icon index
     _tray_icon_idx := iconNum;
-    ImageList2.GetIcon(iconNum, _tray_icon);
+    ImageList1.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
@@ -1692,11 +1696,7 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
-
-        with MainSession.Profile do begin
-            lblDisplayName.Caption := _dnListener.getDisplayName(getJabberID());
-            lblDisplayName.Hint := getJabberID().getDisplayFull();
-        end;
+        UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
         imgSSL.Visible := MainSession.SSLEnabled;
@@ -2017,9 +2017,9 @@ begin
 
         btnOnlineRoster.Down := getBool('roster_only_online');
         mnuOnline.Checked := btnOnlineRoster.Down;
-        Toolbar.Visible := getBool('toolbar');
-        mnuToolbar.Checked := Toolbar.Visible;
-        mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
+        pnlToolbar.Visible := getBool('toolbar');
+        mnuToolbar.Checked := pnlToolbar.Visible;
+        mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
     end;
     Toolbar1.Wrapable := false;
 end;
@@ -2295,9 +2295,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.btnAddContactClick(Sender: TObject);
+var
+    cp: TPoint;
 begin
     // add a contact
-    ShowAddContact();
+    //ShowAddContact();
+    if MainSession.Active then begin
+        cp := btnAddContact.ClientOrigin;
+        cp.Y := cp.Y + btnAddContact.ClientHeight;
+        popCreate.Popup(cp.x, cp.y);
+    end;
 end;
 
 {---------------------------------------}
@@ -2742,10 +2749,10 @@ end;
 procedure TfrmExodus.mnuToolbarClick(Sender: TObject);
 begin
     // toggle toolbar on/off
-    Toolbar.Visible := not Toolbar.Visible;
-    mnuToolbar.Checked := Toolbar.Visible;
-    mnuWindows_View_ShowToolbar.Checked := Toolbar.Visible;
-    MainSession.Prefs.setBool('toolbar', Toolbar.Visible);
+    pnlToolbar.Visible := not pnlToolbar.Visible;
+    mnuToolbar.Checked := pnlToolbar.Visible;
+    mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
+    MainSession.Prefs.setBool('toolbar', pnlToolbar.Visible);
 end;
 
 {---------------------------------------}
@@ -3521,7 +3528,7 @@ begin
      else
          iconNum := _tray_icon_idx;
 
-    ImageList2.GetIcon(iconNum, _tray_icon);
+    ImageList1.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
@@ -4524,12 +4531,9 @@ end;
 procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
 var
     us: TJabberID;
+    ignored: Boolean;
 begin
-    us := MainSession.Profile.getJabberID();
-
-    if jid = us.jid then begin
-        lblDisplayName.Caption := _dnListener.getDisplayName(us);
-    end;
+    UpdateDisplayName();
 end;
 
 procedure TfrmExodus.OnMoving(var Msg: TWMMoving);
@@ -4617,7 +4621,17 @@ begin
 
     lblStatus.Caption := cap;
     setTrayIcon(idx);
-    ImageList2.GetIcon(idx, imgPresence.Picture.Icon);
+    ImageList1.GetIcon(idx, imgPresence.Picture.Icon);
+end;
+procedure TfrmExodus.UpdateDisplayName;
+var
+    jid: TJabberID;
+    pending: Boolean;
+begin
+    jid := MainSession.Profile.getJabberID();
+
+    lblDisplayName.Caption := _dnListener.getProfileDisplayName(jid, pending);
+    lblDisplayName.Hint := jid.getDisplayFull();
 end;
 
 initialization

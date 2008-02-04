@@ -152,18 +152,15 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       object lblSort: TTntLabel
-        Left = 26
+        Left = 94
         Top = 5
-        Width = 140
-        Height = 20
+        Width = 72
+        Height = 13
         Align = alClient
         Alignment = taRightJustify
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
-        ExplicitLeft = 94
-        ExplicitWidth = 72
-        ExplicitHeight = 13
       end
       object SortTopSpacer: TBevel
         Left = 0

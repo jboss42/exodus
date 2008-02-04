@@ -571,19 +571,19 @@ begin
         end;
         //Groups have two images
         //Draw > image
-        frmExodus.ImageList2.Draw(Canvas,
+        frmExodus.ImageList1.Draw(Canvas,
                                   ImgRect.Left,
                                   ImgRect.Top, Arrow);
         //Move to the second image drawing
         ImgRect.Left := ImgRect.Left + Indent;
         //Draw second image
-        frmExodus.ImageList2.Draw(Canvas,
+        frmExodus.ImageList1.Draw(Canvas,
                                   ImgRect.Left,
                                   ImgRect.Top, Folder);
     end
     else
         //Draw image for the item
-        frmExodus.ImageList2.Draw(Canvas,
+        frmExodus.ImageList1.Draw(Canvas,
                                   ImgRect.Left + Indent,
                                   ImgRect.Top, Item.ImageIndex);
 

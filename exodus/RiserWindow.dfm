@@ -9,7 +9,6 @@ inherited frmRiser: TfrmRiser
   DefaultMonitor = dmDesktop
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   OnClick = Panel2Click
   OnClose = FormClose
   OnCreate = FormCreate
@@ -66,8 +65,8 @@ inherited frmRiser: TfrmRiser
   object Label1: TTntLabel
     Left = 28
     Top = 4
-    Width = 98
-    Height = 13
+    Width = 81
+    Height = 26
     Alignment = taCenter
     Caption = 'something really long'
     Transparent = True

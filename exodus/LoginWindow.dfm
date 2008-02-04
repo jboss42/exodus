@@ -79,12 +79,11 @@ object frmLoginWindow: TfrmLoginWindow
     ParentColor = True
     PopupMenu = popProfiles
     ShowColumnHeaders = False
-    SmallImages = frmExodus.ImageList2
+    SmallImages = frmExodus.ImageList1
     TabOrder = 0
     ViewStyle = vsReport
     OnClick = lstProfilesClick
     OnDblClick = lstProfilesClick
-    ExplicitHeight = 73
   end
   object pnlAnimate: TGridPanel
     AlignWithMargins = True
