@@ -2204,6 +2204,7 @@ begin
         FreeAndNil(_docked_forms);
 
     Shell_NotifyIcon(NIM_DELETE, @_tray);
+    FreeAndNil(_dnListener);
 
     // Close the roster window
     RosterForm.CloseRosterWindow();
@@ -3082,8 +3083,6 @@ end;
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
     //TODO:  save dimensions?
-    FreeAndNil(_dnListener);
-
     if (not _cleanupComplete) then
         cleanup();
 
