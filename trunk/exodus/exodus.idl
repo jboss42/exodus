@@ -1068,6 +1068,195 @@ library Exodus
     [default] interface IExodusAXControl;
   };
 
+  [
+    uuid(44410CB8-2AD7-4D58-8067-2E795EB28E60), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusItem: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Text([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Text([in] BSTR value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Type_([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Type_([in] BSTR value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ExtendedText([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ExtendedText([in] BSTR value );
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall UID([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall UID([in] BSTR value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Active([out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Active([in] VARIANT_BOOL value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall ImageIndex([in] long value );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall GroupCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall Group([in] long index, [out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall PropertyCount([out, retval] long * value );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall AddProperty([in] BSTR propertyName, [in] BSTR propertyValue );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall RemoveProperty([in] BSTR Property_ );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall AddGroup([in] BSTR Group );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall RemoveGroup([in] BSTR Group );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall ClearProperties( void );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall ClearGroups( void );
+    [
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall RenameGroup([in] BSTR OldGroup, [in] BSTR NewGroup );
+    [
+    id(0x000000DA)
+    ]
+    HRESULT _stdcall MoveGroup([in] BSTR GroupFrom, [in] BSTR GroupTo );
+    [
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall CopyGroup([in] BSTR GroupTo );
+    [
+    propget, 
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall Action([in] long index, [out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall ActionCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall Property_([in] long index, [out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall Property_([in] long index, [in] BSTR value );
+    [
+    id(0x000000DF)
+    ]
+    HRESULT _stdcall GroupsChanged([in] BSTR Groups, [out, retval] VARIANT_BOOL * ret );
+    [
+    id(0x000000E0)
+    ]
+    HRESULT _stdcall BelongsToGroup([in] BSTR Group, [out, retval] VARIANT_BOOL * Result );
+    [
+    propget, 
+    id(0x000000E1)
+    ]
+    HRESULT _stdcall value([in] BSTR Name, [out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000E1)
+    ]
+    HRESULT _stdcall value([in] BSTR Name, [in] BSTR value );
+    [
+    propget, 
+    id(0x000000E2)
+    ]
+    HRESULT _stdcall IsVisible([out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000E2)
+    ]
+    HRESULT _stdcall IsVisible([in] VARIANT_BOOL value );
+  };
+
+  [
+    uuid(7F9132F5-838F-423C-A334-F28AA8E2E597), 
+    version(1.0), 
+    helpstring("ExodusItem Object")
+  ]
+  coclass ExodusItem
+  {
+    [default] interface IExodusItem;
+  };
+
+  [
+    uuid(5BA92396-E45E-4311-A4F9-B0154DB0445A), 
+    version(1.0), 
+    helpstring("ExodusItemController Object")
+  ]
+  coclass ExodusItemController
+  {
+    [default] interface IExodusItemController;
+  };
+
   
   typedef BSTR * PWideString1;
 
@@ -7980,7 +8169,7 @@ library Exodus
     id(0x00000001), 
     helpstring("Exodus is starting the plugin")
     ]
-    HRESULT _stdcall Startup([in] IExodusController2 * exodusController /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall Startup([in] IExodusController * exodusController /*Warning: unable to validate structure name: */ );
     [
     id(0x00000002), 
     helpstring("Exodus is shutting down the plugin")
@@ -8111,6 +8300,96 @@ library Exodus
     id(0x000000DF)
     ]
     HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Title, [out, retval] IExodusAXControl ** ActiveX_Control /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(7E8D248E-F7E3-4541-A72A-37E1E87C4C93), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusItemController: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall ItemsCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall GroupsCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Group([in] long index, [out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Item([in] long index, [out, retval] IExodusItem ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall RemoveItem([in] BSTR UID );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall AddItemByUid([in] BSTR UID, [out, retval] IExodusItem ** ret /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall CopyItem([in] BSTR UID, [in] BSTR Group );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall MoveItem([in] BSTR UID, [in] BSTR GroupFrom, [in] BSTR GroupTo );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall RemoveGroupMoveContent([in] BSTR Group, [in] BSTR GroupTo );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall RemoveItemFromGroup([in] BSTR UID, [in] BSTR Group );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall GetGroupItems([in] BSTR Group, [out, retval] VARIANT * Items );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall AddGroup([in] BSTR Group );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall RemoveGroup([in] BSTR Group );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall GetItem([in] BSTR UID, [out, retval] IExodusItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall AddItem([in] IExodusItem Item /*Warning: unable to validate structure name: */, [out, retval] long * index );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall ClearGroups( void );
+    [
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall ClearItems( void );
+    [
+    id(0x000000DA)
+    ]
+    HRESULT _stdcall SaveGroups([out, retval] VARIANT_BOOL * Result );
+    [
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall GetGroups([out, retval] VARIANT * Result );
   };
 
 };
