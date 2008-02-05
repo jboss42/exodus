@@ -47,7 +47,7 @@ inherited frmExodus: TfrmExodus
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 476
+      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -60,7 +60,6 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
-        ExplicitHeight = 476
       end
     end
     object tabRoster: TTabSheet
@@ -69,7 +68,7 @@ inherited frmExodus: TfrmExodus
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 476
+      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -79,7 +78,6 @@ inherited frmExodus: TfrmExodus
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitHeight = 439
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -4257,18 +4255,6 @@ inherited frmExodus: TfrmExodus
     OnTimer = timAutoAwayTimer
     Left = 16
     Top = 200
-  end
-  object popTabs: TTntPopupMenu
-    AutoHotkeys = maManual
-    Left = 48
-    Top = 104
-    object popCloseTab: TTntMenuItem
-      Caption = 'Close Window'
-      ShortCut = 16499
-    end
-    object popFloatTab: TTntMenuItem
-      Caption = 'Float Window'
-    end
   end
   object popTray: TTntPopupMenu
     AutoHotkeys = maManual
@@ -12894,7 +12880,7 @@ inherited frmExodus: TfrmExodus
   end
   object popCreate: TTntPopupMenu
     Left = 48
-    Top = 200
+    Top = 104
     object Folder1: TTntMenuItem
       Caption = 'New Group'
     end
