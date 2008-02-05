@@ -437,6 +437,9 @@
     <brand_profile_show_advanced control="imgAdvanced" value="true"/>
     
     <brand_profile_allow_rename value="1"/>
+    <brand_profile_allow_modify value="1"/>
+    <brand_profile_allow_delete value="1"/>
+    <brand_profile_allow_create value="1"/>
     <brand_profile_enable_connect_btn value="1"/>
     
     <brand_profile_conn_type value="0"/>

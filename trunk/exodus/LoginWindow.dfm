@@ -84,7 +84,6 @@ object frmLoginWindow: TfrmLoginWindow
     ViewStyle = vsReport
     OnClick = lstProfilesClick
     OnDblClick = lstProfilesClick
-    ExplicitHeight = 118
   end
   object pnlAnimate: TGridPanel
     AlignWithMargins = True
@@ -140,7 +139,6 @@ object frmLoginWindow: TfrmLoginWindow
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    ExplicitTop = 247
     object pnlInfomercial: TPanel
       AlignWithMargins = True
       Left = 0
@@ -449,7 +447,6 @@ object frmLoginWindow: TfrmLoginWindow
           19561D39F4CCA0A0F0364781A13A9655704BC7233EDDF0855D6424096010BA47
           0713858F1E6563D5BE303CBE0380E69E8DFFE76FCBB7BF7E34A3BEE19FAB212F
           7CBCFDB0520000000049454E44AE426082}
-        ExplicitLeft = 6
       end
       object btnCreateProfile: TExGraphicButton
         Left = 0
@@ -605,8 +602,6 @@ object frmLoginWindow: TfrmLoginWindow
           150255510081419215E37E4083F293E55F0708FCB72527FFD567F2B7A5FAC8EE
           8ABF013536A8C0A55413E90000000049454E44AE426082}
         OnClick = clickCreateProfile
-        ExplicitLeft = 6
-        ExplicitTop = 497
       end
     end
   end

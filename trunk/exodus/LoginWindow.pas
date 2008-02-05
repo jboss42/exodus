@@ -387,18 +387,42 @@ begin
     //Brand disclaimer and logo
     if LoadDisclaimer() <= 0 then LoadLogo();
 
-    //Brand "new user wizard" button
-    if not MainSession.Prefs.getBool('branding_roster_hide_new_wizard') then begin
-        btnNewUser.Visible := true;
-    end else begin
-        btnNewUser.Visible := false;
-    end;
+    with MainSession.Prefs do begin
+        //Brand "new user wizard" button
+        if not getBool('branding_roster_hide_new_wizard') then begin
+            btnNewUser.Visible := true;
+        end else begin
+            btnNewUser.Visible := false;
+        end;
 
-    //Brand "create profile" button
-    if not MainSession.Prefs.getBool('branding_roster_hide_create') then begin
-        btnCreateProfile.Visible := true;
-    end else begin
-        btnCreateProfile.Visible := false;
+        //Brand "create profile" button
+        if getBool('brand_profile_allow_create') then begin
+            btnCreateProfile.Visible := true;
+        end else begin
+            btnCreateProfile.Visible := false;
+        end;
+
+        //Brand "modify profile" menu item
+        if getBool('brand_profile_allow_modify') then begin
+            mnuModifyProfile.Visible := true;
+        end else begin
+            mnuModifyProfile.Visible := false;
+        end;
+
+        //Brand "rename profile" menu item
+        if getBool('brand_profile_allow_rename') then begin
+            mnuRenameProfile.Visible := true;
+        end else begin
+            mnuRenameProfile.Visible := false;
+        end;
+
+        //Brand "delete profile" menu item
+        if getBool('brand_profile_allow_delete') then begin
+            mnuDeleteProfile.Visible := true;
+        end else begin
+            mnuDeleteProfile.Visible := false;
+        end;
+
     end;
 
     ToggleGUI(lgsDisconnected);
