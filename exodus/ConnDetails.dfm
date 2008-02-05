@@ -19,7 +19,7 @@ inherited frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 368
     Height = 342
-    ActivePage = tbsProxy
+    ActivePage = tbsConnection
     Anchors = [akLeft, akTop, akRight]
     Style = tsButtons
     TabOrder = 0
@@ -1498,7 +1498,6 @@ inherited frmConnDetails: TfrmConnDetails
           0BA94FF23CC8CF5C3BF2C713A54CAAECF55636F8B7FF1B41C215793F65BC3F00
           00000049454E44AE426082}
         OnClick = selectPage
-        ExplicitTop = 64
       end
       object imgProxy: TExGraphicButton
         AlignWithMargins = True
@@ -2189,7 +2188,6 @@ inherited frmConnDetails: TfrmConnDetails
           6CEEC8FD9C3DB59B638F489EEC4E9A1FF92F3B03E04CF814100A000000004945
           4E44AE426082}
         OnClick = selectPage
-        ExplicitTop = 192
       end
       object imgAdvanced: TExGraphicButton
         AlignWithMargins = True
@@ -2575,7 +2573,6 @@ inherited frmConnDetails: TfrmConnDetails
           583BB2CF7472BBD9EC91E28DA618FCD5FF005822127971336C52000000004945
           4E44AE426082}
         OnClick = selectPage
-        ExplicitTop = 255
       end
       object imgAcctDetails: TExGraphicButton
         AlignWithMargins = True

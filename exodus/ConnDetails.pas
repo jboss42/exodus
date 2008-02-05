@@ -553,6 +553,8 @@ begin
 
         if (pnlx509Auth.Checked) then
             SSL_Cert := _sslCertKey
+        else
+            SSL_Cert := '';
     end;
 end;
 
