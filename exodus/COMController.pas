@@ -2124,11 +2124,12 @@ begin
 
         ParentControl := frm.pnlMsgList;
 
-        AXControl := AXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
+        AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
         AXControl.Parent := ParentControl;
         AXControl.Align := alClient;
         Result := TExodusAXControl.Create(AXControl);
     except
+        sleep(1);
     end;
 end;
 
