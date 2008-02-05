@@ -82,7 +82,6 @@ type
     ImageList1: TImageList;
     timFlasher: TTimer;
     timAutoAway: TTimer;
-    popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
     AppEvents: TApplicationEvents;
     Toolbar: TCoolBar;
@@ -124,8 +123,6 @@ type
     N2: TTntMenuItem;
     mnuPresence: TTntMenuItem;
     mnuContacts: TTntMenuItem;
-    popFloatTab: TTntMenuItem;
-    popCloseTab: TTntMenuItem;
     trayExit: TTntMenuItem;
     N01: TTntMenuItem;
     trayDisconnect: TTntMenuItem;

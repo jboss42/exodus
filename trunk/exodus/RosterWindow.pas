@@ -45,7 +45,6 @@ type
     StatBar: TStatusBar;
     popStatus: TTntPopupMenu;
     pnlShow: TPanel;
-    ImageList2: TImageList;
     popActions: TTntPopupMenu;
     imgStatus: TPaintBox;
     popGroup: TTntPopupMenu;
@@ -3067,7 +3066,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.imgStatusPaint(Sender: TObject);
 begin
-    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, 1, _cur_status);
+    frmExodus.ImageList1.Draw(imgStatus.Canvas, 1, 1, _cur_status);
 end;
 
 {---------------------------------------}
@@ -3999,7 +3998,7 @@ begin
         i := MainSession.Prefs.Profiles.IndexOfObject(p);
         assert(i >= 0);
         MainSession.ActivateProfile(i);
-        if (ShowNewUserWizard() = mrCancel) then begin
+        if (NewUser.ShowNewUserWizard() = mrCancel) then begin
             // things didn't go so well.. cleanup
             frmExodus.CancelConnect();
             frmExodus.timReconnect.Enabled := false;

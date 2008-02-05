@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls,
   pngextra, XMLTag, pngimage, Menus, TntMenus, RichEdit2, ExRichEdit, Buttons,
-  TntButtons, TntForms;
+  TntButtons, TntForms, ExGraphicButton;
 
 const
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -28,16 +28,13 @@ type
     imgLogo: TImage;
     txtDisclaimer: TExRichEdit;
     pnlProfileActions: TPanel;
-    pnlNewUser: TPanel;
-    Image1: TImage;
-    TntLabel1: TTntLabel;
-    pnlCreateProfile: TPanel;
-    Image2: TImage;
-    TntLabel2: TTntLabel;
+    btnNewUser: TExGraphicButton;
+    btnCreateProfile: TExGraphicButton;
 
     procedure lstProfilesClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure clickCreateProfile(Sender: TObject);
+    procedure clickNewUser(Sender: TObject);
     procedure mnuModifyProfileClick(Sender: TObject);
     procedure mnuDeleteProfileClick(Sender: TObject);
     procedure mnuRenameProfileClick(Sender: TObject);
@@ -73,7 +70,7 @@ function GetLoginWindow() : TfrmLoginWindow;
 implementation
 
 uses Jabber1, JabberUtils, ConnDetails, GnuGetText, InputPassword,
-    PrefController, Profile, Session;
+    PrefController, Profile, Session, NewUser;
 
 const
     sRenameProfile = 'Rename profile';
@@ -392,16 +389,16 @@ begin
 
     //Brand "new user wizard" button
     if not MainSession.Prefs.getBool('branding_roster_hide_new_wizard') then begin
-        pnlNewUser.Visible := true;
+        btnNewUser.Visible := true;
     end else begin
-        pnlNewUser.Visible := false;
+        btnNewUser.Visible := false;
     end;
 
     //Brand "create profile" button
     if not MainSession.Prefs.getBool('branding_roster_hide_create') then begin
-        pnlCreateProfile.Visible := true;
+        btnCreateProfile.Visible := true;
     end else begin
-        pnlCreateProfile.Visible := false;
+        btnCreateProfile.Visible := false;
     end;
 
     ToggleGUI(lgsDisconnected);
@@ -438,6 +435,38 @@ begin
                 LoadProfiles();
             End;
         end;
+    end;
+end;
+procedure TfrmLoginWindow.clickNewUser(Sender: TObject);
+var
+    pname: Widestring;
+    p: TJabberProfile;
+    i: integer;
+begin
+    // Run the new user wizard... first create a new profile
+    pname := _(sProfileNew);
+    if InputQueryW(_(sProfileCreate), _(sProfileNamePrompt), pname) then begin
+        p := MainSession.Prefs.CreateProfile(pname);
+        p.Resource := resourceName;
+        p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
+        MainSession.Prefs.SaveProfiles();
+        LoadProfiles();
+        i := MainSession.Prefs.Profiles.IndexOfObject(p);
+        assert(i >= 0);
+        MainSession.ActivateProfile(i);
+        if (ShowNewUserWizard() = mrCancel) then begin
+            // things didn't go so well.. cleanup
+            frmExodus.CancelConnect();
+            frmExodus.timReconnect.Enabled := false;
+            ToggleGUI(lgsDisconnected);
+            MainSession.Prefs.RemoveProfile(p);
+            MainSession.Prefs.SaveProfiles();
+            MainSession.ActivateDefaultProfile();
+            LoadProfiles();
+        end
+        else
+            // make sure we're showing the right UI
+            ToggleGUI(lgsConnected);
     end;
 end;
 

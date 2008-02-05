@@ -204,7 +204,7 @@ inherited frmConnDetails: TfrmConnDetails
         Left = 0
         Top = 0
         Width = 370
-        Height = 267
+        Height = 272
         AutoSize = True
         BevelOuter = bvNone
         Padding.Bottom = 12
@@ -302,7 +302,7 @@ inherited frmConnDetails: TfrmConnDetails
             Left = 0
             Top = 16
             Width = 102
-            Height = 21
+            Height = 25
             BevelOuter = bvNone
             ParentColor = True
             TabOrder = 0
@@ -311,7 +311,7 @@ inherited frmConnDetails: TfrmConnDetails
             Max = 127
             DesignSize = (
               102
-              21)
+              25)
           end
         end
         object pnlKerberos: TExCheckGroupBox
@@ -319,7 +319,7 @@ inherited frmConnDetails: TfrmConnDetails
           Left = 0
           Top = 149
           Width = 370
-          Height = 38
+          Height = 41
           Margins.Left = 0
           Margins.Top = 12
           Margins.Right = 0
@@ -336,7 +336,7 @@ inherited frmConnDetails: TfrmConnDetails
           object chkWinLogin: TTntCheckBox
             AlignWithMargins = True
             Left = 0
-            Top = 21
+            Top = 24
             Width = 370
             Height = 17
             Margins.Left = 0
@@ -352,9 +352,9 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlx509Auth: TExCheckGroupBox
           AlignWithMargins = True
           Left = 0
-          Top = 205
+          Top = 208
           Width = 370
-          Height = 44
+          Height = 46
           Margins.Left = 0
           Margins.Top = 12
           Margins.Right = 0
@@ -371,9 +371,9 @@ inherited frmConnDetails: TfrmConnDetails
           object pnlx509Cert: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 18
+            Top = 21
             Width = 370
-            Height = 26
+            Height = 25
             Margins.Left = 0
             Margins.Right = 0
             Margins.Bottom = 0
@@ -412,7 +412,7 @@ inherited frmConnDetails: TfrmConnDetails
         Left = 0
         Top = 0
         Width = 241
-        Height = 228
+        Height = 234
         AutoSize = True
         BevelOuter = bvNone
         Padding.Bottom = 12
@@ -618,7 +618,7 @@ inherited frmConnDetails: TfrmConnDetails
         Left = 0
         Top = 0
         Width = 257
-        Height = 284
+        Height = 287
         AutoSize = True
         BevelOuter = bvNone
         Padding.Bottom = 12
@@ -732,7 +732,7 @@ inherited frmConnDetails: TfrmConnDetails
           Left = 0
           Top = 155
           Width = 257
-          Height = 111
+          Height = 114
           Margins.Left = 0
           Margins.Top = 20
           Margins.Right = 0
@@ -748,7 +748,7 @@ inherited frmConnDetails: TfrmConnDetails
           object pnlSocksUsername: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 21
+            Top = 24
             Width = 257
             Height = 39
             Margins.Left = 0
@@ -779,7 +779,7 @@ inherited frmConnDetails: TfrmConnDetails
           object pnlSocksPassword: TExBrandPanel
             AlignWithMargins = True
             Left = 0
-            Top = 66
+            Top = 69
             Width = 257
             Height = 39
             Margins.Left = 0
@@ -838,7 +838,7 @@ inherited frmConnDetails: TfrmConnDetails
         Left = 0
         Top = 0
         Width = 231
-        Height = 162
+        Height = 165
         Margins.Left = 0
         AutoSize = True
         BevelOuter = bvNone
@@ -851,7 +851,7 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlURL: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 18
+          Top = 21
           Width = 231
           Height = 39
           Margins.Left = 0
@@ -880,7 +880,7 @@ inherited frmConnDetails: TfrmConnDetails
         object pnlTime: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 63
+          Top = 66
           Width = 231
           Height = 39
           Margins.Left = 0
@@ -909,7 +909,7 @@ inherited frmConnDetails: TfrmConnDetails
             Left = 0
             Top = 14
             Width = 93
-            Height = 21
+            Height = 25
             BevelOuter = bvNone
             TabOrder = 0
             Text = '0'
@@ -917,13 +917,13 @@ inherited frmConnDetails: TfrmConnDetails
             Max = 1000000
             DesignSize = (
               93
-              21)
+              25)
           end
         end
         object pnlKeys: TExBrandPanel
           AlignWithMargins = True
           Left = 0
-          Top = 108
+          Top = 111
           Width = 231
           Height = 39
           Margins.Left = 0
@@ -945,7 +945,7 @@ inherited frmConnDetails: TfrmConnDetails
             Left = 0
             Top = 14
             Width = 93
-            Height = 21
+            Height = 25
             BevelOuter = bvNone
             TabOrder = 0
             Text = '0'
@@ -953,7 +953,7 @@ inherited frmConnDetails: TfrmConnDetails
             Max = 1000000
             DesignSize = (
               93
-              21)
+              25)
           end
         end
       end
@@ -1042,7 +1042,7 @@ inherited frmConnDetails: TfrmConnDetails
       Left = 10
       Top = 10
       Width = 101
-      Height = 319
+      Height = 315
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1056,9 +1056,9 @@ inherited frmConnDetails: TfrmConnDetails
       object imgConnection: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 64
+        Top = 63
         Width = 101
-        Height = 64
+        Height = 63
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -1498,13 +1498,14 @@ inherited frmConnDetails: TfrmConnDetails
           0BA94FF23CC8CF5C3BF2C713A54CAAECF55636F8B7FF1B41C215793F65BC3F00
           00000049454E44AE426082}
         OnClick = selectPage
+        ExplicitTop = 64
       end
       object imgProxy: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 128
+        Top = 126
         Width = 101
-        Height = 64
+        Height = 63
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -1837,9 +1838,9 @@ inherited frmConnDetails: TfrmConnDetails
       object imgHttpPolling: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 192
+        Top = 189
         Width = 101
-        Height = 64
+        Height = 63
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -2188,11 +2189,12 @@ inherited frmConnDetails: TfrmConnDetails
           6CEEC8FD9C3DB59B638F489EEC4E9A1FF92F3B03E04CF814100A000000004945
           4E44AE426082}
         OnClick = selectPage
+        ExplicitTop = 192
       end
       object imgAdvanced: TExGraphicButton
         AlignWithMargins = True
         Left = 0
-        Top = 256
+        Top = 252
         Width = 101
         Height = 63
         Margins.Left = 0
@@ -2573,13 +2575,14 @@ inherited frmConnDetails: TfrmConnDetails
           583BB2CF7472BBD9EC91E28DA618FCD5FF005822127971336C52000000004945
           4E44AE426082}
         OnClick = selectPage
+        ExplicitTop = 255
       end
       object imgAcctDetails: TExGraphicButton
         AlignWithMargins = True
         Left = 0
         Top = 0
         Width = 101
-        Height = 64
+        Height = 63
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
