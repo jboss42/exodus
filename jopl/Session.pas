@@ -167,8 +167,6 @@ type
 
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
-        //procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
-        //procedure FireEvent(event: string; tag: TXMLTag; const ritem: IExodusItem); overload;
         procedure FireEvent(event: string; const item: IExodusItem); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const data: WideString); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const controller: TChatController); overload;
@@ -535,6 +533,7 @@ begin
     if (Self.Stream.Active) then begin
         if (_authd) then begin
             Prefs.SaveServerPrefs();
+            _dispatcher.DispatchSignal('/session/disconnecting', nil);
             _stream.Send('<presence type="unavailable"/>');
         end;
 
@@ -950,7 +949,6 @@ end;
 procedure TJabberSession.FireEvent(event: string; const item: IExodusItem);
 begin
     // dispatch a roster event directly
-    //_itemSignal.Invoke(event, tag, ritem);
     _itemSignal.Invoke(event, item);
 end;
 
