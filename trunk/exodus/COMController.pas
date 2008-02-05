@@ -2129,7 +2129,6 @@ begin
         AXControl.Align := alClient;
         Result := TExodusAXControl.Create(AXControl);
     except
-        sleep(1);
     end;
 end;
 
