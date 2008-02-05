@@ -6,11 +6,11 @@ interface
 type
    TGroupInfo = class
    private
-       _name: WideString;
-       _expanded: Boolean;
+       _Name: WideString;
+       _Expanded: Boolean;
    public
-       property Name: WideString read _name write _name;
-       property Expanded: Boolean read _expanded write _expanded;
+       property Name: WideString read _Name write _Name;
+       property Expanded: Boolean read _Expanded write _Expanded;
    end; 
 
 implementation

@@ -34,6 +34,10 @@ type
      interface allows group and item management in the contact list.
   }
   protected
+      procedure Set_GroupExpanded(const Group: WideString; Value: WordBool);
+      safecall;
+      function Get_GroupExpanded(const Group: WideString): WordBool; safecall;
+      function Get_GroupExists(const Group: WideString): WordBool; safecall;
       function GetGroups: OleVariant; safecall;
       function SaveGroups: WordBool; safecall;
       function Get_GroupsLoaded: WordBool; safecall;
@@ -47,7 +51,7 @@ type
       function Get_Item(Index: Integer): IExodusItem; safecall;
       function Get_ItemsCount: Integer; safecall;
       function GetGroupItems(const Group: WideString): OleVariant; safecall;
-      procedure AddGroup(const Group: WideString); safecall;
+      function AddGroup(const Group: WideString): Integer; safecall;
       function AddItemByUid(const Uid: WideString): IExodusItem; safecall;
       procedure CopyItem(const UID, Group: WideString); safecall;
       procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
@@ -70,6 +74,7 @@ type
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
+      //Properties
   end;
 
 var
@@ -116,7 +121,7 @@ procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
     if Event = '/session/authenticated' then begin
     //Request group info from the server
-       _groupsLoaded := false;
+       _GroupsLoaded := false;
        _GetGroups();
     end;
 end;
@@ -146,50 +151,30 @@ procedure TExodusItemController._ParseGroups(Event: string; Tag: TXMLTag);
 var
     i, Idx: Integer;
     Storage:TXMLTag;
-    Group: TGroupInfo;
-    PrivateStorageGroups: TWideStringList;
-    DirtyGroups: Boolean;
+    Expanded: Boolean;
+    DefaultGroup: WideString;
 begin
-    DirtyGroups := false;
-    PrivateStorageGroups :=  TWideStringList.Create();
     Storage := Tag.QueryXPTag(xp_group);
-    //Let's create temporary list of groups received from
-    //private storage on the server.
+
     for i := 0 to storage.ChildCount - 1 do
     begin
-        Group := TGroupInfo.Create();
-        Group.Name := Storage.ChildTags[i].Data;
         if (Storage.ChildTags[i].GetAttribute('expanded') = 'true') then
-            Group.Expanded := true
+            Expanded := true
         else
-            Group.Expanded := false;
-        PrivateStorageGroups.AddObject(Group.Name, Group);
-        //_Groups.AddObject(GrpName, Group);
-    end;
-    //Let's check all current groups loaded from contacts.
-    //If we find the group previously added
-    //by contact controller that does not exists, we will need to mark
-    //groups as dirty.
-    for i := 0 to _Groups.Count - 1 do
-    begin
-       Idx := PrivateStorageGroups.IndexOf(_Groups[i]);
-       if (Idx > 0) then
-           DirtyGroups := true;
+            Expanded := false;
 
+        //Add group checks for duplicates
+        Idx := AddGroup(Storage.ChildTags[i].Data);
+        TGroupInfo(_Groups.Objects[Idx]).Expanded := Expanded;
     end;
 
-    _groupsLoaded := true;
-    try
-       //Avoid errors for duplicates
-       _Groups.AddStrings(PrivateStorageGroups);
-    except
+    //Make sure the default group is added to the list
+    DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+    if (not Get_GroupExists(DefaultGroup)) then
+        AddGroup(DefaultGroup);
 
-    end;
+    _GroupsLoaded := true;
 
-    if (DirtyGroups) then
-        _SendGroups();
-        
-    PrivateStorageGroups.Free();
 end;
 
 {---------------------------------------}
@@ -281,17 +266,23 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusItemController.AddGroup(const Group: WideString);
+function TExodusItemController.AddGroup(const Group: WideString): Integer;
 var
     GroupInfo: TGroupInfo;
     Idx: Integer;
 begin
+    Result := -1;
     Idx := _Groups.IndexOf(Group);
-    if (Idx > -1) then exit;
+    if (Idx > -1) then
+    begin
+         Result := Idx;
+         exit;
+    end;
     GroupInfo := TGroupInfo.Create();
     GroupInfo.Name := Group;
     GroupInfo.Expanded := true;
-    _Groups.AddObject(Group, GroupInfo);
+    Result := _Groups.AddObject(Group, GroupInfo);
+     TJabberSession(_JS).FireEvent('/data/group/add', nil, Group);
     //If adding new groups and groups have
     //been loaded, need to save to the server's
     //private storage.
@@ -468,13 +459,13 @@ end;
 
 function TExodusItemController.Get_GroupsLoaded: WordBool;
 begin
-   Result := _groupsLoaded;
+   Result := _GroupsLoaded;
 end;
 
 
 function TExodusItemController.SaveGroups: WordBool;
 begin
-
+    _SendGroups();
 end;
 
 function TExodusItemController.GetGroups: OleVariant;
@@ -484,11 +475,59 @@ var
 begin
     Groups := VarArrayCreate([0,_Groups.Count], varOleStr);
 
-    for i := 0 to _Groups.Count - 1 do begin
+    for i := 0 to _Groups.Count - 1 do
+    begin
         VarArrayPut(Groups, _Groups[i], i);
     end;
 
     Result := Groups;
+end;
+
+function TExodusItemController.Get_GroupExists(
+  const Group: WideString): WordBool;
+var
+    i: Integer;
+begin
+    Result := false;
+    for i := 0 to _Groups.Count - 1 do
+    begin
+        if (_Groups[i] = Group) then
+        begin
+            Result := true;
+            exit;
+        end;
+    end;
+end;
+
+function TExodusItemController.Get_GroupExpanded(
+  const Group: WideString): WordBool;
+var
+    i: Integer;
+begin
+    Result := false;
+    for i := 0 to _Groups.Count - 1 do
+    begin
+        if (_Groups[i] = Group) then
+        begin
+            Result := TGroupInfo(_Groups.Objects[i]).Expanded;
+            exit;
+        end;
+    end;
+end;
+
+procedure TExodusItemController.Set_GroupExpanded(const Group: WideString;
+  Value: WordBool);
+var
+    i: Integer;
+begin
+    for i := 0 to _Groups.Count - 1 do
+    begin
+        if (_Groups[i] = Group) then
+        begin
+            TGroupInfo(_Groups.Objects[i]).Expanded := Value;
+            exit;
+        end;
+    end;
 end;
 
 initialization

@@ -30,7 +30,6 @@ type
 
    TContactController = class
    private
-       //_ItemController: IExodusItemController;
        _JS: TObject;
        _PresCB: Integer;
        _IQCB: Integer;
@@ -42,6 +41,7 @@ type
        _HideObservers: Boolean;
        _UseDisplayName: Boolean;
        _DNListener: TObject;
+       _DefaultGroup: WideString;
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
@@ -55,14 +55,11 @@ type
        procedure _UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
        procedure _UpdateContacts();
        procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
-       //procedure _SynchronizeGroups(Item: IExodusItem);
-       //function  _GroupExists(Group: WideString): Boolean;
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
        procedure Clear();
        //Properties
-       //property ItemController: IExodusItemController read _ItemController write _ItemController;
 
 
    end;
@@ -84,6 +81,7 @@ begin
     _HidePending := false;
     _HideObservers := false;
     _UseDisplayName := false;
+    _DefaultGroup := '';
     _DNListener := TDisplayNameListener.Create();
     TDisplayNameListener(_DNListener).OnDisplayNameChange := _OnDisplayNameChange;
 end;
@@ -127,7 +125,6 @@ var
 begin
         Item := nil;
         TJabberSession(_JS).FireEvent('/item/begin', Item);
-        //TJabberSession(_JS).FireEvent('/item/gui/begin/update', Item);
         ContactItemTags := Tag.QueryXPTags('/iq/query/item');
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
@@ -151,12 +148,10 @@ begin
             //DisplayName.getDisplayNameCache().UpdateDisplayName(TmpJID.jid);
             TmpJID.Free();
         end;
-        TJabberSession(_js).ItemController.SaveGroups();
+        //TJabberSession(_js).ItemController.SaveGroups();
         Item := nil;
         TJabberSession(_JS).FireEvent('/item/end', Item);
-        //TJabberSession(_JS).FireEvent('/item/gui/end/update', Item);
-        //ItemTag.Free();
-        //ItemController.ItemsLoaded := true;
+
 end;
 
 {---------------------------------------}
@@ -199,7 +194,11 @@ begin
 
         end;
     end;
-
+    
+    if (Contact.GroupCount = 0) then
+    begin
+        Contact.AddGroup(_DefaultGroup);
+    end;
     //Make sure groups for the contact exist in the global group list.
     //_SynchronizeGroups(Contact);
 
@@ -217,6 +216,7 @@ begin
          _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
          _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
          _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+         _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
          _GetContacts();
      end
      else if Event = '/session/prefs' then
@@ -226,6 +226,11 @@ begin
          _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
          _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
          _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
+         if (_DefaultGroup <> TJabberSession(_JS).Prefs.getString('roster_default')) then
+         begin
+             _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+             TJabberSession(_JS).ItemController.AddGroup(_DefaultGroup);
+         end;
          _UpdateContacts();
      end;
 end;
@@ -492,37 +497,6 @@ begin
     Item.Text := DisplayName;
     TJabberSession(_JS).FireEvent('/item/update', Item);
 end;
-
-//Makes sure that group exists in the global list and add it
-//to the global list if neccessary
-//procedure TContactController._SynchronizeGroups(Item: IExodusItem);
-//var
-//    i: Integer;
-//begin
-//    for i := 0 to Item.GroupCount - 1 do
-//    begin
-//        if (_GroupExists(Item.Group[i]) = false) then
-//            ItemController.AddGroup(Item.Group[i]);
-//    end;
-//
-//end;
-
-{---------------------------------------}
-//Check if the group exists in the list.
-//function  TContactController._GroupExists(Group: WideString): Boolean;
-//var
-//    i: Integer;
-//begin
-//    Result := false;
-//    for i := 0 to ItemController.GroupsCount - 1 do
-//    begin
-//        if (Group = ItemController.Group[i]) then
-//        begin
-//            Result := true;
-//            exit;
-//        end;
-//    end;
-//end;
 
 
 end.

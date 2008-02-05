@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/1/2008 10:08:36 AM from Type Library described below.
+// File generated on 2/4/2008 5:30:07 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -4480,7 +4480,7 @@ type
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); safecall;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); safecall;
     function GetGroupItems(const Group: WideString): OleVariant; safecall;
-    procedure AddGroup(const Group: WideString); safecall;
+    function AddGroup(const Group: WideString): Integer; safecall;
     procedure RemoveGroup(const Group: WideString); safecall;
     function GetItem(const UID: WideString): IExodusItem; safecall;
     function AddItem(const Item: IExodusItem): Integer; safecall;
@@ -4488,10 +4488,15 @@ type
     procedure ClearItems; safecall;
     function SaveGroups: WordBool; safecall;
     function GetGroups: OleVariant; safecall;
+    function Get_GroupExists(const Group: WideString): WordBool; safecall;
+    function Get_GroupExpanded(const Group: WideString): WordBool; safecall;
+    procedure Set_GroupExpanded(const Group: WideString; value: WordBool); safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Group[index: Integer]: WideString read Get_Group;
     property Item[index: Integer]: IExodusItem read Get_Item;
+    property GroupExists[const Group: WideString]: WordBool read Get_GroupExists;
+    property GroupExpanded[const Group: WideString]: WordBool read Get_GroupExpanded write Set_GroupExpanded;
   end;
 
 // *********************************************************************//
@@ -4512,7 +4517,7 @@ type
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); dispid 209;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); dispid 210;
     function GetGroupItems(const Group: WideString): OleVariant; dispid 211;
-    procedure AddGroup(const Group: WideString); dispid 212;
+    function AddGroup(const Group: WideString): Integer; dispid 212;
     procedure RemoveGroup(const Group: WideString); dispid 213;
     function GetItem(const UID: WideString): IExodusItem; dispid 214;
     function AddItem(const Item: IExodusItem): Integer; dispid 215;
@@ -4520,6 +4525,8 @@ type
     procedure ClearItems; dispid 217;
     function SaveGroups: WordBool; dispid 218;
     function GetGroups: OleVariant; dispid 219;
+    property GroupExists[const Group: WideString]: WordBool readonly dispid 220;
+    property GroupExpanded[const Group: WideString]: WordBool dispid 222;
   end;
 
 // *********************************************************************//
