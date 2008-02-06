@@ -87,7 +87,7 @@ begin
     _lblCaption.AutoSize := true;
     _lblCaption.ParentColor := true;
     _lblCaption.ParentFont := true;
-    _lblCaption.ShowAccelChar := False;
+    _lblCaption.ShowAccelChar := True;
     _lblCaption.Alignment := taCenter;
 
     _pnlBevel.Align := alClient;

@@ -433,7 +433,7 @@ type
     _profileScreenLastWidth: integer;   // Storage for width of roster window when logged in
     _enforceConstraints: boolean;       // Should minimum size constraints be enforced
 
-    _dnListener: TDisplayNameListener;
+    _dnListener: TDisplayNameEventListener;
 
     // Stuff for the Autoaway
     _idle_hooks: THandle;               // handle the lib
@@ -1175,7 +1175,7 @@ begin
     // Init our emoticons
     InitializeEmoticonLists();
 
-    _dnListener := TDisplayNameListener.Create(false);
+    _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := OnDisplayNameChange;
 
     // Setup our caption and the help menus.
@@ -1697,6 +1697,10 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Profile.getJabberID().getDisplayJID();
+
+        //Set Display Name listener to only fire on "My JID" DN updates
+        _dnListener.UID := MainSession.profile.getJabberID().jid;
+        
         UpdateDisplayName();
 
         setTrayInfo(Self.Caption);
@@ -4592,9 +4596,6 @@ begin
 end;
 
 procedure TfrmExodus.OnDisplayNameChange(jid, dn: Widestring);
-var
-    us: TJabberID;
-    ignored: Boolean;
 begin
     UpdateDisplayName();
 end;
@@ -4689,11 +4690,10 @@ end;
 procedure TfrmExodus.UpdateDisplayName;
 var
     jid: TJabberID;
-    pending: Boolean;
 begin
     jid := MainSession.Profile.getJabberID();
 
-    lblDisplayName.Caption := _dnListener.getProfileDisplayName(jid, pending);
+    lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
     lblDisplayName.Hint := jid.getDisplayFull();
 end;
 

@@ -94,7 +94,7 @@ var
 
 {$R *.DFM}
 type
-    TShowHandler = class(TDisplayNameListener)
+    TShowHandler = class(TDisplayNameEventListener)
         jid: TJabberID;
         sub: TfrmSubscribe;
 
@@ -140,14 +140,16 @@ begin
     sub := subFrm;
 
     //newJID may already be in roster. Force a displayname lookup if needed
-    if (Self.ProfileEnabled) then
+{    if (Self.ProfileEnabled) then
     begin
         dName := Self.getProfileDisplayName(newJID, changePending);
         if (dName = '') then
           dname := getDisplayName(newJID, changePending);
     end
     else
-        dname := getDisplayName(newJID, changePending);
+}
+//TODO : display name work. Add a way of overriding roster when getting dn
+        dname := TDisplayNameEventListener.getDisplayName(newJID.jid, changePending);
 
     if (not changePending) then begin
         //show now and destroy ourself

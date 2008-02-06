@@ -19,7 +19,7 @@ type
     procedure TntFormDestroy(Sender: TObject);
     procedure TntButton1Click(Sender: TObject);
   private
-    _dnListener: TDisplayNameListener;
+    _dnListener: TDisplayNameEventListener;
     _ToJID: TJabberID;
     _RoomJID: TJabberID;
   public
@@ -66,7 +66,9 @@ begin
     _RoomJID := TJabberID.Create(DeclinePacket.getAttribute('from'));
     _ToJID := TJabberID.Create(ttag.GetAttribute('from'));
 
-    Self.lblDeclined.Caption := sDECLINE_DESC1 + _DNListener.getDisplayName(_toJID) +
+    _dnListener.UID := _ToJID.jid;
+
+    Self.lblDeclined.Caption := sDECLINE_DESC1 + _DNListener.getDisplayName(_toJID.jid) +
                                 sDECLINE_DESC2 + _RoomJID.userDisplay + sDECLINE_DESC3;
     Self.lblReason.Caption := ttag.GetBasicText('reason');
     if (Self.lblReason.Caption = '') then
@@ -83,7 +85,7 @@ end;
 procedure TFrmInviteDeclined.TntFormCreate(Sender: TObject);
 begin
     inherited;
-    _dnListener := TDisplayNameListener.Create(false); //use this listener to get all DN events
+    _dnListener := TDisplayNameEventListener.Create(); 
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
     _ToJID := nil;
     _RoomJID := nil;
@@ -102,9 +104,8 @@ end;
 
 procedure TFrmInviteDeclined.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
-    if (_ToJID <> nil) and (_ToJID.jid = bareJID) then
-        Self.lblDeclined.Caption := sDECLINE_DESC1 + _DNListener.getDisplayName(_toJID) +
-                                    sDECLINE_DESC2 + _RoomJID.userDisplay + sDECLINE_DESC3;
+    Self.lblDeclined.Caption := sDECLINE_DESC1 + _DNListener.getDisplayName(_toJID.jid) +
+                                sDECLINE_DESC2 + _RoomJID.userDisplay + sDECLINE_DESC3;
 
 end;
 

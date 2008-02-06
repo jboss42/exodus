@@ -35,7 +35,7 @@ type
     procedure TntFormShow(Sender: TObject);
     procedure lblInvitorClick(Sender: TObject);
   private
-    _dnListener: TDisplayNameListener;
+    _dnListener: TDisplayNameEventListener;
     _InvitePacket: TXMLTag;
     _FromJID: TJabberID;
     _RoomJID: TJabberID;
@@ -576,7 +576,7 @@ end;
 procedure TfrmInviteReceived.TntFormCreate(Sender: TObject);
 begin
     inherited;
-    _dnListener := TDisplayNameListener.Create(false); //use this listener to get all DN events
+    _dnListener := TDisplayNameEventListener.Create(); 
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
     _FromJID := nil;
     _InvitePacket := nil;
@@ -661,17 +661,14 @@ end;
 
 procedure TfrmInviteReceived.OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 begin
-    if (_FromJID <> nil) and (bareJID = _FromJID.jid) then
-    begin
-        Self.lblInvitor.Caption := DisplayName;
-        //force some alignment
-        Self.lblInviteMessage.AutoSize := false;
-        Self.lblInviteMessage.AutoSize := true;
-        Self.ExGroupBox1.AutoSize := false;
-        Self.ExGroupBox1.AutoSize := true;
-        Self.AutoSize := false;
-        Self.AutoSize := true;
-    end;
+    Self.lblInvitor.Caption := DisplayName;
+    //force some alignment
+    Self.lblInviteMessage.AutoSize := false;
+    Self.lblInviteMessage.AutoSize := true;
+    Self.ExGroupBox1.AutoSize := false;
+    Self.ExGroupBox1.AutoSize := true;
+    Self.AutoSize := false;
+    Self.AutoSize := true;
 end;
 
 procedure TfrmInviteReceived.InitializeFromTag(InvitePacket: TXMLTag);
@@ -695,19 +692,20 @@ begin
 
     //various labels
     _RoomJID := TJabberID.Create(InvitePacket.getAttribute('from'));
-    Self.lblRoom.Caption := _RoomJID.userDisplay;
+    Self.lblRoom.Caption := DisplayName.getDisplayNameCache.getDisplayName(_RoomJID);
     Self.lblRoom.Hint := _RoomJID.getDisplayJID();
     Self.lblRoom.font.Style := Self.lblRoom.font.Style + [fsBold];
 
     tJID := TJabberID.Create(ttag.GetAttribute('from'));
     _FromJID := TJabberID.Create(tJID.jid); //bare JID
     Self.lblInvitor.Hint := tJID.getDisplayFull();
+    _dnListener.UID := tJID.jid; //listen for DN changes from this JID only
     tJID.free();
 
     inviteMessage := ttag.GetBasicText('reason');
     if (InviteMessage <> '') then
         Self.lblInviteMessage.Caption := InviteMessage;
-    Self.lblInvitor.Caption := _dnListener.getDisplayName(_FromJID);
+    Self.lblInvitor.Caption := DisplayName.getDisplayNameCache.getDisplayName(_FromJID);
 end;
 
 procedure TfrmInviteReceived.lblInvitorClick(Sender: TObject);

@@ -26,26 +26,27 @@ type
     _CanShow: boolean; //are children allowed to be shown? entire panel may be hidden.
   protected
     procedure CreateWindowHandle(const Params: TCreateParams); override;
+    procedure Loaded(); override;
 
-      function GetAutoHide(): boolean;
-      procedure SetAutoHide(b: boolean);
+    function GetAutoHide(): boolean;
+    procedure SetAutoHide(b: boolean);
 
-      function VisibleChildren(): integer; virtual;
-      procedure EnableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
-      procedure ShowChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
+    function VisibleChildren(): integer; virtual;
+    procedure EnableChildren(e: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
+    procedure ShowChildren(v: boolean; useInitial: boolean = false; ignore: TList = nil); virtual;
 
-      procedure SetEnabled(enabled: boolean); override;
+    procedure SetEnabled(enabled: boolean); override;
   public
-      Constructor Create(AOwner: TComponent); override;
-      Destructor Destroy; Override;
+    Constructor Create(AOwner: TComponent); override;
+    Destructor Destroy; Override;
 
-      procedure CheckAutoHide(); virtual;
-      procedure CaptureChildStates(); virtual;
+    procedure CheckAutoHide(); virtual;
+    procedure CaptureChildStates(); virtual;
 
-      property CanEnabled: boolean read _canEnable write _canEnable;
-      property CanShow: boolean read _CanShow write _CanShow;
+    property CanEnabled: boolean read _canEnable write _canEnable;
+    property CanShow: boolean read _CanShow write _CanShow;
   published
-      property AutoHide: boolean read getAutoHide write setAutoHide;
+    property AutoHide: boolean read getAutoHide write setAutoHide;
   end;
 
   procedure Register();
@@ -66,6 +67,12 @@ begin
     Self.BevelOuter := bvNone;
     Self.TabStop := false;
     inherited;
+end;
+
+procedure TExBrandPanel.Loaded();
+begin
+    inherited;
+    Self.Caption := '';
 end;
 
 //protected methods
