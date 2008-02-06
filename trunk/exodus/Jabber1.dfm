@@ -38,16 +38,12 @@ inherited frmExodus: TfrmExodus
     Top = 59
     Width = 286
     Height = 506
-    ActivePage = tabLogin
+    ActivePage = tabRoster
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -65,10 +61,6 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -112,7 +104,7 @@ inherited frmExodus: TfrmExodus
           end
           item
             Column = 1
-            Control = Panel1
+            Control = pnlStatus
             Row = 1
           end
           item
@@ -179,15 +171,16 @@ inherited frmExodus: TfrmExodus
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 52
-          Height = 13
+          Width = 235
+          Height = 12
           Align = alClient
-          Caption = 'user@host'
+          ExplicitWidth = 3
+          ExplicitHeight = 13
         end
-        object Panel1: TPanel
+        object pnlStatus: TPanel
           Left = 21
           Top = 18
-          Width = 52
+          Width = 167
           Height = 19
           Cursor = crHandPoint
           Align = alLeft
@@ -195,25 +188,22 @@ inherited frmExodus: TfrmExodus
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
-          OnClick = lblStatusClick
+          OnClick = clickChangeStatus
           object lblStatus: TTntLabel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 30
+            Width = 3
             Height = 13
             Cursor = crHandPoint
             Align = alLeft
-            Caption = 'status'
-            OnClick = lblStatusClick
-            ExplicitLeft = 0
-            ExplicitTop = 0
+            OnClick = clickEditStatus
           end
-          object Image1: TImage
-            Left = 36
+          object imgDown: TImage
+            Left = 151
             Top = 0
             Width = 16
-            Height = 16
+            Height = 19
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -255,7 +245,27 @@ inherited frmExodus: TfrmExodus
               FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
               FF00}
             Transparent = True
-            OnClick = lblStatusClick
+            OnClick = clickChangeStatus
+            ExplicitLeft = 36
+            ExplicitHeight = 16
+          end
+          object txtStatus: TTntEdit
+            AlignWithMargins = True
+            Left = 12
+            Top = 0
+            Width = 136
+            Height = 19
+            Margins.Top = 0
+            Margins.Bottom = 0
+            Align = alLeft
+            BevelInner = bvNone
+            BevelOuter = bvNone
+            TabOrder = 0
+            Visible = False
+            OnExit = txtStatusExit
+            OnKeyPress = txtStatusKeyPress
+            ExplicitLeft = 9
+            ExplicitHeight = 21
           end
         end
         object imgPresence: TImage
@@ -416,8 +426,8 @@ inherited frmExodus: TfrmExodus
   object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual
     Images = ImageList1
-    Left = 47
-    Top = 74
+    Left = 39
+    Top = 354
     object File1: TTntMenuItem
       Caption = '&File'
       object Old1: TTntMenuItem
@@ -1065,8 +1075,8 @@ inherited frmExodus: TfrmExodus
   end
   object ImageList1: TImageList
     ShareImages = True
-    Left = 88
-    Top = 74
+    Left = 80
+    Top = 354
     Bitmap = {
       494C01015D005E00040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000008001000001002000000000000080
@@ -4246,21 +4256,21 @@ inherited frmExodus: TfrmExodus
     Enabled = False
     Interval = 500
     OnTimer = timFlasherTimer
-    Left = 16
-    Top = 104
+    Left = 8
+    Top = 384
   end
   object timAutoAway: TTimer
     Enabled = False
     Interval = 3000
     OnTimer = timAutoAwayTimer
-    Left = 16
-    Top = 200
+    Left = 8
+    Top = 480
   end
   object popTray: TTntPopupMenu
     AutoHotkeys = maManual
     Images = ImageList1
-    Left = 48
-    Top = 136
+    Left = 40
+    Top = 416
     object trayShow: TTntMenuItem
       Caption = 'Show Exodus'
       OnClick = trayShowClick
@@ -4335,45 +4345,45 @@ inherited frmExodus: TfrmExodus
   object AppEvents: TApplicationEvents
     OnActivate = AppEventsActivate
     OnDeactivate = AppEventsDeactivate
-    Left = 88
-    Top = 136
+    Left = 80
+    Top = 416
   end
   object timReconnect: TTimer
     Enabled = False
     Interval = 10000
     OnTimer = timReconnectTimer
-    Left = 16
-    Top = 136
+    Left = 8
+    Top = 416
   end
   object timTrayAlert: TTimer
     Enabled = False
     Interval = 750
     OnTimer = timTrayAlertTimer
-    Left = 16
-    Top = 168
+    Left = 8
+    Top = 448
   end
   object XMPPAction: TDdeServerConv
     OnExecuteMacro = XMPPActionExecuteMacro
-    Left = 16
-    Top = 75
+    Left = 8
+    Top = 355
   end
   object Resolver: TIdDNSResolver
     OnStatus = ResolverStatus
     Port = 53
     QueryRecords = []
-    Left = 120
-    Top = 104
+    Left = 112
+    Top = 384
   end
   object IdAntiFreeze1: TIdAntiFreeze
-    Left = 120
-    Top = 136
+    Left = 112
+    Top = 416
   end
   object bigImages: TImageList
     AllocBy = 1
     Height = 128
     Width = 128
-    Left = 88
-    Top = 104
+    Left = 80
+    Top = 384
     Bitmap = {
       494C010101000200040080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
@@ -12833,8 +12843,8 @@ inherited frmExodus: TfrmExodus
   object popPresence: TTntPopupMenu
     AutoHotkeys = maManual
     Images = ImageList1
-    Left = 48
-    Top = 168
+    Left = 40
+    Top = 448
     object TntMenuItem1: TTntMenuItem
       Caption = 'Available'
       ImageIndex = 1
@@ -12879,8 +12889,8 @@ inherited frmExodus: TfrmExodus
     end
   end
   object popCreate: TTntPopupMenu
-    Left = 48
-    Top = 104
+    Left = 40
+    Top = 384
     object Folder1: TTntMenuItem
       Caption = 'New Group'
     end

@@ -261,9 +261,9 @@ type
     GridPanel1: TGridPanel;
     imgSSL: TImage;
     lblDisplayName: TTntLabel;
-    Panel1: TPanel;
+    pnlStatus: TPanel;
     lblStatus: TTntLabel;
-    Image1: TImage;
+    imgDown: TImage;
     popPresence: TTntPopupMenu;
     TntMenuItem1: TTntMenuItem;
     TntMenuItem2: TTntMenuItem;
@@ -299,6 +299,7 @@ type
     popCreate: TTntPopupMenu;
     Folder1: TTntMenuItem;
     Contact1: TTntMenuItem;
+    txtStatus: TTntEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -401,8 +402,11 @@ type
       var Accept: Boolean);
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
     procedure trayShowActivityWindowClick(Sender: TObject);
-    procedure lblStatusClick(Sender: TObject);
-  
+    procedure clickChangeStatus(Sender: TObject);
+    procedure clickEditStatus(Sender: TObject);
+    procedure txtStatusKeyPress(Sender: TObject; var Key: Char);
+    procedure txtStatusExit(Sender: TObject);
+
   private
     { Private declarations }
     _noMoveCheck: boolean;              // don't check form moves
@@ -4387,7 +4391,7 @@ begin
     _enforceConstraints := true;
 end;
 
-procedure TfrmExodus.lblStatusClick(Sender: TObject);
+procedure TfrmExodus.clickChangeStatus(Sender: TObject);
 var
     cp : TPoint;
 begin
@@ -4397,6 +4401,69 @@ begin
         popPresence.Popup(cp.x, cp.y);
     end;
 end;
+procedure TfrmExodus.clickEditStatus(Sender: TObject);
+begin
+    pnlStatus.Visible := false;
+
+    lblStatus.Visible := false;
+    imgDown.Visible := false;
+
+    txtStatus.Text := MainSession.Status;
+    txtStatus.Visible := true;
+    txtStatus.Align := alClient;
+    pnlStatus.Align := alClient;
+
+    pnlStatus.Visible := true;
+
+    txtStatus.SetFocus;
+end;
+procedure TfrmExodus.txtStatusExit(Sender: TObject);
+begin
+    inherited;
+
+    pnlStatus.Visible := false;
+
+    txtStatus.Visible := false;
+
+    imgDown.Visible := true;
+    imgDown.Align := alLeft;
+    lblStatus.Visible := true;
+    lblStatus.Align := alLeft;
+
+    pnlStatus.Align := alLeft;
+    pnlStatus.Visible := true;
+end;
+
+procedure TfrmExodus.txtStatusKeyPress(Sender: TObject; var Key: Char);
+var
+    pres: TJabberCustomPres;
+    val: Widestring;
+begin
+    //something to do
+    if Key = Char(13) then begin
+        //TODO:  save and change status
+        val := txtStatus.Text;
+        pres := MainSession.prefs.getPresence(val);
+        if pres = nil then begin
+            //no existing presence...create it!
+            pres := TJabberCustomPres.Create;
+            pres.title := val;
+            pres.Status := val;
+            pres.Show := MainSession.Show;
+            pres.Priority := MainSession.Priority;
+
+            MainSession.Prefs.setPresence(pres);
+            SessionCallback('/session/prefs', nil);
+        end;
+        MainSession.setPresence(pres.Show, pres.Status, pres.Priority);
+        txtStatusExit(Sender);
+    end else if Key = Char(27) then begin
+        txtStatusExit(Sender);
+    end else begin
+        inherited;
+    end;
+end;
+
 
 procedure TfrmExodus.OnNotify(frm: TForm; notifyEvents: integer);
 begin
