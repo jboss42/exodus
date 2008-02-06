@@ -11,11 +11,11 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : 1.2
-// File generated on 2/4/2008 5:30:07 PM from Type Library described below.
+// $Rev: 8291 $
+// File generated on 2/6/2008 9:18:04 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4336,9 +4336,9 @@ type
 // *********************************************************************//
   IExodusAXControl = interface(IDispatch)
     ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
-    function Get_Property1: Integer; safecall;
-    procedure Set_Property1(value: Integer); safecall;
-    property Property1: Integer read Get_Property1 write Set_Property1;
+    function Get_OleObject: OleVariant; safecall;
+    procedure Close; safecall;
+    property OleObject: OleVariant read Get_OleObject;
   end;
 
 // *********************************************************************//
@@ -4348,7 +4348,8 @@ type
 // *********************************************************************//
   IExodusAXControlDisp = dispinterface
     ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
-    property Property1: Integer dispid 201;
+    property OleObject: OleVariant readonly dispid 201;
+    procedure Close; dispid 202;
   end;
 
 // *********************************************************************//

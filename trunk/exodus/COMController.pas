@@ -2116,18 +2116,10 @@ end;
 function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
 var
     frm: TfrmActiveXDockable;
-    AXControl: TAXControl;
-    ParentControl: TWinControl;
 begin
     try
-        frm := StartActiveX(ActiveXWindow_Title, true);
-
-        ParentControl := frm.pnlMsgList;
-
-        AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
-        AXControl.Parent := ParentControl;
-        AXControl.Align := alClient;
-        Result := TExodusAXControl.Create(AXControl);
+        frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Title, true);
+        Result := TExodusAXControl.Create(frm);
     except
     end;
 end;

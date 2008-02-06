@@ -24,21 +24,21 @@ unit COMAXControl;
 interface
 
 uses
-  SysUtils, Variants, ComCtrls, ComObj, ActiveX, Exodus_TLB, StdVcl, PLUGINCONTROLLib_TLB ;
+  SysUtils, Variants, ComCtrls,
+  ComObj, ActiveX, Exodus_TLB,
+  StdVcl, PLUGINCONTROLLib_TLB, ActiveXDockable;
 
 type
   TExodusAXControl = class(TAutoObject, IExodusAXControl)
   private
-    AXControl: TAXControl;
-    prop1: integer;
+    _frm: TfrmActiveXDockable;
 
   public
-    constructor Create(AXControl: TAXControl);
+    constructor Create(form: TfrmActiveXDockable);
 
   protected
-    function Get_Property1: Integer; safecall;
-    procedure Set_Property1(value: Integer); safecall;
-
+    function Get_OleObject: OleVariant; safecall;
+    procedure Close; safecall;
   end;
 
 implementation
@@ -46,20 +46,19 @@ implementation
 uses
     RosterImages, ComServ;
 
-constructor TExodusAXControl.Create(AXControl: TAXControl);
+constructor TExodusAXControl.Create(form: TfrmActiveXDockable);
 begin
-      Self.AXControl := AXControl;
+    _frm := form;
 end;
 
-
-function TExodusAXControl.Get_Property1: Integer;
+function TExodusAXControl.Get_OleObject: OleVariant;
 begin
-    Result := prop1;
+    Result := _frm.AXControl.OleObject;
 end;
 
-procedure TExodusAXControl.Set_Property1(value: Integer);
+procedure TExodusAXControl.Close;
 begin
-    prop1 := value;
+    _frm.Close;
 end;
 
 initialization
