@@ -200,7 +200,8 @@ type
         _js:        TObject; //TjabberSession, use TObject to avoid circular ref issues
                              //DNCache is initialized in session object
         _profileParser: TProfileParser;
-
+        _useProfileDN: boolean;
+        
         function getOrAddDNItem(UID: Widestring): TDisplayNameItem; overload;
         function getOrAddDNItem(JID: TJabberID): TDisplayNameItem; overload;
 
@@ -219,6 +220,7 @@ type
 
         function getDisplayName(jid: TJabberID; out pendingNameChange: boolean; UseCacheOnly: boolean=false): Widestring;overload;
         function getDisplayName(jid: TJabberID): Widestring;overload;
+        function getDisplayName(uid: widestring): Widestring;overload;
         function getDisplayNameAndFullJID(jid: TJabberID): Widestring;
         function getDisplayNameAndBareJID(jid: TJabberID): Widestring;
 
@@ -588,11 +590,7 @@ end;
 
 procedure TDisplayNameItem.OnPrefChange();
 begin
-    //only have to deal if not using roster
-    if (DisplayName[dntItemName] <> '') then
-    begin
-
-    end;
+    //doesn;t handle prefs
 end;
 
 Function TDisplayNameItem.UpdateDisplayName(Item: IExodusItem; InitialUpdate: boolean): Boolean;
@@ -817,12 +815,13 @@ end;
 
 
 procedure TContactDisplayNameItem.OnPrefChange();
+var
+    ignore: boolean;
 begin
-    //only have to deal if not using roster
-    if (DisplayName[dntItemName] <> '') then
-    begin
-
-    end;
+    //clear profile and get display name again. this will force a refresh
+    //where needed.
+    DisplayName[dntProfile] := '';
+    GetDisplayName(ignore);
 end;
 
 {-------------------------------------------------------------------------------
@@ -927,13 +926,17 @@ var
     dnItem: TDisplayNameItem;
     tstr: WideString;
     locked: boolean;
+    prefChanged : boolean;
+    i: integer;
+    
 begin
     if (event = '/session/disconnected') then
         //clear cache on disconnect
         clearDNCache()
     else if (event = '/session/authenticated') then begin
+        _useProfileDN := useProfileDN(); //initial profile state, used to check pref changes
         //add our jid to the cache
-         dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
+        dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
 
         //at this point our nick is our node.
         tstr := DNSession.Prefs.getString('default_nick');
@@ -952,9 +955,20 @@ begin
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
         tstr := getProfileDNMap();
-        if (ProfileParser.ProfileMapString <>  tstr) then begin
-            ProfileParser.setProfileParseMap(tstr)
+        prefChanged := (ProfileParser.ProfileMapString <>  tstr);
+        if  (prefChanged) then
+            ProfileParser.setProfileParseMap(tstr);
+            
+        prefChanged := prefChanged or (_UseProfileDN <> UseProfileDN());
+        if (prefChanged) then
+        begin
+            //walk cache and refresh items based on new prefs
+            for i := 0 to _dnCache.Count - 1 do 
+            begin
+                TDisplayNameItem(_dnCache.Objects[i]).OnPrefChange();
+            end;
         end;
+
         { JJF not updating for now, not sure what to do here
         todo: check prefs and fire session/displayname event for each actual change
         for idx := 0 to _dnCache.Count - 1 do begin
@@ -1050,6 +1064,13 @@ var
     ignored: boolean;
 begin
     Result := getDisplayName(jid, ignored);
+end;
+
+function TDisplayNameCache.getDisplayName(uid: widestring): Widestring;
+var
+    ignored: boolean;    
+begin
+    Result := GetOrAddDNItem(uid).getDisplayName(ignored);
 end;
 
 function TDisplayNameCache.getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
