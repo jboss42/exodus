@@ -25,7 +25,8 @@ uses
     Dockable, ActiveX, ComObj,
     BaseMsgList, SysUtils, Unicode,
     COMDockToolbar, ToolWin, ComCtrls,
-    ExtCtrls, Controls, Classes;
+    ExtCtrls, Controls, Classes,
+    PLUGINCONTROLLib_TLB;
 
 type
   TfrmActiveXDockable = class(TfrmDockable)
@@ -36,21 +37,24 @@ type
 
   private
     { Private declarations }
+    _AXControl: TAXControl;
   protected
 
   public
     { Public declarations }
     DockToolbar: TExodusDockToolbar;
 
+    property AXControl: TAXControl read _AXControl write _AXControl;
+
   end;
 
 var
   frmActiveXDockable: TfrmActiveXDockable;
 
-function StartActiveX(window_title: widestring;
-                   show_window: boolean;
-                   chat_nick: widestring='';
-                   bring_to_front:boolean=true): TfrmActiveXDockable;
+function StartActiveX(ActiveX_GUID: widestring;
+                      window_title: widestring;
+                      show_window: boolean;
+                      bring_to_front:boolean=true): TfrmActiveXDockable;
 
 implementation
 
@@ -60,12 +64,25 @@ uses
     StrUtils;
 
 
-function StartActiveX(window_title: widestring;
-                   show_window: boolean;
-                   chat_nick: widestring='';
-                   bring_to_front:boolean=true): TfrmActiveXDockable;
+function StartActiveX(ActiveX_GUID: widestring;
+                      window_title: widestring;
+                      show_window: boolean;
+                      bring_to_front:boolean=true): TfrmActiveXDockable;
+var
+    AXControl: TAXControl;
+    ParentControl: TWinControl;
 begin
     Result := TfrmActiveXDockable.Create(nil);
+
+    Result.Caption := window_title;
+
+    ParentControl := Result.pnlMsgList;
+
+    AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
+    AXControl.Parent := ParentControl;
+    AXControl.Align := alClient;
+
+    Result.AXControl := AXControl;
 
     if (show_window) then
         Result.ShowDefault(bring_to_front);
