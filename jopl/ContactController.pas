@@ -23,7 +23,7 @@ unit ContactController;
 interface
 
 uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
-     Signals, COMExodusItem;
+     Signals, DisplayName, COMExodusItem;
 
 type
 
@@ -40,7 +40,7 @@ type
        _HidePending: Boolean;
        _HideObservers: Boolean;
        _UseDisplayName: Boolean;
-       _DNListener: TObject;
+       _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
        //Methods
        procedure _GetContacts();
@@ -65,7 +65,7 @@ type
    end;
 
 implementation
-uses IQ, JabberConst, JabberID, DisplayName, SysUtils, Unicode,
+uses IQ, JabberConst, JabberID, SysUtils, Unicode,
      Session, RosterImages, COMExodusItemWrapper;
 
 {---------------------------------------}
@@ -82,8 +82,8 @@ begin
     _HideObservers := false;
     _UseDisplayName := false;
     _DefaultGroup := '';
-    _DNListener := TDisplayNameListener.Create();
-    TDisplayNameListener(_DNListener).OnDisplayNameChange := _OnDisplayNameChange;
+    _DNListener := TDisplayNameEventListener.Create();
+    _DNListener.OnDisplayNameChange := _OnDisplayNameChange;
 end;
 
 {---------------------------------------}
@@ -94,7 +94,7 @@ begin
         UnregisterCallback(_RMCB);
         UnregisterCallback(_PresCB);
     end;
-    TDisplayNameListener(_DNListener).Free;
+    _DNListener.Free;
 end;
 
 {---------------------------------------}
@@ -284,9 +284,8 @@ end;
 procedure TContactController._UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
 var
     IsBlocked, IsOffline, IsPending, IsObserver, IsNone: boolean;
-    ImagePrefix, Subs, Ask, Show, Name: Widestring;
+    ImagePrefix, Subs, Ask, Show: Widestring;
     Tag: TXMLTag;
-    Jid: TJabberID;
 begin
     Item.Active := false;
     Item.IsVisible := true;
@@ -298,19 +297,9 @@ begin
 
     Show := '';
     Tag := TXMLTag.Create();
-    Name :=  Item.Value['Name'];
-    // if there is no nickname, just use the user portion of the jid
-    if (Name = '') then  begin
-        Jid := TJabberID.Create(Item.Uid);
-        if (Item.Value['Subscription'] <> '') then
-            if (TDisplayNameListener(_DNListener).ProfileEnabled) then
-                Item.Text := TDisplayNameListener(_DNListener).getDisplayName(Jid)
-            else
-                Item.Text := Jid.userDisplay
-        else
-            Item.Text := Jid.userDisplay;
-        Jid.Free();
-    end;
+
+    GetDisplayNameCache().UpdateDisplayName(Item);
+    Item.text := GetDisplayNameCache().GetDisplayName(Item.Uid);
 
     // is contact offline?
     //Set contact unavailable by default

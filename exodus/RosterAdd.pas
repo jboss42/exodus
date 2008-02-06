@@ -79,7 +79,7 @@ type
     gw_ent: TJabberEntity;
     gw, sjid, snick, sgrp: Widestring;
     addInfo : TNetworkInfo;
-    dnListener: TDisplayNameListener;
+    dnListener: TDisplayNameEventListener;
     procedure doAdd;
 
     procedure setContact(contact: TJabberID = nil);
@@ -222,7 +222,8 @@ var
 begin
     if (contact <> nil) then begin
         txtJid.Text := contact.GetDisplayJID();
-        txtNickname.Text := dnListener.getDisplayName(contact, pendingNameChange);
+        dnListener.UID := contact.jid; //listen for updates to this jid only
+        txtNickname.Text := TDisplayNameEventListener.getDisplayName(contact.jid, pendingNameChange);
         if (pendingNameChange) then
             txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
         else
@@ -328,7 +329,7 @@ begin
     //MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
-    dnListener := TDisplayNameListener.Create();
+    dnListener := TDisplayNameEventListener.Create();
     dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
     
     txtGateway.Text := MainSession.Server;
@@ -393,7 +394,8 @@ begin
 
     // add the nickname if it's not there.
     if (txtNickname.Text = '') then begin
-        txtNickname.Text := dnListener.getDisplayName(tmp_id, pendingNameChange);
+        dnListener.UID := tmp_id.jid; //listen for changes to this jid only
+        txtNickname.Text := TDisplayNameEventListener.getDisplayName(tmp_id.jid, pendingNameChange);
         if (pendingNameChange) then
             txtNickname.Font.Style := txtNickname.Font.Style + [fsUnderline]
         else

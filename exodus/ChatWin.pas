@@ -137,9 +137,10 @@ type
     _receivedMessage: boolean; //true if we have received at least one message
     _supportsXIM: boolean;     //true if caps advertises support
 
-    _dnListener: TDisplayNameListener;
-    _dnLocked: boolean; //can the display name be changed? true if no\ick was passed
-                        //into factory method 
+    _dnListener: TDisplayNameEventListener;
+
+    //_dnLocked: boolean; //can the display name be changed? true if nick was passed
+                        //into factory method
     _displayName: WideString;
     _insertTab: boolean; // Should a tab insert a tab?
 
@@ -387,7 +388,7 @@ begin
                 mnuSendFile.Enabled   := false;
                 c1.Enabled            := false;
                 mnuBlock.Enabled      := false;
-                _dnLocked := true;
+//                _dnLocked := true;
             end;
 
             if (MainSession.IsBlocked(sjid)) then
@@ -484,9 +485,9 @@ begin
     _spcallback:= -1;
     _scallback := -1;
     _displayName := '';
-    _dnListener := TDisplayNameListener.Create();
+    _dnListener := TDisplayNameEventListener.Create();
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
-    _dnLocked := false;
+//    _dnLocked := false;
     _insertTab := true;
 
     _check_event := false;
@@ -567,7 +568,7 @@ begin
     if (_isRoom) then
         _displayName := TJabberID.removeJEP106(_jid.user) + ' - ' + FindRoomNick(_jid.full)
     else
-        _displayName := _dnListener.getDisplayName(_jid);
+        _displayName := TDisplayNameEventListener.getDisplayName(_jid.jid);
 
     lblNick.Caption := _displayName;
     Caption := _displayName;
@@ -681,6 +682,10 @@ begin
     if (_jid <> nil) then _jid.Free();
 
     _jid := TJabberID.Create(cjid);
+
+    //only listen for display name changes for this jid
+    _DNListener.UID := _jid.jid;
+
     _avatar := nil;
     pnlDockTop.ClientHeight := 28;
 

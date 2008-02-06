@@ -109,7 +109,7 @@ begin
 end;
 
 type
-    TAutoAddHandler = class(TDisplayNameListener)
+    TAutoAddHandler = class(TDisplayNameEventListener)
         jid: TJabberID;
         procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
         procedure addToRoster(newJID: TJabberID);
@@ -139,10 +139,11 @@ var
 begin
     jid := TJabberID.Create(newJID);//save jid for later dispname change event
     //newJID may already be in roster. Force a displayname lookup if needed
-    if (Self.ProfileEnabled) then
-        dName := Self.getProfileDisplayName(newJID, changePending)
-    else
-        dname := getDisplayName(newJID, changePending);
+//    if (Self.ProfileEnabled) then
+//        dName := Self.getProfileDisplayName(newJID, changePending)
+//    else
+//TODO : DN add a mechanism to DN to force a profile DN lookup, regardless of roster name
+        dname := getDisplayName(newJID.jid, changePending);
 
     if (not changePending) then begin
         //addnow, destroy ourself
