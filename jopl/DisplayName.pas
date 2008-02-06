@@ -677,14 +677,11 @@ begin
 end;
 
 procedure TContactDisplayNameItem.VCardIQCallback(event: string; tag: TXMLTag);
-var
-    oldProfile: WideString;
 begin
     //only check for failed results here. Cache will update vcard if successful
     _fetchFailed := (event <> 'xml') or (tag = nil) or (tag.getAttribute('type') <> 'result');
     if (_fetchFailed) then
     begin
-        OldProfile := DisplayName[dntProfile];
         DisplayName[dntProfile] := '';
         SetVCard(nil);
 
@@ -817,10 +814,15 @@ end;
 procedure TContactDisplayNameItem.OnPrefChange();
 var
     ignore: boolean;
+    dname: widestring;
 begin
     //clear profile and get display name again. this will force a refresh
     //where needed.
     DisplayName[dntProfile] := '';
+    //may have a cached vcard, all we need to do is reparse
+    if (ParsevCard(dname)) then
+        DisplayName[dntProfile] := dname;        
+        
     GetDisplayName(ignore);
 end;
 
