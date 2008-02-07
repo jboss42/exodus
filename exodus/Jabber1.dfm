@@ -44,10 +44,6 @@ inherited frmExodus: TfrmExodus
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -65,10 +61,6 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -179,9 +171,11 @@ inherited frmExodus: TfrmExodus
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 3
-          Height = 13
+          Width = 235
+          Height = 12
           Align = alClient
+          ExplicitWidth = 3
+          ExplicitHeight = 13
         end
         object pnlStatus: TPanel
           Left = 21
@@ -209,7 +203,7 @@ inherited frmExodus: TfrmExodus
             Left = 151
             Top = 0
             Width = 16
-            Height = 16
+            Height = 19
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -253,6 +247,7 @@ inherited frmExodus: TfrmExodus
             Transparent = True
             OnClick = clickChangeStatus
             ExplicitLeft = 36
+            ExplicitHeight = 16
           end
           object txtStatus: TTntEdit
             AlignWithMargins = True
@@ -269,7 +264,6 @@ inherited frmExodus: TfrmExodus
             Visible = False
             OnExit = txtStatusExit
             OnKeyPress = txtStatusKeyPress
-            ExplicitLeft = 9
             ExplicitHeight = 21
           end
         end
@@ -817,34 +811,40 @@ inherited frmExodus: TfrmExodus
         object mnuFile_MyStatus_FreeToChat: TTntMenuItem
           Tag = 1
           Caption = 'Free To Chat'
+          GroupIndex = 1
           ImageIndex = 4
           OnClick = presDNDClick
         end
         object mnuFile_MyStatus_Away: TTntMenuItem
           Tag = 2
           Caption = 'Away'
+          GroupIndex = 2
           ImageIndex = 2
           OnClick = presDNDClick
         end
         object mnuFile_MyStatus_XtendedAway: TTntMenuItem
           Tag = 3
           Caption = 'Xtended Away'
+          GroupIndex = 3
           ImageIndex = 10
           OnClick = presDNDClick
         end
         object mnuFile_MyStatus_Donotdisturb: TTntMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
+          GroupIndex = 4
           ImageIndex = 3
           OnClick = presDNDClick
         end
         object N6: TTntMenuItem
           Tag = 99
           Caption = '-'
+          GroupIndex = 4
         end
         object mnuFile_MyStatus_Invisible: TTntMenuItem
           Tag = 99
           Caption = 'Invisible'
+          GroupIndex = 4
           Visible = False
         end
       end
@@ -4296,34 +4296,40 @@ inherited frmExodus: TfrmExodus
       object trayPresChat: TTntMenuItem
         Tag = 1
         Caption = 'Free to Chat'
+        GroupIndex = 1
         ImageIndex = 4
         OnClick = presDNDClick
       end
       object trayPresAway: TTntMenuItem
         Tag = 2
         Caption = 'Away'
+        GroupIndex = 2
         ImageIndex = 2
         OnClick = presDNDClick
       end
       object trayPresXA: TTntMenuItem
         Tag = 3
         Caption = 'Xtended Away'
+        GroupIndex = 3
         ImageIndex = 10
         OnClick = presDNDClick
       end
       object trayPresDND: TTntMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
+        GroupIndex = 4
         ImageIndex = 3
         OnClick = presDNDClick
       end
       object N5: TTntMenuItem
         Tag = 99
         Caption = '-'
+        GroupIndex = 99
       end
       object Custom2: TTntMenuItem
         Tag = 99
         Caption = 'Custom ...'
+        GroupIndex = 99
         OnClick = presCustomClick
       end
     end
@@ -12858,39 +12864,46 @@ inherited frmExodus: TfrmExodus
     object TntMenuItem2: TTntMenuItem
       Tag = 1
       Caption = 'Free to Chat'
+      GroupIndex = 1
       ImageIndex = 4
       OnClick = presDNDClick
     end
     object TntMenuItem3: TTntMenuItem
       Tag = 2
       Caption = 'Away'
+      GroupIndex = 2
       ImageIndex = 2
       OnClick = presDNDClick
     end
     object TntMenuItem4: TTntMenuItem
       Tag = 3
       Caption = 'Xtended Away'
+      GroupIndex = 3
       ImageIndex = 10
       OnClick = presDNDClick
     end
     object TntMenuItem5: TTntMenuItem
       Tag = 4
       Caption = 'Do Not Disturb'
+      GroupIndex = 4
       ImageIndex = 3
       OnClick = presDNDClick
     end
     object TntMenuItem6: TTntMenuItem
       Tag = 99
       Caption = '-'
+      GroupIndex = 99
     end
     object Custom1: TTntMenuItem
       Tag = 99
       Caption = 'Custom ...'
+      GroupIndex = 99
       OnClick = presCustomClick
     end
     object TntMenuItem7: TTntMenuItem
       Tag = 99
       Caption = '-'
+      GroupIndex = 99
     end
   end
   object popCreate: TTntPopupMenu

@@ -25,7 +25,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
   TntComCtrls, TntExtCtrls, ExNumericEdit, ExGroupBox, TntForms, ExFrame,
-  ExBrandPanel;
+  ExBrandPanel, Unicode;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
@@ -66,6 +66,7 @@ type
     { Private declarations }
     _pres_list: TList;
     _no_pres_change: boolean;
+    _show_list: TWideStringList;
 
     procedure clearPresList();
   public
@@ -89,14 +90,24 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, Unicode, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
+    GnuGetText, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
 var
-    i: integer;
+    i, pos: integer;
     ws: TWidestringlist;
     cp: TJabberCustomPres;
+
+    procedure BrandOption(value: Widestring; brand: boolean);
+    begin
+        if brand then begin
+            _show_list.Add(value);
+            Inc(pos);
+        end else begin
+            cboCPType.Items.Delete(pos);
+        end;
+    end;
 begin
     inherited;
 
@@ -112,11 +123,21 @@ begin
 
         // Custom Presence options
         lstCustomPres.Items.Clear();
+        //Setup visible show list
+        pos := 0;
+        _show_list := TWideStringList.Create();
+        BrandOption('chat', getBool('show_presence_menu_chat'));
+        BrandOption('', getBool('show_presence_menu_available'));
+        BrandOption('away', getBool('show_presence_menu_away'));
+        BrandOption('xa', getBool('show_presence_menu_xa'));
+        BrandOption('dnd', getBool('show_presence_menu_dnd'));
+        
         ws := getAllPresence();
         _pres_list := TList.Create();
 
         for i := 0 to ws.Count - 1 do begin
             cp := TJabberCustomPres(ws.Objects[i]);
+            if _show_list.IndexOf(cp.Show) = -1 then continue;
             lstCustomPres.Items.Add(cp.title);
             _pres_list.Add(cp);
         end;
@@ -164,15 +185,17 @@ end;
 {---------------------------------------}
 procedure TfrmPrefPresence.FormDestroy(Sender: TObject);
 begin
-  inherited;
+    inherited;
     clearPresList();
     _pres_list.Free();
+    _show_list.Free();
 end;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.lstCustomPresClick(Sender: TObject);
 var
     e: boolean;
+    idx: integer;
 begin
     // show the props of this presence object
     _no_pres_change := true;
@@ -186,18 +209,14 @@ begin
         txtCPPriority.Text := '0';
     end
     else with TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
-
-        if (show = 'chat') then cboCPType.ItemIndex := 0
-        else if (show = 'away') then cboCPType.Itemindex := 2
-        else if (show = 'xa') then cboCPType.ItemIndex := 3
-        else if (show = 'dnd') then cboCPType.ItemIndex := 4
-        else
-            cboCPType.ItemIndex := 1;
-
-        txtCPTitle.Text := title;
-        txtCPStatus.Text := status;
-        txtCPPriority.Text := IntToStr(priority);
-        txtCPHotkey.HotKey := TextToShortcut(hotkey);
+        idx := _show_list.IndexOf(show);
+        if idx <> -1 then begin
+            cboCPType.ItemIndex := idx;
+            txtCPTitle.Text := title;
+            txtCPStatus.Text := status;
+            txtCPPriority.Text := IntToStr(priority);
+            txtCPHotkey.HotKey := TextToShortcut(hotkey);
+        end;
     end;
     _no_pres_change := false;
 end;
@@ -219,13 +238,7 @@ begin
         status := txtCPStatus.Text;
         priority := SafeInt(txtCPPriority.Text);
         hotkey := ShortCutToText(txtCPHotkey.HotKey);
-        case cboCPType.ItemIndex of
-        0: show := 'chat';
-        1: show := '';
-        2: show := 'away';
-        3: show := 'xa';
-        4: show := 'dnd';
-        end;
+        show := _show_list[cboCPType.ItemIndex];
         if (title <> lstCustomPres.Items[i]) then
             lstCustomPres.Items[i] := title;
         if (isDuplicateHotKey(hotkey, idx)) then begin

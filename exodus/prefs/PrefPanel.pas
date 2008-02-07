@@ -29,7 +29,7 @@ type
   TfrmPrefPanel = class(TExForm)
     pnlHeader: TTntPanel;
     lblHeader: TTntLabel;
-    procedure FormCreate(Sender: TObject);
+    procedure FormCreate(Sender: TObject); virtual;
   private
     { Private declarations }
     procedure loadPrefsOwner(owner: TWinControl);

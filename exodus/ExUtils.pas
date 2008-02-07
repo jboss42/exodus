@@ -942,7 +942,6 @@ end;
 
 {---------------------------------------}
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
-
     procedure ClearCustoms(mi: TMenuItem);
     var
         j: integer;
@@ -961,83 +960,101 @@ var
     grp, i: integer;
     mnu: TTntMenuItem;
     cp: TJabberCustompres;
-    c, avail, chat, away, xa, dnd: TMenuItem;
+    c, mnuAvail, mnuChat, mnuAway, mnuXa, mnuDnd: TMenuItem;
     pm: TTntMenuItem;
     pp: TTntPopupMenu;
+    title: Widestring;
 begin
     // Build the custom presence menus.
     // make sure to leave the main "Custom" entry and the divider
 
     // Parent is a has children, which have children..
-    avail := nil;
-    away := nil;
-    xa := nil;
-    dnd := nil;
-    chat := nil;
+    mnuAvail := nil;
+    mnuAway := nil;
+    mnuXa := nil;
+    mnuDnd := nil;
+    mnuChat := nil;
 
     if (parent is TTntMenuItem) then begin
         pm := TTntMenuItem(Parent);
-        for i := 0 to pm.Count - 1 do begin
-            c := pm.Items[i];
-            case c.tag of
-            0: avail := c;
-            1: chat := c;
-            2: away := c;
-            3: xa := c;
-            4: dnd := c;
-            else
-                continue;
-            end;
-            ClearCustoms(c);
-        end;
     end
     else if (parent is TTntPopupMenu) then begin
         pp := TTntPopupMenu(parent);
-        for i := 0 to pp.Items.Count - 1 do begin
-            c := pp.Items[i];
-            case c.tag of
-            0: avail := c;
-            1: chat := c;
-            2: away := c;
-            3: xa := c;
-            4: dnd := c;
-            else
-                continue;
-            end;
-            ClearCustoms(c);
+        pm := TTntMenuItem(pp.Items);
+    end;
+
+    for i := 0 to pm.Count - 1 do begin
+        c := pm.Items[i];
+        case c.GroupIndex of
+        0: if mnuAvail = nil then mnuAvail := c;
+        1: if mnuChat = nil then mnuChat := c;
+        2: if mnuAway = nil then mnuAway := c;
+        3: if mnuXa = nil then mnuXa := c;
+        4: if mnuDnd = nil then mnuDnd := c;
+        else
+            Continue;
         end;
+
+        ClearCustoms(c);
     end;
 
     // Make sure we got them all.
-    if ((avail = nil) or (chat = nil) or (away = nil) or (xa = nil) or (dnd = nil)) then exit;
+    if ((mnuAvail = nil) or (mnuChat = nil) or (mnuAway = nil) or (mnuXa = nil) or (mnuDnd = nil)) then exit;
 
-    plist := MainSession.prefs.getAllPresence();
+    with MainSession.Prefs do begin
+        mnuAvail.Visible := getBool('show_presence_menu_available');
+        mnuChat.Visible := getBool('show_presence_menu_chat');
+        mnuAway.Visible := getBool('show_presence_menu_away');
+        mnuXa.Visible := getBool('show_presence_menu_xa');
+        mnuDnd.Visible := getBool('show_presence_menu_dnd');
+        plist := getAllPresence();
+    end;
+
     for i := 0 to plist.count - 1 do begin
         cp := TJabberCustomPres(plist.Objects[i]);
 
         if (cp.show = 'chat') then begin
             grp := 4;
-            c := chat;
+            c := mnuChat;
         end
         else if (cp.show = 'away') then begin
             grp := 1;
-            c := away;
+            c := mnuAway;
         end
         else if (cp.Show = 'xa') then begin
             grp := 2;
-            c := xa;
+            c := mnuXa;
         end
         else if (cp.show = 'dnd') then begin
             grp := 3;
-            c := dnd;
+            c := mnuDnd;
         end
         else begin
             grp := 0;
-            c := avail;
+            c := mnuAvail;
         end;
 
+        if not c.Visible then continue;
+
+        if c.Count = 0 then begin
+            //Add "default" item
+            mnu := TTntMenuItem.Create(c);
+            mnu.Caption := c.Caption;
+            mnu.OnClick := c.OnClick;
+            mnu.ShortCut := c.ShortCut;
+            mnu.ImageIndex := c.ImageIndex;
+            mnu.Tag := c.Tag;
+            mnu.GroupIndex := grp;
+            c.Add(mnu);
+        end;
+
+        title := cp.title;
+        if title = '' then title := cp.Status;
+        if title = '' then title := _(cp.Show);
+        if title = '' then title := _('Available');
+
         mnu := TTntMenuItem.Create(c);
-        mnu.Caption := cp.title;
+        mnu.Caption := title;
         mnu.tag := i;
         mnu.OnClick := clickev;
         mnu.ShortCut := TextToShortcut(cp.hotkey);
