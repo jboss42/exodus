@@ -26,7 +26,7 @@ uses
     BaseMsgList, SysUtils, Unicode,
     COMDockToolbar, ToolWin, ComCtrls,
     ExtCtrls, Controls, Classes,
-    PLUGINCONTROLLib_TLB;
+    PLUGINCONTROLLib_TLB, Forms;
 
 type
   TfrmActiveXDockable = class(TfrmDockable)
@@ -34,7 +34,7 @@ type
     pnlChatTop: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     _AXControl: TAXControl;
@@ -61,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    StrUtils;
+    StrUtils, ExUtils;
 
 
 function StartActiveX(ActiveX_GUID: widestring;
@@ -88,7 +88,14 @@ begin
         Result.ShowDefault(bring_to_front);
 end;
 
-{---------------------------------------}
+procedure TfrmActiveXDockable.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    inherited;
+    _AXControl.Free();
+    _AXControl := nil;
+end;
+
 procedure TfrmActiveXDockable.FormCreate(Sender: TObject);
 var
     g: TGUID;
@@ -118,10 +125,6 @@ begin
 
     inherited;
 end;
-
-
-
-
 
 
 

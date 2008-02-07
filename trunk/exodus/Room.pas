@@ -553,6 +553,7 @@ begin
     //don't auto-open rooms we have bookmoarked for join on login
  { TODO : Roster refactor }
     //bm := MainSession.Bookmarks.FindBookmark(getJID);
+    bm := nil;
     if ((event = 'disconnected') and ((bm = nil) or (bm.GetAttribute('autojoin') <> 'true'))) then begin
         //check to see if this room is bokmarked and join on startup
         Result := TXMLTag.Create(Self.classname);
