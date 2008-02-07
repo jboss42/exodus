@@ -307,6 +307,7 @@ type
     TMyNickHandler = class(TDisplayNameEventListener)
         _MyItem: TDisplayNameItem;
         _MyBareJID: TJabberID;
+
         procedure FireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);override;
         procedure GetMyNickFromProfile();
         procedure UpdateRosterName(dname: WideString);
@@ -317,8 +318,8 @@ type
 Constructor TMyNickHandler.Create(MyItem: TDisplayNameItem);
 begin
     inherited Create();
-    _MyItem := MyItem;
     _MyBareJID := TJabberID.Create(DNSession.Profile.getJabberID.jid);
+    _MyItem := MyItem;
     UID := _MyBareJID.jid;
 end;
 
@@ -951,7 +952,7 @@ begin
         end
         else if (locked or (tstr = '')) then begin
             //if nick name is "locked down" or no default nick is supplied, pull our nick from vcard.
-            TMyNickHandler.Create().GetMyNickFromProfile();
+            TMyNickHandler.Create(dnItem).GetMyNickFromProfile();
         end;
     end
     else if (event = '/session/prefs') then begin
