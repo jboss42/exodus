@@ -14,16 +14,18 @@ inherited frmPrefPresence: TfrmPrefPresence
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 421
+    ExplicitWidth = 421
     inherited lblHeader: TTntLabel
-      Width = 123
+      Left = 6
+      Width = 129
       Caption = 'Presence Preferences'
-      ExplicitWidth = 123
+      ExplicitWidth = 129
     end
   end
   object ExBrandPanel1: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 24
+    Top = 26
     Width = 418
     Height = 57
     Margins.Left = 0
@@ -47,8 +49,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Checked = True
       State = cbChecked
       TabOrder = 0
-      ExplicitTop = 3
-      ExplicitWidth = 347
     end
     object chkRoomJoins: TTntCheckBox
       AlignWithMargins = True
@@ -63,8 +63,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Checked = True
       State = cbChecked
       TabOrder = 1
-      ExplicitTop = 22
-      ExplicitWidth = 347
     end
     object chkPresenceSync: TTntCheckBox
       AlignWithMargins = True
@@ -79,14 +77,12 @@ inherited frmPrefPresence: TfrmPrefPresence
       Checked = True
       State = cbChecked
       TabOrder = 2
-      ExplicitTop = 41
-      ExplicitWidth = 347
     end
   end
   object ExGroupBox1: TExGroupBox
     AlignWithMargins = True
     Left = 0
-    Top = 84
+    Top = 86
     Width = 418
     Height = 66
     Margins.Left = 0
@@ -107,8 +103,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Align = alTop
       Caption = 'Trac&k all presence changes'
       TabOrder = 1
-      ExplicitTop = 21
-      ExplicitWidth = 344
     end
     object rbLastPres: TTntRadioButton
       AlignWithMargins = True
@@ -120,8 +114,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Align = alTop
       Caption = 'Show only &last presence change'
       TabOrder = 2
-      ExplicitTop = 37
-      ExplicitWidth = 344
     end
     object rbNoPres: TTntRadioButton
       AlignWithMargins = True
@@ -133,14 +125,12 @@ inherited frmPrefPresence: TfrmPrefPresence
       Align = alTop
       Caption = 'Do &not show any presence changes'
       TabOrder = 3
-      ExplicitTop = 53
-      ExplicitWidth = 344
     end
   end
   object ExGroupBox2: TExGroupBox
     AlignWithMargins = True
     Left = 0
-    Top = 156
+    Top = 158
     Width = 418
     Height = 223
     Margins.Left = 0
@@ -152,7 +142,6 @@ inherited frmPrefPresence: TfrmPrefPresence
     ParentColor = True
     TabOrder = 3
     AutoHide = True
-    ExplicitTop = 153
     object lstCustomPres: TTntListBox
       AlignWithMargins = True
       Left = 0
