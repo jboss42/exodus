@@ -255,6 +255,7 @@ begin
         exit;
     end;
 
+    Result := '';
     m := TMemoryStream.Create();
     if (_pic <> nil) then
         _pic.SaveToStream(m)
@@ -794,7 +795,12 @@ begin
     root := TXMLTag.Create('cache');
     for i := 0 to _cache.Count - 1 do begin
         a := TAvatar(_cache.Objects[i]);
-        name := path + '\' + a.getHash();
+        name := a.getHash();
+        if (name = '') then begin
+            Continue;
+        end;
+
+        name := path + '\' + name;
         a.SaveToFile(name);
         t := root.AddTag('item');
         t.setAttribute('name', name);
