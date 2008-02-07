@@ -3,43 +3,43 @@ inherited frmChat: TfrmChat
   Top = 384
   ActiveControl = MsgOut
   Caption = 'Chat Window'
-  ClientHeight = 384
-  ClientWidth = 454
+  ClientHeight = 416
+  ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
   ExplicitHeight = 450
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 325
-    Width = 454
-    ExplicitTop = 354
-    ExplicitWidth = 454
+    Top = 347
+    Width = 492
+    ExplicitTop = 352
+    ExplicitWidth = 492
   end
   inherited pnlDockTop: TPanel
-    Width = 454
-    ExplicitWidth = 454
+    Width = 492
+    ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
       ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
-      Width = 406
-      ExplicitWidth = 406
+      Width = 440
+      ExplicitWidth = 440
       object pnlJID: TPanel
         Left = 0
         Top = 0
-        Width = 324
-        Height = 30
+        Width = 351
+        Height = 33
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
         object lblNick: TTntLabel
-          Left = 40
+          Left = 43
           Top = 0
-          Width = 44
-          Height = 12
+          Width = 45
+          Height = 33
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,21 +47,22 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
           Top = 0
-          Width = 32
-          Height = 30
+          Width = 35
+          Height = 33
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
         end
         object Panel3: TPanel
-          Left = 32
+          Left = 35
           Top = 0
           Width = 8
-          Height = 30
+          Height = 33
           Align = alLeft
           BevelOuter = bvNone
           ParentColor = True
@@ -71,39 +72,37 @@ inherited frmChat: TfrmChat
     end
   end
   inherited pnlMsgList: TPanel
-    Width = 454
-    Height = 295
-    ExplicitWidth = 454
-    ExplicitHeight = 295
+    Width = 492
+    Height = 314
+    ExplicitWidth = 492
+    ExplicitHeight = 314
   end
   inherited pnlInput: TPanel
-    Top = 358
-    Width = 454
-    ExplicitTop = 358
-    ExplicitWidth = 454
+    Top = 351
+    Width = 492
+    ExplicitTop = 351
+    ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 450
+      Width = 488
       WantReturns = False
       OnChange = MsgOutChange
     end
-  end
-  inherited tbMsgOutToolbar: TTntToolBar
-    Top = 329
-    Width = 454
-    ExplicitTop = 329
-    ExplicitWidth = 454
-  end
-  object SaveDialog1: TSaveDialog [5]
-    DefaultExt = 'html'
-    Filter = 'RTF Files|*.rtf|All Files|*.*'
-    Left = 48
-    Top = 184
+    inherited tbMsgOutToolbar: TTntToolBar
+      Width = 488
+      ExplicitWidth = 488
+    end
   end
   inherited popMsgList: TTntPopupMenu
     object Print1: TTntMenuItem
       Caption = 'Print...'
       OnClick = Print1Click
     end
+  end
+  object SaveDialog1: TSaveDialog [5]
+    DefaultExt = 'html'
+    Filter = 'RTF Files|*.rtf|All Files|*.*'
+    Left = 48
+    Top = 184
   end
   object timBusy: TTimer
     Enabled = False
@@ -179,10 +178,6 @@ inherited frmChat: TfrmChat
     end
     object N1: TTntMenuItem
       Caption = '-'
-    end
-    object NotificationOptions1: TTntMenuItem
-      Caption = 'Notification Options ...'
-      OnClick = NotificationOptions1Click
     end
     object mnuOnTop: TTntMenuItem
       Caption = 'Always on Top'

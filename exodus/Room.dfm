@@ -242,10 +242,6 @@ inherited frmRoom: TfrmRoom
     object N1: TTntMenuItem
       Caption = '-'
     end
-    object NotificationOptions1: TTntMenuItem
-      Caption = 'Notification Options ...'
-      OnClick = NotificationOptions1Click
-    end
     object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
