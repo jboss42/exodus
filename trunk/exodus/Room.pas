@@ -63,7 +63,6 @@ type
     popClose: TTntMenuItem;
     mnuOnTop: TTntMenuItem;
     mnuWordwrap: TTntMenuItem;
-    NotificationOptions1: TTntMenuItem;
     N1: TTntMenuItem;
     popAdmin: TTntMenuItem;
     S1: TTntMenuItem;
@@ -129,7 +128,6 @@ type
     procedure popDestroyClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
-    procedure NotificationOptions1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
     procedure popRosterMsgClick(Sender: TObject);
     procedure popRosterSendJIDClick(Sender: TObject);
@@ -2589,33 +2587,6 @@ begin
     _wrap_input := mnuWordwrap.Checked;
     MsgOut.WordWrap := _wrap_input;
     MainSession.Prefs.setBool('wrap_input', _wrap_input);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.NotificationOptions1Click(Sender: TObject);
-var
-    f: TfrmCustomNotify;
-begin
-    // change notification options..
-    f := TfrmCustomNotify.Create(Application);
-
-    f.addItem('Room activity');
-    f.addItem('Keywords');
-    f.addItem('Priority room activity');
-    f.setVal(0, _notify[NOTIFY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_roomactivity'));
-    f.setVal(1, _notify[NOTIFY_KEYWORD], MainSession.Prefs.getInt('notify_keyword'));
-    f.setVal(2, _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY], MainSession.Prefs.getInt('notify_priority_roomactivity'));
-
-    if (f.ShowModal) = mrOK then begin
-        _notify[NOTIFY_ROOM_ACTIVITY] := f.getVal(0);
-        _notify[NOTIFY_KEYWORD] := f.getVal(1);
-        _notify[NOTIFY_PRIORITY_ROOM_ACTIVITY] := f.getVal(2);
-
-        if ((_notify[NOTIFY_KEYWORD] <> 0) and (_keywords = nil)) then
-            setupKeywords();
-    end;
-
-    f.Free();
 end;
 
 {---------------------------------------}

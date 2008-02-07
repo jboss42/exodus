@@ -36,7 +36,6 @@ type
     mnuWordwrap: TTntMenuItem;
     mnuReturns: TTntMenuItem;
     mnuOnTop: TTntMenuItem;
-    NotificationOptions1: TTntMenuItem;
     N1: TTntMenuItem;
     mnuBlock: TTntMenuItem;
     C1: TTntMenuItem;
@@ -81,7 +80,6 @@ type
     procedure mnuWordwrapClick(Sender: TObject);
 //    procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
 //      Shift: TShiftState; X, Y: Integer);
-    procedure NotificationOptions1Click(Sender: TObject);
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
@@ -1806,25 +1804,6 @@ begin
     _destroying := (ssCtrl in Shift);
 end;
 }
-{---------------------------------------}
-procedure TfrmChat.NotificationOptions1Click(Sender: TObject);
-var
-    f: TfrmCustomNotify;
-begin
-    // change notification options..
-    f := TfrmCustomNotify.Create(Application);
-
-    f.addItem('Chat activity');
-    f.addItem('Priority chat activity');
-    f.setVal(0, _notify[NOTIFY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_chatactivity'));
-    f.setVal(1, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], MainSession.Prefs.getInt('notify_priority_chatactivity'));
-    if (f.ShowModal) = mrOK then begin
-        _notify[NOTIFY_CHAT_ACTIVITY] := f.getVal(0);
-        _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY] := f.getVal(1);
-    end;
-
-    f.Free();
-end;
 
 {---------------------------------------}
 procedure TfrmChat.timBusyTimer(Sender: TObject);
