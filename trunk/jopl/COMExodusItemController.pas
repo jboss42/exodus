@@ -282,7 +282,7 @@ begin
     GroupInfo.Name := Group;
     GroupInfo.Expanded := true;
     Result := _Groups.AddObject(Group, GroupInfo);
-     TJabberSession(_JS).FireEvent('/data/group/add', nil, Group);
+     TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Group);
     //If adding new groups and groups have
     //been loaded, need to save to the server's
     //private storage.
