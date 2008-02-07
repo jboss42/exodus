@@ -4444,7 +4444,7 @@ var
     val: Widestring;
 begin
     //something to do
-    if Key = Char(13) then begin
+    if Key = #13 then begin
         //TODO:  save and change status
         val := txtStatus.Text;
         pres := MainSession.prefs.getPresence(val);
@@ -4461,8 +4461,12 @@ begin
         end;
         MainSession.setPresence(pres.Show, pres.Status, pres.Priority);
         txtStatusExit(Sender);
-    end else if Key = Char(27) then begin
+
+        Key := #0;
+    end else if Key = #27 then begin
         txtStatusExit(Sender);
+
+        Key := #0;
     end else begin
         inherited;
     end;
