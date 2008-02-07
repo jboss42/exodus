@@ -1051,12 +1051,15 @@ library Exodus
     propget, 
     id(0x000000C9)
     ]
-    HRESULT _stdcall Property1([out, retval] long * value );
+    HRESULT _stdcall OleObject([out, retval] VARIANT * value );
     [
-    propput, 
-    id(0x000000C9)
+    id(0x000000CA)
     ]
-    HRESULT _stdcall Property1([in] long value );
+    HRESULT _stdcall Close( void );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall BringToFront( void );
   };
 
   [
@@ -8361,7 +8364,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall AddGroup([in] BSTR Group );
+    HRESULT _stdcall AddGroup([in] BSTR Group, [out, retval] long * Result );
     [
     id(0x000000D5)
     ]
@@ -8390,6 +8393,21 @@ library Exodus
     id(0x000000DB)
     ]
     HRESULT _stdcall GetGroups([out, retval] VARIANT * Result );
+    [
+    propget, 
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall GroupExists([in] BSTR Group, [out, retval] VARIANT_BOOL * Result );
+    [
+    propget, 
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall GroupExpanded([in] BSTR Group, [out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000DE)
+    ]
+    HRESULT _stdcall GroupExpanded([in] BSTR Group, [in] VARIANT_BOOL value );
   };
 
 };

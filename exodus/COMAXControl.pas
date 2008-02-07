@@ -39,6 +39,8 @@ type
   protected
     function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
+    procedure BringToFront; safecall;
+
   end;
 
 implementation
@@ -53,13 +55,30 @@ end;
 
 function TExodusAXControl.Get_OleObject: OleVariant;
 begin
-    Result := _frm.AXControl.OleObject;
+    Result := unassigned;
+    try
+        if ((_frm <> nil) and
+            (_frm.AXControl <> nil)) then begin
+            Result := _frm.AXControl.OleObject;
+        end;
+    except
+    end;
 end;
 
 procedure TExodusAXControl.Close;
 begin
-    _frm.Close;
+    if (_frm <> nil) then begin
+        _frm.Close;
+    end;
 end;
+
+procedure TExodusAXControl.BringToFront;
+begin
+    if (_frm <> nil) then begin
+        _frm.ShowDefault();
+    end;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusAXControl, Class_ExodusAXControl,

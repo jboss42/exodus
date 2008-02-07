@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2/6/2008 9:18:04 AM from Type Library described below.
+// File generated on 2/7/2008 12:08:38 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -4338,6 +4338,7 @@ type
     ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
     function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
+    procedure BringToFront; safecall;
     property OleObject: OleVariant read Get_OleObject;
   end;
 
@@ -4350,6 +4351,7 @@ type
     ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
     property OleObject: OleVariant readonly dispid 201;
     procedure Close; dispid 202;
+    procedure BringToFront; dispid 203;
   end;
 
 // *********************************************************************//
