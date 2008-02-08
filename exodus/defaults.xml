@@ -290,6 +290,12 @@
     <!-- custom presence state, value is ignored -->
     <pres_custom state="rw"/>
     <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
+    
+    <show_presence_menu_chat value="1"/>
+    <show_presence_menu_available value="1"/>
+    <show_presence_menu_away value="1"/>
+    <show_presence_menu_xa value="1"/>
+    <show_presence_menu_dnd value="1"/>
 
     <!-- Hotkey Preferences -->
     <hotkeys_keys state='rw'/>
