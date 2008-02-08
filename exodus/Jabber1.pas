@@ -2287,12 +2287,7 @@ begin
     end;
 
     if MainSession.Active then begin
-        frmRoster.SessionCallback('/session/prefs', nil);
-        {
-        if ((Jabber1.GetDockState() <> dsForbidden) and
-            (Tabs.ActivePage <> tbsRoster)) then
-            Tabs.ActivePage := tbsRoster;
-            }
+        MainSession.FireEvent('/session/prefs', nil);
     end;
 
     // This forces a tree refresh which de-selects the current node item.
@@ -3456,10 +3451,10 @@ begin
             if (_reconnect_cur >= _reconnect_interval) then begin
                 timReconnect.Enabled := false;
                 DoConnect();
+            end
+            else begin
+                getLoginWindow().UpdateReconnect(_reconnect_interval - _reconnect_cur);
             end;
-            //else begin
-                //frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
-            //end;
         end;
     end;
 end;

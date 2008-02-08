@@ -58,6 +58,7 @@ type
     procedure DoLogin(idx: Integer);
 
     procedure ToggleGUI(state: TLoginGuiState);
+    procedure UpdateReconnect(secs: integer);
 
   published
     { Published declarations }
@@ -620,6 +621,14 @@ begin
     else if (event = '/session/authenticated') then begin
         ToggleGUI(lgsAuthenticated);
     end;
+end;
+
+procedure TfrmLoginWindow.UpdateReconnect(secs: Integer);
+begin
+    lstProfiles.Visible := false;
+    pnlProfileActions.Visible := false;
+    lblConnect.Caption := _(sCancelReconnect);
+    lblStatus.Caption := WideFormat(_(sReconnectIn), [secs]);
 end;
 
 end.
