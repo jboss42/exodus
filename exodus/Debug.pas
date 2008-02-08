@@ -428,6 +428,8 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+    prefstag: TXMLTag;
 begin
   inherited;
     if (Key = 0) then exit;
@@ -442,8 +444,17 @@ begin
     else if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
         Key := 0;
         btnSendRawClick(Self);
-    end;
+    end
 
+    // magic debug key sequence Ctrl-Shift-P to dump the Prefs XML to debug.
+    else if ((chr(Key) = 'P') and  (Shift = [ssCtrl, ssShift])) then begin
+        prefstag := nil;
+        MainSession.Prefs.getRoot('', prefstag);
+        if (prefstag <> nil) then begin
+            DebugMsg(prefstag.XML);
+        end;
+        prefstag.Free();
+    end;
 end;
 
 {---------------------------------------}
