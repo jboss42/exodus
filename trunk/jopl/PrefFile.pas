@@ -230,7 +230,12 @@ end;
 {---------------------------------------}
 function TPrefFile.getRoot(rootName: WideString; var rootTag: TXMLTag): boolean;
 begin
-    rootTag := TXMLTag.create(_root.GetFirstTag(rootName));
+    if (rootName = '') then begin
+        rootTag := TXMLTag.create(_root);
+    end
+    else begin
+        rootTag := TXMLTag.create(_root.GetFirstTag(rootName));
+    end;
     Result := (rootTag <> nil);
 end;
 

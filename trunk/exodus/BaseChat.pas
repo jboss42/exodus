@@ -330,13 +330,17 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
+var
+    prefstag: TXMLTag;
 begin
     if (Key = 0) then exit;
+
     // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         GetDockManager().SelectNext(not (ssShift in Shift));
         Key := 0;
     end
+
     // handle close window/tab hotkeys
     else if ((Key = _close_key) and (Shift = _close_shift)) then
         Self.Close()
@@ -359,6 +363,17 @@ begin
     else if ((chr(Key) = 'H') and  (Shift = [ssCtrl, ssShift])) then begin
         DebugMsg(getMsgList.getHistory());
     end
+
+    // magic debug key sequence Ctrl-Shift-P to dump the Prefs XML to debug.
+    else if ((chr(Key) = 'P') and  (Shift = [ssCtrl, ssShift])) then begin
+        prefstag := nil;
+        MainSession.Prefs.getRoot('', prefstag);
+        if (prefstag <> nil) then begin
+            DebugMsg(prefstag.XML);
+        end;
+        prefstag.Free();
+    end
+
     //click toolbar buttons
     else if ((_rtEnabled) and
              ((Shift = [ssCtrl]) and ((chr(Key) = 'B') or (chr(Key) = 'U')))) then begin
@@ -372,6 +387,7 @@ begin
         end;
         Key := 0;
     end
+
     else if ((Shift = [ssCtrl]) and (chr(Key) = 'I') and _rtEnabled) then begin
         ChatToolbarButtonItalics.Down := not ChatToolbarButtonItalics.Down;
         ChatToolbarButtonItalics.click();
