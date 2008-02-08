@@ -300,6 +300,7 @@ type
     Folder1: TTntMenuItem;
     Contact1: TTntMenuItem;
     txtStatus: TTntEdit;
+    imgAd: TImage;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -406,6 +407,7 @@ type
     procedure clickEditStatus(Sender: TObject);
     procedure txtStatusKeyPress(Sender: TObject; var Key: Char);
     procedure txtStatusExit(Sender: TObject);
+    procedure imgAdClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1140,6 +1142,7 @@ var
     s: TXMLTag;
     prefstate: TPrefState;
     appId: Widestring;
+    adVal: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282
 
@@ -1180,6 +1183,22 @@ begin
 
     // Setup our caption and the help menus.
     with MainSession.Prefs do begin
+        adVal := GetString('brand_ad');
+        if adVal <> '' then begin
+            try
+                imgAd.Picture.LoadFromFile(adVal);
+            except
+                //TODO:  loggit?
+            end;
+        end;
+
+        adVal := GetString('brand_ad_url');
+        if adVal <> '' then begin
+            imgAd.Hint := adVal;
+            imgAd.Cursor := crHandPoint;
+        end;
+
+
         self.Caption := GetString('brand_caption');
         trayShow.Caption := _('Show ') + getAppInfo.Caption;
         trayExit.Caption := _('Exit ') + getAppInfo.Caption;
@@ -4484,6 +4503,19 @@ begin
         StartTrayAlert();
 
     //updateNextNotifyButton();
+end;
+
+procedure TfrmExodus.imgAdClick(Sender: TObject);
+var
+    url: Widestring;
+begin
+    inherited;
+
+    url := imgAd.Hint;
+
+    if url <> '' then begin
+        ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    end;
 end;
 
 function TfrmExodus.isActive(): boolean;
