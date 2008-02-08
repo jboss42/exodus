@@ -513,7 +513,6 @@ var
     dv: WideString;
     t: TDateTime;
     id: WideString;
-    exe_name: widestring;
 begin
     try
         if (_displayDateSeperator) then begin

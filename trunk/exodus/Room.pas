@@ -1430,7 +1430,7 @@ begin
            if (itag <> nil) then begin
               if (itag.GetAttribute('affiliation') <> 'none') then begin
                   tmp_jid := TJabberID.Create(from);
-                  member := AddRoomUser(from, tmp_jid.resource, tag);
+                  AddRoomUser(from, tmp_jid.resource, tag);
               end;
            end;
         end;
@@ -1591,13 +1591,11 @@ end;
 procedure TfrmRoom.removeRoomUser(jid: Widestring);
 var
     i: integer;
-    member: TRoomMember;
 begin
     //
     i := _roster.IndexOf(jid);
     if (i = -1) then exit;
 
-    member := TRoomMember(_roster.Objects[i]);
     _roster.Delete(i);
     _roster.Sort;
     if (i >= 0) then begin
