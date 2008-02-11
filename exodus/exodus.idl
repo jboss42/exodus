@@ -1040,12 +1040,12 @@ library Exodus
   };
 
   [
-    uuid(2F00A2EC-7826-4BAA-AD1E-7B83183E802C), 
+    uuid(617D28C3-8B25-4468-9FC8-9A6E931F8EB5), 
     version(1.0), 
     dual, 
     oleautomation
   ]
-   interface IExodusAXControl: IDispatch
+   interface IExodusAXWindow: IDispatch
   {
     [
     propget, 
@@ -1066,9 +1066,9 @@ library Exodus
     uuid(E11594EF-419A-498F-ACF3-D3382D22F048), 
     version(1.0)
   ]
-  coclass ExodusAXControl
+  coclass ExodusAXWindow
   {
-    [default] interface IExodusAXControl;
+    [default] interface IExodusAXWindow;
   };
 
   [
@@ -8302,7 +8302,7 @@ library Exodus
     [
     id(0x000000DF)
     ]
-    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Title, [out, retval] IExodusAXControl ** ActiveX_Control /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Title, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
   };
 
   [

@@ -256,7 +256,7 @@ uses
   MSHTMLEvents in 'MSHTMLEvents.pas',
   PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster: TTntForm},
   ActiveXDockable in 'ActiveXDockable.pas' {frmActiveXDockable},
-  COMAXControl in 'COMAXControl.pas',
+  COMAXWindow in 'COMAXWindow.pas',
   LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
   COMExodusItem in '..\jopl\COMExodusItem.pas',
   COMExodusItemController in '..\jopl\COMExodusItemController.pas',
