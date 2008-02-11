@@ -43,13 +43,14 @@ inherited fAWItem: TfAWItem
       Left = 173
       Top = 0
       Width = 7
-      Height = 16
+      Height = 22
       Align = alRight
       Alignment = taRightJustify
       Caption = '0'
       Transparent = True
       Layout = tlCenter
       OnClick = lblCountClick
+      ExplicitHeight = 16
     end
     object imgPresence: TImage
       Left = 0
@@ -125,8 +126,23 @@ inherited fAWItem: TfAWItem
       OnClick = mnuDockWindowClick
     end
     object mnuFloatWindow: TTntMenuItem
-      Caption = 'Float Window'
+      Caption = 'Undock Window'
       OnClick = mnuFloatWindowClick
+    end
+    object N1: TTntMenuItem
+      Caption = '-'
+    end
+    object mnuAWItem_CloseAll: TTntMenuItem
+      Caption = 'Close All Windows'
+      OnClick = mnuAWItem_CloseAllClick
+    end
+    object mnuAWItem_DockAll: TTntMenuItem
+      Caption = 'Dock All Windows'
+      OnClick = mnuAWItem_DockAllClick
+    end
+    object mnuAWItem_FloatAll: TTntMenuItem
+      Caption = 'Undock All Windows'
+      OnClick = mnuAWItem_FloatAllClick
     end
   end
 end

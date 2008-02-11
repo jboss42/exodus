@@ -93,10 +93,16 @@ type
     _initiallyDocked: boolean;  //start docked?
     _normalImageIndex: integer;//image shown when not notifying
     _prefs_callback_id: integer; //ID for prefs events
+    _session_close_all_callback: integer;
+    _session_dock_all_callback: integer;
+    _session_float_all_callback: integer;
 
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
+    procedure closeAllCallback(event: string; tag: TXMLTag);
+    procedure dockAllCallback(event: string; tag: TXMLTag);
+    procedure floatAllCallback(event: string; tag: TXMLTag);
   protected
     _uid: widestring; // Unique ID (usually a jid) for this particular dockable window
     _unreadmsg: integer; // Unread msg count
@@ -258,6 +264,9 @@ begin
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
     _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
+    _session_close_all_callback := MainSession.RegisterCallback(closeAllCallback, '/session/close-all-windows');
+    _session_dock_all_callback := MainSession.RegisterCallback(dockAllCallback, '/session/dock-all-windows');
+    _session_float_all_callback := MainSession.RegisterCallback(floatAllCallback, '/session/float-all-windows');
     _unreadmsg := -1;
     _priorityflag := false;
     activating := false;
@@ -362,6 +371,9 @@ procedure TfrmDockable.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
     MainSession.UnRegisterCallback(_prefs_callback_id);
+    MainSession.UnRegisterCallback(_session_close_all_callback);
+    MainSession.UnRegisterCallback(_session_dock_all_callback);
+    MainSession.UnRegisterCallback(_session_float_all_callback);
 end;
 
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
@@ -568,6 +580,32 @@ begin
         _lastActivity := lasttime;
     end;
 end;
+
+procedure TfrmDockable.closeAllCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/close-all-windows') then begin
+        Self.Close();
+        Application.ProcessMessages();
+    end;
+end;
+
+procedure TfrmDockable.dockAllCallback(event: string; tag: TXMLTag);
+begin
+    if ((event = '/session/dock-all-windows') and
+        (not _docked)) then begin
+        Self.DockForm;
+    end;
+end;
+
+procedure TfrmDockable.floatAllCallback(event: string; tag: TXMLTag);
+begin
+    if ((event = '/session/float-all-windows') and
+        (_docked)) then begin
+        Self.FloatForm;
+    end;
+end;
+
+
 
 initialization
     dockable_uid := 0;

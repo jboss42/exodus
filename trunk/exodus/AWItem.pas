@@ -56,6 +56,10 @@ type
     FarRightSpacer: TBevel;
     FarLeftSpacer: TBevel;
     AWItemBevel: TColorBevel;
+    N1: TTntMenuItem;
+    mnuAWItem_CloseAll: TTntMenuItem;
+    mnuAWItem_DockAll: TTntMenuItem;
+    mnuAWItem_FloatAll: TTntMenuItem;
     procedure imgPresenceClick(Sender: TObject);
     procedure lblNameClick(Sender: TObject);
     procedure lblCountClick(Sender: TObject);
@@ -65,6 +69,9 @@ type
     procedure mnuCloseWindowClick(Sender: TObject);
     procedure mnuDockWindowClick(Sender: TObject);
     procedure mnuFloatWindowClick(Sender: TObject);
+    procedure mnuAWItem_CloseAllClick(Sender: TObject);
+    procedure mnuAWItem_DockAllClick(Sender: TObject);
+    procedure mnuAWItem_FloatAllClick(Sender: TObject);
     private
         { Private declarations }
         _count: integer;
@@ -348,6 +355,27 @@ procedure TfAWItem.lblNameClick(Sender: TObject);
 begin
     inherited;
     Self.OnClick(Self);
+end;
+
+{---------------------------------------}
+procedure TfAWItem.mnuAWItem_CloseAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/close-all-windows', nil);
+end;
+
+{---------------------------------------}
+procedure TfAWItem.mnuAWItem_DockAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/dock-all-windows', nil);
+end;
+
+{---------------------------------------}
+procedure TfAWItem.mnuAWItem_FloatAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/float-all-windows', nil);
 end;
 
 {---------------------------------------}
