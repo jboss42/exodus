@@ -75,6 +75,10 @@ type
     SortBevel: TColorBevel;
     ScrollUpBevel: TColorBevel;
     ScrollDownBevel: TColorBevel;
+    popAWList: TTntPopupMenu;
+    mnuAW_CloseAll: TTntMenuItem;
+    mnuAW_DockAll: TTntMenuItem;
+    mnuAW_FloatAll: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -87,6 +91,9 @@ type
     procedure pnlListSortClick(Sender: TObject);
     procedure imgShowRosterClick(Sender: TObject);
     procedure timShowActiveDockedTimer(Sender: TObject);
+    procedure mnuAW_CloseAllClick(Sender: TObject);
+    procedure mnuAW_DockAllClick(Sender: TObject);
+    procedure mnuAW_FloatAllClick(Sender: TObject);
   private
     { Private declarations }
     _trackingList: TWidestringList;
@@ -368,6 +375,27 @@ procedure TfrmActivityWindow.mnuAlphaSortClick(Sender: TObject);
 begin
     _sortTrackingList(ssAlpha);
     _updateDisplay();
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.mnuAW_CloseAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/close-all-windows', nil);
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.mnuAW_DockAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/dock-all-windows', nil);
+end;
+
+{---------------------------------------}
+procedure TfrmActivityWindow.mnuAW_FloatAllClick(Sender: TObject);
+begin
+    inherited;
+    MainSession.FireEvent('/session/float-all-windows', nil);
 end;
 
 {---------------------------------------}

@@ -113,12 +113,12 @@ object frmActivityWindow: TfrmActivityWindow
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
+      PopupMenu = popAWList
       TabOrder = 2
       TabStop = True
       GradientProperites.startColor = 13746091
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
-      ExplicitTop = 54
       object ListLeftSpacer: TBevel
         Left = 0
         Top = 0
@@ -152,15 +152,18 @@ object frmActivityWindow: TfrmActivityWindow
       GradientProperites.endColor = 12429970
       GradientProperites.orientation = gdHorizontal
       object lblSort: TTntLabel
-        Left = 94
+        Left = 26
         Top = 5
-        Width = 72
-        Height = 13
+        Width = 140
+        Height = 20
         Align = alClient
         Alignment = taRightJustify
         Caption = 'Sort By:  Alpha'
         Transparent = True
         OnClick = pnlListSortClick
+        ExplicitLeft = 94
+        ExplicitWidth = 72
+        ExplicitHeight = 13
       end
       object SortTopSpacer: TBevel
         Left = 0
@@ -285,5 +288,21 @@ object frmActivityWindow: TfrmActivityWindow
     OnTimer = timShowActiveDockedTimer
     Left = 72
     Top = 144
+  end
+  object popAWList: TTntPopupMenu
+    Left = 72
+    Top = 176
+    object mnuAW_CloseAll: TTntMenuItem
+      Caption = 'Close All Windows'
+      OnClick = mnuAW_CloseAllClick
+    end
+    object mnuAW_DockAll: TTntMenuItem
+      Caption = 'Dock All Windows'
+      OnClick = mnuAW_DockAllClick
+    end
+    object mnuAW_FloatAll: TTntMenuItem
+      Caption = 'Undock All Windows'
+      OnClick = mnuAW_FloatAllClick
+    end
   end
 end

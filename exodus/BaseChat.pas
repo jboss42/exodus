@@ -116,7 +116,6 @@ type
     _close_shift: TShiftState;
     _msgframe: TObject;
     _session_chat_toolbar_callback: integer;
-    _session_close_all_callback: integer;
     _msglist_type: integer;
 
     procedure _scrollBottom();
@@ -493,7 +492,6 @@ begin
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 
         _session_chat_toolbar_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-        _session_close_all_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/close-all-windows');
 
         MsgOutToolbar := TExodusMsgOutToolbar.Create(Self.tbMsgOutToolbar);
         MsgOutToolbar.ObjAddRef();
@@ -516,10 +514,6 @@ begin
         MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text_stringlist);
         updateFromPrefs();
-    end
-    else if (event = '/session/close-all-windows') then begin
-        Self.Close();
-        Application.ProcessMessages();
     end;
 end;
 
@@ -531,7 +525,6 @@ begin
     _hotkeys_text_stringlist.Free();
 
     MainSession.UnRegisterCallback(_session_chat_toolbar_callback);
-    MainSession.UnRegisterCallback(_session_close_all_callback);
     if (frmExodus <> nil) then
         frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();
