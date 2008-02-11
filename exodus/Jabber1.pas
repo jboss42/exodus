@@ -1141,7 +1141,6 @@ var
     mi: TMenuItem;
     s: TXMLTag;
     prefstate: TPrefState;
-    appId: Widestring;
     adVal: Widestring;
 begin
     TVistaAltFix.Create(Self); // MS Vista hotfix via code gear: http://cc.codegear.com/item/24282

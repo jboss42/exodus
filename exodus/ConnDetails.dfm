@@ -6,7 +6,8 @@ inherited frmConnDetails: TfrmConnDetails
   ClientHeight = 384
   ClientWidth = 487
   Constraints.MinWidth = 410
-  DefaultMonitor = dmDesktop
+  DefaultMonitor = dmMainForm
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -27,6 +28,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'Account Details'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         360
         332)
@@ -155,7 +160,7 @@ inherited frmConnDetails: TfrmConnDetails
             Top = 16
             Width = 225
             Height = 21
-            ItemHeight = 13
+            ItemHeight = 0
             TabOrder = 0
             OnKeyPress = txtUsernameKeyPress
             Items.Strings = (
@@ -200,6 +205,10 @@ inherited frmConnDetails: TfrmConnDetails
     object tbsAdvanced: TTntTabSheet
       Caption = 'Advanced'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAdvanced: TExBrandPanel
         Left = 0
         Top = 0
@@ -239,7 +248,7 @@ inherited frmConnDetails: TfrmConnDetails
             Top = 16
             Width = 249
             Height = 21
-            ItemHeight = 13
+            ItemHeight = 0
             TabOrder = 0
             OnKeyPress = txtUsernameKeyPress
           end
@@ -309,9 +318,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 127
-            DesignSize = (
-              102
-              25)
           end
         end
         object pnlKerberos: TExCheckGroupBox
@@ -614,6 +620,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'Proxy'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlProxy: TExBrandPanel
         Left = 0
         Top = 0
@@ -654,7 +664,7 @@ inherited frmConnDetails: TfrmConnDetails
             Width = 254
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
+            ItemHeight = 0
             TabOrder = 0
             OnChange = cboSocksTypeChange
             Items.Strings = (
@@ -816,6 +826,10 @@ inherited frmConnDetails: TfrmConnDetails
       Caption = 'HTTP Polling'
       ImageIndex = -1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblNote: TTntLabel
         Left = 0
         Top = 267
@@ -915,9 +929,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 1000000
-            DesignSize = (
-              93
-              25)
           end
         end
         object pnlKeys: TExBrandPanel
@@ -951,9 +962,6 @@ inherited frmConnDetails: TfrmConnDetails
             Text = '0'
             Min = 0
             Max = 1000000
-            DesignSize = (
-              93
-              25)
           end
         end
       end
