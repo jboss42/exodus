@@ -74,18 +74,36 @@ var
 begin
     Result := TfrmActiveXDockable.Create(nil);
 
-    Result.Caption := window_title;
+    if (Result <> nil) then begin
+        Result.Caption := window_title;
 
-    ParentControl := Result.pnlMsgList;
+        ParentControl := Result.pnlMsgList;
+        try
+            AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
+            if (AXControl <> nil) then begin
+                AXControl.Parent := ParentControl;
+                AXControl.Align := alClient;
 
-    AXControl := TAXControl.Create(ParentControl, StringToGuid(ActiveX_GUID));
-    AXControl.Parent := ParentControl;
-    AXControl.Align := alClient;
+                Result.AXControl := AXControl;
 
-    Result.AXControl := AXControl;
-
-    if (show_window) then
-        Result.ShowDefault(bring_to_front);
+                if (show_window) then begin
+                    Result.ShowDefault(bring_to_front);
+                end;
+            end
+            else begin
+                Result.Close;
+                Result := nil;
+            end;
+        except
+            if (Result <> nil) then begin
+                try
+                    Result.Close;
+                    Result := nil;
+                except
+                end;
+            end;
+        end;
+    end;
 end;
 
 procedure TfrmActiveXDockable.FormClose(Sender: TObject;

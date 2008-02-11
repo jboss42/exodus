@@ -2118,8 +2118,11 @@ var
     frm: TfrmActiveXDockable;
 begin
     try
+        Result := nil;
         frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Title, true);
-        Result := TExodusAXWindow.Create(frm);
+        if (frm <> nil) then begin
+            Result := TExodusAXWindow.Create(frm);
+        end;
     except
     end;
 end;
