@@ -1,4 +1,4 @@
-unit COMAXControl;
+unit COMAXWindow;
 {
     Copyright 2001, Peter Millard
 
@@ -29,7 +29,7 @@ uses
   StdVcl, PLUGINCONTROLLib_TLB, ActiveXDockable;
 
 type
-  TExodusAXControl = class(TAutoObject, IExodusAXControl)
+  TExodusAXWindow = class(TAutoObject, IExodusAXWindow)
   private
     _frm: TfrmActiveXDockable;
 
@@ -48,12 +48,12 @@ implementation
 uses
     RosterImages, ComServ;
 
-constructor TExodusAXControl.Create(form: TfrmActiveXDockable);
+constructor TExodusAXWindow.Create(form: TfrmActiveXDockable);
 begin
     _frm := form;
 end;
 
-function TExodusAXControl.Get_OleObject: OleVariant;
+function TExodusAXWindow.Get_OleObject: OleVariant;
 begin
     Result := unassigned;
     try
@@ -65,14 +65,14 @@ begin
     end;
 end;
 
-procedure TExodusAXControl.Close;
+procedure TExodusAXWindow.Close;
 begin
     if (_frm <> nil) then begin
         _frm.Close;
     end;
 end;
 
-procedure TExodusAXControl.BringToFront;
+procedure TExodusAXWindow.BringToFront;
 begin
     if (_frm <> nil) then begin
         _frm.ShowDefault();
@@ -81,6 +81,6 @@ end;
 
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TExodusAXControl, Class_ExodusAXControl,
+  TAutoObjectFactory.Create(ComServer, TExodusAXWindow, Class_ExodusAXWindow,
     ciMultiInstance, tmApartment);
 end.

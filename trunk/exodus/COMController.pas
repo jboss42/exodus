@@ -140,7 +140,7 @@ type
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
 
     // IExodusController2
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
 
     { Protected declarations }
   private
@@ -259,7 +259,7 @@ uses
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
-    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXControl;
+    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow;
 
 const
     sPluginErrCreate = 'Plugin could not be created. (%s)';
@@ -2113,13 +2113,13 @@ begin
 end;
 
 // IExodusController2
-function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
+function TExodusController.NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
 var
     frm: TfrmActiveXDockable;
 begin
     try
         frm := StartActiveX(ActiveX_GUID, ActiveXWindow_Title, true);
-        Result := TExodusAXControl.Create(frm);
+        Result := TExodusAXWindow.Create(frm);
     except
     end;
 end;

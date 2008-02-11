@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2/7/2008 12:08:38 PM from Type Library described below.
+// File generated on 2/11/2008 9:53:28 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -112,9 +112,9 @@ const
   CLASS_ExodusChat: TGUID = '{C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6}';
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
   CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
-  IID_IExodusAXControl: TGUID = '{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}';
+  IID_IExodusAXWindow: TGUID = '{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}';
   IID_IExodusController2: TGUID = '{FDAB329F-09F2-4AEA-8C72-319059E66389}';
-  CLASS_ExodusAXControl: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
+  CLASS_ExodusAXWindow: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
   IID_IExodusItem: TGUID = '{44410CB8-2AD7-4D58-8067-2E795EB28E60}';
   IID_IExodusItemController: TGUID = '{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}';
   CLASS_ExodusItem: TGUID = '{7F9132F5-838F-423C-A334-F28AA8E2E597}';
@@ -264,8 +264,8 @@ type
   IExodusMsgOutToolbarDisp = dispinterface;
   IExodusDockToolbar = interface;
   IExodusDockToolbarDisp = dispinterface;
-  IExodusAXControl = interface;
-  IExodusAXControlDisp = dispinterface;
+  IExodusAXWindow = interface;
+  IExodusAXWindowDisp = dispinterface;
   IExodusController2 = interface;
   IExodusController2Disp = dispinterface;
   IExodusItem = interface;
@@ -295,7 +295,7 @@ type
   ExodusChat = IExodusChat;
   ExodusToolbarButton = IExodusToolbarButton;
   ExodusRoster = IExodusRoster;
-  ExodusAXControl = IExodusAXControl;
+  ExodusAXWindow = IExodusAXWindow;
   ExodusItem = IExodusItem;
   ExodusItemController = IExodusItemController;
 
@@ -4330,12 +4330,12 @@ type
   end;
 
 // *********************************************************************//
-// Interface: IExodusAXControl
+// Interface: IExodusAXWindow
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {2F00A2EC-7826-4BAA-AD1E-7B83183E802C}
+// GUID:      {617D28C3-8B25-4468-9FC8-9A6E931F8EB5}
 // *********************************************************************//
-  IExodusAXControl = interface(IDispatch)
-    ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
+  IExodusAXWindow = interface(IDispatch)
+    ['{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}']
     function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
     procedure BringToFront; safecall;
@@ -4343,12 +4343,12 @@ type
   end;
 
 // *********************************************************************//
-// DispIntf:  IExodusAXControlDisp
+// DispIntf:  IExodusAXWindowDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {2F00A2EC-7826-4BAA-AD1E-7B83183E802C}
+// GUID:      {617D28C3-8B25-4468-9FC8-9A6E931F8EB5}
 // *********************************************************************//
-  IExodusAXControlDisp = dispinterface
-    ['{2F00A2EC-7826-4BAA-AD1E-7B83183E802C}']
+  IExodusAXWindowDisp = dispinterface
+    ['{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}']
     property OleObject: OleVariant readonly dispid 201;
     procedure Close; dispid 202;
     procedure BringToFront; dispid 203;
@@ -4361,7 +4361,7 @@ type
 // *********************************************************************//
   IExodusController2 = interface(IDispatch)
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
   end;
 
 // *********************************************************************//
@@ -4371,7 +4371,7 @@ type
 // *********************************************************************//
   IExodusController2Disp = dispinterface
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXControl; dispid 223;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; dispid 223;
   end;
 
 // *********************************************************************//
@@ -4749,15 +4749,15 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoExodusAXControl provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusAXControl exposed by              
-// the CoClass ExodusAXControl. The functions are intended to be used by             
+// The Class CoExodusAXWindow provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusAXWindow exposed by              
+// the CoClass ExodusAXWindow. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
-  CoExodusAXControl = class
-    class function Create: IExodusAXControl;
-    class function CreateRemote(const MachineName: string): IExodusAXControl;
+  CoExodusAXWindow = class
+    class function Create: IExodusAXWindow;
+    class function CreateRemote(const MachineName: string): IExodusAXWindow;
   end;
 
 // *********************************************************************//
@@ -4968,14 +4968,14 @@ begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
 end;
 
-class function CoExodusAXControl.Create: IExodusAXControl;
+class function CoExodusAXWindow.Create: IExodusAXWindow;
 begin
-  Result := CreateComObject(CLASS_ExodusAXControl) as IExodusAXControl;
+  Result := CreateComObject(CLASS_ExodusAXWindow) as IExodusAXWindow;
 end;
 
-class function CoExodusAXControl.CreateRemote(const MachineName: string): IExodusAXControl;
+class function CoExodusAXWindow.CreateRemote(const MachineName: string): IExodusAXWindow;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusAXControl) as IExodusAXControl;
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusAXWindow) as IExodusAXWindow;
 end;
 
 class function CoExodusItem.Create: IExodusItem;
