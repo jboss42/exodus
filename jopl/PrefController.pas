@@ -357,6 +357,10 @@ type
         function LoadBookmarks(): TXMLTag;
         procedure SaveBookmarks(tag: TXMLTag);
 
+        // Local Groups storage
+        function LoadGroups(): TXMLTag;
+        procedure SaveGroups(tag: TXMLTag);
+
         // Misc.
         procedure SetSession(js: TObject);
         procedure FetchServerPrefs();
@@ -1908,9 +1912,21 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefController.LoadGroups(): TXMLTag;
+begin
+    Result := _pref_file.Groups;
+end;
+
+{---------------------------------------}
 procedure TPrefController.SaveBookmarks(tag: TXMLTag);
 begin
     _pref_file.SaveBookmarks(tag);
+end;
+
+{---------------------------------------}
+procedure TPrefController.SaveGroups(tag: TXMLTag);
+begin
+    _pref_file.SaveGroups(tag);
 end;
 
 {---------------------------------------}
