@@ -25,7 +25,7 @@ unit COMExodusItemController;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile;
 
 type
   TExodusItemController = class(TAutoObject, IExodusItemController)
@@ -63,6 +63,7 @@ type
       _JS: TObject;
       _SessionCB: Integer;
       _GroupsLoaded: Boolean;
+      _ServerStorage: Boolean;
 
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
@@ -95,7 +96,7 @@ begin
     _JS := JS;
     _groupsLoaded := false;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
-
+    _ServerStorage := true;
 end;
 
 {---------------------------------------}
@@ -149,31 +150,40 @@ end;
 procedure TExodusItemController._ParseGroups(Event: string; Tag: TXMLTag);
 var
     i, Idx: Integer;
-    Storage:TXMLTag;
+    Groups, LocalGroups:TXMLTag;
     Expanded: Boolean;
     DefaultGroup: WideString;
 begin
-    Storage := Tag.QueryXPTag(xp_group);
-
-    for i := 0 to storage.ChildCount - 1 do
+    if ((Event = 'xml') and (Tag.getAttribute('type') = 'result')) then
+        Groups := Tag.QueryXPTag(xp_group)
+    else
     begin
-        if (Storage.ChildTags[i].GetAttribute('expanded') = 'true') then
+        if ((Event = 'xml') and (Tag.getAttribute('type') = 'error')) then
+        begin
+            _ServerStorage := false;
+            Groups := MainSession.Prefs.LoadGroups();
+            if (Groups = nil) then exit;
+        end;
+    end;
+
+    for i := 0 to Groups.ChildCount - 1 do
+    begin
+        if (Groups.ChildTags[i].GetAttribute('expanded') = 'true') then
             Expanded := true
         else
             Expanded := false;
 
         //Add group checks for duplicates
-        Idx := AddGroup(Storage.ChildTags[i].Data);
+        Idx := AddGroup(Groups.ChildTags[i].Data);
         TGroupInfo(_Groups.Objects[Idx]).Expanded := Expanded;
     end;
 
     //Make sure the default group is added to the list
-    DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-    if (not Get_GroupExists(DefaultGroup)) then
-        AddGroup(DefaultGroup);
+//    DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
+//    if (not Get_GroupExists(DefaultGroup)) then
+//        AddGroup(DefaultGroup);
 
     _GroupsLoaded := true;
-
 end;
 
 {---------------------------------------}
@@ -287,7 +297,7 @@ begin
     //private storage.
     if (_GroupsLoaded) then
     begin
-        _SendGroups();
+        SaveGroups();
     end;
 end;
 
@@ -408,7 +418,7 @@ begin
     begin
         //Since the group is deleted, and groups are loaded,
         //we need to save groups to the server
-        _SendGroups();
+        SaveGroups();
     end;
 end;
 
@@ -457,8 +467,31 @@ end;
 
 
 function TExodusItemController.SaveGroups: WordBool;
+var
+     Groups, GTag: TXMLTag;
+     Group: TGroupInfo;
+     Expanded: WideString;
+     i: Integer;
 begin
-    _SendGroups();
+   if (_ServerStorage) then
+       _SendGroups()
+   else
+   begin
+       Groups := TXMLTag.Create('local-groups');
+       for i := 0 to _Groups.Count - 1 do
+       begin
+           Group := TGroupInfo(_Groups.Objects[i]);
+           GTag := TXMLTag.Create('group', Group.Name);
+           if (Group.Expanded) then
+               Expanded := 'true'
+           else
+               Expanded := 'false';
+           GTag.setAttribute('expanded', Expanded);
+           Groups.AddTag(GTag);
+       end;
+       TJabberSession(_js).Prefs.SaveGroups(Groups);
+   end;
+
 end;
 
 function TExodusItemController.GetGroups: OleVariant;
