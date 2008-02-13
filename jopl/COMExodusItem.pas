@@ -46,8 +46,6 @@ type
     function BelongsToGroup(const Group: WideString): WordBool; safecall;
     function GroupsChanged(const Groups: WideString): WordBool; safecall;
       procedure Set_Property_(Index: Integer; const Value: WideString); safecall;
-      function Get_Action(Index: Integer): WideString; safecall;
-      function Get_ActionCount: Integer; safecall;
       function Get_Active: WordBool; safecall;
       function Get_ExtendedText: WideString; safecall;
       function Get_GroupCount: Integer; safecall;
@@ -84,11 +82,10 @@ type
       //Property list is implemented as name-value pair map.
       //We need to manage memory for the value strings ourselves.
       _Properties: TWideStringList;
-      _Actions: TWideStringList;
       _Active: Boolean;
       _IsVisible: Boolean;
   public
-      constructor Create(uid: WideString);
+      constructor Create(Uid: WideString; ItemType: WideString);
       destructor Destroy; override;
 
   end;
@@ -98,16 +95,15 @@ implementation
 uses ComServ, Classes;
 
 {---------------------------------------}
-constructor TExodusItem.Create(Uid: WideString);
+constructor TExodusItem.Create(Uid: WideString; ItemType: WideString);
 begin
     inherited Create();
+    _Type := ItemType;
     _Uid := uid;
     _Groups := TWideStringList.Create();
     _Properties := TWideStringList.Create();
-    _Actions := TWideStringList.Create();
     _Groups.Duplicates := dupIgnore;
     _Properties.Duplicates := dupIgnore;
-    _Actions.Duplicates := dupIgnore;
     _Active := false;
     _IsVisible := true;
     _Type := '';
@@ -120,7 +116,6 @@ destructor TExodusItem.Destroy();
 begin
    _Groups.Free;
    _Properties.Free;
-   _Actions.Free;
    inherited;
 end;
 
@@ -301,18 +296,6 @@ end;
 procedure TExodusItem.Set_Uid(const Value: WideString);
 begin
    _Uid := Value;
-end;
-
-{---------------------------------------}
-function TExodusItem.Get_Action(Index: Integer): WideString;
-begin
-   Result := _Actions[Index];
-end;
-
-{---------------------------------------}
-function TExodusItem.Get_ActionCount: Integer;
-begin
-   Result := _Actions.Count;
 end;
 
 {---------------------------------------}

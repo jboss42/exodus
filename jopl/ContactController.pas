@@ -129,21 +129,16 @@ begin
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
             TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.GetItem(TmpJID.full);
+ //           Item := TJabberSession(_js).ItemController.GetItem(TmpJID.full);
+            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT);
             //Make sure item exists
-            if (Item = nil) then
+            if (Item <> nil) then
             begin
-                Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full);
+                //Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full);
                 _ParseContact(Item, ContactTag);
 
                 if (Item.IsVisible) then
                     TJabberSession(_JS).FireEvent('/item/add', Item);
-            end
-            else
-            begin
-                _ParseContact(Item, ContactTag);
-                if (Item.IsVisible) then
-                    TJabberSession(_JS).FireEvent('/item/update', Item);
             end;
             //DisplayName.getDisplayNameCache().UpdateDisplayName(TmpJID.jid);
             TmpJID.Free();
@@ -164,7 +159,7 @@ var
     i: Integer;
     Grp, Groups: WideString;
 begin
-    Contact.Type_ := EI_TYPE_CONTACT;
+    //Contact.Type_ := EI_TYPE_CONTACT;
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
     Contact.AddProperty('Name', Tag.GetAttribute('name'));

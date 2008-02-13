@@ -43,7 +43,6 @@ type
       function Get_GroupsLoaded: WordBool; safecall;
       procedure ClearGroups; safecall;
       procedure ClearItems; safecall;
-      function AddItem(const Item: IExodusItem): Integer; safecall;
       function GetItem(const UID: WideString): IExodusItem; safecall;
       procedure RemoveGroup(const Group: WideString); safecall;
       function Get_Group(Index: Integer): WideString; safecall;
@@ -52,7 +51,7 @@ type
       function Get_ItemsCount: Integer; safecall;
       function GetGroupItems(const Group: WideString): OleVariant; safecall;
       function AddGroup(const Group: WideString): Integer; safecall;
-      function AddItemByUid(const Uid: WideString): IExodusItem; safecall;
+      function AddItemByUid(const UID, ItemType: WideString): IExodusItem; safecall;
       procedure CopyItem(const UID, Group: WideString); safecall;
       procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
       procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
@@ -293,7 +292,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusItemController.AddItemByUid(const Uid: WideString): IExodusItem;
+function TExodusItemController.AddItemByUid(const UID,
+  ItemType: WideString): IExodusItem;
 var
     Item: TExodusItemWrapper;
     Idx: Integer;
@@ -303,7 +303,7 @@ begin
     //If new item, create and append to the list
     if (Idx = -1) then
     begin
-       Item := TExodusItemWrapper.Create(Uid);
+       Item := TExodusItemWrapper.Create(Uid, ItemType);
        Idx := _Items.AddObject(Uid, Item);
     end;
     //Return interface
@@ -421,13 +421,6 @@ begin
     Idx := _Items.IndexOf(Uid);
     if (Idx = -1) then exit;
     Result := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
-end;
-
-{---------------------------------------}
-function TExodusItemController.AddItem(const Item: IExodusItem): Integer;
-begin
-    //Don't need to check for duplicates. They will be ignored.
-    Result := _Items.AddObject(Item.Uid, TExodusItemWrapper(Item));
 end;
 
 {---------------------------------------}
