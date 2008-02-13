@@ -46,9 +46,6 @@ type
     mJoinConf: TTntMenuItem;
     mRegister: TTntMenuItem;
     mSearch: TTntMenuItem;
-    mLast: TTntMenuItem;
-    mTime: TTntMenuItem;
-    mVersion: TTntMenuItem;
     mVCard: TTntMenuItem;
     N1: TTntMenuItem;
     mBookmark: TTntMenuItem;
@@ -71,7 +68,6 @@ type
     Splitter1: TSplitter;
     lblFeatures: TTntLabel;
     lsFeatures: TTntListBox;
-    mGetInfo: TMenuItem;
     vwInfo: TTntListView;
     pnlTop: TTntPanel;
     CoolBar1: TCoolBar;
@@ -85,6 +81,7 @@ type
     ToolButton3: TToolButton;
     btnNode: TToolButton;
     btnInfo: TToolButton;
+    mGetInfo: TTntMenuItem;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -481,9 +478,6 @@ begin
     mBookmark.Enabled := enabled;
 
     mVCard.Enabled := enabled;
-    mVersion.Enabled := enabled;
-    mTime.Enabled := enabled;
-    mLast.Enabled := enabled;
     mSearch.Enabled := enabled;
     mRegister.Enabled := enabled;
     mJoinConf.Enabled := enabled;
@@ -506,9 +500,6 @@ begin
 
     b := TJabberEntity(_blist[Item.Index]);
 
-    mVersion.Enabled := b.hasFeature(XMLNS_VERSION);
-    mTime.Enabled := b.hasFeature(XMLNS_TIME);
-    mLast.Enabled := b.hasFeature(XMLNS_LAST);
     mSearch.Enabled := b.hasFeature(FEAT_SEARCH);
     mRegister.Enabled := b.hasFeature(FEAT_REGISTER);
     mRunCommand.Enabled := b.hasFeature(XMLNS_COMMANDS);
@@ -564,13 +555,7 @@ begin
     if itm = nil then exit;
 
     jid := itm.SubItems[0];
-    if Sender = mVCard then
-        ShowProfile(itm.SubItems[0])
-    else begin
-        if Sender = mVersion then jabberSendCTCP(jid, XMLNS_VERSION);
-        if Sender = mTime then jabberSendCTCP(jid, XMLNS_TIME);
-        if Sender = mLast then jabberSendCTCP(jid, XMLNS_LAST);
-    end;
+    ShowProfile(itm.SubItems[0])
 end;
 
 {---------------------------------------}

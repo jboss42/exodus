@@ -66,7 +66,7 @@ procedure URLLabel(lbl: TTntLabel); overload;
 
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 
-function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent = nil): TJabberIQ;
+function jabberSendCTCP(jid, xmlns: Widestring; callback: TPacketEvent): TJabberIQ;
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): Widestring;
 function GetPresenceAtom(status: string): ATOM;
@@ -579,8 +579,8 @@ var
     iq: TJabberIQ;
 begin
     // Send an iq-get to some jid, with this namespace
-    if (@callback = nil) then
-        callback := frmExodus.CTCPCallback;
+//    if (@callback = nil) then
+//        callback := frmExodus.CTCPCallback;
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, callback);
     iq.iqType := 'get';
     iq.toJID := jid;

@@ -2,285 +2,416 @@ inherited frmProfile: TfrmProfile
   Left = 368
   Top = 225
   BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsDialog
   Caption = 'Contact Properties'
-  ClientHeight = 364
-  ClientWidth = 454
-  DefaultMonitor = dmDesktop
+  ClientHeight = 428
+  ClientWidth = 515
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 462
-  ExplicitHeight = 398
+  ExplicitWidth = 521
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 137
     Top = 0
-    Height = 330
+    Height = 394
+    ExplicitHeight = 330
+  end
+  inline frameButtons1: TframeButtons
+    Left = 0
+    Top = 394
+    Width = 515
+    Height = 34
+    Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 0
+    TabStop = True
+    ExplicitTop = 388
+    ExplicitWidth = 515
+    ExplicitHeight = 34
+    inherited Panel2: TPanel
+      Width = 515
+      Height = 34
+      ExplicitWidth = 515
+      ExplicitHeight = 34
+      inherited Bevel1: TBevel
+        Width = 515
+        ExplicitWidth = 454
+      end
+      inherited Panel1: TPanel
+        Left = 355
+        Height = 29
+        ExplicitLeft = 355
+        ExplicitHeight = 29
+        inherited btnOK: TTntButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
+      end
+    end
+  end
+  object TreeView1: TTntTreeView
+    Left = 0
+    Top = 0
+    Width = 137
+    Height = 394
+    Align = alLeft
+    BevelWidth = 0
+    Indent = 19
+    ReadOnly = True
+    TabOrder = 1
+    OnChange = TreeView1Change
+    OnClick = TreeView1Click
+    Items.NodeData = {
+      0103000000230000000000000000000000FFFFFFFFFFFFFFFF00000000000000
+      000542006100730069006300410000000000000000000000FFFFFFFFFFFFFFFF
+      00000000010000001450006500720073006F006E0061006C00200049006E0066
+      006F0072006D006100740069006F006E00270000000000000000000000FFFFFF
+      FFFFFFFFFF000000000000000007410064006400720065007300730039000000
+      0000000000000000FFFFFFFFFFFFFFFF00000000010000001057006F0072006B
+      00200049006E0066006F0072006D006100740069006F006E0027000000000000
+      0000000000FFFFFFFFFFFFFFFF00000000000000000741006400640072006500
+      73007300}
+    Items.Utf8Data = {
+      03000000210000000000000000000000FFFFFFFFFFFFFFFF0000000000000000
+      08EFBBBF4261736963300000000000000000000000FFFFFFFFFFFFFFFF000000
+      000100000017EFBBBF506572736F6E616C20496E666F726D6174696F6E230000
+      000000000000000000FFFFFFFFFFFFFFFF00000000000000000AEFBBBF416464
+      726573732C0000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
+      13EFBBBF576F726B20496E666F726D6174696F6E230000000000000000000000
+      FFFFFFFFFFFFFFFF00000000000000000AEFBBBF41646472657373}
+    ExplicitHeight = 388
   end
   object PageControl1: TTntPageControl
     Left = 140
     Top = 0
-    Width = 314
-    Height = 330
+    Width = 375
+    Height = 394
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
-    TabOrder = 0
+    TabOrder = 2
+    ExplicitHeight = 388
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      object Label1: TTntLabel
-        Left = 4
-        Top = 56
-        Width = 20
+      ExplicitHeight = 357
+      object lblSubState: TTntLabel
+        AlignWithMargins = True
+        Left = 6
+        Top = 186
+        Width = 358
         Height = 13
-        Caption = 'JID:'
-      end
-      object Label2: TTntLabel
-        Left = 4
-        Top = 80
-        Width = 23
-        Height = 13
-        Caption = 'Nick:'
-      end
-      object lblEmail: TTntLabel
-        Left = 4
-        Top = 127
-        Width = 28
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Email:'
-        OnClick = lblEmailClick
-      end
-      object Label7: TTntLabel
-        Left = 10
-        Top = 6
-        Width = 59
-        Height = 13
-        Caption = 'First (Given)'
-      end
-      object Label4: TTntLabel
-        Left = 90
-        Top = 6
-        Width = 33
-        Height = 13
-        Caption = 'Middle '
-      end
-      object Label5: TTntLabel
-        Left = 154
-        Top = 6
-        Width = 61
-        Height = 13
-        Caption = 'Last (Family)'
-      end
-      object lblUpdateNick: TTntLabel
-        Left = 56
-        Top = 99
-        Width = 167
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Update nickname based on names.'
-        OnClick = btnUpdateNickClick
-      end
-      object picBox: TPaintBox
-        Left = 56
-        Top = 216
-        Width = 97
-        Height = 81
-        OnPaint = picBoxPaint
-      end
-      object TntLabel1: TTntLabel
-        Left = 4
-        Top = 215
-        Width = 37
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Picture:'
-        OnClick = lblEmailClick
+        Margins.Left = 6
+        Margins.Top = 0
+        Align = alTop
+        Caption = 'lblSubState'
+        ExplicitLeft = 0
+        ExplicitTop = 189
+        ExplicitWidth = 54
       end
       object aniProfile: TAnimate
-        Left = 248
-        Top = 24
+        Left = 279
+        Top = 87
         Width = 16
         Height = 16
         CommonAVI = aviFindFile
         StopFrame = 8
         Visible = False
       end
-      object txtJID: TTntEdit
-        Left = 56
-        Top = 53
-        Width = 185
+      object TntPanel1: TTntPanel
+        AlignWithMargins = True
+        Left = 6
+        Top = 34
+        Width = 358
         Height = 21
-        ReadOnly = True
-        TabOrder = 0
-      end
-      object txtNick: TTntEdit
-        Left = 56
-        Top = 77
-        Width = 185
-        Height = 21
-        TabOrder = 1
-      end
-      object txtPriEmail: TTntEdit
-        Left = 56
-        Top = 124
-        Width = 185
-        Height = 21
-        ReadOnly = True
-        TabOrder = 3
-      end
-      object txtFirst: TTntEdit
-        Left = 14
-        Top = 22
-        Width = 75
-        Height = 21
-        ReadOnly = True
-        TabOrder = 4
-      end
-      object txtMiddle: TTntEdit
-        Left = 94
-        Top = 22
-        Width = 51
-        Height = 21
-        ReadOnly = True
-        TabOrder = 5
-      end
-      object txtLast: TTntEdit
-        Left = 152
-        Top = 22
-        Width = 89
-        Height = 21
-        ReadOnly = True
-        TabOrder = 6
-      end
-      object optSubscrip: TTntRadioGroup
-        Left = 8
-        Top = 152
-        Width = 257
-        Height = 49
-        Caption = 'Subscription Type'
-        Columns = 4
-        ItemIndex = 0
-        Items.Strings = (
-          'None'
-          'To'
-          'From'
-          'Both')
-        TabOrder = 2
-        OnClick = SubscriptionOnClick
-      end
-    end
-    object TabSheet7: TTntTabSheet
-      Caption = 'Resources'
-      ImageIndex = 6
-      object Panel1: TPanel
-        Left = 0
-        Top = 0
-        Width = 306
-        Height = 25
+        Margins.Left = 6
+        Margins.Top = 0
+        Margins.Bottom = 0
         Align = alTop
-        Alignment = taLeftJustify
         BevelOuter = bvNone
-        Caption = 'Online Resources'
-        ParentColor = True
         TabOrder = 1
+        object TntLabel4: TTntLabel
+          AlignWithMargins = True
+          Left = 0
+          Top = 3
+          Width = 51
+          Height = 15
+          Margins.Left = 0
+          Align = alLeft
+          Caption = 'Jabber ID:'
+          ExplicitHeight = 13
+        end
+        object lblJID: TTntLabel
+          AlignWithMargins = True
+          Left = 57
+          Top = 3
+          Width = 298
+          Height = 15
+          Align = alClient
+          Caption = 'pgmillard@jabber.org'
+          ExplicitWidth = 103
+          ExplicitHeight = 13
+        end
       end
-      object Panel2: TPanel
-        Left = 201
-        Top = 25
-        Width = 105
-        Height = 274
-        Align = alRight
+      object TntPanel2: TTntPanel
+        AlignWithMargins = True
+        Left = 6
+        Top = 55
+        Width = 358
+        Height = 128
+        Margins.Left = 6
+        Margins.Top = 0
+        Align = alTop
+        AutoSize = True
         BevelOuter = bvNone
-        ParentColor = True
         TabOrder = 2
-        object btnVersion: TTntButton
-          Left = 6
-          Top = 8
-          Width = 85
+        object TntPanel5: TTntPanel
+          Left = 0
+          Top = 0
+          Width = 358
           Height = 25
-          Caption = 'Client Version'
+          Align = alTop
+          BevelOuter = bvNone
           TabOrder = 0
-          OnClick = btnVersionClick
+          object TntLabel7: TTntLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 3
+            Width = 88
+            Height = 19
+            Margins.Left = 0
+            Align = alLeft
+            Caption = 'Client information:'
+            ExplicitHeight = 13
+          end
+          object lblClientInfo: TTntLabel
+            AlignWithMargins = True
+            Left = 94
+            Top = 3
+            Width = 227
+            Height = 19
+            Align = alClient
+            Caption = 'Not available'
+            ExplicitWidth = 62
+            ExplicitHeight = 13
+          end
+          object btnResources: TTntButton
+            AlignWithMargins = True
+            Left = 327
+            Top = 0
+            Width = 24
+            Height = 25
+            Margins.Top = 0
+            Margins.Right = 7
+            Margins.Bottom = 0
+            Align = alRight
+            Caption = '...'
+            TabOrder = 0
+            OnClick = btnResourcesClick
+          end
         end
-        object btnTime: TTntButton
-          Left = 6
-          Top = 40
-          Width = 85
-          Height = 25
-          Caption = 'Client Time'
+        object pnlAllResources: TTntPanel
+          AlignWithMargins = True
+          Left = 0
+          Top = 28
+          Width = 352
+          Height = 100
+          Margins.Left = 0
+          Margins.Right = 6
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
           TabOrder = 1
-          OnClick = btnVersionClick
-        end
-        object btnLast: TTntButton
-          Left = 6
-          Top = 72
-          Width = 85
-          Height = 25
-          Caption = 'Last Activity'
-          TabOrder = 2
-          OnClick = btnVersionClick
+          ExplicitWidth = 351
+          object gridResources: TTntStringGrid
+            Left = 0
+            Top = 0
+            Width = 352
+            Height = 100
+            Margins.Right = 6
+            Align = alClient
+            ColCount = 2
+            DefaultRowHeight = 18
+            FixedCols = 0
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goRowSelect]
+            TabOrder = 0
+            ExplicitWidth = 351
+            ColWidths = (
+              141
+              203)
+          end
         end
       end
-      object ResListBox: TTntListBox
-        Left = 0
-        Top = 25
-        Width = 201
-        Height = 274
-        Align = alClient
-        ItemHeight = 13
-        TabOrder = 0
-      end
-    end
-    object TabSheet2: TTntTabSheet
-      Caption = 'Groups'
-      ImageIndex = 1
-      object GrpListBox: TTntCheckListBox
+      object TntPanel3: TTntPanel
         Left = 0
         Top = 0
-        Width = 306
-        Height = 258
-        Align = alClient
-        ItemHeight = 13
-        Sorted = True
-        TabOrder = 0
-      end
-      object Panel3: TPanel
-        Left = 0
-        Top = 258
-        Width = 306
-        Height = 41
-        Align = alBottom
+        Width = 367
+        Height = 34
+        Align = alTop
         BevelOuter = bvNone
-        Caption = 'Panel3'
-        ParentColor = True
-        TabOrder = 1
-        DesignSize = (
-          306
-          41)
-        object txtNewGrp: TTntEdit
-          Left = 5
+        TabOrder = 3
+        object lblUserTitle: TTntLabel
+          AlignWithMargins = True
+          Left = 3
           Top = 10
-          Width = 210
+          Width = 361
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Top = 10
+          Align = alClient
+          Caption = '<<USER>> properties'
+          ExplicitWidth = 110
+          ExplicitHeight = 13
+        end
+      end
+      object ExGroupBox1: TExGroupBox
+        AlignWithMargins = True
+        Left = 6
+        Top = 251
+        Width = 355
+        Height = 104
+        Margins.Left = 6
+        Margins.Right = 6
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        Caption = 'Basic contact information:'
+        ParentColor = True
+        TabOrder = 4
+        AutoHide = False
+        ExplicitTop = 257
+        object Label7: TTntLabel
+          Left = 1
+          Top = 21
+          Width = 25
+          Height = 13
+          Caption = 'First:'
+        end
+        object Label4: TTntLabel
+          Left = 111
+          Top = 21
+          Width = 34
+          Height = 13
+          Caption = 'Middle:'
+        end
+        object Label5: TTntLabel
+          Left = 162
+          Top = 21
+          Width = 24
+          Height = 13
+          Caption = 'Last:'
+        end
+        object lblEmail: TTntLabel
+          Left = 1
+          Top = 67
+          Width = 28
+          Height = 13
+          Cursor = crHandPoint
+          Caption = 'Email:'
+          OnClick = lblEmailClick
+        end
+        object picBox: TPaintBox
+          AlignWithMargins = True
+          Left = 287
+          Top = 40
+          Width = 64
+          Height = 64
+          Margins.Top = 0
+          Margins.Right = 6
+          Margins.Bottom = 0
+          OnPaint = picBoxPaint
+        end
+        object TntLabel1: TTntLabel
+          Left = 289
+          Top = 21
+          Width = 37
+          Height = 13
+          Caption = 'Avatar:'
+        end
+        object txtFirst: TTntEdit
+          Left = 1
+          Top = 40
+          Width = 107
+          Height = 21
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object txtMiddle: TTntEdit
+          Left = 112
+          Top = 40
+          Width = 46
+          Height = 21
+          ReadOnly = True
+          TabOrder = 2
+        end
+        object txtLast: TTntEdit
+          Left = 162
+          Top = 40
+          Width = 113
+          Height = 21
+          ReadOnly = True
+          TabOrder = 3
+        end
+        object txtPriEmail: TTntEdit
+          Left = 0
+          Top = 81
+          Width = 275
+          Height = 21
+          ReadOnly = True
+          TabOrder = 4
+        end
+      end
+      object TntPanel4: TTntPanel
+        AlignWithMargins = True
+        Left = 6
+        Top = 205
+        Width = 355
+        Height = 40
+        Margins.Left = 6
+        Margins.Right = 6
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        TabOrder = 5
+        ExplicitTop = 211
+        object Label2: TTntLabel
+          Left = 1
+          Top = 0
+          Width = 49
+          Height = 13
+          Caption = 'Nickname:'
+        end
+        object txtNick: TTntEdit
+          Left = 1
+          Top = 17
+          Width = 280
+          Height = 21
           TabOrder = 0
         end
-        object btnAddGroup: TTntButton
-          Left = 223
-          Top = 8
-          Width = 75
+        object btnChangeNick: TTntButton
+          Left = 287
+          Top = 15
+          Width = 64
           Height = 25
-          Anchors = [akRight, akBottom]
-          Caption = 'Add Group'
+          Caption = 'Change...'
           TabOrder = 1
-          OnClick = btnAddGroupClick
         end
       end
     end
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
+      ExplicitHeight = 357
       object lblURL: TTntLabel
         Left = 10
         Top = 9
@@ -335,7 +466,7 @@ inherited frmProfile: TfrmProfile
       object txtWeb: TTntEdit
         Left = 92
         Top = 6
-        Width = 150
+        Width = 269
         Height = 21
         ReadOnly = True
         TabOrder = 0
@@ -343,7 +474,7 @@ inherited frmProfile: TfrmProfile
       object cboOcc: TTntComboBox
         Left = 92
         Top = 30
-        Width = 150
+        Width = 269
         Height = 21
         Enabled = False
         ItemHeight = 13
@@ -370,7 +501,7 @@ inherited frmProfile: TfrmProfile
       object txtBDay: TTntEdit
         Left = 92
         Top = 54
-        Width = 150
+        Width = 269
         Height = 21
         ReadOnly = True
         TabOrder = 2
@@ -378,7 +509,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeVoice: TTntEdit
         Left = 91
         Top = 99
-        Width = 150
+        Width = 269
         Height = 21
         ReadOnly = True
         TabOrder = 3
@@ -386,15 +517,15 @@ inherited frmProfile: TfrmProfile
       object txtHomeFax: TTntEdit
         Left = 91
         Top = 123
-        Width = 150
+        Width = 269
         Height = 21
         ReadOnly = True
         TabOrder = 4
       end
       object memDesc: TTntMemo
-        Left = 16
-        Top = 160
-        Width = 281
+        Left = 10
+        Top = 164
+        Width = 351
         Height = 97
         ReadOnly = True
         ScrollBars = ssVertical
@@ -405,6 +536,7 @@ inherited frmProfile: TfrmProfile
     object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
+      ExplicitHeight = 357
       object Label13: TTntLabel
         Left = 10
         Top = 129
@@ -450,7 +582,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeState: TTntEdit
         Left = 102
         Top = 78
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 0
@@ -458,7 +590,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeZip: TTntEdit
         Left = 102
         Top = 102
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 1
@@ -466,7 +598,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeCity: TTntEdit
         Left = 102
         Top = 54
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 2
@@ -474,7 +606,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeStreet2: TTntEdit
         Left = 102
         Top = 30
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 3
@@ -482,7 +614,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeStreet1: TTntEdit
         Left = 102
         Top = 6
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 4
@@ -490,7 +622,7 @@ inherited frmProfile: TfrmProfile
       object txtHomeCountry: TTntComboBox
         Left = 102
         Top = 127
-        Width = 150
+        Width = 259
         Height = 21
         Enabled = False
         ItemHeight = 13
@@ -741,6 +873,7 @@ inherited frmProfile: TfrmProfile
     object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
+      ExplicitHeight = 357
       object Label22: TTntLabel
         Left = 10
         Top = 9
@@ -779,7 +912,7 @@ inherited frmProfile: TfrmProfile
       object txtOrgName: TTntEdit
         Left = 102
         Top = 6
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 0
@@ -787,7 +920,7 @@ inherited frmProfile: TfrmProfile
       object txtOrgUnit: TTntEdit
         Left = 102
         Top = 30
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 1
@@ -795,7 +928,7 @@ inherited frmProfile: TfrmProfile
       object txtOrgTitle: TTntEdit
         Left = 102
         Top = 54
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 2
@@ -803,7 +936,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkVoice: TTntEdit
         Left = 102
         Top = 84
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 3
@@ -811,7 +944,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkFax: TTntEdit
         Left = 102
         Top = 108
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 4
@@ -820,6 +953,7 @@ inherited frmProfile: TfrmProfile
     object TabSheet6: TTntTabSheet
       Caption = 'Address'
       ImageIndex = 5
+      ExplicitHeight = 357
       object Label15: TTntLabel
         Left = 10
         Top = 77
@@ -865,7 +999,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkState: TTntEdit
         Left = 102
         Top = 76
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 0
@@ -873,7 +1007,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkZip: TTntEdit
         Left = 102
         Top = 100
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 1
@@ -881,7 +1015,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkCity: TTntEdit
         Left = 102
         Top = 52
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 2
@@ -889,7 +1023,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkStreet2: TTntEdit
         Left = 102
         Top = 28
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 3
@@ -897,7 +1031,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkStreet1: TTntEdit
         Left = 102
         Top = 4
-        Width = 150
+        Width = 259
         Height = 21
         ReadOnly = True
         TabOrder = 4
@@ -905,7 +1039,7 @@ inherited frmProfile: TfrmProfile
       object txtWorkCountry: TTntComboBox
         Left = 102
         Top = 125
-        Width = 150
+        Width = 259
         Height = 21
         Enabled = False
         ItemHeight = 13
@@ -1153,83 +1287,5 @@ inherited frmProfile: TfrmProfile
           'Zimbabwe  ')
       end
     end
-  end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 330
-    Width = 454
-    Height = 34
-    Align = alBottom
-    Color = 13681583
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 1
-    TabStop = True
-    ExplicitTop = 330
-    ExplicitWidth = 454
-    ExplicitHeight = 34
-    inherited Panel2: TPanel
-      Width = 454
-      Height = 34
-      ExplicitWidth = 454
-      ExplicitHeight = 34
-      inherited Bevel1: TBevel
-        Width = 454
-        ExplicitWidth = 454
-      end
-      inherited Panel1: TPanel
-        Left = 294
-        Height = 29
-        ExplicitLeft = 294
-        ExplicitHeight = 29
-        inherited btnOK: TTntButton
-          OnClick = frameButtons1btnOKClick
-        end
-        inherited btnCancel: TTntButton
-          OnClick = frameButtons1btnCancelClick
-        end
-      end
-    end
-  end
-  object TreeView1: TTntTreeView
-    Left = 0
-    Top = 0
-    Width = 137
-    Height = 330
-    Align = alLeft
-    BevelWidth = 0
-    Indent = 19
-    ReadOnly = True
-    TabOrder = 2
-    OnChange = TreeView1Change
-    OnClick = TreeView1Click
-    Items.NodeData = {
-      0104000000230000000000000000000000FFFFFFFFFFFFFFFF00000000010000
-      0005420061007300690063002B0000000000000000000000FFFFFFFFFFFFFFFF
-      0000000000000000095200650073006F00750072006300650073002500000000
-      00000000000000FFFFFFFFFFFFFFFF000000000000000006470072006F007500
-      70007300410000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
-      1450006500720073006F006E0061006C00200049006E0066006F0072006D0061
-      00740069006F006E00270000000000000000000000FFFFFFFFFFFFFFFF000000
-      0000000000074100640064007200650073007300390000000000000000000000
-      FFFFFFFFFFFFFFFF00000000010000001057006F0072006B00200049006E0066
-      006F0072006D006100740069006F006E00270000000000000000000000FFFFFF
-      FFFFFFFFFF0000000000000000074100640064007200650073007300}
-    Items.Utf8Data = {
-      04000000210000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
-      08EFBBBF4261736963250000000000000000000000FFFFFFFFFFFFFFFF000000
-      00000000000CEFBBBF5265736F7572636573220000000000000000000000FFFF
-      FFFFFFFFFFFF000000000000000009EFBBBF47726F7570733000000000000000
-      00000000FFFFFFFFFFFFFFFF000000000100000017EFBBBF506572736F6E616C
-      20496E666F726D6174696F6E230000000000000000000000FFFFFFFFFFFFFFFF
-      00000000000000000AEFBBBF416464726573732C0000000000000000000000FF
-      FFFFFFFFFFFFFF000000000100000013EFBBBF576F726B20496E666F726D6174
-      696F6E230000000000000000000000FFFFFFFFFFFFFFFF00000000000000000A
-      EFBBBF41646472657373}
   end
 end

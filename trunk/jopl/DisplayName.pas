@@ -205,7 +205,6 @@ type
         function getOrAddDNItem(UID: Widestring): TDisplayNameItem; overload;
         function getOrAddDNItem(JID: TJabberID): TDisplayNameItem; overload;
 
-        function getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
     protected
         //list management
         function getDNItem(UID: WideString): TDisplayNameItem; overload;
@@ -223,6 +222,7 @@ type
         function getDisplayName(uid: widestring): Widestring;overload;
         function getDisplayNameAndFullJID(jid: TJabberID): Widestring;
         function getDisplayNameAndBareJID(jid: TJabberID): Widestring;
+        function getProfileDisplayName(jid: TJabberID; out pendingNameChange: boolean): WideString;
 
         function HasProfileDisplayName(UID: WideString): boolean;
 

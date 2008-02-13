@@ -62,16 +62,12 @@ type
     N1: TTntMenuItem;
     mnuSendFile: TTntMenuItem;
     mnuBlock: TTntMenuItem;
-    C1: TTntMenuItem;
     mnuProfile: TTntMenuItem;
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     popPaste: TTntMenuItem;
     popCopy: TTntMenuItem;
     MsgPanel: TPanel;
-    mnuLastActivity: TMenuItem;
-    mnuTimeRequest: TMenuItem;
-    mnuVersionRequest: TMenuItem;
     pnlTop2: TPanel;
     lblFrom: TTntLabel;
     txtFrom: TTntLabel;
@@ -91,7 +87,6 @@ type
     procedure mnuHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure mnuProfileClick(Sender: TObject);
-    procedure mnuVersionRequestClick(Sender: TObject);
     procedure mnuBlockClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
     procedure txtFromClick(Sender: TObject);
@@ -383,7 +378,6 @@ begin
     mnuHistory.Enabled := false;
     popClearHistory.Enabled := false;
     mnuProfile.Enabled := false;
-    C1.Enabled := false;
     mnuBlock.Enabled := false;
     mnuSendFile.Enabled := false;
     mnuResources.Enabled := false;
@@ -731,31 +725,6 @@ begin
   inherited;
     if recips.count <= 0 then exit;
     ShowProfile(recips[0]);
-end;
-
-{---------------------------------------}
-procedure TfrmMsgRecv.mnuVersionRequestClick(Sender: TObject);
-var
-    jid: WideString;
-    p: TJabberPres;
-begin
-  inherited;
-    // get some CTCP query sent out
-    if recips.count <= 0 then exit;
-    p := MainSession.ppdb.FindPres(recips[0], '');
-    if p = nil then
-        // this person isn't online.
-        jid := recips[0]
-    else
-        jid := p.fromJID.full;
-
-    if Sender = mnuVersionRequest then
-        jabberSendCTCP(jid, XMLNS_VERSION)
-    else if Sender = mnuTimeRequest then
-        jabberSendCTCP(jid, XMLNS_TIME)
-    else if Sender = mnuLastActivity then
-        jabberSendCTCP(jid, XMLNS_LAST);
-
 end;
 
 {---------------------------------------}

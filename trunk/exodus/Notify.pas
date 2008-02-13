@@ -258,64 +258,6 @@ begin
     end;
     GetDockManager().OnNotify(win, notify);
 
-{    if ((notify and notify_flash) > 0) then begin
-        // flash or show img
-        if (w = frmExodus) then begin
-            // The window is the main window
-//JJF Fix this!            if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
-//                frmExodus.tbsRoster.ImageIndex := tab_notify;
-            if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
-                frmExodus.Flash();
-        end
-        else
-            if d.Docked then begin
-                if (frmExodus.getTopDocked() <> d) then begin
-                    d.TabSheet.ImageIndex := tab_notify;
-                    frmExodus.Tabs.Repaint();
-                end;
-                if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
-                    frmExodus.Flash();
-            end
-            else if (w is TfrmBaseChat) then
-                TfrmBaseChat(w).Flash()
-            else begin
-                FlashWindow(w.Handle, true);
-                FlashWindow(w.Handle, true);
-            end;
-        end
-        else begin
-            // it's something else
-            FlashWindow(w.Handle, true);
-            FlashWindow(w.Handle, true);
-        end;
-    end;
-
-    if ((notify and notify_front) > 0) then begin
-        // pop the window to the front
-        if (w is TfrmDockable) then begin
-            d := TfrmDockable(w);
-            if (d.Docked) then begin
-                frmExodus.doRestore();
-                frmExodus.BringDockedToTop(d);
-                //invoke the onchange event so tab is updated correctly
-                frmExodus.Tabs.onChange(nil);
-                w := frmExodus;
-            end;
-        end
-        else if (w = frmExodus) then
-            frmExodus.doRestore()
-        else if ((not w.Visible) or (w.WindowState = wsMinimized))then begin
-            w.WindowState := wsNormal;
-            w.Visible := true;
-        end;
-        ShowWindow(w.Handle, SW_SHOWNORMAL);
-        ForceForegroundWindow(w.Handle);
-    end;
-}
-
-    // NOTE:    sound keys in registry MUST be no more then 31 chars
-    //          due to Windows limitations.  Thus the first param to
-    //          PlaySound() is hard coded to exodus_
     if (MainSession.prefs.getBool('notify_sounds')) then begin
         tstr := MainSession.Prefs.GetSoundFile(sound_name);
         if (tstr <> '') and ((notify and notify_sound) > 0) then
