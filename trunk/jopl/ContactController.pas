@@ -207,7 +207,7 @@ begin
      if Event = '/session/authenticated'  then
      begin
          _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
+         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
          _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
          _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
          _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
@@ -217,7 +217,7 @@ begin
      else if Event = '/session/prefs' then
      begin
          _HideBlocked := TJabberSession(_JS).Prefs.getBool('roster_hide_block');
-         _HideOffline := TJabberSession(_JS).Prefs.getBool('roster_only_online');
+         _HideOffline := not TJabberSession(_JS).Prefs.getBool('roster_only_online');
          _HidePending := not TJabberSession(_JS).Prefs.getBool('roster_show_pending');
          _HideObservers := not TJabberSession(_JS).Prefs.getBool('roster_show_observers');
          _UseDisplayName := TJabberSession(_JS).Prefs.getBool('displayname_profile_enabled');
