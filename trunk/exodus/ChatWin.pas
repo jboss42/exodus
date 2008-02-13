@@ -466,6 +466,7 @@ begin
     _dnListener.OnDisplayNameChange := Self.OnDisplayNameChange;
 //    _dnLocked := false;
     _insertTab := true;
+    _windowType := 'chat';
 
     _check_event := false;
     _reply_id := '';

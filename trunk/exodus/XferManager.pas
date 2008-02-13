@@ -461,6 +461,7 @@ begin
     pnlCaption.Font.Size := 10;
     pnlCaption.Font.Style := [fsBold];
     Self.ImageIndex := -1;
+    _windowType := 'xfer_manager';
 end;
 
 {---------------------------------------}

@@ -108,6 +108,8 @@ procedure TfrmInvalidRoster.FormCreate(Sender: TObject);
 begin
     _jids := TStringlist.Create;
 
+    _windowType := 'invalid_roster';
+
     inherited;
 end;
 

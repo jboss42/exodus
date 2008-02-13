@@ -343,6 +343,8 @@ begin
 
     //register for callbacks
     _callback_id := MainSession.RegisterCallback(OnCallback, SE_DISCONNECTED);
+
+    _windowType := 'msg_recv';
 end;
 
 {---------------------------------------}

@@ -109,6 +109,7 @@ type
     _priorityflag: boolean; // Is there a high priority msg unread
     _activating: boolean; // Is the window currently becoming active
     _lastActivity: TDateTime; // what was the last activity for this window
+    _windowType: widestring; // what kind of dockable window is this
 
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
@@ -184,10 +185,11 @@ type
         by the activity window.
     }
     property UID: WideString read getUID write setUID;
-    property UnreadMsgCount: integer read _unreadmsg;
-    property PriorityFlag: boolean read _priorityflag;
+    property UnreadMsgCount: integer read _unreadmsg write _unreadmsg;
+    property PriorityFlag: boolean read _priorityflag write _priorityflag;
     property Activating: boolean read _activating write _activating;
-    property LastActivity: TDateTime read _lastActivity;
+    property LastActivity: TDateTime read _lastActivity write _lastActivity;
+    property WindowType: widestring read _windowType write _windowType;
 
   end;
 

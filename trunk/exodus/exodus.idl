@@ -1040,7 +1040,7 @@ library Exodus
   };
 
   [
-    uuid(617D28C3-8B25-4468-9FC8-9A6E931F8EB5), 
+    uuid(8F2F3430-1E7E-4FA7-B65D-A25B48EFE880), 
     version(1.0), 
     dual, 
     oleautomation
@@ -1060,6 +1060,64 @@ library Exodus
     id(0x000000CB)
     ]
     HRESULT _stdcall BringToFront( void );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall UnreadMsgCount([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall UnreadMsgCount([in] long value );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Dock( void );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall UnDock( void );
+    [
+    propget, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall LastActivityTime([out, retval] DATE * value );
+    [
+    propput, 
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall LastActivityTime([in] DATE value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall PriorityFlag([out, retval] VARIANT_BOOL * value );
+    [
+    propput, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall PriorityFlag([in] VARIANT_BOOL value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall WindowType([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall WindowType([in] BSTR value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall ImageIndex([in] long value );
   };
 
   [
@@ -1094,11 +1152,6 @@ library Exodus
     id(0x000000CB)
     ]
     HRESULT _stdcall Type_([out, retval] BSTR * value );
-    [
-    propput, 
-    id(0x000000CB)
-    ]
-    HRESULT _stdcall Type_([in] BSTR value );
     [
     propget, 
     id(0x000000CC)
@@ -1190,16 +1243,6 @@ library Exodus
     id(0x000000DB)
     ]
     HRESULT _stdcall CopyGroup([in] BSTR GroupTo );
-    [
-    propget, 
-    id(0x000000DD)
-    ]
-    HRESULT _stdcall Action([in] long index, [out, retval] BSTR * value );
-    [
-    propget, 
-    id(0x000000DC)
-    ]
-    HRESULT _stdcall ActionCount([out, retval] long * value );
     [
     propget, 
     id(0x000000DE)
@@ -8340,7 +8383,7 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall AddItemByUid([in] BSTR UID, [out, retval] IExodusItem ** ret /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddItemByUid([in] BSTR UID, [in] BSTR ItemType, [out, retval] IExodusItem ** ret /*Warning: unable to validate structure name: */ );
     [
     id(0x000000CF)
     ]
@@ -8373,10 +8416,6 @@ library Exodus
     id(0x000000D6)
     ]
     HRESULT _stdcall GetItem([in] BSTR UID, [out, retval] IExodusItem ** Item /*Warning: unable to validate structure name: */ );
-    [
-    id(0x000000D7)
-    ]
-    HRESULT _stdcall AddItem([in] IExodusItem Item /*Warning: unable to validate structure name: */, [out, retval] long * index );
     [
     id(0x000000D8)
     ]

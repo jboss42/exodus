@@ -290,6 +290,8 @@ begin
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
+
+    _windowType := 'jud';
 end;
 
 

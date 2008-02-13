@@ -627,6 +627,7 @@ end;
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
   inherited;
+  _windowType := 'xdata';
 end;
 
 {---------------------------------------}

@@ -40,6 +40,18 @@ type
     function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
     procedure BringToFront; safecall;
+    function Get_UnreadMsgCount: Integer; safecall;
+    procedure Dock; safecall;
+    procedure Set_UnreadMsgCount(Value: Integer); safecall;
+    procedure UnDock; safecall;
+    function Get_LastActivityTime: TDateTime; safecall;
+    procedure Set_LastActivityTime(Value: TDateTime); safecall;
+    function Get_WindowType: WideString; safecall;
+    procedure Set_WindowType(const Value: WideString); safecall;
+    function Get_ImageIndex: Integer; safecall;
+    procedure Set_ImageIndex(value: Integer); safecall;
+    function Get_PriorityFlag: WordBool; safecall;
+    procedure Set_PriorityFlag(Value: WordBool); safecall;
 
   end;
 
@@ -79,6 +91,96 @@ begin
     end;
 end;
 
+
+function TExodusAXWindow.Get_UnreadMsgCount: Integer;
+begin
+    Result := 0;
+    if (_frm <> nil) then begin
+        Result := _frm.UnreadMsgCount;
+    end;
+end;
+
+procedure TExodusAXWindow.Dock;
+begin
+    if (_frm <> nil) then begin
+        _frm.DockForm;
+    end;
+end;
+
+procedure TExodusAXWindow.Set_UnreadMsgCount(Value: Integer);
+begin
+    if (_frm <> nil) then begin
+        _frm.UnreadMsgCount := Value;
+    end;
+end;
+
+procedure TExodusAXWindow.UnDock;
+begin
+    if (_frm <> nil) then begin
+        _frm.FloatForm;
+    end;
+end;
+
+function TExodusAXWindow.Get_LastActivityTime: TDateTime;
+begin
+    Result := Now;
+    if (_frm <> nil) then begin
+        Result := _frm.LastActivity;
+    end;
+end;
+
+procedure TExodusAXWindow.Set_LastActivityTime(Value: TDateTime);
+begin
+    if (_frm <> nil) then begin
+        _frm.LastActivity := Value;
+    end;
+end;
+
+function TExodusAXWindow.Get_WindowType: WideString;
+begin
+    Result := '';
+    if (_frm <> nil) then begin
+        Result := _frm.WindowType;
+    end;
+end;
+
+procedure TExodusAXWindow.Set_WindowType(const Value: WideString);
+begin
+    if (_frm <> nil) then begin
+        _frm.WindowType := value;
+    end;
+end;
+
+function TExodusAXWindow.Get_ImageIndex: Integer;
+begin
+    Result := 0;
+    if (_frm <> nil) then begin
+        Result := _frm.ImageIndex;
+    end;
+end;
+
+procedure TExodusAXWindow.Set_ImageIndex(value: Integer);
+begin
+    if (_frm <> nil) then begin
+        _frm.ImageIndex := value;
+    end;
+end;
+
+function TExodusAXWindow.Get_PriorityFlag: WordBool;
+begin
+    Result := false;
+    if (_frm <> nil) then begin
+        Result := _frm.PriorityFlag;
+    end;
+
+end;
+
+procedure TExodusAXWindow.Set_PriorityFlag(Value: WordBool);
+begin
+    if (_frm <> nil) then begin
+        _frm.PriorityFlag := value;
+    end;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusAXWindow, Class_ExodusAXWindow,

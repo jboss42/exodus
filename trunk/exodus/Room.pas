@@ -1809,6 +1809,8 @@ begin
     popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
 
     _session_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
+
+    _windowType := 'adhoc_room';
 end;
 
 {---------------------------------------}
@@ -2742,10 +2744,12 @@ begin
         if (e.hasFeature('muc_persistent')) then begin
             // This is a Persistent room
             Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
+            _windowType := 'perm_room';
         end
         else begin
             // This is a temp room
             Self.ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
+            _windowType := 'adhoc_room';
         end;
     end;
 

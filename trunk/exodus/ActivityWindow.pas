@@ -720,7 +720,7 @@ var
     tempitem1, tempitem2: TAWTrackerItem;
     tempList: TWidestringList;
     itemadded: boolean;
-    roomList, chatList, otherList: TWidestringList;
+    permRoomList, adhocRoomList, chatList, otherList: TWidestringList;
     sortstring: widestring;
 begin
     if (sortType = ssUnsorted) then exit;
@@ -771,18 +771,22 @@ begin
         else if (sortType = ssType) then begin
             // Sort by the type of window (room, chat, etc.), then by alpha for tied items
             sortstring := sortstring + _(sSortType);
-            roomList := TWidestringList.Create();
+            permRoomList := TWidestringList.Create();
+            adhocRoomList := TWidestringList.Create();
             chatList := TWidestringList.Create();
             otherList := TWidestringList.Create();
 
-            // Split them up by group
+            // Split them up by group to make sure it is rooms -> chats -> others
             for i := 0 to _trackingList.Count - 1 do begin
                 tempitem1 := TAWTrackerItem(_trackingList.Objects[i]);
                 if (tempitem1 <> nil) then begin
-                    if (tempitem1.frm is TfrmRoom) then begin
-                        roomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                    if (tempitem1.frm.WindowType ='perm_room') then begin
+                        permRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
                     end
-                    else if (tempitem1.frm is TfrmChat) then begin
+                    else if (tempitem1.frm.WindowType ='adhoc_room') then begin
+                        adhocRoomList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
+                    end
+                    else if (tempitem1.frm.WindowType = 'chat') then begin
                         chatList.AddObject(_trackingList.Strings[i], _trackingList.Objects[i]);
                     end
                     else begin
@@ -791,25 +795,54 @@ begin
                 end;
             end;
 
+            // Sort others list
+            for i := 0 to otherList.Count - 1 do begin
+                // iterate over list to reorder
+                itemadded := false;
+                tempitem1 := TAWTrackerItem(otherList.Objects[i]);
+                if (tempitem1 <> nil) then begin
+                    for j := 0 to tempList.Count - 1 do begin
+                        tempitem2 := TAWTrackerItem(tempList.Objects[j]);
+                        insertPoint := j;
+                        if (tempitem2.frm.WindowType > tempitem1.frm.WindowType) then begin
+                            // We have an new item to add to the temp list that should be higher
+                            // then the current item in the templist
+                            tempList.InsertObject(insertPoint, otherList.Strings[i], otherList.Objects[i]);
+                            itemadded := true;
+                            break;
+                        end;
+                    end;
+                end;
+                if (not itemadded) then begin
+                    // We didn't insert the item into the temp list so add to end
+                    tempList.AddObject(otherList.Strings[i], otherList.Objects[i]);
+                end;
+            end;
+
             // Reassemble list
             _trackingList.Clear();
 
-            for i := 0 to roomList.Count - 1 do begin
-                _trackingList.AddObject(roomList.Strings[i], roomList.Objects[i]);
+            for i := 0 to permRoomList.Count - 1 do begin
+                _trackingList.AddObject(permRoomList.Strings[i], permRoomList.Objects[i]);
+            end;
+            for i := 0 to adhocRoomList.Count - 1 do begin
+                _trackingList.AddObject(adhocRoomList.Strings[i], adhocRoomList.Objects[i]);
             end;
             for i := 0 to chatList.Count - 1 do begin
                 _trackingList.AddObject(chatList.Strings[i], chatList.Objects[i]);
             end;
-            for i := 0 to otherList.Count - 1 do begin
-                _trackingList.AddObject(otherList.Strings[i], otherList.Objects[i]);
+            for i := 0 to tempList.Count - 1 do begin //others
+                _trackingList.AddObject(tempList.Strings[i], tempList.Objects[i]);
             end;
 
             // Cleanup
-            roomList.Clear();
+            permRoomList.Clear();
+            adhocRoomList.Clear();
             chatList.Clear();
             otherList.Clear();
 
-            roomList.Free();
+            permRoomList.Free();
+            adhocRoomList.Free();
             chatList.Free();
             otherList.Free();
         end

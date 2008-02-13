@@ -42,14 +42,16 @@ inherited frmXferManager: TfrmXferManager
   end
   object box: TScrollBox
     Left = 0
-    Top = 32
+    Top = 33
     Width = 455
-    Height = 135
+    Height = 130
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
+    ExplicitTop = 32
+    ExplicitHeight = 135
   end
   object httpServer: TIdHTTPServer
     Bindings = <>

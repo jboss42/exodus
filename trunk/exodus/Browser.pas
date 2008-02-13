@@ -341,6 +341,7 @@ begin
     _ecb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
 
     ImageIndex := RosterImages.RI_BROWSER_INDEX;
+    _windowType := 'browser';
 end;
 
 {---------------------------------------}
