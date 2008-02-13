@@ -142,6 +142,10 @@ inherited frmChat: TfrmChat
       AutoHotkeys = maManual
       Caption = 'Resources'
     end
+    object mnuProperties: TTntMenuItem
+      Caption = 'Properties...'
+      OnClick = doProfile
+    end
     object N4: TTntMenuItem
       Caption = '-'
     end
@@ -152,25 +156,6 @@ inherited frmChat: TfrmChat
     object popAddContact: TTntMenuItem
       Caption = 'Add to Contact List ...'
       OnClick = doAddToRoster
-    end
-    object mnuProfile: TTntMenuItem
-      Caption = 'Show Profile ...'
-      OnClick = doProfile
-    end
-    object C1: TTntMenuItem
-      Caption = 'Contact Info'
-      object mnuVersionRequest: TTntMenuItem
-        Caption = 'Version Request'
-        OnClick = CTCPClick
-      end
-      object mnuTimeRequest: TTntMenuItem
-        Caption = 'Time Request'
-        OnClick = CTCPClick
-      end
-      object mnuLastActivity: TTntMenuItem
-        Caption = 'Last Activity'
-        OnClick = CTCPClick
-      end
     end
     object mnuBlock: TTntMenuItem
       Caption = 'Block Contact'
@@ -190,6 +175,8 @@ inherited frmChat: TfrmChat
     object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
+    end
+    object TTntMenuItem
     end
   end
 end

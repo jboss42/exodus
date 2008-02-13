@@ -22,32 +22,55 @@ unit Profile;
 interface
 
 uses
-    XMLTag, IQ, XMLVcard, 
-    ShellAPI, 
+    Exodus_TLB,
+    Session, 
+    XMLTag, IQ, XMLVcard,
+    ShellAPI,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
-    TntComCtrls, TntCheckLst, TntExtCtrls, ExtDlgs, ExForm, TntForms, ExFrame;
+    buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls, JabberID,
+    TntComCtrls, TntCheckLst, TntExtCtrls, ExtDlgs, ExForm, TntForms, ExFrame,
+  ExBrandPanel, ExGroupBox, Grids, TntGrids;
 
 type
   TfrmProfile = class(TExForm)
+    frameButtons1: TframeButtons;
+    Splitter1: TSplitter;
+    TreeView1: TTntTreeView;
     PageControl1: TTntPageControl;
     TabSheet1: TTntTabSheet;
-    Label1: TTntLabel;
-    Label2: TTntLabel;
-    lblEmail: TTntLabel;
+    aniProfile: TAnimate;
+    TntPanel1: TTntPanel;
+    TntLabel4: TTntLabel;
+    lblJID: TTntLabel;
+    TntPanel2: TTntPanel;
+    TntPanel3: TTntPanel;
+    lblUserTitle: TTntLabel;
+    ExGroupBox1: TExGroupBox;
     Label7: TTntLabel;
     Label4: TTntLabel;
     Label5: TTntLabel;
-    TabSheet2: TTntTabSheet;
-    GrpListBox: TTntCheckListBox;
+    lblEmail: TTntLabel;
+    txtFirst: TTntEdit;
+    txtMiddle: TTntEdit;
+    txtLast: TTntEdit;
+    txtPriEmail: TTntEdit;
+    TntPanel4: TTntPanel;
+    Label2: TTntLabel;
+    txtNick: TTntEdit;
     TabSheet3: TTntTabSheet;
     lblURL: TTntLabel;
     Label12: TTntLabel;
     Label6: TTntLabel;
     Label28: TTntLabel;
+    Label8: TTntLabel;
+    Label9: TTntLabel;
+    Label3: TTntLabel;
     txtWeb: TTntEdit;
     cboOcc: TTntComboBox;
     txtBDay: TTntEdit;
+    txtHomeVoice: TTntEdit;
+    txtHomeFax: TTntEdit;
+    memDesc: TTntMemo;
     TabSheet4: TTntTabSheet;
     Label13: TTntLabel;
     Label21: TTntLabel;
@@ -72,7 +95,6 @@ type
     txtOrgTitle: TTntEdit;
     txtWorkVoice: TTntEdit;
     txtWorkFax: TTntEdit;
-    frameButtons1: TframeButtons;
     TabSheet6: TTntTabSheet;
     Label15: TTntLabel;
     Label16: TTntLabel;
@@ -86,138 +108,355 @@ type
     txtWorkStreet2: TTntEdit;
     txtWorkStreet1: TTntEdit;
     txtWorkCountry: TTntComboBox;
-    Label8: TTntLabel;
-    Label9: TTntLabel;
-    txtHomeVoice: TTntEdit;
-    txtHomeFax: TTntEdit;
-    TabSheet7: TTntTabSheet;
-    Panel1: TPanel;
-    Splitter1: TSplitter;
-    aniProfile: TAnimate;
-    memDesc: TTntMemo;
-    Label3: TTntLabel;
-    lblUpdateNick: TTntLabel;
-    Panel2: TPanel;
-    btnVersion: TTntButton;
-    btnTime: TTntButton;
-    btnLast: TTntButton;
-    Panel3: TPanel;
-    txtNewGrp: TTntEdit;
-    btnAddGroup: TTntButton;
-    txtJID: TTntEdit;
-    txtNick: TTntEdit;
-    txtPriEmail: TTntEdit;
-    txtFirst: TTntEdit;
-    txtMiddle: TTntEdit;
-    txtLast: TTntEdit;
-    ResListBox: TTntListBox;
-    optSubscrip: TTntRadioGroup;
-    TreeView1: TTntTreeView;
+    btnChangeNick: TTntButton;
     picBox: TPaintBox;
     TntLabel1: TTntLabel;
+    TntPanel5: TTntPanel;
+    TntLabel7: TTntLabel;
+    lblClientInfo: TTntLabel;
+    btnResources: TTntButton;
+    pnlAllResources: TTntPanel;
+    gridResources: TTntStringGrid;
+    lblSubState: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
-    procedure btnVersionClick(Sender: TObject);
     procedure lblEmailClick(Sender: TObject);
-    procedure btnAddGroupClick(Sender: TObject);
     procedure btnUpdateNickClick(Sender: TObject);
     procedure picBoxPaint(Sender: TObject);
-    procedure SubscriptionOnClick(Sender: TObject);
+    procedure btnResourcesClick(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
     _vcard: TXMLVCard;
     _origSubIdx: integer;
+    _jid: TJabberID;
+    _isMe: boolean;
   public
     { Public declarations }
     procedure vcard(event: string; tag: TXMLTag);
   end;
 
-var
-  frmProfile: TfrmProfile;
-
 function ShowProfile(jid: Widestring): TfrmProfile;
+procedure OnSessionStartProfile(Session: TJabberSession);
+procedure OnSessionEndProfile();
 
 implementation
 
 {$R *.DFM}
 uses
-    JabberConst, JabberUtils, ExUtils,  GnuGetText,
-    Presence, ContactController, JabberID, Session, Unicode, Jabber1;
+    JabberConst, JabberUtils, ExUtils,  GnuGetText, DisplayName,
+    Presence, ContactController, Unicode, Jabber1, Entity, EntityCache;
+
+const
+    sSUB_NONE = 'You can not see each others presence.';
+    sSUB_TO = 'Contact can see your presence, you can not see their''s.';
+    sSUB_FROM = 'You can see contact''s presence, they can not see yours.';
+    sSUB_BOTH = 'You can see contact''s presence, they can see yours.';
+
+type
+    TVerResponder = class
+        _pForm: TfrmProfile;
+        _jid: TJabberID;
+    public
+        procedure CTCPCallback(event: string; tag: TXMLTag);
+
+        procedure fetchVersion(f: TfrmProfile; j: TJabberID);
+    end;
+    {------------------------ TSessionListener --------------------------------}
+    TSessionListener = class
+    private
+        _Session: TJabberSession;
+
+        _ReceivedError: WideString;
+        _Authenticated: Boolean;
+
+        _SessionCB: integer;
+    protected
+        procedure SetSession(JabberSession: TJabberSession);virtual;
+        procedure FireAuthenticated(); virtual;
+        procedure FireDisconnected(); virtual;
+    public
+        Constructor Create(JabberSession: TJabberSession);
+        Destructor Destroy(); override;
+
+        procedure SessionListener(event: string; tag: TXMLTag);
+
+        property Session: TJabberSession read _Session write SetSession;
+    end;
+
+var
+    _responderList: TWideStringList;
+    _openWindowList: TWideStringList;
+    _sessionListener: TSessionListener;
+
+function IndexOf(jid: widestring): integer;
+var
+    i: integer;
+begin
+    for I := 0 to _openWindowList.Count - 1 do
+        if (_openWindowList[i] = jid) then
+        begin
+            Result := i;
+            exit;
+        end;
+    Result := -1;
+end;
+
+{Event fired indicating session object is created and ready}
+procedure OnSessionStartProfile(Session: TJabberSession);
+begin
+    if (_sessionListener <> nil) then
+    begin
+        _sessionListener.free();
+        _sessionListener := nil;
+    end;
+    if (Session <> nil) then
+        _sessionListener := TSessionListener.create(Session);
+end;
+
+{Session object is being destroyed. Still valid for this call but not after}
+procedure OnSessionEndProfile();
+begin
+    if (_sessionListener <> nil) then
+    begin
+        _sessionListener.free();
+        _sessionListener := nil;
+    end;
+end;
+
+procedure TSessionListener.SetSession(JabberSession: TJabberSession);
+begin
+    if (_Session <> nil) then
+    begin
+        if (_SessionCB <> -1) then        begin
+            _Session.UnRegisterCallback(_SessionCB);
+            _SessionCB := -1;
+        end;
+    end;
+    _Session := JabberSession;
+    if (_Session <> nil) then
+    begin
+        _SessionCB := _Session.RegisterCallback(SessionListener, '/session');
+        _Authenticated := _Session.Authenticated;
+    end;
+end;
+
+procedure TSessionListener.FireAuthenticated();
+begin
+end;
+
+procedure TSessionListener.FireDisconnected();
+var
+    i : integer;
+begin
+    for i := 0 to _openWindowList.Count - 1 do
+        TForm(_openWindowList.Objects[i]).close();
+end;
+
+procedure TSessionListener.SessionListener(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/authenticated') then
+    begin
+        _Authenticated := true;
+        _ReceivedError := '';
+        FireAuthenticated();
+    end
+    else if ((event = '/session/disconnected') and _Authenticated) then
+    begin
+        FireDisconnected();
+        _Authenticated := false;
+    end
+    else if (event = '/session/commerror') then
+    begin
+        _ReceivedError := 'Comm Error';
+    end;
+end;
+
+Constructor TSessionListener.Create(JabberSession: TJabberSession);
+begin
+    _Authenticated := false;
+    _ReceivedError := '';
+    _SessionCB := -1;
+    SetSession(JabberSession);
+end;
+
+Destructor TSessionListener.Destroy();
+begin
+    SetSession(nil);
+end;
+
+procedure TVerResponder.FetchVersion(f: TfrmProfile; j: TJabberID);
+var
+    p: TJabberPres;
+begin
+    //if j is not full, get the primary from ppdb
+    if (j.resource = '') then
+    begin
+        // get some CTCP query sent out
+        p := MainSession.ppdb.FindPres(j.jid, '');
+        if p = nil then
+            exit; //offline, no version
+
+        _jid := TJabberID.create(p.fromJID.full);
+    end
+    else _jid := TJabberID.create(j);
+    _pForm := f;
+    _responderList.AddObject(_jid.full, Self);
+    ExUtils.jabberSendCTCP(_jid.full, XMLNS_VERSION, Self.CTCPCallback);
+end;
+
+procedure TVerResponder.CTCPCallback(event: string; tag: TXMLTag);
+var
+    i : integer;
+    ttag : TXMLTag;
+    tstr: wideString;
+    qtype: widestring;
+begin
+{
+<iq from='rynok@jabber.com/Jabber Instant Messenger'
+        to='pgmillard@jabber.org/workage'
+        type='result'>
+    <query xmlns='jabber:iq:version'>
+        <name>Jabber Instant Messenger</name>
+        <version>1.10.0.7</version>
+        <os>NT 5.0</os>
+    </query>
+</iq>
+}
+    //update labels on associated form
+    ttag := nil;
+    qtype := 'error';
+    if (tag <> nil) then
+    begin
+        ttag := tag.GetFirstTag('query');
+        qtype := tag.getAttribute('type');
+    end;
+
+    if ((_pForm <> nil) and (ttag <> nil) and (qtype = 'result')) then
+    begin
+        for i := 0 to _pForm.gridResources.RowCount - 1 do
+        begin
+            if (_pForm.gridResources.Cells[0,i] = _jid.resource) then
+            begin
+                tstr := ttag.GetBasicText('name') + ', version: ' + ttag.GetBasicText('version');
+                _pForm.gridResources.Cells[1,i] := tstr;
+                if (i = 1) then //0th row is fixed title
+                    _pForm.lblClientInfo.caption := tstr;
+                break;
+            end;
+        end;
+    end;
+    i := _responderList.indexOf(_jid.full);
+    if (i <> -1) then //?!
+        _responderList.Delete(i);
+    _jid.Free();
+    Self.Free();
+end;
+
+procedure ResponderListRemoveForm(f: TfrmProfile);
+var
+    i: integer;
+    oneRes: TVerResponder;
+begin
+    for i := 0 to _responderList.Count -1 do
+    begin
+        oneRes := TVErResponder(_responderList.Objects[1]);
+        if (oneRes._pForm = f) then
+            oneRes._pForm := nil;
+    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 function ShowProfile(jid: Widestring): TfrmProfile;
-//var
-//    tmp_jid: TJabberID;
-//    ritem: TJabberRosterItem;
-//    f: TfrmProfile;
-//    p: TJabberPres;
-//    tmps: string;
-//    i, gi: integer;
+var
+    tstr: Widestring;
+    item: IExodusItem;
+    f: TfrmProfile;
+    p: TJabberPres;
+    tjid: TJabberID;
+    i: integer;
 begin
-{ TODO : Roster refactor }
-//    tmp_jid := TJabberID.Create(jid);
-//    f := TfrmProfile.Create(Application);
-//
-//    with f do begin
-//
-//        //MainSession.Roster.AssignGroups(GrpListBox.Items);
-//        ResListBox.Items.Clear;
-//        optSubscrip.ItemIndex := 0;
-//        txtJID.Text := tmp_jid.getDisplayJID();
-//
-//        //ritem := MainSession.Roster.Find(tmp_jid.jid);
-//        if (ritem <> nil) then begin
-//            txtNick.Text := ritem.Text;
-//            if ritem.subscription = 'from' then
-//                optSubscrip.ItemIndex := 2
-//            else if ritem.subscription = 'to' then
-//                optSubscrip.ItemIndex := 1
-//            else if ritem.subscription = 'both' then
-//                optSubscrip.ItemIndex := 3;
-//
-//            for i := 0 to ritem.GroupCount - 1 do begin
-//                gi := GrpListBox.Items.IndexOf(ritem.Group[i]);
-//                if (gi = -1) then
-//                    gi := GrpListBox.Items.Add(ritem.Group[i]);
-//                GrpListBox.Checked[gi] := true;
-//            end;
-//        end;
-//
-//        _origSubIdx := optSubscrip.ItemIndex;
-//
-//        // Show all the resources
-//        p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
-//        while p <> nil do begin
-//            ResListBox.Items.Add(p.fromJID.resource);
-//            p := MainSession.ppdb.NextPres(p)
-//        end;
-//
-//        tmps := MainSession.generateID();
-//        iq := TJabberIQ.Create(MainSession, tmps, vcard);
-//        iq.Namespace := 'vcard-temp';
-//        iq.qTag.Name := 'vCard';
-//        iq.iqType := 'get';
-//        iq.toJid := tmp_jid.jid;
-//        iq.Send;
-//
-//        TreeView1.Selected := TreeView1.Items[0];
-//        TreeView1.FullExpand();
-//        PageControl1.ActivePageIndex := 0;
-//    end;
-//
-//    tmp_jid.Free();
-//
-//    f.Show;
-//    f.aniProfile.Visible := true;
-//    f.aniProfile.Active := true;
-//    Result := f;
+    tjid := TJabberID.create(jid);
+    i := INdexOf(tjid.jid);
+    if (i <> -1) then
+    begin
+        TForm(_openWindowList.Objects[i]).Show();
+        tjid.free();
+        exit;
+    end;
+
+    f := TfrmProfile.Create(Application);
+    _openWindowList.AddObject(tjid.jid, f);
+    
+    with f do begin
+        p := MainSession.ppdb.FindPres(tjid.jid, '');
+        if (p <> nil) then
+            _jid := TJabberID.Create(p.fromJID.full)
+        else _jid := TJabberID.Create(tjid.jid);
+        tjid.free();
+        item := MainSession.ItemController.GetItem(_jid.jid);
+        _isMe := (_jid.jid = MainSession.Profile.getJabberID().jid); //bare jids match
+
+        frameButtons1.btnOK.visible := _isME;
+        if (not _isME) then begin
+            frameButtons1.btnCancel.Caption := _('Close');
+            frameButtons1.btnCancel.Default := true;
+        end;
+        
+        f.lblUserTitle.Caption := GetDisplayNameCache().getDisplayName(_jid) + ' properties';
+        lblJID.Caption := _jid.getDisplayFull();
+        txtNick.Text := GetDisplayNameCache().getDisplayName(_jid);
+
+        tstr := Item.value['subscription'];
+
+        if (tstr = 'from') then
+            lblSubState.caption := _(sSUB_FROM)
+        else if (tstr = 'to') then
+            lblSubState.caption := _(sSUB_TO)
+        else if (tstr = 'both') then
+            lblSubState.caption := _(sSUB_BOTH)
+        else
+            lblSubState.caption := _(sSUB_NONE);
+
+        gridResources.FixedRows := 1;
+        gridResources.RowCount := 2;
+        gridResources.Cells[0,0] := _('Resource');
+        gridResources.Cells[1,0] := _('Client information');
+
+        while p <> nil do begin
+            gridResources.cells[0, gridResources.RowCount -1] := p.fromJID.resource;
+            gridResources.Cells[1, gridResources.RowCount -1] := _('Not available');
+            gridResources.RowCount := gridResources.RowCount + 1;
+            TVerResponder.Create().fetchVersion(f, p.fromJID);
+            p := MainSession.ppdb.NextPres(p)
+        end;
+        gridResources.RowCount := gridResources.RowCount - 1;
+        btnResources.Visible := (gridResources.RowCount > 2);
+        gridResources.Height := (gridResources.RowCount * gridResources.DefaultRowHeight) + 6;
+        pnlAllResources.Visible := false;
+
+        tstr := MainSession.generateID();
+        iq := TJabberIQ.Create(MainSession, tstr, vcard);
+        iq.Namespace := 'vcard-temp';
+        iq.qTag.Name := 'vCard';
+        iq.iqType := 'get';
+        iq.toJid := _jid.jid;
+        iq.Send;
+
+        TreeView1.Selected := TreeView1.Items[0];
+        TreeView1.FullExpand();
+        PageControl1.ActivePageIndex := 0;
+    end;
+    f.Show;
+    f.aniProfile.Visible := true;
+    f.aniProfile.Active := true;
+    Result := f;
 end;
 
 {---------------------------------------}
@@ -286,40 +525,29 @@ begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
 
-    // make sure our treeview is expanded.
-    for i := 0 to TreeView1.Items.Count - 1 do
-        TreeView1.Items[i].Expand(true);
-
-    URLLabel(lblUpdateNick);
     URLLabel(lblEmail);
     URLLabel(lblURL);
 
     // make all the tabs invisible
     tabSheet1.TabVisible := false;
-    tabSheet2.TabVisible := false;
     tabSheet3.TabVisible := false;
     tabSheet4.TabVisible := false;
     tabSheet5.TabVisible := false;
     tabSheet6.TabVisible := false;
-    tabSheet7.TabVisible := false;
     iq := nil;
 
     // Do this to ensure the nodes are properly translated.
     TreeView1.Items.Clear();
-    n := TreeView1.Items.Add(nil,       _('Basic'));
-    TreeView1.Items.AddChild(n,    _('Resources'));
-    TreeView1.Items.AddChild(nil,  _('Groups'));
-    n := TreeView1.Items.AddChild(nil,  _('Personal Information'));
-    TreeView1.Items.AddChild(n,    _('Address'));
-    n := TreeView1.Items.AddChild(nil,  _('Work Information'));
-    TreeView1.Items.AddChild(n,    _('Address'));
+    TreeView1.Items.Add(nil, _('Basic'));
+    n := TreeView1.Items.AddChild(nil, _('Personal Information'));
+    TreeView1.Items.AddChild(n, _('Address'));
+    n := TreeView1.Items.AddChild(nil, _('Work Information'));
+    TreeView1.Items.AddChild(n, _('Address'));
 
     for i := 0 to TreeView1.Items.Count - 1 do
         TreeView1.Items[i].Expand(true);
 
     _origSubIdx := -1;
-
-    MainSession.Prefs.RestorePosition(Self);
 end;
 
 {---------------------------------------}
@@ -334,10 +562,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmProfile.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+    i: integer;
 begin
-    MainSession.Prefs.SavePosition(Self);
+//    MainSession.Prefs.SavePosition(Self);
     if (iq <> nil) then iq.Free;
     if (_vcard <> nil) then _vcard.Free();
+    i := IndexOf(_jid.jid);
+    if (i <> -1) then
+        _openWindowList.Delete(i);
+    if (_jid <> nil) then
+        _jid.free();
     Action := caFree;
 end;
 
@@ -376,35 +611,13 @@ begin
 //        if ((changed) or (ritem.AreGroupsDirty())) then
 //            ritem.update();
 //    end;
-//    Self.Close;
+    Self.Close;
 end;
 
 {---------------------------------------}
 procedure TfrmProfile.TreeView1Change(Sender: TObject; Node: TTreeNode);
 begin
     Self.TreeView1Click(Self);
-end;
-
-{---------------------------------------}
-procedure TfrmProfile.btnVersionClick(Sender: TObject);
-var
-    jid, res: string;
-    iq: TJabberIQ;
-begin
-    // do some CTCP queries..
-    if (ResListBox.ItemIndex < 0) then exit;
-    res := ResListBox.Items[ResListBox.ItemIndex];
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
-    iq.iqType := 'get';
-    jid := txtJID.Text + '/' + res;
-    iq.toJID := jid;
-    if Sender = btnVersion then
-        iq.Namespace := XMLNS_VERSION
-    else if Sender = btnTime then
-        iq.Namespace := XMLNS_TIME
-    else if Sender = btnLast then
-        iq.Namespace := XMLNS_LAST;
-    iq.Send;
 end;
 
 {---------------------------------------}
@@ -421,35 +634,25 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmProfile.btnAddGroupClick(Sender: TObject);
+procedure TfrmProfile.btnResourcesClick(Sender: TObject);
 var
-    tmps: Widestring;
+    h: integer;
 begin
-    // add this group to the listbox.
-    tmps := txtNewGrp.Text;
-    if (tmps <> '') then begin
-        GrpListBox.Items.Add(tmps);
+    inherited;
+    if (not pnlAllREsources.Visible) then
+    begin
+        h := (gridResources.RowCount * gridResources.DefaultRowHeight) + 6;
+        if (h < 100) then //designed height
+            pnlAllREsources.Height := h;
     end;
+    pnlAllREsources.Visible := not pnlAllREsources.Visible;
 end;
 
 procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
+var
+    i: boolean;
 begin
-    if (txtFirst.Text <> '') or (txtLast.Text <> '') or (txtMiddle.Text <> '') then
-    begin
-        txtNick.Text := txtFirst.Text;
-
-        if (txtMiddle.Text <> '') then begin
-            if (txtNick.Text <> '') then
-                txtNick.Text := txtNick.Text + ' ';
-            txtNick.Text := txtNick.Text + txtMiddle.Text;
-        end;
-
-        if (txtLast.Text <> '') then begin
-            if (txtNick.Text <> '') then
-                txtNick.Text := txtNick.Text + ' ';
-            txtNick.Text := txtNick.Text + txtLast.Text;
-        end;
-    end
+    txtNick.Text := GetDisplayNameCache().getProfileDisplayName(_jid, i)
 end;
 
 procedure TfrmProfile.picBoxPaint(Sender: TObject);
@@ -460,10 +663,12 @@ end;
 
 // soley here to disallow a change in subscription state -
 // a managed user is a happy user...
-procedure TfrmProfile.SubscriptionOnClick(Sender: TObject);
-begin
-    if (_origSubIdx >= 0) then
-      TTntRadioGroup(Sender).ItemIndex := _origSubIdx;
-end;
-
+initialization
+    _responderList := TWideStringList.create();
+    _openWindowList := TWideStringList.create();
+finalization
+    _responderList.free();
+    _responderList := nil;
+    _openWindowList.free();
+    _openWindowList := nil;
 end.

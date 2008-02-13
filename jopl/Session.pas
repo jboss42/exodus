@@ -240,6 +240,7 @@ uses
     EntityCache, CapsCache,
     DisplayName, //display name cache
     PluginAuth,
+    Profile,
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence, XMLVCard, Windows, strutils, JabberUtils;
 
@@ -323,7 +324,7 @@ begin
     ChatList := TJabberChatList.Create();
     MsgList.SetSession(Self);
     ChatList.SetSession(Self);
-
+    OnSessionStartProfile(Self);
     // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
@@ -376,7 +377,8 @@ begin
 
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
-
+    OnSessionEndProfile();
+    
     inherited Destroy;
 end;
 
@@ -1033,7 +1035,7 @@ begin
 
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);
-
+        //do stuff by adding to Presence_XML
         for i := 0 to Presence_XML.Count - 1 do
             p.addInsertedXML(Presence_XML[i]);
 

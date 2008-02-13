@@ -38,8 +38,7 @@ type
     mnuOnTop: TTntMenuItem;
     N1: TTntMenuItem;
     mnuBlock: TTntMenuItem;
-    C1: TTntMenuItem;
-    mnuProfile: TTntMenuItem;
+    mnuProperties: TTntMenuItem;
     popAddContact: TTntMenuItem;
     mnuSendFile: TTntMenuItem;
     N4: TTntMenuItem;
@@ -49,9 +48,6 @@ type
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
     PrintHistory1: TTntMenuItem;
-    mnuLastActivity: TTntMenuItem;
-    mnuTimeRequest: TTntMenuItem;
-    mnuVersionRequest: TTntMenuItem;
     PrintDialog1: TPrintDialog;
     pnlJID: TPanel;
     lblNick: TTntLabel;
@@ -69,7 +65,6 @@ type
     procedure mnuSendFileClick(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure CTCPClick(Sender: TObject);
     procedure mnuBlockClick(Sender: TObject);
     procedure mnuSaveClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
@@ -109,14 +104,7 @@ type
     _sent_composing: boolean;
     _warn_busyclose: boolean;
 
-//    _destroying: boolean;
     _isRoom:  boolean;      // true if this is a muc chat - a chat via a room
-
-    _cur_ver: TJabberIQ;    // pending events
-    _cur_time: TJabberIQ;
-    _cur_last: TJabberIQ;
-
-//    _mynick: Widestring;
 
     // custom notification options to use..
     _notify: array[0..1] of integer;
@@ -167,11 +155,6 @@ type
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure CTCPCallbackTime(event: string; tag: TXMLTag);
-    procedure CTCPCallbackVersion(event: string; tag: TXMLTag);
-    procedure CTCPCallbackLast(event: string; tag: TXMLTag);
-    procedure CTCPCallback(event: string; tag: TXMLTag);
-
     class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
     function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
     procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
@@ -381,10 +364,9 @@ begin
             _isRoom := IsRoom(sjid);
             if (_isRoom) then begin
                 popAddContact.Enabled := false;
-                mnuProfile.Enabled    := false;
+                mnuProperties.Enabled    := false;
                 popResources.Enabled  := false;
                 mnuSendFile.Enabled   := false;
-                c1.Enabled            := false;
                 mnuBlock.Enabled      := false;
 //                _dnLocked := true;
             end;
@@ -476,9 +458,6 @@ end;
 procedure TfrmChat.FormCreate(Sender: TObject);
 begin
     inherited;
-    _cur_ver := nil;
-    _cur_time := nil;
-    _cur_last := nil;
     _pcallback := -1;
     _spcallback:= -1;
     _scallback := -1;
@@ -730,7 +709,6 @@ begin
     Item := MainSession.ItemController.GetItem(cjid);
     if (Item <> nil) then begin
         mnuSendFile.Enabled := (not _isRoom);
-        C1.Enabled := true;
         //if (not item.IsNative) then
         DragAcceptFiles(Handle, false);
     end;
@@ -1604,108 +1582,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.CTCPClick(Sender: TObject);
-var
-    jid: WideString;
-    p: TJabberPres;
-begin
-    // get some CTCP query sent out
-    p := MainSession.ppdb.FindPres(_jid.jid, '');
-    if p = nil then
-        // this person isn't online.
-        jid := _jid.jid
-    else
-        jid := p.fromJID.full;
-
-    if Sender = mnuVersionRequest then
-        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallbackVersion)
-    else if Sender = mnuTimeRequest then
-        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallbackTime)
-    else if Sender = mnuLastActivity then
-        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallbackLast);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.CTCPCallbackTime(event: string; tag: TXMLTag);
-begin
-    if ((event = 'timeout') and
-        (tag = nil)) then
-        _cur_time := nil
-    else
-        CTCPCallback(event, tag);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.CTCPCallbackVersion(event: string; tag: TXMLTag);
-begin
-    if ((event = 'timeout') and
-        (tag = nil)) then
-        _cur_ver := nil
-    else
-        CTCPCallback(event, tag);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.CTCPCallbackLast(event: string; tag: TXMLTag);
-begin
-    if ((event = 'timeout') and
-        (tag = nil)) then
-        _cur_last := nil
-    else
-        CTCPCallback(event, tag);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.CTCPCallback(event: string; tag: TXMLTag);
-var
-    from: WideString;
-    ns: WideString;
-    procedure DispString(str: WideString);
-    var
-        subj_msg: TJabberMessage;
-    begin
-        subj_msg := TJabberMessage.Create();
-        subj_msg.Body := str;
-        subj_msg.Subject := '';
-        subj_msg.Nick := '';
-        DisplayMsg(subj_msg, MsgList);
-        subj_msg.Free();
-    end;
-begin
-    // record some kind of CTCP result
-    if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
-        from := tag.getAttribute('from');
-
-        ns := tag.Namespace(true);
-        if ns = XMLNS_TIME then begin
-            _cur_time := nil;
-            DispString(ParseTimeEvent(tag));
-        end
-
-        else if ns = XMLNS_VERSION then begin
-            _cur_ver := nil;
-            DispString(ParseVersionEvent(tag)); 
-        end
-
-        else if ns = XMLNS_LAST then begin
-            _cur_last := nil;
-            DispString(ParseLastEvent(tag));
-        end;
-
-    end
-    else if (tag <> nil) then begin
-        // Error type - IQ will delete self, must nil out the pointer.
-        ns := tag.Namespace(true);
-        if (ns = XMLNS_VERSION) then
-            _cur_ver := nil
-        else if (ns = XMLNS_TIME) then
-            _cur_time := nil
-        else if (ns = XMLNS_LAST) then
-            _cur_last := nil;
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
      if (MainSession.IsBlocked(_jid.jid)) then
@@ -1776,10 +1652,6 @@ begin
     // Cancel our composing event
     if (_sent_composing) then
         _sendComposing('');
-
-    if (_cur_ver <> nil) then FreeAndNil(_cur_ver);
-    if (_cur_time <> nil) then FreeAndNil(_cur_time);
-    if (_cur_last <> nil) then FreeAndNil(_cur_last);
 
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and

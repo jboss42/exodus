@@ -529,15 +529,12 @@ inherited frmMsgRecv: TfrmMsgRecv
       Caption = 'Client Info'
       object mnuVersionRequest: TMenuItem
         Caption = 'Version Request'
-        OnClick = mnuVersionRequestClick
       end
       object mnuTimeRequest: TMenuItem
         Caption = 'Time Request'
-        OnClick = mnuVersionRequestClick
       end
       object mnuLastActivity: TMenuItem
         Caption = 'Last Activity'
-        OnClick = mnuVersionRequestClick
       end
     end
     object mnuBlock: TTntMenuItem

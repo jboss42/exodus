@@ -26,6 +26,23 @@ uses
     Windows, Classes, SysUtils;
 
 type
+{$IFDEF DEPRICATED_PROTOCOL}
+    TBrowseResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag: TXMLTag); override;
+    public
+        Namespaces: TWidestringList;
+        constructor Create(Session: TJabberSession); overload;
+        destructor Destroy; override;
+    end;
+
+    TAvatarResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag: TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;    
+{$ENDIF}
 
     TResponderFactory = procedure(tag: TXMLTag);
 
@@ -48,15 +65,6 @@ type
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
-
-    TBrowseResponder = class(TJabberResponder)
-    published
-        procedure iqCallback(event: string; tag: TXMLTag); override;
-    public
-        Namespaces: TWidestringList;
-        constructor Create(Session: TJabberSession); overload;
-        destructor Destroy; override;
     end;
 
     TDiscoItem = class
@@ -105,12 +113,6 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
-    TAvatarResponder = class(TJabberResponder)
-    published
-        procedure iqCallback(event: string; tag: TXMLTag); override;
-    public
-        constructor Create(Session: TJabberSession); overload;
-    end;
 
     TConfirmationResponder = class(TJabberResponder)
     published
@@ -127,7 +129,9 @@ procedure ExHandleException(e_data: TWidestringlist; showdlg: boolean);
 var
     Exodus_Disco_Items: TDiscoItemsResponder;
     Exodus_Disco_Info: TDiscoInfoResponder;
+{$IFDEF DEPRICATED_PROTOCOL}
     Exodus_Browse: TBrowseResponder;
+{$ENDIF}
 
 {---------------------------------------}
 {---------------------------------------}
@@ -160,27 +164,22 @@ var
     _last: TLastResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
-    //_muc_invite: TFactoryResponder;
+
     _unhandled: TUnhandledResponder;
     _sistart: TFactoryResponder;
+{$IFDEF DEPRICATED_PROTOCOL}
     _avatar: TAvatarResponder;
+{$ENDIF}
     _confirmation: TConfirmationResponder;
 
 {---------------------------------------}
 function getNick(j: Widestring): Widestring;
-//var
-//    jid: TJabberID;
-//    ritem: TJabberRosterItem;
+var
+    jid: TJabberID;
 begin
-     { TODO : Roster refactor }
-//    jid := TJabberID.Create(j);
-//    Result := DisplayName.getDisplayNameCache().getDisplayName(jid);
-//    ritem := MainSession.roster.Find(jid.jid);
-//    if (ritem = nil) then
-//        result := jid.getDisplayJID()
-//    else
-//        result := ritem.Text;
-//    jid.Free();
+    jid := TJabberID.Create(j);
+    Result := DisplayName.getDisplayNameCache().getDisplayName(jid);
+    jid.free();
 end;
 
 {---------------------------------------}
@@ -202,11 +201,14 @@ begin
     _sistart := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
         SIStart);
-    _avatar := TAvatarResponder.Create(MainSession);
     _confirmation := TConfirmationResponder.Create(MainSession);
 
     // Create some globally accessable responders.
+{$IFDEF DEPRICATED_PROTOCOL}
     Exodus_Browse := TBrowseResponder.Create(MainSession);
+    _avatar := TAvatarResponder.Create(MainSession);
+{$ENDIF}
+
     Exodus_Disco_Items := TDiscoItemsResponder.Create(MainSession);
     Exodus_Disco_Info := TDiscoInfoResponder.Create(MainSession);
 
@@ -307,8 +309,9 @@ begin
 
     FreeAndNil(Exodus_Disco_Info);
     FreeAndNil(Exodus_Disco_Items);
+{$IFDEF DEPRICATED_PROTOCOL}
     FreeAndNil(Exodus_Browse);
-
+{$ENDIF}
     FreeAndNil(_unhandled);
     //FreeAndNil(_muc_invite);
     FreeAndNil(_iqoob);
@@ -346,10 +349,6 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
     //direct notify at the message queue if showing, otherwise the main window
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
 
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sVersion),
@@ -454,11 +453,6 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
-
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
                                           getNick(tag.getAttribute('from'))]),
@@ -497,10 +491,6 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
 
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sLast),
@@ -533,138 +523,6 @@ begin
 end;
 
 {---------------------------------------}
-constructor TAvatarResponder.Create(Session: TJabberSession);
-begin
-    inherited Create(Session, 'jabber:iq:avatar');
-end;
-
-{---------------------------------------}
-procedure TAvatarResponder.iqCallback(event: string; tag: TXMLTag);
-var
-    x, r: TXMLTag;
-    f: TForm;
-begin
-    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-
-    if (_session.Profile.Avatar = '') then begin
-        r := TXMLTag.Create('iq');
-        r.setAttribute('to', tag.getAttribute('from'));
-        r.setAttribute('id', tag.getAttribute('id'));
-        r.setAttribute('type', 'error');
-        x := r.AddTag('error');
-        x.setAttribute('code', '404');
-        x.setAttribute('type', 'cancel');
-        x.AddTag('item-not-found');
-        _session.SendTag(r);
-    end
-    else begin
-        f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//        if (IsMsgQueueShowing()) then
-//            f := GetMsgQueue(false);
-
-        DoNotify(f, 'notify_autoresponse',
-             WideFormat(_(sNotifyAutoResponse), [_(sLast),
-                getNick(tag.getAttribute('from'))]),
-             RosterTreeImages.Find('info'));
-
-        // Respond to last queries
-        r := TXMLTag.Create('iq');
-        with r do begin
-            setAttribute('to', tag.getAttribute('from'));
-            setAttribute('id', tag.getAttribute('id'));
-            setAttribute('type', 'result');
-
-            with AddTag('query') do begin
-                setAttribute('xmlns', 'jabber:iq:avatar');
-                x := AddTag('data');
-                x.setAttribute('mimetype', _session.Profile.AvatarMime);
-                x.AddCData(_session.Profile.Avatar);
-            end;
-        end;
-        _session.sendTag(r);
-    end;
-end;
-
-{---------------------------------------}
-constructor TBrowseResponder.Create(Session: TJabberSession);
-begin
-    inherited Create(Session, XMLNS_BROWSE);
-    Namespaces := TWidestringlist.Create();
-end;
-
-{---------------------------------------}
-destructor TBrowseResponder.Destroy();
-begin
-    Namespaces.Free();
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
-var
-    i: integer;
-    r: TXMLTag;
-    f: TForm;
-begin
-    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-
-    f := nil;
-//JJF TODO need to fix this
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
-
-    DoNotify(f, 'notify_autoresponse',
-             WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
-                                          getNick(tag.getAttribute('from'))]),
-             RosterTreeImages.Find('info'));
-
-    r := TXMLTag.Create('iq');
-    with r do begin
-        setAttribute('to', tag.getAttribute('from'));
-        setAttribute('id', tag.GetAttribute('id'));
-        setAttribute('type', 'result');
-
-        with AddTag('user') do begin
-            setAttribute('xmlns', XMLNS_BROWSE);
-            setAttribute('type', 'client');
-            setAttribute('jid', _session.Profile.getJabberID.full());
-            setAttribute('name', _session.Username);
-
-            AddBasicTag('ns', XMLNS_AGENTS);
-
-            AddBasicTag('ns', XMLNS_IQOOB);
-            AddBasicTag('ns', XMLNS_BROWSE);
-            AddBasicTag('ns', XMLNS_TIME);
-            AddBasicTag('ns', XMLNS_VERSION);
-            AddBasicTag('ns', XMLNS_LAST);
-            AddBasicTag('ns', XMLNS_DISCOITEMS);
-            AddBasicTag('ns', XMLNS_DISCOINFO);
-
-            AddBasicTag('ns', XMLNS_BM);
-            AddBasicTag('ns', XMLNS_XDATA);
-            AddBasicTag('ns', XMLNS_XCONFERENCE);
-            AddBasicTag('ns', XMLNS_XEVENT);
-
-            AddBasicTag('ns', XMLNS_MUC);
-            AddBasicTag('ns', XMLNS_MUCUSER);
-            AddBasicTag('ns', XMLNS_MUCOWNER);
-
-            for i := 0 to Namespaces.Count - 1 do
-                AddBasicTag('ns', Namespaces[i]);
-            //if currently sending/displaying rich text include the NS
-            {
-            if (MainSession.Prefs.getBool('richtext_enabled')) then
-                AddBasicTag('ns', XMLNS_XHTMLIM);
-                }
-        end;
-    end;
-    _session.SendTag(r);
-end;
-
-{---------------------------------------}
 constructor TDiscoItemsResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_DISCOITEMS);
@@ -688,7 +546,6 @@ function TDiscoItemsResponder.addItem(Name, JabberID: Widestring): Widestring;
 var
     di: TDiscoItem;
 begin
-    //
     Result := IntToStr(_items.Count);
     di := TDiscoitem.Create();
     di.Name := Name;
@@ -701,7 +558,6 @@ procedure TDiscoItemsResponder.removeItem(id: Widestring);
 var
     idx: integer;
 begin
-    //
     idx := _items.IndexOf(ID);
     if ((idx >= 0) and (idx < _items.Count)) then begin
         _items.Objects[idx].Free();
@@ -735,12 +591,8 @@ begin
             n.setAttribute('jid', di.JID);
         end;
     end;
+    
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
-
     DoNotify(f, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
@@ -836,11 +688,12 @@ begin
     end
     else begin
         // no node or uri#ver
-//        addFeature(q, XMLNS_SEARCH); no longer supported, will cause contact to show up in search
         addFeature(q, XMLNS_AGENTS);
 
         addFeature(q, XMLNS_IQOOB);
+{$IFDEF DEPRICATED_PROTOCOL}
         addFeature(q, XMLNS_BROWSE);
+{$ENDIF}
         addFeature(q, XMLNS_TIME);
         addFeature(q, XMLNS_VERSION);
         addFeature(q, XMLNS_LAST);
@@ -850,7 +703,9 @@ begin
         // Various core extensions
         addFeature(q, XMLNS_BM);
         addFeature(q, XMLNS_XDATA);
+{$IFDEF DEPRICATED_PROTOCOL}
         addFeature(q, XMLNS_XCONFERENCE);
+{$ENDIF}
         addFeature(q, XMLNS_XEVENT);
 
         // MUC Stuff
@@ -864,10 +719,6 @@ begin
         addFeature(q, XMLNS_BYTESTREAMS);
 
         //if currently sending/displaying rich text include the NS
-        {
-        if (MainSession.Prefs.getBool('richtext_enabled')) then
-            addFeature(q, XMLNS_XHTMLIM);
-        }
         if (node = '') then begin
             with q.AddTag('identity') do begin
                 setAttribute('category', 'user');
@@ -885,11 +736,6 @@ begin
     end;
 
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
-
     DoNotify(f, 'notify_autoresponse',
         WideFormat(_(sNotifyAutoResponse), [_(sDisco),
             getNick(tag.getAttribute('from'))]),
@@ -952,12 +798,140 @@ begin
     end;
 end;
 
+{---------------------------------------}
+{$IFDEF DEPRICATED_PROTOCOL}
+constructor TAvatarResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, 'jabber:iq:avatar');
+end;
+
+{---------------------------------------}
+procedure TAvatarResponder.iqCallback(event: string; tag: TXMLTag);
+var
+    x, r: TXMLTag;
+    f: TForm;
+begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    if (_session.Profile.Avatar = '') then begin
+        r := TXMLTag.Create('iq');
+        r.setAttribute('to', tag.getAttribute('from'));
+        r.setAttribute('id', tag.getAttribute('id'));
+        r.setAttribute('type', 'error');
+        x := r.AddTag('error');
+        x.setAttribute('code', '404');
+        x.setAttribute('type', 'cancel');
+        x.AddTag('item-not-found');
+        _session.SendTag(r);
+    end
+    else begin
+        f := nil;
+
+        DoNotify(f, 'notify_autoresponse',
+             WideFormat(_(sNotifyAutoResponse), [_(sLast),
+                getNick(tag.getAttribute('from'))]),
+             RosterTreeImages.Find('info'));
+
+        // Respond to last queries
+        r := TXMLTag.Create('iq');
+        with r do begin
+            setAttribute('to', tag.getAttribute('from'));
+            setAttribute('id', tag.getAttribute('id'));
+            setAttribute('type', 'result');
+
+            with AddTag('query') do begin
+                setAttribute('xmlns', 'jabber:iq:avatar');
+                x := AddTag('data');
+                x.setAttribute('mimetype', _session.Profile.AvatarMime);
+                x.AddCData(_session.Profile.Avatar);
+            end;
+        end;
+        _session.sendTag(r);
+    end;
+end;
+{$ENDIF}
+
+{---------------------------------------}
+{$IFDEF DEPRICATED_PROTOCOL}
+constructor TBrowseResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, XMLNS_BROWSE);
+    Namespaces := TWidestringlist.Create();
+end;
+
+{---------------------------------------}
+destructor TBrowseResponder.Destroy();
+begin
+    Namespaces.Free();
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
+var
+    i: integer;
+    r: TXMLTag;
+    f: TForm;
+begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    f := nil;
+//JJF TODO need to fix this
+//for now, just notify the "dock manager" (notify to nil)
+//    if (IsMsgQueueShowing()) then
+//        f := GetMsgQueue(false);
+
+    DoNotify(f, 'notify_autoresponse',
+             WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
+                                          getNick(tag.getAttribute('from'))]),
+             RosterTreeImages.Find('info'));
+
+    r := TXMLTag.Create('iq');
+    with r do begin
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.GetAttribute('id'));
+        setAttribute('type', 'result');
+
+        with AddTag('user') do begin
+            setAttribute('xmlns', XMLNS_BROWSE);
+            setAttribute('type', 'client');
+            setAttribute('jid', _session.Profile.getJabberID.full());
+            setAttribute('name', _session.Username);
+
+            AddBasicTag('ns', XMLNS_AGENTS);
+
+            AddBasicTag('ns', XMLNS_IQOOB);
+            AddBasicTag('ns', XMLNS_BROWSE);
+            AddBasicTag('ns', XMLNS_TIME);
+            AddBasicTag('ns', XMLNS_VERSION);
+            AddBasicTag('ns', XMLNS_LAST);
+            AddBasicTag('ns', XMLNS_DISCOITEMS);
+            AddBasicTag('ns', XMLNS_DISCOINFO);
+
+            AddBasicTag('ns', XMLNS_BM);
+            AddBasicTag('ns', XMLNS_XDATA);
+            AddBasicTag('ns', XMLNS_XCONFERENCE);
+            AddBasicTag('ns', XMLNS_XEVENT);
+
+            AddBasicTag('ns', XMLNS_MUC);
+            AddBasicTag('ns', XMLNS_MUCUSER);
+            AddBasicTag('ns', XMLNS_MUCOWNER);
+
+            for i := 0 to Namespaces.Count - 1 do
+                AddBasicTag('ns', Namespaces[i]);
+        end;
+    end;
+    _session.SendTag(r);
+end;
+{$ENDIF}
 
 initialization
+{$IFDEF DEPRICATED_PROTOCOL}
     Exodus_Browse := nil;
+{$ENDIF}
     Exodus_Disco_Items := nil;
     Exodus_Disco_Info := nil;
-    
+
     _version := nil;
     _time := nil;
     _last := nil;

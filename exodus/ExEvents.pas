@@ -239,23 +239,18 @@ end;
 
 {---------------------------------------}
 procedure LogMsgEvent(e: TJabberEvent);
-//var
-//    m: TJabberMessage;
-//    ritem: TJabberRosterItem;
-//    tmp_jid: TJabberID;
+var
+    m: TJabberMessage;
+    tmp_jid: TJabberID;
 begin
-       { TODO : Roster refactor }
-//    tmp_jid := TJabberID.Create(e.from);
-//
-//    m := TJabberMessage.Create(e.tag);
-//    m.isMe := false;
-//    ritem := MainSession.roster.Find(tmp_jid.jid);
-//    if (ritem <> nil) then
-//        m.Nick := ritem.Text
-//    else
-//        m.Nick := m.FromJID;
-//    LogMessage(m);
-//    m.Free();
+    tmp_jid := TJabberID.Create(e.from);
+
+    m := TJabberMessage.Create(e.tag);
+    m.isMe := false;
+    m.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmp_jid);
+    tmp_jid.Free();
+    LogMessage(m);
+    m.Free();
 end;
                                                                                               
 {---------------------------------------}

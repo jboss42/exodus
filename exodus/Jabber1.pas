@@ -502,6 +502,8 @@ type
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
+    procedure CTCPCallback(event: string; tag: TXMLTag);
+
     procedure _sendInitPresence();
     {**
      *  Cleanup objects, registered callbacks etc. Prepare for shutdown
@@ -603,7 +605,6 @@ published
     procedure Startup();
     procedure DoConnect();
     procedure CancelConnect();
-    procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
     procedure TrackWindowsMsg(windows_msg: integer);
@@ -2943,9 +2944,9 @@ procedure TfrmExodus.mnuVersionClick(Sender: TObject);
 begin
     // get either version of time request from the jabber server
     if Sender = mnuVersion then
-        jabberSendCTCP(MainSession.Server, XMLNS_VERSION)
+        jabberSendCTCP(MainSession.Server, XMLNS_VERSION, Self.CTCPCallback)
     else if Sender = mnuTime then
-        jabberSendCTCP(MainSession.Server, XMLNS_TIME);
+        jabberSendCTCP(MainSession.Server, XMLNS_TIME, Self.CTCPCallback);
 end;
 
 procedure TfrmExodus.mnuFile_MyProfiles_ModifyProfileClick(Sender: TObject);
