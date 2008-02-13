@@ -11,11 +11,11 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : 1.2
-// File generated on 2/12/2008 11:03:57 PM from Type Library described below.
+// $Rev: 8291 $
+// File generated on 2/13/2008 3:54:54 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -112,7 +112,7 @@ const
   CLASS_ExodusChat: TGUID = '{C9FEB6AF-32BE-4B47-984C-9DA11B4DF7A6}';
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
   CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
-  IID_IExodusAXWindow: TGUID = '{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}';
+  IID_IExodusAXWindow: TGUID = '{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}';
   IID_IExodusController2: TGUID = '{FDAB329F-09F2-4AEA-8C72-319059E66389}';
   CLASS_ExodusAXWindow: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
   IID_IExodusItem: TGUID = '{44410CB8-2AD7-4D58-8067-2E795EB28E60}';
@@ -4332,26 +4332,50 @@ type
 // *********************************************************************//
 // Interface: IExodusAXWindow
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {617D28C3-8B25-4468-9FC8-9A6E931F8EB5}
+// GUID:      {8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}
 // *********************************************************************//
   IExodusAXWindow = interface(IDispatch)
-    ['{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}']
+    ['{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}']
     function Get_OleObject: OleVariant; safecall;
     procedure Close; safecall;
     procedure BringToFront; safecall;
+    function Get_UnreadMsgCount: Integer; safecall;
+    procedure Set_UnreadMsgCount(value: Integer); safecall;
+    procedure Dock; safecall;
+    procedure UnDock; safecall;
+    function Get_LastActivityTime: TDateTime; safecall;
+    procedure Set_LastActivityTime(value: TDateTime); safecall;
+    function Get_PriorityFlag: WordBool; safecall;
+    procedure Set_PriorityFlag(value: WordBool); safecall;
+    function Get_WindowType: WideString; safecall;
+    procedure Set_WindowType(const value: WideString); safecall;
+    function Get_ImageIndex: Integer; safecall;
+    procedure Set_ImageIndex(value: Integer); safecall;
     property OleObject: OleVariant read Get_OleObject;
+    property UnreadMsgCount: Integer read Get_UnreadMsgCount write Set_UnreadMsgCount;
+    property LastActivityTime: TDateTime read Get_LastActivityTime write Set_LastActivityTime;
+    property PriorityFlag: WordBool read Get_PriorityFlag write Set_PriorityFlag;
+    property WindowType: WideString read Get_WindowType write Set_WindowType;
+    property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
   end;
 
 // *********************************************************************//
 // DispIntf:  IExodusAXWindowDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {617D28C3-8B25-4468-9FC8-9A6E931F8EB5}
+// GUID:      {8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}
 // *********************************************************************//
   IExodusAXWindowDisp = dispinterface
-    ['{617D28C3-8B25-4468-9FC8-9A6E931F8EB5}']
+    ['{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}']
     property OleObject: OleVariant readonly dispid 201;
     procedure Close; dispid 202;
     procedure BringToFront; dispid 203;
+    property UnreadMsgCount: Integer dispid 204;
+    procedure Dock; dispid 205;
+    procedure UnDock; dispid 206;
+    property LastActivityTime: TDateTime dispid 207;
+    property PriorityFlag: WordBool dispid 208;
+    property WindowType: WideString dispid 209;
+    property ImageIndex: Integer dispid 210;
   end;
 
 // *********************************************************************//

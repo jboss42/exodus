@@ -149,6 +149,8 @@ begin
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
 
     Self.ImageIndex := RosterImages.RI_PREFS_INDEX;
+
+    _windowType := 'registration';
 end;
 
 {---------------------------------------}

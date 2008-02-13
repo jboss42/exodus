@@ -27,6 +27,14 @@ inherited frmXData: TfrmXData
     Width = 492
     Height = 34
     Align = alBottom
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 0
     TabStop = True
     ExplicitTop = 382
@@ -57,10 +65,18 @@ inherited frmXData: TfrmXData
   end
   inline frameXData: TframeXData
     Left = 0
-    Top = 32
+    Top = 33
     Width = 492
-    Height = 350
+    Height = 349
     Align = alClient
+    Color = 13681583
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
     TabOrder = 1
     TabStop = True
     ExplicitTop = 32

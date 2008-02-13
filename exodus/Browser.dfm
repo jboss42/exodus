@@ -162,6 +162,8 @@ inherited frmBrowse: TfrmBrowse
     BorderWidth = 3
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 94
+    ExplicitHeight = 277
     object vwBrowse: TTntListView
       Left = 73
       Top = 3
@@ -214,11 +216,10 @@ inherited frmBrowse: TfrmBrowse
       object lblIdentity: TTntLabel
         Left = 4
         Top = 4
-        Width = 62
+        Width = 55
         Height = 13
         Align = alTop
         Caption = 'Indentities:'
-        ExplicitWidth = 55
       end
       object Splitter1: TSplitter
         Left = 4
@@ -231,11 +232,10 @@ inherited frmBrowse: TfrmBrowse
       object lblFeatures: TTntLabel
         Left = 4
         Top = 140
-        Width = 62
+        Width = 47
         Height = 13
         Align = alTop
         Caption = 'Features:'
-        ExplicitWidth = 47
       end
       object vwInfo: TTntListView
         Left = 4
@@ -305,6 +305,7 @@ inherited frmBrowse: TfrmBrowse
     BorderWidth = 1
     ParentColor = True
     TabOrder = 2
+    ExplicitTop = 32
     DesignSize = (
       442
       31)
@@ -347,13 +348,11 @@ inherited frmBrowse: TfrmBrowse
       object TntLabel1: TTntLabel
         Left = 0
         Top = 0
-        Width = 88
-        Height = 29
+        Width = 75
+        Height = 13
         Align = alClient
         Caption = 'Jabber Address'
         Layout = tlCenter
-        ExplicitWidth = 75
-        ExplicitHeight = 13
       end
     end
     object cboJID: TTntComboBox
@@ -362,7 +361,7 @@ inherited frmBrowse: TfrmBrowse
       Width = 225
       Height = 21
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 13
+      ItemHeight = 0
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end
@@ -377,6 +376,7 @@ inherited frmBrowse: TfrmBrowse
     BorderWidth = 1
     ParentColor = True
     TabOrder = 3
+    ExplicitTop = 63
     DesignSize = (
       442
       31)
@@ -393,13 +393,11 @@ inherited frmBrowse: TfrmBrowse
       object TntLabel2: TTntLabel
         Left = 0
         Top = 0
-        Width = 88
-        Height = 29
+        Width = 72
+        Height = 13
         Align = alClient
         Caption = 'Node Identifier'
         Layout = tlCenter
-        ExplicitWidth = 72
-        ExplicitHeight = 13
       end
     end
     object cboNode: TTntComboBox
@@ -408,7 +406,7 @@ inherited frmBrowse: TfrmBrowse
       Width = 225
       Height = 21
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 13
+      ItemHeight = 0
       TabOrder = 1
       OnKeyPress = cboJIDKeyPress
     end

@@ -169,8 +169,11 @@ begin
     if MainSession.Active then begin
         lblJID.Caption := DisplayName.getDisplayNameCache().getDisplayName(MainSession.Profile.getJabberID()) + ' <' + MainSession.Profile.getJabberID().getDisplayFull() + '>';
     end
-    else
+    else begin
         lblJID.Caption := _('Disconnected');
+    end;
+
+    _windowType := 'debug';
 end;
 
 function TfrmDebug.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;

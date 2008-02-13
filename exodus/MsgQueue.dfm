@@ -11,8 +11,8 @@ inherited frmMsgQueue: TfrmMsgQueue
   TextHeight = 13
   object splitRoster: TSplitter [0]
     Left = 0
-    Top = 32
-    Height = 244
+    Top = 33
+    Height = 243
     ResizeStyle = rsUpdate
     ExplicitLeft = 125
     ExplicitTop = 1
@@ -29,13 +29,15 @@ inherited frmMsgQueue: TfrmMsgQueue
   end
   object pnlMsgQueue: TPanel
     Left = 3
-    Top = 32
+    Top = 33
     Width = 443
-    Height = 244
+    Height = 243
     Align = alClient
     Caption = 'pnlMsgQueue'
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 32
+    ExplicitHeight = 244
     object Splitter1: TSplitter
       Left = 1
       Top = 96
@@ -73,7 +75,6 @@ inherited frmMsgQueue: TfrmMsgQueue
       ReadOnly = True
       RowSelect = True
       PopupMenu = PopupMenu1
-      SmallImages = frmExodus.ImageList2
       TabOrder = 0
       ViewStyle = vsReport
       OnChange = lstEventsChange

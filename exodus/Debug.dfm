@@ -45,15 +45,17 @@ inherited frmDebug: TfrmDebug
   end
   object Panel2: TPanel
     Left = 0
-    Top = 32
+    Top = 33
     Width = 400
-    Height = 348
+    Height = 347
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 32
+    ExplicitHeight = 348
     object Splitter1: TSplitter
       Left = 4
       Top = 299

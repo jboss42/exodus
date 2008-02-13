@@ -117,6 +117,7 @@ begin
             { TODO : Roster refactor }
     cboGroup.ItemIndex := 0;
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
+    _windowType := 'roster_recv';
 end;
 
 {---------------------------------------}

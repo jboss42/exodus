@@ -131,6 +131,8 @@ begin
 
         DockToolbar := TExodusDockToolbar.Create(Self.tbDockBar);
         DockToolbar.ObjAddRef();
+
+        _windowType := 'activex_dockable';
     except
     end;
 end;

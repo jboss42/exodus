@@ -196,6 +196,8 @@ begin
 
     _updateCB   := MainSession.RegisterCallback(SessionCallback, SE_UPDATE);
     ImageIndex := RosterImages.RI_NEWSITEM_INDEX;
+
+    _windowType := 'msg_queue';
 end;
 
 {---------------------------------------}

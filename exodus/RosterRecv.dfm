@@ -10,7 +10,7 @@ inherited frmRosterRecv: TfrmRosterRecv
   TextHeight = 13
   object Splitter1: TSplitter [0]
     Left = 0
-    Top = 93
+    Top = 94
     Width = 374
     Height = 3
     Cursor = crVSplit
@@ -42,7 +42,7 @@ inherited frmRosterRecv: TfrmRosterRecv
         Left = 2
         Top = 2
         Width = 44
-        Height = 28
+        Height = 17
         Align = alLeft
         Caption = 'From:    '
         TabOrder = 0
@@ -50,13 +50,11 @@ inherited frmRosterRecv: TfrmRosterRecv
       object txtFrom: TTntStaticText
         Left = 46
         Top = 2
-        Width = 274
-        Height = 28
+        Width = 36
+        Height = 17
         Align = alClient
         Caption = '<JID>'
         TabOrder = 1
-        ExplicitLeft = 53
-        ExplicitWidth = 267
       end
     end
   end
@@ -106,7 +104,7 @@ inherited frmRosterRecv: TfrmRosterRecv
   end
   object txtMsg: TExRichEdit
     Left = 0
-    Top = 32
+    Top = 33
     Width = 374
     Height = 61
     Align = alTop
@@ -199,9 +197,9 @@ inherited frmRosterRecv: TfrmRosterRecv
   end
   object lvContacts: TTntListView
     Left = 0
-    Top = 125
+    Top = 126
     Width = 374
-    Height = 128
+    Height = 127
     Align = alClient
     Checkboxes = True
     Columns = <
@@ -213,19 +211,21 @@ inherited frmRosterRecv: TfrmRosterRecv
         Caption = 'Jabber ID'
         Width = 150
       end>
-    SmallImages = frmExodus.ImageList2
     TabOrder = 2
     ViewStyle = vsReport
+    ExplicitTop = 125
+    ExplicitHeight = 128
   end
   object Panel1: TTntPanel
     Left = 0
-    Top = 96
+    Top = 97
     Width = 374
     Height = 29
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 3
+    ExplicitTop = 96
     DesignSize = (
       374
       29)
@@ -242,7 +242,7 @@ inherited frmRosterRecv: TfrmRosterRecv
       Width = 209
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      ItemHeight = 13
+      ItemHeight = 0
       Sorted = True
       TabOrder = 0
     end
