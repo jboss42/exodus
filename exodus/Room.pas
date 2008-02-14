@@ -209,6 +209,7 @@ type
     function GetRoomRosterHiddenCount(index: Integer): Integer;
     function GetRoomRosterVisibleCount(): Integer;
     procedure ToggleDuplicateMember(rm: TRoomMember;  tag: TXMLTag);
+    procedure _checkForAdhoc();
   protected
     {
         Get the window state associated with this window.
@@ -1549,6 +1550,9 @@ begin
 
             // Am I the owner, thus no registration option
             popRegister.Enabled := (member.affil <> MUC_OWNER);
+
+            // Make sure we have the correct icon showing (adhoc/persistent)
+            _checkForAdhoc();
         end;
         RenderMember(member, tag);
     end;
@@ -3259,6 +3263,27 @@ begin
         lstRoster.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     end;
 end;
+
+procedure TfrmRoom._checkForAdhoc();
+var
+    e: TJabberEntity;
+begin
+    e := jEntityCache.getByJid(self.jid);
+    if (e <> nil) then begin
+        if (e.hasFeature('muc_persistent')) then begin
+            // This is a Persistent room
+            Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
+            _windowType := 'perm_room';
+        end
+        else begin
+            // This is a temp room
+            Self.ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
+            _windowType := 'adhoc_room';
+        end;
+    end;
+end;
+
+
 
 initialization
     // list for all of the current rooms
