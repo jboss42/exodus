@@ -2740,22 +2740,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
-var
-    e: TJabberEntity;
 begin
-    e := jEntityCache.getByJid(self.jid);
-    if (e <> nil) then begin
-        if (e.hasFeature('muc_persistent')) then begin
-            // This is a Persistent room
-            Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
-            _windowType := 'perm_room';
-        end
-        else begin
-            // This is a temp room
-            Self.ImageIndex := RosterImages.RI_TEMP_CONFERENCE_INDEX;
-            _windowType := 'adhoc_room';
-        end;
-    end;
+    _checkForAdhoc();
 
     if (_pending_start = false) then begin
         // Not starting so we don't want to send start presence.
