@@ -399,8 +399,10 @@ begin
         // show this form using the default behavior
         if (not self.Visible and _initiallyDocked and (dockOverride <> 'f')) then begin
             Self.DockForm();
-            if (bringtofront) then
+            if (bringtofront) then begin
                GetDockManager().BringDockedToTop(Self);
+               GetDockManager().ShowDockManagerWindow(); //Make sure window is showing here.
+            end;
         end
         else begin
             inherited; //let base class show window
