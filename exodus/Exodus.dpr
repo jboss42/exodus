@@ -185,6 +185,7 @@ uses
   fProfile in 'fProfile.pas' {frameProfile: TFrame},
   ZlibHandler in '..\jopl\ZlibHandler.pas',
   RosterImages in '..\jopl\RosterImages.pas',
+  ToolbarImages in '..\jopl\ToolbarImages.pas',
   COMRosterGroup in 'COMRosterGroup.pas' {ExodusRosterGroup: CoClass},
   COMRosterImages in 'COMRosterImages.pas' {ExodusRosterImages: CoClass},
   CapsCache in '..\jopl\CapsCache.pas',
