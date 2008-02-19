@@ -1,6 +1,6 @@
 unit MsgList;
 {
-    Copyright 2003, Peter Millard
+    Copyright 2008, Peter Millard
 
     This file is part of Exodus.
 
@@ -31,8 +31,6 @@ type
     private
         _s: TObject;
         _cb1: integer;
-        _cb2: integer;
-        _cb3: integer;
 
         function getController(jid: Widestring): TMsgController;
 
@@ -57,19 +55,20 @@ implementation
 
 uses
     // JOPL stuff
-    ChatController, JabberConst, PrefController, Session,
+    ChatController,
+    JabberConst,
+    PrefController,
+    Session,
     XMLUtils,
 
     // Delphi stuff
-    IdGlobal, SysUtils;
+    SysUtils;
 
 {---------------------------------------}
 constructor TJabberMsgList.Create();
 begin
     //
     _cb1 := -1;
-    _cb2 := -1;
-    _cb3 := -1;
     _s := nil;
 end;
 
@@ -82,8 +81,6 @@ begin
     if ((_s <> nil) and (_cb1 <> -1)) then begin
         s := TJabberSession(_s);
         s.UnRegisterCallback(_cb1);
-        s.UnRegisterCallback(_cb2);
-        s.UnRegisterCallback(_cb3);
     end;
 end;
 
@@ -94,9 +91,9 @@ var
 begin
     _s := s;
     ss := TJabberSession(s);
-    _cb1 := ss.RegisterCallback(MsgCallback, '/post/message[@type="headline"]');
-    _cb2 := ss.RegisterCallback(MsgCallback, '/post/message[@type="normal"]');
-    _cb3 := ss.RegisterCallback(MsgCallback, '/post/message[!type]');
+    _cb1 := ss.RegisterCallback(MsgCallback, '/post/message');//[@type="headline"]');
+//    _cb2 := ss.RegisterCallback(MsgCallback, '/post/message[@type="normal"]');
+//    _cb3 := ss.RegisterCallback(MsgCallback, '/post/message[!type]');
 end;
 
 {---------------------------------------}
@@ -139,6 +136,12 @@ begin
 end;
 
 {---------------------------------------}
+{
+    route all message elements that come through on the post message queue.
+
+    These should be unhandled, unrouted messages. This class allows default
+    handling.
+}
 procedure TJabberMsgList.MsgCallback(event: String; tag: TXMLTag);
 var
     b, mtype: Widestring;
@@ -148,53 +151,71 @@ var
     js: TJabberSession;
     mc: TMsgController;
     m, etag: TXMLTag;
+    messageError: boolean;
 begin
     js := TJabberSession(_s);
+
+    // check to see if we've blocked them.
+    from_jid := TJabberID.Create(tag.getAttribute('from'));
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
-    from_jid := TJabberID.Create(tag.getAttribute('from'));
+    etag := tag.QueryXPTag(XP_MSGXEVENT);
+    messageError := (tag.Name = 'message') and (mtype = 'error');
 
     // check for a handler for this JID already
     try
-        // check for messages we don't care about
-        if (event <> '/unhandled') then begin
+        if (js.IsBlocked(from_jid)) then exit;
+
+        // throw out x:oob cases where body is empty
+        if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
+
+        // evnt == unhandled when a message error was picked up by the
+        // unhandled responder (ExResponders).
+        if (not messageError) then
+        begin
+            if (mtype = 'headline') then
+            begin
+                js.FireEvent('/session/gui/headline', tag);
+                exit;
+            end;
+
+            //message event handling.
+            //should only be receiving these if a chat has not started or
+            //the user closed the chat and the receiving jid sent a "composing"
+            //message back.
+            if (etag <> nil) then
+            begin
+                if (etag.GetFirstTag('id') = nil) and
+                   (etag.GetFirstTag('delivered') <> nil) then
+                begin
+                    // send back a delivered event
+                    m := generateEventMsg(tag, 'delivered');
+                    js.SendTag(m);//m freed by SendTag
+                end
+                else if (etag.GetFirstTag('composing') <> nil) and
+                        (etag.GetFirstTag('id') <> nil) then
+                begin
+                    //forward tag to proper chat so composing event can be handled
+                    //ignore if chat session doesn't exist
+                    cc := js.ChatList.FindChat(from_jid.jid, from_jid.resource, '');
+                    if (cc = nil) then
+                        cc := js.ChatList.FindChat(from_jid.jid, '', '');
+                    if (cc <> nil) then
+                        cc.MsgCallback('xml', tag);
+                end;
+            end;
 
             if (mtype = 'normal') then mtype := '';
 
-            // check for is-composing tags
-            etag := tag.QueryXPTag(XP_MSGXEVENT);
-            if ((etag <> nil) and (b = '') and
-                (etag.GetFirstTag('composing') <> nil) and
-                (etag.GetFirstTag('id') <> nil)) then begin
-                cc := js.ChatList.FindChat(from_jid.jid,
-                    from_jid.resource, '');
-                if (cc = nil) then
-                    cc := js.ChatList.FindChat(from_jid.jid, '', '');
-                if (cc <> nil) then
-                    cc.MsgCallback('xml', tag);
-            end;
-
-
-            // check for headlines w/ JUST a x-oob.
-            // otherwise, throw out cases where body is empty
-            if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
-
-            // check to see if we've blocked them.
-            if (js.IsBlocked(from_jid)) then exit;
 
             // check current msg treatment prefs
             msgt := MainSession.Prefs.getInt('msg_treatment');
-            if (tag.QueryXPTag(XP_XROSTER) <> nil) then begin
-                // fallthru
-                mtype := XMLNS_XROSTER;
-            end
-            else if (msgt = msg_normal) then
+            if (msgt = msg_normal) then
                 // normal msg processing should FALLTHROUGH
-            else begin
+            else begin  //put all messages in a 1-1 chat, use an existing chat if possible
                 // check for an existing chat window..
                 // if we have one, then bail.
-                cc := js.ChatList.FindChat(from_jid.jid,
-                    from_jid.resource, '');
+                cc := js.ChatList.FindChat(from_jid.jid, from_jid.resource, '');
                 if (cc = nil) then
                     cc := js.ChatList.FindChat(from_jid.jid, '', '');
 
@@ -213,6 +234,7 @@ begin
             end;
         end;
 
+        {
         // if we're paused, queue the event
         if (js.isPaused) then begin
             with tag.AddTag('x') do begin
@@ -222,30 +244,15 @@ begin
             js.QueueEvent(event, tag, Self.MsgCallback);
             exit;
         end;
+        }
 
-        // check for delivered event requests
-        etag := tag.QueryXPTag(XP_MSGXEVENT);
-        if ((etag <> nil) and
-            (etag.GetFirstTag('id') = nil) and
-            (etag.GetFirstTag('delivered') <> nil)) then begin
-            // send back a delivered event
-            m := generateEventMsg(tag, 'delivered');
-            js.SendTag(m);
-        end;
-
-        if (mtype = 'headline') then
-            js.FireEvent('/session/gui/headline', tag)
-        else if (mtype = XMLNS_XROSTER) then
-            js.FireEvent('/session/gui/msgevent', tag)
-        else begin
-            mc := FindJid(from_jid);
-            if (mc <> nil) then
-                // send the msg to the existing window
-                mc.HandleMessage(tag)
-            else
-                // spin up a new window
-                js.FireEvent('/session/gui/msgevent', tag);
-        end;
+        mc := FindJid(from_jid);
+        if (mc <> nil) then
+            // send the msg to the existing window
+            mc.HandleMessage(tag)
+        else
+            // spin up a new window
+            js.FireEvent('/session/gui/msgevent', tag);
 
     finally
         from_jid.Free();

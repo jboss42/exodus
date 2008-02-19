@@ -64,12 +64,39 @@ type
     property winObject: TObject read getObject;
   end;
 
+  function MsgListFactory(Owner: TComponent;
+                          Parent: TWinControl;
+                          ListName: widestring = 'msg_list_frame'): TfBaseMsgList;
+
 implementation
 
 {$R *.dfm}
 
 uses
-    BaseChat;
+    RTFMsgList,
+    IEMsgList,
+    Session;
+
+const
+    RTF_MSGLIST = 0;
+    HTML_MSGLIST = 1;
+
+function MsgListFactory(Owner: TComponent; Parent: TWinControl; ListName: widestring): TfBaseMsgList;
+ var
+    mtype: integer;
+begin
+    mtype := MainSession.prefs.getInt('msglist_type');
+    if (mtype = HTML_MSGLIST) then
+        Result := TfIEMsgList.Create(Owner)
+    else if (mtype = RTF_MSGLIST) then
+        Result := TfRTFMsgList.Create(Owner)         
+    else Result := TfRTFMsgList.Create(Owner);
+
+    Result.Parent := Parent;
+    Result.Name := ListName;
+    Result.Align := alClient;
+    Result.Visible := true;
+end;
 
 constructor TfBaseMsgList.Create(Owner: TComponent);
 begin

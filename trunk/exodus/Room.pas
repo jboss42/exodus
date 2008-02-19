@@ -155,6 +155,7 @@ type
     _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
+    _affilChangeCallback: Integer; //affiliation change
     _dcallback: integer;
     _keywords: TRegExpr;        // list of keywords to monitor for
     _hint_text: Widestring;     // Current hint for nickname
@@ -240,7 +241,7 @@ type
     COMController: TObject;
 
     procedure OnSessionCallback(event: string; tag: TXMLTag);
-
+    procedure AffilChangeCallback(event: string; tag: TXMLTag);
     procedure SendMsg; override;
     procedure pluginMenuClick(Sender: TObject); override;
 
@@ -387,7 +388,6 @@ function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 procedure CloseAllRooms();
 
-
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
 
@@ -442,7 +442,6 @@ uses
     DockWindow;
 
 {$R *.DFM}
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -575,6 +574,12 @@ function TfrmRoom.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
     Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self.jid);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.AffilChangeCallback(event: string; tag: TXMLTag);
+begin
+    ShowMsg(tag)
 end;
 
 {---------------------------------------}
@@ -1127,11 +1132,12 @@ begin
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_dcallback);
-
+        MainSession.UnRegisterCallback(_affilChangeCallback);
         _mcallback := -1;
         _ecallback := -1;
         _pcallback := -1;
         _dcallback := -1;
+        _affilChangeCallback := -1;
 
         _roster.Clear();
         lstRoster.Items.Count := 0;
@@ -1753,6 +1759,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _dcallback := -1;
+    _affilChangeCallback := -1;
     _roster := TWideStringList.Create;
     _roster.CaseSensitive := true;
     _isMUC := false;
@@ -1835,6 +1842,7 @@ begin
         _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="error"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         _dcallback := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
+        _affilChangeCallback := MainSession.RegisterCallback(AffilChangeCallback, '/packet/message[@from="' + sjid + '"]/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="101"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
     end;
@@ -2554,6 +2562,7 @@ begin
     // Unregister callbacks and send unavail pres.
     if (MainSession <> nil) then begin
         MainSession.UnRegisterCallback(_mcallback);
+        MainSession.UnRegisterCallback(_affilChangeCallback);
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
@@ -3288,6 +3297,7 @@ finalization
     xp_muc_item.Free();
     xp_muc_status.Free();
     xp_muc_presence.Free();
+    
     room_list.Free();
 
 end.

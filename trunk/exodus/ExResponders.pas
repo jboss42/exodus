@@ -143,6 +143,8 @@ uses
     {$endif}
     DisplayName,
     MsgQueue,
+    RosterRecv,
+    Room,
     RosterImages, COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, InviteReceived;
@@ -164,6 +166,9 @@ var
     _last: TLastResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
+
+    _receivedRoster: TFactoryResponder;
+//    _affiliationChange: TFactoryResponder;
 
     _unhandled: TUnhandledResponder;
     _sistart: TFactoryResponder;
@@ -201,6 +206,15 @@ begin
     _sistart := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
         SIStart);
+
+    _receivedRoster := TFactoryResponder.Create(MainSession,
+        '/packet/message/x[@xmlns="' + XMLNS_XROSTER + '"]',
+        RosterRecv.ReceivedRoster);
+
+{    _affiliationChange := TFactoryResponder.Create(MainSession,
+        '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="101"]',
+        Room.RoomAffiliationChange);
+        }
     _confirmation := TConfirmationResponder.Create(MainSession);
 
     // Create some globally accessable responders.
@@ -313,7 +327,8 @@ begin
     FreeAndNil(Exodus_Browse);
 {$ENDIF}
     FreeAndNil(_unhandled);
-    //FreeAndNil(_muc_invite);
+    FreeAndNil(_receivedRoster);
+//    FreeAndNil(_affiliationChange);
     FreeAndNil(_iqoob);
     FreeAndNil(_xdata);
     FreeAndNil(_last);
@@ -691,9 +706,6 @@ begin
         addFeature(q, XMLNS_AGENTS);
 
         addFeature(q, XMLNS_IQOOB);
-{$IFDEF DEPRICATED_PROTOCOL}
-        addFeature(q, XMLNS_BROWSE);
-{$ENDIF}
         addFeature(q, XMLNS_TIME);
         addFeature(q, XMLNS_VERSION);
         addFeature(q, XMLNS_LAST);
@@ -703,9 +715,6 @@ begin
         // Various core extensions
         addFeature(q, XMLNS_BM);
         addFeature(q, XMLNS_XDATA);
-{$IFDEF DEPRICATED_PROTOCOL}
-        addFeature(q, XMLNS_XCONFERENCE);
-{$ENDIF}
         addFeature(q, XMLNS_XEVENT);
 
         // MUC Stuff
@@ -718,6 +727,11 @@ begin
         addFeature(q, XMLNS_FTPROFILE);
         addFeature(q, XMLNS_BYTESTREAMS);
 
+{$IFDEF DEPRICATED_PROTOCOL}
+         addFeature(q, XMLNS_BROWSE);
+         addFeature(q, XMLNS_XCONFERENCE);
+{$ENDIF}
+        
         //if currently sending/displaying rich text include the NS
         if (node = '') then begin
             with q.AddTag('identity') do begin

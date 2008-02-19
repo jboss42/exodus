@@ -29,11 +29,11 @@ type
         evt_None,
         evt_Message,
         evt_AffilChange,
-        evt_RosterItems,
+//        evt_RosterItems,
         evt_OOB,
-        evt_Version,
-        evt_Time,
-        evt_Last,
+//        evt_Version,
+//        evt_Time,
+//        evt_Last,
         evt_Chat);
 
     TJabberEvent = class
@@ -72,10 +72,6 @@ procedure RenderEvent(e: TJabberEvent);
 procedure LogMsgEvent(e: TJabberEvent);
 function getTaskBarRect(): TRect;
 
-function ParseTimeEvent(iq: TXMLTag): Widestring;
-function ParseVersionEvent(iq: TXMLTag): Widestring;
-function ParseLastEvent(iq: TXMLTag): Widestring;
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -100,14 +96,6 @@ const
     sMsgTimeInfo = 'Time, Ping Response: ';
     sMsgLocalTime = 'Local Time: ';
     sMsgPing = 'Ping Time: %s seconds.';
-
-    sMsgVersion = 'Version Response';
-    sMsgVerClient = 'Description: ';
-    sMsgVerVersion = 'Version: ';
-    sMsgVerOS = 'OS: ';
-
-    sMsgLast = 'Last Activity';
-    sMsgLastInfo = 'Idle for ';
 
     sMsgURL = 'This message contains a URL: ';
 
@@ -175,13 +163,6 @@ begin
                 // log the msg if we're logging.
                 LogMsgEvent(e);
             end;
-        end;
-
-        evt_RosterItems: begin
-            //StartRecvMsg(e);
-            //e.Free();//msg queue does not own this, need to cleanup
-            //exit;
-            //notify := false;
         end;
 
         else begin
@@ -269,67 +250,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function ParseTimeEvent(iq: TXMLTag): Widestring;
-var
-    tmp_tag, qTag: TXMLTag;
-    s, msg: Widestring;
-begin
-    Result := '';
-    qTag := iq.getFirstTag('query');
-    if (qTag = nil) then exit;
-
-    msg := _(sMsgTime);
-    tmp_tag := qtag.getFirstTag('display');
-    if (tmp_tag <> nil) then
-        msg := msg + #13 + _(sMsgLocalTime) + tmp_tag.Data;
-    s := iq.GetAttribute('iq_elapsed_time');
-    if (s <> '') then
-        msg := msg + #13 + WideFormat(_(sMsgPing), [s]);
-    Result := msg;
-end;
-
-{---------------------------------------}
-function ParseVersionEvent(iq: TXMLTag): Widestring;
-var
-    tmp_tag, qTag: TXMLTag;
-    msg: Widestring;
-begin
-    Result := '';
-    qTag := iq.getFirstTag('query');
-    if (qTag = nil) then exit;
-
-    tmp_tag := qtag.getFirstTag('name');
-    if (tmp_tag <> nil) then
-        msg := _(sMsgVersion) + #13 + _(sMsgVerClient) + tmp_tag.Data + #13;
-
-    tmp_tag := qtag.getFirstTag('version');
-    if (tmp_tag <> nil) then
-        msg := msg + _(sMsgVerVersion) + tmp_tag.Data + #13;
-
-    tmp_tag := qtag.getFirstTag('os');
-    if (tmp_tag <> nil) then
-        msg := msg + _(sMsgVerOS) + tmp_tag.Data;
-
-    Result := msg;
-end;
-
-{---------------------------------------}
-function ParseLastEvent(iq: TXMLTag): Widestring;
-var
-    qTag: TXMLTag;
-begin
-    Result := '';
-    qTag := iq.getFirstTag('query');
-    if (qTag = nil) then exit;
-
-    Result := _(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds')) + '.';
-end;
-
-
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
 constructor TJabberEvent.create;
 begin
     inherited;
@@ -396,9 +316,7 @@ procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     tmps, ns, t: Widestring;
     delay, tmp_tag: TXMLTag;
-    i_tags: TXMLTagList;
     j: integer;
-//    ri: TJabberRosterItem;
     url_tags: TXMLTagList;
     cjid: TJabberID;
     c: TChatController;
@@ -474,21 +392,6 @@ begin
             _data_list.Add(tag.GetBasicText('body'));
         end
 
-        else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin
-            // we are getting roster items
-            eType := evt_RosterItems;
-            tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
-            str_content := tag.GetBasicText('body');
-            i_tags := tmp_tag.QueryTags('item');
-            { TODO : Roster refactor }
-//            for j := 0 to i_tags.Count - 1 do begin
-//                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
-//                MainSession.roster.parseItem(ri, i_tags[j]);
-//                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
-//            end;
-            i_tags.Free();
-        end
-
         else if (t = 'chat') then begin
             // this is a queue'd chat msg
             eType := evt_Chat;
@@ -530,23 +433,6 @@ begin
         id := tag.getAttribute('id');
 
         ns := tag.Namespace(true);
-        if ns = XMLNS_TIME then begin
-            eType := evt_Time;
-            str_content := _(sMsgTime);
-            _data_list.Add(ParseTimeEvent(tag));
-        end
-
-        else if ns = XMLNS_VERSION then begin
-            eType := evt_Version;
-            str_content := _(sMsgVersion);
-            _data_list.Add(ParseVersionEvent(tag));
-        end
-
-        else if ns = XMLNS_LAST then begin
-            eType := evt_Last;
-            str_content := _(sMsgLast);
-            _data_list.Add(ParseLastEvent(tag));
-        end;
     end;
 
     if (from <> '') then begin
