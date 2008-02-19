@@ -301,6 +301,7 @@ type
     Contact1: TTntMenuItem;
     txtStatus: TTntEdit;
     imgAd: TImage;
+    ImageList2: TImageList;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -814,7 +815,7 @@ uses
 
     // XXX: ZipMstr
     StateForm,
-    RosterImages,
+    RosterImages, ToolbarImages,
     ExodusImageList,
     COMToolbar, COMToolbarButton, COMToolbarControl,
     NewUser, CommandWizard, Notify,
@@ -1161,8 +1162,9 @@ begin
     // setup our tray icon
     _tray_icon := TIcon.Create();
 
-    // setup our master image list
+    // setup our master image lists
     RosterTreeImages.setImageList(ImageList1);
+    ContactToolbarImages.setImageList(ImageList2);
 
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
