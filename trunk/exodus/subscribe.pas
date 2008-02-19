@@ -99,7 +99,7 @@ type
         sub: TfrmSubscribe;
 
 
-        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure FireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
         procedure getDispNameAndShow(subFrm: TfrmSubscribe; newJID: TJabberID);
 
         destructor Destroy();override;
