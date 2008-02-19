@@ -148,6 +148,7 @@ begin
         tmp_jid.Free();
     end
     else if (event = '/session/gui/chat') then begin
+    {
         // if we are DND, or this is an offline msg, then possibly queue it,
         // depending on prefs.
         if ((MainSession.Prefs.getBool('queue_dnd_chats') and
@@ -166,24 +167,26 @@ begin
             RenderEvent(CreateJabberEvent(tag));
         end
         else begin
-            // New Chat Window
-            tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-            if (not MainSession.IsBlocked(tmp_jid)) then begin
-                //show window but don't bring it to front. Let notifications do that
-                chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
-                if (chat <> nil) then begin
-                  msg := TJabberMessage.Create(tag);
-                  if (((msg.Priority = high) or (msg.Priority = low)) and (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
-                    DoNotify(chat, 'notify_priority_chatactivity',  GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyChat) +
-                         chat.DisplayName, RosterTreeImages.Find('contact'))
-                  else
-                    DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                         chat.DisplayName, RosterTreeImages.Find('contact'));
-                  FreeAndNil(msg);
-                end;
+    }
+        // New Chat Window
+        tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+        if (not MainSession.IsBlocked(tmp_jid)) then begin
+            //show window but don't bring it to front. Let notifications do that
+            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true, '', false);
+            if (chat <> nil) then begin
+              msg := TJabberMessage.Create(tag);
+              if (((msg.Priority = high) or (msg.Priority = low)) and (MainSession.Prefs.getInt('notify_priority_chatactivity') > 0))  then
+                DoNotify(chat, 'notify_priority_chatactivity',  GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityNotifyChat) +
+                     chat.DisplayName, RosterTreeImages.Find('contact'))
+              else
+                DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                     chat.DisplayName, RosterTreeImages.Find('contact'));
+              FreeAndNil(msg);
             end;
-            tmp_jid.Free;
         end;
+        tmp_jid.Free;
+{        end;
+}
     end
     else if (event = '/session/gui/update-chat') then begin
       tmp_jid := TJabberID.Create(tag.getAttribute('from'));

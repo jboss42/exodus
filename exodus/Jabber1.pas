@@ -2940,6 +2940,7 @@ begin
 end;
 
 {---------------------------------------}
+// JJF TODO: remove these calls, show server version/time somewhere else (about box?)
 procedure TfrmExodus.mnuVersionClick(Sender: TObject);
 begin
     // get either version of time request from the jabber server

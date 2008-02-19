@@ -187,16 +187,10 @@ uses
 function StartRecvMsg(e: TJabberEvent): TfrmMsgRecv;
 var
     c: TMsgController;
-    frmRosterRecv : TfrmRosterRecv;
 begin
     Result := nil;
     if (e = nil) then exit;
-    if (e.eType = evt_RosterItems) then begin
-        frmRosterRecv := TfrmRosterRecv.Create(Application);
-        frmRosterRecv.Restore(e);
-        frmRosterRecv.ShowDefault();
-    end
-    else if (e.eType = evt_Chat) then begin
+    if (e.eType = evt_Chat) then begin
         // startChat will automatically play the queue of msgs
         StartChat(e.from_jid.jid, e.from_jid.resource, true);
     end

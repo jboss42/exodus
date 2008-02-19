@@ -48,11 +48,10 @@ type
     { Private declarations }
   public
     { Public declarations }
-    procedure Restore(e: TJabberEvent);
+    procedure Restore(tag: TXMLTag);
   end;
 
-var
-  frmRosterRecv: TfrmRosterRecv;
+  procedure ReceivedRoster(tag: TXMLTag);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -63,9 +62,17 @@ uses
   DisplayName;
 
 {$R *.DFM}
+procedure ReceivedRoster(tag: TXMLTag);
+var
+    frm: TfrmRosterRecv;
+begin
+    frm := TfrmRosterRecv.Create(Application);
+    frm.Restore(tag);
+    frm.ShowDefault();
+end;
 
 {---------------------------------------}
-procedure TfrmRosterRecv.Restore(e: TJabberEvent);
+procedure TfrmRosterRecv.Restore(tag: TXMLTag);
 //var
 //    i, j: integer;
 //    ri: TJabberRosterItem;
@@ -74,6 +81,20 @@ procedure TfrmRosterRecv.Restore(e: TJabberEvent);
 //    noi, noi_label, noi_image_prefix: Widestring;
 //    offset: Cardinal;
 begin
+(* JJF moved from TJabberEvent.parse
+            eType := evt_RosterItems;
+            tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
+            str_content := tag.GetBasicText('body');
+            i_tags := tmp_tag.QueryTags('item');
+            { TODO : Roster refactor }
+//            for j := 0 to i_tags.Count - 1 do begin
+//                ri := TJabberRosterItem.Create(i_tags[j].GetAttribute('jid'));
+//                MainSession.roster.parseItem(ri, i_tags[j]);
+//                _data_list.AddObject(DisplayName.getDisplayNameCache().getDisplayName(ri.Jid), ri);
+//            end;
+            i_tags.Free();
+*)
+
 { TODO : Roster refactor } 
     // Fill up the GUI based on the event
 //    from := TJabberID.Create(e.from);
