@@ -111,7 +111,7 @@ end;
 type
     TAutoAddHandler = class(TDisplayNameEventListener)
         jid: TJabberID;
-        procedure fireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
+        procedure FireOnDisplayNameChange(bareJID: Widestring; displayName: WideString);override;
         procedure addToRoster(newJID: TJabberID);
 
         destructor Destroy();override;

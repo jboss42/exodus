@@ -133,7 +133,6 @@ end;
 procedure TfrmPrefRoster.LoadPrefs();
 var
     gs: TWidestringList;
-    i: Integer;
 begin
     inherited;
     //blocked contacts
