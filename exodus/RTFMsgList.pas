@@ -185,7 +185,7 @@ begin
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
-        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled and not bc.MsgOut.ReadOnly) then begin
             try
                 bc.MsgOut.SetFocus();
                 bc.MsgOut.WideSelText := Key;

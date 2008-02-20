@@ -976,7 +976,7 @@ begin
         end;
     end
     else if (bc.pnlInput.Visible) then begin
-        if (bc.MsgOut.Visible and bc.MsgOut.Enabled) then begin
+        if (bc.MsgOut.Visible and bc.MsgOut.Enabled and not bc.MsgOut.ReadOnly) then begin
             try
                 bc.MsgOut.WideSelText := WideChar(Key);
                 bc.MsgOut.SetFocus();
