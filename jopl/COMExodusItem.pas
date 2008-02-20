@@ -106,7 +106,6 @@ begin
     _Properties.Duplicates := dupIgnore;
     _Active := false;
     _IsVisible := true;
-    _Type := '';
     _Text := '';
     _ExtendedText := '';
 end;
