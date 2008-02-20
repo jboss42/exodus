@@ -435,6 +435,7 @@ inherited frmExodus: TfrmExodus
         Top = 0
         Hint = 'Show Activity Window'
         Caption = 'Activity Window'
+        Enabled = False
         ImageIndex = 8
         Visible = False
         OnClick = mnuWindows_View_ShowActivityWindowClick
