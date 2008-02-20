@@ -246,7 +246,7 @@ uses
     IQ,     //profile request
     Session;
 var
-    _dnCache: TDisplayNameCache;
+    _DisplayNameCache: TDisplayNameCache;
     DNSession: TJabberSession;
 
 const
@@ -254,7 +254,7 @@ const
 
 function getDisplayNameCache(): TDisplayNameCache;
 begin
-    Result := _dnCache;
+    Result := _DisplayNameCache;
 end;
 
 function useProfileDN(): boolean;
@@ -837,14 +837,14 @@ begin
     _js := nil;
     _sessioncb := -1;
     _VCardResultCB := -1;
+    _profileParser := TProfileParser.Create();
 end;
 
 Destructor TDisplayNameCache.Destroy();
 begin
     setSession(nil);
     _dnCache.Free();
-    if (_profileParser <> nil) then
-        _profileParser.Free();
+    _profileParser.Free();
     inherited;
 end;
 
@@ -863,12 +863,6 @@ begin
     Result := getDNItem(JID.jid);
     if (Result = nil) then
     begin
-        if (_profileParser = nil) then
-        begin
-            _profileParser := TProfileParser.Create();
-            //set profile map now that we have a session
-            ProfileParser.setProfileParseMap(getProfileDNMap());
-        end;
         Result := TContactDisplayNameItem.create(jid, _profileParser);
         addDNItem(Result);
     end;
@@ -941,6 +935,7 @@ begin
         //add our jid to the cache
         dnItem := getOrAddDNItem(DNSession.Profile.getJabberID());
 
+        _profileParser.setProfileParseMap(getProfileDNMap());
         //at this point our nick is our node.
         tstr := DNSession.Prefs.getString('default_nick');
         locked := DNSession.Prefs.getBool('brand_prevent_change_nick');
@@ -957,20 +952,18 @@ begin
     end
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
-        if (ProfileParser <> nil) then begin
-            tstr := getProfileDNMap();
-            prefChanged := (ProfileParser.ProfileMapString <>  tstr);
-            if  (prefChanged) then
-                ProfileParser.setProfileParseMap(tstr);
+        tstr := getProfileDNMap();
+        prefChanged := (ProfileParser.ProfileMapString <>  tstr);
+        if  (prefChanged) then
+            ProfileParser.setProfileParseMap(tstr);
 
-            prefChanged := prefChanged or (_UseProfileDN <> UseProfileDN());
-            if (prefChanged) then
+        prefChanged := prefChanged or (_UseProfileDN <> UseProfileDN());
+        if (prefChanged) then
+        begin
+            //walk cache and refresh items based on new prefs
+            for i := 0 to _dnCache.Count - 1 do
             begin
-                //walk cache and refresh items based on new prefs
-                for i := 0 to _dnCache.Count - 1 do
-                begin
-                    TDisplayNameItem(_dnCache.Objects[i]).OnPrefChange();
-                end;
+                TDisplayNameItem(_dnCache.Objects[i]).OnPrefChange();
             end;
         end;
 
@@ -1094,9 +1087,9 @@ begin
 end;
 
 initialization
-    _dnCache := TDisplayNameCache.create();
+    _DisplayNameCache := TDisplayNameCache.create();
 
 finalization
-    _dnCache.Free();
-    _dnCache := nil;    
+    _DisplayNameCache.Free();
+    _DisplayNameCache := nil;    
 end.
