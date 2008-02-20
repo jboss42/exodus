@@ -80,7 +80,7 @@ begin
     //
     if ((_s <> nil) and (_cb1 <> -1)) then begin
         s := TJabberSession(_s);
-        s.UnRegisterCallback(_cb1);
+//        s.UnRegisterCallback(_cb1);
     end;
 end;
 
