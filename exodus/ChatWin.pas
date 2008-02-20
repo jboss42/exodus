@@ -550,6 +550,7 @@ begin
 
     lblNick.Caption := _displayName;
     Caption := _displayName;
+    Hint := _jid.jid;
     MsgList.setTitle(_displayName);
 end;
 

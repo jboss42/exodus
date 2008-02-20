@@ -447,7 +447,6 @@ end;
 procedure TfAWItem._setName(val:widestring);
 begin
     lblName.Caption := val;
-    Hint := val;
 end;
 
 {---------------------------------------}

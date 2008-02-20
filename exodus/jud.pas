@@ -232,6 +232,11 @@ begin
     end
     else  f.cboJID.Items.AddStrings(stringlist);
 
+    if ((f.cboJid.Items.Count > 0) and
+        (f.cboJid.Items.Strings[0] <> '')) then begin
+        f.Hint := f.cboJid.Items.Strings[0];
+    end;
+
     f.reset();
     f.ShowDefault();
 
@@ -706,6 +711,9 @@ begin
     btnContacts.Enabled := false;
     btnChat.Enabled := false;
     btnBroadcastMsg.Enabled := false;
+    if (cboJid.SelText <> '') then begin
+        Hint := cboJid.SelText;
+    end;
 end;
 
 {---------------------------------------}
