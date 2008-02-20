@@ -497,6 +497,7 @@ begin
                 f.sendStartPresence();
 
             f.Caption := tmp_jid.userDisplay; //no display name here for room names
+            f.Hint := tmp_jid.jid;
 
             // setup prefs
             with f do begin

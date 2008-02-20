@@ -485,7 +485,7 @@ begin
             item.awItem.count := frm.UnreadMsgCount;
 
             // Deal with change of nickname
-            aw.SetItemName(item.awItem, frm.Caption);
+            aw.SetItemName(item.awItem, frm.Caption, frm.Hint);
 
             // Deal with undocked window focus
             if (frm.Activating) then begin

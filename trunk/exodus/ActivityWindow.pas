@@ -158,7 +158,7 @@ type
     procedure itemChangeUpdate();
     procedure selectNextItem();
     procedure selectPrevItem();
-    procedure SetItemName(awitem: TfAWItem; name: widestring);
+    procedure SetItemName(awitem: TfAWItem; name: widestring; itemhint: widestring);
 
     property docked: boolean read _docked write _docked;
     property dockwindow: TfrmDockWindow read _dockwindow write _dockwindow;
@@ -500,6 +500,12 @@ begin
         Result.awItem.Left := ListLeftSpacer.Width;
         Result.awItem.Width := pnlList.Width - ListLeftSpacer.Width - ListRightSpacer.Width;
         Result.awItem.name := frm.Caption;
+        if (frm.Hint <> '') then begin
+            Result.awItem.Hint := frm.Hint;
+        end
+        else begin
+            Result.awItem.Hint := frm.Caption;
+        end;
         Result.awItem.defaultStartColor := pnlList.GradientProperites.startColor;
         Result.awItem.defaultEndColor := pnlList.GradientProperites.endColor;
 
@@ -1319,7 +1325,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmActivityWindow.SetItemName(awitem: TfAWItem; name: widestring);
+procedure TfrmActivityWindow.SetItemName(awitem: TfAWItem; name: widestring; itemhint: widestring);
 var
     idx: integer;
     trackeritem: TAWTrackerItem;
@@ -1333,6 +1339,12 @@ begin
         trackeritem := TAWTrackerItem(_trackingList.Objects[idx]);
         if (trackeritem <> nil) then begin
             trackeritem.awItem.name := name;
+            if (itemhint <> '') then begin
+                trackeritem.awItem.hint := itemhint;
+            end
+            else begin
+                trackeritem.awItem.hint := name;
+            end;
         end;
     end;     
 end;
