@@ -957,18 +957,20 @@ begin
     end
     else if (event = '/session/prefs') then begin
         //if we've had a pref change for profile, update accordingly...
-        tstr := getProfileDNMap();
-        prefChanged := (ProfileParser.ProfileMapString <>  tstr);
-        if  (prefChanged) then
-            ProfileParser.setProfileParseMap(tstr);
-            
-        prefChanged := prefChanged or (_UseProfileDN <> UseProfileDN());
-        if (prefChanged) then
-        begin
-            //walk cache and refresh items based on new prefs
-            for i := 0 to _dnCache.Count - 1 do 
+        if (ProfileParser <> nil) then begin
+            tstr := getProfileDNMap();
+            prefChanged := (ProfileParser.ProfileMapString <>  tstr);
+            if  (prefChanged) then
+                ProfileParser.setProfileParseMap(tstr);
+
+            prefChanged := prefChanged or (_UseProfileDN <> UseProfileDN());
+            if (prefChanged) then
             begin
-                TDisplayNameItem(_dnCache.Objects[i]).OnPrefChange();
+                //walk cache and refresh items based on new prefs
+                for i := 0 to _dnCache.Count - 1 do
+                begin
+                    TDisplayNameItem(_dnCache.Objects[i]).OnPrefChange();
+                end;
             end;
         end;
 
