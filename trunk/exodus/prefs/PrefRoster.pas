@@ -146,12 +146,15 @@ begin
 
     AssignTntStrings(gs, txtDefaultGrp.Items);
 
-    //populate gateway gropup cbo
+    //populate gateway group cbo
     if (gs.IndexOf(txtGatewayGrp.Text) = -1) then
         gs.Add(txtGatewayGrp.Text);
     gs.Sort();
     AssignTntStrings(gs, txtGatewayGrp.Items);
     gs.Free();
+
+    //reverse the "Show Offline" (since the pref is "show online")
+    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
 
     trkRosterAlpha.Visible := chkRosterAlpha.Visible;
     txtRosterAlpha.Visible := chkRosterAlpha.Visible;
@@ -183,7 +186,13 @@ end;
 
 procedure TfrmPrefRoster.SavePrefs();
 begin
+    //reverse "Show Offline" (since the pref is "show online")
+    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
+
     inherited;
+
+    //Now reverse *again*, so UI is correct...
+    chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
     MainSession.prefs.setStringlist('blockers', _blockedContacts);
     // XXX: save nested group seperator per JEP-48
 end;
