@@ -285,6 +285,9 @@ begin
             Font.Charset := getInt('roster_font_charset');
             if (Font.Charset = 0) then Font.Charset := 1;
             Font.Style := [];
+            if (getBool('roster_font_bold')) then Font.Style := Font.Style + [fsBold];
+            if (getBool('roster_font_italic')) then Font.Style := Font.Style + [fsItalic];
+            if (getBool('roster_font_underline')) then Font.Style := Font.Style + [fsUnderline];
         end;
 
         btnChatFont.Enabled := true;
