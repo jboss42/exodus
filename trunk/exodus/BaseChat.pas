@@ -188,7 +188,9 @@ uses
     ExUtils,
     JabberMsg,
     IEMsgList,
-    TypInfo;
+    TypInfo,
+    PrefFile,
+    PrefController;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';
@@ -434,6 +436,7 @@ procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
     ht: integer;
     sc: TShortcut;
+    prefstate1, prefstate2: TPrefState;
 begin
     try
         AutoScroll := true;
@@ -444,6 +447,21 @@ begin
 
         MainSession.Prefs.fillStringlist(sPref_Hotkeys_Keys, _hotkeys_keys_stringlist);
         MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
+
+        // Dont show hotkeys toolbar button if
+        //  - keys and text counts aren't equal
+        //  - either keys or text are flagged as invisible
+        //  - keys or text are readonly and there is nothing in list
+        prefstate1 := getPrefState('hotkeys_keys');
+        prefstate2 := getPrefState('hotkeys_text');
+        if ((_hotkeys_keys_stringlist.Count <> _hotkeys_text_stringlist.Count) or
+            (prefstate1 = psInvisible) or
+            (prefstate2 = psInvisible) or
+            (((prefstate1 = psReadOnly) or
+              (prefstate2 = psReadOnly)) and
+             (_hotkeys_keys_stringlist.Count = 0))) then begin
+            ChatToolbarButtonHotkeys.Visible := false;
+        end;
 
         SetPriorityNormal;
 
@@ -631,7 +649,8 @@ begin
     MainSession.Prefs.fillStringlist(sPref_Hotkeys_Text, _hotkeys_text_stringlist);
 
     // Should the button be displayed.
-    if (_hotkeys_keys_stringlist.Count > 0) then begin
+    if ((_hotkeys_keys_stringlist.Count > 0) and
+        (_hotkeys_keys_stringlist.Count = _hotkeys_text_stringlist.Count)) then begin
         // add strings to popup
         for i := _hotkeys_keys_stringlist.Count - 1 downto 0 do begin
             m := TTntMenuItem.Create(Self);

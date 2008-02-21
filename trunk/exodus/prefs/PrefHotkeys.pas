@@ -227,7 +227,7 @@ procedure TfrmPrefHotkeys.LoadPrefs();
 var
     i: integer;
     item: TTntListItem;
-    s: TPrefState;
+    s1, s2: TPrefState;
 begin
     if (_hotkeys_keys = nil) then
         _hotkeys_keys := TWidestringlist.Create();
@@ -243,26 +243,31 @@ begin
     MainSession.Prefs.fillStringlist('hotkeys_keys', _hotkeys_keys);
     MainSession.Prefs.fillStringlist('hotkeys_text', _hotkeys_text);
 
-    for i := 0 to _hotkeys_keys.count - 1 do begin
-        item := lstHotkeys.Items.Add();
-        item.Caption := _hotkeys_keys.Strings[i];
-        item.SubItems.Add(_hotkeys_text.Strings[i]);
-        _set_usedkeys(_hotkeys_keys.Strings[i], true);
-    end;
+    if (_hotkeys_keys.Count = _hotkeys_text.Count) then begin
+        for i := 0 to _hotkeys_keys.count - 1 do begin
+            item := lstHotkeys.Items.Add();
+            item.Caption := _hotkeys_keys.Strings[i];
+            item.SubItems.Add(_hotkeys_text.Strings[i]);
+            _set_usedkeys(_hotkeys_keys.Strings[i], true);
+        end;
 
-    _set_AvailableHotkeys;
+        _set_AvailableHotkeys;
 
-    btnAddHotkeys.Enabled := false;
-    for i := 1 to 12 do begin
-        if (not _used_hotkeys[i]) then begin
-            btnAddHotkeys.Enabled := true;
-            break;
+        btnAddHotkeys.Enabled := false;
+        for i := 1 to 12 do begin
+            if (not _used_hotkeys[i]) then begin
+                btnAddHotkeys.Enabled := true;
+                break;
+            end;
         end;
     end;
-    //finally check state and set controls accordingly
-    s := getPrefState('hotkeys_keys');
-    pnlContainer.Enabled := (s <> psReadOnly);
-    pnlContainer.Visible := (s <> psInvisible);
+
+    // Finally check state and set controls accordingly
+    // If either keys or text are RO or INV, don't allow anything to be set/removed
+    s1 := getPrefState('hotkeys_keys');
+    s2 := getPrefState('hotkeys_text');
+    pnlContainer.Enabled := ((s1 <> psReadOnly) and (s2 <> psReadOnly));
+    pnlContainer.Visible := ((s1 <> psInvisible) and (s2 <> psInvisible));
 end;
 
 procedure TfrmPrefHotkeys.lstHotkeysSelectItem(Sender: TObject; Item: TListItem;
