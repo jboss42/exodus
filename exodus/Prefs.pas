@@ -116,7 +116,8 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session, ExUtils, Room, JabberUtils;
+    GnuGetText, PrefController, Session, ExUtils, Room, JabberUtils,
+    PrefFile;
 
 {---------------------------------------}
 procedure StartPrefs(start_page: string);
@@ -293,7 +294,14 @@ begin
     imgPresence.Target := tsPresence;
     imgPresence.Visible := MainSession.Prefs.getBool('show_presence_preferences');
     imgHotKeys.Target := tsHotKeys;
-    imgHotKeys.Visible := MainSession.Prefs.getBool('show_hot_key_preferences');
+    if ((not MainSession.Prefs.getBool('show_hot_key_preferences')) or
+        (getPrefState('hotkeys_keys') = psInvisible) or
+        (getPrefState('hotkeys_text') = psInvisible)) then begin
+        imgHotKeys.Visible := false;
+    end
+    else begin
+        imgHotKeys.Visible := true;
+    end;
 
     //pick a default page...
     if (imgSystem.Visible) then
