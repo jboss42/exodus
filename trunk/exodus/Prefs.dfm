@@ -77,7 +77,7 @@ inherited frmPrefs: TfrmPrefs
       Left = 1
       Top = 1
       Width = 96
-      Height = 56
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -542,9 +542,9 @@ inherited frmPrefs: TfrmPrefs
     object imgContactList: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 57
+      Top = 64
       Width = 96
-      Height = 56
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -946,9 +946,9 @@ inherited frmPrefs: TfrmPrefs
     object imgDisplay: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 113
+      Top = 127
       Width = 96
-      Height = 56
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1301,9 +1301,9 @@ inherited frmPrefs: TfrmPrefs
     object imgNotifications: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 169
+      Top = 190
       Width = 96
-      Height = 56
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1580,13 +1580,14 @@ inherited frmPrefs: TfrmPrefs
         2F59B545DD2905E5D03FD8EA79AED8CA7300F9F105B7F617FF0D67DAF26A6360
         A4540000000049454E44AE426082}
       OnClick = TabSelect
+      ExplicitTop = 169
     end
     object imgMessages: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 225
+      Top = 253
       Width = 96
-      Height = 57
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -1978,9 +1979,9 @@ inherited frmPrefs: TfrmPrefs
     object imgAutoAway: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 282
+      Top = 316
       Width = 96
-      Height = 55
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -2375,9 +2376,9 @@ inherited frmPrefs: TfrmPrefs
     object imgPresence: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 337
+      Top = 379
       Width = 96
-      Height = 56
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -2758,9 +2759,9 @@ inherited frmPrefs: TfrmPrefs
     object imgHotKeys: TExGraphicButton
       AlignWithMargins = True
       Left = 1
-      Top = 393
+      Top = 442
       Width = 96
-      Height = 57
+      Height = 63
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
