@@ -60,7 +60,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Margins.Left = 0
       Margins.Top = 0
       Align = alTop
-      Caption = 'Show enter and leave messages in conference room &windows.'
+      Caption = 'Show enter and leave messages in conference room &windows'
       Checked = True
       State = cbChecked
       TabOrder = 1
@@ -282,7 +282,7 @@ inherited frmPrefPresence: TfrmPrefPresence
           'Free to Chat'
           'Available'
           'Away'
-          'Xtended Away'
+          'Extended Away'
           'Do Not Disturb')
       end
       object txtCPPriority: TExNumericEdit
