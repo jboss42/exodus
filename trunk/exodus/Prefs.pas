@@ -275,7 +275,7 @@ begin
     _pres := nil;
     _hotkeys := nil;
     _lastSelButton := nil;
-
+    pcPrefs.Visible := false;
     _defaultPage := nil;
 
     //map or graphics to pages
@@ -321,6 +321,7 @@ begin
     else if (imgHotKeys.Visible) then
         _defaultPage := imgHotKeys;
 
+    pcPrefs.Visible := (_defaultPage <> nil);
 //    MainSession.Prefs.RestorePosition(Self);
 end;
 
@@ -449,7 +450,7 @@ end;
 procedure TfrmPrefs.FormShow(Sender: TObject);
 begin
     if (_lastSelButton = nil) then
-        TabSelect(imgSystem);
+        TabSelect(_defaultPage);
 end;
 
 end.
