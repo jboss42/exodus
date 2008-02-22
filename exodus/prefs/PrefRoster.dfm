@@ -15,9 +15,10 @@ inherited frmPrefRoster: TfrmPrefRoster
     ExplicitWidth = 372
     inherited lblHeader: TTntLabel
       Left = 6
-      Width = 150
-      Caption = 'Contact List Preferences'
-      ExplicitWidth = 150
+      Width = 75
+      Caption = 'Contact List'
+      ExplicitLeft = 6
+      ExplicitWidth = 75
     end
   end
   object ExGroupBox1: TExBrandPanel
@@ -50,7 +51,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 2
       AutoHide = True
-      ExplicitTop = 66
       object chkInlineStatus: TTntCheckBox
         AlignWithMargins = True
         Left = 0
@@ -96,7 +96,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Margins.Left = 0
         Margins.Top = 0
         Align = alTop
-        Caption = 'Show group &members online status at group level (e.g., 5/10)'
+        Caption = 'Show group &members online status at group level (e.g., 5 of 10)'
         TabOrder = 3
       end
       object chkOnlineOnly: TTntCheckBox
@@ -125,7 +125,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 3
       AutoHide = True
-      ExplicitTop = 163
       object btnManageBlocked: TTntButton
         Left = 17
         Top = 0
@@ -152,7 +151,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 4
       AutoHide = True
-      ExplicitTop = 193
       object pnlStatusColor: TExBrandPanel
         AlignWithMargins = True
         Left = 0
@@ -259,7 +257,6 @@ inherited frmPrefRoster: TfrmPrefRoster
       ParentColor = True
       TabOrder = 5
       AutoHide = True
-      ExplicitTop = 301
       object chkSort: TTntCheckBox
         Left = 0
         Top = 18
@@ -448,7 +445,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 269
         Width = 353
-        Height = 41
+        Height = 45
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone

@@ -17,9 +17,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
   object pnlContainer: TExBrandPanel [0]
     AlignWithMargins = True
     Left = 0
-    Top = 29
+    Top = 26
     Width = 505
-    Height = 905
+    Height = 908
     Margins.Left = 0
     Margins.Bottom = 0
     Align = alLeft
@@ -734,10 +734,11 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Width = 514
     ExplicitWidth = 514
     inherited lblHeader: TTntLabel
-      Width = 151
-      Height = 17
-      Caption = 'Display Preferences'
-      ExplicitWidth = 151
+      Left = 6
+      Width = 43
+      Caption = 'Display'
+      ExplicitLeft = 6
+      ExplicitWidth = 43
     end
   end
   object FontDialog1: TFontDialog

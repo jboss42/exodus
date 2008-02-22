@@ -104,7 +104,7 @@ uses
 
 const
     sNoHistory = 'There is no history file for this contact.';
-    sBadLogDir = 'The log directory you specified is invalid. Configure the HTML Logging plugin correctly.';
+    sBadLogDir = 'The log directory you specified is invalid. Configure the HTML Logging plug-in correctly.';
     sHistoryDeleted = 'History deleted.';
     sHistoryError = 'Could not delete history file(s).';
     sHistoryNone = 'No history file for this user.';

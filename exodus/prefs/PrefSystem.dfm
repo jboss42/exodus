@@ -5,6 +5,7 @@ inherited frmPrefSystem: TfrmPrefSystem
   Caption = 'frmPrefSystem'
   ClientHeight = 548
   OldCreateOrder = True
+  ExplicitWidth = 394
   ExplicitHeight = 560
   PixelsPerInch = 96
   TextHeight = 13
@@ -12,17 +13,19 @@ inherited frmPrefSystem: TfrmPrefSystem
     Font.Style = [fsBold]
     TabOrder = 1
     inherited lblHeader: TTntLabel
-      Width = 114
-      Caption = 'System Preferences'
-      ExplicitWidth = 114
+      Left = 6
+      Width = 45
+      Caption = 'System'
+      ExplicitLeft = 6
+      ExplicitWidth = 45
     end
   end
   object gbParentGroup: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 24
+    Top = 26
     Width = 305
-    Height = 524
+    Height = 522
     Margins.Left = 0
     Margins.Right = 0
     Margins.Bottom = 0
@@ -47,7 +50,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       ParentColor = True
       TabOrder = 0
       AutoHide = True
-      ExplicitWidth = 283
       object chkAutoStart: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -60,7 +62,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = '&Start Exodus'
         TabOrder = 0
-        ExplicitWidth = 280
       end
     end
     object gbOnStart: TExGroupBox
@@ -80,7 +81,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       ParentColor = True
       TabOrder = 1
       AutoHide = True
-      ExplicitWidth = 283
       object chkAutoLogin: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -93,7 +93,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = '&Automatically login with the last active profile'
         TabOrder = 0
-        ExplicitWidth = 280
       end
       object chkStartMin: TTntCheckBox
         AlignWithMargins = True
@@ -107,8 +106,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Start &minimized to the System Tray'
         TabOrder = 1
-        ExplicitTop = 33
-        ExplicitWidth = 280
       end
       object chkRestoreDesktop: TTntCheckBox
         AlignWithMargins = True
@@ -122,7 +119,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = '&Restore desktop to previous state'
         TabOrder = 2
-        ExplicitWidth = 280
       end
       object chkDebug: TTntCheckBox
         AlignWithMargins = True
@@ -136,7 +132,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Show the debug &window'
         TabOrder = 3
-        ExplicitWidth = 280
       end
     end
     object ExGroupBox4: TExGroupBox
@@ -156,7 +151,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       ParentColor = True
       TabOrder = 2
       AutoHide = True
-      ExplicitWidth = 283
       object chkSaveWindowState: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -169,7 +163,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Save window &positions'
         TabOrder = 0
-        ExplicitWidth = 280
       end
       object pnlDockPref: TTntPanel
         AlignWithMargins = True
@@ -183,7 +176,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
-        ExplicitWidth = 280
         object lblDockPref: TTntLabel
           Left = 3
           Top = 0
@@ -224,13 +216,12 @@ inherited frmPrefSystem: TfrmPrefSystem
         ParentColor = True
         TabOrder = 3
         AutoHide = True
-        ExplicitWidth = 280
         object btnPlugins: TTntButton
           Left = 3
           Top = 0
           Width = 109
           Height = 19
-          Caption = 'Manage Plu&gins...'
+          Caption = 'Manage Plu&g-ins...'
           TabOrder = 0
           OnClick = btnPluginsClick
         end
@@ -253,8 +244,6 @@ inherited frmPrefSystem: TfrmPrefSystem
       ParentColor = True
       TabOrder = 4
       AutoHide = True
-      ExplicitTop = 343
-      ExplicitWidth = 283
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -267,7 +256,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Small titlebar for main window'
         TabOrder = 2
-        ExplicitWidth = 280
       end
       object chkCloseMin: TTntCheckBox
         AlignWithMargins = True
@@ -281,7 +269,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Close button minimizes to the System Tray'
         TabOrder = 0
-        ExplicitWidth = 280
       end
       object chkSingleInstance: TTntCheckBox
         AlignWithMargins = True
@@ -295,7 +282,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Align = alTop
         Caption = 'Only allow a single, running instance'
         TabOrder = 1
-        ExplicitWidth = 280
       end
       object chkOnTop: TTntCheckBox
         AlignWithMargins = True
@@ -310,7 +296,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         Caption = 'Always on top'
         TabOrder = 3
         Visible = False
-        ExplicitWidth = 280
       end
       object pnlAutoUpdates: TTntPanel
         AlignWithMargins = True
@@ -324,7 +309,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 4
-        ExplicitWidth = 280
         object chkAutoUpdate: TTntCheckBox
           Left = 2
           Top = 4
@@ -356,8 +340,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 5
-        ExplicitTop = 118
-        ExplicitWidth = 280
         object lblLang: TTntLabel
           Left = 2
           Top = 0
@@ -407,7 +389,7 @@ inherited frmPrefSystem: TfrmPrefSystem
         Left = 0
         Top = 21
         Width = 299
-        Height = 20
+        Height = 25
         Margins.Left = 0
         Align = alTop
         AutoSize = True
@@ -428,7 +410,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 20
+          Height = 25
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -437,12 +419,12 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 1000000
           DesignSize = (
             45
-            20)
+            25)
         end
       end
       object pnlTime: TExBrandPanel
         Left = 0
-        Top = 44
+        Top = 49
         Width = 302
         Height = 30
         Align = alTop
@@ -451,7 +433,6 @@ inherited frmPrefSystem: TfrmPrefSystem
         ParentColor = True
         TabOrder = 2
         AutoHide = True
-        ExplicitWidth = 280
         object lblTime: TTntLabel
           Left = 0
           Top = 3
@@ -486,7 +467,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 20
+          Height = 25
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -495,7 +476,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 3600
           DesignSize = (
             45
-            20)
+            25)
         end
       end
     end

@@ -82,7 +82,7 @@ const
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
     sPrefsDefaultPres = 'Restore default presence entries?';
-    sPrefsDupHotKey = 'Hot key is already used for presence %s';
+    sPrefsDupHotKey = 'Hotkey is already used for presence %s';
 
 {---------------------------------------}
 {---------------------------------------}
