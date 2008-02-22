@@ -5,7 +5,7 @@ inherited frmBaseChat: TfrmBaseChat
   ClientWidth = 415
   OnDestroy = FormDestroy
   ExplicitWidth = 423
-  ExplicitHeight = 294
+  ExplicitHeight = 287
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -65,6 +65,7 @@ inherited frmBaseChat: TfrmBaseChat
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
+    ParentColor = True
     TabOrder = 1
     object MsgOut: TExRichEdit
       Left = 2
@@ -179,6 +180,7 @@ inherited frmBaseChat: TfrmBaseChat
       ButtonWidth = 25
       Images = frmExodus.ImageList1
       TabOrder = 1
+      Transparent = True
       object ChatToolbarButtonBold: TTntToolButton
         Left = 0
         Top = 0
@@ -309,7 +311,7 @@ inherited frmBaseChat: TfrmBaseChat
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
-        ItemHeight = 0
+        ItemHeight = 13
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
