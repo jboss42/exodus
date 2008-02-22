@@ -96,7 +96,9 @@ inherited frmPrefRoster: TfrmPrefRoster
         Margins.Left = 0
         Margins.Top = 0
         Align = alTop
-        Caption = 'Show group &members online status at group level (e.g., 5 of 10)'
+        Caption = 
+          'Show group &members online status at group level (i.e. 5 of 10 o' +
+          'nline)'
         TabOrder = 3
       end
       object chkOnlineOnly: TTntCheckBox
