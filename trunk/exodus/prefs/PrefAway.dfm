@@ -4,8 +4,6 @@ inherited frmPrefAway: TfrmPrefAway
   Anchors = [akLeft]
   Caption = 'frmPrefAway'
   OldCreateOrder = True
-  ExplicitWidth = 394
-  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   object pnlContainer: TExBrandPanel [0]
@@ -27,7 +25,7 @@ inherited frmPrefAway: TfrmPrefAway
       Left = 0
       Top = 3
       Width = 362
-      Height = 110
+      Height = 113
       Margins.Left = 0
       Margins.Right = 0
       Margins.Bottom = 0
@@ -43,7 +41,7 @@ inherited frmPrefAway: TfrmPrefAway
       object pnlAwayTime: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 15
+        Top = 18
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -84,7 +82,7 @@ inherited frmPrefAway: TfrmPrefAway
       object chkAAReducePri: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 39
+        Top = 42
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -97,7 +95,7 @@ inherited frmPrefAway: TfrmPrefAway
       object chkAwayAutoResponse: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 63
+        Top = 66
         Width = 341
         Height = 23
         Margins.Left = 18
@@ -110,7 +108,7 @@ inherited frmPrefAway: TfrmPrefAway
       object ExBrandPanel2: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 86
+        Top = 89
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -144,9 +142,9 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 119
+      Top = 122
       Width = 362
-      Height = 66
+      Height = 69
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -163,7 +161,7 @@ inherited frmPrefAway: TfrmPrefAway
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 15
+        Top = 18
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -177,9 +175,9 @@ inherited frmPrefAway: TfrmPrefAway
         object lblXATime: TTntLabel
           Left = 0
           Top = 5
-          Width = 210
+          Width = 273
           Height = 13
-          Caption = 'Minutes to &wait before setting status to XA:'
+          Caption = 'Minutes to &wait before setting status to Extended Away:'
           FocusControl = txtXATime
         end
         object txtXATime: TExNumericEdit
@@ -202,7 +200,7 @@ inherited frmPrefAway: TfrmPrefAway
       object ExBrandPanel4: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 42
+        Top = 45
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -236,9 +234,9 @@ inherited frmPrefAway: TfrmPrefAway
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 191
+      Top = 197
       Width = 362
-      Height = 44
+      Height = 42
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -267,7 +265,7 @@ inherited frmPrefAway: TfrmPrefAway
         Left = 304
         Top = 19
         Width = 54
-        Height = 21
+        Height = 25
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
@@ -276,7 +274,7 @@ inherited frmPrefAway: TfrmPrefAway
         Max = 600
         DesignSize = (
           54
-          21)
+          25)
       end
     end
   end

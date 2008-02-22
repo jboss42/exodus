@@ -847,7 +847,7 @@ const
     sRosterAvail = 'Available';
     sRosterChat = 'Free to Chat';
     sRosterAway = 'Away';
-    sRosterXA = 'Xtended Away';
+    sRosterXA = 'Extended Away';
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
 
