@@ -34,7 +34,8 @@ uses
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze,
     TntForms, ExTracer, VistaAltFixUnit, ExForm, ExodusDockManager, DockWindow,
   ActnList, TntActnList, TntStdCtrls, ActnMan, ActnCtrls, ActnMenus,
-  XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB;
+  XPStyleActnCtrls, ActnColorMaps, COMRosterItem, COMExodusItem, Exodus_TLB,
+  SClrRGrp;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -249,7 +250,7 @@ type
     mnuWindows_View_ShowToolbar: TTntMenuItem;
     mnuWindows_View_ShowChatToolbar: TTntMenuItem;
     mnuWindows_View_ShowInstantMessages1: TTntMenuItem;
-    mnuWindows_View_ShowDebugXML: TTntMenuItem;
+    mnuFile_ShowDebugXML: TTntMenuItem;
     mnuOptions_Notifications_NewConversation: TTntMenuItem;
     mnuWindows_View_ShowActivityWindow: TTntMenuItem;
     trayShowActivityWindow: TTntMenuItem;
@@ -295,18 +296,20 @@ type
     ToolButtonSep1: TToolButton;
     btnOptions: TToolButton;
     btnActivityWindow: TToolButton;
-    Bevel1: TBevel;
     popCreate: TTntPopupMenu;
     Folder1: TTntMenuItem;
     Contact1: TTntMenuItem;
     txtStatus: TTntEdit;
     imgAd: TImage;
     ImageList2: TImageList;
+    ToolbarBevel: TColorBevel;
+    popViewStates: TTntPopupMenu;
+    popShowOnline: TTntMenuItem;
+    popShowAll: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnOnlineRosterClick(Sender: TObject);
     procedure btnAddContactClick(Sender: TObject);
     procedure mnuConferenceClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -409,6 +412,8 @@ type
     procedure txtStatusKeyPress(Sender: TObject; var Key: Char);
     procedure txtStatusExit(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
+    procedure popShowOnlineClick(Sender: TObject);
+    procedure popShowAllClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1262,7 +1267,7 @@ begin
         btnSendFile.Visible := getBool('brand_ft');
         mnuPeople_Contacts_BlockContact.Visible := getBool('brand_allow_blocking_jids');
         mnuOptions_Plugins.Visible := getBool('brand_plugs');
-        mnuWindows_View_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
+        mnuFile_ShowDebugXML.Visible := getBool('brand_show_debug_in_menu');
     end;
 
     prefstate := PrefController.getPrefState('auto_start');
@@ -2036,16 +2041,20 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.restoreToolbar;
+var
+    state: Boolean;
 begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
 
-        btnOnlineRoster.Down := getBool('roster_only_online');
         mnuOnline.Checked := btnOnlineRoster.Down;
         pnlToolbar.Visible := getBool('toolbar');
         mnuToolbar.Checked := pnlToolbar.Visible;
         mnuWindows_View_ShowToolbar.Checked := pnlToolbar.Visible;
+
+        popShowOnline.Checked := getBool('roster_only_online');
+        popShowAll.Checked := not popShowOnline.Checked;
     end;
     Toolbar1.Wrapable := false;
 end;
@@ -2295,25 +2304,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.btnOnlineRosterClick(Sender: TObject);
-var
-    filter: boolean;
-begin
-    // show only online
-    with MainSession.Prefs do begin
-        filter := not getBool('roster_only_online');
-        setBool('roster_only_online', filter);
-        btnOnlineRoster.Down := filter;
-        mnuOnline.Checked := filter;
-    end;
-
-    if MainSession.Active then begin
-        MainSession.FireEvent('/session/prefs', nil);
-    end;
-
-    // This forces a tree refresh which de-selects the current node item.
-    btnSendFile.Enabled := false;
-end;
 
 {---------------------------------------}
 procedure TfrmExodus.btnAddContactClick(Sender: TObject);
@@ -4549,6 +4539,26 @@ begin
     mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
+
+procedure TfrmExodus.popShowAllClick(Sender: TObject);
+begin
+    if not popShowAll.Checked then begin
+        MainSession.prefs.setBool('roster_only_online', false);
+        if MainSession.Active then begin
+            MainSession.FireEvent('/session/prefs', nil);
+        end;
+    end;
+end;
+
+procedure TfrmExodus.popShowOnlineClick(Sender: TObject);
+begin
+    if not popShowOnline.Checked then begin
+        MainSession.prefs.setBool('roster_only_online', true);
+        if MainSession.Active then begin
+            MainSession.FireEvent('/session/prefs', nil);
+        end;
+    end;
+end;
 
 procedure TfrmExodus.checkFlash();
 begin
