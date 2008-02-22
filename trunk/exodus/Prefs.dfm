@@ -2767,7 +2767,7 @@ inherited frmPrefs: TfrmPrefs
       Margins.Bottom = 0
       Align = alTop
       BorderWidth = 5
-      Caption = 'Hot Keys'
+      Caption = 'Hotkeys'
       ImageEnabled.Data = {
         89504E470D0A1A0A0000000D4948445200000066000000400806000000E82A02
         490000000467414D410000AFC837058AE90000001974455874536F6674776172
@@ -3145,66 +3145,34 @@ inherited frmPrefs: TfrmPrefs
     object tsSystem: TTntTabSheet
       Caption = 'tsSystem'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsContactList: TTntTabSheet
       Caption = 'tsContactList'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsDisplay: TTntTabSheet
       Caption = 'tsDisplay'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsNotifications: TTntTabSheet
       Caption = 'tsNotifications'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsMessages: TTntTabSheet
       Caption = 'tsMessages'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsAutoAway: TTntTabSheet
       Caption = 'tsAutoAway'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsPresence: TTntTabSheet
       Caption = 'tsPresence'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsHotKeys: TTntTabSheet
       Caption = 'tsHotKeys'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
 end

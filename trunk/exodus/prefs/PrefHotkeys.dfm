@@ -2,28 +2,29 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
   Left = 259
   Top = 156
   Caption = 'frmPrefHotkeys'
-  ClientHeight = 343
+  ClientHeight = 342
   ClientWidth = 392
   OldCreateOrder = True
   OnDestroy = FormDestroy
   ExplicitWidth = 404
-  ExplicitHeight = 355
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 392
     ExplicitWidth = 392
     inherited lblHeader: TTntLabel
-      Width = 47
-      Height = 12
+      Left = 6
+      Width = 50
       Caption = 'Hotkeys'
-      ExplicitWidth = 47
+      ExplicitLeft = 6
+      ExplicitWidth = 50
     end
   end
   object pnlContainer: TExBrandPanel
     AlignWithMargins = True
     Left = 0
-    Top = 27
+    Top = 29
     Width = 389
     Height = 216
     Margins.Left = 0

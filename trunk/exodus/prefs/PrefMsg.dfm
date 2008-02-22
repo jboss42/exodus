@@ -13,16 +13,18 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 388
     ExplicitWidth = 388
     inherited lblHeader: TTntLabel
-      Width = 121
-      Caption = 'Message Preferences'
-      ExplicitWidth = 121
+      Left = 6
+      Width = 52
+      Caption = 'Message'
+      ExplicitLeft = 6
+      ExplicitWidth = 52
     end
   end
   object pnlContainer: TExBrandPanel
     Left = 0
-    Top = 21
+    Top = 23
     Width = 319
-    Height = 470
+    Height = 468
     Align = alLeft
     BevelOuter = bvNone
     ParentColor = True
@@ -52,9 +54,6 @@ inherited frmPrefMsg: TfrmPrefMsg
         Align = alTop
         Caption = 'Add &requestor to default contact list group when accepted'
         TabOrder = 2
-        ExplicitLeft = 0
-        ExplicitTop = 95
-        ExplicitWidth = 313
       end
       object pnlS10NOpts: TExBrandPanel
         AlignWithMargins = True
@@ -80,9 +79,6 @@ inherited frmPrefMsg: TfrmPrefMsg
           Caption = 'Auto &accept all requests'
           TabOrder = 2
           TabStop = True
-          ExplicitLeft = 0
-          ExplicitTop = 37
-          ExplicitWidth = 310
         end
         object rbAcceptContacts: TTntRadioButton
           AlignWithMargins = True
@@ -95,9 +91,6 @@ inherited frmPrefMsg: TfrmPrefMsg
           Caption = 'Auto accept requests from &contacts in my contact list'
           TabOrder = 1
           TabStop = True
-          ExplicitLeft = 0
-          ExplicitTop = 20
-          ExplicitWidth = 310
         end
         object rbDenyAll: TTntRadioButton
           AlignWithMargins = True
@@ -110,9 +103,6 @@ inherited frmPrefMsg: TfrmPrefMsg
           Caption = 'Auto &deny all requests'
           TabOrder = 3
           TabStop = True
-          ExplicitLeft = 0
-          ExplicitTop = 54
-          ExplicitWidth = 310
         end
         object rbPromptAll: TTntRadioButton
           AlignWithMargins = True
@@ -125,9 +115,6 @@ inherited frmPrefMsg: TfrmPrefMsg
           Caption = '&Prompt for all requests'
           TabOrder = 0
           TabStop = True
-          ExplicitLeft = 0
-          ExplicitTop = 3
-          ExplicitWidth = 310
         end
       end
     end
@@ -155,9 +142,6 @@ inherited frmPrefMsg: TfrmPrefMsg
         Align = alTop
         Caption = 'Automatically &join when receiving a conference invitation'
         TabOrder = 1
-        ExplicitLeft = 0
-        ExplicitTop = 21
-        ExplicitWidth = 313
       end
       object chkBlockNonRoster: TTntCheckBox
         AlignWithMargins = True
@@ -169,9 +153,6 @@ inherited frmPrefMsg: TfrmPrefMsg
         Align = alTop
         Caption = '&Block messages from people not on my contact list'
         TabOrder = 2
-        ExplicitLeft = 0
-        ExplicitTop = 41
-        ExplicitWidth = 313
       end
     end
     object gbAdvancedPrefs: TExGroupBox
@@ -189,7 +170,6 @@ inherited frmPrefMsg: TfrmPrefMsg
       ParentColor = True
       TabOrder = 2
       AutoHide = True
-      ExplicitTop = 194
       object btnManageKeywords: TTntButton
         Left = 2
         Top = 18

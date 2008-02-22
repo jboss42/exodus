@@ -3,18 +3,17 @@ inherited frmPrefAway: TfrmPrefAway
   Top = 255
   Anchors = [akLeft]
   Caption = 'frmPrefAway'
-  ParentFont = True
   OldCreateOrder = True
-  ExplicitWidth = 528
-  ExplicitHeight = 588
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 394
+  ExplicitHeight = 439
+  PixelsPerInch = 96
+  TextHeight = 13
   object pnlContainer: TExBrandPanel [0]
     AlignWithMargins = True
     Left = 0
-    Top = 31
-    Width = 446
-    Height = 545
+    Top = 26
+    Width = 362
+    Height = 401
     Margins.Left = 0
     Margins.Right = 0
     Margins.Bottom = 0
@@ -27,8 +26,8 @@ inherited frmPrefAway: TfrmPrefAway
       AlignWithMargins = True
       Left = 0
       Top = 3
-      Width = 446
-      Height = 135
+      Width = 362
+      Height = 110
       Margins.Left = 0
       Margins.Right = 0
       Margins.Bottom = 0
@@ -44,9 +43,9 @@ inherited frmPrefAway: TfrmPrefAway
       object pnlAwayTime: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 18
-        Width = 425
-        Height = 30
+        Top = 15
+        Width = 341
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
@@ -57,18 +56,18 @@ inherited frmPrefAway: TfrmPrefAway
         AutoHide = True
         object lblAwayTime: TTntLabel
           Left = 0
-          Top = 4
-          Width = 263
-          Height = 16
+          Top = 3
+          Width = 224
+          Height = 13
           Margins.Left = 0
           Caption = '&Minutes to wait before setting status to Away:'
           FocusControl = txtAwayTime
         end
         object txtAwayTime: TExNumericEdit
-          Left = 358
+          Left = 287
           Top = 0
-          Width = 67
-          Height = 30
+          Width = 54
+          Height = 24
           Align = alRight
           Anchors = [akLeft]
           BevelOuter = bvNone
@@ -78,16 +77,16 @@ inherited frmPrefAway: TfrmPrefAway
           Min = 1
           Max = 600
           DesignSize = (
-            67
-            30)
+            54
+            24)
         end
       end
       object chkAAReducePri: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 48
-        Width = 425
-        Height = 29
+        Top = 39
+        Width = 341
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
@@ -98,9 +97,9 @@ inherited frmPrefAway: TfrmPrefAway
       object chkAwayAutoResponse: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 77
-        Width = 425
-        Height = 29
+        Top = 63
+        Width = 341
+        Height = 23
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
@@ -111,9 +110,9 @@ inherited frmPrefAway: TfrmPrefAway
       object ExBrandPanel2: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 106
-        Width = 425
-        Height = 29
+        Top = 86
+        Width = 341
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
@@ -125,28 +124,29 @@ inherited frmPrefAway: TfrmPrefAway
         AutoHide = True
         object lblAwayStatus: TTntLabel
           Left = 0
-          Top = 4
-          Width = 99
-          Height = 16
+          Top = 3
+          Width = 87
+          Height = 13
           Caption = 'Away status &text:'
           FocusControl = txtAway
         end
         object txtAway: TTntEdit
-          Left = 229
+          Left = 182
           Top = 0
-          Width = 196
-          Height = 29
+          Width = 159
+          Height = 24
           Align = alRight
           TabOrder = 0
+          ExplicitHeight = 21
         end
       end
     end
     object chkAutoXA: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 144
-      Width = 446
-      Height = 80
+      Top = 119
+      Width = 362
+      Height = 66
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -163,9 +163,9 @@ inherited frmPrefAway: TfrmPrefAway
       object ExBrandPanel3: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 18
-        Width = 425
-        Height = 30
+        Top = 15
+        Width = 341
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Align = alTop
@@ -176,17 +176,17 @@ inherited frmPrefAway: TfrmPrefAway
         AutoHide = True
         object lblXATime: TTntLabel
           Left = 0
-          Top = 6
-          Width = 248
-          Height = 16
+          Top = 5
+          Width = 210
+          Height = 13
           Caption = 'Minutes to &wait before setting status to XA:'
           FocusControl = txtXATime
         end
         object txtXATime: TExNumericEdit
-          Left = 358
+          Left = 287
           Top = 0
-          Width = 67
-          Height = 30
+          Width = 54
+          Height = 24
           Align = alRight
           BevelOuter = bvNone
           ParentColor = True
@@ -195,16 +195,16 @@ inherited frmPrefAway: TfrmPrefAway
           Min = 1
           Max = 600
           DesignSize = (
-            67
-            30)
+            54
+            24)
         end
       end
       object ExBrandPanel4: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 51
-        Width = 425
-        Height = 29
+        Top = 42
+        Width = 341
+        Height = 24
         Margins.Left = 18
         Margins.Top = 0
         Margins.Bottom = 0
@@ -216,28 +216,29 @@ inherited frmPrefAway: TfrmPrefAway
         AutoHide = True
         object lblXAStatus: TTntLabel
           Left = 0
-          Top = 4
-          Width = 155
-          Height = 16
+          Top = 3
+          Width = 136
+          Height = 13
           Caption = '&Extended Away status text:'
           FocusControl = txtXA
         end
         object txtXA: TTntEdit
-          Left = 229
+          Left = 182
           Top = 0
-          Width = 196
-          Height = 29
+          Width = 159
+          Height = 24
           Align = alRight
           TabOrder = 0
+          ExplicitHeight = 21
         end
       end
     end
     object chkAutoDisconnect: TExCheckGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 230
-      Width = 446
-      Height = 54
+      Top = 191
+      Width = 362
+      Height = 44
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -253,20 +254,20 @@ inherited frmPrefAway: TfrmPrefAway
       OnCheckChanged = chkAutoDisconnectCheckChanged
       object lblDisconnectTime: TTntLabel
         AlignWithMargins = True
-        Left = 26
-        Top = 32
-        Width = 214
-        Height = 16
+        Left = 21
+        Top = 26
+        Width = 180
+        Height = 13
         Margins.Left = 21
         Margins.Top = 9
         Caption = 'Minutes to wait &before disconnecting:'
         FocusControl = txtDisconnectTime
       end
       object txtDisconnectTime: TExNumericEdit
-        Left = 374
-        Top = 23
-        Width = 67
-        Height = 31
+        Left = 304
+        Top = 19
+        Width = 54
+        Height = 21
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
@@ -274,20 +275,18 @@ inherited frmPrefAway: TfrmPrefAway
         Min = 1
         Max = 600
         DesignSize = (
-          67
-          31)
+          54
+          21)
       end
     end
   end
   inherited pnlHeader: TTntPanel
-    ExplicitTop = 2
     inherited lblHeader: TTntLabel
       Left = 6
-      Width = 199
-      Height = 19
-      Caption = 'Auto Away Preferences'
+      Width = 69
+      Caption = 'Auto Away'
       ExplicitLeft = 6
-      ExplicitWidth = 199
+      ExplicitWidth = 69
     end
   end
 end

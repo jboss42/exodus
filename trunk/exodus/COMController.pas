@@ -262,10 +262,10 @@ uses
     ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow;
 
 const
-    sPluginErrCreate = 'Plugin could not be created. (%s)';
-    sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
-    sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
-    sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
+    sPluginErrCreate = 'Plug-in could not be created. (%s)';
+    sPluginErrNoIntf = 'Plug-in class does not support IExodusPlugin. (%s)';
+    sPluginErrInit   = 'Plug-in class could not be initialized. (%s)';
+    sPluginRemove    = 'Remove this plug-in from the list of plug-ins to be loaded at startup?';
     sPluginErrNoLib  = 'A library containing (%s) could not be found.';
     sPluginErrNoReg  = 'The library containing (%s) could not be registered.';
     sPluginNotCOM    = 'The library (%s) does not support COM';
@@ -660,7 +660,7 @@ begin
     end;
 
     if (idx < 0) then begin
-        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plug-in could not be initialized or configured.'),
             mtError, [mbOK], 0);
         exit;
     end;
@@ -689,7 +689,7 @@ begin
     end;
 
     if (idx < 0) then begin
-        MessageDlgW(errorStr + #13#10#13#10 + _('Plugin could not be initialized or configured.'),
+        MessageDlgW(errorStr + #13#10#13#10 + _('Plug-in could not be initialized or configured.'),
             mtError, [mbOK], 0);
         exit;
     end;

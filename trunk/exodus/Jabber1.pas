@@ -1414,7 +1414,7 @@ begin
     // enable a logging plugin now.
     if (MainSession.Prefs.getBool('log') and (ExCOMController.ContactLogger = nil)) then begin
         MainSession.Prefs.setBool('log', false);
-        MessageDlgW(_('Message logging is now performed by plugins. Please enable a logging plugin to regain this functionality.'),
+        MessageDlgW(_('Message logging is now performed by plug-ins. Please enable a logging plug-in to regain this functionality.'),
             mtWarning, [mbOK], 0);
     end;
 

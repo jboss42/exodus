@@ -17,9 +17,10 @@ inherited frmPrefPresence: TfrmPrefPresence
     ExplicitWidth = 421
     inherited lblHeader: TTntLabel
       Left = 6
-      Width = 129
-      Caption = 'Presence Preferences'
-      ExplicitWidth = 129
+      Width = 54
+      Caption = 'Presence'
+      ExplicitLeft = 6
+      ExplicitWidth = 54
     end
   end
   object ExBrandPanel1: TExBrandPanel

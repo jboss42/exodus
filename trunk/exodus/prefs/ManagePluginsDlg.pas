@@ -63,7 +63,7 @@ type
     TRegProc = function: HResult; stdcall;
 
 const
-    sRegPluginError = 'The plugin could not be registered with windows.';
+    sRegPluginError = 'The plug-in could not be registered with windows.';
     sExternalLibrary = 'External Library';
 
 procedure showManagePluginDlg(AOwner: TComponent);
