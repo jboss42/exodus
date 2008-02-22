@@ -115,7 +115,7 @@ begin
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(Application);
     frmDebug.ShowDefault(bringToFront);
-    frmExodus.mnuWindows_View_ShowDebugXML.Checked := true;
+    frmExodus.mnuFile_ShowDebugXML.Checked := true;
 end;
 
 {---------------------------------------}
@@ -337,7 +337,7 @@ begin
     frmDebug := nil;
 
     inherited;
-    frmExodus.mnuWindows_View_ShowDebugXML.Checked := false;
+    frmExodus.mnuFile_ShowDebugXML.Checked := false;
 
 end;
 

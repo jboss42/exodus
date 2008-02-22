@@ -3,7 +3,7 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 650
+  ClientHeight = 670
   ClientWidth = 404
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -20,12 +20,12 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 704
+  ExplicitHeight = 724
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 641
+    Top = 661
     Width = 404
     Height = 9
     Align = alBottom
@@ -53,18 +53,21 @@ inherited frmExodus: TfrmExodus
     Left = 0
     Top = 66
     Width = 404
-    Height = 575
+    Height = 595
     ActivePage = tabLogin
     Align = alClient
-    Style = tsFlatButtons
+    Style = tsButtons
     TabOrder = 1
+    ExplicitTop = 136
+    ExplicitHeight = 505
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitHeight = 565
       object pnlLogin: TPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 565
+        Height = 585
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -72,20 +75,23 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 565
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 495
       object pnlRoster: TPanel
         Left = 0
         Top = 37
         Width = 396
-        Height = 528
+        Height = 548
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 458
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -307,26 +313,27 @@ inherited frmExodus: TfrmExodus
     Height = 35
     Align = alTop
     AutoSize = True
+    BevelEdges = []
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    object Bevel1: TBevel
+    object ToolbarBevel: TColorBevel
       Left = 0
-      Top = 34
+      Top = 30
       Width = 404
-      Height = 1
+      Height = 5
       Align = alTop
-      ExplicitLeft = 144
-      ExplicitTop = 24
-      ExplicitWidth = 50
+      Shape = bsBottomLine
+      HighLight = clBtnFace
+      Shadow = clBtnShadow
+      FrameColor = frUser
     end
     object ToolBar1: TToolBar
       Left = 0
       Top = 0
       Width = 404
-      Height = 34
+      Height = 30
       AutoSize = True
-      BorderWidth = 1
       ButtonHeight = 30
       ButtonWidth = 39
       DragKind = dkDock
@@ -359,8 +366,8 @@ inherited frmExodus: TfrmExodus
         AllowAllUp = True
         AutoSize = True
         Caption = 'Add'
+        DropdownMenu = popCreate
         ImageIndex = 2
-        OnClick = btnAddContactClick
       end
       object btnRoom: TToolButton
         Left = 117
@@ -389,9 +396,9 @@ inherited frmExodus: TfrmExodus
         AllowAllUp = True
         AutoSize = True
         Caption = 'View'
+        DropdownMenu = popViewStates
         ImageIndex = 5
         Style = tbsCheck
-        OnClick = btnOnlineRosterClick
       end
       object btnSendFile: TToolButton
         Left = 234
@@ -472,7 +479,6 @@ inherited frmExodus: TfrmExodus
             object mnuOnline: TTntMenuItem
               Caption = 'Show &Only Online'
               ShortCut = 8311
-              OnClick = btnOnlineRosterClick
             end
             object mnuToolbar: TTntMenuItem
               Caption = 'Show Toolbar'
@@ -892,6 +898,10 @@ inherited frmExodus: TfrmExodus
         Caption = 'Pr&eferences'
         OnClick = Preferences1Click
       end
+      object mnuFile_ShowDebugXML: TTntMenuItem
+        Caption = '&Show Console...'
+        OnClick = ShowXML1Click
+      end
       object N21: TTntMenuItem
         Caption = '-'
       end
@@ -983,7 +993,6 @@ inherited frmExodus: TfrmExodus
           end
           object mnuPeople_Group_View_OnlineOnly: TTntMenuItem
             Caption = '&Online Only'
-            OnClick = btnOnlineRosterClick
           end
           object mnuPeople_Group_View_BlockedContacts: TTntMenuItem
             Caption = '&Blocked Contacts'
@@ -1063,10 +1072,6 @@ inherited frmExodus: TfrmExodus
         object mnuWindows_View_ShowInstantMessages1: TTntMenuItem
           Caption = 'Show &Message Queue'
           OnClick = ShowEventsWindow1Click
-        end
-        object mnuWindows_View_ShowDebugXML: TTntMenuItem
-          Caption = 'Show &Debug XML'
-          OnClick = ShowXML1Click
         end
       end
       object mnuWindows_CloseAll: TTntMenuItem
@@ -14136,5 +14141,17 @@ inherited frmExodus: TfrmExodus
       FF0000FFFF0000FFFC018FFFFFE003FFFF0000FFFF0000FFFF038FFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+  end
+  object popViewStates: TTntPopupMenu
+    Left = 40
+    Top = 480
+    object popShowOnline: TTntMenuItem
+      Caption = 'Show Online Contacts'
+      OnClick = popShowOnlineClick
+    end
+    object popShowAll: TTntMenuItem
+      Caption = 'Show All Contacts'
+      OnClick = popShowAllClick
+    end
   end
 end
