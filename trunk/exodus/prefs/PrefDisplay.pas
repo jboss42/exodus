@@ -593,7 +593,7 @@ begin
                 if (not _HTMLContentAlreadyShowing) then begin
                     ForceIgnoreScrollToBottom := true;
                     _HTMLContentAlreadyShowing := true;
-                    
+
                     m := TJabberMessage.Create();
                     with m do begin
                         Body := _('Some text from me');
@@ -608,22 +608,22 @@ begin
 
                     m := TJabberMessage.Create();
                     with m do begin
-                        Body := _('Some reply text');
-                        isMe := false;
-                        Nick := _('Friend');
+                        Body := _('/me does action');
+                        Nick := my_nick;
                         Time := n;
-                        Priority := High;
                     end;
-
                     DisplayMsg(m, false);
                     m.Free();
 
                     m := TJabberMessage.Create();
                     with m do begin
-                        Body := _('/me does action');
-                        Nick := my_nick;
+                        Body := _('Some reply text');
+                        isMe := false;
+                        Nick := _('Friend');
                         Time := n;
+                        Priority := medium;
                     end;
+
                     DisplayMsg(m, false);
                     m.Free();
 
