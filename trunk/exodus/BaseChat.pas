@@ -97,6 +97,7 @@ type
     procedure ChatToolbarButtonBoldClick(Sender: TObject);
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
     procedure ChatToolbarButtonColorsClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -229,10 +230,8 @@ procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
 begin
   inherited;
     // Show the emoticons form
-    if (Sender.InheritsFrom(TControl)) then begin
-        frmEmoticons.Left := TControl(Sender).ClientOrigin.X + 20;
-        frmEmoticons.Top := TControl(Sender).ClientOrigin.Y  + 20;
-    end;
+    frmEmoticons.Left := ChatToolbarButtonEmoticons.ClientOrigin.X;
+    frmEmoticons.Top := ChatToolbarButtonEmoticons.ClientOrigin.Y  + 20;
 
     frmEmoticons.MakeFullyVisible();
     frmEmoticons.ChatWindow := Self;
@@ -555,6 +554,13 @@ begin
         DockToolbar.Free();
 
     inherited;
+end;
+
+procedure TfrmBaseChat.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+
 end;
 
 {---------------------------------------}
