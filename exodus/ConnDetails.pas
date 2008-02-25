@@ -220,6 +220,9 @@ const
     sSmallKeys = 'Must have a larger number of poll keys.';
     sConnDetails = '%s Details';
     sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
+    sProfileInvalidUsername = 'The username you entered is invalid. Please re-enter a valid username.';
+    sProfileInvalidServer = 'The server you entered is invalid. Please re-enter a valid server.';
+    sProfileInvalidResource = 'The resource you entered is invalid. Please re-enter a valid resource.';
     sProfileResourcePassMatch = 'The resource you have provided matches your password.  Please re-enter a valid resource.';
     sResourceWork = 'Work';
     sResourceHome = 'Home';
@@ -279,36 +282,74 @@ end;
 {---------------------------------------}
 function TfrmConnDetails.updateProfile(): boolean;
 var
-    valid: boolean;
-    jid: Widestring;
+    username, domain, resource, jid: Widestring;
     tj: TJabberID;
 begin
-    // Validate the JID..
     Result := true;
-    jid := TJabberID.applyJEP106(txtUsername.Text) +
-            '@' + cboServer.Text +
-            '/' + cboResource.Text;
-    valid := true;
-
-    if (not isValidJid(jid)) then
-        valid := false
-    else begin
-        tj := TJabberID.Create(jid);
-        if (chkWinLogin.Checked or (_sslCertKey <> '')) then
-        begin
-          cboServer.Text := tj.domain;
-        end else begin
-          valid := (tj.user <> '');
+    if pnlx509Auth.Checked then begin
+        //"Validate" certificate
+        if (_sslCertKey = '') then begin
+            MessageDlgW(_(sMissingX509Cert), mtError, [mbOK], 0);
+            Result := false;
+            exit;
         end;
+    end
+    else begin
+        // Validate the JID parts
+        if (not chkWinLogin.Checked) then begin
+            username := TJabberID.applyJEP106(txtUsername.Text);
+            username := xmpp_nodeprep(username);
+            if (username = '') then begin
+                MessageDlgW(_(sProfileInvalidUsername), mtError, [mbOK], 0);
+                Result := false;
+                exit;
+            end;
+        end
+        else begin
+            username := '';
+        end;
+
+        domain := cboServer.Text;
+        domain := xmpp_nameprep(domain);
+        if (domain = '') then begin
+            MessageDlgW(_(sProfileInvalidServer), mtError, [mbOK], 0);
+            Result := false;
+            exit;
+        end;
+
+        resource := cboResource.Text;
+        resource := xmpp_resourceprep(resource);
+        if (resource = '') then begin
+            MessageDlgW(_(sProfileInvalidResource), mtError, [mbOK], 0);
+            Result := false;
+            exit;
+        end;
+
+        //Construct full-jid string
+        if (username <> '') then
+            jid := username + '@' + domain
+        else
+            jid := domain;
+
+        if (resource <> '') then
+            jid  := jid + '/' + resource;
             
-        tj.Free();
-    end;
+        if (not isValidJid(jid)) then begin
+            MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
+            Result := false;
+            exit;
+        end
+        else begin
+            tj := TJabberID.Create(jid);
+            
+            if (not chkWinLogin.Checked) and (tj.user = '') then begin
+                MessageDlgW(_(sProfileInvalidUsername), mtError, [mbOK], 0);
+                Result := false;
+            end;
 
-
-    if (valid = false) then begin
-        MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
-        Result := false;
-        exit;
+            tj.Free();
+            if not Result then exit;
+        end;
     end;
 
     // save the info...
@@ -365,7 +406,7 @@ begin
         exit
     end;
 
-    if (cboResource.Text = txtPassword.Text) then begin
+    if (cboResource.Text <> '') and (txtPassword.Text <> '') and (cboResource.Text = txtPassword.Text) then begin
         MessageDlgW(_(sProfileResourcePassMatch), mtError, [mbOK], 0);
         ModalResult := mrNone;
         exit;
@@ -843,7 +884,7 @@ end;
 procedure TfrmConnDetails.btnConnectClick(Sender: TObject);
 begin
     // Check that resource does not match password
-    if (cboResource.Text = txtPassword.Text) then begin
+    if (cboResource.Text <> '') and (txtPassword.Text <> '') and (cboResource.Text = txtPassword.Text) then begin
         MessageDlgW(_(sProfileResourcePassMatch), mtError, [mbOK], 0);
         ModalResult := mrNone;
         exit;
