@@ -119,8 +119,10 @@ type
     procedure _ClearOldMessages();
     function _getHistory(includeCount: boolean = true): WideString;
     function _processUnicode(txt: widestring): WideString;
-    function _getLineClass(Msg: TJabberMessage): WideString;
-    function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
+    function _getLineClass(Msg: TJabberMessage): WideString; overload;
+    function _getLineClass(nick: widestring): WideString; overload;
+    function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
+    function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
 
   protected
       procedure writeHTML(html: WideString);
@@ -140,7 +142,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(txt: Widestring; timestamp: string); override;
+    procedure DisplayPresence(nick, txt: Widestring; timestamp: string); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -475,6 +477,23 @@ begin
 end;
 
 {---------------------------------------}
+function TfIEMsgList._checkLastNickForMsgGrouping(nick: widestring): boolean;
+var
+    tmsg: TJabberMessage;
+begin
+    Result := false;
+
+    if (nick <> '') then begin
+        tmsg := TJabberMessage.Create();
+        if (tmsg <> nil) then begin
+            tmsg.Nick := nick;
+            Result := _checkLastNickForMsgGrouping(tmsg);
+            tmsg.Free();
+        end;
+    end;
+end;
+
+{---------------------------------------}
 function TfIEMsgList._checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
 begin
     if (Msg.Nick = _lastMsgNick) then begin
@@ -482,6 +501,23 @@ begin
     end
     else begin
         Result := false;
+    end;
+end;
+
+{---------------------------------------}
+function TfIEMsgList._getLineClass(nick: widestring): WideString;
+var
+    tmsg: TJabberMessage;
+begin
+    Result := 'line1';
+
+    if (nick <> '') then begin;
+        tmsg := TJabberMessage.Create();
+        if (tmsg <> nil) then begin
+            tmsg.Nick := nick;
+            Result := _getLineClass(tmsg);
+            tmsg.Free();
+        end;
     end;
 end;
 
@@ -579,8 +615,7 @@ begin
     dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
 
     // Author Stamp
-    if ((Msg.Nick <> '') and
-        (not Msg.Action)) then begin
+    if (Msg.Nick <> '') then begin
         // This is a normal message
         if (not _checkLastNickForMsgGrouping(Msg)) then begin
             if Msg.isMe then begin
@@ -593,9 +628,15 @@ begin
             end;
         end;
 
-        dv := dv + '<div class="msgts">';
-        _lastMsgNick := Msg.Nick;
+    end
+    else begin
+        dv := dv + '<span class="svr">' + _('System Message') + '</span>';
     end;
+
+    _lastMsgNick := Msg.Nick;
+
+    // Wrap msg and time stamp for css
+    dv := dv + '<div class="msgts">';
 
     // Timestamp
     if (MainSession.Prefs.getBool('timestamp')) then begin
@@ -634,15 +675,17 @@ begin
         end;
 
         if (Msg.Highlight) then
-            dv := dv + '<span class="alert"> ' + txt + '</span></div>'
+            dv := dv + '<span class="alert"> ' + txt + '</span>'
         else
-            dv := dv + '<span class="msg">' + txt + '</span></div>';
+            dv := dv + '<span class="msg">' + txt + '</span>';
     end
-    else
+    else begin
         // This is an action
         dv := dv + '<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>';
+    end;
 
-    dv := dv + '</div>';
+    // Close off msgts and line1/2 div tags
+    dv := dv + '</div></div>';
     writeHTML(dv);
 
     if (_doc <> nil) then begin
@@ -660,13 +703,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfIEMsgList.DisplayPresence(txt: Widestring; timestamp: string);
+procedure TfIEMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string);
 var
     pt : integer;
     tags: IHTMLElementCollection;
     dv : IHTMLElement;
     sp : IHTMLElement;
     i : integer;
+    htmlout: widestring;
 begin
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
@@ -689,10 +733,26 @@ begin
         end;
     end;
 
-    if timestamp <> '' then
-        writeHTML('<div class="line"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div>')
-    else
-        writeHTML('<div class="line"><span class="pres">' + txt + '</span></div>');
+    htmlout := '<div class="' + _getLineClass(nick) + '">';
+    if ((not _checkLastNickForMsgGrouping(nick)) and
+        (nick <> '')) then begin
+        // Must NOT be a "me" message
+        htmlout := htmlout + '<span class="other">' + nick + '</span>';
+    end;
+
+    if timestamp <> '' then begin
+        htmlout := htmlout + '<div class="msgts"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div></div>';
+    end
+    else begin
+        if (nick <> '') then begin
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><div class="msgts"><span class="pres">' + txt + '</span></div></div>';
+        end
+        else begin
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><span class="pres">' + txt + '</span></div>';
+        end;
+    end;
+
+    writeHTML(htmlout);
 
     if (_bottom) then
         ScrollToBottom();
