@@ -1202,7 +1202,7 @@ begin
         except
             // To handle Cannot focus exception
         end;
-        MsgList.DisplayPresence(_('You have been disconnected.'), '');
+        MsgList.DisplayPresence('', _('You have been disconnected.'), '');
         Self.ImageIndex := RosterImages.RI_OFFLINE_INDEX;
     end
     else if (event = '/session/presence') then begin
@@ -1213,7 +1213,7 @@ begin
             except
                 // To handle Cannot focus exception
             end;
-            MsgList.DisplayPresence(_('Reconnected'), '');
+            MsgList.DisplayPresence('', _('Reconnected'), '');
             updatePresenceImage();
         end;
     end
@@ -1374,7 +1374,7 @@ begin
         else
             ts := '';
 
-        MsgList.DisplayPresence(_displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts);
+        MsgList.DisplayPresence(_displayName, _displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts);
     end;
 end;
 

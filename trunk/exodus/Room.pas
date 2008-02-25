@@ -686,7 +686,7 @@ begin
                 e := jEntityCache.getByJid(Self.jid, '');
                 // e can be null, not doing this check can cause crashes
                 if ( e <> nil ) then
-                	e.refresh(MainSession);
+                    e.refresh(MainSession);
             end;
         end;
 
@@ -1127,7 +1127,7 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         MsgOut.Visible := false;
-        MsgList.DisplayPresence(_('You have been disconnected.'), '');
+        MsgList.DisplayPresence('', _('You have been disconnected.'), '');
 
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
@@ -1156,9 +1156,9 @@ begin
             (_pending_start)) then begin
             MsgOut.Visible := true;
             if (_pending_start) then
-                MsgList.DisplayPresence(sConnected, '')
+                MsgList.DisplayPresence('', sConnected, '')
             else
-                MsgList.DisplayPresence(sReconnected, '');
+                MsgList.DisplayPresence('', sReconnected, '');
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin
