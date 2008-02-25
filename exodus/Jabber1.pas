@@ -1417,11 +1417,11 @@ begin
 
     // If they had logging turned on, warn them that they need to
     // enable a logging plugin now.
-    if (MainSession.Prefs.getBool('log') and (ExCOMController.ContactLogger = nil)) then begin
+    {if (MainSession.Prefs.getBool('log') and (ExCOMController.ContactLogger = nil)) then begin
         MainSession.Prefs.setBool('log', false);
         MessageDlgW(_('Message logging is now performed by plug-ins. Please enable a logging plug-in to regain this functionality.'),
             mtWarning, [mbOK], 0);
-    end;
+    end;} // removed as logging is going to be moved into core
 
     _expanded := false;
     TAutoOpenEventManager.onAutoOpenEvent('startup');
