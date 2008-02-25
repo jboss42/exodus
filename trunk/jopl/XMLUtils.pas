@@ -58,6 +58,8 @@ function generateEventMsg(tag: TXMLTag; event: widestring): TXMLTag;
 
 procedure parseNameValues(list: TStringlist; str: Widestring);
 
+function StringToXMLTag(input: widestring): TXMLTag;
+
 
 {$ifdef VER150}
     {$define INDY9}
@@ -81,7 +83,8 @@ uses
     {$else}
     IdCoder3To4,
     {$endif}
-    SecHash;
+    SecHash,
+    XMLParser;
 
 function XPLiteEscape(value: widestring): widestring;
 var
@@ -578,6 +581,28 @@ begin
     end;
 end;
 
+{---------------------------------------}
+function StringToXMLTag(input: widestring): TXMLTag;
+var
+    parser: TXMLTagParser;
+begin
+    Result := nil;
+    if (input = '') then exit;
+
+    parser := nil;
+    try
+        try
+            // Input MUST be valid XML
+            parser := TXMLTagParser.Create;
+            parser.ParseString(input, '');
+            Result := parser.popTag();
+        except
+
+        end;
+    finally
+        parser.Free();
+    end;
+end;
 
 {---------------------------------------}
 {$ifdef Win32}

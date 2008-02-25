@@ -664,13 +664,17 @@ begin
                 dv := dv +
                       '<img class="priorityimg" src="res://' +
                       _exeName +
-                      '/GIF/HIGH_PRI"/>';
+                      '/GIF/HIGH_PRI" alt="' +
+                      _('High Priority') +
+                      '" />';
             end
             else if (Msg.Priority = low) then begin
                 dv := dv +
                       '<img class="priorityimg" src="res://' +
                       _exeName +
-                      '/GIF/LOW_PRI"/>';
+                      '/GIF/LOW_PRI" alt="' +
+                      _('Low Priority') +
+                      '" />';
             end;
         end;
 
@@ -739,6 +743,15 @@ begin
         // Must NOT be a "me" message
         htmlout := htmlout + '<span class="other">' + nick + '</span>';
     end;
+
+    // Put presence Icon in with the presence message
+    // How to get image from image list and not resource?
+{    if (_exeName <> '') then begin
+        htmlout := htmlout +
+              '<img class="priorityimg" src="res://' +
+              _exeName +
+              '/GIF/HIGH_PRI"/>';
+    end;    }
 
     if timestamp <> '' then begin
         htmlout := htmlout + '<div class="msgts"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div></div>';

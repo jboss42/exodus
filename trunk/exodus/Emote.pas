@@ -672,11 +672,19 @@ end;
 function TEmoticonList.getImageTag(candidate: WideString): WideString;
 var
     i: integer;
+    ttag: TXMLTag;
 begin
     result := '';
     i := _text.IndexOf(candidate);
-    if (i >= 0) then
+    if (i >= 0) then begin
         result := TEmoticon(_text.Objects[i])._img_tag;
+        ttag := StringToXMLTag(result);
+        if (ttag <> nil) then begin
+            ttag.setAttribute('alt', candidate);
+            result := ttag.XML;
+            ttag.Free();
+        end;
+    end;
 end;
 
 {---------------------------------------}
