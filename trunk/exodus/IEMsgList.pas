@@ -200,7 +200,8 @@ uses
     ExUtils,
     ShellAPI,
     Emote,
-    StrUtils;
+    StrUtils,
+    RT_XIMConversion;
 
 {$R *.dfm}
 
@@ -507,6 +508,7 @@ procedure TfIEMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true
 var
     txt: WideString;
     body: TXmlTag;
+    cleanXIM: TXmlTag;
     i: integer;
     nodes: TXMLNodeList;
     cd: TXMLCData;
@@ -539,20 +541,25 @@ begin
 
     _clearOldMessages();
 
-    if (not Msg.Action) then begin
+    if ((not Msg.Action) and
+        (MainSession.Prefs.getBool('richtext_enabled'))) then begin
         // ignore HTML for actions.  it's harder than you think.
         body := Msg.Tag.QueryXPTag(xp_xhtml);
 
         if (body <> nil) then begin
-        // if first node is a p tag, make it a span...
-            if ((body.Nodes.Count > 0) and
-                (TXMLTag(body.Nodes[0]).NodeType = xml_tag) and
-                (TXMLTag(body.Nodes[0]).Name = 'p')) then
-                TXMLTag(body.Nodes[0]).Name := 'span';
+            // Strip out font tags we wish to ignore
+            cleanXIM := cleanXIMTag(body);
+            if (cleanXIM <> nil) then begin
+                // if first node is a p tag, make it a span...
+                if ((cleanXIM.Nodes.Count > 0) and
+                    (TXMLTag(cleanXIM.Nodes[0]).NodeType = xml_tag) and
+                    (TXMLTag(cleanXIM.Nodes[0]).Name = 'p')) then
+                    TXMLTag(cleanXIM.Nodes[0]).Name := 'span';
 
-            nodes := body.nodes;
-            for i := 0 to nodes.Count - 1 do
-                txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
+                nodes := cleanXIM.nodes;
+                for i := 0 to nodes.Count - 1 do
+                    txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
+            end;
         end;
     end;
 
