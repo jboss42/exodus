@@ -412,8 +412,7 @@ type
     procedure txtStatusKeyPress(Sender: TObject; var Key: Char);
     procedure txtStatusExit(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
-    procedure popShowOnlineClick(Sender: TObject);
-    procedure popShowAllClick(Sender: TObject);
+    procedure popChangeView(Sender: TObject);
 
   private
     { Private declarations }
@@ -1130,11 +1129,22 @@ end;
 
  procedure TfrmExodus.WMActivate(var msg: TMessage);
  begin
-
     if (Msg.WParamLo <> WA_INACTIVE) then begin
+        OutputDebugMsg('exodus got activate');
 //        outputdebugMsg('TfrmExodus.WMActivate');
         checkFlash();
         StopTrayAlert();
+
+        if ((_dockWindow <> nil) and
+            (_dockWindow.Showing) and
+            (_dockWindowGlued) and
+            (_dockWindow.WindowState = wsNormal)) then begin
+            // This will keep the glued window on top
+            // when this window is activated.
+            SetWindowPos(_dockWindow.Handle, Self.Handle,
+                    0, 0, 0, 0,
+                    SWP_NOSIZE or SWP_NOMOVE or SWP_NOACTIVATE or SWP_NOSENDCHANGING);
+        end;
     end;
     inherited;
  end;
@@ -1907,7 +1917,7 @@ begin
 
         // do gui stuff
         if ((tag = nil) or (tag.Name <> 'startup')) then begin
-            updateLayoutPrefChange();
+            //updateLayoutPrefChange();
             //This is gross. For all TfrmDockable windows, call the onDock or onFloat
             //events, allowing the windows to update preferences.
             for i := 0 to Screen.FormCount - 1 do begin
@@ -2284,6 +2294,9 @@ begin
     // Disable showing error dialog when exiting
     Application.OnException := CatchersMit.gotExceptionNoDlg;
 
+    //Save our current width...
+    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, Self.ClientWidth);
+
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
     // we'll close the form properly (xref _appclosing)
@@ -2374,6 +2387,7 @@ begin
         if (frmExodus.Height < frmExodus.Constraints.MinHeight) then
             frmExodus.Height := frmExodus.Constraints.MinHeight;
     end;
+//    MainSession.Prefs.setInt(PrefController.P_ROSTER_WIDTH, frmExodus.Width);
 end;
 
 {---------------------------------------}
@@ -2904,17 +2918,8 @@ begin
 //    if (frmRoster <> nil) then
 //        frmRoster.RosterTree.Invalidate();
     StopTrayAlert();
-
-    if ((_dockWindow <> nil) and
-        (_dockWindow.Showing) and
-        (_dockWindowGlued) and
-        (_dockWindow.WindowState = wsNormal)) then begin
-        // This will keep the glued window on top
-        // when this window is activated.
-        _dockWindow.BringToFront();
-        Self.BringToFront();
-    end;
 end;
+
 
 
 {---------------------------------------}
@@ -3589,7 +3594,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
 procedure TfrmExodus.TrackWindowsMsg(windows_msg: integer);
 var
     idx: integer;
@@ -4540,19 +4544,15 @@ begin
 end;
 
 
-procedure TfrmExodus.popShowAllClick(Sender: TObject);
+procedure TfrmExodus.popChangeView(Sender: TObject);
 begin
-    if not popShowAll.Checked then begin
+    if (Sender = popShowAll) and (not popShowAll.Checked) then begin
         MainSession.prefs.setBool('roster_only_online', false);
         if MainSession.Active then begin
             MainSession.FireEvent('/session/prefs', nil);
         end;
-    end;
-end;
-
-procedure TfrmExodus.popShowOnlineClick(Sender: TObject);
-begin
-    if not popShowOnline.Checked then begin
+    end
+    else if (Sender = popShowOnline) and (not popShowOnline.Checked) then begin
         MainSession.prefs.setBool('roster_only_online', true);
         if MainSession.Active then begin
             MainSession.FireEvent('/session/prefs', nil);
@@ -4740,6 +4740,7 @@ begin
     lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
     lblDisplayName.Hint := jid.getDisplayFull();
 end;
+
 
 initialization
     //JJF 5/5/06 not sure if registering for EXODUS_ messages will cause
