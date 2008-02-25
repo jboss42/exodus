@@ -52,7 +52,7 @@ inherited frmExodus: TfrmExodus
     Top = 66
     Width = 404
     Height = 595
-    ActivePage = tabLogin
+    ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
@@ -75,10 +75,6 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -186,22 +182,24 @@ inherited frmExodus: TfrmExodus
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 3
-          Height = 13
+          Width = 353
+          Height = 12
           Align = alClient
+          ExplicitWidth = 3
+          ExplicitHeight = 13
         end
         object pnlStatus: TPanel
           Left = 21
           Top = 18
-          Width = 167
+          Width = 359
           Height = 19
           Cursor = crHandPoint
-          Align = alLeft
-          AutoSize = True
+          Align = alClient
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
           OnClick = clickChangeStatus
+          ExplicitWidth = 167
           object lblStatus: TTntLabel
             AlignWithMargins = True
             Left = 3
@@ -210,13 +208,15 @@ inherited frmExodus: TfrmExodus
             Height = 13
             Cursor = crHandPoint
             Align = alLeft
+            AutoSize = False
+            EllipsisPosition = epEndEllipsis
             OnClick = clickEditStatus
           end
           object imgDown: TImage
             Left = 151
             Top = 0
             Width = 16
-            Height = 16
+            Height = 19
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
