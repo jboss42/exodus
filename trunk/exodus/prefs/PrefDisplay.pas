@@ -30,27 +30,42 @@ uses
 type
   TfrmPrefDisplay = class(TfrmPrefPanel)
     FontDialog1: TFontDialog;
+    TntScrollBox1: TTntScrollBox;
     pnlContainer: TExBrandPanel;
     gbContactList: TExGroupBox;
+    lblRosterBG: TTntLabel;
+    lblRosterFG: TTntLabel;
+    lblRosterPreview: TTntLabel;
+    cbRosterBG: TColorBox;
+    cbRosterFont: TColorBox;
+    btnRosterFont: TTntButton;
+    colorRoster: TTntTreeView;
     gbActivityWindow: TExGroupBox;
+    lblChatPreview: TTntLabel;
+    Label5: TTntLabel;
+    lblChatWindowElement: TTntLabel;
+    lblChatFG: TTntLabel;
+    colorChat: TExRichEdit;
+    cboChatElement: TTntComboBox;
+    btnChatFont: TTntButton;
+    cbChatFont: TColorBox;
     gbOtherPrefs: TExGroupBox;
     chkRTEnabled: TTntCheckBox;
+    pnlTimeStamp: TExBrandPanel;
+    lblTimestampFmt: TTntLabel;
+    chkTimestamp: TTntCheckBox;
+    txtTimestampFmt: TTntComboBox;
+    chkShowPriority: TTntCheckBox;
+    chkChatAvatars: TTntCheckBox;
+    pnlEmoticons: TExBrandPanel;
+    chkEmoticons: TTntCheckBox;
+    btnEmoSettings: TTntButton;
     gbAdvancedPrefs: TExGroupBox;
     pnlAdvancedLeft: TExBrandPanel;
     gbRTIncludes: TExGroupBox;
     chkAllowFontFamily: TTntCheckBox;
     chkAllowFontSize: TTntCheckBox;
     chkAllowFontColor: TTntCheckBox;
-    pnlTimeStamp: TExBrandPanel;
-    chkTimestamp: TTntCheckBox;
-    lblTimestampFmt: TTntLabel;
-    txtTimestampFmt: TTntComboBox;
-    chkShowPriority: TTntCheckBox;
-    chkChatAvatars: TTntCheckBox;
-    pnlSnapTo: TExBrandPanel;
-    chkSnap: TTntCheckBox;
-    trkSnap: TTrackBar;
-    txtSnap: TExNumericEdit;
     gbChatOptions: TExGroupBox;
     chkBusy: TTntCheckBox;
     chkEscClose: TTntCheckBox;
@@ -61,26 +76,12 @@ type
     lblMem1: TTntLabel;
     trkChatMemory: TTrackBar;
     txtChatMemory: TExNumericEdit;
-    pnlEmoticons: TExBrandPanel;
-    chkEmoticons: TTntCheckBox;
-    btnEmoSettings: TTntButton;
-    lblRosterBG: TTntLabel;
-    cbRosterBG: TColorBox;
-    lblRosterFG: TTntLabel;
-    cbRosterFont: TColorBox;
-    btnRosterFont: TTntButton;
-    colorRoster: TTntTreeView;
-    lblRosterPreview: TTntLabel;
-    lblChatPreview: TTntLabel;
-    colorChat: TExRichEdit;
-    Label5: TTntLabel;
+    pnlSnapTo: TExBrandPanel;
+    chkSnap: TTntCheckBox;
+    trkSnap: TTrackBar;
+    txtSnap: TExNumericEdit;
     lblChatBG: TTntLabel;
     cbChatBG: TColorBox;
-    lblChatWindowElement: TTntLabel;
-    cboChatElement: TTntComboBox;
-    btnChatFont: TTntButton;
-    cbChatFont: TColorBox;
-    lblChatFG: TTntLabel;
     procedure btnEmoSettingsClick(Sender: TObject);
     procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);
@@ -226,8 +227,6 @@ begin
     end;
     date_time_formats.free();
 
-
-
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
     colorRoster.Items.AddChild(n, _('Cowboy Neal'));
@@ -324,8 +323,10 @@ begin
     btnEmoSettings.enabled := ((s <> psReadOnly) and chkEmoticons.enabled);
 
     pnlContainer.captureChildStates();
+    gbAdvancedPrefs.CaptureChildStates();
     btnEmoSettings.Enabled := btnEmoSettings.Enabled and chkEmoticons.Checked;
     pnlContainer.checkAutoHide();
+    gbAdvancedPrefs.CheckAutoHide();
 end;
 
 {---------------------------------------}
