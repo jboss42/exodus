@@ -199,7 +199,6 @@ inherited frmExodus: TfrmExodus
           ParentColor = True
           TabOrder = 0
           OnClick = clickChangeStatus
-          ExplicitWidth = 167
           object lblStatus: TTntLabel
             AlignWithMargins = True
             Left = 3
@@ -491,7 +490,6 @@ inherited frmExodus: TfrmExodus
             end
             object ShowXML1: TTntMenuItem
               Caption = 'Show Debug XML'
-              ShortCut = 8315
               OnClick = ShowXML1Click
             end
           end
