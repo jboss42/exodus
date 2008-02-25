@@ -838,7 +838,7 @@ uses
     XMLUtils, XMLParser,
     ComServ, PrefFile,
     ManagePluginsDlg,
-    DebugManager;
+    DebugManager, TntGraphics;
 
 {$R *.DFM}
 
@@ -4418,11 +4418,17 @@ begin
 end;
 procedure TfrmExodus.clickEditStatus(Sender: TObject);
 begin
+    //prepare for display madness
     pnlStatus.Visible := false;
+    lblStatus.Align := alNone;
+    imgDown.Align := alNone;
+    txtStatus.Align := alNone;
 
+    //hide read-only stuff
     lblStatus.Visible := false;
     imgDown.Visible := false;
 
+    //display read-write stuff
     txtStatus.Text := MainSession.Status;
     txtStatus.Visible := true;
     txtStatus.Align := alClient;
@@ -4436,16 +4442,20 @@ procedure TfrmExodus.txtStatusExit(Sender: TObject);
 begin
     inherited;
 
+    //prepare for display madness
     pnlStatus.Visible := false;
+    lblStatus.Align := alNone;
+    imgDown.Align := alNone;
+    txtStatus.Align := alNone;
 
     txtStatus.Visible := false;
 
-    imgDown.Visible := true;
     imgDown.Align := alLeft;
-    lblStatus.Visible := true;
     lblStatus.Align := alLeft;
 
-    pnlStatus.Align := alLeft;
+    pnlStatus.Align := alClient;
+    imgDown.Visible := true;
+    lblStatus.Visible := true;
     pnlStatus.Visible := true;
 end;
 
@@ -4693,6 +4703,7 @@ var
     stat: WideString;
     cap:  WideString;
     idx:  Integer;
+    txtWidth, maxWidth: Integer;
 begin
     show := MainSession.Show;
     stat := MainSession.Status;
@@ -4727,7 +4738,13 @@ begin
     if (stat <> '') then
         cap := cap + ' (' + stat + ')';
 
+    txtWidth := WideCanvasTextWidth(lblStatus.Canvas, cap);
+    maxWidth := pnlStatus.ClientWidth -
+            (imgDown.Width + imgDown.Margins.Left + imgDown.Margins.Right) -
+            (lblStatus.Margins.Left + lblStatus.Margins.Right);
+    lblStatus.Hint := cap;
     lblStatus.Caption := cap;
+    lblStatus.Width := Min(txtWidth, maxWidth);
     setTrayIcon(idx);
     ImageList1.GetIcon(idx, imgPresence.Picture.Icon);
 end;
