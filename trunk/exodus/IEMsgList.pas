@@ -1065,7 +1065,10 @@ end;
 {---------------------------------------}
 function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
 begin
-    _menu.Popup(_win.event.screenX, _win.event.screeny);
+    if (_menu <> nil) then
+    begin
+        _menu.Popup(_win.event.screenX, _win.event.screeny);
+    end;
     result := false;
 end;
 
