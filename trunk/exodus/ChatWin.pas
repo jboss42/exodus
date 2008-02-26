@@ -1810,11 +1810,13 @@ begin
         // send roster items to this contact.
     { TODO : Roster refactor }
         //sel_contacts := frmRoster.RosterTree.getSelectedContacts(false);
+{
         if (sel_contacts.count > 0) then
             jabberSendRosterItems(TfrmChat(Self).getJid, sel_contacts)
         else
             MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel_contacts.Free();
+}        
     end;
 end;
 

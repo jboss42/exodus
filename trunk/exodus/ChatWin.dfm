@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -141,6 +141,7 @@ inherited frmChat: TfrmChat
     object popResources: TTntMenuItem
       AutoHotkeys = maManual
       Caption = 'Resources'
+      OnClick = popResourcesClick
     end
     object mnuProperties: TTntMenuItem
       Caption = 'Properties...'
@@ -175,8 +176,6 @@ inherited frmChat: TfrmChat
     object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
-    end
-    object TTntMenuItem
     end
   end
 end
