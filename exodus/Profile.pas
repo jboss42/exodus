@@ -43,8 +43,6 @@ type
     TntLabel4: TTntLabel;
     lblJID: TTntLabel;
     TntPanel2: TTntPanel;
-    TntPanel3: TTntPanel;
-    lblUserTitle: TTntLabel;
     ExGroupBox1: TExGroupBox;
     Label7: TTntLabel;
     Label4: TTntLabel;
@@ -111,13 +109,10 @@ type
     btnChangeNick: TTntButton;
     picBox: TPaintBox;
     TntLabel1: TTntLabel;
-    TntPanel5: TTntPanel;
-    TntLabel7: TTntLabel;
-    lblClientInfo: TTntLabel;
-    btnResources: TTntButton;
-    pnlAllResources: TTntPanel;
     gridResources: TTntStringGrid;
     lblSubState: TTntLabel;
+    gbUserProps: TExGroupBox;
+    pnlAllResources: TTntPanel;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -127,7 +122,6 @@ type
     procedure lblEmailClick(Sender: TObject);
     procedure btnUpdateNickClick(Sender: TObject);
     procedure picBoxPaint(Sender: TObject);
-    procedure btnResourcesClick(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
@@ -344,8 +338,6 @@ begin
             begin
                 tstr := ttag.GetBasicText('name') + ', version: ' + ttag.GetBasicText('version');
                 _pForm.gridResources.Cells[1,i] := tstr;
-                if (i = 1) then //0th row is fixed title
-                    _pForm.lblClientInfo.caption := tstr;
                 break;
             end;
         end;
@@ -393,7 +385,7 @@ begin
 
     f := TfrmProfile.Create(Application);
     _openWindowList.AddObject(tjid.jid, f);
-    
+
     with f do begin
         p := MainSession.ppdb.FindPres(tjid.jid, '');
         if (p <> nil) then
@@ -408,9 +400,10 @@ begin
             frameButtons1.btnCancel.Caption := _('Close');
             frameButtons1.btnCancel.Default := true;
         end;
-        
-        f.lblUserTitle.Caption := GetDisplayNameCache().getDisplayName(_jid) + ' properties';
-        lblJID.Caption := _jid.getDisplayFull();
+
+        f.gbUserProps.Caption := GetDisplayNameCache().getDisplayName(_jid) + ' properties';
+
+        lblJID.Caption := _jid.getDisplayJID();
         txtNick.Text := GetDisplayNameCache().getDisplayName(_jid);
 
         tstr := Item.value['subscription'];
@@ -437,9 +430,9 @@ begin
             p := MainSession.ppdb.NextPres(p)
         end;
         gridResources.RowCount := gridResources.RowCount - 1;
-        btnResources.Visible := (gridResources.RowCount > 2);
         gridResources.Height := (gridResources.RowCount * gridResources.DefaultRowHeight) + 6;
-        pnlAllResources.Visible := false;
+        if (gridResources.Height < 100) then //designed height
+            pnlAllResources.Height := gridResources.Height;
 
         tstr := MainSession.generateID();
         iq := TJabberIQ.Create(MainSession, tstr, vcard);
@@ -634,20 +627,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmProfile.btnResourcesClick(Sender: TObject);
-var
-    h: integer;
-begin
-    inherited;
-    if (not pnlAllREsources.Visible) then
-    begin
-        h := (gridResources.RowCount * gridResources.DefaultRowHeight) + 6;
-        if (h < 100) then //designed height
-            pnlAllREsources.Height := h;
-    end;
-    pnlAllREsources.Visible := not pnlAllREsources.Visible;
-end;
-
 procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
 var
     i: boolean;

@@ -10,7 +10,7 @@ inherited frmProfile: TfrmProfile
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 521
-  ExplicitHeight = 460
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -35,7 +35,7 @@ inherited frmProfile: TfrmProfile
     ParentFont = False
     TabOrder = 0
     TabStop = True
-    ExplicitTop = 388
+    ExplicitTop = 394
     ExplicitWidth = 515
     ExplicitHeight = 34
     inherited Panel2: TPanel
@@ -91,7 +91,6 @@ inherited frmProfile: TfrmProfile
       726573732C0000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
       13EFBBBF576F726B20496E666F726D6174696F6E230000000000000000000000
       FFFFFFFFFFFFFFFF00000000000000000AEFBBBF41646472657373}
-    ExplicitHeight = 388
   end
   object PageControl1: TTntPageControl
     Left = 140
@@ -102,22 +101,21 @@ inherited frmProfile: TfrmProfile
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 2
-    ExplicitHeight = 388
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      ExplicitHeight = 357
+      ExplicitLeft = 3
+      ExplicitTop = 25
       object lblSubState: TTntLabel
         AlignWithMargins = True
         Left = 6
-        Top = 186
+        Top = 144
         Width = 358
         Height = 13
         Margins.Left = 6
         Margins.Top = 0
         Align = alTop
         Caption = 'lblSubState'
-        ExplicitLeft = 0
-        ExplicitTop = 189
+        ExplicitTop = 186
         ExplicitWidth = 54
       end
       object aniProfile: TAnimate
@@ -132,7 +130,7 @@ inherited frmProfile: TfrmProfile
       object TntPanel1: TTntPanel
         AlignWithMargins = True
         Left = 6
-        Top = 34
+        Top = 17
         Width = 358
         Height = 21
         Margins.Left = 6
@@ -140,7 +138,9 @@ inherited frmProfile: TfrmProfile
         Margins.Bottom = 0
         Align = alTop
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 1
+        ExplicitTop = 34
         object TntLabel4: TTntLabel
           AlignWithMargins = True
           Left = 0
@@ -167,64 +167,20 @@ inherited frmProfile: TfrmProfile
       object TntPanel2: TTntPanel
         AlignWithMargins = True
         Left = 6
-        Top = 55
+        Top = 38
         Width = 358
-        Height = 128
+        Height = 103
         Margins.Left = 6
         Margins.Top = 0
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
+        ParentColor = True
         TabOrder = 2
-        object TntPanel5: TTntPanel
-          Left = 0
-          Top = 0
-          Width = 358
-          Height = 25
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 0
-          object TntLabel7: TTntLabel
-            AlignWithMargins = True
-            Left = 0
-            Top = 3
-            Width = 88
-            Height = 19
-            Margins.Left = 0
-            Align = alLeft
-            Caption = 'Client information:'
-            ExplicitHeight = 13
-          end
-          object lblClientInfo: TTntLabel
-            AlignWithMargins = True
-            Left = 94
-            Top = 3
-            Width = 227
-            Height = 19
-            Align = alClient
-            Caption = 'Not available'
-            ExplicitWidth = 62
-            ExplicitHeight = 13
-          end
-          object btnResources: TTntButton
-            AlignWithMargins = True
-            Left = 327
-            Top = 0
-            Width = 24
-            Height = 25
-            Margins.Top = 0
-            Margins.Right = 7
-            Margins.Bottom = 0
-            Align = alRight
-            Caption = '...'
-            TabOrder = 0
-            OnClick = btnResourcesClick
-          end
-        end
         object pnlAllResources: TTntPanel
           AlignWithMargins = True
           Left = 0
-          Top = 28
+          Top = 3
           Width = 352
           Height = 100
           Margins.Left = 0
@@ -232,8 +188,8 @@ inherited frmProfile: TfrmProfile
           Margins.Bottom = 0
           Align = alTop
           BevelOuter = bvNone
-          TabOrder = 1
-          ExplicitWidth = 351
+          TabOrder = 0
+          ExplicitTop = 28
           object gridResources: TTntStringGrid
             Left = 0
             Top = 0
@@ -241,43 +197,25 @@ inherited frmProfile: TfrmProfile
             Height = 100
             Margins.Right = 6
             Align = alClient
+            Color = clBtnHighlight
             ColCount = 2
             DefaultRowHeight = 18
             FixedCols = 0
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goRowSelect]
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing]
             TabOrder = 0
-            ExplicitWidth = 351
+            ExplicitTop = 103
+            ExplicitWidth = 358
+            ExplicitHeight = 3
             ColWidths = (
-              141
+              142
               203)
           end
-        end
-      end
-      object TntPanel3: TTntPanel
-        Left = 0
-        Top = 0
-        Width = 367
-        Height = 34
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 3
-        object lblUserTitle: TTntLabel
-          AlignWithMargins = True
-          Left = 3
-          Top = 10
-          Width = 361
-          Height = 21
-          Margins.Top = 10
-          Align = alClient
-          Caption = '<<USER>> properties'
-          ExplicitWidth = 110
-          ExplicitHeight = 13
         end
       end
       object ExGroupBox1: TExGroupBox
         AlignWithMargins = True
         Left = 6
-        Top = 251
+        Top = 209
         Width = 355
         Height = 104
         Margins.Left = 6
@@ -287,9 +225,9 @@ inherited frmProfile: TfrmProfile
         BevelOuter = bvNone
         Caption = 'Basic contact information:'
         ParentColor = True
-        TabOrder = 4
+        TabOrder = 3
         AutoHide = False
-        ExplicitTop = 257
+        ExplicitTop = 251
         object Label7: TTntLabel
           Left = 1
           Top = 21
@@ -343,6 +281,7 @@ inherited frmProfile: TfrmProfile
           Top = 40
           Width = 107
           Height = 21
+          ParentColor = True
           ReadOnly = True
           TabOrder = 1
         end
@@ -351,6 +290,7 @@ inherited frmProfile: TfrmProfile
           Top = 40
           Width = 46
           Height = 21
+          ParentColor = True
           ReadOnly = True
           TabOrder = 2
         end
@@ -359,6 +299,7 @@ inherited frmProfile: TfrmProfile
           Top = 40
           Width = 113
           Height = 21
+          ParentColor = True
           ReadOnly = True
           TabOrder = 3
         end
@@ -367,6 +308,7 @@ inherited frmProfile: TfrmProfile
           Top = 81
           Width = 275
           Height = 21
+          ParentColor = True
           ReadOnly = True
           TabOrder = 4
         end
@@ -374,7 +316,7 @@ inherited frmProfile: TfrmProfile
       object TntPanel4: TTntPanel
         AlignWithMargins = True
         Left = 6
-        Top = 205
+        Top = 163
         Width = 355
         Height = 40
         Margins.Left = 6
@@ -382,8 +324,9 @@ inherited frmProfile: TfrmProfile
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
-        TabOrder = 5
-        ExplicitTop = 211
+        ParentColor = True
+        TabOrder = 4
+        ExplicitTop = 205
         object Label2: TTntLabel
           Left = 1
           Top = 0
@@ -396,6 +339,8 @@ inherited frmProfile: TfrmProfile
           Top = 17
           Width = 280
           Height = 21
+          ParentColor = True
+          ReadOnly = True
           TabOrder = 0
         end
         object btnChangeNick: TTntButton
@@ -407,11 +352,22 @@ inherited frmProfile: TfrmProfile
           TabOrder = 1
         end
       end
+      object gbUserProps: TExGroupBox
+        Left = 0
+        Top = 0
+        Width = 367
+        Height = 17
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = '<<USER>> properties:'
+        ParentColor = True
+        TabOrder = 5
+        AutoHide = False
+      end
     end
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
-      ExplicitHeight = 357
       object lblURL: TTntLabel
         Left = 10
         Top = 9
@@ -468,6 +424,7 @@ inherited frmProfile: TfrmProfile
         Top = 6
         Width = 269
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 0
       end
@@ -478,6 +435,7 @@ inherited frmProfile: TfrmProfile
         Height = 21
         Enabled = False
         ItemHeight = 13
+        ParentColor = True
         TabOrder = 1
         Items.Strings = (
           'Accounting/Finance'
@@ -503,6 +461,7 @@ inherited frmProfile: TfrmProfile
         Top = 54
         Width = 269
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 2
       end
@@ -511,6 +470,7 @@ inherited frmProfile: TfrmProfile
         Top = 99
         Width = 269
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 3
       end
@@ -519,6 +479,7 @@ inherited frmProfile: TfrmProfile
         Top = 123
         Width = 269
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 4
       end
@@ -527,6 +488,7 @@ inherited frmProfile: TfrmProfile
         Top = 164
         Width = 351
         Height = 97
+        ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 5
@@ -536,7 +498,6 @@ inherited frmProfile: TfrmProfile
     object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
-      ExplicitHeight = 357
       object Label13: TTntLabel
         Left = 10
         Top = 129
@@ -584,6 +545,7 @@ inherited frmProfile: TfrmProfile
         Top = 78
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 0
       end
@@ -592,6 +554,7 @@ inherited frmProfile: TfrmProfile
         Top = 102
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 1
       end
@@ -600,6 +563,7 @@ inherited frmProfile: TfrmProfile
         Top = 54
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 2
       end
@@ -608,6 +572,7 @@ inherited frmProfile: TfrmProfile
         Top = 30
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 3
       end
@@ -616,6 +581,7 @@ inherited frmProfile: TfrmProfile
         Top = 6
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 4
       end
@@ -626,6 +592,7 @@ inherited frmProfile: TfrmProfile
         Height = 21
         Enabled = False
         ItemHeight = 13
+        ParentColor = True
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (
@@ -873,7 +840,6 @@ inherited frmProfile: TfrmProfile
     object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
-      ExplicitHeight = 357
       object Label22: TTntLabel
         Left = 10
         Top = 9
@@ -914,6 +880,7 @@ inherited frmProfile: TfrmProfile
         Top = 6
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 0
       end
@@ -922,6 +889,7 @@ inherited frmProfile: TfrmProfile
         Top = 30
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 1
       end
@@ -930,6 +898,7 @@ inherited frmProfile: TfrmProfile
         Top = 54
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 2
       end
@@ -938,6 +907,7 @@ inherited frmProfile: TfrmProfile
         Top = 84
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 3
       end
@@ -946,6 +916,7 @@ inherited frmProfile: TfrmProfile
         Top = 108
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 4
       end
@@ -953,7 +924,6 @@ inherited frmProfile: TfrmProfile
     object TabSheet6: TTntTabSheet
       Caption = 'Address'
       ImageIndex = 5
-      ExplicitHeight = 357
       object Label15: TTntLabel
         Left = 10
         Top = 77
@@ -1001,6 +971,7 @@ inherited frmProfile: TfrmProfile
         Top = 76
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 0
       end
@@ -1009,6 +980,7 @@ inherited frmProfile: TfrmProfile
         Top = 100
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 1
       end
@@ -1017,6 +989,7 @@ inherited frmProfile: TfrmProfile
         Top = 52
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 2
       end
@@ -1025,6 +998,7 @@ inherited frmProfile: TfrmProfile
         Top = 28
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 3
       end
@@ -1033,6 +1007,7 @@ inherited frmProfile: TfrmProfile
         Top = 4
         Width = 259
         Height = 21
+        ParentColor = True
         ReadOnly = True
         TabOrder = 4
       end
@@ -1043,6 +1018,7 @@ inherited frmProfile: TfrmProfile
         Height = 21
         Enabled = False
         ItemHeight = 13
+        ParentColor = True
         TabOrder = 5
         Text = 'United States  '
         Items.Strings = (
