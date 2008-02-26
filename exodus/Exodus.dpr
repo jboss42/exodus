@@ -267,7 +267,8 @@ uses
   ExTreeView in 'components\ExTreeView.pas',
   RosterForm in 'RosterForm.pas' {Form3},
   InviteDeclined in 'InviteDeclined.pas' {FrmInviteDeclined: TTntForm},
-  InviteReceived in 'InviteReceived.pas' {frmInviteReceived: TTntForm};
+  InviteReceived in 'InviteReceived.pas' {frmInviteReceived: TTntForm},
+  IEMsgListUIHandler in 'IEMsgListUIHandler.pas';
 
 {$R *.TLB}
 
