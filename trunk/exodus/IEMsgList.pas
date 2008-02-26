@@ -35,7 +35,8 @@ uses
     Dialogs, Regexpr, iniFiles,
     BaseMsgList, Session, gnugettext, unicode,
     XMLTag, XMLNode, XMLConstants, XMLCdata, LibXmlParser, XMLUtils,
-    OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX;
+    OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX,
+    IEMsgListUIHandler;
 
   function HTMLColor(color_pref: integer) : widestring;
 
@@ -105,6 +106,7 @@ type
     _font_italic: boolean;
     _font_underline: boolean;
     _stylesheet_name: widestring;
+    _webBrowserUI: TWebBrowserUIObject;
 
     _ForceIgnoreScrollToBottom: boolean;
 
@@ -203,7 +205,9 @@ uses
     ShellAPI,
     Emote,
     StrUtils,
-    RT_XIMConversion;
+    RT_XIMConversion,
+    Registry,
+    PrefController;
 
 {$R *.dfm}
 
@@ -220,6 +224,11 @@ end;
 
 {---------------------------------------}
 constructor TfIEMsgList.Create(Owner: TComponent);
+var
+    OleObj: IOleObject;
+    reg: TRegistry;
+    IEOverrideReg: widestring;
+    tstring: widestring;
 begin
     inherited;
     _queue := TWideStringList.Create();
@@ -228,6 +237,31 @@ begin
     _composing := -1;
     _msgCount := 0;
     _doMessageLimiting := false;
+
+    // Setup registry to override IE settings
+    try
+        reg := TRegistry.Create();
+        if (reg <> nil) then begin
+            IEOverrideReg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
+
+            tstring := IEOverrideReg + '\Settings';
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(tstring, true);
+            reg.WriteInteger('Always Use My Colors', 0);
+            reg.WriteInteger('Always Use My Font Face', 0);
+            reg.WriteInteger('Always Use My Font Size', 0);
+            reg.CloseKey();
+
+            tstring := IEOverrideReg + '\Styles';
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(tstring, true);
+            reg.WriteInteger('Use My Stylesheet', 0);
+            reg.CloseKey();
+
+            reg.Free();
+        end;
+    except
+    end;
 
     with MainSession.Prefs do begin
         _maxMsgCountHigh := getInt('maximum_displayed_messages');
@@ -257,15 +291,36 @@ begin
         _color_action := getInt('color_action');
         _color_server := getInt('color_server');
     end;
+
+    // Set IDocHostUIHandler interface to handle override of IE settings
+    try
+        if (browser <> nil) then begin
+            if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
+                if (_webBrowserUI <> nil) then
+                    _webBrowserUI.Free();
+
+                _webBrowserUI := TWebBrowserUIObject.Create();
+                OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
+            end
+            else begin
+                _webBrowserUI := nil;
+                raise Exception.Create('MsgList interface does not support IOleObject');
+            end;
+        end;
+    except
+
+    end;
 end;
 
 {---------------------------------------}
 destructor TfIEMsgList.Destroy;
 begin
-    if (_queue <> nil) then begin
+    try
         _queue.Free();
-        _queue := nil;
+        _webBrowserUI.Free();
+    except
     end;
+
     inherited;
 end;
 
