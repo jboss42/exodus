@@ -60,6 +60,8 @@ procedure parseNameValues(list: TStringlist; str: Widestring);
 
 function StringToXMLTag(input: widestring): TXMLTag;
 
+function ErrorText(tag :TXMLTag): Widestring;
+
 
 {$ifdef VER150}
     {$define INDY9}
@@ -657,6 +659,26 @@ begin
     result := '1.0';
 end;
 {$endif}
+
+function ErrorText(tag: TXMLTag): Widestring;
+var
+    child: TXMLTag;
+    ns: Widestring;
+begin
+    Result := '';
+    child := tag.GetFirstTag('text');
+    if (child <> nil) then begin
+        ns := child.Namespace();
+
+        if (ns = 'urn:ietf:params:xml:ns:xmpp-streams') then
+            Result := child.Data
+        else if (ns = 'urn:ietf:params:xml:ns:xmpp-streams') then
+            Result := child.Data;
+    end;
+
+    if Result = '' then
+        Result := tag.Data;
+end;
 
 
 end.

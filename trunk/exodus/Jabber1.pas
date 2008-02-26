@@ -766,6 +766,7 @@ const
     sBrandingError = 'Branding error!';
     sQueryTypeError = 'Unknown query type: ';
     sUserExistsErr = ''#13#10' ERROR: The username ''%s'' already exists.';
+    sRegNotImplErr = ''#13#10' ERROR: This server does not support in-band registration.';
 
     sOutOfSystemResourcesError = 'Out of system resources.';
 
@@ -1706,10 +1707,12 @@ begin
             tmp := tag.GetFirstTag('error');
             if (tmp <> nil) then begin
                 code := StrToIntDef(tmp.GetAttribute('code'), 0);
-                if (code = 409) then
-                    m := m + WideFormat(_(sUserExistsErr), [MainSession.Profile.Username])
-                else
-                    m := m + ''#13#10' ERROR: ' + tmp.Data;
+                case code of
+                    409: m := m + WideFormat(_(sUserExistsErr), [MainSession.Profile.Username]);
+                    501: m := m + _(sRegNotImplErr);
+                    else
+                        m := m + ''#13#10' ERROR: ' + ErrorText(tmp);
+                end;
             end;
         end;
 
