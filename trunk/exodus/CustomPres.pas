@@ -47,6 +47,7 @@ type
     procedure chkSaveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtTitleChange(Sender: TObject);
+    procedure txtHotkeyChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -58,12 +59,17 @@ var
 
 procedure ShowCustomPresence();
 
+const
+    sDupHotKey = 'Hotkey is already used for presence %s';
+
 implementation
 
 {$R *.dfm}
 
 uses
-    JabberUtils, ExUtils,  GnuGetText, Jabber1, Session, Presence;
+    JabberUtils, ExUtils,  GnuGetText,
+    Jabber1, Session, Presence,
+    Unicode;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -141,6 +147,31 @@ end;
 
     Self.Close;
 end;
+
+{---------------------------------------}
+procedure TfrmCustomPres.txtHotkeyChange(Sender: TObject);
+var
+    i, idx: integer;
+    msg: WideString;
+    list: TWideStringList;
+    cp: TJabberCustomPres;
+begin
+    inherited;
+
+    // Do check to see if hotkey combo already used.
+    list := MainSession.Prefs.getAllPresence();
+
+    for i := 0 to list.Count - 1 do begin
+        cp := TJabberCustomPres(list.Objects[i]);
+        if ((cp.hotkey <> '') and
+            (cp.hotkey = ShortCutToText(txtHotkey.HotKey))) then begin
+              msg := WideFormat(_(sDupHotKey),[cp.title]);
+              MessageDlgW(msg, mtInformation, [mbOk], 0);
+              txtHotkey.HotKey := TextToShortcut('');
+        end;    
+    end;
+end;
+
 {---------------------------------------}
 procedure TfrmCustomPres.txtTitleChange(Sender: TObject);
 begin

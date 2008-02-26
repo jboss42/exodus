@@ -6,10 +6,11 @@ inherited frmCustomPres: TfrmCustomPres
   ClientHeight = 261
   ClientWidth = 313
   DefaultMonitor = dmDesktop
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  ExplicitWidth = 319
+  ExplicitHeight = 293
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -22,14 +23,14 @@ inherited frmCustomPres: TfrmCustomPres
   object Label2: TTntLabel
     Left = 8
     Top = 43
-    Width = 33
+    Width = 35
     Height = 13
     Caption = 'Status:'
   end
   object Label3: TTntLabel
     Left = 8
     Top = 75
-    Width = 31
+    Width = 34
     Height = 13
     Caption = 'Priority'
   end
@@ -129,7 +130,7 @@ inherited frmCustomPres: TfrmCustomPres
     object lblTitle: TTntLabel
       Left = 8
       Top = 18
-      Width = 23
+      Width = 24
       Height = 13
       Caption = 'Title:'
       Enabled = False
@@ -137,7 +138,7 @@ inherited frmCustomPres: TfrmCustomPres
     object lblHotkey: TTntLabel
       Left = 8
       Top = 50
-      Width = 38
+      Width = 39
       Height = 13
       Caption = 'HotKey:'
       Enabled = False
@@ -159,6 +160,7 @@ inherited frmCustomPres: TfrmCustomPres
       Enabled = False
       HotKey = 32833
       TabOrder = 1
+      OnChange = txtHotkeyChange
     end
   end
 end
