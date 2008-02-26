@@ -5,7 +5,7 @@ inherited frmBaseChat: TfrmBaseChat
   ClientWidth = 415
   OnDestroy = FormDestroy
   ExplicitWidth = 423
-  ExplicitHeight = 287
+  ExplicitHeight = 294
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
@@ -184,6 +184,7 @@ inherited frmBaseChat: TfrmBaseChat
       object ChatToolbarButtonBold: TTntToolButton
         Left = 0
         Top = 0
+        Hint = 'Bold'
         AllowAllUp = True
         ImageIndex = 70
         ParentShowHint = False
