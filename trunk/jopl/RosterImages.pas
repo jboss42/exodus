@@ -221,6 +221,12 @@ const
     RI_FOLDER_OPEN_INDEX    : Integer = 91;
     RI_FOLDER_CLOSED_KEY    : Widestring = 'folder_closed';
     RI_FOLDER_CLOSED_INDEX  : Integer = 92;
+    RI_CONTACTS_TAB_KEY     : Widestring = 'contacts_tab';
+    RI_CONTACTS_TAB_INDEX   : Integer = 93;
+    RI_ROOMS_TAB_KEY        : Widestring = 'rooms_tab';
+    RI_ROOMS_TAB_INDEX      : Integer = 94;
+    RI_MAIN_TAB_KEY         : Widestring = 'main_tab';
+    RI_MAIN_TAB_INDEX       : Integer = 95;
 
 {$ENDIF}
 
@@ -328,6 +334,9 @@ begin
     _ids.Insert(RI_TEMP_CONFERENCE_INDEX, RI_TEMP_CONFERENCE_KEY);
     _ids.Insert(RI_FOLDER_OPEN_INDEX, RI_FOLDER_OPEN_KEY);
     _ids.Insert(RI_FOLDER_CLOSED_INDEX, RI_FOLDER_CLOSED_KEY);    
+    _ids.Insert(RI_CONTACTS_TAB_INDEX, RI_CONTACTS_TAB_KEY);
+    _ids.Insert(RI_ROOMS_TAB_INDEX, RI_ROOMS_TAB_KEY);
+    _ids.Insert(RI_MAIN_TAB_INDEX, RI_MAIN_TAB_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
