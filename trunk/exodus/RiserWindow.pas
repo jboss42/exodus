@@ -100,7 +100,7 @@ begin
         // create a new instance
         singleToast := TfrmRiser.Create(Application);
         animate := true;
-        AssignDefaultFont(singleToast.Label1.Font);
+//        AssignDefaultFont(singleToast.Label1.Font);
 
         // reduce the font size by 1 pt.
         //singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
