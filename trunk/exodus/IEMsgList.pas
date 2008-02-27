@@ -443,7 +443,6 @@ var
     aname: WideString;
 begin
     // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
-
     result := '';
 
     // any tag not in the good list should be deleted, but everything else
@@ -522,8 +521,10 @@ begin
     else if (n.NodeType = xml_CDATA) then begin
         // Check for URLs
         if ((parent = nil) or (parent.Name <> 'a')) then begin
-            str := REGEX_URL.Replace(TXMLCData(n).Data,
+            str := REGEX_URL.Replace(TXMLCData(n).XML,
                                      '<a href="$0">$0</a>', true);
+            // Look for and replace &APOS; as HTML doesn't understand this escaping.
+            str := StringReplace(str, '&apos;', '''', [rfReplaceAll]);
             result := result + ProcessIEEmoticons(str);
         end
         else
@@ -657,11 +658,12 @@ begin
     if (txt = '') then begin
         txt := HTML_EscapeChars(Msg.Body, false, false);
         txt := _processUnicode(txt); //StringReplace() cannot handle
+        // Make sure the spaces are preserved
         txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
-        cd := TXMLCData.Create(txt);
-        txt := ProcessTag(nil, cd);
+        // Change CRLF to HTML equiv
         txt := REGEX_CRLF.Replace(txt, '<br />', true);
-        cd.Free();
+        // Detect URLs in text
+        txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
     end;
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
