@@ -296,9 +296,7 @@ begin
     try
         if (browser <> nil) then begin
             if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
-                if (_webBrowserUI <> nil) then
-                    _webBrowserUI.Free();
-
+                _webBrowserUI.Free();
                 _webBrowserUI := TWebBrowserUIObject.Create();
                 OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
             end
@@ -317,7 +315,6 @@ destructor TfIEMsgList.Destroy;
 begin
     try
         _queue.Free();
-        _webBrowserUI.Free();
     except
     end;
 
