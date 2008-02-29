@@ -20,13 +20,9 @@ program Exodus;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
-{%File 'README.txt'}
-{%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
 {$R 'iehtml.res' 'iehtml.rc'}
 {$R 'priority_images.res' 'priority_images.rc'}
-{%File 'defaults.xml'}
-{%File 'iemsglist_style.css'}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -151,7 +147,6 @@ uses
   DockWizard in 'DockWizard.pas' {frmDockWizard},
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
   DNSUtils in '..\jopl\DNSUtils.pas',
-  IdDNSResolver in '..\jopl\IdDNSResolver.pas',
   Entity in '..\jopl\Entity.pas',
   EntityCache in '..\jopl\EntityCache.pas',
   SASLAuth in '..\jopl\SASLAuth.pas',
@@ -261,14 +256,21 @@ uses
   LoginWindow in 'LoginWindow.pas' {frmLoginWindow: TTntForm},
   COMExodusItem in '..\jopl\COMExodusItem.pas',
   COMExodusItemController in '..\jopl\COMExodusItemController.pas',
-  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas',
+  COMExodusTabWrapper in 'COMExodusTabWrapper.pas',
   GroupInfo in '..\jopl\GroupInfo.pas',
   ContactController in '..\jopl\ContactController.pas',
-  ExTreeView in 'components\ExTreeView.pas',
   RosterForm in 'RosterForm.pas' {Form3},
   InviteDeclined in 'InviteDeclined.pas' {FrmInviteDeclined: TTntForm},
   InviteReceived in 'InviteReceived.pas' {frmInviteReceived: TTntForm},
-  IEMsgListUIHandler in 'IEMsgListUIHandler.pas';
+  IdDNSResolver in '..\jopl\IdDNSResolver.pas',
+  COMExodusTabController in 'COMExodusTabController.pas' {ExodusTabController: CoClass},
+  COMExodusTab in 'COMExodusTab.pas' {ExodusTab: CoClass},
+  ExTreeView in 'components\ExTreeView.pas',
+  COMExodusItemWrapper in '..\jopl\COMExodusItemWrapper.pas',
+  RoomController in '..\jopl\RoomController.pas',
+  IEMsgListUIHandler in 'IEMsgListUIHandler.pas',
+  ExContactsTreeView in 'components\ExContactsTreeView.pas',
+  ExRoomsTreeView in 'components\ExRoomsTreeView.pas';
 
 {$R *.TLB}
 

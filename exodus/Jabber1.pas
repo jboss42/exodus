@@ -1180,6 +1180,7 @@ begin
 
     // setup our master image lists
     RosterTreeImages.setImageList(ImageList1);
+    GetRosterWindow().ImageList := RosterTreeImages.ImageList;
     ContactToolbarImages.setImageList(ImageList2);
 
     // if we are testing auto-away, then fire the

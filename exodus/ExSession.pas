@@ -639,7 +639,8 @@ begin
     InviteReceived.OnSessionStart(MainSession);
 
     //create a roster early so all other windows can get east access
-    RosterForm.GetRosterWindow();
+    RosterForm.GetRosterWindow().InitControlls();
+    
     Result := true;
 end;
 

@@ -30,7 +30,7 @@ uses
     JabberAuth, Chat, ChatController, MsgList, Presence, COMExodusItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue,
-    COMExodusItemController, ContactController, Exodus_TLB;
+    COMExodusItemController, ContactController, Exodus_TLB, RoomController;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -127,6 +127,7 @@ type
         ppdb: TJabberPPDB;
         ItemController: IExodusItemController;
         roster: TContactController;
+        rooms: TRoomController;
         //bookmarks: TBookmarkManager;
         MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
@@ -313,6 +314,7 @@ begin
     //_intfItemController := itemController;
 
     roster := TContactController.create(Self);
+    rooms := TRoomController.create(Self);
     //roster.ItemController := ItemController;
 
     // Create the bookmark manager
@@ -360,6 +362,7 @@ begin
     ppdb.Free();
     //itemController.Free();
     roster.Free();
+    rooms.Free();
     //bookmarks.Free();
     MsgList.Free();
     ChatList.Free();

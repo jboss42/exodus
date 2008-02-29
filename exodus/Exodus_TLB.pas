@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2/13/2008 3:54:54 PM from Type Library described below.
+// File generated on 2/28/2008 4:22:49 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -119,6 +119,10 @@ const
   IID_IExodusItemController: TGUID = '{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}';
   CLASS_ExodusItem: TGUID = '{7F9132F5-838F-423C-A334-F28AA8E2E597}';
   CLASS_ExodusItemController: TGUID = '{5BA92396-E45E-4311-A4F9-B0154DB0445A}';
+  IID_IExodusTabController: TGUID = '{9717635B-FC59-40A9-8282-1902D897BF09}';
+  IID_IExodusTab: TGUID = '{F633716F-B315-4867-A1D0-6E177831FA27}';
+  CLASS_ExodusTabController: TGUID = '{820EB166-9870-4D1A-B693-EC4F5A39E2BA}';
+  CLASS_ExodusTab: TGUID = '{9FC3FE8B-4F0D-48A9-B38A-7D8507E6CBF0}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -272,6 +276,10 @@ type
   IExodusItemDisp = dispinterface;
   IExodusItemController = interface;
   IExodusItemControllerDisp = dispinterface;
+  IExodusTabController = interface;
+  IExodusTabControllerDisp = dispinterface;
+  IExodusTab = interface;
+  IExodusTabDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -298,6 +306,8 @@ type
   ExodusAXWindow = IExodusAXWindow;
   ExodusItem = IExodusItem;
   ExodusItemController = IExodusItemController;
+  ExodusTabController = IExodusTabController;
+  ExodusTab = IExodusTab;
 
 
 // *********************************************************************//
@@ -4436,6 +4446,7 @@ type
     procedure Set_value(const Name: WideString; const value: WideString); safecall;
     function Get_IsVisible: WordBool; safecall;
     procedure Set_IsVisible(value: WordBool); safecall;
+    function Get_PropertyName(Index: Integer): WideString; safecall;
     property Text: WideString read Get_Text write Set_Text;
     property Type_: WideString read Get_Type_;
     property ExtendedText: WideString read Get_ExtendedText write Set_ExtendedText;
@@ -4448,6 +4459,7 @@ type
     property Property_[index: Integer]: WideString read Get_Property_ write Set_Property_;
     property value[const Name: WideString]: WideString read Get_value write Set_value;
     property IsVisible: WordBool read Get_IsVisible write Set_IsVisible;
+    property PropertyName[Index: Integer]: WideString read Get_PropertyName;
   end;
 
 // *********************************************************************//
@@ -4480,6 +4492,7 @@ type
     function BelongsToGroup(const Group: WideString): WordBool; dispid 224;
     property value[const Name: WideString]: WideString dispid 225;
     property IsVisible: WordBool dispid 226;
+    property PropertyName[Index: Integer]: WideString readonly dispid 210;
   end;
 
 // *********************************************************************//
@@ -4510,6 +4523,7 @@ type
     function Get_GroupExists(const Group: WideString): WordBool; safecall;
     function Get_GroupExpanded(const Group: WideString): WordBool; safecall;
     procedure Set_GroupExpanded(const Group: WideString; value: WordBool); safecall;
+    function GetItemsByType(const Type_: WideString): OleVariant; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Group[index: Integer]: WideString read Get_Group;
@@ -4545,6 +4559,88 @@ type
     function GetGroups: OleVariant; dispid 219;
     property GroupExists[const Group: WideString]: WordBool readonly dispid 220;
     property GroupExpanded[const Group: WideString]: WordBool dispid 222;
+    function GetItemsByType(const Type_: WideString): OleVariant; dispid 215;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusTabController
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {9717635B-FC59-40A9-8282-1902D897BF09}
+// *********************************************************************//
+  IExodusTabController = interface(IDispatch)
+    ['{9717635B-FC59-40A9-8282-1902D897BF09}']
+    function Get_TabCount: Integer; safecall;
+    function AddTab(const ActiveX_GUID: WideString): IExodusTab; safecall;
+    procedure RemoveTab(index: Integer); safecall;
+    procedure ActivateTab(index: Integer); safecall;
+    function Get_Tab(index: Integer): IExodusTab; safecall;
+    procedure Clear; safecall;
+    function GetTabByUID(const UID: WideString): IExodusTab; safecall;
+    function GetTabIndexByUID(const UID: WideString): Integer; safecall;
+    property TabCount: Integer read Get_TabCount;
+    property Tab[index: Integer]: IExodusTab read Get_Tab;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusTabControllerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {9717635B-FC59-40A9-8282-1902D897BF09}
+// *********************************************************************//
+  IExodusTabControllerDisp = dispinterface
+    ['{9717635B-FC59-40A9-8282-1902D897BF09}']
+    property TabCount: Integer readonly dispid 201;
+    function AddTab(const ActiveX_GUID: WideString): IExodusTab; dispid 202;
+    procedure RemoveTab(index: Integer); dispid 203;
+    procedure ActivateTab(index: Integer); dispid 204;
+    property Tab[index: Integer]: IExodusTab readonly dispid 205;
+    procedure Clear; dispid 206;
+    function GetTabByUID(const UID: WideString): IExodusTab; dispid 207;
+    function GetTabIndexByUID(const UID: WideString): Integer; dispid 208;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusTab
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F633716F-B315-4867-A1D0-6E177831FA27}
+// *********************************************************************//
+  IExodusTab = interface(IDispatch)
+    ['{F633716F-B315-4867-A1D0-6E177831FA27}']
+    function Get_Name: WideString; safecall;
+    procedure Set_Name(const value: WideString); safecall;
+    function Get_Caption: WideString; safecall;
+    procedure Set_Caption(const value: WideString); safecall;
+    function Get_ImageIndex: Integer; safecall;
+    procedure Set_ImageIndex(value: Integer); safecall;
+    function Get_Visible: Integer; safecall;
+    procedure Show; safecall;
+    procedure Hide; safecall;
+    procedure Activate; safecall;
+    function Get_handle: Integer; safecall;
+    function Get_UID: WideString; safecall;
+    property Name: WideString read Get_Name write Set_Name;
+    property Caption: WideString read Get_Caption write Set_Caption;
+    property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+    property Visible: Integer read Get_Visible;
+    property handle: Integer read Get_handle;
+    property UID: WideString read Get_UID;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusTabDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F633716F-B315-4867-A1D0-6E177831FA27}
+// *********************************************************************//
+  IExodusTabDisp = dispinterface
+    ['{F633716F-B315-4867-A1D0-6E177831FA27}']
+    property Name: WideString dispid 201;
+    property Caption: WideString dispid 202;
+    property ImageIndex: Integer dispid 203;
+    property Visible: Integer readonly dispid 204;
+    procedure Show; dispid 205;
+    procedure Hide; dispid 206;
+    procedure Activate; dispid 207;
+    property handle: Integer readonly dispid 208;
+    property UID: WideString readonly dispid 209;
   end;
 
 // *********************************************************************//
@@ -4799,6 +4895,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusItemController;
   end;
 
+// *********************************************************************//
+// The Class CoExodusTabController provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusTabController exposed by              
+// the CoClass ExodusTabController. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusTabController = class
+    class function Create: IExodusTabController;
+    class function CreateRemote(const MachineName: string): IExodusTabController;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusTab provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusTab exposed by              
+// the CoClass ExodusTab. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusTab = class
+    class function Create: IExodusTab;
+    class function CreateRemote(const MachineName: string): IExodusTab;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5011,6 +5131,26 @@ end;
 class function CoExodusItemController.CreateRemote(const MachineName: string): IExodusItemController;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusItemController) as IExodusItemController;
+end;
+
+class function CoExodusTabController.Create: IExodusTabController;
+begin
+  Result := CreateComObject(CLASS_ExodusTabController) as IExodusTabController;
+end;
+
+class function CoExodusTabController.CreateRemote(const MachineName: string): IExodusTabController;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusTabController) as IExodusTabController;
+end;
+
+class function CoExodusTab.Create: IExodusTab;
+begin
+  Result := CreateComObject(CLASS_ExodusTab) as IExodusTab;
+end;
+
+class function CoExodusTab.CreateRemote(const MachineName: string): IExodusTab;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusTab) as IExodusTab;
 end;
 
 end.
