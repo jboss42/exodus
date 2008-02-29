@@ -4,27 +4,38 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExForm, XMLTag, ExTreeView, Exodus_TLB, LoginWindow;
+  Dialogs, ExForm, XMLTag, ExTreeView, Exodus_TLB, LoginWindow, ComCtrls,
+  TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController;
 
 type
   TRosterForm = class(TExForm)
+     _PageControl: TTntPageControl;
       procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
-      procedure TntFormCreate(Sender: TObject);
+
 
   private
       { Private declarations }
-      _sessionCB: integer;            // session callback id
-      _rosterCB: integer;            // roster callback id
-      _tree: TExTreeView;
-
+      _SessionCB: integer;            // session callback id
+      _RosterCB: integer;            // roster callback id
+      _TreeMain: TExTreeView;
+      _TreeContacts: TExContactsTreeView;
+      _TreeRooms: TExRoomsTreeView;
+      _TabController: IExodusTabController;
       procedure _ToggleGUI(state: TLoginGuiState);
+      function _GetImages() : TImageList;
+      procedure _SetImages(Value :TImageList);
+      //procedure _RemovePluginTabs();
   public
       { Public declarations }
+      procedure InitControlls();
       procedure SessionCallback(event: string; tag: TXMLTag);
       procedure RosterCallback(event: string; item: IExodusItem);
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
-      property  RosterTree: TExTreeView read _tree;
+      property  RosterTree: TExTreeView read _TreeMain;
+      property  ContactsTree: TExContactsTreeView read _TreeContacts;
+      property  RoomsTree: TExRoomsTreeView read _TreeRooms;
+      property  ImageList: TImageList read _GetImages  write _SetImages;
   end;
 
 
@@ -32,10 +43,10 @@ function GetRosterWindow() : TRosterForm;
 procedure CloseRosterWindow();
 
 var
-  frmRoster: TRosterForm;
+  FrmRoster: TRosterForm;
 
 implementation
-uses ExUtils, CommCtrl, Session;
+uses ExUtils, CommCtrl, Session, RosterImages;
 
 {$R *.dfm}
 
@@ -44,9 +55,9 @@ uses ExUtils, CommCtrl, Session;
 }
 function GetRosterWindow() : TRosterForm;
 begin
-    if (frmRoster = nil) then
-        frmRoster := TRosterForm.Create(Application);
-    Result := frmRoster;
+    if (FrmRoster = nil) then
+        FrmRoster := TRosterForm.Create(Application);
+    Result := FrmRoster;
 end;
 
 {
@@ -54,18 +65,29 @@ end;
 }
 procedure CloseRosterWindow();
 begin
-    if (frmRoster <> nil) then begin
-        frmRoster.Close();
-        frmRoster := nil;
+    if (FrmRoster <> nil) then begin
+        FrmRoster.Close();
+        FrmRoster := nil;
     end;
 end;
 
+{---------------------------------------}
+function TRosterForm._GetImages() : TImageList;
+begin
+    Result := TImageList(_PageControl.Images);
+end;
 
 {---------------------------------------}
-procedure TRosterForm.SessionCallback(event: string; tag: TXMLTag);
+procedure TRosterForm._SetImages(Value :TImageList);
+begin
+    _PageControl.Images := Value;
+end;
+
+{---------------------------------------}
+procedure TRosterForm.SessionCallback(Event: string; Tag: TXMLTag);
 begin
     // catch session events
-    if event = '/session/disconnected' then
+    if Event = '/session/disconnected' then
     begin
         _ToggleGUI(lgsDisconnected);
     end
@@ -87,44 +109,85 @@ begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_sessioncb);
    end;
-    _tree.Free();
-    _tree := nil;
-
+    _TreeMain.Free();
+    _TreeMain := nil;
+    _TreeContacts.Free();
+    _TreeContacts := nil;
+    _TreeRooms.Free();
+    _TreeRooms := nil;
+    _TabController := nil;
 end;
 
 {---------------------------------------}
-procedure TRosterForm.TntFormCreate(Sender: TObject);
+procedure TRosterForm.InitControlls();
+var
+    ITab: IExodusTab;
+    Idx: Integer;
 begin
-    inherited;
-    _tree := TExTreeView.Create(Self, MainSession);
-    _tree.parent := Self;
-    _tree.Align := alClient;
-    _tree.Canvas.Pen.Width := 1;
-    _tree.SetFontsAndColors();
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
-    _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
+    _TabController := TExodusTabController.Create();
+    _TreeMain := TExTreeView.Create(Self, MainSession);
+    _TreeMain.Align := alClient;
+    _TreeMain.Canvas.Pen.Width := 1;
+    _TreeMain.SetFontsAndColors();
+    _Rostercb := MainSession.RegisterCallback(RosterCallback, '/item');
+    _SessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
 
+
+    _TreeContacts := TExContactsTreeView.Create(Self, MainSession);
+    _TreeContacts.Align := alClient;
+    _TreeContacts.Canvas.Pen.Width := 1;
+    _TreeContacts.SetFontsAndColors();
+
+    _TreeRooms := TExRoomsTreeView.Create(Self, MainSession);
+    _TreeRooms.Align := alClient;
+    _TreeRooms.Canvas.Pen.Width := 1;
+    _TreeRooms.SetFontsAndColors();
+
+    ITab := _tabController.AddTab('');
+    ITab.ImageIndex := RI_MAIN_TAB_INDEX;
+    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+    if (Idx > -1) then
+        _treeMain.parent := _PageControl.Pages[Idx];
+
+    ITab := _TabController.AddTab('');
+    ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
+    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+    if (Idx > -1) then
+        _TreeContacts.parent := _PageControl.Pages[Idx];
+
+    ITab := _TabController.AddTab('');
+    ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
+    Idx := _TabController.GetTabIndexByUid(ITab.UID);
+    if (Idx > -1) then
+        _TreeRooms.parent := _PageControl.Pages[Idx];
 
     AssignUnicodeFont(Self, 9);
 end;
 
 {---------------------------------------}
-procedure TRosterForm.RosterCallback(event: string; item: IExodusItem);
+procedure TRosterForm.RosterCallback(Event: string; Item: IExodusItem);
 begin
-   if event = '/item/end' then
+   if Event = '/item/end' then
         Self.SessionCallback('/item/end', nil);
 end;
 
 {---------------------------------------}
-procedure TRosterForm._ToggleGUI(state: TLoginGuiState);
+procedure TRosterForm._ToggleGUI(State: TLoginGuiState);
+var
+   ITab: IExodusTab;
+   control: TWinControl;
+   Idx: Integer;
 begin
-    if (state = lgsDisconnected) then
+    if (State = lgsDisconnected) then
     begin
        Self.Visible := false;
-       _tree.Items.Clear();
+       _TreeMain.Items.Clear();
+       _TreeContacts.Items.Clear();
+       _TreeRooms.Items.Clear();
     end;
-    
+
 end;
+
 
 {---------------------------------------}
 function  TRosterForm.GetDockParent(): TForm;

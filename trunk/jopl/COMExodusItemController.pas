@@ -57,6 +57,7 @@ type
       procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
       procedure RemoveItem(const Uid: WideString); safecall;
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
+      function GetItemsByType(const Type_: WideString): OleVariant; safecall;
   private
       _Groups: TWideStringList;
       _Items: TWideStringList;
@@ -70,6 +71,7 @@ type
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
       procedure _SendGroups();
       function  _GetGroupItems(const Group: WideString): TWideStringList;
+      function  _GetItemsByType(Type_: WideString): TWideStringList;
 
   public
       constructor Create(JS: TObject);
@@ -159,11 +161,11 @@ begin
     else
     begin
         if ((Event = 'xml') and (Tag.getAttribute('type') = 'error')) then
-        begin
+//        begin
             _ServerStorage := false;
-            Groups := MainSession.Prefs.LoadGroups();
-            if (Groups = nil) then exit;
-        end;
+//            Groups := MainSession.Prefs.LoadGroups();
+//            if (Groups = nil) then exit;
+//        end;
     end;
 
     for i := 0 to Groups.ChildCount - 1 do
@@ -228,6 +230,19 @@ begin
     for i := 0 to _Items.Count - 1 do
     begin
         if ((TExodusItemWrapper(_Items.Objects[i]).ExodusItem).BelongsToGroup(Group)) then
+            Result.AddObject(_Items[i], _Items.Objects[i]);
+    end;
+end;
+
+{---------------------------------------}
+function  TExodusItemController._GetItemsByType(Type_: WideString): TWideStringList;
+var
+    i: Integer;
+begin
+    Result := TWideStringList.Create();
+    for i := 0 to _Items.Count - 1 do
+    begin
+        if ((TExodusItemWrapper(_Items.Objects[i]).ExodusItem).Type_ = Type_) then
             Result.AddObject(_Items[i], _Items.Objects[i]);
     end;
 end;
@@ -474,23 +489,23 @@ var
      i: Integer;
 begin
    if (_ServerStorage) then
-       _SendGroups()
-   else
-   begin
-       Groups := TXMLTag.Create('local-groups');
-       for i := 0 to _Groups.Count - 1 do
-       begin
-           Group := TGroupInfo(_Groups.Objects[i]);
-           GTag := TXMLTag.Create('group', Group.Name);
-           if (Group.Expanded) then
-               Expanded := 'true'
-           else
-               Expanded := 'false';
-           GTag.setAttribute('expanded', Expanded);
-           Groups.AddTag(GTag);
-       end;
-       TJabberSession(_js).Prefs.SaveGroups(Groups);
-   end;
+       _SendGroups();
+//   else
+//   begin
+//       Groups := TXMLTag.Create('local-groups');
+//       for i := 0 to _Groups.Count - 1 do
+//       begin
+//           Group := TGroupInfo(_Groups.Objects[i]);
+//           GTag := TXMLTag.Create('group', Group.Name);
+//           if (Group.Expanded) then
+//               Expanded := 'true'
+//           else
+//               Expanded := 'false';
+//           GTag.setAttribute('expanded', Expanded);
+//           Groups.AddTag(GTag);
+//       end;
+//       TJabberSession(_js).Prefs.SaveGroups(Groups);
+//   end;
 
 end;
 
@@ -554,6 +569,23 @@ begin
             exit;
         end;
     end;
+end;
+
+function TExodusItemController.GetItemsByType(
+  const Type_: WideString): OleVariant;
+var
+    List: TWideStringList;
+    Items: Variant;
+    i: Integer;
+begin
+    List := _GetItemsByType(Type_);
+    Items := VarArrayCreate([0,List.Count], varOleStr);
+
+    for i := 0 to List.Count - 1 do begin
+        VarArrayPut(Items, List[i], i);
+    end;
+    list.Free();
+    Result := items;
 end;
 
 initialization
