@@ -416,9 +416,13 @@ begin
         exit;
 
     Item := TJabberSession(_js).ItemController.GetItem(Pres.fromJid.jid);
+
     //Is this possible?
     if (Item = nil) then exit;
 
+    //Make sure the item is contact.
+    if (Item.Type_ <> EI_TYPE_CONTACT) then exit;
+    
     wasVisible := Item.IsVisible;
 
     _UpdateContact(Item, Pres);
