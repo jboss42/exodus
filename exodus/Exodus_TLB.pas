@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2/28/2008 4:22:49 PM from Type Library described below.
+// File generated on 3/3/2008 1:52:55 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -4446,7 +4446,7 @@ type
     procedure Set_value(const Name: WideString; const value: WideString); safecall;
     function Get_IsVisible: WordBool; safecall;
     procedure Set_IsVisible(value: WordBool); safecall;
-    function Get_PropertyName(Index: Integer): WideString; safecall;
+    function Get_propertyName(index: Integer): WideString; safecall;
     property Text: WideString read Get_Text write Set_Text;
     property Type_: WideString read Get_Type_;
     property ExtendedText: WideString read Get_ExtendedText write Set_ExtendedText;
@@ -4459,7 +4459,7 @@ type
     property Property_[index: Integer]: WideString read Get_Property_ write Set_Property_;
     property value[const Name: WideString]: WideString read Get_value write Set_value;
     property IsVisible: WordBool read Get_IsVisible write Set_IsVisible;
-    property PropertyName[Index: Integer]: WideString read Get_PropertyName;
+    property propertyName[index: Integer]: WideString read Get_propertyName;
   end;
 
 // *********************************************************************//
@@ -4492,7 +4492,7 @@ type
     function BelongsToGroup(const Group: WideString): WordBool; dispid 224;
     property value[const Name: WideString]: WideString dispid 225;
     property IsVisible: WordBool dispid 226;
-    property PropertyName[Index: Integer]: WideString readonly dispid 210;
+    property propertyName[index: Integer]: WideString readonly dispid 210;
   end;
 
 // *********************************************************************//
@@ -4611,7 +4611,7 @@ type
     procedure Set_Caption(const value: WideString); safecall;
     function Get_ImageIndex: Integer; safecall;
     procedure Set_ImageIndex(value: Integer); safecall;
-    function Get_Visible: Integer; safecall;
+    function Get_Visible: WordBool; safecall;
     procedure Show; safecall;
     procedure Hide; safecall;
     procedure Activate; safecall;
@@ -4620,7 +4620,7 @@ type
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
-    property Visible: Integer read Get_Visible;
+    property Visible: WordBool read Get_Visible;
     property handle: Integer read Get_handle;
     property UID: WideString read Get_UID;
   end;
@@ -4635,7 +4635,7 @@ type
     property Name: WideString dispid 201;
     property Caption: WideString dispid 202;
     property ImageIndex: Integer dispid 203;
-    property Visible: Integer readonly dispid 204;
+    property Visible: WordBool readonly dispid 204;
     procedure Show; dispid 205;
     procedure Hide; dispid 206;
     procedure Activate; dispid 207;

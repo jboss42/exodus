@@ -1,3 +1,22 @@
+{
+    Copyright 2001, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 unit RoomController;
 
 interface
@@ -25,7 +44,8 @@ type TRoomController = class
 end;
 
 implementation
-uses Session, IQ, JabberConst, SysUtils, COMExodusItem, JabberID, RosterImages;
+uses Session, IQ, JabberConst, SysUtils, COMExodusItem, JabberID, RosterImages,
+     DisplayName;
 
 {---------------------------------------}
 constructor TRoomController.Create(JS: TObject);
@@ -134,6 +154,9 @@ begin
      end
 end;
 
+{---------------------------------------}
+//Creates and sends out an IQ to retrieve
+//bookmarks from the server.
 procedure TRoomController._GetRooms();
 var
     IQ: TJabberIQ;
@@ -151,6 +174,8 @@ begin
     end;
 end;
 
+{---------------------------------------}
+//Parses the xml with bookmarks received from the server.
 procedure TRoomController._ParseRooms(Event: string; Tag: TXMLTag);
 var
     RoomTags: TXMLTagList;
@@ -164,15 +189,13 @@ begin
     TJabberSession(_JS).FireEvent('/item/begin', Item);
     RoomTags := nil;
     if ((Event = 'xml') and (Tag.getAttribute('type') <> 'result')) then exit;
-        // we got a response..
 
+    // We got a response..
     StorageTag := tag.QueryXPTag('/iq/query/storage');
     if (StorageTag <> nil) then
         RoomTags := StorageTag.ChildTags();
 
-
     for i := 0 to RoomTags.Count - 1 do begin
-
             if (RoomTags[i].Name <> 'conference') then continue;
             RoomTag := RoomTags.Tags[i];
             jid := WideLowerCase(RoomTag.GetAttribute('jid'));
@@ -196,6 +219,9 @@ begin
 
 end;
 
+{---------------------------------------}
+//Sets some specific and generic properties of
+//IExodusItem interface based on the tag data.
 procedure TRoomController._ParseRoom(Room: IExodusItem; Tag: TXMLTag);
 var
     TmpJid: TJabberID;
@@ -212,24 +238,23 @@ begin
                                   autojoin='true'
                                   jid='council@conference.underhill.org'>
                         <nick>Puck</nick>
-                        <password>titania</password>
                         <group ns="http://jabber.com/protocols">abc</group>
                     </conference>
                 </storage>
         </query></iq>
         }
     Room.ImageIndex := RI_CONFERENCE_INDEX;
-    Room.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
     Room.AddProperty('name', Tag.GetAttribute('name'));
+    //Retrieve room name from display cache
+    GetDisplayNameCache().UpdateDisplayName(Room);
+    Room.Text := GetDisplayNameCache().GetDisplayName(Room.Uid);
     Room.AddProperty('autojoin', Tag.GetAttribute('autojoin'));
     Room.AddProperty('reg_nick', Tag.GetAttribute('reg_nick'));
     TmpTag := Tag.QueryXPTag('/conference/nick');
     if (TmpTag <> nil) then
         Room.AddProperty('nick', TmpTag.Data);
-//    TmpTag := Tag.QueryXPTag('/conference/password');
-//    if (TmpTag <> nil) then
-//        Room.AddProperty('password', TmpTag.Data);
+
 
     Grps := Tag.QueryXPTags('/conference/group');
     //Build temporary list of groups for future comparison of the lists.

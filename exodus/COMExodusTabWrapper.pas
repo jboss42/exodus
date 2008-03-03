@@ -27,17 +27,16 @@ uses Exodus_TLB, COMExodusTab;
 type
 {
    This purpose of this class is to hold the reference to
-   IExodusItem interface.
-   When TExodusItem is created it's reference count is 0. Without
-   having anything reference TExodusItem it will eventually get releasedd
-   Having a wrapper that holds the reference to IExodusItem will
-   gurantee that TExodusItem will not get released until reference to
+   IExodusTab interface.
+   When IExodusTab is created it's reference count is 0. Without
+   having anything reference IExodusTab it will eventually get releasedd
+   Having a wrapper that holds the reference to IExodusTab will
+   gurantee that TExodusTab will not get released until reference to
    it is set to nil. 
 }
    TExodusTabWrapper = class
    private
        _Tab: IExodusTab;
-       //_Page: TTntTabSheet;
    public
        constructor Create(activeX_GUID: WideString); overload;
        destructor Destroy(); override;
@@ -50,6 +49,7 @@ uses TntComCtrls, RosterForm;
 constructor TExodusTabWrapper.Create(activeX_GUID: WideString);
 var
     Page: TTntTabSheet;
+    l: Integer;
 begin
     inherited Create;
      Page := TTntTabSheet.Create(GetRosterWindow()._PageControl);
