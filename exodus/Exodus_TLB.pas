@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/5/2008 10:15:48 AM from Type Library described below.
+// File generated on 2008-03-05 10:43:16 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -127,6 +127,8 @@ const
   IID_IExodusDataTable: TGUID = '{2BD06814-A066-4D2D-9236-FE33B9CB4759}';
   CLASS_ExodusDataStore: TGUID = '{D1FE5126-8833-43E3-BBDF-F684A158A3E3}';
   CLASS_ExodusDataTable: TGUID = '{A83961EB-6756-4719-B493-1CC664CC9F98}';
+  IID_IExodusItemList: TGUID = '{8247F310-6DAB-4D81-BF91-8D53C7A028D1}';
+  CLASS_ExodusItemList: TGUID = '{7B0DF61F-D7E0-4253-A846-8F29C7F5D5E8}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -288,6 +290,8 @@ type
   IExodusDataStoreDisp = dispinterface;
   IExodusDataTable = interface;
   IExodusDataTableDisp = dispinterface;
+  IExodusItemList = interface;
+  IExodusItemListDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -318,6 +322,7 @@ type
   ExodusTab = IExodusTab;
   ExodusDataStore = IExodusDataStore;
   ExodusDataTable = IExodusDataTable;
+  ExodusItemList = IExodusItemList;
 
 
 // *********************************************************************//
@@ -4731,6 +4736,41 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusItemList
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {8247F310-6DAB-4D81-BF91-8D53C7A028D1}
+// *********************************************************************//
+  IExodusItemList = interface(IDispatch)
+    ['{8247F310-6DAB-4D81-BF91-8D53C7A028D1}']
+    function Get_Count: Integer; safecall;
+    function Get_Item(Index: Integer): IExodusItem; safecall;
+    procedure Set_Item(Index: Integer; const Value: IExodusItem); safecall;
+    procedure Add(const Value: IExodusItem); safecall;
+    procedure Delete(Index: Integer); safecall;
+    function IndexOf(const item: IExodusItem): Integer; safecall;
+    procedure Remove(const Item: IExodusItem); safecall;
+    procedure Clear; safecall;
+    property Count: Integer read Get_Count;
+    property Item[Index: Integer]: IExodusItem read Get_Item write Set_Item;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusItemListDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {8247F310-6DAB-4D81-BF91-8D53C7A028D1}
+// *********************************************************************//
+  IExodusItemListDisp = dispinterface
+    ['{8247F310-6DAB-4D81-BF91-8D53C7A028D1}']
+    property Count: Integer readonly dispid 201;
+    property Item[Index: Integer]: IExodusItem dispid 202;
+    procedure Add(const Value: IExodusItem); dispid 203;
+    procedure Delete(Index: Integer); dispid 204;
+    function IndexOf(const item: IExodusItem): Integer; dispid 205;
+    procedure Remove(const Item: IExodusItem); dispid 206;
+    procedure Clear; dispid 207;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -5030,6 +5070,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusDataTable;
   end;
 
+// *********************************************************************//
+// The Class CoExodusItemList provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusItemList exposed by              
+// the CoClass ExodusItemList. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusItemList = class
+    class function Create: IExodusItemList;
+    class function CreateRemote(const MachineName: string): IExodusItemList;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5282,6 +5334,16 @@ end;
 class function CoExodusDataTable.CreateRemote(const MachineName: string): IExodusDataTable;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusDataTable) as IExodusDataTable;
+end;
+
+class function CoExodusItemList.Create: IExodusItemList;
+begin
+  Result := CreateComObject(CLASS_ExodusItemList) as IExodusItemList;
+end;
+
+class function CoExodusItemList.CreateRemote(const MachineName: string): IExodusItemList;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusItemList) as IExodusItemList;
 end;
 
 end.

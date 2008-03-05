@@ -3,8 +3,8 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 825
-  ClientWidth = 497
+  ClientHeight = 670
+  ClientWidth = 404
   UseDockManager = True
   DefaultMonitor = dmDesktop
   DockSite = True
@@ -21,13 +21,13 @@ inherited frmExodus: TfrmExodus
   OnShow = FormShow
   ExplicitWidth = 505
   ExplicitHeight = 890
-  PixelsPerInch = 120
-  TextHeight = 16
+  PixelsPerInch = 96
+  TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 814
-    Width = 497
-    Height = 11
+    Top = 661
+    Width = 404
+    Height = 9
     Align = alBottom
     AutoSize = True
     Center = True
@@ -40,8 +40,8 @@ inherited frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 497
-    Height = 38
+    Width = 404
+    Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
     Bands = <>
@@ -49,9 +49,9 @@ inherited frmExodus: TfrmExodus
   end
   object tbsView: TPageControl
     Left = 0
-    Top = 74
-    Width = 497
-    Height = 740
+    Top = 60
+    Width = 404
+    Height = 601
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
@@ -65,8 +65,8 @@ inherited frmExodus: TfrmExodus
       object pnlLogin: TPanel
         Left = 0
         Top = 0
-        Width = 487
-        Height = 720
+        Width = 396
+        Height = 585
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -79,11 +79,15 @@ inherited frmExodus: TfrmExodus
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlRoster: TPanel
         Left = 0
-        Top = 46
-        Width = 489
-        Height = 684
+        Top = 37
+        Width = 397
+        Height = 556
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
@@ -92,8 +96,8 @@ inherited frmExodus: TfrmExodus
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
-        Width = 489
-        Height = 46
+        Width = 397
+        Height = 37
         Align = alTop
         BevelOuter = bvNone
         ColumnCollection = <
@@ -141,10 +145,10 @@ inherited frmExodus: TfrmExodus
           end>
         TabOrder = 1
         object imgSSL: TImage
-          Left = 473
+          Left = 384
           Top = 0
-          Width = 16
-          Height = 46
+          Width = 13
+          Height = 37
           Hint = 'Secure Connection'
           Margins.Left = 0
           Margins.Top = 0
@@ -181,26 +185,20 @@ inherited frmExodus: TfrmExodus
             FF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80FFFF80
             FFFF}
           Transparent = True
-          ExplicitLeft = 468
-          ExplicitWidth = 19
         end
         object lblDisplayName: TTntLabel
           AlignWithMargins = True
-          Left = 24
-          Top = 3
-          Width = 446
-          Height = 17
+          Left = 20
+          Top = 2
+          Width = 3
+          Height = 13
           Align = alClient
-          ExplicitLeft = 30
-          ExplicitTop = 4
-          ExplicitWidth = 4
-          ExplicitHeight = 16
         end
         object pnlStatus: TPanel
-          Left = 21
-          Top = 23
-          Width = 452
-          Height = 23
+          Left = 17
+          Top = 19
+          Width = 367
+          Height = 18
           Cursor = crHandPoint
           Align = alClient
           BevelOuter = bvNone
@@ -209,24 +207,21 @@ inherited frmExodus: TfrmExodus
           OnClick = clickChangeStatus
           object lblStatus: TTntLabel
             AlignWithMargins = True
-            Left = 3
-            Top = 3
+            Left = 2
+            Top = 2
             Width = 3
-            Height = 17
+            Height = 14
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = False
             EllipsisPosition = epEndEllipsis
             OnClick = clickEditStatus
-            ExplicitLeft = 4
-            ExplicitTop = 4
-            ExplicitHeight = 16
           end
           object imgDown: TImage
-            Left = 182
+            Left = 148
             Top = 0
             Width = 16
-            Height = 23
+            Height = 13
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -269,14 +264,12 @@ inherited frmExodus: TfrmExodus
               FF00}
             Transparent = True
             OnClick = clickChangeStatus
-            ExplicitLeft = 186
-            ExplicitHeight = 20
           end
           object txtStatus: TTntEdit
             AlignWithMargins = True
-            Left = 12
+            Left = 10
             Top = 0
-            Width = 167
+            Width = 135
             Height = 23
             Margins.Top = 0
             Margins.Bottom = 0
@@ -287,28 +280,26 @@ inherited frmExodus: TfrmExodus
             Visible = False
             OnExit = txtStatusExit
             OnKeyPress = txtStatusKeyPress
-            ExplicitHeight = 24
           end
         end
         object imgPresence: TImage
           Left = 0
           Top = 0
-          Width = 21
-          Height = 46
+          Width = 17
+          Height = 37
           Align = alClient
           AutoSize = True
           Center = True
           Transparent = True
-          ExplicitWidth = 26
         end
       end
     end
   end
   object pnlToolbar: TPanel
     Left = 0
-    Top = 38
-    Width = 497
-    Height = 36
+    Top = 31
+    Width = 404
+    Height = 29
     Align = alTop
     AutoSize = True
     BevelEdges = []
@@ -317,15 +308,14 @@ inherited frmExodus: TfrmExodus
     TabOrder = 2
     object ToolbarBevel: TColorBevel
       Left = 0
-      Top = 30
-      Width = 497
-      Height = 6
+      Top = 24
+      Width = 404
+      Height = 5
       Align = alTop
       Shape = bsBottomLine
       HighLight = clBtnFace
       Shadow = clBtnShadow
       FrameColor = frUser
-      ExplicitTop = 37
     end
     object ToolBar1: TToolBar
       Left = 0

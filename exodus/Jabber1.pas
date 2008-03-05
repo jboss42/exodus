@@ -2055,8 +2055,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.restoreToolbar;
-var
-    state: Boolean;
 begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
