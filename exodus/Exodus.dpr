@@ -270,7 +270,11 @@ uses
   RoomController in '..\jopl\RoomController.pas',
   IEMsgListUIHandler in 'IEMsgListUIHandler.pas',
   ExContactsTreeView in 'components\ExContactsTreeView.pas',
-  ExRoomsTreeView in 'components\ExRoomsTreeView.pas';
+  ExRoomsTreeView in 'components\ExRoomsTreeView.pas',
+  SQLiteTable3 in 'SQLiteTable3.pas',
+  SQLite3 in 'SQLite3.pas',
+  COMExodusDataStore in 'COMExodusDataStore.pas',
+  COMExodusDataTable in 'COMExodusDataTable.pas';
 
 {$R *.TLB}
 

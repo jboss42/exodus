@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/3/2008 1:52:55 PM from Type Library described below.
+// File generated on 3/5/2008 10:15:48 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -123,6 +123,10 @@ const
   IID_IExodusTab: TGUID = '{F633716F-B315-4867-A1D0-6E177831FA27}';
   CLASS_ExodusTabController: TGUID = '{820EB166-9870-4D1A-B693-EC4F5A39E2BA}';
   CLASS_ExodusTab: TGUID = '{9FC3FE8B-4F0D-48A9-B38A-7D8507E6CBF0}';
+  IID_IExodusDataStore: TGUID = '{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}';
+  IID_IExodusDataTable: TGUID = '{2BD06814-A066-4D2D-9236-FE33B9CB4759}';
+  CLASS_ExodusDataStore: TGUID = '{D1FE5126-8833-43E3-BBDF-F684A158A3E3}';
+  CLASS_ExodusDataTable: TGUID = '{A83961EB-6756-4719-B493-1CC664CC9F98}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -280,6 +284,10 @@ type
   IExodusTabControllerDisp = dispinterface;
   IExodusTab = interface;
   IExodusTabDisp = dispinterface;
+  IExodusDataStore = interface;
+  IExodusDataStoreDisp = dispinterface;
+  IExodusDataTable = interface;
+  IExodusDataTableDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -308,6 +316,8 @@ type
   ExodusItemController = IExodusItemController;
   ExodusTabController = IExodusTabController;
   ExodusTab = IExodusTab;
+  ExodusDataStore = IExodusDataStore;
+  ExodusDataTable = IExodusDataTable;
 
 
 // *********************************************************************//
@@ -4644,6 +4654,83 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusDataStore
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {20A21035-31DD-4F14-AF03-DB4B2DC26ACB}
+// *********************************************************************//
+  IExodusDataStore = interface(IDispatch)
+    ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
+    function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
+    function GetTable(const SQLStatement: WideString): IExodusDataTable; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusDataStoreDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {20A21035-31DD-4F14-AF03-DB4B2DC26ACB}
+// *********************************************************************//
+  IExodusDataStoreDisp = dispinterface
+    ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
+    function ExecSQL(const SQLStatement: WideString): WordBool; dispid 201;
+    function GetTable(const SQLStatement: WideString): IExodusDataTable; dispid 202;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusDataTable
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2BD06814-A066-4D2D-9236-FE33B9CB4759}
+// *********************************************************************//
+  IExodusDataTable = interface(IDispatch)
+    ['{2BD06814-A066-4D2D-9236-FE33B9CB4759}']
+    function Get_CurrentRow: Integer; safecall;
+    function Get_ColCount: Integer; safecall;
+    function Get_RowCount: Integer; safecall;
+    function Get_IsEndOfTable: WordBool; safecall;
+    function Get_IsBeginOfTable: WordBool; safecall;
+    function IsFieldNULL(Field: Integer): WordBool; safecall;
+    function GetFieldByName(const Name: WideString): WideString; safecall;
+    function GetCol(Column: Integer): WideString; safecall;
+    function GetField(Field: Integer): WideString; safecall;
+    procedure NextRow; safecall;
+    procedure PrevRow; safecall;
+    procedure FirstRow; safecall;
+    procedure LastRow; safecall;
+    function GetFieldAsInt(Field: Integer): Integer; safecall;
+    function GetFieldAsString(Field: Integer): WideString; safecall;
+    function GetFieldAsDouble(Field: Integer): Double; safecall;
+    property CurrentRow: Integer read Get_CurrentRow;
+    property ColCount: Integer read Get_ColCount;
+    property RowCount: Integer read Get_RowCount;
+    property IsEndOfTable: WordBool read Get_IsEndOfTable;
+    property IsBeginOfTable: WordBool read Get_IsBeginOfTable;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusDataTableDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {2BD06814-A066-4D2D-9236-FE33B9CB4759}
+// *********************************************************************//
+  IExodusDataTableDisp = dispinterface
+    ['{2BD06814-A066-4D2D-9236-FE33B9CB4759}']
+    property CurrentRow: Integer readonly dispid 201;
+    property ColCount: Integer readonly dispid 202;
+    property RowCount: Integer readonly dispid 203;
+    property IsEndOfTable: WordBool readonly dispid 204;
+    property IsBeginOfTable: WordBool readonly dispid 205;
+    function IsFieldNULL(Field: Integer): WordBool; dispid 206;
+    function GetFieldByName(const Name: WideString): WideString; dispid 207;
+    function GetCol(Column: Integer): WideString; dispid 208;
+    function GetField(Field: Integer): WideString; dispid 209;
+    procedure NextRow; dispid 210;
+    procedure PrevRow; dispid 211;
+    procedure FirstRow; dispid 212;
+    procedure LastRow; dispid 213;
+    function GetFieldAsInt(Field: Integer): Integer; dispid 214;
+    function GetFieldAsString(Field: Integer): WideString; dispid 215;
+    function GetFieldAsDouble(Field: Integer): Double; dispid 216;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -4919,6 +5006,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusTab;
   end;
 
+// *********************************************************************//
+// The Class CoExodusDataStore provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusDataStore exposed by              
+// the CoClass ExodusDataStore. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusDataStore = class
+    class function Create: IExodusDataStore;
+    class function CreateRemote(const MachineName: string): IExodusDataStore;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusDataTable provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusDataTable exposed by              
+// the CoClass ExodusDataTable. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusDataTable = class
+    class function Create: IExodusDataTable;
+    class function CreateRemote(const MachineName: string): IExodusDataTable;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5151,6 +5262,26 @@ end;
 class function CoExodusTab.CreateRemote(const MachineName: string): IExodusTab;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusTab) as IExodusTab;
+end;
+
+class function CoExodusDataStore.Create: IExodusDataStore;
+begin
+  Result := CreateComObject(CLASS_ExodusDataStore) as IExodusDataStore;
+end;
+
+class function CoExodusDataStore.CreateRemote(const MachineName: string): IExodusDataStore;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusDataStore) as IExodusDataStore;
+end;
+
+class function CoExodusDataTable.Create: IExodusDataTable;
+begin
+  Result := CreateComObject(CLASS_ExodusDataTable) as IExodusDataTable;
+end;
+
+class function CoExodusDataTable.CreateRemote(const MachineName: string): IExodusDataTable;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusDataTable) as IExodusDataTable;
 end;
 
 end.
