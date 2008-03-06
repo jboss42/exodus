@@ -48,6 +48,8 @@ type
     constructor Create();
     destructor Destroy();
 
+    procedure SetProcessing(value: boolean);
+
     // IExodusHistoryResult Interface
     function Get_Processing: WordBool; safecall;
     function Get_ResultCount: Integer; safecall;
@@ -141,6 +143,11 @@ begin
     _ResultList.AddObject('', msg);
 end;
 
+{---------------------------------------}
+procedure TExodusHistoryResult.SetProcessing(value: boolean);
+begin
+    _processing := value;
+end;
 
 
 

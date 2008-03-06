@@ -1627,6 +1627,15 @@ library Exodus
     [default] interface IExodusHistorySearchManager;
   };
 
+  [
+    uuid(64EE21C2-6212-44D2-8FF1-F0FCC1FD5F67), 
+    version(1.0)
+  ]
+  coclass ExodusHistorySQLSearchHandler
+  {
+    [default] interface IExodusHistorySearchHandler;
+  };
+
   
   typedef BSTR * PWideString1;
 
