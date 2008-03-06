@@ -280,7 +280,8 @@ uses
   SQLite3 in 'SQLite3.pas',
   COMExodusDataStore in 'COMExodusDataStore.pas',
   COMExodusDataTable in 'COMExodusDataTable.pas',
-  SQLLogger in 'SQLLogger.pas';
+  SQLLogger in 'SQLLogger.pas',
+  ManageTabsDlg in 'prefs\ManageTabsDlg.pas' {frmPrefTabs: TTntForm};
 
 {$R *.TLB}
 

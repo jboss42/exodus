@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/6/2008 9:26:38 AM from Type Library described below.
+// File generated on 3/6/2008 11:24:05 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -347,6 +347,7 @@ type
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
+  PInteger1 = ^Integer; {*}
 
 
 // *********************************************************************//
@@ -448,6 +449,7 @@ type
     function GetStringlistValue(const key: WideString; index: Integer): WideString; safecall;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
+    function Get_TabController: IExodusTabController; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -467,6 +469,7 @@ type
     property ContactLogger: IExodusLogger read Get_ContactLogger write Set_ContactLogger;
     property RoomLogger: IExodusLogger read Get_RoomLogger write Set_RoomLogger;
     property BookmarkManager: IExodusBookmarkManager read Get_BookmarkManager;
+    property TabController: IExodusTabController read Get_TabController;
   end;
 
 // *********************************************************************//
@@ -566,6 +569,7 @@ type
     function GetStringlistValue(const key: WideString; index: Integer): WideString; dispid 220;
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); dispid 221;
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
+    property TabController: IExodusTabController readonly dispid 223;
   end;
 
 // *********************************************************************//
@@ -4605,15 +4609,18 @@ type
   IExodusTabController = interface(IDispatch)
     ['{9717635B-FC59-40A9-8282-1902D897BF09}']
     function Get_TabCount: Integer; safecall;
-    function AddTab(const ActiveX_GUID: WideString): IExodusTab; safecall;
+    function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; safecall;
     procedure RemoveTab(index: Integer); safecall;
     procedure ActivateTab(index: Integer); safecall;
     function Get_Tab(index: Integer): IExodusTab; safecall;
     procedure Clear; safecall;
     function GetTabByUID(const UID: WideString): IExodusTab; safecall;
     function GetTabIndexByUID(const UID: WideString): Integer; safecall;
+    function Get_VisibleTabCount: Integer; safecall;
+    function GetTabIndexByName(const Name: WideString): Integer; safecall;
     property TabCount: Integer read Get_TabCount;
     property Tab[index: Integer]: IExodusTab read Get_Tab;
+    property VisibleTabCount: Integer read Get_VisibleTabCount;
   end;
 
 // *********************************************************************//
@@ -4624,13 +4631,15 @@ type
   IExodusTabControllerDisp = dispinterface
     ['{9717635B-FC59-40A9-8282-1902D897BF09}']
     property TabCount: Integer readonly dispid 201;
-    function AddTab(const ActiveX_GUID: WideString): IExodusTab; dispid 202;
+    function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; dispid 202;
     procedure RemoveTab(index: Integer); dispid 203;
     procedure ActivateTab(index: Integer); dispid 204;
     property Tab[index: Integer]: IExodusTab readonly dispid 205;
     procedure Clear; dispid 206;
     function GetTabByUID(const UID: WideString): IExodusTab; dispid 207;
     function GetTabIndexByUID(const UID: WideString): Integer; dispid 208;
+    property VisibleTabCount: Integer readonly dispid 209;
+    function GetTabIndexByName(const Name: WideString): Integer; dispid 210;
   end;
 
 // *********************************************************************//
@@ -4650,14 +4659,19 @@ type
     procedure Show; safecall;
     procedure Hide; safecall;
     procedure Activate; safecall;
-    function Get_handle: Integer; safecall;
     function Get_UID: WideString; safecall;
+    function Get_Height: Integer; safecall;
+    function Get_Width: Integer; safecall;
+    function Get_Descrption: WideString; safecall;
+    procedure Set_Descrption(const Value: WideString); safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
     property Visible: WordBool read Get_Visible;
-    property handle: Integer read Get_handle;
     property UID: WideString read Get_UID;
+    property Height: Integer read Get_Height;
+    property Width: Integer read Get_Width;
+    property Descrption: WideString read Get_Descrption write Set_Descrption;
   end;
 
 // *********************************************************************//
@@ -4674,8 +4688,10 @@ type
     procedure Show; dispid 205;
     procedure Hide; dispid 206;
     procedure Activate; dispid 207;
-    property handle: Integer readonly dispid 208;
     property UID: WideString readonly dispid 209;
+    property Height: Integer readonly dispid 210;
+    property Width: Integer readonly dispid 211;
+    property Descrption: WideString dispid 212;
   end;
 
 // *********************************************************************//
@@ -4798,15 +4814,15 @@ type
   IExodusHistorySearch = interface(IDispatch)
     ['{719FB50D-8FD3-48DE-82A2-13E4668E7B71}']
     function Get_minDate: TDateTime; safecall;
-    procedure Set_minDate(Value: TDateTime); safecall;
+    procedure Set_minDate(value: TDateTime); safecall;
     function Get_maxDate: TDateTime; safecall;
-    procedure Set_maxDate(Value: TDateTime); safecall;
-    procedure AddJID(const JID: WideString); safecall;
+    procedure Set_maxDate(value: TDateTime); safecall;
+    procedure AddJid(const JID: WideString); safecall;
     function GetJID(index: Integer): WideString; safecall;
     procedure AddKeyword(const Keyword: WideString); safecall;
     function GetKeyword(index: Integer): WideString; safecall;
     function Get_ExactKeywordMatch: WordBool; safecall;
-    procedure Set_ExactKeywordMatch(Value: WordBool); safecall;
+    procedure Set_ExactKeywordMatch(value: WordBool); safecall;
     procedure AddAllowedSearchType(const ID: WideString); safecall;
     function GetAllowedSearchType(index: Integer): WideString; safecall;
     function Get_KeywordCount: Integer; safecall;
@@ -4831,7 +4847,7 @@ type
     ['{719FB50D-8FD3-48DE-82A2-13E4668E7B71}']
     property minDate: TDateTime dispid 201;
     property maxDate: TDateTime dispid 202;
-    procedure AddJID(const JID: WideString); dispid 203;
+    procedure AddJid(const JID: WideString); dispid 203;
     function GetJID(index: Integer): WideString; dispid 204;
     procedure AddKeyword(const Keyword: WideString); dispid 206;
     function GetKeyword(index: Integer): WideString; dispid 207;
@@ -4853,7 +4869,7 @@ type
     ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
     function Get_ResultCount: Integer; safecall;
     function Get_Processing: WordBool; safecall;
-    procedure OnResultItem(const SearchID: WideString; const item: IExodusLogMsg); safecall;
+    procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
     function GetResult(index: Integer): IExodusLogMsg; safecall;
     property ResultCount: Integer read Get_ResultCount;
     property Processing: WordBool read Get_Processing;
@@ -4868,7 +4884,7 @@ type
     ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
     property ResultCount: Integer readonly dispid 201;
     property Processing: WordBool readonly dispid 202;
-    procedure OnResultItem(const SearchID: WideString; const item: IExodusLogMsg); dispid 203;
+    procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); dispid 203;
     function GetResult(index: Integer): IExodusLogMsg; dispid 204;
   end;
 

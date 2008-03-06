@@ -142,6 +142,7 @@ type
     // IExodusController2
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function GetDataStore: IExodusDataStore; safecall;
+    function Get_TabController: IExodusTabController; safecall;
 
 
     { Protected declarations }
@@ -2135,6 +2136,11 @@ begin
 end;
 
 
+
+function TExodusController.Get_TabController: IExodusTabController;
+begin
+    Result := GetRosterWindow().TabController;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

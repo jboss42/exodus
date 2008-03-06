@@ -52,9 +52,7 @@ var
     l: Integer;
 begin
     inherited Create;
-     Page := TTntTabSheet.Create(GetRosterWindow()._PageControl);
-     Page.PageControl :=  GetRosterWindow()._PageControl;
-    _Tab := TExodusTab.Create(Page, activeX_GUID);
+    _Tab := TExodusTab.Create(activeX_GUID);
 end;
 
 {---------------------------------------}
