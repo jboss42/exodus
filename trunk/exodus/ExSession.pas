@@ -25,7 +25,7 @@ uses
     COMEntityCache, COMToolbar, COMBookmarkManager,
     COMRosterImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
-    S10n,
+    S10n, COMExodusDataStore, SQLLogger,
 
     // Delphi stuff
     Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils,
@@ -103,6 +103,11 @@ var
     uri_regex: TRegExpr;
     pair_regex: TRegExpr;
     im_regex: TRegExpr;
+
+    // SQLDatabase and logger
+    DataStore: TExodusDataStore;
+    MsgLogger: TSQLLogger;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -212,6 +217,8 @@ var
     tf: TFont;
     tc: TColor;
     tstr: widestring;
+
+    dbfile: widestring;
     
 begin
     // setup all the session stuff, parse cmd line params, etc..
@@ -640,7 +647,25 @@ begin
 
     //create a roster early so all other windows can get east access
     RosterForm.GetRosterWindow().InitControlls();
-    
+
+    // Setup SQL DB
+    dbfile := MainSession.Prefs.getString('datastore');
+    if (dbfile = '') then begin
+        // No db file specified in prefs/branding/etc.
+        // Default to MyDocs/appname/appname.db
+        dbfile := getUserDir() +
+                  getAppInfo().ID +
+                  '.db';
+    end;
+
+    try
+        DataStore := TExodusDataStore.Create(dbfile);
+        MsgLogger := TSQLLogger.Create();
+    except
+        DataStore := nil;
+        MsgLogger := nil;
+    end;
+
     Result := true;
 end;
 

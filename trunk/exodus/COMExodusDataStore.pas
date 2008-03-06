@@ -2,7 +2,7 @@ unit COMExodusDataStore;
 
 {$WARN SYMBOL_PLATFORM OFF}
 {
-    Copyright 2006, Peter Millard
+    Copyright 2008, Estate of Peter Millard
 
     This file is part of Exodus.
 
@@ -24,18 +24,31 @@ unit COMExodusDataStore;
 interface
 
 uses
-    ComObj, ActiveX, Exodus_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB,
+    StdVcl, SQLiteTable3;
 
 type
   TExodusDataStore = class(TAutoObject, IExodusDataStore)
   protected
+
+  private
+    // Variables
+    _DBHandle: TSQLiteDatabase;
+    _DBFileName: Widestring;
+
+    // Methods
+    function _OpenDBFile(filename: widestring): boolean;
+    procedure _CloseDBFile();
+
+  public
     // IExodusDataStore Interface
     function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
     function GetTable(const SQLStatement: WideString): IExodusDataTable; safecall;
 
-  private
+    constructor Create(filename: widestring);
+    destructor Destroy();
 
-  public
+    function CheckForTableExistence(tablename: widestring): boolean;
 
   end;
 
@@ -45,19 +58,94 @@ type
 implementation
 
 uses
-    ComServ;
+    ComServ, sysUtils, COMExodusDataTable;
+
+{---------------------------------------}
+constructor TExodusDataStore.Create(filename: widestring);
+begin
+    inherited Create;
+
+    _OpenDBFile(filename);
+end;
+
+{---------------------------------------}
+destructor TExodusDataStore.Destroy;
+begin
+    _CloseDBFile();
+
+    inherited;
+end;
 
 {---------------------------------------}
 function TExodusDataStore.ExecSQL(const SQLStatement: WideString): WordBool;
 begin
-    Result := false; //???dda
+    Result := false;
+    if (_DBHandle = nil) then exit;
+    if (SQLStatement = '') then exit;
+
+    Result := true;
+    try
+        _DBHandle.ExecSQL(SQLStatement);
+    except
+        on e: ESqliteException do begin
+            Result := false;
+        end;
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataStore.GetTable(const SQLStatement: WideString): IExodusDataTable;
+var
+    sqlTable: TSQLiteTable;
 begin
-    Result := nil; //???dda
+    Result := nil;
+
+    if (_DBHandle = nil) then exit;
+    if (SQLStatement = '') then exit;
+
+    try
+        sqlTable := _DBHandle.GetTable(SQLStatement);
+        Result := TExodusDataTable.Create(sqlTable);
+    except
+    end;
 end;
+
+{---------------------------------------}
+function TExodusDataStore._OpenDBFile(filename: widestring): boolean;
+begin
+    Result := false;
+    if (filename = '') then exit;
+
+    if (_DBHandle <> nil) then begin
+        _CloseDBFile();
+    end;
+
+    // Try to open/create the file as SQLite DB
+    _DBHandle := TSQLiteDatabase.Create(filename); // Raises Exception on I/O error
+
+    Result := true;
+end;
+
+{---------------------------------------}
+function TExodusDataStore.CheckForTableExistence(tablename: widestring): boolean;
+begin
+    Result := false;
+    if (_DBHandle = nil) then exit;
+
+    Result := _DBHandle.TableExists(tablename);
+end;
+
+{---------------------------------------}
+procedure TExodusDataStore._CloseDBFile();
+begin
+    if (_DBHandle = nil) then exit;
+
+    _DBHandle.Free();
+    _DBHandle := nil;
+end;
+
+
+
 
 
 

@@ -141,6 +141,8 @@ type
 
     // IExodusController2
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
+    function GetDataStore: IExodusDataStore; safecall;
+
 
     { Protected declarations }
   private
@@ -2126,6 +2128,12 @@ begin
     except
     end;
 end;
+
+function TExodusController.GetDataStore: IExodusDataStore;
+begin
+    Result := DataStore;
+end;
+
 
 
 initialization

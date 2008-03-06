@@ -279,7 +279,8 @@ uses
   SQLiteTable3 in 'SQLiteTable3.pas',
   SQLite3 in 'SQLite3.pas',
   COMExodusDataStore in 'COMExodusDataStore.pas',
-  COMExodusDataTable in 'COMExodusDataTable.pas';
+  COMExodusDataTable in 'COMExodusDataTable.pas',
+  SQLLogger in 'SQLLogger.pas';
 
 {$R *.TLB}
 
