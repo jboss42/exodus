@@ -41,29 +41,40 @@ type
       procedure Activate; safecall;
       function Get_Handle: Integer; safecall;
       function Get_UID: WideString; safecall;
+      function Get_Height: Integer; safecall;
+      function Get_Width: Integer; safecall;
+      function Get_Descrption: WideString; safecall;
+      procedure Set_Descrption(const Value: WideString); safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
       _UID:  WideString;
+      _Name: WideString;
+      _Desc: WideString;
   public
-      constructor Create(Page: TTntTabSheet; ActiveX_GUID: WideString);
+      constructor Create(ActiveX_GUID: WideString);
       destructor Destroy; override;
   end;
 
 implementation
 
-uses ComServ, RosterForm, SysUtils;
+uses ComServ, RosterForm, SysUtils, Session;
 
 {---------------------------------------}
-constructor TExodusTab.Create(Page: TTntTabSheet; ActiveX_GUID: WideString);
+constructor TExodusTab.Create(ActiveX_GUID: WideString);
 var
     g: TGUID;
 begin
     _AxControl := nil;
-    _Page :=  Page;
+    _Page := TTntTabSheet.Create(GetRosterWindow()._PageControl);
+    _Page.PageControl :=  GetRosterWindow()._PageControl;
+    _Page.Visible := true;
     _UID := ActiveX_GUID;
     if (_UID <> '') then
-        _AxControl := TAXControl.Create(_Page, StringToGuid(_UID))
+    begin
+        _AxControl := TAXControl.Create(_Page, StringToGuid(_UID));
+        _AxControl.Parent := _Page;
+    end
     else
     begin
         CreateGUID(g);
@@ -94,19 +105,20 @@ end;
 {---------------------------------------}
 function TExodusTab.Get_Name: WideString;
 begin
-    Result := _Page.Name;
+    Result := _Name;
 end;
 
 {---------------------------------------}
 function TExodusTab.Get_Visible: WordBool;
 begin
-    Result := _Page.Visible;
+    Result := _Page.TabVisible;
 end;
 
 {---------------------------------------}
 procedure TExodusTab.Hide;
 begin
-   _Page.Visible := false;
+   _Page.TabVisible := false;
+   MainSession.FireEvent('/session/tab/hide', nil);
 end;
 
 {---------------------------------------}
@@ -123,13 +135,14 @@ end;
 
 procedure TExodusTab.Set_Name(const Value: WideString);
 begin
-    _Page.Name := Value;
+    _Name := Value;
 end;
 
 {---------------------------------------}
 procedure TExodusTab.Show;
 begin
-    _Page.Visible := true;
+    _Page.TabVisible := true;
+    MainSession.FireEvent('/session/tab/show', nil);
 end;
 
 {---------------------------------------}
@@ -148,6 +161,27 @@ end;
 function TExodusTab.Get_UID: WideString;
 begin
    Result := _UID;
+end;
+
+function TExodusTab.Get_Height: Integer;
+begin
+    Result := _Page.Height;
+end;
+
+function TExodusTab.Get_Width: Integer;
+begin
+   Result := _Page.Width;
+end;
+
+
+function TExodusTab.Get_Descrption: WideString;
+begin
+    Result := _Desc;
+end;
+
+procedure TExodusTab.Set_Descrption(const Value: WideString);
+begin
+   _Desc := Value;
 end;
 
 initialization

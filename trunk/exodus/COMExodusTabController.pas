@@ -24,12 +24,12 @@ unit COMExodusTabController;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, TntComCtrls, Unicode, Contnrs;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, TntComCtrls, Unicode, Contnrs, XMLTag;
 
 type
   TExodusTabController = class(TAutoObject, IExodusTabController)
   protected
-      function AddTab(const activeX_guid: WideString): IExodusTab; safecall;
+    function AddTab(const ActiveX_GUID, Name: WideString): IExodusTab; safecall;
       function Get_Tab(Index: Integer): IExodusTab; safecall;
       function Get_TabCount: Integer; safecall;
       procedure ActivateTab(Index: Integer); safecall;
@@ -37,8 +37,15 @@ type
       procedure Clear; safecall;
       function GetTabByUID(const uid: WideString): IExodusTab; safecall;
       function GetTabIndexByUID(const uid: WideString): Integer; safecall;
+    function Get_VisibleTabCount: Integer; safecall;
+    function GetTabIndexByName(const Name: WideString): Integer; safecall;
   private
       _Tabs: TObjectList;
+      _HiddenTabs: TWideStringList;
+      _SessionCB: Integer;
+      //Methods
+      procedure _SessionCallback(Event: string; Tag: TXMLTag);
+
   public
       constructor Create();
       destructor Destroy; override;
@@ -46,29 +53,46 @@ type
 
 implementation
 
-uses ComServ, COMExodusTab, COMExodusTabWrapper;
+uses ComServ, COMExodusTab, COMExodusTabWrapper, Session, PrefController;
 
 {---------------------------------------}
 constructor TExodusTabController.Create();
 begin
     _Tabs := TObjectList.Create();
     _Tabs.OwnsObjects := true;
+    _HiddenTabs := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('tabs_hidden', _HiddenTabs);
+    _SessionCB := MainSession.RegisterCallback(_SessionCallback, '/session');
+end;
+{---------------------------------------}
+procedure TExodusTabController._SessionCallback(Event: string; Tag: TXMLTag);
+begin
+    // catch session events
+    if Event = '/session/prefs' then
+         MainSession.Prefs.fillStringlist('tabs_hidden', _HiddenTabs);
 end;
 
 {---------------------------------------}
 destructor TExodusTabController.Destroy();
 begin
     _Tabs.Free;
+    _HiddenTabs.Free;
 end;
 
 {---------------------------------------}
-function TExodusTabController.AddTab(
-  const activeX_guid: WideString): IExodusTab;
+function TExodusTabController.AddTab(const ActiveX_GUID,
+  Name: WideString): IExodusTab;
 var
     Tab: TExodusTabWrapper;
+    Idx: Integer;
 begin
-   Tab := TExodusTabWrapper.Create(activeX_guid);
-   _Tabs.Add(tab);
+   Tab := TExodusTabWrapper.Create(ActiveX_GUID);
+   _Tabs.Add(Tab);
+   Tab.ExodusTab.Name := Name;
+   //Hide tab if it is in the list of hidden tabs
+   Idx := _HiddenTabs.IndexOf(Name);
+   if (Idx > -1) then
+       Tab.ExodusTab.Hide;
    Result := Tab.ExodusTab;
 end;
 
@@ -143,6 +167,35 @@ begin
     for i := 0 to _Tabs.Count - 1 do
     begin
        if (Get_Tab(i).UID = uid) then
+       begin
+          Result := i;
+          break;
+       end;
+    end;
+end;
+
+
+function TExodusTabController.Get_VisibleTabCount: Integer;
+var
+    i: Integer;
+begin
+    Result := 0;
+    for i := 0 to _Tabs.Count - 1 do
+    begin
+       if (Get_Tab(i).Visible) then
+           Inc(Result);
+    end;
+end;
+
+function TExodusTabController.GetTabIndexByName(
+  const Name: WideString): Integer;
+var
+    i: Integer;
+begin
+    Result := -1;
+    for i := 0 to _Tabs.Count - 1 do
+    begin
+       if (Get_Tab(i).Name = Name) then
        begin
           Result := i;
           break;

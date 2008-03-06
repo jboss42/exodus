@@ -82,6 +82,7 @@ type
     txtSnap: TExNumericEdit;
     lblChatBG: TTntLabel;
     cbChatBG: TColorBox;
+    btnManageTabs: TTntButton;
     procedure btnEmoSettingsClick(Sender: TObject);
     procedure chkEmoticonsClick(Sender: TObject);
     procedure txtChatMemoryChange(Sender: TObject);
@@ -103,6 +104,7 @@ type
     procedure chkAllowFontFamilyClick(Sender: TObject);
     procedure cboChatElementChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnManageTabsClick(Sender: TObject);
   private
     _color_me: integer;
     _color_other: integer;
@@ -181,7 +183,8 @@ uses
     PrefController,
     Unicode,
     PrefEmoteDlg,
-    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo;
+    JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils, TypInfo,
+    ManageTabsDlg;
 
 const
     RTF_MSGLIST = 0;
@@ -472,6 +475,13 @@ begin
         end;
     end;
 end;
+
+procedure TfrmPrefDisplay.btnManageTabsClick(Sender: TObject);
+begin
+  inherited;
+  ShowManageTabsDlg(Self);
+end;
+
 
 {---------------------------------------}
 procedure TfrmPrefDisplay.redrawChat();

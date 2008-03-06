@@ -36,6 +36,7 @@ type
       property  ContactsTree: TExContactsTreeView read _TreeContacts;
       property  RoomsTree: TExRoomsTreeView read _TreeRooms;
       property  ImageList: TImageList read _GetImages  write _SetImages;
+      property  TabController: IExodusTabController read _TabController;
   end;
 
 
@@ -85,6 +86,8 @@ end;
 
 {---------------------------------------}
 procedure TRosterForm.SessionCallback(Event: string; Tag: TXMLTag);
+var
+    Idx: Integer;
 begin
     // catch session events
     if Event = '/session/disconnected' then
@@ -96,6 +99,24 @@ begin
     begin
         if (not Visible) then
             Visible := true;
+    end
+    else if Event = '/session/tab/hide' then
+    begin
+        if (TabController.VisibleTabCount = 1) then
+        begin
+            _PageControl.Visible := false;
+            _TreeMain.Parent := Self;
+        end;
+    end
+    else if Event = '/session/tab/show' then
+    begin
+        if (TabController.VisibleTabCount > 1) then
+        begin
+            _PageControl.Visible := true;
+             Idx := _TabController.GetTabIndexByName('Main');
+             if (Idx <> -1) then
+                 _TreeMain.parent := _PageControl.Pages[Idx];
+        end;
     end;
 
 end;
@@ -143,19 +164,19 @@ begin
     _TreeRooms.Canvas.Pen.Width := 1;
     _TreeRooms.SetFontsAndColors();
 
-    ITab := _tabController.AddTab('');
+    ITab := _tabController.AddTab('', 'Main');
     ITab.ImageIndex := RI_MAIN_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
         _treeMain.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('');
+    ITab := _TabController.AddTab('', 'Contacts');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
         _TreeContacts.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('');
+    ITab := _TabController.AddTab('', 'Rooms');
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
