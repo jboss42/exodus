@@ -77,10 +77,10 @@ begin
          //Main tab is always shown
          if (GetRosterWindow().TabController.Tab[i].Name = 'Main') then
              continue;
-         
+
          Item := lstTabs.Items.Add();
          Item.Caption := GetRosterWindow().TabController.Tab[i].Name;
-         //Item.SubItems.Add(GetRosterWindow().TabController.Tab[i].Description);
+         Item.SubItems.Add(GetRosterWindow().TabController.Tab[i].Descrption);
          Item.Data := TObject(GetRosterWindow().TabController.Tab[i]);
          Item.Checked := GetRosterWindow().TabController.Tab[i].Visible;
     end;
