@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-03-05 10:43:16 from Type Library described below.
+// File generated on 3/6/2008 9:26:38 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -129,6 +129,13 @@ const
   CLASS_ExodusDataTable: TGUID = '{A83961EB-6756-4719-B493-1CC664CC9F98}';
   IID_IExodusItemList: TGUID = '{8247F310-6DAB-4D81-BF91-8D53C7A028D1}';
   CLASS_ExodusItemList: TGUID = '{7B0DF61F-D7E0-4253-A846-8F29C7F5D5E8}';
+  IID_IExodusHistorySearch: TGUID = '{719FB50D-8FD3-48DE-82A2-13E4668E7B71}';
+  IID_IExodusHistoryResult: TGUID = '{DC665BA9-A59B-4038-A162-33AB2EFA961D}';
+  IID_IExodusHistorySearchHandler: TGUID = '{EA467AEA-897D-4CBA-918E-CF274981C3C8}';
+  IID_IExodusHisotrySearchManager: TGUID = '{810CB0EC-25DA-443B-8F16-D3E710ED333B}';
+  CLASS_ExodusHistorySearch: TGUID = '{58A2E35A-A42F-42AC-BAC1-83FCE2F27A32}';
+  CLASS_ExodusHistoryResult: TGUID = '{37DC94DD-FDB8-4E9E-84E2-A37747F70713}';
+  CLASS_ExodusHistorySearchManager: TGUID = '{3821A305-8C0D-47BE-AA5B-A5E62F9D4BD5}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -292,6 +299,14 @@ type
   IExodusDataTableDisp = dispinterface;
   IExodusItemList = interface;
   IExodusItemListDisp = dispinterface;
+  IExodusHistorySearch = interface;
+  IExodusHistorySearchDisp = dispinterface;
+  IExodusHistoryResult = interface;
+  IExodusHistoryResultDisp = dispinterface;
+  IExodusHistorySearchHandler = interface;
+  IExodusHistorySearchHandlerDisp = dispinterface;
+  IExodusHisotrySearchManager = interface;
+  IExodusHisotrySearchManagerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -323,6 +338,9 @@ type
   ExodusDataStore = IExodusDataStore;
   ExodusDataTable = IExodusDataTable;
   ExodusItemList = IExodusItemList;
+  ExodusHistorySearch = IExodusHistorySearch;
+  ExodusHistoryResult = IExodusHistoryResult;
+  ExodusHistorySearchManager = IExodusHisotrySearchManager;
 
 
 // *********************************************************************//
@@ -4411,6 +4429,7 @@ type
   IExodusController2 = interface(IDispatch)
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
+    function GetDataStore: IExodusDataStore; safecall;
   end;
 
 // *********************************************************************//
@@ -4421,6 +4440,7 @@ type
   IExodusController2Disp = dispinterface
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; dispid 223;
+    function GetDataStore: IExodusDataStore; dispid 201;
   end;
 
 // *********************************************************************//
@@ -4696,10 +4716,10 @@ type
     function GetFieldByName(const Name: WideString): WideString; safecall;
     function GetCol(Column: Integer): WideString; safecall;
     function GetField(Field: Integer): WideString; safecall;
-    procedure NextRow; safecall;
-    procedure PrevRow; safecall;
-    procedure FirstRow; safecall;
-    procedure LastRow; safecall;
+    function NextRow: WordBool; safecall;
+    function PrevRow: WordBool; safecall;
+    function FirstRow: WordBool; safecall;
+    function LastRow: WordBool; safecall;
     function GetFieldAsInt(Field: Integer): Integer; safecall;
     function GetFieldAsString(Field: Integer): WideString; safecall;
     function GetFieldAsDouble(Field: Integer): Double; safecall;
@@ -4726,10 +4746,10 @@ type
     function GetFieldByName(const Name: WideString): WideString; dispid 207;
     function GetCol(Column: Integer): WideString; dispid 208;
     function GetField(Field: Integer): WideString; dispid 209;
-    procedure NextRow; dispid 210;
-    procedure PrevRow; dispid 211;
-    procedure FirstRow; dispid 212;
-    procedure LastRow; dispid 213;
+    function NextRow: WordBool; dispid 210;
+    function PrevRow: WordBool; dispid 211;
+    function FirstRow: WordBool; dispid 212;
+    function LastRow: WordBool; dispid 213;
     function GetFieldAsInt(Field: Integer): Integer; dispid 214;
     function GetFieldAsString(Field: Integer): WideString; dispid 215;
     function GetFieldAsDouble(Field: Integer): Double; dispid 216;
@@ -4743,15 +4763,15 @@ type
   IExodusItemList = interface(IDispatch)
     ['{8247F310-6DAB-4D81-BF91-8D53C7A028D1}']
     function Get_Count: Integer; safecall;
-    function Get_Item(Index: Integer): IExodusItem; safecall;
-    procedure Set_Item(Index: Integer; const Value: IExodusItem); safecall;
-    procedure Add(const Value: IExodusItem); safecall;
-    procedure Delete(Index: Integer); safecall;
-    function IndexOf(const item: IExodusItem): Integer; safecall;
+    function Get_Item(index: Integer): IExodusItem; safecall;
+    procedure Set_Item(index: Integer; const value: IExodusItem); safecall;
+    procedure Add(const value: IExodusItem); safecall;
+    procedure Delete(index: Integer); safecall;
+    function IndexOf(const Item: IExodusItem): Integer; safecall;
     procedure Remove(const Item: IExodusItem); safecall;
     procedure Clear; safecall;
     property Count: Integer read Get_Count;
-    property Item[Index: Integer]: IExodusItem read Get_Item write Set_Item;
+    property Item[index: Integer]: IExodusItem read Get_Item write Set_Item;
   end;
 
 // *********************************************************************//
@@ -4762,12 +4782,149 @@ type
   IExodusItemListDisp = dispinterface
     ['{8247F310-6DAB-4D81-BF91-8D53C7A028D1}']
     property Count: Integer readonly dispid 201;
-    property Item[Index: Integer]: IExodusItem dispid 202;
-    procedure Add(const Value: IExodusItem); dispid 203;
-    procedure Delete(Index: Integer); dispid 204;
-    function IndexOf(const item: IExodusItem): Integer; dispid 205;
+    property Item[index: Integer]: IExodusItem dispid 202;
+    procedure Add(const value: IExodusItem); dispid 203;
+    procedure Delete(index: Integer); dispid 204;
+    function IndexOf(const Item: IExodusItem): Integer; dispid 205;
     procedure Remove(const Item: IExodusItem); dispid 206;
     procedure Clear; dispid 207;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusHistorySearch
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {719FB50D-8FD3-48DE-82A2-13E4668E7B71}
+// *********************************************************************//
+  IExodusHistorySearch = interface(IDispatch)
+    ['{719FB50D-8FD3-48DE-82A2-13E4668E7B71}']
+    function Get_minDate: TDateTime; safecall;
+    procedure Set_minDate(Value: TDateTime); safecall;
+    function Get_maxDate: TDateTime; safecall;
+    procedure Set_maxDate(Value: TDateTime); safecall;
+    procedure AddJID(const JID: WideString); safecall;
+    function GetJID(index: Integer): WideString; safecall;
+    procedure AddKeyword(const Keyword: WideString); safecall;
+    function GetKeyword(index: Integer): WideString; safecall;
+    function Get_ExactKeywordMatch: WordBool; safecall;
+    procedure Set_ExactKeywordMatch(Value: WordBool); safecall;
+    procedure AddAllowedSearchType(const ID: WideString); safecall;
+    function GetAllowedSearchType(index: Integer): WideString; safecall;
+    function Get_KeywordCount: Integer; safecall;
+    function Get_JIDCount: Integer; safecall;
+    function Get_AllowedSearchTypeCount: Integer; safecall;
+    function Get_SearchID: WideString; safecall;
+    property minDate: TDateTime read Get_minDate write Set_minDate;
+    property maxDate: TDateTime read Get_maxDate write Set_maxDate;
+    property ExactKeywordMatch: WordBool read Get_ExactKeywordMatch write Set_ExactKeywordMatch;
+    property KeywordCount: Integer read Get_KeywordCount;
+    property JIDCount: Integer read Get_JIDCount;
+    property AllowedSearchTypeCount: Integer read Get_AllowedSearchTypeCount;
+    property SearchID: WideString read Get_SearchID;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHistorySearchDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {719FB50D-8FD3-48DE-82A2-13E4668E7B71}
+// *********************************************************************//
+  IExodusHistorySearchDisp = dispinterface
+    ['{719FB50D-8FD3-48DE-82A2-13E4668E7B71}']
+    property minDate: TDateTime dispid 201;
+    property maxDate: TDateTime dispid 202;
+    procedure AddJID(const JID: WideString); dispid 203;
+    function GetJID(index: Integer): WideString; dispid 204;
+    procedure AddKeyword(const Keyword: WideString); dispid 206;
+    function GetKeyword(index: Integer): WideString; dispid 207;
+    property ExactKeywordMatch: WordBool dispid 209;
+    procedure AddAllowedSearchType(const ID: WideString); dispid 210;
+    function GetAllowedSearchType(index: Integer): WideString; dispid 211;
+    property KeywordCount: Integer readonly dispid 212;
+    property JIDCount: Integer readonly dispid 213;
+    property AllowedSearchTypeCount: Integer readonly dispid 214;
+    property SearchID: WideString readonly dispid 205;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusHistoryResult
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DC665BA9-A59B-4038-A162-33AB2EFA961D}
+// *********************************************************************//
+  IExodusHistoryResult = interface(IDispatch)
+    ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
+    function Get_ResultCount: Integer; safecall;
+    function Get_Processing: WordBool; safecall;
+    procedure OnResultItem(const SearchID: WideString; const item: IExodusLogMsg); safecall;
+    function GetResult(index: Integer): IExodusLogMsg; safecall;
+    property ResultCount: Integer read Get_ResultCount;
+    property Processing: WordBool read Get_Processing;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHistoryResultDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DC665BA9-A59B-4038-A162-33AB2EFA961D}
+// *********************************************************************//
+  IExodusHistoryResultDisp = dispinterface
+    ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
+    property ResultCount: Integer readonly dispid 201;
+    property Processing: WordBool readonly dispid 202;
+    procedure OnResultItem(const SearchID: WideString; const item: IExodusLogMsg); dispid 203;
+    function GetResult(index: Integer): IExodusLogMsg; dispid 204;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusHistorySearchHandler
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {EA467AEA-897D-4CBA-918E-CF274981C3C8}
+// *********************************************************************//
+  IExodusHistorySearchHandler = interface(IDispatch)
+    ['{EA467AEA-897D-4CBA-918E-CF274981C3C8}']
+    function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; safecall;
+    procedure CancelSearch(const SearchID: WideString); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHistorySearchHandlerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {EA467AEA-897D-4CBA-918E-CF274981C3C8}
+// *********************************************************************//
+  IExodusHistorySearchHandlerDisp = dispinterface
+    ['{EA467AEA-897D-4CBA-918E-CF274981C3C8}']
+    function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; dispid 201;
+    procedure CancelSearch(const SearchID: WideString); dispid 202;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusHisotrySearchManager
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {810CB0EC-25DA-443B-8F16-D3E710ED333B}
+// *********************************************************************//
+  IExodusHisotrySearchManager = interface(IDispatch)
+    ['{810CB0EC-25DA-443B-8F16-D3E710ED333B}']
+    function NewSearch(const SearchParams: IExodusHistorySearch; 
+                       const SearchResult: IExodusHistoryResult): WordBool; safecall;
+    function RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer; safecall;
+    procedure UnRegisterSearchHandler(HandlerID: Integer); safecall;
+    procedure CancelSearch(const SearchID: WideString); safecall;
+    function GetSearchType(index: Integer): WideString; safecall;
+    function Get_SearchTypeCount: Integer; safecall;
+    property SearchTypeCount: Integer read Get_SearchTypeCount;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusHisotrySearchManagerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {810CB0EC-25DA-443B-8F16-D3E710ED333B}
+// *********************************************************************//
+  IExodusHisotrySearchManagerDisp = dispinterface
+    ['{810CB0EC-25DA-443B-8F16-D3E710ED333B}']
+    function NewSearch(const SearchParams: IExodusHistorySearch; 
+                       const SearchResult: IExodusHistoryResult): WordBool; dispid 201;
+    function RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer; dispid 202;
+    procedure UnRegisterSearchHandler(HandlerID: Integer); dispid 203;
+    procedure CancelSearch(const SearchID: WideString); dispid 204;
+    function GetSearchType(index: Integer): WideString; dispid 205;
+    property SearchTypeCount: Integer readonly dispid 206;
   end;
 
 // *********************************************************************//
@@ -5082,6 +5239,42 @@ type
     class function CreateRemote(const MachineName: string): IExodusItemList;
   end;
 
+// *********************************************************************//
+// The Class CoExodusHistorySearch provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusHistorySearch exposed by              
+// the CoClass ExodusHistorySearch. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusHistorySearch = class
+    class function Create: IExodusHistorySearch;
+    class function CreateRemote(const MachineName: string): IExodusHistorySearch;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusHistoryResult provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusHistoryResult exposed by              
+// the CoClass ExodusHistoryResult. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusHistoryResult = class
+    class function Create: IExodusHistoryResult;
+    class function CreateRemote(const MachineName: string): IExodusHistoryResult;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusHistorySearchManager provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusHisotrySearchManager exposed by              
+// the CoClass ExodusHistorySearchManager. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusHistorySearchManager = class
+    class function Create: IExodusHisotrySearchManager;
+    class function CreateRemote(const MachineName: string): IExodusHisotrySearchManager;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5344,6 +5537,36 @@ end;
 class function CoExodusItemList.CreateRemote(const MachineName: string): IExodusItemList;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusItemList) as IExodusItemList;
+end;
+
+class function CoExodusHistorySearch.Create: IExodusHistorySearch;
+begin
+  Result := CreateComObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
+end;
+
+class function CoExodusHistorySearch.CreateRemote(const MachineName: string): IExodusHistorySearch;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySearch) as IExodusHistorySearch;
+end;
+
+class function CoExodusHistoryResult.Create: IExodusHistoryResult;
+begin
+  Result := CreateComObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
+end;
+
+class function CoExodusHistoryResult.CreateRemote(const MachineName: string): IExodusHistoryResult;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistoryResult) as IExodusHistoryResult;
+end;
+
+class function CoExodusHistorySearchManager.Create: IExodusHisotrySearchManager;
+begin
+  Result := CreateComObject(CLASS_ExodusHistorySearchManager) as IExodusHisotrySearchManager;
+end;
+
+class function CoExodusHistorySearchManager.CreateRemote(const MachineName: string): IExodusHisotrySearchManager;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySearchManager) as IExodusHisotrySearchManager;
 end;
 
 end.

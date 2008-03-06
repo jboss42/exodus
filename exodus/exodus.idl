@@ -1281,6 +1281,11 @@ library Exodus
     id(0x000000E2)
     ]
     HRESULT _stdcall IsVisible([in] VARIANT_BOOL value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall propertyName([in] long index, [out, retval] BSTR * Name );
   };
 
   [
@@ -1303,8 +1308,312 @@ library Exodus
     [default] interface IExodusItemController;
   };
 
+  [
+    uuid(F633716F-B315-4867-A1D0-6E177831FA27), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusTab: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Name([in] BSTR value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Caption([in] BSTR value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
+    [
+    propput, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ImageIndex([in] long value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Visible([out, retval] VARIANT_BOOL * value );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Show( void );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Hide( void );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Activate( void );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall handle([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall UID([out, retval] BSTR * value );
+  };
+
+  [
+    uuid(820EB166-9870-4D1A-B693-EC4F5A39E2BA), 
+    version(1.0), 
+    helpstring("COMExodusTabController")
+  ]
+  coclass ExodusTabController
+  {
+    [default] interface IExodusTabController;
+  };
+
+  [
+    uuid(9FC3FE8B-4F0D-48A9-B38A-7D8507E6CBF0), 
+    version(1.0), 
+    helpstring("COMExodusTab")
+  ]
+  coclass ExodusTab
+  {
+    [default] interface IExodusTab;
+  };
+
+  [
+    uuid(2BD06814-A066-4D2D-9236-FE33B9CB4759), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusDataTable: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall CurrentRow([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall ColCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall RowCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall IsEndOfTable([out, retval] VARIANT_BOOL * value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall IsBeginOfTable([out, retval] VARIANT_BOOL * value );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall IsFieldNULL([in] long Field, [out, retval] VARIANT_BOOL * IsNull );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall GetFieldByName([in] BSTR Name, [out, retval] BSTR * Field );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall GetCol([in] long Column, [out, retval] BSTR * value );
+    [
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall GetField([in] long Field, [out, retval] BSTR * value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall NextRow([out, retval] VARIANT_BOOL * success );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall PrevRow([out, retval] VARIANT_BOOL * success );
+    [
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall FirstRow([out, retval] VARIANT_BOOL * success );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall LastRow([out, retval] VARIANT_BOOL * success );
+    [
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall GetFieldAsInt([in] long Field, [out, retval] long * value );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall GetFieldAsString([in] long Field, [out, retval] BSTR * value );
+    [
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall GetFieldAsDouble([in] long Field, [out, retval] double * value );
+  };
+
+  [
+    uuid(D1FE5126-8833-43E3-BBDF-F684A158A3E3), 
+    version(1.0)
+  ]
+  coclass ExodusDataStore
+  {
+    [default] interface IExodusDataStore;
+  };
+
+  [
+    uuid(A83961EB-6756-4719-B493-1CC664CC9F98), 
+    version(1.0)
+  ]
+  coclass ExodusDataTable
+  {
+    [default] interface IExodusDataTable;
+  };
+
+  [
+    uuid(7B0DF61F-D7E0-4253-A846-8F29C7F5D5E8), 
+    version(1.0)
+  ]
+  coclass ExodusItemList
+  {
+    [default] interface IExodusItemList;
+  };
+
   
   typedef BSTR * PWideString1;
+
+  [
+    uuid(719FB50D-8FD3-48DE-82A2-13E4668E7B71), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHistorySearch: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall minDate([out, retval] DATE * Value );
+    [
+    propput, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall minDate([in] DATE Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall maxDate([out, retval] DATE * Value );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall maxDate([in] DATE Value );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall AddJID([in] BSTR JID );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall GetJID([in] long index, [out, retval] BSTR * JID );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall AddKeyword([in] BSTR Keyword );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall GetKeyword([in] long index, [out, retval] BSTR * Keyword );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ExactKeywordMatch([out, retval] VARIANT_BOOL * Value );
+    [
+    propput, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall ExactKeywordMatch([in] VARIANT_BOOL Value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall AddAllowedSearchType([in] BSTR ID );
+    [
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall GetAllowedSearchType([in] long index, [out, retval] BSTR * ID );
+    [
+    propget, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall KeywordCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall JIDCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall AllowedSearchTypeCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall SearchID([out, retval] BSTR * Value );
+  };
+
+  [
+    uuid(58A2E35A-A42F-42AC-BAC1-83FCE2F27A32), 
+    version(1.0)
+  ]
+  coclass ExodusHistorySearch
+  {
+    [default] interface IExodusHistorySearch;
+  };
+
+  [
+    uuid(37DC94DD-FDB8-4E9E-84E2-A37747F70713), 
+    version(1.0)
+  ]
+  coclass ExodusHistoryResult
+  {
+    [default] interface IExodusHistoryResult;
+  };
+
+  [
+    uuid(3821A305-8C0D-47BE-AA5B-A5E62F9D4BD5), 
+    version(1.0)
+  ]
+  coclass ExodusHistorySearchManager
+  {
+    [default] interface IExodusHisotrySearchManager;
+  };
 
   [
     uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
@@ -8346,6 +8655,10 @@ library Exodus
     id(0x000000DF)
     ]
     HRESULT _stdcall NewAXWindow([in] BSTR ActiveX_GUID, [in] BSTR ActiveXWindow_Title, [out, retval] IExodusAXWindow ** ActiveX_Window /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall GetDataStore([out, retval] IExodusDataStore ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8447,6 +8760,198 @@ library Exodus
     id(0x000000DE)
     ]
     HRESULT _stdcall GroupExpanded([in] BSTR Group, [in] VARIANT_BOOL value );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall GetItemsByType([in] BSTR Type_, [out, retval] VARIANT * Items );
+  };
+
+  [
+    uuid(9717635B-FC59-40A9-8282-1902D897BF09), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusTabController: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall TabCount([out, retval] long * value );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall AddTab([in] BSTR ActiveX_GUID, [out, retval] IExodusTab ** Result /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall RemoveTab([in] long index );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ActivateTab([in] long index );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Tab([in] long index, [out, retval] IExodusTab ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Clear( void );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall GetTabByUID([in] BSTR UID, [out, retval] IExodusTab ** Result /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall GetTabIndexByUID([in] BSTR UID, [out, retval] long * value );
+  };
+
+  [
+    uuid(20A21035-31DD-4F14-AF03-DB4B2DC26ACB), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusDataStore: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ExecSQL([in] BSTR SQLStatement, [out, retval] VARIANT_BOOL * success );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [out, retval] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(8247F310-6DAB-4D81-BF91-8D53C7A028D1), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusItemList: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Count([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Item([in] long index, [out, retval] IExodusItem ** value /*Warning: unable to validate structure name: */ );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Item([in] long index, [in] IExodusItem * value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Add([in] IExodusItem * value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Delete([in] long index );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall IndexOf([in] IExodusItem * Item /*Warning: unable to validate structure name: */, [out, retval] long * value );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall Remove([in] IExodusItem * Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall Clear( void );
+  };
+
+  [
+    uuid(DC665BA9-A59B-4038-A162-33AB2EFA961D), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHistoryResult: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ResultCount([out, retval] long * Value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Processing([out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall OnResultItem([in] BSTR SearchID, [in] IExodusLogMsg * item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall GetResult([in] long index, [out, retval] IExodusLogMsg ** item /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(EA467AEA-897D-4CBA-918E-CF274981C3C8), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHistorySearchHandler: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall NewSearch([in] IExodusHistorySearch * SearchParameters /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * HandlerParticipatingInSearch );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall CancelSearch([in] BSTR SearchID );
+  };
+
+  [
+    uuid(810CB0EC-25DA-443B-8F16-D3E710ED333B), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusHisotrySearchManager: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall NewSearch([in] IExodusHistorySearch SearchParams /*Warning: unable to validate structure name: */, [in] IExodusHistoryResult SearchResult /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * SearchAccepted );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall RegisterSearchHandler([in] IExodusHistorySearchHandler Handler /*Warning: unable to validate structure name: */, [out, retval] long * HandlerID );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall UnRegisterSearchHandler([in] long HandlerID );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall CancelSearch([in] BSTR SearchID );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GetSearchType([in] long index, [out, retval] BSTR * SearchType );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall SearchTypeCount([out, retval] long * Value );
   };
 
 };
