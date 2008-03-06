@@ -3,35 +3,35 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   Top = 142
   BorderStyle = bsDialog
   Caption = 'Plug-ins'
-  ClientHeight = 361
-  ClientWidth = 420
+  ClientHeight = 444
+  ClientWidth = 517
   OldCreateOrder = True
   OnCreate = TntFormCreate
-  ExplicitWidth = 426
-  ExplicitHeight = 393
-  PixelsPerInch = 96
-  TextHeight = 13
+  ExplicitWidth = 523
+  ExplicitHeight = 482
+  PixelsPerInch = 120
+  TextHeight = 16
   object Label6: TTntLabel
     Left = 2
-    Top = 257
-    Width = 200
-    Height = 13
+    Top = 316
+    Width = 239
+    Height = 16
     Caption = 'Plug-in Directory (automatically scanned):'
   end
   object lblPluginScan: TTntLabel
     Left = 2
-    Top = 308
-    Width = 162
-    Height = 13
+    Top = 379
+    Width = 193
+    Height = 16
     Cursor = crHandPoint
     Caption = 'Re-scan this directory for plug-ins'
     OnClick = lblPluginScanClick
   end
   object btnConfigPlugin: TTntButton
-    Left = 3
-    Top = 223
-    Width = 85
-    Height = 25
+    Left = 4
+    Top = 274
+    Width = 104
+    Height = 31
     Caption = 'Configure...'
     Enabled = False
     TabOrder = 1
@@ -39,16 +39,16 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   end
   object txtPluginDir: TTntEdit
     Left = 2
-    Top = 277
-    Width = 321
-    Height = 21
+    Top = 341
+    Width = 396
+    Height = 24
     TabOrder = 2
   end
   object btnBrowsePluginPath: TTntButton
-    Left = 332
-    Top = 278
-    Width = 85
-    Height = 23
+    Left = 409
+    Top = 342
+    Width = 104
+    Height = 28
     Caption = 'Browse...'
     TabOrder = 3
     OnClick = btnBrowsePluginPathClick
@@ -57,8 +57,8 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     AlignWithMargins = True
     Left = 3
     Top = 9
-    Width = 414
-    Height = 206
+    Width = 511
+    Height = 254
     Margins.Top = 9
     Align = alTop
     BevelWidth = 0
@@ -66,35 +66,35 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Columns = <
       item
         Caption = 'Plug-in'
-        Width = 119
+        Width = 146
       end
       item
         Caption = 'Description'
-        Width = 180
+        Width = 222
       end
       item
         Caption = 'Filename'
-        Width = 95
+        Width = 117
       end>
     TabOrder = 0
     ViewStyle = vsReport
     OnSelectItem = lstPluginsSelectItem
   end
   object btnCancel: TTntButton
-    Left = 332
-    Top = 329
-    Width = 85
-    Height = 25
+    Left = 409
+    Top = 405
+    Width = 104
+    Height = 31
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 4
   end
   object btnOK: TTntButton
-    Left = 241
-    Top = 329
-    Width = 84
-    Height = 25
+    Left = 297
+    Top = 405
+    Width = 103
+    Height = 31
     Caption = 'OK'
     Default = True
     ModalResult = 1

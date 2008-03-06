@@ -20,7 +20,5 @@ inherited RosterForm: TRosterForm
     TabOrder = 0
     TabPosition = tpBottom
     TabWidth = 26
-    ExplicitWidth = 417
-    ExplicitHeight = 254
   end
 end

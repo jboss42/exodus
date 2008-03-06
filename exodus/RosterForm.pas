@@ -47,7 +47,7 @@ var
   FrmRoster: TRosterForm;
 
 implementation
-uses ExUtils, CommCtrl, Session, RosterImages;
+uses ExUtils, CommCtrl, Session, RosterImages, gnugettext;
 
 {$R *.dfm}
 
@@ -170,14 +170,16 @@ begin
     if (Idx > -1) then
         _treeMain.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('', 'Contacts');
+    ITab := _TabController.AddTab('', _('Contacts '));
+    ITab.Descrption := _('Tab containing contacts only. ');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
         _TreeContacts.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('', 'Rooms');
+    ITab := _TabController.AddTab('', _('Rooms '));
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
+    ITab.Descrption := _('Tab containing rooms only. ');
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
         _TreeRooms.parent := _PageControl.Pages[Idx];
