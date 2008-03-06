@@ -24,11 +24,29 @@ unit COMExodusDataTable;
 interface
 
 uses
-    ComObj, ActiveX, Exodus_TLB, StdVcl;
+    ComObj, ActiveX, Exodus_TLB,
+    StdVcl, SQLiteTable3;
 
 type
   TExodusDataTable = class(TAutoObject, IExodusDataTable)
+  private
+    // Variables
+    _table: TSQLiteTable;
+
+    // Methdods
+
   protected
+    // Variables
+
+    // Methdods
+
+  public
+    // Variables
+
+    // Methdods
+    constructor Create(sqltable: TSQLiteTable);
+    destructor Destroy();
+
     // IExodusDataTable Interface
     function Get_ColCount: Integer; safecall;
     function Get_CurrentRow: Integer; safecall;
@@ -42,14 +60,13 @@ type
     function GetFieldAsString(Field: Integer): WideString; safecall;
     function GetFieldByName(const Name: WideString): WideString; safecall;
     function IsFieldNULL(Field: Integer): WordBool; safecall;
-    procedure FirstRow; safecall;
-    procedure LastRow; safecall;
-    procedure NextRow; safecall;
-    procedure PrevRow; safecall;
+    function FirstRow: WordBool; safecall;
+    function LastRow: WordBool; safecall;
+    function NextRow: WordBool; safecall;
+    function PrevRow: WordBool; safecall;
 
-  private
-
-  public
+    // Properties
+    property Table: TSQLiteTable read _table write _table;
 
   end;
 
@@ -63,99 +80,211 @@ uses
 
 
 {---------------------------------------}
+constructor TExodusDataTable.Create(sqltable: TSQLiteTable);
+begin
+    inherited Create;
+
+    _table := sqltable;
+end;
+
+{---------------------------------------}
+destructor TExodusDataTable.Destroy;
+begin
+    _table.Free;
+
+    inherited;
+end;
+
+{---------------------------------------}
 function TExodusDataTable.Get_ColCount: Integer;
 begin
-    Result := 0; //???dda
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.ColCount;
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.Get_CurrentRow: Integer;
 begin
-    Result := 0; //???dda
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.Row;
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.Get_IsBeginOfTable: WordBool;
 begin
-    Result := false; //???dda
+    Result := false;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.BOF;
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.Get_IsEndOfTable: WordBool;
 begin
-    Result := false; //???dda
+    Result := false;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.EOF;
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.Get_RowCount: Integer;
 begin
-    Result := 0; //???dda
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.RowCount;
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetCol(Column: Integer): WideString;
 begin
-    Result := ''; //???dda
+    Result := '';
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.Columns[Column];
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetField(Field: Integer): WideString;
 begin
-    Result := ''; //???dda
+    Result := '';
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.Fields[Field];
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetFieldAsDouble(Field: Integer): Double;
 begin
-    Result := 0; //???dda
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldAsDouble(Field);
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetFieldAsInt(Field: Integer): Integer;
 begin
-    Result := 0; //???dda
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldAsInteger(Field);
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetFieldAsString(Field: Integer): WideString;
 begin
-    Result := ''; //???dda
+    Result := '';
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldAsString(Field);
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.GetFieldByName(const Name: WideString): WideString;
 begin
-    Result := ''; //???dda
+    Result := '';
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldByName[Name];
+    except
+    end;
 end;
 
 {---------------------------------------}
 function TExodusDataTable.IsFieldNULL(Field: Integer): WordBool;
 begin
-    Result := false; //???dda
+    Result := false;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldIsNull(Field);
+    except
+    end;
 end;
 
 {---------------------------------------}
-procedure TExodusDataTable.FirstRow;
+function TExodusDataTable.FirstRow: WordBool;
 begin
+    Result := false;
+    if (_table = nil) then exit;
 
+    try
+        Result := _table.MoveFirst;
+    except
+    end;
 end;
 
 {---------------------------------------}
-procedure TExodusDataTable.LastRow;
+function TExodusDataTable.LastRow: WordBool;
 begin
+    Result := false;
+    if (_table = nil) then exit;
 
+    try
+        Result := _table.MoveLast;
+    except
+    end;
 end;
 
 {---------------------------------------}
-procedure TExodusDataTable.NextRow;
+function TExodusDataTable.NextRow: WordBool;
 begin
+    Result := false;
+    if (_table = nil) then exit;
 
+    try
+        Result := _table.Next;
+    except
+    end;
 end;
 
 {---------------------------------------}
-procedure TExodusDataTable.PrevRow;
+function TExodusDataTable.PrevRow: WordBool;
 begin
+    Result := false;
+    if (_table = nil) then exit;
 
+    try
+        Result := _table.Previous;
+    except
+    end;
 end;
 
 

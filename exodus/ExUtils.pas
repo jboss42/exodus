@@ -349,6 +349,12 @@ var
     logger: IExodusLogger;
     m: TExodusLogMsg;
 begin
+    // Internal SQL Logger
+    if (MsgLogger <> nil) then begin
+        MsgLogger.LogMsg(msg);
+    end;
+
+    // Logger Plugin
     if (msg.MsgType = 'groupchat') then
         logger := ExCOMController.RoomLogger
     else
