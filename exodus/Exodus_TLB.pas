@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/6/2008 11:24:05 AM from Type Library described below.
+// File generated on 3/6/2008 12:52:18 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -132,7 +132,7 @@ const
   IID_IExodusHistorySearch: TGUID = '{719FB50D-8FD3-48DE-82A2-13E4668E7B71}';
   IID_IExodusHistoryResult: TGUID = '{DC665BA9-A59B-4038-A162-33AB2EFA961D}';
   IID_IExodusHistorySearchHandler: TGUID = '{EA467AEA-897D-4CBA-918E-CF274981C3C8}';
-  IID_IExodusHisotrySearchManager: TGUID = '{810CB0EC-25DA-443B-8F16-D3E710ED333B}';
+  IID_IExodusHistorySearchManager: TGUID = '{810CB0EC-25DA-443B-8F16-D3E710ED333B}';
   CLASS_ExodusHistorySearch: TGUID = '{58A2E35A-A42F-42AC-BAC1-83FCE2F27A32}';
   CLASS_ExodusHistoryResult: TGUID = '{37DC94DD-FDB8-4E9E-84E2-A37747F70713}';
   CLASS_ExodusHistorySearchManager: TGUID = '{3821A305-8C0D-47BE-AA5B-A5E62F9D4BD5}';
@@ -305,8 +305,8 @@ type
   IExodusHistoryResultDisp = dispinterface;
   IExodusHistorySearchHandler = interface;
   IExodusHistorySearchHandlerDisp = dispinterface;
-  IExodusHisotrySearchManager = interface;
-  IExodusHisotrySearchManagerDisp = dispinterface;
+  IExodusHistorySearchManager = interface;
+  IExodusHistorySearchManagerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -340,14 +340,13 @@ type
   ExodusItemList = IExodusItemList;
   ExodusHistorySearch = IExodusHistorySearch;
   ExodusHistoryResult = IExodusHistoryResult;
-  ExodusHistorySearchManager = IExodusHisotrySearchManager;
+  ExodusHistorySearchManager = IExodusHistorySearchManager;
 
 
 // *********************************************************************//
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
-  PInteger1 = ^Integer; {*}
 
 
 // *********************************************************************//
@@ -4663,7 +4662,7 @@ type
     function Get_Height: Integer; safecall;
     function Get_Width: Integer; safecall;
     function Get_Descrption: WideString; safecall;
-    procedure Set_Descrption(const Value: WideString); safecall;
+    procedure Set_Descrption(const value: WideString); safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
@@ -4897,6 +4896,9 @@ type
     ['{EA467AEA-897D-4CBA-918E-CF274981C3C8}']
     function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; safecall;
     procedure CancelSearch(const SearchID: WideString); safecall;
+    function Get_SearchTypeCount: Integer; safecall;
+    function GetSearchType(index: Integer): WideString; safecall;
+    property SearchTypeCount: Integer read Get_SearchTypeCount;
   end;
 
 // *********************************************************************//
@@ -4908,14 +4910,16 @@ type
     ['{EA467AEA-897D-4CBA-918E-CF274981C3C8}']
     function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; dispid 201;
     procedure CancelSearch(const SearchID: WideString); dispid 202;
+    property SearchTypeCount: Integer readonly dispid 203;
+    function GetSearchType(index: Integer): WideString; dispid 204;
   end;
 
 // *********************************************************************//
-// Interface: IExodusHisotrySearchManager
+// Interface: IExodusHistorySearchManager
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {810CB0EC-25DA-443B-8F16-D3E710ED333B}
 // *********************************************************************//
-  IExodusHisotrySearchManager = interface(IDispatch)
+  IExodusHistorySearchManager = interface(IDispatch)
     ['{810CB0EC-25DA-443B-8F16-D3E710ED333B}']
     function NewSearch(const SearchParams: IExodusHistorySearch; 
                        const SearchResult: IExodusHistoryResult): WordBool; safecall;
@@ -4928,11 +4932,11 @@ type
   end;
 
 // *********************************************************************//
-// DispIntf:  IExodusHisotrySearchManagerDisp
+// DispIntf:  IExodusHistorySearchManagerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {810CB0EC-25DA-443B-8F16-D3E710ED333B}
 // *********************************************************************//
-  IExodusHisotrySearchManagerDisp = dispinterface
+  IExodusHistorySearchManagerDisp = dispinterface
     ['{810CB0EC-25DA-443B-8F16-D3E710ED333B}']
     function NewSearch(const SearchParams: IExodusHistorySearch; 
                        const SearchResult: IExodusHistoryResult): WordBool; dispid 201;
@@ -5281,14 +5285,14 @@ type
 
 // *********************************************************************//
 // The Class CoExodusHistorySearchManager provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusHisotrySearchManager exposed by              
+// create instances of the default interface IExodusHistorySearchManager exposed by              
 // the CoClass ExodusHistorySearchManager. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
   CoExodusHistorySearchManager = class
-    class function Create: IExodusHisotrySearchManager;
-    class function CreateRemote(const MachineName: string): IExodusHisotrySearchManager;
+    class function Create: IExodusHistorySearchManager;
+    class function CreateRemote(const MachineName: string): IExodusHistorySearchManager;
   end;
 
 implementation
@@ -5575,14 +5579,14 @@ begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistoryResult) as IExodusHistoryResult;
 end;
 
-class function CoExodusHistorySearchManager.Create: IExodusHisotrySearchManager;
+class function CoExodusHistorySearchManager.Create: IExodusHistorySearchManager;
 begin
-  Result := CreateComObject(CLASS_ExodusHistorySearchManager) as IExodusHisotrySearchManager;
+  Result := CreateComObject(CLASS_ExodusHistorySearchManager) as IExodusHistorySearchManager;
 end;
 
-class function CoExodusHistorySearchManager.CreateRemote(const MachineName: string): IExodusHisotrySearchManager;
+class function CoExodusHistorySearchManager.CreateRemote(const MachineName: string): IExodusHistorySearchManager;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySearchManager) as IExodusHisotrySearchManager;
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySearchManager) as IExodusHistorySearchManager;
 end;
 
 end.

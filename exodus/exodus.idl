@@ -1365,14 +1365,29 @@ library Exodus
     HRESULT _stdcall Activate( void );
     [
     propget, 
-    id(0x000000D0)
-    ]
-    HRESULT _stdcall handle([out, retval] long * value );
-    [
-    propget, 
     id(0x000000D1)
     ]
     HRESULT _stdcall UID([out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall Height([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall Width([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall Descrption([out, retval] BSTR * value );
+    [
+    propput, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall Descrption([in] BSTR value );
   };
 
   [
@@ -1501,9 +1516,6 @@ library Exodus
     [default] interface IExodusItemList;
   };
 
-  
-  typedef BSTR * PWideString1;
-
   [
     uuid(719FB50D-8FD3-48DE-82A2-13E4668E7B71), 
     version(1.0), 
@@ -1516,26 +1528,26 @@ library Exodus
     propget, 
     id(0x000000C9)
     ]
-    HRESULT _stdcall minDate([out, retval] DATE * Value );
+    HRESULT _stdcall minDate([out, retval] DATE * value );
     [
     propput, 
     id(0x000000C9)
     ]
-    HRESULT _stdcall minDate([in] DATE Value );
+    HRESULT _stdcall minDate([in] DATE value );
     [
     propget, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall maxDate([out, retval] DATE * Value );
+    HRESULT _stdcall maxDate([out, retval] DATE * value );
     [
     propput, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall maxDate([in] DATE Value );
+    HRESULT _stdcall maxDate([in] DATE value );
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall AddJID([in] BSTR JID );
+    HRESULT _stdcall AddJid([in] BSTR JID );
     [
     id(0x000000CC)
     ]
@@ -1552,12 +1564,12 @@ library Exodus
     propget, 
     id(0x000000D1)
     ]
-    HRESULT _stdcall ExactKeywordMatch([out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall ExactKeywordMatch([out, retval] VARIANT_BOOL * value );
     [
     propput, 
     id(0x000000D1)
     ]
-    HRESULT _stdcall ExactKeywordMatch([in] VARIANT_BOOL Value );
+    HRESULT _stdcall ExactKeywordMatch([in] VARIANT_BOOL value );
     [
     id(0x000000D2)
     ]
@@ -1570,22 +1582,22 @@ library Exodus
     propget, 
     id(0x000000D4)
     ]
-    HRESULT _stdcall KeywordCount([out, retval] long * Value );
+    HRESULT _stdcall KeywordCount([out, retval] long * value );
     [
     propget, 
     id(0x000000D5)
     ]
-    HRESULT _stdcall JIDCount([out, retval] long * Value );
+    HRESULT _stdcall JIDCount([out, retval] long * value );
     [
     propget, 
     id(0x000000D6)
     ]
-    HRESULT _stdcall AllowedSearchTypeCount([out, retval] long * Value );
+    HRESULT _stdcall AllowedSearchTypeCount([out, retval] long * value );
     [
     propget, 
     id(0x000000CD)
     ]
-    HRESULT _stdcall SearchID([out, retval] BSTR * Value );
+    HRESULT _stdcall SearchID([out, retval] BSTR * value );
   };
 
   [
@@ -1612,8 +1624,11 @@ library Exodus
   ]
   coclass ExodusHistorySearchManager
   {
-    [default] interface IExodusHisotrySearchManager;
+    [default] interface IExodusHistorySearchManager;
   };
+
+  
+  typedef BSTR * PWideString1;
 
   [
     uuid(A764C2F3-F1C9-4DE6-95D7-5876C9D4E99C), 
@@ -2004,6 +2019,11 @@ library Exodus
     id(0x000000DE)
     ]
     HRESULT _stdcall BookmarkManager([out, retval] IExodusBookmarkManager ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000DF)
+    ]
+    HRESULT _stdcall TabController([out, retval] IExodusTabController ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8782,7 +8802,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall AddTab([in] BSTR ActiveX_GUID, [out, retval] IExodusTab ** Result /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall AddTab([in] BSTR ActiveX_GUID, [in] BSTR Name, [out, retval] IExodusTab ** Result /*Warning: unable to validate structure name: */ );
     [
     id(0x000000CB)
     ]
@@ -8808,6 +8828,15 @@ library Exodus
     id(0x000000D0)
     ]
     HRESULT _stdcall GetTabIndexByUID([in] BSTR UID, [out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D1)
+    ]
+    HRESULT _stdcall VisibleTabCount([out, retval] long * value );
+    [
+    id(0x000000D2)
+    ]
+    HRESULT _stdcall GetTabIndexByName([in] BSTR Name, [out, retval] long * index );
   };
 
   [
@@ -8885,20 +8914,20 @@ library Exodus
     propget, 
     id(0x000000C9)
     ]
-    HRESULT _stdcall ResultCount([out, retval] long * Value );
+    HRESULT _stdcall ResultCount([out, retval] long * value );
     [
     propget, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall Processing([out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall Processing([out, retval] VARIANT_BOOL * value );
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall OnResultItem([in] BSTR SearchID, [in] IExodusLogMsg * item /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall OnResultItem([in] BSTR SearchID, [in] IExodusLogMsg * Item /*Warning: unable to validate structure name: */ );
     [
     id(0x000000CC)
     ]
-    HRESULT _stdcall GetResult([in] long index, [out, retval] IExodusLogMsg ** item /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetResult([in] long index, [out, retval] IExodusLogMsg ** Item /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8917,6 +8946,15 @@ library Exodus
     id(0x000000CA)
     ]
     HRESULT _stdcall CancelSearch([in] BSTR SearchID );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall SearchTypeCount([out, retval] long * value );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall GetSearchType([in] long index, [out, retval] BSTR * SearchType );
   };
 
   [
@@ -8925,7 +8963,7 @@ library Exodus
     dual, 
     oleautomation
   ]
-   interface IExodusHisotrySearchManager: IDispatch
+   interface IExodusHistorySearchManager: IDispatch
   {
     [
     id(0x000000C9)
@@ -8951,7 +8989,7 @@ library Exodus
     propget, 
     id(0x000000CE)
     ]
-    HRESULT _stdcall SearchTypeCount([out, retval] long * Value );
+    HRESULT _stdcall SearchTypeCount([out, retval] long * value );
   };
 
 };

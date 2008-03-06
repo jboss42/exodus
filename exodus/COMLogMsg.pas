@@ -59,6 +59,10 @@ type
 
   end;
 
+const
+    LOG_MESSAGE_DIRECTION_OUT = 'out';
+    LOG_MESSAGE_DIRECTION_IN  = 'in';
+
 implementation
 
 uses
@@ -67,9 +71,9 @@ uses
 constructor TExodusLogMsg.Create(msg: TJabberMessage);
 begin
     if (msg.isMe) then
-        _dir := 'out'
+        _dir := LOG_MESSAGE_DIRECTION_OUT
     else
-        _dir := 'in';
+        _dir := LOG_MESSAGE_DIRECTION_IN;
 
     _nick := msg.Nick;
     _id := msg.id;
