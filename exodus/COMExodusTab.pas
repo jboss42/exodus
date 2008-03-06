@@ -68,7 +68,7 @@ begin
     _AxControl := nil;
     _Page := TTntTabSheet.Create(GetRosterWindow()._PageControl);
     _Page.PageControl :=  GetRosterWindow()._PageControl;
-    _Page.Visible := true;
+    _Page.TabVisible := true;
     _UID := ActiveX_GUID;
     if (_UID <> '') then
     begin
