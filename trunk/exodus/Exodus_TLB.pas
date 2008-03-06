@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/6/2008 12:52:18 PM from Type Library described below.
+// File generated on 3/6/2008 3:13:52 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -136,6 +136,7 @@ const
   CLASS_ExodusHistorySearch: TGUID = '{58A2E35A-A42F-42AC-BAC1-83FCE2F27A32}';
   CLASS_ExodusHistoryResult: TGUID = '{37DC94DD-FDB8-4E9E-84E2-A37747F70713}';
   CLASS_ExodusHistorySearchManager: TGUID = '{3821A305-8C0D-47BE-AA5B-A5E62F9D4BD5}';
+  CLASS_ExodusHistorySQLSearchHandler: TGUID = '{64EE21C2-6212-44D2-8FF1-F0FCC1FD5F67}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -341,6 +342,7 @@ type
   ExodusHistorySearch = IExodusHistorySearch;
   ExodusHistoryResult = IExodusHistoryResult;
   ExodusHistorySearchManager = IExodusHistorySearchManager;
+  ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
 
 
 // *********************************************************************//
@@ -5295,6 +5297,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusHistorySearchManager;
   end;
 
+// *********************************************************************//
+// The Class CoExodusHistorySQLSearchHandler provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusHistorySearchHandler exposed by              
+// the CoClass ExodusHistorySQLSearchHandler. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusHistorySQLSearchHandler = class
+    class function Create: IExodusHistorySearchHandler;
+    class function CreateRemote(const MachineName: string): IExodusHistorySearchHandler;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5587,6 +5601,16 @@ end;
 class function CoExodusHistorySearchManager.CreateRemote(const MachineName: string): IExodusHistorySearchManager;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySearchManager) as IExodusHistorySearchManager;
+end;
+
+class function CoExodusHistorySQLSearchHandler.Create: IExodusHistorySearchHandler;
+begin
+  Result := CreateComObject(CLASS_ExodusHistorySQLSearchHandler) as IExodusHistorySearchHandler;
+end;
+
+class function CoExodusHistorySQLSearchHandler.CreateRemote(const MachineName: string): IExodusHistorySearchHandler;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySQLSearchHandler) as IExodusHistorySearchHandler;
 end;
 
 end.

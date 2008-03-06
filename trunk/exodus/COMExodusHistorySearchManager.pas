@@ -25,36 +25,15 @@ interface
 
 uses
     ComObj, ActiveX, Exodus_TLB,
-    StdVcl, Unicode;
+    StdVcl, Unicode, COMExodusHistoryResult;
 
 type
   TSearchHandlerWrapper = class(TObject)
       private
         // Variables
         _Handler: IExodusHistorySearchHandler;
+        _SearchTypeCache: TWidestringList;
         _cb_id: integer;
-
-        // Methods
-
-      protected
-        // Variables
-
-        // Methods
-
-      public
-        // Variables
-
-        // Methods
-
-        // Properties
-        property Handler: IExodusHistorySearchHandler read _Handler write _Handler;
-        property cb_id: integer read _cb_id write _cb_id;
-  end;
-
-  TSearchType = class(TObject)
-      private
-        // Variables
-        _Handlers: TWidestringList
 
         // Methods
 
@@ -71,7 +50,34 @@ type
         destructor Destroy();
 
         // Properties
-        property Handlers: TWidestringList read _Handlers write _Handlers;
+        property Handler: IExodusHistorySearchHandler read _Handler write _Handler;
+        property SearchTypeCache: TWidestringList read _SearchTypeCache write _SearchTypeCache;
+        property cb_id: integer read _cb_id write _cb_id;
+  end;
+
+  TSearchTracker = class (TObject)
+      private
+        // Variables
+        _HandlerList: TWidestringList;
+        _ResultObject: TExodusHistoryResult;
+
+        // Methods
+
+      protected
+        // Variables
+
+        // Methods
+
+      public
+        // Variables
+
+        // Methods
+        constructor Create();
+        destructor Destroy();
+
+        // Properties
+        property HandlerList: TWidestringList read _HandlerList write _HandlerList;
+        property ResultObject: TExodusHistoryResult read _ResultObject write _ResultObject;
   end;
 
   TExodusHistorySearchManager = class(TAutoObject, IExodusHistorySearchManager)
@@ -118,24 +124,41 @@ var
     _hid: longint = 0;
 
 {---------------------------------------}
-constructor TSearchType.Create();
+constructor TSearchHandlerWrapper.Create();
 begin
     inherited;
 
-    _Handlers := TWidestringList.Create();
+    _SearchTypeCache := TWidestringList.Create();
 end;
 
 {---------------------------------------}
-destructor TSearchType.Destroy();
-var
-    i: integer;
+destructor TSearchHandlerWrapper.Destroy();
 begin
-    _Handlers.Clear();
-
-    _Handlers.Free();
+    _SearchTypeCache.Clear();
+    _SearchTypeCache.Free();
 
     inherited;
 end;
+
+{---------------------------------------}
+constructor TSearchTracker.Create();
+begin
+    inherited;
+
+    _HandlerList := TWidestringList.Create();
+end;
+
+{---------------------------------------}
+destructor TSearchTracker.Destroy();
+begin
+    _ResultObject.SetProcessing(false);
+
+    _HandlerList.Clear();
+    _HandlerList.Free();
+
+    inherited;
+end;
+
 {---------------------------------------}
 constructor TExodusHistorySearchManager.Create();
 begin
@@ -178,52 +201,82 @@ end;
 
 {---------------------------------------}
 function TExodusHistorySearchManager.NewSearch(const SearchParams: IExodusHistorySearch; const SearchResult: IExodusHistoryResult): WordBool;
+var
+    i: integer;
+    j: integer;
+    k: integer;
+    hwrapper: TSearchHandlerWrapper;
+    tracker: TSearchTracker;
 begin
+    Result := false;
+    tracker := nil;
 
+    for i := 0 to SearchParams.AllowedSearchTypeCount - 1 do begin
+        for j := 0 to _HandlerList.Count - 1 do begin
+            hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[j]);
+            if (hwrapper.SearchTypeCache.Find(LowerCase(SearchParams.GetAllowedSearchType(i)), k)) then begin
+                if(hwrapper.Handler.NewSearch(SearchParams)) then begin
+                    if (tracker = nil) then begin
+                        tracker := TSearchTracker.Create();
+                    end;
+                    tracker.HandlerList.Add(_HandlerList[j]);
+                    Result := true;
+                end;
+            end;
+        end;
+    end;
+
+    if (Result) then begin
+        tracker.ResultObject := TExodusHistoryResult(SearchResult);
+        tracker.ResultObject.SetProcessing(true);
+        _CurrentSearches.AddObject(SearchParams.SearchID, tracker);
+    end;
 end;
 
 {---------------------------------------}
 function TExodusHistorySearchManager.RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer;
 var
-    handlerwrapper: TSearchHandlerWrapper;
+    hwrapper: TSearchHandlerWrapper;
     i: Integer;
     j: integer;
     tmp: Widestring;
-    searchtype: TSearchType;
     searchtypeexists: boolean;
 begin
     Result := _hid;
 
-    handlerwrapper := TSearchHandlerWrapper.Create();
-    handlerwrapper.Handler := Handler;
-    handlerwrapper.cb_id := _hid;
+    hwrapper := TSearchHandlerWrapper.Create();
+    hwrapper.Handler := Handler;
+    hwrapper.cb_id := _hid;
 
     for i := 0 to Handler.SearchTypeCount - 1 do begin
         tmp := LowerCase(Handler.GetSearchType(i));
-        searchtypeexists := false;
-        for j := 0 to _SearchTypes.Count - 1 do begin
-            if (_SearchTypes[i] = tmp) then begin
-                searchtype := TSearchType(_SearchTypes.Objects[i]);
-                searchtype.Handlers.Add(IntToStr(handlerwrapper.cb_id));
-                searchtypeexists := true;
-                break;
-            end;
-        end;
-        if (not searchtypeexists) then begin
-            searchtype := TSearchType.Create();
-            searchtype.Handlers.Add(IntToStr(handlerwrapper.cb_id));
-            _SearchTypes.AddObject(tmp, searchtype);
-        end;
+        hwrapper.SearchTypeCache.Add(tmp);
     end;
 
-    _HandlerList.AddObject(IntToStr(_hid), handlerwrapper);
+    _HandlerList.AddObject(IntToStr(_hid), hwrapper);
     Inc(_hid);
 end;
 
 {---------------------------------------}
 procedure TExodusHistorySearchManager.CancelSearch(const SearchID: WideString);
+var
+    i: integer;
+    j: integer;
+    k: integer;
+    tracker: TSearchTracker;
+    hwrapper: TSearchHandlerWrapper;
 begin
-
+    if (_CurrentSearches.Find(SearchID, i)) then begin
+        tracker := TSearchTracker(_CurrentSearches.Objects[i]);
+        for j := 0 to tracker.HandlerList.Count - 1 do begin
+            if (_HandlerList.Find(tracker.HandlerList[j], k)) then begin
+                hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[k]);
+                hwrapper.Handler.CancelSearch(SearchID);
+            end;
+        end;
+        tracker.Free();
+        _CurrentSearches.Delete(i);
+    end;
 end;
 
 {---------------------------------------}
@@ -231,31 +284,16 @@ procedure TExodusHistorySearchManager.UnRegisterSearchHandler(HandlerID: Integer
 var
     i: integer;
     j: integer;
-    handlerwrapper: TSearchHandlerWrapper;
-    searchtype: TSearchType;
+    hwrapper: TSearchHandlerWrapper;
 begin
 //???dda    for i := 0 to _HandlerList.Count - 1 do begin
     if (_HandlerList.Find(IntToStr(HandlerID), i)) then begin
-        handlerwrapper := TSearchHandlerWrapper(_HandlerList.Objects[i]);
-        if (handlerwrapper.cb_id = HandlerID) then begin
+        hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[i]);
+        if (hwrapper.cb_id = HandlerID) then begin
             _HandlerList.Delete(i);
         end;
+        hwrapper.Free();
     end;
-
-    for i := 0 to _SearchTypes.Count - 1 do begin
-        searchtype := TSearchType(_SearchTypes.Objects[i]);
-        for j := 0 to searchtype.Handlers.Count - 1 do begin
-            if (searchtype.Handlers[j] = IntToStr(HandlerID)) then begin
-                searchtype.Handlers.Delete(j);
-                break;
-            end;
-        end;
-        if (searchtype.Handlers.Count <= 0) then begin
-            searchtype.Free();
-            _SearchTypes.Delete(i);
-        end;
-    end;
-
 end;
 
 
