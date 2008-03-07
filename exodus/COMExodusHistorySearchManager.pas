@@ -108,7 +108,7 @@ type
         function RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer; safecall;
         procedure CancelSearch(const SearchID: WideString); safecall;
         procedure UnRegisterSearchHandler(HandlerID: Integer); safecall;
-        procedure HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
+        procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
 
         // Properties
   end;
@@ -308,9 +308,16 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistorySearchManager.HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg);
+procedure TExodusHistorySearchManager.HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg);
+//var
+//    i: integer;
+//    tracker: TSearchTracker;
 begin
+{   if (SearchID = '') then exit;
 
+    if (_CurrentSearches.Find(SearchID, i)) then begin
+        //tracker
+    end;   }
 end;
 
 

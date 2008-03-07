@@ -9011,7 +9011,7 @@ library Exodus
     [
     id(0x000000CF)
     ]
-    HRESULT _stdcall HandlerResult([in] BSTR SearchID, [in] IExodusLogMsg * LogMsg /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall HandlerResult([in] long HandlerID, [in] BSTR SearchID, [in] IExodusLogMsg * LogMsg /*Warning: unable to validate structure name: */ );
   };
 
 };
