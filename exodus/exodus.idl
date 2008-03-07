@@ -1382,12 +1382,17 @@ library Exodus
     propget, 
     id(0x000000D4)
     ]
-    HRESULT _stdcall Descrption([out, retval] BSTR * value );
+    HRESULT _stdcall Description([out, retval] BSTR * value );
     [
     propput, 
     id(0x000000D4)
     ]
-    HRESULT _stdcall Descrption([in] BSTR value );
+    HRESULT _stdcall Description([in] BSTR value );
+    [
+    propget, 
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall AXControl([out, retval]  IDispatch ** value );
   };
 
   [
@@ -1487,6 +1492,10 @@ library Exodus
     id(0x000000D8)
     ]
     HRESULT _stdcall GetFieldAsDouble([in] long Field, [out, retval] double * value );
+    [
+    id(0x000000D9)
+    ]
+    HRESULT _stdcall GetFieldIndex([in] BSTR Field, [out, retval] long * index );
   };
 
   [
