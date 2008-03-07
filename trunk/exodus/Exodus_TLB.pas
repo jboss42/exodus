@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/7/2008 3:07:57 PM from Type Library described below.
+// File generated on 3/7/2008 3:24:04 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -4935,7 +4935,8 @@ type
     procedure CancelSearch(const SearchID: WideString); safecall;
     function GetSearchType(index: Integer): WideString; safecall;
     function Get_SearchTypeCount: Integer; safecall;
-    procedure HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; 
+                            const LogMsg: IExodusLogMsg); safecall;
     property SearchTypeCount: Integer read Get_SearchTypeCount;
   end;
 
@@ -4953,7 +4954,8 @@ type
     procedure CancelSearch(const SearchID: WideString); dispid 204;
     function GetSearchType(index: Integer): WideString; dispid 205;
     property SearchTypeCount: Integer readonly dispid 206;
-    procedure HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg); dispid 207;
+    procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; 
+                            const LogMsg: IExodusLogMsg); dispid 207;
   end;
 
 // *********************************************************************//
