@@ -25,7 +25,7 @@ interface
 
 uses
     ComObj, ActiveX, Exodus_TLB,
-    StdVcl, SQLiteTable3;
+    StdVcl, SQLiteTable3, sysUtils;
 
 type
   TExodusDataTable = class(TAutoObject, IExodusDataTable)

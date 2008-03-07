@@ -26,6 +26,7 @@ uses
     COMRosterImages, COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
     S10n, COMExodusDataStore, SQLLogger, COMExodusHistorySearchManager,
+    SQLSearchHandler,
 
     // Delphi stuff
     Registry, Classes, Dialogs, Forms, SysUtils, StrUtils, Windows, TntSysUtils,
@@ -108,6 +109,7 @@ var
     DataStore: TExodusDataStore;
     MsgLogger: TSQLLogger;
     HistorySearchManager: TExodusHistorySearchManager;
+    SQLSearch: TSQLSearchHandler;
 
 
 {---------------------------------------}
@@ -663,11 +665,13 @@ begin
         DataStore := TExodusDataStore.Create(dbfile);
         MsgLogger := TSQLLogger.Create();
         HistorySearchManager := TExodusHistorySearchManager.Create();
+        SQLSearch := TSQLSearchHandler.Create();
     except
         //???dda - if not successful, we are in a world of hurt.
         DataStore := nil;
         MsgLogger := nil;
         HistorySearchManager := nil;
+        SQLSearch := nil;
     end;
 
     Result := true;
@@ -824,6 +828,7 @@ begin
     // kill all of the auto-responders..
     OutputDebugString('TeardownSession');
 
+    SQLSearch.Free();
     HistorySearchManager.Free();
     MsgLogger.Free();
     DataStore.Destroy();

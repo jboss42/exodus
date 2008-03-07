@@ -282,7 +282,8 @@ uses
   COMExodusDataTable in 'COMExodusDataTable.pas',
   SQLLogger in 'SQLLogger.pas',
   ManageTabsDlg in 'prefs\ManageTabsDlg.pas' {frmPrefTabs: TTntForm},
-  SQLSearchHandler in 'SQLSearchHandler.pas';
+  SQLSearchHandler in 'SQLSearchHandler.pas',
+  SQLSearchThread in 'SQLSearchThread.pas';
 
 {$R *.TLB}
 
