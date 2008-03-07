@@ -9008,6 +9008,10 @@ library Exodus
     id(0x000000CE)
     ]
     HRESULT _stdcall SearchTypeCount([out, retval] long * value );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall HandlerResult([in] BSTR SearchID, [in] IExodusLogMsg * LogMsg /*Warning: unable to validate structure name: */ );
   };
 
 };

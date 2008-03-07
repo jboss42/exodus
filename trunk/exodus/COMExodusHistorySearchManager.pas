@@ -108,6 +108,7 @@ type
         function RegisterSearchHandler(const Handler: IExodusHistorySearchHandler): Integer; safecall;
         procedure CancelSearch(const SearchID: WideString); safecall;
         procedure UnRegisterSearchHandler(HandlerID: Integer); safecall;
+        procedure HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
 
         // Properties
   end;
@@ -121,7 +122,7 @@ uses
     ComServ, sysUtils;
 
 var
-    _hid: longint = 0;
+    _hid: longint = 1;
 
 {---------------------------------------}
 constructor TSearchHandlerWrapper.Create();
@@ -211,9 +212,9 @@ begin
     Result := false;
     tracker := nil;
 
-    for i := 0 to SearchParams.AllowedSearchTypeCount - 1 do begin
-        for j := 0 to _HandlerList.Count - 1 do begin
-            hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[j]);
+    for j := 0 to _HandlerList.Count - 1 do begin
+        hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[j]);
+        for i := 0 to SearchParams.AllowedSearchTypeCount - 1 do begin
             if (hwrapper.SearchTypeCache.Find(LowerCase(SearchParams.GetAllowedSearchType(i)), k)) then begin
                 if(hwrapper.Handler.NewSearch(SearchParams)) then begin
                     if (tracker = nil) then begin
@@ -221,6 +222,7 @@ begin
                     end;
                     tracker.HandlerList.Add(_HandlerList[j]);
                     Result := true;
+                    break;
                 end;
             end;
         end;
@@ -251,6 +253,16 @@ begin
     for i := 0 to Handler.SearchTypeCount - 1 do begin
         tmp := LowerCase(Handler.GetSearchType(i));
         hwrapper.SearchTypeCache.Add(tmp);
+        searchtypeexists := false;
+        for j := 0 to _SearchTypes.Count - 1 do begin
+            if (tmp = _SearchTypes[j]) then begin
+                searchtypeexists := true;
+                break;
+            end;
+        end;
+        if (not searchtypeexists) then begin
+            _SearchTypes.Add(tmp);
+        end;
     end;
 
     _HandlerList.AddObject(IntToStr(_hid), hwrapper);
@@ -286,7 +298,6 @@ var
     j: integer;
     hwrapper: TSearchHandlerWrapper;
 begin
-//???dda    for i := 0 to _HandlerList.Count - 1 do begin
     if (_HandlerList.Find(IntToStr(HandlerID), i)) then begin
         hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[i]);
         if (hwrapper.cb_id = HandlerID) then begin
@@ -296,7 +307,11 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TExodusHistorySearchManager.HandlerResult(const SearchID: WideString; const LogMsg: IExodusLogMsg);
+begin
 
+end;
 
 
 
