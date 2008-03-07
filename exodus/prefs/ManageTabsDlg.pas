@@ -80,7 +80,7 @@ begin
 
          Item := lstTabs.Items.Add();
          Item.Caption := GetRosterWindow().TabController.Tab[i].Name;
-         Item.SubItems.Add(GetRosterWindow().TabController.Tab[i].Descrption);
+         Item.SubItems.Add(GetRosterWindow().TabController.Tab[i].Description);
          Item.Data := TObject(GetRosterWindow().TabController.Tab[i]);
          Item.Checked := GetRosterWindow().TabController.Tab[i].Visible;
     end;

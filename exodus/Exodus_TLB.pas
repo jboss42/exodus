@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/6/2008 3:13:52 PM from Type Library described below.
+// File generated on 3/7/2008 11:47:48 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4663,8 +4663,9 @@ type
     function Get_UID: WideString; safecall;
     function Get_Height: Integer; safecall;
     function Get_Width: Integer; safecall;
-    function Get_Descrption: WideString; safecall;
+    function Get_Description: WideString; safecall;
     procedure Set_Descrption(const value: WideString); safecall;
+    function Get_AXControl: IDispatch; safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
@@ -4672,7 +4673,8 @@ type
     property UID: WideString read Get_UID;
     property Height: Integer read Get_Height;
     property Width: Integer read Get_Width;
-    property Descrption: WideString read Get_Descrption write Set_Descrption;
+    property Description: WideString read Get_Description write Set_Descrption;
+    property AXControl: IDispatch read Get_AXControl;
   end;
 
 // *********************************************************************//
@@ -4692,7 +4694,8 @@ type
     property UID: WideString readonly dispid 209;
     property Height: Integer readonly dispid 210;
     property Width: Integer readonly dispid 211;
-    property Descrption: WideString dispid 212;
+    property Description: WideString dispid 212;
+    property AXControl: IDispatch readonly dispid 208;
   end;
 
 // *********************************************************************//
