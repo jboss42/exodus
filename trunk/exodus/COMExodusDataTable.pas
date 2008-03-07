@@ -64,6 +64,8 @@ type
     function LastRow: WordBool; safecall;
     function NextRow: WordBool; safecall;
     function PrevRow: WordBool; safecall;
+    function GetFieldIndex(const Field: WideString): Integer; safecall;
+
 
     // Properties
     property Table: TSQLiteTable read _table write _table;
@@ -104,6 +106,9 @@ begin
     try
         Result := _table.ColCount;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -116,6 +121,9 @@ begin
     try
         Result := _table.Row;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -128,6 +136,9 @@ begin
     try
         Result := _table.BOF;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -140,6 +151,9 @@ begin
     try
         Result := _table.EOF;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -152,6 +166,9 @@ begin
     try
         Result := _table.RowCount;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -164,6 +181,9 @@ begin
     try
         Result := _table.Columns[Column];
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -176,6 +196,9 @@ begin
     try
         Result := _table.Fields[Field];
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -188,6 +211,9 @@ begin
     try
         Result := _table.FieldAsDouble(Field);
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -200,6 +226,9 @@ begin
     try
         Result := _table.FieldAsInteger(Field);
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -212,6 +241,9 @@ begin
     try
         Result := _table.FieldAsString(Field);
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -224,6 +256,9 @@ begin
     try
         Result := _table.FieldByName[Name];
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -236,6 +271,9 @@ begin
     try
         Result := _table.FieldIsNull(Field);
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -248,6 +286,9 @@ begin
     try
         Result := _table.MoveFirst;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -260,6 +301,9 @@ begin
     try
         Result := _table.MoveLast;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
 
@@ -272,7 +316,10 @@ begin
     try
         Result := _table.Next;
     except
-    end;
+         on e: ESqliteException do begin
+            // Eat error
+        end;
+   end;
 end;
 
 {---------------------------------------}
@@ -284,8 +331,28 @@ begin
     try
         Result := _table.Previous;
     except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
     end;
 end;
+
+{---------------------------------------}
+function TExodusDataTable.GetFieldIndex(const Field: WideString): Integer;
+begin
+    Result := -1;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldIndex[Field];
+    except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
+    end;
+end;
+
+
 
 
 

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/7/2008 11:47:48 AM from Type Library described below.
+// File generated on 3/7/2008 12:59:28 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4664,7 +4664,7 @@ type
     function Get_Height: Integer; safecall;
     function Get_Width: Integer; safecall;
     function Get_Description: WideString; safecall;
-    procedure Set_Descrption(const value: WideString); safecall;
+    procedure Set_Description(const value: WideString); safecall;
     function Get_AXControl: IDispatch; safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
@@ -4673,7 +4673,7 @@ type
     property UID: WideString read Get_UID;
     property Height: Integer read Get_Height;
     property Width: Integer read Get_Width;
-    property Description: WideString read Get_Description write Set_Descrption;
+    property Description: WideString read Get_Description write Set_Description;
     property AXControl: IDispatch read Get_AXControl;
   end;
 
@@ -4743,6 +4743,7 @@ type
     function GetFieldAsInt(Field: Integer): Integer; safecall;
     function GetFieldAsString(Field: Integer): WideString; safecall;
     function GetFieldAsDouble(Field: Integer): Double; safecall;
+    function GetFieldIndex(const Field: WideString): Integer; safecall;
     property CurrentRow: Integer read Get_CurrentRow;
     property ColCount: Integer read Get_ColCount;
     property RowCount: Integer read Get_RowCount;
@@ -4773,6 +4774,7 @@ type
     function GetFieldAsInt(Field: Integer): Integer; dispid 214;
     function GetFieldAsString(Field: Integer): WideString; dispid 215;
     function GetFieldAsDouble(Field: Integer): Double; dispid 216;
+    function GetFieldIndex(const Field: WideString): Integer; dispid 217;
   end;
 
 // *********************************************************************//
