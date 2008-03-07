@@ -45,7 +45,8 @@ type
       function Get_Width: Integer; safecall;
       function Get_Description: WideString; safecall;
       procedure Set_Descrption(const Value: WideString); safecall;
-    function Get_AXControl: IDispatch; safecall;
+    function Get_AXControl: OleVariant; safecall;
+    procedure Set_Description(const value: WideString); safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
@@ -59,7 +60,7 @@ type
 
 implementation
 
-uses ComServ, RosterForm, SysUtils, Session;
+uses ComServ, RosterForm, SysUtils, Session, Variants;
 
 {---------------------------------------}
 constructor TExodusTab.Create(ActiveX_GUID: WideString);
@@ -185,12 +186,17 @@ begin
    _Desc := Value;
 end;
 
-function TExodusTab.Get_AXControl: IDispatch;
+function TExodusTab.Get_AXControl: OleVariant;
 begin
-   Result := nil;
+   Result := unassigned;;
    if (_AXControl <> nil) then
        Result := _AXControl.ControlInterface;
    
+end;
+
+procedure TExodusTab.Set_Description(const value: WideString);
+begin
+
 end;
 
 initialization
