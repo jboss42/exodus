@@ -18,6 +18,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     inherited lblHeader: TTntLabel
       Left = 6
       Width = 56
+      Height = 19
       Caption = 'Display'
       ExplicitLeft = 6
       ExplicitWidth = 56
@@ -38,7 +39,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       Left = 0
       Top = 3
       Width = 490
-      Height = 620
+      Height = 625
       Margins.Left = 0
       Margins.Bottom = 0
       Align = alTop
@@ -52,7 +53,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         Left = 0
         Top = 3
         Width = 490
-        Height = 192
+        Height = 197
         Margins.Left = 0
         Margins.Right = 0
         Margins.Bottom = 0
@@ -144,8 +145,8 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         end
         object btnManageTabs: TTntButton
           AlignWithMargins = True
-          Left = 92
-          Top = 163
+          Left = 210
+          Top = 168
           Width = 101
           Height = 26
           Margins.Left = 0
@@ -157,7 +158,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object gbActivityWindow: TExGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 198
+        Top = 203
         Width = 490
         Height = 241
         Margins.Left = 0
@@ -170,7 +171,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 1
         AutoHide = True
-        ExplicitTop = 195
+        ExplicitTop = 198
         object lblChatPreview: TTntLabel
           Left = 210
           Top = 26
@@ -321,7 +322,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Height = 24
           Margins.Left = 0
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 16
           TabOrder = 2
           OnChange = cboChatElementChange
         end
@@ -368,7 +369,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       object gbOtherPrefs: TExGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 445
+        Top = 450
         Width = 487
         Height = 175
         Margins.Left = 0
@@ -381,8 +382,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 2
         AutoHide = True
-        ExplicitTop = 442
-        ExplicitHeight = 176
+        ExplicitTop = 445
         object chkRTEnabled: TTntCheckBox
           AlignWithMargins = True
           Left = 3
@@ -411,7 +411,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           ParentColor = True
           TabOrder = 4
           AutoHide = True
-          ExplicitTop = 126
           object lblTimestampFmt: TTntLabel
             Left = 32
             Top = 31
@@ -457,7 +456,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Align = alTop
           Caption = 'Show &message priority in chat windows'
           TabOrder = 3
-          ExplicitTop = 101
         end
         object chkChatAvatars: TTntCheckBox
           AlignWithMargins = True
@@ -511,7 +509,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     object gbAdvancedPrefs: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 629
+      Top = 634
       Width = 490
       Height = 401
       Margins.Left = 0
@@ -524,20 +522,20 @@ inherited frmPrefDisplay: TfrmPrefDisplay
       ParentColor = True
       TabOrder = 1
       AutoHide = True
-      ExplicitTop = 631
+      ExplicitTop = 629
       object pnlAdvancedLeft: TExBrandPanel
         AlignWithMargins = True
         Left = 3
-        Top = 81
+        Top = 87
         Width = 421
-        Height = 317
+        Height = 311
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
         AutoHide = True
-        ExplicitTop = 80
-        ExplicitHeight = 318
+        ExplicitTop = 81
+        ExplicitHeight = 317
         object gbRTIncludes: TExGroupBox
           AlignWithMargins = True
           Left = 0
@@ -658,7 +656,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             Left = 0
             Top = 129
             Width = 415
-            Height = 50
+            Height = 56
             Margins.Left = 0
             Margins.Top = 9
             Align = alTop
@@ -670,12 +668,13 @@ inherited frmPrefDisplay: TfrmPrefDisplay
             object lblMem1: TTntLabel
               Left = 0
               Top = 0
-              Width = 377
+              Width = 415
               Height = 16
               Align = alTop
               Caption = 
                 'Minutes to keep displayed chat history (0 to destroy immediately' +
                 '):'
+              ExplicitWidth = 377
             end
             object trkChatMemory: TTrackBar
               Left = -6
@@ -695,7 +694,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               Left = 186
               Top = 18
               Width = 76
-              Height = 38
+              Height = 31
               BevelOuter = bvNone
               ParentColor = True
               TabOrder = 0
@@ -703,6 +702,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
               Min = 0
               Max = 360
               OnChange = txtChatMemoryChange
+              DesignSize = (
+                76
+                31)
             end
           end
         end
@@ -712,7 +714,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         Left = 0
         Top = 21
         Width = 487
-        Height = 57
+        Height = 63
         Margins.Left = 0
         Margins.Bottom = 0
         Align = alTop
@@ -750,7 +752,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Left = 217
           Top = 25
           Width = 75
-          Height = 38
+          Height = 31
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -759,6 +761,9 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Min = 10
           Max = 120
           OnChange = txtSnapChange
+          DesignSize = (
+            75
+            31)
         end
       end
     end
