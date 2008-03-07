@@ -43,8 +43,9 @@ type
       function Get_UID: WideString; safecall;
       function Get_Height: Integer; safecall;
       function Get_Width: Integer; safecall;
-      function Get_Descrption: WideString; safecall;
+      function Get_Description: WideString; safecall;
       procedure Set_Descrption(const Value: WideString); safecall;
+    function Get_AXControl: IDispatch; safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
@@ -174,7 +175,7 @@ begin
 end;
 
 
-function TExodusTab.Get_Descrption: WideString;
+function TExodusTab.Get_Description: WideString;
 begin
     Result := _Desc;
 end;
@@ -182,6 +183,14 @@ end;
 procedure TExodusTab.Set_Descrption(const Value: WideString);
 begin
    _Desc := Value;
+end;
+
+function TExodusTab.Get_AXControl: IDispatch;
+begin
+   Result := nil;
+   if (_AXControl <> nil) then
+       Result := _AXControl.ControlInterface;
+   
 end;
 
 initialization
