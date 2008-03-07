@@ -1,19 +1,40 @@
 unit SQLSearchHandler;
+{
+    Copyright 2008, Estate of Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
 uses
     ComObj, ActiveX, Exodus_TLB,
-    StdVcl, Unicode;
+    StdVcl, Unicode, JabberMsg;
 
 type
     TSQLSearchHandler = class(TAutoObject, IExodusHistorySearchHandler)
         private
             // Variables
             _SearchTypes: TWidestringList;
-            handlerID: integer;
+            _CurrentSearches: TWidestringList;
+            _handlerID: integer;
 
             // Methods
+            function GenerateSQLSearchString(SearchParameters: IExodusHistorySearch): Widestring;
 
         protected
             // Variables
@@ -26,6 +47,8 @@ type
             // Methods
             constructor Create();
             destructor Destroy();
+
+            procedure OnResult(SearchID: widestring; msg: TJabberMessage);
 
             // IExodusHistorySearchHandler inteface
             function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; safecall;
@@ -42,7 +65,8 @@ type
 implementation
 
 uses
-    ExSession, ComServ, sysUtils;
+    ExSession, ComServ, sysUtils,
+    SQLSearchThread, SQLLogger, COMLogMsg;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -51,27 +75,59 @@ begin
     _SearchTypes.Add('chat history');
     _SearchTypes.Add('groupchat history');
 
-    handlerID := HistorySearchManager.RegisterSearchHandler(Self);
+    _CurrentSearches := TWidestringList.Create();
+
+    _handlerID := HistorySearchManager.RegisterSearchHandler(Self);
 end;
 {---------------------------------------}
 destructor TSQLSearchHandler.Destroy();
+var
+    i: integer;
+    thread: TSQLSearchThread;
 begin
-    HistorySearchManager.UnRegisterSearchHandler(handlerID);
+    HistorySearchManager.UnRegisterSearchHandler(_handlerID);
 
     _SearchTypes.Clear();
+    for i := 0 to _CurrentSearches.Count - 1 do begin
+        thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
+        thread.Suspend();
+        thread.Free();
+        _CurrentSearches.Delete(i);
+    end;
+
     _SearchTypes.Free();
+    _CurrentSearches.Free();
 end;
 
 {---------------------------------------}
 function TSQLSearchHandler.NewSearch(const SearchParameters: IExodusHistorySearch): WordBool;
+var
+    searchThread: TSQLSearchThread;
 begin
+    searchThread := TSQLSearchThread.Create();
+    searchThread.SearchID := SearchParameters.SearchID;
+    searchThread.DataStore := DataStore;
+    searchThread.SQLStatement := GenerateSQLSearchString(SearchParameters);
+    searchThread.SetCallback(Self.OnResult);
+    _CurrentSearches.AddObject(SearchParameters.SearchID, searchThread);
 
+    searchThread.Resume();
+
+    Result := true; // Always want to participate in search
 end;
 
 {---------------------------------------}
 procedure TSQLSearchHandler.CancelSearch(const SearchID: WideString);
+var
+    i: integer;
+    thread: TSQLSearchThread;
 begin
-
+    if (_CurrentSearches.Find(SearchID, i)) then begin
+        thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
+        thread.Suspend();
+        thread.Free();
+        _CurrentSearches.Delete(i);
+    end;
 end;
 
 {---------------------------------------}
@@ -89,6 +145,82 @@ begin
 
     Result := _SearchTypes[index];
 end;
+
+{---------------------------------------}
+function TSQLSearchHandler.GenerateSQLSearchString(SearchParameters: IExodusHistorySearch): Widestring;
+var
+    i: integer;
+    mindate: integer;
+    maxdate: integer;
+begin
+    // SELECT part
+    Result := 'SELECT * ';
+
+    // FROM part
+    Result := Result +
+              'FROM ' +
+              MESSAGES_TABLE;
+
+    // WHERE part
+    mindate := Trunc(SearchParameters.minDate);
+    maxdate := Trunc(SearchParameters.maxDate);
+    Result := Result +
+              ' WHERE date > ' +
+              IntToStr(mindate) +
+              ' AND date < ' +
+              IntToStr(maxdate);
+
+    if (SearchParameters.JIDCount > 0) then begin
+        Result := Result +
+                  ' AND (';
+        for i := 0 to SearchParameters.JIDCount - 1 do begin
+            Result := Result +
+                      'jid="' +
+                      SearchParameters.GetJID(i) +
+                      '"';
+            if (i < (SearchParameters.JIDCount - 1)) then begin
+                Result := Result +
+                          ' OR ';
+            end;
+        end;
+        Result := Result +
+                  ')';
+    end;
+
+    // GROUP BY part
+
+    // ORDER BY part
+    Result := Result +
+              ' ORDER BY ' +
+              'date, time';
+
+    // End of SQL Statement
+    Result := Result +
+             ';';
+end;
+
+{---------------------------------------}
+procedure TSQLSearchHandler.OnResult(SearchID: widestring; msg: TJabberMessage);
+var
+    i: integer;
+    m: TExodusLogMsg;
+begin
+    if (SearchID = '') then exit;
+
+    if (msg = nil) then begin
+        // End of result set
+        HistorySearchManager.HandlerResult(_handlerID, SearchID, nil);
+        CancelSearch(SearchID);
+    end
+    else begin
+        // Send the result set on to the Search Manager
+        m := TExodusLogMsg.Create(msg);
+        HistorySearchManager.HandlerResult(_handlerID, SearchID, m);
+        m.Free();
+    end;
+end;
+
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TSQLSearchHandler, Class_ExodusHistorySQLSearchHandler,

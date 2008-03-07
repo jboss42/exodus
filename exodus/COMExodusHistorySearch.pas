@@ -91,7 +91,7 @@ begin
     _JIDList := TWidestringList.Create();
     _KeywordList := TWidestringList.Create();
 
-    _minDate := StrToDateTime('1970/01/01 00:00:00'); // Start of time as far as computers are concerned
+    _minDate := StrToDateTime('01/01/1970 00:00:00'); 
     _maxDate := Tomorrow(); // Makes sure we capture all of today by default
     _SearchID := Format('%8.6f', [Now()]);
     _ExactMatch := false;

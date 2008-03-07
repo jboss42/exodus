@@ -208,10 +208,12 @@ var
     k: integer;
     hwrapper: TSearchHandlerWrapper;
     tracker: TSearchTracker;
+    searchID: Widestring;
 begin
     Result := false;
     tracker := nil;
 
+    SearchID := SearchParams.SearchID;
     for j := 0 to _HandlerList.Count - 1 do begin
         hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[j]);
         for i := 0 to SearchParams.AllowedSearchTypeCount - 1 do begin
@@ -231,7 +233,7 @@ begin
     if (Result) then begin
         tracker.ResultObject := TExodusHistoryResult(SearchResult);
         tracker.ResultObject.SetProcessing(true);
-        _CurrentSearches.AddObject(SearchParams.SearchID, tracker);
+        _CurrentSearches.AddObject(SearchID, tracker);
     end;
 end;
 
@@ -309,15 +311,33 @@ end;
 
 {---------------------------------------}
 procedure TExodusHistorySearchManager.HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg);
-//var
-//    i: integer;
-//    tracker: TSearchTracker;
+var
+    i: integer;
+    j: integer;
+    tracker: TSearchTracker;
 begin
-{   if (SearchID = '') then exit;
+    if (SearchID = '') then exit;
 
     if (_CurrentSearches.Find(SearchID, i)) then begin
-        //tracker
-    end;   }
+        // Found the Search
+        tracker := TSearchTracker(_CurrentSearches.Objects[i]);
+        if ((LogMsg = nil) and
+            (tracker.HandlerList.Find(IntToStr(HandlerID), j))) then begin
+            // Found the Handler and LogMsg is nil - so we can remove handler from search list
+            tracker.HandlerList.Delete(j);
+        end
+        else if (LogMsg <> nil) then begin
+            // Valid search result
+            tracker.ResultObject.OnResultItem(SearchID, LogMsg);
+        end;
+
+        if (tracker.HandlerList.Count = 0) then begin
+            // No more handlers outstanding so end search
+            tracker.ResultObject.OnResultItem(SearchID, nil);
+            tracker.Free();
+            _CurrentSearches.Delete(i);
+        end;
+    end;
 end;
 
 
