@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/7/2008 4:30:08 PM from Type Library described below.
+// File generated on 2008-03-09 10:34:58 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -137,6 +137,11 @@ const
   CLASS_ExodusHistoryResult: TGUID = '{37DC94DD-FDB8-4E9E-84E2-A37747F70713}';
   CLASS_ExodusHistorySearchManager: TGUID = '{3821A305-8C0D-47BE-AA5B-A5E62F9D4BD5}';
   CLASS_ExodusHistorySQLSearchHandler: TGUID = '{64EE21C2-6212-44D2-8FF1-F0FCC1FD5F67}';
+  IID_IExodusAction: TGUID = '{30D5C4FE-F672-4240-B381-53D84C20FA04}';
+  IID_IExodusTypedActions: TGUID = '{638D1155-7D20-4295-A461-86E27FF28A5E}';
+  IID_IExodusActionMap: TGUID = '{B7C79472-A921-4357-84EB-A01902B18791}';
+  IID_IExodusActionController: TGUID = '{4318FEF0-E766-4269-935E-417CE9925991}';
+  CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -308,6 +313,14 @@ type
   IExodusHistorySearchHandlerDisp = dispinterface;
   IExodusHistorySearchManager = interface;
   IExodusHistorySearchManagerDisp = dispinterface;
+  IExodusAction = interface;
+  IExodusActionDisp = dispinterface;
+  IExodusTypedActions = interface;
+  IExodusTypedActionsDisp = dispinterface;
+  IExodusActionMap = interface;
+  IExodusActionMapDisp = dispinterface;
+  IExodusActionController = interface;
+  IExodusActionControllerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -343,6 +356,7 @@ type
   ExodusHistoryResult = IExodusHistoryResult;
   ExodusHistorySearchManager = IExodusHistorySearchManager;
   ExodusHistorySQLSearchHandler = IExodusHistorySearchHandler;
+  ExodusActionController = IExodusActionController;
 
 
 // *********************************************************************//
@@ -4959,6 +4973,145 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusAction
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {30D5C4FE-F672-4240-B381-53D84C20FA04}
+// *********************************************************************//
+  IExodusAction = interface(IDispatch)
+    ['{30D5C4FE-F672-4240-B381-53D84C20FA04}']
+    function Get_Name: WideString; safecall;
+    function Get_Caption: WideString; safecall;
+    function Get_ImageIndex: Integer; safecall;
+    function Get_Enabled: WordBool; safecall;
+    function Get_SubActionCount: Integer; safecall;
+    function Get_SubAction(Index: Integer): IExodusAction; safecall;
+    procedure execute(const items: IExodusItemList); safecall;
+    property Name: WideString read Get_Name;
+    property Caption: WideString read Get_Caption;
+    property ImageIndex: Integer read Get_ImageIndex;
+    property Enabled: WordBool read Get_Enabled;
+    property SubActionCount: Integer read Get_SubActionCount;
+    property SubAction[Index: Integer]: IExodusAction read Get_SubAction;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusActionDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {30D5C4FE-F672-4240-B381-53D84C20FA04}
+// *********************************************************************//
+  IExodusActionDisp = dispinterface
+    ['{30D5C4FE-F672-4240-B381-53D84C20FA04}']
+    property Name: WideString readonly dispid 201;
+    property Caption: WideString readonly dispid 202;
+    property ImageIndex: Integer readonly dispid 203;
+    property Enabled: WordBool readonly dispid 204;
+    property SubActionCount: Integer readonly dispid 205;
+    property SubAction[Index: Integer]: IExodusAction readonly dispid 206;
+    procedure execute(const items: IExodusItemList); dispid 207;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusTypedActions
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {638D1155-7D20-4295-A461-86E27FF28A5E}
+// *********************************************************************//
+  IExodusTypedActions = interface(IDispatch)
+    ['{638D1155-7D20-4295-A461-86E27FF28A5E}']
+    function Get_ItemType: WideString; safecall;
+    function Get_ItemCount: Integer; safecall;
+    function Get_Item(Index: Integer): IExodusItem; safecall;
+    function Get_ActionCount: Integer; safecall;
+    function Get_Action(Index: Integer): IExodusAction; safecall;
+    function GetActionNamed(const name: WideString): IExodusAction; safecall;
+    procedure execute(const actname: WideString); safecall;
+    property ItemType: WideString read Get_ItemType;
+    property ItemCount: Integer read Get_ItemCount;
+    property Item[Index: Integer]: IExodusItem read Get_Item;
+    property ActionCount: Integer read Get_ActionCount;
+    property Action[Index: Integer]: IExodusAction read Get_Action;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusTypedActionsDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {638D1155-7D20-4295-A461-86E27FF28A5E}
+// *********************************************************************//
+  IExodusTypedActionsDisp = dispinterface
+    ['{638D1155-7D20-4295-A461-86E27FF28A5E}']
+    property ItemType: WideString readonly dispid 201;
+    property ItemCount: Integer readonly dispid 202;
+    property Item[Index: Integer]: IExodusItem readonly dispid 203;
+    property ActionCount: Integer readonly dispid 204;
+    property Action[Index: Integer]: IExodusAction readonly dispid 205;
+    function GetActionNamed(const name: WideString): IExodusAction; dispid 206;
+    procedure execute(const actname: WideString); dispid 207;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusActionMap
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B7C79472-A921-4357-84EB-A01902B18791}
+// *********************************************************************//
+  IExodusActionMap = interface(IDispatch)
+    ['{B7C79472-A921-4357-84EB-A01902B18791}']
+    function Get_ItemCount: Integer; safecall;
+    function Get_Item(Index: Integer): IExodusItem; safecall;
+    function Get_TypedActionsCount: Integer; safecall;
+    function Get_TypedActions(Index: Integer): IExodusTypedActions; safecall;
+    function GetActionsFor(const itemtype: WideString): IExodusTypedActions; safecall;
+    function GetActionNamed(const actname: WideString): IExodusAction; safecall;
+    property ItemCount: Integer read Get_ItemCount;
+    property Item[Index: Integer]: IExodusItem read Get_Item;
+    property TypedActionsCount: Integer read Get_TypedActionsCount;
+    property TypedActions[Index: Integer]: IExodusTypedActions read Get_TypedActions;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusActionMapDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {B7C79472-A921-4357-84EB-A01902B18791}
+// *********************************************************************//
+  IExodusActionMapDisp = dispinterface
+    ['{B7C79472-A921-4357-84EB-A01902B18791}']
+    property ItemCount: Integer readonly dispid 201;
+    property Item[Index: Integer]: IExodusItem readonly dispid 202;
+    property TypedActionsCount: Integer readonly dispid 203;
+    property TypedActions[Index: Integer]: IExodusTypedActions readonly dispid 204;
+    function GetActionsFor(const itemtype: WideString): IExodusTypedActions; dispid 205;
+    function GetActionNamed(const actname: WideString): IExodusAction; dispid 206;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusActionController
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {4318FEF0-E766-4269-935E-417CE9925991}
+// *********************************************************************//
+  IExodusActionController = interface(IDispatch)
+    ['{4318FEF0-E766-4269-935E-417CE9925991}']
+    procedure registerAction(const itemtype: WideString; const act: IExodusAction); safecall;
+    procedure addEnableFilter(const itemtype: WideString; const actname: WideString; 
+                              filter: PSafeArray); safecall;
+    procedure addDisableFilter(const itemtype: WideString; const actname: WideString; 
+                               filter: PSafeArray); safecall;
+    function buildActions(const items: IExodusItemList): IExodusActionMap; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusActionControllerDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {4318FEF0-E766-4269-935E-417CE9925991}
+// *********************************************************************//
+  IExodusActionControllerDisp = dispinterface
+    ['{4318FEF0-E766-4269-935E-417CE9925991}']
+    procedure registerAction(const itemtype: WideString; const act: IExodusAction); dispid 201;
+    procedure addEnableFilter(const itemtype: WideString; const actname: WideString; 
+                              filter: {??PSafeArray}OleVariant); dispid 202;
+    procedure addDisableFilter(const itemtype: WideString; const actname: WideString; 
+                               filter: {??PSafeArray}OleVariant); dispid 203;
+    function buildActions(const items: IExodusItemList): IExodusActionMap; dispid 204;
+  end;
+
+// *********************************************************************//
 // The Class CoexodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass exodusController. The functions are intended to be used by             
@@ -5318,6 +5471,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusHistorySearchHandler;
   end;
 
+// *********************************************************************//
+// The Class CoExodusActionController provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusActionController exposed by              
+// the CoClass ExodusActionController. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusActionController = class
+    class function Create: IExodusActionController;
+    class function CreateRemote(const MachineName: string): IExodusActionController;
+  end;
+
 implementation
 
 uses ComObj;
@@ -5620,6 +5785,16 @@ end;
 class function CoExodusHistorySQLSearchHandler.CreateRemote(const MachineName: string): IExodusHistorySearchHandler;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusHistorySQLSearchHandler) as IExodusHistorySearchHandler;
+end;
+
+class function CoExodusActionController.Create: IExodusActionController;
+begin
+  Result := CreateComObject(CLASS_ExodusActionController) as IExodusActionController;
+end;
+
+class function CoExodusActionController.CreateRemote(const MachineName: string): IExodusActionController;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusActionController) as IExodusActionController;
 end;
 
 end.
