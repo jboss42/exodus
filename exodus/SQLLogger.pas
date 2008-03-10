@@ -33,11 +33,6 @@ type
 
             // Methods
             procedure _CreateLoggerTable();
-            function _str2sql(str: string): string;
-            function _sql2str(str: string): string;
-            function _unquoteStr(str: string; qchar: string = #39): string;
-            function _quoteStr(str: string; qchar: string = #39): string;
-            function _SafeInt(str: Widestring): integer;
 
             // IExodusSearchHandler Interface
 
@@ -69,7 +64,8 @@ uses
     ExSession,
     JabberID,
     sysUtils,
-    XMLUtils;
+    XMLUtils,
+    SQLUtils;
 
 {---------------------------------------}
 constructor TSQLLogger.Create;
@@ -100,6 +96,7 @@ begin
     sql := sql + 'body TEXT, ';
     sql := sql + 'type TEXT, ';
     sql := sql + 'outbound BOOLEAN, ';
+//    sql := sql + 'priority INTEGER, '; //???dda
     sql := sql + 'xml TEXT);';
 
     try
@@ -132,6 +129,7 @@ var
     mtype: string;
     outstr: string;
     xml: string;
+    priority: integer;
 begin
     if (DataStore = nil) then exit;
 
@@ -154,21 +152,33 @@ begin
     thread := UTF8Encode(msg.Thread);
     mtype := msg.MsgType;
 
-    subject := _str2sql(UTF8Encode(msg.Subject));
-    nick := _str2sql(UTF8Encode(msg.nick));
-    body := _str2sql(UTF8Encode(msg.Body));
-    xml := _str2sql(UTF8Encode(XML_EscapeChars(msg.Tag.XML)));
+    subject := str2sql(UTF8Encode(msg.Subject));
+    nick := str2sql(UTF8Encode(msg.nick));
+    body := str2sql(UTF8Encode(msg.Body));
+    xml := str2sql(UTF8Encode(XML_EscapeChars(msg.Tag.XML)));
+
+    case (msg.Priority) of
+        high: priority := 0;
+        medium: priority := 1;
+        low: priority := 2;
+        else priority := 3;
+    end;
 
     ts := msg.Time;
 
     cmd := 'INSERT INTO ' +
            MESSAGES_TABLE + ' ' +
            '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, xml) ' +
-           'VALUES ("%s", "%s", %d, %8.6f, "%s", "%s", "%s", "%s", "%s", "%s", "%s");';
+           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'');';
+//    cmd := 'INSERT INTO ' +
+//           MESSAGES_TABLE + ' ' +
+//           '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, priority, xml) ' +
+//           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', %d, ''%s'');';  //???dda
 
     di := Trunc(ts);
     ti := Frac(double(ts));
     sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, xml]);
+//    sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, priority, xml]); //???dda
 
     try
         DataStore.ExecSQL(sql);
@@ -179,63 +189,6 @@ begin
     tojid.Free();
 end;
 
-function TSQLLogger._SafeInt(str: Widestring): integer;
-begin
-    // Null safe string to int function
-    Result := StrToIntDef(str, 0);
-end;
-
-
-{---------------------------------------}
-function TSQLLogger._str2sql(str: string): string;
-var
-    i: integer;
-begin
-    Result := _sql2str(str);
-    for i := Length(Result) - 1 downto 0 do begin
-        if (Result[i] = #39) then
-            Insert(#39, Result, i);
-    end;
-    //Result := QuoteStr(Result);
-end;
-
-{---------------------------------------}
-function TSQLLogger._sql2str(str: string): string;
-const
-    dblq: string = #39#39;
-var
-    p: integer;
-begin
-    Result := str;
-    p := Pos(dblq, Result);
-    while (p > 0) do begin
-        Delete(Result, p, 1);
-        p := pos(dblq, Result);
-    end;
-    Result := _unquoteStr(Result);
-end;
-
-{---------------------------------------}
-function TSQLLogger._unquoteStr(str: string; qchar: string): string;
-begin
-    Result := str;
-    if (Length(Result) > 1) then begin
-        if (Result[1] = qchar) then
-            Delete(Result, 1, 1);
-        if (Result[Length(Result)] = qchar) then
-            Delete(Result, Length(Result), 1);
-    end;
-end;
-
-{---------------------------------------}
-function TSQLLogger._quoteStr(str: string; qchar: string): string;
-begin
-    Result := ConCat(qchar, str, qchar);
-end;
-
-{
-    Copied from XMLUtils to eliminate that dependancy
-}
 
 
 

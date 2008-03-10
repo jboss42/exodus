@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/10/2008 8:40:16 AM from Type Library described below.
+// File generated on 3/10/2008 1:55:29 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -4891,7 +4891,7 @@ type
     function Get_Processing: WordBool; safecall;
     procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
     function GetResult(index: Integer): IExodusLogMsg; safecall;
-    procedure Set_Processing(Value: WordBool); safecall;
+    procedure Set_Processing(value: WordBool); safecall;
     property ResultCount: Integer read Get_ResultCount;
     property Processing: WordBool read Get_Processing write Set_Processing;
   end;

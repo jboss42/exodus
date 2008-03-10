@@ -22,8 +22,11 @@ unit SQLSearchThread;
 interface
 
 uses
-    Classes, COMExodusDataStore, COMExodusDataTable,
-    Exodus_TLB, JabberMsg;
+    Classes,
+    COMExodusDataStore,
+    COMExodusDataTable,
+    Exodus_TLB,
+    JabberMsg;
 
 type
     TSQLThreadResult = procedure(SearchID: widestring; msg: TJabberMessage) of object;
@@ -68,7 +71,9 @@ type
 implementation
 
 uses
-    sysUtils, XMLTag, XMLParser,
+    sysUtils,
+    XMLTag,
+    XMLParser,
     XMLUtils;
 
 

@@ -24,8 +24,12 @@ unit COMExodusHistorySearchManager;
 interface
 
 uses
-    ComObj, ActiveX, Exodus_TLB,
-    StdVcl, Unicode, COMExodusHistoryResult;
+    ComObj,
+    ActiveX,
+    Exodus_TLB,
+    StdVcl,
+    Unicode,
+    COMExodusHistoryResult;
 
 type
   TSearchHandlerWrapper = class(TObject)
@@ -119,7 +123,8 @@ type
 implementation
 
 uses
-    ComServ, sysUtils;
+    ComServ,
+    sysUtils;
 
 var
     _hid: longint = 1;

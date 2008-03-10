@@ -22,8 +22,12 @@ unit SQLSearchHandler;
 interface
 
 uses
-    ComObj, ActiveX, Exodus_TLB,
-    StdVcl, Unicode, JabberMsg;
+    ComObj,
+    ActiveX,
+    Exodus_TLB,
+    StdVcl,
+    Unicode,
+    JabberMsg;
 
 type
     TSQLSearchHandler = class(TAutoObject, IExodusHistorySearchHandler)
@@ -65,8 +69,13 @@ type
 implementation
 
 uses
-    ExSession, ComServ, sysUtils,
-    SQLLogger, COMLogMsg, SQLSearchThread;
+    ExSession,
+    ComServ,
+    sysUtils,
+    SQLLogger,
+    COMLogMsg,
+    SQLSearchThread,
+    SQLUtils;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -161,6 +170,7 @@ var
     maxdate: integer;
     exactMatch: boolean;
 begin
+//???dda - str2sql?
     exactMatch := false;
 
     // SELECT part
@@ -186,7 +196,7 @@ begin
         for i := 0 to SearchParameters.JIDCount - 1 do begin
             Result := Result +
                       'jid="' +
-                      SearchParameters.GetJID(i) +
+                      str2sql(UTF8Encode(SearchParameters.GetJID(i))) +
                       '"';
             if (i < (SearchParameters.JIDCount - 1)) then begin
                 Result := Result +
@@ -205,12 +215,16 @@ begin
         for i := 0 to SearchParameters.KeywordCount - 1 do begin
             Result := Result +
                       'body LIKE "';
+
             if (not exactMatch) then
                 Result := Result + '%';
+
             Result := Result +
-                      SearchParameters.GetKeyword(i);
+                      str2sql(UTF8Encode(SearchParameters.GetKeyword(i)));
+
             if (not exactMatch) then
                 Result := Result + '%';
+
             Result := Result +
                       '"';
 

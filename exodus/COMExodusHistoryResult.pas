@@ -24,8 +24,11 @@ unit COMExodusHistoryResult;
 interface
 
 uses
-    ComObj, ActiveX, Exodus_TLB,
-    StdVcl, Unicode;
+    ComObj,
+    ActiveX,
+    Exodus_TLB,
+    StdVcl,
+    Unicode;
 
 type
   TExodusHistoryResult = class(TAutoObject, IExodusHistoryResult)
@@ -66,8 +69,11 @@ type
 implementation
 
 uses
-    ComServ, sysUtils, JabberMsg,
-    ComLogMsg, JabberUtils;
+    ComServ,
+    sysUtils,
+    JabberMsg,
+    ComLogMsg,
+    JabberUtils;
 
 {---------------------------------------}
 constructor TExodusHistoryResult.Create();
