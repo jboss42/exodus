@@ -60,7 +60,7 @@ type
 
 implementation
 
-uses ComServ, RosterForm, SysUtils, Session, Variants;
+uses ComServ, RosterForm, SysUtils, Session, Variants, Controls;
 
 {---------------------------------------}
 constructor TExodusTab.Create(ActiveX_GUID: WideString);
@@ -76,6 +76,7 @@ begin
     begin
         _AxControl := TAXControl.Create(_Page, StringToGuid(_UID));
         _AxControl.Parent := _Page;
+        _AxControl.Align := alClient;
     end
     else
     begin
@@ -190,7 +191,7 @@ function TExodusTab.Get_AXControl: OleVariant;
 begin
    Result := unassigned;;
    if (_AXControl <> nil) then
-       Result := _AXControl.ControlInterface;
+       Result := _AXControl.OleObject;
    
 end;
 
