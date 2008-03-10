@@ -66,7 +66,7 @@ implementation
 
 uses
     ExSession, ComServ, sysUtils,
-    SQLSearchThread, SQLLogger, COMLogMsg;
+    SQLLogger, COMLogMsg, SQLSearchThread;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -90,8 +90,11 @@ begin
     _SearchTypes.Clear();
     for i := 0 to _CurrentSearches.Count - 1 do begin
         thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
-        thread.Suspend();
-        thread.Free();
+        try
+            thread.Terminate();
+        except
+        end;
+
         _CurrentSearches.Delete(i);
     end;
 
@@ -109,7 +112,8 @@ begin
     searchThread.DataStore := DataStore;
     searchThread.SQLStatement := GenerateSQLSearchString(SearchParameters);
     searchThread.SetCallback(Self.OnResult);
-    _CurrentSearches.AddObject(SearchParameters.SearchID, searchThread);
+
+    _CurrentSearches.AddObject(searchThread.SearchID, SearchThread);
 
     searchThread.Resume();
 
@@ -123,9 +127,12 @@ var
     thread: TSQLSearchThread;
 begin
     if (_CurrentSearches.Find(SearchID, i)) then begin
-        thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
-        thread.Suspend();
-        thread.Free();
+        try
+            thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
+            thread.Terminate();
+        except
+        end;
+
         _CurrentSearches.Delete(i);
     end;
 end;
@@ -152,7 +159,10 @@ var
     i: integer;
     mindate: integer;
     maxdate: integer;
+    exactMatch: boolean;
 begin
+    exactMatch := false;
+
     // SELECT part
     Result := 'SELECT * ';
 
@@ -187,6 +197,32 @@ begin
                   ')';
     end;
 
+    if (SearchParameters.KeywordCount > 0) then begin
+        exactMatch := SearchParameters.ExactKeywordMatch;
+
+        Result := Result +
+                  ' AND (';
+        for i := 0 to SearchParameters.KeywordCount - 1 do begin
+            Result := Result +
+                      'body LIKE "';
+            if (not exactMatch) then
+                Result := Result + '%';
+            Result := Result +
+                      SearchParameters.GetKeyword(i);
+            if (not exactMatch) then
+                Result := Result + '%';
+            Result := Result +
+                      '"';
+
+            if (i < (SearchParameters.KeywordCount -1)) then begin
+                Result := Result +
+                          ' OR ';
+            end;
+        end;
+        Result := Result +
+                  ')';
+    end;
+
     // GROUP BY part
 
     // ORDER BY part
@@ -210,7 +246,14 @@ begin
     if (msg = nil) then begin
         // End of result set
         HistorySearchManager.HandlerResult(_handlerID, SearchID, nil);
-        CancelSearch(SearchID);
+        if (_currentSearches.Find(SearchID, i)) then begin
+            // Remove search from search queue.
+            // Do NOT free the thread object here.  It will self
+            // delete.  If we try to clean it up, we deadlock.
+            // Deleteing the search from the list will remove any reference
+            // to it, so we will not try to access a deleted object.
+            _CurrentSearches.Delete(i);
+        end;
     end
     else begin
         // Send the result set on to the Search Manager

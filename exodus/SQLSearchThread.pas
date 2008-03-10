@@ -38,7 +38,8 @@ type
             _callbackSet: boolean;
 
             // Methods
-            procedure ProcessResultTable(table: IExodusDataTable);
+            procedure _ProcessResultTable(table: IExodusDataTable);
+            procedure _OnResult();
 
         protected
             // Variables
@@ -51,7 +52,6 @@ type
             constructor Create();
 
             procedure Execute; override;
-            procedure OnResult();
             procedure SetCallback(callback: TSQLThreadResult);
 
             // Properties
@@ -95,6 +95,7 @@ begin
     _msg := nil;
     _callback := nil;
     _callbackSet := false;
+    Self.FreeOnTerminate := true;
 end;
 
 {---------------------------------------}
@@ -103,11 +104,11 @@ begin
     if (_DataStore = nil) then exit;
     if (_SQLStatement = '') then exit;
 
-    ProcessResultTable(_DataStore.GetTable(_SQLStatement));
+    _ProcessResultTable(_DataStore.GetTable(_SQLStatement));
 end;
 
 {---------------------------------------}
-procedure TSQLSearchThread.ProcessResultTable(table: IExodusDataTable);
+procedure TSQLSearchThread._ProcessResultTable(table: IExodusDataTable);
 const
     msgid_col = 0;
     user_jid_col = 1;
@@ -175,7 +176,7 @@ begin
                 //_msg.Priority
             end;
 
-            Synchronize(Self.OnResult);  // blocks here
+            Synchronize(Self._OnResult);  // blocks here
             _msg.Free();
             _msg := nil;
 
@@ -184,7 +185,7 @@ begin
             end;
         end;
 
-        Synchronize(Self.OnResult); // Send nil as end of result set.
+        Synchronize(Self._OnResult); // Send nil as end of result set.
 
         parser.Free();
     except
@@ -192,7 +193,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSQLSearchThread.OnResult();
+procedure TSQLSearchThread._OnResult();
 begin
     if (not _callbackSet) then exit;
 

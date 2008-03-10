@@ -59,7 +59,7 @@ type
       private
         // Variables
         _HandlerList: TWidestringList;
-        _ResultObject: TExodusHistoryResult;
+        _ResultObject: IExodusHistoryResult;
 
         // Methods
 
@@ -77,7 +77,7 @@ type
 
         // Properties
         property HandlerList: TWidestringList read _HandlerList write _HandlerList;
-        property ResultObject: TExodusHistoryResult read _ResultObject write _ResultObject;
+        property ResultObject: IExodusHistoryResult read _ResultObject write _ResultObject;
   end;
 
   TExodusHistorySearchManager = class(TAutoObject, IExodusHistorySearchManager)
@@ -152,7 +152,7 @@ end;
 {---------------------------------------}
 destructor TSearchTracker.Destroy();
 begin
-    _ResultObject.SetProcessing(false);
+    _ResultObject.Processing := false;
 
     _HandlerList.Clear();
     _HandlerList.Free();
@@ -231,8 +231,8 @@ begin
     end;
 
     if (Result) then begin
-        tracker.ResultObject := TExodusHistoryResult(SearchResult);
-        tracker.ResultObject.SetProcessing(true);
+        tracker.ResultObject := SearchResult;
+        tracker.ResultObject.Processing := true;
         _CurrentSearches.AddObject(SearchID, tracker);
     end;
 end;

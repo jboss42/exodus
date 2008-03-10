@@ -48,13 +48,14 @@ type
     constructor Create();
     destructor Destroy();
 
-    procedure SetProcessing(value: boolean);
-
     // IExodusHistoryResult Interface
-    function Get_Processing: WordBool; safecall;
     function Get_ResultCount: Integer; safecall;
-    function GetResult(index: Integer): IExodusLogMsg; safecall;
+    function Get_Processing: WordBool; safecall;
     procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
+    function GetResult(index: Integer): IExodusLogMsg; safecall;
+    procedure Set_Processing(Value: WordBool); safecall;
+    property ResultCount: Integer read Get_ResultCount;
+    property Processing: WordBool read Get_Processing write Set_Processing;
 
 	// Properties
   end;
@@ -121,30 +122,36 @@ procedure TExodusHistoryResult.OnResultItem(const SearchID: WideString; const It
 var
     msg: TJabberMessage;
 begin
-    msg := TJabberMessage.Create();
-
-    msg.ToJID := Item.ToJid;
-    msg.FromJID := Item.FromJid;
-    msg.MsgType := Item.MsgType;
-    msg.ID := Item.ID;
-    msg.Nick := Item.Nick;
-    msg.Body := Item.Body;
-    msg.Thread := Item.Thread;
-    msg.Subject := Item.Subject;
-    msg.Time := JabberToDateTime(Item.Timestamp);
-    if (Item.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
-        msg.isMe := true;
+    if (Item = nil) then begin
+        // Got a nil so that is the signal to end processing.
+        _processing := false;
     end
     else begin
-        msg.isMe := false;
-    end;
-    msg.XML := Item.XML;
+        msg := TJabberMessage.Create();
 
-    _ResultList.AddObject('', msg);
+        msg.ToJID := Item.ToJid;
+        msg.FromJID := Item.FromJid;
+        msg.MsgType := Item.MsgType;
+        msg.ID := Item.ID;
+        msg.Nick := Item.Nick;
+        msg.Body := Item.Body;
+        msg.Thread := Item.Thread;
+        msg.Subject := Item.Subject;
+        msg.Time := JabberToDateTime(Item.Timestamp);
+        if (Item.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
+            msg.isMe := true;
+        end
+        else begin
+            msg.isMe := false;
+        end;
+        msg.XML := Item.XML;
+
+        _ResultList.AddObject('', msg);
+    end;
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResult.SetProcessing(value: boolean);
+procedure TExodusHistoryResult.Set_Processing(Value: WordBool);
 begin
     _processing := value;
 end;
