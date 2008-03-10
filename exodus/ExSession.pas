@@ -831,7 +831,7 @@ begin
     SQLSearch.Free();
     HistorySearchManager.Free();
     MsgLogger.Free();
-    DataStore.Destroy();
+    DataStore.Free();
 
     cleanupResponders();
     StopDebugLogger();
