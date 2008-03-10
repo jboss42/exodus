@@ -283,7 +283,8 @@ uses
   SQLLogger in 'SQLLogger.pas',
   ManageTabsDlg in 'prefs\ManageTabsDlg.pas' {frmPrefTabs: TTntForm},
   SQLSearchHandler in 'SQLSearchHandler.pas',
-  SQLSearchThread in 'SQLSearchThread.pas';
+  SQLSearchThread in 'SQLSearchThread.pas',
+  SQLUtils in '..\jopl\SQLUtils.pas';
 
 {$R *.TLB}
 
