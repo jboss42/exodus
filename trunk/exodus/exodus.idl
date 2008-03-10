@@ -1392,7 +1392,7 @@ library Exodus
     propget, 
     id(0x000000D0)
     ]
-    HRESULT _stdcall AXControl([out, retval]  IDispatch ** value );
+    HRESULT _stdcall AXControl([out, retval] VARIANT * value );
   };
 
   [
@@ -1643,6 +1643,15 @@ library Exodus
   coclass ExodusHistorySQLSearchHandler
   {
     [default] interface IExodusHistorySearchHandler;
+  };
+
+  [
+    uuid(0C473B97-BF10-4FEF-B20B-8C6724E3A395), 
+    version(1.0)
+  ]
+  coclass ExodusActionController
+  {
+    [default] interface IExodusActionController;
   };
 
   
@@ -8946,6 +8955,11 @@ library Exodus
     id(0x000000CC)
     ]
     HRESULT _stdcall GetResult([in] long index, [out, retval] IExodusLogMsg ** Item /*Warning: unable to validate structure name: */ );
+    [
+    propput, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Processing([in] VARIANT_BOOL Value );
   };
 
   [
@@ -9012,6 +9026,157 @@ library Exodus
     id(0x000000CF)
     ]
     HRESULT _stdcall HandlerResult([in] long HandlerID, [in] BSTR SearchID, [in] IExodusLogMsg * LogMsg /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(30D5C4FE-F672-4240-B381-53D84C20FA04), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusAction: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall Name([out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Caption([out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall ImageIndex([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall Enabled([out, retval] VARIANT_BOOL * value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall SubActionCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall SubAction([in] long index, [out, retval] IExodusAction ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall execute([in] IExodusItemList * Items /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(638D1155-7D20-4295-A461-86E27FF28A5E), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusTypedActions: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall ItemType([out, retval] BSTR * value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall itemCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall Item([in] long index, [out, retval] IExodusItem ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall ActionCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall Action([in] long index, [out, retval] IExodusAction ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall GetActionNamed([in] BSTR Name, [out, retval] IExodusAction ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall execute([in] BSTR actname );
+  };
+
+  [
+    uuid(B7C79472-A921-4357-84EB-A01902B18791), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusActionMap: IDispatch
+  {
+    [
+    propget, 
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall itemCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall Item([in] long index, [out, retval] IExodusItem ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall TypedActionsCount([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall TypedActions([in] long index, [out, retval] IExodusTypedActions ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CD)
+    ]
+    HRESULT _stdcall GetActionsFor([in] BSTR ItemType, [out, retval] IExodusTypedActions ** value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall GetActionNamed([in] BSTR actname, [out, retval] IExodusAction ** value /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(4318FEF0-E766-4269-935E-417CE9925991), 
+    version(1.0), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusActionController: IDispatch
+  {
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall registerAction([in] BSTR ItemType, [in] IExodusAction * act /*Warning: unable to validate structure name: */ );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall addEnableFilter([in] BSTR ItemType, [in] BSTR actname, [in] SAFEARRAY(BSTR) filter );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall addDisableFilter([in] BSTR ItemType, [in] BSTR actname, [in] SAFEARRAY(BSTR) filter );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall buildActions([in] IExodusItemList * Items /*Warning: unable to validate structure name: */, [out, retval] IExodusActionMap ** value /*Warning: unable to validate structure name: */ );
   };
 
 };

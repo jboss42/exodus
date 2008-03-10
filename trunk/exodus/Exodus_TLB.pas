@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-03-09 10:34:58 from Type Library described below.
+// File generated on 3/10/2008 8:40:16 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4891,8 +4891,9 @@ type
     function Get_Processing: WordBool; safecall;
     procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
     function GetResult(index: Integer): IExodusLogMsg; safecall;
+    procedure Set_Processing(Value: WordBool); safecall;
     property ResultCount: Integer read Get_ResultCount;
-    property Processing: WordBool read Get_Processing;
+    property Processing: WordBool read Get_Processing write Set_Processing;
   end;
 
 // *********************************************************************//
@@ -4903,7 +4904,7 @@ type
   IExodusHistoryResultDisp = dispinterface
     ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
     property ResultCount: Integer readonly dispid 201;
-    property Processing: WordBool readonly dispid 202;
+    property Processing: WordBool dispid 202;
     procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); dispid 203;
     function GetResult(index: Integer): IExodusLogMsg; dispid 204;
   end;
@@ -4984,14 +4985,14 @@ type
     function Get_ImageIndex: Integer; safecall;
     function Get_Enabled: WordBool; safecall;
     function Get_SubActionCount: Integer; safecall;
-    function Get_SubAction(Index: Integer): IExodusAction; safecall;
-    procedure execute(const items: IExodusItemList); safecall;
+    function Get_SubAction(index: Integer): IExodusAction; safecall;
+    procedure execute(const Items: IExodusItemList); safecall;
     property Name: WideString read Get_Name;
     property Caption: WideString read Get_Caption;
     property ImageIndex: Integer read Get_ImageIndex;
     property Enabled: WordBool read Get_Enabled;
     property SubActionCount: Integer read Get_SubActionCount;
-    property SubAction[Index: Integer]: IExodusAction read Get_SubAction;
+    property SubAction[index: Integer]: IExodusAction read Get_SubAction;
   end;
 
 // *********************************************************************//
@@ -5006,8 +5007,8 @@ type
     property ImageIndex: Integer readonly dispid 203;
     property Enabled: WordBool readonly dispid 204;
     property SubActionCount: Integer readonly dispid 205;
-    property SubAction[Index: Integer]: IExodusAction readonly dispid 206;
-    procedure execute(const items: IExodusItemList); dispid 207;
+    property SubAction[index: Integer]: IExodusAction readonly dispid 206;
+    procedure execute(const Items: IExodusItemList); dispid 207;
   end;
 
 // *********************************************************************//
@@ -5018,17 +5019,17 @@ type
   IExodusTypedActions = interface(IDispatch)
     ['{638D1155-7D20-4295-A461-86E27FF28A5E}']
     function Get_ItemType: WideString; safecall;
-    function Get_ItemCount: Integer; safecall;
-    function Get_Item(Index: Integer): IExodusItem; safecall;
+    function Get_itemCount: Integer; safecall;
+    function Get_Item(index: Integer): IExodusItem; safecall;
     function Get_ActionCount: Integer; safecall;
-    function Get_Action(Index: Integer): IExodusAction; safecall;
-    function GetActionNamed(const name: WideString): IExodusAction; safecall;
+    function Get_Action(index: Integer): IExodusAction; safecall;
+    function GetActionNamed(const Name: WideString): IExodusAction; safecall;
     procedure execute(const actname: WideString); safecall;
     property ItemType: WideString read Get_ItemType;
-    property ItemCount: Integer read Get_ItemCount;
-    property Item[Index: Integer]: IExodusItem read Get_Item;
+    property itemCount: Integer read Get_itemCount;
+    property Item[index: Integer]: IExodusItem read Get_Item;
     property ActionCount: Integer read Get_ActionCount;
-    property Action[Index: Integer]: IExodusAction read Get_Action;
+    property Action[index: Integer]: IExodusAction read Get_Action;
   end;
 
 // *********************************************************************//
@@ -5039,11 +5040,11 @@ type
   IExodusTypedActionsDisp = dispinterface
     ['{638D1155-7D20-4295-A461-86E27FF28A5E}']
     property ItemType: WideString readonly dispid 201;
-    property ItemCount: Integer readonly dispid 202;
-    property Item[Index: Integer]: IExodusItem readonly dispid 203;
+    property itemCount: Integer readonly dispid 202;
+    property Item[index: Integer]: IExodusItem readonly dispid 203;
     property ActionCount: Integer readonly dispid 204;
-    property Action[Index: Integer]: IExodusAction readonly dispid 205;
-    function GetActionNamed(const name: WideString): IExodusAction; dispid 206;
+    property Action[index: Integer]: IExodusAction readonly dispid 205;
+    function GetActionNamed(const Name: WideString): IExodusAction; dispid 206;
     procedure execute(const actname: WideString); dispid 207;
   end;
 
@@ -5054,16 +5055,16 @@ type
 // *********************************************************************//
   IExodusActionMap = interface(IDispatch)
     ['{B7C79472-A921-4357-84EB-A01902B18791}']
-    function Get_ItemCount: Integer; safecall;
-    function Get_Item(Index: Integer): IExodusItem; safecall;
+    function Get_itemCount: Integer; safecall;
+    function Get_Item(index: Integer): IExodusItem; safecall;
     function Get_TypedActionsCount: Integer; safecall;
-    function Get_TypedActions(Index: Integer): IExodusTypedActions; safecall;
-    function GetActionsFor(const itemtype: WideString): IExodusTypedActions; safecall;
+    function Get_TypedActions(index: Integer): IExodusTypedActions; safecall;
+    function GetActionsFor(const ItemType: WideString): IExodusTypedActions; safecall;
     function GetActionNamed(const actname: WideString): IExodusAction; safecall;
-    property ItemCount: Integer read Get_ItemCount;
-    property Item[Index: Integer]: IExodusItem read Get_Item;
+    property itemCount: Integer read Get_itemCount;
+    property Item[index: Integer]: IExodusItem read Get_Item;
     property TypedActionsCount: Integer read Get_TypedActionsCount;
-    property TypedActions[Index: Integer]: IExodusTypedActions read Get_TypedActions;
+    property TypedActions[index: Integer]: IExodusTypedActions read Get_TypedActions;
   end;
 
 // *********************************************************************//
@@ -5073,11 +5074,11 @@ type
 // *********************************************************************//
   IExodusActionMapDisp = dispinterface
     ['{B7C79472-A921-4357-84EB-A01902B18791}']
-    property ItemCount: Integer readonly dispid 201;
-    property Item[Index: Integer]: IExodusItem readonly dispid 202;
+    property itemCount: Integer readonly dispid 201;
+    property Item[index: Integer]: IExodusItem readonly dispid 202;
     property TypedActionsCount: Integer readonly dispid 203;
-    property TypedActions[Index: Integer]: IExodusTypedActions readonly dispid 204;
-    function GetActionsFor(const itemtype: WideString): IExodusTypedActions; dispid 205;
+    property TypedActions[index: Integer]: IExodusTypedActions readonly dispid 204;
+    function GetActionsFor(const ItemType: WideString): IExodusTypedActions; dispid 205;
     function GetActionNamed(const actname: WideString): IExodusAction; dispid 206;
   end;
 
@@ -5088,12 +5089,12 @@ type
 // *********************************************************************//
   IExodusActionController = interface(IDispatch)
     ['{4318FEF0-E766-4269-935E-417CE9925991}']
-    procedure registerAction(const itemtype: WideString; const act: IExodusAction); safecall;
-    procedure addEnableFilter(const itemtype: WideString; const actname: WideString; 
+    procedure registerAction(const ItemType: WideString; const act: IExodusAction); safecall;
+    procedure addEnableFilter(const ItemType: WideString; const actname: WideString; 
                               filter: PSafeArray); safecall;
-    procedure addDisableFilter(const itemtype: WideString; const actname: WideString; 
+    procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                filter: PSafeArray); safecall;
-    function buildActions(const items: IExodusItemList): IExodusActionMap; safecall;
+    function buildActions(const Items: IExodusItemList): IExodusActionMap; safecall;
   end;
 
 // *********************************************************************//
@@ -5103,12 +5104,12 @@ type
 // *********************************************************************//
   IExodusActionControllerDisp = dispinterface
     ['{4318FEF0-E766-4269-935E-417CE9925991}']
-    procedure registerAction(const itemtype: WideString; const act: IExodusAction); dispid 201;
-    procedure addEnableFilter(const itemtype: WideString; const actname: WideString; 
+    procedure registerAction(const ItemType: WideString; const act: IExodusAction); dispid 201;
+    procedure addEnableFilter(const ItemType: WideString; const actname: WideString; 
                               filter: {??PSafeArray}OleVariant); dispid 202;
-    procedure addDisableFilter(const itemtype: WideString; const actname: WideString; 
+    procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                filter: {??PSafeArray}OleVariant); dispid 203;
-    function buildActions(const items: IExodusItemList): IExodusActionMap; dispid 204;
+    function buildActions(const Items: IExodusItemList): IExodusActionMap; dispid 204;
   end;
 
 // *********************************************************************//
