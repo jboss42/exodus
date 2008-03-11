@@ -26,9 +26,19 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList, JabberMsg, AppEvnts, MsgQueue;
+  ToolWin, ImgList, JabberMsg, AppEvnts, MsgQueue,
+  ExActions, ExActionCtrl;
 
 type
+  TStartChatAction = class(TBaseAction)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+
+    procedure execute(const items: IExodusItemList); override; safecall;
+  end;
+
   TfrmChat = class(TfrmBaseChat)
     popContact: TTntPopupMenu;
     SaveDialog1: TSaveDialog;
@@ -233,7 +243,7 @@ uses
     RT_XIMConversion,
     EntityCache,
     IEMsgList,
-    TypInfo, Dockable;
+    TypInfo, Dockable, ActiveX;
 
 const
     sReplying = ' is replying.';
@@ -255,6 +265,16 @@ const
     NOTIFY_PRIORITY_CHAT_ACTIVITY = 1;
 
 {$R *.dfm}
+
+procedure RegisterActions();
+var
+    actctrl: IExodusActionController;
+begin
+    actctrl := GetActionController();
+
+    actctrl.registerAction('contact', TStartChatAction.Create());
+    actctrl.addEnableFilter('contact', '{exodus.googlecode.com}start-chat', 'selection=single');
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -452,6 +472,30 @@ begin
             end;
         end;
     end;
+end;
+
+constructor TStartChatAction.Create;
+begin
+    inherited Create('{exodus.googlecode.com}start-chat');
+
+    Set_Caption(_('Start Chat'));
+end;
+destructor TStartChatAction.Destroy;
+begin
+    inherited Destroy;
+end;
+
+procedure TStartChatAction.execute(const items: IExodusItemList);
+var
+    item: IExodusItem;
+begin
+    if items.Count = 1 then
+        item := items.Item[0]
+    else
+        item := nil;
+
+    if item <> nil then
+        StartChat(item.UID, '', true);
 end;
 
 {---------------------------------------}
@@ -1866,4 +1910,6 @@ end;
 initialization
     Classes.RegisterClass(TfrmChat);
 
+    //should we register the "start chat" action here?
+    RegisterActions();
 end.

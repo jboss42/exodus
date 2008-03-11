@@ -143,7 +143,7 @@ type
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function GetDataStore: IExodusDataStore; safecall;
     function Get_TabController: IExodusTabController; safecall;
-
+    function Get_ActionController: IExodusActionController; safecall;
 
     { Protected declarations }
   private
@@ -262,7 +262,8 @@ uses
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, StrUtils, SysUtils, shellapi, SHDocVw, ComServ,
-    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow;
+    ActiveXDockable, PLUGINCONTROLLib_TLB, COMAXWindow,
+    ExActionCtrl;
 
 const
     sPluginErrCreate = 'Plug-in could not be created. (%s)';
@@ -2135,11 +2136,14 @@ begin
     Result := DataStore;
 end;
 
-
-
 function TExodusController.Get_TabController: IExodusTabController;
 begin
     Result := GetRosterWindow().TabController;
+end;
+
+function TExodusController.Get_ActionController: IExodusActionController;
+begin
+    Result := GetActionController();
 end;
 
 initialization
