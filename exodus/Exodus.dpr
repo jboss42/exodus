@@ -285,7 +285,8 @@ uses
   SQLSearchHandler in 'SQLSearchHandler.pas',
   SQLSearchThread in 'SQLSearchThread.pas',
   SQLUtils in '..\jopl\SQLUtils.pas',
-  ActionMenus in 'components\ActionMenus.pas';
+  ActionMenus in 'components\ActionMenus.pas',
+  HistorySearch in 'HistorySearch.pas' {HistorySearchDlg};
 
 {$R *.TLB}
 

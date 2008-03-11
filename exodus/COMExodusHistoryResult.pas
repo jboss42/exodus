@@ -28,40 +28,46 @@ uses
     ActiveX,
     Exodus_TLB,
     StdVcl,
-    Unicode;
+    Unicode,
+    JabberMsg;
 
 type
-  TExodusHistoryResult = class(TAutoObject, IExodusHistoryResult)
-  private
-    // Variables
-    _processing: boolean;
-    _ResultList: TWidestringList;
+    TInternalResultCallback = procedure(msg: TJabberMessage) of object;
+    TExodusHistoryResult = class(TAutoObject, IExodusHistoryResult)
+        private
+            // Variables
+            _processing: boolean;
+            _ResultList: TWidestringList;
+            _callback: TInternalResultCallback; // callback for internal (non COM API) use
+            _callbackset: boolean;
 
-    // Methods
+            // Methods
 
-  protected
-    // Variables
+        protected
+            // Variables
 
-    // Methods
+            // Methods
 
-  public
-    // Variables
+        public
+            // Variables
 
-    // Methods
-    constructor Create();
-    destructor Destroy();
+            // Methods
+            constructor Create();
+            destructor Destroy();
 
-    // IExodusHistoryResult Interface
-    function Get_ResultCount: Integer; safecall;
-    function Get_Processing: WordBool; safecall;
-    procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
-    function GetResult(index: Integer): IExodusLogMsg; safecall;
-    procedure Set_Processing(Value: WordBool); safecall;
-    property ResultCount: Integer read Get_ResultCount;
-    property Processing: WordBool read Get_Processing write Set_Processing;
+            procedure SetCallback(cb: TInternalResultCallback);
 
-	// Properties
-  end;
+            // IExodusHistoryResult Interface
+            function Get_ResultCount: Integer; safecall;
+            function Get_Processing: WordBool; safecall;
+            procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
+            function GetResult(index: Integer): IExodusLogMsg; safecall;
+            procedure Set_Processing(Value: WordBool); safecall;
+            property ResultCount: Integer read Get_ResultCount;
+            property Processing: WordBool read Get_Processing write Set_Processing;
+
+            // Properties
+    end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -71,7 +77,6 @@ implementation
 uses
     ComServ,
     sysUtils,
-    JabberMsg,
     ComLogMsg,
     JabberUtils;
 
@@ -82,6 +87,8 @@ begin
 
     _ResultList := TWidestringList.Create();
     _processing := false;
+    _callback := nil;
+    _callbackset := false;
 end;
 
 {---------------------------------------}
@@ -131,6 +138,10 @@ begin
     if (Item = nil) then begin
         // Got a nil so that is the signal to end processing.
         _processing := false;
+
+        if (_callbackset) then begin
+            _callback(nil);
+        end;
     end
     else begin
         msg := TJabberMessage.Create();
@@ -153,6 +164,10 @@ begin
         msg.XML := Item.XML;
 
         _ResultList.AddObject('', msg);
+
+        if (_callbackset) then begin
+            _callback(msg);
+        end;
     end;
 end;
 
@@ -162,7 +177,12 @@ begin
     _processing := value;
 end;
 
-
+{---------------------------------------}
+procedure TExodusHistoryResult.SetCallback(cb: TInternalResultCallback);
+begin
+    _callbackset := true;
+    _callback := cb;
+end;
 
 
 initialization

@@ -96,7 +96,7 @@ begin
     sql := sql + 'body TEXT, ';
     sql := sql + 'type TEXT, ';
     sql := sql + 'outbound BOOLEAN, ';
-//    sql := sql + 'priority INTEGER, '; //???dda
+    sql := sql + 'priority INTEGER, ';
     sql := sql + 'xml TEXT);';
 
     try
@@ -168,17 +168,12 @@ begin
 
     cmd := 'INSERT INTO ' +
            MESSAGES_TABLE + ' ' +
-           '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, xml) ' +
-           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'');';
-//    cmd := 'INSERT INTO ' +
-//           MESSAGES_TABLE + ' ' +
-//           '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, priority, xml) ' +
-//           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', %d, ''%s'');';  //???dda
+           '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, priority, xml) ' +
+           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', %d, ''%s'');';
 
     di := Trunc(ts);
     ti := Frac(double(ts));
-    sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, xml]);
-//    sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, priority, xml]); //???dda
+    sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, priority, xml]);
 
     try
         DataStore.ExecSQL(sql);
