@@ -12,7 +12,6 @@ type
      _PageControl: TTntPageControl;
       procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
 
-
   private
       { Private declarations }
       _SessionCB: integer;            // session callback id

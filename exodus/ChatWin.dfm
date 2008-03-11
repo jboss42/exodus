@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 443
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -39,7 +39,7 @@ inherited frmChat: TfrmChat
           Left = 43
           Top = 0
           Width = 45
-          Height = 33
+          Height = 13
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,7 +47,6 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
-          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0

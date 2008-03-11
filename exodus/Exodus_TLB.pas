@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/10/2008 1:55:29 PM from Type Library described below.
+// File generated on 2008-03-11 08:58:02 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -5091,9 +5091,9 @@ type
     ['{4318FEF0-E766-4269-935E-417CE9925991}']
     procedure registerAction(const ItemType: WideString; const act: IExodusAction); safecall;
     procedure addEnableFilter(const ItemType: WideString; const actname: WideString; 
-                              filter: PSafeArray); safecall;
+                              const filter: WideString); safecall;
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
-                               filter: PSafeArray); safecall;
+                               const filter: WideString); safecall;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; safecall;
   end;
 
@@ -5106,9 +5106,9 @@ type
     ['{4318FEF0-E766-4269-935E-417CE9925991}']
     procedure registerAction(const ItemType: WideString; const act: IExodusAction); dispid 201;
     procedure addEnableFilter(const ItemType: WideString; const actname: WideString; 
-                              filter: {??PSafeArray}OleVariant); dispid 202;
+                              const filter: WideString); dispid 202;
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
-                               filter: {??PSafeArray}OleVariant); dispid 203;
+                               const filter: WideString); dispid 203;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; dispid 204;
   end;
 

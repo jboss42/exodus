@@ -1,19 +1,19 @@
 inherited RosterForm: TRosterForm
   Caption = ''
-  ClientHeight = 250
-  ClientWidth = 413
+  ClientHeight = 203
+  ClientWidth = 336
   Color = clBtnFace
   ParentFont = False
   OnClose = TntFormClose
-  ExplicitWidth = 421
-  ExplicitHeight = 290
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 344
+  ExplicitHeight = 237
+  PixelsPerInch = 96
+  TextHeight = 13
   object _PageControl: TTntPageControl
     Left = 0
     Top = 0
-    Width = 413
-    Height = 250
+    Width = 336
+    Height = 203
     Align = alClient
     RaggedRight = True
     TabHeight = 26

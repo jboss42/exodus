@@ -66,7 +66,6 @@ end;
 procedure TExodusItemList.Add(const item: IExodusItem);
 begin
     if (IndexOf(item) = -1) then _items.Add(item);
-
 end;
 procedure TExodusItemList.Delete(index: Integer);
 begin
@@ -83,12 +82,12 @@ begin
 end;
 procedure TExodusItemList.Remove(const Value: IExodusItem);
 begin
-
+    _items.Remove(Value);
 end;
 
 function TExodusItemList.IExodusItemList_Get_Count: Integer;
 begin
-
+    Result := _items.Count;
 end;
 
 initialization
