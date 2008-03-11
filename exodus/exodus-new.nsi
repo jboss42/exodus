@@ -202,6 +202,9 @@ REAL STUFF STARTS HERE
 !define LIBIDN "libidn"
 !define SSLEAY "ssleay32"
 !define LIBEAY "libeay32"
+!define SQLITE "sqlite3"
+!define ICUIN "icuin38"
+!define ICUUC "icuuc38"
 !define RICHED "riched20"
 !define VCL "..\redist\vcl100.bpl"
 !define RTL "..\redist\rtl100.bpl"
@@ -441,6 +444,9 @@ Section Exodus SEC_Exodus
     File "${LIBEAY}${DLL_EXTENSION}";
     File "${VCL}"
     File "${RTL}"
+    File "${SQLITE}${DLL_EXTENSION}"
+    File "${ICUIN}${DLL_EXTENSION}"
+    File "${ICUUC}${DLL_EXTENSION}"
 
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
@@ -839,6 +845,9 @@ Section "Uninstall"
     Delete /REBOOTOK "$INSTDIR\${BRANDING_FILE}${XML_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${LIBEAY}${DLL_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${SSLEAY}${DLL_EXTENSION}"
+    Delete /REBOOTOK "$INSTDIR\${SQLITE}${DLL_EXTENSION}"
+    Delete /REBOOTOK "$INSTDIR\${ICUIN}${DLL_EXTENSION}"
+    Delete /REBOOTOK "$INSTDIR\${ICUUC}${DLL_EXTENSION}"
 
     ; MUST REMOVE UNINSTALLER, too
     Delete /REBOOTOK "$INSTDIR\${PRODUCT_UNINSTALLER}${EXEC_EXTENSION}"

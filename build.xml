@@ -236,6 +236,11 @@ You can download NSIS from: http://sourceforge.net/projects/nsis
 	 destfile="exodus/Exodus.zip" 
 	 includesfile="exodus/zipfiles.txt">
       <fileset dir="exodus/plugins" includes="*.dll"/>
+      <fileset dir="redist">
+        <include name="sqlite3.dll"/>
+        <include name="icuin38.dll"/>
+        <include name="icuuc38.dll"/>
+      </fileset>
     </zip>
     <exec dir="exodus" executable="${NSIS}" failonerror="true">
       <arg value="/v1"/>
