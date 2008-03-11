@@ -62,8 +62,7 @@ type
             property SQLStatement: Widestring write _SQLStatement;
             property msg: TJabberMessage read _msg;
             property SearchID: Widestring read _SearchID write _SearchID;
-
-  end;
+    end;
 
 {---------------------------------------}
 {---------------------------------------}

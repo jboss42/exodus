@@ -63,6 +63,10 @@ type
             // Properties
     end;
 
+const
+    SQLSEARCH_CHAT = 'chat history';
+    SQLSEARCH_ROOM = 'groupchat history';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -81,8 +85,8 @@ uses
 constructor TSQLSearchHandler.Create();
 begin
     _SearchTypes := TWidestringList.Create();
-    _SearchTypes.Add('chat history');
-    _SearchTypes.Add('groupchat history');
+    _SearchTypes.Add(SQLSEARCH_CHAT);
+    _SearchTypes.Add(SQLSEARCH_ROOM);
 
     _CurrentSearches := TWidestringList.Create();
 
@@ -170,7 +174,6 @@ var
     maxdate: integer;
     exactMatch: boolean;
 begin
-//???dda - str2sql?
     exactMatch := false;
 
     // SELECT part
