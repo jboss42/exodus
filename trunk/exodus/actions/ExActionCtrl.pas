@@ -13,6 +13,7 @@ private
     _disabling: TWidestringList; //List of name/value pairs
 
     function containsAny(expected, actual: TWidestringList): Boolean;
+    procedure Set_Delegate(const act: IExodusAction);
 public
     constructor Create(itemtype, actname: Widestring);
     destructor Destroy(); override;
@@ -23,7 +24,7 @@ public
 
     property ItemType: Widestring read _itemtype;
     property Name: Widestring read _name;
-    property Action: IExodusAction read _delegate write _delegate;
+    property Action: IExodusAction read _delegate write Set_Delegate;
     property EnablingFilter: TWidestringList read _enabling;
     property DisablingFilter: TWidestringList read _disabling;
 end;
@@ -49,9 +50,11 @@ private
 
 public
     constructor Create(enableHints, disableHints: TWidestringList);
+    constructor CreateFrom(filters: TWidestringList);
     destructor Destroy; override;
 
     procedure update(item: IExodusItem);
+
     property Items: TInterfaceList read _items;
     property Enabling: TWidestringList read _enableSet;
     property Disabling: TWidestringList read _disableSet;
@@ -159,6 +162,15 @@ begin
     end;
 end;
 
+procedure TActionProxy.Set_Delegate(const act: IExodusAction);
+begin
+    if _delegate <> nil then
+        _delegate._Release;
+
+    _delegate := act;
+    if _delegate <> nil then
+        _delegate._AddRef;
+end;
 
 procedure TActionProxy.addToEnabling(filter: Widestring);
 var
@@ -182,8 +194,6 @@ begin
 end;
 
 function TActionProxy.applies(enabling, disabling: TWideStringList): Boolean;
-var
-    idx: Integer;
 begin
     //Check for "Do I exist?"
     If (Action = nil) then begin
@@ -192,10 +202,10 @@ begin
     end;
 
     //Check for "do or die"!
-    If not Action.Enabled then begin
-        Result := false;
-        exit;
-    end;
+//    If not Action.Enabled then begin
+//        Result := false;
+//        exit;
+//    end;
 
     //Check enabling (if any are present)
     Result := containsAny(_enabling, enabling);
@@ -259,6 +269,76 @@ begin
     _disableHints := TWidestringList.Create;
     if (disableHints <> nil) and (disableHints.Count > 0) then
         _disableHints.Assign(disableHints);
+end;
+constructor TFilteringSet.CreateFrom(filters: TWideStringList);
+var
+    idx, jdx, loc: Integer;
+    filter: TFilteringSet;
+    fromList, toList: TWidestringList;
+begin
+    _enableHints := TWidestringList.Create;
+    _enableSet := TWidestringList.Create;
+
+    _disableHints := TWidestringList.Create;
+    _disableSet := TWidestringList.Create;
+
+    //update hints
+    for idx := 0 to filters.Count - 1 do begin
+        filter := TFilteringSet(filters.Objects[idx]);
+
+        toList := Self._disableHints;
+        fromList := filter._disableHints;
+        for jdx := 0 to fromList.Count - 1 do begin
+            if (toList.IndexOf(fromList[jdx]) = -1) then
+                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+        end;
+
+        toList := Self._enableHints;
+        fromList := filter._enableHints;
+        for jdx := 0 to fromList.Count - 1 do begin
+            if (toList.IndexOf(fromList[jdx]) = -1) then
+                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+        end;
+    end;
+
+    //update sets
+    for idx := 0 to filters.Count - 1 do begin
+        filter := TFilteringSet(filters.Objects[idx]);
+
+        //Update disable sets (unions)
+        toList := Self._disableSet;
+        fromList := filter._disableSet;
+        for jdx := fromList.Count - 1 downto 1 do begin
+            if _disableHints.IndexOf(fromList[jdx]) = -1 then
+                continue;
+
+            loc := toList.IndexOf(fromList[idx]);
+            if (loc <> -1) then begin
+                if TFilteringItem(toList.Objects[loc]).Value = TFilteringItem(fromList.Objects[jdx]).Value then
+                    continue;
+            end;
+
+            toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+        end;
+
+        //Update enable sets (intersection)
+        toList := Self._enableSet;
+        fromList := filter._enableSet;
+        for jdx := fromList.Count - 1 downto 0 do begin
+            if _enableHints.IndexOf(fromList[jdx]) = -1 then
+                continue;
+
+            loc := toList.IndexOf(fromList[jdx]);
+            if (loc <> -1) then begin
+                if TFilteringItem(toList.Objects[loc]).Value <> TFilteringItem(fromList.Objects[jdx]).Value then begin
+                    toList.Delete(loc);
+                    loc := _enableHints.IndexOf(fromList[jdx]);
+                    if (loc <> -1) then _enableHints.Delete(loc);
+                end;
+            end else
+                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+        end;
+    end;
 end;
 destructor TFilteringSet.Destroy;
 var
@@ -332,7 +412,9 @@ begin
     for idx := _enableHints.Count - 1 downto 0 do begin
         key := _enableHints[idx];
 
-        if (key = 'active') then
+        if (key = 'selection') then
+            continue    //ignore this hint (always present)
+        else if (key = 'active') then
             val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
         else if (key = 'visible') then
             val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
@@ -521,74 +603,110 @@ var
     actmap: TExodusActionMap;
     potentials: TPotentialActions;
     proxy: TActionProxy;
-    itemtype: Widestring;
-    interestTypes: TWidestringList;
-    interestSet: TFilteringSet;
+    applied: TObjectList;
+    allInterests: TWidestringList;
+    typedInterests, mainInterests: TFilteringSet;
     idx, jdx: Integer;
     item: IExodusItem;
 begin
     actmap := TExodusActionMap.Create(items);
     Result := actmap;
 
-    //quickly exit if we didn't actually select anything...
-    if items.Count = 0 then exit;
-
     //walk items, building sets
-    interestTypes := TWidestringList.Create;
+    allInterests := TWidestringList.Create;
     for idx := 0 to items.Count - 1 do begin
         item := items.Item[idx];
 
         potentials := lookupActionsFor(item.Type_, false);
         if (potentials <> nil) then begin
-            jdx := interestTypes.IndexOf(potentials.ItemType);
+            jdx := allInterests.IndexOf(potentials.ItemType);
             if (jdx <> -1) then begin
-                interestSet := TFilteringSet(interestTypes.Objects[jdx]);
+                typedInterests := TFilteringSet(allInterests.Objects[jdx]);
             end else begin
-                interestSet := TFilteringSet.Create(potentials.EnableHints, potentials.DisableHints);
-                interestTypes.AddObject(potentials.ItemType, interestSet);
+                typedInterests := TFilteringSet.Create(potentials.EnableHints, potentials.DisableHints);
+                allInterests.AddObject(potentials.ItemType, typedInterests);
             end;
 
-            interestSet.update(item);
+            typedInterests.update(item);
         end;
     end;
 
     //walk types, building action map
-    for idx := 0 to interestTypes.Count - 1 do begin
-        potentials := lookupActionsFor(interestTypes[idx], false);
-        interestSet := TFilteringSet(interestTypes.Objects[idx]);
+    mainInterests := TFilteringSet.CreateFrom(allInterests);
+    applied := TObjectList.Create();
+    applied.OwnsObjects := false;
+    for idx := 0 to allInterests.Count - 1 do begin
+        potentials := lookupActionsFor(allInterests[idx], false);
+        typedInterests := TFilteringSet(allInterests.Objects[idx]);
 
-        if (items.Count = 0) then begin
-            //don't touch anything!!
-        end else if (items.Count = 1) then begin
-            interestSet.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
-            interestSet.Enabling.AddObject('selection', FILTER_SELECTION_SINGLE);
-        end else begin
-            interestSet.Disabling.AddObject('selection', FILTER_SELECTION_MULTI);
-            interestSet.Enabling.AddObject('selection', FILTER_SELECTION_MULTI);
+        case typedInterests.Items.Count of
+            0: begin
+                //don't touch anything!!
+            end;
+            1: begin
+                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
+                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_SINGLE);
+            end;
+            else begin
+                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_MULTI);
+                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_MULTI);
+            end;
         end;
 
-        //TODO:  add typed actions to actionmap
+        //add applicable typed actions to actionmap
         for jdx := 0 to potentials.ProxyCount - 1 do begin
             proxy := potentials.Proxy[idx];
 
-            if proxy.applies(interestSet.Enabling, interestSet.Disabling) then
+            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
+                if (applied.IndexOf(proxy) = -1) then
+                    applied.Add(proxy);
                 actmap.AddAction(potentials.ItemType, proxy.Action);
+            end;
         end;
 
+        //TODO: add applicable "anytype" actions to actionmap
+
         //Free it up now
-        interestTypes.Objects[idx] := nil;
-        interestSet.Free;
+        allInterests.Objects[idx] := nil;
+        typedInterests.Free;
     end;
 
-    //build the intersection
-    actmap.Collate();
+    //Build main actions
+    case items.Count of
+        0: begin
+            //Don't touch anything!!
+        end;
+        1: begin
+            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
+            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_SINGLE);
+        end;
+        else begin
+            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_MULTI);
+            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_MULTI);
+        end;
+    end;
+
+    for idx := 0 to applied.Count - 1 do begin
+        proxy := TActionProxy(applied[idx]);
+        applied[idx] := nil;
+
+        if proxy.applies(mainInterests.Enabling, mainInterests.Disabling) then begin
+            actmap.AddAction('', proxy.Action);
+        end;
+    end;
+
+    //Cleanup
+    FreeAndNil(allInterests);
+    FreeAndNil(mainInterests);
+    FreeAndNil(applied);
+    actmap := nil;
 end;
 
 function GetActionController: IExodusActionController;
 begin
     if (g_ActCtrl = nil) then
         g_ActCtrl := TExodusActionController.Create;
-    Result := g_actCtrl;
+    Result := g_actCtrl as IExodusActionController;
 end;
 
 initialization

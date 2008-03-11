@@ -284,7 +284,8 @@ uses
   ManageTabsDlg in 'prefs\ManageTabsDlg.pas' {frmPrefTabs: TTntForm},
   SQLSearchHandler in 'SQLSearchHandler.pas',
   SQLSearchThread in 'SQLSearchThread.pas',
-  SQLUtils in '..\jopl\SQLUtils.pas';
+  SQLUtils in '..\jopl\SQLUtils.pas',
+  ActionMenus in 'components\ActionMenus.pas';
 
 {$R *.TLB}
 
