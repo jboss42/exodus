@@ -52,7 +52,7 @@ type
             // Variables
 
             // Methods
-            constructor Create();
+            procedure Initialize(); override;
             destructor Destroy();
 
             procedure SetCallback(cb: TInternalResultCallback);
@@ -81,7 +81,7 @@ uses
     JabberUtils;
 
 {---------------------------------------}
-constructor TExodusHistoryResult.Create();
+procedure TExodusHistoryResult.Initialize();
 begin
     inherited;
 

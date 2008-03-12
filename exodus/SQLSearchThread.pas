@@ -73,7 +73,8 @@ uses
     sysUtils,
     XMLTag,
     XMLParser,
-    XMLUtils;
+    XMLUtils,
+    ComObj;
 
 
 { Important: Methods and properties of objects in visual components can only be
@@ -104,11 +105,18 @@ end;
 
 {---------------------------------------}
 procedure TSQLSearchThread.Execute;
+var
+    table: IExodusDataTable;
 begin
     if (_DataStore = nil) then exit;
     if (_SQLStatement = '') then exit;
 
-    _ProcessResultTable(_DataStore.GetTable(_SQLStatement));
+    table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
+
+    if (table <> nil) then begin
+        _DataStore.GetTable(_SQLStatement, table);
+        _ProcessResultTable(table);
+    end;
 end;
 
 {---------------------------------------}
@@ -125,7 +133,8 @@ const
     body_col = 8;
     type_col = 9;
     outbound_col = 10;
-    xml_col = 11;
+    priority_col = 11;
+    xml_col = 12;
 var
     tag: TXMLTag;
     i: integer;
@@ -168,16 +177,18 @@ begin
                 _msg.Thread := table.GetField(thread_col);
                 _msg.Body := table.GetField(body_col);
                 _msg.MsgType := table.GetField(type_col);
-                //_msg.ID
-                //_msg.Action
                 _msg.Nick := table.GetField(nick_col);
-                //_msg.Time :=
-                //_msg.isXdata
-                //_msg.highlight
-                //_msg.Tag
-                //_msg.XML := table.GetField(xml_col);
-                //_msg.com
-                //_msg.Priority
+                _msg.Time := table.GetFieldAsInt(date_col) +
+                             table.GetFieldAsDouble(time_col);
+                //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
+                case table.GetFieldAsInt(priority_col) of
+                    0: _msg.Priority := high;
+                    1: _msg.Priority := medium;
+                    2: _msg.Priority := low;
+                    else begin
+                        _msg.Priority := none;
+                    end;    
+                end;
             end;
 
             Synchronize(Self._OnResult);  // blocks here

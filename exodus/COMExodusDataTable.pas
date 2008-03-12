@@ -25,15 +25,45 @@ interface
 
 uses
     ComObj, ActiveX, Exodus_TLB,
-    StdVcl, SQLiteTable3, sysUtils;
+    StdVcl, SQLiteTable3, sysUtils,
+    Unicode;
 
 type
+  TExodusDataTableMap = class
+  private
+    // Variables
+    _tablemap: TWidestringList;
+
+    // Methods
+    function _FindTable(tableID: widestring): integer;
+  protected
+    // Variables
+
+    // Methods
+  public
+    // Variables
+
+    // Methods
+    constructor Create();
+    destructor Destroy();
+
+    procedure AddTable(tableID: widestring; table: TSQLiteTable);
+    function FindTable(tableID: widestring): TSQLiteTable;
+    procedure RemoveTable(tableID: widestring);
+
+    // Properties
+  end;
+
   TExodusDataTable = class(TAutoObject, IExodusDataTable)
   private
     // Variables
-    _table: TSQLiteTable;
+    _tableID: widestring;
 
     // Methdods
+    function _GetTable(): TSQLiteTable;
+
+    // Properties
+    property _table: TSQLiteTable read _GetTable;
 
   protected
     // Variables
@@ -44,33 +74,42 @@ type
     // Variables
 
     // Methdods
-    constructor Create(sqltable: TSQLiteTable);
+    procedure Initialize(); override;
     destructor Destroy();
 
     // IExodusDataTable Interface
-    function Get_ColCount: Integer; safecall;
     function Get_CurrentRow: Integer; safecall;
-    function Get_IsBeginOfTable: WordBool; safecall;
-    function Get_IsEndOfTable: WordBool; safecall;
+    function Get_ColCount: Integer; safecall;
     function Get_RowCount: Integer; safecall;
+    function Get_IsEndOfTable: WordBool; safecall;
+    function Get_IsBeginOfTable: WordBool; safecall;
+    function IsFieldNULL(Field: Integer): WordBool; safecall;
+    function GetFieldByName(const Name: WideString): WideString; safecall;
     function GetCol(Column: Integer): WideString; safecall;
     function GetField(Field: Integer): WideString; safecall;
-    function GetFieldAsDouble(Field: Integer): Double; safecall;
-    function GetFieldAsInt(Field: Integer): Integer; safecall;
-    function GetFieldAsString(Field: Integer): WideString; safecall;
-    function GetFieldByName(const Name: WideString): WideString; safecall;
-    function IsFieldNULL(Field: Integer): WordBool; safecall;
-    function FirstRow: WordBool; safecall;
-    function LastRow: WordBool; safecall;
     function NextRow: WordBool; safecall;
     function PrevRow: WordBool; safecall;
+    function FirstRow: WordBool; safecall;
+    function LastRow: WordBool; safecall;
+    function GetFieldAsInt(Field: Integer): Integer; safecall;
+    function GetFieldAsString(Field: Integer): WideString; safecall;
+    function GetFieldAsDouble(Field: Integer): Double; safecall;
     function GetFieldIndex(const Field: WideString): Integer; safecall;
-
+    function Get_SQLTableID: WideString; safecall;
+    property CurrentRow: Integer read Get_CurrentRow;
+    property ColCount: Integer read Get_ColCount;
+    property RowCount: Integer read Get_RowCount;
+    property IsEndOfTable: WordBool read Get_IsEndOfTable;
+    property IsBeginOfTable: WordBool read Get_IsBeginOfTable;
+    property SQLTableID: WideString read Get_SQLTableID;
 
     // Properties
-    property Table: TSQLiteTable read _table write _table;
 
   end;
+
+var
+    ExodusDataTableMap: TExodusDataTableMap;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -82,19 +121,101 @@ uses
 
 
 {---------------------------------------}
-constructor TExodusDataTable.Create(sqltable: TSQLiteTable);
+constructor TExodusDataTableMap.Create();
 begin
-    inherited Create;
+    _tablemap := TWidestringList.Create();
+end;
 
-    _table := sqltable;
+{---------------------------------------}
+destructor TExodusDataTableMap.Destroy();
+var
+    i: integer;
+    table: TSQLiteTable;
+begin
+    for i := 0 to _tablemap.Count - 1 do begin
+        table := TSQLiteTable(_tablemap.Objects[i]);
+        if (table <> nil) then begin
+            table.Free();
+        end;
+        _tablemap.Delete(i);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusDataTableMap.AddTable(tableID: WideString; table: TSQLiteTable);
+begin
+    if (tableID = '') then exit;
+    if (table = nil) then exit;
+
+    RemoveTable(tableID);
+
+    _tablemap.AddObject(tableID, table);
+end;
+
+{---------------------------------------}
+function TExodusDataTableMap._FindTable(tableID: widestring): integer;
+var
+    i: integer;
+begin
+    Result := -1;
+    if (tableID = '') then exit;
+
+    if (_tablemap.Find(tableID, i)) then begin
+        Result := i;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusDataTableMap.FindTable(tableID: widestring): TSQLiteTable;
+var
+    i: integer;
+begin
+    Result := nil;
+    if (tableID = '') then exit;
+
+    i := _FindTable(tableID);
+
+    if (i >= 0) then begin
+        Result := TSQLiteTable(_tablemap.Objects[i]);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusDataTableMap.RemoveTable(tableID: widestring);
+var
+    i: integer;
+begin
+    if (tableID = '') then exit;
+
+    i := _FindTable(tableID);
+    if (i >= 0) then begin
+        try
+            TSQLiteTable(_tablemap.Objects[i]).Free();
+            _tablemap.Delete(i);
+        except
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusDataTable.Initialize();
+begin
+    inherited;
+    _tableID := DateTimeToStr(Now());
 end;
 
 {---------------------------------------}
 destructor TExodusDataTable.Destroy;
 begin
-    _table.Free;
+    ExodusDataTableMap.RemoveTable(_tableID);
 
     inherited;
+end;
+
+{---------------------------------------}
+function TExodusDataTable._GetTable(): TSQLiteTable;
+begin
+    Result := ExodusDataTableMap.FindTable(_tableID);
 end;
 
 {---------------------------------------}
@@ -352,12 +473,22 @@ begin
     end;
 end;
 
+{---------------------------------------}
+function TExodusDataTable.Get_SQLTableID: WideString;
+begin
+    Result := _tableID;
+end;
 
 
 
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TExodusDataTable, Class_ExodusDataTable,
-    ciMultiInstance, tmApartment);
+    TAutoObjectFactory.Create(ComServer, TExodusDataTable, Class_ExodusDataTable,
+                              ciMultiInstance, tmApartment);
+
+    ExodusDataTableMap := TExodusDataTableMap.Create();
+
+finalization
+    ExodusDataTableMap.Free();
 
 end.

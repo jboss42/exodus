@@ -1496,6 +1496,11 @@ library Exodus
     id(0x000000D9)
     ]
     HRESULT _stdcall GetFieldIndex([in] BSTR Field, [out, retval] long * index );
+    [
+    propget, 
+    id(0x000000DA)
+    ]
+    HRESULT _stdcall SQLTableID([out, retval] BSTR * Value );
   };
 
   [
@@ -8881,7 +8886,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [out, retval] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [in, out] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8959,7 +8964,7 @@ library Exodus
     propput, 
     id(0x000000CA)
     ]
-    HRESULT _stdcall Processing([in] VARIANT_BOOL Value );
+    HRESULT _stdcall Processing([in] VARIANT_BOOL value );
   };
 
   [
@@ -9168,11 +9173,11 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall addEnableFilter([in] BSTR ItemType, [in] BSTR actname, [in] SAFEARRAY(BSTR) filter );
+    HRESULT _stdcall addEnableFilter([in] BSTR ItemType, [in] BSTR actname, [in] BSTR filter );
     [
     id(0x000000CB)
     ]
-    HRESULT _stdcall addDisableFilter([in] BSTR ItemType, [in] BSTR actname, [in] SAFEARRAY(BSTR) filter );
+    HRESULT _stdcall addDisableFilter([in] BSTR ItemType, [in] BSTR actname, [in] BSTR filter );
     [
     id(0x000000CC)
     ]

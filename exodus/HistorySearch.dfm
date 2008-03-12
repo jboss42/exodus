@@ -4,6 +4,7 @@ inherited frmHistorySearch: TfrmHistorySearch
   ClientWidth = 545
   ParentFont = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnResize = FormResize
   ExplicitWidth = 553
   ExplicitHeight = 462
@@ -18,7 +19,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 500
     object pnlBasicSearchBar: TTntPanel
       Left = 0
       Top = 0
@@ -28,10 +28,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitWidth = 498
-      ExplicitHeight = 35
       object pnlBasicSearchHistoryFor: TTntPanel
         Left = 0
         Top = 0
@@ -41,9 +37,6 @@ inherited frmHistorySearch: TfrmHistorySearch
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitLeft = 1
-        ExplicitTop = 1
-        ExplicitHeight = 33
         DesignSize = (
           250
           150)
@@ -73,9 +66,6 @@ inherited frmHistorySearch: TfrmHistorySearch
         ParentBackground = False
         ParentColor = True
         TabOrder = 1
-        ExplicitLeft = 247
-        ExplicitTop = 1
-        ExplicitHeight = 33
         DesignSize = (
           250
           150)
@@ -106,8 +96,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       ParentColor = True
       TabOrder = 1
       Visible = False
-      ExplicitTop = -1
-      ExplicitWidth = 744
       object grpDate: TTntGroupBox
         Left = 8
         Top = 9
@@ -190,19 +178,10 @@ inherited frmHistorySearch: TfrmHistorySearch
         object TntLabel3: TTntLabel
           Left = 5
           Top = 20
-          Width = 160
+          Width = 129
           Height = 13
           Anchors = [akLeft, akTop, akRight]
           Caption = 'Enter one keyword per line'
-        end
-        object txtKeywords: TTntEdit
-          Left = 5
-          Top = 42
-          Width = 160
-          Height = 59
-          Anchors = [akLeft, akTop, akRight]
-          AutoSize = False
-          TabOrder = 0
         end
         object chkExact: TTntCheckBox
           Left = 5
@@ -211,6 +190,13 @@ inherited frmHistorySearch: TfrmHistorySearch
           Height = 17
           Anchors = [akLeft, akTop, akRight]
           Caption = 'Exact Match'
+          TabOrder = 0
+        end
+        object txtKeywords: TTntMemo
+          Left = 5
+          Top = 42
+          Width = 160
+          Height = 59
           TabOrder = 1
         end
       end
@@ -232,6 +218,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Anchors = [akTop, akRight]
           Caption = 'Add...'
           TabOrder = 0
+          OnClick = btnAddJIDClick
         end
         object btnRemoveJID: TTntButton
           Left = 90
@@ -241,15 +228,21 @@ inherited frmHistorySearch: TfrmHistorySearch
           Anchors = [akTop, akRight]
           Caption = 'Remove'
           TabOrder = 1
+          OnClick = btnRemoveJIDClick
         end
         object lstJids: TTntListBox
-          Left = 5
+          Left = 7
           Top = 19
           Width = 160
           Height = 82
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
+          Items.Strings = (
+            'test2@wrk186.corp.jabber.com'
+            'test800@wrk186.corp.jabber.com')
+          MultiSelect = True
           TabOrder = 2
+          OnClick = lstJidsClick
         end
       end
     end
@@ -263,9 +256,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    ExplicitTop = 156
-    ExplicitWidth = 500
-    ExplicitHeight = 272
     object Splitter1: TSplitter
       Left = 0
       Top = 89
@@ -285,7 +275,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 500
       object TntListView1: TTntListView
         Left = 0
         Top = 0
@@ -306,13 +295,6 @@ inherited frmHistorySearch: TfrmHistorySearch
           end>
         Constraints.MinHeight = 50
         GridLines = True
-        Items.ItemData = {
-          01A20000000300000000000000FFFFFFFFFFFFFFFF0200000000000000036100
-          620063000364006500660003680069006A0000000000FFFFFFFFFFFFFFFF0200
-          00000000000003310032003300033400350036000337003800390000000000FF
-          FFFFFFFFFFFFFF02000000000000000568006F00770064007900046400750064
-          0065000C7400680069007300200069007300200063006F006F006C00FFFFFFFF
-          FFFFFFFFFFFFFFFF}
         TabOrder = 0
         ViewStyle = vsReport
         ExplicitTop = -3
@@ -326,10 +308,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Height = 151
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 216
-      ExplicitTop = 168
-      ExplicitWidth = 185
-      ExplicitHeight = 41
     end
   end
   object pnlControlBar: TTntPanel
@@ -341,8 +319,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    ExplicitTop = 193
-    ExplicitWidth = 500
     DesignSize = (
       545
       35)
@@ -354,7 +330,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Anchors = [akTop, akRight]
       Caption = 'Search'
       TabOrder = 0
-      ExplicitLeft = 416
+      OnClick = btnSerachClick
     end
     object btnAdvBasicSwitch: TTntButton
       Left = 380
@@ -365,7 +341,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Caption = 'Advanced'
       TabOrder = 1
       OnClick = btnAdvBasicSwitchClick
-      ExplicitLeft = 335
     end
   end
 end

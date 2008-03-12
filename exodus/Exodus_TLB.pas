@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-03-11 09:24:11 from Type Library described below.
+// File generated on 3/12/2008 12:04:08 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4720,7 +4720,7 @@ type
   IExodusDataStore = interface(IDispatch)
     ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
     function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
-    function GetTable(const SQLStatement: WideString): IExodusDataTable; safecall;
+    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); safecall;
   end;
 
 // *********************************************************************//
@@ -4731,7 +4731,7 @@ type
   IExodusDataStoreDisp = dispinterface
     ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
     function ExecSQL(const SQLStatement: WideString): WordBool; dispid 201;
-    function GetTable(const SQLStatement: WideString): IExodusDataTable; dispid 202;
+    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); dispid 202;
   end;
 
 // *********************************************************************//
@@ -4758,11 +4758,13 @@ type
     function GetFieldAsString(Field: Integer): WideString; safecall;
     function GetFieldAsDouble(Field: Integer): Double; safecall;
     function GetFieldIndex(const Field: WideString): Integer; safecall;
+    function Get_SQLTableID: WideString; safecall;
     property CurrentRow: Integer read Get_CurrentRow;
     property ColCount: Integer read Get_ColCount;
     property RowCount: Integer read Get_RowCount;
     property IsEndOfTable: WordBool read Get_IsEndOfTable;
     property IsBeginOfTable: WordBool read Get_IsBeginOfTable;
+    property SQLTableID: WideString read Get_SQLTableID;
   end;
 
 // *********************************************************************//
@@ -4789,6 +4791,7 @@ type
     function GetFieldAsString(Field: Integer): WideString; dispid 215;
     function GetFieldAsDouble(Field: Integer): Double; dispid 216;
     function GetFieldIndex(const Field: WideString): Integer; dispid 217;
+    property SQLTableID: WideString readonly dispid 218;
   end;
 
 // *********************************************************************//

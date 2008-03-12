@@ -50,8 +50,8 @@ type
     // Variables
 
     // Methods
-    constructor Create();
-    destructor Destroy();
+    procedure Initialize(); override;
+    destructor Destroy(); override;
 
     // IExodusHistorySearch Interface
     function Get_AllowedSearchTypeCount: Integer; safecall;
@@ -83,7 +83,7 @@ uses
     ComServ, sysUtils, DateUtils;
 
 {---------------------------------------}
-constructor TExodusHistorySearch.Create();
+procedure TExodusHistorySearch.Initialize();
 begin
     inherited;
 
@@ -107,7 +107,7 @@ begin
     _AllowedSearchType.Free();
     _JIDList.Free();
     _KeywordList.Free();
-
+ 
     inherited;
 end;
 
