@@ -202,17 +202,17 @@ begin
     end;
 
     //Check for "do or die"!
-//    If not Action.Enabled then begin
-//        Result := false;
-//        exit;
-//    end;
+    If not Action.Enabled then begin
+        Result := false;
+        exit;
+    end;
 
     //Check enabling (if any are present)
-    Result := containsAny(_enabling, enabling);
+    Result := (_enabling.Count = 0) or containsAny(_enabling, enabling);
     if not Result then exit;
 
     //Check disabling
-    Result := not containsAny(_disabling, disabling);
+    Result := (_disabling.Count = 0) or not containsAny(_disabling, disabling);
     if not Result then exit;
 
     Result := true;
