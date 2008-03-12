@@ -287,7 +287,7 @@ var
 begin
     if (_CurrentSearches.Find(SearchID, i)) then begin
         tracker := TSearchTracker(_CurrentSearches.Objects[i]);
-        for j := 0 to tracker.HandlerList.Count - 1 do begin
+        for j := tracker.HandlerList.Count - 1 downto 0 do begin
             if (_HandlerList.Find(tracker.HandlerList[j], k)) then begin
                 hwrapper := TSearchHandlerWrapper(_HandlerList.Objects[k]);
                 hwrapper.Handler.CancelSearch(SearchID);

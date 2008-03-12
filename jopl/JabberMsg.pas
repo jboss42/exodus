@@ -76,6 +76,7 @@ type
         constructor Create; overload;
         constructor Create(mTag: TXMLTag); overload;
         constructor Create(cToJID, cMsgType, cBody, cSubject : WideString; priority: PriorityType = None); overload;
+        constructor Create(msg: TJabberMessage); overload;
         destructor Destroy; override;
 
         function GetTag(duplicateTag:boolean = true): TXMLTag;
@@ -251,6 +252,34 @@ begin
     setBody(cBody);
     setMsgType(cMsgType);
     _priority := priority;
+end;
+
+{---------------------------------------}
+constructor TJabberMessage.Create(msg: TJabberMessage);
+begin
+    if (msg.Tag <> nil) then begin
+        Create(msg.Tag);
+    end
+    else begin
+        Create();
+
+        _ToJID := msg.ToJID;
+        _FromJID := msg.FromJID;
+        _Subject := msg.Subject;
+        _Thread := msg.Thread;
+        _Body := msg.Body;
+        _msg_type := msg.MsgType;
+        _ID := msg.ID;
+        _Action := msg.Action;
+        _Nick := msg.Nick;
+        _isMe := msg.isMe;
+        _Time := msg.Time;
+        _isXdata := msg.isXdata;
+        _highlight := msg.highlight;
+        _XML := msg.XML;
+        _Composing := msg.Composing;
+        _Priority := msg.Priority;
+    end;
 end;
 
 {---------------------------------------}

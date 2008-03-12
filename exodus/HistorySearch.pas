@@ -31,7 +31,9 @@ uses
   COMExodusHistorySearch,
   COMExodusHistoryResult,
   BaseMsgList,
-  Exodus_TLB;
+  Exodus_TLB,
+  JabberMsg,
+  Unicode;
 
 type
   TfrmHistorySearch = class(TExForm)
@@ -49,7 +51,7 @@ type
     btnSerach: TTntButton;
     btnAdvBasicSwitch: TTntButton;
     pnlResultsList: TTntPanel;
-    TntListView1: TTntListView;
+    lstResults: TTntListView;
     Splitter1: TSplitter;
     pnlResultsHistory: TTntPanel;
     radioAll: TTntRadioButton;
@@ -86,7 +88,7 @@ type
     _DoAdvSearch: boolean;
     _SearchObj: IExodusHistorySearch;
     _ResultObj: IExodusHistoryResult;
-
+    _ResultList: TWidestringList;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -102,6 +104,7 @@ type
     // Variables
 
     // Methods
+    procedure ResultCallback(msg: TJabberMessage);
 
     // Properties
     property MsgList: TfBaseMsgList read _getMsgList;
@@ -132,7 +135,6 @@ uses
     SelContact,
     SQLSearchHandler,
     ExSession,
-    Unicode,
     ComObj;
 
 {---------------------------------------}
@@ -229,7 +231,7 @@ begin
     end;
 
     // Set Callback
-    //r.SetCallback();
+    ExodusHistoryResultCallbackMap.AddCallback(Self.ResultCallback, _ResultObj);
 
     // Change to "searching GUI"
 
@@ -283,13 +285,26 @@ begin
 
     _SearchObj := nil;
     _ResultObj := nil;
+
+    _ResultList := TWidestringList.Create();
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.FormDestroy(Sender: TObject);
+var
+    i: integer;
+    msg: TJabberMessage;
 begin
     _SearchObj := nil;
     _ResultObj := nil;
+
+    for i := _ResultList.Count - 1 downto 0 do begin
+        msg := TJabberMessage(_ResultList.Objects[i]);
+        msg.Free();
+        _ResultList.Delete(i);
+    end;
+    _ResultList.Free();
+
     inherited;
 end;
 
@@ -382,7 +397,43 @@ begin
 
 end;
 
+{---------------------------------------}
+procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
+var
+    newItem: TTntListItem;
+    newmsg: TJabberMessage;
+begin
+    if (msg = nil) then begin
+        // End of results - remove from Result callback map
+        ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
 
+        // Change GUI to "done searching"
+    end
+    else begin
+        // Got another result so check to see if we should display it.
+        newmsg := TJabberMessage.Create(msg);
+
+        // Override the TJabberMessage timestamp
+        // as it puts a Now() timestamp on when it
+        // doesn't find the MSGDELAY tag.  As we
+        // are pulling the original XML, it probably
+        // didn't have this tag when we stored it.
+        newmsg.Time := msg.Time;
+
+        _ResultList.AddObject('', newmsg);
+
+        newItem := lstResults.Items.Add();
+        newItem.Caption := '';
+        if (newmsg.isMe) then begin
+            newItem.SubItems.Add(newmsg.ToJID);
+        end
+        else begin
+            newItem.SubItems.Add(newmsg.FromJID);
+        end;
+        newItem.SubItems.Add(DateTimeToStr(newmsg.Time));
+        newItem.SubItems.Add(newmsg.Body);
+    end;
+end;
 
 
 
