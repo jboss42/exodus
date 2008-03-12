@@ -88,10 +88,10 @@ begin
             selected.Add(IExodusItem(node.Data));
     end;
 
-    actmap := GetActionController().buildActions(selected);
+    _actMap := GetActionController().buildActions(selected);
     //TODO: build menus
     Items.Clear();
-    actlist := actmap.GetActionsFor('');
+    actlist := _actmap.GetActionsFor('');
     if (actlist = nil) then
         exit;
         
@@ -106,7 +106,6 @@ begin
         Items.Add(mi);
     end;
 
-    _actMap := actmap;
     inherited Popup(X, Y);
 end;
 

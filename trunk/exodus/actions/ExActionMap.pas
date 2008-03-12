@@ -183,17 +183,26 @@ begin
     Result := _actLists.Count;
 end;
 function TExodusActionMap.Get_TypedActions(idx: Integer): IExodusTypedActions;
+var
+    actList: TExodusTypedActions;
 begin
-    Result := TExodusTypedActions(_actLists.Objects[idx]) as IExodusTypedActions;
+    Result := nil;
+    if (idx < 0) or (idx > _actLists.Count) then exit;
+    
+    actList := TExodusTypedActions(_actLists.Objects[idx]);
+    Result := actList as IExodusTypedActions;
 end;
 function TExodusActionMap.GetActionsFor(const itemtype: WideString): IExodusTypedActions;
 var
     idx: Integer;
+    actList: TExodusTypedActions;
 begin
     Result := nil;
     idx := _actLists.IndexOf(itemtype);
-    if (idx <> -1) then
-        Result := TExodusTypedActions(_actLists.Objects[idx]) as IExodusTypedActions
+    if (idx = -1) then exit;
+
+    actList := TExodusTypedActions(_actLists.Objects[idx]);
+    Result := actList as IExodusTypedActions
 end;
 
 function TExodusActionMap.GetActionNamed(const name: WideString): IExodusAction;

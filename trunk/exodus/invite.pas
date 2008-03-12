@@ -25,9 +25,17 @@ uses
     Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
-  TntStdCtrls, TntComCtrls, JabberID, ExForm, TntForms, ExFrame;
+  TntStdCtrls, TntComCtrls, JabberID, ExForm, TntForms, ExFrame,
+  ExActions, ExActionCtrl, Exodus_TLB;
 
 type
+  TInviteToRoomAction = class(TExBaseAction)
+  private
+    constructor Create;
+  public
+    procedure execute(const items: IExodusItemList); override;
+  end;
+  
   TfrmInvite = class(TExForm)
     frameButtons1: TframeButtons;
     pnlMain: TPanel;
@@ -362,4 +370,49 @@ begin
     _selector.Free();
 end;
 
+{
+    TInviteToRoomAction implementation
+}
+constructor TInviteToRoomAction.Create;
+begin
+    inherited Create('{exodus.googlecode.com}invite-to-room');
+
+    Caption := _('Invite to Conference...');
+end;
+
+procedure TInviteToRoomAction.execute(const items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+    jids: TWidestringList;
+begin
+    jids := TWidestringList.Create;
+
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+        jids.Add(item.UID);
+    end;
+    ShowInvite('', jids);
+
+    jids.Free;
+end;
+
+
+procedure RegisterActions();
+var
+    actctrl: IExodusActionController;
+    act: TInviteToRoomAction;
+begin
+    act := TInviteToRoomAction.Create;
+
+    actctrl := GetActionController();
+    actctrl.registerAction('contact', act as IExodusAction);
+
+    //TODO:  setup filters...
+
+end;
+
+initialization
+    RegisterActions();
+    
 end.

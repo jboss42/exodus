@@ -37,9 +37,7 @@ type
   private
     constructor Create;
   public
-    destructor Destroy; override;
-
-    procedure execute(items: IExodusItemList); override;
+    procedure execute(const items: IExodusItemList); override;
   end;
 
   TfrmChat = class(TfrmBaseChat)
@@ -1900,7 +1898,7 @@ begin
     Caption := _('Start Chat');
     Enabled := true;
 end;
-procedure TStartChatAction.execute(items: IExodusItemList);
+procedure TStartChatAction.execute(const items: IExodusItemList);
 var
     idx: Integer;
     item: IExodusItem;
