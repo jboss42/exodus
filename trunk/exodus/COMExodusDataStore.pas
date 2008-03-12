@@ -43,7 +43,7 @@ type
   public
     // IExodusDataStore Interface
     function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
-    function GetTable(const SQLStatement: WideString): IExodusDataTable; safecall;
+    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); safecall;
 
     constructor Create(filename: widestring);
     destructor Destroy();
@@ -94,18 +94,20 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusDataStore.GetTable(const SQLStatement: WideString): IExodusDataTable;
+procedure TExodusDataStore.GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable);
 var
     sqlTable: TSQLiteTable;
 begin
-    Result := nil;
-
     if (_DBHandle = nil) then exit;
     if (SQLStatement = '') then exit;
+    if (ResultTable = nil) then exit;
 
     try
         sqlTable := _DBHandle.GetTable(SQLStatement);
-        Result := TExodusDataTable.Create(sqlTable);
+
+        if (sqlTable <> nil) then begin
+            ExodusDataTableMap.AddTable(ResultTable.SQLTableID, sqlTable);
+        end;
     except
     end;
 end;
