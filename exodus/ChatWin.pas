@@ -30,13 +30,16 @@ uses
   ExActions, ExActionCtrl;
 
 type
-  TStartChatAction = class(TBaseAction)
+  {
+    Action implementation to start chats with a given contact(s)
+  }
+  TStartChatAction = class(TExBaseAction)
   private
     constructor Create;
   public
     destructor Destroy; override;
 
-    procedure execute(const items: IExodusItemList); override; safecall;
+    procedure execute(items: IExodusItemList); override;
   end;
 
   TfrmChat = class(TfrmBaseChat)
@@ -228,6 +231,7 @@ function StartChat(sjid, resource: widestring;
                    bring_to_front:boolean=true): TfrmChat;
 
 procedure CloseAllChats;
+procedure RegisterActions;
 
 implementation
 uses
@@ -269,12 +273,15 @@ const
 procedure RegisterActions();
 var
     actctrl: IExodusActionController;
+    act: TStartChatAction;
 begin
-    actctrl := GetActionController();
+    act := TStartChatAction.Create;
 
-    actctrl.registerAction('contact', TStartChatAction.Create());
+    actctrl := GetActionController();
+    actctrl.registerAction('contact', act as IExodusAction);
     actctrl.addEnableFilter('contact', '{exodus.googlecode.com}start-chat', 'selection=single');
 end;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -472,30 +479,6 @@ begin
             end;
         end;
     end;
-end;
-
-constructor TStartChatAction.Create;
-begin
-    inherited Create('{exodus.googlecode.com}start-chat');
-
-    Set_Caption(_('Start Chat'));
-end;
-destructor TStartChatAction.Destroy;
-begin
-    inherited Destroy;
-end;
-
-procedure TStartChatAction.execute(const items: IExodusItemList);
-var
-    item: IExodusItem;
-begin
-    if items.Count = 1 then
-        item := items.Item[0]
-    else
-        item := nil;
-
-    if item <> nil then
-        StartChat(item.UID, '', true);
 end;
 
 {---------------------------------------}
@@ -1905,6 +1888,31 @@ procedure TfrmChat.OnDisplayNameChange(bareJID: Widestring; displayName: WideStr
 begin
     //our display name has changed, refresh title, labels
     updateDisplayName();
+end;
+
+{
+    TStartChatAction implementation
+}
+constructor TStartChatAction.Create;
+begin
+    inherited Create('{exodus.googlecode.com}start-chat');
+
+    Caption := _('Start Chat');
+    Enabled := true;
+end;
+procedure TStartChatAction.execute(items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+begin
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+
+        if item.Type_ = 'contact' then StartChat(item.UID, '', true);
+    end;
+
+    //Let's just make sure we clean up...
+    item := nil;
 end;
 
 initialization

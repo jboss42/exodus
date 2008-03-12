@@ -4,13 +4,15 @@ interface
 
 uses ActiveX, Classes, ComObj, Contnrs, Unicode, Exodus_TLB;
 
-type TBaseAction = class(TAutoIntfObject, IExodusAction)
+type TExodusActionCall = procedure(items: IExodusItemList) of Object;
+type TExBaseAction = class(TAutoIntfObject, IExodusAction)
     private
         _name: Widestring;
         _caption: Widestring;
         _imgIdx: Integer;
         _enabled: Boolean;
         _subactions: TInterfaceList;
+        _call: TExodusActionCall;
 
     protected
         procedure set_Caption(txt: Widestring);
@@ -33,6 +35,11 @@ type TBaseAction = class(TAutoIntfObject, IExodusAction)
         function Get_SubActionCount: Integer; safecall;
         function Get_SubAction(idx: Integer): IExodusAction; safecall;
 
+        property Caption: Widestring read Get_Caption write Set_Caption;
+        property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
+        property Enabled: WordBool read Get_Enabled write Set_Enabled;
+        property Callback: TExodusActionCall read _call write _call;
+
         procedure execute(const items: IExodusItemList); virtual; safecall;
     end;
 
@@ -43,7 +50,7 @@ uses ComServ, SysUtils;
 {
     TBaseAction implementation
 }
-constructor TBaseAction.Create(name: Widestring);
+constructor TExBaseAction.Create(name: Widestring);
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusAction);
 
@@ -52,50 +59,50 @@ begin
     _enabled := true;
     _subactions := TInterfaceList.Create;
 end;
-destructor TBaseAction.Destroy;
+destructor TExBaseAction.Destroy;
 begin
     FreeAndNil(_subactions);
 
     inherited;
 end;
 
-function TBaseAction.Get_Name: Widestring;
+function TExBaseAction.Get_Name: Widestring;
 begin
     Result := _name;
 end;
 
-function TBaseAction.Get_Caption: Widestring;
+function TExBaseAction.Get_Caption: Widestring;
 begin
     Result := _caption;
 end;
-procedure TBaseAction.set_Caption(txt: WideString);
+procedure TExBaseAction.set_Caption(txt: WideString);
 begin
      _caption := txt;
 end;
 
-function TBaseAction.Get_ImageIndex: Integer;
+function TExBaseAction.Get_ImageIndex: Integer;
 begin
     Result := _imgIdx;
 end;
-procedure TBaseAction.set_ImageIndex(idx: Integer);
+procedure TExBaseAction.set_ImageIndex(idx: Integer);
 begin
     _imgIdx := idx;
 end;
 
-function TBaseAction.Get_Enabled: WordBool;
+function TExBaseAction.Get_Enabled: WordBool;
 begin
     Result := _enabled;
 end;
-procedure TBaseAction.set_Enabled(flag: WordBool);
+procedure TExBaseAction.set_Enabled(flag: WordBool);
 begin
     _enabled := flag;
 end;
 
-function TBaseAction.Get_SubActionsList: TInterfaceList;
+function TExBaseAction.Get_SubActionsList: TInterfaceList;
 begin
     Result := _subactions;
 end;
-procedure TBaseAction.Set_SubActionsList(acts: TInterfaceList);
+procedure TExBaseAction.Set_SubActionsList(acts: TInterfaceList);
 var
     idx: Integer;
     act: IExodusAction;
@@ -111,28 +118,29 @@ begin
     end;
 end;
 
-function TBaseAction.Get_SubActionCount: Integer;
+function TExBaseAction.Get_SubActionCount: Integer;
 begin
     Result := _subactions.Count;
 end;
-function TBaseAction.Get_SubAction(idx: Integer): IExodusAction;
+function TExBaseAction.Get_SubAction(idx: Integer): IExodusAction;
 begin
     Result := IExodusAction(_subactions[idx]);
 end;
-procedure TBaseAction.addSubaction(act: IExodusAction);
+procedure TExBaseAction.addSubaction(act: IExodusAction);
 begin
     if (act <> nil) and (_subactions.IndexOf(act) = -1) then
         _subactions.Add(act);
 end;
-procedure TBaseAction.remSubaction(act: IExodusAction);
+procedure TExBaseAction.remSubaction(act: IExodusAction);
 begin
     if (act <> nil) then
         _subactions.Remove(act);
 end;
 
-procedure TBaseAction.execute(const items: IExodusItemList);
+procedure TExBaseAction.execute(const items: IExodusItemList);
 begin
-    //DO NOTHING
+    if Enabled and Assigned(_call) then
+        Callback(items);
 end;
 
 end.
