@@ -75,7 +75,7 @@ type
 
     // Methdods
     procedure Initialize(); override;
-    destructor Destroy();
+    destructor Destroy(); override;
 
     // IExodusDataTable Interface
     function Get_CurrentRow: Integer; safecall;
@@ -132,7 +132,7 @@ var
     i: integer;
     table: TSQLiteTable;
 begin
-    for i := 0 to _tablemap.Count - 1 do begin
+    for i := _tablemap.Count - 1 downto 0 do begin
         table := TSQLiteTable(_tablemap.Objects[i]);
         if (table <> nil) then begin
             table.Free();

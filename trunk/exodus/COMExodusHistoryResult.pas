@@ -33,13 +33,55 @@ uses
 
 type
     TInternalResultCallback = procedure(msg: TJabberMessage) of object;
+
+    TExodusHistoryResultCallbackItem = class
+        private
+            // Variables
+
+            // Methods
+        protected
+            // Variables
+
+            // Methods
+        public
+            // Variables
+            cb: TInternalResultCallback;
+            ResultObj: IExodusHistoryResult
+
+            // Methods
+    end;
+
+    TExodusHistoryResultCallbackMap = class
+        private
+            // Variables
+            _callbackmap: TWidestringList;
+
+            // Methods
+            function _FindCallback(ResultObj: IExodusHistoryResult): TExodusHistoryResultCallbackItem;
+        protected
+            // Variables
+
+            // Methods
+        public
+            // Variables
+
+            // Methods
+            constructor Create();
+            destructor Destroy();
+
+            procedure AddCallback(cb: TInternalResultCallback; ResultObj: IExodusHistoryResult);
+            procedure FireCallback(ResultObj: IExodusHistoryResult; msg: TJabberMessage);
+            procedure DeleteCallback(ResultObj: IExodusHistoryResult);
+
+            // Properties
+
+    end;
+
     TExodusHistoryResult = class(TAutoObject, IExodusHistoryResult)
         private
             // Variables
             _processing: boolean;
             _ResultList: TWidestringList;
-            _callback: TInternalResultCallback; // callback for internal (non COM API) use
-            _callbackset: boolean;
 
             // Methods
 
@@ -53,9 +95,7 @@ type
 
             // Methods
             procedure Initialize(); override;
-            destructor Destroy();
-
-            procedure SetCallback(cb: TInternalResultCallback);
+            destructor Destroy(); override;
 
             // IExodusHistoryResult Interface
             function Get_ResultCount: Integer; safecall;
@@ -69,6 +109,9 @@ type
             // Properties
     end;
 
+var
+    ExodusHistoryResultCallbackMap: TExodusHistoryResultCallbackMap;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -80,6 +123,99 @@ uses
     ComLogMsg,
     JabberUtils;
 
+
+{---------------------------------------}
+constructor TExodusHistoryResultCallbackMap.Create();
+begin
+    _callbackmap := TWidestringList.Create();
+end;
+
+{---------------------------------------}
+destructor TExodusHistoryResultCallbackMap.Destroy();
+var
+    i: integer;
+    tmp: TExodusHistoryResultCallbackItem;
+begin
+    for i := _callbackmap.Count - 1 downto 0 do begin
+        tmp := TExodusHistoryResultCallbackItem(_callbackmap.Objects[i]);
+        tmp.Free();
+        _callbackmap.Delete(i);
+    end;
+    _callbackmap.Free();
+end;
+
+{---------------------------------------}
+procedure TExodusHistoryResultCallbackMap.AddCallback(cb: TInternalResultCallback; ResultObj: IExodusHistoryResult);
+var
+    tmp: TExodusHistoryResultCallbackItem;
+begin
+    if (ResultObj = nil) then exit;
+
+    DeleteCallback(ResultObj);
+
+    tmp := TExodusHistoryResultCallbackItem.Create();
+    tmp.cb := cb;
+    tmp.ResultObj := ResultObj;
+
+    _callbackmap.AddObject('', tmp);
+end;
+
+{---------------------------------------}
+function TExodusHistoryResultCallbackMap._FindCallback(ResultObj: IExodusHistoryResult): TExodusHistoryResultCallbackItem;
+var
+    i: integer;
+    tmp: TExodusHistoryResultCallbackItem;
+begin
+    Result := nil;
+    if (ResultObj = nil) then exit;
+
+    for i := 0 to _callbackmap.Count - 1 do begin
+        tmp := TExodusHistoryResultCallbackItem(_callbackmap.Objects[i]);
+        if ((tmp <> nil) and
+            (ResultObj = tmp.ResultObj)) then begin
+            Result := tmp;
+            break;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusHistoryResultCallbackMap.FireCallback(ResultObj: IExodusHistoryResult; msg: TJabberMessage);
+var
+    tmp: TExodusHistoryResultCallbackItem;
+begin
+    if (ResultObj = nil) then exit;
+    if (msg = nil) then exit;
+
+    tmp := _FindCallback(ResultObj);
+    if (tmp <> nil) then begin
+        try
+            tmp.cb(msg);
+        except
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusHistoryResultCallbackMap.DeleteCallback(ResultObj: IExodusHistoryResult);
+var
+    i: integer;
+    tmp: TExodusHistoryResultCallbackItem;
+begin
+    if (ResultObj = nil) then exit;
+
+    for i := 0 to _callbackmap.Count - 1 do begin
+        tmp := TExodusHistoryResultCallbackItem(_callbackmap.Objects[i]);
+        if ((tmp <> nil) and
+            (ResultObj = tmp.ResultObj)) then begin
+            tmp.Free();
+            _callbackmap.Delete(i);
+            break;
+        end;
+    end;
+end;
+
+
 {---------------------------------------}
 procedure TExodusHistoryResult.Initialize();
 begin
@@ -87,8 +223,6 @@ begin
 
     _ResultList := TWidestringList.Create();
     _processing := false;
-    _callback := nil;
-    _callbackset := false;
 end;
 
 {---------------------------------------}
@@ -97,7 +231,7 @@ var
     i: integer;
     msg: TJabberMessage;
 begin
-    for i := 0 to _ResultList.Count - 1 do begin
+    for i := _ResultList.Count - 1 downto 0 do begin
         msg := TJabberMessage(_ResultList.Objects[i]);
         msg.Free();
         _ResultList.Delete(i);
@@ -139,9 +273,10 @@ begin
         // Got a nil so that is the signal to end processing.
         _processing := false;
 
-        if (_callbackset) then begin
-            _callback(nil);
-        end;
+        // Special hack for internal use of the result object.
+        // On an externally created Result object, this should
+        // just not do anything.
+        ExodusHistoryResultCallbackMap.FireCallback(Self, nil);
     end
     else begin
         msg := TJabberMessage.Create();
@@ -165,9 +300,10 @@ begin
 
         _ResultList.AddObject('', msg);
 
-        if (_callbackset) then begin
-            _callback(msg);
-        end;
+        // Special hack for internal use of the result object.
+        // On an externally created Result object, this should
+        // just not do anything.
+        ExodusHistoryResultCallbackMap.FireCallback(Self, msg);
     end;
 end;
 
@@ -177,16 +313,14 @@ begin
     _processing := value;
 end;
 
-{---------------------------------------}
-procedure TExodusHistoryResult.SetCallback(cb: TInternalResultCallback);
-begin
-    _callbackset := true;
-    _callback := cb;
-end;
-
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TExodusHistoryResult, Class_ExodusHistoryResult,
-    ciMultiInstance, tmApartment);
+    TAutoObjectFactory.Create(ComServer, TExodusHistoryResult, Class_ExodusHistoryResult,
+                              ciMultiInstance, tmApartment);
+
+    ExodusHistoryResultCallbackMap := TExodusHistoryResultCallbackMap.Create();
+
+finalization
+    ExodusHistoryResultCallbackMap.Free();
 
 end.

@@ -275,7 +275,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      object TntListView1: TTntListView
+      object lstResults: TTntListView
         Left = 0
         Top = 0
         Width = 545
@@ -292,13 +292,14 @@ inherited frmHistorySearch: TfrmHistorySearch
           item
             Caption = 'Date'
             Width = 200
+          end
+          item
+            Caption = 'Body'
           end>
         Constraints.MinHeight = 50
         GridLines = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitTop = -3
-        ExplicitWidth = 500
       end
     end
     object pnlResultsHistory: TTntPanel

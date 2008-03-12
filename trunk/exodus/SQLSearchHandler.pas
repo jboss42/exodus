@@ -101,7 +101,7 @@ begin
     HistorySearchManager.UnRegisterSearchHandler(_handlerID);
 
     _SearchTypes.Clear();
-    for i := 0 to _CurrentSearches.Count - 1 do begin
+    for i := _CurrentSearches.Count - 1 downto 0 do begin
         thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
         try
             thread.Terminate();
@@ -125,6 +125,7 @@ begin
     searchThread.DataStore := DataStore;
     searchThread.SQLStatement := GenerateSQLSearchString(SearchParameters);
     searchThread.SetCallback(Self.OnResult);
+    searchThread.SetTable(CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable);
 
     _CurrentSearches.AddObject(searchThread.SearchID, SearchThread);
 

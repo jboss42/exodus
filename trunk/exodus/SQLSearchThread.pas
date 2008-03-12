@@ -39,9 +39,10 @@ type
             _SearchID: Widestring;
             _callback: TSQLThreadResult;
             _callbackSet: boolean;
+            _table: IExodusDataTable;
 
             // Methods
-            procedure _ProcessResultTable(table: IExodusDataTable);
+            procedure _ProcessResultTable();
             procedure _OnResult();
 
         protected
@@ -56,6 +57,7 @@ type
 
             procedure Execute; override;
             procedure SetCallback(callback: TSQLThreadResult);
+            procedure SetTable(table: IExodusDataTable);
 
             // Properties
             property DataStore: TExodusDataStore write _DataStore;
@@ -105,22 +107,20 @@ end;
 
 {---------------------------------------}
 procedure TSQLSearchThread.Execute;
-var
-    table: IExodusDataTable;
 begin
     if (_DataStore = nil) then exit;
     if (_SQLStatement = '') then exit;
 
-    table := CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable;
-
-    if (table <> nil) then begin
-        _DataStore.GetTable(_SQLStatement, table);
-        _ProcessResultTable(table);
+    if (_table <> nil) then begin
+        _DataStore.GetTable(_SQLStatement, _table);
+        _ProcessResultTable();
     end;
+
+    _table := nil;
 end;
 
 {---------------------------------------}
-procedure TSQLSearchThread._ProcessResultTable(table: IExodusDataTable);
+procedure TSQLSearchThread._ProcessResultTable();
 const
     msgid_col = 0;
     user_jid_col = 1;
@@ -141,14 +141,14 @@ var
     tmp: widestring;
     parser: TXMLTagParser;
 begin
-    if (table = nil) then exit;
+    if (_table = nil) then exit;
 
     try
         parser := TXMLTagParser.Create();
 
-        table.FirstRow();
-        for i := 0 to table.RowCount - 1 do begin
-            tmp := table.GetField(xml_col);
+        _table.FirstRow();
+        for i := 0 to _table.RowCount - 1 do begin
+            tmp := _table.GetField(xml_col);
             if (tmp <> '') then begin
                 // if we have the tag stored, try and recreate
                 // jabber message using stored tag
@@ -156,32 +156,40 @@ begin
                 parser.ParseString(tmp, '');
                 tag := parser.popTag();
                 _msg := TJabberMessage.Create(tag);
+
+                // Override the TJabberMessage timestamp
+                // as it puts a Now() timestamp on when it
+                // doesn't find the MSGDELAY tag.  As we
+                // are pulling the original XML, it probably
+                // didn't have this tag when we stored it.
+                _msg.Time := _table.GetFieldAsInt(date_col) +
+                             _table.GetFieldAsDouble(time_col);
                 tag.Free();
             end
             else begin
                 // No tag stored
                 _msg := TJabberMessage.Create();
 
-                if (table.GetField(outbound_col) = 'TRUE') then begin
-                    _msg.ToJID := table.GetField(jid_col);
-                    _msg.FromJID := table.GetField(user_jid_col);
+                if (_table.GetField(outbound_col) = 'TRUE') then begin
+                    _msg.ToJID := _table.GetField(jid_col);
+                    _msg.FromJID := _table.GetField(user_jid_col);
                     if (_msg.FromJID <> '') then begin
                         _msg.isMe := true;
                     end;
                 end
                 else begin
-                    _msg.ToJID := table.GetField(user_jid_col);
-                    _msg.FromJID := table.GetField(jid_col);
+                    _msg.ToJID := _table.GetField(user_jid_col);
+                    _msg.FromJID := _table.GetField(jid_col);
                 end;
-                _msg.Subject := table.GetField(subject_col);
-                _msg.Thread := table.GetField(thread_col);
-                _msg.Body := table.GetField(body_col);
-                _msg.MsgType := table.GetField(type_col);
-                _msg.Nick := table.GetField(nick_col);
-                _msg.Time := table.GetFieldAsInt(date_col) +
-                             table.GetFieldAsDouble(time_col);
+                _msg.Subject := _table.GetField(subject_col);
+                _msg.Thread := _table.GetField(thread_col);
+                _msg.Body := _table.GetField(body_col);
+                _msg.MsgType := _table.GetField(type_col);
+                _msg.Nick := _table.GetField(nick_col);
+                _msg.Time := _table.GetFieldAsInt(date_col) +
+                             _table.GetFieldAsDouble(time_col);
                 //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
-                case table.GetFieldAsInt(priority_col) of
+                case _table.GetFieldAsInt(priority_col) of
                     0: _msg.Priority := high;
                     1: _msg.Priority := medium;
                     2: _msg.Priority := low;
@@ -195,8 +203,8 @@ begin
             _msg.Free();
             _msg := nil;
 
-            if (i < table.RowCount - 1) then begin
-                table.NextRow();
+            if (i < _table.RowCount - 1) then begin
+                _table.NextRow();
             end;
         end;
 
@@ -221,6 +229,15 @@ begin
     _callbackSet := true;
     _callback := callback;
 end;
+
+{---------------------------------------}
+procedure TSQLSearchThread.SetTable(table: IExodusDataTable);
+begin
+    if (table = nil) then exit;
+
+    _table := table;
+end;
+
 
 
 end.
