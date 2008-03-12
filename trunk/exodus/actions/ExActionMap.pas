@@ -2,7 +2,7 @@ unit ExActionMap;
 
 interface
 
-uses ActiveX, ComObj, Classes, Contnrs, ExActions, Exodus_TLB;
+uses ActiveX, ComObj, Classes, Contnrs, ExActions, Unicode, Exodus_TLB;
 
 type TExodusTypedActions = class(TAutoIntfObject, IExodusTypedActions)
 private
@@ -31,8 +31,9 @@ end;
 type TExodusActionMap = class(TAutoIntfObject, IExodusActionMap)
 private
     _items: IExodusItemList;
-    _actLists: TInterfaceList;
     _allActs: TInterfaceList;
+    _mainActs: TExodusTypedActions;
+    _actLists: TWidestringList;
 
 public
     constructor Create(items: IExodusItemList);
@@ -44,7 +45,6 @@ public
     function Get_TypedActions(idx: Integer): IExodusTypedActions; safecall;
 
     procedure AddAction(itemtype: Widestring; act: IExodusAction);
-    procedure Collate;
 
     function GetActionsFor(const itemtype: Widestring): IExodusTypedActions; safecall;
     function GetActionNamed(const name: Widestring): IExodusAction; safecall;
@@ -113,7 +113,7 @@ var
     idx: Integer;
 begin
     for idx := 0 to _actions.Count - 1 do begin
-        Result := IExodusAction(_actions[idx]);
+        Result := _actions[idx] as IExodusAction;
 
         if Result.Name = name then exit;
         Result := nil;
@@ -152,14 +152,19 @@ begin
     if (items = nil) then items := TExodusItemList.Create;
 
     _items := items;
+    _mainActs := TExodusTypedActions.Create(Self as IExodusActionMap, '');
     _allActs := TInterfaceList.Create;
-    _actLists := TInterfaceList.Create;
+
+    _actLists := TWidestringList.Create;
+    _actLists.AddObject('', _mainActs);
 end;
 destructor TExodusActionMap.Destroy;
 begin
-    _allActs := nil;
-    _actLists := nil;
+    FreeAndNil(_actLists);
+    
     _items := nil;
+    _allActs := nil;
+    _mainActs := nil;
 
     inherited;
 end;
@@ -179,18 +184,16 @@ begin
 end;
 function TExodusActionMap.Get_TypedActions(idx: Integer): IExodusTypedActions;
 begin
-    Result := IExodusTypedActions(_actLists[idx]);
+    Result := TExodusTypedActions(_actLists.Objects[idx]) as IExodusTypedActions;
 end;
 function TExodusActionMap.GetActionsFor(const itemtype: WideString): IExodusTypedActions;
 var
     idx: Integer;
 begin
-    for idx := 0 to _actLists.Count - 1 do begin
-        Result := _actLists[idx] as IExodusTypedActions;
-
-        if (Result.ItemType = itemtype) then exit;
-        Result := nil;
-    end;
+    Result := nil;
+    idx := _actLists.IndexOf(itemtype);
+    if (idx <> -1) then
+        Result := TExodusTypedActions(_actLists.Objects[idx]) as IExodusTypedActions
 end;
 
 function TExodusActionMap.GetActionNamed(const name: WideString): IExodusAction;
@@ -215,47 +218,16 @@ begin
     if (idx = -1) then
         _allActs.Add(act as IExodusAction);
 
-    actList := TExodusTypedActions(GetActionsFor(itemtype));
-    if (actList = nil) then begin
+    idx := _actLists.IndexOf(itemtype);
+    if (idx <> -1) then
+        actList := TExodusTypedActions(_actLists.Objects[idx])
+    else begin
         actList := TExodusTypedActions.Create(Self as IExodusActionMap, itemtype);
 
-        _actLists.Add(actList as IExodusTypedActions);
+        _actLists.AddObject(actList.Get_ItemType, actList);
     end;
 
     actList.AddAction(act);
-end;
-procedure TExodusActionMap.Collate;
-var
-    mainActs, actList: TExodusTypedActions;
-    act: IExodusAction;
-    idx, jdx: Integer;
-    found: Boolean;
-begin
-    mainActs := TExodusTypedActions(GetActionsFor(''));
-    if (mainActs <> nil) then
-        mainActs.Clear()
-    else begin
-        mainActs := TExodusTypedActions.Create(Self as IExodusActionMap, '');
-        _actLists.Add(mainActs as IExodusTypedActions);
-    end;
-
-
-    //Walk all actions, to see if they apply to all types
-    for idx := 0 to _allActs.Count - 1 do begin
-        act := _allActs.Items[idx] as IExodusAction;
-        found := true;
-
-        for jdx := 0 to _actLists.Count - 1 do begin
-            actList := TExodusTypedActions(_actLists.Items[jdx] as IExodusTypedActions);
-            if (actList._itemtype = '') then continue;
-            
-            found := actList.IndexOfAction(act) <> -1;
-
-            if not found then break;
-        end;
-
-        if found then mainActs.AddAction(act);
-    end;
 end;
 
 end.

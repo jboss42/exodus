@@ -90,8 +90,11 @@ begin
 
     actmap := GetActionController().buildActions(selected);
     //TODO: build menus
-    actlist := actmap.GetActionsFor('');
     Items.Clear();
+    actlist := actmap.GetActionsFor('');
+    if (actlist = nil) then
+        exit;
+        
     for idx := 0 to actlist.ActionCount - 1 do begin
         act := actlist.Action[idx];
         mi := TActionMenuItem.Create(actlist.ItemType, act.Name, Items);

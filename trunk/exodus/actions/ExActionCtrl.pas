@@ -155,7 +155,7 @@ begin
         jdx := actual.IndexOf(name);
         if (jdx <> -1) then begin
             aval := TFilteringItem(actual.Objects[jdx]);
-            Result := (eval.Key = aval.Key);
+            Result := (eval.Value = aval.Value);
         end;
 
         if (Result) then exit;
