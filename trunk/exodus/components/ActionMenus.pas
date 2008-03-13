@@ -4,10 +4,14 @@ interface
 
 uses Classes, Menus, TntMenus, ExTreeView, Exodus_TLB;
 
-type TActionPopupMenu = class(TTntPopupMenu)
+type TExActionPopupMenu = class(TTntPopupMenu)
 private
     _actMap: IExodusActionMap;
+    _targets: IExodusItemList;
 
+    procedure SetTargets(targets: IExodusItemList);
+
+    procedure rebuild;
     function createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
 
 protected
@@ -18,27 +22,16 @@ public
     destructor Destroy; override;
 
     procedure Popup(X, Y: Integer); override;
+
+    property Targets: IExodusItemList read _targets write SetTargets;
 end;
 
 implementation
 
-uses Session, SysUtils, COMExodusItem, COMExodusItemList, ExActionCtrl,
-        TntComCtrls, gnugettext, Variants, Unicode;
+uses Session, ComObj, ComServ, SysUtils, COMExodusItem, COMExodusItemList,
+        ExActionCtrl, TntComCtrls, gnugettext, Variants, Unicode;
 
-type TSelectionBuilder = class
-private
-    _tree: TExTreeView;
-    _items: IExodusItemList;
-
-    procedure buildFromNode(node: TTntTreeNode);
-
-public
-    constructor Create(tv: TExTreeView);
-    destructor Destroy; override;
-
-    property Items: IExodusItemList read _items;
-end;
-type TActionMenuItem = class(TTntMenuItem)
+type TExActionMenuItem = class(TTntMenuItem)
 private
     _itemtype: Widestring;
     _actname: Widestring;
@@ -54,138 +47,68 @@ end;
 {
 
 }
-constructor TSelectionBuilder.Create(tv: TExTreeView);
-var
-    idx: Integer;
-    node: TTntTreeNode;
-begin
-    inherited Create;
-
-    _tree := tv;
-    _items := TExodusItemList.Create;
-
-    for idx := 0 to _tree.SelectionCount - 1 do begin
-        node := _tree.Selections[idx];
-
-        buildFromNode(node);
-    end;
-end;
-destructor TSelectionBuilder.Destroy;
-begin
-    _items := nil;
-
-    inherited Destroy;
-end;
-
-procedure TSelectionBuilder.buildFromNode(node: TTntTreeNode);
-var
-    idx: Integer;
-    item: IExodusItem;
-begin
-    item := IExodusItem(node.Data);
-    if item = nil then begin
-        //Group -- walk the kids
-        for idx := 0 to node.Count - 1 do begin
-            buildFromNode(node.Item[idx]);
-        end;
-    end else if item.IsVisible then begin
-        _items.Add(item);
-    end;
-end;
-
-{
-
-}
-constructor TActionMenuItem.Create(AOwner: TComponent);
+constructor TExActionMenuItem.Create(AOwner: TComponent);
 begin
     inherited Create(AOwner);
 end;
-destructor TActionMenuItem.Destroy;
+destructor TExActionMenuItem.Destroy;
 begin
     inherited;
 end;
-
 
 {
 
 }
-constructor TActionPopupMenu.Create(AOwner: TComponent);
+constructor TExActionPopupMenu.Create(AOwner: TComponent);
 begin
     inherited;
 end;
-destructor TActionPopupMenu.Destroy;
+destructor TExActionPopupMenu.Destroy;
 begin
+    Targets := nil;
+
     inherited;
 end;
 
-procedure TActionPopupMenu.HandleClick(Sender: TObject);
-var
-    mi: TActionMenuItem;
+procedure TExActionPopupMenu.SetTargets(targets: IExodusItemList);
 begin
-    mi := TActionMenuItem(sender);
+    if (targets <> _targets) then begin
+        _actMap := nil;
+        _targets := targets;
+    end;
+end;
+
+procedure TExActionPopupMenu.HandleClick(Sender: TObject);
+var
+    mi: TExActionMenuItem;
+begin
+    mi := TExActionMenuItem(sender);
 
     _actMap.GetActionsFor(mi.ItemType).execute(mi.ActionName);
 end;
 
-function TActionPopupMenu.createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
+procedure TExActionPopupMenu.rebuild;
 var
-    idx: Integer;
-    act: IExodusAction;
-    mi: TActionMenuItem;
-begin
-    for idx := 0 to actList.ActionCount - 1 do begin
-        act := actlist.Action[idx];
-        mi := TActionMenuItem.Create(parent);
-
-        mi.ItemType := actList.ItemType;
-        mi.ActionName := act.Name;
-        mi.Caption := act.Caption;
-        mi.ImageIndex := act.ImageIndex;
-        mi.OnClick := HandleClick;
-
-        parent.Add(mi);
-
-        //TODO:  subactions...
-    end;
-
-    Result := actList.ActionCount;
-end;
-
-procedure TActionPopupMenu.Popup(X: Integer; Y: Integer);
-var
-    tv: TExTreeView;
+    mainActs, grpActs, typedActs: IExodusTypedActions;
+    itemtype: Widestring;
     idx, typeCount, miCount: Integer;
-    selected: TSelectionBuilder;
-    actmap: IExodusActionMap;
-    itemType: Widestring;
-    typedActs, mainActs, grpActs: IExodusTypedActions;
     mi: TTntMenuItem;
 begin
-    _actMap := nil;
-    
-    tv := TExTreeView(Self.Owner);
-
-    selected := TSelectionBuilder.Create(tv);
-    actmap := GetActionController().buildActions(selected.Items);
-    typeCount := 0;
-    miCount := 0;
-
-    //build menus
     Items.Clear();
-    mainActs := actmap.GetActionsFor('');
+    mainActs := _actMap.GetActionsFor('');
     if (mainActs <> nil) then Dec(typeCount);
-    
-    grpActs := actmap.GetActionsFor('group');
+
+    grpActs := _actMap.GetActionsFor('group');
     if (grpActs <> nil) then Dec(typeCount);
 
-    typeCount := typeCount + actmap.TypedActionsCount;
+    typeCount := typeCount + _actMap.TypedActionsCount;
     if (typeCount > 1) then begin
-        for idx := 0 to actmap.TypedActionsCount - 1 do begin
-            typedActs := actmap.TypedActions[idx];
+        for idx := 0 to _actMap.TypedActionsCount - 1 do begin
+            typedActs := _actMap.TypedActions[idx];
             itemtype := typedActs.ItemType;
 
             if (itemtype = '') or (itemtype = 'group') then continue;
-            
+
             //TODO:  better item type captions!
             mi := TTntMenuItem.Create(Items);
             mi.Caption := _(itemtype + 's');
@@ -220,12 +143,37 @@ begin
 
         createTypedMenu(grpActs, Items);
     end;
-        
-    _actMap := actmap;
+end;
+function TExActionPopupMenu.createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
+var
+    idx: Integer;
+    act: IExodusAction;
+    mi: TExActionMenuItem;
+begin
+    for idx := 0 to actList.ActionCount - 1 do begin
+        act := actlist.Action[idx];
+        mi := TExActionMenuItem.Create(parent);
+
+        mi.ItemType := actList.ItemType;
+        mi.ActionName := act.Name;
+        mi.Caption := act.Caption;
+        mi.ImageIndex := act.ImageIndex;
+        mi.OnClick := HandleClick;
+
+        parent.Add(mi);
+
+        //TODO:  subactions...
+    end;
+
+    Result := actList.ActionCount;
+end;
+
+procedure TExActionPopupMenu.Popup(X: Integer; Y: Integer);
+begin
+    _actMap := GetActionController.buildActions(Targets);
+    rebuild;
 
     inherited Popup(X, Y);
-
-    selected.Free;
 end;
 
 end.
