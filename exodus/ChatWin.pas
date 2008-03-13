@@ -277,7 +277,7 @@ begin
 
     actctrl := GetActionController();
     actctrl.registerAction('contact', act as IExodusAction);
-    actctrl.addEnableFilter('contact', '{exodus.googlecode.com}start-chat', 'selection=single');
+    actctrl.addEnableFilter('contact', '{000-exodus.googlecode.com}-000-start-chat', 'selection=single');
 end;
 
 
@@ -1893,7 +1893,7 @@ end;
 }
 constructor TStartChatAction.Create;
 begin
-    inherited Create('{exodus.googlecode.com}start-chat');
+    inherited Create('{000-exodus.googlecode.com}-000-start-chat');
 
     Caption := _('Start Chat');
     Enabled := true;

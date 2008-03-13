@@ -4,11 +4,16 @@ interface
 
 uses ActiveX, ComObj, Classes, Contnrs, ExActions, Unicode, Exodus_TLB;
 
+type TActionRef = packed record
+    action: IExodusAction;
+end;
 type TExodusTypedActions = class(TAutoIntfObject, IExodusTypedActions)
 private
-    _actMap: IExodusActionMap;
     _itemtype: Widestring;
-    _actions: TInterfaceList;
+    _items: IExodusItemList;
+    _actions: TWidestringList;
+
+    procedure Collate;
 
 public
     constructor Create(actmap: IExodusActionMap; itemtype: Widestring);
@@ -20,7 +25,6 @@ public
 
     function Get_ActionCount: Integer; safecall;
     function Get_Action(idx: Integer): IExodusAction; safecall;
-    function IndexOfAction(act: IExodusAction): Integer;
     procedure AddAction(act: IExodusAction);
     procedure Clear;
 
@@ -48,6 +52,8 @@ public
 
     function GetActionsFor(const itemtype: Widestring): IExodusTypedActions; safecall;
     function GetActionNamed(const name: Widestring): IExodusAction; safecall;
+
+    procedure Collate;
 end;
 
 implementation
@@ -59,16 +65,27 @@ uses SysUtils, ComServ, COMExodusItemList;
 }
 
 constructor TExodusTypedActions.Create(actmap: IExodusActionMap; itemtype: WideString);
+var
+    idx: Integer;
+    item: IExodusItem;
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusTypedActions);
 
-    _actMap := actmap;
     _itemtype := itemtype;
-    _actions := TInterfaceList.Create;
+    _actions := TWidestringList.Create;
+
+    _items := TExodusItemList.Create as IExodusItemList;
+    for idx := 0 to actmap.itemCount - 1 do begin
+        item := actmap.Item[idx];
+        if (itemtype = '') or (itemtype = item.Type_) then
+            _items.Add(actmap.Item[idx]);
+    end;
 end;
 destructor TExodusTypedActions.Destroy;
 begin
-    _actions := nil;
+    Clear;
+    _actions.Free;
+    _items := nil;
 
     inherited;
 end;
@@ -80,11 +97,14 @@ end;
 
 function TExodusTypedActions.Get_ItemCount: Integer;
 begin
-    Result := 0;
+    Result := _items.Count;
 end;
 function TExodusTypedActions.Get_Item(idx: Integer): IExodusItem;
 begin
     Result := nil;
+    if (idx < 0) or (idx >= _items.Count) then exit;
+
+    Result := _items.Item[idx];
 end;
 
 function TExodusTypedActions.Get_ActionCount: Integer;
@@ -93,58 +113,70 @@ begin
 end;
 function TExodusTypedActions.Get_Action(idx: Integer): IExodusAction;
 begin
-    Result := IExodusAction(_actions[idx]);
-end;
-function TExodusTypedActions.IndexOfAction(act: IExodusAction): Integer;
-begin
-    Result := _actions.IndexOf(act);
+    Result := nil;
+    if (idx < 0) or (idx >= _actions.Count) then exit;
+
+    Result := IExodusAction(Pointer(_actions.Objects[idx]));
 end;
 procedure TExodusTypedActions.AddAction(act: IExodusAction);
+var
+    idx: Integer;
+    currRef: Pointer;
+    nextRef: Pointer;
 begin
-    _actions.Add(act);
+    if _actions.Sorted then _actions.Sorted := false;
+
+    nextRef := Pointer(act);
+    idx := _actions.IndexOf(act.Name);
+    if (idx <> -1) then begin
+        currRef := Pointer(_actions.Objects[idx]);
+
+        if (currRef = nextRef) then
+            exit;       //already present, so do nothing!
+        IExodusAction(currRef)._Release;
+        _actions.Delete(idx);
+    end;
+
+    act._AddRef;
+    _actions.AddObject(act.Name, TObject(Pointer(act)));
 end;
 procedure TExodusTypedActions.Clear;
+var
+    idx: Integer;
 begin
-    _actions.Clear;
+    if _actions.Sorted then _actions.Sorted := false;
+
+    for idx := _actions.Count - 1 downto 0 do begin
+        IExodusAction(Pointer(_actions.Objects[idx]))._Release;
+        _actions.Delete(idx);
+    end;
 end;
 
 function TExodusTypedActions.GetActionNamed(const name: WideString): IExodusAction;
 var
     idx: Integer;
 begin
-    for idx := 0 to _actions.Count - 1 do begin
-        Result := _actions[idx] as IExodusAction;
-
-        if Result.Name = name then exit;
-        Result := nil;
-    end;
+    idx := _actions.IndexOf(name);
+    Result := Get_Action(idx);
 end;
 procedure TExodusTypedActions.execute(const actname: Widestring);
 var
     act: IExodusAction;
-    items: IExodusItemList;
-    item: IExodusItem;
-    idx: Integer;
 begin
     act := GetActionNamed(actname);
     if (act = nil) then exit;
 
-    items := TExodusItemList.Create();
-    for idx := 0 to _actMap.itemCount - 1 do begin
-        item := _actMap.Item[idx];
+    act.execute(_items);
+end;
 
-        if (_itemtype = '') or (_itemtype = item.Type_) then
-            items.Add(_actMap.Item[idx]);
-    end;
-
-    act.execute(items);
-    items := nil;
+procedure TExodusTypedActions.Collate;
+begin
+    _actions.Sorted := true;
 end;
 
 {
     TExodusActionMap implementation
 }
-
 constructor TExodusActionMap.Create(items: IExodusItemList);
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusActionMap);
@@ -152,18 +184,27 @@ begin
     if (items = nil) then items := TExodusItemList.Create;
 
     _items := items;
-    _mainActs := TExodusTypedActions.Create(Self as IExodusActionMap, '');
     _allActs := TInterfaceList.Create;
 
+    _mainActs := TExodusTypedActions.Create(Self as IExodusActionMap, '');
+    _mainActs._AddRef;
+    
     _actLists := TWidestringList.Create;
     _actLists.AddObject('', _mainActs);
 end;
 destructor TExodusActionMap.Destroy;
+var
+    idx: Integer;
 begin
+    for idx := 0 to _actLists.Count - 1 do begin
+        TExodusTypedActions(_actLists.Objects[idx])._Release;
+    end;
     FreeAndNil(_actLists);
-    
+
     _items := nil;
     _allActs := nil;
+
+    _mainActs._Release;
     _mainActs := nil;
 
     inherited;
@@ -220,7 +261,6 @@ end;
 procedure TExodusActionMap.AddAction(itemtype: WideString; act: IExodusAction);
 var
     idx: Integer;
-    item: IExodusItem;
     actList: TExodusTypedActions;
 begin
     idx := _allActs.IndexOf(act);
@@ -232,11 +272,38 @@ begin
         actList := TExodusTypedActions(_actLists.Objects[idx])
     else begin
         actList := TExodusTypedActions.Create(Self as IExodusActionMap, itemtype);
-
+        actList._AddRef;
+        
+        if _actLists.Sorted then _actLists.Sorted := false;
         _actLists.AddObject(actList.Get_ItemType, actList);
     end;
 
     actList.AddAction(act);
+end;
+
+procedure TExodusActionMap.Collate;
+var
+    idx: Integer;
+    main: IExodusTypedActions;
+    act: IExodusAction;
+begin
+    if (_actLists.Count = 2) then begin
+        //there's only one typed actions, copy it into main actions...
+        main := Get_TypedActions(1);
+
+        for idx := 0 to main.ActionCount - 1 do begin
+            act := main.Action[idx];
+            _mainActs.AddAction(act);
+        end;
+    end;
+
+    for idx := 0 to _actLists.Count - 1 do begin
+        //Collate (sort) all actions for types
+        TExodusTypedActions(_actLists.Objects[idx]).Collate;
+    end;
+
+    //Sort the type list
+    _actLists.Sorted := true;
 end;
 
 end.
