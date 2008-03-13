@@ -12,7 +12,8 @@ private
     _enabling: TWidestringList; //List of name/value pairs
     _disabling: TWidestringList; //List of name/value pairs
 
-    function containsAny(expected, actual: TWidestringList): Boolean;
+    function enabledContainsAll(actual: TWidestringList): Boolean;
+    function disabledContainsAny(actual: TWidestringList): Boolean;
     procedure Set_Delegate(const act: IExodusAction);
 public
     constructor Create(itemtype, actname: Widestring);
@@ -44,18 +45,18 @@ public
 end;
 type TFilteringSet = class(TObject)
 private
-    _items: TInterfaceList;
+    _itemcount: Integer;
     _enableHints, _disableHints: TWidestringList;
     _enableSet, _disableSet: TWidestringList;
 
 public
     constructor Create(enableHints, disableHints: TWidestringList);
-    constructor CreateFrom(filters: TWidestringList);
+    constructor CreateFromList(filters: TWidestringList);
     destructor Destroy; override;
 
     procedure update(item: IExodusItem);
 
-    property Items: TInterfaceList read _items;
+    property ItemCount: Integer read _itemcount;
     property Enabling: TWidestringList read _enableSet;
     property Disabling: TWidestringList read _disableSet;
 end;
@@ -105,7 +106,7 @@ end;
 
 function GetActionController: IExodusActionController;
 
-var FILTER_SELECTION_SINGLE, FILTER_SELECTION_MULTI: TFilteringItem;
+var FILTER_SELECTION_NONE, FILTER_SELECTION_SINGLE, FILTER_SELECTION_MULTI: TFilteringItem;
 
 implementation
 
@@ -128,6 +129,9 @@ begin
 
     _disabling := TWidestringList.Create;
     _disabling.Duplicates := dupAccept;
+
+    if (itemtype <> '') then
+        addToEnabling('type=' + itemtype);
 end;
 Destructor TActionProxy.Destroy;
 begin
@@ -137,22 +141,46 @@ begin
     inherited;
 end;
 
-function TActionProxy.containsAny(expected, actual: TWidestringList): Boolean;
+function TActionProxy.enabledContainsAll(actual: TWideStringList): Boolean;
 var
     idx, jdx: Integer;
-    name: Widestring;
     eval, aval: TFilteringItem;
 begin
-    Result := false;
+    //Assume it does contain all
+    Result := true;
 
-    if not expected.Sorted then expected.Sorted := true;
+    //make sure we're sorted (lookups are faster)
+    if not _enabling.Sorted then _enabling.Sorted := true;
     if not actual.Sorted then actual.Sorted := true;
 
-    for idx := 0 to expected.Count - 1 do begin
-        name := expected[idx];
-        eval := TFilteringItem(expected.Objects[idx]);
+    for idx := 0 to _enabling.Count - 1 do begin
+        eval := TFilteringItem(_enabling.Objects[idx]);
 
-        jdx := actual.IndexOf(name);
+        jdx := actual.IndexOf(eval.Key);
+        if (jdx <> -1) then begin
+            aval := TFilteringItem(actual.Objects[jdx]);
+            Result := (eval.Value = aval.Value);
+        end;
+
+        if (not Result) then exit;
+    end;
+end;
+function TActionProxy.disabledContainsAny(actual: TWidestringList): Boolean;
+var
+    idx, jdx: Integer;
+    eval, aval: TFilteringItem;
+begin
+    //Assume it doesn't contain any
+    Result := false;
+
+    //make sure we're sorted (lookups are faster)
+    if not _disabling.Sorted then _disabling.Sorted := true;
+    if not actual.Sorted then actual.Sorted := true;
+
+    for idx := 0 to _disabling.Count - 1 do begin
+        eval := TFilteringItem(_disabling.Objects[idx]);
+
+        jdx := actual.IndexOf(eval.Key);
         if (jdx <> -1) then begin
             aval := TFilteringItem(actual.Objects[jdx]);
             Result := (eval.Value = aval.Value);
@@ -208,11 +236,11 @@ begin
     end;
 
     //Check enabling (if any are present)
-    Result := (_enabling.Count = 0) or containsAny(_enabling, enabling);
+    Result := (_enabling.Count = 0) or enabledContainsAll(enabling);
     if not Result then exit;
 
     //Check disabling
-    Result := (_disabling.Count = 0) or not containsAny(_disabling, disabling);
+    Result := (_disabling.Count = 0) or not disabledContainsAny(disabling);
     if not Result then exit;
 
     Result := true;
@@ -258,7 +286,7 @@ constructor TFilteringSet.Create(
         enableHints: TWideStringList;
         disableHints: TWideStringList);
 begin
-    _items := TInterfaceList.Create;
+    _itemcount := 0;
 
     _enableSet := TWidestringList.Create;
     _enableHints := TWidestringList.Create;
@@ -270,12 +298,15 @@ begin
     if (disableHints <> nil) and (disableHints.Count > 0) then
         _disableHints.Assign(disableHints);
 end;
-constructor TFilteringSet.CreateFrom(filters: TWideStringList);
+constructor TFilteringSet.CreateFromList(filters: TWideStringList);
 var
     idx, jdx, loc: Integer;
     filter: TFilteringSet;
     fromList, toList: TWidestringList;
+    fitem: TFilteringItem;
 begin
+    _itemcount := 0;
+
     _enableHints := TWidestringList.Create;
     _enableSet := TWidestringList.Create;
 
@@ -290,14 +321,14 @@ begin
         fromList := filter._disableHints;
         for jdx := 0 to fromList.Count - 1 do begin
             if (toList.IndexOf(fromList[jdx]) = -1) then
-                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+                toList.Add(fromList[jdx]);
         end;
 
         toList := Self._enableHints;
         fromList := filter._enableHints;
         for jdx := 0 to fromList.Count - 1 do begin
             if (toList.IndexOf(fromList[jdx]) = -1) then
-                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+                toList.Add(fromList[jdx]);
         end;
     end;
 
@@ -318,7 +349,13 @@ begin
                     continue;
             end;
 
-            toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+            fitem := TFilteringItem(fromList.Objects[jdx]);
+            if      (fitem <> FILTER_SELECTION_NONE) and
+                    (fitem <> FILTER_SELECTION_SINGLE) and
+                    (fitem <> FILTER_SELECTION_MULTI) then
+                fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+
+            toList.AddObject(fromList[jdx], fitem);
         end;
 
         //Update enable sets (intersection)
@@ -330,13 +367,22 @@ begin
 
             loc := toList.IndexOf(fromList[jdx]);
             if (loc <> -1) then begin
-                if TFilteringItem(toList.Objects[loc]).Value <> TFilteringItem(fromList.Objects[jdx]).Value then begin
+                fitem := TFilteringItem(fromList.Objects[jdx]);
+                if TFilteringItem(toList.Objects[loc]).Value <> fitem.Value then begin
+                    fitem.Free;
                     toList.Delete(loc);
                     loc := _enableHints.IndexOf(fromList[jdx]);
                     if (loc <> -1) then _enableHints.Delete(loc);
                 end;
-            end else
-                toList.AddObject(fromList[jdx], fromList.Objects[jdx]);
+            end else begin
+                fitem := TFilteringItem(fromList.Objects[jdx]);
+                if      (fitem <> FILTER_SELECTION_NONE) and
+                        (fitem <> FILTER_SELECTION_SINGLE) and
+                        (fitem <> FILTER_SELECTION_MULTI) then
+                    fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+
+                toList.AddObject(fromList[jdx], fitem);
+            end;
         end;
     end;
 end;
@@ -354,7 +400,9 @@ begin
         fitem := TFilteringItem(_enableSet.Objects[idx]);
         _enableSet.Objects[idx] := nil;
 
-        if (fitem <> FILTER_SELECTION_SINGLE) and (fitem <> FILTER_SELECTION_MULTI) then
+        if      (fitem <> FILTER_SELECTION_SINGLE) and
+                (fitem <> FILTER_SELECTION_MULTI) and
+                (fitem <> FILTER_SELECTION_NONE) then
             fitem.Free;
     end;
     _enableSet.Free;
@@ -367,12 +415,12 @@ begin
         fitem := TFilteringItem(_disableSet.Objects[idx]);
         _disableSet.Objects[idx] := nil;
 
-        if (fitem <> FILTER_SELECTION_SINGLE) and (fitem <> FILTER_SELECTION_MULTI) then
+        if      (fitem <> FILTER_SELECTION_SINGLE) and
+                (fitem <> FILTER_SELECTION_MULTI) and
+                (fitem <> FILTER_SELECTION_NONE) then
             fitem.Free;
     end;
     _disableSet.Free;
-
-    _items.Free;
 
     inherited Destroy;
 end;
@@ -382,26 +430,31 @@ var
     key, val: Widestring;
     idx, place: Integer;
     currItem, foundItem: TFilteringItem;
-begin
-    //remember item
-    if _items.IndexOf(item) = -1 then _items.Add(item);
 
-    //Update disabling (walk backwards, so we can remove things)
-    for idx := _disableHints.Count - 1 downto 0 do begin
-        key := _disableHints[idx];
+    function lookupKeyValue: Boolean;
+    begin
+        Result := true;
 
         if (key = 'selection') then
-            continue    //ignore this hint (always present)
+            Result := false     //ignore this hint (always present)
+        else if (key = 'type') then
+            val := item.Type_
         else if (key = 'active') then
             val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
         else if (key = 'visible') then
             val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
-        else if (key = 'uid') then
-            val := item.UID
         else begin
             //TODO:  strip off "property." ?
             val := item.value[key];
         end;
+    end;
+begin
+    Inc(_itemcount);
+
+    //Update disabling (walk backwards, so we can remove things)
+    for idx := _disableHints.Count - 1 downto 0 do begin
+        key := _disableHints[idx];
+        if not lookupKeyValue then continue;
 
         //don't care if it's already present...
         currItem := TFilteringItem.CreatePair(key, val);
@@ -411,19 +464,7 @@ begin
     //Update enabling
     for idx := _enableHints.Count - 1 downto 0 do begin
         key := _enableHints[idx];
-
-        if (key = 'selection') then
-            continue    //ignore this hint (always present)
-        else if (key = 'active') then
-            val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
-        else if (key = 'visible') then
-            val := StrLowerW(PWideChar(BoolToStr(item.Active, true)))
-        else if (key = 'uid') then
-            val := item.UID
-        else begin
-            //TODO:  strip off "property." ?
-            val := item.value[key];
-        end;
+        if not lookupKeyValue then continue;
 
         //now we care if it's already there...
         place := _enableSet.IndexOf(key);
@@ -608,9 +649,10 @@ var
     typedInterests, mainInterests: TFilteringSet;
     idx, jdx: Integer;
     item: IExodusItem;
+    itemtype: Widestring;
 begin
     actmap := TExodusActionMap.Create(items);
-    Result := actmap;
+    Result := actmap as IExodusActionMap;
 
     //walk items, building sets
     allInterests := TWidestringList.Create;
@@ -632,16 +674,18 @@ begin
     end;
 
     //walk types, building action map
-    mainInterests := TFilteringSet.CreateFrom(allInterests);
+    mainInterests := TFilteringSet.CreateFromList(allInterests);
     applied := TObjectList.Create();
     applied.OwnsObjects := false;
     for idx := 0 to allInterests.Count - 1 do begin
-        potentials := lookupActionsFor(allInterests[idx], false);
+        itemtype := allInterests[idx];
+        potentials := lookupActionsFor(itemtype, false);
         typedInterests := TFilteringSet(allInterests.Objects[idx]);
 
-        case typedInterests.Items.Count of
+        case typedInterests.ItemCount of
             0: begin
-                //don't touch anything!!
+                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_NONE);
+                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_NONE);
             end;
             1: begin
                 typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
@@ -655,18 +699,28 @@ begin
 
         //add applicable typed actions to actionmap
         for jdx := 0 to potentials.ProxyCount - 1 do begin
-            proxy := potentials.Proxy[idx];
+            proxy := potentials.Proxy[jdx];
 
             if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
                 if (applied.IndexOf(proxy) = -1) then
                     applied.Add(proxy);
-                actmap.AddAction(potentials.ItemType, proxy.Action);
+                actmap.AddAction(itemtype, proxy.Action);
             end;
         end;
 
-        //TODO: add applicable "anytype" actions to actionmap
+        //add applicable "anytype" actions to actionmap
+        potentials := lookupActionsFor('', true);
+        for jdx := 0 to potentials.ProxyCount - 1 do begin
+            proxy := potentials.Proxy[jdx];
 
-        //Free it up now
+            if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
+                if (applied.IndexOf(proxy) = -1) then
+                    applied.Add(proxy);
+                actmap.AddAction(itemtype, proxy.Action);
+            end;
+        end;
+
+        //Free up typed interests now
         allInterests.Objects[idx] := nil;
         typedInterests.Free;
     end;
@@ -674,7 +728,8 @@ begin
     //Build main actions
     case items.Count of
         0: begin
-            //Don't touch anything!!
+            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_NONE);
+            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_NONE);
         end;
         1: begin
             mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
@@ -696,16 +751,18 @@ begin
     end;
 
     //Cleanup
+    actmap.Collate;
     FreeAndNil(allInterests);
     FreeAndNil(mainInterests);
     FreeAndNil(applied);
-    actmap := nil;
 end;
 
 function GetActionController: IExodusActionController;
 begin
-    if (g_ActCtrl = nil) then
+    if (g_ActCtrl = nil) then begin
         g_ActCtrl := TExodusActionController.Create;
+        g_ActCtrl._AddRef;
+    end;
     Result := g_actCtrl as IExodusActionController;
 end;
 
@@ -714,6 +771,7 @@ initialization
             TExodusActionController,
             CLASS_ExodusActionController,
             ciMultiInstance, tmApartment);
+    FILTER_SELECTION_NONE := TFilteringItem.CreatePair('selection', 'none');
     FILTER_SELECTION_SINGLE := TFilteringItem.CreatePair('selection', 'single');
     FILTER_SELECTION_MULTI := TFilteringItem.CreatePair('selection', 'multi');
 end.

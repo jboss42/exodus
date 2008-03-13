@@ -375,7 +375,7 @@ end;
 }
 constructor TInviteToRoomAction.Create;
 begin
-    inherited Create('{exodus.googlecode.com}invite-to-room');
+    inherited Create('{000-exodus.googlecode.com}-050-invite-to-room');
 
     Caption := _('Invite to Conference...');
 end;
@@ -414,5 +414,5 @@ end;
 
 initialization
     RegisterActions();
-    
+
 end.
