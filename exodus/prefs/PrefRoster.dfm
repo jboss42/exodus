@@ -415,7 +415,7 @@ inherited frmPrefRoster: TfrmPrefRoster
             'A new or existing chat window')
         end
       end
-      object pnlGroupSeperator: TExBrandPanel
+      object pnlGroupSeparator: TExBrandPanel
         AlignWithMargins = True
         Left = 0
         Top = 245
@@ -428,14 +428,14 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 10
         AutoHide = True
-        object lblGrpSeperator: TTntLabel
+        object lblGrpSeparator: TTntLabel
           Left = 0
           Top = 2
           Width = 119
           Height = 13
           Caption = 'Nested group seperator:'
         end
-        object txtGrpSeperator: TTntEdit
+        object txtGrpSeparator: TTntEdit
           Left = 143
           Top = 0
           Width = 155

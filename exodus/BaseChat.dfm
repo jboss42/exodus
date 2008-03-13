@@ -228,11 +228,10 @@ inherited frmBaseChat: TfrmBaseChat
         ShowHint = True
         OnClick = ChatToolbarButtonColorsClick
       end
-      object ChatToolbarButtonSeperator1: TTntToolButton
+      object ChatToolbarButtonSeparator1: TTntToolButton
         Left = 100
         Top = 0
         Width = 8
-        Caption = 'ChatToolbarButtonSeperator1'
         Style = tbsSeparator
       end
       object ChatToolbarButtonCut: TTntToolButton
@@ -265,11 +264,10 @@ inherited frmBaseChat: TfrmBaseChat
         ShowHint = True
         OnClick = Paste1Click
       end
-      object ChatToolbarButtonSeperator2: TTntToolButton
+      object ChatToolbarButtonSeparator2: TTntToolButton
         Left = 183
         Top = 0
         Width = 8
-        Caption = 'ChatToolbarButtonSeperator2'
         Style = tbsSeparator
       end
       object ChatToolbarButtonEmoticons: TTntToolButton

@@ -75,9 +75,9 @@
     </roster_chat>
     <roster_show_unsub value="0" control="chkShowUnsubs" state="inv"/>
     <roster_pres_errors  value="0" control="chkPresErrors" state="inv"/>
-    <group_seperator value="/" control="txtGrpSeperator" state="inv">
-        <control name="lblGrpSeperator"/>
-    </group_seperator>
+    <group_separator value="/" control="txtGrpSeparator" state="inv">
+        <control name="lblGrpSeparator"/>
+    </group_separator>
     <roster_offline_group value="0" control="chkOfflineGrp" state="inv"/>
     <roster_transport_grp value="Transports" control="txtGatewayGrp" state="inv">
       <control name="lblGatewayGrp"/>
@@ -133,7 +133,7 @@
 
     <msglist_type value="0"/>
     <!-- These values only matter if msglist_type has a value of 1 and not 0 -->
-    <display_date_seperator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
+    <display_date_separator value="0" /> <!-- Should the date be displayed between 2 messages that are on different days -->
     <maximum_displayed_messages value="0" /> <!-- Maximum number of messages in a history window before cleanup (for memory management).  0 means no maximum -->
     <maximum_displayed_messages_drop_down_to value="0" /> <!-- When messages deleted for memory management (see above), what is the number of messages that should be left in the window -->
     <ie_css value="iemsglist_style"/>

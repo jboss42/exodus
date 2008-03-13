@@ -268,7 +268,7 @@ begin
     until (c = '/') or (c = '\') or (c = ':') or (i <= 0);
 
     if (i > 0) then begin
-        // we got a seperator
+        // we got a separator
         fn := Copy(url, i + 2, length(url) - i);
         fp := MainSession.Prefs.getString('xfer_path');
         if (AnsiEndsText('\', fp)) then
@@ -1090,7 +1090,7 @@ end;
 //
 //    if (MainSession.Prefs.getBool('nested_groups')) then
 //        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
-//            [MainSession.Prefs.getString('group_seperator')]);
+//            [MainSession.Prefs.getString('group_separator')]);
 //    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
 //
 //    // add the new grp.

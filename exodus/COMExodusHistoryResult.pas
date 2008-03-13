@@ -185,7 +185,6 @@ var
     tmp: TExodusHistoryResultCallbackItem;
 begin
     if (ResultObj = nil) then exit;
-    if (msg = nil) then exit;
 
     tmp := _FindCallback(ResultObj);
     if (tmp <> nil) then begin
