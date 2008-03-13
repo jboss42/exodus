@@ -267,9 +267,14 @@ begin
         _maxMsgCountHigh := getInt('maximum_displayed_messages');
         _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
         if ((_maxMsgCountHigh <> 0) and
-            (_maxMsgCountLow <> 0) and
             (_maxMsgCountHigh >= _maxMsgCountLow))then begin
-            _doMessageLimiting := true
+            _doMessageLimiting := true;
+            if (_maxMsgCountLow <= 0) then begin
+                // High water mark set, but low water mark not set.
+                // So, we will make the low water mark equal to the  high water mark.
+                // This will only drop 1 message at a time.
+                _maxMsgCountLow := _maxMsgCountHigh;
+            end;
         end;
         _displayDateSeparator := getBool('display_date_separator');
         _exeName := getString('exe_FullPath');
