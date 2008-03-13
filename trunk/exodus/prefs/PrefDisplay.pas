@@ -160,8 +160,8 @@ const
     sActionText = 'Action text';
     sBGColor1 = 'Background color 1';
     sBGColor2 = 'Background color 2';
-    sDateSeperator = 'Date seperator';
-    sDateSeperatorBG = 'Date seperator background';
+    sDateSeparator = 'Date separator';
+    sDateSeparatorBG = 'Date separator background';
     sMessageLabelMe = 'Messages from me';
     sMessageLabelOthers = 'Messages from others';
     sMessagePriority = 'Message priority';
@@ -204,8 +204,8 @@ begin
         HTML_MSGLIST: begin
             cboChatElement.AddItem(sBGColor1, nil);
             cboChatElement.AddItem(sBGColor2, nil);
-            cboChatElement.AddItem(sDateSeperator, nil);
-            cboChatElement.AddItem(sDateSeperatorBG, nil);
+            cboChatElement.AddItem(sDateSeparator, nil);
+            cboChatElement.AddItem(sDateSeparatorBG, nil);
         end;
     end;
     cboChatElement.AddItem(sMessageLabelMe, nil);
@@ -788,11 +788,11 @@ begin
         // normal window, font_color
        Result := 'color_alt_bg';
     end
-    else if(index = cboChatElement.Items.IndexOf(sDateSeperator)) then begin
+    else if(index = cboChatElement.Items.IndexOf(sDateSeparator)) then begin
         // normal window, font_color
        Result := 'color_date';
     end
-    else if(index = cboChatElement.Items.IndexOf(sDateSeperatorBG)) then begin
+    else if(index = cboChatElement.Items.IndexOf(sDateSeparatorBG)) then begin
         // normal window, font_color
        Result := 'color_date_bg';
     end
@@ -840,11 +840,11 @@ begin
         cbChatFont.Selected := TColor(_color_alt_bg);
         lblChatFG.Caption := sBackgroundColorFG;
     end
-    else if(index = cboChatElement.Items.IndexOf(sDateSeperator)) then begin
+    else if(index = cboChatElement.Items.IndexOf(sDateSeparator)) then begin
         cbChatFont.Selected := TColor(_color_date);
         lblChatFG.Caption := sFontColorFG;
     end
-    else if(index = cboChatElement.Items.IndexOf(sDateSeperatorBG)) then begin
+    else if(index = cboChatElement.Items.IndexOf(sDateSeparatorBG)) then begin
         cbChatFont.Selected := TColor(_color_date_bg);
         lblChatFG.Caption := sBackgroundColorFG;
     end;

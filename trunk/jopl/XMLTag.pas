@@ -909,7 +909,7 @@ begin
         end;
 
         if ((c = '/') or (i = l)) then begin
-            // we've reached a seperator
+            // we've reached a separator
             if (c = '/') then begin
                 cur := Copy(xps, s, (i-s));
                 s := i;

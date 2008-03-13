@@ -56,9 +56,9 @@ type
     pnlDblClickAction: TExBrandPanel;
     lblDblClick: TTntLabel;
     cboDblClick: TTntComboBox;
-    pnlGroupSeperator: TExBrandPanel;
-    lblGrpSeperator: TTntLabel;
-    txtGrpSeperator: TTntEdit;
+    pnlGroupSeparator: TExBrandPanel;
+    lblGrpSeparator: TTntLabel;
+    txtGrpSeparator: TTntEdit;
     pnlDefaultNIck: TExBrandPanel;
     lblDefaultNick: TTntLabel;
     txtDefaultNick: TTntEdit;
@@ -174,9 +174,9 @@ begin
     end;
 
     if (not MainSession.Prefs.getBool('branding_nested_subgroup')) then begin
-        txtGrpSeperator.Visible := false;
+        txtGrpSeparator.Visible := false;
         chkNestedGrps.Visible := false;
-        lblGrpSeperator.Visible := false;
+        lblGrpSeparator.Visible := false;
 
         chkNestedGrps.Checked := false;
     end;
@@ -194,7 +194,7 @@ begin
     //Now reverse *again*, so UI is correct...
     chkOnlineOnly.Checked := not chkOnlineOnly.Checked;
     MainSession.prefs.setStringlist('blockers', _blockedContacts);
-    // XXX: save nested group seperator per JEP-48
+    // XXX: save nested group separator per JEP-48
 end;
 
 procedure TfrmPrefRoster.TntFormDestroy(Sender: TObject);

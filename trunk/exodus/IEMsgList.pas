@@ -75,7 +75,7 @@ type
     _title: WideString;
     _ready: Boolean;
     _idCount: integer;
-    _displayDateSeperator: boolean;
+    _displayDateSeparator: boolean;
     _lastTimeStamp: TDateTime;
     _composing: integer;
     _msgCount: integer;
@@ -271,7 +271,7 @@ begin
             (_maxMsgCountHigh >= _maxMsgCountLow))then begin
             _doMessageLimiting := true
         end;
-        _displayDateSeperator := getBool('display_date_seperator');
+        _displayDateSeparator := getBool('display_date_separator');
         _exeName := getString('exe_FullPath');
 
         _stylesheet_name := getString('ie_css');
@@ -606,7 +606,7 @@ var
     id: WideString;
 begin
     try
-        if (_displayDateSeperator) then begin
+        if (_displayDateSeparator) then begin
             t := msg.Time;
             if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
                 (msg.Subject = '') and

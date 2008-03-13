@@ -58,11 +58,11 @@ type
     ChatToolbarButtonBold: TTntToolButton;
     ChatToolbarButtonUnderline: TTntToolButton;
     ChatToolbarButtonItalics: TTntToolButton;
-    ChatToolbarButtonSeperator1: TTntToolButton;
+    ChatToolbarButtonSeparator1: TTntToolButton;
     ChatToolbarButtonCut: TTntToolButton;
     ChatToolbarButtonCopy: TTntToolButton;
     ChatToolbarButtonPaste: TTntToolButton;
-    ChatToolbarButtonSeperator2: TTntToolButton;
+    ChatToolbarButtonSeparator2: TTntToolButton;
     ChatToolbarButtonEmoticons: TTntToolButton;
     ChatToolbarButtonHotkeys: TTntToolButton;
     popHotkeys: TTntPopupMenu;
@@ -804,7 +804,7 @@ begin
         ChatToolbarButtonBold.visible := _rtEnabled;
         ChatToolbarButtonUnderline.visible := _rtEnabled;
         ChatToolbarButtonColors.visible := _rtEnabled;
-        ChatToolbarButtonSeperator1.visible := _rtEnabled;
+        ChatToolbarButtonSeparator1.visible := _rtEnabled;
         if (not _rtEnabled) then begin
             //drop all previous formatting since we are loosing rich text
             MsgOut.DefAttributes.Bold := false;
