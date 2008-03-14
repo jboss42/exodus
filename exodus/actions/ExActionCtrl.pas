@@ -12,7 +12,7 @@ private
     _enabling: TWidestringList; //List of name/value pairs
     _disabling: TWidestringList; //List of name/value pairs
 
-    function enabledContainsAll(actual: TWidestringList): Boolean;
+    function enabledContainsAny(actual: TWidestringList): Boolean;
     function disabledContainsAny(actual: TWidestringList): Boolean;
     procedure Set_Delegate(const act: IExodusAction);
 public
@@ -106,8 +106,6 @@ end;
 
 function GetActionController: IExodusActionController;
 
-var FILTER_SELECTION_NONE, FILTER_SELECTION_SINGLE, FILTER_SELECTION_MULTI: TFilteringItem;
-
 implementation
 
 uses ComServ, SysUtils;
@@ -129,9 +127,6 @@ begin
 
     _disabling := TWidestringList.Create;
     _disabling.Duplicates := dupAccept;
-
-    if (itemtype <> '') then
-        addToEnabling('type=' + itemtype);
 end;
 Destructor TActionProxy.Destroy;
 begin
@@ -141,13 +136,13 @@ begin
     inherited;
 end;
 
-function TActionProxy.enabledContainsAll(actual: TWideStringList): Boolean;
+function TActionProxy.enabledContainsAny(actual: TWideStringList): Boolean;
 var
     idx, jdx: Integer;
     eval, aval: TFilteringItem;
 begin
     //Assume it does contain all
-    Result := true;
+    Result := false;
 
     //make sure we're sorted (lookups are faster)
     if not _enabling.Sorted then _enabling.Sorted := true;
@@ -162,7 +157,7 @@ begin
             Result := (eval.Value = aval.Value);
         end;
 
-        if (not Result) then exit;
+        if (Result) then exit;
     end;
 end;
 function TActionProxy.disabledContainsAny(actual: TWidestringList): Boolean;
@@ -209,6 +204,10 @@ begin
     if _enabling.Sorted then
         _enabling.Sorted := false;
     _enabling.AddObject(fitem.Key, fitem);
+    if fitem.Key = 'selection' then begin
+        fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
+        _enabling.AddObject(fitem.Key, fitem);
+    end;
 end;
 procedure TActionProxy.addToDisabling(filter: Widestring);
 var
@@ -218,7 +217,12 @@ begin
 
     if _disabling.Sorted then
         _disabling.Sorted := false;
+
     _disabling.AddObject(fitem.Key, fitem);
+    if fitem.Key = 'selection' then begin
+        fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
+        _disabling.AddObject(fitem.Key, fitem);
+    end;
 end;
 
 function TActionProxy.applies(enabling, disabling: TWideStringList): Boolean;
@@ -236,7 +240,7 @@ begin
     end;
 
     //Check enabling (if any are present)
-    Result := (_enabling.Count = 0) or enabledContainsAll(enabling);
+    Result := (_enabling.Count = 0) or enabledContainsAny(enabling);
     if not Result then exit;
 
     //Check disabling
@@ -350,10 +354,7 @@ begin
             end;
 
             fitem := TFilteringItem(fromList.Objects[jdx]);
-            if      (fitem <> FILTER_SELECTION_NONE) and
-                    (fitem <> FILTER_SELECTION_SINGLE) and
-                    (fitem <> FILTER_SELECTION_MULTI) then
-                fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+            fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
 
             toList.AddObject(fromList[jdx], fitem);
         end;
@@ -376,10 +377,7 @@ begin
                 end;
             end else begin
                 fitem := TFilteringItem(fromList.Objects[jdx]);
-                if      (fitem <> FILTER_SELECTION_NONE) and
-                        (fitem <> FILTER_SELECTION_SINGLE) and
-                        (fitem <> FILTER_SELECTION_MULTI) then
-                    fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
+                fitem := TFilteringItem.CreatePair(fitem.Key, fitem.Value);
 
                 toList.AddObject(fromList[jdx], fitem);
             end;
@@ -399,11 +397,7 @@ begin
     for idx := 0 to _enableSet.Count - 1 do begin
         fitem := TFilteringItem(_enableSet.Objects[idx]);
         _enableSet.Objects[idx] := nil;
-
-        if      (fitem <> FILTER_SELECTION_SINGLE) and
-                (fitem <> FILTER_SELECTION_MULTI) and
-                (fitem <> FILTER_SELECTION_NONE) then
-            fitem.Free;
+        fitem.Free;
     end;
     _enableSet.Free;
 
@@ -414,11 +408,7 @@ begin
     for idx := 0 to _disableSet.Count - 1 do begin
         fitem := TFilteringItem(_disableSet.Objects[idx]);
         _disableSet.Objects[idx] := nil;
-
-        if      (fitem <> FILTER_SELECTION_SINGLE) and
-                (fitem <> FILTER_SELECTION_MULTI) and
-                (fitem <> FILTER_SELECTION_NONE) then
-            fitem.Free;
+        fitem.Free;
     end;
     _disableSet.Free;
 
@@ -435,7 +425,7 @@ var
     begin
         Result := true;
 
-        if (key = 'selection') then
+        if (key = 'selection') or (key = 'type-selection') then
             Result := false     //ignore this hint (always present)
         else if (key = 'type') then
             val := item.Type_
@@ -646,7 +636,7 @@ var
     proxy: TActionProxy;
     applied: TObjectList;
     allInterests: TWidestringList;
-    typedInterests, mainInterests: TFilteringSet;
+    typedInterests: TFilteringSet;
     idx, jdx: Integer;
     item: IExodusItem;
     itemtype: Widestring;
@@ -674,7 +664,6 @@ begin
     end;
 
     //walk types, building action map
-    mainInterests := TFilteringSet.CreateFromList(allInterests);
     applied := TObjectList.Create();
     applied.OwnsObjects := false;
     for idx := 0 to allInterests.Count - 1 do begin
@@ -682,18 +671,44 @@ begin
         potentials := lookupActionsFor(itemtype, false);
         typedInterests := TFilteringSet(allInterests.Objects[idx]);
 
-        case typedInterests.ItemCount of
+        case items.Count of
             0: begin
-                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_NONE);
-                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_NONE);
+                typedInterests.Disabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','none'));
+                typedInterests.Enabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','none'));
             end;
             1: begin
-                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
-                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_SINGLE);
+                typedInterests.Disabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','single'));
+                typedInterests.Enabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','single'));
             end;
             else begin
-                typedInterests.Disabling.AddObject('selection', FILTER_SELECTION_MULTI);
-                typedInterests.Enabling.AddObject('selection', FILTER_SELECTION_MULTI);
+                typedInterests.Disabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','multi'));
+                typedInterests.Enabling.AddObject('selection',
+                        TFilteringItem.CreatePair('selection','multi'));
+            end;
+        end;
+        case typedInterests.ItemCount of
+            0: begin
+                typedInterests.Disabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','none'));
+                typedInterests.Enabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','none'));
+            end;
+            1: begin
+                typedInterests.Disabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','single'));
+                typedInterests.Enabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','single'));
+            end;
+            else begin
+                typedInterests.Disabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','multi'));
+                typedInterests.Enabling.AddObject('type-selection',
+                        TFilteringItem.CreatePair('type-selection','multi'));
             end;
         end;
 
@@ -725,35 +740,11 @@ begin
         typedInterests.Free;
     end;
 
-    //Build main actions
-    case items.Count of
-        0: begin
-            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_NONE);
-            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_NONE);
-        end;
-        1: begin
-            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_SINGLE);
-            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_SINGLE);
-        end;
-        else begin
-            mainInterests.Disabling.AddObject('selection', FILTER_SELECTION_MULTI);
-            mainInterests.Enabling.AddObject('selection', FILTER_SELECTION_MULTI);
-        end;
-    end;
-
-    for idx := 0 to applied.Count - 1 do begin
-        proxy := TActionProxy(applied[idx]);
-        applied[idx] := nil;
-
-        if proxy.applies(mainInterests.Enabling, mainInterests.Disabling) then begin
-            actmap.AddAction('', proxy.Action);
-        end;
-    end;
-
-    //Cleanup
+    //Prep map
     actmap.Collate;
+    
+    //Cleanup
     FreeAndNil(allInterests);
-    FreeAndNil(mainInterests);
     FreeAndNil(applied);
 end;
 
@@ -771,7 +762,4 @@ initialization
             TExodusActionController,
             CLASS_ExodusActionController,
             ciMultiInstance, tmApartment);
-    FILTER_SELECTION_NONE := TFilteringItem.CreatePair('selection', 'none');
-    FILTER_SELECTION_SINGLE := TFilteringItem.CreatePair('selection', 'single');
-    FILTER_SELECTION_MULTI := TFilteringItem.CreatePair('selection', 'multi');
 end.
