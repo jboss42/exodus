@@ -25,7 +25,9 @@ public
 
     function Get_ActionCount: Integer; safecall;
     function Get_Action(idx: Integer): IExodusAction; safecall;
+    function IndexOfAction(act: IExodusAction): Integer;
     procedure AddAction(act: IExodusAction);
+    procedure RemoveAction(act: IExodusAction);
     procedure Clear;
 
     function GetActionNamed(const name: Widestring): IExodusAction; safecall;
@@ -36,8 +38,11 @@ type TExodusActionMap = class(TAutoIntfObject, IExodusActionMap)
 private
     _items: IExodusItemList;
     _allActs: TInterfaceList;
-    _mainActs: TExodusTypedActions;
     _actLists: TWidestringList;
+
+protected
+    function LookupTypedActions(itemtype: Widestring; create: Boolean): TExodusTypedActions;
+    procedure DeleteTypedActions(actList: TExodusTypedActions);
 
 public
     constructor Create(items: IExodusItemList);
@@ -118,12 +123,17 @@ begin
 
     Result := IExodusAction(Pointer(_actions.Objects[idx]));
 end;
+function TExodusTypedActions.IndexOfAction(act: IExodusAction): Integer;
+begin
+    Result := _actions.IndexOfObject(TObject(Pointer(act)));
+end;
 procedure TExodusTypedActions.AddAction(act: IExodusAction);
 var
     idx: Integer;
     currRef: Pointer;
     nextRef: Pointer;
 begin
+    if act = nil then exit;
     if _actions.Sorted then _actions.Sorted := false;
 
     nextRef := Pointer(act);
@@ -139,6 +149,25 @@ begin
 
     act._AddRef;
     _actions.AddObject(act.Name, TObject(Pointer(act)));
+end;
+procedure TExodusTypedActions.RemoveAction(act: IExodusAction);
+var
+    idx: Integer;
+    prevAct: IExodusAction;
+    currRef, prevRef: Pointer;
+begin
+    if act = nil then exit;
+
+    currRef := Pointer(act);
+    idx := _actions.IndexOf(act.Name);
+    if (idx <> -1) then begin
+        prevRef := Pointer(_actions.Objects[idx]);
+
+        if (currRef = prevRef) then begin
+            _actions.Delete(idx);
+            act._Release;
+        end;
+    end;
 end;
 procedure TExodusTypedActions.Clear;
 var
@@ -186,26 +215,21 @@ begin
     _items := items;
     _allActs := TInterfaceList.Create;
 
-    _mainActs := TExodusTypedActions.Create(Self as IExodusActionMap, '');
-    _mainActs._AddRef;
-    
     _actLists := TWidestringList.Create;
-    _actLists.AddObject('', _mainActs);
 end;
 destructor TExodusActionMap.Destroy;
 var
     idx: Integer;
+    actList: TExodusTypedActions;
 begin
-    for idx := 0 to _actLists.Count - 1 do begin
-        TExodusTypedActions(_actLists.Objects[idx])._Release;
+    for idx := _actLists.Count - 1 downto 0 do begin
+        actList := TExodusTypedActions(_actLists.Objects[idx]);
+        actList._Release;
     end;
     FreeAndNil(_actLists);
 
     _items := nil;
     _allActs := nil;
-
-    _mainActs._Release;
-    _mainActs := nil;
 
     inherited;
 end;
@@ -233,17 +257,44 @@ begin
     actList := TExodusTypedActions(_actLists.Objects[idx]);
     Result := actList as IExodusTypedActions;
 end;
-function TExodusActionMap.GetActionsFor(const itemtype: WideString): IExodusTypedActions;
+function TExodusActionMap.LookupTypedActions(
+        itemtype: WideString;
+        create: Boolean): TExodusTypedActions;
 var
     idx: Integer;
-    actList: TExodusTypedActions;
 begin
     Result := nil;
     idx := _actLists.IndexOf(itemtype);
-    if (idx = -1) then exit;
+    if (idx <> -1) then
+        Result := TExodusTypedActions(_actLists.Objects[idx])
+    else if create then begin
+        if _actLists.Sorted then _actLists.Sorted := false;
 
-    actList := TExodusTypedActions(_actLists.Objects[idx]);
-    Result := actList as IExodusTypedActions
+         Result := TExodusTypedActions.Create(Self as IExodusActionMap, itemtype);
+         Result._AddRef;
+         _actLists.AddObject(itemtype, Result);
+    end;
+end;
+procedure TExodusActionMap.DeleteTypedActions(actList: TExodusTypedActions);
+var
+    idx: Integer;
+begin
+    idx := _actLists.IndexOfObject(actList);
+    if (idx <> -1) then begin
+        _actLists.Delete(idx);
+        actList._Release;
+    end;
+end;
+
+function TExodusActionMap.GetActionsFor(const itemtype: WideString): IExodusTypedActions;
+var
+    actList: TExodusTypedActions;
+begin
+    actList := LookupTypedActions(itemtype, false);
+    if actList <> nil then
+        Result := actList as IExodusTypedActions
+    else
+        Result := nil;
 end;
 
 function TExodusActionMap.GetActionNamed(const name: WideString): IExodusAction;
@@ -267,39 +318,39 @@ begin
     if (idx = -1) then
         _allActs.Add(act as IExodusAction);
 
-    idx := _actLists.IndexOf(itemtype);
-    if (idx <> -1) then
-        actList := TExodusTypedActions(_actLists.Objects[idx])
-    else begin
-        actList := TExodusTypedActions.Create(Self as IExodusActionMap, itemtype);
-        actList._AddRef;
-        
-        if _actLists.Sorted then _actLists.Sorted := false;
-        _actLists.AddObject(actList.Get_ItemType, actList);
-    end;
-
+    actList := LookupTypedActions(itemtype, true);
     actList.AddAction(act);
 end;
 
 procedure TExodusActionMap.Collate;
 var
-    idx: Integer;
-    main: IExodusTypedActions;
+    idx, jdx: Integer;
+    mainActs, typedActs: TExodusTypedActions;
     act: IExodusAction;
 begin
-    if (_actLists.Count = 2) then begin
-        //there's only one typed actions, copy it into main actions...
-        main := Get_TypedActions(1);
+    mainActs := LookupTypedActions('', true);
+    mainActs.Clear;
 
-        for idx := 0 to main.ActionCount - 1 do begin
-            act := main.Action[idx];
-            _mainActs.AddAction(act);
-        end;
+    //Let's (optimistically) asume that all actions should be in the main actions
+    for idx := 0 to _allActs.Count - 1 do begin
+        mainActs.AddAction(_allActs[idx] as IExodusAction);
     end;
+    mainActs.Collate;
 
     for idx := 0 to _actLists.Count - 1 do begin
-        //Collate (sort) all actions for types
-        TExodusTypedActions(_actLists.Objects[idx]).Collate;
+        //Collate (sort) all actions for types (other than '')
+        typedActs := TExodusTypedActions(_actLists.Objects[idx]);
+
+        //skip main actions
+        if (typedActs = mainActs) then continue;
+
+        //remove actions missing in typed from main
+        for jdx := 0 to _allActs.Count - 1 do begin
+            act := _allActs[idx] as IExodusAction;
+            if typedActs.IndexOfAction(act) = -1 then mainActs.RemoveAction(act);
+        end;
+
+        typedActs.Collate;
     end;
 
     //Sort the type list
