@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/14/2008 9:19:49 AM from Type Library described below.
+// File generated on 3/14/2008 1:45:02 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -985,6 +985,8 @@ type
                               const resName: WideString): Integer; safecall;
     procedure Remove(const ID: WideString); safecall;
     function Find(const ID: WideString): Integer; safecall;
+    function GetImageById(const Id: WideString): WideString; safecall;
+    function GetImageByIndex(Index: Integer): WideString; safecall;
   end;
 
 // *********************************************************************//
@@ -1000,6 +1002,8 @@ type
                               const resName: WideString): Integer; dispid 203;
     procedure Remove(const ID: WideString); dispid 204;
     function Find(const ID: WideString): Integer; dispid 205;
+    function GetImageById(const Id: WideString): WideString; dispid 206;
+    function GetImageByIndex(Index: Integer): WideString; dispid 207;
   end;
 
 // *********************************************************************//
