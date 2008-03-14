@@ -2,10 +2,11 @@ unit ActionMenus;
 
 interface
 
-uses Classes, Menus, TntMenus, ExTreeView, Exodus_TLB;
+uses Classes, Menus, TntMenus, Exodus_TLB;
 
 type TExActionPopupMenu = class(TTntPopupMenu)
 private
+    _actCtrl: IExodusActionController;
     _actMap: IExodusActionMap;
     _targets: IExodusItemList;
 
@@ -24,12 +25,14 @@ public
     procedure Popup(X, Y: Integer); override;
 
     property Targets: IExodusItemList read _targets write SetTargets;
+    property ActionController: IExodusActionController read _actCtrl write _actCtrl;
 end;
+
+procedure Register;
 
 implementation
 
-uses Session, ComObj, ComServ, SysUtils, COMExodusItem, COMExodusItemList,
-        ExActionCtrl, TntComCtrls, gnugettext, Variants, Unicode;
+uses SysUtils, TntComCtrls, gnugettext, Variants, Unicode;
 
 type TExActionMenuItem = class(TTntMenuItem)
 private
@@ -94,6 +97,9 @@ var
     idx, typeCount, miCount: Integer;
     mi: TTntMenuItem;
 begin
+    typeCount := 0;
+    miCount := 0;
+
     Items.Clear();
     mainActs := _actMap.GetActionsFor('');
     if (mainActs <> nil) then Dec(typeCount);
@@ -170,10 +176,15 @@ end;
 
 procedure TExActionPopupMenu.Popup(X: Integer; Y: Integer);
 begin
-    _actMap := GetActionController.buildActions(Targets);
+    _actMap := ActionController.buildActions(Targets);
     rebuild;
 
     inherited Popup(X, Y);
+end;
+
+procedure Register;
+begin
+    RegisterComponents('Exodus Components', [TExActionPopupMenu]);
 end;
 
 end.
