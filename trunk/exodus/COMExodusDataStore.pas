@@ -34,7 +34,6 @@ type
   private
     // Variables
     _DBHandle: TSQLiteDatabase;
-    _DBFileName: Widestring;
 
     // Methods
     function _OpenDBFile(filename: widestring): boolean;

@@ -102,6 +102,7 @@ type
     property IsEndOfTable: WordBool read Get_IsEndOfTable;
     property IsBeginOfTable: WordBool read Get_IsBeginOfTable;
     property SQLTableID: WideString read Get_SQLTableID;
+    function GetFieldAsBoolean(Field: Integer): WordBool; safecall;
 
     // Properties
 
@@ -477,6 +478,22 @@ end;
 function TExodusDataTable.Get_SQLTableID: WideString;
 begin
     Result := _tableID;
+end;
+
+
+{---------------------------------------}
+function TExodusDataTable.GetFieldAsBoolean(Field: Integer): WordBool;
+begin
+    Result := false;
+    if (_table = nil) then exit;
+
+    try
+        Result := _table.FieldAsBoolean(Field);
+    except
+        on e: ESqliteException do begin
+            // Eat error
+        end;
+    end;
 end;
 
 

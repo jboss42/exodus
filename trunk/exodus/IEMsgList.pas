@@ -605,7 +605,6 @@ var
     cleanXIM: TXmlTag;
     i: integer;
     nodes: TXMLNodeList;
-    cd: TXMLCData;
     dv: WideString;
     t: TDateTime;
     id: WideString;

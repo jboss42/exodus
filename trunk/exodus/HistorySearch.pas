@@ -36,6 +36,14 @@ uses
   Unicode;
 
 type
+  TResultListItem = class
+    private
+    protected
+    public
+    msg: TJabberMessage;
+    listitem: TTntListItem;
+  end;
+
   TfrmHistorySearch = class(TExForm)
     pnlAdvancedSearchBar: TTntPanel;
     pnlBasicSearchBar: TTntPanel;
@@ -81,6 +89,7 @@ type
     procedure btnRemoveJIDClick(Sender: TObject);
     procedure btnSerachClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure lstResultsClick(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -95,6 +104,9 @@ type
     procedure _PossitionControls();
     procedure _AddJidToJIDList(jid: widestring);
 
+    // Properties
+    property _MsgList: TfBaseMsgList read _getMsgList;
+
   protected
     // Variables
 
@@ -106,8 +118,6 @@ type
     // Methods
     procedure ResultCallback(msg: TJabberMessage);
 
-    // Properties
-    property MsgList: TfBaseMsgList read _getMsgList;
   end;
 
 const
@@ -270,7 +280,7 @@ begin
         end;
     end;
 
-    with MsgList do begin
+    with _MsgList do begin
         Name := 'ResultsHistoryFrame';
         Parent := pnlResultsHistory;
         Align := alClient;
@@ -293,14 +303,28 @@ end;
 procedure TfrmHistorySearch.FormDestroy(Sender: TObject);
 var
     i: integer;
-    msg: TJabberMessage;
+    j: integer;
+    k: integer;
+    ritem: TResultListItem;
+    datelist: TWidestringList;
+    itemlist: TWidestringList;
 begin
     _SearchObj := nil;
     _ResultObj := nil;
 
     for i := _ResultList.Count - 1 downto 0 do begin
-        msg := TJabberMessage(_ResultList.Objects[i]);
-        msg.Free();
+        dateList := TWidestringList(_ResultList.Objects[i]);
+        for j := datelist.Count - 1  downto 0 do begin
+            itemlist := TWidestringList(datelist.Objects[j]);
+            for k := itemlist.Count - 1 downto 0 do begin
+                ritem := TResultListItem(itemlist.Objects[i]);
+                ritem.msg.Free();
+                itemlist.Delete(k);
+            end;
+            itemlist.Free();
+            datelist.Delete(j);
+        end;
+        dateList.Free();
         _ResultList.Delete(i);
     end;
     _ResultList.Free();
@@ -323,6 +347,43 @@ begin
     end
     else begin
         btnRemoveJID.Enabled := false;
+    end;
+end;
+
+procedure TfrmHistorySearch.lstResultsClick(Sender: TObject);
+var
+    i: integer;
+    j: integer;
+    k: integer;
+    l: integer;
+    ritem: TResultListItem;
+    listItem: TTntListItem;
+    dateList: TWidestringList;
+    itemList: TWidestringList;
+begin
+    inherited;
+
+    listItem := lstResults.Selected;
+
+    _MsgList.Clear();
+
+    for i := 0 to _ResultList.Count - 1 do begin
+        dateList := TWidestringList(_ResultList.Objects[i]);
+        for j := 0 to dateList.Count - 1 do begin
+            itemList := TWidestringList(dateList.Objects[j]);
+            for k := 0 to itemList.Count - 1 do begin
+                ritem := TResultListItem(itemList.Objects[k]);
+                if (ritem.listitem = listItem) then begin
+                    // We have a match.
+                    // So, run through list adding all dates to display box
+                    for l := 0 to itemList.Count - 1 do begin
+                        ritem := TResultListItem(itemList.Objects[l]);
+                        _MsgList.DisplayMsg(ritem.msg, false);
+                    end;
+                    exit; // Get out of this tripple list madness
+                end;
+            end;
+        end;
     end;
 end;
 
@@ -402,6 +463,15 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
 var
     newItem: TTntListItem;
     newmsg: TJabberMessage;
+    ritem: TResultListItem;
+    i: integer;
+    j: integer;
+    jid: widestring;
+    date: widestring;
+    dateList: TWidestringList;
+    itemList: TWidestringList;
+    jidfound: boolean;
+    datefound: boolean;
 begin
     if (msg = nil) then begin
         // End of results - remove from Result callback map
@@ -420,8 +490,6 @@ begin
         // didn't have this tag when we stored it.
         newmsg.Time := msg.Time;
 
-        _ResultList.AddObject('', newmsg);
-
         newItem := lstResults.Items.Add();
         newItem.Caption := '';
         if (newmsg.isMe) then begin
@@ -430,8 +498,55 @@ begin
         else begin
             newItem.SubItems.Add(newmsg.FromJID);
         end;
-        newItem.SubItems.Add(DateTimeToStr(newmsg.Time));
+        //newItem.SubItems.Add(DateTimeToStr(newmsg.Time));
+        newItem.SubItems.Add(IntToStr(Trunc(newmsg.Time)));
         newItem.SubItems.Add(newmsg.Body);
+
+        ritem := TResultListItem.Create();
+        ritem.msg := newmsg;
+        ritem.listitem := newitem;
+
+        if (newmsg.isMe) then begin
+            jid := newmsg.ToJid;
+        end
+        else begin
+            jid := newmsg.FromJID;
+        end;
+        date := IntToStr(Trunc(newmsg.Time));
+
+        jidfound := false;
+        datefound := false;
+        for i := 0 to _ResultList.Count - 1 do begin
+            if (jid = _ResultList[i]) then begin
+                // found via jid
+                jidfound := true;
+                dateList := TWidestringList(_ResultList.Objects[i]);
+                for j := 0 to dateList.Count - 1 do begin
+                    if (date = datelist[j]) then begin
+                    // found date - just add msg
+                    datefound := true;
+                    itemList := TWidestringList(dateList.Objects[j]);
+                    itemList.AddObject('', ritem);
+                    end;
+                end;
+
+                if (not datefound) then begin
+                    // need to add date and msg
+                    itemList := TWidestringList.Create();
+                    dateList.AddObject(date, itemList);
+                    itemList.AddObject('', ritem);
+                end;
+            end
+        end;
+
+        if (not jidfound) then begin
+            // Nothing found so create it all
+            dateList := TWidestringList.Create();
+            itemList := TWidestringList.Create();
+            _ResultList.AddObject(jid, dateList);
+            dateList.AddObject(date, itemList);
+            itemList.AddObject('', ritem);
+        end;
     end;
 end;
 
