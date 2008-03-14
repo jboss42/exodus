@@ -262,24 +262,23 @@ begin
     end
     else begin
         Create();
-
-        _ToJID := msg.ToJID;
-        _FromJID := msg.FromJID;
-        _Subject := msg.Subject;
-        _Thread := msg.Thread;
-        _Body := msg.Body;
-        _msg_type := msg.MsgType;
-        _ID := msg.ID;
-        _Action := msg.Action;
-        _Nick := msg.Nick;
-        _isMe := msg.isMe;
-        _Time := msg.Time;
-        _isXdata := msg.isXdata;
-        _highlight := msg.highlight;
-        _XML := msg.XML;
-        _Composing := msg.Composing;
-        _Priority := msg.Priority;
     end;
+    _ToJID := msg.ToJID;
+    _FromJID := msg.FromJID;
+    _Subject := msg.Subject;
+    _Thread := msg.Thread;
+    _Body := msg.Body;
+    _msg_type := msg.MsgType;
+    _ID := msg.ID;
+    _Action := msg.Action;
+    _Nick := msg.Nick;
+    _isMe := msg.isMe;
+    _Time := msg.Time;
+    _isXdata := msg.isXdata;
+    _highlight := msg.highlight;
+    _XML := msg.XML;
+    _Composing := msg.Composing;
+    _Priority := msg.Priority;
 end;
 
 {---------------------------------------}

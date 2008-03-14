@@ -27,6 +27,7 @@ const
   dtStr = 3;
   dtBlob = 4;
   dtNull = 5;
+  dtBool = 6;
 
 type
 
@@ -85,6 +86,7 @@ type
     function FieldIsNull(I: cardinal): boolean;
     function FieldAsString(I: cardinal): string;
     function FieldAsDouble(I: cardinal): double;
+    function FieldAsBoolean(I: cardinal): boolean;
     function Next: boolean;
     function Previous: boolean;
     property EOF: boolean read GetEOF;
@@ -419,23 +421,28 @@ begin
               begin
                 new(thisColType);
                 DeclaredColType := Sqlite3_ColumnDeclType(stmt, i);
-                if DeclaredColType = nil then
+                if DeclaredColType = nil then begin
                   thisColType^ := Sqlite3_ColumnType(stmt, i) //use the actual column type instead
                 //seems to be needed for last_insert_rowid
-                else
-                  if (DeclaredColType = 'INTEGER') or (DeclaredColType = 'BOOLEAN') then
-                    thisColType^ := dtInt
-                  else
-                    if (DeclaredColType = 'NUMERIC') or
-                      (DeclaredColType = 'FLOAT') or
-                      (DeclaredColType = 'DOUBLE') or
-                      (DeclaredColType = 'REAL') then
-                      thisColType^ := dtNumeric
-                    else
-                      if DeclaredColType = 'BLOB' then
-                        thisColType^ := dtBlob
-                      else
-                        thisColType^ := dtStr;
+                end
+                else if (DeclaredColType = 'INTEGER') then begin
+                    thisColType^ := dtInt;
+                end
+                else if (DeclaredColType = 'NUMERIC') or
+                        (DeclaredColType = 'FLOAT') or
+                        (DeclaredColType = 'DOUBLE') or
+                        (DeclaredColType = 'REAL') then begin
+                    thisColType^ := dtNumeric;
+                end
+                else if DeclaredColType = 'BLOB' then begin
+                    thisColType^ := dtBlob;
+                end
+                else if (DeclaredColType ='BOOLEAN') then begin
+                    thisColType^ := dtBool;
+                end
+                else begin
+                    thisColType^ := dtStr;
+                end;
                 fColTypes.Add(thiscoltype);
               end;
               fResults := TList.Create;
@@ -630,6 +637,14 @@ begin
       Result := FloatToStr(self.FieldAsDouble(I));
     dtBlob:
       Result := self.FieldAsBlobText(I);
+    dtBool: begin
+        if (self.FieldAsBoolean(I)) then begin
+            Result := 'TRUE';
+        end
+        else begin
+            Result := 'FALSE';
+        end;
+    end
   else
     Result := '';
   end;
@@ -708,6 +723,28 @@ begin
     Result := ''
   else
     Result := self.GetFields(I);
+end;
+
+function TSqliteTable.FieldAsBoolean(I: cardinal): boolean;
+var
+    thisvalue: pstring;
+    tmpstr: string;
+begin
+    if EOF then
+        raise ESqliteException.Create('Table is at End of File');
+
+    thisvalue := self.fResults[(self.frow * self.fColCount) + I];
+    if (thisvalue <> nil) then
+        tmpstr := thisvalue^
+    else
+        tmpstr := '';
+
+    if (UpperCase(tmpstr) = 'TRUE') then begin
+        Result := true;
+    end
+    else begin
+        Result := false;
+    end;
 end;
 
 function TSqliteTable.FieldIsNull(I: cardinal): boolean;

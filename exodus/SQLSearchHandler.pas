@@ -175,8 +175,6 @@ var
     maxdate: integer;
     exactMatch: boolean;
 begin
-    exactMatch := false;
-
     // SELECT part
     Result := 'SELECT * ';
 

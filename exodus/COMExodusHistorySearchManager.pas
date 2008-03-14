@@ -302,7 +302,6 @@ end;
 procedure TExodusHistorySearchManager.UnRegisterSearchHandler(HandlerID: Integer);
 var
     i: integer;
-    j: integer;
     hwrapper: TSearchHandlerWrapper;
 begin
     if (_HandlerList.Find(IntToStr(HandlerID), i)) then begin

@@ -1500,7 +1500,11 @@ library Exodus
     propget, 
     id(0x000000DA)
     ]
-    HRESULT _stdcall SQLTableID([out, retval] BSTR * Value );
+    HRESULT _stdcall SQLTableID([out, retval] BSTR * value );
+    [
+    id(0x000000DB)
+    ]
+    HRESULT _stdcall GetFieldAsBoolean([in] long Field, [out, retval] VARIANT_BOOL * Value );
   };
 
   [

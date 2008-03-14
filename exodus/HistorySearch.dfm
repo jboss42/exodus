@@ -197,6 +197,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Top = 42
           Width = 160
           Height = 59
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
         end
       end
@@ -298,8 +299,12 @@ inherited frmHistorySearch: TfrmHistorySearch
           end>
         Constraints.MinHeight = 50
         GridLines = True
+        RowSelect = True
+        SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
+        OnClick = lstResultsClick
+        ExplicitTop = 1
       end
     end
     object pnlResultsHistory: TTntPanel
@@ -308,6 +313,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Width = 545
       Height = 151
       Align = alClient
+      BevelOuter = bvNone
       TabOrder = 1
     end
   end

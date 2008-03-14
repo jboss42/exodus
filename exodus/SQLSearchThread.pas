@@ -164,13 +164,24 @@ begin
                 // didn't have this tag when we stored it.
                 _msg.Time := _table.GetFieldAsInt(date_col) +
                              _table.GetFieldAsDouble(time_col);
+
+                // Set the nick if it exists in the db.
+                if (_msg.Nick = '') then begin
+                    _msg.Nick := _table.GetField(nick_col);
+                end;
+
+                // Set the "isMe" because this cannot be determined by just the tag
+                if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
+                    _msg.isMe := true;
+                end;
+
                 tag.Free();
             end
             else begin
                 // No tag stored
                 _msg := TJabberMessage.Create();
 
-                if (_table.GetField(outbound_col) = 'TRUE') then begin
+                if (_table.GetField(outbound_col) = '1') then begin
                     _msg.ToJID := _table.GetField(jid_col);
                     _msg.FromJID := _table.GetField(user_jid_col);
                     if (_msg.FromJID <> '') then begin
