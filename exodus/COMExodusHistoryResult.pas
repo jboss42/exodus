@@ -287,7 +287,7 @@ begin
         msg.Body := Item.Body;
         msg.Thread := Item.Thread;
         msg.Subject := Item.Subject;
-        msg.Time := JabberToDateTime(Item.Timestamp);
+        msg.Time := JabberToDateTime(Item.Timestamp); 
         if (Item.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
             msg.isMe := true;
         end
