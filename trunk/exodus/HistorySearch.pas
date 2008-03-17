@@ -36,6 +36,8 @@ uses
   Unicode;
 
 type
+  TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
+
   TResultListItem = class
     private
     protected
@@ -97,6 +99,9 @@ type
     procedure lstResultsClick(Sender: TObject);
     procedure btnAddRoomClick(Sender: TObject);
     procedure btnRemoveRoomClick(Sender: TObject);
+    procedure lstResultsCompare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
+    procedure lstResultsColumnClick(Sender: TObject; Column: TListColumn);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -106,6 +111,7 @@ type
     _ResultObj: IExodusHistoryResult;
     _ResultList: TWidestringList;
     _DoingSearch: boolean;
+    _resultSort: TResultSort;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -156,7 +162,9 @@ uses
     ExSession,
     ComObj,
     DisplayName,
-    JabberID;
+    JabberID,
+    IdGlobal,
+    RosterImages;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.btnAddContactClick(Sender: TObject);
@@ -244,8 +252,8 @@ begin
         if (_DoAdvSearch) then begin
             // Advanced Search
             if (radioRange.Checked) then begin
-                _SearchObj.Set_maxDate(dateTo.DateTime);
-                _SearchObj.Set_minDate(dateFrom.DateTime);
+                _SearchObj.Set_maxDate(dateTo.DateTime + TimeZoneBias());
+                _SearchObj.Set_minDate(dateFrom.DateTime + TimeZoneBias());
             end;
 
             for i := 0 to txtKeywords.Lines.Count - 1 do begin
@@ -334,6 +342,10 @@ begin
     _DoingSearch := false;
 
     _ResultList := TWidestringList.Create();
+
+    _resultSort := rsJIDAsc;
+    lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
+    lstResults.Columns.Items[1].ImageIndex := -1;
 end;
 
 {---------------------------------------}
@@ -438,6 +450,114 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmHistorySearch.lstResultsColumnClick(Sender: TObject;
+  Column: TListColumn);
+begin
+    inherited;
+
+    if (Column = lstResults.Columns.Items[0]) then begin
+        if (_resultSort = rsJIDAsc) then begin
+            _resultSort := rsJIDDec;
+
+        end
+        else begin
+            _resultSort := rsJIDAsc;
+        end;
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
+    end
+    else if (Column = lstResults.Columns.Items[1]) then begin
+        if (_resultSort = rsDateAsc) then begin
+            _resultSort := rsDateDec;
+        end
+        else begin
+            _resultSort := rsDateAsc;
+        end;
+        lstResults.SortType := stNone;
+        lstResults.SortType := stBoth;
+    end
+    else begin
+        // Do nothing if Message column
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.lstResultsCompare(Sender: TObject; Item1,
+  Item2: TListItem; Data: Integer; var Compare: Integer);
+var
+    dt1: TDateTime;
+    dt2: TDateTime;
+begin
+    inherited;
+
+    case _resultSort of
+        rsJIDAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            if (Item1.Caption > Item2.Caption) then begin
+                Compare := 1;
+            end
+            else if (Item1.Caption < Item2.Caption) then begin
+                Compare := -1;
+            end
+            else begin
+                Compare := 0;
+            end;
+        end;
+        rsJIDDec: begin
+            lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_down');
+            lstResults.Columns.Items[1].ImageIndex := -1;
+            if (Item1.Caption > Item2.Caption) then begin
+                Compare := -1;
+            end
+            else if (Item1.Caption < Item2.Caption) then begin
+                Compare := 1;
+            end
+            else begin
+                Compare := 0;
+            end;
+        end;
+        rsDateAsc: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_up');
+            try
+                dt1 := StrToDateTime(Item1.SubItems[0]);
+                dt2 := StrToDateTime(Item2.SubItems[0]);
+                if (dt1 > dt2) then begin
+                    Compare := 1;
+                end
+                else if (dt1 < dt2) then begin
+                    Compare := -1;
+                end
+                else begin
+                    Compare := 0;
+                end;
+            except
+            end;
+        end;
+        rsDateDec: begin
+            lstResults.Columns.Items[0].ImageIndex := -1;
+            lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_down');
+            try
+                dt1 := StrToDateTime(Item1.SubItems[0]);
+                dt2 := StrToDateTime(Item2.SubItems[0]);
+                if (dt1 > dt2) then begin
+                    Compare := -1;
+                end
+                else if (dt1 < dt2) then begin
+                    Compare := 1;
+                end
+                else begin
+                    Compare := 0;
+                end;
+            except
+            end;
+        end;
+    end;
+
+end;
+
+{---------------------------------------}
 procedure TfrmHistorySearch.radioAllClick(Sender: TObject);
 begin
     inherited;
@@ -495,15 +615,12 @@ begin
     // Result Table
     if ((lstResults.Columns.Items[0].Width +
          lstResults.Columns.Items[1].Width +
-         lstResults.Columns.Items[2].Width +
-         lstResults.Columns.Items[3].Width) < lstResults.ClientWidth) then begin
+         lstResults.Columns.Items[2].Width) < lstResults.ClientWidth) then begin
         // Make sure Body column is at least large enough to fit to right side of table
-        lstResults.Columns.Items[3].Width := lstResults.ClientWidth -
+        lstResults.Columns.Items[2].Width := lstResults.ClientWidth -
                                              lstResults.Columns.Items[0].Width -
-                                             lstResults.Columns.Items[1].Width -
-                                             lstResults.Columns.Items[2].Width;
+                                             lstResults.Columns.Items[1].Width;
     end;
-    
 end;
 
 {---------------------------------------}
@@ -527,16 +644,26 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
     function CreateNewListItem(newmsg: TJabberMessage): TTntListItem;
     var
         id: TJabberID;
+        exItem: IExodusItem;
     begin
-        Result := lstResults.Items.Add();
-        Result.Caption := '';
         if (newmsg.isMe) then begin
             id := TJabberID.Create(newmsg.ToJid);
         end
         else begin
             id := TJabberID.Create(newmsg.FromJid);
         end;
-        Result.SubItems.Add(DisplayName.getDisplayNameCache().getDisplayName(id.jid));
+
+        Result := lstResults.Items.Add();
+        // Display Name
+        Result.Caption := DisplayName.getDisplayNameCache().getDisplayName(id.jid);
+        // Image Index
+        exItem := MainSession.ItemController.GetItem(id.jid);
+        if (exItem <> nil) then begin
+            Result.ImageIndex := exItem.ImageIndex;
+        end
+        else begin
+            Result.ImageIndex := RosterTreeImages.Find('unknown');
+        end;
         id.Free();
         Result.SubItems.Add(DateTimeToStr(newmsg.Time));
         Result.SubItems.Add(newmsg.Body);
@@ -546,7 +673,7 @@ var
     ritem: TResultListItem;
     i: integer;
     j: integer;
-    jid: widestring;
+    jid: TJabberID;
     date: widestring;
     dateList: TWidestringList;
     itemList: TWidestringList;
@@ -576,17 +703,17 @@ begin
         ritem.listitem := nil;
 
         if (newmsg.isMe) then begin
-            jid := newmsg.ToJid;
+            jid := TJabberID.Create(newmsg.ToJid);
         end
         else begin
-            jid := newmsg.FromJID;
+            jid := TJabberID.Create(newmsg.FromJID);
         end;
         date := IntToStr(Trunc(newmsg.Time));
 
         jidfound := false;
         datefound := false;
         for i := 0 to _ResultList.Count - 1 do begin
-            if (jid = _ResultList[i]) then begin
+            if (jid.jid = _ResultList[i]) then begin
                 // found via jid
                 jidfound := true;
                 dateList := TWidestringList(_ResultList.Objects[i]);
@@ -614,10 +741,12 @@ begin
             ritem.listitem := CreateNewListItem(newmsg);
             dateList := TWidestringList.Create();
             itemList := TWidestringList.Create();
-            _ResultList.AddObject(jid, dateList);
+            _ResultList.AddObject(jid.jid, dateList);
             dateList.AddObject(date, itemList);
             itemList.AddObject('', ritem);
         end;
+
+        jid.Free();
     end;
 end;
 

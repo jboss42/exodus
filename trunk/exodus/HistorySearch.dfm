@@ -323,10 +323,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         Align = alClient
         Columns = <
           item
-            Width = 25
-          end
-          item
-            Caption = 'JID'
+            Caption = 'To'
             Width = 150
           end
           item
@@ -334,16 +331,21 @@ inherited frmHistorySearch: TfrmHistorySearch
             Width = 150
           end
           item
-            Caption = 'Body'
+            Caption = 'Message'
             Width = 215
           end>
         Constraints.MinHeight = 50
         GridLines = True
+        ReadOnly = True
         RowSelect = True
-        SortType = stText
+        SmallImages = frmExodus.ImageList1
+        SortType = stBoth
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = lstResultsClick
+        OnColumnClick = lstResultsColumnClick
+        OnCompare = lstResultsCompare
+        ExplicitTop = -3
       end
     end
     object pnlResultsHistory: TTntPanel

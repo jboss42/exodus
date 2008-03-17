@@ -65,7 +65,8 @@ uses
     JabberID,
     sysUtils,
     XMLUtils,
-    SQLUtils;
+    SQLUtils,
+    IdGlobal;
 
 {---------------------------------------}
 constructor TSQLLogger.Create;
@@ -130,6 +131,7 @@ var
     outstr: string;
     xml: string;
     priority: integer;
+    dda: TDateTime;
 begin
     if (DataStore = nil) then exit;
 
@@ -164,7 +166,10 @@ begin
         else priority := 3;
     end;
 
-    ts := msg.Time;
+    ts := msg.Time + TimeZoneBias();
+    dda := Now();
+    if (dda = now()) then sleep(1);
+    
 
     cmd := 'INSERT INTO ' +
            MESSAGES_TABLE + ' ' +
