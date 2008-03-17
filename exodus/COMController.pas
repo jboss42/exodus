@@ -144,6 +144,7 @@ type
     function GetDataStore: IExodusDataStore; safecall;
     function Get_TabController: IExodusTabController; safecall;
     function Get_ActionController: IExodusActionController; safecall;
+    function Get_ItemController: IExodusItemController; safecall;
 
     { Protected declarations }
   private
@@ -2144,6 +2145,11 @@ end;
 function TExodusController.Get_ActionController: IExodusActionController;
 begin
     Result := GetActionController();
+end;
+
+function TExodusController.Get_ItemController: IExodusItemController;
+begin
+    Result := MainSession.ItemController;
 end;
 
 initialization

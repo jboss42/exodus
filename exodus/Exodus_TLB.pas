@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/14/2008 1:45:02 PM from Type Library described below.
+// File generated on 3/17/2008 3:04:28 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -465,6 +465,7 @@ type
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
     function Get_TabController: IExodusTabController; safecall;
+    function Get_ItemController: IExodusItemController; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -485,6 +486,7 @@ type
     property RoomLogger: IExodusLogger read Get_RoomLogger write Set_RoomLogger;
     property BookmarkManager: IExodusBookmarkManager read Get_BookmarkManager;
     property TabController: IExodusTabController read Get_TabController;
+    property ItemController: IExodusItemController read Get_ItemController;
   end;
 
 // *********************************************************************//
@@ -585,6 +587,7 @@ type
     procedure RemoveStringlistValue(const key: WideString; const value: WideString); dispid 221;
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
     property TabController: IExodusTabController readonly dispid 223;
+    property ItemController: IExodusItemController readonly dispid 224;
   end;
 
 // *********************************************************************//
@@ -985,8 +988,8 @@ type
                               const resName: WideString): Integer; safecall;
     procedure Remove(const ID: WideString); safecall;
     function Find(const ID: WideString): Integer; safecall;
-    function GetImageById(const Id: WideString): WideString; safecall;
-    function GetImageByIndex(Index: Integer): WideString; safecall;
+    function GetImageById(const ID: WideString): WideString; safecall;
+    function GetImageByIndex(index: Integer): WideString; safecall;
   end;
 
 // *********************************************************************//
@@ -1002,8 +1005,8 @@ type
                               const resName: WideString): Integer; dispid 203;
     procedure Remove(const ID: WideString); dispid 204;
     function Find(const ID: WideString): Integer; dispid 205;
-    function GetImageById(const Id: WideString): WideString; dispid 206;
-    function GetImageByIndex(Index: Integer): WideString; dispid 207;
+    function GetImageById(const ID: WideString): WideString; dispid 206;
+    function GetImageByIndex(index: Integer): WideString; dispid 207;
   end;
 
 // *********************************************************************//
