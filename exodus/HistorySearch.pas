@@ -72,11 +72,16 @@ type
     grpKeyword: TTntGroupBox;
     chkExact: TTntCheckBox;
     TntLabel3: TTntLabel;
-    grpJID: TTntGroupBox;
-    btnAddJID: TTntButton;
-    btnRemoveJID: TTntButton;
-    lstJids: TTntListBox;
+    grpContacts: TTntGroupBox;
+    btnAddContact: TTntButton;
+    btnRemoveContact: TTntButton;
+    lstContacts: TTntListBox;
     txtKeywords: TTntMemo;
+    TntBevel1: TTntBevel;
+    grpRooms: TTntGroupBox;
+    btnAddRoom: TTntButton;
+    btnRemoveRoom: TTntButton;
+    lstRooms: TTntListBox;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
@@ -84,12 +89,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure dateFromChange(Sender: TObject);
     procedure dateToChange(Sender: TObject);
-    procedure btnAddJIDClick(Sender: TObject);
-    procedure lstJidsClick(Sender: TObject);
-    procedure btnRemoveJIDClick(Sender: TObject);
+    procedure btnAddContactClick(Sender: TObject);
+    procedure lstContactsClick(Sender: TObject);
+    procedure btnRemoveContactClick(Sender: TObject);
     procedure btnSerachClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lstResultsClick(Sender: TObject);
+    procedure btnAddRoomClick(Sender: TObject);
+    procedure btnRemoveRoomClick(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -98,11 +105,13 @@ type
     _SearchObj: IExodusHistorySearch;
     _ResultObj: IExodusHistoryResult;
     _ResultList: TWidestringList;
+    _DoingSearch: boolean;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
     procedure _PossitionControls();
-    procedure _AddJidToJIDList(jid: widestring);
+    procedure _AddContactToContactList(contact: widestring);
+    procedure _DropResults();
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -145,10 +154,12 @@ uses
     SelContact,
     SQLSearchHandler,
     ExSession,
-    ComObj;
+    ComObj,
+    DisplayName,
+    JabberID;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.btnAddJIDClick(Sender: TObject);
+procedure TfrmHistorySearch.btnAddContactClick(Sender: TObject);
 var
     dlg: TfrmSelContact;
     jid: widestring;
@@ -158,8 +169,15 @@ begin
     dlg := TfrmSelContact.Create(Self);
     if (dlg.ShowModal() = mrOK) then begin
         jid := dlg.GetSelectedJID();
-        _AddJidToJIDList(jid);
+        _AddContactToContactList(jid);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.btnAddRoomClick(Sender: TObject);
+begin
+    inherited;
+    Sleep(1);
 end;
 
 {---------------------------------------}
@@ -185,11 +203,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.btnRemoveJIDClick(Sender: TObject);
+procedure TfrmHistorySearch.btnRemoveContactClick(Sender: TObject);
 begin
     inherited;
-    lstJids.DeleteSelected();
-    btnRemoveJID.Enabled := false; // We just removed the selected, so nothing can be selected
+    lstContacts.DeleteSelected();
+    btnRemoveContact.Enabled := false; // We just removed the selected, so nothing can be selected
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.btnRemoveRoomClick(Sender: TObject);
+begin
+    inherited;
+    Sleep(1);
 end;
 
 {---------------------------------------}
@@ -199,53 +224,63 @@ var
 begin
     inherited;
 
-    _SearchObj := nil;
-    _ResultObj := nil;
+    if (_DoingSearch) then begin
+        HistorySearchManager.CancelSearch(_SearchObj.SearchID);
 
-    _SearchObj := CreateCOMObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
-    _ResultObj := CreateCOMObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
-
-    _SearchObj.AddAllowedSearchType(SQLSEARCH_CHAT);
-    _SearchObj.AddAllowedSearchType(SQLSEARCH_ROOM);
-
-    if (_DoAdvSearch) then begin
-        // Advanced Search
-        if (radioRange.Checked) then begin
-            _SearchObj.Set_maxDate(dateTo.DateTime);
-            _SearchObj.Set_minDate(dateFrom.DateTime);
-        end;
-
-        for i := 0 to txtKeywords.Lines.Count - 1 do begin
-            if (Trim(txtKeywords.Lines[i]) <> '') then begin
-                _SearchObj.AddKeyword(Trim(txtkeywords.Lines[i]));
-            end;
-        end;
-
-        _SearchObj.Set_ExactKeywordMatch(chkExact.Checked);
-
-        for i := 0 to lstJids.Items.Count - 1 do begin
-            if (Trim(lstJids.Items[i]) <> '') then begin
-                _SearchObj.AddJid(Trim(lstJids.Items[i]));
-            end;
-        end;
+        // Switch to "search done" GUI
+        _DoingSearch := false;
     end
     else begin
-        // Basic Search
-        if (Trim(txtBasicHistoryFor.Text) <> '') then begin
-            _SearchObj.AddJid(txtBasicHistoryFor.Text);
+        _SearchObj := nil;
+
+        _DropResults();
+
+        _SearchObj := CreateCOMObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
+        _ResultObj := CreateCOMObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
+
+        _SearchObj.AddAllowedSearchType(SQLSEARCH_CHAT);
+        _SearchObj.AddAllowedSearchType(SQLSEARCH_ROOM);
+
+        if (_DoAdvSearch) then begin
+            // Advanced Search
+            if (radioRange.Checked) then begin
+                _SearchObj.Set_maxDate(dateTo.DateTime);
+                _SearchObj.Set_minDate(dateFrom.DateTime);
+            end;
+
+            for i := 0 to txtKeywords.Lines.Count - 1 do begin
+                if (Trim(txtKeywords.Lines[i]) <> '') then begin
+                    _SearchObj.AddKeyword(Trim(txtkeywords.Lines[i]));
+                end;
+            end;
+
+            _SearchObj.Set_ExactKeywordMatch(chkExact.Checked);
+
+            for i := 0 to lstContacts.Items.Count - 1 do begin
+                if (Trim(lstContacts.Items[i]) <> '') then begin
+                    _SearchObj.AddJid(Trim(lstContacts.Items[i]));
+                end;
+            end;
+        end
+        else begin
+            // Basic Search
+            if (Trim(txtBasicHistoryFor.Text) <> '') then begin
+                _SearchObj.AddJid(txtBasicHistoryFor.Text);
+            end;
+
+            if (Trim(txtBasicKeywordSearch.Text) <> '') then begin
+                _SearchObj.AddKeyword(Trim(txtBasicKeywordSearch.Text));
+            end;
         end;
 
-        if (Trim(txtBasicKeywordSearch.Text) <> '') then begin
-            _SearchObj.AddKeyword(Trim(txtBasicKeywordSearch.Text));
-        end;
+        // Set Callback
+        ExodusHistoryResultCallbackMap.AddCallback(Self.ResultCallback, _ResultObj);
+
+        // Change to "searching GUI"
+        _DoingSearch := true;
+
+        HistorySearchManager.NewSearch(_SearchObj, _ResultObj);
     end;
-
-    // Set Callback
-    ExodusHistoryResultCallbackMap.AddCallback(Self.ResultCallback, _ResultObj);
-
-    // Change to "searching GUI"
-
-    HistorySearchManager.NewSearch(_SearchObj, _ResultObj);
 end;
 
 {---------------------------------------}
@@ -291,16 +326,30 @@ begin
     dateTo.DateTime := Now();
     dateFrom.DateTime := IncMonth(dateTo.DateTime, DEFAULT_DATE_GAP_MONTHS);
 
-    btnRemoveJID.Enabled := false;
+    btnRemoveContact.Enabled := false;
 
     _SearchObj := nil;
     _ResultObj := nil;
+
+    _DoingSearch := false;
 
     _ResultList := TWidestringList.Create();
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.FormDestroy(Sender: TObject);
+begin
+    _SearchObj := nil;
+
+    _DropResults();
+
+    _ResultList.Free();
+
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._DropResults();
 var
     i: integer;
     j: integer;
@@ -309,15 +358,17 @@ var
     datelist: TWidestringList;
     itemlist: TWidestringList;
 begin
-    _SearchObj := nil;
     _ResultObj := nil;
+
+    lstResults.Clear();
+    _MsgList.Clear();
 
     for i := _ResultList.Count - 1 downto 0 do begin
         dateList := TWidestringList(_ResultList.Objects[i]);
         for j := datelist.Count - 1  downto 0 do begin
             itemlist := TWidestringList(datelist.Objects[j]);
             for k := itemlist.Count - 1 downto 0 do begin
-                ritem := TResultListItem(itemlist.Objects[i]);
+                ritem := TResultListItem(itemlist.Objects[k]);
                 ritem.msg.Free();
                 itemlist.Delete(k);
             end;
@@ -327,9 +378,6 @@ begin
         dateList.Free();
         _ResultList.Delete(i);
     end;
-    _ResultList.Free();
-
-    inherited;
 end;
 
 {---------------------------------------}
@@ -339,17 +387,19 @@ begin
     _PossitionControls();
 end;
 
-procedure TfrmHistorySearch.lstJidsClick(Sender: TObject);
+{---------------------------------------}
+procedure TfrmHistorySearch.lstContactsClick(Sender: TObject);
 begin
     inherited;
-    if (lstJids.SelCount > 0) then begin
-        btnRemoveJID.Enabled := true;
+    if (lstContacts.SelCount > 0) then begin
+        btnRemoveContact.Enabled := true;
     end
     else begin
-        btnRemoveJID.Enabled := false;
+        btnRemoveContact.Enabled := false;
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmHistorySearch.lstResultsClick(Sender: TObject);
 var
     i: integer;
@@ -418,12 +468,14 @@ begin
     pnlBasicSearchKeywordSearch.Width := pnlBasicSearchBar.Width div 2;
 
     // Adv serach bar
-    GroupBoxWidth := (pnlAdvancedSearchBar.Width - (4 * ADVGRPGUTTER_WIDTH)) div 3;
+    GroupBoxWidth := (pnlAdvancedSearchBar.Width - (5 * ADVGRPGUTTER_WIDTH)) div 4;
     grpDate.Width := GroupBoxWidth;
     grpKeyword.Width := GroupBoxWidth;
-    grpJID.Width := GroupBoxWidth;
+    grpContacts.Width := GroupBoxWidth;
+    grpRooms.Width := GroupBoxWidth;
     grpKeyword.Left := grpDate.Left + grpDate.Width + ADVGRPGUTTER_WIDTH;
-    grpJID.Left := pnlAdvancedSearchBar.Width - grpJID.Width - ADVGRPGUTTER_WIDTH;
+    grpContacts.Left := grpKeyword.Left + grpKeyword.Width + ADVGRPGUTTER_WIDTH;
+    grpRooms.Left := grpContacts.Left + grpContacts.Width + ADVGRPGUTTER_WIDTH;
 
     lblFrom.Enabled := radioRange.Checked;
     lblTo.Enabled := radioRange.Checked;
@@ -439,29 +491,57 @@ begin
         pnlSearchBar.Height := BASICPANEL_HEIGHT;
         pnlControlBar.Top := BASICPANEL_HEIGHT;
     end;
+
+    // Result Table
+    if ((lstResults.Columns.Items[0].Width +
+         lstResults.Columns.Items[1].Width +
+         lstResults.Columns.Items[2].Width +
+         lstResults.Columns.Items[3].Width) < lstResults.ClientWidth) then begin
+        // Make sure Body column is at least large enough to fit to right side of table
+        lstResults.Columns.Items[3].Width := lstResults.ClientWidth -
+                                             lstResults.Columns.Items[0].Width -
+                                             lstResults.Columns.Items[1].Width -
+                                             lstResults.Columns.Items[2].Width;
+    end;
+    
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch._AddJidToJIDList(jid: widestring);
+procedure TfrmHistorySearch._AddContactToContactList(contact: widestring);
 var
     i: integer;
 begin
-    if (Trim(jid) = '') then exit;
+    if (Trim(contact) = '') then exit;
 
     // Check for dupe
-    for i := 0 to lstJids.Count - 1 do begin
-        if (jid = lstJids.Items[i]) then exit; // is a dupe
+    for i := 0 to lstContacts.Count - 1 do begin
+        if (contact = lstContacts.Items[i]) then exit; // is a dupe
     end;
 
     // no dupes so go ahead and add to lsit
-    lstJids.AddItem(jid, nil);
-
+    lstContacts.AddItem(contact, nil);
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
+    function CreateNewListItem(newmsg: TJabberMessage): TTntListItem;
+    var
+        id: TJabberID;
+    begin
+        Result := lstResults.Items.Add();
+        Result.Caption := '';
+        if (newmsg.isMe) then begin
+            id := TJabberID.Create(newmsg.ToJid);
+        end
+        else begin
+            id := TJabberID.Create(newmsg.FromJid);
+        end;
+        Result.SubItems.Add(DisplayName.getDisplayNameCache().getDisplayName(id.jid));
+        id.Free();
+        Result.SubItems.Add(DateTimeToStr(newmsg.Time));
+        Result.SubItems.Add(newmsg.Body);
+    end;
 var
-    newItem: TTntListItem;
     newmsg: TJabberMessage;
     ritem: TResultListItem;
     i: integer;
@@ -478,6 +558,7 @@ begin
         ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
 
         // Change GUI to "done searching"
+        _DoingSearch := false;
     end
     else begin
         // Got another result so check to see if we should display it.
@@ -490,21 +571,9 @@ begin
         // didn't have this tag when we stored it.
         newmsg.Time := msg.Time;
 
-        newItem := lstResults.Items.Add();
-        newItem.Caption := '';
-        if (newmsg.isMe) then begin
-            newItem.SubItems.Add(newmsg.ToJID);
-        end
-        else begin
-            newItem.SubItems.Add(newmsg.FromJID);
-        end;
-        //newItem.SubItems.Add(DateTimeToStr(newmsg.Time));
-        newItem.SubItems.Add(IntToStr(Trunc(newmsg.Time)));
-        newItem.SubItems.Add(newmsg.Body);
-
         ritem := TResultListItem.Create();
         ritem.msg := newmsg;
-        ritem.listitem := newitem;
+        ritem.listitem := nil;
 
         if (newmsg.isMe) then begin
             jid := newmsg.ToJid;
@@ -532,6 +601,7 @@ begin
 
                 if (not datefound) then begin
                     // need to add date and msg
+                    ritem.listitem := CreateNewListItem(newmsg);
                     itemList := TWidestringList.Create();
                     dateList.AddObject(date, itemList);
                     itemList.AddObject('', ritem);
@@ -541,6 +611,7 @@ begin
 
         if (not jidfound) then begin
             // Nothing found so create it all
+            ritem.listitem := CreateNewListItem(newmsg);
             dateList := TWidestringList.Create();
             itemList := TWidestringList.Create();
             _ResultList.AddObject(jid, dateList);

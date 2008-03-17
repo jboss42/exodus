@@ -67,7 +67,7 @@ type
 
             // Methods
             constructor Create();
-            destructor Destroy();
+            destructor Destroy(); override;
 
             procedure AddCallback(cb: TInternalResultCallback; ResultObj: IExodusHistoryResult);
             procedure FireCallback(ResultObj: IExodusHistoryResult; msg: TJabberMessage);
@@ -90,13 +90,6 @@ type
 
             // Methods
 
-        public
-            // Variables
-
-            // Methods
-            procedure Initialize(); override;
-            destructor Destroy(); override;
-
             // IExodusHistoryResult Interface
             function Get_ResultCount: Integer; safecall;
             function Get_Processing: WordBool; safecall;
@@ -105,6 +98,12 @@ type
             procedure Set_Processing(Value: WordBool); safecall;
             property ResultCount: Integer read Get_ResultCount;
             property Processing: WordBool read Get_Processing write Set_Processing;
+        public
+            // Variables
+
+            // Methods
+            procedure Initialize(); override;
+            destructor Destroy(); override;
 
             // Properties
     end;
@@ -123,7 +122,6 @@ uses
     ComLogMsg,
     JabberUtils;
 
-
 {---------------------------------------}
 constructor TExodusHistoryResultCallbackMap.Create();
 begin
@@ -138,6 +136,7 @@ var
 begin
     for i := _callbackmap.Count - 1 downto 0 do begin
         tmp := TExodusHistoryResultCallbackItem(_callbackmap.Objects[i]);
+        tmp.ResultObj := nil;
         tmp.Free();
         _callbackmap.Delete(i);
     end;

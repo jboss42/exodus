@@ -674,6 +674,17 @@ begin
         SQLSearch := nil;
     end;
 
+    try
+        if (DataStore <> nil) then begin
+            case MainSession.Prefs.getInt('sqlite_table_synchronous_level') of
+                2: DataStore.ExecSQL('PRAGMA synchronous = FULL;');
+                1: DataStore.ExecSQL('PRAGMA synchronous = NORMAL;');
+                else DataStore.ExecSQL('PRAGMA synchronous = OFF;');
+            end;
+        end;
+    finally
+    end;
+
     Result := true;
 end;
 

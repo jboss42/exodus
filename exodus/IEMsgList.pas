@@ -109,6 +109,8 @@ type
     _webBrowserUI: TWebBrowserUIObject;
 
     _ForceIgnoreScrollToBottom: boolean;
+    _Clearing: boolean;
+    _ClearingMsgCache: TWidestringList;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
@@ -237,6 +239,8 @@ begin
     _composing := -1;
     _msgCount := 0;
     _doMessageLimiting := false;
+    _Clearing := false;
+    _ClearingMsgCache := TWidestringList.Create();
 
     // Setup registry to override IE settings
     try
@@ -317,8 +321,16 @@ end;
 
 {---------------------------------------}
 destructor TfIEMsgList.Destroy;
+var
+    i: integer;
 begin
     try
+        for i := _ClearingMsgCache.Count - 1 downto 0 do begin
+            TJabberMessage(_ClearingMsgCache.Objects[i]).Free();
+            _ClearingMsgCache.Delete(i);
+        end;
+        _ClearingMsgCache.Free();
+        
         _queue.Free();
     except
     end;
@@ -405,6 +417,7 @@ begin
     try
         _ready := true;
         _home := 'res://' + URL_EscapeChars(Application.ExeName);
+        _Clearing := true;
         browser.Navigate(_home + '/iemsglist');
     except
     end;
@@ -609,159 +622,166 @@ var
     t: TDateTime;
     id: WideString;
 begin
-    try
-        if (_displayDateSeparator) then begin
-            t := msg.Time;
-            if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
-                (msg.Subject = '') and
-                (msg.Nick <> ''))then begin
-                txt := '<div class="date">' +
-                       '<span>' +
-                       DateToStr(t) +
-                       '</span>' +
-                       '</div>';
+    if (msg = nil) then exit;
 
-                writeHTML(txt);
-                _lastTimeStamp := msg.Time;
-                txt := '';
-                _lastMsgNick := '';
-                if (_doMessageLimiting) then
-                    Inc(_msgCount);
-            end;
-        end;
-    except
-    end;
-
-    _clearOldMessages();
-
-    if ((not Msg.Action) and
-        (MainSession.Prefs.getBool('richtext_enabled'))) then begin
-        // ignore HTML for actions.  it's harder than you think.
-        body := Msg.Tag.QueryXPTag(xp_xhtml);
-
-        if (body <> nil) then begin
-            // Strip out font tags we wish to ignore
-            cleanXIM := cleanXIMTag(body);
-            if (cleanXIM <> nil) then begin
-                // if first node is a p tag, make it a span...
-                if ((cleanXIM.Nodes.Count > 0) and
-                    (TXMLTag(cleanXIM.Nodes[0]).NodeType = xml_tag) and
-                    (TXMLTag(cleanXIM.Nodes[0]).Name = 'p')) then
-                    TXMLTag(cleanXIM.Nodes[0]).Name := 'span';
-
-                nodes := cleanXIM.nodes;
-                for i := 0 to nodes.Count - 1 do
-                    txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
-            end;
-        end;
-    end;
-
-    if (txt = '') then begin
-        txt := HTML_EscapeChars(Msg.Body, false, false);
-        txt := _processUnicode(txt); //StringReplace() cannot handle
-        // Make sure the spaces are preserved
-        txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
-        // Change CRLF to HTML equiv
-        txt := REGEX_CRLF.Replace(txt, '<br />', true);
-        // Detect URLs in text
-        txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
-    end;
-
-    // build up a string, THEN call writeHTML, since IE is being "helpful" by
-    // canonicalizing HTML as it gets inserted.
-    id := _genElementID();
-    dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
-
-    // Author Stamp
-    if (Msg.Nick <> '') then begin
-        // This is a normal message
-        if (not _checkLastNickForMsgGrouping(Msg)) then begin
-            if Msg.isMe then begin
-                // Our own msgs
-                dv := dv + '<span class="me">' + Msg.Nick + '</span>';
-            end
-            else begin
-                // Msgs from "others"
-                dv := dv + '<span class="other">' + Msg.Nick + '</span>';
-            end;
-        end;
-
+    if (_Clearing) then begin
+        _ClearingMsgCache.AddObject('', msg);
     end
     else begin
-        dv := dv + '<span class="svr">' + _('System Message') + '</span>';
-    end;
-
-    _lastMsgNick := Msg.Nick;
-
-    // Wrap msg and time stamp for css
-    dv := dv + '<div class="msgts">';
-
-    // Timestamp
-    if (MainSession.Prefs.getBool('timestamp')) then begin
         try
-            dv := dv + '<span class="ts">' +
-                FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
-                '</span>';
+            if (_displayDateSeparator) then begin
+                t := msg.Time;
+                if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
+                    (msg.Subject = '') and
+                    (msg.Nick <> ''))then begin
+                    txt := '<div class="date">' +
+                           '<span>' +
+                           DateToStr(t) +
+                           '</span>' +
+                           '</div>';
+
+                    writeHTML(txt);
+                    _lastTimeStamp := msg.Time;
+                    txt := '';
+                    _lastMsgNick := '';
+                    if (_doMessageLimiting) then
+                        Inc(_msgCount);
+                end;
+            end;
         except
-            on EConvertError do begin
+        end;
+
+        _clearOldMessages();
+
+        if ((not Msg.Action) and
+            (MainSession.Prefs.getBool('richtext_enabled'))) then begin
+            // ignore HTML for actions.  it's harder than you think.
+            body := Msg.Tag.QueryXPTag(xp_xhtml);
+
+            if (body <> nil) then begin
+                // Strip out font tags we wish to ignore
+                cleanXIM := cleanXIMTag(body);
+                if (cleanXIM <> nil) then begin
+                    // if first node is a p tag, make it a span...
+                    if ((cleanXIM.Nodes.Count > 0) and
+                        (TXMLTag(cleanXIM.Nodes[0]).NodeType = xml_tag) and
+                        (TXMLTag(cleanXIM.Nodes[0]).Name = 'p')) then
+                        TXMLTag(cleanXIM.Nodes[0]).Name := 'span';
+
+                    nodes := cleanXIM.nodes;
+                    for i := 0 to nodes.Count - 1 do
+                        txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
+                end;
+            end;
+        end;
+
+        if (txt = '') then begin
+            txt := HTML_EscapeChars(Msg.Body, false, false);
+            txt := _processUnicode(txt); //StringReplace() cannot handle
+            // Make sure the spaces are preserved
+            txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
+            // Change CRLF to HTML equiv
+            txt := REGEX_CRLF.Replace(txt, '<br />', true);
+            // Detect URLs in text
+            txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
+        end;
+
+        // build up a string, THEN call writeHTML, since IE is being "helpful" by
+        // canonicalizing HTML as it gets inserted.
+        id := _genElementID();
+        dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
+
+        // Author Stamp
+        if (Msg.Nick <> '') then begin
+            // This is a normal message
+            if (not _checkLastNickForMsgGrouping(Msg)) then begin
+                if Msg.isMe then begin
+                    // Our own msgs
+                    dv := dv + '<span class="me">' + Msg.Nick + '</span>';
+                end
+                else begin
+                    // Msgs from "others"
+                    dv := dv + '<span class="other">' + Msg.Nick + '</span>';
+                end;
+            end;
+
+        end
+        else begin
+            dv := dv + '<span class="svr">' + _('System Message') + '</span>';
+        end;
+
+        _lastMsgNick := Msg.Nick;
+
+        // Wrap msg and time stamp for css
+        dv := dv + '<div class="msgts">';
+
+        // Timestamp
+        if (MainSession.Prefs.getBool('timestamp')) then begin
+            try
                 dv := dv + '<span class="ts">' +
-                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                    Now()) + '</span>';
-            end;
-        end;
-    end;
-
-    // MSG Content
-    if (Msg.Nick = '') then begin
-        // Server generated msgs (mostly in TC Rooms)
-        dv := dv + '<span class="svr">' + txt + '</span>';
-    end
-    else if not Msg.Action then begin
-        if (_exeName <> '') then begin
-            if (Msg.Priority = high) then begin
-                dv := dv +
-                      '<img class="priorityimg" src="res://' +
-                      _exeName +
-                      '/GIF/HIGH_PRI" alt="' +
-                      _('High Priority') +
-                      '" />';
-            end
-            else if (Msg.Priority = low) then begin
-                dv := dv +
-                      '<img class="priorityimg" src="res://' +
-                      _exeName +
-                      '/GIF/LOW_PRI" alt="' +
-                      _('Low Priority') +
-                      '" />';
+                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
+                    '</span>';
+            except
+                on EConvertError do begin
+                    dv := dv + '<span class="ts">' +
+                        FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                        Now()) + '</span>';
+                end;
             end;
         end;
 
-        if (Msg.Highlight) then
-            dv := dv + '<span class="alert"> ' + txt + '</span>'
-        else
-            dv := dv + '<span class="msg">' + txt + '</span>';
-    end
-    else begin
-        // This is an action
-        dv := dv + '<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>';
+        // MSG Content
+        if (Msg.Nick = '') then begin
+            // Server generated msgs (mostly in TC Rooms)
+            dv := dv + '<span class="svr">' + txt + '</span>';
+        end
+        else if not Msg.Action then begin
+            if (_exeName <> '') then begin
+                if (Msg.Priority = high) then begin
+                    dv := dv +
+                          '<img class="priorityimg" src="res://' +
+                          _exeName +
+                          '/GIF/HIGH_PRI" alt="' +
+                          _('High Priority') +
+                          '" />';
+                end
+                else if (Msg.Priority = low) then begin
+                    dv := dv +
+                          '<img class="priorityimg" src="res://' +
+                          _exeName +
+                          '/GIF/LOW_PRI" alt="' +
+                          _('Low Priority') +
+                          '" />';
+                end;
+            end;
+
+            if (Msg.Highlight) then
+                dv := dv + '<span class="alert"> ' + txt + '</span>'
+            else
+                dv := dv + '<span class="msg">' + txt + '</span>';
+        end
+        else begin
+            // This is an action
+            dv := dv + '<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>';
+        end;
+
+        // Close off msgts and line1/2 div tags
+        dv := dv + '</div></div>';
+        writeHTML(dv);
+
+        if (_doc <> nil) then begin
+            _lastelement := _doc.all.item(id, 0) as IHTMLElement;
+        end
+        else begin
+            _lastelement := nil;
+        end;
+
+        if (_doMessageLimiting) then
+            Inc(_msgCount);
+
+        if (_bottom) then
+            ScrollToBottom();
     end;
-
-    // Close off msgts and line1/2 div tags
-    dv := dv + '</div></div>';
-    writeHTML(dv);
-
-    if (_doc <> nil) then begin
-        _lastelement := _doc.all.item(id, 0) as IHTMLElement;
-    end
-    else begin
-        _lastelement := nil;
-    end;
-
-    if (_doMessageLimiting) then
-        Inc(_msgCount);
-
-    if (_bottom) then
-        ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -1159,6 +1179,8 @@ var
 begin
     inherited;
     try
+        _Clearing := false;
+
         if ((not _ready) or (browser.Document = nil)) then
             exit;
 
@@ -1204,6 +1226,15 @@ begin
         if (_title <> '') then begin
             setTitle(_title);
         end;
+
+        for i := 0 to _ClearingMsgCache.Count - 1 do begin
+            DisplayMsg(TJabberMessage(_ClearingMsgCache.Objects[i]));
+        end;
+        for i := _ClearingMsgCache.Count - 1 downto 0 do begin
+            TJabberMessage(_ClearingMsgCache.Objects[i]);
+            _ClearingMsgCache.Delete(i);
+        end;                                                
+
         ScrollToBottom();
     except
         // When Undocking, the browser.Document becomes bad and

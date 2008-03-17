@@ -411,6 +411,14 @@
         This option is never exposed to the user -->
     <search_component_only value="0"/>
 
+	<!-- What level of file synchronisity should the internal sqlogger (sqlite database) use.
+		 The higher the level the slower the performance
+		0 - OFF
+		1 - NORMAL
+		2 - FULL
+	-->
+    <sqlite_table_synchronous_level value="0"/>
+
 
     <!-- Branding items -->
     <brand_ad />

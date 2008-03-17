@@ -103,7 +103,7 @@ type
 
         // Methods
         constructor Create();
-        destructor Destroy();
+        destructor Destroy(); override;
 
         // IExodusHistorySearchManager Interface
         function Get_SearchTypeCount: Integer; safecall;
@@ -115,6 +115,7 @@ type
         procedure HandlerResult(HandlerID: Integer; const SearchID: WideString; const LogMsg: IExodusLogMsg); safecall;
 
         // Properties
+        property SearchTypeCount: Integer read Get_SearchTypeCount;
   end;
 
 {---------------------------------------}
@@ -157,7 +158,10 @@ end;
 {---------------------------------------}
 destructor TSearchTracker.Destroy();
 begin
-    _ResultObject.Processing := false;
+    if (_ResultObject <> nil) then begin
+        _ResultObject.Processing := false;
+    end;
+    _ResultObject := nil;
 
     _HandlerList.Clear();
     _HandlerList.Free();
@@ -293,8 +297,6 @@ begin
                 hwrapper.Handler.CancelSearch(SearchID);
             end;
         end;
-        tracker.Free();
-        _CurrentSearches.Delete(i);
     end;
 end;
 
@@ -325,21 +327,27 @@ begin
     if (_CurrentSearches.Find(SearchID, i)) then begin
         // Found the Search
         tracker := TSearchTracker(_CurrentSearches.Objects[i]);
-        if ((LogMsg = nil) and
-            (tracker.HandlerList.Find(IntToStr(HandlerID), j))) then begin
-            // Found the Handler and LogMsg is nil - so we can remove handler from search list
-            tracker.HandlerList.Delete(j);
-        end
-        else if (LogMsg <> nil) then begin
-            // Valid search result
-            tracker.ResultObject.OnResultItem(SearchID, LogMsg);
-        end;
+        if (tracker <> nil) then begin
+            if ((LogMsg = nil) and
+                (tracker.HandlerList.Find(IntToStr(HandlerID), j))) then begin
+                // Found the Handler and LogMsg is nil - so we can remove handler from search list
+                tracker.HandlerList.Delete(j);
+            end
+            else if (LogMsg <> nil) then begin
+                // Valid search result
+                if (tracker.ResultObject <> nil) then begin
+                    tracker.ResultObject.OnResultItem(SearchID, LogMsg);
+                end;
+            end;
 
-        if (tracker.HandlerList.Count = 0) then begin
-            // No more handlers outstanding so end search
-            tracker.ResultObject.OnResultItem(SearchID, nil);
-            tracker.Free();
-            _CurrentSearches.Delete(i);
+            if (tracker.HandlerList.Count = 0) then begin
+                // No more handlers outstanding so end search
+                if (tracker.ResultObject <> nil) then begin
+                    tracker.ResultObject.OnResultItem(SearchID, nil);
+                end;
+                tracker.Free();
+                _CurrentSearches.Delete(i);
+            end;
         end;
     end;
 end;
