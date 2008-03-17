@@ -146,8 +146,6 @@ begin
             thread.Terminate();
         except
         end;
-
-        _CurrentSearches.Delete(i);
     end;
 end;
 

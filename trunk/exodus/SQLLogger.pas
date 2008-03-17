@@ -139,18 +139,18 @@ begin
     tojid := TJabberID.Create(msg.ToJID);
 
     if (outb) then begin
-        jid := UTF8Encode(tojid.jid);
-        user_jid := UTF8Encode(fromjid.jid);
+        jid := str2sql(UTF8Encode(tojid.jid));
+        user_jid := str2sql(UTF8Encode(fromjid.jid));
         outstr := 'TRUE';
     end
     else begin
-        jid := UTF8Encode(fromjid.jid);
-        user_jid := UTF8Encode(tojid.jid);
+        jid := str2sql(UTF8Encode(fromjid.jid));
+        user_jid := str2sql(UTF8Encode(tojid.jid));
         outstr := 'FALSE';
     end;
 
-    thread := UTF8Encode(msg.Thread);
-    mtype := msg.MsgType;
+    thread := str2sql(UTF8Encode(msg.Thread));
+    mtype := str2sql(UTF8Encode(msg.MsgType));
 
     subject := str2sql(UTF8Encode(msg.Subject));
     nick := str2sql(UTF8Encode(msg.nick));

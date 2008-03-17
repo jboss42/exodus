@@ -1,19 +1,19 @@
 inherited frmHistorySearch: TfrmHistorySearch
   Caption = 'History'
   ClientHeight = 428
-  ClientWidth = 545
+  ClientWidth = 720
   ParentFont = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  ExplicitWidth = 553
+  ExplicitWidth = 728
   ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object pnlSearchBar: TTntPanel
     Left = 0
     Top = 0
-    Width = 545
+    Width = 720
     Height = 150
     Align = alTop
     BevelOuter = bvNone
@@ -22,7 +22,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     object pnlBasicSearchBar: TTntPanel
       Left = 0
       Top = 0
-      Width = 545
+      Width = 720
       Height = 150
       Align = alClient
       BevelOuter = bvNone
@@ -57,7 +57,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         end
       end
       object pnlBasicSearchKeywordSearch: TTntPanel
-        Left = 295
+        Left = 470
         Top = 0
         Width = 250
         Height = 150
@@ -89,7 +89,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     object pnlAdvancedSearchBar: TTntPanel
       Left = 0
       Top = 0
-      Width = 545
+      Width = 720
       Height = 150
       Align = alClient
       BevelOuter = bvNone
@@ -201,17 +201,17 @@ inherited frmHistorySearch: TfrmHistorySearch
           TabOrder = 1
         end
       end
-      object grpJID: TTntGroupBox
+      object grpContacts: TTntGroupBox
         Left = 364
         Top = 9
         Width = 170
         Height = 135
-        Caption = 'JIDs'
+        Caption = 'Contacts'
         TabOrder = 2
         DesignSize = (
           170
           135)
-        object btnAddJID: TTntButton
+        object btnAddContact: TTntButton
           Left = 5
           Top = 107
           Width = 75
@@ -219,9 +219,9 @@ inherited frmHistorySearch: TfrmHistorySearch
           Anchors = [akTop, akRight]
           Caption = 'Add...'
           TabOrder = 0
-          OnClick = btnAddJIDClick
+          OnClick = btnAddContactClick
         end
-        object btnRemoveJID: TTntButton
+        object btnRemoveContact: TTntButton
           Left = 90
           Top = 107
           Width = 75
@@ -229,21 +229,60 @@ inherited frmHistorySearch: TfrmHistorySearch
           Anchors = [akTop, akRight]
           Caption = 'Remove'
           TabOrder = 1
-          OnClick = btnRemoveJIDClick
+          OnClick = btnRemoveContactClick
         end
-        object lstJids: TTntListBox
+        object lstContacts: TTntListBox
           Left = 7
           Top = 19
           Width = 160
           Height = 82
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
-          Items.Strings = (
-            'test2@wrk186.corp.jabber.com'
-            'test800@wrk186.corp.jabber.com')
           MultiSelect = True
           TabOrder = 2
-          OnClick = lstJidsClick
+          OnClick = lstContactsClick
+        end
+      end
+      object grpRooms: TTntGroupBox
+        Left = 540
+        Top = 9
+        Width = 170
+        Height = 135
+        Caption = 'Rooms'
+        TabOrder = 3
+        DesignSize = (
+          170
+          135)
+        object btnAddRoom: TTntButton
+          Left = 9
+          Top = 107
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Add...'
+          TabOrder = 0
+          OnClick = btnAddRoomClick
+        end
+        object btnRemoveRoom: TTntButton
+          Left = 90
+          Top = 107
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Remove'
+          TabOrder = 1
+          OnClick = btnRemoveRoomClick
+        end
+        object lstRooms: TTntListBox
+          Left = 7
+          Top = 19
+          Width = 160
+          Height = 82
+          Anchors = [akLeft, akTop, akRight]
+          ItemHeight = 13
+          MultiSelect = True
+          TabOrder = 2
+          OnClick = lstContactsClick
         end
       end
     end
@@ -251,7 +290,7 @@ inherited frmHistorySearch: TfrmHistorySearch
   object pnlResults: TTntPanel
     Left = 0
     Top = 185
-    Width = 545
+    Width = 720
     Height = 243
     Align = alClient
     BevelOuter = bvNone
@@ -260,7 +299,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     object Splitter1: TSplitter
       Left = 0
       Top = 89
-      Width = 545
+      Width = 720
       Height = 3
       Cursor = crVSplit
       Align = alTop
@@ -271,7 +310,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     object pnlResultsList: TTntPanel
       Left = 0
       Top = 0
-      Width = 545
+      Width = 720
       Height = 89
       Align = alTop
       BevelOuter = bvNone
@@ -279,7 +318,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       object lstResults: TTntListView
         Left = 0
         Top = 0
-        Width = 545
+        Width = 720
         Height = 89
         Align = alClient
         Columns = <
@@ -288,14 +327,15 @@ inherited frmHistorySearch: TfrmHistorySearch
           end
           item
             Caption = 'JID'
-            Width = 200
+            Width = 150
           end
           item
             Caption = 'Date'
-            Width = 200
+            Width = 150
           end
           item
             Caption = 'Body'
+            Width = 215
           end>
         Constraints.MinHeight = 50
         GridLines = True
@@ -304,13 +344,12 @@ inherited frmHistorySearch: TfrmHistorySearch
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = lstResultsClick
-        ExplicitTop = 1
       end
     end
     object pnlResultsHistory: TTntPanel
       Left = 0
       Top = 92
-      Width = 545
+      Width = 720
       Height = 151
       Align = alClient
       BevelOuter = bvNone
@@ -320,17 +359,28 @@ inherited frmHistorySearch: TfrmHistorySearch
   object pnlControlBar: TTntPanel
     Left = 0
     Top = 150
-    Width = 545
+    Width = 720
     Height = 35
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
     DesignSize = (
-      545
+      720
       35)
+    object TntBevel1: TTntBevel
+      Left = 0
+      Top = 0
+      Width = 720
+      Height = 50
+      Align = alTop
+      Shape = bsTopLine
+      ExplicitLeft = 144
+      ExplicitTop = 8
+      ExplicitWidth = 50
+    end
     object btnSerach: TTntButton
-      Left = 461
+      Left = 636
       Top = 5
       Width = 75
       Height = 25
@@ -340,7 +390,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       OnClick = btnSerachClick
     end
     object btnAdvBasicSwitch: TTntButton
-      Left = 380
+      Left = 555
       Top = 5
       Width = 75
       Height = 25

@@ -117,6 +117,7 @@ begin
     end;
 
     _table := nil;
+    _DataStore := nil;
 end;
 
 {---------------------------------------}
@@ -148,74 +149,79 @@ begin
 
         _table.FirstRow();
         for i := 0 to _table.RowCount - 1 do begin
-            tmp := _table.GetField(xml_col);
-            if (tmp <> '') then begin
-                // if we have the tag stored, try and recreate
-                // jabber message using stored tag
-                tmp := XML_UnEscapeChars(tmp);
-                parser.ParseString(tmp, '');
-                tag := parser.popTag();
-                _msg := TJabberMessage.Create(tag);
-
-                // Override the TJabberMessage timestamp
-                // as it puts a Now() timestamp on when it
-                // doesn't find the MSGDELAY tag.  As we
-                // are pulling the original XML, it probably
-                // didn't have this tag when we stored it.
-                _msg.Time := _table.GetFieldAsInt(date_col) +
-                             _table.GetFieldAsDouble(time_col);
-
-                // Set the nick if it exists in the db.
-                if (_msg.Nick = '') then begin
-                    _msg.Nick := _table.GetField(nick_col);
-                end;
-
-                // Set the "isMe" because this cannot be determined by just the tag
-                if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
-                    _msg.isMe := true;
-                end;
-
-                tag.Free();
+            if (Self.Terminated) then begin
+                break;
             end
             else begin
-                // No tag stored
-                _msg := TJabberMessage.Create();
+                tmp := _table.GetField(xml_col);
+                if (tmp <> '') then begin
+                    // if we have the tag stored, try and recreate
+                    // jabber message using stored tag
+                    tmp := XML_UnEscapeChars(UTF8Decode(tmp));
+                    parser.ParseString(tmp, '');
+                    tag := parser.popTag();
+                    _msg := TJabberMessage.Create(tag);
 
-                if (_table.GetField(outbound_col) = '1') then begin
-                    _msg.ToJID := _table.GetField(jid_col);
-                    _msg.FromJID := _table.GetField(user_jid_col);
-                    if (_msg.FromJID <> '') then begin
+                    // Override the TJabberMessage timestamp
+                    // as it puts a Now() timestamp on when it
+                    // doesn't find the MSGDELAY tag.  As we
+                    // are pulling the original XML, it probably
+                    // didn't have this tag when we stored it.
+                    _msg.Time := _table.GetFieldAsInt(date_col) +
+                                 _table.GetFieldAsDouble(time_col);
+
+                    // Set the nick if it exists in the db.
+                    if (_msg.Nick = '') then begin
+                        _msg.Nick := UTF8Decode(_table.GetField(nick_col));
+                    end;
+
+                    // Set the "isMe" because this cannot be determined by just the tag
+                    if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
                         _msg.isMe := true;
                     end;
+
+                    tag.Free();
                 end
                 else begin
-                    _msg.ToJID := _table.GetField(user_jid_col);
-                    _msg.FromJID := _table.GetField(jid_col);
-                end;
-                _msg.Subject := _table.GetField(subject_col);
-                _msg.Thread := _table.GetField(thread_col);
-                _msg.Body := _table.GetField(body_col);
-                _msg.MsgType := _table.GetField(type_col);
-                _msg.Nick := _table.GetField(nick_col);
-                _msg.Time := _table.GetFieldAsInt(date_col) +
-                             _table.GetFieldAsDouble(time_col);
-                //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
-                case _table.GetFieldAsInt(priority_col) of
-                    0: _msg.Priority := high;
-                    1: _msg.Priority := medium;
-                    2: _msg.Priority := low;
+                    // No tag stored
+                    _msg := TJabberMessage.Create();
+
+                    if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
+                        _msg.ToJID := UTF8Decode(_table.GetField(jid_col));
+                        _msg.FromJID := UTF8Decode(_table.GetField(user_jid_col));
+                        if (_msg.FromJID <> '') then begin
+                            _msg.isMe := true;
+                        end;
+                    end
                     else begin
-                        _msg.Priority := none;
-                    end;    
+                        _msg.ToJID := UTF8Decode(_table.GetField(user_jid_col));
+                        _msg.FromJID :=UTF8Decode( _table.GetField(jid_col));
+                    end;
+                    _msg.Subject := UTF8Decode(_table.GetField(subject_col));
+                    _msg.Thread := UTF8Decode(_table.GetField(thread_col));
+                    _msg.Body := UTF8Decode(_table.GetField(body_col));
+                    _msg.MsgType := UTF8Decode(_table.GetField(type_col));
+                    _msg.Nick := UTF8Decode(_table.GetField(nick_col));
+                    _msg.Time := _table.GetFieldAsInt(date_col) +
+                                 _table.GetFieldAsDouble(time_col);
+                    //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
+                    case _table.GetFieldAsInt(priority_col) of
+                        0: _msg.Priority := high;
+                        1: _msg.Priority := medium;
+                        2: _msg.Priority := low;
+                        else begin
+                            _msg.Priority := none;
+                        end;
+                    end;
                 end;
-            end;
 
-            Synchronize(Self._OnResult);  // blocks here
-            _msg.Free();
-            _msg := nil;
+                Synchronize(Self._OnResult);  // blocks here
+                _msg.Free();
+                _msg := nil;
 
-            if (i < _table.RowCount - 1) then begin
-                _table.NextRow();
+                if (i < _table.RowCount - 1) then begin
+                    _table.NextRow();
+                end;
             end;
         end;
 
