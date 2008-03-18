@@ -111,7 +111,6 @@ uses
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
   S10n in '..\jopl\S10n.pas',
   SecHash in '..\jopl\SecHash.pas',
-  SelContact in 'SelContact.pas' {frmSelContact},
   Session in '..\jopl\Session.pas',
   Signals in '..\jopl\Signals.pas',
   StandardAuth in '..\jopl\StandardAuth.pas',
@@ -285,7 +284,8 @@ uses
   SQLSearchHandler in 'SQLSearchHandler.pas',
   SQLSearchThread in 'SQLSearchThread.pas',
   SQLUtils in '..\jopl\SQLUtils.pas',
-  HistorySearch in 'HistorySearch.pas' {HistorySearchDlg};
+  HistorySearch in 'HistorySearch.pas' {HistorySearchDlg},
+  SelectItem in 'SelectItem.pas' {frmSelectItem};
 
 {$R *.TLB}
 

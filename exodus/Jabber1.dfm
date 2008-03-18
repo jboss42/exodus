@@ -19,8 +19,8 @@ inherited frmExodus: TfrmExodus
   OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 505
-  ExplicitHeight = 890
+  ExplicitWidth = 412
+  ExplicitHeight = 724
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -221,7 +221,7 @@ inherited frmExodus: TfrmExodus
             Left = 148
             Top = 0
             Width = 16
-            Height = 13
+            Height = 16
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -264,6 +264,7 @@ inherited frmExodus: TfrmExodus
               FF00}
             Transparent = True
             OnClick = clickChangeStatus
+            ExplicitHeight = 13
           end
           object txtStatus: TTntEdit
             AlignWithMargins = True

@@ -6,7 +6,7 @@ inherited frmXData: TfrmXData
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 453
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlDockTop: TPanel

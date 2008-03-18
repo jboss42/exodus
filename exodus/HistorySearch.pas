@@ -157,7 +157,7 @@ uses
     Session,
     BaseChat,
     gnuGetText,
-    SelContact,
+    SelectItem,
     SQLSearchHandler,
     ExSession,
     ComObj,
@@ -169,14 +169,12 @@ uses
 {---------------------------------------}
 procedure TfrmHistorySearch.btnAddContactClick(Sender: TObject);
 var
-    dlg: TfrmSelContact;
     jid: widestring;
 begin
     inherited;
 
-    dlg := TfrmSelContact.Create(Self);
-    if (dlg.ShowModal() = mrOK) then begin
-        jid := dlg.GetSelectedJID();
+    jid := SelectUIDByType('contact');
+    if (jid <> '') then begin
         _AddContactToContactList(jid);
     end;
 end;

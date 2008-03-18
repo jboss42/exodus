@@ -21,7 +21,7 @@ unit RoomAdminList;
 interface
 
 uses
-    XMLTag, IQ, Unicode, SelContact, SelRoomOccupant,  
+    XMLTag, IQ, Unicode, SelectItem, SelRoomOccupant,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
     TntComCtrls, TntStdCtrls, ExForm, TntForms, ExFrame;
@@ -52,7 +52,6 @@ type
     _iq: TJabberIQ;
     _adds: TWidestringlist;
     _dels: TWidestringlist;
-    _selector: TfrmSelContact;
     _occupant_selector: TfrmSelRoomOccupant;
     _rlist: TList;
 
@@ -310,7 +309,6 @@ begin
     _iq := nil;
     _adds := TWidestringlist.Create();
     _dels := TWidestringlist.Create();
-    _selector := TfrmSelContact.Create(nil);
     _rlist := nil;
 
     MainSession.Prefs.RestorePosition(Self);
@@ -324,7 +322,6 @@ begin
     if (_iq <> nil) then FreeAndNil(_iq);
     FreeAndNil(_adds);
     FreeAndNil(_dels);
-    _selector.Free();
 
     if (_rlist <> nil) then begin
         for i := 0 to _rlist.Count - 1 do
@@ -354,8 +351,8 @@ begin
     end
     else begin
         // Select by JID
-        if (_selector.ShowModal = mrOK) then begin
-            j := _selector.GetSelectedJID();
+        j := SelectUIDByType('contact');
+        if (j <> '') then begin
 { TODO : Roster refactor }            
 //            ritem := MainSession.Roster.Find(j);
 //            if (ritem <> nil) then
@@ -404,8 +401,7 @@ procedure TfrmRoomAdminList.lstItemsDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
     // Accept roster items
-    Accept := (Source = frmRoster.RosterTree) or
-        (Source = _selector.frameTreeRoster1.treeRoster);
+    Accept := (Source = frmRoster.RosterTree);
 end;
 
 {---------------------------------------}

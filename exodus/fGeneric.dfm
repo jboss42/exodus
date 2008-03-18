@@ -1,14 +1,11 @@
 inherited frameGeneric: TframeGeneric
-  Left = 0
-  Top = 0
   Width = 141
   Height = 15
-  ParentFont = False
   ParentShowHint = False
   ShowHint = True
-  TabOrder = 0
-  TabStop = True
   OnResize = FrameResize
+  ExplicitWidth = 141
+  ExplicitHeight = 15
   object elCaption: TExodusLabel
     Left = 0
     Top = 0

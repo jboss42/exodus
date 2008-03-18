@@ -111,7 +111,7 @@ procedure showXData(tag: TXMLTag);
 implementation
 {$R *.dfm}
 uses
-    SelContact, Jabber1, 
+    SelectItem, Jabber1, 
     GnuGetText, JabberUtils, Session, Math, XMLUtils;
 
 const
@@ -470,24 +470,18 @@ end;
 {---------------------------------------}
 procedure TXDataRow.JidSelect(Sender: TObject);
 var
-    fsel: TfrmSelContact;
+    selected: Widestring;
     jid: TJabberID;
 begin
-    fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
-
-    frmExodus.PreModal(fsel);
-
-    if (fsel.ShowModal = mrOK) then begin
-        jid := TJabberID.Create(fsel.GetSelectedJid());
+    selected := SelectUIDByType('contact');
+    if (selected <> '') then begin
+        jid := TJabberID.Create(selected);
         if (con is TTntEdit) then
             TTntEdit(con).Text := jid.GetDisplayFull()
         else if (con is TTntMemo) then
             TTntMemo(con).Lines.Add(jid.GetDisplayFull());
         jid.Free();
     end;
-
-    frmExodus.PostModal();
 end;
 
 {---------------------------------------}

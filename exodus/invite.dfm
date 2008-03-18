@@ -8,7 +8,6 @@ inherited frmInvite: TfrmInvite
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   ExplicitWidth = 331
   ExplicitHeight = 302
   PixelsPerInch = 96
@@ -181,7 +180,7 @@ inherited frmInvite: TfrmInvite
           Width = 214
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 0
           OnChange = cboRoomChange
         end
