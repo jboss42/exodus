@@ -342,10 +342,9 @@ inherited frmHistorySearch: TfrmHistorySearch
         SortType = stBoth
         TabOrder = 0
         ViewStyle = vsReport
-        OnClick = lstResultsClick
+        OnChange = lstResultsChange
         OnColumnClick = lstResultsColumnClick
         OnCompare = lstResultsCompare
-        ExplicitTop = -3
       end
     end
     object pnlResultsHistory: TTntPanel
@@ -356,6 +355,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 95
     end
   end
   object pnlControlBar: TTntPanel
@@ -401,5 +401,37 @@ inherited frmHistorySearch: TfrmHistorySearch
       TabOrder = 1
       OnClick = btnAdvBasicSwitchClick
     end
+  end
+  object mnuResultHistoryPopup: TTntPopupMenu
+    Left = 8
+    Top = 288
+    object popCopy: TTntMenuItem
+      Caption = 'Copy'
+      ShortCut = 16451
+      OnClick = popCopyClick
+    end
+    object popCopyAll: TTntMenuItem
+      Caption = 'Copy All'
+      ShortCut = 16449
+      OnClick = popCopyAllClick
+    end
+    object popPrint: TTntMenuItem
+      Caption = 'Print...'
+      ShortCut = 16464
+      OnClick = popPrintClick
+    end
+    object popSaveAs: TTntMenuItem
+      Caption = 'Save As...'
+      ShortCut = 16467
+      OnClick = popSaveAsClick
+    end
+  end
+  object dlgSave: TTntSaveDialog
+    Left = 40
+    Top = 288
+  end
+  object dlgPrint: TPrintDialog
+    Left = 72
+    Top = 288
   end
 end
