@@ -31,7 +31,7 @@ type
        constructor Create();
 
    public
-       procedure execute(const items: IExodusItemList);
+       procedure execute(const items: IExodusItemList); override;
    end;
 
    TExContactsTreeView = class(TExTreeView)
