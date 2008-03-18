@@ -44,6 +44,8 @@ type
   public
     destructor Destroy; override;
 
+    procedure DblClick; override;
+
     property ShowOnline: Boolean read _online write SetShowOnline;
 
   end;
@@ -83,7 +85,7 @@ type
 
   end;
 
-function SelectUIDByType(itemtype: Widestring): Widestring;
+function SelectUIDByType(itemtype: Widestring; title: Widestring = ''): Widestring;
 
 
 implementation
@@ -92,12 +94,14 @@ uses gnugettext, Session;
 
 {$R *.dfm}
 
-function SelectUIDByType(itemtype: Widestring): Widestring;
+function SelectUIDByType(itemtype: Widestring; title: Widestring): Widestring;
 var
     selector: TfrmSelectItem;
 begin
     Result := '';
     selector := TfrmSelectItem.Create(nil, itemtype);
+    if (title <> '') then
+        selector.Caption := title;
 
     if (selector.ShowModal = mrOk) then begin
         Result := selector.SelectedUID;
@@ -125,6 +129,7 @@ begin
     end;
 
 end;
+
 function TTypedTreeView.FilterItem(item: IExodusItem): Boolean;
 var
     itemtype: Widestring;
@@ -139,6 +144,20 @@ begin
         exit;
 
     Result := true;
+end;
+
+procedure TTypedTreeView.DblClick;
+begin
+    if (CurrentNode = nil) or (CurrentNode.Data = nil) then begin
+        inherited;
+        exit;
+    end;
+
+    with TfrmSelectItem(Owner) do begin
+        ItemChanged(Self, CurrentNode);
+        ModalResult := mrOk;
+        Hide;
+    end;
 end;
 
 {
