@@ -171,7 +171,7 @@ begin
         //TODO:  subactions...
     end;
 
-    Result := actList.ActionCount;
+    Result := 1;
 end;
 
 procedure TExActionPopupMenu.Popup(X: Integer; Y: Integer);
