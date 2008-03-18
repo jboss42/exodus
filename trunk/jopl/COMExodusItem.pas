@@ -364,15 +364,20 @@ var
    OldValue, NewValue: PWideChar;
 begin
     Idx := _Properties.IndexOf(Name);
-    if (Idx = -1) then exit;
-    //Retrieve old value
-    OldValue := PWideChar(_Properties.Objects[idx]);
-    //Allocate memory and copy content of the passed wide string
-    NewValue := StrNewW(PWideChar(Value));
-    //Assign new string to the property
-    _Properties.Objects[Idx] := TObject(NewValue);
-    //Free memory that is no longer used.
-    StrDisposeW(OldValue);
+    if (Idx = -1) then begin
+        //Add the property value
+        AddProperty(Name, value);
+    end
+    else begin
+        //Retrieve old value
+        OldValue := PWideChar(_Properties.Objects[idx]);
+        //Allocate memory and copy content of the passed wide string
+        NewValue := StrNewW(PWideChar(Value));
+        //Assign new string to the property
+        _Properties.Objects[Idx] := TObject(NewValue);
+        //Free memory that is no longer used.
+        StrDisposeW(OldValue);
+    end;
 end;
 
 {---------------------------------------}
