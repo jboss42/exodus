@@ -105,6 +105,8 @@ type
         constructor Create();
         destructor Destroy(); override;
 
+        procedure CancelAllSearches();
+
         // IExodusHistorySearchManager Interface
         function Get_SearchTypeCount: Integer; safecall;
         function GetSearchType(index: Integer): WideString; safecall;
@@ -191,6 +193,17 @@ begin
     _CurrentSearches.Free();
 
     inherited;
+end;
+
+{---------------------------------------}
+procedure TExodusHistorySearchManager.CancelAllSearches();
+var
+    i: integer;
+    tracker: TSearchTracker;
+begin
+    for i := _CurrentSearches.Count -1 downto 0 do begin
+        CancelSearch(_CurrentSearches[i]);
+    end;
 end;
 
 {---------------------------------------}

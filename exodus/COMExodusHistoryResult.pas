@@ -34,49 +34,6 @@ uses
 type
     TInternalResultCallback = procedure(msg: TJabberMessage) of object;
 
-    TExodusHistoryResultCallbackItem = class
-        private
-            // Variables
-
-            // Methods
-        protected
-            // Variables
-
-            // Methods
-        public
-            // Variables
-            cb: TInternalResultCallback;
-            ResultObj: IExodusHistoryResult
-
-            // Methods
-    end;
-
-    TExodusHistoryResultCallbackMap = class
-        private
-            // Variables
-            _callbackmap: TWidestringList;
-
-            // Methods
-            function _FindCallback(ResultObj: IExodusHistoryResult): TExodusHistoryResultCallbackItem;
-        protected
-            // Variables
-
-            // Methods
-        public
-            // Variables
-
-            // Methods
-            constructor Create();
-            destructor Destroy(); override;
-
-            procedure AddCallback(cb: TInternalResultCallback; ResultObj: IExodusHistoryResult);
-            procedure FireCallback(ResultObj: IExodusHistoryResult; msg: TJabberMessage);
-            procedure DeleteCallback(ResultObj: IExodusHistoryResult);
-
-            // Properties
-
-    end;
-
     TExodusHistoryResult = class(TAutoObject, IExodusHistoryResult)
         private
             // Variables
@@ -106,6 +63,49 @@ type
             destructor Destroy(); override;
 
             // Properties
+    end;
+
+    TExodusHistoryResultCallbackItem = class
+        private
+            // Variables
+
+            // Methods
+        protected
+            // Variables
+
+            // Methods
+        public
+            // Variables
+            cb: TInternalResultCallback;
+            ResultObj: TExodusHistoryResult
+
+            // Methods
+    end;
+
+    TExodusHistoryResultCallbackMap = class
+        private
+            // Variables
+            _callbackmap: TWidestringList;
+
+            // Methods
+            function _FindCallback(ResultObj: TExodusHistoryResult): TExodusHistoryResultCallbackItem;
+        protected
+            // Variables
+
+            // Methods
+        public
+            // Variables
+
+            // Methods
+            constructor Create();
+            destructor Destroy(); override;
+
+            procedure AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult);
+            procedure FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage);
+            procedure DeleteCallback(ResultObj: TExodusHistoryResult);
+
+            // Properties
+
     end;
 
 var
@@ -144,7 +144,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResultCallbackMap.AddCallback(cb: TInternalResultCallback; ResultObj: IExodusHistoryResult);
+procedure TExodusHistoryResultCallbackMap.AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult);
 var
     tmp: TExodusHistoryResultCallbackItem;
 begin
@@ -160,7 +160,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusHistoryResultCallbackMap._FindCallback(ResultObj: IExodusHistoryResult): TExodusHistoryResultCallbackItem;
+function TExodusHistoryResultCallbackMap._FindCallback(ResultObj: TExodusHistoryResult): TExodusHistoryResultCallbackItem;
 var
     i: integer;
     tmp: TExodusHistoryResultCallbackItem;
@@ -179,7 +179,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResultCallbackMap.FireCallback(ResultObj: IExodusHistoryResult; msg: TJabberMessage);
+procedure TExodusHistoryResultCallbackMap.FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage);
 var
     tmp: TExodusHistoryResultCallbackItem;
 begin
@@ -195,7 +195,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResultCallbackMap.DeleteCallback(ResultObj: IExodusHistoryResult);
+procedure TExodusHistoryResultCallbackMap.DeleteCallback(ResultObj: TExodusHistoryResult);
 var
     i: integer;
     tmp: TExodusHistoryResultCallbackItem;

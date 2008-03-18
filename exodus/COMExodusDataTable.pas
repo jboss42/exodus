@@ -45,7 +45,7 @@ type
 
     // Methods
     constructor Create();
-    destructor Destroy();
+    destructor Destroy(); override;
 
     procedure AddTable(tableID: widestring; table: TSQLiteTable);
     function FindTable(tableID: widestring): TSQLiteTable;

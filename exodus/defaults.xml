@@ -393,6 +393,11 @@
     <lowest_unread_msg_cnt_color_change value="1"/>
     
     <!-- /ACTIVITY WINDOW PREFS -->
+    
+    <!-- HISTORY SEARCH WINDOW PREFS -->
+    <search_history_primary_bg_color value="$ffffff"/>
+    <search_history_alternate_bg_color value="$efedeb"/>
+    <!-- /HISTORY SEARCH WINDOW PREFS -->
 
     <!-- unfiled -->
     <toolbar value="1"/>
