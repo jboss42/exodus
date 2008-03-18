@@ -22,19 +22,29 @@ unit ExContactsTreeView;
 
 interface
 
-uses ExTreeView, Exodus_TLB;
+uses ExTreeView, Exodus_TLB, ExActions;
 
 
 type
+   TSendContactsAction = class(TExBaseAction)
+   private
+       constructor Create();
+
+   public
+       procedure execute(const items: IExodusItemList);
+   end;
+
    TExContactsTreeView = class(TExTreeView)
 
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
    end;
 
+   procedure RegisterActions();
+
 implementation
 
-uses COMExodusItem;
+uses Classes, COMExodusItem, ExUtils, ExActionCtrl, gnugettext, SelectItem, Unicode;
 
 {---------------------------------------}
 function  TExContactsTreeView.FilterItem(Item: IExodusItem): Boolean;
@@ -44,6 +54,47 @@ begin
     else
         Result := false;
 end;
+
+constructor TSendContactsAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-060-send-contacts');
+
+    Set_Caption(_('Send contacts to...'));
+    Set_Enabled(true);
+end;
+
+procedure TSendContactsAction.execute(const items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+    subjects: TList;
+    target: Widestring;
+begin
+
+    target := SelectUIDByType('contact');
+    if (target <> '') then begin
+        subjects := TList.Create;
+
+        for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+            subjects.Add(Pointer(item));
+        end;
+
+        jabberSendRosterItems(target, subjects);
+    end;
+end;
+
+procedure RegisterActions();
+var
+    actCtrl: IExodusActionController;
+begin
+    actCtrl := GetActionController();
+    actCtrl.registerAction('contact', TSendContactsAction.Create() as IExodusAction);
+end;
+
+initialization
+    RegisterActions();
+    
 end.
 
 

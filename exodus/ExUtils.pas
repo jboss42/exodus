@@ -637,11 +637,10 @@ var
     i,j : integer;
     b: WideString;
     msg, x, item: TXMLTag;
-//    ri: TJabberRosterItem;
+    xi: IExodusItem;
     noi, noi_domain, noi_parameter: Widestring;
     offset: Cardinal;
 begin
-  { TODO : Roster refactor }
     msg := TXMLTag.Create('message');
     msg.setAttribute('id', MainSession.generateID());
     msg.setAttribute('to', to_jid);
@@ -650,10 +649,10 @@ begin
     x := msg.AddTag('x');
     x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin
-        //ri := TJabberRosterItem(items[i]);
+        xi := IExodusItem(items[i]);
         item := x.AddTag('item');
-        //item.setAttribute('jid', ri.jid.full);
-        //item.setAttribute('name', ri.Text);
+        item.SetAttribute('jid', xi.UID);
+        item.SetAttribute('name', xi.Text);
         for j := 0 to MainSession.Prefs.getStringlistCount('send_contact_noi') - 1 do begin
             noi_parameter := MainSession.Prefs.getStringlistValue('send_contact_noi', j);
             offset := Pos('=', noi_parameter);

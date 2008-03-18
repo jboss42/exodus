@@ -23,9 +23,9 @@ unit SelectItem;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, ComCtrls,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, ComCtrls, ExForm,
   Forms, ExTreeView, Exodus_TLB, Dialogs, ExtCtrls, StdCtrls, TntStdCtrls,
-  Menus, TntMenus;
+  Menus, TntMenus, ExGradientPanel, SClrRGrp;
 
 type
   TfrmSelectItem = class;
@@ -48,7 +48,7 @@ type
 
   end;
 
-  TfrmSelectItem = class(TForm)
+  TfrmSelectItem = class(TExForm)
     pnlInput: TPanel;
     pnlActions: TPanel;
     pnlSelect: TPanel;
@@ -59,6 +59,7 @@ type
     lblJID: TTntLabel;
     popSelected: TTntPopupMenu;
     mnuShowOnline: TTntMenuItem;
+    ColorBevel1: TColorBevel;
     
     procedure FormCreate(Sender: TObject);
 
@@ -87,7 +88,7 @@ function SelectUIDByType(itemtype: Widestring): Widestring;
 
 implementation
 
-uses Session;
+uses gnugettext, Session;
 
 {$R *.dfm}
 
@@ -160,6 +161,8 @@ end;
 procedure TfrmSelectItem.FormCreate(Sender: TObject);
 begin
     inherited;
+
+    Self.Caption := _(Self.Caption + ' ' + _itemtype);
 
     _itemView := TTypedTreeView.Create(Self, MainSession);
     _itemView.Parent := pnlSelect;
