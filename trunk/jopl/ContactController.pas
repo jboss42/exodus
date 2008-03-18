@@ -23,10 +23,9 @@ unit ContactController;
 interface
 
 uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
-     Signals, DisplayName, COMExodusItem;
+        Signals, DisplayName, COMExodusItem;
 
 type
-
 
    TContactController = class
    private
@@ -485,6 +484,5 @@ begin
     Item.Text := DisplayName;
     TJabberSession(_JS).FireEvent('/item/update', Item);
 end;
-
 
 end.
