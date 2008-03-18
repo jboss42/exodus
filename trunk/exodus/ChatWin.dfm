@@ -39,7 +39,7 @@ inherited frmChat: TfrmChat
           Left = 43
           Top = 0
           Width = 45
-          Height = 13
+          Height = 33
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Nickname'
@@ -47,6 +47,7 @@ inherited frmChat: TfrmChat
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
           Left = 0
@@ -122,12 +123,16 @@ inherited frmChat: TfrmChat
       Caption = 'Save Conversation'
       OnClick = mnuSaveClick
     end
+    object mnuSearchHistory: TTntMenuItem
+      Caption = 'Search History...'
+      OnClick = mnuSearchHistoryClick
+    end
     object mnuHistory: TTntMenuItem
-      Caption = 'Show History ...'
+      Caption = 'Show History (Plugin)...'
       OnClick = doHistory
     end
     object popClearHistory: TTntMenuItem
-      Caption = 'Clear History'
+      Caption = 'Clear History (Plugin)'
       OnClick = popClearHistoryClick
     end
     object PrintHistory1: TTntMenuItem

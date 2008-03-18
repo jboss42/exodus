@@ -65,6 +65,7 @@ type
     imgAvatar: TPaintBox;
     Panel3: TPanel;
     Print1: TTntMenuItem;
+    mnuSearchHistory: TTntMenuItem;
     
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -96,6 +97,7 @@ type
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure Print1Click(Sender: TObject);
     procedure MsgOutOnEnter(Sender: TObject);
+    procedure mnuSearchHistoryClick(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -245,7 +247,8 @@ uses
     RT_XIMConversion,
     EntityCache,
     IEMsgList,
-    TypInfo, Dockable, ActiveX;
+    TypInfo, Dockable, ActiveX,
+    HistorySearch;
 
 const
     sReplying = ' is replying.';
@@ -603,8 +606,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.setupMenus();
 begin
-    mnuHistory.Enabled := (ExCOMController.ContactLogger <> nil);
-    popClearHistory.Enabled := (ExCOMController.ContactLogger <> nil);
+    mnuHistory.Visible := (ExCOMController.ContactLogger <> nil);
+    popClearHistory.Visible := (ExCOMController.ContactLogger <> nil);
 end;
 
 {---------------------------------------}
@@ -1481,6 +1484,13 @@ begin
     _wrap_input := mnuWordwrap.Checked;
     MsgOut.WordWrap := _wrap_input;
     MainSession.Prefs.setBool('wrap_input', _wrap_input);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.mnuSearchHistoryClick(Sender: TObject);
+begin
+    inherited;
+    StartShowHistoryWithContact(_jid.jid);
 end;
 
 {---------------------------------------}

@@ -33,7 +33,10 @@ uses
   BaseMsgList,
   Exodus_TLB,
   JabberMsg,
-  Unicode;
+  Unicode, 
+  Menus, 
+  TntMenus, 
+  TntDialogs;
 
 type
   TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
@@ -84,6 +87,13 @@ type
     btnAddRoom: TTntButton;
     btnRemoveRoom: TTntButton;
     lstRooms: TTntListBox;
+    mnuResultHistoryPopup: TTntPopupMenu;
+    popCopy: TTntMenuItem;
+    popCopyAll: TTntMenuItem;
+    popPrint: TTntMenuItem;
+    popSaveAs: TTntMenuItem;
+    dlgSave: TTntSaveDialog;
+    dlgPrint: TPrintDialog;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
@@ -96,28 +106,39 @@ type
     procedure btnRemoveContactClick(Sender: TObject);
     procedure btnSerachClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure lstResultsClick(Sender: TObject);
     procedure btnAddRoomClick(Sender: TObject);
     procedure btnRemoveRoomClick(Sender: TObject);
     procedure lstResultsCompare(Sender: TObject; Item1, Item2: TListItem;
       Data: Integer; var Compare: Integer);
     procedure lstResultsColumnClick(Sender: TObject; Column: TListColumn);
+    procedure lstResultsChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure popCopyClick(Sender: TObject);
+    procedure popCopyAllClick(Sender: TObject);
+    procedure popFindClick(Sender: TObject);
+    procedure popPrintClick(Sender: TObject);
+    procedure popSaveAsClick(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
     _MsglistType: integer;
-    _DoAdvSearch: boolean;
+    _AdvSearch: boolean;
     _SearchObj: IExodusHistorySearch;
     _ResultObj: IExodusHistoryResult;
     _ResultList: TWidestringList;
     _DoingSearch: boolean;
     _resultSort: TResultSort;
+    _LastSelectedItem: TListItem;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
     procedure _PossitionControls();
-    procedure _AddContactToContactList(contact: widestring);
+    procedure _AddContactToContactList(const contact: widestring);
+    procedure _AddRoomToRoomList(const room: widestring);
     procedure _DropResults();
+    procedure _DisplayHistory();
+    procedure _SearchingGUI(const inSearch: boolean);
+    procedure _SetAdvSearch(value: boolean);
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -132,6 +153,12 @@ type
 
     // Methods
     procedure ResultCallback(msg: TJabberMessage);
+    procedure AddContactBasicSearch(const jid: widestring);
+    procedure AddContact(const jid: widestring);
+    procedure AddRoom(const room: widestring);
+
+    // Properties
+    property AdvSearch: boolean read _AdvSearch write _SetAdvSearch;
 
   end;
 
@@ -143,6 +170,11 @@ const
 
 var
   frmHistorySearch: TfrmHistorySearch;
+
+procedure StartShowHistory();
+procedure StartShowHistoryWithContact(const jid: widestring);
+procedure StartShowHistoryWithContacts(const ContactList: TWidestringList);
+procedure StartShowHistoryWithRooms(const RoomList: TWidestringList);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -164,7 +196,62 @@ uses
     DisplayName,
     JabberID,
     IdGlobal,
-    RosterImages;
+    RosterImages,
+    XMLUtils,
+    PrtRichEdit;
+
+{---------------------------------------}
+procedure StartShowHistory();
+var
+    frm: TfrmHistorySearch;
+begin
+    frm := TfrmHistorySearch.Create(Application);
+    frm.Show();
+end;
+
+{---------------------------------------}
+procedure StartShowHistoryWithContact(const jid: widestring);
+var
+    frm: TfrmHistorySearch;
+begin
+    frm := TfrmHistorySearch.Create(Application);
+    frm.AddContactBasicSearch(jid);
+    frm.Show();
+end;
+
+{---------------------------------------}
+procedure StartShowHistoryWithContacts(const ContactList: TWidestringList);
+var
+    frm: TfrmHistorySearch;
+    i: integer;
+begin
+    frm := TfrmHistorySearch.Create(Application);
+
+    if (ContactList.Count = 1) then begin
+        frm.AddContactBasicSearch(ContactList[0]);
+    end
+    else begin
+        for i := 0 to ContactList.Count - 1 do begin
+            frm.AddContact(ContactList[i]);
+        end;
+        frm.AdvSearch := true;
+    end;
+    frm.Show();
+end;
+
+{---------------------------------------}
+procedure StartShowHistoryWithRooms(const RoomList: TWidestringList);
+var
+    frm: TfrmHistorySearch;
+    i: integer;
+begin
+    frm := TfrmHistorySearch.Create(Application);
+    for i := 0 to RoomList.Count - 1 do begin
+        frm.AddRoom(RoomList[i]);
+    end;
+    frm.AdvSearch := true;
+    frm.Show();
+end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.btnAddContactClick(Sender: TObject);
@@ -181,9 +268,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.btnAddRoomClick(Sender: TObject);
+var
+    jid: widestring;
 begin
     inherited;
-    Sleep(1);
+
+    jid := SelectUIDByType('room');
+    if (jid <> '') then begin
+        _AddRoomToRoomList(jid);
+    end;
 end;
 
 {---------------------------------------}
@@ -191,7 +284,7 @@ procedure TfrmHistorySearch.btnAdvBasicSwitchClick(Sender: TObject);
 begin
     inherited;
 
-    if (_DoAdvSearch) then begin
+    if (_AdvSearch) then begin
         // Currently in adv serach
         pnlAdvancedSearchBar.Visible := false;
         pnlBasicSearchBar.Visible := true;
@@ -204,7 +297,7 @@ begin
         btnAdvBasicSwitch.Caption := _('Basic');
     end;
 
-    _DoAdvSearch := (not _DoAdvSearch);
+    _AdvSearch := (not _AdvSearch);
     _PossitionControls();
 end;
 
@@ -220,7 +313,8 @@ end;
 procedure TfrmHistorySearch.btnRemoveRoomClick(Sender: TObject);
 begin
     inherited;
-    Sleep(1);
+    lstRooms.DeleteSelected();
+    btnRemoveRoom.Enabled := false; // We just removed the selected, so nothing can be selected
 end;
 
 {---------------------------------------}
@@ -235,8 +329,11 @@ begin
 
         // Switch to "search done" GUI
         _DoingSearch := false;
+        _SearchingGUI(false);
     end
     else begin
+        _LastSelectedItem := nil;
+
         _SearchObj := nil;
 
         _DropResults();
@@ -247,7 +344,7 @@ begin
         _SearchObj.AddAllowedSearchType(SQLSEARCH_CHAT);
         _SearchObj.AddAllowedSearchType(SQLSEARCH_ROOM);
 
-        if (_DoAdvSearch) then begin
+        if (_AdvSearch) then begin
             // Advanced Search
             if (radioRange.Checked) then begin
                 _SearchObj.Set_maxDate(dateTo.DateTime + TimeZoneBias());
@@ -284,6 +381,7 @@ begin
 
         // Change to "searching GUI"
         _DoingSearch := true;
+        _SearchingGUI(true);
 
         HistorySearchManager.NewSearch(_SearchObj, _ResultObj);
     end;
@@ -310,7 +408,7 @@ end;
 {---------------------------------------}
 procedure TfrmHistorySearch.FormCreate(Sender: TObject);
 begin
-  inherited;
+    inherited;
 
     _MsglistType := MainSession.prefs.getInt('msglist_type');
     case _MsglistType of
@@ -326,6 +424,7 @@ begin
         Parent := pnlResultsHistory;
         Align := alClient;
         Visible := true;
+        setContextMenu(mnuResultHistoryPopup);
         Ready();
     end;
 
@@ -344,6 +443,8 @@ begin
     _resultSort := rsJIDAsc;
     lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
     lstResults.Columns.Items[1].ImageIndex := -1;
+
+    Self.Caption := MainSession.Prefs.getString('brand_caption') + _(' History');
 end;
 
 {---------------------------------------}
@@ -410,7 +511,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.lstResultsClick(Sender: TObject);
+procedure TfrmHistorySearch.lstResultsChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+    inherited;
+    if (Change = ctState) then begin
+        if ((Item.Selected) and
+            (Item <> _LastSelectedItem)) then begin
+            _DisplayHistory();
+            _LastSelectedItem := Item;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._DisplayHistory();
 var
     i: integer;
     j: integer;
@@ -421,26 +536,26 @@ var
     dateList: TWidestringList;
     itemList: TWidestringList;
 begin
-    inherited;
-
     listItem := lstResults.Selected;
 
     _MsgList.Clear();
 
-    for i := 0 to _ResultList.Count - 1 do begin
-        dateList := TWidestringList(_ResultList.Objects[i]);
-        for j := 0 to dateList.Count - 1 do begin
-            itemList := TWidestringList(dateList.Objects[j]);
-            for k := 0 to itemList.Count - 1 do begin
-                ritem := TResultListItem(itemList.Objects[k]);
-                if (ritem.listitem = listItem) then begin
-                    // We have a match.
-                    // So, run through list adding all dates to display box
-                    for l := 0 to itemList.Count - 1 do begin
-                        ritem := TResultListItem(itemList.Objects[l]);
-                        _MsgList.DisplayMsg(ritem.msg, false);
+    if (listItem <> nil) then begin
+        for i := 0 to _ResultList.Count - 1 do begin
+            dateList := TWidestringList(_ResultList.Objects[i]);
+            for j := 0 to dateList.Count - 1 do begin
+                itemList := TWidestringList(dateList.Objects[j]);
+                for k := 0 to itemList.Count - 1 do begin
+                    ritem := TResultListItem(itemList.Objects[k]);
+                    if (ritem.listitem = listItem) then begin
+                        // We have a match.
+                        // So, run through list adding all dates to display box
+                        for l := 0 to itemList.Count - 1 do begin
+                            ritem := TResultListItem(itemList.Objects[l]);
+                            _MsgList.DisplayMsg(ritem.msg, false);
+                        end;
+                        exit; // Get out of this tripple list madness
                     end;
-                    exit; // Get out of this tripple list madness
                 end;
             end;
         end;
@@ -556,6 +671,96 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmHistorySearch.popCopyAllClick(Sender: TObject);
+begin
+    inherited;
+    _MsgList.CopyAll();
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.popCopyClick(Sender: TObject);
+begin
+    inherited;
+    _MsgList.Copy();
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.popFindClick(Sender: TObject);
+begin
+    inherited;
+    Sleep(1);
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.popPrintClick(Sender: TObject);
+var
+    cap: Widestring;
+    ml: TfBaseMsgList;
+    msglist: TfRTFMsgList;
+    htmlmsglist: TfIEMsgList;
+begin
+    inherited;
+    ml := _getMsgList();
+
+    if (ml is TfRTFMsgList) then begin
+        msglist := TfRTFMsgList(ml);
+        with dlgPrint do begin
+            if (not Execute) then exit;
+
+            cap := _('Room Transcript: %s');
+            cap := WideFormat(cap, [Self.Caption]);
+
+            PrintRichEdit(cap, TRichEdit(msglist.MsgList), Copies, PrintRange);
+        end;
+    end
+    else if (ml is TfIEMsgList) then begin
+        htmlmsglist := TfIEMsgList(ml);
+        htmlmsglist.print(true);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.popSaveAsClick(Sender: TObject);
+var
+    fn: widestring;
+    filetype: integer;
+begin
+    dlgSave.FileName := MungeName(lstResults.Selected.Caption);
+
+    case _MsglistType of
+        RTF_MSGLIST  : dlgSave.Filter := 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'; // RTF
+        HTML_MSGLIST : dlgSave.Filter := 'HTML (*.htm)|*.htm'; // HTML
+    end;
+
+    if (not dlgSave.Execute()) then exit;
+    fn := dlgSave.FileName;
+    filetype := dlgSave.FilterIndex;
+
+    case _MsglistType of
+        RTF_MSGLIST  :
+            begin
+                if (filetype = 1) then begin
+                    // .rtf file
+                    if (LowerCase(RightStr(fn, 3)) <> '.rtf') then
+                        fn := fn + '.rtf';
+                end
+                else if (filetype = 2) then begin
+                    // .txt file
+                    if (LowerCase(RightStr(fn, 3)) <> '.txt') then
+                        fn := fn + '.txt';
+                end;
+            end;
+        HTML_MSGLIST :
+            begin
+                // .htm file
+                if (LowerCase(RightStr(fn, 3)) <> '.htm') then
+                    fn := fn + '.htm';
+            end;
+    end;
+    _MsgList.Save(fn);
+end;
+
+{---------------------------------------}
 procedure TfrmHistorySearch.radioAllClick(Sender: TObject);
 begin
     inherited;
@@ -601,7 +806,7 @@ begin
     dateTo.Enabled := radioRange.Checked;
 
     // Control bar
-    if (_DoAdvSearch) then begin
+    if (_AdvSearch) then begin
         pnlSearchBar.Height := ADVPANEL_HEIGHT;
         pnlControlBar.Top := ADVPANEL_HEIGHT;
     end
@@ -622,7 +827,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch._AddContactToContactList(contact: widestring);
+procedure TfrmHistorySearch._AddContactToContactList(const contact: widestring);
 var
     i: integer;
 begin
@@ -630,11 +835,28 @@ begin
 
     // Check for dupe
     for i := 0 to lstContacts.Count - 1 do begin
-        if (contact = lstContacts.Items[i]) then exit; // is a dupe
+        if (Trim(contact) = lstContacts.Items[i]) then exit; // is a dupe
     end;
 
     // no dupes so go ahead and add to lsit
-    lstContacts.AddItem(contact, nil);
+    lstContacts.AddItem(Trim(contact), nil);
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._AddRoomToRoomList(const room: widestring);
+var
+    i: integer;
+begin
+    if (Trim(room) = '') then exit;
+
+    // Check for dupe
+    for i := 0 to lstContacts.Count - 1 do begin
+
+        if (Trim(room) = lstRooms.Items[i]) then exit; // is a dupe
+    end;
+
+    // no dupes so go ahead and add to lsit
+    lstRooms.AddItem(Trim(room), nil);
 end;
 
 {---------------------------------------}
@@ -684,6 +906,7 @@ begin
 
         // Change GUI to "done searching"
         _DoingSearch := false;
+        _SearchingGUI(false);
     end
     else begin
         // Got another result so check to see if we should display it.
@@ -748,6 +971,52 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmHistorySearch._SearchingGUI(const inSearch: boolean);
+begin
+    if (inSearch) then begin
+        btnSerach.Caption := _('Cancel');
+        Screen.Cursor := crHourglass;
+    end
+    else begin
+        btnSerach.Caption := _('Search');
+        Screen.Cursor := crDefault;
+    end;
+    btnAdvBasicSwitch.Enabled := (not inSearch);
+    pnlSearchBar.Enabled := (not inSearch);
+    pnlResults.Enabled := (not inSearch);
 
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.AddContactBasicSearch(const jid: widestring);
+begin
+    if (Trim(jid) = '') then exit;
+
+    txtBasicHistoryFor.Text := Trim(jid);
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.AddContact(const jid: widestring);
+begin
+    if (Trim(jid) = '') then exit;
+
+    _AddContactToContactList(jid);
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.AddRoom(const room: widestring);
+begin
+    if (Trim(room) = '') then exit;
+
+    _AddRoomToRoomList(room);
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._SetAdvSearch(value: boolean);
+begin
+    btnAdvBasicSwitchClick(nil);
+    _AdvSearch := value;
+end;
 
 end.
