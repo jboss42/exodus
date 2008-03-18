@@ -396,7 +396,7 @@ uses
     fProfile, ConnDetails, NewUser, RosterImages,
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
-    SelContact, Invite, S10n, MsgRecv, PrefController,
+    SelectItem, Invite, S10n, MsgRecv, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
     Transports, Session, StrUtils;
@@ -3272,7 +3272,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
 var
-    fsel: TfrmSelContact;
+    selected: Widestring;
     sel: TList;
     observer: boolean;
 begin
@@ -3293,16 +3293,11 @@ begin
         exit;
     end;
 
-    fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
-
-    frmExodus.PreModal(fsel);
-    if (fsel.ShowModal = mrOK) then
-        jabberSendRosterItems(fsel.GetSelectedJID(), sel);
-    frmExodus.PostModal();
+    selected := SelectUIDByType('contact');
+    if (selected <> '') then
+        jabberSendRosterItems(selected, sel);
 
     sel.Free();
-    fSel.Free();
 end;
 
 {---------------------------------------}

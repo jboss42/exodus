@@ -25,7 +25,7 @@ interface
 uses
     // Exodus stuff
     {BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, SelContact, Emote, NodeItem,
+    ShellAPI, Registry, SelectItem, Emote, NodeItem,
     Dockable,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,

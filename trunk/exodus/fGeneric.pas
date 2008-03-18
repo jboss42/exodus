@@ -63,7 +63,7 @@ uses
     Math, JabberConst, 
     Jabber1, GnuGetText,
     JabberID, ShellAPI,
-    SelContact, ExRichEdit,
+    SelectItem, ExRichEdit,
     JabberUtils, ExUtils,  CheckLst, RichEdit2, Types;
 
 const
@@ -340,18 +340,12 @@ end;
 {---------------------------------------}
 procedure TframeGeneric.JidFieldDotClick(Sender: TObject);
 var
-    fsel: TfrmSelContact;
+    selected :Widestring;
 begin
-    fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
-
-    frmExodus.PreModal(fsel);
-
-    if (fsel.ShowModal = mrOK) then begin
-        TTntEdit(c).Text := fsel.GetSelectedJID();
+    selected := SelectUIDByType('contact');
+    if (selected <> '') then begin
+        TTntEdit(c).Text := selected;
     end;
-
-    frmExodus.PostModal();
 end;
 
 {---------------------------------------}

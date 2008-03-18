@@ -24,7 +24,7 @@ interface
 uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, LoginWindow, RosterForm, Presence, XMLTag,
-    ShellAPI, Registry, SelContact, Emote, 
+    ShellAPI, Registry, Emote, 
     Dockable, DisplayName,
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -839,7 +839,7 @@ uses
     XMLUtils, XMLParser,
     ComServ, PrefFile,
     ManagePluginsDlg,
-    DebugManager, TntGraphics;
+    DebugManager, TntGraphics, SelectItem;
 
 {$R *.DFM}
 
@@ -3373,18 +3373,11 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.trayMessageClick(Sender: TObject);
 var
-    fsel: TfrmSelContact;
-    jid : string;
+    jid : Widestring;
 begin
     // Send a msg via the tray menu popup
-    fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.DrawRoster(true, false);
-    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
-
-    if (fsel.ShowModal = mrOK) then begin
-        jid := fsel.GetSelectedJID();
-        if (jid = '') then exit;
-
+    jid := SelectUIDByType('contact');
+    if (jid <> '') then begin
         // do the send
         if (MainSession.Prefs.getBool(P_CHAT)) then
             StartChat(jid, '', true)
@@ -3392,7 +3385,6 @@ begin
             StartMsg(jid);
 
     end;
-    fSel.Free();
 end;
 
 {---------------------------------------}

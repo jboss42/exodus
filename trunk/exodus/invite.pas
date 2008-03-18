@@ -22,8 +22,8 @@ unit Invite;
 interface
 
 uses
-    Unicode, XMLTag, SelContact,
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Unicode, XMLTag, Windows, Messages, SysUtils, Variants, Classes,
+    Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
   TntStdCtrls, TntComCtrls, JabberID, ExForm, TntForms, ExFrame,
   ExActions, ExActionCtrl, Exodus_TLB;
@@ -59,14 +59,12 @@ type
     procedure btnRemoveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAddClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure cboRoomChange(Sender: TObject);
     procedure lstJIDSChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure lstJIDSDeletion(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
-    _selector: TfrmSelContact;
 
   public
     { Public declarations }
@@ -85,8 +83,8 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 implementation
 uses
     ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
-    JabberConst, InputPassword,
-    Session, Room, RosterForm, ContactController;
+    JabberConst, InputPassword, DisplayName,
+    Session, Room, RosterForm, ContactController, SelectItem;
 
 const
     sConfRoom = 'Conference Room:';
@@ -142,12 +140,36 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvite.AddRecip(jid: WideString);
-//var
-//    i: integer;
+var
+    idx: integer;
+    entered: TTntListItems;
+    entry: TListItem;
+    itemCtrl: IExodusItemController;
+    item: IExodusItem;
+    cap: Widestring;
 //    cap: WideString;
 //    ritem: TJabberRosterItem;
 //    n: TListItem;
 begin
+    item := MainSession.ItemController.GetItem(jid);
+    
+    //TODO:  validate JID supports MUC??
+
+    //Validate not already present
+    entered := lstJIDS.Items;
+    for idx := 0 to entered.Count - 1 do begin
+        if (entered[idx].SubItems[0] = jid) then exit;
+    end;
+
+    if (item <> nil) then
+        cap := item.Text
+    else
+        cap := jid;
+
+    entry := entered.Add();
+    entry.Caption := cap;
+    entry.SubItems.Add(jid);
+
   { TODO : Roster refactor }
 //    ritem := MainSession.roster.Find(jid);
 //    if ritem <> nil then
@@ -267,7 +289,6 @@ begin
     AssignTntStrings(tmp, cboRoom.Items);
     tmp.Free();
     pnlMain.Align := alClient;
-    _selector := TfrmSelContact.Create(nil);
 end;
 
 {---------------------------------------}
@@ -276,8 +297,7 @@ procedure TfrmInvite.lstJIDSDragOver(Sender, Source: TObject; X,
 begin
     // accept roster items from the main roster as well
     // as the string grid on this form
-    Accept := (Source = frmRoster.RosterTree) or
-        (Source = _selector.frameTreeRoster1.treeRoster);
+    Accept := (Source = frmRoster.RosterTree);
 end;
 
 {---------------------------------------}
@@ -358,16 +378,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvite.btnAddClick(Sender: TObject);
+var
+    selected: Widestring;
 begin
     // Add a JID
-    if (_selector.ShowModal = mrOK) then begin
-        self.AddRecip(_selector.GetSelectedJID());
-    end;
-end;
-
-procedure TfrmInvite.FormDestroy(Sender: TObject);
-begin
-    _selector.Free();
+    selected := SelectUIDByType('contact');
+    if (selected <> '') then
+        AddRecip(selected);
 end;
 
 {
