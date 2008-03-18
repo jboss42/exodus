@@ -196,12 +196,20 @@ begin
     //Make sure groups for the contact exist in the global group list.
     //_SynchronizeGroups(Contact);
 
+    if TJabberSession(_JS).IsBlocked(TmpJid) then
+        Contact.value['blocked'] := 'true'
+    else
+        Contact.value['blocked'] := 'false';
+
     Grps.Free();
     TmpJid.Free();
 end;
 
 {---------------------------------------}
 procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
+var
+    uid: Widestring;
+    item: IExodusItem;
 begin
      if Event = '/session/authenticated'  then
      begin
@@ -226,6 +234,22 @@ begin
              TJabberSession(_JS).ItemController.AddGroup(_DefaultGroup);
          end;
          _UpdateContacts();
+     end
+     else if Event = '/session/block' then
+     begin
+         uid := Tag.GetAttribute('jid');
+         item := TJabberSession(_js).ItemController.GetItem(uid);
+
+         if (item <> nil) then
+            item.value['blocked'] := 'true';
+     end
+     else if Event = '/session/unblock' then
+     begin
+         uid := Tag.GetAttribute('jid');
+         item := TJabberSession(_js).ItemController.GetItem(uid);
+
+         if (item <> nil) then
+            item.value['blocked'] := 'false';
      end;
 end;
 

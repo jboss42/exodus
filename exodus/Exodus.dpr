@@ -285,7 +285,8 @@ uses
   SQLSearchThread in 'SQLSearchThread.pas',
   SQLUtils in '..\jopl\SQLUtils.pas',
   HistorySearch in 'HistorySearch.pas' {HistorySearchDlg},
-  SelectItem in 'SelectItem.pas' {frmSelectItem};
+  SelectItem in 'SelectItem.pas' {frmSelectItem},
+  ContactActions in 'ContactActions.pas';
 
 {$R *.TLB}
 
