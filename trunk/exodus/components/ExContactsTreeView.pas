@@ -71,7 +71,7 @@ var
     target: Widestring;
 begin
 
-    target := SelectUIDByType('contact');
+    target := SelectUIDByType('contact', _('Select Recipient'));
     if (target <> '') then begin
         subjects := TList.Create;
 
