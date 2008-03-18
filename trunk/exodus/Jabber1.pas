@@ -2282,7 +2282,11 @@ begin
     //mainsession should never be nil here, it is created before this object
     //and destroyed in ExSession finalization
 
-    // Ask before clsoing in COM server situation
+    // Kill any History searches that may be in progress as they hold
+    // COM objects open and will trip the next check.
+    HistorySearchManager.CancelAllSearches();
+
+    // Ask before closing in COM server situation
     if ((MainSession.Prefs.getBool('brand_warn_close_com_server')) and
         (ComServer.ObjectCount > 0) and
         (not _ApprovedExitWithCOMActive))then begin

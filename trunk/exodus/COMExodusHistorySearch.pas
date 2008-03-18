@@ -46,6 +46,13 @@ type
 
     // Methods
 
+  public
+    // Variables
+
+    // Methods
+    procedure Initialize(); override;
+    destructor Destroy(); override;
+
     // IExodusHistorySearch Interface
     function Get_AllowedSearchTypeCount: Integer; safecall;
     function Get_ExactKeywordMatch: WordBool; safecall;
@@ -63,12 +70,6 @@ type
     procedure Set_ExactKeywordMatch(value: WordBool); safecall;
     procedure Set_maxDate(value: TDateTime); safecall;
     procedure Set_minDate(value: TDateTime); safecall;
-  public
-    // Variables
-
-    // Methods
-    procedure Initialize(); override;
-    destructor Destroy(); override;
 
     // Properties
   end;

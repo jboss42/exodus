@@ -3,6 +3,8 @@ inherited frmHistorySearch: TfrmHistorySearch
   ClientHeight = 428
   ClientWidth = 720
   ParentFont = False
+  OnClose = FormClose
+  OnCloseQuery = TntFormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
@@ -345,6 +347,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         OnChange = lstResultsChange
         OnColumnClick = lstResultsColumnClick
         OnCompare = lstResultsCompare
+        OnCustomDrawItem = lstResultsCustomDrawItem
       end
     end
     object pnlResultsHistory: TTntPanel
@@ -355,7 +358,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 95
     end
   end
   object pnlControlBar: TTntPanel

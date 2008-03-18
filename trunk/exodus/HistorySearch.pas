@@ -34,9 +34,10 @@ uses
   Exodus_TLB,
   JabberMsg,
   Unicode, 
-  Menus, 
-  TntMenus, 
-  TntDialogs;
+  Menus,
+  TntMenus,
+  TntDialogs,
+  XMLTag;
 
 type
   TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
@@ -118,17 +119,23 @@ type
     procedure popFindClick(Sender: TObject);
     procedure popPrintClick(Sender: TObject);
     procedure popSaveAsClick(Sender: TObject);
+    procedure lstResultsCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TntFormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
     _MsglistType: integer;
     _AdvSearch: boolean;
-    _SearchObj: IExodusHistorySearch;
-    _ResultObj: IExodusHistoryResult;
+    _SearchObj: TExodusHistorySearch;
+    _ResultObj: TExodusHistoryResult;
     _ResultList: TWidestringList;
     _DoingSearch: boolean;
     _resultSort: TResultSort;
     _LastSelectedItem: TListItem;
+    _PrimaryBGColor: TColor;
+    _AlternateBGColor: TColor;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -198,7 +205,8 @@ uses
     IdGlobal,
     RosterImages,
     XMLUtils,
-    PrtRichEdit;
+    PrtRichEdit,
+    JabberUtils;
 
 {---------------------------------------}
 procedure StartShowHistory();
@@ -325,21 +333,33 @@ begin
     inherited;
 
     if (_DoingSearch) then begin
-        HistorySearchManager.CancelSearch(_SearchObj.SearchID);
+        HistorySearchManager.CancelSearch(_SearchObj.Get_SearchID);
 
         // Switch to "search done" GUI
         _DoingSearch := false;
         _SearchingGUI(false);
+
+        _SearchObj.Free();
+        _SearchObj := nil;
+        _ResultObj.Free();
+        _ResultObj := nil;
     end
     else begin
         _LastSelectedItem := nil;
 
+        _SearchObj.Free();
         _SearchObj := nil;
+        _ResultObj.Free();
+        _ResultObj := nil;
 
         _DropResults();
 
-        _SearchObj := CreateCOMObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
-        _ResultObj := CreateCOMObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
+        //_SearchObj := CreateCOMObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
+        _SearchObj := TExodusHistorySearch.Create();
+        _SearchObj.ObjAddRef();
+        //_ResultObj := CreateCOMObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
+        _ResultObj := TExodusHistoryResult.Create();
+        _ResultObj.ObjAddRef();
 
         _SearchObj.AddAllowedSearchType(SQLSEARCH_CHAT);
         _SearchObj.AddAllowedSearchType(SQLSEARCH_ROOM);
@@ -433,7 +453,9 @@ begin
 
     btnRemoveContact.Enabled := false;
 
+    _SearchObj.Free();
     _SearchObj := nil;
+    _ResultObj.Free();
     _ResultObj := nil;
 
     _DoingSearch := false;
@@ -445,12 +467,18 @@ begin
     lstResults.Columns.Items[1].ImageIndex := -1;
 
     Self.Caption := MainSession.Prefs.getString('brand_caption') + _(' History');
+
+    _PrimaryBGColor := MainSession.Prefs.getInt('search_history_primary_bg_color');
+    _AlternateBGColor := MainSession.Prefs.getInt('search_history_alternate_bg_color');
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.FormDestroy(Sender: TObject);
 begin
+    _SearchObj.Free();
     _SearchObj := nil;
+    _ResultObj.Free();
+    _ResultObj := nil;
 
     _DropResults();
 
@@ -469,8 +497,6 @@ var
     datelist: TWidestringList;
     itemlist: TWidestringList;
 begin
-    _ResultObj := nil;
-
     lstResults.Clear();
     _MsgList.Clear();
 
@@ -668,6 +694,20 @@ begin
         end;
     end;
 
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.lstResultsCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+begin
+    inherited;
+
+    if ((item.Index mod 2) = 0) then begin
+        Sender.Canvas.Brush.Color := _PrimaryBGColor;
+    end
+    else begin
+        Sender.Canvas.Brush.Color := _AlternateBGColor;
+    end;
 end;
 
 {---------------------------------------}
@@ -907,6 +947,11 @@ begin
         // Change GUI to "done searching"
         _DoingSearch := false;
         _SearchingGUI(false);
+
+        _SearchObj.Free();
+        _SearchObj := nil;
+        _ResultObj.Free();
+        _ResultObj := nil;
     end
     else begin
         // Got another result so check to see if we should display it.
@@ -972,6 +1017,26 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmHistorySearch.TntFormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+    inherited;
+
+    if (_DoingSearch) then begin
+        MessageDlgW(_('Search currently in progress.  Please cancel the serach or wait for search to end before closing.'), mtWarning, [mbOK], 0);
+        CanClose := false;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    inherited;
+    Self.Free();
+end;
+
+{---------------------------------------}
 procedure TfrmHistorySearch._SearchingGUI(const inSearch: boolean);
 begin
     if (inSearch) then begin
@@ -985,7 +1050,6 @@ begin
     btnAdvBasicSwitch.Enabled := (not inSearch);
     pnlSearchBar.Enabled := (not inSearch);
     pnlResults.Enabled := (not inSearch);
-
 end;
 
 {---------------------------------------}
@@ -1018,5 +1082,6 @@ begin
     btnAdvBasicSwitchClick(nil);
     _AdvSearch := value;
 end;
+
 
 end.
