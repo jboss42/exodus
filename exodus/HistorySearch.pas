@@ -472,6 +472,12 @@ begin
                     _SearchObj.AddJid(Trim(lstContacts.Items[i]));
                 end;
             end;
+
+            for i := 0 to lstRooms.Items.Count - 1 do begin
+                if (Trim(lstRooms.Items[i]) <> '') then begin
+                    _SearchObj.AddJid(Trim(lstRooms.Items[i]));
+                end;
+            end;
         end
         else begin
             // Basic Search
@@ -540,6 +546,7 @@ begin
     dateFrom.DateTime := IncMonth(dateTo.DateTime, DEFAULT_DATE_GAP_MONTHS);
 
     btnRemoveContact.Enabled := false;
+    btnRemoveRoom.Enabled := false;
 
     _SearchObj.Free();
     _SearchObj := nil;
@@ -978,7 +985,7 @@ begin
     if (Trim(room) = '') then exit;
 
     // Check for dupe
-    for i := 0 to lstContacts.Count - 1 do begin
+    for i := 0 to lstRooms.Count - 1 do begin
 
         if (Trim(room) = lstRooms.Items[i]) then exit; // is a dupe
     end;
