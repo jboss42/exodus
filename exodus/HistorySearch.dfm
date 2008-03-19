@@ -4,7 +4,7 @@ inherited frmHistorySearch: TfrmHistorySearch
   ClientWidth = 720
   ParentFont = False
   OnClose = FormClose
-  OnCloseQuery = TntFormCloseQuery
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
