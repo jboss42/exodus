@@ -631,6 +631,11 @@
         <!-- comment out or set to 0 to use default window colors -->
         <brand_default_window_color value="$00D0C3AF" state="rw"/>
 
+	<!-- Should the internal SQL logger log chat or room messages -->
+	<brand_log_chat_messages value="1"/>
+    <brand_log_groupchat_messages value="1"/>
+
+
   </prefs>
 
   <!-- default custom presence stuff -->

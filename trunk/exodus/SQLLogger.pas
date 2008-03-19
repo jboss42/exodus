@@ -28,8 +28,9 @@ uses
 type
     TSQLLogger = class(TObject{, IExodusSearchHandler})
         private
-
             // Variables
+            _LogChats: boolean;
+            _LogRooms: boolean;
 
             // Methods
             procedure _CreateLoggerTable();
@@ -66,12 +67,16 @@ uses
     sysUtils,
     XMLUtils,
     SQLUtils,
-    IdGlobal;
+    IdGlobal,
+    Session;
 
 {---------------------------------------}
 constructor TSQLLogger.Create;
 begin
     if (DataStore = nil) then exit;
+
+    _LogChats := MainSession.Prefs.getBool('brand_log_chat_messages');
+    _LogRooms := MainSession.Prefs.getBool('brand_log_groupchat_messages');
 
     _CreateLoggerTable();
 end;
@@ -131,9 +136,14 @@ var
     outstr: string;
     xml: string;
     priority: integer;
-    dda: TDateTime;
 begin
     if (DataStore = nil) then exit;
+
+    // Branding checks
+    if ((not _LogChats) and
+        (msg.MsgType = 'chat')) then exit;
+    if ((not _LogRooms) and
+        (msg.MsgType = 'groupchat')) then exit;
 
     outb := (msg.isMe);
 
@@ -167,9 +177,6 @@ begin
     end;
 
     ts := msg.Time + TimeZoneBias();
-    dda := Now();
-    if (dda = now()) then sleep(1);
-    
 
     cmd := 'INSERT INTO ' +
            MESSAGES_TABLE + ' ' +
