@@ -68,7 +68,9 @@ uses
     XMLUtils,
     SQLUtils,
     IdGlobal,
-    Session;
+    Session,
+    JabberConst,
+    XMLTag;
 
 {---------------------------------------}
 constructor TSQLLogger.Create;
@@ -136,6 +138,7 @@ var
     outstr: string;
     xml: string;
     priority: integer;
+    msgDelayTag: TXMLTag;
 begin
     if (DataStore = nil) then exit;
 
@@ -145,6 +148,16 @@ begin
     if ((not _LogRooms) and
         (msg.MsgType = 'groupchat')) then exit;
 
+    // if room, don't log "old" messages
+    if (msg.MsgType = 'groupchat') then begin
+        msgDelayTag := Msg.Tag.QueryXPTag(XP_MSGDELAY);
+        if (msgDelayTag <> nil) then begin
+            // This is an old message, so we shouldn't log
+            exit;
+        end;
+    end;
+
+    // Pull out the data and prep the SQL statment to insert into SQLite
     outb := (msg.isMe);
 
     fromjid := TJabberID.Create(msg.FromJID);
@@ -188,6 +201,7 @@ begin
     sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, priority, xml]);
 
     try
+        // Insert the message as a new record.
         DataStore.ExecSQL(sql);
     except
     end;
