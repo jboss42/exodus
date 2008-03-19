@@ -383,6 +383,10 @@ begin
 
             hist := TrimRight(chat.getHistory());
             DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
+            if (new_chat) then begin
+               assert(win <> nil);
+               ExCOMController.fireNewChat(sjid, win.com_controller);
+            end;
         end;
 
         // Setup the properties of the window,
@@ -440,10 +444,6 @@ begin
 
         end;
 
-        if (new_chat) then begin
-            assert(win <> nil);
-            ExCOMController.fireNewChat(sjid, win.com_controller);
-        end;
 
         Result := TfrmChat(chat.window);
     except
