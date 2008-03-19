@@ -37,10 +37,21 @@ uses
   Menus,
   TntMenus,
   TntDialogs,
-  XMLTag;
+  XMLTag,
+  ExActions;
 
 type
   TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
+
+  {
+    Action implementation to start chats with a given contact(s)
+  }
+  TSearchHistoryAction = class(TExBaseAction)
+  private
+    constructor Create;
+  public
+    procedure execute(const items: IExodusItemList); override;
+  end;
 
   TResultListItem = class
     private
@@ -178,10 +189,10 @@ const
 var
   frmHistorySearch: TfrmHistorySearch;
 
+procedure RegisterActions();
 procedure StartShowHistory();
 procedure StartShowHistoryWithContact(const jid: widestring);
-procedure StartShowHistoryWithContacts(const ContactList: TWidestringList);
-procedure StartShowHistoryWithRooms(const RoomList: TWidestringList);
+procedure StartShowHistoryWithMultipleItems(const ContactList: TWidestringList; const RoomList: TWidestringList);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -206,7 +217,24 @@ uses
     RosterImages,
     XMLUtils,
     PrtRichEdit,
-    JabberUtils;
+    JabberUtils,
+    ExActionCtrl;
+
+{---------------------------------------}
+procedure RegisterActions();
+var
+    actctrl: IExodusActionController;
+    act: TSearchHistoryAction;
+begin
+    act := TSearchHistoryAction.Create;
+
+    actctrl := GetActionController();
+    actctrl.registerAction('contact', act as IExodusAction);
+    actctrl.addEnableFilter('contact', '{000-exodus.googlecode.com}-040-view-history', '');
+    actctrl.registerAction('room', act as IExodusAction);
+    actctrl.addEnableFilter('room', '{000-exodus.googlecode.com}-040-view-history', '');
+end;
+
 
 {---------------------------------------}
 procedure StartShowHistory();
@@ -228,21 +256,33 @@ begin
 end;
 
 {---------------------------------------}
-procedure StartShowHistoryWithContacts(const ContactList: TWidestringList);
+procedure StartShowHistoryWithMultipleItems(const ContactList: TWidestringList; const RoomList: TWidestringList);
 var
     frm: TfrmHistorySearch;
     i: integer;
 begin
     frm := TfrmHistorySearch.Create(Application);
 
-    if (ContactList.Count = 1) then begin
+    if (((ContactList <> nil) and (ContactList.Count = 1)) and
+        ((RoomList = nil) or (RoomList.Count = 0))) then begin
+        // We only have 1 contact and no rooms, so start with basic search.
         frm.AddContactBasicSearch(ContactList[0]);
     end
     else begin
-        for i := 0 to ContactList.Count - 1 do begin
-            frm.AddContact(ContactList[i]);
-        end;
+        // More than 1 contact or rooms or both, so do advanced search
         frm.AdvSearch := true;
+
+        if (ContactList <> nil) then begin
+            for i := 0 to ContactList.Count - 1 do begin
+                frm.AddContact(ContactList[i]);
+            end;
+        end;
+
+        if (RoomList <> nil) then begin
+            for i := 0 to RoomList.Count - 1 do begin
+                frm.AddRoom(RoomList[i]);
+            end;
+        end;
     end;
     frm.Show();
 end;
@@ -259,6 +299,54 @@ begin
     end;
     frm.AdvSearch := true;
     frm.Show();
+end;
+
+{---------------------------------------}
+constructor TSearchHistoryAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-040-view-history');
+
+    Caption := _('View History');
+    Enabled := true;
+end;
+
+{---------------------------------------}
+procedure TSearchHistoryAction.execute(const items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+    contactlist: TWidestringList;
+    roomlist: TWidestringList;
+begin
+    if ((items.Count = 1) and
+        (items.Item[0].Type_ = 'contact')) then begin
+        StartShowHistoryWithContact(items.Item[0].UID);
+    end
+    else begin
+        contactlist := TWidestringList.Create();
+        roomlist := TWidestringList.Create();
+
+        for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+
+            if (item.Type_ = 'contact') then begin
+                contactlist.Add(item.UID);
+            end
+            else if (item.Type_ = 'room') then begin
+                roomlist.Add(item.UID);
+            end;
+        end;
+
+        StartShowHistoryWithMultipleItems(contactlist, roomlist);
+
+        contactlist.Clear();
+        roomlist.Clear();
+        contactlist.Free();
+        roomlist.Free();
+    end;  
+
+    //Let's just make sure we clean up...
+    item := nil;
 end;
 
 {---------------------------------------}
@@ -1082,6 +1170,12 @@ begin
     btnAdvBasicSwitchClick(nil);
     _AdvSearch := value;
 end;
+
+
+
+
+initialization
+    RegisterActions();
 
 
 end.
