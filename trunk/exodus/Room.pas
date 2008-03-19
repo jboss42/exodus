@@ -25,7 +25,7 @@ uses
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus,
     JabberID, TntSysUtils, TntWideStrUtils, ToolWin, ImgList, JabberMsg,
-    AppEvnts, IQ;
+    AppEvnts, IQ, Exodus_TLB, ExActions;
 
 type
   TMemberNode = TTntListItem;
@@ -279,6 +279,14 @@ type
 
   end;
 
+  TJoinRoomAction = class(TExBaseAction)
+  private
+    constructor Create;
+
+  public
+    procedure execute(const items: IExodusItemList); override;
+  end;
+
 var
   frmRoom: TfrmRoom;
 
@@ -402,6 +410,7 @@ uses
     COMChatController,
     CustomNotify,
     ExSession,
+    ExActionCtrl,
     JabberUtils,
     ExUtils,
     Entity,
@@ -3280,6 +3289,46 @@ begin
 end;
 
 
+constructor TJoinRoomAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-000-join-roon');
+
+    Set_Caption(_('Join'));
+    Set_Enabled(true);
+end;
+
+procedure TJoinRoomAction.execute(const items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+    nick, pass: Widestring;
+    useReg: Boolean;
+begin
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+
+        nick := item.value['nick'];
+        pass := item.value['password'];
+
+        if (item.value['reg_nick'] = 'true') then
+            useReg := true
+        else
+            useReg := false;
+
+        StartRoom(item.UID, nick, pass, true, false, useReg);
+    end;
+end;
+
+procedure RegisterActions();
+var
+    actCtrl: IExodusActionController;
+    act: IExodusAction;
+begin
+    actCtrl := GetActionController();
+
+    act := TJoinRoomAction.Create() as IExodusAction;
+    actCtrl.registerAction('room', act);
+end;
 
 initialization
     // list for all of the current rooms
@@ -3293,6 +3342,9 @@ initialization
     xp_muc_destroy_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/destroy/reason');
 
     Classes.RegisterClass(TfrmRoom); //auto-open RTII
+
+    RegisterActions();
+
 finalization
     xp_muc_reason.Free();
     xp_muc_item.Free();
