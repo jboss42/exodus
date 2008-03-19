@@ -65,7 +65,7 @@ type
     imgAvatar: TPaintBox;
     Panel3: TPanel;
     Print1: TTntMenuItem;
-    mnuSearchHistory: TTntMenuItem;
+    mnuViewHistory: TTntMenuItem;
     
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -97,7 +97,7 @@ type
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure Print1Click(Sender: TObject);
     procedure MsgOutOnEnter(Sender: TObject);
-    procedure mnuSearchHistoryClick(Sender: TObject);
+    procedure mnuViewHistoryClick(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1487,7 +1487,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.mnuSearchHistoryClick(Sender: TObject);
+procedure TfrmChat.mnuViewHistoryClick(Sender: TObject);
 begin
     inherited;
     StartShowHistoryWithContact(_jid.jid);

@@ -123,9 +123,9 @@ inherited frmChat: TfrmChat
       Caption = 'Save Conversation'
       OnClick = mnuSaveClick
     end
-    object mnuSearchHistory: TTntMenuItem
-      Caption = 'Search History...'
-      OnClick = mnuSearchHistoryClick
+    object mnuViewHistory: TTntMenuItem
+      Caption = 'View History...'
+      OnClick = mnuViewHistoryClick
     end
     object mnuHistory: TTntMenuItem
       Caption = 'Show History (Plugin)...'
