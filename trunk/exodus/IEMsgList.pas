@@ -111,6 +111,7 @@ type
     _ForceIgnoreScrollToBottom: boolean;
     _Clearing: boolean;
     _ClearingMsgCache: TWidestringList;
+    _IgnoreMsgLimiting: boolean;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
@@ -142,6 +143,7 @@ type
     procedure ScrollToBottom(); override;
     procedure ScrollToTop();
     procedure Clear(); override;
+    procedure Reset(); override;
     procedure setContextMenu(popup: TTntPopupMenu); override;
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
@@ -182,6 +184,7 @@ type
     property font_italic: boolean read _font_italic write _font_italic;
     property font_underline: boolean read _font_underline write _font_underline;
     property ForceIgnoreScrollToBottom: boolean read _ForceIgnoreScrollToBottom write _ForceIgnoreScrollToBottom;
+    property IgnoreMsgLimiting: boolean read _IgnoreMsgLimiting write _IgnoreMsgLimiting;
 
   end;
 
@@ -239,6 +242,7 @@ begin
     _composing := -1;
     _msgCount := 0;
     _doMessageLimiting := false;
+    _IgnoreMsgLimiting := false;
     _Clearing := false;
     _ClearingMsgCache := TWidestringList.Create();
 
@@ -271,7 +275,7 @@ begin
         _maxMsgCountHigh := getInt('maximum_displayed_messages');
         _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
         if ((_maxMsgCountHigh <> 0) and
-            (_maxMsgCountHigh >= _maxMsgCountLow))then begin
+            (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
             _doMessageLimiting := true;
             if (_maxMsgCountLow <= 0) then begin
                 // High water mark set, but low water mark not set.
@@ -422,6 +426,17 @@ begin
     except
     end;
 end;
+
+{---------------------------------------}
+procedure TfIEMsgList.Reset();
+begin
+    _lastTimeStamp := 0;
+    _lastLineClass := '';
+    _lastMsgNick := '';
+    _IgnoreMsgLimiting := false;
+    Clear();
+end;
+
 
 {---------------------------------------}
 procedure TfIEMsgList.setContextMenu(popup: TTntPopupMenu);
@@ -621,17 +636,19 @@ var
     dv: WideString;
     t: TDateTime;
     id: WideString;
+    cachemsg: TJabberMessage;
 begin
     if (msg = nil) then exit;
 
     if (_Clearing) then begin
-        _ClearingMsgCache.AddObject('', msg);
+        cachemsg := TJabberMessage.Create(msg);
+        _ClearingMsgCache.AddObject('', cachemsg);
     end
     else begin
         try
             if (_displayDateSeparator) then begin
                 t := msg.Time;
-                if ((DateToStr(t) <> DateToStr(_lastTimeStamp)) and
+                if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
                     (msg.Subject = '') and
                     (msg.Nick <> ''))then begin
                     txt := '<div class="date">' +
@@ -1231,7 +1248,7 @@ begin
             DisplayMsg(TJabberMessage(_ClearingMsgCache.Objects[i]));
         end;
         for i := _ClearingMsgCache.Count - 1 downto 0 do begin
-            TJabberMessage(_ClearingMsgCache.Objects[i]);
+            TJabberMessage(_ClearingMsgCache.Objects[i]).Free();
             _ClearingMsgCache.Delete(i);
         end;                                                
 
@@ -1374,6 +1391,7 @@ var
     elem: IHTMLElement;
 begin
     if ((_doMessageLimiting) and
+        (not _IgnoreMsgLimiting) and
         (_msgCount >= _maxMsgCountHigh) and
         (_content <> nil)) then begin
         while (_msgCount >= _maxMsgCountLow) do begin

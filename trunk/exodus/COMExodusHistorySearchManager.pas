@@ -51,7 +51,7 @@ type
 
         // Methods
         constructor Create();
-        destructor Destroy();
+        destructor Destroy(); override;
 
         // Properties
         property Handler: IExodusHistorySearchHandler read _Handler write _Handler;
@@ -77,7 +77,7 @@ type
 
         // Methods
         constructor Create();
-        destructor Destroy();
+        destructor Destroy(); override;
 
         // Properties
         property HandlerList: TWidestringList read _HandlerList write _HandlerList;

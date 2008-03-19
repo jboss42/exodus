@@ -57,8 +57,15 @@ type
     private
     protected
     public
-    msg: TJabberMessage;
-    listitem: TTntListItem;
+        // Variables
+        msgXML: widestring; // Store as string, bool, etc  instead of TJabberMessage to save on memory if we have XML.
+        isMe: boolean;
+        time: TDateTime;
+        nick: widestring;
+
+        msg: TJabberMessage; // Else store the tag
+
+        listitem: TTntListItem;
   end;
 
   TfrmHistorySearch = class(TExForm)
@@ -133,7 +140,7 @@ type
     procedure lstResultsCustomDrawItem(Sender: TCustomListView; Item: TListItem;
       State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure TntFormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -218,7 +225,8 @@ uses
     XMLUtils,
     PrtRichEdit,
     JabberUtils,
-    ExActionCtrl;
+    ExActionCtrl,
+    XMLParser;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -491,7 +499,7 @@ begin
         end;
 
         // Set Callback
-        ExodusHistoryResultCallbackMap.AddCallback(Self.ResultCallback, _ResultObj);
+        ExodusHistoryResultCallbackMap.AddCallback(Self.ResultCallback, _ResultObj, false);
 
         // Change to "searching GUI"
         _DoingSearch := true;
@@ -527,7 +535,10 @@ begin
     _MsglistType := MainSession.prefs.getInt('msglist_type');
     case _MsglistType of
         RTF_MSGLIST  : _ResultsHistoryFrame := TfRTFMsgList.Create(Self);
-        HTML_MSGLIST : _ResultsHistoryFrame := TfIEMsgList.Create(Self);
+        HTML_MSGLIST : begin
+            _ResultsHistoryFrame := TfIEMsgList.Create(Self);
+            TfIEMsgList(_ResultsHistoryFrame).IgnoreMsgLimiting := true;
+        end
         else begin
             _ResultsHistoryFrame := TfRTFMsgList.Create(Self);
         end;
@@ -579,6 +590,14 @@ begin
 
     _ResultList.Free();
 
+    case _MsglistType of
+        RTF_MSGLIST  : TfRTFMsgList(_ResultsHistoryFrame).Free();
+        HTML_MSGLIST : TfIEMsgList(_ResultsHistoryFrame).Free();
+        else begin
+            _ResultsHistoryFrame.Free();
+        end;
+    end;
+
     inherited;
 end;
 
@@ -593,7 +612,10 @@ var
     itemlist: TWidestringList;
 begin
     lstResults.Clear();
-    _MsgList.Clear();
+    _MsgList.Reset();
+    if (_MsglistType = HTML_MSGLIST) then begin
+        TfIEMsgList(_ResultsHistoryFrame).IgnoreMsgLimiting := true;
+    end;
 
     for i := _ResultList.Count - 1 downto 0 do begin
         dateList := TWidestringList(_ResultList.Objects[i]);
@@ -602,6 +624,7 @@ begin
             for k := itemlist.Count - 1 downto 0 do begin
                 ritem := TResultListItem(itemlist.Objects[k]);
                 ritem.msg.Free();
+                ritem.Free();
                 itemlist.Delete(k);
             end;
             itemlist.Free();
@@ -656,10 +679,16 @@ var
     listItem: TTntListItem;
     dateList: TWidestringList;
     itemList: TWidestringList;
+    msg: TJabberMessage;
+    parser: TXMLTagParser;
+    tag: TXMLTag;
 begin
     listItem := lstResults.Selected;
 
-    _MsgList.Clear();
+    _MsgList.Reset();
+    if (_MsglistType = HTML_MSGLIST) then begin
+        TfIEMsgList(_ResultsHistoryFrame).IgnoreMsgLimiting := true;
+    end;
 
     if (listItem <> nil) then begin
         for i := 0 to _ResultList.Count - 1 do begin
@@ -671,10 +700,25 @@ begin
                     if (ritem.listitem = listItem) then begin
                         // We have a match.
                         // So, run through list adding all dates to display box
+                        parser := TXMLTagParser.Create();
                         for l := 0 to itemList.Count - 1 do begin
                             ritem := TResultListItem(itemList.Objects[l]);
-                            _MsgList.DisplayMsg(ritem.msg, false);
+                            if (ritem.msg = nil) then begin
+                                parser.ParseString(ritem.msgXML, '');
+                                tag := parser.popTag();
+                                msg := TJabberMessage.Create(tag);
+                                msg.Nick := ritem.nick;
+                                msg.Time := ritem.time;
+                                msg.isMe := ritem.isMe;
+                                _MsgList.DisplayMsg(msg, false);
+                                msg.Free();
+                                tag.Free();
+                            end
+                            else begin
+                                _MsgList.DisplayMsg(ritem.msg, false);
+                            end;
                         end;
+                        parser.Free();
                         exit; // Get out of this tripple list madness
                     end;
                 end;
@@ -1019,6 +1063,7 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
         else begin
             Result.ImageIndex := RosterTreeImages.Find('unknown');
         end;
+        exItem := nil;
         id.Free();
         Result.SubItems.Add(DateTimeToStr(newmsg.Time));
         Result.SubItems.Add(newmsg.Body);
@@ -1060,7 +1105,23 @@ begin
         newmsg.Time := msg.Time;
 
         ritem := TResultListItem.Create();
-        ritem.msg := newmsg;
+        if (newmsg.Tag = nil) then begin
+            ritem.msg := newmsg;
+            ritem.msgXML := '';
+            ritem.isMe := false;
+            ritem.time := 0;
+            ritem.nick := '';
+        end
+        else begin
+            // Store details of the TJabberMessage Object instead of the actual object
+            // if we can as it uses far less memory.
+            ritem.msg := nil;
+            ritem.msgXML := newmsg.Tag.XML;
+            ritem.isMe := newmsg.isMe;
+            ritem.time := newmsg.Time;
+            ritem.nick := newmsg.Nick;
+        end;
+
         ritem.listitem := nil;
 
         if (newmsg.isMe) then begin
@@ -1107,12 +1168,16 @@ begin
             itemList.AddObject('', ritem);
         end;
 
+        if (ritem.msg = nil) then begin
+           newmsg.Free();
+        end;
+
         jid.Free();
     end;
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.TntFormCloseQuery(Sender: TObject;
+procedure TfrmHistorySearch.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;

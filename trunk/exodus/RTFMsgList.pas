@@ -47,6 +47,7 @@ type
     procedure Copy(); override;
     procedure ScrollToBottom(); override;
     procedure Clear(); override;
+    procedure Reset(); override;
     procedure setContextMenu(popup: TTntPopupMenu); override;
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
@@ -111,6 +112,12 @@ begin
          MsgList.Lines[i] := '';
     end;
 
+end;
+
+{---------------------------------------}
+procedure TfRTFMsgList.Reset();
+begin
+    Clear();
 end;
 
 {---------------------------------------}

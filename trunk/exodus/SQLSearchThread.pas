@@ -229,7 +229,7 @@ begin
 
         parser.Free();
     except
-    end;
+    end;    
 end;
 
 {---------------------------------------}

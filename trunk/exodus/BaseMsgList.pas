@@ -39,7 +39,8 @@ type
     procedure CopyAll(); virtual;
     procedure Copy(); virtual;
     procedure ScrollToBottom(); virtual;
-    procedure Clear(); virtual;
+    procedure Clear(); virtual; // Clear the msg list
+    procedure Reset(); virtual; // Clear the msg list and reset last date, last nick, etc. (Currently used in IEMsgList)
     procedure setContextMenu(popup: TTntPopupMenu); virtual;
     procedure setDragOver(event: TDragOverEvent); virtual;
     procedure setDragDrop(event: TDragDropEvent); virtual;
@@ -125,6 +126,11 @@ begin
 end;
 
 procedure TfBaseMsgList.Clear();
+begin
+    //
+end;
+
+procedure TfBaseMsgList.Reset();
 begin
     //
 end;

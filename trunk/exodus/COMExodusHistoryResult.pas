@@ -77,7 +77,8 @@ type
         public
             // Variables
             cb: TInternalResultCallback;
-            ResultObj: TExodusHistoryResult
+            ResultObj: TExodusHistoryResult;
+            StoreResultWithCallbackSpecified: boolean;
 
             // Methods
     end;
@@ -100,8 +101,8 @@ type
             constructor Create();
             destructor Destroy(); override;
 
-            procedure AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult);
-            procedure FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage);
+            procedure AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult; ShouldStoreResultWithCallback: boolean = true);
+            function FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage): boolean;
             procedure DeleteCallback(ResultObj: TExodusHistoryResult);
 
             // Properties
@@ -144,7 +145,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResultCallbackMap.AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult);
+procedure TExodusHistoryResultCallbackMap.AddCallback(cb: TInternalResultCallback; ResultObj: TExodusHistoryResult; ShouldStoreResultWithCallback: boolean);
 var
     tmp: TExodusHistoryResultCallbackItem;
 begin
@@ -155,6 +156,7 @@ begin
     tmp := TExodusHistoryResultCallbackItem.Create();
     tmp.cb := cb;
     tmp.ResultObj := ResultObj;
+    tmp.StoreResultWithCallbackSpecified := ShouldStoreResultWithCallback;
 
     _callbackmap.AddObject('', tmp);
 end;
@@ -179,16 +181,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResultCallbackMap.FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage);
+function TExodusHistoryResultCallbackMap.FireCallback(ResultObj: TExodusHistoryResult; msg: TJabberMessage): boolean;
 var
     tmp: TExodusHistoryResultCallbackItem;
 begin
+    Result := true;
     if (ResultObj = nil) then exit;
 
     tmp := _FindCallback(ResultObj);
     if (tmp <> nil) then begin
         try
             tmp.cb(msg);
+            Result := tmp.StoreResultWithCallbackSpecified;
         except
         end;
     end;
@@ -266,6 +270,7 @@ end;
 procedure TExodusHistoryResult.OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg);
 var
     msg: TJabberMessage;
+    ShouldSaveMsg: boolean;
 begin
     if (Item = nil) then begin
         // Got a nil so that is the signal to end processing.
@@ -287,7 +292,7 @@ begin
         msg.Body := Item.Body;
         msg.Thread := Item.Thread;
         msg.Subject := Item.Subject;
-        msg.Time := JabberToDateTime(Item.Timestamp); 
+        msg.Time := JabberToDateTime(Item.Timestamp);
         if (Item.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
             msg.isMe := true;
         end
@@ -296,12 +301,17 @@ begin
         end;
         msg.XML := Item.XML;
 
-        _ResultList.AddObject('', msg);
 
         // Special hack for internal use of the result object.
         // On an externally created Result object, this should
         // just not do anything.
-        ExodusHistoryResultCallbackMap.FireCallback(Self, msg);
+        ShouldSaveMsg := ExodusHistoryResultCallbackMap.FireCallback(Self, msg);
+        if (ShouldSaveMsg) then begin
+            _ResultList.AddObject('', msg);
+        end
+        else begin
+            msg.Free(); 
+        end;
     end;
 end;
 
