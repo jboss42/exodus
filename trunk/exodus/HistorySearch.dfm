@@ -358,6 +358,8 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 40
+      ExplicitTop = 108
     end
   end
   object pnlControlBar: TTntPanel
@@ -385,7 +387,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     end
     object btnSerach: TTntButton
       Left = 636
-      Top = 5
+      Top = 6
       Width = 75
       Height = 25
       Anchors = [akTop, akRight]
@@ -395,13 +397,31 @@ inherited frmHistorySearch: TfrmHistorySearch
     end
     object btnAdvBasicSwitch: TTntButton
       Left = 555
-      Top = 5
+      Top = 6
       Width = 75
       Height = 25
       Anchors = [akTop, akRight]
       Caption = 'Advanced'
       TabOrder = 1
       OnClick = btnAdvBasicSwitchClick
+    end
+    object btnPrint: TTntButton
+      Left = 8
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Print...'
+      TabOrder = 2
+      OnClick = bntPrintClick
+    end
+    object btnDelete: TTntButton
+      Left = 89
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Delete...'
+      TabOrder = 3
+      OnClick = btnDeleteClick
     end
   end
   object mnuResultHistoryPopup: TTntPopupMenu

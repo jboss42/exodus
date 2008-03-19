@@ -49,6 +49,7 @@ type
             constructor Create();
 
             procedure LogMsg(msg: TJabberMessage);
+            procedure DeleteLogEntries(jid: widestring; datestart, dateend: TDateTime);
 
             // Properties
     end;
@@ -210,8 +211,53 @@ begin
     tojid.Free();
 end;
 
+{---------------------------------------}
+procedure TSQLLogger.DeleteLogEntries(jid: widestring; datestart, dateend: TDateTime);
+var
+    sql: widestring;
+    dtStart: integer;
+    tiStart: double;
+    dtEnd: integer;
+    tiEnd: double;
+begin
+    if (DataStore = nil) then exit;
 
+    // Delete From part
+    sql := 'DELETE FROM ' +
+           MESSAGES_TABLE;
 
+    // WHERE Part
+
+    // jid
+    sql := sql +
+           ' WHERE ';
+    if (jid <> '') then begin
+        sql := sql +
+               'jid="' +
+               jid +
+               '" AND ';
+    end;
+
+    // dates
+    sql := sql + 'date >= %d AND time >= %8.6f AND date <= %d AND time <= %8.6f;';
+
+    // Change dates for Time zone as they are stored in DB with Timezone Bias
+    datestart := datestart + TimeZoneBias();
+    dateend := dateend + TimeZoneBias();
+
+    dtStart := Trunc(datestart);
+    dtEnd := Trunc(dateend);
+
+    tiStart := Frac(double(datestart));
+    tiEnd := Frac(double(dateend));
+
+    sql := Format(sql, [dtStart, tiStart, dtEnd, tiEnd]);
+
+    try
+        DataStore.ExecSQL(sql);
+    except
+    end;
+end;
 
 
 end.

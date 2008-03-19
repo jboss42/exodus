@@ -57,7 +57,9 @@ type
 implementation
 
 uses
-    ComServ, sysUtils, COMExodusDataTable;
+    ComServ,
+    sysUtils,
+    COMExodusDataTable;
 
 {---------------------------------------}
 constructor TExodusDataStore.Create(filename: widestring);
@@ -144,8 +146,6 @@ begin
     _DBHandle.Free();
     _DBHandle := nil;
 end;
-
-
 
 
 

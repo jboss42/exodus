@@ -38,7 +38,8 @@ uses
   TntMenus,
   TntDialogs,
   XMLTag,
-  ExActions;
+  ExActions,
+  XMLParser;
 
 type
   TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
@@ -113,6 +114,8 @@ type
     popSaveAs: TTntMenuItem;
     dlgSave: TTntSaveDialog;
     dlgPrint: TPrintDialog;
+    btnPrint: TTntButton;
+    btnDelete: TTntButton;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
@@ -141,6 +144,8 @@ type
       State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure bntPrintClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -154,16 +159,19 @@ type
     _LastSelectedItem: TListItem;
     _PrimaryBGColor: TColor;
     _AlternateBGColor: TColor;
+    _parser: TXMLTagParser;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
-    procedure _PossitionControls();
+    procedure _PositionControls();
     procedure _AddContactToContactList(const contact: widestring);
     procedure _AddRoomToRoomList(const room: widestring);
     procedure _DropResults();
     procedure _DisplayHistory();
     procedure _SearchingGUI(const inSearch: boolean);
     procedure _SetAdvSearch(value: boolean);
+    function _FindResultStringList(const item: TTntListItem): TWidestringList;
+    function _GetTJabberMessage(const ritem: TResultListItem): TJabberMessage;
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -225,8 +233,7 @@ uses
     XMLUtils,
     PrtRichEdit,
     JabberUtils,
-    ExActionCtrl,
-    XMLParser;
+    ExActionCtrl;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -358,6 +365,14 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmHistorySearch.bntPrintClick(Sender: TObject);
+begin
+    inherited;
+
+    popPrintClick(Sender);
+end;
+
+{---------------------------------------}
 procedure TfrmHistorySearch.btnAddContactClick(Sender: TObject);
 var
     jid: widestring;
@@ -402,7 +417,80 @@ begin
     end;
 
     _AdvSearch := (not _AdvSearch);
-    _PossitionControls();
+    _PositionControls();
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.btnDeleteClick(Sender: TObject);
+var
+    jid: TJabberID;
+    datestart: TDateTime;
+    dateend: TDateTime;
+    listitem: TTntListItem;
+    itemlist: TWidestringList;
+    i: integer;
+    ritem: TResultListItem;
+    tmpmsg: TJabberMessage;
+    warning: widestring;
+begin
+    inherited;
+
+    listitem := lstResults.Selected;
+
+    // Confirm they want to delete THIS history
+    warning := _('Are you sure you wish to delete the history for %s on %s?');
+    warning := Format(warning, [listitem.Caption, listitem.SubItems[0]]);
+
+    if (MessageDlgW(warning, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+        // Setup the delete params
+        itemlist := _FindResultStringList(listitem);
+        if (itemlist <> nil) then begin
+            try
+                datestart := 0;
+                dateend := 0;
+                for i := 0 to itemList.Count - 1 do begin
+                    ritem := TResultListItem(itemList.Objects[i]);
+                    if (ritem <> nil) then begin
+                        tmpmsg := _GetTJabberMessage(ritem);
+
+                        if (i = 0) then begin
+                            // Only need to do this once
+                            if (tmpmsg.isMe) then begin
+                                jid := TJabberID.Create(tmpmsg.ToJID);
+                            end
+                            else begin
+                                jid := TJabberID.Create(tmpmsg.FromJID);
+                            end;
+                        end;
+
+                        if ((tmpmsg.time < datestart) or
+                            (datestart = 0)) then begin
+                            datestart := tmpmsg.time;
+                        end;
+                        if (tmpmsg.time > dateend) then begin
+                            // We know it will be greater then 0
+                            dateend := tmpmsg.time;
+                        end;
+                    end;
+                end;
+
+                // Execute the Delete
+                if ((jid <> nil) and
+                    (datestart > 0) and
+                    (dateend > 0)) then begin
+                    MsgLogger.DeleteLogEntries(jid.jid, datestart, dateend);
+                end;
+            except
+            end;
+
+            jid.Free();
+
+            lstResults.DeleteSelected();
+            _MsgList.Clear();
+            btnPrint.Enabled := false;
+            btnDelete.Enabled := false;
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -576,6 +664,16 @@ begin
 
     _PrimaryBGColor := MainSession.Prefs.getInt('search_history_primary_bg_color');
     _AlternateBGColor := MainSession.Prefs.getInt('search_history_alternate_bg_color');
+
+    if (not MainSession.Prefs.getBool('brand_print')) then begin
+        popPrint.Visible := false;
+        popPrint.Enabled := false;
+        btnPrint.Visible := false;
+    end;
+    btnPrint.Enabled := false;
+    btnDelete.Enabled := false;
+
+    _parser := TXMLTagParser.Create();
 end;
 
 {---------------------------------------}
@@ -585,6 +683,8 @@ begin
     _SearchObj := nil;
     _ResultObj.Free();
     _ResultObj := nil;
+
+    _parser.Free();
 
     _DropResults();
 
@@ -639,7 +739,7 @@ end;
 procedure TfrmHistorySearch.FormResize(Sender: TObject);
 begin
     inherited;
-    _PossitionControls();
+    _PositionControls();
 end;
 
 {---------------------------------------}
@@ -669,20 +769,67 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch._DisplayHistory();
+function TfrmHistorySearch._FindResultStringList(const item: TTntListItem): TWidestringList;
 var
     i: integer;
     j: integer;
     k: integer;
+    dateList: TWidestringList;
+    itemList: TWidestringList;
+    ritem: TResultListItem;
+begin
+    Result := nil;
+    if (item = nil) then exit;
+
+    for i := 0 to _ResultList.Count - 1 do begin
+        dateList := TWidestringList(_ResultList.Objects[i]);
+        for j := 0 to dateList.Count - 1 do begin
+            itemList := TWidestringList(dateList.Objects[j]);
+            for k := 0 to itemList.Count - 1 do begin
+                ritem := TResultListItem(itemList.Objects[k]);
+                if (ritem.listitem = item) then begin
+                    Result := itemList;
+                    exit;  // Get out of this tripple list madness
+                end;
+            end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TfrmHistorySearch._GetTJabberMessage(const ritem: TResultListItem): TJabberMessage;
+var
+    tag: TXMLTag;
+begin
+    Result := nil;
+    if (ritem = nil) then exit;
+
+    if (ritem.msg = nil) then begin
+        _parser.ParseString(ritem.msgXML, '');
+        tag := _parser.popTag();
+        Result := TJabberMessage.Create(tag);
+        Result.Nick := ritem.nick;
+        Result.Time := ritem.time;
+        Result.isMe := ritem.isMe;
+        tag.Free();
+    end
+    else begin
+        Result := TJabberMessage.Create(ritem.msg);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._DisplayHistory();
+var
     l: integer;
     ritem: TResultListItem;
     listItem: TTntListItem;
-    dateList: TWidestringList;
     itemList: TWidestringList;
     msg: TJabberMessage;
-    parser: TXMLTagParser;
-    tag: TXMLTag;
 begin
+    btnPrint.Enabled := true;
+    btnDelete.Enabled := true;
+
     listItem := lstResults.Selected;
 
     _MsgList.Reset();
@@ -690,38 +837,16 @@ begin
         TfIEMsgList(_ResultsHistoryFrame).IgnoreMsgLimiting := true;
     end;
 
-    if (listItem <> nil) then begin
-        for i := 0 to _ResultList.Count - 1 do begin
-            dateList := TWidestringList(_ResultList.Objects[i]);
-            for j := 0 to dateList.Count - 1 do begin
-                itemList := TWidestringList(dateList.Objects[j]);
-                for k := 0 to itemList.Count - 1 do begin
-                    ritem := TResultListItem(itemList.Objects[k]);
-                    if (ritem.listitem = listItem) then begin
-                        // We have a match.
-                        // So, run through list adding all dates to display box
-                        parser := TXMLTagParser.Create();
-                        for l := 0 to itemList.Count - 1 do begin
-                            ritem := TResultListItem(itemList.Objects[l]);
-                            if (ritem.msg = nil) then begin
-                                parser.ParseString(ritem.msgXML, '');
-                                tag := parser.popTag();
-                                msg := TJabberMessage.Create(tag);
-                                msg.Nick := ritem.nick;
-                                msg.Time := ritem.time;
-                                msg.isMe := ritem.isMe;
-                                _MsgList.DisplayMsg(msg, false);
-                                msg.Free();
-                                tag.Free();
-                            end
-                            else begin
-                                _MsgList.DisplayMsg(ritem.msg, false);
-                            end;
-                        end;
-                        parser.Free();
-                        exit; // Get out of this tripple list madness
-                    end;
-                end;
+    itemlist := _FindResultStringList(listItem);
+    if (itemlist <> nil) then begin
+        // We have a match.
+        // So, run through list adding all dates to display box
+        for l := 0 to itemList.Count - 1 do begin
+            ritem := TResultListItem(itemList.Objects[l]);
+            msg := _GetTJabberMessage(ritem);
+            if (msg <> nil) then begin
+                _MsgList.DisplayMsg(msg, false);
+                msg.Free();
             end;
         end;
     end;
@@ -943,14 +1068,14 @@ end;
 procedure TfrmHistorySearch.radioAllClick(Sender: TObject);
 begin
     inherited;
-    _PossitionControls();
+    _PositionControls();
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.radioRangeClick(Sender: TObject);
 begin
     inherited;
-    _PossitionControls();
+    _PositionControls();
 end;
 
 {---------------------------------------}
@@ -960,7 +1085,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch._PossitionControls();
+procedure TfrmHistorySearch._PositionControls();
 var
     GroupBoxWidth: integer;
 begin
@@ -992,6 +1117,11 @@ begin
     else begin
         pnlSearchBar.Height := BASICPANEL_HEIGHT;
         pnlControlBar.Top := BASICPANEL_HEIGHT;
+    end;
+
+    if (not btnPrint.Visible) then begin
+        btnDelete.Left := btnPrint.Left;
+        btnDelete.Top := btnPrint.Top;
     end;
 
     // Result Table
@@ -1065,7 +1195,8 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
         end;
         exItem := nil;
         id.Free();
-        Result.SubItems.Add(DateTimeToStr(newmsg.Time));
+        //Result.SubItems.Add(DateTimeToStr(newmsg.Time));
+        Result.SubItems.Add(DateToStr(newmsg.Time));
         Result.SubItems.Add(newmsg.Body);
     end;
 var
