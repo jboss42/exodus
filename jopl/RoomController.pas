@@ -254,7 +254,9 @@ begin
     TmpTag := Tag.QueryXPTag('/conference/nick');
     if (TmpTag <> nil) then
         Room.AddProperty('nick', TmpTag.Data);
-
+    TmpTag := Tag.QueryXPTag('/conference/password');
+    if (TmpTag <> nil) then
+        Room.AddProperty('password', TmpTag.Data);
 
     Grps := Tag.QueryXPTags('/conference/group');
     //Build temporary list of groups for future comparison of the lists.
