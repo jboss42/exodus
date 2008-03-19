@@ -82,17 +82,15 @@ begin
 end;
 
 procedure TExActionPopupMenu.HandleClick(Sender: TObject);
-var
-    mi: TExActionMenuItem;
 begin
-    mi := TExActionMenuItem(sender);
-
-    _actMap.GetActionsFor(mi.ItemType).execute(mi.ActionName);
+    with TExActionMenuItem(sender) do begin
+        _actMap.GetActionsFor(ItemType).execute(ActionName);
+    end;
 end;
 
 procedure TExActionPopupMenu.rebuild;
 var
-    mainActs, grpActs, typedActs: IExodusTypedActions;
+    mainActs, typedActs: IExodusTypedActions;
     itemtype: Widestring;
     idx, typeCount, miCount: Integer;
     mi: TTntMenuItem;
@@ -103,9 +101,6 @@ begin
     Items.Clear();
     mainActs := _actMap.GetActionsFor('');
     if (mainActs <> nil) then Dec(typeCount);
-
-    grpActs := _actMap.GetActionsFor('group');
-    if (grpActs <> nil) then Dec(typeCount);
 
     typeCount := typeCount + _actMap.TypedActionsCount;
     if (typeCount > 1) then begin
@@ -135,19 +130,6 @@ begin
         end;
 
         createTypedMenu(mainActs, Items);
-    end;
-    if (grpActs <> nil) and (typeCount >= 0) and (grpActs.ActionCount > 0) then begin
-        //check to see if we need a separator
-        if (miCount > 0) then begin
-            if not Items.Items[miCount - 1].IsLine then begin
-                mi := TTntMenuItem.Create(Items);
-                mi.Caption := '-';
-                Items.Add(mi);
-                Inc(miCount);
-            end;
-        end;
-
-        createTypedMenu(grpActs, Items);
     end;
 end;
 function TExActionPopupMenu.createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
