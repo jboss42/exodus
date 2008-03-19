@@ -365,7 +365,7 @@ begin
 
         //remove actions missing in typed from main
         for jdx := 0 to _allActs.Count - 1 do begin
-            act := _allActs[idx] as IExodusAction;
+            act := _allActs[jdx] as IExodusAction;
             if typedActs.IndexOfAction(act) = -1 then mainActs.RemoveAction(act);
         end;
 
