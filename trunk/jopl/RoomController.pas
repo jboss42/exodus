@@ -127,13 +127,14 @@ begin
             begin
                 if (TJabberSession(_js).ItemController.Item[i].Type_ <> EI_TYPE_ROOM) then continue;
                 Room := TJabberSession(_js).ItemController.Item[i];
-                RoomTag := TXMLTag.Create('conference');
+                RoomTag := StorageTag.AddTag('conference');
                 RoomTag.setAttribute('xmlns', XMLNS_BM);
                 RoomTag.setAttribute('jid', Room.uid);
                 RoomTag.setAttribute('name', Room.Value['name']);
                 RoomTag.setAttribute('autojoin', Room.Value['autojoin']);
                 RoomTag.setAttribute('reg_nick', Room.Value['reg_nick']);
                 RoomTag.AddBasicTag('nick', Room.Value['nick']);
+                RoomTag.AddBasicTag('password', Room.Value['password']);
                 for j := 0 to Room.GroupCount - 1 do
                 begin
                     GroupTag := RoomTag.AddBasicTag('group', Room.Group[j]);

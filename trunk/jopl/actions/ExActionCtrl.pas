@@ -615,10 +615,9 @@ var
     proxy: TActionProxy;
 begin
     //graceful fail
-    if (itemtype = '') then exit;
     if (actname = '') then exit;
     if (filter = '') then exit;
-    
+
     //get appropriate potentials and proxy
     list := lookupActionsFor(itemtype, true);
     proxy := list.GetProxyNamed(actname);
@@ -634,13 +633,12 @@ var
     proxy: TActionProxy;
 begin
     //graceful fail
-    if (itemtype = '') then exit;
     if (actname = '') then exit;
     if (filter = '') then exit;
 
     //get appropriate potentials and proxy
     list := lookupActionsFor(itemtype, true);
-    proxy := list.GetProxyNamed(itemtype);
+    proxy := list.GetProxyNamed(actname);
     if (proxy = nil) then proxy := TActionProxy.Create(itemtype, actname);
 
     proxy.addToDisabling(filter);
@@ -651,6 +649,7 @@ function TExodusActionController.buildActions(
         const items: IExodusItemList): IExodusActionMap;
 var
     actmap: TExodusActionMap;
+    typedActs: TExodusTypedActions;
     potentials: TPotentialActions;
     proxy: TActionProxy;
     applied: TObjectList;
@@ -731,6 +730,9 @@ begin
             end;
         end;
 
+        //make sure the list exists (so we don't accidentally get single-type main actions)
+        typedActs := actmap.LookupTypedActions(itemtype, true);
+
         //add applicable typed actions to actionmap
         for jdx := 0 to potentials.ProxyCount - 1 do begin
             proxy := potentials.Proxy[jdx];
@@ -738,7 +740,7 @@ begin
             if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
                 if (applied.IndexOf(proxy) = -1) then
                     applied.Add(proxy);
-                actmap.AddAction(itemtype, proxy.Action);
+                typedActs.AddAction(proxy.Action);
             end;
         end;
 
@@ -750,7 +752,7 @@ begin
             if proxy.applies(typedInterests.Enabling, typedInterests.Disabling) then begin
                 if (applied.IndexOf(proxy) = -1) then
                     applied.Add(proxy);
-                actmap.AddAction(itemtype, proxy.Action);
+                typedActs.AddAction(proxy.Action);
             end;
         end;
 
