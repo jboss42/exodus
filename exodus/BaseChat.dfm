@@ -25,7 +25,7 @@ inherited frmBaseChat: TfrmBaseChat
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
       Left = 366
-      ExplicitLeft = 366
+      ExplicitLeft = 343
       inherited btnDockToggle: TToolButton
         ParentShowHint = False
         ShowHint = True

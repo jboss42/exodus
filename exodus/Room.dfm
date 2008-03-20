@@ -21,11 +21,11 @@ inherited frmRoom: TfrmRoom
     ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 443
+      ExplicitLeft = 420
     end
     inherited pnlChatTop: TPanel
       Width = 440
-      ExplicitWidth = 440
+      ExplicitWidth = 417
       object pnlSubj: TPanel
         Left = 0
         Top = 0
@@ -153,6 +153,9 @@ inherited frmRoom: TfrmRoom
   end
   inherited popOut: TTntPopupMenu
     AutoHotkeys = maManual
+  end
+  inherited AppEvents: TApplicationEvents
+    Left = 112
   end
   object popRoom: TTntPopupMenu
     AutoHotkeys = maManual

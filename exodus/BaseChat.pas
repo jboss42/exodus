@@ -191,7 +191,8 @@ uses
     IEMsgList,
     TypInfo,
     PrefFile,
-    PrefController;
+    PrefController,
+    RosterImages;
 
 const
     PREF_RT_ENABLED = 'richtext_enabled';

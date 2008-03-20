@@ -9,7 +9,6 @@ inherited frmDockable: TfrmDockable
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
   ExplicitWidth = 212
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object pnlDockTop: TPanel
@@ -37,6 +36,7 @@ inherited frmDockable: TfrmDockable
       TabOrder = 0
       Transparent = True
       Wrapable = False
+      ExplicitLeft = 132
       object btnDockToggle: TToolButton
         AlignWithMargins = True
         Left = 0

@@ -146,6 +146,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure bntPrintClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    procedure lstRoomsClick(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -172,6 +173,7 @@ type
     procedure _SetAdvSearch(value: boolean);
     function _FindResultStringList(const item: TTntListItem): TWidestringList;
     function _GetTJabberMessage(const ritem: TResultListItem): TJabberMessage;
+    procedure _setWindowCaption(txt: widestring);
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -180,6 +182,7 @@ type
     // Variables
 
     // Methods
+    procedure CreateParams(Var params: TCreateParams); override;
 
   public
     // Variables
@@ -661,7 +664,7 @@ begin
     lstResults.Columns.Items[0].ImageIndex := RosterTreeImages.Find('arrow_up');
     lstResults.Columns.Items[1].ImageIndex := -1;
 
-    Self.Caption := MainSession.Prefs.getString('brand_caption') + _(' History');
+    _setWindowCaption(_('History'));
 
     _PrimaryBGColor := MainSession.Prefs.getInt('search_history_primary_bg_color');
     _AlternateBGColor := MainSession.Prefs.getInt('search_history_alternate_bg_color');
@@ -972,6 +975,18 @@ begin
     end
     else begin
         Sender.Canvas.Brush.Color := _AlternateBGColor;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.lstRoomsClick(Sender: TObject);
+begin
+    inherited;
+    if (lstRooms.SelCount > 0) then begin
+        btnRemoveRoom.Enabled := true;
+    end
+    else begin
+        btnRemoveRoom.Enabled := false;
     end;
 end;
 
@@ -1374,6 +1389,31 @@ begin
     btnAdvBasicSwitchClick(nil);
     _AdvSearch := value;
 end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.CreateParams(Var params: TCreateParams);
+begin
+    // Make this window show up on the taskbar
+    inherited CreateParams( params );
+    params.ExStyle := params.ExStyle or WS_EX_APPWINDOW;
+    params.WndParent := GetDesktopwindow;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch._setWindowCaption(txt: widestring);
+begin
+    if (txt = '') then begin
+        Caption := MainSession.Prefs.getString('brand_caption');
+    end
+    else begin
+        Caption := txt +
+                   ' - ' +
+                   MainSession.Prefs.getString('brand_caption');
+    end;
+end;
+
+
+
 
 
 

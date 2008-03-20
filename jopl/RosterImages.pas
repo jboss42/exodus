@@ -227,6 +227,8 @@ const
     RI_ROOMS_TAB_INDEX      : Integer = 94;
     RI_MAIN_TAB_KEY         : Widestring = 'main_tab';
     RI_MAIN_TAB_INDEX       : Integer = 95;
+    RI_VIEW_HISTORY_KEY     : Widestring = 'view_history';
+    RI_VIEW_HISTORY_INDEX   : Integer = 96;
 
 {$ENDIF}
 
@@ -337,6 +339,7 @@ begin
     _ids.Insert(RI_CONTACTS_TAB_INDEX, RI_CONTACTS_TAB_KEY);
     _ids.Insert(RI_ROOMS_TAB_INDEX, RI_ROOMS_TAB_KEY);
     _ids.Insert(RI_MAIN_TAB_INDEX, RI_MAIN_TAB_KEY);
+    _ids.Insert(RI_VIEW_HISTORY_INDEX, RI_VIEW_HISTORY_KEY);
     setDefaultIDs(_ids);
 {$ENDIF}
 end;
