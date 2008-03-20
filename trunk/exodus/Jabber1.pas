@@ -306,6 +306,7 @@ type
     popViewStates: TTntPopupMenu;
     popShowOnline: TTntMenuItem;
     popShowAll: TTntMenuItem;
+    mnuContacts_ViewHistory: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -413,6 +414,7 @@ type
     procedure txtStatusExit(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
     procedure popChangeView(Sender: TObject);
+    procedure mnuContacts_ViewHistoryClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -839,7 +841,8 @@ uses
     XMLUtils, XMLParser,
     ComServ, PrefFile,
     ManagePluginsDlg,
-    DebugManager, TntGraphics, SelectItem;
+    DebugManager, TntGraphics, SelectItem,
+    HistorySearch;
 
 {$R *.DFM}
 
@@ -1249,6 +1252,8 @@ begin
         _enforceConstraints := true;
         frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
         frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+
+        mnuContacts_ViewHistory.Visible := getBool('brand_history_search');
     end;
 //
 //    // Setup our session callback
@@ -2345,8 +2350,19 @@ begin
     StartJoinRoom();
 end;
 
+{---------------------------------------}
+procedure TfrmExodus.mnuContacts_ViewHistoryClick(Sender: TObject);
+var
+    dlg: TfrmHistorySearch;
+begin
+    inherited;
+
+    StartShowHistory();
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.mnuFile_ConnectClick(Sender: TObject);
-begin 
+begin
     btnConnect.Enabled := false;
     btnOptions.Enabled := false;
     mnuOptions_Options.Enabled := false;
@@ -2358,6 +2374,7 @@ begin
     trayShowActivityWindow.Enabled := false;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOfflineClick(Sender: TObject);
 begin
     if (mnuOptions_Notifications_ContactOffline.Checked) then
@@ -2369,6 +2386,7 @@ begin
                         not mnuOptions_Notifications_ContactOffline.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuOptions_Notifications_ContactOnlineClick(Sender: TObject);
 begin
     if (mnuOptions_Notifications_ContactOnline.Checked) then
