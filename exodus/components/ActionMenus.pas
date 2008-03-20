@@ -14,6 +14,7 @@ private
 
     procedure rebuild;
     function createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
+    function createSubMenu(itemtype: Widestring; act: IExodusAction; parent: TMenuItem): Integer;
 
 protected
     procedure HandleClick(Sender: TObject);
@@ -132,6 +133,7 @@ begin
         createTypedMenu(mainActs, Items);
     end;
 end;
+
 function TExActionPopupMenu.createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
 var
     idx: Integer;
@@ -146,14 +148,41 @@ begin
         mi.ActionName := act.Name;
         mi.Caption := act.Caption;
         mi.ImageIndex := act.ImageIndex;
-        mi.OnClick := HandleClick;
+
+        if createSubMenu(actList.ItemType, act, mi) = 0 then
+            mi.OnClick := HandleClick;
 
         parent.Add(mi);
-
-        //TODO:  subactions...
     end;
 
     Result := 1;
+end;
+function TExActionPopupMenu.createSubMenu(
+        itemtype: Widestring;
+        act: IExodusAction;
+        parent: TMenuItem): Integer;
+var
+    idx, amt: Integer;
+    subact: IExodusAction;
+    mi: TExActionMenuItem;
+begin
+    amt := act.SubActionCount;
+    Result := amt;
+
+    for idx := 0 to amt - 1 do begin
+        subact := act.SubAction[idx];
+        mi := TExActionMenuItem.Create(parent);
+
+        mi.ItemType := itemtype;
+        mi.ActionName := subact.Name;
+        mi.Caption := subact.Caption;
+        mi.ImageIndex := subact.ImageIndex;
+
+        if createSubMenu(itemtype, subact, mi) = 0 then
+            mi.OnClick := HandleClick;
+
+        parent.Add(mi);
+    end;
 end;
 
 procedure TExActionPopupMenu.Popup(X: Integer; Y: Integer);
