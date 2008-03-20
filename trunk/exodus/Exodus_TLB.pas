@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/17/2008 3:04:28 PM from Type Library described below.
+// File generated on 3/20/2008 10:29:17 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4727,7 +4727,9 @@ type
   IExodusDataStore = interface(IDispatch)
     ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
     function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
-    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); safecall;
+    function GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable): WordBool; safecall;
+    function GetLastError: Integer; safecall;
+    function GetErrorString(ErrorCode: Integer): WideString; safecall;
   end;
 
 // *********************************************************************//
@@ -4738,7 +4740,9 @@ type
   IExodusDataStoreDisp = dispinterface
     ['{20A21035-31DD-4F14-AF03-DB4B2DC26ACB}']
     function ExecSQL(const SQLStatement: WideString): WordBool; dispid 201;
-    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); dispid 202;
+    function GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable): WordBool; dispid 202;
+    function GetLastError: Integer; dispid 203;
+    function GetErrorString(ErrorCode: Integer): WideString; dispid 204;
   end;
 
 // *********************************************************************//
@@ -4767,6 +4771,8 @@ type
     function GetFieldIndex(const Field: WideString): Integer; safecall;
     function Get_SQLTableID: WideString; safecall;
     function GetFieldAsBoolean(Field: Integer): WordBool; safecall;
+    function GetLastError: Integer; safecall;
+    function GetErrorString(ErrorCode: Integer): WideString; safecall;
     property CurrentRow: Integer read Get_CurrentRow;
     property ColCount: Integer read Get_ColCount;
     property RowCount: Integer read Get_RowCount;
@@ -4801,6 +4807,8 @@ type
     function GetFieldIndex(const Field: WideString): Integer; dispid 217;
     property SQLTableID: WideString readonly dispid 218;
     function GetFieldAsBoolean(Field: Integer): WordBool; dispid 219;
+    function GetLastError: Integer; dispid 220;
+    function GetErrorString(ErrorCode: Integer): WideString; dispid 221;
   end;
 
 // *********************************************************************//

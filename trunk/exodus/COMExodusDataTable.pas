@@ -29,6 +29,11 @@ uses
     Unicode;
 
 type
+  TDataTableMapErrors = (no_error,
+                         unknown,
+                         no_table_data,
+                         sqlite_exception);
+
   TExodusDataTableMap = class
   private
     // Variables
@@ -58,6 +63,8 @@ type
   private
     // Variables
     _tableID: widestring;
+    _ErrorCode: TDataTableMapErrors;
+    _sqliteExceptionStr: widestring;
 
     // Methdods
     function _GetTable(): TSQLiteTable;
@@ -96,17 +103,24 @@ type
     function GetFieldAsDouble(Field: Integer): Double; safecall;
     function GetFieldIndex(const Field: WideString): Integer; safecall;
     function Get_SQLTableID: WideString; safecall;
+    function GetFieldAsBoolean(Field: Integer): WordBool; safecall;
+    function GetLastError: Integer; safecall;
     property CurrentRow: Integer read Get_CurrentRow;
     property ColCount: Integer read Get_ColCount;
     property RowCount: Integer read Get_RowCount;
     property IsEndOfTable: WordBool read Get_IsEndOfTable;
     property IsBeginOfTable: WordBool read Get_IsBeginOfTable;
     property SQLTableID: WideString read Get_SQLTableID;
-    function GetFieldAsBoolean(Field: Integer): WordBool; safecall;
+    function GetErrorString(ErrorCode: Integer): WideString; safecall;
 
     // Properties
 
   end;
+
+const
+    sNO_TABLE_DATA = 'No table data';
+    sNO_ERROR = 'No error';
+    sUNKNOWN = 'Unknown error';
 
 var
     ExodusDataTableMap: TExodusDataTableMap;
@@ -202,6 +216,8 @@ end;
 procedure TExodusDataTable.Initialize();
 begin
     inherited;
+    _sqliteExceptionStr := '';
+    _ErrorCode := no_error;
     _tableID := DateTimeToStr(Now());
 end;
 
@@ -223,13 +239,21 @@ end;
 function TExodusDataTable.Get_ColCount: Integer;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.ColCount;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -238,13 +262,21 @@ end;
 function TExodusDataTable.Get_CurrentRow: Integer;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.Row;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -253,13 +285,21 @@ end;
 function TExodusDataTable.Get_IsBeginOfTable: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.BOF;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -268,13 +308,21 @@ end;
 function TExodusDataTable.Get_IsEndOfTable: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.EOF;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -283,13 +331,21 @@ end;
 function TExodusDataTable.Get_RowCount: Integer;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.RowCount;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -298,13 +354,21 @@ end;
 function TExodusDataTable.GetCol(Column: Integer): WideString;
 begin
     Result := '';
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.Columns[Column];
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -313,13 +377,21 @@ end;
 function TExodusDataTable.GetField(Field: Integer): WideString;
 begin
     Result := '';
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.Fields[Field];
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -328,13 +400,21 @@ end;
 function TExodusDataTable.GetFieldAsDouble(Field: Integer): Double;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldAsDouble(Field);
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -343,13 +423,21 @@ end;
 function TExodusDataTable.GetFieldAsInt(Field: Integer): Integer;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldAsInteger(Field);
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -358,13 +446,21 @@ end;
 function TExodusDataTable.GetFieldAsString(Field: Integer): WideString;
 begin
     Result := '';
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldAsString(Field);
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -373,13 +469,21 @@ end;
 function TExodusDataTable.GetFieldByName(const Name: WideString): WideString;
 begin
     Result := '';
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldByName[Name];
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -388,13 +492,21 @@ end;
 function TExodusDataTable.IsFieldNULL(Field: Integer): WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldIsNull(Field);
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -403,13 +515,21 @@ end;
 function TExodusDataTable.FirstRow: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.MoveFirst;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -418,13 +538,21 @@ end;
 function TExodusDataTable.LastRow: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.MoveLast;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -433,13 +561,21 @@ end;
 function TExodusDataTable.NextRow: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.Next;
+        _ErrorCode := no_error;
     except
-         on e: ESqliteException do begin
-            // Eat error
+        on e: ESqliteException do begin
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
    end;
 end;
@@ -448,13 +584,21 @@ end;
 function TExodusDataTable.PrevRow: WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.Previous;
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -463,13 +607,21 @@ end;
 function TExodusDataTable.GetFieldIndex(const Field: WideString): Integer;
 begin
     Result := -1;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldIndex[Field];
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
@@ -485,14 +637,45 @@ end;
 function TExodusDataTable.GetFieldAsBoolean(Field: Integer): WordBool;
 begin
     Result := false;
-    if (_table = nil) then exit;
+    if (_table = nil) then begin
+        _ErrorCode := no_table_data;
+        exit;
+    end;
 
     try
         Result := _table.FieldAsBoolean(Field);
+        _ErrorCode := no_error;
     except
         on e: ESqliteException do begin
-            // Eat error
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
         end;
+        else begin
+            _ErrorCode := unknown;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusDataTable.GetLastError: Integer;
+begin
+    case _ErrorCode of
+        no_error: Result := 0;
+        unknown: Result := 1;
+        no_table_data: Result := 2;
+        sqlite_exception: Result := 3;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusDataTable.GetErrorString(ErrorCode: Integer): WideString;
+begin
+    case ErrorCode of
+        0: Result := sNO_ERROR;
+        1: Result := sUNKNOWN;
+        2: Result := sNO_TABLE_DATA;
+        3: Result := _sqliteExceptionStr;
+        else Result := sUNKNOWN;
     end;
 end;
 

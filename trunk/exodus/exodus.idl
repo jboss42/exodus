@@ -400,6 +400,14 @@ library Exodus
     id(0x000000CD)
     ]
     HRESULT _stdcall Find([in] BSTR ID, [out, retval] long * index );
+    [
+    id(0x000000CE)
+    ]
+    HRESULT _stdcall GetImageById([in] BSTR ID, [out, retval] BSTR * Image );
+    [
+    id(0x000000CF)
+    ]
+    HRESULT _stdcall GetImageByIndex([in] long index, [out, retval] BSTR * Image );
   };
 
   [
@@ -1504,7 +1512,15 @@ library Exodus
     [
     id(0x000000DB)
     ]
-    HRESULT _stdcall GetFieldAsBoolean([in] long Field, [out, retval] VARIANT_BOOL * Value );
+    HRESULT _stdcall GetFieldAsBoolean([in] long Field, [out, retval] VARIANT_BOOL * value );
+    [
+    id(0x000000DC)
+    ]
+    HRESULT _stdcall GetLastError([out, retval] long * ErrorMessage );
+    [
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall GetErrorString([in] long ErrorCode, [out, retval] BSTR * ErrorString );
   };
 
   [
@@ -2060,6 +2076,11 @@ library Exodus
     id(0x000000DF)
     ]
     HRESULT _stdcall TabController([out, retval] IExodusTabController ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000E0)
+    ]
+    HRESULT _stdcall ItemController([out, retval] IExodusItemController ** value /*Warning: unable to validate structure name: */ );
   };
 
   [
@@ -8890,7 +8911,15 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [in, out] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */ );
+    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [in, out] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * Success );
+    [
+    id(0x000000CB)
+    ]
+    HRESULT _stdcall GetLastError([out, retval] long * ErrorMessage );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall GetErrorString([in] long ErrorCode, [out, retval] BSTR * ErrorString );
   };
 
   [
