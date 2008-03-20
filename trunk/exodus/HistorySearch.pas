@@ -203,6 +203,8 @@ const
 
 var
   frmHistorySearch: TfrmHistorySearch;
+  HistoryAction: TSearchHistoryAction;
+
 
 procedure RegisterActions();
 procedure StartShowHistory();
@@ -239,15 +241,14 @@ uses
 procedure RegisterActions();
 var
     actctrl: IExodusActionController;
-    act: TSearchHistoryAction;
 begin
-    act := TSearchHistoryAction.Create;
-
     actctrl := GetActionController();
-    actctrl.registerAction('contact', act as IExodusAction);
+    actctrl.registerAction('contact', HistoryAction as IExodusAction);
     actctrl.addEnableFilter('contact', '{000-exodus.googlecode.com}-040-view-history', '');
-    actctrl.registerAction('room', act as IExodusAction);
+    actctrl.registerAction('room', HistoryAction as IExodusAction);
     actctrl.addEnableFilter('room', '{000-exodus.googlecode.com}-040-view-history', '');
+
+    HistoryAction.Enabled := false; // disabled until we know branding options
 end;
 
 
@@ -1378,6 +1379,7 @@ end;
 
 
 initialization
+    HistoryAction := TSearchHistoryAction.Create;
     RegisterActions();
 
 

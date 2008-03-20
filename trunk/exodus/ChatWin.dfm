@@ -104,6 +104,9 @@ inherited frmChat: TfrmChat
     Left = 48
     Top = 184
   end
+  inherited AppEvents: TApplicationEvents
+    Left = 112
+  end
   object timBusy: TTimer
     Enabled = False
     Interval = 800

@@ -29,8 +29,10 @@ type
     TSQLLogger = class(TObject{, IExodusSearchHandler})
         private
             // Variables
+            _LoggingEnabled: boolean;
             _LogChats: boolean;
             _LogRooms: boolean;
+            _LogNormal: boolean;
 
             // Methods
             procedure _CreateLoggerTable();
@@ -78,10 +80,14 @@ constructor TSQLLogger.Create;
 begin
     if (DataStore = nil) then exit;
 
+    _LoggingEnabled := MainSession.Prefs.getBool('brand_history_search');
     _LogChats := MainSession.Prefs.getBool('brand_log_chat_messages');
     _LogRooms := MainSession.Prefs.getBool('brand_log_groupchat_messages');
+    _LogNormal := MainSession.Prefs.getBool('brand_log_normal_messages');
 
-    _CreateLoggerTable();
+    if (_LoggingEnabled) then begin
+        _CreateLoggerTable();
+    end;
 end;
 
 {---------------------------------------}
@@ -144,10 +150,14 @@ begin
     if (DataStore = nil) then exit;
 
     // Branding checks
+    if (not _LoggingEnabled) then exit;    
     if ((not _LogChats) and
         (msg.MsgType = 'chat')) then exit;
     if ((not _LogRooms) and
         (msg.MsgType = 'groupchat')) then exit;
+    if ((not _LogNormal) and
+        ((msg.MsgType = '') or
+         (msg.MsgType = 'normal'))) then exit;
 
     // if room, don't log "old" messages
     if (msg.MsgType = 'groupchat') then begin
