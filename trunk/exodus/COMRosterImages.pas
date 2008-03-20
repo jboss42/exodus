@@ -169,16 +169,21 @@ end;
 function TExodusRosterImages.GetImageByIndex(Idx: Integer): WideString;
 var
   Encoder: TidEncoderMime;
+  Bitmap: TBitmap;
 begin
    Result := '';
    //First, save bitmap to stream.
-    RosterTreeImages.ImageList.GetBitmap(Idx, _bmp);
+   Bitmap := TBitmap.Create();
+    //RosterTreeImages.ImageList.GetBitmap(Idx, _bmp);
+    RosterTreeImages.ImageList.GetBitmap(Idx, Bitmap);
+   _mem.Clear();
    _mem.Position := 0;
-   _bmp.SaveToStream(_mem);
+   //_bmp.SaveToStream(_mem);
+   Bitmap.SaveToStream(_mem);
    _mem.Position := 0;
    //Encode stream into binary string
    Result := _Encoder.Encode(_mem);
-
+   Bitmap.Free();
 end;
 
 initialization

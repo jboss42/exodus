@@ -11,6 +11,10 @@ type
   TRosterForm = class(TExForm)
      _PageControl: TTntPageControl;
       procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
+    procedure _PageControlGetImageIndex(Sender: TObject; TabIndex: Integer;
+      var ImageIndex: Integer);
+    procedure _PageControlDrawTab(Control: TCustomTabControl; TabIndex: Integer;
+      const Rect: TRect; Active: Boolean);
 
   private
       { Private declarations }
@@ -75,6 +79,38 @@ end;
 function TRosterForm._GetImages() : TImageList;
 begin
     Result := TImageList(_PageControl.Images);
+end;
+
+procedure TRosterForm._PageControlDrawTab(Control: TCustomTabControl;
+  TabIndex: Integer; const Rect: TRect; Active: Boolean);
+var
+   ARect: TRect;
+begin
+  ARect := Rect;
+  inherited;
+  if (Active) then
+  begin
+     ARect.Left := ARect.Left + 7;
+     ARect.Top := ARect.Top  + 7;
+  end
+  else
+  begin
+     ARect.Left := ARect.Left + 3;
+     ARect.Top := ARect.Top + 3;
+  end;
+  _PageControl.Images.Draw(_PageControl.Canvas,
+                            ARect.Left,
+                            ARect.Top, TabController.Tab[TabIndex].ImageIndex);
+end;
+
+procedure TRosterForm._PageControlGetImageIndex(Sender: TObject;
+  TabIndex: Integer; var ImageIndex: Integer);
+begin
+  inherited;
+//
+   if (TabIndex > TabController.TabCount - 1) then exit;
+   if (TabIndex < 0) then exit; 
+   ImageIndex :=  TabController.Tab[TabIndex].ImageIndex;
 end;
 
 {---------------------------------------}
