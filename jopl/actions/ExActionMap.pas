@@ -23,62 +23,66 @@ interface
 
 uses ActiveX, ComObj, Classes, Contnrs, ExActions, Unicode, Exodus_TLB;
 
-type TActionRef = packed record
-    action: IExodusAction;
-end;
-type TExodusTypedActions = class(TAutoIntfObject, IExodusTypedActions)
-private
-    _itemtype: Widestring;
-    _items: IExodusItemList;
-    _actions: TWidestringList;
 
-    procedure Collate;
 
-public
-    constructor Create(actmap: IExodusActionMap; itemtype: Widestring);
-    destructor Destroy; override;
+type
+    TExodusActionMap = class;
+    TExodusTypedActions = class(TAutoIntfObject, IExodusTypedActions)
+    private
+        _owner: TExodusActionMap;
+        _itemtype: Widestring;
+        _items: IExodusItemList;
+        _actions: TWidestringList;
 
-    function Get_ItemType: Widestring; safecall;
-    function Get_ItemCount: Integer; safecall;
-    function Get_Item(idx: Integer): IExodusItem; safecall;
+        constructor Create(actmap: TExodusActionMap; itemtype: Widestring);
 
-    function Get_ActionCount: Integer; safecall;
-    function Get_Action(idx: Integer): IExodusAction; safecall;
-    function IndexOfAction(act: IExodusAction): Integer;
-    procedure AddAction(act: IExodusAction);
-    procedure RemoveAction(act: IExodusAction);
-    procedure Clear;
+        procedure Collate;
 
-    function GetActionNamed(const name: Widestring): IExodusAction; safecall;
-    procedure execute(const actname: Widestring); safecall;
-end;
+    public
+        destructor Destroy; override;
 
-type TExodusActionMap = class(TAutoIntfObject, IExodusActionMap)
-private
-    _items: IExodusItemList;
-    _allActs: TInterfaceList;
-    _actLists: TWidestringList;
+        function Get_ItemType: Widestring; safecall;
+        function Get_ItemCount: Integer; safecall;
+        function Get_Item(idx: Integer): IExodusItem; safecall;
 
-protected
-    function LookupTypedActions(itemtype: Widestring; create: Boolean): TExodusTypedActions;
-    procedure DeleteTypedActions(actList: TExodusTypedActions);
+        function Get_ActionCount: Integer; safecall;
+        function Get_Action(idx: Integer): IExodusAction; safecall;
+        function IndexOfAction(act: IExodusAction): Integer;
+        procedure AddAction(act: IExodusAction);
+        procedure RemoveAction(act: IExodusAction);
+        procedure Clear;
 
-public
-    constructor Create(items: IExodusItemList);
-    destructor Destroy; override;
+        function GetActionNamed(const name: Widestring): IExodusAction; safecall;
+        procedure execute(const actname: Widestring); safecall;
+    end;
 
-    function Get_ItemCount: Integer; safecall;
-    function Get_Item(idx: Integer): IExodusItem; safecall;
-    function Get_TypedActionsCount: Integer; safecall;
-    function Get_TypedActions(idx: Integer): IExodusTypedActions; safecall;
+    TExodusActionMap = class(TAutoIntfObject, IExodusActionMap)
+    private
+        _items: IExodusItemList;
+        _allActs: TInterfaceList;
+        _actLists: TWidestringList;
 
-    procedure AddAction(itemtype: Widestring; act: IExodusAction);
+        procedure AddAction(act: IExodusAction);
+    
+    protected
+        procedure DeleteTypedActions(actList: TExodusTypedActions);
 
-    function GetActionsFor(const itemtype: Widestring): IExodusTypedActions; safecall;
-    function GetActionNamed(const name: Widestring): IExodusAction; safecall;
+    public
+        constructor Create(items: IExodusItemList);
+        destructor Destroy; override;
 
-    procedure Collate;
-end;
+        function Get_ItemCount: Integer; safecall;
+        function Get_Item(idx: Integer): IExodusItem; safecall;
+        function Get_TypedActionsCount: Integer; safecall;
+        function Get_TypedActions(idx: Integer): IExodusTypedActions; safecall;
+
+        function LookupTypedActions(itemtype: Widestring; create: Boolean): TExodusTypedActions;
+
+        function GetActionsFor(const itemtype: Widestring): IExodusTypedActions; safecall;
+        function GetActionNamed(const name: Widestring): IExodusAction; safecall;
+
+        procedure Collate;
+    end;
 
 implementation
 
@@ -88,21 +92,22 @@ uses SysUtils, ComServ, COMExodusItemList;
     TTypedActions implementation
 }
 
-constructor TExodusTypedActions.Create(actmap: IExodusActionMap; itemtype: WideString);
+constructor TExodusTypedActions.Create(actmap: TExodusActionMap; itemtype: WideString);
 var
     idx: Integer;
     item: IExodusItem;
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusTypedActions);
 
+    _owner := actmap as TExodusActionMap;
     _itemtype := itemtype;
     _actions := TWidestringList.Create;
 
     _items := TExodusItemList.Create as IExodusItemList;
-    for idx := 0 to actmap.itemCount - 1 do begin
-        item := actmap.Item[idx];
+    for idx := 0 to actmap.Get_ItemCount - 1 do begin
+        item := actmap.Get_item(idx);
         if (itemtype = '') or (itemtype = item.Type_) then
-            _items.Add(actmap.Item[idx]);
+            _items.Add(item);
     end;
 end;
 destructor TExodusTypedActions.Destroy;
@@ -168,6 +173,7 @@ begin
 
     act._AddRef;
     _actions.AddObject(act.Name, TObject(Pointer(act)));
+    _owner.AddAction(act);
 end;
 procedure TExodusTypedActions.RemoveAction(act: IExodusAction);
 var
@@ -289,7 +295,7 @@ begin
     else if create then begin
         if _actLists.Sorted then _actLists.Sorted := false;
 
-         Result := TExodusTypedActions.Create(Self as IExodusActionMap, itemtype);
+         Result := TExodusTypedActions.Create(Self, itemtype);
          Result._AddRef;
          _actLists.AddObject(itemtype, Result);
     end;
@@ -328,17 +334,13 @@ begin
     end;
 end;
 
-procedure TExodusActionMap.AddAction(itemtype: WideString; act: IExodusAction);
+procedure TExodusActionMap.AddAction(act: IExodusAction);
 var
     idx: Integer;
-    actList: TExodusTypedActions;
 begin
     idx := _allActs.IndexOf(act);
     if (idx = -1) then
         _allActs.Add(act as IExodusAction);
-
-    actList := LookupTypedActions(itemtype, true);
-    actList.AddAction(act);
 end;
 
 procedure TExodusActionMap.Collate;

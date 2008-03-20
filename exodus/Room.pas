@@ -287,6 +287,16 @@ type
     procedure execute(const items: IExodusItemList); override;
   end;
 
+  TAutojoinAction = class(TExBaseAction)
+  private
+    _value: Widestring;
+
+    constructor Create(flag: Boolean);
+
+  public
+    procedure execute(const items: IExodusItemList); override;
+  end;
+
 var
   frmRoom: TfrmRoom;
 
@@ -3319,6 +3329,41 @@ begin
     end;
 end;
 
+constructor TAutojoinAction.Create(flag: Boolean);
+var
+    rname: Widestring;
+    cap: Widestring;
+begin
+    if flag then begin
+        _value := 'true';
+        rname := 'join-on-startup';
+        cap := _('Join on Startup');
+    end else begin
+        _value := 'false';
+        rname := 'unjoin-on-startup';
+        cap := _('Don''t join on startup');
+    end;
+
+    inherited Create('{000-exodus.googlecode.com}-010-' + rname);
+
+    Set_Caption(cap);
+    Set_Enabled(true);
+end;
+
+procedure TAutojoinAction.execute(const items: IExodusItemList);
+var
+    idx: Integer;
+    item: IExodusItem;
+begin
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+
+        item.value['autojoin'] := _value;
+    end;
+
+    MainSession.rooms.SaveRooms();
+end;
+
 procedure RegisterActions();
 var
     actCtrl: IExodusActionController;
@@ -3326,8 +3371,18 @@ var
 begin
     actCtrl := GetActionController();
 
+    //setup join action
     act := TJoinRoomAction.Create() as IExodusAction;
     actCtrl.registerAction('room', act);
+
+    //setup autojoin action
+    act := TAutojoinAction.Create(true) as IExodusAction;
+    actCtrl.registerAction('room', act);
+    actCtrl.addDisableFilter('room', act.Name, 'autojoin=true');
+
+    act := TAutojoinAction.Create(false) as IExodusAction;
+    actCtrl.registerAction('room', act);
+    actCtrl.addEnableFilter('room', act.Name, 'autojoin=true');
 end;
 
 initialization
