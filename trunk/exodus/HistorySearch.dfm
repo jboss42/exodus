@@ -284,7 +284,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           ItemHeight = 13
           MultiSelect = True
           TabOrder = 2
-          OnClick = lstContactsClick
+          OnClick = lstRoomsClick
         end
       end
     end
@@ -358,8 +358,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 40
-      ExplicitTop = 108
     end
   end
   object pnlControlBar: TTntPanel

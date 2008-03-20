@@ -153,6 +153,7 @@ type
     procedure _sendComposing(id: Widestring);
     function isToXIMEnabled(tag: TXMLTag): boolean; //is the to of this message xhtml-im enabled?
   protected
+    btnViewHistory: TToolButton;
     {
         Get the window state associated with this window.
 
@@ -541,8 +542,18 @@ begin
             mnuBlock.Visible := false;
         end;
 
-        if (not getBool('brand_history_serach')) then begin
-            mnuViewHistory.Visible := false;
+        mnuViewHistory.Visible := (getBool('brand_history_search') and getBool('brand_log_chat_messages'));
+
+        // Button Created here instead of in dfm because the inherited buttons mixed with
+        // this button create ordering issues (this button wants to always be at the right
+        // and we want it to the left).
+        if (getBool('brand_history_search') and getBool('brand_log_groupchat_messages')) then begin
+            btnViewHistory := TToolButton.Create(tbDockBar);
+            btnViewHistory.ImageIndex := RosterImages.RosterTreeImages.Find(RI_VIEW_HISTORY_KEY);
+            btnViewHistory.OnClick := mnuViewHistoryClick;
+            btnViewHistory.Parent := tbDockBar;
+            btnViewHistory.ShowHint := true;
+            btnViewHistory.Hint := _('View History');
         end;
     end;
 
@@ -551,12 +562,14 @@ begin
 
 end;
 
+{---------------------------------------}
 class procedure TfrmChat.AutoOpenFactory(autoOpenInfo: TXMLTag);
 begin
     //don't bring these to front
     StartChat(autoOpenInfo.getAttribute('jid'), '', true, '', false);
 end;
 
+{---------------------------------------}
 function TfrmChat.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
     if ((event = 'disconnected') and (Self.Visible)) then begin
@@ -567,12 +580,14 @@ begin
     else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
+{---------------------------------------}
 function TfrmChat.GetWindowStateKey() : WideString;
 begin
     //todo jjf remove profile from this state key once prefs are profile aware
     Result := inherited GetWindowStateKey() + '-' + MungeName(MainSession.Profile.Name) + '-' + MungeName(Self._jid.jid);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.updateDisplayName();
 begin
     //if this is a private chat from a room, display name shoudl be "room - nick"
@@ -587,6 +602,7 @@ begin
     MsgList.setTitle(_displayName);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.updatePresenceImage();
 var
     Item: IExodusItem;

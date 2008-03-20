@@ -145,6 +145,7 @@ type
     procedure Print1Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnViewHistoryClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -212,6 +213,7 @@ type
     procedure ToggleDuplicateMember(rm: TRoomMember;  tag: TXMLTag);
     procedure _checkForAdhoc();
   protected
+    btnViewHistory: TToolButton;
     {
         Get the window state associated with this window.
 
@@ -458,7 +460,8 @@ uses
     KeyWords,
     Dockable,
     ExodusDockManager,
-    DockWindow;
+    DockWindow,
+    HistorySearch;
 
 {$R *.DFM}
 {---------------------------------------}
@@ -1827,21 +1830,38 @@ begin
     MsgList.setDragOver(OnDockedDragOver);
     MsgList.setDragDrop(OnDockedDragDrop);
 
-    if (MainSession.Prefs.getBool('brand_prevent_change_nick')) then
-        popNick.Enabled := False;
+    with MainSession.Prefs do begin
+        if (getBool('brand_prevent_change_nick')) then
+            popNick.Enabled := False;
 
-    if (not MainSession.Prefs.getBool('brand_print')) then begin
-        Print1.Visible := false;
-    end
-    else begin
-        Print1.Visible := true;
+        if (not getBool('brand_print')) then begin
+            Print1.Visible := false;
+        end
+        else begin
+            Print1.Visible := true;
+        end;
+
+        // Button Created here instead of in dfm because the inherited buttons mixed with
+        // this button create ordering issues (this button wants to always be at the right
+        // and we want it to the left).
+        if (getBool('brand_history_search') and getBool('brand_log_groupchat_messages')) then begin
+            btnViewHistory := TToolButton.Create(tbDockBar);
+            btnViewHistory.ImageIndex := RosterImages.RosterTreeImages.Find(RI_VIEW_HISTORY_KEY);
+            btnViewHistory.OnClick := btnViewHistoryClick;
+            btnViewHistory.Parent := tbDockBar;
+            btnViewHistory.ShowHint := true;
+            btnViewHistory.Hint := _('View History');
+        end;
+
+        popRosterBrowse.Visible := getBool('brand_browser');
     end;
 
-    popRosterBrowse.Visible := MainSession.Prefs.getBool('brand_browser');
+
+
 
     _session_callback := MainSession.RegisterCallback(OnSessionCallback, '/session/prefs');
-
     _windowType := 'adhoc_room';
+
 end;
 
 {---------------------------------------}
@@ -2015,6 +2035,20 @@ end;
 procedure TfrmRoom.btnCloseClick(Sender: TObject);
 begin
     Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.btnViewHistoryClick(Sender: TObject);
+var
+    roomList: TWidestringList;
+begin
+    inherited;
+
+    roomList := TWidestringList.Create();
+    roomList.Add(jid);
+    StartShowHistoryWithMultipleItems(nil, roomlist);
+    roomList.Clear();
+    roomList.Free();
 end;
 
 {---------------------------------------}

@@ -275,6 +275,7 @@ begin
     if (MainSession <> nil) then begin
         _uid := generateUID();
     end;
+
     inherited;
 end;
 
