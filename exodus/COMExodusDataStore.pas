@@ -28,12 +28,23 @@ uses
     StdVcl, SQLiteTable3;
 
 type
+  TDataStoreErrors = (no_error,
+                      unknown,
+                      no_db,
+                      no_sql_statement,
+                      no_results_table,
+                      failed_create_table,
+                      no_filename,
+                      sqlite_exception);
+
   TExodusDataStore = class(TAutoObject, IExodusDataStore)
   protected
 
   private
     // Variables
     _DBHandle: TSQLiteDatabase;
+    _ErrorCode: TDataStoreErrors;
+    _sqliteExceptionStr: widestring;
 
     // Methods
     function _OpenDBFile(filename: widestring): boolean;
@@ -42,7 +53,10 @@ type
   public
     // IExodusDataStore Interface
     function ExecSQL(const SQLStatement: WideString): WordBool; safecall;
-    procedure GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable); safecall;
+    function GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable): WordBool; safecall;
+    function GetLastError: Integer; safecall;
+    function GetErrorString(ErrorCode: Integer): WideString; safecall;
+
 
     constructor Create(filename: widestring);
     destructor Destroy();
@@ -50,6 +64,15 @@ type
     function CheckForTableExistence(tablename: widestring): boolean;
 
   end;
+
+const
+    sNO_DB = 'SQLite database not open';
+    sNO_SQL_STATEMENT = 'Empty SQL statement supplied';
+    sNO_ERROR = 'No error';
+    sNO_RESULT_TABLE = 'No result table supplied';
+    sFAILED_CREATE_TABLE = 'Failed to create SQLite result table';
+    sNO_FILENAME = 'No filename supplied';
+    sUNKNOWN = 'Unknown error';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -66,7 +89,19 @@ constructor TExodusDataStore.Create(filename: widestring);
 begin
     inherited Create;
 
-    _OpenDBFile(filename);
+    _ErrorCode := no_error;
+
+    try
+        _OpenDBFile(filename);
+    except
+        on e: ESqliteException do begin
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -81,35 +116,68 @@ end;
 function TExodusDataStore.ExecSQL(const SQLStatement: WideString): WordBool;
 begin
     Result := false;
-    if (_DBHandle = nil) then exit;
-    if (SQLStatement = '') then exit;
+    if (_DBHandle = nil) then begin
+        _ErrorCode := no_db;
+        exit;
+    end;
+    if (SQLStatement = '') then begin
+        _ErrorCode := no_sql_statement;
+        exit;
+    end;
 
-    Result := true;
     try
         _DBHandle.ExecSQL(SQLStatement);
+        _ErrorCode := no_error;
+        Result := true;
     except
         on e: ESqliteException do begin
-            Result := false;
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
         end;
     end;
 end;
 
 {---------------------------------------}
-procedure TExodusDataStore.GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable);
+function TExodusDataStore.GetTable(const SQLStatement: WideString; var ResultTable: IExodusDataTable): WordBool;
 var
     sqlTable: TSQLiteTable;
 begin
-    if (_DBHandle = nil) then exit;
-    if (SQLStatement = '') then exit;
-    if (ResultTable = nil) then exit;
+    Result := false;
+    if (_DBHandle = nil) then begin
+        _ErrorCode := no_db;
+        exit;
+    end;
+    if (SQLStatement = '') then begin
+        _ErrorCode := no_sql_statement;
+        exit;
+    end;
+    if (ResultTable = nil) then begin
+        _ErrorCode := no_results_table;
+        exit;
+    end;
 
     try
         sqlTable := _DBHandle.GetTable(SQLStatement);
 
         if (sqlTable <> nil) then begin
             ExodusDataTableMap.AddTable(ResultTable.SQLTableID, sqlTable);
+            _ErrorCode := no_error;
+            Result := true;
+        end
+        else begin
+            _ErrorCode := failed_create_table;
         end;
     except
+        on e: ESqliteException do begin
+            _ErrorCode := sqlite_exception;
+            _sqliteExceptionStr := e.Message;
+        end;
+        else begin
+            _ErrorCode := unknown;
+        end;
     end;
 end;
 
@@ -117,7 +185,10 @@ end;
 function TExodusDataStore._OpenDBFile(filename: widestring): boolean;
 begin
     Result := false;
-    if (filename = '') then exit;
+    if (filename = '') then begin
+        _ErrorCode := no_filename;
+        exit;
+    end;
 
     if (_DBHandle <> nil) then begin
         _CloseDBFile();
@@ -133,7 +204,10 @@ end;
 function TExodusDataStore.CheckForTableExistence(tablename: widestring): boolean;
 begin
     Result := false;
-    if (_DBHandle = nil) then exit;
+    if (_DBHandle = nil) then begin
+        _ErrorCode := no_db;
+        exit;
+    end;
 
     Result := _DBHandle.TableExists(tablename);
 end;
@@ -141,11 +215,46 @@ end;
 {---------------------------------------}
 procedure TExodusDataStore._CloseDBFile();
 begin
-    if (_DBHandle = nil) then exit;
+    if (_DBHandle = nil) then begin
+        _ErrorCode := no_db;
+        exit;
+    end;
 
     _DBHandle.Free();
     _DBHandle := nil;
 end;
+
+{---------------------------------------}
+function TExodusDataStore.GetLastError: Integer;
+begin
+    case _ErrorCode of
+        no_error: Result := 0;
+        unknown: Result := 1;
+        no_db: Result := 2;
+        no_sql_statement: Result := 3;
+        no_results_table: Result := 4;
+        failed_create_table: Result := 5;
+        no_filename: Result := 6;
+        sqlite_exception: Result := 7;
+    end;
+end;
+
+{---------------------------------------}
+function TExodusDataStore.GetErrorString(ErrorCode: Integer): WideString;
+begin
+    case ErrorCode of
+        0: Result := sNO_ERROR;
+        1: Result := sUNKNOWN;
+        2: Result := sNO_DB;
+        3: Result := sNO_SQL_STATEMENT;
+        4: Result := sNO_RESULT_TABLE;
+        5: Result := sFAILED_CREATE_TABLE;
+        6: Result := sNO_FILENAME;
+        7: Result := _sqliteExceptionStr;
+        else Result := sUNKNOWN;
+    end;
+end;
+
 
 
 
