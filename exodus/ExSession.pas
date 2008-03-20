@@ -128,7 +128,8 @@ uses
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     InviteReceived,
-    ExForm;
+    ExForm,
+    HistorySearch;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -683,6 +684,10 @@ begin
             end;
         end;
     finally
+    end;
+
+    if (MainSession.Prefs.getBool('brand_history_search')) then begin
+        HistoryAction.Enabled := true;
     end;
 
     Result := true;

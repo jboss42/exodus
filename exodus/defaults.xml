@@ -619,22 +619,23 @@
     <!-- Stringlist with additional data to be added to the about box -->
     <brand_about_additional_list/>
 
-        <!-- default font and window background colors.
-             All font pref state key off of font name -->
-        <brand_default_font_name value="Arial" state="rw"/>
-        <brand_default_font_color value="$000000"/>
-        <brand_default_font_size value="8"/>
-        <brand_default_font_bold value="0"/>
-        <brand_default_font_italic value="0"/>
-        <brand_default_font_underline value="0"/>
+    <!-- default font and window background colors.
+         All font pref state key off of font name -->
+    <brand_default_font_name value="Arial" state="rw"/>
+    <brand_default_font_color value="$000000"/>
+    <brand_default_font_size value="8"/>
+    <brand_default_font_bold value="0"/>
+    <brand_default_font_italic value="0"/>
+    <brand_default_font_underline value="0"/>
 
-        <!-- comment out or set to 0 to use default window colors -->
-        <brand_default_window_color value="$00D0C3AF" state="rw"/>
+    <!-- comment out or set to 0 to use default window colors -->
+    <brand_default_window_color value="$00D0C3AF" state="rw"/>
 
 	<!-- Should the internal SQL logger log chat or room messages -->
+	<brand_history_search value="1"/>
 	<brand_log_chat_messages value="1"/>
     <brand_log_groupchat_messages value="1"/>
-
+    <brand_log_normal_messages value="1"/>
 
   </prefs>
 

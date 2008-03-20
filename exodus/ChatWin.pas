@@ -537,8 +537,13 @@ begin
             Print1.Visible := true;
         end;
 
-        if (getBool('brand_allow_blocking_jids') = false) then 
+        if (getBool('brand_allow_blocking_jids') = false) then begin
             mnuBlock.Visible := false;
+        end;
+
+        if (not getBool('brand_history_serach')) then begin
+            mnuViewHistory.Visible := false;
+        end;
     end;
 
     MsgList.setDragOver(OnDockedDragOver);
