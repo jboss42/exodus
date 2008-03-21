@@ -29,7 +29,8 @@ uses
     Exodus_TLB,
     StdVcl,
     Unicode,
-    JabberMsg;
+    JabberMsg,
+    XMLParser;
 
 type
     TInternalResultCallback = procedure(msg: TJabberMessage) of object;
@@ -39,6 +40,7 @@ type
             // Variables
             _processing: boolean;
             _ResultList: TWidestringList;
+            _parser: TXMLTagParser;
 
             // Methods
 
@@ -121,7 +123,8 @@ uses
     ComServ,
     sysUtils,
     ComLogMsg,
-    JabberUtils;
+    JabberUtils,
+    XMLTag;
 
 {---------------------------------------}
 constructor TExodusHistoryResultCallbackMap.Create();
@@ -225,6 +228,8 @@ begin
 
     _ResultList := TWidestringList.Create();
     _processing := false;
+
+    _parser := TXMLTagParser.Create();
 end;
 
 {---------------------------------------}
@@ -240,6 +245,8 @@ begin
     end;
 
     _ResultList.Free();
+
+    _parser.Free();
 
     inherited;
 end;
@@ -271,6 +278,7 @@ procedure TExodusHistoryResult.OnResultItem(const SearchID: WideString; const It
 var
     msg: TJabberMessage;
     ShouldSaveMsg: boolean;
+    tag: TXMLTag;
 begin
     if (Item = nil) then begin
         // Got a nil so that is the signal to end processing.
@@ -282,16 +290,12 @@ begin
         ExodusHistoryResultCallbackMap.FireCallback(Self, nil);
     end
     else begin
-        msg := TJabberMessage.Create();
+        _parser.ParseString(Item.XML);
+        tag := _parser.popTag();
+        msg := TJabberMessage.Create(tag);
+        tag.Free();
 
-        msg.ToJID := Item.ToJid;
-        msg.FromJID := Item.FromJid;
-        msg.MsgType := Item.MsgType;
-        msg.ID := Item.ID;
         msg.Nick := Item.Nick;
-        msg.Body := Item.Body;
-        msg.Thread := Item.Thread;
-        msg.Subject := Item.Subject;
         msg.Time := JabberToDateTime(Item.Timestamp);
         if (Item.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
             msg.isMe := true;
@@ -299,7 +303,6 @@ begin
         else begin
             msg.isMe := false;
         end;
-        msg.XML := Item.XML;
 
 
         // Special hack for internal use of the result object.
