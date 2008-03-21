@@ -214,7 +214,7 @@ begin
                   ' AND (';
         for i := 0 to SearchParameters.KeywordCount - 1 do begin
             Result := Result +
-                      'body LIKE "';
+                      'body LIKE ''';
 
             if (not exactMatch) then
                 Result := Result + '%';
@@ -226,7 +226,7 @@ begin
                 Result := Result + '%';
 
             Result := Result +
-                      '"';
+                      '''';
 
             if (i < (SearchParameters.KeywordCount -1)) then begin
                 Result := Result +
