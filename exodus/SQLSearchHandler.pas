@@ -185,9 +185,9 @@ begin
     mindate := Trunc(SearchParameters.minDate);
     maxdate := Trunc(SearchParameters.maxDate);
     Result := Result +
-              ' WHERE date > ' +
+              ' WHERE date >= ' +
               IntToStr(mindate) +
-              ' AND date < ' +
+              ' AND date <= ' +
               IntToStr(maxdate);
 
     if (SearchParameters.JIDCount > 0) then begin

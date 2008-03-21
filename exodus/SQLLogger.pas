@@ -229,42 +229,52 @@ var
     tiStart: double;
     dtEnd: integer;
     tiEnd: double;
+    tag: TXMLTag;
 begin
     if (DataStore = nil) then exit;
 
-    // Delete From part
-    sql := 'DELETE FROM ' +
-           MESSAGES_TABLE;
-
-    // WHERE Part
-
-    // jid
-    sql := sql +
-           ' WHERE ';
-    if (jid <> '') then begin
-        sql := sql +
-               'jid="' +
-               jid +
-               '" AND ';
-    end;
-
-    // dates
-    sql := sql + 'date >= %d AND time >= %8.6f AND date <= %d AND time <= %8.6f;';
-
-    // Change dates for Time zone as they are stored in DB with Timezone Bias
-    datestart := datestart + TimeZoneBias();
-    dateend := dateend + TimeZoneBias();
-
-    dtStart := Trunc(datestart);
-    dtEnd := Trunc(dateend);
-
-    tiStart := Frac(double(datestart));
-    tiEnd := Frac(double(dateend));
-
-    sql := Format(sql, [dtStart, tiStart, dtEnd, tiEnd]);
-
     try
+        // Delete From part
+        sql := 'DELETE FROM ' +
+               MESSAGES_TABLE;
+
+        // WHERE Part
+
+        // jid
+        sql := sql +
+               ' WHERE ';
+        if (jid <> '') then begin
+            sql := sql +
+                   'jid="' +
+                   jid +
+                   '" AND ';
+        end;
+
+        // dates
+        sql := sql + 'date >= %d AND time >= %8.6f AND date <= %d AND time <= %8.6f;';
+
+        // Change dates for Time zone as they are stored in DB with Timezone Bias
+        datestart := datestart + TimeZoneBias();
+        dateend := dateend + TimeZoneBias();
+
+        dtStart := Trunc(datestart);
+        dtEnd := Trunc(dateend);
+
+        tiStart := Frac(double(datestart));
+        tiEnd := Frac(double(dateend));
+
+        sql := Format(sql, [dtStart, tiStart, dtEnd, tiEnd]);
+
         DataStore.ExecSQL(sql);
+
+        // Shoot out event notifying anyone who wants to know that the history has been
+        // removed.
+        tag := TXMLTag.Create('history_delete');
+        tag.AddBasicTag('jid', jid);
+        tag.AddBasicTag('startdatetime', DateTimeToJabber(datestart));
+        tag.AddBasicTag('enddatetime', DateTimeToJabber(dateend));
+        MainSession.FireEvent('/session/history/delete', tag);
+        tag.Free();
     except
     end;
 end;
