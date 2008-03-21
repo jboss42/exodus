@@ -137,7 +137,6 @@ type
       Change: TItemChange);
     procedure popCopyClick(Sender: TObject);
     procedure popCopyAllClick(Sender: TObject);
-    procedure popFindClick(Sender: TObject);
     procedure popPrintClick(Sender: TObject);
     procedure popSaveAsClick(Sender: TObject);
     procedure lstResultsCustomDrawItem(Sender: TCustomListView; Item: TListItem;
@@ -238,7 +237,8 @@ uses
     XMLUtils,
     PrtRichEdit,
     JabberUtils,
-    ExActionCtrl;
+    ExActionCtrl,
+    TntSysUtils;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -1005,13 +1005,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.popFindClick(Sender: TObject);
-begin
-    inherited;
-    Sleep(1);
-end;
-
-{---------------------------------------}
 procedure TfrmHistorySearch.popPrintClick(Sender: TObject);
 var
     cap: Widestring;
@@ -1186,7 +1179,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
-    function CreateNewListItem(newmsg: TJabberMessage): TTntListItem;
+    function StripString(const str: widestring): widestring;
+    begin
+        Result := Tnt_WideStringReplace(str, ''#13, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#10, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#9, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#11, ' ',[rfReplaceAll, rfIgnoreCase]);
+    end;
+    function CreateNewListItem(const newmsg: TJabberMessage): TTntListItem;
     var
         id: TJabberID;
         exItem: IExodusItem;
@@ -1211,9 +1211,9 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
         end;
         exItem := nil;
         id.Free();
-        //Result.SubItems.Add(DateTimeToStr(newmsg.Time));
         Result.SubItems.Add(DateToStr(newmsg.Time));
-        Result.SubItems.Add(newmsg.Body);
+
+        Result.SubItems.Add(StripString(newmsg.Body));
     end;
 var
     newmsg: TJabberMessage;
