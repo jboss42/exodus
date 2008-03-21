@@ -212,7 +212,8 @@ uses
     StrUtils,
     RT_XIMConversion,
     Registry,
-    PrefController;
+    PrefController,
+    TntSysUtils;
 
 {$R *.dfm}
 
@@ -554,7 +555,7 @@ begin
             str := REGEX_URL.Replace(TXMLCData(n).XML,
                                      '<a href="$0">$0</a>', true);
             // Look for and replace &APOS; as HTML doesn't understand this escaping.
-            str := StringReplace(str, '&apos;', '''', [rfReplaceAll]);
+            str := Tnt_WideStringReplace(str, '&apos;', '''', [rfReplaceAll]);
             result := result + ProcessIEEmoticons(str);
         end
         else
