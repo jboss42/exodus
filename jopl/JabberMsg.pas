@@ -222,8 +222,8 @@ begin
             _addresses := TJabberAddressList.Create(t);
         end;
 
-       t := GetFirstTag('headers');
-       if (t <> nil) then begin
+        t := GetFirstTag('headers');
+        if (t <> nil) then begin
           headerList := t.ChildTags();
           for i := 0 to headerList.Count - 1 do begin
             if ((headerList[i].Name = 'header') and (headerList[i].GetAttribute('name') = 'Urgency')) then begin
@@ -231,9 +231,13 @@ begin
                break;
             end;
           end;
+        end;
 
-       end;
-
+        // Rich text formating XEP-71
+        t := GetFirstTag('html');
+        if (t <> nil) then begin
+            _xml := t.XML;
+        end;
     end;
 end;
 
