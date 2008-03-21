@@ -210,6 +210,7 @@ procedure TContactController._SessionCallback(Event: string; Tag: TXMLTag);
 var
     uid: Widestring;
     item: IExodusItem;
+    Pres: TJabberPres;
 begin
      if Event = '/session/authenticated'  then
      begin
@@ -241,15 +242,32 @@ begin
          item := TJabberSession(_js).ItemController.GetItem(uid);
 
          if (item <> nil) then
-            item.value['blocked'] := 'true';
+         begin
+             item.value['blocked'] := 'true';
+             pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
+             //We need to obtain new image and see if blocked items are visible
+             _UpdateContact(Item, pres);
+             if (Item.IsVisible) then
+                 TJabberSession(_JS).FireEvent('/item/add',  Item)
+             else
+                 TJabberSession(_JS).FireEvent('/item/remove', Item);
+         end;
      end
      else if Event = '/session/unblock' then
      begin
          uid := Tag.GetAttribute('jid');
          item := TJabberSession(_js).ItemController.GetItem(uid);
-
          if (item <> nil) then
-            item.value['blocked'] := 'false';
+         begin
+             item.value['blocked'] := 'false';
+             pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
+              //We need to obtain new image and see if blocked items are visible
+             _UpdateContact(Item, pres);
+             if (Item.IsVisible) then
+                 TJabberSession(_JS).FireEvent('/item/add',  Item)
+             else
+                 TJabberSession(_JS).FireEvent('/item/remove', Item);
+         end;
      end;
 end;
 
