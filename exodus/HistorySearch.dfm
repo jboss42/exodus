@@ -201,6 +201,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Height = 59
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
+          WordWrap = False
         end
       end
       object grpContacts: TTntGroupBox
@@ -330,7 +331,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           end
           item
             Caption = 'Date'
-            Width = 150
+            Width = 100
           end
           item
             Caption = 'Message'
