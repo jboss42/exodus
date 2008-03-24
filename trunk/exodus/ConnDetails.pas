@@ -334,22 +334,16 @@ begin
         if (resource <> '') then
             jid  := jid + '/' + resource;
             
-        if (not isValidJid(jid)) then begin
-            MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
-            Result := false;
-            exit;
-        end
-        else begin
-            tj := TJabberID.Create(jid);
-            
-            if (not chkWinLogin.Checked) and (tj.user = '') then begin
-                MessageDlgW(_(sProfileInvalidUsername), mtError, [mbOK], 0);
-                Result := false;
-            end;
+        tj := TJabberID.Create(jid);
 
-            tj.Free();
-            if not Result then exit;
+        if (not chkWinLogin.Checked) and (tj.user = '') then begin
+            MessageDlgW(_(sProfileInvalidUsername), mtError, [mbOK], 0);
+            Result := false;
         end;
+
+        tj.Free();
+        if not Result then
+            exit;
     end;
 
     // save the info...
