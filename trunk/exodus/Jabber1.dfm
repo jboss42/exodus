@@ -57,10 +57,8 @@ inherited frmExodus: TfrmExodus
     Align = alClient
     Style = tsButtons
     TabOrder = 1
-    ExplicitHeight = 595
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitHeight = 456
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -73,13 +71,11 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
-        ExplicitHeight = 456
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
-      ExplicitHeight = 585
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -89,9 +85,6 @@ inherited frmExodus: TfrmExodus
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
-        ExplicitLeft = -48
-        ExplicitTop = 53
-        ExplicitHeight = 419
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -14283,6 +14276,7 @@ inherited frmExodus: TfrmExodus
     Top = 272
     object popShowOnline: TTntMenuItem
       Caption = 'Show Online Contacts'
+      OnClick = popChangeView
     end
     object popShowAll: TTntMenuItem
       Caption = 'Show All Contacts'
