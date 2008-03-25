@@ -3319,7 +3319,8 @@ var
 begin
     e := jEntityCache.getByJid(self.jid);
     if (e <> nil) then begin
-        if (e.hasFeature('muc_persistent')) then begin
+        if ((e.hasFeature('muc_persistent')) or
+            (e.hasFeature('persistent'))) then begin
             // This is a Persistent room
             Self.ImageIndex := RosterImages.RI_CONFERENCE_INDEX;
             _windowType := 'perm_room';
