@@ -106,6 +106,7 @@ type
     procedure checkFlash();
     procedure moveGlued();
     procedure SessionCallback(event: string; tag: TXMLTag);
+    function GetActiveTabSheet(): TTntTabSheet;
   end;
 
 var
@@ -282,7 +283,7 @@ function TfrmDockWindow.OpenDocked(frm : TfrmDockable) : TTntTabSheet;
 var
     oldsheet: TTntTabSheet;
 begin
-    oldsheet := TTntTabSheet(AWTabControl.ActivePage);
+    oldsheet := GetActiveTabSheet();
     if (not Self.Showing) then begin
         ShowDockManagerWindow(true, false);
     end;
@@ -362,7 +363,7 @@ begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         _undocking := false;
-        oldsheet := TTntTabSheet(AWTabControl.ActivePage);
+        oldsheet := GetActiveTabSheet();
         updateLayoutDockChange(TfrmDockable(Source.Control), true, false);
         TfrmDockable(Source.Control).Docked := true;
         TTntTabSheet(AWTabControl.Pages[AWTabControl.PageCount - 1]).ImageIndex := TfrmDockable(Source.Control).ImageIndex;
@@ -574,7 +575,10 @@ var
     aw: TfrmActivityWindow;
     frm: TfrmDockable;
     item: TAWTrackerItem;
+    holdSheet: TTntTabSheet;
 begin
+    holdSheet:=  TTntTabSheet(AWTabControl.ActivePage);
+
     if ((idx >= 0) and
         (idx < AWTabControl.PageCount)) then begin
         AWTabControl.Pages[idx].TabVisible := false;
@@ -585,10 +589,28 @@ begin
         end;
     end;
 
+    if (holdSheet <> nil) then begin
+        AWTabControl.ActivePage := holdSheet;
+    end;
+
     if (oldtsheet <> nil) then begin
         // Workaround for problem with hidden tabs on TPageControl
         // Restore the sheet that was showing
-        AWTabControl.ActivePage := oldtsheet;
+        //AWTabControl.ActivePage := oldtsheet;
+        try
+            aw := GetActivityWindow();
+            if (aw <> nil) then begin
+                frm := TfrmDockable(getTabForm(oldtsheet));
+                if (frm <> nil) then begin
+                    item := aw.findItem(frm);
+                    if (item <> nil) then begin
+                        aw.activateItem(item.awItem);
+                    end;
+                end;
+            end;
+            AWTabControl.ActivePage := oldtsheet;
+        except
+        end;
     end
     else if (AWTabControl.PageCount > 0) then begin
         try
@@ -608,7 +630,6 @@ begin
         except
         end;
     end;
-
 end;
 
 {---------------------------------------}
@@ -1033,6 +1054,25 @@ begin
     end;
 
 end;
+
+{---------------------------------------}
+function TfrmDockWindow.GetActiveTabSheet(): TTntTabSheet;
+var
+    i: integer;
+begin
+    Result := TTntTabSheet(AWTabControl.ActivePage);
+
+    if (Result = nil) then begin
+        for i := 0 to AWTabControl.PageCount - 1 do begin
+            if (AWTabControl.Pages[i].Visible) then begin
+                Result := TTntTabSheet(AWTabControl.Pages[i]);
+                break;
+            end;
+        end;
+    end;
+end;
+
+
 
 
 end.
