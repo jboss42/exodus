@@ -3,7 +3,7 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 670
+  ClientHeight = 478
   ClientWidth = 404
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -20,12 +20,12 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 724
+  ExplicitHeight = 532
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 661
+    Top = 469
     Width = 404
     Height = 9
     Align = alBottom
@@ -36,6 +36,7 @@ inherited frmExodus: TfrmExodus
     Transparent = True
     Visible = False
     OnClick = imgAdClick
+    ExplicitTop = 661
   end
   object Toolbar: TCoolBar
     Left = 0
@@ -51,18 +52,20 @@ inherited frmExodus: TfrmExodus
     Left = 0
     Top = 66
     Width = 404
-    Height = 595
+    Height = 403
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    ExplicitHeight = 595
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitHeight = 456
       object pnlLogin: TPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 585
+        Height = 393
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -70,20 +73,25 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 456
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 585
       object pnlRoster: TPanel
         Left = 0
         Top = 37
         Width = 396
-        Height = 548
+        Height = 356
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitLeft = -48
+        ExplicitTop = 53
+        ExplicitHeight = 419
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -446,7 +454,7 @@ inherited frmExodus: TfrmExodus
     AutoHotkeys = maManual
     Images = ImageList1
     Left = 39
-    Top = 354
+    Top = 146
     object File1: TTntMenuItem
       Caption = '&File'
       object Old1: TTntMenuItem
@@ -1102,7 +1110,7 @@ inherited frmExodus: TfrmExodus
   object ImageList1: TImageList
     ShareImages = True
     Left = 80
-    Top = 354
+    Top = 146
     Bitmap = {
       494C010161006300040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000009001000001002000000000000090
@@ -4415,20 +4423,20 @@ inherited frmExodus: TfrmExodus
     Interval = 500
     OnTimer = timFlasherTimer
     Left = 8
-    Top = 384
+    Top = 176
   end
   object timAutoAway: TTimer
     Enabled = False
     Interval = 3000
     OnTimer = timAutoAwayTimer
     Left = 8
-    Top = 480
+    Top = 272
   end
   object popTray: TTntPopupMenu
     AutoHotkeys = maManual
     Images = ImageList1
     Left = 40
-    Top = 416
+    Top = 208
     object trayShow: TTntMenuItem
       Caption = 'Show Exodus'
       OnClick = trayShowClick
@@ -4510,44 +4518,44 @@ inherited frmExodus: TfrmExodus
     OnActivate = AppEventsActivate
     OnDeactivate = AppEventsDeactivate
     Left = 80
-    Top = 416
+    Top = 208
   end
   object timReconnect: TTimer
     Enabled = False
     Interval = 10000
     OnTimer = timReconnectTimer
     Left = 8
-    Top = 416
+    Top = 208
   end
   object timTrayAlert: TTimer
     Enabled = False
     Interval = 750
     OnTimer = timTrayAlertTimer
     Left = 8
-    Top = 448
+    Top = 240
   end
   object XMPPAction: TDdeServerConv
     OnExecuteMacro = XMPPActionExecuteMacro
     Left = 8
-    Top = 355
+    Top = 147
   end
   object Resolver: TIdDNSResolver
     OnStatus = ResolverStatus
     Port = 53
     QueryRecords = []
     Left = 112
-    Top = 384
+    Top = 176
   end
   object IdAntiFreeze1: TIdAntiFreeze
     Left = 112
-    Top = 416
+    Top = 208
   end
   object bigImages: TImageList
     AllocBy = 1
     Height = 128
     Width = 128
     Left = 80
-    Top = 384
+    Top = 176
     Bitmap = {
       494C010101000200040080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
@@ -13008,7 +13016,7 @@ inherited frmExodus: TfrmExodus
     AutoHotkeys = maManual
     Images = ImageList1
     Left = 40
-    Top = 448
+    Top = 240
     object TntMenuItem1: TTntMenuItem
       Caption = 'Available'
       ImageIndex = 1
@@ -13061,7 +13069,7 @@ inherited frmExodus: TfrmExodus
   end
   object popCreate: TTntPopupMenu
     Left = 40
-    Top = 384
+    Top = 176
     object Folder1: TTntMenuItem
       Caption = 'New Group'
     end
@@ -13074,7 +13082,7 @@ inherited frmExodus: TfrmExodus
     ShareImages = True
     Width = 32
     Left = 112
-    Top = 352
+    Top = 144
     Bitmap = {
       494C010109000E00040020001800FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004800000001002000000000000090
@@ -14272,7 +14280,7 @@ inherited frmExodus: TfrmExodus
   end
   object popViewStates: TTntPopupMenu
     Left = 40
-    Top = 480
+    Top = 272
     object popShowOnline: TTntMenuItem
       Caption = 'Show Online Contacts'
     end
