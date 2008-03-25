@@ -681,6 +681,7 @@ begin
                         end;
                         tsheet.Visible := true;
                         _oldActivateSheet := tsheet;
+                        _dockWindow.AWTabControl.ActivePage := tsheet;
                         _dockWindow.setWindowCaption(trackitem.frm.Caption);
                         scrollToActive();
                     except
