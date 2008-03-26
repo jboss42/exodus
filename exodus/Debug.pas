@@ -63,6 +63,7 @@ type
     procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure Panel2Resize(Sender: TObject);
   private
     { Private declarations }
     _scb: integer;
@@ -426,6 +427,32 @@ procedure TfrmDebug.MsgDebugKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
     Key := Chr(0);
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.Panel2Resize(Sender: TObject);
+var
+    oldHeight: real;
+    msgratio: real;
+    memoratio: real;
+    real_a: real;
+    real_b: real;
+begin
+    // This code exists to try and prevent losing a part of the window due to resize
+    // when (un)docking.
+    inherited;
+    if ((MsgDebug.Height + Splitter1.Height + MemoSend.Height) > Panel2.Height) then begin
+        // All combined, everything is bigger then the room we have, so resize
+        oldHeight := MsgDebug.Height + MemoSend.Height;
+        real_a := MsgDebug.Height;
+        real_b := MemoSend.Height;
+        msgratio := real_a / oldHeight;
+        memoratio := real_b / oldHeight;
+
+        // Now that we have ratios, make sure that nothing would be too small;
+        MsgDebug.Height := Trunc(msgratio * (Panel2.Height - Splitter1.Height));
+        MemoSend.Height := Trunc(memoratio * (Panel2.Height - Splitter1.Height));
+    end;
 end;
 
 {---------------------------------------}

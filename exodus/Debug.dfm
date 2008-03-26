@@ -20,7 +20,7 @@ inherited frmDebug: TfrmDebug
       Left = 0
       Top = 0
       Width = 348
-      Height = 32
+      Height = 33
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
@@ -54,11 +54,10 @@ inherited frmDebug: TfrmDebug
     Caption = 'Panel2'
     ParentColor = True
     TabOrder = 0
-    ExplicitTop = 32
-    ExplicitHeight = 348
+    OnResize = Panel2Resize
     object Splitter1: TSplitter
       Left = 4
-      Top = 299
+      Top = 298
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -69,7 +68,7 @@ inherited frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 295
+      Height = 294
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -163,7 +162,7 @@ inherited frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 304
+      Top = 303
       Width = 392
       Height = 40
       Align = alBottom
