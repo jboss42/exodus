@@ -390,22 +390,60 @@ begin
     // We need to find out what actual date that relative date corresponds to.
     // If the (relative) start day is before end day, then assume we can use
     // the dates from the current year to figure out DST.
-    // If the end day is before the start day, then assume the start day
-    // is in the previous year for calculation.
+    // If the end day is before the start day, then assume we are in the
+    // souther hemesphere.
     // Essentually, start before end should correspond to Northern Hemisphere
     // DST and end before start should correspond to Sothern Hemisphere as
     // the seasons are reveresed in the two hemispeheres and thus DST is
-    // reversed.  In either case, assume end year is the same as current year.
-    EndYear := Year;
+    // reversed.  We need to then figure out which year to shift.
+    // Start or end.  This depends on when in the year we are.
     if ((timezoneinfo.DaylightDate.wMonth < timezoneinfo.StandardDate.wMonth) or
         ((timezoneinfo.DaylightDate.wMonth = timezoneinfo.StandardDate.wMonth) and
          (timezoneinfo.DaylightDate.wDay < timezoneinfo.StandardDate.wDay))) then begin
-        // Start before end
+        // Start before end -  Assume same year.
         StartYear := Year;
+        EndYear := Year;
     end
     else begin
-        // End before start
-        StartYear := Year - 1;
+        // End before start - Need to figure out which year to bump
+        if ((Month > timezoneinfo.DaylightDate.wMonth) or
+
+            ((Month = timezoneinfo.DaylightDate.wMonth) and
+             (Day > timezoneinfo.DaylightDate.wDay)) or
+
+            ((Month = timezoneinfo.DaylightDate.wMonth) and
+             (Day = timezoneinfo.DaylightDate.wDay) and
+             (Hour > timezoneinfo.DaylightDate.wHour)) or
+
+            ((Month = timezoneinfo.DaylightDate.wMonth) and
+             (Day = timezoneinfo.DaylightDate.wDay) and
+             (Hour = timezoneinfo.DaylightDate.wHour) and
+             (Min > timezoneinfo.DaylightDate.wMinute)) or
+
+            ((Month = timezoneinfo.DaylightDate.wMonth) and
+             (Day = timezoneinfo.DaylightDate.wDay) and
+             (Hour = timezoneinfo.DaylightDate.wHour) and
+             (Min = timezoneinfo.DaylightDate.wMinute) and
+             (Sec > timezoneinfo.DaylightDate.wSecond)) or
+
+            ((Month = timezoneinfo.DaylightDate.wMonth) and
+             (Day = timezoneinfo.DaylightDate.wDay) and
+             (Hour = timezoneinfo.DaylightDate.wHour) and
+             (Min = timezoneinfo.DaylightDate.wMinute) and
+             (Sec = timezoneinfo.DaylightDate.wSecond) and
+             (Milli >= timezoneinfo.DaylightDate.wMilliseconds))) then
+        begin
+            // Our time is greater then or equal to the DST start time
+            // so we need to bump the end year to next year
+            StartYear := Year;
+            EndYear := Year + 1;
+        end
+        else begin
+            // Our time is less then the DST start time
+            // so we need to bump the start year to last year
+            StartYear := Year - 1;
+            EndYear := Year;
+        end;
     end;
 
     //Calculate when daylight savings time begins
