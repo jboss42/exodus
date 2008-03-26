@@ -4,6 +4,7 @@ inherited frmBaseChat: TfrmBaseChat
   ClientHeight = 260
   ClientWidth = 415
   OnDestroy = FormDestroy
+  OnResize = TntFormResize
   ExplicitWidth = 423
   ExplicitHeight = 294
   PixelsPerInch = 96
@@ -25,7 +26,7 @@ inherited frmBaseChat: TfrmBaseChat
     ExplicitWidth = 415
     inherited tbDockBar: TToolBar
       Left = 366
-      ExplicitLeft = 343
+      ExplicitLeft = 366
       inherited btnDockToggle: TToolButton
         ParentShowHint = False
         ShowHint = True

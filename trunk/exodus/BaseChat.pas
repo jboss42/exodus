@@ -98,6 +98,7 @@ type
     procedure ChatToolbarButtonUnderlineClick(Sender: TObject);
     procedure ChatToolbarButtonColorsClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure TntFormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -571,6 +572,32 @@ begin
     // save the new position to use on all new windows
     MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
     Self.Invalidate();
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.TntFormResize(Sender: TObject);
+var
+    oldHeight: real;
+    msglistratio: real;
+    pnlinputratio: real;
+    real_a: real;
+    real_b: real;
+begin
+    // This code exists to try and prevent losing a part of the window due to resize
+    // when (un)docking.
+    inherited;
+    if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDockTop.Height) > ClientHeight) then begin
+        // All combined, everything is bigger then the room we have, so resize
+        oldHeight := pnlMsgList.Height + pnlInput.Height;
+        real_a := pnlMsgList.Height;
+        real_b := pnlInput.Height;
+        msglistratio := real_a / oldHeight;
+        pnlinputratio := real_b / oldHeight;
+
+        // Now that we have ratios, make sure that nothing would be too small;
+        pnlMsgList.Height := Trunc(msglistratio * (ClientHeight - Splitter1.Height - pnlDockTop.Height));
+        pnlInput.Height := Trunc(pnlinputratio * (ClientHeight - Splitter1.Height- pnlDockTop.Height));
+    end;
 end;
 
 {---------------------------------------}
