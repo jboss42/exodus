@@ -380,16 +380,39 @@ var
   timezoneinfo: TTimezoneinformation;
   dstStart, dstEnd: TDateTime;
   Year, Month, Day, Hour, Min, Sec, Milli: word;
+  StartYear, EndYear: word;
 begin
     FillChar(timezoneinfo, SizeOf(timezoneinfo), #0);
     GetTimezoneInformation(timezoneinfo);
     DecodeDateTime(time, Year, Month, Day, Hour, Min, Sec, Milli);
 
+    // If we don't get a year we have a "relative" date.
+    // We need to find out what actual date that relative date corresponds to.
+    // If the (relative) start day is before end day, then assume we can use
+    // the dates from the current year to figure out DST.
+    // If the end day is before the start day, then assume the start day
+    // is in the previous year for calculation.
+    // Essentually, start before end should correspond to Northern Hemisphere
+    // DST and end before start should correspond to Sothern Hemisphere as
+    // the seasons are reveresed in the two hemispeheres and thus DST is
+    // reversed.  In either case, assume end year is the same as current year.
+    EndYear := Year;
+    if ((timezoneinfo.DaylightDate.wMonth < timezoneinfo.StandardDate.wMonth) or
+        ((timezoneinfo.DaylightDate.wMonth = timezoneinfo.StandardDate.wMonth) and
+         (timezoneinfo.DaylightDate.wDay < timezoneinfo.StandardDate.wDay))) then begin
+        // Start before end
+        StartYear := Year;
+    end
+    else begin
+        // End before start
+        StartYear := Year - 1;
+    end;
+
     //Calculate when daylight savings time begins
     if (timezoneinfo.DaylightDate.wYear = 0) then begin
         with timezoneinfo.DaylightDate do begin
             try
-                dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstStart := EncodeDayOfWeekInMonth(StartYear, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
                 dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
             except
                 on EConvertError do begin
@@ -397,7 +420,7 @@ begin
                     // in the month.  This is a difference in how GetTimeZoneInfo returns
                     // info and how EncodeDayOfWeekInMonth works.
                     if (wday = 5) then begin
-                        dstStart := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstStart := EncodeDayOfWeekInMonth(StartYear, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
                         dstStart := dstStart + EncodeTime(whour, wminute, wsecond, wmilliseconds);
                     end
                     else begin
@@ -408,13 +431,15 @@ begin
         end;
     end
     else begin
+        // We have an actual start date
         dstStart := SystemTimeToDateTime(timezoneinfo.DaylightDate);
     end;
+
     //Calculate when daylight savings time ends
     if (timezoneinfo.StandardDate.wYear = 0) then begin
         with timezoneinfo.StandardDate do begin
             try
-                dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
+                dstEnd := EncodeDayOfWeekInMonth(EndYear, wmonth, wday, ConvertDayOfWeek(wDayOfWeek));
                 dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
             except
                 on EConvertError do begin
@@ -422,7 +447,7 @@ begin
                     // in the month.  This is a difference in how GetTimeZoneInfo returns
                     // info and how EncodeDayOfWeekInMonth works.
                     if (wday = 5) then begin
-                        dstEnd := EncodeDayOfWeekInMonth(Year, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
+                        dstEnd := EncodeDayOfWeekInMonth(EndYear, wmonth, wday - 1, ConvertDayOfWeek(wDayOfWeek));
                         dstEnd := dstEnd + EncodeTime(whour, wminute, wsecond, wmilliseconds);
                     end
                     else begin
@@ -433,9 +458,12 @@ begin
         end;
     end
     else begin
+        // We have an actual end date
         dstEnd := SystemTimeToDateTime(timezoneinfo.StandardDate);
     end;
 
+    // If our given time is between the calculated start and end,
+    // then the time IS in DST.
     if ((time >= dstStart) and (time <= dstEnd)) then
       Result := DST_YES
     else
