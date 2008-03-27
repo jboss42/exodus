@@ -1207,7 +1207,13 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
             Result.ImageIndex := exItem.ImageIndex;
         end
         else begin
-            Result.ImageIndex := RosterTreeImages.Find('unknown');
+            // We may not know presence or this could be a unbookmarked room
+            if (newmsg.MsgType = 'groupchat') then begin
+                Result.ImageIndex := RosterTreeImages.Find('conference');
+            end
+            else begin
+                Result.ImageIndex := RosterTreeImages.Find('unknown');
+            end;
         end;
         exItem := nil;
         id.Free();
