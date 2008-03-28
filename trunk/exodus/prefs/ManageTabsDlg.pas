@@ -71,7 +71,10 @@ procedure TfrmPrefTabs._LoadPrefs();
 var
     i: Integer;
     Item: TTntListItem;
+    TabsHidden: TWidestringlist;
 begin
+    TabsHidden := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('tabs_hidden', TabsHidden);
     for i := 0 to GetRosterWindow().TabController.TabCount - 1 do
     begin
          //Main tab is always shown
@@ -82,7 +85,8 @@ begin
          Item.Caption := GetRosterWindow().TabController.Tab[i].Name;
          Item.SubItems.Add(GetRosterWindow().TabController.Tab[i].Description);
          Item.Data := TObject(GetRosterWindow().TabController.Tab[i]);
-         Item.Checked := GetRosterWindow().TabController.Tab[i].Visible;
+         Item.Checked :=  (TabsHidden.IndexOf(GetRosterWindow().TabController.Tab[i].Name) = -1);
+
     end;
       
 end;

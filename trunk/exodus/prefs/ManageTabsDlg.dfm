@@ -3,12 +3,12 @@ inherited frmPrefTabs: TfrmPrefTabs
   Top = 142
   BorderStyle = bsDialog
   Caption = 'Manage tabs'
-  ClientHeight = 314
+  ClientHeight = 310
   ClientWidth = 517
   OldCreateOrder = True
   OnShow = TntFormShow
   ExplicitWidth = 523
-  ExplicitHeight = 352
+  ExplicitHeight = 348
   PixelsPerInch = 120
   TextHeight = 16
   object lstTabs: TTntListView
@@ -33,20 +33,20 @@ inherited frmPrefTabs: TfrmPrefTabs
     ViewStyle = vsReport
   end
   object btnCancel: TTntButton
-    Left = 410
+    Left = 446
     Top = 278
-    Width = 104
-    Height = 31
+    Width = 68
+    Height = 28
     Cancel = True
     Caption = '&Cancel'
     ModalResult = 2
     TabOrder = 1
   end
   object btnOK: TTntButton
-    Left = 298
+    Left = 372
     Top = 278
-    Width = 103
-    Height = 31
+    Width = 68
+    Height = 28
     Caption = '&OK'
     Default = True
     ModalResult = 1

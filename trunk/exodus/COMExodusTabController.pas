@@ -46,7 +46,6 @@ type
       _SessionCB: Integer;
       //Methods
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
-
   public
       constructor Create();
       destructor Destroy; override;
@@ -71,6 +70,7 @@ begin
     // catch session events
     if Event = '/session/prefs' then
          MainSession.Prefs.fillStringlist('tabs_hidden', _HiddenTabs);
+
 end;
 
 {---------------------------------------}
@@ -93,7 +93,10 @@ begin
    //Hide tab if it is in the list of hidden tabs
    Idx := _HiddenTabs.IndexOf(Name);
    if (Idx > -1) then
-       Tab.ExodusTab.Hide;
+       Tab.ExodusTab.Hide
+   else
+       Tab.ExodusTab.Show;    
+
    Result := Tab.ExodusTab;
 end;
 

@@ -217,14 +217,14 @@ begin
     if (Idx > -1) then
         _treeMain.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('', _('Contacts '));
+    ITab := _TabController.AddTab('', _('Contacts'));
     ITab.Description := _('Tab containing contacts only. ');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
         _TreeContacts.parent := _PageControl.Pages[Idx];
 
-    ITab := _TabController.AddTab('', _('Rooms '));
+    ITab := _TabController.AddTab('', _('Rooms'));
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
     ITab.Description := _('Tab containing rooms only. ');
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
