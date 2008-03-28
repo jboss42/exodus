@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/20/2008 10:29:17 AM from Type Library described below.
+// File generated on 3/28/2008 12:11:30 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4585,12 +4585,14 @@ type
     function Get_GroupExpanded(const Group: WideString): WordBool; safecall;
     procedure Set_GroupExpanded(const Group: WideString; value: WordBool); safecall;
     function GetItemsByType(const Type_: WideString): OleVariant; safecall;
+    function Get_GroupsLoaded: WordBool; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Group[index: Integer]: WideString read Get_Group;
     property Item[index: Integer]: IExodusItem read Get_Item;
     property GroupExists[const Group: WideString]: WordBool read Get_GroupExists;
     property GroupExpanded[const Group: WideString]: WordBool read Get_GroupExpanded write Set_GroupExpanded;
+    property GroupsLoaded: WordBool read Get_GroupsLoaded;
   end;
 
 // *********************************************************************//
@@ -4621,6 +4623,7 @@ type
     property GroupExists[const Group: WideString]: WordBool readonly dispid 220;
     property GroupExpanded[const Group: WideString]: WordBool dispid 222;
     function GetItemsByType(const Type_: WideString): OleVariant; dispid 215;
+    property GroupsLoaded: WordBool readonly dispid 221;
   end;
 
 // *********************************************************************//
@@ -4640,9 +4643,11 @@ type
     function GetTabIndexByUID(const UID: WideString): Integer; safecall;
     function Get_VisibleTabCount: Integer; safecall;
     function GetTabIndexByName(const Name: WideString): Integer; safecall;
+    function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
     property TabCount: Integer read Get_TabCount;
     property Tab[index: Integer]: IExodusTab read Get_Tab;
     property VisibleTabCount: Integer read Get_VisibleTabCount;
+    property VisibleTab[Index: Integer]: IExodusTab read Get_VisibleTab;
   end;
 
 // *********************************************************************//
@@ -4662,6 +4667,7 @@ type
     function GetTabIndexByUID(const UID: WideString): Integer; dispid 208;
     property VisibleTabCount: Integer readonly dispid 209;
     function GetTabIndexByName(const Name: WideString): Integer; dispid 210;
+    property VisibleTab[Index: Integer]: IExodusTab readonly dispid 211;
   end;
 
 // *********************************************************************//
@@ -4687,6 +4693,8 @@ type
     function Get_Description: WideString; safecall;
     procedure Set_Description(const value: WideString); safecall;
     function Get_AXControl: OleVariant; safecall;
+    function Get_TabIndex: Integer; safecall;
+    function Get_PageIndex: Integer; safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
@@ -4696,6 +4704,8 @@ type
     property Width: Integer read Get_Width;
     property Description: WideString read Get_Description write Set_Description;
     property AXControl: OleVariant read Get_AXControl;
+    property TabIndex: Integer read Get_TabIndex;
+    property PageIndex: Integer read Get_PageIndex;
   end;
 
 // *********************************************************************//
@@ -4717,6 +4727,8 @@ type
     property Width: Integer readonly dispid 211;
     property Description: WideString dispid 212;
     property AXControl: OleVariant readonly dispid 208;
+    property TabIndex: Integer readonly dispid 213;
+    property PageIndex: Integer readonly dispid 214;
   end;
 
 // *********************************************************************//

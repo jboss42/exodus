@@ -105,7 +105,7 @@ begin
   end;
   _PageControl.Images.Draw(_PageControl.Canvas,
                             ARect.Left,
-                            ARect.Top, TabController.Tab[TabIndex].ImageIndex);
+                            ARect.Top, TabController.VisibleTab[TabIndex].ImageIndex);
 end;
 
 procedure TRosterForm._PageControlGetImageIndex(Sender: TObject;

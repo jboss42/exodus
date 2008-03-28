@@ -46,6 +46,8 @@ type
       function Get_Description: WideString; safecall;
       function Get_AXControl: OleVariant; safecall;
       procedure Set_Description(const value: WideString); safecall;
+    function Get_PageIndex: Integer; safecall;
+    function Get_TabIndex: Integer; safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
@@ -193,6 +195,16 @@ end;
 procedure TExodusTab.Set_Description(const value: WideString);
 begin
    _Desc := Value;
+end;
+
+function TExodusTab.Get_PageIndex: Integer;
+begin
+    Result := _Page.PageIndex;
+end;
+
+function TExodusTab.Get_TabIndex: Integer;
+begin
+   Result := _Page.TabIndex;
 end;
 
 initialization
