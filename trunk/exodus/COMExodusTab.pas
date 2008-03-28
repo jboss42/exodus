@@ -44,9 +44,8 @@ type
       function Get_Height: Integer; safecall;
       function Get_Width: Integer; safecall;
       function Get_Description: WideString; safecall;
-      procedure Set_Descrption(const Value: WideString); safecall;
-    function Get_AXControl: OleVariant; safecall;
-    procedure Set_Description(const value: WideString); safecall;
+      function Get_AXControl: OleVariant; safecall;
+      procedure Set_Description(const value: WideString); safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
@@ -182,10 +181,6 @@ begin
     Result := _Desc;
 end;
 
-procedure TExodusTab.Set_Descrption(const Value: WideString);
-begin
-   _Desc := Value;
-end;
 
 function TExodusTab.Get_AXControl: OleVariant;
 begin
@@ -197,7 +192,7 @@ end;
 
 procedure TExodusTab.Set_Description(const value: WideString);
 begin
-
+   _Desc := Value;
 end;
 
 initialization
