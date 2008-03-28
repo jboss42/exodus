@@ -39,6 +39,7 @@ type
       function GetTabIndexByUID(const uid: WideString): Integer; safecall;
     function Get_VisibleTabCount: Integer; safecall;
     function GetTabIndexByName(const Name: WideString): Integer; safecall;
+    function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
   private
       _Tabs: TObjectList;
       _HiddenTabs: TWideStringList;
@@ -198,6 +199,23 @@ begin
        if (Get_Tab(i).Name = Name) then
        begin
           Result := i;
+          break;
+       end;
+    end;
+end;
+
+function TExodusTabController.Get_VisibleTab(Index: Integer): IExodusTab;
+var
+    i: Integer;
+begin
+    Result := nil;
+    if (Index < 0) then exit;
+    if (Index > Get_VisibleTabCount - 1) then exit;
+    for i := 0 to _Tabs.Count - 1 do
+    begin
+       if (Get_Tab(i).TabIndex = Index) then
+       begin
+          Result := Get_Tab(Get_Tab(i).PageIndex);
           break;
        end;
     end;
