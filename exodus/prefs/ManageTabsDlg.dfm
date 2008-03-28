@@ -2,23 +2,22 @@ inherited frmPrefTabs: TfrmPrefTabs
   Left = 232
   Top = 142
   BorderStyle = bsDialog
-  Caption = 'Tabs'
-  ClientHeight = 317
+  Caption = 'Manage tabs'
+  ClientHeight = 314
   ClientWidth = 517
   OldCreateOrder = True
   OnShow = TntFormShow
   ExplicitWidth = 523
-  ExplicitHeight = 355
+  ExplicitHeight = 352
   PixelsPerInch = 120
   TextHeight = 16
   object lstTabs: TTntListView
     AlignWithMargins = True
-    Left = 3
-    Top = 9
-    Width = 511
-    Height = 254
+    Left = 0
+    Top = 0
+    Width = 514
+    Height = 272
     Margins.Top = 9
-    Align = alTop
     BevelWidth = 0
     Checkboxes = True
     Columns = <
@@ -35,20 +34,20 @@ inherited frmPrefTabs: TfrmPrefTabs
   end
   object btnCancel: TTntButton
     Left = 410
-    Top = 269
+    Top = 278
     Width = 104
     Height = 31
     Cancel = True
-    Caption = 'Cancel'
+    Caption = '&Cancel'
     ModalResult = 2
     TabOrder = 1
   end
   object btnOK: TTntButton
     Left = 298
-    Top = 269
+    Top = 278
     Width = 103
     Height = 31
-    Caption = 'OK'
+    Caption = '&OK'
     Default = True
     ModalResult = 1
     TabOrder = 2

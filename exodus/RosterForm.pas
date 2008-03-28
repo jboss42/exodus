@@ -24,6 +24,9 @@ type
       _TreeContacts: TExContactsTreeView;
       _TreeRooms: TExRoomsTreeView;
       _TabController: IExodusTabController;
+      _PageControlSaveWinProc: TWndMethod;
+      _ActiveTabColor: TColor;
+      procedure _PageControlNewWndProc(var Msg: TMessage);
       procedure _ToggleGUI(state: TLoginGuiState);
       function _GetImages() : TImageList;
       procedure _SetImages(Value :TImageList);
@@ -87,9 +90,11 @@ var
    ARect: TRect;
 begin
   ARect := Rect;
-  inherited;
+  //inherited;
   if (Active) then
   begin
+     _PageControl.Canvas.Brush.Color := _ActiveTabColor;
+     _PageControl.Canvas.FillRect(ARect);
      ARect.Left := ARect.Left + 7;
      ARect.Top := ARect.Top  + 7;
   end
@@ -152,7 +157,9 @@ begin
              if (Idx <> -1) then
                  _TreeMain.parent := _PageControl.Pages[Idx];
         end;
-    end;
+    end
+    else if Event = '/session/prefs' then
+        _ActiveTabColor := TColor(MainSession.prefs.getInt('roster_bg'));
 
 end;
 
@@ -160,6 +167,8 @@ end;
 procedure TRosterForm.TntFormClose(Sender: TObject; var Action: TCloseAction);
 begin
    inherited;
+   _PageControl.WindowProc := _PageControlSaveWinProc;
+   _PageControlSaveWinProc := nil;
    if (MainSession <> nil) then with MainSession do
    begin
         UnRegisterCallback(_rostercb);
@@ -180,7 +189,10 @@ var
     ITab: IExodusTab;
     Idx: Integer;
 begin
+    _PageControlSaveWinProc := _PageControl.WindowProc;
+    _PageControl.WindowProc := _PageControlNewWndProc;
     _TabController := TExodusTabController.Create();
+    _ActiveTabColor := TColor(MainSession.prefs.getInt('roster_bg'));
     _TreeMain := TExTreeView.Create(Self, MainSession);
     _TreeMain.Align := alClient;
     _TreeMain.Canvas.Pen.Width := 1;
@@ -246,6 +258,24 @@ begin
 
 end;
 
+{---------------------------------------}
+procedure TRosterForm._PageControlNewWndProc(var Msg: TMessage);
+var
+    hdn: ^THDNotify;
+    i: Integer;
+begin
+  if(Msg.Msg=TCM_ADJUSTRECT) then
+  begin
+      _PageControlSaveWinProc(Msg);
+      PRect(Msg.LParam)^.Left:=0;
+      PRect(Msg.LParam)^.Right:=ClientWidth;
+      PRect(Msg.LParam)^.Top:=PRect(Msg.LParam)^.Top-4;
+      PRect(Msg.LParam)^.Bottom:=ClientHeight - _PageControl.TabWidth - 2;
+  end
+  else
+      _PageControlSaveWinProc(Msg);
+
+end;
 
 {---------------------------------------}
 function  TRosterForm.GetDockParent(): TForm;
