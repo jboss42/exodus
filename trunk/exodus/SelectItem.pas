@@ -148,13 +148,13 @@ end;
 
 procedure TTypedTreeView.DblClick;
 begin
-    if (CurrentNode = nil) or (CurrentNode.Data = nil) then begin
+    if (Selected = nil) or (Selected.Data = nil) then begin
         inherited;
         exit;
     end;
 
     with TfrmSelectItem(Owner) do begin
-        ItemChanged(Self, CurrentNode);
+        ItemChanged(Self, Selected);
         ModalResult := mrOk;
         Hide;
     end;

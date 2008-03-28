@@ -34,7 +34,8 @@ type
         _items: IExodusItemList;
         _actions: TWidestringList;
 
-        constructor Create(actmap: TExodusActionMap; itemtype: Widestring);
+    protected
+        constructor CreateFromMap(actmap: TExodusActionMap; itemtype: Widestring);
 
         procedure Collate;
 
@@ -92,7 +93,7 @@ uses SysUtils, ComServ, COMExodusItemList;
     TTypedActions implementation
 }
 
-constructor TExodusTypedActions.Create(actmap: TExodusActionMap; itemtype: WideString);
+constructor TExodusTypedActions.CreateFromMap(actmap: TExodusActionMap; itemtype: WideString);
 var
     idx: Integer;
     item: IExodusItem;
@@ -295,7 +296,7 @@ begin
     else if create then begin
         if _actLists.Sorted then _actLists.Sorted := false;
 
-         Result := TExodusTypedActions.Create(Self, itemtype);
+         Result := TExodusTypedActions.CreateFromMap(Self, itemtype);
          Result._AddRef;
          _actLists.AddObject(itemtype, Result);
     end;
