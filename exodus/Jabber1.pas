@@ -1271,7 +1271,11 @@ begin
         mnuPlugins.Visible := getBool('brand_plugs');
         mnuVCard.Visible := getBool('brand_vcard');
         mnuMyVCard.Visible := getBool('brand_vcard');
-        mnuRegistration.Visible := getBool('brand_registration');
+
+        mnuFile_Password.Visible := getBool('brand_changepassword');
+        mnuFile_Registration_VCard.Visible := getBool('brand_vcard');
+        mnuFile_Registration_EditReg.Visible := getBool('brand_registration');
+        mnuRegistration.Visible := mnuFile_Registration_EditReg.Visible and mnuFile_Registration_VCard.Visible;
 
         mnuBrowser.Visible := getBool('brand_browser');
         if (not mnuBrowser.Visible) then begin
@@ -2143,6 +2147,7 @@ begin
     mnuFile_Disconnect.Visible := enable;
     mnuFile_MyStatus.Enabled := enable;
     //mnuFile_MyProfiles.Enabled := not enable;
+
     mnuFile_Password.Enabled := enable;
     mnuFile_Registration.Enabled := enable;
 
@@ -2159,12 +2164,14 @@ begin
     if (enable) then begin
         btnConnect.Visible := not enable;
         mnuFile_Connect.Enabled := not enable;
+
         btnDisconnect.Visible := enable;
         mnuFile_Disconnect.Enabled := enable;
     end
     else begin
         btnDisconnect.Visible := enable;
         mnuFile_Disconnect.Enabled := enable;
+
         btnConnect.Visible := not enable;
         mnuFile_Connect.Enabled := not enable;
     end;

@@ -502,6 +502,10 @@
     <brand_profile_x509auth control="pnlx509Auth" value="false"/>
     <brand_profile_x509cert control="pnlx509Cert" value=""/>
 
+    <!-- registration (account) branding -->
+    <brand_registration_allow_changepassword value="1"/>
+    <brand_registration_allow_editaccount value="1"/>
+
     <!-- misc. branded options -->
     <brand_invisible_pres value="1"/>
     <brand_muc value="1"/>
