@@ -103,8 +103,7 @@ begin
     sql := sql + 'msgid INTEGER PRIMARY KEY AUTOINCREMENT, '; // Auto increment
     sql := sql + 'user_jid TEXT, '; // My JID
     sql := sql + 'jid TEXT, '; // Other JID
-    sql := sql + 'date INTEGER, ';
-    sql := sql + 'time FLOAT, ';
+    sql := sql + 'datetime FLOAT, ';
     sql := sql + 'thread TEXT, ';
     sql := sql + 'subject TEXT, ';
     sql := sql + 'nick TEXT, ';
@@ -117,7 +116,7 @@ begin
     try
         DataStore.ExecSQL(sql);
         DataStore.ExecSQL('CREATE INDEX ' + MESSAGES_TABLE + '_idx1 on ' + MESSAGES_TABLE + '(jid);');
-        DataStore.ExecSQL('CREATE INDEX ' + MESSAGES_TABLE + '_idx2 on ' + MESSAGES_TABLE + '(jid, time);');
+        DataStore.ExecSQL('CREATE INDEX ' + MESSAGES_TABLE + '_idx2 on ' + MESSAGES_TABLE + '(jid, datetime);');
         DataStore.ExecSQL('CREATE INDEX ' + MESSAGES_TABLE + '_idx3 on ' + MESSAGES_TABLE + '(jid, time, thread);');
     except
     end;
@@ -129,8 +128,6 @@ var
     sql: string;
     cmd: string;
 
-    di: integer;
-    ti: double;
     fromjid: TJabberID;
     tojid: TJabberID;
     outb: boolean;
@@ -200,16 +197,14 @@ begin
         else priority := 3;
     end;
 
-    ts := msg.Time + TimeZoneBias();
+    ts := msg.Time + TimeZoneBias(); // Store as UTC
 
     cmd := 'INSERT INTO ' +
            MESSAGES_TABLE + ' ' +
-           '(user_jid, jid, date, time, thread, subject, nick, body, type, outbound, priority, xml) ' +
-           'VALUES (''%s'', ''%s'', %d, %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', %d, ''%s'');';
+           '(user_jid, jid, datetime, thread, subject, nick, body, type, outbound, priority, xml) ' +
+           'VALUES (''%s'', ''%s'', %8.6f, ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', ''%s'', %d, ''%s'');';
 
-    di := Trunc(ts);
-    ti := Frac(double(ts));
-    sql := Format(cmd, [user_jid, jid, di, ti, thread, subject, nick, body, mtype, outstr, priority, xml]);
+    sql := Format(cmd, [user_jid, jid, ts, thread, subject, nick, body, mtype, outstr, priority, xml]);
 
     try
         // Insert the message as a new record.
@@ -251,19 +246,13 @@ begin
         end;
 
         // dates
-        sql := sql + 'date >= %d AND time >= %8.6f AND date <= %d AND time <= %8.6f;';
+        sql := sql + 'datetime >= %8.6f AND  datetime <=  %8.6f;';
 
-        // Change dates for Time zone as they are stored in DB with Timezone Bias
+        // Change dates for Time zone as they are stored in DB as UTC
         datestart := datestart + TimeZoneBias();
         dateend := dateend + TimeZoneBias();
 
-        dtStart := Trunc(datestart);
-        dtEnd := Trunc(dateend);
-
-        tiStart := Frac(double(datestart));
-        tiEnd := Frac(double(dateend));
-
-        sql := Format(sql, [dtStart, tiStart, dtEnd, tiEnd]);
+        sql := Format(sql, [datestart, dateend]);
 
         DataStore.ExecSQL(sql);
 
@@ -278,6 +267,9 @@ begin
     except
     end;
 end;
+
+
+
 
 
 end.
