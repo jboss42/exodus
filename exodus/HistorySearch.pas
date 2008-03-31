@@ -238,7 +238,8 @@ uses
     PrtRichEdit,
     JabberUtils,
     ExActionCtrl,
-    TntSysUtils;
+    TntSysUtils,
+    DateUtils;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -448,34 +449,27 @@ begin
     if (MessageDlgW(warning, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
         // Setup the delete params
         itemlist := _FindResultStringList(listitem);
-        if (itemlist <> nil) then begin
+        if ((itemlist <> nil) and
+            (itemlist.Count > 0)) then begin
             try
                 datestart := 0;
                 dateend := 0;
-                for i := 0 to itemList.Count - 1 do begin
-                    ritem := TResultListItem(itemList.Objects[i]);
-                    if (ritem <> nil) then begin
-                        tmpmsg := _GetTJabberMessage(ritem);
 
-                        if (i = 0) then begin
-                            // Only need to do this once
-                            if (tmpmsg.isMe) then begin
-                                jid := TJabberID.Create(tmpmsg.ToJID);
-                            end
-                            else begin
-                                jid := TJabberID.Create(tmpmsg.FromJID);
-                            end;
-                        end;
+                ritem := TResultListItem(itemList.Objects[0]);
+                if (ritem <> nil) then begin
+                    tmpmsg := _GetTJabberMessage(ritem);
 
-                        if ((tmpmsg.time < datestart) or
-                            (datestart = 0)) then begin
-                            datestart := tmpmsg.time;
-                        end;
-                        if (tmpmsg.time > dateend) then begin
-                            // We know it will be greater then 0
-                            dateend := tmpmsg.time;
-                        end;
+
+                    if (tmpmsg.isMe) then begin
+                        jid := TJabberID.Create(tmpmsg.ToJID);
+                    end
+                    else begin
+                        jid := TJabberID.Create(tmpmsg.FromJID);
                     end;
+
+                    // date is local date, not GMT
+                    datestart := Trunc(tmpmsg.Time); // Midnight
+                    dateend := Trunc(tmpmsg.Time) + 0.999999; //just shy of midnight
                 end;
 
                 // Execute the Delete
@@ -555,8 +549,8 @@ begin
         if (_AdvSearch) then begin
             // Advanced Search
             if (radioRange.Checked) then begin
-                _SearchObj.Set_maxDate(dateTo.DateTime + TimeZoneBias());
-                _SearchObj.Set_minDate(dateFrom.DateTime + TimeZoneBias());
+                _SearchObj.Set_minDate(dateFrom.DateTime); // Midnight
+                _SearchObj.Set_maxDate(dateTo.DateTime + 0.999999); // Just shy of midnight
             end;
 
             for i := 0 to txtKeywords.Lines.Count - 1 do begin

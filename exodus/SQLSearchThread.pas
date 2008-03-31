@@ -126,16 +126,15 @@ const
     msgid_col = 0;
     user_jid_col = 1;
     jid_col = 2;
-    date_col = 3;
-    time_col = 4;
-    thread_col = 5;
-    subject_col = 6;
-    nick_col = 7;
-    body_col = 8;
-    type_col = 9;
-    outbound_col = 10;
-    priority_col = 11;
-    xml_col = 12;
+    datetime_col = 3;
+    thread_col = 4;
+    subject_col = 5;
+    nick_col = 6;
+    body_col = 7;
+    type_col = 8;
+    outbound_col = 9;
+    priority_col = 10;
+    xml_col = 11;
 var
     tag: TXMLTag;
     i: integer;
@@ -167,8 +166,7 @@ begin
                     // doesn't find the MSGDELAY tag.  As we
                     // are pulling the original XML, it probably
                     // didn't have this tag when we stored it.
-                    _msg.Time := _table.GetFieldAsInt(date_col) +
-                                 _table.GetFieldAsDouble(time_col);
+                    _msg.Time := _table.GetFieldAsDouble(datetime_col);
 
                     // Set the nick if it exists in the db.
                     if (_msg.Nick = '') then begin
@@ -202,8 +200,7 @@ begin
                     _msg.Body := UTF8Decode(_table.GetField(body_col));
                     _msg.MsgType := UTF8Decode(_table.GetField(type_col));
                     _msg.Nick := UTF8Decode(_table.GetField(nick_col));
-                    _msg.Time := _table.GetFieldAsInt(date_col) +
-                                 _table.GetFieldAsDouble(time_col);
+                    _msg.Time := _table.GetFieldAsDouble(datetime_col);
                     //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
                     case _table.GetFieldAsInt(priority_col) of
                         0: _msg.Priority := high;

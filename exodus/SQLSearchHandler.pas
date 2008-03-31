@@ -79,7 +79,8 @@ uses
     SQLLogger,
     COMLogMsg,
     SQLSearchThread,
-    SQLUtils;
+    SQLUtils,
+    IdGlobal;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -169,8 +170,6 @@ end;
 function TSQLSearchHandler.GenerateSQLSearchString(SearchParameters: IExodusHistorySearch): Widestring;
 var
     i: integer;
-    mindate: integer;
-    maxdate: integer;
     exactMatch: boolean;
 begin
     // SELECT part
@@ -182,13 +181,8 @@ begin
               MESSAGES_TABLE;
 
     // WHERE part
-    mindate := Trunc(SearchParameters.minDate);
-    maxdate := Trunc(SearchParameters.maxDate);
-    Result := Result +
-              ' WHERE date >= ' +
-              IntToStr(mindate) +
-              ' AND date <= ' +
-              IntToStr(maxdate);
+    // Add Timezonebias to keep everything UTC
+    Result := Result + Format(' WHERE datetime >= %8.6f  AND datetime <= %8.6f', [SearchParameters.minDate + TimeZoneBias(), SearchParameters.maxDate + TimeZoneBias()]);
 
     if (SearchParameters.JIDCount > 0) then begin
         Result := Result +
@@ -242,7 +236,7 @@ begin
     // ORDER BY part
     Result := Result +
               ' ORDER BY ' +
-              'date, time';
+              'datetime';
 
     // End of SQL Statement
     Result := Result +
