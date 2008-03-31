@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 526
+  ExplicitHeight = 532
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -59,6 +59,10 @@ inherited frmExodus: TfrmExodus
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -879,7 +883,7 @@ inherited frmExodus: TfrmExodus
         Caption = '&Registration'
         Enabled = False
         object mnuFile_Registration_EditReg: TTntMenuItem
-          Caption = 'Edit &Registration...'
+          Caption = 'Edit &Account Details...'
           OnClick = mnuRegistrationClick
         end
         object mnuFile_Registration_VCard: TTntMenuItem
