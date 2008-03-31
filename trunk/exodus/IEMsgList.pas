@@ -128,6 +128,7 @@ type
     function _getLineClass(nick: widestring): WideString; overload;
     function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
     function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
+    procedure _dateSeperator(msg: TJabberMessage);
 
   protected
       procedure writeHTML(html: WideString);
@@ -148,7 +149,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(nick, txt: Widestring; timestamp: string); override;
+    procedure DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -646,28 +647,7 @@ begin
         _ClearingMsgCache.AddObject('', cachemsg);
     end
     else begin
-        try
-            if (_displayDateSeparator) then begin
-                t := msg.Time;
-                if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
-                    (msg.Subject = '') and
-                    (msg.Nick <> ''))then begin
-                    txt := '<div class="date">' +
-                           '<span>' +
-                           DateToStr(t) +
-                           '</span>' +
-                           '</div>';
-
-                    writeHTML(txt);
-                    _lastTimeStamp := msg.Time;
-                    txt := '';
-                    _lastMsgNick := '';
-                    if (_doMessageLimiting) then
-                        Inc(_msgCount);
-                end;
-            end;
-        except
-        end;
+        _dateSeperator(msg);
 
         _clearOldMessages();
 
@@ -803,30 +783,43 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfIEMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string);
+procedure TfIEMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime);
 var
     pt : integer;
     tags: IHTMLElementCollection;
     dv : IHTMLElement;
+    linedv : IHTMLElement;
     sp : IHTMLElement;
     i : integer;
     htmlout: widestring;
+    tmsg : TJabberMessage;
 begin
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
 
     if ((pt = 1) and (_content <> nil)) then begin
         // if previous is a presence, replace with this one.
+        // Pres looks like:
+        // <DIV class=line1>
+	    //     <SPAN class=other>user</SPAN>
+	    //     <DIV class=msgts>
+		//         <SPAN class=ts>9:32 am</SPAN>
+		//         <SPAN class=pres>user is now available.</SPAN>
+        //     </DIV>
+        // </DIV>
         tags := _content.children as IHTMLElementCollection;
         if (tags.length > 0) then begin
-            dv := tags.Item(tags.length - 1, 0) as IHTMLElement;
+            linedv := tags.Item(tags.length - 1, 0) as IHTMLElement; // class=line1 div
+            tags := linedv.children as IHTMLElementCollection;
+            dv := tags.item(tags.length - 1, 0) as IHTMLElement; // class=msgts div
             tags := dv.children as IHTMLElementCollection;
             for i := 0 to tags.length - 1 do begin
-                sp := tags.Item(i, 0) as IHTMLElement;
-                if sp.className = 'pres' then begin
-                    dv.outerHTML := '';
-                    if (_doMessageLimiting) then
+                sp := tags.Item(i, 0) as IHTMLElement; // class=ts, class=pres span
+                if (sp.className = 'pres') then begin
+                    linedv.outerHTML := ''; // clear div
+                    if (_doMessageLimiting) then begin
                         Dec(_msgCount);
+                    end;
                     break;
                 end;
             end;
@@ -849,7 +842,15 @@ begin
               '/GIF/HIGH_PRI"/>';
     end;    }
 
-    if timestamp <> '' then begin
+    if (timestamp <> '') then begin
+        if (dtTimestamp > 0) then begin
+            tmsg := TJabberMessage.Create();
+            tmsg.Time := dtTimestamp;
+            tmsg.Subject := '';
+            tmsg.Nick := nick;
+            _dateSeperator(tmsg);
+            tmsg.Free();
+        end;
         htmlout := htmlout + '<div class="msgts"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div></div>';
     end
     else begin
@@ -861,6 +862,7 @@ begin
         end;
     end;
 
+    _lastMsgNick := nick;
     writeHTML(htmlout);
 
     if (_bottom) then
@@ -1428,6 +1430,40 @@ begin
         end;
     end;
 end;
+
+{---------------------------------------}
+procedure TfIEMsgList._dateSeperator(msg: TJabberMessage);
+var
+    t: TDateTime;
+    txt: widestring;
+begin
+    if (msg = nil) then exit;
+    
+    try
+        if (_displayDateSeparator) then begin
+            t := msg.Time;
+            if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
+                (msg.Subject = '') and
+                (msg.Nick <> ''))then begin
+                txt := '<div class="date">' +
+                       '<span>' +
+                       DateToStr(t) +
+                       '</span>' +
+                       '</div>';
+
+                writeHTML(txt);
+                _lastTimeStamp := msg.Time;
+                txt := '';
+                _lastMsgNick := '';
+                if (_doMessageLimiting) then
+                    Inc(_msgCount);
+            end;
+        end;
+    except
+    end; 
+end;
+
+
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');
