@@ -29,17 +29,20 @@ uses
 type
   TExodusTabController = class(TAutoObject, IExodusTabController)
   protected
-    function AddTab(const ActiveX_GUID, Name: WideString): IExodusTab; safecall;
+      function AddTab(const ActiveX_GUID, Name: WideString): IExodusTab; safecall;
       function Get_Tab(Index: Integer): IExodusTab; safecall;
       function Get_TabCount: Integer; safecall;
-      procedure ActivateTab(Index: Integer); safecall;
       procedure RemoveTab(Index: Integer); safecall;
       procedure Clear; safecall;
       function GetTabByUID(const uid: WideString): IExodusTab; safecall;
       function GetTabIndexByUID(const uid: WideString): Integer; safecall;
-    function Get_VisibleTabCount: Integer; safecall;
-    function GetTabIndexByName(const Name: WideString): Integer; safecall;
-    function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
+      function Get_VisibleTabCount: Integer; safecall;
+      function GetTabIndexByName(const Name: WideString): Integer; safecall;
+      function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
+      function Get_ActiveTab: Integer; safecall;
+      procedure Set_ActiveTab(Index: Integer); safecall;
+      function GetSelectedItems(Index: Integer): OleVariant; safecall;
+      function GetSelectedGroups(Index: Integer): OleVariant; safecall;
   private
       _Tabs: TObjectList;
       _HiddenTabs: TWideStringList;
@@ -53,7 +56,8 @@ type
 
 implementation
 
-uses ComServ, COMExodusTab, COMExodusTabWrapper, Session, PrefController;
+uses ComServ, COMExodusTab, COMExodusTabWrapper, Session, PrefController,
+     RosterForm, Windows, SysUtils, Variants;
 
 {---------------------------------------}
 constructor TExodusTabController.Create();
@@ -113,12 +117,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusTabController.ActivateTab(Index: Integer);
-begin
-   Get_Tab(Index).Activate;
-end;
-
-{---------------------------------------}
 procedure TExodusTabController.RemoveTab(Index: Integer);
 var
    Tab: TExodusTabWrapper;
@@ -132,20 +130,6 @@ begin
   _Tabs.Clear();
 end;
 
-//function TExodusTabController.Get_TabByUid(const uid: WideString): IExodusTab;
-//var
-//    i: Integer;
-//begin
-//    Result := nil;
-//    for i := 0 to _Tabs.Count - 1 do
-//    begin
-//       if (Get_Tab(i).UID = uid) then
-//       begin
-//          Result := Get_Tab(i);
-//          break;
-//       end;
-//    end;
-//end;
 
 function TExodusTabController.GetTabByUID(const uid: WideString): IExodusTab;
 var
@@ -178,7 +162,7 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
 function TExodusTabController.Get_VisibleTabCount: Integer;
 var
     i: Integer;
@@ -191,6 +175,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 function TExodusTabController.GetTabIndexByName(
   const Name: WideString): Integer;
 var
@@ -207,6 +192,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 function TExodusTabController.Get_VisibleTab(Index: Integer): IExodusTab;
 var
     i: Integer;
@@ -222,6 +208,65 @@ begin
           break;
        end;
     end;
+end;
+
+{---------------------------------------}
+function TExodusTabController.Get_ActiveTab: Integer;
+begin
+    OutputDebugString(PChar(Format('Active tab: %d',[GetRosterWindow().PageControl.ActivePageIndex])));
+    Result := GetRosterWindow().PageControl.ActivePageIndex;
+end;
+
+{---------------------------------------}
+procedure TExodusTabController.Set_ActiveTab(Index: Integer);
+begin
+    if (Index < 0) then exit;
+    if (Index > GetRosterWindow().PageControl.PageCount - 1) then exit;
+    
+    OutputDebugString(PChar(Format('Setting active tab: %d',[Index])));
+    //Get_Tab(Index).Activate;
+    GetRosterWindow().PageControl.ActivePage := GetRosterWindow().PageControl.Pages[Index];
+    OutputDebugString(PChar(Format('Active tab: %d',[GetRosterWindow().PageControl.ActivePageIndex])));
+end;
+
+{---------------------------------------}
+function TExodusTabController.GetSelectedItems(Index: Integer): OleVariant;
+var
+    List: TWideStringList;
+    Items: Variant;
+    i: Integer;
+begin
+    if (Index < 0) then exit;
+    if (Index > GetRosterWindow().PageControl.PageCount - 1) then exit;
+    List := GetRosterWindow().GetSelectedItems(Index);
+    Items := VarArrayCreate([0,List.Count], varOleStr);
+    OutputDebugString(PChar(Format('%d selected.',[List.Count])));
+    for i := 0 to List.Count - 1 do begin
+        VarArrayPut(Items, List[i], i);
+        OutputDebugString(PChar(Format('Selection %d: %s',[i, List[i]])));
+    end;
+    List.Free();
+    Result := items;
+end;
+
+{---------------------------------------}
+function TExodusTabController.GetSelectedGroups(Index: Integer): OleVariant;
+var
+    List: TWideStringList;
+    Groups: Variant;
+    i: Integer;
+begin
+    if (Index < 0) then exit;
+    if (Index > GetRosterWindow().PageControl.PageCount - 1) then exit;
+    List := GetRosterWindow().GetSelectedGroups(Index);
+    Groups := VarArrayCreate([0,List.Count], varOleStr);
+    OutputDebugString(PChar(Format('%d selected.',[List.Count])));
+    for i := 0 to List.Count - 1 do begin
+        VarArrayPut(Groups, List[i], i);
+        OutputDebugString(PChar(Format('Selection %d: %s',[i, List[i]])));
+    end;
+    List.Free();
+    Result := Groups;
 end;
 
 initialization

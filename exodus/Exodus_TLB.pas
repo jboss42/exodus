@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/28/2008 12:11:30 PM from Type Library described below.
+// File generated on 3/31/2008 12:18:42 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\source\exodus\Exodus.tlb (1)
@@ -4636,18 +4636,22 @@ type
     function Get_TabCount: Integer; safecall;
     function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; safecall;
     procedure RemoveTab(index: Integer); safecall;
-    procedure ActivateTab(index: Integer); safecall;
     function Get_Tab(index: Integer): IExodusTab; safecall;
     procedure Clear; safecall;
     function GetTabByUID(const UID: WideString): IExodusTab; safecall;
     function GetTabIndexByUID(const UID: WideString): Integer; safecall;
     function Get_VisibleTabCount: Integer; safecall;
     function GetTabIndexByName(const Name: WideString): Integer; safecall;
-    function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
+    function Get_VisibleTab(index: Integer): IExodusTab; safecall;
+    function Get_ActiveTab: Integer; safecall;
+    procedure Set_ActiveTab(index: Integer); safecall;
+    function GetSelectedItems(index: Integer): OleVariant; safecall;
+    function GetSelectedGroups(index: Integer): OleVariant; safecall;
     property TabCount: Integer read Get_TabCount;
     property Tab[index: Integer]: IExodusTab read Get_Tab;
     property VisibleTabCount: Integer read Get_VisibleTabCount;
-    property VisibleTab[Index: Integer]: IExodusTab read Get_VisibleTab;
+    property VisibleTab[index: Integer]: IExodusTab read Get_VisibleTab;
+    property ActiveTab: Integer read Get_ActiveTab write Set_ActiveTab;
   end;
 
 // *********************************************************************//
@@ -4660,14 +4664,16 @@ type
     property TabCount: Integer readonly dispid 201;
     function AddTab(const ActiveX_GUID: WideString; const Name: WideString): IExodusTab; dispid 202;
     procedure RemoveTab(index: Integer); dispid 203;
-    procedure ActivateTab(index: Integer); dispid 204;
     property Tab[index: Integer]: IExodusTab readonly dispid 205;
     procedure Clear; dispid 206;
     function GetTabByUID(const UID: WideString): IExodusTab; dispid 207;
     function GetTabIndexByUID(const UID: WideString): Integer; dispid 208;
     property VisibleTabCount: Integer readonly dispid 209;
     function GetTabIndexByName(const Name: WideString): Integer; dispid 210;
-    property VisibleTab[Index: Integer]: IExodusTab readonly dispid 211;
+    property VisibleTab[index: Integer]: IExodusTab readonly dispid 211;
+    property ActiveTab: Integer dispid 212;
+    function GetSelectedItems(index: Integer): OleVariant; dispid 204;
+    function GetSelectedGroups(index: Integer): OleVariant; dispid 213;
   end;
 
 // *********************************************************************//
@@ -4686,7 +4692,6 @@ type
     function Get_Visible: WordBool; safecall;
     procedure Show; safecall;
     procedure Hide; safecall;
-    procedure Activate; safecall;
     function Get_UID: WideString; safecall;
     function Get_Height: Integer; safecall;
     function Get_Width: Integer; safecall;
@@ -4721,7 +4726,6 @@ type
     property Visible: WordBool readonly dispid 204;
     procedure Show; dispid 205;
     procedure Hide; dispid 206;
-    procedure Activate; dispid 207;
     property UID: WideString readonly dispid 209;
     property Height: Integer readonly dispid 210;
     property Width: Integer readonly dispid 211;

@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExForm, XMLTag, ExTreeView, Exodus_TLB, LoginWindow, ComCtrls,
-  TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController;
+  TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController,
+  Unicode;
 
 type
   TRosterForm = class(TExForm)
@@ -30,6 +31,7 @@ type
       procedure _ToggleGUI(state: TLoginGuiState);
       function _GetImages() : TImageList;
       procedure _SetImages(Value :TImageList);
+      function _GetTreeByTabIndex(Index: Integer): TTntTreeView;
       //procedure _RemovePluginTabs();
   public
       { Public declarations }
@@ -38,11 +40,14 @@ type
       procedure RosterCallback(event: string; item: IExodusItem);
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
+      function  GetSelectedItems(Index: Integer): TWideStringList;
+      function  GetSelectedGroups(Index: Integer): TWideStringList;
       property  RosterTree: TExTreeView read _TreeMain;
       property  ContactsTree: TExContactsTreeView read _TreeContacts;
       property  RoomsTree: TExRoomsTreeView read _TreeRooms;
       property  ImageList: TImageList read _GetImages  write _SetImages;
       property  TabController: IExodusTabController read _TabController;
+      property  PageControl: TTntPageControl read _PageControl;
   end;
 
 
@@ -122,6 +127,19 @@ end;
 procedure TRosterForm._SetImages(Value :TImageList);
 begin
     _PageControl.Images := Value;
+end;
+
+{---------------------------------------}
+function TRosterForm._GetTreeByTabIndex(Index: Integer): TTntTreeView;
+begin
+   Result := nil;
+   if (_TreeMain.TabIndex = Index) then
+       Result := _TreeMain
+   else if (_TreeContacts.TabIndex = Index) then
+       Result := _TreeContacts
+   else if (_TreeRooms.TabIndex = Index) then
+       Result := _TreeRooms;
+
 end;
 
 {---------------------------------------}
@@ -215,21 +233,29 @@ begin
     ITab.ImageIndex := RI_MAIN_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
+    begin
         _treeMain.parent := _PageControl.Pages[Idx];
+        _treeMain.TabIndex := Idx;
+    end;
 
     ITab := _TabController.AddTab('', _('Contacts'));
     ITab.Description := _('Tab containing contacts only. ');
     ITab.ImageIndex := RI_CONTACTS_TAB_INDEX;
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
+    begin
         _TreeContacts.parent := _PageControl.Pages[Idx];
-
+        _TreeContacts.TabIndex := Idx;
+    end;
     ITab := _TabController.AddTab('', _('Rooms'));
     ITab.ImageIndex := RI_ROOMS_TAB_INDEX;
     ITab.Description := _('Tab containing rooms only. ');
     Idx := _TabController.GetTabIndexByUid(ITab.UID);
     if (Idx > -1) then
+    begin
         _TreeRooms.parent := _PageControl.Pages[Idx];
+        _TreeRooms.TabIndex := Idx;
+    end;
 
     AssignUnicodeFont(Self, 9);
 end;
@@ -290,6 +316,43 @@ begin
         Self.ManualDock(docksite, nil, alClient);
         Application.ProcessMessages();
         Self.Align := alClient;
+    end;
+end;
+
+{---------------------------------------}
+function  TRosterForm.GetSelectedItems(Index: Integer): TWideStringList;
+var
+    Tree: TTntTreeView;
+    Node: TTntTreeNode;
+    Item: IExodusItem;
+    i: Integer;
+begin
+    Result := TWideStringList.Create();
+    Tree := _GetTreeByTabIndex(Index);
+    if (Tree = nil) then exit;
+    
+    for i := 0 to Tree.SelectionCount - 1 do
+    begin
+        if (Tree.Selections[i].Data <> nil) then
+            Result.Add(IExodusItem(Tree.Selections[i].Data).UID);
+    end;
+end;
+
+{---------------------------------------}
+function  TRosterForm.GetSelectedGroups(Index: Integer): TWideStringList;
+var
+    Tree: TTntTreeView;
+    Node: TTntTreeNode;
+    i: Integer;
+begin
+    Result := TWideStringList.Create();
+    Tree := _GetTreeByTabIndex(Index);
+    if (Tree = nil) then exit;
+    
+    for i := 0 to Tree.SelectionCount - 1 do
+    begin
+        if (Tree.Selections[i].Data = nil) then
+            Result.Add(Tree.Selections[i].Text);
     end;
 end;
 
