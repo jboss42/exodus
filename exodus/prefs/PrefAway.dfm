@@ -4,6 +4,8 @@ inherited frmPrefAway: TfrmPrefAway
   Anchors = [akLeft]
   Caption = 'frmPrefAway'
   OldCreateOrder = True
+  ExplicitWidth = 394
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   object pnlContainer: TExBrandPanel [0]
@@ -82,7 +84,7 @@ inherited frmPrefAway: TfrmPrefAway
       object chkAAReducePri: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 42
+        Top = 66
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -90,12 +92,13 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Bottom = 0
         Align = alTop
         Caption = 'Reduce &priority to 0 when Away'
-        TabOrder = 2
+        TabOrder = 3
+        ExplicitTop = 42
       end
       object chkAwayAutoResponse: TTntCheckBox
         AlignWithMargins = True
         Left = 18
-        Top = 66
+        Top = 90
         Width = 341
         Height = 23
         Margins.Left = 18
@@ -103,12 +106,13 @@ inherited frmPrefAway: TfrmPrefAway
         Margins.Bottom = 0
         Align = alTop
         Caption = '&Send auto response message when away'
-        TabOrder = 3
+        TabOrder = 4
+        ExplicitTop = 66
       end
       object ExBrandPanel2: TExBrandPanel
         AlignWithMargins = True
         Left = 18
-        Top = 89
+        Top = 42
         Width = 341
         Height = 24
         Margins.Left = 18
@@ -118,8 +122,9 @@ inherited frmPrefAway: TfrmPrefAway
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 4
+        TabOrder = 2
         AutoHide = True
+        ExplicitLeft = 17
         object lblAwayStatus: TTntLabel
           Left = 0
           Top = 3
@@ -236,7 +241,7 @@ inherited frmPrefAway: TfrmPrefAway
       Left = 0
       Top = 197
       Width = 362
-      Height = 42
+      Height = 43
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -252,7 +257,7 @@ inherited frmPrefAway: TfrmPrefAway
       OnCheckChanged = chkAutoDisconnectCheckChanged
       object lblDisconnectTime: TTntLabel
         AlignWithMargins = True
-        Left = 21
+        Left = 18
         Top = 26
         Width = 180
         Height = 13
@@ -265,7 +270,7 @@ inherited frmPrefAway: TfrmPrefAway
         Left = 304
         Top = 19
         Width = 54
-        Height = 25
+        Height = 24
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
@@ -274,7 +279,7 @@ inherited frmPrefAway: TfrmPrefAway
         Max = 600
         DesignSize = (
           54
-          25)
+          24)
       end
     end
   end
