@@ -163,6 +163,8 @@ type
     _AlternateBGColor: TColor;
     _parser: TXMLTagParser;
     _sessionCB: integer;
+    _basicpanel_height: integer;
+    _advpanel_height: integer;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -202,9 +204,8 @@ type
   end;
 
 const
-    ADVPANEL_HEIGHT = 150;
-    BASICPANEL_HEIGHT = 35;
     ADVGRPGUTTER_WIDTH = 8;
+    TOP_BOTTOM_GUTTER_HEIGHT = 9;
     DEFAULT_DATE_GAP_MONTHS = -2;
 
 var
@@ -540,10 +541,8 @@ begin
 
         _DropResults();
 
-        //_SearchObj := CreateCOMObject(CLASS_ExodusHistorySearch) as IExodusHistorySearch;
         _SearchObj := TExodusHistorySearch.Create();
         _SearchObj.ObjAddRef();
-        //_ResultObj := CreateCOMObject(CLASS_ExodusHistoryResult) as IExodusHistoryResult;
         _ResultObj := TExodusHistoryResult.Create();
         _ResultObj.ObjAddRef();
 
@@ -678,6 +677,10 @@ begin
     _parser := TXMLTagParser.Create();
 
     _sessionCB := Mainsession.RegisterCallback(SessionCallback, '/session/disconnected');
+
+    _basicpanel_height := txtBasicKeywordSearch.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
+    _advpanel_height := grpDate.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
+
 end;
 
 {---------------------------------------}
@@ -1142,12 +1145,12 @@ begin
 
     // Control bar
     if (_AdvSearch) then begin
-        pnlSearchBar.Height := ADVPANEL_HEIGHT;
-        pnlControlBar.Top := ADVPANEL_HEIGHT;
+        pnlSearchBar.Height := _ADVPANEL_HEIGHT;
+        pnlControlBar.Top := _ADVPANEL_HEIGHT;
     end
     else begin
-        pnlSearchBar.Height := BASICPANEL_HEIGHT;
-        pnlControlBar.Top := BASICPANEL_HEIGHT;
+        pnlSearchBar.Height := _BASICPANEL_HEIGHT;
+        pnlControlBar.Top := _BASICPANEL_HEIGHT;
     end;
 
     if (not btnPrint.Visible) then begin
