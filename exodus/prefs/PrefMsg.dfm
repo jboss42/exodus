@@ -40,7 +40,7 @@ inherited frmPrefMsg: TfrmPrefMsg
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Incoming subscription request handling:'
+      Caption = 'Incoming subscription request handling'
       ParentColor = True
       TabOrder = 0
       AutoHide = True
@@ -128,7 +128,7 @@ inherited frmPrefMsg: TfrmPrefMsg
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Other message handling options:'
+      Caption = 'Other message handling options'
       ParentColor = True
       TabOrder = 1
       AutoHide = True
@@ -166,7 +166,7 @@ inherited frmPrefMsg: TfrmPrefMsg
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Advanced message handling preferences'
+      Caption = 'Advanced message handling options'
       ParentColor = True
       TabOrder = 2
       AutoHide = True

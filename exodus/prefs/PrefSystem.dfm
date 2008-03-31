@@ -46,7 +46,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'When I start my computer:'
+      Caption = 'When I start my computer'
       ParentColor = True
       TabOrder = 0
       AutoHide = True
@@ -77,7 +77,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'When I start Exodus:'
+      Caption = 'When I start Exodus'
       ParentColor = True
       TabOrder = 1
       AutoHide = True
@@ -147,7 +147,7 @@ inherited frmPrefSystem: TfrmPrefSystem
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Other:'
+      Caption = 'Other system preferences'
       ParentColor = True
       TabOrder = 2
       AutoHide = True
@@ -230,7 +230,7 @@ inherited frmPrefSystem: TfrmPrefSystem
     object ExGroupBox3: TExGroupBox
       AlignWithMargins = True
       Left = 0
-      Top = 341
+      Top = 346
       Width = 305
       Height = 165
       Margins.Left = 0
@@ -240,10 +240,11 @@ inherited frmPrefSystem: TfrmPrefSystem
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Advanced system preferences:'
+      Caption = 'Advanced system preferences'
       ParentColor = True
       TabOrder = 4
       AutoHide = True
+      ExplicitTop = 341
       object chkToolbox: TTntCheckBox
         AlignWithMargins = True
         Left = 3
@@ -375,12 +376,12 @@ inherited frmPrefSystem: TfrmPrefSystem
       Left = 0
       Top = 258
       Width = 302
-      Height = 74
+      Height = 79
       Margins.Left = 0
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
-      Caption = 'Reconnect options:'
+      Caption = 'Reconnect options'
       ParentColor = True
       TabOrder = 3
       AutoHide = True
@@ -410,7 +411,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 25
+          Height = 24
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -419,7 +420,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 1000000
           DesignSize = (
             45
-            25)
+            24)
         end
       end
       object pnlTime: TExBrandPanel
@@ -467,7 +468,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Left = 171
           Top = 0
           Width = 45
-          Height = 25
+          Height = 24
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
@@ -476,7 +477,7 @@ inherited frmPrefSystem: TfrmPrefSystem
           Max = 3600
           DesignSize = (
             45
-            25)
+            24)
         end
       end
     end

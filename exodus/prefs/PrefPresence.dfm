@@ -90,7 +90,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    Caption = 'Presence tracking in chat windows:'
+    Caption = 'Presence tracking in chat windows'
     ParentColor = True
     TabOrder = 2
     AutoHide = True
@@ -139,7 +139,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    Caption = 'Custom presence entries:'
+    Caption = 'Custom presence entries'
     ParentColor = True
     TabOrder = 3
     AutoHide = True
@@ -289,7 +289,7 @@ inherited frmPrefPresence: TfrmPrefPresence
         Left = 72
         Top = 68
         Width = 68
-        Height = 25
+        Height = 24
         Hint = 'Priority of -1 uses current priority.'
         BevelOuter = bvNone
         ParentColor = True
@@ -303,7 +303,7 @@ inherited frmPrefPresence: TfrmPrefPresence
         OnChange = txtCPTitleChange
         DesignSize = (
           68
-          25)
+          24)
       end
       object txtCPHotkey: THotKey
         Left = 72
