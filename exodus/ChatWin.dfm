@@ -7,7 +7,7 @@ inherited frmChat: TfrmChat
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -21,7 +21,7 @@ inherited frmChat: TfrmChat
     ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 420
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
       Width = 440

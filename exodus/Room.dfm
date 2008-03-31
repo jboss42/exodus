@@ -6,7 +6,7 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
@@ -21,11 +21,11 @@ inherited frmRoom: TfrmRoom
     ExplicitWidth = 492
     inherited tbDockBar: TToolBar
       Left = 443
-      ExplicitLeft = 420
+      ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
       Width = 440
-      ExplicitWidth = 417
+      ExplicitWidth = 440
       object pnlSubj: TPanel
         Left = 0
         Top = 0
@@ -122,6 +122,8 @@ inherited frmRoom: TfrmRoom
         ShowColumnHeaders = False
         ShowWorkAreas = True
         ShowHint = True
+        SmallImages = frmExodus.ImageList1
+        SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
         OnCustomDrawItem = lstRosterCustomDrawItem
