@@ -182,7 +182,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         object TntLabel3: TTntLabel
           Left = 5
           Top = 20
-          Width = 129
+          Width = 162
           Height = 13
           Anchors = [akLeft, akTop, akRight]
           Caption = 'Enter one keyword per line'
@@ -217,20 +217,20 @@ inherited frmHistorySearch: TfrmHistorySearch
           170
           135)
         object btnAddContact: TTntButton
-          Left = 5
-          Top = 107
-          Width = 75
-          Height = 25
+          Left = 7
+          Top = 104
+          Width = 68
+          Height = 28
           Anchors = [akTop, akRight]
           Caption = 'Add...'
           TabOrder = 0
           OnClick = btnAddContactClick
         end
         object btnRemoveContact: TTntButton
-          Left = 90
-          Top = 107
-          Width = 75
-          Height = 25
+          Left = 99
+          Top = 104
+          Width = 68
+          Height = 28
           Anchors = [akTop, akRight]
           Caption = 'Remove'
           TabOrder = 1
@@ -259,20 +259,20 @@ inherited frmHistorySearch: TfrmHistorySearch
           170
           135)
         object btnAddRoom: TTntButton
-          Left = 9
-          Top = 107
-          Width = 75
-          Height = 25
+          Left = 7
+          Top = 104
+          Width = 68
+          Height = 28
           Anchors = [akTop, akRight]
           Caption = 'Add...'
           TabOrder = 0
           OnClick = btnAddRoomClick
         end
         object btnRemoveRoom: TTntButton
-          Left = 90
-          Top = 107
-          Width = 75
-          Height = 25
+          Left = 99
+          Top = 104
+          Width = 68
+          Height = 28
           Anchors = [akTop, akRight]
           Caption = 'Remove'
           TabOrder = 1
@@ -387,20 +387,20 @@ inherited frmHistorySearch: TfrmHistorySearch
       ExplicitWidth = 50
     end
     object btnSerach: TTntButton
-      Left = 636
+      Left = 639
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
       Anchors = [akTop, akRight]
       Caption = 'Search'
       TabOrder = 0
       OnClick = btnSerachClick
     end
     object btnAdvBasicSwitch: TTntButton
-      Left = 555
+      Left = 565
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
       Anchors = [akTop, akRight]
       Caption = 'Advanced'
       TabOrder = 1
@@ -409,17 +409,17 @@ inherited frmHistorySearch: TfrmHistorySearch
     object btnPrint: TTntButton
       Left = 8
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
       Caption = 'Print...'
       TabOrder = 2
       OnClick = bntPrintClick
     end
     object btnDelete: TTntButton
-      Left = 89
+      Left = 82
       Top = 6
-      Width = 75
-      Height = 25
+      Width = 68
+      Height = 28
       Caption = 'Delete...'
       TabOrder = 3
       OnClick = btnDeleteClick
