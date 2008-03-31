@@ -32,13 +32,12 @@ type
       function Get_Caption: WideString; safecall;
       function Get_ImageIndex: Integer; safecall;
       function Get_Name: WideString; safecall;
-    function Get_Visible: WordBool; safecall;
+      function Get_Visible: WordBool; safecall;
       procedure Hide; safecall;
       procedure Set_Caption(const Value: WideString); safecall;
       procedure Set_ImageIndex(Value: Integer); safecall;
       procedure Set_Name(const Value: WideString); safecall;
       procedure Show; safecall;
-      procedure Activate; safecall;
       function Get_Handle: Integer; safecall;
       function Get_UID: WideString; safecall;
       function Get_Height: Integer; safecall;
@@ -147,12 +146,6 @@ procedure TExodusTab.Show;
 begin
     _Page.TabVisible := true;
     MainSession.FireEvent('/session/tab/show', nil);
-end;
-
-{---------------------------------------}
-procedure TExodusTab.Activate;
-begin
-    _Page.SetFocus;
 end;
 
 {---------------------------------------}
