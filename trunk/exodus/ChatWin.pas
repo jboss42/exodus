@@ -1157,11 +1157,13 @@ var
 begin
     Item := MainSession.ItemController.Getitem(_jid.jid);
     if (Item <> nil) then begin
+    { JJF TODO run this through the action map
         if (not Item.Active) then begin
             MsgOut.Clear;
             MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
             exit;
         end;
+    }
     end;
 
     // Get the text from the UI
