@@ -420,8 +420,6 @@ end;
 procedure AssignUnicodeFont(f: TFont; font_size: short);
 begin
     TExForm.GetDefaultFont(f);
-//    if (font_size >= 5) then
-//        f.size := font_size;
 end;
 
 {---------------------------------------}
@@ -429,15 +427,17 @@ procedure AssignUnicodeHighlight(f: TFont; font_size: short);
 begin
     AssignUnicodeFont(f, font_size);
     f.Color := clHighlightText;
-    f.Style := [fsBold];
+    f.Style := f.Style + [fsBold];
 end;
 
 {---------------------------------------}
 procedure AssignUnicodeURL(f: TFont; font_size: short);
 begin
     AssignUnicodeFont(f, font_size);
+    if (not (fsUnderline in f.Style)) then    
+        f.Size := f.Size + 1; //bump a little to make room for the underbar
     f.Color := clBlue;
-    f.Style := [fsUnderline];
+    f.Style := f.Style + [fsUnderline];
 end;
 
 {---------------------------------------}
@@ -460,7 +460,6 @@ begin
             Font.Charset := cs;
 
         Font.Style := [];
-        // Color := TColor(getInt('color_bg'));
         Font.Color := TColor(getInt('font_color'));
         if getBool('font_bold') then
             Font.Style := Font.Style + [fsBold];
