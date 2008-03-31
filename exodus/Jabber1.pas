@@ -404,8 +404,6 @@ type
     procedure mnuOptions_Notifications_NewConversationClick(Sender: TObject);
     procedure mnuPeople_ConferenceClick(Sender: TObject);
     procedure btnFindClick(Sender: TObject);
-    procedure splitRosterCanResize(Sender: TObject; var NewSize: Integer;
-      var Accept: Boolean);
     procedure mnuWindows_View_ShowActivityWindowClick(Sender: TObject);
     procedure trayShowActivityWindowClick(Sender: TObject);
     procedure clickChangeStatus(Sender: TObject);
@@ -1251,7 +1249,7 @@ begin
 
         _enforceConstraints := true;
         frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-        frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+        frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
 
         mnuContacts_ViewHistory.Visible := getBool('brand_history_search');
     end;
@@ -1788,7 +1786,7 @@ begin
         // We are logged in, so change main form to roster witdth
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_roster_window_height');
-            frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width_undocked');
+            frmExodus.Constraints.MinWidth := getInt('brand_min_roster_window_width');
         end;
 
         _profileScreenLastWidth := Self.Width;
@@ -1863,7 +1861,7 @@ begin
         // Change back to profile width from roster width
         with MainSession.Prefs do begin
             frmExodus.Constraints.MinHeight := getInt('brand_min_profiles_window_height');
-            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width_undocked');
+            frmExodus.Constraints.MinWidth := getInt('brand_min_profiles_window_width');
         end;
 
         if (_profileScreenLastWidth > 0) then
@@ -2520,22 +2518,6 @@ begin
       CloseDebugForm()
     else
       ShowDebugForm();
-end;
-
-procedure TfrmExodus.splitRosterCanResize(Sender: TObject; var NewSize: Integer;
-  var Accept: Boolean);
-begin
-    Accept := true;
-    if (MainSession.Active) then begin
-        if (newSize < MainSession.Prefs.getInt('brand_min_roster_spliter_width')) then begin
-            Accept := false;
-        end;
-    end
-    else begin
-        if (NewSize < MainSession.Prefs.getInt('brand_min_profiles_spliter_width')) then begin
-            Accept := false;
-        end;
-    end;
 end;
 
 {---------------------------------------}
@@ -4415,9 +4397,9 @@ begin
     Self.DockSite := false;
 
     if (MainSession.Active) then
-        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width_undocked')
+        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_roster_window_width')
     else
-        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width_undocked');
+        frmExodus.Constraints.MinWidth := MainSession.Prefs.getInt('brand_min_profiles_window_width');
 
     _enforceConstraints := true;
 end;

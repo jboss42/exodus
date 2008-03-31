@@ -282,6 +282,9 @@
 
     <!-- Presence Preferences -->
     <client_caps value="1" control="chkClientCaps" state="rw"/>
+    <!-- Client capabilities identifier -->
+    <client_caps_uri value="http://jmomentim.jabber.com/caps"/>
+
     <room_joins value="0" control="chkRoomJoins" state="rw"/>
     <!-- hmm, why two of these? -->
     <presence_message_listen value="1" control="chkPresenceSync" state="rw"/>
@@ -289,8 +292,7 @@
     <pres_tracking value="0" state="rw"/>
     <!-- custom presence state, value is ignored -->
     <pres_custom state="rw"/>
-    <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
-    
+
     <show_presence_menu_chat value="1"/>
     <show_presence_menu_available value="1"/>
     <show_presence_menu_away value="1"/>
@@ -604,17 +606,13 @@
     <brand_logo/>
 
     <!-- Brand the minimum size of the window -->
-        <!-- brand_min_roster_* is minimum size (in pixels) when user is logged into a server -->
+    <!-- brand_min_roster_* is minimum size (in pixels) when user is logged into a server -->
     <brand_min_roster_window_height value="230"/>
-    <brand_min_roster_window_width_docked value="600"/> <!-- When 1 or more windows are docked -->
-        <brand_min_roster_window_width_undocked value="250"/> <!-- No docked windows -->
-        <brand_min_roster_spliter_width value="250"/>
+    <brand_min_roster_window_width value="250"/> 
 
-        <!-- brand_min_profiles_* is minimum size (in pixels) when user is NOT logged into a server -->
+    <!-- brand_min_profiles_* is minimum size (in pixels) when user is NOT logged into a server -->
     <brand_min_profiles_window_height value="230"/>
-    <brand_min_profiles_window_width_docked value="600"/> <!-- When 1 or more windows are docked -->
-    <brand_min_profiles_window_width_undocked value="250"/> <!-- No docked windows -->
-        <brand_min_profiles_spliter_width value="250"/>
+    <brand_min_profiles_window_width value="250"/>
 
     <!-- Stringlist with additional data to be added to the about box -->
     <brand_about_additional_list/>
@@ -631,9 +629,9 @@
     <!-- comment out or set to 0 to use default window colors -->
     <brand_default_window_color value="$00D0C3AF" state="rw"/>
 
-	<!-- Should the internal SQL logger log chat or room messages -->
-	<brand_history_search value="1"/>
-	<brand_log_chat_messages value="1"/>
+    <!-- Should the internal SQL logger log chat or room messages -->
+    <brand_history_search value="1"/>
+    <brand_log_chat_messages value="1"/>
     <brand_log_groupchat_messages value="1"/>
     <brand_log_normal_messages value="1"/>
 
