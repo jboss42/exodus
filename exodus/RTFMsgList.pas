@@ -52,7 +52,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(nick, txt: Widestring; timestamp: string); override;
+    procedure DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -246,7 +246,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfRTFMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string);
+procedure TfRTFMsgList.DisplayPresence(nick, txt: Widestring; timestamp: string; dtTimestamp: TDateTime);
 var
     pt : integer;
     at_bottom: boolean;

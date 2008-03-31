@@ -1251,7 +1251,7 @@ begin
         except
             // To handle Cannot focus exception
         end;
-        MsgList.DisplayPresence('', _('You have been disconnected.'), '');
+        MsgList.DisplayPresence('', _('You have been disconnected.'), '', 0);
         Self.ImageIndex := RosterImages.RI_OFFLINE_INDEX;
     end
     else if (event = '/session/presence') then begin
@@ -1262,7 +1262,7 @@ begin
             except
                 // To handle Cannot focus exception
             end;
-            MsgList.DisplayPresence('', _('Reconnected'), '');
+            MsgList.DisplayPresence('', _('Reconnected'), '', 0);
             updatePresenceImage();
         end;
     end
@@ -1387,6 +1387,7 @@ var
     p: TJabberPres;
     j: TJabberID;
     Item: IExodusItem;
+    dt: TDateTime;
 begin
     // Get the user
     user := tag.GetAttribute('from');
@@ -1418,12 +1419,15 @@ begin
         if (txt = '') then
             txt := _(sAvailable);
 
-        if (MainSession.Prefs.getBool('timestamp')) then
-            ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now)
-        else
+        if (MainSession.Prefs.getBool('timestamp')) then begin
+            dt := Now;
+            ts := FormatDateTime(MainSession.Prefs.getString('timestamp_format'), dt);
+        end
+        else begin
             ts := '';
+        end;
 
-        MsgList.DisplayPresence(_displayName, _displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts);
+        MsgList.DisplayPresence(_displayName, _displayName + ' ' + _(sIsNow) + ' ' + txt + '.', ts, dt);
     end;
 end;
 
