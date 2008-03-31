@@ -146,6 +146,8 @@ type
     procedure bntPrintClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure lstRoomsClick(Sender: TObject);
+    procedure FormMouseEnter(Sender: TObject);
+    procedure FormMouseLeave(Sender: TObject);
   private
     // Variables
     _ResultsHistoryFrame: TObject;
@@ -160,6 +162,7 @@ type
     _PrimaryBGColor: TColor;
     _AlternateBGColor: TColor;
     _parser: TXMLTagParser;
+    _sessionCB: integer;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -191,6 +194,7 @@ type
     procedure AddContactBasicSearch(const jid: widestring);
     procedure AddContact(const jid: widestring);
     procedure AddRoom(const room: widestring);
+    procedure SessionCallback(event: string; tag: TXMLTag);
 
     // Properties
     property AdvSearch: boolean read _AdvSearch write _SetAdvSearch;
@@ -672,6 +676,8 @@ begin
     btnDelete.Enabled := false;
 
     _parser := TXMLTagParser.Create();
+
+    _sessionCB := Mainsession.RegisterCallback(SessionCallback, '/session/disconnected');
 end;
 
 {---------------------------------------}
@@ -696,7 +702,29 @@ begin
         end;
     end;
 
+    MainSession.UnRegisterCallback(_sessionCB);
+
     inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.FormMouseEnter(Sender: TObject);
+begin
+    inherited;
+
+    if (_DoingSearch) then begin
+        Screen.Cursor := crHourglass;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.FormMouseLeave(Sender: TObject);
+begin
+    inherited;
+
+    if (_DoingSearch) then begin
+        Screen.Cursor := crDefault;
+    end;
 end;
 
 {---------------------------------------}
@@ -1412,7 +1440,19 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmHistorySearch.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then begin
+        if (_DoingSearch) then begin
+            HistorySearchManager.CancelSearch(_SearchObj.Get_SearchID);
+            _DoingSearch := false;
+            ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
+        end;
 
+        Self.Close();
+    end;
+end;
 
 
 

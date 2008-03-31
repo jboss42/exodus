@@ -7,6 +7,8 @@ inherited frmHistorySearch: TfrmHistorySearch
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnMouseEnter = FormMouseEnter
+  OnMouseLeave = FormMouseLeave
   OnResize = FormResize
   ExplicitWidth = 728
   ExplicitHeight = 462
