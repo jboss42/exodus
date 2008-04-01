@@ -254,6 +254,9 @@ begin
     fld_type := t;
     if (frm_type = 'submit') then
         c.Enabled := false;
+
+    // Force redraw to make everything size correctly.
+    FrameResize(nil);
 end;
 
 {---------------------------------------}
@@ -352,7 +355,7 @@ end;
 procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
     if (change_width) then exit;
-    
+
     if (c is TTntEdit) then begin
         if (dot <> nil) then
             c.width := Self.ClientWidth - elCaption.Width - dot.Width - 6 - 2

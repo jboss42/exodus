@@ -13,5 +13,6 @@ inherited frameGeneric: TframeGeneric
     Height = 15
     Align = alLeft
     Caption = 'Label'
+    ExplicitHeight = 16
   end
 end

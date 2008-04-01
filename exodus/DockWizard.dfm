@@ -95,6 +95,7 @@ inherited frmDockWizard: TfrmDockWizard
       ParentColor = True
       ParentCtl3D = False
       TabOrder = 1
+      OnResize = Panel1Resize
       object Bevel2: TBevel
         Left = 0
         Top = 44
@@ -107,9 +108,10 @@ inherited frmDockWizard: TfrmDockWizard
       end
       object lblWizardTitle: TTntLabel
         Left = 16
-        Top = 8
+        Top = 5
         Width = 135
         Height = 13
+        Align = alCustom
         Caption = 'Wizard Label goes here'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -122,8 +124,9 @@ inherited frmDockWizard: TfrmDockWizard
       object lblWizardDetails: TTntLabel
         Left = 32
         Top = 24
-        Width = 297
+        Width = 363
         Height = 29
+        Align = alCustom
         AutoSize = False
         Caption = 'lblWizardDetails'
         Transparent = True
