@@ -30,12 +30,12 @@ uses
   ComCtrls, ExtCtrls, TntExtCtrls,
   ExodusDockManager, StdCtrls,
   ExGradientPanel, AWItem, Unicode,
-  StateForm, XMLTag;
+  StateForm, XMLTag,
+  FrmUtils;
 
 type
 
   TSortState = (ssUnsorted, ssAlpha, ssRecent, ssType, ssUnread);
-  TGlueEdge = (geNone, geTop, geRight, geLeft, geBottom);
 
   TfrmDockWindow = class(TfrmState, IExodusDockManager)
     splAW: TTntSplitter;
@@ -63,6 +63,7 @@ type
     _dockState: TDockStates;
     _sortState: TSortState;
     _glueEdge: TGlueEdge;
+    _glueRange: integer;
     _undocking: boolean;
     _sessionCB: integer;
     _suppressShow: boolean;
@@ -73,7 +74,6 @@ type
     procedure _saveDockWidths();
     procedure _needToBeShowingCheck();
     procedure _glueCheck();
-    function _withinGlueSnapRange(): TGlueEdge;
     function _canShowWindow(): boolean;
 
   protected
@@ -107,6 +107,8 @@ type
     procedure moveGlued();
     procedure SessionCallback(event: string; tag: TXMLTag);
     function GetActiveTabSheet(): TTntTabSheet;
+
+    property glueEdge: TGlueEdge read _glueEdge write _glueEdge;
   end;
 
 var
@@ -226,6 +228,14 @@ begin
     end;
 
     _layoutAWOnly();
+
+    // Determine glue range
+    if (MainSession.Prefs.getBool('brand_glue_activity_window')) then begin
+        _glueRange := MainSession.Prefs.getInt('brand_glue_activity_window_range');
+    end
+    else begin
+        _glueRange := -1;
+    end;
 end;
 
 {---------------------------------------}
@@ -921,75 +931,13 @@ procedure TfrmDockWindow._glueCheck();
 begin
     if (Self.WindowState = wsMaximized) then exit;
 
-    _glueEdge := _withinGlueSnapRange();
+    _glueEdge := withinGlueSnapRange(frmExodus, Self, _glueRange);
 
     if (_glueEdge <> geNone) then begin
         frmExodus.glueWindow(true);
     end
     else begin
         frmExodus.glueWindow(false);
-    end;
-end;
-
-{---------------------------------------}
-function TfrmDockWindow._withinGlueSnapRange(): TGlueEdge;
-var
-    mainfrmRect: TRect;
-    myRect: TRect;
-    glueRange: integer;
-begin
-    // Capture frmExodus rect.
-    mainfrmRect.Top := frmExodus.Top;
-    mainfrmRect.Left := frmExodus.Left;
-    mainfrmRect.Bottom := frmExodus.Top + frmExodus.Height;
-    mainfrmRect.Right := frmExodus.Left + frmExodus.Width;
-
-    // Capture My Rect
-    myRect.Top := Self.Top;
-    myRect.Left := Self.Left;
-    myRect.Bottom := Self.Top + Self.Height;
-    myRect.Right := Self.Left + Self.Width;
-
-    // Determine glue range
-    glueRange := 10;
-    if (MainSession.Prefs.getBool('snap_on')) then begin
-        glueRange := MainSession.Prefs.getInt('edge_snap');
-    end;
-
-    // Check to see if we are in range
-    //  - Need to be within glue range of a side
-    //  - Need to be within glue range of secondary trait, like the top
-    if ((myRect.Left <= (mainfrmRect.Right + glueRange)) and
-        (myRect.Left >= (mainfrmRect.Right - glueRange)) and
-        (myRect.Top <= (mainfrmRect.Top + glueRange)) and
-        (myRect.Top >= (mainfrmRect.Top - glueRange))) then begin
-        // Close to my left edge
-        Result := geLeft;
-    end
-    else if ((myRect.Right >= (mainfrmRect.Left - glueRange)) and
-            (myRect.Right <= (mainfrmRect.Left + glueRange)) and
-            (myRect.Top <= (mainfrmRect.Top + glueRange)) and
-            (myRect.Top >= (mainfrmRect.Top - glueRange))) then begin
-        // Close to my right edge
-        Result := geRight;
-    end
-    else if ((myRect.Top <= (mainfrmRect.Bottom + glueRange)) and
-            (myRect.Top >= (mainfrmRect.Bottom - glueRange)) and
-            (myRect.Left <= (mainfrmRect.Left + glueRange)) and
-            (myRect.Left >= (mainfrmRect.Left - glueRange))) then begin
-        // Close to my top edge
-        Result := geTop;
-    end
-    else if ((myRect.Bottom >= (mainfrmRect.Top - glueRange)) and
-            (myRect.Bottom <= (mainfrmRect.Top + glueRange)) and
-            (myRect.Left <= (mainfrmRect.Left + glueRange)) and
-            (myRect.Left >= (mainfrmRect.Left - glueRange))) then begin
-        // Close to my bottom edge
-        Result := geBottom;
-    end
-    else begin
-        // Not close enough to anything
-        Result := geNone;
     end;
 end;
 
@@ -1071,8 +1019,6 @@ begin
         end;
     end;
 end;
-
-
 
 
 end.
