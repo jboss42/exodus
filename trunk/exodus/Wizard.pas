@@ -41,6 +41,7 @@ type
     btnNext: TTntButton;
     btnCancel: TTntButton;
     procedure FormCreate(Sender: TObject);
+    procedure Panel1Resize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -55,7 +56,17 @@ implementation
 procedure TfrmWizard.FormCreate(Sender: TObject);
 begin
     Image1.Picture.Icon.Handle := Application.Icon.Handle;
+
+    lblWizardTitle.Width := Panel1.Width - lblWizardTitle.Left - Image1.Width - 5;
+    lblWizardDetails.Width := Panel1.Width - lblWizardDetails.Left - Image1.Width - 5;
 end;
 {$R *.dfm}
+
+procedure TfrmWizard.Panel1Resize(Sender: TObject);
+begin
+    inherited;
+    lblWizardTitle.Width := Panel1.Width - lblWizardTitle.Left - Image1.Width - 5;
+    lblWizardDetails.Width := Panel1.Width - lblWizardDetails.Left - Image1.Width - 5;
+end;
 
 end.

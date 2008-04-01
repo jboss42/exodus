@@ -3,8 +3,6 @@ inherited frmRegister: TfrmRegister
   Top = 361
   Caption = 'Service Registration'
   OldCreateOrder = True
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -19,8 +17,12 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet4
+    ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 27
+      ExplicitWidth = 486
+      ExplicitHeight = 293
       object Label1: TTntLabel
         Left = 0
         Top = 0
@@ -63,10 +65,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object formBox: TScrollBox
         Left = 0
         Top = 0
@@ -89,11 +87,15 @@ inherited frmRegister: TfrmRegister
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        DesignSize = (
+          486
+          32)
         object btnDelete: TTntButton
-          Left = 243
-          Top = 3
+          Left = 325
+          Top = 5
           Width = 161
           Height = 25
+          Anchors = [akRight, akBottom]
           Caption = 'Delete My Registration'
           TabOrder = 0
           OnClick = btnDeleteClick
@@ -103,10 +105,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TTntLabel
         Left = 0
         Top = 0
@@ -128,10 +126,6 @@ inherited frmRegister: TfrmRegister
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblOK: TTntLabel
         Left = 0
         Top = 0

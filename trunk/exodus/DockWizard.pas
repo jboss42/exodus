@@ -41,6 +41,8 @@ type
     lblWizardTitle: TTntLabel;
     lblWizardDetails: TTntLabel;
     Image1: TImage;
+    procedure FormCreate(Sender: TObject);
+    procedure Panel1Resize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,5 +55,21 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmDockWizard.FormCreate(Sender: TObject);
+begin
+    inherited;
+
+    lblWizardTitle.Width := Panel1.Width - lblWizardTitle.Left - Image1.Width - 5;
+    lblWizardDetails.Width := Panel1.Width - lblWizardDetails.Left - Image1.Width - 5;
+end;
+
+procedure TfrmDockWizard.Panel1Resize(Sender: TObject);
+begin
+    inherited;
+    lblWizardTitle.Width := Panel1.Width - lblWizardTitle.Left - Image1.Width - 5;
+    lblWizardDetails.Width := Panel1.Width - lblWizardDetails.Left - Image1.Width - 5;
+
+end;
 
 end.

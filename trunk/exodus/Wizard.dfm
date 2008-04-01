@@ -6,6 +6,7 @@ inherited frmWizard: TfrmWizard
   ClientHeight = 358
   ClientWidth = 410
   DefaultMonitor = dmDesktop
+  OnCreate = FormCreate
   ExplicitWidth = 416
   ExplicitHeight = 390
   PixelsPerInch = 96
@@ -75,6 +76,7 @@ inherited frmWizard: TfrmWizard
     ParentColor = True
     ParentCtl3D = False
     TabOrder = 1
+    OnResize = Panel1Resize
     object Bevel2: TBevel
       Left = 0
       Top = 51
@@ -85,9 +87,10 @@ inherited frmWizard: TfrmWizard
     end
     object lblWizardTitle: TTntLabel
       Left = 16
-      Top = 8
+      Top = 5
       Width = 135
       Height = 13
+      Align = alCustom
       Caption = 'Wizard Label goes here'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -99,9 +102,10 @@ inherited frmWizard: TfrmWizard
     end
     object lblWizardDetails: TTntLabel
       Left = 32
-      Top = 24
-      Width = 297
+      Top = 25
+      Width = 331
       Height = 29
+      Align = alCustom
       AutoSize = False
       Caption = 'lblWizardDetails'
       Transparent = True
