@@ -31,7 +31,7 @@ uses
 
 type
 
-  TScrollState = (ssDisabled, ssEnabled, ssPriority, ssNewWindow);
+  TScrollState = (ssDisabled, ssEnabled, ssPriority, ssNewWindow, ssNewMessage);
 
   TAWTrackerItem = class
   private
@@ -113,6 +113,8 @@ type
     _scrollPriorityEndColor: TColor;
     _scrollNewWindowStartColor: TColor;
     _scrollNewWindowEndColor: TColor;
+    _scrollNewMessageStartColor: TColor;
+    _scrollNewMessageEndColor: TColor;
     _scrollDefaultStartColor: TColor;
     _scrollDefaultEndColor: TColor;
     _scrollEnabledStartColor: TColor;
@@ -286,6 +288,8 @@ begin
     _scrollPriorityEndColor := $000000ff;
     _scrollNewWindowStartColor := $0000ffff;
     _scrollNewWindowEndColor := $0000aaaa;
+    _scrollNewMessageStartColor := $0000ffff;
+    _scrollNewMessageEndColor := $0000aaaa;
     tag := MainSession.Prefs.getXMLPref('activity_window_default_color');
     if (tag <> nil) then begin
         _startColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
@@ -322,6 +326,12 @@ begin
     if (tag <> nil) then begin
         _scrollNewWindowStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
         _scrollNewWindowEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+    end;
+    FreeAndNil(tag);
+    tag := MainSession.Prefs.getXMLPref('activity_window_new_message_color');
+    if (tag <> nil) then begin
+        _scrollNewMessageStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+        _scrollNewMessageEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
     end;
     FreeAndNil(tag);
     tag := MainSession.Prefs.getXMLPref('activity_window_bevel_color');
@@ -940,6 +950,9 @@ begin
                     // Off the top of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollUp(true);
+                    if (item.awItem.newMessageHighlight) then begin
+                        _scrollUpState := ssNewMessage;
+                    end;
                     if (item.awItem.priority) then begin
                         _scrollUpState := ssPriority;
                     end;
@@ -951,6 +964,9 @@ begin
                     // Off the bottom of the viewable list
                     item.awItem.Visible := false;
                     _enableScrollDown(true);
+                    if (item.awItem.newMessageHighlight) then begin
+                        _scrollDownState := ssNewMessage;
+                    end;
                     if (item.awItem.priority) then begin
                         _scrollDownState := ssPriority;
                     end;
@@ -1235,6 +1251,10 @@ begin
             pnlListScrollUp.GradientProperites.startColor := _scrollNewWindowStartColor;
             pnlListScrollUp.GradientProperites.endColor := _scrollNewWindowEndColor;
         end;
+        ssNewMessage: begin
+            pnlListScrollUp.GradientProperites.startColor := _scrollNewMessageStartColor;
+            pnlListScrollUp.GradientProperites.endColor := _scrollNewMessageEndColor;
+        end;
     end;
     pnlListScrollUp.Invalidate();
 end;
@@ -1258,6 +1278,10 @@ begin
         ssNewWindow: begin
             pnlListScrollDown.GradientProperites.startColor := _scrollNewWindowStartColor;
             pnlListScrollDown.GradientProperites.endColor := _scrollNewWindowEndColor;
+        end;
+        ssNewMessage: begin
+            pnlListScrollDown.GradientProperites.startColor := _scrollNewMessageStartColor;
+            pnlListScrollDown.GradientProperites.endColor := _scrollNewMessageEndColor;
         end;
     end;
     pnlListScrollDown.Invalidate();

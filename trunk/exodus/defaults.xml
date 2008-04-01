@@ -375,6 +375,10 @@
         <start>$0045b1fe</start>
         <end>$0045b1fe</end>
     </activity_window_new_window_color>
+    <activity_window_new_message_color>
+        <start>$0045b1fe</start>
+        <end>$0045b1fe</end>
+    </activity_window_new_message_color>
     <activity_window_bevel_color>
         <shadow>$00ab9d8b</shadow>
         <highlight>$00e1d6c9</highlight>

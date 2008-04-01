@@ -492,6 +492,11 @@ begin
             // Successful lookup or add
             item.awItem.imgIndex := frm.ImageIndex;
 
+            // Deal with new msg highlight
+            if (frm.UnreadMsgCount > item.awItem.count) then begin
+                item.awItem.newMessage(true);
+            end;
+
             // Deal with msg count
             item.awItem.count := frm.UnreadMsgCount;
 
