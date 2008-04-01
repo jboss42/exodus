@@ -122,7 +122,7 @@ type
     function onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
     function _genElementID(): WideString;
     procedure _ClearOldMessages();
-    function _getHistory(includeCount: boolean = true): WideString;
+    function _getHistory(includeState: boolean = true): WideString;
     function _processUnicode(txt: widestring): WideString;
     function _getLineClass(Msg: TJabberMessage): WideString; overload;
     function _getLineClass(nick: widestring): WideString; overload;
@@ -904,33 +904,6 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TfIEMsgList.populate(history: Widestring);
-var
-    txt: widestring;
-    p: integer;
-begin
-    p := pos('-->', history);
-
-    if ((p > 0) and
-        (LeftStr(history, 4) = '<!--')) then begin
-        txt := LeftStr(history, p - 1);
-        txt := MidStr(txt, 5, Length(txt));
-        try
-            if (_doMessageLimiting) then begin
-                _msgCount := StrToInt(txt);
-            end;
-        except
-        end;
-        history := MidStr(history, p + 3, Length(history));
-    end;
-
-    writeHTML(history);
-
-    if (_doMessageLimiting) then begin
-        _clearOldMessages();
-    end;
-end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
@@ -971,18 +944,84 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._getHistory(includeCount: boolean): WideString;
+function TfIEMsgList._getHistory(includeState: boolean): WideString;
+var
+    i: integer;
+    tstr: widestring;
+    ts: TTimeStamp;
 begin
     Result := '';
-    if (_content = nil) then
-        Result := ''
-    else begin
-        if (includeCount) then
-            Result := '<!--' + IntToStr(_msgCount) + '-->';
-        Result := Result + _content.innerHTML;
+    //add any items in the queue to the end.
+//    for i := 0 to _queue.Count - 1 do
+//        Result := Result + _queue[i];
+
+    if (_content <> nil) then
+        Result := _content.innerHTML + Result;
+
+    if (includeState) then
+    begin
+        ts := DateTimeToTimeStamp(_lastTimeStamp);
+        tstr := '<state>';
+        tstr := tstr + '<lastts-date>' + IntToStr(ts.Date) + '</lastts-date>';
+        tstr := tstr + '<lastts-time>' + IntToStr(ts.Time) + '</lastts-time>';
+        tstr := tstr + '<lastnick>' + _lastMsgNick + '</lastnick>';
+        tstr := tstr + '<msgcount>' + IntToStr(_msgCount) + '</msgcount>';
+        tstr := tstr + '</state>';
+        Result := '<!--' + tstr + '-->' + Result;
     end;
 end;
 
+{---------------------------------------}
+procedure TfIEMsgList.populate(history: Widestring);
+var
+    txt, tstr: widestring;
+    p: integer;
+    stag, ttag: TXMLtag;
+    ts: TTimeStamp;
+    td: TDateTime;
+begin
+//    Clear();
+//    _queue.clear();
+
+    p := pos('-->', history);
+    if ((p > 0) and
+        (LeftStr(history, 4) = '<!--')) then
+    begin
+        txt := LeftStr(history, p - 1);
+        txt := MidStr(txt, 5, Length(txt));
+        stag := StringToXMLTag(txt);
+        txt := MidStr(history, p + 3, Length(history));
+    end
+    else txt := history;
+
+    //state info was passed along with history
+    if (stag <> nil) then
+    begin
+        try
+            ts.date := StrToInt(stag.GetBasicText('lastts-date'));
+            ts.time := StrToInt(stag.GetBasicText('lastts-time'));
+        except
+            ts.Date := 0;
+            ts.Time := 0;
+        end;
+        _lastTimeStamp := TimeStampToDateTime(ts);
+
+        _lastMsgNick := stag.GetBasicText('lastnick');
+        if (_doMessageLimiting) then begin
+            try
+                _msgCount := StrToInt(stag.GetBasicText('msgcount'));
+            except
+                _msgCount := 0;
+            end;
+        end;
+    end;
+
+    writeHTML(txt);
+
+    if (_doMessageLimiting) then begin
+        _clearOldMessages();
+    end;
+end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setDragOver(event: TDragOverEvent);
