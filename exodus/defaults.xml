@@ -394,6 +394,10 @@
     <lowest_unread_msg_cnt value="0"/>
     <lowest_unread_msg_cnt_color_change value="1"/>
     
+    <!-- Should the activity window and the roster snap together -->
+    <brand_glue_activity_window value="1"/>
+    <brand_glue_activity_window_range value="10"/>
+    
     <!-- /ACTIVITY WINDOW PREFS -->
     
     <!-- HISTORY SEARCH WINDOW PREFS -->

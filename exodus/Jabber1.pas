@@ -484,6 +484,7 @@ type
 
     // Other
     _killshow: boolean;
+    _glueRange: integer;
 
 
 //    _currRosterPanel: TPanel; //what panel is roster being rendered in
@@ -549,7 +550,9 @@ type
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
 
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
-    procedure OnMoving(var Msg: TWMMoving); message WM_MOVING;
+    procedure WMMoving(var Msg: TWMMoving); message WM_MOVING;
+    procedure WMMove(var Msg: TWMMove); message WM_MOVE;
+    procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -840,7 +843,8 @@ uses
     ComServ, PrefFile,
     ManagePluginsDlg,
     DebugManager, TntGraphics, SelectItem,
-    HistorySearch;
+    HistorySearch,
+    FrmUtils;
 
 {$R *.DFM}
 
@@ -1372,6 +1376,14 @@ begin
         DockWindow(pnlRoster);
         Visible := true;
     end;
+
+    if (MainSession.Prefs.getBool('brand_glue_activity_window')) then begin
+        _glueRange := MainSession.Prefs.getInt('brand_glue_activity_window_range');
+    end
+    else begin
+        _glueRange := -1;
+    end;
+
 end;
 
 {---------------------------------------}
@@ -4659,16 +4671,74 @@ begin
     UpdateDisplayName();
 end;
 
-procedure TfrmExodus.OnMoving(var Msg: TWMMoving);
+procedure TfrmExodus.WMMoving(var Msg: TWMMoving);
 begin
     if (_dockWindowGlued) then begin
         if (_dockWindow <> nil) then begin
             _dockWindow.moveGlued();
         end;
     end;
-    
+
     inherited;
 end;
+
+procedure TfrmExodus.WMMove(var Msg: TWMMove);
+var
+    gedge: TGlueEdge;
+begin
+    if (not _dockWindowGlued) then begin
+        if (_dockWindow <> nil) then begin
+            gedge := withinGlueSnapRange(_dockWindow, self, _glueRange);
+            if (gedge <> geNone) then begin
+                //_dockWindowGlued := true;
+                // Set the edge on the dock window.
+                // Edge is opposite of gedge
+                case gedge of
+                    geNone: begin
+                        _dockWindow.glueEdge := geNone;
+                    end;
+                    geTop: begin
+                        _dockWindow.glueEdge := geBottom;
+                        Self.Left := _dockWindow.Left;
+                        Self.Top := _dockWindow.Top + _dockWindow.Height;
+                    end;
+                    geRight: begin
+                        _dockWindow.glueEdge := geLeft;
+                        Self.Top := _dockWindow.Top;
+                        Self.Left := _dockWindow.Left - Self.Width;
+                    end;
+                    geLeft: begin
+                        _dockWindow.glueEdge := geRight;
+                        Self.Top := _dockWindow.Top;
+                        Self.Left := _dockWindow.Left + _dockWindow.Width;
+                    end;
+                    geBottom: begin
+                        _dockWindow.glueEdge := geTop;
+                        Self.Left := _dockWindow.Left;
+                        Self.Top := _dockWindow.Top - Self.Height;
+                    end;
+                end;
+            end;
+        end;
+    end;
+
+    inherited;
+end;
+
+procedure TfrmExodus.WMExitSizeMove(var Message: TMessage);
+var
+    gedge: TGlueEdge;
+begin
+    if (_dockWindow <> nil) then begin
+        gedge := withinGlueSnapRange(_dockWindow, self, _glueRange);
+        if (gedge <> geNone) then begin
+            _dockWindowGlued := true;
+        end;
+    end;
+
+    inherited;
+end;
+
 
 procedure TfrmExodus.doHide();
 begin
