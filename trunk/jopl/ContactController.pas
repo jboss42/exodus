@@ -294,14 +294,19 @@ var
     Item: IExodusItem;
     Tag: TXMLTag;
     pres: TJabberPres;
+    session: TJabberSession;
 begin
+    session := TJabberSession(_JS);
     Tag := TXMLTag.Create();
     Item := nil;
-    TJabberSession(_JS).FireEvent('/item/begin', Item);
-    for i := 0 to TJabberSession(_js).ItemController.ItemsCount - 1 do
+
+    session.FireEvent('/item/begin', Item);
+    for i := 0 to session.ItemController.ItemsCount - 1 do
     begin
-        Item := TJabberSession(_js).ItemController.Item[i];
-        pres := TJabberSession(_JS).ppdb.FindPres(Item.uid, '');
+        Item := session.ItemController.Item[i];
+        if (Item.Type_ <> EI_TYPE_CONTACT) then continue;
+
+        pres := session.ppdb.FindPres(Item.uid, '');
         _UpdateContact(Item, pres);
         if (Item.IsVisible) then
             TJabberSession(_JS).FireEvent('/item/add',  Item)
@@ -309,7 +314,7 @@ begin
             TJabberSession(_JS).FireEvent('/item/remove', Item)
 
     end;
-    TJabberSession(_JS).FireEvent('/item/end', Item);
+    session.FireEvent('/item/end', Item);
     Tag.Free();
 
 end;
