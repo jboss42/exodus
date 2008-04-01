@@ -82,11 +82,14 @@ type
         _newWindowEndColor: TColor;
         _activeStartColor: TColor;
         _activeEndColor: TColor;
+        _newMessageStartColor: TColor;
+        _newMessageEndColor: TColor;
         _startColor: TColor;
         _endColor: TColor;
         _active: boolean;
         _priority: boolean;
         _newWindowHighlight: boolean;
+        _newMessageHighlight: boolean;
         _activity_window_selected_font_color: TColor;
         _activity_window_non_selected_font_color: TColor;
         _activity_window_unread_msgs_font_color: TColor;
@@ -95,7 +98,9 @@ type
         _activity_window_bevel_shadow_color: TColor;
         _activity_window_bevel_highlight_color: TColor;
         _timNewItemTimer: TTimer;
+        _timNewMsgTimer: TTimer;
         _flashcnt: integer;
+        _msgflashcnt: integer;
         _LowestUnreadMsgCnt: integer;
         _LowestUnreadMsgCntColorChange: integer;
 
@@ -105,7 +110,9 @@ type
         procedure _setImgIndex(val: integer);
         procedure _setPnlColors(startColor, endColor: TColor);
         procedure _timNewItemTimerTimer(Sender: TObject);
+        procedure _timNewMsgTimerTimer(Sender: TObject);
         procedure _stopTimer();
+        procedure _stopMsgTimer();
     protected
         { Protected declarations }
     public
@@ -115,6 +122,7 @@ type
 
         procedure activate(setActive:boolean; docked:boolean = true);
         procedure priorityFlag(setPriority:boolean);
+        procedure newMessage(setNewMessage:boolean = true);
 
         property name: WideString read _getName write _setName;
         property count: integer read _count write _setCount;
@@ -123,11 +131,14 @@ type
         property priorityEndColor: TColor read _priorityEndColor write _priorityEndColor;
         property activeStartColor: TColor read _activeStartColor write _activeStartColor;
         property activeEndColor: TColor read _activeEndColor write _activeEndColor;
+        property newMessageStartColor: TColor read _newMessageStartColor write _newMessageStartColor;
+        property newMessageEndColor: TColor read _newMessageEndColor write _newMessageEndColor;
         property active: boolean read _active;
         property priority: boolean read _priority;
         property defaultStartColor: TColor read _startColor write _startColor;
         property defaultEndColor: TColor read _endColor write _endColor;
         property newWindowHighlight: boolean read _newWindowHighlight;
+        property newMessageHighlight: boolean read _newMessageHighlight;
     published
         { published declarations }
     end;
@@ -189,6 +200,8 @@ begin
         _priorityEndColor := $000000ff;
         _newWindowStartColor := $0000ffff;
         _newWindowEndColor := $0000aaaa;
+        _newMessageStartColor := $0000ffff;
+        _newMessageEndColor := $0000aaaa;
         _activeStartColor := $0000ff00;
         _activeEndColor := $0000ff00;
         _activity_window_selected_font_color := $00000000;
@@ -236,6 +249,12 @@ begin
             AWItemBevel.HighLight := _activity_window_bevel_highlight_color;
         end;
         FreeAndNil(tag);
+        tag := MainSession.Prefs.getXMLPref('activity_window_new_message_color');
+        if (tag <> nil) then begin
+            _newMessageStartColor := TColor(StrToInt(tag.GetFirstTag('start').Data));
+            _newMessageEndColor := TColor(StrToInt(tag.GetFirstTag('end').Data));
+        end;
+        FreeAndNil(tag);
 
         _activity_window_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_non_selected_font_color'));
         _activity_window_non_selected_font_color := TColor(MainSession.Prefs.GetInt('activity_window_selected_font_color'));
@@ -256,9 +275,17 @@ begin
                 _flashcnt := 0;
                 _newWindowHighlight := true;
             end;
+            _timNewMsgTimer := TTimer.Create(Self);
         end
         else begin
             _timNewItemTimer := nil;
+        end;
+
+        if (_timNewMsgTimer <> nil) then begin
+            _timNewMsgTimer.Enabled := false;
+            _timNewMsgTimer.Interval := 500;
+            _timNewMsgTimer.OnTimer := _timNewMsgTimerTimer;
+            _msgflashcnt := 0;
         end;
 
         AssignUnicodeFont(lblCount.Font);
@@ -274,7 +301,12 @@ begin
         _timNewItemTimer.Enabled := false;
     end;
 
+    if (_timNewMsgTimer <> nil) then begin
+        _timNewMsgTimer.Enabled := false;
+    end;
+
     _timNewItemTimer.Free;
+    _timNewMsgTimer.Free;
 end;
 
 {---------------------------------------}
@@ -296,12 +328,38 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfAWItem._timNewMsgTimerTimer(Sender: TObject);
+begin
+    Inc(_msgflashcnt);
+    if (_msgflashcnt >= 6) then begin
+        _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+        _stopMsgTimer();
+    end
+    else begin
+        if ((_msgflashcnt mod 2) = 0) then begin
+            _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+        end
+        else begin
+            _setPnlColors(_startColor, _endColor);
+        end;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfAWItem._stopTimer();
 begin
     if (_timNewItemTimer <> nil) then begin
         _timNewItemTimer.Enabled := false;
         _timNewItemTimer.Free();
         _timNewItemTimer := nil;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfAWItem._stopMsgTimer();
+begin
+    if (_timNewMsgTimer <> nil) then begin
+        _timNewMsgTimer.Enabled := false;
     end;
 end;
 
@@ -465,8 +523,10 @@ begin
     _active := setActive;
     if (setActive) then begin
         _newWindowHighlight := false;
+        _newMessageHighlight := false;
         _priority := false;
         _stopTimer();
+        _stopMsgTimer();
         if (docked) then begin
             _setPnlColors(_activeStartColor, _activeEndColor);
             lblName.Font.Color := _activity_window_selected_font_color;
@@ -507,6 +567,30 @@ begin
             // If the color is something else (like the selected color, then
             // color will be left alone.
             _setPnlColors(_startColor, _endColor);
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfAWItem.newMessage(setNewMessage:boolean);
+begin
+    _newMessageHighlight := setNewMessage;
+    if (not _newWindowHighlight) then begin
+        if (setNewMessage) then begin
+            _setPnlColors(_newMessageStartColor, _newMessageEndColor);
+            if (_timNewMsgTimer <> nil) then begin
+                _timNewMsgTimer.Enabled := true;
+                _msgflashcnt := 0;
+            end;
+        end
+        else begin
+            if ((pnlAWItemGPanel.GradientProperites.startColor = _newMessageStartColor) and
+                (pnlAWItemGPanel.GradientProperites.startColor = _newMessageStartColor)) then begin
+                // This clears out new message color only if it is showing
+                // If the color is something else (like the selected color, then
+                // color will be left alone.
+                _setPnlColors(_startColor, _endColor);
+            end;
         end;
     end;
 end;
