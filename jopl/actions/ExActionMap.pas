@@ -90,7 +90,7 @@ implementation
 uses SysUtils, ComServ, COMExodusItemList;
 
 {
-    TTypedActions implementation
+    TExodusTypedActions implementation
 }
 
 constructor TExodusTypedActions.CreateFromMap(actmap: TExodusActionMap; itemtype: WideString);
@@ -159,7 +159,6 @@ var
     nextRef: Pointer;
 begin
     if act = nil then exit;
-    if _actions.Sorted then _actions.Sorted := false;
 
     nextRef := Pointer(act);
     idx := _actions.IndexOf(act.Name);
@@ -199,8 +198,6 @@ procedure TExodusTypedActions.Clear;
 var
     idx: Integer;
 begin
-    if _actions.Sorted then _actions.Sorted := false;
-
     for idx := _actions.Count - 1 downto 0 do begin
         IExodusAction(Pointer(_actions.Objects[idx]))._Release;
         _actions.Delete(idx);
@@ -294,8 +291,6 @@ begin
     if (idx <> -1) then
         Result := TExodusTypedActions(_actLists.Objects[idx])
     else if create then begin
-        if _actLists.Sorted then _actLists.Sorted := false;
-
          Result := TExodusTypedActions.CreateFromMap(Self, itemtype);
          Result._AddRef;
          _actLists.AddObject(itemtype, Result);
