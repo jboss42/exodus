@@ -235,9 +235,7 @@ procedure TJabberEntityCache.Remove(e: TJabberEntity);
 var
     i: integer;
 begin
-    i := indexOf(e);
-    if (i >= 0) then
-        _cache.Delete(i);
+    Delete(indexOf(e));
 end;
 
 {---------------------------------------}
@@ -257,10 +255,9 @@ begin
                 break;
             inc(i);
         until ((cur = nil) or (i >= _cache.Count));
-        if (cur = nil) then exit;
+        if (cur = nil) or (i >= _cache.Count) then exit;
+        Delete(i);
     end;
-    if (i >= 0) then
-        _cache.Delete(i);
 end;
 
 {---------------------------------------}

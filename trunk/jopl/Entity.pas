@@ -54,12 +54,15 @@ type
     published
         procedure ItemsCallback(event: string; tag: TXMLTag);
         procedure InfoCallback(event: string; tag: TXMLTag);
+
+        {$IFDEF DEPRECATED}
         procedure BrowseCallback(event: string; tag: TXMLTag);
         procedure AgentsCallback(event: string; tag: TXMLTag);
-        
+        {$ENDIF}
+
         procedure WalkCallback(event: string; tag: TXMLTag);
         procedure WalkItemsCallback(event: string; tag: TXMLTag);
-        
+
     private
         _parent: TJabberEntity;
         _jid: TJabberID;
@@ -98,18 +101,21 @@ type
         procedure _processDiscoInfo(tag: TXMLTag);
         procedure _processDiscoItems(tag: TXMLTag);
         procedure _processLegacyFeatures();
+
+        procedure _finishWalk(jso: TObject);
+        procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
+
+        {$IFDEF DEPRECATED}
         procedure _processBrowse(tag: TXMLTag);
         procedure _processBrowseItem(item: TXMLTag);
         procedure _processAgent(item: TXMLTag);
-
-        procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
-        procedure _finishWalk(jso: TObject);
         procedure _finishBrowse(jso: TObject);
+        {$ENDIF}
 
     public
         Tag: integer;
         Data: TObject;
-        
+
         constructor Create(jid: TJabberID; node: Widestring = ''; etype: TJabberEntityType = ent_unknown);
         destructor Destroy; override;
 
@@ -168,9 +174,11 @@ type
         ptype: integer;
     private
         procedure FinishDisco();
-        procedure FinishBrowse();
         procedure FinishWalk();
 
+        {$IFDEF DEPRECATED}
+        procedure FinishBrowse();
+        {$ENDIF}
     protected
         procedure Execute(); override;
     end;
@@ -197,10 +205,12 @@ begin
         e._processDiscoItems(tag);
         Synchronize(FinishDisco);
     end
+    {$IFDEF DEPRECATED}
     else if (ptype = ProcBrowse) then begin
         e._processBrowse(tag);
         Synchronize(FinishBrowse);
     end
+    {$ENDIF}
     else if (ptype = ProcWalk) then begin
         if (tag <> nil) then
             e._processDiscoitems(tag);
@@ -222,10 +232,12 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntityProcess.FinishBrowse();
 begin
     e._finishBrowse(jso);
 end;
+{$ENDIF}
 
 {---------------------------------------}
 {---------------------------------------}
@@ -490,7 +502,8 @@ begin
     if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // Dispatch a disco#items query
+        {$IFDEF DEPRECATED}
+        // Dispatch an iq:browse query
         if (not _fallback) then exit;
 
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
@@ -498,6 +511,10 @@ begin
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
         _iq.Send();
+        {$ELSE}
+        // FAIL!
+        // TODO:  fail
+        {$ENDIF}
         exit;
     end;
 
@@ -518,6 +535,7 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity._finishBrowse(jso: TObject);
 var
     i: integer;
@@ -539,6 +557,7 @@ begin
     end;
     t.Free();
 end;
+{$ENDIF}
 
 {---------------------------------------}
 procedure TJabberEntity.InfoCallback(event: string; tag: TXMLTag);
@@ -555,6 +574,7 @@ begin
     if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
+        {$IFDEF DEPRECATED}
         // Dispatch a browse query
         if (not _fallback) then begin
             _has_info := true;
@@ -563,12 +583,16 @@ begin
             js.FireEvent('/session/entity/info', tag);
             exit;
         end;
-        
+
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
         _iq.Send();
+        {$ELSE}
+        // FAIL!
+        // TODO:  fail
+        {$ENDIF}
         exit;
     end;
 
@@ -840,12 +864,33 @@ begin
     if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // Dispatch a disco#items query
+        {$IFDEF DEPRECATED}
+        // Dispatch an iq:browse query
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
         _iq.Send();
+        {$ELSE}
+        // FAIL!
+        // if our event is a timeout, let's retry the whole mess, with a longer
+        // timeout.
+        if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then begin
+            _timeout := _timeout * 3;
+            _discoInfo(js, WalkCallback);
+        end
+        else if (tag.getAttribute('type') = 'error') then begin
+            _has_info := true;
+            _disco_info_error := true;
+            _has_items := true;
+        end
+        else begin
+            _has_info := true;
+            _disco_info_error := false;
+            _has_items := true;
+        end;
+        exit;
+        {$ENDIF}
         exit;
     end;
 
@@ -908,6 +953,7 @@ begin
 end;
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity._processBrowseItem(item: TXMLTag);
 var
     nss: TXMLTagList;
@@ -935,8 +981,10 @@ begin
     // but not it's children
     _has_items := false;
 end;
+{$ENDIF}
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity.BrowseCallback(event: string; tag: TXMLTag);
 var
     pt: TJabberEntityProcess;
@@ -972,8 +1020,10 @@ begin
     pt.Resume();
 
 end;
+{$ENDIF}
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity._processBrowse(tag: TXMLTag);
 var
     idx, i: integer;
@@ -1043,8 +1093,10 @@ begin
     }
 
 end;
+{$ENDIF}
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity._processAgent(item: TXMLTag);
 var
     tmps: Widestring;
@@ -1065,7 +1117,7 @@ begin
     // desc := agent.GetBasicText('description');
     _has_info := true;
     _disco_info_error := false;
-    
+
     tmps := item.GetBasicText('service');
     if (tmps <> '') then _feats.Add(tmps);
     _cat_type := tmps;
@@ -1083,9 +1135,10 @@ begin
         _feats.Add(nss[n].Data);
 
 end;
-
+{$ENDIF}
 
 {---------------------------------------}
+{$IFDEF DEPRECATED}
 procedure TJabberEntity.AgentsCallback(event: string; tag: TXMLTag);
 var
     js: TJabberSession;
@@ -1116,7 +1169,7 @@ begin
             _has_info := true;
             _disco_info_error := false;
             _has_items := true;
-        end;        
+        end;
         exit;
     end;
 
@@ -1154,7 +1207,7 @@ begin
     t.Free();
 
 end;
-
+{$ENDIF}
 
 function TJabberEntity.toString(): WideString;
 var
