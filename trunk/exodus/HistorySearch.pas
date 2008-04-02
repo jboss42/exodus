@@ -1371,7 +1371,7 @@ procedure TfrmHistorySearch.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     inherited;
-    Self.Free();
+    Action := caFree;
 end;
 
 {---------------------------------------}
