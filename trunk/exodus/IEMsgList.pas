@@ -695,17 +695,17 @@ begin
             if (not _checkLastNickForMsgGrouping(Msg)) then begin
                 if Msg.isMe then begin
                     // Our own msgs
-                    dv := dv + '<span class="me">' + Msg.Nick + '</span>';
+                    dv := dv + '<span class="me">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
                 end
                 else begin
                     // Msgs from "others"
-                    dv := dv + '<span class="other">' + Msg.Nick + '</span>';
+                    dv := dv + '<span class="other">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
                 end;
             end;
 
         end
         else begin
-            dv := dv + '<span class="svr">' + _('System Message') + '</span>';
+            dv := dv + '<span class="svr">' + HTML_EscapeChars(_('System Message'), false, true) + '</span>';
         end;
 
         _lastMsgNick := Msg.Nick;
@@ -717,13 +717,13 @@ begin
         if (MainSession.Prefs.getBool('timestamp')) then begin
             try
                 dv := dv + '<span class="ts">' +
-                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
+                    HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time), false, true) +
                     '</span>';
             except
                 on EConvertError do begin
                     dv := dv + '<span class="ts">' +
-                        FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                        Now()) + '</span>';
+                        HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now()), false, true) +
+                        '</span>';
                 end;
             end;
         end;
@@ -760,7 +760,7 @@ begin
         end
         else begin
             // This is an action
-            dv := dv + '<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>';
+            dv := dv + '<span class="action">&nbsp;*&nbsp;' + HTML_EscapeChars(Msg.Nick, false, true) + '&nbsp;' + txt + '</span>';
         end;
 
         // Close off msgts and line1/2 div tags
@@ -830,7 +830,7 @@ begin
     if ((not _checkLastNickForMsgGrouping(nick)) and
         (nick <> '')) then begin
         // Must NOT be a "me" message
-        htmlout := htmlout + '<span class="other">' + nick + '</span>';
+        htmlout := htmlout + '<span class="other">' + HTML_EscapeChars(nick, false, true) + '</span>';
     end;
 
     // Put presence Icon in with the presence message
@@ -851,14 +851,14 @@ begin
             _dateSeperator(tmsg);
             tmsg.Free();
         end;
-        htmlout := htmlout + '<div class="msgts"><span class="ts">' + timestamp + '</span><span class="pres">' + txt + '</span></div></div>';
+        htmlout := htmlout + '<div class="msgts"><span class="ts">' + HTML_EscapeChars(timestamp, false, true) + '</span><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
     end
     else begin
         if (nick <> '') then begin
-            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><div class="msgts"><span class="pres">' + txt + '</span></div></div>';
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><div class="msgts"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
         end
         else begin
-            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><span class="pres">' + txt + '</span></div>';
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div>';
         end;
     end;
 
