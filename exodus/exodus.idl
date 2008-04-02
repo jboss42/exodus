@@ -1368,10 +1368,6 @@ library Exodus
     ]
     HRESULT _stdcall Hide( void );
     [
-    id(0x000000CF)
-    ]
-    HRESULT _stdcall Activate( void );
-    [
     propget, 
     id(0x000000D1)
     ]
@@ -1401,6 +1397,16 @@ library Exodus
     id(0x000000D0)
     ]
     HRESULT _stdcall AXControl([out, retval] VARIANT * value );
+    [
+    propget, 
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall TabIndex([out, retval] long * value );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall PageIndex([out, retval] long * value );
   };
 
   [
@@ -8841,6 +8847,11 @@ library Exodus
     id(0x000000D7)
     ]
     HRESULT _stdcall GetItemsByType([in] BSTR Type_, [out, retval] VARIANT * Items );
+    [
+    propget, 
+    id(0x000000DD)
+    ]
+    HRESULT _stdcall GroupsLoaded([out, retval] VARIANT_BOOL * value );
   };
 
   [
@@ -8864,10 +8875,6 @@ library Exodus
     id(0x000000CB)
     ]
     HRESULT _stdcall RemoveTab([in] long index );
-    [
-    id(0x000000CC)
-    ]
-    HRESULT _stdcall ActivateTab([in] long index );
     [
     propget, 
     id(0x000000CD)
@@ -8894,6 +8901,29 @@ library Exodus
     id(0x000000D2)
     ]
     HRESULT _stdcall GetTabIndexByName([in] BSTR Name, [out, retval] long * index );
+    [
+    propget, 
+    id(0x000000D3)
+    ]
+    HRESULT _stdcall VisibleTab([in] long index, [out, retval] IExodusTab ** value /*Warning: unable to validate structure name: */ );
+    [
+    propget, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall ActiveTab([out, retval] long * index );
+    [
+    propput, 
+    id(0x000000D4)
+    ]
+    HRESULT _stdcall ActiveTab([in] long index );
+    [
+    id(0x000000CC)
+    ]
+    HRESULT _stdcall GetSelectedItems([in] long index, [out, retval] VARIANT * Items );
+    [
+    id(0x000000D5)
+    ]
+    HRESULT _stdcall GetSelectedGroups([in] long index, [out, retval] VARIANT * Groups );
   };
 
   [
@@ -8911,7 +8941,7 @@ library Exodus
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [in, out] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * Success );
+    HRESULT _stdcall GetTable([in] BSTR SQLStatement, [in, out] IExodusDataTable ** ResultTable /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * success );
     [
     id(0x000000CB)
     ]
