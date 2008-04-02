@@ -29,6 +29,7 @@ type
 
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
+       procedure SaveGroupsState(); override;
    end;
 
 implementation
@@ -43,6 +44,12 @@ begin
     else
         Result := false;
 end;
+
+procedure TExRoomsTreeView.SaveGroupsState();
+begin
+
+end;
+
 end.
 
 

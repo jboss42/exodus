@@ -287,7 +287,8 @@ uses
   HistorySearch in 'HistorySearch.pas' {HistorySearchDlg},
   SelectItem in 'SelectItem.pas' {frmSelectItem},
   ContactActions in 'ContactActions.pas',
-  FrmUtils in '..\jopl\FrmUtils.pas';
+  FrmUtils in '..\jopl\FrmUtils.pas',
+  GroupParser in '..\jopl\GroupParser.pas';
 
 {$R *.TLB}
 

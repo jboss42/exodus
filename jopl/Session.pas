@@ -309,18 +309,6 @@ begin
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
 
-    // Create the Roster
-    ItemController := TExodusItemController.create(Self);
-    //_intfItemController := itemController;
-
-    roster := TContactController.create(Self);
-    rooms := TRoomController.create(Self);
-    //roster.ItemController := ItemController;
-
-    // Create the bookmark manager
-    //bookmarks := TBookmarkManager.Create();
-    //bookmarks.SetSession(Self);
-
     // Create the msg & chat controllers
     MsgList := TJabberMsgList.Create();
     ChatList := TJabberChatList.Create();
@@ -349,6 +337,11 @@ begin
     Presence_XML := TWideStringlist.Create();
 
     _extensions := TWideStringList.Create();
+    
+    ItemController := TExodusItemController.create(Self);
+    roster := TContactController.create(Self);
+    rooms := TRoomController.create(Self);
+
 end;
 
 {---------------------------------------}
