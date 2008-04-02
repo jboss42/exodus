@@ -18,62 +18,75 @@ inherited frmChat: TfrmChat
   end
   inherited pnlDockTop: TPanel
     Width = 492
+    Height = 28
     ExplicitWidth = 492
+    ExplicitHeight = 28
     inherited tbDockBar: TToolBar
       Left = 443
+      Height = 22
       ExplicitLeft = 443
     end
     inherited pnlChatTop: TPanel
       Width = 440
-      ExplicitWidth = 440
+      Height = 28
+      ExplicitWidth = 353
+      ExplicitHeight = 25
       object pnlJID: TPanel
         Left = 0
         Top = 0
-        Width = 351
-        Height = 33
-        Align = alLeft
+        Width = 440
+        Height = 28
+        Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitWidth = 351
+        ExplicitHeight = 33
         object lblNick: TTntLabel
-          Left = 43
+          Left = 38
           Top = 0
           Width = 45
-          Height = 33
+          Height = 28
           Cursor = crHandPoint
+          Margins.Left = 9
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
           Align = alLeft
           Caption = 'Nickname'
           ParentShowHint = False
           ShowHint = True
+          Transparent = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitLeft = 43
           ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
-          Left = 0
+          AlignWithMargins = True
+          Left = 3
           Top = 0
           Width = 35
-          Height = 33
+          Height = 28
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
-        end
-        object Panel3: TPanel
-          Left = 35
-          Top = 0
-          Width = 8
-          Height = 33
-          Align = alLeft
-          BevelOuter = bvNone
-          ParentColor = True
-          TabOrder = 0
+          ExplicitLeft = 0
+          ExplicitHeight = 33
         end
       end
     end
   end
   inherited pnlMsgList: TPanel
+    Top = 28
     Width = 492
-    Height = 314
+    Height = 319
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     ExplicitWidth = 492
     ExplicitHeight = 314
   end
