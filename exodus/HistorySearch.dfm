@@ -182,7 +182,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         object TntLabel3: TTntLabel
           Left = 5
           Top = 20
-          Width = 162
+          Width = 129
           Height = 13
           Anchors = [akLeft, akTop, akRight]
           Caption = 'Enter one keyword per line'
