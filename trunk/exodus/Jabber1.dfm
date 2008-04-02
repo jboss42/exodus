@@ -3,7 +3,7 @@ inherited frmExodus: TfrmExodus
   Top = 118
   AlphaBlendValue = 240
   Caption = 'Exodus'
-  ClientHeight = 478
+  ClientHeight = 558
   ClientWidth = 404
   UseDockManager = True
   DefaultMonitor = dmDesktop
@@ -20,12 +20,12 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 532
+  ExplicitHeight = 612
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 469
+    Top = 549
     Width = 404
     Height = 9
     Align = alBottom
@@ -52,22 +52,20 @@ inherited frmExodus: TfrmExodus
     Left = 0
     Top = 66
     Width = 404
-    Height = 403
+    Height = 483
     ActivePage = tabRoster
     Align = alClient
     Style = tsButtons
     TabOrder = 1
+    ExplicitHeight = 403
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 393
       object pnlLogin: TPanel
         Left = 0
         Top = 0
         Width = 396
-        Height = 393
+        Height = 473
         Align = alClient
         BevelInner = bvSpace
         BevelOuter = bvNone
@@ -75,20 +73,23 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 393
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitHeight = 393
       object pnlRoster: TPanel
         Left = 0
         Top = 37
         Width = 396
-        Height = 356
+        Height = 436
         Align = alClient
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 356
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -4440,6 +4441,7 @@ inherited frmExodus: TfrmExodus
     end
     object trayShowActivityWindow: TTntMenuItem
       Caption = 'Show Activity Window'
+      Enabled = False
       Visible = False
       OnClick = trayShowActivityWindowClick
     end
