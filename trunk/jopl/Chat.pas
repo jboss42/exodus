@@ -88,6 +88,7 @@ var
     c: TChatController;
     idx1, idx2, mt: integer;
     mtype: string;
+    isEvent: boolean;
 begin
     // check to see if we have a session already open for
     // this jid, if not, create one.
@@ -99,9 +100,9 @@ begin
     // pgm 2/29/04 - we should never get these packets anymore...
     // throw out any x-data msgs we get.. the xdata handler will pick them up.
     //if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-
+    isEvent := (tag.QueryXPTag(XP_MSGXEVENT) <> nil);
     // we are only interested in packets w/ a body tag
-    if (tag.GetFirstTag('body') = nil) then exit;
+    if (not isEvent and (tag.GetFirstTag('body') = nil)) then exit;
 
     tmp_jid := TJabberID.Create(fjid);
 
@@ -109,10 +110,10 @@ begin
         idx1 := Self.indexOf(fjid);
         idx2 := Self.indexOf(tmp_jid.jid);
 
-        if (mtype <> 'chat') then begin
+        if (not isEvent) and (mtype <> 'chat') then begin
             if ((mt = msg_existing_chat) and (idx1 = -1) and (idx2 = -1)) then
                 exit
-            else if (mt = msg_normal) then
+            else if (mt = msg_normal)then
                 exit;
         end;
 
@@ -126,11 +127,7 @@ begin
                 exit;
 
             // Create a new chat controller
-            if (FindRoom(tmp_jid.jid) <> nil) then
-                c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, true)
-            else
-                c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, false);
-
+            c := Self.AddChat(tmp_jid.jid, tmp_jid.resource, FindRoom(tmp_jid.jid) <> nil);
             c.MsgCallback(event, tag);
         end;
     finally

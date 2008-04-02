@@ -300,6 +300,10 @@ begin
     // if we have no body, then bail
     if ((not is_composing) and (tag.GetFirstTag('body') = nil)) then exit;
 
+    mtype := tag.GetAttribute('type');
+    //if not chat or event, bail
+    if ((mtype =  '') and not is_composing)  then exit;
+    
     // check for delivered requests
     if (mtype <> 'error') and (etag <> nil) then begin
         if ((etag.GetFirstTag('delivered') <> nil) and
@@ -675,7 +679,8 @@ var
     event: widestring;
 begin
     UnRegisterMsgCB();
-    event := '/packet/message[@type="chat"][@from="';
+    //event := '/packet/message[@type="chat"][@from="';
+    event := '/packet/message[@from="';
     event := event + XPLiteEscape(Lowercase(Self.JID));
     if (_anonymous_chat) then
         event := event + XPLiteEscape(Lowercase('/' + Self.Resource));
