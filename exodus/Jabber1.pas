@@ -1465,6 +1465,10 @@ begin
                 getDockManager().ShowDockManagerWindow(true, false);
             end;
             ShowDebugForm(false);
+            if ((ExStartup.minimized) and
+                (_dockwindow <> nil)) then begin
+                ShowWindow(_dockwindow.Handle, SW_HIDE);
+            end;
         end;
         if (ExStartup.auto_login) then begin
             // snag default profile, etc..

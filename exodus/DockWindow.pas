@@ -121,7 +121,8 @@ implementation
 
 uses
     RosterForm, Session, PrefController,
-    ActivityWindow, Jabber1, ExUtils;
+    ActivityWindow, Jabber1, ExUtils,
+    ExSession;
 
 {$R *.dfm}
 
@@ -351,6 +352,7 @@ begin
     frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
     frmExodus.trayShowActivityWindow.Enabled := true;
     frmExodus.btnActivityWindow.Enabled := true;
+    frmExodus.trayShowActivityWindow.Enabled := true;
 
     _glueCheck();
 end;
@@ -545,6 +547,15 @@ begin
     if ((Show) and
         (_canShowWindow())) then begin
         Self.ShowDefault(BringWindowToFront);
+
+        // Make sure that if we are starting up and we are supposed to
+        // start minimized to systray, then be sure to be minimized to systray
+        if ((StateForm.restoringDesktopFlag) and
+            (ExStartup.minimized) and
+            (not frmExodus.Showing)) then begin                   
+            ShowWindow(Self.Handle, SW_HIDE);
+        end;
+        
         Result := true;
     end
     else if (not Show) then begin
@@ -919,6 +930,7 @@ begin
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := false;
             frmExodus.trayShowActivityWindow.Enabled := false;
             frmExodus.btnActivityWindow.Enabled := false;
+            frmExodus.trayShowActivityWindow.Enabled := false;
         end
         else begin
             // We CAN be shown, but don't HAVE to be shown so
@@ -927,6 +939,7 @@ begin
             frmExodus.mnuWindows_View_ShowActivityWindow.Enabled := true;
             frmExodus.trayShowActivityWindow.Enabled := true;
             frmExodus.btnActivityWindow.Enabled := true;
+            frmExodus.trayShowActivityWindow.Enabled := true;
         end;
     end;
 end;
