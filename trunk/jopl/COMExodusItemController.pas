@@ -25,7 +25,7 @@ unit COMExodusItemController;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile, GroupParser;
 
 type
   TExodusItemController = class(TAutoObject, IExodusItemController)
@@ -65,7 +65,8 @@ type
       _SessionCB: Integer;
       _GroupsLoaded: Boolean;
       _ServerStorage: Boolean;
-
+      _GroupParser : TGroupParser;
+      
       procedure _SessionCallback(Event: string; Tag: TXMLTag);
       procedure _GetGroups();
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
@@ -99,6 +100,7 @@ begin
     _groupsLoaded := false;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _ServerStorage := true;
+    _GroupParser := TGroupParser.Create(_JS);
 end;
 
 {---------------------------------------}
@@ -115,6 +117,7 @@ begin
         Item.Free();
     end;
     _Items.Free;
+    _GroupParser.Free;
 end;
 
 
@@ -155,7 +158,11 @@ var
     Groups, LocalGroups:TXMLTag;
     Expanded: Boolean;
     DefaultGroup: WideString;
+    Group: IExodusItem;
 begin
+    Group := nil;
+    TJabberSession(_JS).FireEvent('/item/begin', Group);
+
     if ((Event = 'xml') and (Tag.getAttribute('type') = 'result')) then
         Groups := Tag.QueryXPTag(xp_group)
     else
@@ -186,6 +193,7 @@ begin
 //        AddGroup(DefaultGroup);
 
     _GroupsLoaded := true;
+    TJabberSession(_JS).FireEvent('/item/end', Group);
 end;
 
 {---------------------------------------}
@@ -293,7 +301,8 @@ end;
 function TExodusItemController.AddGroup(const Group: WideString): Integer;
 var
     GroupInfo: TGroupInfo;
-    Idx: Integer;
+    Idx, i: Integer;
+    Groups: TWideStringList;
 begin
     Result := -1;
     Idx := _Groups.IndexOf(Group);
@@ -306,7 +315,18 @@ begin
     GroupInfo.Name := Group;
     GroupInfo.Expanded := true;
     Result := _Groups.AddObject(Group, GroupInfo);
-     TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Group);
+    TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Group);
+    Groups := _GroupParser.GetNestedGroups(Group);
+    for i := 0 to Groups.Count - 1 do
+    begin
+        if (Get_GroupExists(Groups[i])) then continue;
+        GroupInfo := TGroupInfo.Create();
+        GroupInfo.Name := Groups[i];
+        GroupInfo.Expanded := true;
+        _Groups.AddObject(Groups[i], GroupInfo);
+        TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Groups[i]);
+    end;
+    Groups.Free;  
     //If adding new groups and groups have
     //been loaded, need to save to the server's
     //private storage.

@@ -30,6 +30,7 @@ type
 
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
+       procedure SaveGroupsState(); override;
    end;
 
 
@@ -44,6 +45,11 @@ begin
         Result := true
     else
         Result := false;
+end;
+
+procedure TExContactsTreeView.SaveGroupsState();
+begin
+
 end;
 
 end.
