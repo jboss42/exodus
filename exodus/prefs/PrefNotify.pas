@@ -326,34 +326,26 @@ begin
     s := GetPrefState('notify_type_toast');
     _CanEnableToast := (s <> psReadOnly);
     chkToast.Visible := (s <> psInvisible);
+    btnToastSettings.Visible := chkToast.Visible;
+
     s := GetPrefState('notify_type_flash');
     _CanEnableFlash := (s <> psReadOnly);
     chkFlash.Visible := (s <> psInvisible);
+
     s := GetPrefState('notify_type_tray');
     _CanEnableTray := (s <> psReadOnly);
     chkTrayNotify.Visible := (s <> psInvisible);
+
     s := GetPrefState('notify_type_sound');
     _CanEnableSound := (s <> psReadOnly);
     chkPlaySound.Visible := (s <> psInvisible);
-    Self.txtSoundFile.Visible := chkPlaySound.Visible;
-    Self.btnPlaySound.Visible := chkPlaySound.Visible;
-    Self.btnBrowse.Visible := chkPlaySound.Visible;
+    txtSoundFile.Visible := chkPlaySound.Visible;
+    btnPlaySound.Visible := chkPlaySound.Visible;
+    btnBrowse.Visible := chkPlaySound.Visible;
+
     s := GetPrefState('notify_type_front');
     _CanEnableFront := (s <> psReadOnly);
     chkFront.Visible := (s <> psInvisible);
-
-    //alpha value is locked because of locked use alpha pref?
-    btnToastSettings.Visible := true;
-    if (_ToastAlphaValue.IsWriteable and
-        (not _ToastAlpha.IsWriteable) and
-        (not _ToastAlpha.BoolValue)) then
-        btnToastSettings.Visible := false;
-
-    //is any setting available?
-    btnToastSettings.Visible := (btnToastSettings.Visible and
-                                (_ToastAlpha.IsWriteable or
-                                 _ToastAlphaValue.IsWriteable or
-                                 _ToastDuration.IsWriteable));
 
     chkToast.Checked := false;
     chkFlash.Checked := false;
@@ -371,7 +363,6 @@ begin
         chkNotify.ItemIndex := 0;
         chkNotifyClick(Self);
     end;
-
     //allow panels to autohide...
     pnlContainer.checkAutoHide();
 
