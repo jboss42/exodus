@@ -18,6 +18,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       Width = 77
       Caption = 'Notifications'
       FocusControl = chkSound
+      ExplicitLeft = 6
       ExplicitWidth = 77
     end
   end
