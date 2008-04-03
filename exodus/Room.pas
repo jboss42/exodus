@@ -2039,16 +2039,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.btnViewHistoryClick(Sender: TObject);
-var
-    roomList: TWidestringList;
 begin
     inherited;
 
-    roomList := TWidestringList.Create();
-    roomList.Add(jid);
-    StartShowHistoryWithMultipleItems(nil, roomlist);
-    roomList.Clear();
-    roomList.Free();
+    StartShowHistoryWithJID(jid, true);
 end;
 
 {---------------------------------------}

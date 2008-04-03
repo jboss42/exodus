@@ -34,6 +34,7 @@ type
     _AllowedSearchType: TWidestringList;
     _JIDList: TWidestringList;
     _KeywordList: TWidestringList;
+    _MessageTypeList: TWidestringList;
     _minDate: TDateTime;
     _maxDate: TDateTime;
     _SearchID: Widestring;
@@ -70,6 +71,9 @@ type
     procedure Set_ExactKeywordMatch(value: WordBool); safecall;
     procedure Set_maxDate(value: TDateTime); safecall;
     procedure Set_minDate(value: TDateTime); safecall;
+    procedure AddMessageType(const messageType: WideString); safecall;
+    function GetMessageType(index: Integer): WideString; safecall;
+    function Get_MessageTypeCount: Integer; safecall;
 
     // Properties
   end;
@@ -93,6 +97,7 @@ begin
     _AllowedSearchType := TWidestringList.Create();
     _JIDList := TWidestringList.Create();
     _KeywordList := TWidestringList.Create();
+    _MessageTypeList := TWidestringList.Create();
 
     _minDate := StrToDateTime('01/01/1970 00:00:00'); 
     _maxDate := Tomorrow(); // Makes sure we capture all of today by default
@@ -106,10 +111,12 @@ begin
     _AllowedSearchType.Clear();
     _JIDList.Clear();
     _KeywordList.Clear();
+    _MessageTypeList.Clear();
 
     _AllowedSearchType.Free();
     _JIDList.Free();
     _KeywordList.Free();
+    _MessageTypeList.Free();
  
     inherited;
 end;
@@ -252,6 +259,37 @@ begin
     _minDate := value;
 end;
 
+{---------------------------------------}
+procedure TExodusHistorySearch.AddMessageType(const messageType: WideString);
+var
+    index: integer;
+    tmp: Widestring;
+begin
+    if (messageType = '') then exit;
+
+    tmp := LowerCase(messageType);
+    index := -1;
+
+    if (not _MessageTypeList.Find(tmp, index)) then begin
+        _MessageTypeList.Add(tmp);
+    end;
+end;
+
+{---------------------------------------}
+function TExodusHistorySearch.GetMessageType(index: Integer): WideString;
+begin
+    Result := '';
+    if (index < 0) then exit;
+    if (index >= _MessageTypeList.Count) then exit;
+
+    Result := _MessageTypeList[index];
+end;
+
+{---------------------------------------}
+function TExodusHistorySearch.Get_MessageTypeCount: Integer;
+begin
+    Result := _MessageTypeList.Count;
+end;
 
 
 

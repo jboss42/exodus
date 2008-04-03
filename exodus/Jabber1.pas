@@ -1133,7 +1133,8 @@ begin
     DoDisconnect();
 end;
 
- procedure TfrmExodus.WMActivate(var msg: TMessage);
+{---------------------------------------}
+procedure TfrmExodus.WMActivate(var msg: TMessage);
  begin
     if (Msg.WParamLo <> WA_INACTIVE) then begin
         OutputDebugMsg('exodus got activate');
@@ -1154,6 +1155,7 @@ end;
     end;
     inherited;
  end;
+
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);

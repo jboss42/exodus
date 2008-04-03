@@ -63,6 +63,7 @@ type
     pnlJID: TPanel;
     lblNick: TTntLabel;
     imgAvatar: TPaintBox;
+    Panel3: TPanel;
     Print1: TTntMenuItem;
     mnuViewHistory: TTntMenuItem;
     
@@ -630,23 +631,14 @@ begin
     popClearHistory.Visible := (ExCOMController.ContactLogger <> nil);
 end;
 
-function RGBToColor(R,G,B:Byte): TColor;
-begin
-  Result:=B Shl 16 Or
-          G Shl 8  Or
-          R;
-end;
-
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
 var
     sc: TShortcut;
 begin
-//    AssignDefaultFont(Self.Font);
-    lblNick.Font.Size := lblNick.Font.Size + 2;
-    lblNick.Font.Color := RGBToColor(47, 136, 225);
-    lblNick.Font.style := lblNick.Font.style + [fsBold];
-     
+    AssignDefaultFont(Self.Font);
+    AssignUnicodeURL(lblNick.Font, 12);
+
     // setup prefs
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
@@ -1525,7 +1517,7 @@ end;
 procedure TfrmChat.mnuViewHistoryClick(Sender: TObject);
 begin
     inherited;
-    StartShowHistoryWithContact(_jid.jid);
+    StartShowHistoryWithJID(_jid.jid, false);
 end;
 
 {---------------------------------------}
@@ -1797,7 +1789,6 @@ begin
         r.Right := 28;
         imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
     end;
-    lblNick.Left := imgAvatar.Width + 3; 
 end;
 
 {---------------------------------------}

@@ -288,7 +288,7 @@ uses
   SelectItem in 'SelectItem.pas' {frmSelectItem},
   ContactActions in 'ContactActions.pas',
   FrmUtils in '..\jopl\FrmUtils.pas',
-  GroupParser in '..\jopl\GroupParser.pas';
+  SelectItemAny in 'SelectItemAny.pas' {frmSelectItemAny: TTntForm};
 
 {$R *.TLB}
 

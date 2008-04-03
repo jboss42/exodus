@@ -80,7 +80,8 @@ uses
     COMLogMsg,
     SQLSearchThread,
     SQLUtils,
-    IdGlobal;
+    IdGlobal,
+    Debug;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -187,6 +188,9 @@ begin
     if (SearchParameters.JIDCount > 0) then begin
         Result := Result +
                   ' AND (';
+        if (SearchParameters.MessageTypeCount > 0) then begin
+            Result := Result + '(';
+        end;
         for i := 0 to SearchParameters.JIDCount - 1 do begin
             Result := Result +
                       'jid="' +
@@ -199,6 +203,32 @@ begin
         end;
         Result := Result +
                   ')';
+    end;
+
+    if (SearchParameters.MessageTypeCount > 0) then begin
+        if (SearchParameters.JIDCount > 0) then begin
+            Result := Result +
+                      ' OR (';
+        end
+        else begin
+            Result := Result +
+                      ' AND (';
+        end;
+        for i := 0 to SearchParameters.MessageTypeCount - 1 do begin
+            Result := Result +
+                      'type="' +
+                      str2sql(UTF8Encode(SearchParameters.GetMessageType(i))) +
+                      '"';
+            if (i < (SearchParameters.MessageTypeCount - 1)) then begin
+                Result := Result +
+                          ' OR ';
+            end;
+        end;
+        Result := Result +
+                  ')';
+        if (SearchParameters.JIDCount > 0) then begin
+            Result := Result + ')';
+        end;
     end;
 
     if (SearchParameters.KeywordCount > 0) then begin
@@ -241,6 +271,8 @@ begin
     // End of SQL Statement
     Result := Result +
              ';';
+
+    DebugMessage('History Search SQL statement:  ' + Result);
 end;
 
 {---------------------------------------}
