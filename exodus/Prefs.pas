@@ -64,10 +64,6 @@ type
     procedure TabSelect(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure imgSystemMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure OffBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
@@ -322,6 +318,7 @@ begin
         _defaultPage := imgHotKeys;
 
     pcPrefs.Visible := (_defaultPage <> nil);
+
 //    MainSession.Prefs.RestorePosition(Self);
 end;
 
@@ -435,22 +432,20 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefs.imgSystemMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
-begin
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.OffBoxMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-end;
-
-{---------------------------------------}
 procedure TfrmPrefs.FormShow(Sender: TObject);
 begin
     if (_lastSelButton = nil) then
         TabSelect(_defaultPage);
+    if (Self.Height > Self.Monitor.Height) then
+    begin
+        Self.Top := 0;
+        Self.Height := Self.Monitor.Height - 30; //little breathing room
+    end;
+    if (Self.width > Self.Monitor.width) then
+    begin
+        Self.Left := 0;
+        Self.width := Self.Monitor.width;
+    end;        
 end;
 
 end.

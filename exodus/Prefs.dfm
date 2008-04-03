@@ -1,56 +1,63 @@
 inherited frmPrefs: TfrmPrefs
   Left = 192
   Top = 266
+  Width = 636
+  Height = 618
   BorderStyle = bsDialog
   BorderWidth = 1
   Caption = 'Preferences'
-  ClientHeight = 613
-  ClientWidth = 641
   DefaultMonitor = dmMainForm
   Position = poScreenCenter
+  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitWidth = 649
-  ExplicitHeight = 647
+  ExplicitWidth = 636
+  ExplicitHeight = 618
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 579
-    Width = 641
-    Height = 34
+    Top = 551
+    Width = 628
+    Height = 39
     Align = alBottom
     BevelOuter = bvLowered
     BorderWidth = 1
     ParentColor = True
     TabOrder = 0
+    DesignSize = (
+      628
+      39)
     object btnCancel: TTntButton
-      Left = 492
-      Top = 8
-      Width = 69
-      Height = 23
+      Left = 481
+      Top = 6
+      Width = 68
+      Height = 28
+      Anchors = [akTop, akRight]
       Cancel = True
       Caption = 'Cancel'
       ModalResult = 2
       TabOrder = 1
     end
     object btnOK: TTntButton
-      Left = 418
-      Top = 8
+      Left = 407
+      Top = 6
       Width = 68
-      Height = 23
+      Height = 28
+      Anchors = [akTop, akRight]
       Caption = 'OK'
       ModalResult = 1
       TabOrder = 0
       OnClick = frameButtons1btnOKClick
     end
     object Button6: TTntButton
-      Left = 567
-      Top = 7
-      Width = 69
-      Height = 23
+      Left = 555
+      Top = 6
+      Width = 68
+      Height = 28
+      Anchors = [akTop, akRight]
       Caption = 'Apply'
       TabOrder = 2
       OnClick = frameButtons1btnOKClick
@@ -61,7 +68,7 @@ inherited frmPrefs: TfrmPrefs
     Left = 3
     Top = 6
     Width = 98
-    Height = 567
+    Height = 539
     Margins.Top = 6
     Margins.Bottom = 6
     Align = alLeft
@@ -1580,7 +1587,6 @@ inherited frmPrefs: TfrmPrefs
         2F59B545DD2905E5D03FD8EA79AED8CA7300F9F105B7F617FF0D67DAF26A6360
         A4540000000049454E44AE426082}
       OnClick = TabSelect
-      ExplicitTop = 169
     end
     object imgMessages: TExGraphicButton
       AlignWithMargins = True
@@ -3138,8 +3144,9 @@ inherited frmPrefs: TfrmPrefs
   object pcPrefs: TTntPageControl
     Left = 104
     Top = 0
-    Width = 537
-    Height = 579
+    Width = 524
+    Height = 551
+    ActivePage = tsHotKeys
     Align = alClient
     Style = tsButtons
     TabOrder = 2
