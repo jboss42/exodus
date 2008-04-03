@@ -97,8 +97,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         Margins.Top = 0
         Align = alTop
         Caption = 
-          'Show group &members online status at group level (i.e. 5 of 10 o' +
-          'nline)'
+          'Sho&w the number of online contacts for each group (5 of 10 onli' +
+          'ne)'
         TabOrder = 3
       end
       object chkOnlineOnly: TTntCheckBox
@@ -230,7 +230,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 353
         Height = 16
         Align = alTop
-        Caption = 'Show contacts I have asked to add as "Pending"'
+        Caption = '&Show contacts I have asked to add as "Pending"'
         TabOrder = 3
       end
       object chkObservers: TTntCheckBox
@@ -239,7 +239,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Width = 353
         Height = 16
         Align = alTop
-        Caption = 'Show observers'
+        Caption = 'Show obser&vers'
         TabOrder = 4
       end
     end
@@ -248,7 +248,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       Left = 0
       Top = 295
       Width = 353
-      Height = 278
+      Height = 298
       Margins.Left = 0
       Margins.Top = 6
       Margins.Right = 0
@@ -282,7 +282,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         Left = 0
         Top = 144
         Width = 350
-        Height = 41
+        Height = 21
         Margins.Left = 0
         Align = alTop
         AutoSize = True
@@ -293,8 +293,8 @@ inherited frmPrefRoster: TfrmPrefRoster
         object lblFilter: TTntLabel
           Left = 0
           Top = 2
-          Width = 43
-          Height = 39
+          Width = 128
+          Height = 15
           Caption = '"Online" minimum status: '
           WordWrap = True
         end
@@ -316,7 +316,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGatewayGroup: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 191
+        Top = 171
         Width = 350
         Height = 21
         Margins.Left = 0
@@ -326,6 +326,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 4
         AutoHide = True
+        ExplicitTop = 191
         object lblGatewayGrp: TTntLabel
           Left = 0
           Top = 2
@@ -384,7 +385,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlDblClickAction: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 218
+        Top = 198
         Width = 350
         Height = 21
         Margins.Left = 0
@@ -394,6 +395,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 9
         AutoHide = True
+        ExplicitTop = 218
         object lblDblClick: TTntLabel
           Left = 0
           Top = 2
@@ -418,7 +420,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       object pnlGroupSeparator: TExBrandPanel
         AlignWithMargins = True
         Left = 0
-        Top = 245
+        Top = 225
         Width = 350
         Height = 21
         Margins.Left = 0
@@ -428,6 +430,7 @@ inherited frmPrefRoster: TfrmPrefRoster
         ParentColor = True
         TabOrder = 10
         AutoHide = True
+        ExplicitTop = 245
         object lblGrpSeparator: TTntLabel
           Left = 0
           Top = 2
@@ -445,15 +448,17 @@ inherited frmPrefRoster: TfrmPrefRoster
       end
       object pnlAlpha: TExBrandPanel
         Left = 0
-        Top = 269
+        Top = 249
         Width = 353
-        Height = 45
+        Height = 44
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 11
         AutoHide = True
+        ExplicitTop = 269
+        ExplicitHeight = 45
         object chkRosterAlpha: TTntCheckBox
           Left = 0
           Top = 0
@@ -483,7 +488,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           Left = 143
           Top = 20
           Width = 53
-          Height = 25
+          Height = 24
           BevelOuter = bvNone
           Enabled = False
           ParentColor = True
@@ -494,7 +499,7 @@ inherited frmPrefRoster: TfrmPrefRoster
           OnChange = txtRosterAlphaChange
           DesignSize = (
             53
-            25)
+            24)
         end
       end
       object chkCollapsed: TTntCheckBox
