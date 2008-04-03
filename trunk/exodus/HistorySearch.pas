@@ -43,6 +43,7 @@ uses
 
 type
   TResultSort = (rsJIDAsc, rsJIDDec, rsDateAsc, rsDateDec);
+  THistorySearchJIDLimit = (hsNone, hsLimited, hsAny);
 
   {
     Action implementation to start chats with a given contact(s)
@@ -81,7 +82,7 @@ type
     pnlBasicSearchKeywordSearch: TTntPanel;
     pnlResults: TTntPanel;
     pnlControlBar: TTntPanel;
-    btnSerach: TTntButton;
+    btnSearch: TTntButton;
     btnAdvBasicSwitch: TTntButton;
     pnlResultsList: TTntPanel;
     lstResults: TTntListView;
@@ -126,7 +127,7 @@ type
     procedure btnAddContactClick(Sender: TObject);
     procedure lstContactsClick(Sender: TObject);
     procedure btnRemoveContactClick(Sender: TObject);
-    procedure btnSerachClick(Sender: TObject);
+    procedure btnSearchClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnAddRoomClick(Sender: TObject);
     procedure btnRemoveRoomClick(Sender: TObject);
@@ -165,6 +166,10 @@ type
     _sessionCB: integer;
     _basicpanel_height: integer;
     _advpanel_height: integer;
+    _simpleJIDIsRoom: boolean;
+    _simpleJID: widestring;
+    _contactsJIDLimit: THistorySearchJIDLimit;
+    _roomsJIDLimit: THistorySearchJIDLimit;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -193,7 +198,7 @@ type
 
     // Methods
     procedure ResultCallback(msg: TJabberMessage);
-    procedure AddContactBasicSearch(const jid: widestring);
+    procedure AddJIDBasicSearch(const jid: widestring; const isroom: boolean);
     procedure AddContact(const jid: widestring);
     procedure AddRoom(const room: widestring);
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -212,10 +217,12 @@ var
   frmHistorySearch: TfrmHistorySearch;
   HistoryAction: TSearchHistoryAction;
 
+const
+    ANY_JID = '< Any >';
 
 procedure RegisterActions();
 procedure StartShowHistory();
-procedure StartShowHistoryWithContact(const jid: widestring);
+procedure StartShowHistoryWithJID(const jid: widestring; const isroom:boolean);
 procedure StartShowHistoryWithMultipleItems(const ContactList: TWidestringList; const RoomList: TWidestringList);
 
 {---------------------------------------}
@@ -244,7 +251,8 @@ uses
     JabberUtils,
     ExActionCtrl,
     TntSysUtils,
-    DateUtils;
+    DateUtils,
+    SelectItemAny;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -271,12 +279,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure StartShowHistoryWithContact(const jid: widestring);
+procedure StartShowHistoryWithJID(const jid: widestring; const isroom:boolean);
 var
     frm: TfrmHistorySearch;
 begin
     frm := TfrmHistorySearch.Create(Application);
-    frm.AddContactBasicSearch(jid);
+    frm.AddJidBasicSearch(jid, isroom);
     frm.Show();
 end;
 
@@ -291,7 +299,7 @@ begin
     if (((ContactList <> nil) and (ContactList.Count = 1)) and
         ((RoomList = nil) or (RoomList.Count = 0))) then begin
         // We only have 1 contact and no rooms, so start with basic search.
-        frm.AddContactBasicSearch(ContactList[0]);
+        frm.AddJidBasicSearch(ContactList[0], false);
     end
     else begin
         // More than 1 contact or rooms or both, so do advanced search
@@ -343,9 +351,13 @@ var
     contactlist: TWidestringList;
     roomlist: TWidestringList;
 begin
-    if ((items.Count = 1) and
-        (items.Item[0].Type_ = 'contact')) then begin
-        StartShowHistoryWithContact(items.Item[0].UID);
+    if (items.Count = 1) then begin
+        if (items.Item[0].Type_ = 'contact') then begin
+            StartShowHistoryWithJID(items.Item[0].UID, false);
+        end
+        else begin
+            StartShowHistoryWithJID(items.Item[0].UID, true);
+        end;
     end
     else begin
         contactlist := TWidestringList.Create();
@@ -389,7 +401,7 @@ var
 begin
     inherited;
 
-    jid := SelectUIDByType('contact');
+    jid := SelectUIDByTypeAny('contact');
     if (jid <> '') then begin
         _AddContactToContactList(jid);
     end;
@@ -402,7 +414,7 @@ var
 begin
     inherited;
 
-    jid := SelectUIDByType('room');
+    jid := SelectUIDByTypeAny('room');
     if (jid <> '') then begin
         _AddRoomToRoomList(jid);
     end;
@@ -418,12 +430,57 @@ begin
         pnlAdvancedSearchBar.Visible := false;
         pnlBasicSearchBar.Visible := true;
         btnAdvBasicSwitch.Caption := _('Advanced');
+
+        if ((lstContacts.Count > 0) and
+            (_contactsJIDLimit = hsLimited)) then begin
+            // Contacts have something so it takes priority
+            _simpleJIDIsRoom := false;
+            _simpleJID := TJabberID(lstContacts.Items.Objects[0]).jid;
+            txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+        end
+        else if ((lstRooms.Count > 0) and
+            (_roomsJIDLimit = hsLimited)) then begin
+            // Contacts have nothing and Rooms have something
+            _simpleJIDIsRoom := true;
+            _simpleJID := TJabberID(lstRooms.Items.Objects[0]).jid;
+            txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+        end
+        else begin
+            // Set simple search to any
+            _simpleJIDIsRoom := false;
+            _simpleJID := '';
+            txtBasicHistoryFor.Text := _(ANY_JID);
+        end;
+
+        // Make sure Search button is enabled;
+        btnSearch.Enabled := true;
     end
     else begin
         // Currently in basic serach
         pnlBasicSearchBar.Visible := false;
         pnlAdvancedSearchBar.Visible := true;
         btnAdvBasicSwitch.Caption := _('Basic');
+
+        if (_simpleJID <> '') then begin
+            if (_simpleJIDIsRoom) then begin
+                _AddRoomToRoomList(_simpleJID);
+            end
+            else begin
+                _AddContactToContactList(_simpleJID);
+            end;
+        end
+        else begin
+            // In ANY mode, so set both rooms and chats
+            // to ANY.
+            if (_contactsJIDLimit <> hsAny) then begin
+                lstContacts.AddItem(_(ANY_JID), nil);
+                _contactsJIDLimit := hsAny;
+            end;
+            if (_roomsJIDLimit <> hsAny) then begin
+                lstRooms.AddItem(_(ANY_JID), nil);
+                _roomsJIDLimit := hsAny;
+            end;
+        end;
     end;
 
     _AdvSearch := (not _AdvSearch);
@@ -498,24 +555,69 @@ end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.btnRemoveContactClick(Sender: TObject);
+var
+    i: integer;
+    jid: TJabberID;
 begin
     inherited;
+
+    try
+        for i := 0 to lstContacts.Count - 1 do begin
+            if (lstContacts.Selected[i]) then begin
+                jid := TJabberID(lstContacts.Items.Objects[i]);
+                jid.Free();
+            end;
+        end;
+    except
+    end;
+
     lstContacts.DeleteSelected();
     btnRemoveContact.Enabled := false; // We just removed the selected, so nothing can be selected
+
+    if (lstContacts.Count <= 0) then begin
+        _contactsJIDLimit := hsNone;
+
+        if (lstRooms.Count <= 0) then begin
+            btnSearch.Enabled := false;
+        end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch.btnRemoveRoomClick(Sender: TObject);
+var
+    i: integer;
+    jid: TJabberID;
 begin
     inherited;
+
+    try
+        for i := 0 to lstRooms.Count - 1 do begin
+            if (lstRooms.Selected[i]) then begin
+                jid := TJabberID(lstRooms.Items.Objects[i]);
+                jid.Free();
+            end;
+        end;
+    except
+    end;
+
     lstRooms.DeleteSelected();
     btnRemoveRoom.Enabled := false; // We just removed the selected, so nothing can be selected
+
+    if (lstRooms.Count <= 0) then begin
+        _roomsJIDLimit := hsNone;
+
+        if (lstContacts.Count <= 0) then begin
+            btnSearch.Enabled := false;
+        end;
+    end;
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.btnSerachClick(Sender: TObject);
+procedure TfrmHistorySearch.btnSearchClick(Sender: TObject);
 var
     i: integer;
+    jid: TJabberID;
 begin
     inherited;
 
@@ -564,22 +666,41 @@ begin
 
             _SearchObj.Set_ExactKeywordMatch(chkExact.Checked);
 
-            for i := 0 to lstContacts.Items.Count - 1 do begin
-                if (Trim(lstContacts.Items[i]) <> '') then begin
-                    _SearchObj.AddJid(Trim(lstContacts.Items[i]));
+            case _contactsJIDLimit of
+                hsNone: begin
+                    // Don't do anything
+                end;
+                hsLimited: begin
+                    for i := 0 to lstContacts.Items.Count - 1 do begin
+                        jid := TJabberID(lstContacts.Items.Objects[i]);
+                        _SearchObj.AddJid(jid.jid);
+                    end;
+                end;
+                hsAny: begin
+                    _SearchObj.AddMessageType('chat');
+                    _SearchObj.AddMessageType('normal');
                 end;
             end;
 
-            for i := 0 to lstRooms.Items.Count - 1 do begin
-                if (Trim(lstRooms.Items[i]) <> '') then begin
-                    _SearchObj.AddJid(Trim(lstRooms.Items[i]));
+            case _roomsJIDLimit of
+                hsNone: begin
+                    // Don't do anything
+                end;
+                hsLimited: begin
+                    for i := 0 to lstRooms.Items.Count - 1 do begin
+                        jid := TJabberID(lstRooms.Items.Objects[i]);
+                        _SearchObj.AddJid(jid.jid);
+                    end;
+                end;
+                hsAny: begin
+                    _SearchObj.AddMessageType('groupchat');
                 end;
             end;
         end
         else begin
             // Basic Search
             if (Trim(txtBasicHistoryFor.Text) <> '') then begin
-                _SearchObj.AddJid(txtBasicHistoryFor.Text);
+                _SearchObj.AddJid(_simpleJID);
             end;
 
             if (Trim(txtBasicKeywordSearch.Text) <> '') then begin
@@ -620,6 +741,14 @@ end;
 procedure TfrmHistorySearch.FormCreate(Sender: TObject);
 begin
     inherited;
+
+    txtBasicHistoryFor.Text := _(ANY_JID);
+    _simpleJIDIsRoom := false;
+
+    lstContacts.AddItem(_(ANY_JID), nil);
+    lstRooms.AddItem(_(ANY_JID), nil);
+    _contactsJIDLimit := hsAny;
+    _roomsJIDLimit := hsAny;
 
     _MsglistType := MainSession.prefs.getInt('msglist_type');
     case _MsglistType of
@@ -1173,33 +1302,102 @@ end;
 procedure TfrmHistorySearch._AddContactToContactList(const contact: widestring);
 var
     i: integer;
+    jid: TJabberID;
+    dn: widestring;
 begin
     if (Trim(contact) = '') then exit;
 
+    if (contact = ANY_JID_MARKER) then begin
+        if (_contactsJIDLimit <> hsAny) then begin
+            _contactsJIDLimit := hsAny;
+            for i := 0 to lstContacts.Count - 1 do begin
+                jid := TJabberID(lstContacts.Items.Objects[i]);
+                jid.Free();
+            end;
+            lstContacts.SelectAll();
+            lstContacts.DeleteSelected();
+            lstContacts.AddItem(_(ANY_JID), nil);
+        end;
+        exit;
+    end;
+
+    if (_contactsJIDLimit = hsAny) then begin
+        _contactsJIDLimit := hsLimited;
+        lstContacts.SelectAll();
+        lstContacts.DeleteSelected();
+    end;
+
+    jid := TJabberID.Create(contact);
+    dn := DisplayName.getDisplayNameCache().getDisplayName(jid.jid);
+
     // Check for dupe
     for i := 0 to lstContacts.Count - 1 do begin
-        if (Trim(contact) = lstContacts.Items[i]) then exit; // is a dupe
+        if (jid.jid = TJabberID(lstContacts.Items.Objects[i]).jid) then begin
+            // is a dupe
+            jid.Free();
+            exit;
+        end;
     end;
 
     // no dupes so go ahead and add to lsit
-    lstContacts.AddItem(Trim(contact), nil);
+    lstContacts.AddItem(dn, jid);
+
+    // Set limit to "limited"
+    _contactsJIDLimit := hsLimited;
+
+    // Make sure Search button is enabled;
+    btnSearch.Enabled := true;
 end;
 
 {---------------------------------------}
 procedure TfrmHistorySearch._AddRoomToRoomList(const room: widestring);
 var
     i: integer;
+    jid: TJabberID;
+    dn: widestring;
 begin
     if (Trim(room) = '') then exit;
 
+    if (room = ANY_JID_MARKER) then begin
+        if (_roomsJIDLimit <> hsAny) then begin
+            _roomsJIDLimit := hsAny;
+            for i := 0 to lstRooms.Count - 1 do begin
+                jid := TJabberID(lstRooms.Items.Objects[i]);
+                jid.Free();
+            end;
+            lstRooms.SelectAll();
+            lstRooms.DeleteSelected();
+            lstRooms.AddItem(_(ANY_JID), nil);
+        end;
+        exit;
+    end;
+
+    if (_roomsJIDLimit = hsAny) then begin
+        _roomsJIDLimit := hsLimited;
+        lstRooms.SelectAll();
+        lstRooms.DeleteSelected();
+    end;
+
+    jid := TJabberID.Create(room);
+    dn := DisplayName.getDisplayNameCache().getDisplayName(jid.jid);
+
     // Check for dupe
     for i := 0 to lstRooms.Count - 1 do begin
-
-        if (Trim(room) = lstRooms.Items[i]) then exit; // is a dupe
+        if (jid.jid = TJabberID(lstRooms.Items.Objects[i]).jid) then begin
+            // is a dupe
+            jid.Free();
+            exit;
+        end;
     end;
 
     // no dupes so go ahead and add to lsit
-    lstRooms.AddItem(Trim(room), nil);
+    lstRooms.AddItem(dn, jid);
+
+    // Set limit to "limited"
+    _roomsJIDLimit := hsLimited;
+
+    // Make sure Search button is enabled;
+    btnSearch.Enabled := true;
 end;
 
 {---------------------------------------}
@@ -1378,11 +1576,11 @@ end;
 procedure TfrmHistorySearch._SearchingGUI(const inSearch: boolean);
 begin
     if (inSearch) then begin
-        btnSerach.Caption := _('Cancel');
+        btnSearch.Caption := _('Cancel');
         Screen.Cursor := crHourglass;
     end
     else begin
-        btnSerach.Caption := _('Search');
+        btnSearch.Caption := _('Search');
         Screen.Cursor := crDefault;
     end;
     btnAdvBasicSwitch.Enabled := (not inSearch);
@@ -1391,11 +1589,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmHistorySearch.AddContactBasicSearch(const jid: widestring);
+procedure TfrmHistorySearch.AddJIDBasicSearch(const jid: widestring; const isroom: boolean);
 begin
     if (Trim(jid) = '') then exit;
 
-    txtBasicHistoryFor.Text := Trim(jid);
+    _simpleJID := Trim(jid);
+    txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
+    _simpleJIDIsRoom := isroom;
 end;
 
 {---------------------------------------}

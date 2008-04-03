@@ -6,7 +6,7 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 444
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter

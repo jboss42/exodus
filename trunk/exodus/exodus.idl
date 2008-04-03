@@ -1638,6 +1638,19 @@ library Exodus
     id(0x000000CD)
     ]
     HRESULT _stdcall SearchID([out, retval] BSTR * value );
+    [
+    id(0x000000D0)
+    ]
+    HRESULT _stdcall AddMessageType([in] BSTR messageType );
+    [
+    id(0x000000D7)
+    ]
+    HRESULT _stdcall GetMessageType([in] long index, [out, retval] BSTR * messageType );
+    [
+    propget, 
+    id(0x000000D8)
+    ]
+    HRESULT _stdcall MessageTypeCount([out, retval] long * Value );
   };
 
   [

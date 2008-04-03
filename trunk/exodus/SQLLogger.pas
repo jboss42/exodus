@@ -184,6 +184,9 @@ begin
 
     thread := str2sql(UTF8Encode(msg.Thread));
     mtype := str2sql(UTF8Encode(msg.MsgType));
+    if (mtype = '') then begin
+        mtype := 'normal';
+    end;
 
     subject := str2sql(UTF8Encode(msg.Subject));
     nick := str2sql(UTF8Encode(msg.nick));

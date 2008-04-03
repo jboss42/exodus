@@ -40,7 +40,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
-        TabOrder = 0
+        TabOrder = 1
         DesignSize = (
           250
           150)
@@ -57,6 +57,8 @@ inherited frmHistorySearch: TfrmHistorySearch
           Width = 169
           Height = 21
           Anchors = [akLeft, akTop, akRight]
+          ParentColor = True
+          ReadOnly = True
           TabOrder = 0
         end
       end
@@ -69,7 +71,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         BevelOuter = bvNone
         ParentBackground = False
         ParentColor = True
-        TabOrder = 1
+        TabOrder = 0
         DesignSize = (
           250
           150)
@@ -217,7 +219,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           170
           135)
         object btnAddContact: TTntButton
-          Left = 7
+          Left = 5
           Top = 104
           Width = 68
           Height = 28
@@ -227,7 +229,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnAddContactClick
         end
         object btnRemoveContact: TTntButton
-          Left = 99
+          Left = 97
           Top = 104
           Width = 68
           Height = 28
@@ -237,7 +239,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnRemoveContactClick
         end
         object lstContacts: TTntListBox
-          Left = 7
+          Left = 5
           Top = 19
           Width = 160
           Height = 82
@@ -259,7 +261,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           170
           135)
         object btnAddRoom: TTntButton
-          Left = 7
+          Left = 4
           Top = 104
           Width = 68
           Height = 28
@@ -269,7 +271,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnAddRoomClick
         end
         object btnRemoveRoom: TTntButton
-          Left = 99
+          Left = 96
           Top = 104
           Width = 68
           Height = 28
@@ -279,7 +281,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = btnRemoveRoomClick
         end
         object lstRooms: TTntListBox
-          Left = 7
+          Left = 4
           Top = 19
           Width = 160
           Height = 82
@@ -386,7 +388,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       ExplicitTop = 8
       ExplicitWidth = 50
     end
-    object btnSerach: TTntButton
+    object btnSearch: TTntButton
       Left = 639
       Top = 6
       Width = 68
@@ -394,7 +396,7 @@ inherited frmHistorySearch: TfrmHistorySearch
       Anchors = [akTop, akRight]
       Caption = 'Search'
       TabOrder = 0
-      OnClick = btnSerachClick
+      OnClick = btnSearchClick
     end
     object btnAdvBasicSwitch: TTntButton
       Left = 565

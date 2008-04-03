@@ -59,6 +59,7 @@ inherited frmSelectItem: TfrmSelectItem
         Height = 23
         Align = alClient
         TabOrder = 0
+        OnChange = txtJIDChange
         ExplicitHeight = 21
       end
     end

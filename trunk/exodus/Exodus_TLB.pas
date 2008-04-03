@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 3/31/2008 12:18:42 PM from Type Library described below.
+// File generated on 4/3/2008 12:19:25 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4885,6 +4885,9 @@ type
     function Get_JIDCount: Integer; safecall;
     function Get_AllowedSearchTypeCount: Integer; safecall;
     function Get_SearchID: WideString; safecall;
+    procedure AddMessageType(const messageType: WideString); safecall;
+    function GetMessageType(index: Integer): WideString; safecall;
+    function Get_MessageTypeCount: Integer; safecall;
     property minDate: TDateTime read Get_minDate write Set_minDate;
     property maxDate: TDateTime read Get_maxDate write Set_maxDate;
     property ExactKeywordMatch: WordBool read Get_ExactKeywordMatch write Set_ExactKeywordMatch;
@@ -4892,6 +4895,7 @@ type
     property JIDCount: Integer read Get_JIDCount;
     property AllowedSearchTypeCount: Integer read Get_AllowedSearchTypeCount;
     property SearchID: WideString read Get_SearchID;
+    property MessageTypeCount: Integer read Get_MessageTypeCount;
   end;
 
 // *********************************************************************//
@@ -4914,6 +4918,9 @@ type
     property JIDCount: Integer readonly dispid 213;
     property AllowedSearchTypeCount: Integer readonly dispid 214;
     property SearchID: WideString readonly dispid 205;
+    procedure AddMessageType(const messageType: WideString); dispid 208;
+    function GetMessageType(index: Integer): WideString; dispid 215;
+    property MessageTypeCount: Integer readonly dispid 216;
   end;
 
 // *********************************************************************//

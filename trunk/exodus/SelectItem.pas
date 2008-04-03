@@ -1,5 +1,6 @@
+unit SelectItem;
 {
-    Copyright 2008, Peter Millard
+    Copyright 2008, Estate of Peter Millard
 
     This file is part of Exodus.
 
@@ -18,7 +19,6 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
-unit SelectItem;
 
 interface
 
@@ -67,9 +67,13 @@ type
 
     procedure ItemChanged(Sender: TObject; Node: TTreeNode);
     procedure mnuShowOnlineClick(Sender: TObject);
+    procedure txtJIDChange(Sender: TObject);
 
   private
     { Private declarations }
+
+  protected
+    { Protected declarations }
     _itemType: Widestring;
     _selectedUID: Widestring;
     _itemView: TTypedTreeView;
@@ -90,7 +94,10 @@ function SelectUIDByType(itemtype: Widestring; title: Widestring = ''): Widestri
 
 implementation
 
-uses gnugettext, Session;
+uses
+    gnugettext,
+    Session,
+    JabberID;
 
 {$R *.dfm}
 
@@ -169,6 +176,7 @@ begin
     _itemtype := itemtype;
     _selectedUID := '';
 end;
+
 destructor TfrmSelectItem.Destroy;
 begin
     _itemView.Free;
@@ -200,14 +208,17 @@ var
     item: IExodusItem;
     valid: Boolean;
 begin
-   if (Node = nil) then exit;
-   
+    if (Node = nil) then exit;
+    
     valid := (Node.Data <> nil);
-    if not valid then
-        _selectedUID := ''
+    if not valid then begin
+        _selectedUID := '';
+        txtJID.text := '';
+    end
     else begin
         item := IExodusItem(Node.Data);
         _selectedUID := item.UID;
+        txtJID.text := item.UID;
     end;
 
     btnOK.Enabled := valid;
@@ -218,5 +229,20 @@ begin
     mnuShowOnline.Checked := not mnuShowOnline.Checked;
     _itemView.ShowOnline := mnuShowOnline.Checked;
 end;
+
+procedure TfrmSelectItem.txtJIDChange(Sender: TObject);
+begin
+    inherited;
+
+    if (isValidJID(txtJID.Text, false)) then begin
+        _selectedUID := txtJID.Text;
+        btnOK.Enabled := true;
+    end
+    else begin
+        btnOK.Enabled := false;
+    end;
+end;
+
+
 
 end.
