@@ -2,21 +2,20 @@ inherited frmPrefDisplay: TfrmPrefDisplay
   Left = 400
   Top = 120
   Caption = 'frmPrefFont'
-  ClientHeight = 709
+  ClientHeight = 639
   ClientWidth = 418
   OldCreateOrder = True
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   ExplicitWidth = 430
-  ExplicitHeight = 721
+  ExplicitHeight = 651
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
     Width = 418
     ExplicitWidth = 418
     inherited lblHeader: TTntLabel
-      Left = 6
       Width = 43
       Caption = 'Display'
       ExplicitLeft = 6
@@ -27,12 +26,13 @@ inherited frmPrefDisplay: TfrmPrefDisplay
     Left = 0
     Top = 23
     Width = 418
-    Height = 686
+    Height = 616
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 1
+    ExplicitHeight = 686
     object pnlContainer: TExBrandPanel
       AlignWithMargins = True
       Left = 0
@@ -530,8 +530,6 @@ inherited frmPrefDisplay: TfrmPrefDisplay
         ParentColor = True
         TabOrder = 1
         AutoHide = True
-        ExplicitTop = 75
-        ExplicitHeight = 248
         object gbRTIncludes: TExGroupBox
           AlignWithMargins = True
           Left = 0
@@ -589,7 +587,7 @@ inherited frmPrefDisplay: TfrmPrefDisplay
           Left = 0
           Top = 91
           Width = 340
-          Height = 160
+          Height = 155
           Margins.Left = 0
           Align = alTop
           AutoSize = True

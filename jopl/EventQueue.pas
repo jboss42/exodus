@@ -191,7 +191,7 @@ begin
     // save all of the events in the listview out to a file
     if (MainSession = nil) then exit;
     //if (_loading) then exit;
-
+    (*
     s := TXMLTag.Create('spool');
     for i := 0 to Count - 1 do begin
         event := TJabberEvent(Items[i]);
@@ -238,6 +238,7 @@ begin
     MainSession.FireEvent(SE_UPDATE, nil);
     ss.Free();
     s.Free();
+    *)
 end;
 
 {---------------------------------------}
@@ -254,7 +255,7 @@ begin
     tmp_jid.Free();
     // NB: _queue now owns e... it needs to free it, etc.
     Add(e);
-    SaveEvents();
+//    SaveEvents();
 end;
 
 {---------------------------------------}

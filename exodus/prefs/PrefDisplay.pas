@@ -429,14 +429,15 @@ procedure TfrmPrefDisplay.loadAllowedFontProps();
 var
     s: TprefState;
 begin
-    if (chkRTEnabled.Checked) then begin
-        s := PrefController.getPrefState('richtext_ignored_font_styles');
+    s := PrefController.getPrefState('richtext_ignored_font_styles');
 
-        chkAllowFontFamily.visible := (s <> psInvisible);
+    chkAllowFontFamily.visible := (s <> psInvisible);
+    chkAllowFontSize.visible := (s <> psInvisible);
+    chkAllowFontColor.visible := (s <> psInvisible);
+    
+    if (chkRTEnabled.Checked) then begin
         chkAllowFontFamily.enabled := (s <> psReadOnly);
-        chkAllowFontSize.visible := (s <> psInvisible);
         chkAllowFontSize.enabled := (s <> psReadOnly);
-        chkAllowFontColor.visible := (s <> psInvisible);
         chkAllowFontColor.enabled := (s <> psReadOnly);
 
         chkAllowFontFamily.Checked := _lastAllowFont;
