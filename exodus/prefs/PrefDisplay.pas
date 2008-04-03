@@ -210,7 +210,10 @@ begin
     end;
     cboChatElement.AddItem(sMessageLabelMe, nil);
     cboChatElement.AddItem(sMessageLabelOthers, nil);
-    cboChatElement.AddItem(sMessagePriority, nil);
+    //woot, special casing ftw
+    if (_msglist_type = RTF_MSGLIST) then
+        cboChatElement.AddItem(sMessagePriority, nil);
+
     cboChatElement.AddItem(sMessageText, nil);
     cboChatElement.AddItem(sSystemMessages, nil);
     cboChatElement.AddItem(sTimestamp, nil);
