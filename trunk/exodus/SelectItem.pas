@@ -200,6 +200,8 @@ var
     item: IExodusItem;
     valid: Boolean;
 begin
+   if (Node = nil) then exit;
+   
     valid := (Node.Data <> nil);
     if not valid then
         _selectedUID := ''
