@@ -479,7 +479,7 @@ begin
     chkPlaySound.Checked := ((OneNI.IntValue and notify_sound) > 0);
 
     pnlSoundFile.enabled := chkPlaySound.Checked;
-    btnToastSettings.Enabled := chkToast.Checked;
+    btnToastSettings.Enabled := chkToast.Checked and chkToast.Enabled;
     txtSoundFile.Text := OneNI.SoundFile;
 
     _NoNotifyUpdate := false;
@@ -511,7 +511,7 @@ begin
     if (Sender = chkPlaySound) then
         pnlSoundFile.Enabled := chkPlaySound.Checked
     else if (Sender = chkToast) then
-        btnToastSettings.Enabled := chkToast.checked;
+        btnToastSettings.Enabled := chkToast.checked and chkToast.enabled;
 end;
 
 end.
