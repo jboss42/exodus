@@ -58,6 +58,7 @@ type
     tsAutoAway: TTntTabSheet;
     tsPresence: TTntTabSheet;
     tsHotKeys: TTntTabSheet;
+    ScrollBox1: TScrollBox;
     procedure memKeywordsKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
@@ -436,10 +437,12 @@ procedure TfrmPrefs.FormShow(Sender: TObject);
 begin
     if (_lastSelButton = nil) then
         TabSelect(_defaultPage);
-    if (Self.Height > Self.Monitor.Height) then
+    if (Self.Height > (Self.Monitor.Height - 30)) then
     begin
         Self.Top := 0;
         Self.Height := Self.Monitor.Height - 30; //little breathing room
+        //inc width by scrollbar width
+        Self.Width := Self.Width + Self.VertScrollBar.ThumbSize;
     end;
     if (Self.width > Self.Monitor.width) then
     begin
