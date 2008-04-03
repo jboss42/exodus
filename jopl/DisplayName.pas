@@ -326,6 +326,7 @@ end;
 Destructor TMyNickHandler.Destroy();
 begin
     _MyBareJID.Free();
+    inherited;
 end;
 
 procedure TMyNickHandler.fireOnProfileResult(BareJID: Widestring; ProfileName: WideString; FetchError: boolean);
@@ -421,7 +422,7 @@ var
     tJID: TJabberID;
 begin
     tJID := TJabberID.Create(uid);
-    REsult := GetDisplayNameCache().getDisplayName(tJID, PendingNameChange);
+    Result := GetDisplayNameCache().getDisplayName(tJID, PendingNameChange);
     tJID.free();
 end;
 
