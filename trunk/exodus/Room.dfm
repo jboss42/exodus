@@ -6,12 +6,12 @@ inherited frmRoom: TfrmRoom
   ClientWidth = 492
   OldCreateOrder = True
   ExplicitWidth = 500
-  ExplicitHeight = 450
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
     Top = 347
-    Width = 492
+    Width = 484
     ExplicitTop = 352
     ExplicitWidth = 492
   end
@@ -27,14 +27,20 @@ inherited frmRoom: TfrmRoom
       Width = 440
       ExplicitWidth = 440
       object pnlSubj: TPanel
-        Left = 0
+        AlignWithMargins = True
+        Left = 4
         Top = 0
         Width = 352
         Height = 33
+        Margins.Left = 4
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitLeft = 0
         object lblSubject: TTntLabel
           Left = 27
           Top = 5
@@ -138,16 +144,17 @@ inherited frmRoom: TfrmRoom
   end
   inherited pnlInput: TPanel
     Top = 351
-    Width = 492
+    Width = 488
     TabOrder = 0
+    ExplicitLeft = 2
     ExplicitTop = 351
-    ExplicitWidth = 492
+    ExplicitWidth = 488
     inherited MsgOut: TExRichEdit
-      Width = 488
+      Width = 484
     end
     inherited tbMsgOutToolbar: TTntToolBar
-      Width = 488
-      ExplicitWidth = 488
+      Width = 484
+      ExplicitWidth = 484
     end
   end
   inherited popMsgList: TTntPopupMenu
