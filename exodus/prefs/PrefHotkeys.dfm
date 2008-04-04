@@ -62,6 +62,7 @@ inherited frmPrefHotkeys: TfrmPrefHotkeys
           Caption = 'Message'
           Width = 333
         end>
+      ReadOnly = True
       RowSelect = True
       SortType = stData
       TabOrder = 0

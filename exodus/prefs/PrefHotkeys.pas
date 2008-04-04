@@ -118,17 +118,17 @@ begin
     btnModifyHotkeys.Enabled := false;
     btnRemoveHotkeys.Enabled := false;
     lstHotkeys.ClearSelection;
+
     if (dlg.ShowModal() = mrCancel) then
         exit;
 
     item := lstHotkeys.Items.Add();
     item.Caption := dlg.cbhotkey.Text;
     item.SubItems.Add(dlg.txtHotkeyMessage.Text);
-
+    
     _set_usedkeys(item.Caption, true);
 
     lstHotkeys.AlphaSort();
-
     //see if we have too many hotkeys to allow for more.
     btnAddHotkeys.Enabled := false;
     for i := 1 to 12 do begin
@@ -142,6 +142,7 @@ procedure TfrmPrefHotkeys.btnModifyHotkeysClick(Sender: TObject);
 var
     dlg: TfrmModifyHotkeys;
     i: Integer;
+    item: TTntListItem;
 begin
     dlg := TfrmModifyHotkeys.Create(Self);
     dlg.Position := poOwnerFormCenter;
@@ -177,15 +178,17 @@ begin
 
     btnModifyHotkeys.Enabled := false;
     btnRemoveHotkeys.Enabled := false;
-    if (dlg.ShowModal() = mrCancel) then begin
-        lstHotkeys.ClearSelection;
-        exit;
-    end;
+    item := lstHotkeys.Selected;
+    
+    lstHotkeys.ClearSelection;
 
-    _set_usedkeys(lstHotkeys.Selected.Caption, false);
-    lstHotkeys.Selected.Caption := dlg.cbhotkey.Text;
-    lstHotkeys.Selected.Subitems.Strings[0] := dlg.txtHotkeyMessage.Text;
-    _set_usedkeys(lstHotkeys.Selected.Caption, true);
+    if (dlg.ShowModal() = mrCancel) then
+        exit;
+
+    _set_usedkeys(item.Caption, false);
+    item.Caption := dlg.cbhotkey.Text;
+    item.Subitems.Strings[0] := dlg.txtHotkeyMessage.Text;
+    _set_usedkeys(item.Caption, true);
 
     lstHotkeys.AlphaSort();
 end;
@@ -195,6 +198,8 @@ begin
     btnAddHotkeys.Enabled := true;
     _set_usedkeys(lstHotkeys.Selected.Caption, false);
     lstHotkeys.Selected.Delete();
+    btnRemoveHotkeys.Enabled := false;
+    btnModifyHotkeys.Enabled := false;
 end;
 
 procedure TfrmPrefHotkeys.btnClearAllClick(Sender: TObject);
@@ -207,6 +212,8 @@ begin
         lstHotkeys.items[i].Delete();
     end;
     btnAddHotkeys.Enabled := true;
+    btnRemoveHotkeys.Enabled := false;
+    btnModifyHotkeys.Enabled := false;
 end;
 
 
@@ -261,7 +268,10 @@ begin
             end;
         end;
     end;
-
+    btnRemoveHotkeys.Enabled := false;
+    btnModifyHotkeys.Enabled := false;
+    
+    pnlContainer.CaptureChildStates(); //capture disabled states on mod/remove
     // Finally check state and set controls accordingly
     // If either keys or text are RO or INV, don't allow anything to be set/removed
     s1 := getPrefState('hotkeys_keys');
