@@ -145,6 +145,7 @@ begin
         //TJabberSession(_js).ItemController.SaveGroups();
         Item := nil;
         TJabberSession(_JS).FireEvent('/item/end', Item);
+        TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
 
 end;
 
@@ -300,6 +301,7 @@ begin
     Tag := TXMLTag.Create();
     Item := nil;
 
+    session.FireEvent('/data/item/group/save', nil, '');
     session.FireEvent('/item/begin', Item);
     for i := 0 to session.ItemController.ItemsCount - 1 do
     begin
@@ -314,6 +316,7 @@ begin
             TJabberSession(_JS).FireEvent('/item/remove', Item)
 
     end;
+    session.FireEvent('/data/item/group/restore', nil, '');
     session.FireEvent('/item/end', Item);
     Tag.Free();
 
@@ -478,7 +481,9 @@ begin
           TJabberSession(_JS).FireEvent('/item/update', Item)
       else
           // notify the window that this item needs to be updated
-          TJabberSession(_JS).FireEvent('/item/add', Item);
+          TJabberSession(_JS).FireEvent('/item/add', Item)
+  else
+      TJabberSession(_JS).FireEvent('/item/remove', Item);
 
 end;
 
