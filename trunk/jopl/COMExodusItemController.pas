@@ -194,6 +194,7 @@ begin
 
     _GroupsLoaded := true;
     TJabberSession(_JS).FireEvent('/item/end', Group);
+    TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
 end;
 
 {---------------------------------------}

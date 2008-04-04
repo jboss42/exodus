@@ -215,7 +215,7 @@ begin
 
      Item := nil;
      TJabberSession(_JS).FireEvent('/item/end', Item);
-
+     TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
      RoomTags.Free();
 
 end;
