@@ -631,13 +631,26 @@ begin
     popClearHistory.Visible := (ExCOMController.ContactLogger <> nil);
 end;
 
+{posted by Sebastian Volland at http://www.delphi3000.com/articles/article_1150.asp?SK=}
+function RGBToColor(R,G,B:Byte): TColor;
+begin
+  Result:=B Shl 16 Or
+          G Shl 8  Or
+          R;
+end;
+
 {---------------------------------------}
 procedure TfrmChat.SetupPrefs();
 var
     sc: TShortcut;
 begin
     AssignDefaultFont(Self.Font);
-    AssignUnicodeURL(lblNick.Font, 12);
+
+    lblNick.Font.Size := lblNick.Font.Size + 1;
+    lblNick.Font.Style := lblNick.Font.Style + [fsBold];
+    lblNick.Font.Color := RGBToColor(45, 135, 190);
+    
+    //AssignUnicodeURL(lblNick.Font, 12);
 
     // setup prefs
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
@@ -733,11 +746,13 @@ begin
                     imgAvatar.Width := _avatar.Width;
                 pnlDockTop.ClientHeight := m + 1;
             end;
-        end
+        end;
+        lblNick.left := imgAvatar.Left + imgAvatar.Width;
     end
     else begin
         // No avatars are displayed
         imgAvatar.Visible := false;
+        lblNick.left := 3;
     end;
 
     // setup the callbacks if we don't have them already

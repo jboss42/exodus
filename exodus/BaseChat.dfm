@@ -6,19 +6,26 @@ inherited frmBaseChat: TfrmBaseChat
   OnDestroy = FormDestroy
   OnResize = TntFormResize
   ExplicitWidth = 423
-  ExplicitHeight = 294
+  ExplicitHeight = 288
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter [0]
-    Left = 0
+    AlignWithMargins = True
+    Left = 4
     Top = 191
-    Width = 415
+    Width = 407
     Height = 4
     Cursor = crVSplit
+    Margins.Left = 4
+    Margins.Top = 0
+    Margins.Right = 4
+    Margins.Bottom = 0
     Align = alBottom
     AutoSnap = False
     Beveled = True
     OnMoved = Splitter1Moved
+    ExplicitLeft = 0
+    ExplicitWidth = 415
   end
   inherited pnlDockTop: TPanel
     Width = 415
@@ -59,19 +66,26 @@ inherited frmBaseChat: TfrmBaseChat
     TabOrder = 0
   end
   object pnlInput: TPanel
-    Left = 0
+    AlignWithMargins = True
+    Left = 2
     Top = 195
-    Width = 415
+    Width = 411
     Height = 65
+    Margins.Left = 2
+    Margins.Top = 0
+    Margins.Right = 2
+    Margins.Bottom = 0
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
     ParentColor = True
     TabOrder = 1
+    ExplicitLeft = 0
+    ExplicitWidth = 415
     object MsgOut: TExRichEdit
       Left = 2
       Top = 24
-      Width = 411
+      Width = 407
       Height = 39
       Align = alClient
       AutoURLDetect = adNone
@@ -176,12 +190,13 @@ inherited frmBaseChat: TfrmBaseChat
     object tbMsgOutToolbar: TTntToolBar
       Left = 2
       Top = 2
-      Width = 411
+      Width = 407
       Height = 22
       ButtonWidth = 25
       Images = frmExodus.ImageList1
       TabOrder = 1
       Transparent = True
+      ExplicitWidth = 411
       object ChatToolbarButtonBold: TTntToolButton
         Left = 0
         Top = 0

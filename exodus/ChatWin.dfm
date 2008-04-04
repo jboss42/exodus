@@ -11,8 +11,14 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
+    AlignWithMargins = True
+    Left = 4
     Top = 347
-    Width = 492
+    Width = 484
+    Margins.Left = 4
+    Margins.Top = 0
+    Margins.Right = 4
+    Margins.Bottom = 0
     ExplicitTop = 352
     ExplicitWidth = 492
   end
@@ -36,29 +42,42 @@ inherited frmChat: TfrmChat
         ParentColor = True
         TabOrder = 0
         object lblNick: TTntLabel
-          Left = 43
+          AlignWithMargins = True
+          Left = 53
           Top = 0
           Width = 45
-          Height = 13
+          Height = 33
           Cursor = crHandPoint
+          Margins.Left = 6
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
           Align = alLeft
           Caption = 'Nickname'
           ParentShowHint = False
           ShowHint = True
           Layout = tlCenter
           OnClick = lblJIDClick
+          ExplicitLeft = 43
+          ExplicitHeight = 13
         end
         object imgAvatar: TPaintBox
-          Left = 0
+          AlignWithMargins = True
+          Left = 4
           Top = 0
           Width = 35
           Height = 33
+          Margins.Left = 4
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
           Align = alLeft
           OnClick = imgAvatarClick
           OnPaint = imgAvatarPaint
+          ExplicitLeft = 0
         end
         object Panel3: TPanel
-          Left = 35
+          Left = 39
           Top = 0
           Width = 8
           Height = 33
@@ -66,6 +85,7 @@ inherited frmChat: TfrmChat
           BevelOuter = bvNone
           ParentColor = True
           TabOrder = 0
+          ExplicitLeft = 35
         end
       end
     end
@@ -77,18 +97,25 @@ inherited frmChat: TfrmChat
     ExplicitHeight = 314
   end
   inherited pnlInput: TPanel
+    AlignWithMargins = True
+    Left = 2
     Top = 351
-    Width = 492
+    Width = 488
+    Margins.Left = 2
+    Margins.Top = 0
+    Margins.Right = 2
+    Margins.Bottom = 0
     ExplicitTop = 351
     ExplicitWidth = 492
     inherited MsgOut: TExRichEdit
-      Width = 488
+      Width = 484
       WantReturns = False
       OnChange = MsgOutChange
     end
     inherited tbMsgOutToolbar: TTntToolBar
-      Width = 488
-      ExplicitWidth = 488
+      Width = 484
+      ExplicitLeft = 0
+      ExplicitWidth = 482
       inherited cmbPriority: TTntComboBox
         Hint = 'Priority'
       end
