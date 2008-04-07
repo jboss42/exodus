@@ -198,7 +198,13 @@ begin
     _itemView.AlignWithMargins := false;
     _itemView.OnChange := ItemChanged;
     _itemView.PopupMenu := popSelected;
-    _itemView.ShowOnline := MainSession.Prefs.getBool('roster_only_online');
+    with MainSession.Prefs do begin
+        _itemView.Font.Name := getString('roster_font_name');
+        _itemView.Font.Size := getInt('roster_font_size');
+        _itemView.Font.Color := TColor(getInt('roster_font_color'));
+        _itemView.Font.Charset := getInt('roster_font_charset');
+        _itemView.ShowOnline := getBool('roster_only_online');
+    end;
 
     _itemView.Refresh;
 end;
