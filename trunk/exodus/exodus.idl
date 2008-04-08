@@ -1650,7 +1650,7 @@ library Exodus
     propget, 
     id(0x000000D8)
     ]
-    HRESULT _stdcall MessageTypeCount([out, retval] long * Value );
+    HRESULT _stdcall MessageTypeCount([out, retval] long * value );
   };
 
   [
@@ -9081,11 +9081,11 @@ library Exodus
     [
     id(0x000000C9)
     ]
-    HRESULT _stdcall NewSearch([in] IExodusHistorySearch SearchParams /*Warning: unable to validate structure name: */, [in] IExodusHistoryResult SearchResult /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * SearchAccepted );
+    HRESULT _stdcall NewSearch([in] IExodusHistorySearch * SearchParams /*Warning: unable to validate structure name: */, [in] IExodusHistoryResult * SearchResult /*Warning: unable to validate structure name: */, [out, retval] VARIANT_BOOL * SearchAccepted );
     [
     id(0x000000CA)
     ]
-    HRESULT _stdcall RegisterSearchHandler([in] IExodusHistorySearchHandler Handler /*Warning: unable to validate structure name: */, [out, retval] long * HandlerID );
+    HRESULT _stdcall RegisterSearchHandler([in] IExodusHistorySearchHandler * Handler /*Warning: unable to validate structure name: */, [out, retval] long * HandlerID );
     [
     id(0x000000CB)
     ]
