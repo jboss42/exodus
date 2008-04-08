@@ -271,8 +271,6 @@ begin
     // End of SQL Statement
     Result := Result +
              ';';
-
-    DebugMessage('History Search SQL statement:  ' + Result);
 end;
 
 {---------------------------------------}

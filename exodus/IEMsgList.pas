@@ -41,6 +41,41 @@ uses
   function HTMLColor(color_pref: integer) : widestring;
 
 type
+  TIEMsgListProcessor = class
+  private
+    _lastLineClass: WideString;
+    _lastMsgNick: WideString;
+    _exeName: Widestring;
+    _idCount: integer;
+    _displayDateSeparator: boolean;
+    _lastTimeStamp: TDateTime;
+
+    function _processUnicode(txt: widestring): WideString;
+    function _genElementID(): WideString;
+    function _getLineClass(Msg: TJabberMessage): WideString; overload;
+    function _getLineClass(nick: widestring): WideString; overload;
+    function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
+    function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
+  protected
+  public
+    constructor Create();
+
+    function dateSeperator(const msg: TJabberMessage): widestring;
+    function ProcessDisplayMsg(const Msg: TJabberMessage): widestring; overload;
+    function ProcessDisplayMsg(const Msg: TJabberMessage; var id:widestring): widestring; overload;
+    function ProcessPresenceMsg(const nick: widestring; const txt: Widestring; const timestamp: string): widestring;
+    function ProcessComposing(const txt: Widestring): widestring; overload;
+    function ProcessComposing(const txt: Widestring; var id:widestring): widestring; overload;
+    procedure Reset();
+
+    property lastLineClass: widestring read _lastLineClass write _lastLineClass;
+    property lastMsgNick: widestring read _lastMsgNick write _lastMsgNick;
+    property exeName: widestring read _exeName write _exeName;
+    property idCount: integer read _idCount write _idCount;
+    property displayDateSeparator: boolean read _displayDateSeparator write _displayDateSeparator;
+    property lastTimeStamp: TDateTime read _lastTimeStamp write _lastTimeStamp;
+  end;
+
   TfIEMsgList = class(TfBaseMsgList)
     browser: TWebBrowser;
     procedure browserDocumentComplete(Sender: TObject;
@@ -54,6 +89,7 @@ type
 
   private
     { Private declarations }
+    _msgProcessor: TIEMsgListProcessor;
     _home: WideString;
 
     _doc: IHTMLDocument2;
@@ -74,9 +110,6 @@ type
     _queue: TWideStringList;
     _title: WideString;
     _ready: Boolean;
-    _idCount: integer;
-    _displayDateSeparator: boolean;
-    _lastTimeStamp: TDateTime;
     _composing: integer;
     _msgCount: integer;
     _maxMsgCountHigh: integer;
@@ -85,10 +118,6 @@ type
 
     _dragDrop: TDragDropEvent;
     _dragOver: TDragOverEvent;
-
-    _lastLineClass: WideString;
-    _lastMsgNick: WideString;
-    _exeName: Widestring;
 
     _font_name: widestring;
     _font_size: widestring;
@@ -112,6 +141,8 @@ type
     _Clearing: boolean;
     _ClearingMsgCache: TWidestringList;
     _IgnoreMsgLimiting: boolean;
+    _InMessageDumpMode: boolean;
+    _MessageDumpModeHTML: Widestring;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
@@ -120,18 +151,11 @@ type
     function onDragOver(Sender: TObject): WordBool;
     function onContextMenu(Sender: TObject): WordBool;
     function onKeyPress(Sender: TObject; const pEvtObj: IHTMLEventObj): WordBool;
-    function _genElementID(): WideString;
     procedure _ClearOldMessages();
     function _getHistory(includeState: boolean = true): WideString;
-    function _processUnicode(txt: widestring): WideString;
-    function _getLineClass(Msg: TJabberMessage): WideString; overload;
-    function _getLineClass(nick: widestring): WideString; overload;
-    function _checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean; overload;
-    function _checkLastNickForMsgGrouping(nick: widestring): boolean; overload;
-    procedure _dateSeperator(msg: TJabberMessage);
+    procedure _SetInMessageDumpMode(value: boolean);
 
   protected
-      procedure writeHTML(html: WideString);
 
   public
     { Public declarations }
@@ -167,6 +191,7 @@ type
     procedure ChangeStylesheet( resname: WideString);
     procedure ResetStylesheet();
     procedure print(ShowDialog: boolean);
+    procedure writeHTML(html: WideString);
 
     property font_name: widestring read _font_name write _font_name;
     property font_size: widestring read _font_size write _font_size;
@@ -186,6 +211,8 @@ type
     property font_underline: boolean read _font_underline write _font_underline;
     property ForceIgnoreScrollToBottom: boolean read _ForceIgnoreScrollToBottom write _ForceIgnoreScrollToBottom;
     property IgnoreMsgLimiting: boolean read _IgnoreMsgLimiting write _IgnoreMsgLimiting;
+
+    property InMessageDumpMode: boolean read _InMessageDumpMode write _SetInMessageDumpMode;
 
   end;
 
@@ -227,236 +254,6 @@ begin
     Result := IntToHex(GetRValue(color), 2) +
               IntToHex(GetGValue(color), 2) +
               IntToHex(GetBValue(color), 2);
-end;
-
-{---------------------------------------}
-constructor TfIEMsgList.Create(Owner: TComponent);
-var
-    OleObj: IOleObject;
-    reg: TRegistry;
-    IEOverrideReg: widestring;
-    tstring: widestring;
-begin
-    inherited;
-    _queue := TWideStringList.Create();
-    _ready := true;
-    _idCount := 0;
-    _composing := -1;
-    _msgCount := 0;
-    _doMessageLimiting := false;
-    _IgnoreMsgLimiting := false;
-    _Clearing := false;
-    _ClearingMsgCache := TWidestringList.Create();
-
-    // Setup registry to override IE settings
-    try
-        reg := TRegistry.Create();
-        if (reg <> nil) then begin
-            IEOverrideReg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
-
-            tstring := IEOverrideReg + '\Settings';
-            reg.RootKey := HKEY_CURRENT_USER;
-            reg.OpenKey(tstring, true);
-            reg.WriteInteger('Always Use My Colors', 0);
-            reg.WriteInteger('Always Use My Font Face', 0);
-            reg.WriteInteger('Always Use My Font Size', 0);
-            reg.CloseKey();
-
-            tstring := IEOverrideReg + '\Styles';
-            reg.RootKey := HKEY_CURRENT_USER;
-            reg.OpenKey(tstring, true);
-            reg.WriteInteger('Use My Stylesheet', 0);
-            reg.CloseKey();
-
-            reg.Free();
-        end;
-    except
-    end;
-
-    with MainSession.Prefs do begin
-        _maxMsgCountHigh := getInt('maximum_displayed_messages');
-        _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
-        if ((_maxMsgCountHigh <> 0) and
-            (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
-            _doMessageLimiting := true;
-            if (_maxMsgCountLow <= 0) then begin
-                // High water mark set, but low water mark not set.
-                // So, we will make the low water mark equal to the  high water mark.
-                // This will only drop 1 message at a time.
-                _maxMsgCountLow := _maxMsgCountHigh;
-            end;
-        end;
-        _displayDateSeparator := getBool('display_date_separator');
-        _exeName := getString('exe_FullPath');
-
-        _stylesheet_name := getString('ie_css');
-        _font_name := getString('font_name');
-        _font_size := getString('font_size');
-        _font_bold := getBool('font_bold');
-        _font_italic := getBool('font_italic');
-        _font_underline := getBool('font_underline');
-        _font_color := getInt('font_color');
-        _color_bg := getInt('color_bg');
-        _color_alt_bg := getInt('color_alt_bg');
-        _color_date_bg := getInt('color_date_bg');
-        _color_date := getInt('color_date');
-        _color_me := getInt('color_me');
-        _color_other := getInt('color_other');
-        _color_time := getInt('color_time');
-        _color_action := getInt('color_action');
-        _color_server := getInt('color_server');
-    end;
-
-    // Set IDocHostUIHandler interface to handle override of IE settings
-    try
-        if (browser <> nil) then begin
-            if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
-                _webBrowserUI.Free();
-                _webBrowserUI := TWebBrowserUIObject.Create();
-                OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
-            end
-            else begin
-                _webBrowserUI := nil;
-                raise Exception.Create('MsgList interface does not support IOleObject');
-            end;
-        end;
-    except
-
-    end;
-end;
-
-{---------------------------------------}
-destructor TfIEMsgList.Destroy;
-var
-    i: integer;
-begin
-    try
-        for i := _ClearingMsgCache.Count - 1 downto 0 do begin
-            TJabberMessage(_ClearingMsgCache.Objects[i]).Free();
-            _ClearingMsgCache.Delete(i);
-        end;
-        _ClearingMsgCache.Free();
-        
-        _queue.Free();
-    except
-    end;
-
-    inherited;
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.writeHTML(html: WideString);
-begin
-    if (_content = nil) then begin
-        assert(_queue <> nil);
-        _queue.Add(html);
-        exit;
-    end;
-
-    // For some reason, the _content that is set
-    // elsewhere is causing exceptions
-    _content := _doc.all.item('content', 0) as IHTMLElement;
-    _content.insertAdjacentHTML('beforeEnd', html);
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.Invalidate();
-begin
-//    browser.Invalidate();
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.CopyAll();
-begin
-    _doc.execCommand('SelectAll', false, varNull);
-    _doc.execCommand('Copy', true, varNull);
-    _doc.execCommand('Unselect', false, varNull);
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.Copy();
-begin
-    _doc.execCommand('Copy', true, varNull);
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.ScrollToBottom();
-var
-    tags: IHTMLElementCollection;
-    last: IHTMLElement;
-begin
-    if (_win = nil) then exit;
-    if (_ForceIgnoreScrollToBottom) then exit;
-    
-
-    // this is a slowness for large histories, I think, but it is the only
-    // thing that seems to work, since we are now scrolling the _content
-    // element, rather than the window, as Bill intended.
-    tags := _content.children as IHTMLElementCollection;
-    if (tags.length > 0) then begin
-        last := tags.Item(tags.length - 1, 0) as IHTMLElement;
-        last.ScrollIntoView(false);
-    end;
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.ScrollToTop();
-var
-    tags: IHTMLElementCollection;
-    first: IHTMLElement;
-begin
-    if (_win = nil) then exit;
-
-    // this is a slowness for large histories, I think, but it is the only
-    // thing that seems to work, since we are now scrolling the _content
-    // element, rather than the window, as Bill intended.
-    tags := _content.children as IHTMLElementCollection;
-    if (tags.length > 0) then begin
-        first := tags.Item(0, 0) as IHTMLElement;
-        first.ScrollIntoView(false);
-    end;
-end;     
-
-{---------------------------------------}
-procedure TfIEMsgList.Clear();
-begin
-    try
-        _ready := true;
-        _home := 'res://' + URL_EscapeChars(Application.ExeName);
-        _Clearing := true;
-        browser.Navigate(_home + '/iemsglist');
-    except
-    end;
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.Reset();
-begin
-    _lastTimeStamp := 0;
-    _lastLineClass := '';
-    _lastMsgNick := '';
-    _IgnoreMsgLimiting := false;
-    Clear();
-end;
-
-
-{---------------------------------------}
-procedure TfIEMsgList.setContextMenu(popup: TTntPopupMenu);
-begin
-    _menu := popup;
-end;
-
-{---------------------------------------}
-function TfIEMsgList.getHandle(): THandle;
-begin
-    Result := 0; //Browser.Handle;
-end;
-
-{---------------------------------------}
-function TfIEMsgList.getObject(): TObject;
-begin
-    // Result := Browser;
-    result := nil;
 end;
 
 {---------------------------------------}
@@ -565,7 +362,17 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._checkLastNickForMsgGrouping(nick: widestring): boolean;
+{---------------------------------------}
+constructor TIEMsgListProcessor.Create();
+begin
+    with MainSession.Prefs do begin
+        _displayDateSeparator := getBool('display_date_separator');
+        _exeName := getString('exe_FullPath');
+    end;
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor._checkLastNickForMsgGrouping(nick: widestring): boolean;
 var
     tmsg: TJabberMessage;
 begin
@@ -582,7 +389,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
+function TIEMsgListProcessor._checkLastNickForMsgGrouping(Msg: TJabberMessage): boolean;
 begin
     if (Msg.Nick = _lastMsgNick) then begin
         Result := true;
@@ -593,7 +400,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._getLineClass(nick: widestring): WideString;
+function TIEMsgListProcessor._getLineClass(nick: widestring): WideString;
 var
     tmsg: TJabberMessage;
 begin
@@ -610,7 +417,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._getLineClass(Msg: TJabberMessage): WideString;
+function TIEMsgListProcessor._getLineClass(Msg: TJabberMessage): WideString;
 begin
     if (_checkLastNickForMsgGrouping(Msg)) then begin
         Result := _lastLineClass;
@@ -628,158 +435,542 @@ begin
 end;
 
 {---------------------------------------}
+function TIEMsgListProcessor.ProcessDisplayMsg(const Msg: TJabberMessage): widestring;
+var
+    id: widestring;
+begin
+    id := '';
+    Result := ProcessDisplayMsg(Msg, id);
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.ProcessDisplayMsg(const Msg: TJabberMessage; var id: widestring): widestring;
+var
+    dv: widestring;
+    txt: widestring;
+    cleanXIM: TXmlTag;
+    nodes: TXMLNodeList;
+    i: integer;
+    body: TXmlTag;
+begin
+    Result := '';
+    if (Msg = nil) then exit;
+
+    if ((not Msg.Action) and
+        (MainSession.Prefs.getBool('richtext_enabled'))) then begin
+        // ignore HTML for actions.  it's harder than you think.
+        body := Msg.Tag.QueryXPTag(xp_xhtml);
+
+        if (body <> nil) then begin
+            // Strip out font tags we wish to ignore
+            cleanXIM := cleanXIMTag(body);
+            if (cleanXIM <> nil) then begin
+                // if first node is a p tag, make it a span...
+                if ((cleanXIM.Nodes.Count > 0) and
+                    (TXMLTag(cleanXIM.Nodes[0]).NodeType = xml_tag) and
+                    (TXMLTag(cleanXIM.Nodes[0]).Name = 'p')) then
+                    TXMLTag(cleanXIM.Nodes[0]).Name := 'span';
+
+                nodes := cleanXIM.nodes;
+                for i := 0 to nodes.Count - 1 do
+                    txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
+            end;
+        end;
+    end;
+
+    if (txt = '') then begin
+        txt := HTML_EscapeChars(Msg.Body, false, false);
+        txt := _processUnicode(txt); //StringReplace() cannot handle
+        // Make sure the spaces are preserved
+        txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
+        // Change CRLF to HTML equiv
+        txt := REGEX_CRLF.Replace(txt, '<br />', true);
+        // Detect URLs in text
+        txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
+    end;
+
+    // build up a string, THEN call writeHTML, since IE is being "helpful" by
+    // canonicalizing HTML as it gets inserted.
+    id := _genElementID();
+    dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
+
+    // Author Stamp
+    if (Msg.Nick <> '') then begin
+        // This is a normal message
+        if (not _checkLastNickForMsgGrouping(Msg)) then begin
+            if Msg.isMe then begin
+                // Our own msgs
+                dv := dv + '<span class="me">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
+            end
+            else begin
+                // Msgs from "others"
+                dv := dv + '<span class="other">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
+            end;
+        end;
+
+    end
+    else begin
+        dv := dv + '<span class="svr">' + HTML_EscapeChars(_('System Message'), false, true) + '</span>';
+    end;
+
+    _lastMsgNick := Msg.Nick;
+
+    // Wrap msg and time stamp for css
+    dv := dv + '<div class="msgts">';
+
+    // Timestamp
+    if (MainSession.Prefs.getBool('timestamp')) then begin
+        try
+            dv := dv + '<span class="ts">' +
+                HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time), false, true) +
+                '</span>';
+        except
+            on EConvertError do begin
+                dv := dv + '<span class="ts">' +
+                    HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now()), false, true) +
+                    '</span>';
+            end;
+        end;
+    end;
+
+    // MSG Content
+    if (Msg.Nick = '') then begin
+        // Server generated msgs (mostly in TC Rooms)
+        dv := dv + '<span class="svr">' + txt + '</span>';
+    end
+    else if not Msg.Action then begin
+        if (_exeName <> '') then begin
+            if (Msg.Priority = high) then begin
+                dv := dv +
+                      '<img class="priorityimg" src="res://' +
+                      _exeName +
+                      '/GIF/HIGH_PRI" alt="' +
+                      _('High Priority') +
+                      '" />';
+            end
+            else if (Msg.Priority = low) then begin
+                dv := dv +
+                      '<img class="priorityimg" src="res://' +
+                      _exeName +
+                      '/GIF/LOW_PRI" alt="' +
+                      _('Low Priority') +
+                      '" />';
+            end;
+        end;
+
+        if (Msg.Highlight) then
+            dv := dv + '<span class="alert"> ' + txt + '</span>'
+        else
+            dv := dv + '<span class="msg">' + txt + '</span>';
+    end
+    else begin
+        // This is an action
+        dv := dv + '<span class="action">&nbsp;*&nbsp;' + HTML_EscapeChars(Msg.Nick, false, true) + '&nbsp;' + txt + '</span>';
+    end;
+
+    // Close off msgts and line1/2 div tags
+    dv := dv + '</div></div>';
+
+    Result := dv;
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor._genElementID(): WideString;
+begin
+    Result := 'msg_id_' + IntToStr(_idCount);
+    Inc(_idCount);
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor._processUnicode(txt: widestring): WideString;
+var
+    i: integer;
+begin
+    Result := '';
+    for i := 1 to Length(txt) do begin
+        if (Ord(txt[i]) > 126) then begin
+            // This looks to be a non-ascii char so represent in HTML escaped notation
+            try
+                Result := Result + '&#' + IntToStr(Ord(txt[i])) + ';';
+            except
+                exit;
+            end;
+        end
+        else begin
+            Result := Result + txt[i];
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.dateSeperator(const msg: TJabberMessage): widestring;
+var
+    t: TDateTime;
+begin
+    Result := '';
+    if (msg = nil) then exit;
+
+    try
+        if (_displayDateSeparator) then begin
+            t := msg.Time;
+            if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
+                (msg.Subject = '') and
+                (msg.Nick <> ''))then begin
+                Result := '<div class="date">' +
+                       '<span>' +
+                       DateToStr(t) +
+                       '</span>' +
+                       '</div>';
+
+                _lastTimeStamp := msg.Time;
+                _lastMsgNick := '';
+            end;
+        end;
+    except
+    end;
+end;
+
+{---------------------------------------}
+procedure TIEMsgListProcessor.Reset();
+begin
+    _lastTimeStamp := 0;
+    _lastLineClass := '';
+    _lastMsgNick := '';
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.ProcessPresenceMsg(const nick: widestring; const txt: Widestring; const timestamp: string): widestring;
+var
+    htmlout: widestring;
+begin
+    htmlout := '<div class="' + _getLineClass(nick) + '">';
+    if ((not _checkLastNickForMsgGrouping(nick)) and
+        (nick <> '')) then begin
+        // Must NOT be a "me" message
+        htmlout := htmlout + '<span class="other">' + HTML_EscapeChars(nick, false, true) + '</span>';
+    end;
+
+    // Put presence Icon in with the presence message
+    // How to get image from image list and not resource?
+{    if (_exeName <> '') then begin
+        htmlout := htmlout +
+              '<img class="priorityimg" src="res://' +
+              _exeName +
+              '/GIF/HIGH_PRI"/>';
+    end;    }
+
+    if (timestamp <> '') then begin
+        htmlout := htmlout + '<div class="msgts"><span class="ts">' + HTML_EscapeChars(timestamp, false, true) + '</span><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
+    end
+    else begin
+        if (nick <> '') then begin
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><div class="msgts"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
+        end
+        else begin
+            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div>';
+        end;
+    end;
+
+    _lastMsgNick := nick;
+
+    Result := htmlout;
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.ProcessComposing(const txt: Widestring): widestring;
+var
+    id: widestring;
+begin
+    id := '';
+    Result := ProcessComposing(txt, id);
+end;
+
+{---------------------------------------}
+function TIEMsgListProcessor.ProcessComposing(const txt: Widestring; var id:widestring): widestring;
+begin
+    id := _genElementID();
+    Result := '<div id="' +
+                 id +
+                 '"><br /><span class="composing">' +
+                 HTML_EscapeChars(txt, false, false) +
+                 '</span><br /></div>';
+end;
+
+
+
+{---------------------------------------}
+{---------------------------------------}
+constructor TfIEMsgList.Create(Owner: TComponent);
+var
+    OleObj: IOleObject;
+    reg: TRegistry;
+    IEOverrideReg: widestring;
+    tstring: widestring;
+begin
+    inherited;
+    _msgProcessor := TIEMsgListProcessor.Create();
+    _queue := TWideStringList.Create();
+    _ready := true;
+    _composing := -1;
+    _msgCount := 0;
+    _doMessageLimiting := false;
+    _IgnoreMsgLimiting := false;
+    _Clearing := false;
+    _ClearingMsgCache := TWidestringList.Create();
+
+    // Setup registry to override IE settings
+    try
+        reg := TRegistry.Create();
+        if (reg <> nil) then begin
+            IEOverrideReg := '\Software\Jabber\' + PrefController.GetAppInfo().ID + '\IEMsgList';
+
+            tstring := IEOverrideReg + '\Settings';
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(tstring, true);
+            reg.WriteInteger('Always Use My Colors', 0);
+            reg.WriteInteger('Always Use My Font Face', 0);
+            reg.WriteInteger('Always Use My Font Size', 0);
+            reg.CloseKey();
+
+            tstring := IEOverrideReg + '\Styles';
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(tstring, true);
+            reg.WriteInteger('Use My Stylesheet', 0);
+            reg.CloseKey();
+
+            reg.Free();
+        end;
+    except
+    end;
+
+    with MainSession.Prefs do begin
+        _maxMsgCountHigh := getInt('maximum_displayed_messages');
+        _maxMsgCountLow := getInt('maximum_displayed_messages_drop_down_to');
+        if ((_maxMsgCountHigh <> 0) and
+            (_maxMsgCountHigh >= _maxMsgCountLow)) then begin
+            _doMessageLimiting := true;
+            if (_maxMsgCountLow <= 0) then begin
+                // High water mark set, but low water mark not set.
+                // So, we will make the low water mark equal to the  high water mark.
+                // This will only drop 1 message at a time.
+                _maxMsgCountLow := _maxMsgCountHigh;
+            end;
+        end;
+
+        _stylesheet_name := getString('ie_css');
+        _font_name := getString('font_name');
+        _font_size := getString('font_size');
+        _font_bold := getBool('font_bold');
+        _font_italic := getBool('font_italic');
+        _font_underline := getBool('font_underline');
+        _font_color := getInt('font_color');
+        _color_bg := getInt('color_bg');
+        _color_alt_bg := getInt('color_alt_bg');
+        _color_date_bg := getInt('color_date_bg');
+        _color_date := getInt('color_date');
+        _color_me := getInt('color_me');
+        _color_other := getInt('color_other');
+        _color_time := getInt('color_time');
+        _color_action := getInt('color_action');
+        _color_server := getInt('color_server');
+    end;
+
+    // Set IDocHostUIHandler interface to handle override of IE settings
+    try
+        if (browser <> nil) then begin
+            if (Supports(browser.DefaultInterface, IOleObject, OleObj)) then begin
+                _webBrowserUI.Free();
+                _webBrowserUI := TWebBrowserUIObject.Create();
+                OleObj.SetClientSite(_webBrowserUI as IOleClientSite);
+            end
+            else begin
+                _webBrowserUI := nil;
+                raise Exception.Create('MsgList interface does not support IOleObject');
+            end;
+        end;
+    except
+
+    end;
+end;
+
+{---------------------------------------}
+destructor TfIEMsgList.Destroy;
+var
+    i: integer;
+begin
+    try
+        _ClearingMsgCache.Clear();
+        _ClearingMsgCache.Free();
+        
+        _queue.Free();
+
+        _msgProcessor.Free();
+    except
+    end;
+
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.writeHTML(html: WideString);
+begin
+    if (html = '') then exit;
+
+    if (_content = nil) then begin
+        assert(_queue <> nil);
+        _queue.Add(html);
+        exit;
+    end;
+
+    if (_Clearing) then begin
+        _ClearingMsgCache.Add(html);
+    end
+    else begin
+        if (_InMessageDumpMode) then begin
+            _MessageDumpModeHTML := _MessageDumpModeHTML + html;
+        end
+        else begin
+            // For some reason, the _content that is set
+            // elsewhere is causing exceptions
+            _content := _doc.all.item('content', 0) as IHTMLElement;
+            _content.insertAdjacentHTML('beforeEnd', html);
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.Invalidate();
+begin
+//    browser.Invalidate();
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.CopyAll();
+begin
+    _doc.execCommand('SelectAll', false, varNull);
+    _doc.execCommand('Copy', true, varNull);
+    _doc.execCommand('Unselect', false, varNull);
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.Copy();
+begin
+    _doc.execCommand('Copy', true, varNull);
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.ScrollToBottom();
+var
+    tags: IHTMLElementCollection;
+    last: IHTMLElement;
+begin
+    if (_win = nil) then exit;
+    if (_ForceIgnoreScrollToBottom) then exit;
+    
+
+    // this is a slowness for large histories, I think, but it is the only
+    // thing that seems to work, since we are now scrolling the _content
+    // element, rather than the window, as Bill intended.
+    tags := _content.children as IHTMLElementCollection;
+    if (tags.length > 0) then begin
+        last := tags.Item(tags.length - 1, 0) as IHTMLElement;
+        last.ScrollIntoView(false);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.ScrollToTop();
+var
+    tags: IHTMLElementCollection;
+    first: IHTMLElement;
+begin
+    if (_win = nil) then exit;
+
+    // this is a slowness for large histories, I think, but it is the only
+    // thing that seems to work, since we are now scrolling the _content
+    // element, rather than the window, as Bill intended.
+    tags := _content.children as IHTMLElementCollection;
+    if (tags.length > 0) then begin
+        first := tags.Item(0, 0) as IHTMLElement;
+        first.ScrollIntoView(false);
+    end;
+end;     
+
+{---------------------------------------}
+procedure TfIEMsgList.Clear();
+begin
+    try
+        _ready := true;
+        _home := 'res://' + URL_EscapeChars(Application.ExeName);
+        _Clearing := true;
+        browser.Navigate(_home + '/iemsglist');
+    except
+    end;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.Reset();
+begin
+    _msgProcessor.Reset();
+    _IgnoreMsgLimiting := false;
+    Clear();
+end;
+
+
+{---------------------------------------}
+procedure TfIEMsgList.setContextMenu(popup: TTntPopupMenu);
+begin
+    _menu := popup;
+end;
+
+{---------------------------------------}
+function TfIEMsgList.getHandle(): THandle;
+begin
+    Result := 0; //Browser.Handle;
+end;
+
+{---------------------------------------}
+function TfIEMsgList.getObject(): TObject;
+begin
+    // Result := Browser;
+    result := nil;
+end;
+
+{---------------------------------------}
 procedure TfIEMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     txt: WideString;
-    body: TXmlTag;
-    cleanXIM: TXmlTag;
-    i: integer;
-    nodes: TXMLNodeList;
-    dv: WideString;
     t: TDateTime;
-    id: WideString;
     cachemsg: TJabberMessage;
+    id: widestring;
 begin
     if (msg = nil) then exit;
 
-    if (_Clearing) then begin
-        cachemsg := TJabberMessage.Create(msg);
-        _ClearingMsgCache.AddObject('', cachemsg);
+    txt := _msgProcessor.dateSeperator(msg);
+    if ((_doMessageLimiting) and (txt <> '')) then begin
+        Inc(_msgCount);
+    end;
+    writeHTML(txt);
+    txt := '';
+
+    _clearOldMessages();
+
+    txt := _msgProcessor.ProcessDisplayMsg(Msg, id);
+    writeHTML(txt);
+    txt := '';
+
+    if (_doc <> nil) then begin
+        _lastelement := _doc.all.item(id, 0) as IHTMLElement;
     end
     else begin
-        _dateSeperator(msg);
-
-        _clearOldMessages();
-
-        if ((not Msg.Action) and
-            (MainSession.Prefs.getBool('richtext_enabled'))) then begin
-            // ignore HTML for actions.  it's harder than you think.
-            body := Msg.Tag.QueryXPTag(xp_xhtml);
-
-            if (body <> nil) then begin
-                // Strip out font tags we wish to ignore
-                cleanXIM := cleanXIMTag(body);
-                if (cleanXIM <> nil) then begin
-                    // if first node is a p tag, make it a span...
-                    if ((cleanXIM.Nodes.Count > 0) and
-                        (TXMLTag(cleanXIM.Nodes[0]).NodeType = xml_tag) and
-                        (TXMLTag(cleanXIM.Nodes[0]).Name = 'p')) then
-                        TXMLTag(cleanXIM.Nodes[0]).Name := 'span';
-
-                    nodes := cleanXIM.nodes;
-                    for i := 0 to nodes.Count - 1 do
-                        txt := txt + ProcessTag(cleanXIM, TXMLNode(nodes[i]));
-                end;
-            end;
-        end;
-
-        if (txt = '') then begin
-            txt := HTML_EscapeChars(Msg.Body, false, false);
-            txt := _processUnicode(txt); //StringReplace() cannot handle
-            // Make sure the spaces are preserved
-            txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
-            // Change CRLF to HTML equiv
-            txt := REGEX_CRLF.Replace(txt, '<br />', true);
-            // Detect URLs in text
-            txt := REGEX_URL.Replace(txt, '<a href="$0">$0</a>', true);
-        end;
-
-        // build up a string, THEN call writeHTML, since IE is being "helpful" by
-        // canonicalizing HTML as it gets inserted.
-        id := _genElementID();
-        dv := '<div id="' + id + '" class="' + _getLineClass(Msg) + '">';
-
-        // Author Stamp
-        if (Msg.Nick <> '') then begin
-            // This is a normal message
-            if (not _checkLastNickForMsgGrouping(Msg)) then begin
-                if Msg.isMe then begin
-                    // Our own msgs
-                    dv := dv + '<span class="me">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
-                end
-                else begin
-                    // Msgs from "others"
-                    dv := dv + '<span class="other">' + HTML_EscapeChars(Msg.Nick, false, true) + '</span>';
-                end;
-            end;
-
-        end
-        else begin
-            dv := dv + '<span class="svr">' + HTML_EscapeChars(_('System Message'), false, true) + '</span>';
-        end;
-
-        _lastMsgNick := Msg.Nick;
-
-        // Wrap msg and time stamp for css
-        dv := dv + '<div class="msgts">';
-
-        // Timestamp
-        if (MainSession.Prefs.getBool('timestamp')) then begin
-            try
-                dv := dv + '<span class="ts">' +
-                    HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time), false, true) +
-                    '</span>';
-            except
-                on EConvertError do begin
-                    dv := dv + '<span class="ts">' +
-                        HTML_EscapeChars(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Now()), false, true) +
-                        '</span>';
-                end;
-            end;
-        end;
-
-        // MSG Content
-        if (Msg.Nick = '') then begin
-            // Server generated msgs (mostly in TC Rooms)
-            dv := dv + '<span class="svr">' + txt + '</span>';
-        end
-        else if not Msg.Action then begin
-            if (_exeName <> '') then begin
-                if (Msg.Priority = high) then begin
-                    dv := dv +
-                          '<img class="priorityimg" src="res://' +
-                          _exeName +
-                          '/GIF/HIGH_PRI" alt="' +
-                          _('High Priority') +
-                          '" />';
-                end
-                else if (Msg.Priority = low) then begin
-                    dv := dv +
-                          '<img class="priorityimg" src="res://' +
-                          _exeName +
-                          '/GIF/LOW_PRI" alt="' +
-                          _('Low Priority') +
-                          '" />';
-                end;
-            end;
-
-            if (Msg.Highlight) then
-                dv := dv + '<span class="alert"> ' + txt + '</span>'
-            else
-                dv := dv + '<span class="msg">' + txt + '</span>';
-        end
-        else begin
-            // This is an action
-            dv := dv + '<span class="action">&nbsp;*&nbsp;' + HTML_EscapeChars(Msg.Nick, false, true) + '&nbsp;' + txt + '</span>';
-        end;
-
-        // Close off msgts and line1/2 div tags
-        dv := dv + '</div></div>';
-        writeHTML(dv);
-
-        if (_doc <> nil) then begin
-            _lastelement := _doc.all.item(id, 0) as IHTMLElement;
-        end
-        else begin
-            _lastelement := nil;
-        end;
-
-        if (_doMessageLimiting) then
-            Inc(_msgCount);
-
-        if (_bottom) then
-            ScrollToBottom();
+        _lastelement := nil;
     end;
+
+    if (_doMessageLimiting) then
+        Inc(_msgCount);
+
+    if (_bottom) then
+        ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -793,6 +984,7 @@ var
     i : integer;
     htmlout: widestring;
     tmsg : TJabberMessage;
+    ds: widestring;
 begin
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
@@ -826,43 +1018,22 @@ begin
         end;
     end;
 
-    htmlout := '<div class="' + _getLineClass(nick) + '">';
-    if ((not _checkLastNickForMsgGrouping(nick)) and
-        (nick <> '')) then begin
-        // Must NOT be a "me" message
-        htmlout := htmlout + '<span class="other">' + HTML_EscapeChars(nick, false, true) + '</span>';
-    end;
-
-    // Put presence Icon in with the presence message
-    // How to get image from image list and not resource?
-{    if (_exeName <> '') then begin
-        htmlout := htmlout +
-              '<img class="priorityimg" src="res://' +
-              _exeName +
-              '/GIF/HIGH_PRI"/>';
-    end;    }
-
     if (timestamp <> '') then begin
         if (dtTimestamp > 0) then begin
             tmsg := TJabberMessage.Create();
             tmsg.Time := dtTimestamp;
             tmsg.Subject := '';
             tmsg.Nick := nick;
-            _dateSeperator(tmsg);
+            ds := _msgProcessor.dateSeperator(tmsg);
+            if (ds <> '') then begin
+                writeHTML(ds);
+            end;
             tmsg.Free();
-        end;
-        htmlout := htmlout + '<div class="msgts"><span class="ts">' + HTML_EscapeChars(timestamp, false, true) + '</span><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
-    end
-    else begin
-        if (nick <> '') then begin
-            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><div class="msgts"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div></div>';
-        end
-        else begin
-            htmlout := htmlout + '<div class="' + _getLineClass(nick) + '"><span class="pres">' + HTML_EscapeChars(txt, false, true) + '</span></div>';
         end;
     end;
 
-    _lastMsgNick := nick;
+    htmlout := _msgProcessor.ProcessPresenceMsg(nick, txt, timestamp);
+
     writeHTML(htmlout);
 
     if (_bottom) then
@@ -960,11 +1131,11 @@ begin
 
     if (includeState) then
     begin
-        ts := DateTimeToTimeStamp(_lastTimeStamp);
+        ts := DateTimeToTimeStamp(_msgProcessor.lastTimeStamp);
         tstr := '<state>';
         tstr := tstr + '<lastts-date>' + IntToStr(ts.Date) + '</lastts-date>';
         tstr := tstr + '<lastts-time>' + IntToStr(ts.Time) + '</lastts-time>';
-        tstr := tstr + '<lastnick>' + _lastMsgNick + '</lastnick>';
+        tstr := tstr + '<lastnick>' + _msgProcessor.lastMsgNick + '</lastnick>';
         tstr := tstr + '<msgcount>' + IntToStr(_msgCount) + '</msgcount>';
         tstr := tstr + '</state>';
         Result := '<!--' + tstr + '-->' + Result;
@@ -1004,9 +1175,9 @@ begin
             ts.Date := 0;
             ts.Time := 0;
         end;
-        _lastTimeStamp := TimeStampToDateTime(ts);
+        _msgProcessor.lastTimeStamp := TimeStampToDateTime(ts);
 
-        _lastMsgNick := stag.GetBasicText('lastnick');
+        _msgProcessor.lastMsgNick := stag.GetBasicText('lastnick');
         if (_doMessageLimiting) then begin
             try
                 _msgCount := StrToInt(stag.GetBasicText('msgcount'));
@@ -1286,13 +1457,12 @@ begin
             setTitle(_title);
         end;
 
+        InMessageDumpMode := true;
         for i := 0 to _ClearingMsgCache.Count - 1 do begin
-            DisplayMsg(TJabberMessage(_ClearingMsgCache.Objects[i]));
+            writeHTML(_ClearingMsgCache.Strings[i]);
         end;
-        for i := _ClearingMsgCache.Count - 1 downto 0 do begin
-            TJabberMessage(_ClearingMsgCache.Objects[i]).Free();
-            _ClearingMsgCache.Delete(i);
-        end;                                                
+        _ClearingMsgCache.Clear();
+        InMessageDumpMode := false;
 
         ScrollToBottom();
     except
@@ -1372,12 +1542,9 @@ var
 begin
     HideComposing();
     _composing := 1;
-    id := _genElementID();
-    outstring := '<div id="' +
-                 id +
-                 '"><br /><span class="composing">' +
-                 HTML_EscapeChars(msg, false, false) +
-                 '</span><br /></div>';
+    id := '';
+
+    outstring := _msgProcessor.ProcessComposing(msg, id);
     writeHTML(outstring);
     _composingelement := _doc.all.item(id, 0) as IHTMLElement;
 
@@ -1401,13 +1568,6 @@ end;
 function TfIEMsgList.isComposing(): boolean;
 begin
     Result := (_composing >= 0);
-end;
-
-{---------------------------------------}
-function TfIEMsgList._genElementID(): WideString;
-begin
-    Result := 'msg_id_' + IntToStr(_idCount);
-    Inc(_idCount);
 end;
 
 {---------------------------------------}
@@ -1450,58 +1610,18 @@ begin
 end;
 
 {---------------------------------------}
-function TfIEMsgList._processUnicode(txt: widestring): WideString;
-var
-    i: integer;
+procedure TfIEMsgList._SetInMessageDumpMode(value: boolean);
 begin
-    Result := '';
-    for i := 1 to Length(txt) do begin
-        if (Ord(txt[i]) > 126) then begin
-            // This looks to be a non-ascii char so represent in HTML escaped notation
-            try
-                Result := Result + '&#' + IntToStr(Ord(txt[i])) + ';';
-            except
-                exit;
-            end;
-        end
-        else begin
-            Result := Result + txt[i];
+    _InMessageDumpMode := value;
+
+    if (not value) then begin
+        // Coming out of Message Dump mode, so Display the HTML
+        if (_MessageDumpModeHTML <> '') then begin
+            writeHTML(_MessageDumpModeHTML);
         end;
+        _MessageDumpModeHTML := '';
     end;
 end;
-
-{---------------------------------------}
-procedure TfIEMsgList._dateSeperator(msg: TJabberMessage);
-var
-    t: TDateTime;
-    txt: widestring;
-begin
-    if (msg = nil) then exit;
-    
-    try
-        if (_displayDateSeparator) then begin
-            t := msg.Time;
-            if ((Trunc(t) <> Trunc(_lastTimeStamp)) and
-                (msg.Subject = '') and
-                (msg.Nick <> ''))then begin
-                txt := '<div class="date">' +
-                       '<span>' +
-                       DateToStr(t) +
-                       '</span>' +
-                       '</div>';
-
-                writeHTML(txt);
-                _lastTimeStamp := msg.Time;
-                txt := '';
-                _lastMsgNick := '';
-                if (_doMessageLimiting) then
-                    Inc(_msgCount);
-            end;
-        end;
-    except
-    end; 
-end;
-
 
 
 initialization
