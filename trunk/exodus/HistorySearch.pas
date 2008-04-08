@@ -39,6 +39,7 @@ uses
   TntDialogs,
   XMLTag,
   ExActions,
+  IEMsgList,
   XMLParser;
 
 type
@@ -68,6 +69,15 @@ type
         msg: TJabberMessage; // Else store the tag
 
         listitem: TTntListItem;
+  end;
+
+  TResultListItemHTML = class(TResultListItem)
+    private
+    protected
+    public
+        // Variables
+        htmlRepresentation: widestring;
+        msgListProcessor: TIEMsgListProcessor;
   end;
 
   TfrmHistorySearch = class(TExForm)
@@ -233,7 +243,6 @@ implementation
 {$R *.dfm}
 
 uses
-    IEMsgList,
     RTFMsgList,
     Session,
     BaseChat,
@@ -495,12 +504,12 @@ var
     dateend: TDateTime;
     listitem: TTntListItem;
     itemlist: TWidestringList;
-    i: integer;
     ritem: TResultListItem;
     tmpmsg: TJabberMessage;
     warning: widestring;
 begin
     inherited;
+    jid := nil;
 
     listitem := lstResults.Selected;
 
@@ -865,7 +874,7 @@ var
     i: integer;
     j: integer;
     k: integer;
-    ritem: TResultListItem;
+    ritem: TResultListItemHTML;
     datelist: TWidestringList;
     itemlist: TWidestringList;
 begin
@@ -880,7 +889,8 @@ begin
         for j := datelist.Count - 1  downto 0 do begin
             itemlist := TWidestringList(datelist.Objects[j]);
             for k := itemlist.Count - 1 downto 0 do begin
-                ritem := TResultListItem(itemlist.Objects[k]);
+                ritem := TResultListItemHTML(itemlist.Objects[k]);
+                ritem.msgListProcessor.Free();
                 ritem.msg.Free();
                 ritem.Free();
                 itemlist.Delete(k);
@@ -981,9 +991,11 @@ procedure TfrmHistorySearch._DisplayHistory();
 var
     l: integer;
     ritem: TResultListItem;
+    ritemhtml: TResultListItemHTML;
     listItem: TTntListItem;
     itemList: TWidestringList;
     msg: TJabberMessage;
+    html: widestring;
 begin
     btnPrint.Enabled := true;
     btnDelete.Enabled := true;
@@ -999,12 +1011,19 @@ begin
     if (itemlist <> nil) then begin
         // We have a match.
         // So, run through list adding all dates to display box
-        for l := 0 to itemList.Count - 1 do begin
-            ritem := TResultListItem(itemList.Objects[l]);
-            msg := _GetTJabberMessage(ritem);
-            if (msg <> nil) then begin
-                _MsgList.DisplayMsg(msg, false);
-                msg.Free();
+        if (_MsglistType = HTML_MSGLIST) then begin
+            ritemhtml := TResultListItemHTML(itemList.Objects[0]);
+            html := ritemhtml.htmlRepresentation;
+            TfIEMsgList(_MsgList).writeHTML(html);
+        end
+        else begin
+            for l := 0 to itemList.Count - 1 do begin
+                ritem := TResultListItem(itemList.Objects[l]);
+                msg := _GetTJabberMessage(ritem);
+                if (msg <> nil) then begin
+                    _MsgList.DisplayMsg(msg);
+                    msg.Free();
+                end;
             end;
         end;
     end;
@@ -1446,7 +1465,7 @@ procedure TfrmHistorySearch.ResultCallback(msg: TJabberMessage);
     end;
 var
     newmsg: TJabberMessage;
-    ritem: TResultListItem;
+    ritem: TResultListItemHTML;
     i: integer;
     j: integer;
     jid: TJabberID;
@@ -1480,7 +1499,8 @@ begin
         // didn't have this tag when we stored it.
         newmsg.Time := msg.Time;
 
-        ritem := TResultListItem.Create();
+        ritem := TResultListItemHTML.Create();
+        ritem.msgListProcessor := nil;
         if (newmsg.Tag = nil) then begin
             ritem.msg := newmsg;
             ritem.msgXML := '';
@@ -1517,10 +1537,19 @@ begin
                 dateList := TWidestringList(_ResultList.Objects[i]);
                 for j := 0 to dateList.Count - 1 do begin
                     if (date = datelist[j]) then begin
-                    // found date - just add msg
-                    datefound := true;
-                    itemList := TWidestringList(dateList.Objects[j]);
-                    itemList.AddObject('', ritem);
+                        // found date - just add msg
+                        datefound := true;
+                        itemList := TWidestringList(dateList.Objects[j]);
+                        if (_MsglistType = HTML_MSGLIST) then begin
+                            ritem.Free();
+                            ritem := TResultListItemHTML(itemList.Objects[0]);
+                            ritem.htmlRepresentation := ritem.htmlRepresentation +
+                                                        ritem.msgListProcessor.dateSeperator(newmsg) +
+                                                        ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
+                        end
+                        else begin
+                            itemList.AddObject('', ritem);
+                        end;
                     end;
                 end;
 
@@ -1529,6 +1558,11 @@ begin
                     ritem.listitem := CreateNewListItem(newmsg);
                     itemList := TWidestringList.Create();
                     dateList.AddObject(date, itemList);
+                    if (_MsglistType = HTML_MSGLIST) then begin
+                        ritem.msgListProcessor := TIEMsgListProcessor.Create();
+                        ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg) +
+                                                    ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
+                    end;
                     itemList.AddObject('', ritem);
                 end;
             end
@@ -1541,6 +1575,11 @@ begin
             itemList := TWidestringList.Create();
             _ResultList.AddObject(jid.jid, dateList);
             dateList.AddObject(date, itemList);
+            if (_MsglistType = HTML_MSGLIST) then begin
+                ritem.msgListProcessor := TIEMsgListProcessor.Create();
+                ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg) +
+                                            ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
+            end;
             itemList.AddObject('', ritem);
         end;
 

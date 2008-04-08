@@ -82,7 +82,8 @@ implementation
 uses
     ComServ,
     sysUtils,
-    COMExodusDataTable;
+    COMExodusDataTable,
+    Debug;
 
 {---------------------------------------}
 constructor TExodusDataStore.Create(filename: widestring);
@@ -125,6 +126,8 @@ begin
         exit;
     end;
 
+    DebugMessage('DataStore ExecSQL statement:  ' + SQLStatement);
+
     try
         _DBHandle.ExecSQL(SQLStatement);
         _ErrorCode := no_error;
@@ -158,6 +161,8 @@ begin
         _ErrorCode := no_results_table;
         exit;
     end;
+
+    DebugMessage('DataStore GetTable statement:  ' + SQLStatement);
 
     try
         sqlTable := _DBHandle.GetTable(SQLStatement);
