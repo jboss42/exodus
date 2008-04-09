@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/9/2008 10:51:59 AM from Type Library described below.
+// File generated on 2008-04-09 13:39:51 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -5139,6 +5139,7 @@ type
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                const filter: WideString); safecall;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; safecall;
+    function actionsForType(const itemtype: WideString): IExodusTypedActions; safecall;
   end;
 
 // *********************************************************************//
@@ -5154,6 +5155,7 @@ type
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                const filter: WideString); dispid 203;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; dispid 204;
+    function actionsForType(const itemtype: WideString): IExodusTypedActions; dispid 205;
   end;
 
 // *********************************************************************//

@@ -41,6 +41,7 @@ type
        _UseDisplayName: Boolean;
        _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
+       
        //Methods
        procedure _GetContacts();
        procedure _ParseContacts(Event: string; Tag: TXMLTag);
@@ -54,18 +55,35 @@ type
        procedure _UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
        procedure _UpdateContacts();
        procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
+       
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
-       procedure Clear();
+
+       function Add(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
+       //procedure Clear();
        //Properties
-
-
    end;
+
+  TContactAddItem = class
+  private
+    _ctrl: TContactController;
+    _item: IExodusItem;
+    _subscribe: boolean;
+
+    procedure _Callback(event: String; tag: TXMLTag);
+
+  protected
+    constructor Create(ctrl: TContactController; item: IExodusItem; subscribe: Boolean);
+
+    property Controller: TContactController read _ctrl;
+    property Item: IExodusItem read _item;
+    property Subscribe: Boolean read _subscribe;
+  end;
 
 implementation
 uses IQ, JabberConst, JabberID, SysUtils, Unicode,
-     Session, RosterImages, COMExodusItemWrapper;
+     Session, s10n, RosterImages, COMExodusItemWrapper;
 
 {---------------------------------------}
 constructor TContactController.Create(JS: TObject);
@@ -162,9 +180,9 @@ begin
     //Contact.Type_ := EI_TYPE_CONTACT;
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
-    Contact.AddProperty('Name', Tag.GetAttribute('name'));
-    Contact.AddProperty('Subscription', Tag.GetAttribute('subscription'));
-    Contact.AddProperty('Ask', Tag.GetAttribute('ask'));
+    Contact.value['Name'] := Tag.GetAttribute('name');
+    Contact.value['Subscription'] := Tag.GetAttribute('subscription');
+    Contact.value['Ask'] := Tag.GetAttribute('ask');
     _UpdateContact(Contact);
 
     Grps := Tag.QueryXPTags('/item/group');
@@ -488,11 +506,13 @@ begin
 end;
 
 {---------------------------------------}
+{
 procedure TContactController.Clear();
 begin
     TJabberSession(_js).ItemController.ClearGroups();
     TJabberSession(_js).ItemController.ClearItems();
 end;
+}
 
 {---------------------------------------}
 procedure TContactController._SetPresenceImage(Show: Widestring; Item: IExodusItem);
@@ -535,6 +555,92 @@ begin
     if (Item = nil) then exit;
     Item.Text := DisplayName;
     TJabberSession(_JS).FireEvent('/item/update', Item);
+end;
+
+function TContactController.Add(
+        sjid: WideString;
+        name: WideString;
+        group: WideString;
+        subscribe: Boolean) : IExodusItem;
+var
+    session: TJabberSession;
+    itemCtlr: IExodusItemController;
+begin
+    session := TJabberSession(_js);
+    itemCtlr := session.ItemController;
+    Result := itemCtlr.GetItem(sjid);
+    if (Result <> nil) then begin
+        if (group <> '') and not Result.BelongsToGroup(group) then begin
+            //just update the groups this contact belongs to
+            Result.AddGroup(group);
+            session.FireEvent('/item/update', Result);
+        end;
+    end
+    else begin
+        //Actual item creation!
+        Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT);
+        Result.value['Name'] := name;
+        Result.value['Subscription'] := 'none';
+        if (group <> '') then begin
+            Result.AddGroup(group);
+            itemCtlr.AddGroup(group);
+        end;
+        _UpdateContact(Result);
+
+        TContactAddItem.Create(Self, Result, subscribe);
+    end;
+
+end;
+
+
+constructor TContactAddItem.Create(
+        ctrl: TContactController;
+        item: IExodusItem;
+        subscribe: Boolean);
+var
+    session: TJabberSession;
+    iq: TJabberIQ;
+    idx: Integer;
+begin
+    inherited Create();
+
+    _ctrl := ctrl;
+    _item := item;
+    _subscribe := subscribe;
+
+    session := TJabberSession(_ctrl._JS);
+    iq := TJabberIQ.Create(session, session.generateID, Self._Callback);
+    with iq do begin
+        Namespace := XMLNS_ROSTER;
+        iqType := 'set';
+        with AddTag('item') do begin
+            setAttribute('jid', item.UID);
+            setAttribute('name', item.value['Name']);
+
+            for idx := 0 to item.GroupCount - 1 do begin
+                AddBasicTag('group', item.Group[idx]);
+            end;
+       end;
+    end;
+
+    iq.Send();
+end;
+
+procedure TContactAddItem._Callback(event: string; tag: TXMLTag);
+var
+    session: TJabberSession;
+begin
+    if (tag <> nil) and (tag.GetAttribute('type') = 'result') then begin
+        session := TJabberSession(Controller._JS);
+
+        if Subscribe then
+            SendSubscribe(item.UID, session);
+
+        if item.IsVisible then
+            session.FireEvent('/item/add', item);
+    end;
+
+    Self.Free();
 end;
 
 end.

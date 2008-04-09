@@ -45,11 +45,12 @@ inherited frmSelectItem: TfrmSelectItem
         Left = 3
         Top = 3
         Width = 47
-        Height = 13
+        Height = 23
         Align = alLeft
         Caption = 'Jabber ID'
         FocusControl = txtJID
         Layout = tlCenter
+        ExplicitHeight = 13
       end
       object txtJID: TTntEdit
         AlignWithMargins = True

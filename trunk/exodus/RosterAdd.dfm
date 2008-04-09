@@ -7,7 +7,6 @@ inherited frmAdd: TfrmAdd
   ClientHeight = 214
   ClientWidth = 251
   DefaultMonitor = dmDesktop
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate

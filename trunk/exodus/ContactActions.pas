@@ -5,6 +5,15 @@ interface
 uses Exodus_TLB, ExActions;
 
 type
+    TAddContactAction = class(TExBaseAction)
+    private
+        constructor Create;
+
+    public
+        procedure execute(const items: IExodusItemList); override;
+        
+    end;
+
     TSendContactsAction = class(TExBaseAction)
     private
         constructor Create;
@@ -32,7 +41,20 @@ type
 
 implementation
 
-uses Classes, ExActionCtrl, ExUtils, gnugettext, JabberID, SelectItem, Session;
+uses Classes, ExActionCtrl, ExUtils, gnugettext, JabberID, SelectItem,
+    Session, RosterAdd;
+
+constructor TAddContactAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-000-add-contact');
+
+    Set_Caption(_('Add Contact'));
+    Set_Enabled(true);
+end;
+procedure TAddContactAction.execute(const items: IExodusItemList);
+begin
+    ShowAddContact();
+end;
 
 constructor TSendContactsAction.Create;
 begin
@@ -120,6 +142,10 @@ var
 begin
     actCtrl := GetActionController();
 
+    //Setup add contact
+    act := TAddContactAction.Create() as IExodusAction;
+    actCtrl.registerAction('{create}', act);
+
     //Setup send contacts
     act := TSendContactsAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
@@ -129,6 +155,7 @@ begin
     actCtrl.registerAction('contact', act);
     actCtrl.addEnableFilter('contact', act.Name, 'blocked=false');
 
+    //Setup unblock contact
     act := TUnblockContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
     actCtrl.addEnableFilter('contact', act.Name, 'blocked=true');

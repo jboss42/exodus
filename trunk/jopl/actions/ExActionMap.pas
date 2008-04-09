@@ -34,12 +34,15 @@ type
         _items: IExodusItemList;
         _actions: TWidestringList;
 
+        procedure Set_Owner(actmap: TExodusActionMap);
     protected
-        constructor CreateFromMap(actmap: TExodusActionMap; itemtype: Widestring);
 
+        function LookupAction(actname: Widestring; recurse: Boolean = false): IExodusAction;
         procedure Collate;
 
+        property Owner: TExodusActionMap read _owner write Set_Owner;
     public
+        constructor Create(itemtype: Widestring);
         destructor Destroy; override;
 
         function Get_ItemType: Widestring; safecall;
@@ -89,25 +92,49 @@ implementation
 
 uses SysUtils, ComServ, COMExodusItemList;
 
+function findAction(act: IExodusAction; name: Widestring): IExodusAction;
+var
+    idx: Integer;
+    subact: IExodusAction;
+begin
+    Result := nil;
+
+    for idx := 0 to act.SubActionCount - 1 do begin
+        subact := act.SubAction[idx];
+        if (subact.Name = name) then
+            Result := subact
+        else
+            Result := findAction(subact, name);
+
+        if (Result <> nil) then
+            exit;
+    end
+end;
+
 {
     TExodusTypedActions implementation
 }
 
-constructor TExodusTypedActions.CreateFromMap(actmap: TExodusActionMap; itemtype: WideString);
+constructor TExodusTypedActions.Create(itemtype: WideString);
+begin
+    inherited Create(ComServer.TypeLib, IID_IExodusTypedActions);
+
+    _itemtype := itemtype;
+    _actions := TWidestringList.Create;
+    _items := TExodusItemList.Create as IExodusItemList;
+end;
+
+procedure TExodusTypedActions.Set_Owner(actmap: TExodusActionMap);
 var
     idx: Integer;
     item: IExodusItem;
 begin
-    inherited Create(ComServer.TypeLib, IID_IExodusTypedActions);
-
     _owner := actmap as TExodusActionMap;
-    _itemtype := itemtype;
-    _actions := TWidestringList.Create;
 
-    _items := TExodusItemList.Create as IExodusItemList;
+    Self.Clear();
     for idx := 0 to actmap.Get_ItemCount - 1 do begin
         item := actmap.Get_item(idx);
-        if (itemtype = '') or (itemtype = item.Type_) then
+        if (_itemtype = '') or (_itemtype = item.Type_) then
             _items.Add(item);
     end;
 end;
@@ -173,7 +200,8 @@ begin
 
     act._AddRef;
     _actions.AddObject(act.Name, TObject(Pointer(act)));
-    _owner.AddAction(act);
+    if Owner <> nil then
+        _owner.AddAction(act);
 end;
 procedure TExodusTypedActions.RemoveAction(act: IExodusAction);
 var
@@ -202,25 +230,41 @@ begin
         IExodusAction(Pointer(_actions.Objects[idx]))._Release;
         _actions.Delete(idx);
     end;
+    _items.Clear();
 end;
 
 function TExodusTypedActions.GetActionNamed(const name: WideString): IExodusAction;
 var
     idx: Integer;
 begin
-    idx := _actions.IndexOf(name);
-    Result := Get_Action(idx);
+    Result := LookupAction(name, false);
 end;
 procedure TExodusTypedActions.execute(const actname: Widestring);
 var
     act: IExodusAction;
 begin
-    act := GetActionNamed(actname);
+    act := LookupAction(actname, true);
     if (act = nil) then exit;
 
     act.execute(_items);
 end;
 
+function TExodusTypedActions.LookupAction(actname: WideString; recurse: Boolean): IExodusAction;
+var
+    idx: Integer;
+begin
+    Result := nil;
+
+    idx := _actions.IndexOf(actname);
+    if (idx <> -1) then
+        Result := Get_Action(idx)
+    else if (recurse) then begin
+        for idx := 0 to _actions.Count - 1 do begin
+            Result := findAction(Get_Action(idx), actname);
+            if (Result <> nil) then exit;
+        end;
+    end;
+end;
 procedure TExodusTypedActions.Collate;
 begin
     _actions.Sorted := true;
@@ -291,7 +335,8 @@ begin
     if (idx <> -1) then
         Result := TExodusTypedActions(_actLists.Objects[idx])
     else if create then begin
-         Result := TExodusTypedActions.CreateFromMap(Self, itemtype);
+         Result := TExodusTypedActions.Create(itemtype);
+         Result.Owner := Self;
          Result._AddRef;
          _actLists.AddObject(itemtype, Result);
     end;

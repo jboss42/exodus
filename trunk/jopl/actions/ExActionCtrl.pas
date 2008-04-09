@@ -115,12 +115,16 @@ public
     constructor Create;
     destructor Destroy; override;
 
-    procedure registerAction(const itemtype: Widestring; const act: IExodusAction); safecall;
+    procedure registerAction(const itemtype: Widestring; const act: IExodusAction);
+      safecall;
     procedure addEnableFilter(const ItemType, actname, filter: WideString);
       safecall;
     procedure addDisableFilter(const ItemType, actname, filter: WideString);
       safecall;
-    function buildActions(const items: IExodusItemList): IExodusActionMap; safecall;
+    function actionsForType(const itemtype: WideString): IExodusTypedActions;
+      safecall;
+    function buildActions(const items: IExodusItemList): IExodusActionMap;
+      safecall;
 end;
 
 function GetActionController: IExodusActionController;
@@ -643,6 +647,31 @@ begin
 
     proxy.addToDisabling(filter);
     list.updateProxy(proxy);
+end;
+
+function TExodusActionController.actionsForType(
+  const itemtype: WideString): IExodusTypedActions;
+var
+    typedActs: TExodusTypedActions;
+    potentials: TPotentialActions;
+    idx: Integer;
+    proxy: TActionProxy;
+    act: IExodusAction;
+begin
+    typedActs := TExodusTypedActions.Create(itemtype);
+    potentials := lookupActionsFor(itemtype, false);
+
+    if (potentials <> nil) then begin
+        for idx := 0 to potentials.ProxyCount - 1 do begin
+            proxy := potentials.Proxy[idx];
+            act := proxy.Action;
+
+            if (act <> nil) and act.Enabled then
+                typedActs.AddAction(act);
+        end;
+    end;
+
+    Result := typedActs as IExodusTypedActions;
 end;
 
 function TExodusActionController.buildActions(
