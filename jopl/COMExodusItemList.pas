@@ -42,7 +42,8 @@ type
     procedure Remove(const Value: IExodusItem); safecall;
     function IExodusItemList.Get_Count = IExodusItemList_Get_Count;
     function IExodusItemList_Get_Count: Integer; safecall;
-
+  private
+    function _GetItems() : TInterfaceList;
   public
     constructor Create;
     destructor Destroy; override;
@@ -56,57 +57,64 @@ constructor TExodusItemList.Create;
 begin
     inherited Create;
 
-    _items := TInterfaceList.Create;
 end;
+
 destructor TExodusItemList.Destroy;
 begin
-    _items.Free;
+    _GetItems().Free;
 
     inherited;
 end;
 
 function TExodusItemList.Get_Count: Integer;
 begin
-    Result := _items.Count;
+    Result := _GetItems().Count;
 end;
 
 function TExodusItemList.Get_Item(Index: Integer): IExodusItem;
 begin
-    Result := IExodusItem(_items.Items[Index]);
+    Result := IExodusItem(_GetItems().Items[Index]);
 end;
 procedure TExodusItemList.Set_Item(Index: Integer; const Value: IExodusItem);
 begin
     if (value <> nil) then
-        _items.Items[index] := value
+        _GetItems().Items[index] := value
     else
-        _items.Delete(Index);
+        _GetItems().Delete(Index);
 end;
 
 procedure TExodusItemList.Add(const item: IExodusItem);
 begin
-    if (IndexOf(item) = -1) then _items.Add(item);
+    if (IndexOf(item) = -1) then _GetItems().Add(item);
 end;
 procedure TExodusItemList.Delete(index: Integer);
 begin
-    _items.Delete(index);
+    _GetItems().Delete(index);
 end;
 procedure TExodusItemList.Clear;
 begin
-    _items.Clear;
+    _GetItems().Clear;
 end;
 
 function TExodusItemList.IndexOf(const item: IExodusItem): Integer;
 begin
-    Result := _items.IndexOf(item);
+    Result := _GetItems().IndexOf(item);
 end;
 procedure TExodusItemList.Remove(const Value: IExodusItem);
 begin
-    _items.Remove(Value);
+    _GetItems().Remove(Value);
 end;
 
 function TExodusItemList.IExodusItemList_Get_Count: Integer;
 begin
-    Result := _items.Count;
+    Result := _GetItems().Count;
+end;
+
+function TExodusItemList._GetItems() : TInterfaceList;
+begin
+    if (_items = nil) then
+        _items := TInterfaceList.Create;
+    Result := _items;
 end;
 
 initialization

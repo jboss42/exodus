@@ -41,8 +41,6 @@ type
       function Get_VisibleTab(Index: Integer): IExodusTab; safecall;
       function Get_ActiveTab: Integer; safecall;
       procedure Set_ActiveTab(Index: Integer); safecall;
-      function GetSelectedItems(Index: Integer): OleVariant; safecall;
-      function GetSelectedGroups(Index: Integer): OleVariant; safecall;
   private
       _Tabs: TObjectList;
       _HiddenTabs: TWideStringList;
@@ -229,45 +227,6 @@ begin
     OutputDebugString(PChar(Format('Active tab: %d',[GetRosterWindow().PageControl.ActivePageIndex])));
 end;
 
-{---------------------------------------}
-function TExodusTabController.GetSelectedItems(Index: Integer): OleVariant;
-var
-    List: TWideStringList;
-    Items: Variant;
-    i: Integer;
-begin
-    if (Index < 0) then exit;
-    if (Index > GetRosterWindow().PageControl.PageCount - 1) then exit;
-    List := GetRosterWindow().GetSelectedItems(Index);
-    Items := VarArrayCreate([0,List.Count], varOleStr);
-    OutputDebugString(PChar(Format('%d selected.',[List.Count])));
-    for i := 0 to List.Count - 1 do begin
-        VarArrayPut(Items, List[i], i);
-        OutputDebugString(PChar(Format('Selection %d: %s',[i, List[i]])));
-    end;
-    List.Free();
-    Result := items;
-end;
-
-{---------------------------------------}
-function TExodusTabController.GetSelectedGroups(Index: Integer): OleVariant;
-var
-    List: TWideStringList;
-    Groups: Variant;
-    i: Integer;
-begin
-    if (Index < 0) then exit;
-    if (Index > GetRosterWindow().PageControl.PageCount - 1) then exit;
-    List := GetRosterWindow().GetSelectedGroups(Index);
-    Groups := VarArrayCreate([0,List.Count], varOleStr);
-    OutputDebugString(PChar(Format('%d selected.',[List.Count])));
-    for i := 0 to List.Count - 1 do begin
-        VarArrayPut(Groups, List[i], i);
-        OutputDebugString(PChar(Format('Selection %d: %s',[i, List[i]])));
-    end;
-    List.Free();
-    Result := Groups;
-end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusTabController, Class_ExodusTabController,

@@ -45,8 +45,9 @@ type
       function Get_Description: WideString; safecall;
       function Get_AXControl: OleVariant; safecall;
       procedure Set_Description(const value: WideString); safecall;
-    function Get_PageIndex: Integer; safecall;
-    function Get_TabIndex: Integer; safecall;
+      function Get_PageIndex: Integer; safecall;
+      function Get_TabIndex: Integer; safecall;
+      function GetSelectedItems: IExodusItemList; safecall;
   private
       _AxControl: TAXControl;
       _Page: TTntTabSheet;
@@ -60,7 +61,7 @@ type
 
 implementation
 
-uses ComServ, RosterForm, SysUtils, Session, Variants, Controls;
+uses ComServ, RosterForm, SysUtils, Session, Variants, Controls, COMExodusItemList;
 
 {---------------------------------------}
 constructor TExodusTab.Create(ActiveX_GUID: WideString);
@@ -198,6 +199,31 @@ end;
 function TExodusTab.Get_TabIndex: Integer;
 begin
    Result := _Page.TabIndex;
+end;
+
+function TExodusTab.GetSelectedItems: IExodusItemList;
+var
+   Selection: IExodusItemSelection;
+begin
+   if (VarIsEmpty(Get_AXControl())) then
+   begin
+     Result := TExodusItemList.Create();
+     //GetRosterWindow().GetTreeByTabIndex(Get_PageIndex())
+   end
+   else
+   begin
+     try
+        Selection := IUnknown(Get_AXControl()) as  IExodusItemSelection;
+     except
+         on EIntfCastError do begin
+             Selection := nil
+         end;
+     end;
+     if (Selection <> nil) then
+         Result := Selection.GetSelectedItems();
+   end;
+
+
 end;
 
 initialization
