@@ -13062,6 +13062,7 @@ inherited frmExodus: TfrmExodus
     end
   end
   object popCreate: TTntPopupMenu
+    OnPopup = popCreatePopup
     Left = 40
     Top = 176
     object Folder1: TTntMenuItem

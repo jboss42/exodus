@@ -430,8 +430,7 @@ begin
     // check to see if there is an agent for this type
     // of contact type
     if (AddInfo.isInNetwork()) then begin
-         { TODO : Roster refactor }
-        //MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+         MainSession.roster.Add(sjid, snick, sgrp, true);
         Self.Close;
     end
     else begin
@@ -448,7 +447,7 @@ begin
             sjid := j + '@' + a.jid.full;
             ExRegController.MonitorJid(sjid, false);
               { TODO : Roster refactor }
-            //MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+            MainSession.Roster.Add(sjid, snick, sgrp, true);
             Self.Close;
         end
         else begin

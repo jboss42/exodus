@@ -413,6 +413,8 @@ type
     procedure imgAdClick(Sender: TObject);
     procedure popChangeView(Sender: TObject);
     procedure mnuContacts_ViewHistoryClick(Sender: TObject);
+    procedure popCreatePopup(Sender: TObject);
+    procedure clickCreatePopupItem(Sender: TObject);
 
   private
     { Private declarations }
@@ -844,7 +846,8 @@ uses
     ManagePluginsDlg,
     DebugManager, TntGraphics, SelectItem,
     HistorySearch,
-    FrmUtils;
+    FrmUtils,
+    ExActionCtrl;
 
 {$R *.DFM}
 
@@ -4593,6 +4596,57 @@ begin
     end;
 end;
 
+procedure TfrmExodus.popCreatePopup(Sender: TObject);
+var
+    typedActs: IExodusTypedActions;
+    idx: Integer;
+    act: IExodusAction;
+    root, mi: TTntMenuItem;
+begin
+  inherited;
+
+  root := TTntMenuItem(popCreate.Items);
+
+  //Clear previous...
+  if root.Tag <> 0 then begin
+      typedActs := IExodusTypedActions(Pointer(root.tag));
+      typedActs._Release;
+  end;
+
+  //Fill in the results...
+  typedActs := GetActionController().actionsForType('{create}');
+
+  root.Clear();
+  if (typedActs = nil) or (typedActs.ActionCount = 0) then
+    exit;
+  
+  root.Tag := Integer(Pointer(typedActs));
+  typedActs._AddRef;
+
+  for idx := 0 to typedActs.ActionCount - 1 do begin
+    //Insert spacer if more than three, and we're at the end
+    {
+    if (idx >= 3) and (idx = typedActs.ActionCount - 1) then begin
+        mi := TTntMenuItem.Create(popCreate);
+        mi.Caption := _('-');
+
+        root.Add(mi);
+    end;
+    }
+
+    act := typedActs.Action[idx];
+
+    mi := TTntMenuItem.Create(popCreate);
+    mi.Caption := act.Caption;
+    mi.ImageIndex := act.ImageIndex;
+    mi.Tag := Integer(Pointer(act));
+    mi.OnClick := clickCreatePopupItem;
+    //TODO:  setup submenus?
+
+    root.Add(mi);
+  end
+end;
+
 procedure TfrmExodus.checkFlash();
 begin
     if (timFlasher.Enabled and
@@ -4837,6 +4891,17 @@ begin
 
     lblDisplayName.Caption := TDisplayNameEventListener.GetDisplayName(jid.jid);
     lblDisplayName.Hint := jid.getDisplayFull();
+end;
+
+procedure TfrmExodus.clickCreatePopupItem(Sender: TObject);
+var
+    typedActs: IExodusTypedActions;
+    act: IExodusAction;
+begin
+    typedActs := IExodusTypedActions(Pointer(popCreate.Items.tag));
+    act := IExodusAction(Pointer(TTntMenuItem(Sender).Tag));
+
+    typedActs.execute(act.Name);
 end;
 
 
