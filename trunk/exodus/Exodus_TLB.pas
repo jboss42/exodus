@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/8/2008 11:32:47 AM from Type Library described below.
+// File generated on 4/9/2008 10:51:59 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -142,6 +142,7 @@ const
   IID_IExodusActionMap: TGUID = '{B7C79472-A921-4357-84EB-A01902B18791}';
   IID_IExodusActionController: TGUID = '{4318FEF0-E766-4269-935E-417CE9925991}';
   CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
+  IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -321,6 +322,8 @@ type
   IExodusActionMapDisp = dispinterface;
   IExodusActionController = interface;
   IExodusActionControllerDisp = dispinterface;
+  IExodusItemSelection = interface;
+  IExodusItemSelectionDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -4645,8 +4648,6 @@ type
     function Get_VisibleTab(index: Integer): IExodusTab; safecall;
     function Get_ActiveTab: Integer; safecall;
     procedure Set_ActiveTab(index: Integer); safecall;
-    function GetSelectedItems(index: Integer): OleVariant; safecall;
-    function GetSelectedGroups(index: Integer): OleVariant; safecall;
     property TabCount: Integer read Get_TabCount;
     property Tab[index: Integer]: IExodusTab read Get_Tab;
     property VisibleTabCount: Integer read Get_VisibleTabCount;
@@ -4672,8 +4673,6 @@ type
     function GetTabIndexByName(const Name: WideString): Integer; dispid 210;
     property VisibleTab[index: Integer]: IExodusTab readonly dispid 211;
     property ActiveTab: Integer dispid 212;
-    function GetSelectedItems(index: Integer): OleVariant; dispid 204;
-    function GetSelectedGroups(index: Integer): OleVariant; dispid 213;
   end;
 
 // *********************************************************************//
@@ -4700,6 +4699,7 @@ type
     function Get_AXControl: OleVariant; safecall;
     function Get_TabIndex: Integer; safecall;
     function Get_PageIndex: Integer; safecall;
+    function GetSelectedItems: IExodusItemList; safecall;
     property Name: WideString read Get_Name write Set_Name;
     property Caption: WideString read Get_Caption write Set_Caption;
     property ImageIndex: Integer read Get_ImageIndex write Set_ImageIndex;
@@ -4733,6 +4733,7 @@ type
     property AXControl: OleVariant readonly dispid 208;
     property TabIndex: Integer readonly dispid 213;
     property PageIndex: Integer readonly dispid 214;
+    function GetSelectedItems: IExodusItemList; dispid 207;
   end;
 
 // *********************************************************************//
@@ -5153,6 +5154,26 @@ type
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                const filter: WideString); dispid 203;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; dispid 204;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusItemSelection
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}
+// *********************************************************************//
+  IExodusItemSelection = interface(IDispatch)
+    ['{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}']
+    function GetSelectedItems: IExodusItemList; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusItemSelectionDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}
+// *********************************************************************//
+  IExodusItemSelectionDisp = dispinterface
+    ['{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}']
+    function GetSelectedItems: IExodusItemList; dispid 201;
   end;
 
 // *********************************************************************//
