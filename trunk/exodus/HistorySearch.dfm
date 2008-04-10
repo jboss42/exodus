@@ -343,6 +343,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           end>
         Constraints.MinHeight = 50
         GridLines = True
+        IconOptions.Arrangement = iaLeft
         ReadOnly = True
         RowSelect = True
         SmallImages = frmExodus.ImageList1
