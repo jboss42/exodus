@@ -666,6 +666,7 @@ begin
         DataStore := TExodusDataStore.Create(dbfile);
         MsgLogger := TSQLLogger.Create();
         HistorySearchManager := TExodusHistorySearchManager.Create();
+        HistorySearchManager.ObjAddRef();
         SQLSearch := TSQLSearchHandler.Create();
     except
         //???dda - if not successful, we are in a world of hurt.
