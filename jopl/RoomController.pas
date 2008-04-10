@@ -277,7 +277,7 @@ begin
             if (Grp <> '') then
             begin
                 Room.AddGroup(grp);
-                TJabberSession(_js).ItemController.AddGroup(grp);
+                TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;

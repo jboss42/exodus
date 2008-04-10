@@ -146,12 +146,10 @@ begin
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
             TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
- //           Item := TJabberSession(_js).ItemController.GetItem(TmpJID.full);
             Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT);
             //Make sure item exists
             if (Item <> nil) then
             begin
-                //Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full);
                 _ParseContact(Item, ContactTag);
 
                 if (Item.IsVisible) then
@@ -177,7 +175,6 @@ var
     i: Integer;
     Grp, Groups: WideString;
 begin
-    //Contact.Type_ := EI_TYPE_CONTACT;
     Contact.Text := Tag.GetAttribute('name');
     TmpJid := TJabberID.Create(Tag.GetAttribute('jid'));
     Contact.value['Name'] := Tag.GetAttribute('name');
@@ -202,7 +199,7 @@ begin
             Grp := WideTrim(TXMLTag(Grps[i]).Data);
             if (Grp <> '') then begin
                 Contact.AddGroup(grp);
-                TJabberSession(_js).ItemController.AddGroup(grp);
+                TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;
@@ -251,7 +248,7 @@ begin
          if (_DefaultGroup <> TJabberSession(_JS).Prefs.getString('roster_default')) then
          begin
              _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-             TJabberSession(_JS).ItemController.AddGroup(_DefaultGroup);
+             TJabberSession(_JS).ItemController.AddItemByUID(_DefaultGroup, EI_TYPE_GROUP);
          end;
          _UpdateContacts();
      end
@@ -509,7 +506,6 @@ end;
 {
 procedure TContactController.Clear();
 begin
-    TJabberSession(_js).ItemController.ClearGroups();
     TJabberSession(_js).ItemController.ClearItems();
 end;
 }
@@ -583,7 +579,7 @@ begin
         Result.value['Subscription'] := 'none';
         if (group <> '') then begin
             Result.AddGroup(group);
-            itemCtlr.AddGroup(group);
+            itemCtlr.AddItemByUID(group, EI_TYPE_GROUP);
         end;
         _UpdateContact(Result);
 

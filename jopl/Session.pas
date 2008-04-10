@@ -598,7 +598,6 @@ begin
     FreeAndNil(_features);
 
     ppdb.Clear;
-    ItemController.ClearGroups;
     ItemController.ClearItems;
     //roster.Clear;
     ppdb.Clear;
