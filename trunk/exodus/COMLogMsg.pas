@@ -62,6 +62,17 @@ type
                          const Nick: WideString; const Direction: WideString;
                          const MsgType: WideString; const Thread: WideString;
                          const Subject: WideString; const Body: WideString; const XML: WideString); safecall;
+    procedure Set_Body(const Value: WideString); safecall;
+    procedure Set_Direction(const Value: WideString); safecall;
+    procedure Set_FromJid(const Value: WideString); safecall;
+    procedure Set_ID(const Value: WideString); safecall;
+    procedure Set_MsgType(const Value: WideString); safecall;
+    procedure Set_Nick(const Value: WideString); safecall;
+    procedure Set_Subject(const Value: WideString); safecall;
+    procedure Set_Thread(const Value: WideString); safecall;
+    procedure Set_Timestamp(const Value: WideString); safecall;
+    procedure Set_ToJid(const Value: WideString); safecall;
+    procedure Set_XML(const Value: WideString); safecall;
 
   end;
 
@@ -167,6 +178,61 @@ begin
     _xml := XML;
 end;
 
+
+procedure TExodusLogMsg.Set_Body(const Value: WideString);
+begin
+    _body := Value;
+end;
+
+procedure TExodusLogMsg.Set_Direction(const Value: WideString);
+begin
+    _dir := Value;
+end;
+
+procedure TExodusLogMsg.Set_FromJid(const Value: WideString);
+begin
+    _from := Value;
+end;
+
+procedure TExodusLogMsg.Set_ID(const Value: WideString);
+begin
+    _id := Value;
+end;
+
+procedure TExodusLogMsg.Set_MsgType(const Value: WideString);
+begin
+    _type := Value;
+end;
+
+procedure TExodusLogMsg.Set_Nick(const Value: WideString);
+begin
+    _nick := Value;
+end;
+
+procedure TExodusLogMsg.Set_Subject(const Value: WideString);
+begin
+    _subject := Value;
+end;
+
+procedure TExodusLogMsg.Set_Thread(const Value: WideString);
+begin
+    _thread := Value;
+end;
+
+procedure TExodusLogMsg.Set_Timestamp(const Value: WideString);
+begin
+    _delay := Value;
+end;
+
+procedure TExodusLogMsg.Set_ToJid(const Value: WideString);
+begin
+    _to := Value;
+end;
+
+procedure TExodusLogMsg.Set_XML(const Value: WideString);
+begin
+    _xml := Value;
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusLogMsg, Class_ExodusLogMsg,
