@@ -29,7 +29,7 @@ uses
     Windows, Classes, ComObj, ActiveX, Exodus_TLB, StdVcl, COMExodusItem;
 
 type
-  TExodusController = class(TAutoObject, IExodusController, IExodusController2)
+  TExodusController = class(TAutoObject, IExodusController)
   protected
     function Get_Connected: WordBool; safecall;
     function Get_Server: WideString; safecall;
@@ -141,11 +141,9 @@ type
     function Get_TabController: IExodusTabController; safecall;
     function Get_ActionController: IExodusActionController; safecall;
     function Get_ItemController: IExodusItemController; safecall;
-
-    // IExodusController2
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
-    function GetDataStore: IExodusDataStore; safecall;
-    function GetHistorySearchManager: IExodusHistorySearchManager; safecall;
+    function Get_DataStore: IExodusDataStore; safecall;
+    function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
 
     { Protected declarations }
   private
@@ -2148,12 +2146,12 @@ begin
     end;
 end;
 
-function TExodusController.GetDataStore: IExodusDataStore;
+function TExodusController.Get_DataStore: IExodusDataStore;
 begin
     Result := DataStore;
 end;
 
-function TExodusController.GetHistorySearchManager: IExodusHistorySearchManager;
+function TExodusController.Get_HistorySearchManager: IExodusHistorySearchManager;
 begin
     Result := HistorySearchManager;
 end;

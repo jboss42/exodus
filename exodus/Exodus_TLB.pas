@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/10/2008 7:39:59 AM from Type Library described below.
+// File generated on 4/10/2008 11:57:43 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
@@ -113,7 +113,6 @@ const
   CLASS_ExodusToolbarButton: TGUID = '{D29EB98A-994F-4E67-A12F-652733E7E5DD}';
   CLASS_ExodusRoster: TGUID = '{027E1B53-59A9-4FA4-9610-AC6CA2561248}';
   IID_IExodusAXWindow: TGUID = '{8F2F3430-1E7E-4FA7-B65D-A25B48EFE880}';
-  IID_IExodusController2: TGUID = '{FDAB329F-09F2-4AEA-8C72-319059E66389}';
   CLASS_ExodusAXWindow: TGUID = '{E11594EF-419A-498F-ACF3-D3382D22F048}';
   IID_IExodusItem: TGUID = '{44410CB8-2AD7-4D58-8067-2E795EB28E60}';
   IID_IExodusItemController: TGUID = '{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}';
@@ -290,8 +289,6 @@ type
   IExodusDockToolbarDisp = dispinterface;
   IExodusAXWindow = interface;
   IExodusAXWindowDisp = dispinterface;
-  IExodusController2 = interface;
-  IExodusController2Disp = dispinterface;
   IExodusItem = interface;
   IExodusItemDisp = dispinterface;
   IExodusItemController = interface;
@@ -469,6 +466,9 @@ type
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
     function Get_TabController: IExodusTabController; safecall;
     function Get_ItemController: IExodusItemController; safecall;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; safecall;
+    function Get_DataStore: IExodusDataStore; safecall;
+    function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -490,6 +490,8 @@ type
     property BookmarkManager: IExodusBookmarkManager read Get_BookmarkManager;
     property TabController: IExodusTabController read Get_TabController;
     property ItemController: IExodusItemController read Get_ItemController;
+    property DataStore: IExodusDataStore read Get_DataStore;
+    property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
   end;
 
 // *********************************************************************//
@@ -591,6 +593,9 @@ type
     property BookmarkManager: IExodusBookmarkManager readonly dispid 222;
     property TabController: IExodusTabController readonly dispid 223;
     property ItemController: IExodusItemController readonly dispid 224;
+    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; dispid 225;
+    property DataStore: IExodusDataStore readonly dispid 226;
+    property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
   end;
 
 // *********************************************************************//
@@ -4458,30 +4463,6 @@ type
     property PriorityFlag: WordBool dispid 208;
     property WindowType: WideString dispid 209;
     property ImageIndex: Integer dispid 210;
-  end;
-
-// *********************************************************************//
-// Interface: IExodusController2
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FDAB329F-09F2-4AEA-8C72-319059E66389}
-// *********************************************************************//
-  IExodusController2 = interface(IDispatch)
-    ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
-    function GetDataStore: IExodusDataStore; safecall;
-    function GetHistorySearchManager: IExodusHistorySearchManager; safecall;
-  end;
-
-// *********************************************************************//
-// DispIntf:  IExodusController2Disp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {FDAB329F-09F2-4AEA-8C72-319059E66389}
-// *********************************************************************//
-  IExodusController2Disp = dispinterface
-    ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
-    function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; dispid 223;
-    function GetDataStore: IExodusDataStore; dispid 201;
-    function GetHistorySearchManager: IExodusHistorySearchManager; dispid 202;
   end;
 
 // *********************************************************************//
