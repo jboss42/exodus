@@ -1143,11 +1143,17 @@ procedure TfrmHistorySearch.lstResultsCustomDrawItem(Sender: TCustomListView;
 begin
     inherited;
 
-    if ((item.Index mod 2) = 0) then begin
-        Sender.Canvas.Brush.Color := _PrimaryBGColor;
+    if (item.Selected) then begin
+        Sender.Canvas.Brush.Color := clMenuHighlight;
+        Sender.Canvas.Font.Color := clHighlightText;
     end
     else begin
-        Sender.Canvas.Brush.Color := _AlternateBGColor;
+        if ((item.Index mod 2) = 0) then begin
+            Sender.Canvas.Brush.Color := _PrimaryBGColor;
+        end
+        else begin
+            Sender.Canvas.Brush.Color := _AlternateBGColor;
+        end;
     end;
 end;
 
