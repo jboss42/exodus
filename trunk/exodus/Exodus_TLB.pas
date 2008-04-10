@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/10/2008 12:05:39 PM from Type Library described below.
+// File generated on 4/10/2008 4:52:59 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4162,27 +4162,27 @@ type
                          const MsgType: WideString; const Thread: WideString; 
                          const Subject: WideString; const Body: WideString; const XML: WideString); safecall;
     function Get_ToJid: WideString; safecall;
-    procedure Set_ToJid(const Value: WideString); safecall;
+    procedure Set_ToJid(const value: WideString); safecall;
     function Get_FromJid: WideString; safecall;
-    procedure Set_FromJid(const Value: WideString); safecall;
+    procedure Set_FromJid(const value: WideString); safecall;
     function Get_MsgType: WideString; safecall;
-    procedure Set_MsgType(const Value: WideString); safecall;
+    procedure Set_MsgType(const value: WideString); safecall;
     function Get_ID: WideString; safecall;
-    procedure Set_ID(const Value: WideString); safecall;
+    procedure Set_ID(const value: WideString); safecall;
     function Get_Nick: WideString; safecall;
-    procedure Set_Nick(const Value: WideString); safecall;
+    procedure Set_Nick(const value: WideString); safecall;
     function Get_Body: WideString; safecall;
-    procedure Set_Body(const Value: WideString); safecall;
+    procedure Set_Body(const value: WideString); safecall;
     function Get_Thread: WideString; safecall;
-    procedure Set_Thread(const Value: WideString); safecall;
+    procedure Set_Thread(const value: WideString); safecall;
     function Get_Subject: WideString; safecall;
-    procedure Set_Subject(const Value: WideString); safecall;
+    procedure Set_Subject(const value: WideString); safecall;
     function Get_Timestamp: WideString; safecall;
-    procedure Set_Timestamp(const Value: WideString); safecall;
+    procedure Set_Timestamp(const value: WideString); safecall;
     function Get_Direction: WideString; safecall;
-    procedure Set_Direction(const Value: WideString); safecall;
+    procedure Set_Direction(const value: WideString); safecall;
     function Get_XML: WideString; safecall;
-    procedure Set_XML(const Value: WideString); safecall;
+    procedure Set_XML(const value: WideString); safecall;
     property ToJid: WideString read Get_ToJid write Set_ToJid;
     property FromJid: WideString read Get_FromJid write Set_FromJid;
     property MsgType: WideString read Get_MsgType write Set_MsgType;
@@ -4572,7 +4572,6 @@ type
     ['{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}']
     function Get_ItemsCount: Integer; safecall;
     function Get_GroupsCount: Integer; safecall;
-    function Get_Group(index: Integer): WideString; safecall;
     function Get_Item(index: Integer): IExodusItem; safecall;
     procedure RemoveItem(const UID: WideString); safecall;
     function AddItemByUid(const UID: WideString; const ItemType: WideString): IExodusItem; safecall;
@@ -4581,10 +4580,7 @@ type
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); safecall;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); safecall;
     function GetGroupItems(const Group: WideString): OleVariant; safecall;
-    function AddGroup(const Group: WideString): Integer; safecall;
-    procedure RemoveGroup(const Group: WideString); safecall;
     function GetItem(const UID: WideString): IExodusItem; safecall;
-    procedure ClearGroups; safecall;
     procedure ClearItems; safecall;
     function SaveGroups: WordBool; safecall;
     function GetGroups: OleVariant; safecall;
@@ -4595,7 +4591,6 @@ type
     function Get_GroupsLoaded: WordBool; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
-    property Group[index: Integer]: WideString read Get_Group;
     property Item[index: Integer]: IExodusItem read Get_Item;
     property GroupExists[const Group: WideString]: WordBool read Get_GroupExists;
     property GroupExpanded[const Group: WideString]: WordBool read Get_GroupExpanded write Set_GroupExpanded;
@@ -4611,7 +4606,6 @@ type
     ['{7E8D248E-F7E3-4541-A72A-37E1E87C4C93}']
     property ItemsCount: Integer readonly dispid 202;
     property GroupsCount: Integer readonly dispid 203;
-    property Group[index: Integer]: WideString readonly dispid 204;
     property Item[index: Integer]: IExodusItem readonly dispid 205;
     procedure RemoveItem(const UID: WideString); dispid 206;
     function AddItemByUid(const UID: WideString; const ItemType: WideString): IExodusItem; dispid 201;
@@ -4620,10 +4614,7 @@ type
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); dispid 209;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); dispid 210;
     function GetGroupItems(const Group: WideString): OleVariant; dispid 211;
-    function AddGroup(const Group: WideString): Integer; dispid 212;
-    procedure RemoveGroup(const Group: WideString); dispid 213;
     function GetItem(const UID: WideString): IExodusItem; dispid 214;
-    procedure ClearGroups; dispid 216;
     procedure ClearItems; dispid 217;
     function SaveGroups: WordBool; dispid 218;
     function GetGroups: OleVariant; dispid 219;

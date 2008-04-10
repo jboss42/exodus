@@ -16,6 +16,8 @@ type
        constructor Create(Session: TObject);
        destructor Destroy(); override;
        function GetNestedGroups(Group: WideString): TWideStringList;
+       function GetGroupName(Group: WideString): WideString;
+       function GetGroupParent(Group: WideString): WideString;
        function ParseGroupName(Group: WideString): TWideStringList;
        function BuildNestedGroupList(Groups: TWideStringList): TWideStringList;
    end;
@@ -88,4 +90,33 @@ begin
    end;
 end;
 
+{---------------------------------------}
+//Returns groups name based on UID
+//For uid "/a/b/c" name would be "c"
+function TGroupParser.GetGroupName(Group: WideString): WideString;
+var
+    Groups: TWideStringList;
+begin
+    Groups := ParseGroupName(Group);
+    Result := Groups[Groups.Count -1];
+    Groups.Free();
+end;
+
+{---------------------------------------}
+//Returns groups name based on UID
+//For uid "/a/b/c" name would be "c"
+function TGroupParser.GetGroupParent(Group: WideString): WideString;
+var
+    Groups, GroupList: TWideStringList;
+begin
+    Result := '';
+    Groups := ParseGroupName(Group);
+    Groups.Delete(Groups.Count -1 );
+    GroupList := BuildNestedGroupList(Groups);
+    if (GroupList.Count > 0) then
+       Result := GroupList[GroupList.Count - 1];
+
+    Groups.Free();
+    GroupList.Free();
+end;
 end.

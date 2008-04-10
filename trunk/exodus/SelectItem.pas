@@ -97,7 +97,8 @@ implementation
 uses
     gnugettext,
     Session,
-    JabberID;
+    JabberID,
+    COMExodusItem;
 
 {$R *.dfm}
 
@@ -155,7 +156,7 @@ end;
 
 procedure TTypedTreeView.DblClick;
 begin
-    if (Selected = nil) or (Selected.Data = nil) then begin
+    if (Selected = nil) or (IExodusItem(Selected.Data).Type_ = EI_TYPE_GROUP) then begin
         inherited;
         exit;
     end;
@@ -216,7 +217,7 @@ var
 begin
     if (Node = nil) then exit;
     
-    valid := (Node.Data <> nil);
+    valid := (IExodusItem(Node.Data).Type_ = EI_TYPE_GROUP);
     if not valid then begin
         _selectedUID := '';
         txtJID.text := '';

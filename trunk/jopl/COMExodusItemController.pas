@@ -41,16 +41,12 @@ type
       function GetGroups: OleVariant; safecall;
       function SaveGroups: WordBool; safecall;
       function Get_GroupsLoaded: WordBool; safecall;
-      procedure ClearGroups; safecall;
       procedure ClearItems; safecall;
       function GetItem(const UID: WideString): IExodusItem; safecall;
-      procedure RemoveGroup(const Group: WideString); safecall;
-      function Get_Group(Index: Integer): WideString; safecall;
       function Get_GroupsCount: Integer; safecall;
       function Get_Item(Index: Integer): IExodusItem; safecall;
       function Get_ItemsCount: Integer; safecall;
       function GetGroupItems(const Group: WideString): OleVariant; safecall;
-      function AddGroup(const Group: WideString): Integer; safecall;
       function AddItemByUid(const UID, ItemType: WideString): IExodusItem; safecall;
       procedure CopyItem(const UID, Group: WideString); safecall;
       procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
@@ -59,7 +55,6 @@ type
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
       function GetItemsByType(const Type_: WideString): OleVariant; safecall;
   private
-      _Groups: TWideStringList;
       _Items: TWideStringList;
       _JS: TObject;
       _SessionCB: Integer;
@@ -73,11 +68,12 @@ type
       procedure _SendGroups();
       function  _GetGroupItems(const Group: WideString): TWideStringList;
       function  _GetItemsByType(Type_: WideString): TWideStringList;
-
+      function  _AddGroup(const GroupUID: WideString): Integer;
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
       //Properties
+
   end;
 
 var
@@ -86,15 +82,14 @@ var
 implementation
 
 uses ComServ, COMExodusItemWrapper, Classes,
-     JabberConst, IQ, Session, GroupInfo, Variants, Contnrs;
+     JabberConst, IQ, Session, GroupInfo, Variants, Contnrs,
+     COMExodusItem;
 
 {---------------------------------------}
 constructor TExodusItemController.Create(JS: TObject);
 begin
 
-    _Groups := TWideStringList.Create();
     _Items := TWideStringList.Create();
-    _Groups.Duplicates := dupError;
     _Items.Duplicates := dupError;
     _JS := JS;
     _groupsLoaded := false;
@@ -108,7 +103,6 @@ destructor TExodusItemController.Destroy();
 var
      Item: TExodusItemWrapper;
 begin
-   _Groups.Free;
 
     while _Items.Count > 0 do
     begin
@@ -154,10 +148,8 @@ end;
 //from private storage on the server.
 procedure TExodusItemController._ParseGroups(Event: string; Tag: TXMLTag);
 var
-    i, Idx: Integer;
-    Groups, LocalGroups:TXMLTag;
-    Expanded: Boolean;
-    DefaultGroup: WideString;
+    i: Integer;
+    Groups:TXMLTag;
     Group: IExodusItem;
 begin
     Group := nil;
@@ -177,20 +169,10 @@ begin
 
     for i := 0 to Groups.ChildCount - 1 do
     begin
-        if (Groups.ChildTags[i].GetAttribute('expanded') = 'true') then
-            Expanded := true
-        else
-            Expanded := false;
-
-        //Add group checks for duplicates
-        Idx := AddGroup(Groups.ChildTags[i].Data);
-        TGroupInfo(_Groups.Objects[Idx]).Expanded := Expanded;
+        //Add will checks for duplicates
+        Group := AddItemByUID(Groups.ChildTags[i].Data, EI_TYPE_GROUP);
+        Group.AddProperty('Expanded', Groups.ChildTags[i].GetAttribute('expanded'));
     end;
-
-    //Make sure the default group is added to the list
-//    DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-//    if (not Get_GroupExists(DefaultGroup)) then
-//        AddGroup(DefaultGroup);
 
     _GroupsLoaded := true;
     TJabberSession(_JS).FireEvent('/item/end', Group);
@@ -214,15 +196,17 @@ begin
             setAttribute('xmlns', XMLNS_PRIVATE);
             STag := AddTag('storage');
             STag.setAttribute('xmlns', XMLNS_GROUPS);
-            for i := 0 to _Groups.Count - 1 do
+            for i := 0 to Get_ItemsCount - 1 do
             begin
-                Group := TGroupInfo(_Groups.Objects[i]);
-                GTag := TXMLTag.Create('group', Group.Name);
-                if (Group.Expanded) then
-                    Expanded := 'true'
-                else
-                    Expanded := 'false';
-                GTag.setAttribute('expanded', Expanded);
+                if (Get_Item(i).Type_ <> EI_TYPE_GROUP) then continue;
+
+                //Group := TGroupInfo(_Groups.Objects[i]);
+                GTag := TXMLTag.Create('group', Get_Item(i).UID);
+                try
+                   GTag.setAttribute('expanded', Get_Item(i).Value['Expanded']);
+                except
+                   GTag.setAttribute('expanded', 'true');
+                end;
                 STag.AddTag(GTag);
             end;
         end;
@@ -257,15 +241,16 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusItemController.Get_Group(Index: Integer): WideString;
-begin
-    Result := _groups[index];
-end;
-
-{---------------------------------------}
 function TExodusItemController.Get_GroupsCount: Integer;
+var
+    i: Integer;
 begin
-    Result := _Groups.Count;
+    Result := 0;
+    for i := 0 to Get_ItemsCount - 1 do
+    begin
+        if (Get_Item(i).Type_ <> EI_TYPE_GROUP) then continue;
+        Inc(Result);
+    end;
 end;
 
 {---------------------------------------}
@@ -298,36 +283,34 @@ begin
     Result := items;
 end;
 
-{---------------------------------------}
-function TExodusItemController.AddGroup(const Group: WideString): Integer;
+function  TExodusItemController._AddGroup(const GroupUID: WideString): Integer;
 var
-    GroupInfo: TGroupInfo;
     Idx, i: Integer;
+    Group, SubGroup: TExodusItemWrapper;
     Groups: TWideStringList;
+    GroupParent: WideString;
+    InnerGroup: IExodusItem;
 begin
     Result := -1;
-    Idx := _Groups.IndexOf(Group);
-    if (Idx > -1) then
-    begin
-         Result := Idx;
-         exit;
-    end;
-    GroupInfo := TGroupInfo.Create();
-    GroupInfo.Name := Group;
-    GroupInfo.Expanded := true;
-    Result := _Groups.AddObject(Group, GroupInfo);
-    TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Group);
-    Groups := _GroupParser.GetNestedGroups(Group);
+    Idx := _Items.IndexOf(GroupUID);
+    if (Idx <> -1) then exit;
+    //Get nested groups
+    Groups := _GroupParser.GetNestedGroups(GroupUID);
+    //Add nested groups to the item list
     for i := 0 to Groups.Count - 1 do
     begin
         if (Get_GroupExists(Groups[i])) then continue;
-        GroupInfo := TGroupInfo.Create();
-        GroupInfo.Name := Groups[i];
-        GroupInfo.Expanded := true;
-        _Groups.AddObject(Groups[i], GroupInfo);
-        TJabberSession(_JS).FireEvent('/data/item/group/add', nil, Groups[i]);
+        SubGroup := TExodusItemWrapper.Create(Groups[i], EI_TYPE_GROUP);
+        Idx := _Items.AddObject(Groups[i], SubGroup);
+        Get_Item(Idx).Text := _GroupParser.GetGroupName(Get_Item(Idx).UID);
+        GroupParent := _GroupParser.GetGroupParent(Get_Item(Idx).UID);
+        if (GroupParent <> '') then
+            Get_Item(Idx).AddGroup(GroupParent);
+        if (i = Groups.Count - 1) then
+            Result := Idx;
     end;
-    Groups.Free;  
+    Groups.Free;
+    TJabberSession(_JS).FireEvent('/item/add', Get_Item(Result));
     //If adding new groups and groups have
     //been loaded, need to save to the server's
     //private storage.
@@ -349,9 +332,15 @@ begin
     //If new item, create and append to the list
     if (Idx = -1) then
     begin
-       Item := TExodusItemWrapper.Create(Uid, ItemType);
-       Idx := _Items.AddObject(Uid, Item);
+       if (ItemType = EI_TYPE_GROUP) then
+            Idx := _AddGroup(UID)
+       else
+       begin
+           Item := TExodusItemWrapper.Create(Uid, ItemType);
+           Idx := _Items.AddObject(Uid, Item);
+       end;
     end;
+
     //Return interface
     Result := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
 end;
@@ -439,24 +428,6 @@ begin
     Item.RemoveGroup(Group);
 end;
 
-{---------------------------------------}
-procedure TExodusItemController.RemoveGroup(const group: WideString);
-var
-    Idx: Integer;
-    GroupInfo: TGroupInfo;
-begin
-    Idx := _Groups.IndexOf(Group);
-    if (Idx = -1) then exit;
-    GroupInfo := TGroupInfo(_Groups.Objects[Idx]);
-    _Groups.Delete(Idx);
-    GroupInfo.Free;
-    if (_GroupsLoaded) then
-    begin
-        //Since the group is deleted, and groups are loaded,
-        //we need to save groups to the server
-        SaveGroups();
-    end;
-end;
 
 {---------------------------------------}
 function TExodusItemController.GetItem(const UID: WideString): IExodusItem;
@@ -469,18 +440,6 @@ begin
     Result := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
 end;
 
-{---------------------------------------}
-procedure TExodusItemController.ClearGroups;
-var
-    Group: TGroupInfo;
-begin
-    while _Groups.Count > 0 do
-    begin
-        Group :=  TGroupInfo(_Groups.Objects[0]);
-        _Groups.Delete(0);
-        Group.Free();
-    end;
-end;
 
 {---------------------------------------}
 procedure TExodusItemController.ClearItems;
@@ -535,11 +494,13 @@ var
     Groups : Variant;
     i: Integer;
 begin
-    Groups := VarArrayCreate([0,_Groups.Count], varOleStr);
+    Groups := VarArrayCreate([0,Get_GroupsCount], varOleStr);
 
-    for i := 0 to _Groups.Count - 1 do
+    for i := 0 to Get_ItemsCount - 1 do
     begin
-        VarArrayPut(Groups, _Groups[i], i);
+        if (Get_Item(i).Type_ <> EI_TYPE_GROUP) then continue;
+
+        VarArrayPut(Groups, Get_Item(i).UID, i);
     end;
 
     Result := Groups;
@@ -547,48 +508,42 @@ end;
 
 function TExodusItemController.Get_GroupExists(
   const Group: WideString): WordBool;
-var
-    i: Integer;
 begin
     Result := false;
-    for i := 0 to _Groups.Count - 1 do
-    begin
-        if (_Groups[i] = Group) then
-        begin
-            Result := true;
-            exit;
-        end;
-    end;
+    if (_Items.IndexOf(Group) > -1) then
+       Result := true;
 end;
 
 function TExodusItemController.Get_GroupExpanded(
   const Group: WideString): WordBool;
 var
-    i: Integer;
+    Idx: Integer;
 begin
     Result := false;
-    for i := 0 to _Groups.Count - 1 do
-    begin
-        if (_Groups[i] = Group) then
-        begin
-            Result := TGroupInfo(_Groups.Objects[i]).Expanded;
-            exit;
-        end;
+    Idx := _Items.IndexOf(Group);
+    if (Idx = -1) then exit;
+    try
+       if (Get_Item(Idx).value['Expanded'] = 'true') then
+           Result := true;
+    except
+
     end;
 end;
 
 procedure TExodusItemController.Set_GroupExpanded(const Group: WideString;
   Value: WordBool);
 var
-    i: Integer;
+    Idx: Integer;
 begin
-    for i := 0 to _Groups.Count - 1 do
-    begin
-        if (_Groups[i] = Group) then
-        begin
-            TGroupInfo(_Groups.Objects[i]).Expanded := Value;
-            exit;
-        end;
+    Idx := _Items.IndexOf(Group);
+    if (Idx = -1) then exit;
+    try
+       if (Value) then
+           Get_Item(Idx).value['Expanded'] := 'true'
+       else
+           Get_Item(Idx).value['Expanded'] := 'false';
+    except
+
     end;
 end;
 

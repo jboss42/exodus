@@ -256,7 +256,6 @@ uses
   COMExodusItem in '..\jopl\COMExodusItem.pas',
   COMExodusItemController in '..\jopl\COMExodusItemController.pas',
   COMExodusTabWrapper in 'COMExodusTabWrapper.pas',
-  GroupInfo in '..\jopl\GroupInfo.pas',
   ContactController in '..\jopl\ContactController.pas',
   RosterForm in 'RosterForm.pas' {Form3},
   InviteDeclined in 'InviteDeclined.pas' {FrmInviteDeclined: TTntForm},
