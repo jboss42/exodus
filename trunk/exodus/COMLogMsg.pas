@@ -45,6 +45,7 @@ type
     constructor Create(msg: TJabberMessage);
 
   protected
+    // IExodusLogMsg
     function Get_Body: WideString; safecall;
     function Get_Direction: WideString; safecall;
     function Get_FromJid: WideString; safecall;
@@ -56,6 +57,11 @@ type
     function Get_Timestamp: WideString; safecall;
     function Get_ToJid: WideString; safecall;
     function Get_XML: WideString; safecall;
+    procedure FillLogMsg(const ID: WideString; const Timestamp: WideString;
+                         const ToJid: WideString; const FromJid: WideString;
+                         const Nick: WideString; const Direction: WideString;
+                         const MsgType: WideString; const Thread: WideString;
+                         const Subject: WideString; const Body: WideString; const XML: WideString); safecall;
 
   end;
 
@@ -141,6 +147,26 @@ function TExodusLogMsg.Get_XML: WideString;
 begin
     Result := _xml;
 end;
+
+procedure TExodusLogMsg.FillLogMsg(const ID: WideString; const Timestamp: WideString;
+                     const ToJid: WideString; const FromJid: WideString;
+                     const Nick: WideString; const Direction: WideString;
+                     const MsgType: WideString; const Thread: WideString;
+                     const Subject: WideString; const Body: WideString; const XML: WideString);
+begin
+    _body := Body;
+    _dir := Direction;
+    _from := FromJid;
+    _to := ToJid;
+    _id := ID;
+    _type := MsgType;
+    _nick := Nick;
+    _subject := Subject;
+    _thread := Thread;
+    _delay := Timestamp;
+    _xml := XML;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusLogMsg, Class_ExodusLogMsg,

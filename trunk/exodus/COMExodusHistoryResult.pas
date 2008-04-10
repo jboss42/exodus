@@ -290,10 +290,22 @@ begin
         ExodusHistoryResultCallbackMap.FireCallback(Self, nil);
     end
     else begin
-        _parser.ParseString(Item.XML);
-        tag := _parser.popTag();
-        msg := TJabberMessage.Create(tag);
-        tag.Free();
+        if (item.XML <> '') then begin
+            _parser.ParseString(Item.XML);
+            tag := _parser.popTag();
+            msg := TJabberMessage.Create(tag);
+            tag.Free();
+        end
+        else begin
+            msg := TJabberMessage.Create();
+            msg.ToJID := Item.ToJid;
+            msg.FromJID := Item.FromJid;
+            msg.Subject := Item.Subject;
+            msg.Thread := Item.Thread;
+            msg.Body := Item.Body;
+            msg.MsgType := Item.MsgType;
+            msg.ID := item.ID;
+        end;
 
         msg.Nick := Item.Nick;
         msg.Time := JabberToDateTime(Item.Timestamp);
@@ -303,7 +315,6 @@ begin
         else begin
             msg.isMe := false;
         end;
-
 
         // Special hack for internal use of the result object.
         // On an externally created Result object, this should
