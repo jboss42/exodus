@@ -138,13 +138,14 @@ type
       safecall;
     procedure RemoveStringlistValue(const key, value: WideString); safecall;
     function Get_BookmarkManager: IExodusBookmarkManager; safecall;
+    function Get_TabController: IExodusTabController; safecall;
+    function Get_ActionController: IExodusActionController; safecall;
+    function Get_ItemController: IExodusItemController; safecall;
 
     // IExodusController2
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function GetDataStore: IExodusDataStore; safecall;
-    function Get_TabController: IExodusTabController; safecall;
-    function Get_ActionController: IExodusActionController; safecall;
-    function Get_ItemController: IExodusItemController; safecall;
+    function GetHistorySearchManager: IExodusHistorySearchManager; safecall;
 
     { Protected declarations }
   private
@@ -2113,8 +2114,23 @@ function TExodusController.Get_BookmarkManager: IExodusBookmarkManager;
 begin
     //ExCOMBookmarkManager.ObjAddRef();
     //Result := COMBookmarkManager;
-  { TODO : Roster refactor }  
+  { TODO : Roster refactor }
     Result := nil;
+end;
+
+function TExodusController.Get_TabController: IExodusTabController;
+begin
+    Result := GetRosterWindow().TabController;
+end;
+
+function TExodusController.Get_ActionController: IExodusActionController;
+begin
+    Result := GetActionController();
+end;
+
+function TExodusController.Get_ItemController: IExodusItemController;
+begin
+    Result := MainSession.ItemController;
 end;
 
 // IExodusController2
@@ -2137,20 +2153,11 @@ begin
     Result := DataStore;
 end;
 
-function TExodusController.Get_TabController: IExodusTabController;
+function TExodusController.GetHistorySearchManager: IExodusHistorySearchManager;
 begin
-    Result := GetRosterWindow().TabController;
+    Result := HistorySearchManager;
 end;
 
-function TExodusController.Get_ActionController: IExodusActionController;
-begin
-    Result := GetActionController();
-end;
-
-function TExodusController.Get_ItemController: IExodusItemController;
-begin
-    Result := MainSession.ItemController;
-end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

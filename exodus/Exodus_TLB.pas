@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-09 13:39:51 from Type Library described below.
+// File generated on 4/10/2008 7:39:59 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4162,6 +4162,11 @@ type
     function Get_Timestamp: WideString; safecall;
     function Get_Direction: WideString; safecall;
     function Get_XML: WideString; safecall;
+    procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
+                         const ToJid: WideString; const FromJid: WideString; 
+                         const Nick: WideString; const Direction: WideString; 
+                         const MsgType: WideString; const Thread: WideString; 
+                         const Subject: WideString; const Body: WideString; const XML: WideString); safecall;
     property ToJid: WideString read Get_ToJid;
     property FromJid: WideString read Get_FromJid;
     property MsgType: WideString read Get_MsgType;
@@ -4193,6 +4198,11 @@ type
     property Timestamp: WideString readonly dispid 209;
     property Direction: WideString readonly dispid 210;
     property XML: WideString readonly dispid 211;
+    procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
+                         const ToJid: WideString; const FromJid: WideString; 
+                         const Nick: WideString; const Direction: WideString; 
+                         const MsgType: WideString; const Thread: WideString; 
+                         const Subject: WideString; const Body: WideString; const XML: WideString); dispid 212;
   end;
 
 // *********************************************************************//
@@ -4459,6 +4469,7 @@ type
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; safecall;
     function GetDataStore: IExodusDataStore; safecall;
+    function GetHistorySearchManager: IExodusHistorySearchManager; safecall;
   end;
 
 // *********************************************************************//
@@ -4470,6 +4481,7 @@ type
     ['{FDAB329F-09F2-4AEA-8C72-319059E66389}']
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWindow_Title: WideString): IExodusAXWindow; dispid 223;
     function GetDataStore: IExodusDataStore; dispid 201;
+    function GetHistorySearchManager: IExodusHistorySearchManager; dispid 202;
   end;
 
 // *********************************************************************//
@@ -5139,7 +5151,7 @@ type
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                const filter: WideString); safecall;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; safecall;
-    function actionsForType(const itemtype: WideString): IExodusTypedActions; safecall;
+    function actionsForType(const ItemType: WideString): IExodusTypedActions; safecall;
   end;
 
 // *********************************************************************//
@@ -5155,7 +5167,7 @@ type
     procedure addDisableFilter(const ItemType: WideString; const actname: WideString; 
                                const filter: WideString); dispid 203;
     function buildActions(const Items: IExodusItemList): IExodusActionMap; dispid 204;
-    function actionsForType(const itemtype: WideString): IExodusTypedActions; dispid 205;
+    function actionsForType(const ItemType: WideString): IExodusTypedActions; dispid 205;
   end;
 
 // *********************************************************************//
