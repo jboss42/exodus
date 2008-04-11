@@ -1550,7 +1550,8 @@ begin
                             ritem.Free();
                             ritem := TResultListItemHTML(itemList.Objects[0]);
                             ritem.htmlRepresentation := ritem.htmlRepresentation +
-                                                        ritem.msgListProcessor.dateSeperator(newmsg) +
+                                                        ritem.msgListProcessor.dateSeperator(newmsg);
+                            ritem.htmlRepresentation := ritem.htmlRepresentation +
                                                         ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
                         end
                         else begin
@@ -1566,7 +1567,8 @@ begin
                     dateList.AddObject(date, itemList);
                     if (_MsglistType = HTML_MSGLIST) then begin
                         ritem.msgListProcessor := TIEMsgListProcessor.Create();
-                        ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg) +
+                        ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg);
+                        ritem.htmlRepresentation := ritem.htmlRepresentation +
                                                     ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
                     end;
                     itemList.AddObject('', ritem);
@@ -1583,7 +1585,8 @@ begin
             dateList.AddObject(date, itemList);
             if (_MsglistType = HTML_MSGLIST) then begin
                 ritem.msgListProcessor := TIEMsgListProcessor.Create();
-                ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg) +
+                ritem.htmlRepresentation := ritem.msgListProcessor.dateSeperator(newmsg);
+                ritem.htmlRepresentation := ritem.htmlRepresentation +
                                             ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
             end;
             itemList.AddObject('', ritem);

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/10/2008 4:52:59 PM from Type Library described below.
+// File generated on 4/11/2008 9:32:03 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4160,7 +4160,8 @@ type
                          const ToJid: WideString; const FromJid: WideString; 
                          const Nick: WideString; const Direction: WideString; 
                          const MsgType: WideString; const Thread: WideString; 
-                         const Subject: WideString; const Body: WideString; const XML: WideString); safecall;
+                         const Subject: WideString; const Body: WideString; const XML: WideString; 
+                         const RawMsgXML: WideString); safecall;
     function Get_ToJid: WideString; safecall;
     procedure Set_ToJid(const value: WideString); safecall;
     function Get_FromJid: WideString; safecall;
@@ -4183,6 +4184,8 @@ type
     procedure Set_Direction(const value: WideString); safecall;
     function Get_XML: WideString; safecall;
     procedure Set_XML(const value: WideString); safecall;
+    function Get_RawMsgXML: WideString; safecall;
+    procedure Set_RawMsgXML(const Value: WideString); safecall;
     property ToJid: WideString read Get_ToJid write Set_ToJid;
     property FromJid: WideString read Get_FromJid write Set_FromJid;
     property MsgType: WideString read Get_MsgType write Set_MsgType;
@@ -4194,6 +4197,7 @@ type
     property Timestamp: WideString read Get_Timestamp write Set_Timestamp;
     property Direction: WideString read Get_Direction write Set_Direction;
     property XML: WideString read Get_XML write Set_XML;
+    property RawMsgXML: WideString read Get_RawMsgXML write Set_RawMsgXML;
   end;
 
 // *********************************************************************//
@@ -4207,7 +4211,8 @@ type
                          const ToJid: WideString; const FromJid: WideString; 
                          const Nick: WideString; const Direction: WideString; 
                          const MsgType: WideString; const Thread: WideString; 
-                         const Subject: WideString; const Body: WideString; const XML: WideString); dispid 212;
+                         const Subject: WideString; const Body: WideString; const XML: WideString; 
+                         const RawMsgXML: WideString); dispid 212;
     property ToJid: WideString dispid 201;
     property FromJid: WideString dispid 202;
     property MsgType: WideString dispid 203;
@@ -4219,6 +4224,7 @@ type
     property Timestamp: WideString dispid 209;
     property Direction: WideString dispid 210;
     property XML: WideString dispid 211;
+    property RawMsgXML: WideString dispid 213;
   end;
 
 // *********************************************************************//

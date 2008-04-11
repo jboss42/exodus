@@ -290,8 +290,8 @@ begin
         ExodusHistoryResultCallbackMap.FireCallback(Self, nil);
     end
     else begin
-        if (item.XML <> '') then begin
-            _parser.ParseString(Item.XML);
+        if (item.RawMsgXML <> '') then begin
+            _parser.ParseString(Item.RawMsgXML);
             tag := _parser.popTag();
             msg := TJabberMessage.Create(tag);
             tag.Free();

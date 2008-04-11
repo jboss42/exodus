@@ -217,7 +217,7 @@ var
 begin
     if (Node = nil) then exit;
     
-    valid := (IExodusItem(Node.Data).Type_ = EI_TYPE_GROUP);
+    valid := (IExodusItem(Node.Data).Type_ = _itemtype);
     if not valid then begin
         _selectedUID := '';
         txtJID.text := '';
