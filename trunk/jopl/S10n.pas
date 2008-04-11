@@ -73,7 +73,8 @@ uses
     JabberID,
     ContactController,
     DisplayName,
-    PrefController;
+    PrefController,
+    Exodus_TLB;
 
 {---------------------------------------}
 Constructor TSubController.Create;
@@ -148,55 +149,64 @@ begin
     if (not changePending) then begin
         //addnow, destroy ourself
 { TODO : Roster refactor }
-       // MainSession.Roster.AddItem(newjid.jid, dname, MainSession.Prefs.getString('roster_default'), true);
+        MainSession.Roster.Add(newjid.jid, dname, MainSession.Prefs.getString('roster_default'), true);
         Self.Free();
     end;
 end;
 
 {---------------------------------------}
 procedure TSubController.Subscribe(event: string; tag: TXMLTag);
-//var
-//    j: TJabberID;
-//    incoming: integer;
-//    add_to_roster: boolean;
-//    prompt: boolean;
-    //ritem: TJabberRosterItem;
+var
+    j: TJabberID;
+    incoming: integer;
+    add_to_roster: boolean;
+    prompt: boolean;
+    subscr, ask: Widestring;
+    item: IExodusItem;
 begin
  { TODO : Roster refactor }
     // getting a s10n request
-//    j := TJabberID.Create(tag.GetAttribute('from'));
-//
+    j := TJabberID.Create(tag.GetAttribute('from'));
+
 //    // deal w/ transports
-//    if (_transports.IndexOf(j.jid) >= 0) then
-//        SendSubscribed(j.full, MainSession)
+    if (_transports.IndexOf(j.jid) >= 0) then
+        SendSubscribed(j.full, MainSession)
+
+    // deal w/ normal subscription requests
+    else begin
+        with MainSession do begin
+
+        end;
+        incoming := MainSession.Prefs.getInt(PrefController.P_SUB_AUTO);
+        add_to_roster := MainSession.Prefs.getBool(PrefController.P_SUB_AUTO_ADD);
+
+        item := MainSession.ItemController.GetItem(j.jid);
+        prompt := false; // auto-accept all
+        if (incoming = PrefController.s10n_ask) then // auto-accept from none
+            prompt := true
+        else if (incoming = PrefController.s10n_auto_roster) then begin // auto-accept from roster
+            if (item = nil) then
+                prompt := true
+            else begin
+                subscr := item.value['Subscription'];
+
+                if (subscr <> 'to') and (subscr <> 'both') then
+                  prompt := true;
+            end;
+        end
+        else if (incoming = s10n_auto_deny_all) then begin // auto-deny all
+            SendUnsubscribed(j.jid, MainSession);
+            exit;
+        end;
 //
-//    // deal w/ normal subscription requests
-//    else begin
-//        incoming := MainSession.Prefs.getInt(PrefController.P_SUB_AUTO);
-//        add_to_roster := MainSession.Prefs.getBool(PrefController.P_SUB_AUTO_ADD);
-//
-//        ritem := MainSession.roster.Find(j.jid);
-//
-//        prompt := false; // auto-accept all
-//        if (incoming = PrefController.s10n_ask) then // auto-accept from none
-//            prompt := true
-//        else if (incoming = PrefController.s10n_auto_roster) then begin // auto-accept from roster
-//            if (ritem = nil) then
-//                prompt := true
-//            else begin
-//                if ((ritem.subscription <> 'to') and
-//                    (ritem.subscription <> 'both')) then
-//                    prompt := true;
-//            end;
-//        end
-//        else if (incoming = s10n_auto_deny_all) then begin // auto-deny all
-//            SendUnsubscribed(j.jid, MainSession);
-//            exit;
-//        end;
-//
-//        if (prompt) then
-//            MainSession.FireEvent('/session/gui/subscribe', tag)
-//        else begin
+        if (prompt) then
+            MainSession.FireEvent('/session/gui/subscribe', tag)
+        else begin
+            if (item <> nil) then begin
+                subscr := item.value['Subscription'];
+                ask := item.value['Ask'];
+            end;
+
 //            if ((ritem = nil) or (ritem.subscription = 'none') or
 //                (ritem.subscription = '')) then begin
 //
@@ -206,11 +216,13 @@ begin
 //                if (((ritem = nil) or (ritem.ask <> 'subscribe')) and add_to_roster) then
 //                    TAutoAddHandler.Create().addToRoster(j);
 //            end;
-//             // we are in auto-approve mode, so approve it
-//            SendSubscribed(j.jid, MainSession);
-//        end;
-//    end;
-//    j.Free;
+            if ((subscr = '') or (ask <> 'subscribe') and add_to_roster) then
+                TAutoAddHandler.Create().addToRoster(j);
+            SendSubscribed(j.jid, MainSession);
+
+        end;
+    end;
+    j.Free;
 end;
 
 {---------------------------------------}

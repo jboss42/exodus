@@ -415,6 +415,7 @@ type
     procedure mnuContacts_ViewHistoryClick(Sender: TObject);
     procedure popCreatePopup(Sender: TObject);
     procedure clickCreatePopupItem(Sender: TObject);
+    procedure PeopleClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -827,7 +828,7 @@ uses
     StateForm,
     RosterImages, ToolbarImages,
     ExodusImageList,
-    COMToolbar, COMToolbarButton, COMToolbarControl,
+    COMToolbar, COMToolbarButton, COMToolbarControl, COMExodusItemList,
     NewUser, CommandWizard, Notify,
     About, AutoUpdate, AutoUpdateStatus, Browser, Chat,
     ChatController,
@@ -4579,6 +4580,34 @@ begin
     mnuOptions_Notifications_NewConversation.Checked := (MainSession.Prefs.getInt('notify_newchat') > 0);
 end;
 
+
+procedure TfrmExodus.PeopleClick(Sender: TObject);
+var
+    tabCtrl: IExodusTabController;
+    tab: IExodusTab;
+    actCtrl: IExodusActionController;
+    actMap: IExodusActionMap;
+    typedActs: IExodusTypedActions;
+    act: IExodusAction;
+    items: IExodusItemList;
+    idx: Integer;
+begin
+  inherited;
+
+  tabCtrl := GetRosterWindow().TabController;
+  if (tabCtrl.ActiveTab = -1) then
+    items := TExodusItemList.Create()
+  else begin
+    tab := tabCtrl.Tab[tabCtrl.ActiveTab];
+    items := tab.GetSelectedItems();
+  end;
+
+  actMap := GetActionController().buildActions(items);
+
+  //Enable/Disable contact menus...
+  //Enable/Disable room menus...
+  //Enable/Disable group menus...
+end;
 
 procedure TfrmExodus.popChangeView(Sender: TObject);
 begin
