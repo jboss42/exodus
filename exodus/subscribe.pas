@@ -26,6 +26,7 @@ uses
     XMLTag, JabberID,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls, TntMenus, TntForms,
+    Exodus_TLB,
   ExFrame;
 
 type
@@ -70,6 +71,7 @@ type
     showhandler: TObject;
     { TODO : Roster refactor }
     //procedure setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
+    procedure setup(jid: TJabberID; item: IExodusItem; tag: TXMLTag);
     procedure EnableAdd(e: boolean);
   end;
 
@@ -162,86 +164,85 @@ begin
 end;
 
 {---------------------------------------}
-//procedure TfrmSubscribe.setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
-//var
-//    c: TXMLTag;
-//    dgrp, id, capid: Widestring;
-//    e: TJabberEntity;
-//    idx: integer;
-//    skipImage: boolean;
-//    showNow: boolean; //show immediately, goit dispname from roster
-//begin
+procedure TfrmSubscribe.setup(jid: TJabberID; item: IExodusItem; tag: TXMLTag);
+var
+    c: TXMLTag;
+    dgrp, id, capid: Widestring;
+    e: TJabberEntity;
+    idx: integer;
+    skipImage: boolean;
+    showNow: boolean; //show immediately, goit dispname from roster
+begin
 //    { TODO : Roster refactor }
-//    showNow := false;
-//    _jid := TJabberID.Create(jid);
-//    lblJID.Caption := _jid.getDisplayFull;
+    showNow := false;
+    _jid := TJabberID.Create(jid);
+    lblJID.Caption := _jid.getDisplayFull;
 //
-//    chkSubscribe.Checked := true;
-//    chkSubscribe.Enabled := true;
+    chkSubscribe.Checked := true;
+    chkSubscribe.Enabled := true;
 //
-//    if (ri <> nil) then begin
-//        if ((ri.Subscription = 'to') or (ri.Subscription = 'both')) then begin
-//            chkSubscribe.Checked := false;
-//            chkSubscribe.Enabled := false;
-//        end;
-//    end;
+    if (item <> nil) then begin
+        if ((item.value['Subscription'] = 'to') or (item.value['Subscription'] = 'both')) then begin
+            chkSubscribe.Checked := false;
+            chkSubscribe.Enabled := false;
+        end;
+    end;
 //
-//    EnableAdd(chkSubscribe.Enabled);
+    EnableAdd(chkSubscribe.Enabled);
 //
-//    if (chkSubscribe.Enabled) then begin
+    if (chkSubscribe.Enabled) then begin
 //        MainSession.Roster.AssignGroups(cboGroup.Items);
-//        dgrp := MainSession.Prefs.getString('roster_default');
-//        cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
-//        if (ri <> nil) then begin
-//            txtNickName.Text := ri.Text;
-////            showNow := true;
-//            if (ri.GroupCount > 0) then
-//                cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
-//        end;
-//    end;
+        dgrp := MainSession.Prefs.getString('roster_default');
+        //cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
+        if (item <> nil) then begin
+            txtNickName.Text := item.Text;
+//            showNow := true;
+//            if (item.GroupCount > 0) then
+//                cboGroup.itemIndex := cboGroup.Items.indexof(item.Group[0]);
+        end;
+    end;
 //
-//    idx := -1;
-//    skipImage := false;
-//    c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
-//    if (c <> nil) then begin
-//        capid := c.GetAttribute('node') + '#' + c.getAttribute('ver');
-//        e := jCapsCache.find(capid);
-//        if (e <> nil) then begin
-//
-//            // make sure we're not waiting for caps
-//            if (not e.hasInfo) then begin
-//                // bail out early so we leave the image empty
-//                _capsid := capid;
-//                _capscb := MainSession.RegisterCallback(CapsCallback, '/session/caps');
-//                skipImage := true;
-//            end
-//            else if (e.IdentityCount > 0) then begin
-//                // use the first identity we find, and get the image
-//                id := e.Identities[0].Name;
-//                idx := RosterTreeImages.Find('identity#' + id);
-//            end;
-//        end;
-//    end;
-//
-//    if (not skipImage) then begin
-//        if (idx = -1) then
-//            idx := RosterTreeImages.Find('available');
-//
-//        if (idx >= 0) then
-//            RosterTreeImages.GetImage(idx, imgIdent);
-//    end;
-//
-//    if (showNow) then begin
-//        ShowDefault(false);
-//        DoNotify(Self, 'notify_s10n',
-//                 'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
-//    end
-//    else begin
-//        showHandler := TShowHandler.Create();
-//        TShowHandler(showHandler).getDispNameAndShow(Self, jid);
-//        ShowDefault(true);
-//    end;
-//end;
+    idx := -1;
+    skipImage := false;
+    c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
+    if (c <> nil) then begin
+        capid := c.GetAttribute('node') + '#' + c.getAttribute('ver');
+        e := jCapsCache.find(capid);
+        if (e <> nil) then begin
+            // make sure we're not waiting for caps
+            if (not e.hasInfo) then begin
+                // bail out early so we leave the image empty
+                _capsid := capid;
+                _capscb := MainSession.RegisterCallback(CapsCallback, '/session/caps');
+                skipImage := true;
+            end
+            else if (e.IdentityCount > 0) then begin
+                // use the first identity we find, and get the image
+                id := e.Identities[0].Name;
+                idx := RosterTreeImages.Find('identity#' + id);
+            end;
+        end;
+    end;
+
+    if (not skipImage) then begin
+        if (idx = -1) then
+            idx := RosterTreeImages.Find('available');
+
+        if (idx >= 0) then
+            RosterTreeImages.GetImage(idx, imgIdent);
+    end;
+
+    if (showNow) then begin
+        ShowDefault(false);
+        DoNotify(Self, 'notify_s10n',
+                 'Subscription from ' + txtNickName.Text, RosterTreeImages.Find('key'));
+    end
+    else begin
+        showHandler := TShowHandler.Create();
+        TShowHandler(showHandler).getDispNameAndShow(Self, jid);
+        ShowDefault(true);
+    end;
+end;
 
 {---------------------------------------}
 procedure TfrmSubscribe.CapsCallback(event: string; tag: TXMLTag);
@@ -293,7 +294,8 @@ begin
 
     // do an iq-set
 { TODO : Roster refactor }    
-//    if chkSubscribe.Checked then
+    if chkSubscribe.Checked then
+        MainSession.Roster.Add(sjid, snick, sgrp, true);
 //        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
     Self.Close;
 end;

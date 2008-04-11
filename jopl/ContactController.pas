@@ -90,7 +90,7 @@ constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
-    _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
+    _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
     _RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
     _PresCB := TJabberSession(_JS).RegisterCallback(_PresCallback);
     _HideBlocked := false;
@@ -289,7 +289,49 @@ end;
 
 {---------------------------------------}
 procedure TContactController._IQCallback(Event: String; Tag: TXMLTag);
+var
+    query: TXMLTag;
+    riTag: TXMLTag;
+    riList: TXMLTagList;
+    idx: Integer;
+    uid, subscr: Widestring;
+    item: IExodusItem;
+    itemCtrl: IExodusItemController;
+    session: TJabberSession;
 begin
+    if (Tag <> nil) then
+        query := Tag.GetFirstTag('query')
+    else
+        query := nil;
+
+    if (query <> nil) then
+        riList := query.ChildTags
+    else
+        riList := TXMLTagList.Create();
+
+    session := TJabberSession(_JS);
+    itemCtrl := session.ItemController;
+    for idx := 0 to riList.Count - 1 do begin
+        riTag := riList[idx];
+        uid := riTag.GetAttribute('jid');
+        subscr := riTag.GetAttribute('subscription');
+        item := itemCtrl.GetItem(uid);
+
+        if (subscr = 'remove') and (item <> nil) then begin
+            //removing...make sure it disappears
+            itemCtrl.RemoveItem(uid);
+            session.FireEvent('/item/remove', item);
+            SendUnSubscribe(uid, session);
+        end
+        else if (item <> nil) then begin
+            //some sort of update
+            _ParseContact(item, riTag);
+            if item.IsVisible then
+                session.FireEvent('/item/add', item)
+            else
+                session.FireEvent('/item/remove', item);
+        end;
+    end;
 end;
 
 {---------------------------------------}

@@ -49,7 +49,7 @@ uses
     Dialogs, GnuGetText, AutoUpdateStatus, Controls,
     InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, JabberID, Session, JabberMsg, windows, EventQueue, DisplayName,
-    ChatController, Presence;
+    ChatController, Presence, Exodus_TLB;
 
 const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
@@ -88,9 +88,10 @@ var
     sjid: Widestring;
     tmp_jid: TJabberID;
     chat: TfrmChat;
-//    sub: TfrmSubscribe;
+    sub: TfrmSubscribe;
  //   ri: TJabberRosterItem;
  //   ir: TfrmInvalidRoster;
+    item: IExodusItem;
     e: TJabberEvent;
     msg: TJabberMessage;
     c: TChatController;
@@ -279,12 +280,12 @@ begin
         tmp_jid := TJabberID.Create(sjid);
         sjid := tmp_jid.getDisplayJID();
 { TODO : Roster refactor }
-//        ri := MainSession.Roster.Find(sjid);
-//
-//        if (ri <> nil) then begin
-//            if ((ri.subscription = 'from') or (ri.subscription = 'both')) then
-//                exit;
-//        end;
+
+        item := MainSession.ItemController.GetItem(sjid);
+        if (item <> nil) then begin
+            if ((item.value['Subscription'] = 'from') or (item.value['Subscription'] = 'both')) then
+                exit;
+        end;
 
         // block list?
         // Don't use MainSession.IsBlocked since it also
@@ -297,13 +298,12 @@ begin
             p.PresType := 'unsubscribed';
 
             MainSession.SendTag(p);
-        end;
-//
-//        else begin
-//            sub := TfrmSubscribe.Create(Application);
+        end
+        else begin
+            sub := TfrmSubscribe.Create(Application);
 { TODO : Roster refactor }
-            //sub.setup(tmp_jid, ri, tag);
-//        end;
+            sub.setup(tmp_jid, item, tag);
+        end;
         tmp_jid.Free();
     end;
 end;
