@@ -65,6 +65,8 @@ type
         isMe: boolean;
         time: TDateTime;
         nick: widestring;
+        havePartialDayResults: boolean;
+        jid: widestring;
 
         msg: TJabberMessage; // Else store the tag
 
@@ -180,6 +182,8 @@ type
     _simpleJID: widestring;
     _contactsJIDLimit: THistorySearchJIDLimit;
     _roomsJIDLimit: THistorySearchJIDLimit;
+    _PartialSearchList: TWidestringList;
+    _PartialSearchListItem: TTntListItem;
 
     // Methods
     function _getMsgList(): TfBaseMsgList;
@@ -208,6 +212,7 @@ type
 
     // Methods
     procedure ResultCallback(msg: TJabberMessage);
+    procedure PartialResultCallback(msg: TJabberMessage);
     procedure AddJIDBasicSearch(const jid: widestring; const isroom: boolean);
     procedure AddContact(const jid: widestring);
     procedure AddRoom(const room: widestring);
@@ -1010,23 +1015,75 @@ begin
     itemlist := _FindResultStringList(listItem);
     if (itemlist <> nil) then begin
         // We have a match.
-        // So, run through list adding all dates to display box
-        if (_MsglistType = HTML_MSGLIST) then begin
-            ritemhtml := TResultListItemHTML(itemList.Objects[0]);
-            html := ritemhtml.htmlRepresentation;
-            TfIEMsgList(_MsgList).writeHTML(html);
+
+        if (TResultListItem(itemList.Objects[0]).havePartialDayResults) then begin
+            // We only have partial list, so do a search on date and jid to get
+            // full day of history.
+            ritem := TResultListItem(itemList.Objects[0]);
+
+            _SearchObj := TExodusHistorySearch.Create();
+            _SearchObj.ObjAddRef();
+            _ResultObj := TExodusHistoryResult.Create();
+            _ResultObj.ObjAddRef();
+
+            _SearchObj.AddAllowedSearchType(SQLSEARCH_CHAT);
+            _SearchObj.AddAllowedSearchType(SQLSEARCH_ROOM);
+            _SearchObj.AddJid(ritem.jid);
+            _SearchObj.Set_minDate(Trunc(ritem.time));
+            _SearchObj.Set_maxDate(IncDay(Trunc(ritem.time), 1));
+
+            // Set Callback
+            ExodusHistoryResultCallbackMap.AddCallback(Self.PartialResultCallback, _ResultObj, false);
+
+            // Change to "searching GUI"
+            _DoingSearch := true;
+            _SearchingGUI(true);
+
+            // Clearout current list for betterlist
+            _PartialSearchList := itemList;
+            _PartialSearchListItem := ritem.listitem;
+            for l := 0 to itemList.Count - 1 do begin
+                if (_MsglistType = HTML_MSGLIST) then begin
+                    ritemhtml := TResultListItemHTML(itemList.Objects[l]);
+                    ritemhtml.msg.Free();
+                    ritemhtml.msgListProcessor.Free();
+                    ritemhtml.Free();
+                end
+                else begin
+                    ritem := TResultListItem(itemList.Objects[l]);
+                    ritem.msg.Free();
+                    ritem.Free();
+                end;
+                itemList.Delete(l);
+            end;
+
+            // Submit search
+            HistorySearchManager.NewSearch(_SearchObj, _ResultObj);
         end
         else begin
-            for l := 0 to itemList.Count - 1 do begin
-                ritem := TResultListItem(itemList.Objects[l]);
-                msg := _GetTJabberMessage(ritem);
-                if (msg <> nil) then begin
-                    _MsgList.DisplayMsg(msg);
-                    msg.Free();
+            // We have full list for this item so,
+            // run through list adding all dates to display box
+            if (_MsglistType = HTML_MSGLIST) then begin
+                ritemhtml := TResultListItemHTML(itemList.Objects[0]);
+                html := ritemhtml.htmlRepresentation;
+                TfIEMsgList(_MsgList).writeHTML(html);
+            end
+            else begin
+                for l := 0 to itemList.Count - 1 do begin
+                    ritem := TResultListItem(itemList.Objects[l]);
+                    msg := _GetTJabberMessage(ritem);
+                    if (msg <> nil) then begin
+                        _MsgList.DisplayMsg(msg);
+                        msg.Free();
+                    end;
                 end;
             end;
+
+            // Make sure that result list has focus
+            lstResults.SetFocus();
         end;
     end;
+
 end;
 
 {---------------------------------------}
@@ -1562,6 +1619,14 @@ begin
 
                 if (not datefound) then begin
                     // need to add date and msg
+                    if (_SearchObj.Get_KeywordCount() > 0) then begin
+                        // If we have a keyword count, then we will only get partial results
+                        ritem.havePartialDayResults := true;
+                    end
+                    else begin
+                        ritem.havePartialDayResults := false;
+                    end;
+                    ritem.jid := jid.jid;
                     ritem.listitem := CreateNewListItem(newmsg);
                     itemList := TWidestringList.Create();
                     dateList.AddObject(date, itemList);
@@ -1578,7 +1643,14 @@ begin
 
         if (not jidfound) then begin
             // Nothing found so create it all
-            ritem.listitem := CreateNewListItem(newmsg);
+            if (_SearchObj.Get_KeywordCount() > 0) then begin
+                // If we have a keyword count, then we will only get partial results
+                ritem.havePartialDayResults := true;
+            end
+            else begin
+                ritem.havePartialDayResults := false;
+            end;
+            ritem.jid := jid.jid;
             dateList := TWidestringList.Create();
             itemList := TWidestringList.Create();
             _ResultList.AddObject(jid.jid, dateList);
@@ -1591,6 +1663,116 @@ begin
             end;
             itemList.AddObject('', ritem);
         end;
+
+        if (ritem.msg = nil) then begin
+           newmsg.Free();
+        end;
+
+        jid.Free();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmHistorySearch.PartialResultCallback(msg: TJabberMessage);
+    function StripString(const str: widestring): widestring;
+    begin
+        Result := Tnt_WideStringReplace(str, ''#13, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#10, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#9, ' ',[rfReplaceAll, rfIgnoreCase]);
+        Result := Tnt_WideStringReplace(Result, ''#11, ' ',[rfReplaceAll, rfIgnoreCase]);
+    end;
+var
+    newmsg: TJabberMessage;
+    ritem: TResultListItemHTML;
+    root_ritem: TResultListItemHTML;
+    jid: TJabberID;
+    date: widestring;
+begin
+    if (msg = nil) then begin
+        // End of results - remove from Result callback map
+        ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
+
+        // Change GUI to "done searching"
+        _DoingSearch := false;
+        _SearchingGUI(false);
+
+        _SearchObj.Free();
+        _SearchObj := nil;
+        _ResultObj.Free();
+        _ResultObj := nil;
+
+        // Display the history
+        _DisplayHistory();
+    end
+    else begin
+        // Got another result so check to see if we should display it.
+        newmsg := TJabberMessage.Create(msg);
+
+        // Override the TJabberMessage timestamp
+        // as it puts a Now() timestamp on when it
+        // doesn't find the MSGDELAY tag.  As we
+        // are pulling the original XML, it probably
+        // didn't have this tag when we stored it.
+        newmsg.Time := msg.Time;
+
+        ritem := TResultListItemHTML.Create();
+        ritem.msgListProcessor := nil;
+        if (newmsg.Tag = nil) then begin
+            ritem.msg := newmsg;
+            ritem.msgXML := '';
+            ritem.isMe := false;
+            ritem.time := 0;
+            ritem.nick := '';
+        end
+        else begin
+            // Store details of the TJabberMessage Object instead of the actual object
+            // if we can as it uses far less memory.
+            ritem.msg := nil;
+            ritem.msgXML := newmsg.Tag.XML;
+            ritem.isMe := newmsg.isMe;
+            ritem.time := newmsg.Time;
+            ritem.nick := newmsg.Nick;
+        end;
+
+        ritem.listitem := nil;
+
+        if (newmsg.isMe) then begin
+            jid := TJabberID.Create(newmsg.ToJid);
+        end
+        else begin
+            jid := TJabberID.Create(newmsg.FromJID);
+        end;
+        date := IntToStr(Trunc(newmsg.Time));
+
+        ritem.havePartialDayResults := false;
+        if (_PartialSearchList.Count = 0) then begin
+            ritem.listitem := _PartialSearchListItem;
+            if (_MsglistType = HTML_MSGLIST) then begin
+                ritem.msgListProcessor := TIEMsgListProcessor.Create();
+                ritem.htmlRepresentation := '';
+                root_ritem := ritem;
+            end
+            else begin
+                root_ritem := nil;
+            end;
+        end
+        else begin
+            if (_MsglistType = HTML_MSGLIST) then begin
+                root_ritem := TResultListItemHTML(_PartialSearchList.Objects[0])
+            end
+            else begin
+                root_ritem := nil;
+            end;
+        end;
+
+        if (_MsglistType = HTML_MSGLIST) then begin
+            root_ritem.htmlRepresentation := root_ritem.htmlRepresentation +
+                                             root_ritem.msgListProcessor.dateSeperator(newmsg);
+            root_ritem.htmlRepresentation := root_ritem.htmlRepresentation +
+                                             root_ritem.msgListProcessor.ProcessDisplayMsg(newmsg);
+        end;
+        ritem.jid := jid.jid;
+        _PartialSearchList.AddObject('', ritem);
 
         if (ritem.msg = nil) then begin
            newmsg.Free();
