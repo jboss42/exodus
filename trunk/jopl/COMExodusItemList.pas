@@ -57,6 +57,7 @@ constructor TExodusItemList.Create;
 begin
     inherited Create;
 
+    _GetItems();    //pre-load if we're in Exodus codebase
 end;
 
 destructor TExodusItemList.Destroy;

@@ -59,10 +59,6 @@ inherited frmExodus: TfrmExodus
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -955,6 +951,7 @@ inherited frmExodus: TfrmExodus
         end
         object mnuPeople_Contacts_SendMessage: TTntMenuItem
           Caption = 'Send &Message...'
+          Visible = False
           OnClick = mnuMessageClick
         end
         object mnuPeople_Contacts_ViewHistory: TTntMenuItem
