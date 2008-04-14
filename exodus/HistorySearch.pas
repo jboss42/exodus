@@ -1042,7 +1042,7 @@ begin
             // Clearout current list for betterlist
             _PartialSearchList := itemList;
             _PartialSearchListItem := ritem.listitem;
-            for l := 0 to itemList.Count - 1 do begin
+            for l := itemList.Count - 1 downto 0 do begin
                 if (_MsglistType = HTML_MSGLIST) then begin
                     ritemhtml := TResultListItemHTML(itemList.Objects[l]);
                     ritemhtml.msg.Free();
@@ -1651,6 +1651,7 @@ begin
                 ritem.havePartialDayResults := false;
             end;
             ritem.jid := jid.jid;
+            ritem.listitem := CreateNewListItem(newmsg);
             dateList := TWidestringList.Create();
             itemList := TWidestringList.Create();
             _ResultList.AddObject(jid.jid, dateList);
