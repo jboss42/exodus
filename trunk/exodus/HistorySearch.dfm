@@ -10,8 +10,8 @@ inherited frmHistorySearch: TfrmHistorySearch
   OnMouseEnter = FormMouseEnter
   OnMouseLeave = FormMouseLeave
   OnResize = FormResize
-  ExplicitWidth = 726
-  ExplicitHeight = 460
+  ExplicitWidth = 734
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object pnlSearchBar: TTntPanel
@@ -23,7 +23,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 720
     object pnlBasicSearchBar: TTntPanel
       Left = 0
       Top = 0
@@ -33,7 +32,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
-      ExplicitWidth = 720
       object pnlBasicSearchHistoryFor: TTntPanel
         Left = 0
         Top = 0
@@ -74,7 +72,6 @@ inherited frmHistorySearch: TfrmHistorySearch
         ParentBackground = False
         ParentColor = True
         TabOrder = 0
-        ExplicitLeft = 470
         DesignSize = (
           250
           150)
@@ -105,7 +102,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       ParentColor = True
       TabOrder = 1
       Visible = False
-      ExplicitWidth = 720
       object grpDate: TTntGroupBox
         Left = 8
         Top = 9
@@ -307,8 +303,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
-    ExplicitWidth = 720
-    ExplicitHeight = 243
     object Splitter1: TSplitter
       Left = 0
       Top = 89
@@ -328,7 +322,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 720
       object lstResults: TTntListView
         Left = 0
         Top = 0
@@ -361,7 +354,6 @@ inherited frmHistorySearch: TfrmHistorySearch
         OnColumnClick = lstResultsColumnClick
         OnCompare = lstResultsCompare
         OnCustomDrawItem = lstResultsCustomDrawItem
-        ExplicitWidth = 720
       end
     end
     object pnlResultsHistory: TTntPanel
@@ -372,8 +364,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 720
-      ExplicitHeight = 151
     end
   end
   object pnlControlBar: TTntPanel
@@ -385,7 +375,6 @@ inherited frmHistorySearch: TfrmHistorySearch
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
-    ExplicitWidth = 720
     DesignSize = (
       718
       35)
@@ -409,7 +398,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Caption = 'Search'
       TabOrder = 0
       OnClick = btnSearchClick
-      ExplicitLeft = 639
     end
     object btnAdvBasicSwitch: TTntButton
       Left = 563
@@ -420,7 +408,6 @@ inherited frmHistorySearch: TfrmHistorySearch
       Caption = 'Advanced'
       TabOrder = 1
       OnClick = btnAdvBasicSwitchClick
-      ExplicitLeft = 565
     end
     object btnPrint: TTntButton
       Left = 8
