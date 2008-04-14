@@ -205,25 +205,25 @@ function TExodusTab.GetSelectedItems: IExodusItemList;
 var
    Selection: IExodusItemSelection;
 begin
+   Result := nil;
+
    if (VarIsEmpty(Get_AXControl())) then
    begin
-     Result := TExodusItemList.Create();
-     //GetRosterWindow().GetTreeByTabIndex(Get_PageIndex())
+      Result := GetRosterWindow().SelectionFor(Get_PageIndex);
    end
    else
    begin
      try
         Selection := IUnknown(Get_AXControl()) as  IExodusItemSelection;
+        Result := Selection.GetSelectedItems();
      except
          on EIntfCastError do begin
-             Selection := nil
+            //TODO:  loggit??
          end;
      end;
-     if (Selection <> nil) then
-         Result := Selection.GetSelectedItems();
    end;
 
-
+   if (Result = nil) then Result := TExodusItemList.Create();
 end;
 
 initialization

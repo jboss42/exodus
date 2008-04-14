@@ -40,8 +40,7 @@ type
       procedure RosterCallback(event: string; item: IExodusItem);
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
-      function  GetSelectedItems(Index: Integer): TWideStringList;
-      function  GetSelectedGroups(Index: Integer): TWideStringList;
+      function  SelectionFor(Index: Integer): IExodusItemList;
       property  RosterTree: TExTreeView read _TreeMain;
       property  ContactsTree: TExContactsTreeView read _TreeContacts;
       property  RoomsTree: TExRoomsTreeView read _TreeRooms;
@@ -58,7 +57,8 @@ var
   FrmRoster: TRosterForm;
 
 implementation
-uses ExUtils, CommCtrl, Session, RosterImages, gnugettext;
+uses ExUtils, CommCtrl, COMExodusItemList, Session, RosterImages,
+        gnugettext;
 
 {$R *.dfm}
 
@@ -320,40 +320,19 @@ begin
 end;
 
 {---------------------------------------}
-function  TRosterForm.GetSelectedItems(Index: Integer): TWideStringList;
+function TRosterForm.SelectionFor(Index: Integer): IExodusItemList;
 var
     Tree: TTntTreeView;
     Node: TTntTreeNode;
     Item: IExodusItem;
     i: Integer;
 begin
-    Result := TWideStringList.Create();
     Tree := _GetTreeByTabIndex(Index);
     if (Tree = nil) then exit;
-    
-    for i := 0 to Tree.SelectionCount - 1 do
-    begin
-        if (Tree.Selections[i].Data <> nil) then
-            Result.Add(IExodusItem(Tree.Selections[i].Data).UID);
-    end;
-end;
-
-{---------------------------------------}
-function  TRosterForm.GetSelectedGroups(Index: Integer): TWideStringList;
-var
-    Tree: TTntTreeView;
-    Node: TTntTreeNode;
-    i: Integer;
-begin
-    Result := TWideStringList.Create();
-    Tree := _GetTreeByTabIndex(Index);
-    if (Tree = nil) then exit;
-    
-    for i := 0 to Tree.SelectionCount - 1 do
-    begin
-        if (Tree.Selections[i].Data = nil) then
-            Result.Add(Tree.Selections[i].Text);
-    end;
+    if (Tree is TExTreeView) then
+        Result := TExTreeView(Tree).GetSelectedItems()
+    else
+        Result := TExodusItemList.Create() as IExodusItemList;
 end;
 
 end.
