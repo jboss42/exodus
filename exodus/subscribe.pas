@@ -295,7 +295,7 @@ begin
     // do an iq-set
 { TODO : Roster refactor }    
     if chkSubscribe.Checked then
-        MainSession.Roster.Add(sjid, snick, sgrp, true);
+        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
 //        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
     Self.Close;
 end;
