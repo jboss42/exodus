@@ -673,8 +673,17 @@ begin
             end;
 
             for i := 0 to txtKeywords.Lines.Count - 1 do begin
+                // Don't allow all whitespace keywords.
                 if (Trim(txtKeywords.Lines[i]) <> '') then begin
-                    _SearchObj.AddKeyword(Trim(txtkeywords.Lines[i]));
+                    if (chkExact.Checked) then begin
+                        // We are doing an "Exact match" so keep case and
+                        // white space.
+                        _SearchObj.AddKeyword(txtkeywords.Lines[i]);
+                    end
+                    else begin
+                        // Not an exact match so trim it and Lowercase the input.
+                        _SearchObj.AddKeyword(LowerCase(Trim(txtkeywords.Lines[i])));
+                    end;
                 end;
             end;
 
@@ -718,7 +727,8 @@ begin
             end;
 
             if (Trim(txtBasicKeywordSearch.Text) <> '') then begin
-                _SearchObj.AddKeyword(Trim(txtBasicKeywordSearch.Text));
+                // Simple search keywords are never "exact match"
+                _SearchObj.AddKeyword(LowerCase(Trim(txtBasicKeywordSearch.Text)));
             end;
         end;
 
