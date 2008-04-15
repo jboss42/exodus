@@ -140,16 +140,18 @@ var
 begin
     jid := TJabberID.Create(newJID);//save jid for later dispname change event
     //newJID may already be in roster. Force a displayname lookup if needed
-//    if (Self.ProfileEnabled) then
-//        dName := Self.getProfileDisplayName(newJID, changePending)
-//    else
+    if (Self.ProfileEnabled) then
+        dName := Self.getProfileDisplayName(newJID, changePending)
+    else
 //TODO : DN add a mechanism to DN to force a profile DN lookup, regardless of roster name
         dname := getDisplayName(newJID.jid, changePending);
 
     if (not changePending) then begin
         //addnow, destroy ourself
-{ TODO : Roster refactor }
-        MainSession.Roster.Add(newjid.jid, dname, MainSession.Prefs.getString('roster_default'), true);
+        MainSession.Roster.AddItem(
+                newjid.jid, dname,
+                MainSession.Prefs.getString('roster_default'),
+                true);
         Self.Free();
     end;
 end;
@@ -245,46 +247,57 @@ end;
 procedure TSubController.UnSubscribe(event: string; tag: TXMLTag);
 begin
     // someone is removing us
+    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "unsubscribe",
+    the user SHOULD acknowledge receipt of that subscription state notification
+    through either "affirming" it by sending a presence stanza of type
+    "unsubscribed" to the contact or "denying" it by sending a presence stanza
+    of type "subscribed" to the contact; this step does not necessarily
+    affect the subscription state, but instead lets the user's server
+    know that it MUST no longer send notification of the subscription
+    state change to the user }
+
+    //TODO:  alert user??
+    SendUnSubscribed(tag.getAttribute('from'), MainSession);
 end;
 
 {---------------------------------------}
 procedure TSubController.UnSubscribed(event: string; tag: TXMLTag);
-//var
-//    from: TJabberID;
+var
+    from: TJabberID;
+    item: IExodusItem;
 //    ritem: TJabberRosterItem;
-//    tstr: WideString;
+    tstr: WideString;
 begin
- { TODO : Roster refactor }
-//    { Todo:  Move this UI code out of jopl.  Perhaps throw a
-//             /session/gui/unsubscribed event and do it in GUIFactory? }
-//
-//    // getting a s10n denial or someone is revoking us
-//    from := TJabberID.Create(tag.getAttribute('from'));
-//    tstr := DisplayName.getDisplayNameCache().getDisplayName(from) + ' (' + from.getDisplayJID + ')';
-//    ritem := MainSession.roster.Find(from.jid);
-//    if (ritem <> nil) then begin
-//        if (ritem.ask = 'subscribe') then begin
-//            // we are got denied by this person
-//            MessageDlgW(WideFormat(sS10nDeny, [tstr]), mtInformation, [mbOK], 0);
-//            ritem.remove();
-//        end
-//        else begin
-//            MessageDlgW(WideFormat(sS10nUnsub, [tstr]), mtInformation, [mbOK], 0);
-//        end;
-//    end;
-//
-//    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "subscribed",
-//    the user SHOULD acknowledge receipt of that subscription state notification
-//    through either "affirming" it by sending a presence stanza of type
-//    "subscribe" to the contact or "denying" it by sending a presence stanza
-//    of type "unsubscribe" to the contact; this step does not necessarily
-//    affect the subscription state, but instead lets the user's server
-//    know that it MUST no longer send notification of the subscription
-//    state change to the user }
-//
-//    SendUnSubscribe(from.full, MainSession);
-//
-//    from.Free();
+    { Todo:  Move this UI code out of jopl.  Perhaps throw a
+             /session/gui/unsubscribed event and do it in GUIFactory? }
+
+    // getting a s10n denial or someone is revoking us
+    from := TJabberID.Create(tag.getAttribute('from'));
+    tstr := DisplayName.getDisplayNameCache().getDisplayName(from) + ' (' + from.getDisplayJID + ')';
+    item := MainSession.ItemController.GetItem(from.jid);
+
+    if (item <> nil) then begin
+        if (item.value['Ask'] = 'subscribe') then begin
+            // we are got denied by this person
+            MessageDlgW(WideFormat(sS10nDeny, [tstr]), mtInformation, [mbOK], 0);
+        end
+        else begin
+            MessageDlgW(WideFormat(sS10nUnsub, [tstr]), mtInformation, [mbOK], 0);
+        end;
+        MainSession.Roster.RemoveItem(item);
+    end;
+
+    { From RFC 3921 Section 8.2:  Upon receiving the presence stanza of type "unsubscribed",
+    the user SHOULD acknowledge receipt of that subscription state notification
+    through either "affirming" it by sending a presence stanza of type
+    "unsubscribe" to the contact or "denying" it by sending a presence stanza
+    of type "subscribe" to the contact; this step does not necessarily
+    affect the subscription state, but instead lets the user's server
+    know that it MUST no longer send notification of the subscription
+    state change to the user }
+    SendUnSubscribe(from.full, MainSession);
+
+    from.Free();
 end;
 
 {---------------------------------------}

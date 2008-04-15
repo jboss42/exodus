@@ -60,7 +60,9 @@ type
        constructor Create(JS: TObject);
        destructor Destroy; override;
 
-       function Add(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
+       function AddItem(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
+       procedure RemoveItem(item: IExodusItem); overload;
+       procedure RemoveItem(sjid: Widestring); overload;
        //procedure Clear();
        //Properties
    end;
@@ -79,6 +81,19 @@ type
     property Controller: TContactController read _ctrl;
     property Item: IExodusItem read _item;
     property Subscribe: Boolean read _subscribe;
+  end;
+  TContactRemItem = class
+  private
+    _ctrl: TContactController;
+    _item: IExodusItem;
+
+    procedure _Callback(event: String; tag: TXMLTag);
+
+  protected
+    constructor Create(ctrl: TContactController; item: IExodusItem);
+
+    property Controller: TContactController read _ctrl;
+    property Item: IExodusItem read _item;
   end;
 
 implementation
@@ -294,7 +309,7 @@ var
     riTag: TXMLTag;
     riList: TXMLTagList;
     idx: Integer;
-    uid, subscr: Widestring;
+    uid, subscr, ask: Widestring;
     item: IExodusItem;
     itemCtrl: IExodusItemController;
     session: TJabberSession;
@@ -315,6 +330,7 @@ begin
         riTag := riList[idx];
         uid := riTag.GetAttribute('jid');
         subscr := riTag.GetAttribute('subscription');
+        ask := riTag.GetAttribute('ask');
         item := itemCtrl.GetItem(uid);
 
         if (subscr = 'remove') and (item <> nil) then begin
@@ -595,7 +611,7 @@ begin
     TJabberSession(_JS).FireEvent('/item/update', Item);
 end;
 
-function TContactController.Add(
+function TContactController.AddItem(
         sjid: WideString;
         name: WideString;
         group: WideString;
@@ -629,7 +645,15 @@ begin
     end;
 
 end;
-
+procedure TContactController.RemoveItem(item: IExodusItem);
+begin
+    if (item = nil) or (item.Type_ <> 'contact') then exit;
+    TContactRemItem.Create(Self, item);
+end;
+procedure TContactController.RemoveItem(sjid: WideString);
+begin
+    RemoveItem(TJabberSession(_JS).ItemController.GetItem(sjid));
+end;
 
 constructor TContactAddItem.Create(
         ctrl: TContactController;
@@ -651,7 +675,7 @@ begin
     with iq do begin
         Namespace := XMLNS_ROSTER;
         iqType := 'set';
-        with AddTag('item') do begin
+        with qTag.AddTag('item') do begin
             setAttribute('jid', item.UID);
             setAttribute('name', item.value['Name']);
 
@@ -663,7 +687,6 @@ begin
 
     iq.Send();
 end;
-
 procedure TContactAddItem._Callback(event: string; tag: TXMLTag);
 var
     session: TJabberSession;
@@ -679,6 +702,40 @@ begin
     end;
 
     Self.Free();
+end;
+
+constructor TContactRemItem.Create(ctrl: TContactController; item: IExodusItem);
+var
+    session: TJabberSession;
+    iq: TJabberIQ;
+begin
+    _ctrl := ctrl;
+    _item := item;
+
+    session := TJabberSession(ctrl._JS);
+    iq := TJabberIQ.Create(session, session.generateID, _Callback);
+    with iq do begin
+        Namespace := XMLNS_ROSTER;
+        iqType := 'set';
+        with qTag.AddTag('item') do begin
+            setAttribute('jid', item.UID);
+            setAttribute('subscription', 'remove');
+        end;
+    end;
+
+    iq.Send();
+end;
+procedure TContactRemItem._Callback(event: string; tag: TXMLTag);
+var
+    session: TJabberSession;
+begin
+    if (tag <> nil) and (tag.GetAttribute('type') = 'result') then begin
+        session := TJabberSession(Controller._JS);
+
+        //TODO:  allow flag here??
+        SendUnSubscribe(item.UID, session);
+        SendUnSubscribed(item.UID, session);
+    end;
 end;
 
 end.
