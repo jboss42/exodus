@@ -26,7 +26,8 @@ uses
     COMExodusDataStore,
     COMExodusDataTable,
     Exodus_TLB,
-    JabberMsg;
+    JabberMsg,
+    Unicode;
 
 type
     TSQLThreadResult = procedure(SearchID: widestring; msg: TJabberMessage) of object;
@@ -40,6 +41,8 @@ type
             _callback: TSQLThreadResult;
             _callbackSet: boolean;
             _table: IExodusDataTable;
+            _keywordList: TWidestringList;
+            _exactKeywordMatch: boolean;
 
             // Methods
             procedure _ProcessResultTable();
@@ -58,12 +61,14 @@ type
             procedure Execute; override;
             procedure SetCallback(callback: TSQLThreadResult);
             procedure SetTable(table: IExodusDataTable);
+            procedure AddKeyword(keyword: Widestring);
 
             // Properties
             property DataStore: TExodusDataStore write _DataStore;
             property SQLStatement: Widestring write _SQLStatement;
             property msg: TJabberMessage read _msg;
             property SearchID: Widestring read _SearchID write _SearchID;
+            property ExactKeywordMatch: boolean read _exactKeywordMatch write _exactKeywordMatch;
     end;
 
 {---------------------------------------}
@@ -103,11 +108,16 @@ begin
     _callback := nil;
     _callbackSet := false;
     Self.FreeOnTerminate := true;
+    _keywordList := TWidestringList.Create();
+    _exactKeywordMatch := false;
 end;
 
 {---------------------------------------}
 procedure TSQLSearchThread.Execute;
+var
+    i: integer;
 begin
+    // NOTE: Object frees on terminate from this thread
     if (_DataStore = nil) then exit;
     if (_SQLStatement = '') then exit;
 
@@ -118,6 +128,8 @@ begin
 
     _table := nil;
     _DataStore := nil;
+
+    _keywordList.Free();
 end;
 
 {---------------------------------------}
@@ -137,9 +149,13 @@ const
     xml_col = 11;
 var
     tag: TXMLTag;
-    i: integer;
+    i,j: integer;
     tmp: widestring;
     parser: TXMLTagParser;
+    keywordpos: integer;
+    keywordlen: integer;
+    exactkeywordstartvalid: boolean;
+    exactkeywordendvalid: boolean;
 begin
     if (_table = nil) then exit;
 
@@ -212,7 +228,21 @@ begin
                     end;
                 end;
 
-                Synchronize(Self._OnResult);  // blocks here
+                if ((_exactKeywordMatch) and
+                    (_keywordList.Count > 0)) then begin
+                    for j := 0 to _keywordList.Count - 1 do begin
+                        keywordpos := Pos(_keywordList[j], _msg.Body);
+                        if (keywordpos > 0) then begin
+                            // This keyword was found in case sensitve search,
+                            // we are good to send it on.
+                            Synchronize(Self._OnResult);  // blocks here
+                            break;
+                        end;
+                    end;
+                end
+                else begin
+                    Synchronize(Self._OnResult);  // blocks here
+                end;
                 _msg.Free();
                 _msg := nil;
 
@@ -250,6 +280,14 @@ begin
     if (table = nil) then exit;
 
     _table := table;
+end;
+
+{---------------------------------------}
+procedure TSQLSearchThread.AddKeyword(keyword: Widestring);
+begin
+    if (Trim(keyword) = '') then exit; // Don't allow empty strings
+    
+    _keywordList.Add(keyword);
 end;
 
 

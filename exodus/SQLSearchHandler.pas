@@ -124,11 +124,18 @@ end;
 function TSQLSearchHandler.NewSearch(const SearchParameters: IExodusHistorySearch): WordBool;
 var
     searchThread: TSQLSearchThread;
+    i: integer;
 begin
     searchThread := TSQLSearchThread.Create();
     searchThread.SearchID := SearchParameters.SearchID;
     searchThread.DataStore := DataStore;
     searchThread.SQLStatement := GenerateSQLSearchString(SearchParameters);
+    searchThread.ExactKeywordMatch := SearchParameters.ExactKeywordMatch;
+    if (SearchParameters.ExactKeywordMatch) then begin
+        for i := 0 to SearchParameters.KeywordCount - 1 do begin
+            searchThread.AddKeyword(SearchParameters.GetKeyword(i));
+        end;
+    end;
     searchThread.SetCallback(Self.OnResult);
     searchThread.SetTable(CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable);
 
@@ -180,7 +187,6 @@ end;
 function TSQLSearchHandler.GenerateSQLSearchString(SearchParameters: IExodusHistorySearch): Widestring;
 var
     i: integer;
-    exactMatch: boolean;
 begin
     // SELECT part
     Result := 'SELECT * ';
@@ -241,22 +247,16 @@ begin
     end;
 
     if (SearchParameters.KeywordCount > 0) then begin
-        exactMatch := SearchParameters.ExactKeywordMatch;
-
         Result := Result +
                   ' AND (';
         for i := 0 to SearchParameters.KeywordCount - 1 do begin
             Result := Result +
                       'body LIKE ''';
 
-            if (not exactMatch) then
-                Result := Result + '%';
-
+            Result := Result + '%';
             Result := Result +
                       str2sql(UTF8Encode(SearchParameters.GetKeyword(i)));
-
-            if (not exactMatch) then
-                Result := Result + '%';
+            Result := Result + '%';
 
             Result := Result +
                       '''';

@@ -242,7 +242,7 @@ var
 begin
     if (Keyword = '') then exit;
 
-    tmp := LowerCase(Keyword);
+    tmp := Keyword;
     index := -1;
 
     if (not _KeywordList.Find(tmp, index)) then begin
