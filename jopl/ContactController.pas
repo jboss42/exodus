@@ -223,6 +223,7 @@ begin
     if (Contact.GroupCount = 0) then
     begin
         Contact.AddGroup(_DefaultGroup);
+        TJabberSession(_js).ItemController.AddItemByUID(_DefaultGroup, EI_TYPE_GROUP);
     end;
     //Make sure groups for the contact exist in the global group list.
     //_SynchronizeGroups(Contact);
