@@ -32,6 +32,7 @@ type
   private
     // Variables
     _AllowedSearchType: TWidestringList;
+    _ExclusiveJIDSearchList: TWidestringList;
     _JIDList: TWidestringList;
     _KeywordList: TWidestringList;
     _MessageTypeList: TWidestringList;
@@ -74,6 +75,8 @@ type
     procedure AddMessageType(const messageType: WideString); safecall;
     function GetMessageType(index: Integer): WideString; safecall;
     function Get_MessageTypeCount: Integer; safecall;
+    function GetJIDExclusiveHandlerID(const JID: WideString): Integer; safecall;
+    procedure SetJIDExclusiveHandlerID(JIDIndex, HandlerID: Integer); safecall;
 
     // Properties
   end;
@@ -95,6 +98,7 @@ begin
     inherited;
 
     _AllowedSearchType := TWidestringList.Create();
+    _ExclusiveJIDSearchList := TWidestringList.Create();
     _JIDList := TWidestringList.Create();
     _KeywordList := TWidestringList.Create();
     _MessageTypeList := TWidestringList.Create();
@@ -107,16 +111,20 @@ end;
 
 {---------------------------------------}
 destructor TExodusHistorySearch.Destroy();
+var
+    i: integer;
 begin
     _AllowedSearchType.Clear();
     _JIDList.Clear();
     _KeywordList.Clear();
     _MessageTypeList.Clear();
+    _ExclusiveJIDSearchList.Clear();
 
     _AllowedSearchType.Free();
     _JIDList.Free();
     _KeywordList.Free();
     _MessageTypeList.Free();
+    _ExclusiveJIDSearchList.Free();
  
     inherited;
 end;
@@ -222,6 +230,7 @@ begin
 
     if (not _JIDList.Find(tmp, index)) then begin
         _JIDList.Add(tmp);
+        _ExclusiveJIDSearchList.Add('-1');
     end;
 end;
 
@@ -290,6 +299,34 @@ function TExodusHistorySearch.Get_MessageTypeCount: Integer;
 begin
     Result := _MessageTypeList.Count;
 end;
+
+{---------------------------------------}
+function TExodusHistorySearch.GetJIDExclusiveHandlerID(const JID: WideString): Integer;
+var
+    i: integer;
+begin
+    Result := -2;
+    if (Trim(JID) = '') then exit;
+
+    for i := 0 to _JIDList.Count - 1 do begin
+        if (_JIDList[i] = Trim(JID)) then begin
+            Result := StrToInt(_ExclusiveJIDSearchList[i]);
+            break;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusHistorySearch.SetJIDExclusiveHandlerID(JIDIndex, HandlerID: Integer);
+var
+    idx: integer;
+begin
+    if (JIDindex < 0) or (JIDindex >= _ExclusiveJIDSearchList.Count) then exit;
+
+    _ExclusiveJIDSearchList[JIDIndex] := IntToStr(HandlerID);
+end;
+
+
 
 
 

@@ -64,6 +64,7 @@ type
         // Variables
         _HandlerList: TWidestringList;
         _ResultObject: IExodusHistoryResult;
+        _SearchObject: IExodusHistorySearch;
 
         // Methods
 
@@ -82,6 +83,7 @@ type
         // Properties
         property HandlerList: TWidestringList read _HandlerList write _HandlerList;
         property ResultObject: IExodusHistoryResult read _ResultObject write _ResultObject;
+        property SearchObject: IExodusHistorySearch read _SearchObject write _SearchObject;
   end;
 
   TExodusHistorySearchManager = class(TAutoObject, IExodusHistorySearchManager)
@@ -127,7 +129,9 @@ implementation
 
 uses
     ComServ,
-    sysUtils;
+    sysUtils,
+    JabberID,
+    COMLogMsg;
 
 var
     _hid: longint = 1;
@@ -164,6 +168,7 @@ begin
         _ResultObject.Processing := false;
     end;
     _ResultObject := nil;
+    _SearchObject := nil;
 
     _HandlerList.Clear();
     _HandlerList.Free();
@@ -254,6 +259,7 @@ begin
 
     if (Result) then begin
         tracker.ResultObject := SearchResult;
+        tracker.SearchObject := SearchParams;
         tracker.ResultObject.Processing := true;
         _CurrentSearches.AddObject(SearchID, tracker);
     end;
@@ -334,6 +340,8 @@ var
     i: integer;
     j: integer;
     tracker: TSearchTracker;
+    JIDExclusiveID: integer;
+    jid: TJabberID;
 begin
     if (SearchID = '') then exit;
 
@@ -348,15 +356,25 @@ begin
             end
             else if (LogMsg <> nil) then begin
                 // Valid search result
-                if (tracker.ResultObject <> nil) then begin
-                    tracker.ResultObject.OnResultItem(SearchID, LogMsg);
+                if (LogMsg.Direction = LOG_MESSAGE_DIRECTION_OUT) then begin
+                    jid := TJabberID.Create(LogMsg.ToJid);
+                end
+                else begin
+                    jid := TJabberID.Create(LogMsg.FromJid);
                 end;
+                JIDExclusiveID := tracker.SearchObject.GetJIDExclusiveHandlerID(jid.jid);
+                if (((JIDExclusiveID < 0) or
+                     (JIDExclusiveID = HandlerID)) and
+                    (tracker.ResultObject <> nil)) then begin
+                    tracker.ResultObject.OnResultItem(HandlerID, SearchID, LogMsg);
+                end;
+                jid.Free();
             end;
 
             if (tracker.HandlerList.Count = 0) then begin
                 // No more handlers outstanding so end search
                 if (tracker.ResultObject <> nil) then begin
-                    tracker.ResultObject.OnResultItem(SearchID, nil);
+                    tracker.ResultObject.OnResultItem(HandlerID, SearchID, nil);
                 end;
                 tracker.Free();
                 _CurrentSearches.Delete(i);

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-11 14:47:16 from Type Library described below.
+// File generated on 4/15/2008 12:31:01 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4890,6 +4890,8 @@ type
     procedure AddMessageType(const messageType: WideString); safecall;
     function GetMessageType(index: Integer): WideString; safecall;
     function Get_MessageTypeCount: Integer; safecall;
+    function GetJIDExclusiveHandlerID(const JID: WideString): Integer; safecall;
+    procedure SetJIDExclusiveHandlerID(JIDindex: Integer; HandlerID: Integer); safecall;
     property minDate: TDateTime read Get_minDate write Set_minDate;
     property maxDate: TDateTime read Get_maxDate write Set_maxDate;
     property ExactKeywordMatch: WordBool read Get_ExactKeywordMatch write Set_ExactKeywordMatch;
@@ -4923,6 +4925,8 @@ type
     procedure AddMessageType(const messageType: WideString); dispid 208;
     function GetMessageType(index: Integer): WideString; dispid 215;
     property MessageTypeCount: Integer readonly dispid 216;
+    function GetJIDExclusiveHandlerID(const JID: WideString): Integer; dispid 217;
+    procedure SetJIDExclusiveHandlerID(JIDindex: Integer; HandlerID: Integer); dispid 218;
   end;
 
 // *********************************************************************//
@@ -4934,7 +4938,8 @@ type
     ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
     function Get_ResultCount: Integer; safecall;
     function Get_Processing: WordBool; safecall;
-    procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
+    procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; 
+                           const Item: IExodusLogMsg); safecall;
     function GetResult(index: Integer): IExodusLogMsg; safecall;
     procedure Set_Processing(value: WordBool); safecall;
     property ResultCount: Integer read Get_ResultCount;
@@ -4950,7 +4955,8 @@ type
     ['{DC665BA9-A59B-4038-A162-33AB2EFA961D}']
     property ResultCount: Integer readonly dispid 201;
     property Processing: WordBool dispid 202;
-    procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); dispid 203;
+    procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; 
+                           const Item: IExodusLogMsg); dispid 203;
     function GetResult(index: Integer): IExodusLogMsg; dispid 204;
   end;
 
@@ -4965,7 +4971,9 @@ type
     procedure CancelSearch(const SearchID: WideString); safecall;
     function Get_SearchTypeCount: Integer; safecall;
     function GetSearchType(index: Integer): WideString; safecall;
+    function Get_SearchHandlerLabel: WideString; safecall;
     property SearchTypeCount: Integer read Get_SearchTypeCount;
+    property SearchHandlerLabel: WideString read Get_SearchHandlerLabel;
   end;
 
 // *********************************************************************//
@@ -4979,6 +4987,7 @@ type
     procedure CancelSearch(const SearchID: WideString); dispid 202;
     property SearchTypeCount: Integer readonly dispid 203;
     function GetSearchType(index: Integer): WideString; dispid 204;
+    property SearchHandlerLabel: WideString readonly dispid 205;
   end;
 
 // *********************************************************************//
