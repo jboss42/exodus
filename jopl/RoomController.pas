@@ -284,7 +284,10 @@ begin
     end;
 
     if (Room.GroupCount = 0) then
+    begin
         Room.AddGroup(TJabberSession(_JS).Prefs.getString('roster_default'));
+        TJabberSession(_js).ItemController.AddItemByUID(TJabberSession(_JS).Prefs.getString('roster_default'), EI_TYPE_GROUP);
+    end;
 
    
     Grps.Free();
