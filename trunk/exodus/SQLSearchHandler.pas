@@ -59,6 +59,7 @@ type
             procedure CancelSearch(const SearchID: WideString); safecall;
             function Get_SearchTypeCount: Integer; safecall;
             function GetSearchType(index: Integer): WideString; safecall;
+            function Get_SearchHandlerLabel: WideString; safecall;
 
             // Properties
     end;
@@ -66,6 +67,8 @@ type
 const
     SQLSEARCH_CHAT = 'chat history';
     SQLSEARCH_ROOM = 'groupchat history';
+
+    sSearchHandlerLabel = 'Internal message logger';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -165,6 +168,12 @@ begin
     if (index >= _SearchTypes.Count) then exit;
 
     Result := _SearchTypes[index];
+end;
+
+{---------------------------------------}
+function TSQLSearchHandler.Get_SearchHandlerLabel: WideString;
+begin
+    Result := sSearchHandlerLabel;
 end;
 
 {---------------------------------------}

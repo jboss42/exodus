@@ -52,7 +52,7 @@ type
             // IExodusHistoryResult Interface
             function Get_ResultCount: Integer; safecall;
             function Get_Processing: WordBool; safecall;
-            procedure OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg); safecall;
+            procedure OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; const Item: IExodusLogMsg); safecall;
             function GetResult(index: Integer): IExodusLogMsg; safecall;
             procedure Set_Processing(Value: WordBool); safecall;
             property ResultCount: Integer read Get_ResultCount;
@@ -274,7 +274,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusHistoryResult.OnResultItem(const SearchID: WideString; const Item: IExodusLogMsg);
+procedure TExodusHistoryResult.OnResultItem(SearchHandlerID: Integer; const SearchID: WideString; const Item: IExodusLogMsg);
 var
     msg: TJabberMessage;
     ShouldSaveMsg: boolean;
