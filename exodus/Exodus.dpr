@@ -287,7 +287,10 @@ uses
   SelectItem in 'SelectItem.pas' {frmSelectItem},
   ContactActions in 'ContactActions.pas',
   FrmUtils in '..\jopl\FrmUtils.pas',
-  SelectItemAny in 'SelectItemAny.pas' {frmSelectItemAny: TTntForm};
+  SelectItemAny in 'SelectItemAny.pas' {frmSelectItemAny: TTntForm},
+  COMExodusHistorySearchManager in 'COMExodusHistorySearchManager.pas',
+  COMExodusHistoryResult in 'COMExodusHistoryResult.pas',
+  COMExodusHistorySearch in 'COMExodusHistorySearch.pas';
 
 {$R *.TLB}
 
