@@ -27,7 +27,8 @@ uses
     Exodus_TLB,
     StdVcl,
     Unicode,
-    JabberMsg;
+    JabberMsg,
+    XMLTag;
 
 type
     TSQLSearchHandler = class(TAutoObject, IExodusHistorySearchHandler)
@@ -36,6 +37,7 @@ type
             _SearchTypes: TWidestringList;
             _CurrentSearches: TWidestringList;
             _handlerID: integer;
+            _sessionCB: integer;
 
             // Methods
             function GenerateSQLSearchString(SearchParameters: IExodusHistorySearch): Widestring;
@@ -53,6 +55,7 @@ type
             destructor Destroy();
 
             procedure OnResult(SearchID: widestring; msg: TJabberMessage);
+            procedure SessionCallback(event: string; tag:TXMLTag);
 
             // IExodusHistorySearchHandler inteface
             function NewSearch(const SearchParameters: IExodusHistorySearch): WordBool; safecall;
@@ -84,7 +87,8 @@ uses
     SQLSearchThread,
     SQLUtils,
     IdGlobal,
-    Debug;
+    Debug,
+    Session;
 
 {---------------------------------------}
 constructor TSQLSearchHandler.Create();
@@ -96,6 +100,7 @@ begin
     _CurrentSearches := TWidestringList.Create();
 
     _handlerID := HistorySearchManager.RegisterSearchHandler(Self);
+    _sessionCB := MainSession.RegisterCallback(SessionCallback,'/session/history/search');
 end;
 {---------------------------------------}
 destructor TSQLSearchHandler.Destroy();
@@ -118,6 +123,8 @@ begin
 
     _SearchTypes.Free();
     _CurrentSearches.Free();
+
+    MainSession.UnRegisterCallback(_sessionCB);
 end;
 
 {---------------------------------------}
@@ -140,8 +147,6 @@ begin
     searchThread.SetTable(CreateCOMObject(CLASS_ExodusDataTable) as IExodusDataTable);
 
     _CurrentSearches.AddObject(searchThread.SearchID, SearchThread);
-
-    searchThread.Resume();
 
     Result := true; // Always want to participate in search
 end;
@@ -310,6 +315,24 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TSQLSearchHandler.SessionCallback(event: string; tag:TXMLTag);
+var
+    searchID: widestring;
+    thread: TSQLSearchThread;
+    i: integer;
+begin
+    if (event = '/session/history/search/execute') then begin
+        searchID := tag.Data;
+        if (_CurrentSearches.Find(searchID, i)) then begin
+            try
+                thread := TSQLSearchThread(_CurrentSearches.Objects[i]);
+                thread.Resume();
+            except
+            end;
+        end;                    
+    end;
+end;
 
 
 initialization

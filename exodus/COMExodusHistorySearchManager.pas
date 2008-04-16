@@ -131,7 +131,9 @@ uses
     ComServ,
     sysUtils,
     JabberID,
-    COMLogMsg;
+    COMLogMsg,
+    Session,
+    XMLTag;
 
 var
     _hid: longint = 1;
@@ -236,6 +238,7 @@ var
     hwrapper: TSearchHandlerWrapper;
     tracker: TSearchTracker;
     searchID: Widestring;
+    tag: TXMLTag;
 begin
     Result := false;
     tracker := nil;
@@ -262,6 +265,9 @@ begin
         tracker.SearchObject := SearchParams;
         tracker.ResultObject.Processing := true;
         _CurrentSearches.AddObject(SearchID, tracker);
+        tag := TXMLTag.Create('SearchID', SearchID);
+        MainSession.FireEvent('/session/history/search/execute', tag);
+        tag.Free();
     end;
 end;
 
@@ -307,6 +313,7 @@ var
     k: integer;
     tracker: TSearchTracker;
     hwrapper: TSearchHandlerWrapper;
+    tag: TXMLTag;
 begin
     if (_CurrentSearches.Find(SearchID, i)) then begin
         tracker := TSearchTracker(_CurrentSearches.Objects[i]);
@@ -316,6 +323,10 @@ begin
                 hwrapper.Handler.CancelSearch(SearchID);
             end;
         end;
+
+        tag := TXMLTag.Create('SearchID', SearchID);
+        MainSession.FireEvent('/session/history/search/cancel', tag);
+        tag.Free();
     end;
 end;
 
@@ -342,6 +353,7 @@ var
     tracker: TSearchTracker;
     JIDExclusiveID: integer;
     jid: TJabberID;
+    tag: TXMLTag;
 begin
     if (SearchID = '') then exit;
 
@@ -378,6 +390,10 @@ begin
                 end;
                 tracker.Free();
                 _CurrentSearches.Delete(i);
+
+                tag := TXMLTag.Create('SearchID', SearchID);
+                MainSession.FireEvent('/session/history/search/complete', tag);
+                tag.Free();
             end;
         end;
     end;
