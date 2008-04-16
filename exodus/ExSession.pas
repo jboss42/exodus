@@ -664,6 +664,7 @@ begin
 
     try
         DataStore := TExodusDataStore.Create(dbfile);
+        DataStore.ObjAddRef();
         MsgLogger := TSQLLogger.Create();
         HistorySearchManager := TExodusHistorySearchManager.Create();
         HistorySearchManager.ObjAddRef();

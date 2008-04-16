@@ -668,8 +668,8 @@ begin
         if (_AdvSearch) then begin
             // Advanced Search
             if (radioRange.Checked) then begin
-                _SearchObj.Set_minDate(dateFrom.DateTime); // Midnight
-                _SearchObj.Set_maxDate(dateTo.DateTime + 0.999999); // Just shy of midnight
+                _SearchObj.Set_minDate(Trunc(dateFrom.DateTime)); // Midnight
+                _SearchObj.Set_maxDate(Trunc(dateTo.DateTime) + 0.999999); // Just shy of midnight
             end;
 
             for i := 0 to txtKeywords.Lines.Count - 1 do begin
