@@ -33,7 +33,7 @@ begin
     //Spaces are no longer word boundaries, but group separators are.
    _GroupSeparator := PWideChar(TJabberSession(_Session).Prefs.getString('group_seperator'))^;
    _NestedGroups.SpaceChars :=  _GroupSeparator;
-   _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32);
+   _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32) + chr(45);
    _NestedGroups.Expression := '\b\w+';
    _NestedGroups.Compile();
 end;
