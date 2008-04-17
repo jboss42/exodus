@@ -393,6 +393,9 @@ begin
     mainActs := LookupTypedActions('', true);
     mainActs.Clear;
 
+    for idx := 0 to _items.Count - 1 do
+        mainActs._items.Add(Self._items.Item[idx]);
+
     //Let's (optimistically) asume that all actions should be in the main actions
     for idx := 0 to _allActs.Count - 1 do begin
         mainActs.AddAction(_allActs[idx] as IExodusAction);

@@ -27,15 +27,20 @@ uses Session;
 
 {---------------------------------------}
 constructor TGroupParser.Create(Session: TObject);
+var
+    sep: Widestring;
 begin
    _Session := Session;
-   _NestedGroups := TRegExpr.Create();
-    //Spaces are no longer word boundaries, but group separators are.
-   _GroupSeparator := PWideChar(TJabberSession(_Session).Prefs.getString('group_seperator'))^;
-   _NestedGroups.SpaceChars :=  _GroupSeparator;
-   _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32) + chr(45);
-   _NestedGroups.Expression := '\b\w+';
-   _NestedGroups.Compile();
+   //Spaces are no longer word boundaries, but group separators are.
+   sep := TJabberSession(_Session).Prefs.getString('group_seperator');
+   if (sep <> '') then begin
+       _NestedGroups := TRegExpr.Create();
+       _GroupSeparator := PWideChar(sep)^;
+       _NestedGroups.SpaceChars :=  _GroupSeparator;
+       _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32) + chr(45);
+       _NestedGroups.Expression := '\b\w+';
+       _NestedGroups.Compile();
+   end;
 end;
 
 {---------------------------------------}
@@ -63,6 +68,11 @@ var
     Found: Boolean;
 begin
    Result := TWideStringList.Create();
+   if (_NestedGroups = nil) then begin
+       Result.Add(Group);
+       exit;
+   end;
+
    Found := _NestedGroups.Exec(Group);
    //Continue while finding tokens separated by /
    while (Found) do

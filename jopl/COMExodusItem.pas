@@ -75,6 +75,8 @@ type
       function Get_PropertyName(Index: Integer): WideString; safecall;
 
   private
+      _Ctrl: IExodusItemController;
+      _Callback: IExodusItemCallback;
       _Uid: WideString;
       _Type: WideString;
       _Text: WideString;
@@ -87,21 +89,32 @@ type
       _Active: Boolean;
       _IsVisible: Boolean;
   public
-      constructor Create(Uid: WideString; ItemType: WideString);
+      constructor Create(ctrl: IExodusItemController;
+            Uid: WideString;
+            ItemType: WideString;
+            cb: IExodusItemCallback);
       destructor Destroy; override;
+
+      property Callback: IExodusItemCallback read _Callback;
 
   end;
 
 implementation
 
-uses ComServ, Classes;
+uses ComServ, Classes, COMExodusItemController;
 
 {---------------------------------------}
-constructor TExodusItem.Create(Uid: WideString; ItemType: WideString);
+constructor TExodusItem.Create(ctrl: IExodusItemController;
+        Uid: WideString;
+        ItemType: WideString;
+        cb: IExodusItemCallback);
 begin
     inherited Create();
+
+    _Ctrl := ctrl;
     _Type := ItemType;
     _Uid := uid;
+    _Callback := cb;
     _Groups := TWideStringList.Create();
     _Properties := TWideStringList.Create();
     _Groups.Duplicates := dupIgnore;
@@ -117,6 +130,9 @@ destructor TExodusItem.Destroy();
 begin
    _Groups.Free;
    _Properties.Free;
+   _Callback := nil;
+   _Ctrl := nil;
+   
    inherited;
 end;
 
@@ -181,7 +197,8 @@ end;
 {---------------------------------------}
 procedure TExodusItem.AddGroup(const Group: WideString);
 begin
-   _Groups.Add(Group);
+    _Ctrl.AddGroup(Group);
+    _Groups.Add(Group);
 end;
 
 {---------------------------------------}
@@ -226,9 +243,7 @@ procedure TExodusItem.MoveGroup(const GroupFrom, GroupTo: WideString);
 var
     Index: Integer;
 begin
-    Index := _Groups.IndexOf(GroupFrom);
-    if (Index = -1) then exit;
-    _Groups.Delete(Index);
+    RemoveGroup(GroupFrom);
     AddGroup(GroupTo);
 end;
 

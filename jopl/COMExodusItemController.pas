@@ -25,7 +25,7 @@ unit COMExodusItemController;
 interface
 
 uses
-  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile, GroupParser;
+  ComObj, ActiveX, Exodus_TLB, StdVcl, Unicode, XMLTag, PrefFile, GroupParser, COMExodusItemWrapper;
 
 type
   TExodusItemController = class(TAutoObject, IExodusItemController)
@@ -47,16 +47,19 @@ type
       function Get_Item(Index: Integer): IExodusItem; safecall;
       function Get_ItemsCount: Integer; safecall;
       function GetGroupItems(const Group: WideString): OleVariant; safecall;
-      function AddItemByUid(const UID, ItemType: WideString): IExodusItem; safecall;
+      function AddItemByUid(const UID, ItemType: WideString;
+      const cb: IExodusItemCallback): IExodusItem; safecall;
       procedure CopyItem(const UID, Group: WideString); safecall;
       procedure MoveItem(const UID, GroupFrom, GroupTo: WideString); safecall;
       procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
       procedure RemoveItem(const Uid: WideString); safecall;
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
       function GetItemsByType(const Type_: WideString): OleVariant; safecall;
+    function AddGroup(const grp: WideString): IExodusItem; safecall;
   private
       _Items: TWideStringList;
       _JS: TObject;
+      _GroupsCB: IExodusItemCallback;
       _SessionCB: Integer;
       _GroupsLoaded: Boolean;
       _ServerStorage: Boolean;
@@ -66,9 +69,10 @@ type
       procedure _GetGroups();
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
       procedure _SendGroups();
+      function  _GetItemWrapper(const UID: Widestring): TExodusItemWrapper;
       function  _GetGroupItems(const Group: WideString): TWideStringList;
       function  _GetItemsByType(Type_: WideString): TWideStringList;
-      function  _AddGroup(const GroupUID: WideString): Integer;
+      function  _AddGroup(const GroupUID: WideString): TExodusItemWrapper;
   public
       constructor Create(JS: TObject);
       destructor Destroy; override;
@@ -76,12 +80,23 @@ type
 
   end;
 
+  TExodusGroupCallback = class(TAutoIntfObject, IExodusItemCallback)
+  private
+    constructor Create();
+
+  public
+    destructor Destroy(); override;
+
+    procedure ItemDeleted(const item: IExodusItem); safecall;
+    procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+  end;
+
 var
    xp_group : TXPLite;
 
 implementation
 
-uses ComServ, COMExodusItemWrapper, Classes,
+uses ComServ, Classes,
      JabberConst, IQ, Session, GroupInfo, Variants, Contnrs,
      COMExodusItem;
 
@@ -91,6 +106,7 @@ begin
 
     _Items := TWideStringList.Create();
     _Items.Duplicates := dupError;
+    _GroupsCB := TExodusGroupCallback.Create();
     _JS := JS;
     _groupsLoaded := false;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
@@ -112,6 +128,8 @@ begin
     end;
     _Items.Free;
     _GroupParser.Free;
+    
+    _GroupsCB := nil;
 end;
 
 
@@ -170,7 +188,7 @@ begin
     for i := 0 to Groups.ChildCount - 1 do
     begin
         //Add will checks for duplicates
-        Group := AddItemByUID(Groups.ChildTags[i].Data, EI_TYPE_GROUP);
+        Group := AddGroup(Groups.ChildTags[i].Data);
         Group.AddProperty('Expanded', Groups.ChildTags[i].GetAttribute('expanded'));
     end;
 
@@ -283,7 +301,17 @@ begin
     Result := items;
 end;
 
-function  TExodusItemController._AddGroup(const GroupUID: WideString): Integer;
+function TExodusItemController._GetItemWrapper(const UID: WideString): TExodusItemWrapper;
+var
+    idx: Integer;
+begin
+    idx := _Items.IndexOf(UID);
+    if (idx <> -1) then
+        Result := TExodusItemWrapper(_Items.Objects[idx])
+    else
+        Result := nil;
+end;
+function  TExodusItemController._AddGroup(const GroupUID: WideString): TExodusItemWrapper;
 var
     Idx, i: Integer;
     Group, SubGroup: TExodusItemWrapper;
@@ -291,26 +319,30 @@ var
     GroupParent: WideString;
     InnerGroup: IExodusItem;
 begin
-    Result := -1;
-    Idx := _Items.IndexOf(GroupUID);
-    if (Idx <> -1) then exit;
+    Result := _GetItemWrapper(GroupUID);
+    if (Result <> nil) then exit;
+
     //Get nested groups
     Groups := _GroupParser.GetNestedGroups(GroupUID);
     //Add nested groups to the item list
     for i := 0 to Groups.Count - 1 do
     begin
         if (Get_GroupExists(Groups[i])) then continue;
-        SubGroup := TExodusItemWrapper.Create(Groups[i], EI_TYPE_GROUP);
-        Idx := _Items.AddObject(Groups[i], SubGroup);
-        Get_Item(Idx).Text := _GroupParser.GetGroupName(Get_Item(Idx).UID);
-        GroupParent := _GroupParser.GetGroupParent(Get_Item(Idx).UID);
+        SubGroup := TExodusItemWrapper.Create(Self, Groups[i], EI_TYPE_GROUP, _GroupsCB);
+        _Items.AddObject(Groups[i], SubGroup);
+        SubGroup.ExodusItem.Text := _GroupParser.GetGroupName(SubGroup.ExodusItem.UID);
+        GroupParent := _GroupParser.GetGroupParent(SubGroup.ExodusItem.UID);
         if (GroupParent <> '') then
-            Get_Item(Idx).AddGroup(GroupParent);
+            SubGroup.ExodusItem.AddGroup(GroupParent);
         if (i = Groups.Count - 1) then
-            Result := Idx;
+            Result := SubGroup;
     end;
+
+    if (Result = nil) then
+        Result := _GetItemWrapper(GroupUID);
+
     Groups.Free;
-    TJabberSession(_JS).FireEvent('/item/add', Get_Item(Result));
+    TJabberSession(_JS).FireEvent('/item/add', Result.ExodusItem);
     //If adding new groups and groups have
     //been loaded, need to save to the server's
     //private storage.
@@ -321,28 +353,28 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusItemController.AddItemByUid(const UID,
-  ItemType: WideString): IExodusItem;
+function TExodusItemController.AddItemByUid(const UID, ItemType: WideString;
+  const cb: IExodusItemCallback): IExodusItem;
 var
-    Item: TExodusItemWrapper;
+    wrapper: TExodusItemWrapper;
     Idx: Integer;
 begin
     //Check if item exists
-    Idx := _items.IndexOf(Uid);
+    wrapper := _GetItemWrapper(UID);
     //If new item, create and append to the list
-    if (Idx = -1) then
+    if (wrapper = nil) then
     begin
        if (ItemType = EI_TYPE_GROUP) then
-            Idx := _AddGroup(UID)
+            wrapper := _AddGroup(UID)
        else
        begin
-           Item := TExodusItemWrapper.Create(Uid, ItemType);
-           Idx := _Items.AddObject(Uid, Item);
+           wrapper := TExodusItemWrapper.Create(Self, Uid, ItemType, cb);
+           _Items.AddObject(Uid, wrapper);
        end;
     end;
 
     //Return interface
-    Result := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
+    Result := wrapper.ExodusItem;
 end;
 
 {---------------------------------------}
@@ -562,6 +594,30 @@ begin
     end;
     list.Free();
     Result := items;
+end;
+
+function TExodusItemController.AddGroup(const grp: WideString): IExodusItem;
+begin
+    Result := _AddGroup(grp).ExodusItem;
+end;
+
+
+constructor TExodusGroupCallback.Create;
+begin
+    inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
+end;
+destructor TExodusGroupCallback.Destroy;
+begin
+    inherited;
+end;
+
+procedure TExodusGroupCallback.ItemDeleted(const item: IExodusItem);
+begin
+    //TODO:  something??
+end;
+procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
+begin
+    //TODO:  something??
 end;
 
 initialization

@@ -23,13 +23,14 @@ unit ContactController;
 interface
 
 uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
-        Signals, DisplayName, COMExodusItem;
+        Signals, DisplayName, COMExodusItem, ComObj;
 
 type
 
    TContactController = class
    private
        _JS: TObject;
+       _ItemsCB: IExodusItemCallback;
        _PresCB: Integer;
        _IQCB: Integer;
        _RMCB: Integer;
@@ -67,6 +68,18 @@ type
        //Properties
    end;
 
+  TExodusContactsCallback = class(TAutoIntfObject, IExodusItemCallback)
+  private
+    _contactCtrl: TContactController;
+
+    constructor Create(cc: TContactController);
+  public
+    destructor Destroy(); override;
+
+    procedure ItemDeleted(const item: IExodusItem); safecall;
+    procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+  end;
+  
   TContactAddItem = class
   private
     _ctrl: TContactController;
@@ -98,12 +111,13 @@ type
 
 implementation
 uses IQ, JabberConst, JabberID, SysUtils, Unicode,
-     Session, s10n, RosterImages, COMExodusItemWrapper;
+     Session, s10n, RosterImages, COMExodusItemWrapper, ComServ;
 
 {---------------------------------------}
 constructor TContactController.Create(JS: TObject);
 begin
     _JS := JS;
+    _ItemsCB := TExodusContactsCallback.Create(Self);
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _IQCB := TJabberSession(_JS).RegisterCallback(_IQCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:roster"]'); //add type set, skip results
     _RMCB := TJabberSession(_JS).RegisterCallback(_RemoveCallback, '/roster/remove/item[@xmlns="jabber:iq:roster"]');
@@ -127,6 +141,8 @@ begin
         UnregisterCallback(_PresCB);
     end;
     _DNListener.Free;
+
+    _ItemsCB := nil;
 end;
 
 {---------------------------------------}
@@ -161,7 +177,7 @@ begin
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
             TmpJID := TJabberID.Create(ContactTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT);
+            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_CONTACT, _ItemsCB);
             //Make sure item exists
             if (Item <> nil) then
             begin
@@ -214,7 +230,6 @@ begin
             Grp := WideTrim(TXMLTag(Grps[i]).Data);
             if (Grp <> '') then begin
                 Contact.AddGroup(grp);
-                TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;
@@ -223,7 +238,6 @@ begin
     if (Contact.GroupCount = 0) then
     begin
         Contact.AddGroup(_DefaultGroup);
-        TJabberSession(_js).ItemController.AddItemByUID(_DefaultGroup, EI_TYPE_GROUP);
     end;
     //Make sure groups for the contact exist in the global group list.
     //_SynchronizeGroups(Contact);
@@ -264,7 +278,6 @@ begin
          if (_DefaultGroup <> TJabberSession(_JS).Prefs.getString('roster_default')) then
          begin
              _DefaultGroup := TJabberSession(_JS).Prefs.getString('roster_default');
-             TJabberSession(_JS).ItemController.AddItemByUID(_DefaultGroup, EI_TYPE_GROUP);
          end;
          _UpdateContacts();
      end
@@ -620,31 +633,34 @@ function TContactController.AddItem(
 var
     session: TJabberSession;
     itemCtlr: IExodusItemController;
+    state: Widestring;
 begin
     session := TJabberSession(_js);
     itemCtlr := session.ItemController;
     Result := itemCtlr.GetItem(sjid);
-    if (Result <> nil) then begin
-        if (group <> '') and not Result.BelongsToGroup(group) then begin
-            //just update the groups this contact belongs to
-            Result.AddGroup(group);
-            session.FireEvent('/item/update', Result);
-        end;
-    end
-    else begin
+    if (Result = nil) then begin
         //Actual item creation!
-        Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT);
+        Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT, _ItemsCB);
         Result.value['Name'] := name;
         Result.value['Subscription'] := 'none';
         if (group <> '') then begin
             Result.AddGroup(group);
-            itemCtlr.AddItemByUID(group, EI_TYPE_GROUP);
         end;
         _UpdateContact(Result);
-
-        TContactAddItem.Create(Self, Result, subscribe);
+    end
+    else begin
+        state := Result.value['Subscription'];
+        if ((state = 'both') or (state = 'to')) and
+                ((group <> '') and not Result.BelongsToGroup(group)) then begin
+            //just update the groups this contact belongs to, and bail
+            Result.AddGroup(group);
+            session.FireEvent('/item/update', Result);
+            exit;
+        end;
     end;
 
+    //now we inform the server...
+    TContactAddItem.Create(Self, Result, subscribe);
 end;
 procedure TContactController.RemoveItem(item: IExodusItem);
 begin
@@ -654,6 +670,26 @@ end;
 procedure TContactController.RemoveItem(sjid: WideString);
 begin
     RemoveItem(TJabberSession(_JS).ItemController.GetItem(sjid));
+end;
+
+constructor TExodusContactsCallback.Create(cc: TContactController);
+begin
+    inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
+
+    _contactCtrl := cc;
+end;
+destructor TExodusContactsCallback.Destroy;
+begin
+    inherited;
+end;
+
+procedure TExodusContactsCallback.ItemDeleted(const item: IExodusItem);
+begin
+    _contactCtrl.RemoveItem(item);
+end;
+procedure TExodusContactsCallback.ItemGroupsChanged(const item: IExodusItem);
+begin
+    TContactAddItem.Create(_contactCtrl, item, false);
 end;
 
 constructor TContactAddItem.Create(
