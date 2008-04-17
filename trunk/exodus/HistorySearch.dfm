@@ -10,8 +10,8 @@ inherited frmHistorySearch: TfrmHistorySearch
   OnMouseEnter = FormMouseEnter
   OnMouseLeave = FormMouseLeave
   OnResize = FormResize
-  ExplicitWidth = 734
-  ExplicitHeight = 462
+  ExplicitWidth = 726
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   object pnlSearchBar: TTntPanel

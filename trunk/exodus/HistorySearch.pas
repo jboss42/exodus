@@ -197,6 +197,7 @@ type
     function _FindResultStringList(const item: TTntListItem): TWidestringList;
     function _GetTJabberMessage(const ritem: TResultListItem): TJabberMessage;
     procedure _setWindowCaption(txt: widestring);
+    procedure _RemoveAnyJID(removeFromContact: boolean = true; removeFromRoom: boolean = true);
 
     // Properties
     property _MsgList: TfBaseMsgList read _getMsgList;
@@ -314,6 +315,11 @@ begin
         ((RoomList = nil) or (RoomList.Count = 0))) then begin
         // We only have 1 contact and no rooms, so start with basic search.
         frm.AddJidBasicSearch(ContactList[0], false);
+    end
+    else if (((RoomList <> nil) and (RoomList.Count = 1)) and
+             ((ContactList = nil) or (ContactList.Count = 0))) then begin
+        // We only have 1 room and no contacts, so start with basic search.
+        frm.AddJidBasicSearch(RoomList[0], true);
     end
     else begin
         // More than 1 contact or rooms or both, so do advanced search
@@ -1846,6 +1852,8 @@ procedure TfrmHistorySearch.AddJIDBasicSearch(const jid: widestring; const isroo
 begin
     if (Trim(jid) = '') then exit;
 
+    _RemoveAnyJID(true, true);
+
     _simpleJID := Trim(jid);
     txtBasicHistoryFor.Text := DisplayName.getDisplayNameCache().getDisplayName(_simpleJID);
     _simpleJIDIsRoom := isroom;
@@ -1856,6 +1864,8 @@ procedure TfrmHistorySearch.AddContact(const jid: widestring);
 begin
     if (Trim(jid) = '') then exit;
 
+    _RemoveAnyJID(false, true);
+
     _AddContactToContactList(jid);
 end;
 
@@ -1863,6 +1873,8 @@ end;
 procedure TfrmHistorySearch.AddRoom(const room: widestring);
 begin
     if (Trim(room) = '') then exit;
+
+    _RemoveAnyJID(true, false);
 
     _AddRoomToRoomList(room);
 end;
@@ -1910,7 +1922,23 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmHistorySearch._RemoveAnyJID(removeFromContact: boolean; removeFromRoom: boolean);
+begin
+    if ((removeFromContact) and
+        (_contactsJIDLimit = hsAny)) then begin
+        _contactsJIDLimit := hsNone;
+        lstContacts.SelectAll();
+        lstContacts.DeleteSelected();
+    end;
 
+    if ((removeFromRoom) and
+        (_roomsJIDLimit = hsAny)) then begin
+        _roomsJIDLimit := hsNone;
+        lstRooms.SelectAll();
+        lstRooms.DeleteSelected();
+    end;
+end;
 
 
 
