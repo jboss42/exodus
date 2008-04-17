@@ -23,14 +23,14 @@ unit ContactController;
 interface
 
 uses COMExodusItemController, Exodus_TLB, XMLTag, Presence,
-        Signals, DisplayName, COMExodusItem, ComObj;
+        Signals, DisplayName, COMExodusItem, ComObj, Unicode;
 
 type
-
+   TExodusContactsCallback = class;
    TContactController = class
    private
        _JS: TObject;
-       _ItemsCB: IExodusItemCallback;
+       _ItemsCB: TExodusContactsCallback;
        _PresCB: Integer;
        _IQCB: Integer;
        _RMCB: Integer;
@@ -64,15 +64,23 @@ type
        function AddItem(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
        procedure RemoveItem(item: IExodusItem); overload;
        procedure RemoveItem(sjid: Widestring); overload;
-       //procedure Clear();
        //Properties
    end;
 
   TExodusContactsCallback = class(TAutoIntfObject, IExodusItemCallback)
   private
     _contactCtrl: TContactController;
+    _paused: Boolean;
+    _ignoring: TWidestringList;
 
     constructor Create(cc: TContactController);
+
+  protected
+    property Paused: Boolean read _paused write _paused;
+
+    function IsIgnored(sjid: Widestring): Boolean;
+    procedure Ignore(sjid: Widestring);
+    procedure Unignore(sjid: Widestring);
   public
     destructor Destroy(); override;
 
@@ -110,7 +118,7 @@ type
   end;
 
 implementation
-uses IQ, JabberConst, JabberID, SysUtils, Unicode,
+uses IQ, JabberConst, JabberID, SysUtils,
      Session, s10n, RosterImages, COMExodusItemWrapper, ComServ;
 
 {---------------------------------------}
@@ -172,6 +180,7 @@ var
     Item: IExodusItem;
 begin
         Item := nil;
+        _ItemsCB.Paused := true;
         TJabberSession(_JS).FireEvent('/item/begin', Item);
         ContactItemTags := Tag.QueryXPTags('/iq/query/item');
         for i := 0 to ContactItemTags.Count - 1 do begin
@@ -191,6 +200,7 @@ begin
         end;
         //TJabberSession(_js).ItemController.SaveGroups();
         Item := nil;
+        _ItemsCB.Paused := false;
         TJabberSession(_JS).FireEvent('/item/end', Item);
         TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
 
@@ -495,7 +505,6 @@ begin
 
     end;
 
-
     //Figure out status text for the item
     //Need to have presence for extended text(status).
     if (Pres <> nil) then
@@ -639,6 +648,7 @@ begin
     itemCtlr := session.ItemController;
     Result := itemCtlr.GetItem(sjid);
     if (Result = nil) then begin
+        _ItemsCB.Ignore(sjid);
         //Actual item creation!
         Result := itemCtlr.AddItemByUid(sjid, EI_TYPE_CONTACT, _ItemsCB);
         Result.value['Name'] := name;
@@ -647,6 +657,7 @@ begin
             Result.AddGroup(group);
         end;
         _UpdateContact(Result);
+        _ItemsCB.Unignore(sjid);
     end
     else begin
         state := Result.value['Subscription'];
@@ -677,18 +688,43 @@ begin
     inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
 
     _contactCtrl := cc;
+    _ignoring := TWidestringList.Create;
 end;
 destructor TExodusContactsCallback.Destroy;
 begin
+    _ignoring.Free;
+
     inherited;
+end;
+
+function TExodusContactsCallback.IsIgnored(sjid: WideString): Boolean;
+begin
+    Result := (_ignoring.IndexOf(sjid) <> -1);
+end;
+procedure TExodusContactsCallback.Ignore(sjid: WideString);
+begin
+    _ignoring.Add(sjid);
+end;
+procedure TExodusContactsCallback.Unignore(sjid: WideString);
+var
+    idx: Integer;
+begin
+    idx := _ignoring.IndexOf(sjid);
+    if (idx <> -1) then _ignoring.Delete(idx);
 end;
 
 procedure TExodusContactsCallback.ItemDeleted(const item: IExodusItem);
 begin
+    if Paused then exit;
+    if IsIgnored(item.UID) then exit;
+    
     _contactCtrl.RemoveItem(item);
 end;
 procedure TExodusContactsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
+    if Paused then exit;
+    if IsIgnored(item.UID) then exit;
+    
     TContactAddItem.Create(_contactCtrl, item, false);
 end;
 

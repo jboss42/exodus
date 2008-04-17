@@ -39,6 +39,23 @@ type
      This class handles group management for the item and implements general
      "property" list to allow  functionality extensions for the plug-ins.
   }
+  private
+      _Ctrl: IExodusItemController;
+      _Callback: IExodusItemCallback;
+      _Uid: WideString;
+      _Type: WideString;
+      _Text: WideString;
+      _ExtendedText: WideString;
+      _Groups: TWideStringList;
+      _ImageIndex: Integer;
+
+      //Property list is implemented as name-value pair map.
+      //We need to manage memory for the value strings ourselves.
+      _Properties: TWideStringList;
+      _Active: Boolean;
+      _IsVisible: Boolean;
+
+      _Updating: Boolean;
   protected
       function Get_IsVisible: WordBool; safecall;
       procedure Set_IsVisible(Value: WordBool); safecall;
@@ -74,20 +91,8 @@ type
       procedure Set_Uid(const Value: WideString); safecall;
       function Get_PropertyName(Index: Integer): WideString; safecall;
 
-  private
-      _Ctrl: IExodusItemController;
-      _Callback: IExodusItemCallback;
-      _Uid: WideString;
-      _Type: WideString;
-      _Text: WideString;
-      _ExtendedText: WideString;
-      _Groups: TWideStringList;
-      _ImageIndex: Integer;
-      //Property list is implemented as name-value pair map.
-      //We need to manage memory for the value strings ourselves.
-      _Properties: TWideStringList;
-      _Active: Boolean;
-      _IsVisible: Boolean;
+      property IsUpdating: Boolean read _Updating write _Updating;
+
   public
       constructor Create(ctrl: IExodusItemController;
             Uid: WideString;
@@ -199,6 +204,7 @@ procedure TExodusItem.AddGroup(const Group: WideString);
 begin
     _Ctrl.AddGroup(Group);
     _Groups.Add(Group);
+    if (not IsUpdating) then _Callback.ItemGroupsChanged(Self);
 end;
 
 {---------------------------------------}
@@ -240,11 +246,13 @@ end;
 
 {---------------------------------------}
 procedure TExodusItem.MoveGroup(const GroupFrom, GroupTo: WideString);
-var
-    Index: Integer;
 begin
+    IsUpdating := true;
     RemoveGroup(GroupFrom);
     AddGroup(GroupTo);
+    IsUpdating := false;
+
+    _Callback.ItemGroupsChanged(Self);
 end;
 
 {---------------------------------------}
@@ -255,6 +263,8 @@ begin
     Idx := _Groups.IndexOf(Group);
     if (Idx = -1) then exit;
     _Groups.Delete(Idx);
+
+    if (not IsUpdating) then _Callback.ItemGroupsChanged(Self);
 end;
 
 {---------------------------------------}
