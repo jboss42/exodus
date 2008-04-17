@@ -169,82 +169,84 @@ begin
             end
             else begin
                 tmp := _table.GetField(xml_col);
-                if (tmp <> '') then begin
-                    // if we have the tag stored, try and recreate
-                    // jabber message using stored tag
-                    tmp := XML_UnEscapeChars(UTF8Decode(tmp));
-                    parser.ParseString(tmp, '');
-                    tag := parser.popTag();
-                    _msg := TJabberMessage.Create(tag);
+                if (_table.GetLastError() = 0) then begin
+                    if (tmp <> '') then begin
+                        // if we have the tag stored, try and recreate
+                        // jabber message using stored tag
+                        tmp := XML_UnEscapeChars(UTF8Decode(tmp));
+                        parser.ParseString(tmp, '');
+                        tag := parser.popTag();
+                        _msg := TJabberMessage.Create(tag);
 
-                    // Override the TJabberMessage timestamp
-                    // as it puts a Now() timestamp on when it
-                    // doesn't find the MSGDELAY tag.  As we
-                    // are pulling the original XML, it probably
-                    // didn't have this tag when we stored it.
-                    _msg.Time := _table.GetFieldAsDouble(datetime_col);
+                        // Override the TJabberMessage timestamp
+                        // as it puts a Now() timestamp on when it
+                        // doesn't find the MSGDELAY tag.  As we
+                        // are pulling the original XML, it probably
+                        // didn't have this tag when we stored it.
+                        _msg.Time := _table.GetFieldAsDouble(datetime_col);
 
-                    // Set the nick if it exists in the db.
-                    if (_msg.Nick = '') then begin
-                        _msg.Nick := UTF8Decode(_table.GetField(nick_col));
-                    end;
+                        // Set the nick if it exists in the db.
+                        if (_msg.Nick = '') then begin
+                            _msg.Nick := UTF8Decode(_table.GetField(nick_col));
+                        end;
 
-                    // Set the "isMe" because this cannot be determined by just the tag
-                    if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
-                        _msg.isMe := true;
-                    end;
-
-                    tag.Free();
-                end
-                else begin
-                    // No tag stored
-                    _msg := TJabberMessage.Create();
-
-                    if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
-                        _msg.ToJID := UTF8Decode(_table.GetField(jid_col));
-                        _msg.FromJID := UTF8Decode(_table.GetField(user_jid_col));
-                        if (_msg.FromJID <> '') then begin
+                        // Set the "isMe" because this cannot be determined by just the tag
+                        if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
                             _msg.isMe := true;
+                        end;
+
+                        tag.Free();
+                    end
+                    else begin
+                        // No tag stored
+                        _msg := TJabberMessage.Create();
+
+                        if (UpperCase(_table.GetField(outbound_col)) = 'TRUE') then begin
+                            _msg.ToJID := UTF8Decode(_table.GetField(jid_col));
+                            _msg.FromJID := UTF8Decode(_table.GetField(user_jid_col));
+                            if (_msg.FromJID <> '') then begin
+                                _msg.isMe := true;
+                            end;
+                        end
+                        else begin
+                            _msg.ToJID := UTF8Decode(_table.GetField(user_jid_col));
+                            _msg.FromJID := UTF8Decode( _table.GetField(jid_col));
+                        end;
+                        _msg.Subject := UTF8Decode(_table.GetField(subject_col));
+                        _msg.Thread := UTF8Decode(_table.GetField(thread_col));
+                        _msg.Body := UTF8Decode(_table.GetField(body_col));
+                        _msg.MsgType := UTF8Decode(_table.GetField(type_col));
+                        _msg.Nick := UTF8Decode(_table.GetField(nick_col));
+                        _msg.Time := _table.GetFieldAsDouble(datetime_col);
+                        //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
+                        case _table.GetFieldAsInt(priority_col) of
+                            0: _msg.Priority := high;
+                            1: _msg.Priority := medium;
+                            2: _msg.Priority := low;
+                            else begin
+                                _msg.Priority := none;
+                            end;
+                        end;
+                    end;
+
+                    if ((_exactKeywordMatch) and
+                        (_keywordList.Count > 0)) then begin
+                        for j := 0 to _keywordList.Count - 1 do begin
+                            keywordpos := Pos(_keywordList[j], _msg.Body);
+                            if (keywordpos > 0) then begin
+                                // This keyword was found in case sensitve search,
+                                // we are good to send it on.
+                                Synchronize(Self._OnResult);  // blocks here
+                                break;
+                            end;
                         end;
                     end
                     else begin
-                        _msg.ToJID := UTF8Decode(_table.GetField(user_jid_col));
-                        _msg.FromJID :=UTF8Decode( _table.GetField(jid_col));
+                        Synchronize(Self._OnResult);  // blocks here
                     end;
-                    _msg.Subject := UTF8Decode(_table.GetField(subject_col));
-                    _msg.Thread := UTF8Decode(_table.GetField(thread_col));
-                    _msg.Body := UTF8Decode(_table.GetField(body_col));
-                    _msg.MsgType := UTF8Decode(_table.GetField(type_col));
-                    _msg.Nick := UTF8Decode(_table.GetField(nick_col));
-                    _msg.Time := _table.GetFieldAsDouble(datetime_col);
-                    //_msg.XML := table.GetField(xml_col); // The xml part of a JabberMsg is not the xml that was parsed to create the object.
-                    case _table.GetFieldAsInt(priority_col) of
-                        0: _msg.Priority := high;
-                        1: _msg.Priority := medium;
-                        2: _msg.Priority := low;
-                        else begin
-                            _msg.Priority := none;
-                        end;
-                    end;
+                    _msg.Free();
+                    _msg := nil;
                 end;
-
-                if ((_exactKeywordMatch) and
-                    (_keywordList.Count > 0)) then begin
-                    for j := 0 to _keywordList.Count - 1 do begin
-                        keywordpos := Pos(_keywordList[j], _msg.Body);
-                        if (keywordpos > 0) then begin
-                            // This keyword was found in case sensitve search,
-                            // we are good to send it on.
-                            Synchronize(Self._OnResult);  // blocks here
-                            break;
-                        end;
-                    end;
-                end
-                else begin
-                    Synchronize(Self._OnResult);  // blocks here
-                end;
-                _msg.Free();
-                _msg := nil;
 
                 if (i < _table.RowCount - 1) then begin
                     _table.NextRow();
