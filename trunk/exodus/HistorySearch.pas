@@ -1168,13 +1168,19 @@ begin
             lstResults.Columns.Items[0].ImageIndex := -1;
             lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_up');
             try
-                dt1 := StrToDateTime(Item1.SubItems[0]);
-                dt2 := StrToDateTime(Item2.SubItems[0]);
-                if (dt1 > dt2) then begin
-                    Compare := 1;
-                end
-                else if (dt1 < dt2) then begin
-                    Compare := -1;
+                if ((Item1.SubItems.Count > 0) and
+                    (Item2.SubItems.Count > 0)) then begin
+                    dt1 := StrToDateTime(Item1.SubItems[0]);
+                    dt2 := StrToDateTime(Item2.SubItems[0]);
+                    if (dt1 > dt2) then begin
+                        Compare := 1;
+                    end
+                    else if (dt1 < dt2) then begin
+                        Compare := -1;
+                    end
+                    else begin
+                        Compare := 0;
+                    end;
                 end
                 else begin
                     Compare := 0;
@@ -1186,13 +1192,19 @@ begin
             lstResults.Columns.Items[0].ImageIndex := -1;
             lstResults.Columns.Items[1].ImageIndex := RosterTreeImages.Find('arrow_down');
             try
-                dt1 := StrToDateTime(Item1.SubItems[0]);
-                dt2 := StrToDateTime(Item2.SubItems[0]);
-                if (dt1 > dt2) then begin
-                    Compare := -1;
-                end
-                else if (dt1 < dt2) then begin
-                    Compare := 1;
+                if ((Item1.SubItems.Count > 0) and
+                    (Item2.SubItems.Count > 0)) then begin
+                    dt1 := StrToDateTime(Item1.SubItems[0]);
+                    dt2 := StrToDateTime(Item2.SubItems[0]);
+                    if (dt1 > dt2) then begin
+                        Compare := -1;
+                    end
+                    else if (dt1 < dt2) then begin
+                        Compare := 1;
+                    end
+                    else begin
+                        Compare := 0;
+                    end;
                 end
                 else begin
                     Compare := 0;
