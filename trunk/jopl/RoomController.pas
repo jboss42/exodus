@@ -20,12 +20,13 @@
 unit RoomController;
 
 interface
-uses XMLTag, Exodus_TLB, Unicode;
+uses XMLTag, Exodus_TLB, Unicode, ComObj;
 
 type TRoomController = class
      private
          _JS: TObject;
          _SessionCB: Integer;
+         _ItemsCB: IExodusItemCallback;
 
          //Methods
          procedure _GetRooms();
@@ -36,23 +37,36 @@ type TRoomController = class
          constructor Create(JS: TObject);
          destructor  Destroy; override;
          procedure   AddRoom(const JabberID, RoomName, Nickname: WideString;
-                                 AutoJoin, UseRegisteredNick: Boolean; 
+                                 AutoJoin, UseRegisteredNick: Boolean;
                                  Groups: TWideStringList);
          procedure RemoveRoom(const JabberID: WideString);
          procedure SaveRooms();
 
 end;
 
+type TExodusRoomsCallback = class(TAutoIntfObject, IExodusItemCallback)
+    private
+        _roomCtrl: TRoomController;
+
+        constructor Create(rc: TRoomController);
+
+    public
+        destructor Destroy(); override;
+
+        procedure ItemDeleted(const item: IExodusItem); safecall;
+        procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+end;
+
 implementation
 uses Session, IQ, JabberConst, SysUtils, COMExodusItem, JabberID, RosterImages,
-     DisplayName;
+     DisplayName, ComServ;
 
 {---------------------------------------}
 constructor TRoomController.Create(JS: TObject);
 begin
     _JS := JS;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
-
+    _ItemsCB := TExodusRoomsCallback.Create(Self);
 end;
 
 {---------------------------------------}
@@ -62,6 +76,7 @@ begin
         UnregisterCallback(_SessionCB);
     end;
 
+    _ItemsCB := nil;
 end;
 
 {---------------------------------------}
@@ -71,7 +86,7 @@ var
     Room: IExodusItem;
     i: Integer;
 begin
-    Room := TJabberSession(_js).ItemController.AddItemByUid(JabberID, EI_TYPE_ROOM);
+    Room := TJabberSession(_js).ItemController.AddItemByUid(JabberID, EI_TYPE_ROOM, _ItemsCB);
     Room.ImageIndex := RI_CONFERENCE_INDEX;
     Room.Text := RoomName;    
     Room.AddProperty('name', RoomName);
@@ -201,7 +216,7 @@ begin
             RoomTag := RoomTags.Tags[i];
             jid := WideLowerCase(RoomTag.GetAttribute('jid'));
             TmpJID := TJabberID.Create(RoomTag.GetAttribute('jid'));
-            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM);
+            Item := TJabberSession(_js).ItemController.AddItemByUid(TmpJID.full, EI_TYPE_ROOM, _ItemsCB);
             //Make sure item exists
             if (Item <> nil) then
             begin
@@ -277,7 +292,7 @@ begin
             if (Grp <> '') then
             begin
                 Room.AddGroup(grp);
-                TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
+                //TJabberSession(_js).ItemController.AddItemByUID(grp, EI_TYPE_GROUP);
             end;
 
         end;
@@ -286,12 +301,31 @@ begin
     if (Room.GroupCount = 0) then
     begin
         Room.AddGroup(TJabberSession(_JS).Prefs.getString('roster_default'));
-        TJabberSession(_js).ItemController.AddItemByUID(TJabberSession(_JS).Prefs.getString('roster_default'), EI_TYPE_GROUP);
     end;
 
    
     Grps.Free();
     TmpJid.Free();
+end;
+
+constructor TExodusRoomsCallback.Create(rc: TRoomController);
+begin
+    inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
+
+    _roomCtrl := rc;
+end;
+destructor TExodusRoomsCallback.Destroy();
+begin
+    inherited;
+end;
+
+procedure TExodusRoomsCallback.ItemDeleted(const item: IExodusItem);
+begin
+    _roomCtrl.SaveRooms();
+end;
+procedure TExodusRoomsCallback.ItemGroupsChanged(const item: IExodusItem);
+begin
+    _roomCtrl.SaveRooms();
 end;
 
 end.

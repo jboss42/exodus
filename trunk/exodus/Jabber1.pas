@@ -860,6 +860,37 @@ const
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
 
+//Hidden Helpers!
+type TActionHelper = class
+private
+    _typedActs: IExodusTypedActions;
+    _actName: Widestring;
+
+public
+    constructor Create(typedActs: IExodusTypedActions; actname: Widestring);
+    destructor Destroy; override;
+
+    property TypedActions: IExodusTypedActions read _typedActs;
+    property ActionName: Widestring read _actName;
+
+    procedure click(Sender: TObject);
+end;
+constructor TActionHelper.Create(typedActs: IExodusTypedActions; actname: WideString);
+begin
+    _typedActs := typedActs;
+    _actName := actname;
+end;
+destructor TActionHelper.Destroy;
+begin
+    _typedActs := nil;
+
+    inherited;
+end;
+procedure TActionHelper.click(Sender: TObject);
+begin
+    if (TypedActions <> nil) then TypedActions.execute(ActionName);
+end;
+
 function getDockManager(): IExodusDockManager;
 begin
     Result := frmExodus.dockManager;
@@ -4590,6 +4621,29 @@ var
     typedActs: IExodusTypedActions;
     items: IExodusItemList;
     idx: Integer;
+
+    procedure SetupMenuItem(mi: TTntMenuItem; name: Widestring);
+    var
+        act: IExodusAction;
+        oldAct, newAct: TActionHelper;
+    begin
+        if (typedActs = nil) then
+            act := nil
+        else
+            act := typedActs.GetActionNamed(name);
+
+        TActionHelper(Pointer(mi.Tag)).Free();
+        mi.Enabled := (act <> nil);
+        if (mi.Enabled) then begin
+            newAct := TActionHelper.Create(typedActs, name);
+            mi.OnClick := newAct.click;
+            mi.Tag := Integer(Pointer(newAct));
+        end
+        else begin
+            mi.OnClick := nil;
+            mi.Tag := 0;
+        end;
+    end;
 begin
   tabCtrl := GetRosterWindow().TabController;
   if (tabCtrl.ActiveTab = -1) then
@@ -4603,32 +4657,25 @@ begin
 
   //Enable/Disable contact menus...
   typedActs := actMap.GetActionsFor('contact');
-  mnuPeople_Contacts_BlockContact.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-080-block-contact') <> nil);
-  mnuPeople_Contacts_ViewHistory.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-040-view-history') <> nil);
-  mnuPeople_Contacts_ContactProperties.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-100-properties') <> nil);
-  mnuPeople_Contacts_RenameContact.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-150-rename') <> nil);
-  mnuPeople_Contacts_DeleteContact.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-190-delete') <> nil);
+  SetupMenuItem(mnuPeople_Contacts_BlockContact, '{000-exodus.googlecode.com}-080-block-contact');
+  SetupMenuItem(mnuPeople_Contacts_ViewHistory, '{000-exodus.googlecode.com}-040-view-history');
+  SetupMenuItem(mnuPeople_Contacts_ContactProperties, '{000-exodus.googlecode.com}-100-properties');
+  SetupMenuItem(mnuPeople_Contacts_RenameContact, '{000-exodus.googlecode.com}-150-rename');
+  SetupMenuItem(mnuPeople_Contacts_DeleteContact, '{000-exodus.googlecode.com}-190-delete');
 
   //Enable/Disable room menus...
   typedActs := actMap.GetActionsFor('room');
 
   //Enable/Disable group menus...
   typedActs := actMap.GetActionsFor('group');
-  mnuPeople_Group_RenameGroup.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-150-rename') <> nil);
-  mnuPeople_Group_DeleteGroup.Enabled := (typedActs <> nil) and
-        (typedActs.GetActionNamed('{000-exodus.googlecode.com}-190-delete') <> nil);
+  SetupMenuItem(mnuPeople_Group_RenameGroup, '{000-exodus.googlecode.com}-150-rename');
+  SetupMenuItem(mnuPeople_Group_DeleteGroup, '{000-exodus.googlecode.com}-190-delete');
 
   //Enable/Disable 'create' menu items...
   typedActs := getActionController().actionsForType('{create}');
-  mnuPeople_Contacts_AddContact.Enabled := (typedActs.GetActionNamed('{000-exodus.googlecode.com}-000-add-contact') <> nil);
-  mnuPeople_Conference_OpenNewConferenceRoom.Enabled := (typedActs.GetActionNamed('{000-exodus.googlecode.com}-010-add-room') <> nil);
-  mnuPeople_Group_AddNewRoster.Enabled := (typedActs.GetActionNamed('{000-exodus.googlecode.com}-090-add-group') <> nil);
+  SetupMenuItem(mnuPeople_Contacts_AddContact, '{000-exodus.googlecode.com}-000-add-contact');
+  SetupMenuItem(mnuPeople_Conference_OpenNewConferenceRoom, '{000-exodus.googlecode.com}-010-add-room');
+  SetupMenuItem(mnuPeople_Group_AddNewRoster, '{000-exodus.googlecode.com}-090-add-group');
 end;
 
 procedure TfrmExodus.popChangeView(Sender: TObject);

@@ -290,7 +290,8 @@ uses
   SelectItemAny in 'SelectItemAny.pas' {frmSelectItemAny: TTntForm},
   COMExodusHistorySearchManager in 'COMExodusHistorySearchManager.pas',
   COMExodusHistoryResult in 'COMExodusHistoryResult.pas',
-  COMExodusHistorySearch in 'COMExodusHistorySearch.pas';
+  COMExodusHistorySearch in 'COMExodusHistorySearch.pas',
+  GroupParser in '..\jopl\GroupParser.pas';
 
 {$R *.TLB}
 

@@ -38,7 +38,10 @@ type
    private
        _Item: IExodusItem;
    public
-       constructor Create(Uid: WideString; Type_: WideString);overload;
+       constructor Create(ctrl: IExodusItemController;
+            Uid: WideString;
+            Type_: WideString;
+            cb: IExodusItemCallback);overload;
        destructor Destroy(); override;
        property ExodusItem: IExodusItem read _Item write _Item;
    end;
@@ -46,16 +49,21 @@ type
 implementation
 
 {---------------------------------------}
-constructor TExodusItemWrapper.Create(Uid: WideString; Type_: WideString);
+constructor TExodusItemWrapper.Create(ctrl: IExodusItemController;
+        Uid: WideString;
+        Type_: WideString;
+        cb: IExodusItemCallback);
 begin
     inherited Create;
-    _Item := TExodusItem.Create(Uid, Type_);
+    
+    _Item := TExodusItem.Create(ctrl, Uid, Type_, cb);
 end;
 
 {---------------------------------------}
 destructor TExodusItemWrapper.Destroy();
 begin
     _Item := nil;
+    
     inherited;
 end;
 

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/15/2008 12:31:01 PM from Type Library described below.
+// File generated on 2008-04-17 09:35:24 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -142,6 +142,7 @@ const
   IID_IExodusActionController: TGUID = '{4318FEF0-E766-4269-935E-417CE9925991}';
   CLASS_ExodusActionController: TGUID = '{0C473B97-BF10-4FEF-B20B-8C6724E3A395}';
   IID_IExodusItemSelection: TGUID = '{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}';
+  IID_IExodusItemCallback: TGUID = '{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -321,6 +322,8 @@ type
   IExodusActionControllerDisp = dispinterface;
   IExodusItemSelection = interface;
   IExodusItemSelectionDisp = dispinterface;
+  IExodusItemCallback = interface;
+  IExodusItemCallbackDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -363,6 +366,7 @@ type
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
+  PPUserType1 = ^IExodusItem; {*}
 
 
 // *********************************************************************//
@@ -4580,7 +4584,8 @@ type
     function Get_GroupsCount: Integer; safecall;
     function Get_Item(index: Integer): IExodusItem; safecall;
     procedure RemoveItem(const UID: WideString); safecall;
-    function AddItemByUid(const UID: WideString; const ItemType: WideString): IExodusItem; safecall;
+    function AddItemByUid(const UID: WideString; const ItemType: WideString; 
+                          const cb: IExodusItemCallback): IExodusItem; safecall;
     procedure CopyItem(const UID: WideString; const Group: WideString); safecall;
     procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); safecall;
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); safecall;
@@ -4595,6 +4600,7 @@ type
     procedure Set_GroupExpanded(const Group: WideString; value: WordBool); safecall;
     function GetItemsByType(const Type_: WideString): OleVariant; safecall;
     function Get_GroupsLoaded: WordBool; safecall;
+    function AddGroup(const grp: WideString): IExodusItem; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
     property GroupsCount: Integer read Get_GroupsCount;
     property Item[index: Integer]: IExodusItem read Get_Item;
@@ -4614,7 +4620,8 @@ type
     property GroupsCount: Integer readonly dispid 203;
     property Item[index: Integer]: IExodusItem readonly dispid 205;
     procedure RemoveItem(const UID: WideString); dispid 206;
-    function AddItemByUid(const UID: WideString; const ItemType: WideString): IExodusItem; dispid 201;
+    function AddItemByUid(const UID: WideString; const ItemType: WideString; 
+                          const cb: IExodusItemCallback): IExodusItem; dispid 201;
     procedure CopyItem(const UID: WideString; const Group: WideString); dispid 207;
     procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); dispid 208;
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); dispid 209;
@@ -4628,6 +4635,7 @@ type
     property GroupExpanded[const Group: WideString]: WordBool dispid 222;
     function GetItemsByType(const Type_: WideString): OleVariant; dispid 215;
     property GroupsLoaded: WordBool readonly dispid 221;
+    function AddGroup(const grp: WideString): IExodusItem; dispid 204;
   end;
 
 // *********************************************************************//
@@ -5186,6 +5194,28 @@ type
   IExodusItemSelectionDisp = dispinterface
     ['{DB35AAD2-6E6B-4A3D-A12D-A73E383586B9}']
     function GetSelectedItems: IExodusItemList; dispid 201;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusItemCallback
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}
+// *********************************************************************//
+  IExodusItemCallback = interface(IDispatch)
+    ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
+    procedure ItemDeleted(const item: IExodusItem); safecall;
+    procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusItemCallbackDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}
+// *********************************************************************//
+  IExodusItemCallbackDisp = dispinterface
+    ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
+    procedure ItemDeleted(const item: IExodusItem); dispid 201;
+    procedure ItemGroupsChanged(const item: IExodusItem); dispid 202;
   end;
 
 // *********************************************************************//
