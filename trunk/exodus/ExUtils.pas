@@ -24,7 +24,7 @@ uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
     TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs,   
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows,
-    TntSysUtils;
+    TntSysUtils, Exodus_TLB;
 
 const
     cWIN_95 = 1;             { Windows version constants}
@@ -98,7 +98,7 @@ procedure CenterChildForm(f: TForm; anchor: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 { TODO : Roster refactor }
-//function promptNewGroup: TJabberGroup;
+function promptNewGroup(base_grp: Widestring = ''): IExodusItem;
 
 function IsUnicodeEnabled(): boolean;
 
@@ -128,7 +128,7 @@ function GetParentForm(c: TWinControl): TForm;
 {---------------------------------------}
 implementation
 uses
-    Exodus_TLB, COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
+    COMLogMsg, ExSession, GnuGetText, Presence, InputPassword,
     IniFiles, StrUtils, IdGlobal, ShellAPI, Types,
     XMLUtils, Session, JabberUtils, JabberID, Jabber1, 
     JabberConst, MsgDisplay,
@@ -1073,39 +1073,39 @@ begin
 end;
 
 {---------------------------------------}
-{ TODO : Roster refactor }
-//function promptNewGroup: TJabberGroup;
-//var
-//    msg: Widestring;
-//    new_grp: WideString;
-//    go: TJabberGroup;
-//begin
-//    // Add a roster grp.
-//    Result := nil;
-//
-//    new_grp := _(sDefaultGroup);
-//    msg := _(sNewGroupPrompt);
-//
-//    if (MainSession.Prefs.getBool('nested_groups')) then
-//        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
-//            [MainSession.Prefs.getString('group_separator')]);
-//    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
-//
-//    // add the new grp.
-//    go := MainSession.Roster.getGroup(new_grp);
-//    if (go <> nil) then begin
-//       if (go.Data <> nil) then begin
-//         MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
-//         Result := nil;
-//       end
-//       else
-//         Result := go;
-//    end
-//    else begin
-//        // add the new grp.
-//        Result := MainSession.Roster.addGroup(new_grp);
-//    end;
-//end;
+function promptNewGroup(base_grp: Widestring): IExodusItem;
+var
+    msg: Widestring;
+    new_grp: WideString;
+    nesting: Boolean;
+    grpSeparator: Widestring;
+begin
+    // Add a roster grp.
+    Result := nil;
+
+    new_grp := _(sDefaultGroup);
+    msg := _(sNewGroupPrompt);
+
+    with MainSession.Prefs do begin
+        grpSeparator := getString('group_separator');
+        nesting := getBool('nested_groups') and (grpSeparator <> '');
+    end;
+    if nesting then
+        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
+            [grpSeparator]);
+    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
+
+    // add the new grp.
+    if (nesting) and (base_grp <> '') then
+        new_grp := base_grp + grpSeparator + new_grp;
+    Result := MainSession.ItemController.GetItem(new_grp);
+    if (Result <> nil) then begin
+        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+    end
+    else begin
+        Result := MainSession.ItemController.AddGroup(new_grp);
+    end;
+end;
 
 {---------------------------------------}
 procedure checkAndCenterForm(f: TForm);
