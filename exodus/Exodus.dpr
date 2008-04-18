@@ -291,7 +291,8 @@ uses
   COMExodusHistorySearchManager in 'COMExodusHistorySearchManager.pas',
   COMExodusHistoryResult in 'COMExodusHistoryResult.pas',
   COMExodusHistorySearch in 'COMExodusHistorySearch.pas',
-  GroupParser in '..\jopl\GroupParser.pas';
+  GroupParser in '..\jopl\GroupParser.pas',
+  GroupActions in 'GroupActions.pas';
 
 {$R *.TLB}
 
