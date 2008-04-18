@@ -9,11 +9,12 @@ private
     _actCtrl: IExodusActionController;
     _actMap: IExodusActionMap;
     _targets: IExodusItemList;
+    _splitIdx: Integer;
 
     procedure SetTargets(targets: IExodusItemList);
 
     procedure rebuild;
-    function createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
+    function createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem; offset: Integer = -1): Integer;
     function createSubMenu(itemtype: Widestring; act: IExodusAction; parent: TMenuItem): Integer;
 
 protected
@@ -91,19 +92,30 @@ end;
 
 procedure TExActionPopupMenu.rebuild;
 var
-    mainActs, typedActs: IExodusTypedActions;
+    mainActs, grpActs, typedActs: IExodusTypedActions;
     itemtype: Widestring;
     idx, typeCount, miCount: Integer;
     mi: TTntMenuItem;
 begin
-    typeCount := 0;
+    typeCount := _actMap.TypedActionsCount;
     miCount := 0;
 
-    Items.Clear();
+    //Clear out the old (but not the static items)
+    if (_splitIdx > 0) then begin
+        for idx := _splitIdx - 1 downto 0 do begin
+            Items.Delete(idx);
+        end;
+    end;
+
+    //Remember the main actions...
     mainActs := _actMap.GetActionsFor('');
     if (mainActs <> nil) then Dec(typeCount);
 
-    typeCount := typeCount + _actMap.TypedActionsCount;
+    //Remember group actions...
+    grpActs := _actMap.GetActionsFor('group');
+    if (grpActs <> nil) then Dec(typeCount);
+
+    //build type-specific actions
     if (typeCount > 1) then begin
         for idx := 0 to _actMap.TypedActionsCount - 1 do begin
             typedActs := _actMap.TypedActions[idx];
@@ -112,11 +124,28 @@ begin
             if (itemtype = '') or (itemtype = 'group') then continue;
 
             //TODO:  better item type captions!
-            mi := TTntMenuItem.Create(Items);
+            mi := TExActionMenuItem.Create(Items);
             mi.Caption := _(itemtype + 's');
-            Items.Add(mi);
-            miCount := miCount + createTypedMenu(typedActs, mi);
+            Items.Insert(0, mi);
+            createTypedMenu(typedActs, mi, miCount);
+            Inc(miCount);
         end;
+    end
+    else if (typeCount = 1) then begin
+        //treat the "only" type-specific actions as the main actions
+        for idx := 0 to _actMap.TypedActionsCount - 1 do begin
+            typedActs := _actMap.TypedActions[idx];
+            itemtype := typedActs.ItemType;
+
+            if (itemtype = '') or (itemtype = 'group') then continue;
+
+            mainActs := typedActs;
+        end;
+    end
+    else if (typeCount = 0) then begin
+        //We didn't get anything other than main actions and/or group actions
+        if (mainActs = nil) or (mainActs.ActionCount = 0) then
+            mainActs := grpActs;
     end;
 
     if (mainActs <> nil) and (mainActs.ActionCount > 0) then begin
@@ -125,21 +154,37 @@ begin
             if not Items.Items[miCount - 1].IsLine then begin
                 mi := TTntMenuItem.Create(Items);
                 mi.Caption := '-';
-                Items.Add(mi);
+                Items.Insert(miCount, mi);
                 Inc(miCount);
             end;
         end;
 
-        createTypedMenu(mainActs, Items);
+        miCount := miCount + createTypedMenu(mainActs, Items, miCount);
     end;
+
+    if (miCount <> Items.Count) then begin
+        //add splitter between dynamic and static actions
+        mi := TTntMenuItem.Create(Items);
+        mi.Caption := '-';
+        Items.Insert(miCount, mi);
+    end;
+
+    //Remember where we're at...
+    _splitIdx := miCount;
 end;
 
-function TExActionPopupMenu.createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem): Integer;
+function TExActionPopupMenu.createTypedMenu(
+        actList: IExodusTypedActions;
+        parent: TMenuItem;
+        offset: Integer): Integer;
 var
     idx: Integer;
     act: IExodusAction;
     mi: TExActionMenuItem;
 begin
+    if (offset < 0) or (offset > parent.Count) then
+        offset := parent.Count;
+
     for idx := 0 to actList.ActionCount - 1 do begin
         act := actlist.Action[idx];
         mi := TExActionMenuItem.Create(parent);
@@ -152,10 +197,11 @@ begin
         if createSubMenu(actList.ItemType, act, mi) = 0 then
             mi.OnClick := HandleClick;
 
-        parent.Add(mi);
+        parent.Insert(offset, mi);
+        Inc(offset);
     end;
 
-    Result := 1;
+    Result := actList.ActionCount;
 end;
 function TExActionPopupMenu.createSubMenu(
         itemtype: Widestring;

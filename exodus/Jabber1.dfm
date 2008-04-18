@@ -59,10 +59,6 @@ inherited frmExodus: TfrmExodus
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -946,6 +942,7 @@ inherited frmExodus: TfrmExodus
         end
         object mnuPeople_Contacts_FindContactinRoster: TTntMenuItem
           Caption = '&Find Contact in Contact List'
+          Visible = False
           OnClick = mnuFindClick
         end
         object mnuPeople_Contacts_SendFile: TTntMenuItem
@@ -979,33 +976,17 @@ inherited frmExodus: TfrmExodus
         end
         object N13: TTntMenuItem
           Caption = '-'
+          Visible = False
         end
         object mnuPeople_Group_AddContacttoGroup: TTntMenuItem
           Caption = '&Add Contact to Group...'
+          Visible = False
           OnClick = btnAddContactClick
         end
         object mnuPeople_Group_RemoveContactfromGroup: TTntMenuItem
           Caption = 'Remo&ve Contact from Group...'
-          OnClick = btnDelPersonClick
-        end
-        object mnuPeople_Group_View: TTntMenuItem
-          Caption = '&View'
           Visible = False
-          object mnuPeople_Group_View_All: TTntMenuItem
-            Caption = '&All'
-          end
-          object mnuPeople_Group_View_OnlineOnly: TTntMenuItem
-            Caption = '&Online Only'
-          end
-          object mnuPeople_Group_View_BlockedContacts: TTntMenuItem
-            Caption = '&Blocked Contacts'
-          end
-          object mnuPeople_Group_View_AllRooms: TTntMenuItem
-            Caption = 'All Conference &Rooms'
-          end
-          object mnuPeople_Group_View_AllChats: TTntMenuItem
-            Caption = 'All &Chats'
-          end
+          OnClick = btnDelPersonClick
         end
       end
       object mnuPeople_Conference: TTntMenuItem
@@ -1022,30 +1003,6 @@ inherited frmExodus: TfrmExodus
         object mnuPeople_Conference_SearchforConferenceRoom: TTntMenuItem
           Caption = '&Search for Conference Room...'
           OnClick = mnuSearchClick
-        end
-        object mnuPeople_Conference_CloseConferenceRoom: TTntMenuItem
-          Caption = '&Close Conference Room'
-          Visible = False
-        end
-        object N16: TTntMenuItem
-          Caption = '-'
-          Visible = False
-        end
-        object mnuPeople_Conference_InvitePeopletoConferenceRoom: TTntMenuItem
-          Caption = 'Invite People to Conference Room...'
-          Visible = False
-        end
-        object mnuPeople_Conference_RemovePeopleFromConferenceRoom: TTntMenuItem
-          Caption = 'Remove People From Conference Room...'
-          Visible = False
-        end
-        object mnuPeople_Conference_BlockPeopleFromConferenceRoom: TTntMenuItem
-          Caption = 'Block People From Conference Room...'
-          Visible = False
-        end
-        object mnuPeople_Conference_RenamePeopleFromConferenceRoom: TTntMenuItem
-          Caption = 'Rename People From Conference Room...'
-          Visible = False
         end
         object mnuPeople_Conference_ViewHistory: TTntMenuItem
           Caption = 'View History'
