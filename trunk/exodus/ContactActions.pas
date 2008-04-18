@@ -154,13 +154,13 @@ begin
     act := TBlockContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
     actCtrl.addEnableFilter('contact', act.Name, 'blocked=false');
-    actCtrl.addEnableFilter('contact', act.Name, 'selection=single');
+    actCtrl.addDisableFilter('contact', act.Name, 'selection=multi');
 
     //Setup unblock contact
     act := TUnblockContactAction.Create() as IExodusAction;
     actCtrl.registerAction('contact', act);
     actCtrl.addEnableFilter('contact', act.Name, 'blocked=true');
-    actCtrl.addEnableFilter('contact', act.Name, 'selection=single');
+    actCtrl.addDisableFilter('contact', act.Name, 'selection=multi');
 end;
 
 
