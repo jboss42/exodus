@@ -199,6 +199,7 @@ begin
     _itemView.AlignWithMargins := false;
     _itemView.OnChange := ItemChanged;
     _itemView.PopupMenu := popSelected;
+    _itemView.BorderStyle := bsSingle;
     with MainSession.Prefs do begin
         _itemView.Font.Name := getString('roster_font_name');
         _itemView.Font.Size := getInt('roster_font_size');
