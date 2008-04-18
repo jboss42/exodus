@@ -267,7 +267,8 @@ uses
     ExActionCtrl,
     TntSysUtils,
     DateUtils,
-    SelectItemAny;
+    SelectItemAny,
+    SelectItemAnyRoom;
 
 {---------------------------------------}
 procedure RegisterActions();
@@ -434,7 +435,7 @@ var
 begin
     inherited;
 
-    jid := SelectUIDByTypeAny('room');
+    jid := SelectUIDByTypeAnyRoom('room');
     if (jid <> '') then begin
         _AddRoomToRoomList(jid);
     end;

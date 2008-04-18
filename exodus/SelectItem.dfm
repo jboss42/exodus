@@ -1,8 +1,7 @@
 inherited frmSelectItem: TfrmSelectItem
-  BorderStyle = bsDialog
   Caption = 'Select'
-  ClientHeight = 322
-  ClientWidth = 281
+  ClientHeight = 320
+  ClientWidth = 279
   ParentFont = False
   OnCreate = FormCreate
   ExplicitWidth = 287
@@ -12,34 +11,39 @@ inherited frmSelectItem: TfrmSelectItem
   object pnlInput: TPanel
     Left = 0
     Top = 0
-    Width = 281
-    Height = 288
+    Width = 279
+    Height = 286
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitWidth = 281
+    ExplicitHeight = 288
     object pnlSelect: TPanel
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 275
-      Height = 253
+      Width = 273
+      Height = 251
       Align = alClient
       BevelOuter = bvNone
-      BorderStyle = bsSingle
       ParentColor = True
       TabOrder = 0
+      ExplicitWidth = 275
+      ExplicitHeight = 253
     end
     object pnlEntry: TPanel
       Left = 0
-      Top = 259
-      Width = 281
+      Top = 257
+      Width = 279
       Height = 29
       Align = alBottom
       AutoSize = True
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitTop = 259
+      ExplicitWidth = 281
       object lblJID: TTntLabel
         AlignWithMargins = True
         Left = 3
@@ -56,34 +60,38 @@ inherited frmSelectItem: TfrmSelectItem
         AlignWithMargins = True
         Left = 56
         Top = 3
-        Width = 222
+        Width = 220
         Height = 23
         Align = alClient
         TabOrder = 0
         OnChange = txtJIDChange
+        ExplicitWidth = 222
         ExplicitHeight = 21
       end
     end
   end
   object pnlActions: TPanel
     Left = 0
-    Top = 288
-    Width = 281
+    Top = 286
+    Width = 279
     Height = 34
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    ExplicitTop = 288
+    ExplicitWidth = 281
     object ColorBevel1: TColorBevel
       Left = 0
       Top = 0
-      Width = 281
+      Width = 279
       Height = 2
       Align = alTop
       HighLight = clBtnHighlight
       Shadow = clBtnShadow
       FrameColor = frDefault
+      ExplicitWidth = 281
     end
     object btnCancel: TTntButton
       AlignWithMargins = True

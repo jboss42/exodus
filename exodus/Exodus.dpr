@@ -292,7 +292,8 @@ uses
   COMExodusHistoryResult in 'COMExodusHistoryResult.pas',
   COMExodusHistorySearch in 'COMExodusHistorySearch.pas',
   GroupParser in '..\jopl\GroupParser.pas',
-  GroupActions in 'GroupActions.pas';
+  GroupActions in 'GroupActions.pas',
+  SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm};
 
 {$R *.TLB}
 
