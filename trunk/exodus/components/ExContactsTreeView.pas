@@ -22,11 +22,11 @@ unit ExContactsTreeView;
 
 interface
 
-uses ExTreeView, Exodus_TLB, ExActions;
+uses ExAllTreeView, Exodus_TLB;
 
 
 type
-   TExContactsTreeView = class(TExTreeView)
+   TExContactsTreeView = class(TExAllTreeView)
 
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;
@@ -36,7 +36,7 @@ type
 
 implementation
 
-uses Classes, COMExodusItem, ExUtils, ExActionCtrl, gnugettext, SelectItem, Unicode;
+uses Classes, COMExodusItem;
 
 {---------------------------------------}
 function  TExContactsTreeView.FilterItem(Item: IExodusItem): Boolean;

@@ -21,11 +21,11 @@ unit ExRoomsTreeView;
 
 interface
 
-uses ExTreeView, Exodus_TLB;
+uses ExAllTreeView, Exodus_TLB;
 
 
 type
-   TExRoomsTreeView = class(TExTreeView)
+   TExRoomsTreeView = class(TExAllTreeView)
 
    protected
        function  FilterItem(Item: IExodusItem): Boolean; override;

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExForm, XMLTag, ExTreeView, Exodus_TLB, LoginWindow, ComCtrls,
+  Dialogs, ExForm, XMLTag, ExAllTreeView, Exodus_TLB, LoginWindow, ComCtrls,
   TntComCtrls, ExContactsTreeView, ExRoomsTreeView, COMExodusTabController,
   Unicode;
 
@@ -21,7 +21,7 @@ type
       { Private declarations }
       _SessionCB: integer;            // session callback id
       _RosterCB: integer;            // roster callback id
-      _TreeMain: TExTreeView;
+      _TreeMain: TExAllTreeView;
       _TreeContacts: TExContactsTreeView;
       _TreeRooms: TExRoomsTreeView;
       _TabController: IExodusTabController;
@@ -41,7 +41,7 @@ type
       function  GetDockParent(): TForm;
       procedure DockWindow(docksite: TWinControl);
       function  SelectionFor(Index: Integer): IExodusItemList;
-      property  RosterTree: TExTreeView read _TreeMain;
+      property  RosterTree: TExAllTreeView read _TreeMain;
       property  ContactsTree: TExContactsTreeView read _TreeContacts;
       property  RoomsTree: TExRoomsTreeView read _TreeRooms;
       property  ImageList: TImageList read _GetImages  write _SetImages;
@@ -58,7 +58,7 @@ var
 
 implementation
 uses ExUtils, CommCtrl, COMExodusItemList, Session, RosterImages,
-        gnugettext;
+        gnugettext, ExTreeView;
 
 {$R *.dfm}
 
@@ -211,7 +211,7 @@ begin
     _PageControl.WindowProc := _PageControlNewWndProc;
     _TabController := TExodusTabController.Create();
     _ActiveTabColor := TColor(MainSession.prefs.getInt('roster_bg'));
-    _TreeMain := TExTreeView.Create(Self, MainSession);
+    _TreeMain := TExAllTreeView.Create(Self, MainSession);
     _TreeMain.Align := alClient;
     _TreeMain.Canvas.Pen.Width := 1;
     _TreeMain.SetFontsAndColors();
