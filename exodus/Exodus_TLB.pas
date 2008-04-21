@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-17 09:35:24 from Type Library described below.
+// File generated on 2008-04-21 07:57:58 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
@@ -366,7 +366,6 @@ type
 // Declaration of structures, unions and aliases.                         
 // *********************************************************************//
   PWideString1 = ^WideString; {*}
-  PPUserType1 = ^IExodusItem; {*}
 
 
 // *********************************************************************//
@@ -4590,7 +4589,7 @@ type
     procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); safecall;
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); safecall;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); safecall;
-    function GetGroupItems(const Group: WideString): OleVariant; safecall;
+    function GetGroupItems(const Group: WideString): IExodusItemList; safecall;
     function GetItem(const UID: WideString): IExodusItem; safecall;
     procedure ClearItems; safecall;
     function SaveGroups: WordBool; safecall;
@@ -4598,7 +4597,7 @@ type
     function Get_GroupExists(const Group: WideString): WordBool; safecall;
     function Get_GroupExpanded(const Group: WideString): WordBool; safecall;
     procedure Set_GroupExpanded(const Group: WideString; value: WordBool); safecall;
-    function GetItemsByType(const Type_: WideString): OleVariant; safecall;
+    function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function Get_GroupsLoaded: WordBool; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
     property ItemsCount: Integer read Get_ItemsCount;
@@ -4626,14 +4625,14 @@ type
     procedure MoveItem(const UID: WideString; const GroupFrom: WideString; const GroupTo: WideString); dispid 208;
     procedure RemoveGroupMoveContent(const Group: WideString; const GroupTo: WideString); dispid 209;
     procedure RemoveItemFromGroup(const UID: WideString; const Group: WideString); dispid 210;
-    function GetGroupItems(const Group: WideString): OleVariant; dispid 211;
+    function GetGroupItems(const Group: WideString): IExodusItemList; dispid 211;
     function GetItem(const UID: WideString): IExodusItem; dispid 214;
     procedure ClearItems; dispid 217;
     function SaveGroups: WordBool; dispid 218;
     function GetGroups: OleVariant; dispid 219;
     property GroupExists[const Group: WideString]: WordBool readonly dispid 220;
     property GroupExpanded[const Group: WideString]: WordBool dispid 222;
-    function GetItemsByType(const Type_: WideString): OleVariant; dispid 215;
+    function GetItemsByType(const Type_: WideString): IExodusItemList; dispid 215;
     property GroupsLoaded: WordBool readonly dispid 221;
     function AddGroup(const grp: WideString): IExodusItem; dispid 204;
   end;
@@ -5203,8 +5202,8 @@ type
 // *********************************************************************//
   IExodusItemCallback = interface(IDispatch)
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
-    procedure ItemDeleted(const item: IExodusItem); safecall;
-    procedure ItemGroupsChanged(const item: IExodusItem); safecall;
+    procedure ItemDeleted(const Item: IExodusItem); safecall;
+    procedure ItemGroupsChanged(const Item: IExodusItem); safecall;
   end;
 
 // *********************************************************************//
@@ -5214,8 +5213,8 @@ type
 // *********************************************************************//
   IExodusItemCallbackDisp = dispinterface
     ['{74B2E5CA-F9AB-4FC6-8361-36652C7D57B2}']
-    procedure ItemDeleted(const item: IExodusItem); dispid 201;
-    procedure ItemGroupsChanged(const item: IExodusItem); dispid 202;
+    procedure ItemDeleted(const Item: IExodusItem); dispid 201;
+    procedure ItemGroupsChanged(const Item: IExodusItem); dispid 202;
   end;
 
 // *********************************************************************//

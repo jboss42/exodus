@@ -78,7 +78,7 @@ inherited frmSubscribe: TfrmSubscribe
       Top = 44
       Width = 200
       Height = 21
-      ItemHeight = 0
+      ItemHeight = 13
       Sorted = True
       TabOrder = 1
     end
