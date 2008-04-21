@@ -23,31 +23,39 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, TntStdCtrls, buttonFrame, ExForm, TntForms, ExFrame;
+  Dialogs, StdCtrls, TntStdCtrls, buttonFrame, ExForm, TntForms, ExFrame,
+  Exodus_TLB;
 
 type
+  TGroupOperationType = (tgoAsk, tgoCopy, tgoMove);
   TfrmGrpManagement = class(TExForm)
     frameButtons1: TframeButtons;
     optMove: TTntRadioButton;
     optCopy: TTntRadioButton;
     lstGroups: TTntListBox;
+    lblTitle: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure optChangeGroupOpClick(Sender: TObject);
   private
     { Private declarations }
-    _items: TList;
+    _items: IExodusItemList;
+    _op: TGroupOperationType;
+
+    constructor Create(AOwner: TComponent; op: TGroupOperationType);
+
   public
     { Public declarations }
-    procedure setItems(items: TList);
+    procedure setItems(items: IExodusItemList);
   end;
 
-var
-  frmGrpManagement: TfrmGrpManagement;
 
-function ShowGrpManagement(items: TList): TfrmGrpManagement;
+function ShowGrpManagement(
+        items: IExodusItemList;
+        op: TGroupOperationType = tgoAsk): TfrmGrpManagement;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -59,60 +67,108 @@ uses
     ContactController, Session, JabberUtils, ExUtils,  GnuGetText;
 
 {---------------------------------------}
-function ShowGrpManagement(items: TList): TfrmGrpManagement;
+function ShowGrpManagement(
+        items: IExodusItemList;
+        op: TGroupOperationType): TfrmGrpManagement;
 begin
-    Result := TfrmGrpManagement.Create(Application);
+    Result := TfrmGrpManagement.Create(Application, op);
     Result.setItems(items);
     Result.Show;
 end;
 
 {---------------------------------------}
+constructor TfrmGrpManagement.Create(AOwner: TComponent; op: TGroupOperationType);
+begin
+    _op := op;
+
+    inherited Create(AOwner);
+end;
+{---------------------------------------}
 procedure TfrmGrpManagement.FormCreate(Sender: TObject);
+var
+    idx: Integer;
+    grps: IExodusItemList;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-        { TODO : Roster refactor }
-    //MainSession.Roster.AssignGroups(lstGroups.Items);
+    grps := MainSession.ItemController.GetItemsByType('group');
+    for idx := 0 to grps.Count - 1 do begin
+        lstGroups.Items.Add(grps.Item[idx].UID);
+    end;
     lstGroups.ItemIndex := lstGroups.Items.IndexOf(MainSession.Prefs.getString('roster_default'));
+
+    //Display the right controls based on the operation...
+    if (_op <> tgoAsk) then begin
+        lblTitle.Visible := true;
+        optCopy.Visible := false;
+        optMove.Visible := false;
+
+        if (_op = tgoCopy) then
+            lblTitle.Caption := optCopy.Caption
+        else if (_op = tgoMove) then
+             lblTitle.Caption := optMove.Caption;
+    end
+    else begin
+        if optCopy.Checked then
+            _op := tgoCopy
+        else if optMove.Checked then
+            _op := tgoMove;
+    end;
 end;
 
 {---------------------------------------}
-procedure TfrmGrpManagement.setItems(items: TList);
+procedure TfrmGrpManagement.setItems(items: IExodusItemList);
 begin
     _items := items;
 end;
 
 {---------------------------------------}
 procedure TfrmGrpManagement.frameButtons1btnOKClick(Sender: TObject);
-//var
-//    new_grp: Widestring;
-//    i: integer;
-//    ritem: TJabberRosterItem;
+var
+    new_grp: Widestring;
+    idx: integer;
+    item: IExodusItem;
 begin
- { TODO : Roster refactor }
-//    // Move or copy _items;
-//    if ((_items = nil) or (_items.Count <= 0)) then begin
-//        Self.Close();
-//        exit;
-//    end;
-//
-//    new_grp := lstGroups.Items[lstGroups.ItemIndex];
-//    for i := 0 to _items.Count - 1 do begin
-//        ritem := TJabberRosterItem(_items[i]);
-//        if (optMove.Checked) then begin
-//            ritem.ClearGroups();
-//            ritem.AddGroup(new_grp);
-//            ritem.Update();
-//        end
-//        else begin
-//            if (not ritem.IsInGroup(new_grp)) then begin
-//                ritem.AddGroup(new_grp);
-//                ritem.Update();
-//            end;
-//        end;
-//    end;
+    // Move or copy _items;
+    if ((_items = nil) or (_items.Count <= 0)) then begin
+        Self.Close();
+        exit;
+    end;
 
-//    Self.Close();
+    new_grp := lstGroups.Items[lstGroups.ItemIndex];
+    for idx := 0 to _items.Count - 1 do begin
+        item := _items.Item[idx];
+
+        if (item.Type_ = 'group') then begin
+            //Create the subgroup 'new_grp/item.Text'
+            //Copy/move all items into subgroup
+
+            //if (_op = tgoMove) then
+            //    MainSession.ItemController.RemoveItem(item.UID);
+        end
+        else begin
+            if (_op = tgoCopy) and not item.BelongsToGroup(new_grp) then begin
+                item.AddGroup(new_grp)
+            end
+            else if (_op = tgoMove) then begin
+                //remove unmatched groups from item
+                item.ClearGroups();
+                item.AddGroup(new_grp);
+            end;
+        end;
+    end;
+
+    Self.Close();
+end;
+
+procedure TfrmGrpManagement.optChangeGroupOpClick(Sender: TObject);
+begin
+  inherited;
+
+  if (Sender = optMove) then
+    _op := tgoMove
+  else if (Sender = optCopy) then
+    _op := tgoCopy;
 end;
 
 {---------------------------------------}
