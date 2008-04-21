@@ -293,7 +293,8 @@ uses
   COMExodusHistorySearch in 'COMExodusHistorySearch.pas',
   GroupParser in '..\jopl\GroupParser.pas',
   GroupActions in 'GroupActions.pas',
-  SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm};
+  SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
+  ExAllTreeView in 'components\ExAllTreeView.pas';
 
 {$R *.TLB}
 

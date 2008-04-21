@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/21/2008 12:25:36 PM from Type Library described below.
+// File generated on 2008-04-21 14:29:49 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4190,7 +4190,7 @@ type
     function Get_RawMsgXML: WideString; safecall;
     procedure Set_RawMsgXML(const value: WideString); safecall;
     function Get_Priority: Integer; safecall;
-    procedure Set_Priority(Value: Integer); safecall;
+    procedure Set_Priority(value: Integer); safecall;
     property ToJid: WideString read Get_ToJid write Set_ToJid;
     property FromJid: WideString read Get_FromJid write Set_FromJid;
     property MsgType: WideString read Get_MsgType write Set_MsgType;

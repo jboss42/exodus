@@ -87,34 +87,37 @@ type
     procedure ItemDeleted(const item: IExodusItem); safecall;
     procedure ItemGroupsChanged(const item: IExodusItem); safecall;
   end;
-  
-  TContactAddItem = class
+
+  TContactOp = class
   private
     _ctrl: TContactController;
     _item: IExodusItem;
-    _subscribe: boolean;
+    _stype: Widestring;
 
-    procedure _Callback(event: String; tag: TXMLTag);
+  protected
+    constructor Create(ctrl: TContactController; item: IExodusItem; stype: Widestring = '');
+    procedure _Callback(event:String; tag:TXMLTag); virtual;
+
+    property Controller: TContactController read _ctrl;
+    property Item: IExodusItem read _item;
+  end;
+  TContactAddItemOp = class(TContactOp)
+  private
+    _subscribe: boolean;
 
   protected
     constructor Create(ctrl: TContactController; item: IExodusItem; subscribe: Boolean);
 
-    property Controller: TContactController read _ctrl;
-    property Item: IExodusItem read _item;
     property Subscribe: Boolean read _subscribe;
+    procedure _Callback(event: String; tag: TXMLTag); override;
   end;
-  TContactRemItem = class
+  TContactRemItemOp = class(TContactOp)
   private
-    _ctrl: TContactController;
-    _item: IExodusItem;
-
-    procedure _Callback(event: String; tag: TXMLTag);
 
   protected
     constructor Create(ctrl: TContactController; item: IExodusItem);
 
-    property Controller: TContactController read _ctrl;
-    property Item: IExodusItem read _item;
+    procedure _Callback(event: String; tag: TXMLTag); override;
   end;
 
 implementation
@@ -366,6 +369,7 @@ begin
         else if (item <> nil) then begin
             //some sort of update
             _ParseContact(item, riTag);
+            _UpdateContact(item, MainSession.ppdb.FindPres(item.UID, ''));
             if item.IsVisible then
                 session.FireEvent('/item/add', item)
             else
@@ -671,12 +675,12 @@ begin
     end;
 
     //now we inform the server...
-    TContactAddItem.Create(Self, Result, subscribe);
+    TContactAddItemOp.Create(Self, Result, subscribe);
 end;
 procedure TContactController.RemoveItem(item: IExodusItem);
 begin
     if (item = nil) or (item.Type_ <> 'contact') then exit;
-    TContactRemItem.Create(Self, item);
+    TContactRemItemOp.Create(Self, item);
 end;
 procedure TContactController.RemoveItem(sjid: WideString);
 begin
@@ -725,23 +729,21 @@ begin
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
     
-    TContactAddItem.Create(_contactCtrl, item, false);
+    TContactOp.Create(_contactCtrl, item);
 end;
 
-constructor TContactAddItem.Create(
+constructor TContactOp.Create(
         ctrl: TContactController;
         item: IExodusItem;
-        subscribe: Boolean);
+        stype: WideString);
 var
     session: TJabberSession;
     iq: TJabberIQ;
     idx: Integer;
 begin
-    inherited Create();
-
     _ctrl := ctrl;
     _item := item;
-    _subscribe := subscribe;
+    _stype := stype;
 
     session := TJabberSession(_ctrl._JS);
     iq := TJabberIQ.Create(session, session.generateID, Self._Callback);
@@ -751,16 +753,47 @@ begin
         with qTag.AddTag('item') do begin
             setAttribute('jid', item.UID);
             setAttribute('name', item.value['Name']);
+            if (_stype <> '') then
+                setAttribute('subscription', _stype);
 
-            for idx := 0 to item.GroupCount - 1 do begin
-                AddBasicTag('group', item.Group[idx]);
+            if (_stype <> 'remove') then begin
+                for idx := 0 to item.GroupCount - 1 do begin
+                    AddBasicTag('group', item.Group[idx]);
+                end;
             end;
        end;
     end;
 
     iq.Send();
 end;
-procedure TContactAddItem._Callback(event: string; tag: TXMLTag);
+procedure TContactOp._Callback(event: string; tag: TXMLTag);
+var
+    session: TJabberSession;
+begin
+    if (tag <> nil) and (tag.GetAttribute('type') = 'result') then begin
+        session := TJabberSession(Controller._JS);
+
+        if item.IsVisible then
+            session.FireEvent('/item/update', item);
+    end;
+
+    Self.Free();
+end;
+
+constructor TContactAddItemOp.Create(
+        ctrl: TContactController;
+        item: IExodusItem;
+        subscribe: Boolean);
+var
+    session: TJabberSession;
+    iq: TJabberIQ;
+    idx: Integer;
+begin
+    _subscribe := subscribe;
+
+    inherited Create(ctrl, item);
+end;
+procedure TContactAddItemOp._Callback(event: string; tag: TXMLTag);
 var
     session: TJabberSession;
 begin
@@ -771,34 +804,20 @@ begin
             SendSubscribe(item.UID, session);
 
         if item.IsVisible then
-            session.FireEvent('/item/add', item);
+            session.FireEvent('/item/update', item);
     end;
 
     Self.Free();
 end;
 
-constructor TContactRemItem.Create(ctrl: TContactController; item: IExodusItem);
+constructor TContactRemItemOp.Create(ctrl: TContactController; item: IExodusItem);
 var
     session: TJabberSession;
     iq: TJabberIQ;
 begin
-    _ctrl := ctrl;
-    _item := item;
-
-    session := TJabberSession(ctrl._JS);
-    iq := TJabberIQ.Create(session, session.generateID, _Callback);
-    with iq do begin
-        Namespace := XMLNS_ROSTER;
-        iqType := 'set';
-        with qTag.AddTag('item') do begin
-            setAttribute('jid', item.UID);
-            setAttribute('subscription', 'remove');
-        end;
-    end;
-
-    iq.Send();
+    inherited Create(ctrl, item, 'remove');
 end;
-procedure TContactRemItem._Callback(event: string; tag: TXMLTag);
+procedure TContactRemItemOp._Callback(event: string; tag: TXMLTag);
 var
     session: TJabberSession;
 begin

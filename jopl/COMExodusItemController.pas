@@ -401,6 +401,7 @@ end;
 procedure TExodusItemController.RemoveItem(const Uid: WideString);
 var
     ItemWrapper: TExodusItemWrapper;
+    subItems: IExodusItemList;
     Idx: Integer;
 begin
     //Check if item exists
@@ -408,7 +409,12 @@ begin
     if (Idx < 0) then exit;
     //Remove item from the list, call remove for the item
     ItemWrapper := TExodusItemWrapper(_Items.Objects[Idx]);
+    if (ItemWrapper.ExodusItem.Type_ = EI_TYPE_GROUP) then begin
+        //TODO:  remove all of the group's items...
+    end;
+
     _Items.Delete(Idx);
+
     ItemWrapper.Free;
 
 end;

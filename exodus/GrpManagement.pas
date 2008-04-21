@@ -125,37 +125,81 @@ end;
 {---------------------------------------}
 procedure TfrmGrpManagement.frameButtons1btnOKClick(Sender: TObject);
 var
-    new_grp: Widestring;
-    idx: integer;
+    new_grp, sep: Widestring;
     item: IExodusItem;
+    itemCtrl: IExodusItemController;
+
+    procedure moveItems(toGrp: Widestring; items: IExodusItemList);
+    var
+        subgrp: Widestring;
+        idx: integer;
+    begin
+        for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+
+            if (item.Type_ = 'group') then begin
+                if (sep <> '') then begin
+                    //create sub-group
+                    subgrp := toGrp + sep + item.Text;
+                    itemCtrl.AddGroup(subgrp);
+                end
+                else begin
+                    //just move everyone from this group to the toGrp
+                    subgrp := toGrp;
+                end;
+
+                moveItems(subgrp, itemCtrl.GetGroupItems(item.UID));
+
+                itemCtrl.RemoveItem(item.UID);
+            end
+            else begin
+                item.ClearGroups();
+                item.AddGroup(toGrp);
+            end;
+        end;
+    end;
+    procedure copyItems(toGrp: Widestring; items: IExodusItemList);
+    var
+        subgrp: Widestring;
+        idx: integer;
+    begin
+        for idx := 0 to items.Count - 1 do begin
+            item := items.Item[idx];
+
+            if (item.Type_ = 'group') then begin
+                if (sep <> '') then begin
+                    //create sub-group
+                    subgrp := toGrp + sep + item.Text;
+                    itemCtrl.AddGroup(subgrp);
+                end
+                else begin
+                    //just move everyone from this group to the toGrp
+                    subgrp := toGrp;
+                end;
+
+                copyItems(subgrp, itemCtrl.GetGroupItems(item.UID));
+            end
+            else if not item.BelongsToGroup(toGrp) then begin
+                item.AddGroup(toGrp);
+            end;
+        end;
+    end;
 begin
-    // Move or copy _items;
     if ((_items = nil) or (_items.Count <= 0)) then begin
         Self.Close();
         exit;
     end;
 
     new_grp := lstGroups.Items[lstGroups.ItemIndex];
-    for idx := 0 to _items.Count - 1 do begin
-        item := _items.Item[idx];
-
-        if (item.Type_ = 'group') then begin
-            //Create the subgroup 'new_grp/item.Text'
-            //Copy/move all items into subgroup
-
-            //if (_op = tgoMove) then
-            //    MainSession.ItemController.RemoveItem(item.UID);
-        end
-        else begin
-            if (_op = tgoCopy) and not item.BelongsToGroup(new_grp) then begin
-                item.AddGroup(new_grp)
-            end
-            else if (_op = tgoMove) then begin
-                //remove unmatched groups from item
-                item.ClearGroups();
-                item.AddGroup(new_grp);
-            end;
-        end;
+    itemCtrl := MainSession.ItemController;
+    if MainSession.Prefs.getBool('nested_groups') then
+        sep := MainSession.Prefs.getString('group_separator')
+    else
+        sep := '';
+        
+    case _op of
+        tgoCopy: copyItems(new_grp, _items);
+        tgoMove: moveItems(new_grp, _items);
     end;
 
     Self.Close();
@@ -187,7 +231,7 @@ end;
 {---------------------------------------}
 procedure TfrmGrpManagement.FormDestroy(Sender: TObject);
 begin
-    if (_items <> nil) then FreeAndNil(_items);
+    if (_items <> nil) then _items := nil;
 end;
 
 end.
