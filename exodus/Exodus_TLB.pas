@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/21/2008 12:11:12 PM from Type Library described below.
+// File generated on 4/21/2008 12:25:36 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
@@ -4160,7 +4160,7 @@ type
   IExodusLogMsg = interface(IDispatch)
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
     procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
-                         const ToJid: WideString; const FromJid: WideString; 
+                         const ToJid: WideString; const FromJid: WideString; Priority: Integer; 
                          const Nick: WideString; const Direction: WideString; 
                          const MsgType: WideString; const Thread: WideString; 
                          const Subject: WideString; const Body: WideString; const XML: WideString; 
@@ -4189,6 +4189,8 @@ type
     procedure Set_XML(const value: WideString); safecall;
     function Get_RawMsgXML: WideString; safecall;
     procedure Set_RawMsgXML(const value: WideString); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(Value: Integer); safecall;
     property ToJid: WideString read Get_ToJid write Set_ToJid;
     property FromJid: WideString read Get_FromJid write Set_FromJid;
     property MsgType: WideString read Get_MsgType write Set_MsgType;
@@ -4201,6 +4203,7 @@ type
     property Direction: WideString read Get_Direction write Set_Direction;
     property XML: WideString read Get_XML write Set_XML;
     property RawMsgXML: WideString read Get_RawMsgXML write Set_RawMsgXML;
+    property Priority: Integer read Get_Priority write Set_Priority;
   end;
 
 // *********************************************************************//
@@ -4211,7 +4214,7 @@ type
   IExodusLogMsgDisp = dispinterface
     ['{2E945876-C2E5-4A24-98B4-0E38BD65D431}']
     procedure FillLogMsg(const ID: WideString; const Timestamp: WideString; 
-                         const ToJid: WideString; const FromJid: WideString; 
+                         const ToJid: WideString; const FromJid: WideString; Priority: Integer; 
                          const Nick: WideString; const Direction: WideString; 
                          const MsgType: WideString; const Thread: WideString; 
                          const Subject: WideString; const Body: WideString; const XML: WideString; 
@@ -4228,6 +4231,7 @@ type
     property Direction: WideString dispid 210;
     property XML: WideString dispid 211;
     property RawMsgXML: WideString dispid 213;
+    property Priority: Integer dispid 214;
   end;
 
 // *********************************************************************//

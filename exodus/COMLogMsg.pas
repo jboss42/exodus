@@ -41,6 +41,7 @@ type
     _delay: Widestring;
     _extraXML: Widestring;
     _rawXML: Widestring;
+    _priority: integer;
 
   public
     constructor Create(msg: TJabberMessage);
@@ -58,8 +59,9 @@ type
     function Get_Timestamp: WideString; safecall;
     function Get_ToJid: WideString; safecall;
     function Get_XML: WideString; safecall;
-    procedure FillLogMsg(const ID, Timestamp, ToJid, FromJid, Nick, Direction,
-      MsgType, Thread, Subject, Body, XML, RawMsgXML: WideString); safecall;
+    procedure FillLogMsg(const ID, Timestamp, ToJid, FromJid: WideString;
+      Priority: Integer; const Nick, Direction, MsgType, Thread, Subject, Body,
+      XML, RawMsgXML: WideString); safecall;
     procedure Set_Body(const Value: WideString); safecall;
     procedure Set_Direction(const Value: WideString); safecall;
     procedure Set_FromJid(const Value: WideString); safecall;
@@ -73,6 +75,8 @@ type
     procedure Set_XML(const Value: WideString); safecall;
     function Get_RawMsgXML: WideString; safecall;
     procedure Set_RawMsgXML(const Value: WideString); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(Value: Integer); safecall;
 
   end;
 
@@ -103,6 +107,12 @@ begin
     _delay := DateTimeToJabber(msg.Time);
     _extraXML := msg.XML;
     _rawXML := msg.Tag.xml;
+    case msg.Priority of
+        high: _priority := 0;
+        medium: _priority := 1;
+        low: _priority := 2;
+        none: _priority := 3;
+    end;
 end;
 
 function TExodusLogMsg.Get_Body: WideString;
@@ -160,8 +170,9 @@ begin
     Result := _extraXML;
 end;
 
-procedure TExodusLogMsg.FillLogMsg(const ID, Timestamp, ToJid, FromJid, Nick,
-  Direction, MsgType, Thread, Subject, Body, XML, RawMsgXML: WideString);
+procedure TExodusLogMsg.FillLogMsg(const ID, Timestamp, ToJid,
+  FromJid: WideString; Priority: Integer; const Nick, Direction, MsgType,
+  Thread, Subject, Body, XML, RawMsgXML: WideString);
 begin
     _body := Body;
     _dir := Direction;
@@ -175,8 +186,8 @@ begin
     _delay := Timestamp;
     _extraXML := XML;
     _rawXML := RawMsgXML;
-end;
-
+    _priority := Priority;
+end;        
 
 procedure TExodusLogMsg.Set_Body(const Value: WideString);
 begin
@@ -241,6 +252,16 @@ end;
 procedure TExodusLogMsg.Set_RawMsgXML(const Value: WideString);
 begin
     _rawXML := Value;
+end;
+
+function TExodusLogMsg.Get_Priority: Integer;
+begin
+    Result := _priority;
+end;
+
+procedure TExodusLogMsg.Set_Priority(Value: Integer);
+begin
+    _priority := Value;
 end;
 
 initialization
