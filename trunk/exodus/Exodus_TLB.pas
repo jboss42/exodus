@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-21 07:57:58 from Type Library described below.
+// File generated on 4/21/2008 12:11:12 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\Projects\MomentIM\src\Exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4899,6 +4899,8 @@ type
     function Get_MessageTypeCount: Integer; safecall;
     function GetJIDExclusiveHandlerID(const JID: WideString): Integer; safecall;
     procedure SetJIDExclusiveHandlerID(JIDindex: Integer; HandlerID: Integer); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(value: Integer); safecall;
     property minDate: TDateTime read Get_minDate write Set_minDate;
     property maxDate: TDateTime read Get_maxDate write Set_maxDate;
     property ExactKeywordMatch: WordBool read Get_ExactKeywordMatch write Set_ExactKeywordMatch;
@@ -4907,6 +4909,7 @@ type
     property AllowedSearchTypeCount: Integer read Get_AllowedSearchTypeCount;
     property SearchID: WideString read Get_SearchID;
     property MessageTypeCount: Integer read Get_MessageTypeCount;
+    property Priority: Integer read Get_Priority write Set_Priority;
   end;
 
 // *********************************************************************//
@@ -4934,6 +4937,7 @@ type
     property MessageTypeCount: Integer readonly dispid 216;
     function GetJIDExclusiveHandlerID(const JID: WideString): Integer; dispid 217;
     procedure SetJIDExclusiveHandlerID(JIDindex: Integer; HandlerID: Integer); dispid 218;
+    property Priority: Integer dispid 219;
   end;
 
 // *********************************************************************//

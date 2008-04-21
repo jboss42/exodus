@@ -129,6 +129,8 @@ type
     dlgPrint: TPrintDialog;
     btnPrint: TTntButton;
     btnDelete: TTntButton;
+    grpPriority: TTntGroupBox;
+    chkOnlyHighPriority: TTntCheckBox;
     procedure FormResize(Sender: TObject);
     procedure btnAdvBasicSwitchClick(Sender: TObject);
     procedure radioAllClick(Sender: TObject);
@@ -679,6 +681,10 @@ begin
                 _SearchObj.Set_maxDate(Trunc(dateTo.DateTime) + 0.999999); // Just shy of midnight
             end;
 
+            if (chkOnlyHighPriority.Checked) then begin
+                _SearchObj.Set_Priority(0); // 0 = high;
+            end;
+
             for i := 0 to txtKeywords.Lines.Count - 1 do begin
                 // Don't allow all whitespace keywords.
                 if (Trim(txtKeywords.Lines[i]) <> '') then begin
@@ -839,7 +845,7 @@ begin
     _sessionCB := Mainsession.RegisterCallback(SessionCallback, '/session/disconnected');
 
     _basicpanel_height := txtBasicKeywordSearch.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
-    _advpanel_height := grpDate.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
+    _advpanel_height := grpKeyword.Height + (2 * TOP_BOTTOM_GUTTER_HEIGHT);
 
 end;
 
@@ -1371,6 +1377,7 @@ begin
     // Adv serach bar
     GroupBoxWidth := (pnlAdvancedSearchBar.Width - (5 * ADVGRPGUTTER_WIDTH)) div 4;
     grpDate.Width := GroupBoxWidth;
+    grpPriority.Width := GroupBoxWidth;
     grpKeyword.Width := GroupBoxWidth;
     grpContacts.Width := GroupBoxWidth;
     grpRooms.Width := GroupBoxWidth;
@@ -1648,8 +1655,10 @@ begin
 
                 if (not datefound) then begin
                     // need to add date and msg
-                    if (_SearchObj.Get_KeywordCount() > 0) then begin
-                        // If we have a keyword count, then we will only get partial results
+                    if ((_SearchObj.Get_KeywordCount() > 0) or
+                        (_SearchObj.Get_Priority < 3)) then begin // 3 = none
+                        // If we have a keyword count, or a priority restrction,
+                        // then we will only get partial results
                         ritem.havePartialDayResults := true;
                     end
                     else begin
@@ -1672,8 +1681,10 @@ begin
 
         if (not jidfound) then begin
             // Nothing found so create it all
-            if (_SearchObj.Get_KeywordCount() > 0) then begin
-                // If we have a keyword count, then we will only get partial results
+            if ((_SearchObj.Get_KeywordCount() > 0) or
+                (_SearchObj.Get_Priority < 3)) then begin // 3 = none
+                // If we have a keyword count, or a priority restrction,
+                // then we will only get partial results
                 ritem.havePartialDayResults := true;
             end
             else begin

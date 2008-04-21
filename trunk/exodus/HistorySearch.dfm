@@ -18,7 +18,7 @@ inherited frmHistorySearch: TfrmHistorySearch
     Left = 0
     Top = 0
     Width = 718
-    Height = 150
+    Height = 169
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
@@ -27,23 +27,25 @@ inherited frmHistorySearch: TfrmHistorySearch
       Left = 0
       Top = 0
       Width = 718
-      Height = 150
+      Height = 169
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
+      ExplicitHeight = 150
       object pnlBasicSearchHistoryFor: TTntPanel
         Left = 0
         Top = 0
         Width = 250
-        Height = 150
+        Height = 169
         Align = alLeft
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        ExplicitHeight = 150
         DesignSize = (
           250
-          150)
+          169)
         object lblBasicHistoryFor: TTntLabel
           Left = 8
           Top = 9
@@ -66,15 +68,16 @@ inherited frmHistorySearch: TfrmHistorySearch
         Left = 468
         Top = 0
         Width = 250
-        Height = 150
+        Height = 169
         Align = alRight
         BevelOuter = bvNone
         ParentBackground = False
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 150
         DesignSize = (
           250
-          150)
+          169)
         object lblBasicKeywordSearch: TTntLabel
           Left = 10
           Top = 9
@@ -96,39 +99,40 @@ inherited frmHistorySearch: TfrmHistorySearch
       Left = 0
       Top = 0
       Width = 718
-      Height = 150
+      Height = 169
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
       Visible = False
+      ExplicitHeight = 150
       object grpDate: TTntGroupBox
         Left = 8
         Top = 9
         Width = 170
-        Height = 135
+        Height = 101
         Caption = 'Date'
         TabOrder = 0
         DesignSize = (
           170
-          135)
+          101)
         object lblFrom: TTntLabel
           Left = 19
-          Top = 69
+          Top = 45
           Width = 28
           Height = 13
           Caption = 'From:'
         end
         object lblTo: TTntLabel
           Left = 19
-          Top = 96
+          Top = 72
           Width = 16
           Height = 13
           Caption = 'To:'
         end
         object dateFrom: TTntDateTimePicker
           Left = 72
-          Top = 65
+          Top = 41
           Width = 89
           Height = 21
           Anchors = [akLeft, akTop, akRight]
@@ -139,7 +143,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         end
         object dateTo: TTntDateTimePicker
           Left = 72
-          Top = 92
+          Top = 68
           Width = 89
           Height = 21
           Anchors = [akLeft, akTop, akRight]
@@ -149,9 +153,9 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnChange = dateToChange
         end
         object radioAll: TTntRadioButton
-          Left = 7
+          Left = 5
           Top = 19
-          Width = 160
+          Width = 80
           Height = 17
           Anchors = [akLeft, akTop, akRight]
           Caption = 'All'
@@ -161,9 +165,9 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = radioAllClick
         end
         object radioRange: TTntRadioButton
-          Left = 7
-          Top = 42
-          Width = 160
+          Left = 85
+          Top = 19
+          Width = 80
           Height = 17
           Anchors = [akLeft, akTop, akRight]
           Caption = 'Range'
@@ -175,12 +179,12 @@ inherited frmHistorySearch: TfrmHistorySearch
         Left = 186
         Top = 9
         Width = 170
-        Height = 135
+        Height = 154
         Caption = 'Keywords'
         TabOrder = 1
         DesignSize = (
           170
-          135)
+          154)
         object TntLabel3: TTntLabel
           Left = 5
           Top = 20
@@ -191,7 +195,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         end
         object chkExact: TTntCheckBox
           Left = 5
-          Top = 111
+          Top = 126
           Width = 160
           Height = 17
           Anchors = [akLeft, akTop, akRight]
@@ -202,7 +206,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Left = 5
           Top = 42
           Width = 160
-          Height = 59
+          Height = 73
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           WordWrap = False
@@ -212,15 +216,15 @@ inherited frmHistorySearch: TfrmHistorySearch
         Left = 364
         Top = 9
         Width = 170
-        Height = 135
+        Height = 154
         Caption = 'Contacts'
         TabOrder = 2
         DesignSize = (
           170
-          135)
+          154)
         object btnAddContact: TTntButton
           Left = 5
-          Top = 104
+          Top = 121
           Width = 68
           Height = 28
           Anchors = [akTop, akRight]
@@ -230,7 +234,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         end
         object btnRemoveContact: TTntButton
           Left = 97
-          Top = 104
+          Top = 121
           Width = 68
           Height = 28
           Anchors = [akTop, akRight]
@@ -242,7 +246,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Left = 5
           Top = 19
           Width = 160
-          Height = 82
+          Height = 96
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           MultiSelect = True
@@ -254,15 +258,15 @@ inherited frmHistorySearch: TfrmHistorySearch
         Left = 540
         Top = 9
         Width = 170
-        Height = 135
+        Height = 154
         Caption = 'Rooms'
         TabOrder = 3
         DesignSize = (
           170
-          135)
+          154)
         object btnAddRoom: TTntButton
           Left = 4
-          Top = 104
+          Top = 121
           Width = 68
           Height = 28
           Anchors = [akTop, akRight]
@@ -272,7 +276,7 @@ inherited frmHistorySearch: TfrmHistorySearch
         end
         object btnRemoveRoom: TTntButton
           Left = 96
-          Top = 104
+          Top = 121
           Width = 68
           Height = 28
           Anchors = [akTop, akRight]
@@ -284,7 +288,7 @@ inherited frmHistorySearch: TfrmHistorySearch
           Left = 4
           Top = 19
           Width = 160
-          Height = 82
+          Height = 96
           Anchors = [akLeft, akTop, akRight]
           ItemHeight = 13
           MultiSelect = True
@@ -292,17 +296,39 @@ inherited frmHistorySearch: TfrmHistorySearch
           OnClick = lstRoomsClick
         end
       end
+      object grpPriority: TTntGroupBox
+        Left = 8
+        Top = 116
+        Width = 170
+        Height = 47
+        Caption = 'Message Priority'
+        TabOrder = 4
+        DesignSize = (
+          170
+          47)
+        object chkOnlyHighPriority: TTntCheckBox
+          Left = 5
+          Top = 19
+          Width = 160
+          Height = 17
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'High Priority Only'
+          TabOrder = 0
+        end
+      end
     end
   end
   object pnlResults: TTntPanel
     Left = 0
-    Top = 185
+    Top = 204
     Width = 718
-    Height = 241
+    Height = 222
     Align = alClient
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 1
+    ExplicitTop = 185
+    ExplicitHeight = 241
     object Splitter1: TSplitter
       Left = 0
       Top = 89
@@ -360,21 +386,23 @@ inherited frmHistorySearch: TfrmHistorySearch
       Left = 0
       Top = 92
       Width = 718
-      Height = 149
+      Height = 130
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 149
     end
   end
   object pnlControlBar: TTntPanel
     Left = 0
-    Top = 150
+    Top = 169
     Width = 718
     Height = 35
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 2
+    ExplicitTop = 150
     DesignSize = (
       718
       35)

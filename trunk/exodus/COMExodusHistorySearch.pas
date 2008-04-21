@@ -40,6 +40,7 @@ type
     _maxDate: TDateTime;
     _SearchID: Widestring;
     _ExactMatch: boolean;
+    _priority: integer;
 
     // Methods
 
@@ -77,6 +78,8 @@ type
     function Get_MessageTypeCount: Integer; safecall;
     function GetJIDExclusiveHandlerID(const JID: WideString): Integer; safecall;
     procedure SetJIDExclusiveHandlerID(JIDIndex, HandlerID: Integer); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(Value: Integer); safecall;
 
     // Properties
   end;
@@ -89,7 +92,8 @@ implementation
 uses
     ComServ,
     sysUtils,
-    DateUtils;
+    DateUtils,
+    JabberMsg;
 
 
 {---------------------------------------}
@@ -107,6 +111,7 @@ begin
     _maxDate := Tomorrow(); // Makes sure we capture all of today by default
     _SearchID := Format('%8.6f', [Now()]);
     _ExactMatch := false;
+    _priority := 3; //  3 = none
 end;
 
 {---------------------------------------}
@@ -325,6 +330,20 @@ begin
 
     _ExclusiveJIDSearchList[JIDIndex] := IntToStr(HandlerID);
 end;
+
+{---------------------------------------}
+function TExodusHistorySearch.Get_Priority: Integer;
+begin
+    Result := _priority;
+end;
+
+{---------------------------------------}
+procedure TExodusHistorySearch.Set_Priority(Value: Integer);
+begin
+    _priority := Value;
+end;
+
+
 
 
 
