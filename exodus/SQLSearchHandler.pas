@@ -275,6 +275,19 @@ begin
                   ')';
     end;
 
+    if (SearchParameters.Priority = 0) then begin
+        Result := Result + 'AND priority=0'; // high only
+    end
+    else if (SearchParameters.Priority = 1) then begin
+        Result := Result + 'AND (priority=0 OR priority=1)'; // High or Normal
+    end
+    else if (SearchParameters.Priority = 2) then begin
+        Result := Result + 'AND (priority=0 OR priority=1 OR priority=2)'; // High or Normal or Low but NOT None
+    end;
+    // Else everything - so no need to add SQL restriction.
+
+
+
     // GROUP BY part
 
     // ORDER BY part
