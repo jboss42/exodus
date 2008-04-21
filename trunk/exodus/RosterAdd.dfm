@@ -11,8 +11,6 @@ inherited frmAdd: TfrmAdd
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -73,7 +71,7 @@ inherited frmAdd: TfrmAdd
     Top = 101
     Width = 142
     Height = 21
-    ItemHeight = 0
+    ItemHeight = 13
     Sorted = True
     TabOrder = 2
   end
@@ -126,7 +124,7 @@ inherited frmAdd: TfrmAdd
     Width = 142
     Height = 21
     Style = csDropDownList
-    ItemHeight = 0
+    ItemHeight = 13
     TabOrder = 4
     OnChange = cboTypeChange
   end

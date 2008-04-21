@@ -322,11 +322,22 @@ procedure TfrmAdd.FormCreate(Sender: TObject);
 var
     i, nNetworks: Integer;
     tinfo : TNetworkInfo;
+
+    procedure populateGroups();
+    var
+        idx: Integer;
+        items: IExodusItemList;
+    begin
+        items := MainSession.ItemController.GetItemsByType('group');
+        for idx := 0 to items.Count - 1 do begin
+            cboGroup.Items.Add(items.Item[idx].UID);
+        end;
+    end;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-  { TODO : Roster refactor }  
-    //MainSession.Roster.AssignGroups(cboGroup.Items);
+
+    populateGroups();
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
 
     dnListener := TDisplayNameEventListener.Create();

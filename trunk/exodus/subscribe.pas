@@ -69,8 +69,7 @@ type
   public
     { Public declarations }
     showhandler: TObject;
-    { TODO : Roster refactor }
-    //procedure setup(jid: TJabberID; ri: TJabberRosterItem; tag: TXMLTag);
+    
     procedure setup(jid: TJabberID; item: IExodusItem; tag: TXMLTag);
     procedure EnableAdd(e: boolean);
   end;
@@ -172,6 +171,17 @@ var
     idx: integer;
     skipImage: boolean;
     showNow: boolean; //show immediately, goit dispname from roster
+
+    procedure populateGroups();
+    var
+        items: IExodusItemList;
+        idx: Integer;
+    begin
+        items := MainSession.ItemController.GetItemsByType('group');
+        for idx := 0 to items.Count - 1 do begin
+            cboGroup.Items.Add(items.Item[idx].UID);
+        end;
+    end;
 begin
 //    { TODO : Roster refactor }
     showNow := false;
@@ -191,17 +201,17 @@ begin
     EnableAdd(chkSubscribe.Enabled);
 //
     if (chkSubscribe.Enabled) then begin
-//        MainSession.Roster.AssignGroups(cboGroup.Items);
+        populateGroups();
         dgrp := MainSession.Prefs.getString('roster_default');
-        //cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
+        cboGroup.ItemIndex := cboGroup.Items.IndexOf(dgrp);
         if (item <> nil) then begin
             txtNickName.Text := item.Text;
-//            showNow := true;
-//            if (item.GroupCount > 0) then
-//                cboGroup.itemIndex := cboGroup.Items.indexof(item.Group[0]);
+            showNow := true;
+            if (item.GroupCount > 0) then
+                cboGroup.itemIndex := cboGroup.Items.indexof(item.Group[0]);
         end;
     end;
-//
+    
     idx := -1;
     skipImage := false;
     c := tag.QueryXPTag('/presence/c[@xmlns="' + XMLNS_CAPS + '"]');
@@ -225,8 +235,9 @@ begin
     end;
 
     if (not skipImage) then begin
-        if (idx = -1) then
+        if (idx = -1) then begin
             idx := RosterTreeImages.Find('available');
+        end;
 
         if (idx >= 0) then
             RosterTreeImages.GetImage(idx, imgIdent);
