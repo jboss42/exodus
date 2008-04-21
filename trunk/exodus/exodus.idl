@@ -827,7 +827,7 @@ library Exodus
     [
     id(0x000000D4)
     ]
-    HRESULT _stdcall FillLogMsg([in] BSTR ID, [in] BSTR Timestamp, [in] BSTR ToJid, [in] BSTR FromJid, [in] BSTR Nick, [in] BSTR Direction, [in] BSTR MsgType, [in] BSTR Thread, [in] BSTR Subject, [in] BSTR Body, [in] BSTR XML, [in] BSTR RawMsgXML );
+    HRESULT _stdcall FillLogMsg([in] BSTR ID, [in] BSTR Timestamp, [in] BSTR ToJid, [in] BSTR FromJid, [in] long Priority, [in] BSTR Nick, [in] BSTR Direction, [in] BSTR MsgType, [in] BSTR Thread, [in] BSTR Subject, [in] BSTR Body, [in] BSTR XML, [in] BSTR RawMsgXML );
     [
     propget, 
     id(0x000000C9)
@@ -948,6 +948,16 @@ library Exodus
     id(0x000000D5)
     ]
     HRESULT _stdcall RawMsgXML([in] BSTR value );
+    [
+    propget, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall Priority([out, retval] long * Value );
+    [
+    propput, 
+    id(0x000000D6)
+    ]
+    HRESULT _stdcall Priority([in] long Value );
   };
 
   [
@@ -1639,12 +1649,12 @@ library Exodus
     propget, 
     id(0x000000DB)
     ]
-    HRESULT _stdcall Priority([out, retval] long * Value );
+    HRESULT _stdcall Priority([out, retval] long * value );
     [
     propput, 
     id(0x000000DB)
     ]
-    HRESULT _stdcall Priority([in] long Value );
+    HRESULT _stdcall Priority([in] long value );
   };
 
   [
@@ -8797,7 +8807,7 @@ library Exodus
     [
     id(0x000000D3)
     ]
-    HRESULT _stdcall GetGroupItems([in] BSTR Group, [out, retval] VARIANT * Items );
+    HRESULT _stdcall GetGroupItems([in] BSTR Group, [out, retval] IExodusItemList ** Items /*Warning: unable to validate structure name: */ );
     [
     id(0x000000D6)
     ]
@@ -8832,7 +8842,7 @@ library Exodus
     [
     id(0x000000D7)
     ]
-    HRESULT _stdcall GetItemsByType([in] BSTR Type_, [out, retval] VARIANT * Items );
+    HRESULT _stdcall GetItemsByType([in] BSTR Type_, [out, retval] IExodusItemList ** Items /*Warning: unable to validate structure name: */ );
     [
     propget, 
     id(0x000000DD)
