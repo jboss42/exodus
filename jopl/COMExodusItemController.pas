@@ -46,7 +46,7 @@ type
       function Get_GroupsCount: Integer; safecall;
       function Get_Item(Index: Integer): IExodusItem; safecall;
       function Get_ItemsCount: Integer; safecall;
-      function GetGroupItems(const Group: WideString): OleVariant; safecall;
+    function GetGroupItems(const Group: WideString): IExodusItemList; safecall;
       function AddItemByUid(const UID, ItemType: WideString;
       const cb: IExodusItemCallback): IExodusItem; safecall;
       procedure CopyItem(const UID, Group: WideString); safecall;
@@ -54,7 +54,7 @@ type
       procedure RemoveGroupMoveContent(const Group, groupTo: WideString); safecall;
       procedure RemoveItem(const Uid: WideString); safecall;
       procedure RemoveItemFromGroup(const UID, Group: WideString); safecall;
-      function GetItemsByType(const Type_: WideString): OleVariant; safecall;
+    function GetItemsByType(const Type_: WideString): IExodusItemList; safecall;
     function AddGroup(const grp: WideString): IExodusItem; safecall;
   private
       _Items: TWideStringList;
@@ -70,8 +70,6 @@ type
       procedure _ParseGroups(Event: string; Tag: TXMLTag);
       procedure _SendGroups();
       function  _GetItemWrapper(const UID: Widestring): TExodusItemWrapper;
-      function  _GetGroupItems(const Group: WideString): TWideStringList;
-      function  _GetItemsByType(Type_: WideString): TWideStringList;
       function  _AddGroup(const GroupUID: WideString): TExodusItemWrapper;
   public
       constructor Create(JS: TObject);
@@ -98,7 +96,7 @@ implementation
 
 uses ComServ, Classes,
      JabberConst, IQ, Session, GroupInfo, Variants, Contnrs,
-     COMExodusItem;
+     COMExodusItem, COMExodusItemList;
 
 {---------------------------------------}
 constructor TExodusItemController.Create(JS: TObject);
@@ -233,32 +231,6 @@ begin
 end;
 
 {---------------------------------------}
-function  TExodusItemController._GetGroupItems(const Group: WideString): TWideStringList;
-var
-    i: Integer;
-begin
-    Result := TWideStringList.Create();
-    for i := 0 to _Items.Count - 1 do
-    begin
-        if ((TExodusItemWrapper(_Items.Objects[i]).ExodusItem).BelongsToGroup(Group)) then
-            Result.AddObject(_Items[i], _Items.Objects[i]);
-    end;
-end;
-
-{---------------------------------------}
-function  TExodusItemController._GetItemsByType(Type_: WideString): TWideStringList;
-var
-    i: Integer;
-begin
-    Result := TWideStringList.Create();
-    for i := 0 to _Items.Count - 1 do
-    begin
-        if ((TExodusItemWrapper(_Items.Objects[i]).ExodusItem).Type_ = Type_) then
-            Result.AddObject(_Items[i], _Items.Objects[i]);
-    end;
-end;
-
-{---------------------------------------}
 function TExodusItemController.Get_GroupsCount: Integer;
 var
     i: Integer;
@@ -285,20 +257,17 @@ end;
 
 {---------------------------------------}
 function TExodusItemController.GetGroupItems(
-  const Group: WideString): OleVariant;
+  const Group: WideString): IExodusItemList;
 var
-    List: TWideStringList;
-    Items: Variant;
-    i: Integer;
+    item: IExodusItem;
+    idx: Integer;
 begin
-    List := _GetGroupItems(group);
-    Items := VarArrayCreate([0,List.Count], varOleStr);
-
-    for i := 0 to List.Count - 1 do begin
-        VarArrayPut(Items, List[i], i);
+    Result := TExodusItemList.Create();
+    for idx := 0 to _Items.Count - 1 do begin
+        item := TExodusItemWrapper(_Items.Objects[idx]).ExodusItem;
+        if (item.BelongsToGroup(Group)) then
+            Result.Add(item);
     end;
-    list.Free();
-    Result := items;
 end;
 
 function TExodusItemController._GetItemWrapper(const UID: WideString): TExodusItemWrapper;
@@ -413,20 +382,19 @@ end;
 procedure TExodusItemController.RemoveGroupMoveContent(const Group,
   groupTo: WideString);
 var
-    Items: TWideStringList;
+    Items: IExodusItemList;
     Item: IExodusItem;
     i: Integer;
 begin
     //Get list of items in the group
-    Items := _GetGroupItems(Group);
+    Items := GetGroupItems(Group);
     for i := 0 to Items.Count do
     begin
        //Iterate through the list and move each item to the new group
-       Item := TExodusItemWrapper(Items.Objects[i]).ExodusItem;
+       Item := Items.Item[i];
        if (Item <> nil) then
            Item.MoveGroup(Group, GroupTo);
     end;
-    Items.Free;
 end;
 
 {---------------------------------------}
@@ -580,20 +548,17 @@ begin
 end;
 
 function TExodusItemController.GetItemsByType(
-  const Type_: WideString): OleVariant;
+  const Type_: WideString): IExodusItemList;
 var
-    List: TWideStringList;
-    Items: Variant;
-    i: Integer;
+    item: IExodusItem;
+    idx: Integer;
 begin
-    List := _GetItemsByType(Type_);
-    Items := VarArrayCreate([0,List.Count], varOleStr);
-
-    for i := 0 to List.Count - 1 do begin
-        VarArrayPut(Items, List[i], i);
+    Result := TExodusItemList.Create();
+    for idx := 0 to _Items.Count - 1 do begin
+        item := TExodusItemWrapper(_Items.Objects[idx]).ExodusItem;
+        if (item.Type_ = Type_) then
+            Result.Add(item);
     end;
-    list.Free();
-    Result := items;
 end;
 
 function TExodusItemController.AddGroup(const grp: WideString): IExodusItem;

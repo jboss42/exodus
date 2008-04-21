@@ -1,24 +1,33 @@
 inherited frmGrpManagement: TfrmGrpManagement
   Left = 255
   Top = 165
+  BorderStyle = bsDialog
   Caption = 'Group Management'
-  ClientHeight = 209
-  ClientWidth = 359
+  ClientHeight = 211
+  ClientWidth = 361
   DefaultMonitor = dmDesktop
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  DesignSize = (
-    359
-    209)
+  ExplicitWidth = 367
+  ExplicitHeight = 243
   PixelsPerInch = 96
   TextHeight = 13
+  object lblTitle: TTntLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 49
+    Width = 355
+    Height = 13
+    Align = alTop
+    Visible = False
+    ExplicitWidth = 3
+  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 173
-    Width = 359
+    Top = 175
+    Width = 361
     Height = 36
     Align = alBottom
     Color = 13681583
@@ -35,16 +44,16 @@ inherited frmGrpManagement: TfrmGrpManagement
     ExplicitWidth = 359
     ExplicitHeight = 36
     inherited Panel2: TPanel
-      Width = 359
+      Width = 361
       Height = 36
       ExplicitWidth = 359
       ExplicitHeight = 36
       inherited Bevel1: TBevel
-        Width = 359
+        Width = 361
         ExplicitWidth = 359
       end
       inherited Panel1: TPanel
-        Left = 199
+        Left = 201
         Height = 31
         ExplicitLeft = 199
         ExplicitHeight = 31
@@ -58,31 +67,42 @@ inherited frmGrpManagement: TfrmGrpManagement
     end
   end
   object optMove: TTntRadioButton
-    Left = 16
-    Top = 8
-    Width = 329
+    AlignWithMargins = True
+    Left = 3
+    Top = 26
+    Width = 355
     Height = 17
-    Anchors = [akLeft, akTop, akRight]
+    Align = alTop
     Caption = 'Move the selected contacts to the following group:'
     Checked = True
     TabOrder = 1
     TabStop = True
+    OnClick = optChangeGroupOpClick
+    ExplicitLeft = 16
+    ExplicitTop = 8
+    ExplicitWidth = 329
   end
   object optCopy: TTntRadioButton
-    Left = 16
-    Top = 32
-    Width = 329
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 355
     Height = 17
-    Anchors = [akLeft, akTop, akRight]
+    Align = alTop
     Caption = 'Copy the selected contacts to the following group:'
     TabOrder = 2
+    OnClick = optChangeGroupOpClick
+    ExplicitLeft = 16
+    ExplicitTop = 32
+    ExplicitWidth = 329
   end
   object lstGroups: TTntListBox
-    Left = 32
-    Top = 56
-    Width = 313
+    AlignWithMargins = True
+    Left = 3
+    Top = 67
+    Width = 355
     Height = 105
-    Anchors = [akLeft, akTop, akRight]
+    Align = alBottom
     ExtendedSelect = False
     ItemHeight = 13
     Sorted = True
