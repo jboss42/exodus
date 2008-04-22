@@ -49,6 +49,9 @@ begin
 
     act := TAddGroupAction.Create();
     actCtrl.registerAction('{create}', act);
+
+    actCtrl.registerAction('group', act);
+    actCtrl.addEnableFilter('group', act.Name, 'selection=single');
 end;
 
 initialization;

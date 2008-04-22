@@ -12,7 +12,7 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-21 14:29:49 from Type Library described below.
+// File generated on 2008-04-22 14:04:53 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
@@ -472,6 +472,7 @@ type
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; safecall;
     function Get_DataStore: IExodusDataStore; safecall;
     function Get_HistorySearchManager: IExodusHistorySearchManager; safecall;
+    function Get_ActionController: IExodusActionController; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -495,6 +496,7 @@ type
     property ItemController: IExodusItemController read Get_ItemController;
     property DataStore: IExodusDataStore read Get_DataStore;
     property HistorySearchManager: IExodusHistorySearchManager read Get_HistorySearchManager;
+    property ActionController: IExodusActionController read Get_ActionController;
   end;
 
 // *********************************************************************//
@@ -599,6 +601,7 @@ type
     function NewAXWindow(const ActiveX_GUID: WideString; const ActiveXWidnow_Title: WideString): IExodusAXWindow; dispid 225;
     property DataStore: IExodusDataStore readonly dispid 226;
     property HistorySearchManager: IExodusHistorySearchManager readonly dispid 227;
+    property ActionController: IExodusActionController readonly dispid 228;
   end;
 
 // *********************************************************************//
