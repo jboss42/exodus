@@ -153,6 +153,7 @@ begin
     end;
     _DNListener.Free;
 
+    _ItemsCB._Release();
     _ItemsCB := nil;
 end;
 
@@ -693,10 +694,11 @@ begin
 
     _contactCtrl := cc;
     _ignoring := TWidestringList.Create;
+    _AddRef();
 end;
 destructor TExodusContactsCallback.Destroy;
 begin
-    _ignoring.Free;
+    _ignoring.Free();
 
     inherited;
 end;
