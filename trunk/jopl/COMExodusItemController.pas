@@ -404,22 +404,32 @@ end;
 procedure TExodusItemController.RemoveItem(const Uid: WideString);
 var
     ItemWrapper: TExodusItemWrapper;
+    cb: IExodusItemCallback;
     subItems: IExodusItemList;
     Idx: Integer;
 begin
     //Check if item exists
     Idx := _items.IndexOf(uid);
     if (Idx < 0) then exit;
-    //Remove item from the list, call remove for the item
+
+    //Remove item from the list (stops infinite loop)
     ItemWrapper := TExodusItemWrapper(_Items.Objects[Idx]);
+    _Items.Delete(Idx);
+    
     if (ItemWrapper.ExodusItem.Type_ = EI_TYPE_GROUP) then begin
-        //TODO:  remove all of the group's items...
+        //remove all of the group's items...
+        subItems := GetGroupItems(ItemWrapper.ExodusItem.UID);
+        for idx := 0 to subItems.Count - 1 do begin
+            subItems.Item[idx].RemoveGroup(ItemWrapper.ExodusItem.UID);
+        end;
     end;
 
-    _Items.Delete(Idx);
+    //notify callback
+    cb := TExodusItem(ItemWrapper.ExodusItem).Callback;
+    if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
 
+    //then finally, we delete
     ItemWrapper.Free;
-
 end;
 
 {---------------------------------------}

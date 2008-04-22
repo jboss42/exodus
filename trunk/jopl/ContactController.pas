@@ -88,36 +88,45 @@ type
     procedure ItemGroupsChanged(const item: IExodusItem); safecall;
   end;
 
-  TContactOp = class
+  TContactUpdateItemOp = class
   private
     _ctrl: TContactController;
     _item: IExodusItem;
-    _stype: Widestring;
 
   protected
-    constructor Create(ctrl: TContactController; item: IExodusItem; stype: Widestring = '');
+    constructor Create(ctrl: TContactController; item: IExodusItem);
     procedure _Callback(event:String; tag:TXMLTag); virtual;
 
     property Controller: TContactController read _ctrl;
     property Item: IExodusItem read _item;
   end;
-  TContactAddItemOp = class(TContactOp)
+  TContactAddItemOp = class
   private
+    _ctrl: TContactController;
+    _item: IExodusItem;
     _subscribe: boolean;
 
   protected
     constructor Create(ctrl: TContactController; item: IExodusItem; subscribe: Boolean);
 
+    procedure _Callback(event: String; tag: TXMLTag);
+
     property Subscribe: Boolean read _subscribe;
-    procedure _Callback(event: String; tag: TXMLTag); override;
+    property Controller: TContactController read _ctrl;
+    property Item: IExodusItem read _item;
   end;
-  TContactRemItemOp = class(TContactOp)
+  TContactRemItemOp = class
   private
+    _ctrl: TContactController;
+    _item: IExodusItem;
 
   protected
     constructor Create(ctrl: TContactController; item: IExodusItem);
 
-    procedure _Callback(event: String; tag: TXMLTag); override;
+    procedure _Callback(event: String; tag: TXMLTag);
+    
+    property Controller: TContactController read _ctrl;
+    property Item: IExodusItem read _item;
   end;
 
 implementation
@@ -680,7 +689,11 @@ begin
 end;
 procedure TContactController.RemoveItem(item: IExodusItem);
 begin
-    if (item = nil) or (item.Type_ <> 'contact') then exit;
+    if (item = nil) or
+            (item.Type_ <> 'contact') or
+            (item.value['Removing'] = 'true') then exit;
+
+    item.value['Removing'] := 'true';
     TContactRemItemOp.Create(Self, item);
 end;
 procedure TContactController.RemoveItem(sjid: WideString);
@@ -731,13 +744,12 @@ begin
     if Paused then exit;
     if IsIgnored(item.UID) then exit;
     
-    TContactOp.Create(_contactCtrl, item);
+    TContactUpdateItemOp.Create(_contactCtrl, item);
 end;
 
-constructor TContactOp.Create(
+constructor TContactUpdateItemOp.Create(
         ctrl: TContactController;
-        item: IExodusItem;
-        stype: WideString);
+        item: IExodusItem);
 var
     session: TJabberSession;
     iq: TJabberIQ;
@@ -745,7 +757,6 @@ var
 begin
     _ctrl := ctrl;
     _item := item;
-    _stype := stype;
 
     session := TJabberSession(_ctrl._JS);
     iq := TJabberIQ.Create(session, session.generateID, Self._Callback);
@@ -755,20 +766,16 @@ begin
         with qTag.AddTag('item') do begin
             setAttribute('jid', item.UID);
             setAttribute('name', item.value['Name']);
-            if (_stype <> '') then
-                setAttribute('subscription', _stype);
 
-            if (_stype <> 'remove') then begin
-                for idx := 0 to item.GroupCount - 1 do begin
-                    AddBasicTag('group', item.Group[idx]);
-                end;
+            for idx := 0 to item.GroupCount - 1 do begin
+                AddBasicTag('group', item.Group[idx]);
             end;
        end;
     end;
 
     iq.Send();
 end;
-procedure TContactOp._Callback(event: string; tag: TXMLTag);
+procedure TContactUpdateItemOp._Callback(event: string; tag: TXMLTag);
 var
     session: TJabberSession;
 begin
@@ -791,9 +798,26 @@ var
     iq: TJabberIQ;
     idx: Integer;
 begin
+    _ctrl := ctrl;
+    _item := item;
     _subscribe := subscribe;
 
-    inherited Create(ctrl, item);
+    session := TJabberSession(_ctrl._JS);
+    iq := TJabberIQ.Create(session, session.generateID, Self._Callback);
+    with iq do begin
+        Namespace := XMLNS_ROSTER;
+        iqType := 'set';
+        with qTag.AddTag('item') do begin
+            setAttribute('jid', item.UID);
+            setAttribute('name', item.value['Name']);
+
+            for idx := 0 to item.GroupCount - 1 do begin
+                AddBasicTag('group', item.Group[idx]);
+            end;
+       end;
+    end;
+
+    iq.Send();
 end;
 procedure TContactAddItemOp._Callback(event: string; tag: TXMLTag);
 var
@@ -817,7 +841,22 @@ var
     session: TJabberSession;
     iq: TJabberIQ;
 begin
-    inherited Create(ctrl, item, 'remove');
+    _ctrl := ctrl;
+    _item := item;
+
+    session := TJabberSession(_ctrl._JS);
+    iq := TJabberIQ.Create(session, session.generateID, Self._Callback);
+    with iq do begin
+        Namespace := XMLNS_ROSTER;
+        iqType := 'set';
+        with qTag.AddTag('item') do begin
+            setAttribute('jid', item.UID);
+            setAttribute('name', item.value['Name']);
+            setAttribute('subscription', 'remove');
+       end;
+    end;
+
+    iq.Send();
 end;
 procedure TContactRemItemOp._Callback(event: string; tag: TXMLTag);
 var
