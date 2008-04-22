@@ -40,13 +40,13 @@ inherited frmGrpManagement: TfrmGrpManagement
     ParentFont = False
     TabOrder = 0
     TabStop = True
-    ExplicitTop = 173
-    ExplicitWidth = 359
+    ExplicitTop = 175
+    ExplicitWidth = 361
     ExplicitHeight = 36
     inherited Panel2: TPanel
       Width = 361
       Height = 36
-      ExplicitWidth = 359
+      ExplicitWidth = 361
       ExplicitHeight = 36
       inherited Bevel1: TBevel
         Width = 361
@@ -55,7 +55,7 @@ inherited frmGrpManagement: TfrmGrpManagement
       inherited Panel1: TPanel
         Left = 201
         Height = 31
-        ExplicitLeft = 199
+        ExplicitLeft = 201
         ExplicitHeight = 31
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -78,9 +78,6 @@ inherited frmGrpManagement: TfrmGrpManagement
     TabOrder = 1
     TabStop = True
     OnClick = optChangeGroupOpClick
-    ExplicitLeft = 16
-    ExplicitTop = 8
-    ExplicitWidth = 329
   end
   object optCopy: TTntRadioButton
     AlignWithMargins = True
@@ -92,20 +89,19 @@ inherited frmGrpManagement: TfrmGrpManagement
     Caption = 'Copy the selected contacts to the following group:'
     TabOrder = 2
     OnClick = optChangeGroupOpClick
-    ExplicitLeft = 16
-    ExplicitTop = 32
-    ExplicitWidth = 329
   end
   object lstGroups: TTntListBox
     AlignWithMargins = True
     Left = 3
-    Top = 67
+    Top = 68
     Width = 355
-    Height = 105
-    Align = alBottom
+    Height = 104
+    Align = alClient
     ExtendedSelect = False
     ItemHeight = 13
     Sorted = True
     TabOrder = 3
+    ExplicitTop = 67
+    ExplicitHeight = 105
   end
 end
