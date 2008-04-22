@@ -144,10 +144,13 @@ begin
     end
     else if (typeCount = 0) then begin
         //We didn't get anything other than main actions and/or group actions
-        if (mainActs = nil) or (mainActs.ActionCount = 0) then
+        if (mainActs = nil) or (mainActs.ActionCount = 0) then begin
             mainActs := grpActs;
+            grpActs := nil;
+        end;
     end;
 
+    //build main actions
     if (mainActs <> nil) and (mainActs.ActionCount > 0) then begin
         //check to see if we need a separator
         if (miCount > 0) then begin
@@ -160,6 +163,21 @@ begin
         end;
 
         miCount := miCount + createTypedMenu(mainActs, Items, miCount);
+    end;
+
+    //build group actions
+    if (grpActs <> nil) and (grpActs.ActionCount > 0) then begin
+        //check to see if we need a separator
+        if (miCount > 0) then begin
+            if not Items.Items[miCount - 1].IsLine then begin
+                mi := TTntMenuItem.Create(Items);
+                mi.Caption := '-';
+                Items.Insert(miCount, mi);
+                Inc(miCount);
+            end;
+        end;
+
+        miCount := miCount + createTypedMenu(grpActs, Items, miCount);
     end;
 
     if (miCount <> Items.Count) then begin
