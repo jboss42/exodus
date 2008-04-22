@@ -135,9 +135,12 @@ end;
 procedure TExodusItemController._SessionCallback(Event: string; Tag: TXMLTag);
 begin
     if Event = '/session/authenticated' then begin
-    //Request group info from the server
        _GroupsLoaded := false;
        _GetGroups();
+    end
+    else if Event = '/session/disconnected' then begin
+        _GroupsLoaded := false;
+        ClearItems();
     end;
 end;
 

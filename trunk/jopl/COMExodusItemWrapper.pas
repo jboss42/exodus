@@ -54,8 +54,6 @@ constructor TExodusItemWrapper.Create(ctrl: IExodusItemController;
         Type_: WideString;
         cb: IExodusItemCallback);
 begin
-    inherited Create;
-    
     _Item := TExodusItem.Create(ctrl, Uid, Type_, cb);
 end;
 
