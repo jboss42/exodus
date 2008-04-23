@@ -122,7 +122,6 @@ procedure TfrmSelectItemAnyRoom.lstJoinedRoomsChange(Sender: TObject;
   Item: TListItem; Change: TItemChange);
 var
     i: integer;
-    idx: integer;
     track: TListItemTracker;
     jid: widestring;
 begin

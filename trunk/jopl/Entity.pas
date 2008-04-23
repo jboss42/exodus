@@ -51,18 +51,6 @@ type
     // This class is designed to gather information about a host.
     // It first tries disco, then falls back on browse, and finally agents.
     TJabberEntity = class
-    published
-        procedure ItemsCallback(event: string; tag: TXMLTag);
-        procedure InfoCallback(event: string; tag: TXMLTag);
-
-        {$IFDEF DEPRECATED}
-        procedure BrowseCallback(event: string; tag: TXMLTag);
-        procedure AgentsCallback(event: string; tag: TXMLTag);
-        {$ENDIF}
-
-        procedure WalkCallback(event: string; tag: TXMLTag);
-        procedure WalkItemsCallback(event: string; tag: TXMLTag);
-
     private
         _parent: TJabberEntity;
         _jid: TJabberID;
@@ -138,6 +126,17 @@ type
         function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function getItemByFeature(f: Widestring): TJabberEntity;
 
+        procedure ItemsCallback(event: string; tag: TXMLTag);
+        procedure InfoCallback(event: string; tag: TXMLTag);
+
+        {$IFDEF DEPRECATED}
+        procedure BrowseCallback(event: string; tag: TXMLTag);
+        procedure AgentsCallback(event: string; tag: TXMLTag);
+        {$ENDIF}
+
+        procedure WalkCallback(event: string; tag: TXMLTag);
+        procedure WalkItemsCallback(event: string; tag: TXMLTag);
+
         property Parent: TJabberEntity read _parent;
         property Jid: TJabberID read _jid;
         property Node: Widestring read _node;
@@ -147,7 +146,7 @@ type
         property Name: Widestring read _name;
 
         function toString(): WideString;
-        
+
         property hasItems: boolean read _has_items;
         property hasInfo: boolean read _has_info;
         property discoInfoError: boolean read _disco_info_error;

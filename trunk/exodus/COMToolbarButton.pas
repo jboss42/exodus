@@ -47,10 +47,8 @@ type
     function Get_MenuListener: IExodusMenuListener; safecall;
     procedure Set_MenuListener(const Value: IExodusMenuListener); safecall;
     function Get_Name: Widestring; safecall;
-
-  published
+  public
     procedure OnClick(Sender: TObject);
-
   end;
 
 implementation

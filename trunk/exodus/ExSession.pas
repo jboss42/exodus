@@ -898,7 +898,7 @@ procedure PlayXMPPActions();
 var
     i,k : integer;
     node: TXMLTag;
-    j, tmp: WideString;
+    j: WideString;
     jid: TJabberID;
     //msgRcv: TfrmMsgRecv;
     chatWin: TfrmChat;

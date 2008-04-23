@@ -151,7 +151,7 @@ end;
 {---------------------------------------}
 procedure TfrmCustomPres.txtHotkeyChange(Sender: TObject);
 var
-    i, idx: integer;
+    i: integer;
     msg: WideString;
     list: TWideStringList;
     cp: TJabberCustomPres;

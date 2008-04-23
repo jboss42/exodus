@@ -32,7 +32,7 @@ private
 
 public
     constructor Create(category: WideString; DiscoType: WideString; Name: WideString);
-published
+
     property Category: WideString read _cat;
     property DiscoType: WideString read _type;
     property Name: WideString read _getName;

@@ -116,8 +116,6 @@ end;
 
 {---------------------------------------}
 procedure TExodusTabController.RemoveTab(Index: Integer);
-var
-   Tab: TExodusTabWrapper;
 begin
    _Tabs.Delete(Index);
 end;

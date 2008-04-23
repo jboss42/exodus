@@ -4581,16 +4581,14 @@ procedure TfrmExodus.PeopleClick(Sender: TObject);
 var
     tabCtrl: IExodusTabController;
     tab: IExodusTab;
-    actCtrl: IExodusActionController;
     actMap: IExodusActionMap;
     typedActs: IExodusTypedActions;
     items: IExodusItemList;
-    idx: Integer;
 
     procedure SetupMenuItem(mi: TTntMenuItem; name: Widestring);
     var
         act: IExodusAction;
-        oldAct, newAct: TActionHelper;
+        newAct: TActionHelper;
     begin
         if (typedActs = nil) then
             act := nil

@@ -71,7 +71,7 @@ type
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure lblLangScanClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);override;
   private
     { Private declarations }
     _dirty_locale: Widestring;
@@ -417,7 +417,7 @@ end;
 
 procedure TfrmPrefSystem.FormCreate(Sender: TObject);
 begin
-  inherited;
+    inherited;
     AssignUnicodeURL(lblLangScan.Font, 8);
     _initial_chkdebug_state := MainSession.Prefs.getBool('debug');
 
