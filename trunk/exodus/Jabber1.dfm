@@ -20,7 +20,7 @@ inherited frmExodus: TfrmExodus
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 412
-  ExplicitHeight = 612
+  ExplicitHeight = 606
   PixelsPerInch = 96
   TextHeight = 13
   object imgAd: TImage
@@ -59,6 +59,10 @@ inherited frmExodus: TfrmExodus
     TabOrder = 1
     object tabLogin: TTabSheet
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlLogin: TPanel
         Left = 0
         Top = 0
@@ -71,11 +75,16 @@ inherited frmExodus: TfrmExodus
         ParentColor = True
         ParentCtl3D = False
         TabOrder = 0
+        ExplicitHeight = 393
       end
     end
     object tabRoster: TTabSheet
       ImageIndex = 1
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 393
       object pnlRoster: TPanel
         Left = 0
         Top = 37
@@ -85,6 +94,7 @@ inherited frmExodus: TfrmExodus
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 0
+        ExplicitHeight = 356
       end
       object GridPanel1: TGridPanel
         Left = 0
@@ -185,11 +195,9 @@ inherited frmExodus: TfrmExodus
           AlignWithMargins = True
           Left = 24
           Top = 3
-          Width = 353
-          Height = 12
+          Width = 3
+          Height = 13
           Align = alClient
-          ExplicitWidth = 3
-          ExplicitHeight = 13
         end
         object pnlStatus: TPanel
           Left = 21
@@ -221,7 +229,7 @@ inherited frmExodus: TfrmExodus
             Left = 150
             Top = 0
             Width = 16
-            Height = 19
+            Height = 16
             Cursor = crHandPoint
             Align = alLeft
             AutoSize = True
@@ -494,7 +502,6 @@ inherited frmExodus: TfrmExodus
             end
             object ShowEventsWindow1: TTntMenuItem
               Caption = 'Instant Messages'
-              OnClick = ShowEventsWindow1Click
             end
             object ShowXML1: TTntMenuItem
               Caption = 'Show Debug XML'
@@ -1031,7 +1038,6 @@ inherited frmExodus: TfrmExodus
         end
         object mnuWindows_View_ShowInstantMessages1: TTntMenuItem
           Caption = 'Show &Message Queue'
-          OnClick = ShowEventsWindow1Click
         end
       end
       object mnuWindows_CloseAll: TTntMenuItem
@@ -4450,11 +4456,6 @@ inherited frmExodus: TfrmExodus
         GroupIndex = 99
         OnClick = presCustomClick
       end
-    end
-    object trayMessage: TTntMenuItem
-      Caption = 'Send Message'
-      Enabled = False
-      OnClick = trayMessageClick
     end
     object N4: TTntMenuItem
       Caption = '-'

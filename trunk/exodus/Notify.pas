@@ -56,7 +56,7 @@ uses
     RosterForm,
     StateForm,
     DisplayName,
-    BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
+    BaseChat, JabberUtils, ExUtils,  GnuGetText,
     Jabber1, PrefController, RiserWindow,
     Room, ContactController, MMSystem, Debug, Session;
 
@@ -108,11 +108,12 @@ begin
     // we are getting some event to do notification on
 
     // DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true));
+{** JJF msgqueue refactor
     if MainSession.IsPaused then begin
         MainSession.QueueEvent(event, tag, Self.Callback);
         exit;
     end;
-
+**}
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
@@ -202,8 +203,9 @@ var
     tstr: string;
 begin
     //bail if paused
+{** JJF msgqueue refactor
     if (MainSession.IsPaused) then exit;
-
+**}
     //If "bring to front" notification selected, skip the following section
     // and perform notification code following this section
     if ((notify and notify_front) = 0) then begin

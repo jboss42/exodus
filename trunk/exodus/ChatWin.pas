@@ -26,7 +26,7 @@ uses
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage, TntComCtrls, Exodus_TLB,
     DisplayName,
-  ToolWin, ImgList, JabberMsg, AppEvnts, MsgQueue,
+  ToolWin, ImgList, JabberMsg, AppEvnts,
   ExActions, ExActionCtrl;
 
 type
@@ -166,14 +166,8 @@ type
     procedure updateDisplayName();
 
     procedure updatePresenceImage();
-  published
-    procedure PresCallback(event: string; tag: TXMLTag);
-    procedure SessionCallback(event: string; tag: TXMLTag);
-    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
-    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
-    procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
 
-    property DisplayName: WideString read _displayName;
+    procedure OnPersistedMessage(msg: TXMLTag);override;
   public
     { Public declarations }
     chat_object: TChatController;
@@ -216,6 +210,13 @@ type
 
     procedure pluginMenuClick(Sender: TObject); override;
 
+    procedure PresCallback(event: string; tag: TXMLTag);
+    procedure SessionCallback(event: string; tag: TXMLTag);
+    class procedure AutoOpenFactory(autoOpenInfo: TXMLTag); override;
+    function GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;override;
+    procedure OnDisplayNameChange(bareJID: Widestring; displayName: WideString);
+    
+    property DisplayName: WideString read _displayName;
     property getJid: Widestring read jid;
     property anonymousChat: boolean read _anonymousChat write _anonymousChat;
   end;
@@ -237,7 +238,7 @@ procedure RegisterActions;
 implementation
 uses
     CapPresence, RosterImages, PrtRichEdit, RTFMsgList, BaseMsgList,
-    CustomNotify, Debug, ExEvents,
+    CustomNotify, Debug, 
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
@@ -329,10 +330,8 @@ begin
     try
         // either show an existing chat or start one.
         chat := MainSession.ChatList.FindChat(sjid, resource, '');
-        new_chat := false;
         do_scroll := false;
         hist := '';
-        win := nil;
 
         // Determine if this chat is one started from an annonymous room.
         if (FindRoom(sjid) <> nil) then
@@ -402,7 +401,8 @@ begin
                 mnuSendFile.Enabled   := false;
                 mnuBlock.Enabled      := false;
 //                _dnLocked := true;
-            end;
+            end
+            else PersistUnreadMessages := true;
 
             if (MainSession.IsBlocked(sjid)) then
               mnuBlock.Caption := _('Unblock')
@@ -496,6 +496,7 @@ begin
 //    _dnLocked := false;
     _insertTab := true;
     _windowType := 'chat';
+    //make this window track new messages
 
     _check_event := false;
     _reply_id := '';
@@ -572,12 +573,16 @@ end;
 {---------------------------------------}
 function TfrmChat.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
-    if ((event = 'disconnected') and (Self.Visible)) then begin
+    Result := nil;
+    UseProfile := false;
+    if (event = 'disconnected') then
+    begin
         Result := TXMLtag.Create(Self.ClassName);
         Result.setattribute('jid', _jid.jid);
+        if (UnreadMsgCount > 0) then
+            Result.SetAttribute('auto-open-override', 'true');        
         useProfile := true;
-    end
-    else Result := inherited GetAutoOpenInfo(event, useProfile);
+    end;
 end;
 
 {---------------------------------------}
@@ -820,26 +825,14 @@ end;
 procedure TfrmChat.PlayQueue();
 var
     t: TXMLTag;
-    //showMsgQueue: boolean;
 begin
     // pull all of the msgs from the controller queue,
     // and feed them into this window
     if (chat_object = nil) then exit;
-
-    while (chat_object.last_session_msg_queue.AtLeast(1)) do begin
-        t := TXMLTag(chat_object.last_session_msg_queue.Pop());
-        Self.MessageEvent(t);
-    end;
-
     while (chat_object.msg_queue.AtLeast(1)) do begin
         t := TXMLTag(chat_object.msg_queue.Pop());
         Self.MessageEvent(t);
     end;
-
-    //The following code is used to remove chat events from the queue
-    MainSession.EventQueue.RemoveEvents(_jid.jid);
-
-
 end;
 
 {---------------------------------------}
@@ -912,6 +905,7 @@ outputdebugmsg('Chat is not visible but we received a message. Showing');
     end;
 
     showMsg(tag);
+
     if GetThread() = '' then begin
         //Get thread from message
         tagThread := tag.GetFirstTag('thread');
@@ -1060,30 +1054,34 @@ begin
         timBusy.Enabled := true;
     end;
 
-    if (tag.GetAttribute('type') = 'error') then begin
-        // Display the error info..
-        err := _('The last message bounced!. ');
+    Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
+    
+    if (tag.getAttribute('type') = 'error') then begin
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
+            err := _('Your last message was returned with an error.');
             emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
             if (emsg = '') then emsg := etag.Data;
             err := err + emsg;
             err := err + '(' + _('Error Code: ') + etag.GetAttribute('code') + ')';
-        end;
-        MessageDlgW(err, mtError, [mbOK], 0);
+
+            Msg.Body := _('ERROR: ') + err;
+        end
+        else
+            Msg.Body := _('ERROR: ') + _('Your last message was returned with an error.');
+        DisplayMsg(Msg, MsgList);
+        Msg.Free();
         exit;
     end;
 
     _check_event := false;
     MsgList.HideComposing();
 
-    Msg := chat_object.CreateMessage(tag); //Create, assign nickname & directionality
-
     // Check to see if we need to increment the
     // unread msg count
     if ((not msg.isMe) and
         (msg.Body <> '')) then begin
-        updateMsgCount(msg);
+        updateMsgCount(tag);
         updateLastActivity(msg.Time);
     end;
 
@@ -1100,6 +1098,7 @@ begin
     notify := true;
     if (Msg.Body <> '') then begin
         //Notify
+{** JJF msgqueue refactor
         if (not Msg.isMe) then begin
            if ((MainSession.Prefs.getBool('queue_not_avail')) and
                ((MainSession.Show = 'away') or
@@ -1109,7 +1108,7 @@ begin
         end
         else
            notify := false;
-
+**}
         if (notify) then begin
             if ((Msg.Priority = High) or (Msg.Priority = Low)) then
                DoNotify(Self, _notify[NOTIFY_PRIORITY_CHAT_ACTIVITY], GetDisplayPriority(Msg.Priority) + ' ' + _(sPriorityChatActivity) + DisplayName,
@@ -1172,13 +1171,13 @@ var
 begin
     Item := MainSession.ItemController.Getitem(_jid.jid);
     if (Item <> nil) then begin
-    { JJF TODO run this through the action map
+{** JJF msgqueue refactor TODO run this through the action map
         if (not Item.Active) then begin
             MsgOut.Clear;
             MessageBoxW(WindowHandle, pWideChar(_(sCannotOffline)), PWideChar(_jid.jid), MB_OK);
             exit;
         end;
-    }
+**}
     end;
 
     // Get the text from the UI
@@ -1261,7 +1260,9 @@ end;
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
+        //JJF chats closed at disconnect, no longer need this hander
         // post a msg to the window and disable the text input box.
+{**
         MsgOut.Visible := false;
         try
             MsgList.SetFocus();
@@ -1270,6 +1271,7 @@ begin
         end;
         MsgList.DisplayPresence('', _('You have been disconnected.'), '', 0);
         Self.ImageIndex := RosterImages.RI_OFFLINE_INDEX;
+**}        
     end
     else if (event = '/session/presence') then begin
         if (not MsgOut.Visible) then begin
@@ -1619,7 +1621,6 @@ end;
 procedure TfrmChat.freeChatObject();
 begin
     if (chat_object = nil) then exit;
-    chat_object.unassignEvent();
     chat_object.window := nil;
     chat_object.Release();
     chat_object := nil;
@@ -1735,15 +1736,11 @@ begin
         _sendComposing('');
 
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
-        (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and
-        (not MsgList.empty()) and
-        (chat_object <> nil)) //and (not _destroying))
-        then begin
+        (not MsgList.empty()) and (chat_object <> nil)) then
+    begin
         s := MsgList.getHistory();
         chat_object.SetHistory(s);
-        chat_object.UnassignEvent();
         chat_object.Window := nil;
-        chat_object.TimedRelease();
         DebugMsg('(close) chat refcount: ' + IntToStr(chat_object.RefCount));
         chat_object := nil;
     end;
@@ -1879,11 +1876,11 @@ begin
 end;
 
 procedure TfrmChat.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
- sel_contacts: TList;
+//var
+// sel_contacts: TList;
 begin
     inherited;
-    if (Source = frmRoster.RosterTree) then begin
+//    if (Source = frmRoster.RosterTree) then begin
         // send roster items to this contact.
     { TODO : Roster refactor }
         //sel_contacts := frmRoster.RosterTree.getSelectedContacts(false);
@@ -1893,8 +1890,8 @@ begin
         else
             MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel_contacts.Free();
-}        
-    end;
+}
+//    end;
 end;
 
 {
@@ -1938,6 +1935,22 @@ procedure TfrmChat.OnDisplayNameChange(bareJID: Widestring; displayName: WideStr
 begin
     //our display name has changed, refresh title, labels
     updateDisplayName();
+end;
+
+procedure TfrmChat.OnPersistedMessage(msg: TXMLTag);
+var
+    m: TJabberMessage;
+begin
+    inherited;
+    //Create, assign nickname & directionality
+    m := chat_object.CreateMessage(msg);
+    
+    updateMsgCount(msg);
+    updateLastActivity(m.Time);
+
+    //Render
+    DisplayMsg(m, MsgList);
+    m.free();
 end;
 
 {

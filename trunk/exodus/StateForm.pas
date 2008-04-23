@@ -35,6 +35,13 @@ const
     WS_TRAY = 3;
 
     FLASH_TIMER_INTERVAL = 500;
+
+    AOE_DISCONNECTED = 'disconnected';
+    AOE_SHUTDOWN = 'shutdown';
+    AOE_AUTHED = 'authed';
+    AOE_STARTUP = 'startup';
+
+    AUTO_OPEN_OVERRIDE = 'auto-open-override';
 type
 
     {
@@ -115,7 +122,7 @@ type
     TStateFormPrefsHelper = class
     public
         {wrappers around TPrefController methods, these introduce profiles to prefs}
-        procedure setWindowState(windowState: TXMLTag);
+        procedure setWindowState(pKey: widestring; windowState: TXMLTag);
         function  getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
         procedure setAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
         function  getAutoOpenEvent(event: Widestring; var aoWindows: TXMLTagList; Profile: WideString=''): boolean;
@@ -226,7 +233,6 @@ type
         Event fired when the form should handle flash notification
     }
     procedure OnFlash();virtual;
-
   public
     {
         Show the window in its default configuration.
@@ -251,7 +257,7 @@ type
         @param notifyEvents - bitmapped flag of events to execute
     }
     procedure OnNotify(notifyEvents: integer);virtual;
-  published
+
     {
         Use the given persisted information to open a form as if the
         user had done it.
@@ -300,13 +306,15 @@ type
     }
     property IsNotifying: boolean read _isNotifying write setNotifying;
 
+    {
+        Should window state be loaded and persisted?
+        Default checks restore_window_state preference
+    }
+    function RestoreStateEnabled(): boolean; virtual;
   end;
 
 var
-  frmState: TfrmState;
-
   restoringDesktopFlag: boolean;
-
 
 implementation
 
@@ -317,8 +325,6 @@ uses
     debug,
     room,
     ChatWin,
-    msgqueue,
-
     unicode,
     jabber1,
     types,
@@ -328,6 +334,8 @@ uses
     XMLUtils;
 
 class procedure TAutoOpenEventManager.onAutoOpenEvent(event: Widestring);
+type
+    tsfMeta= class of TfrmState;
 var
     i: integer;
     wTag: TXMLTag;
@@ -336,53 +344,49 @@ var
     useProfile: boolean;
     discovered: TWideStringList;
     AClass: TPersistentClass;
+    tsf: tsfMeta;
     prefHelper: TStateFormPrefsHelper;
-
+    RestoreDesktop: boolean;
+    
     function toggleEvent(event: widestring): WideString;
     begin
-        if (event = 'disconnected') then
-            Result := 'authed'
-        else //if (event = 'shutdown') then
-            Result := 'startup'
-    end;
-
-    //should eb able to use the RTII method below but it not working
-    procedure AutoOpenFactory(autoOpenInfo: TXMLTag);
-    var
-        cName: WideString;
-    begin
-        cName := autoOpenInfo.Name;
-        if (cname = 'TfrmDebug') then
-            TfrmDebug.AutoOpenFactory(autoOpenInfo)
-        else if (cName = 'TfrmRoom') then
-            TfrmRoom.AutoOpenFactory(autoOpenInfo)
-        else if (cName = 'TfrmChat') then
-            TfrmChat.AutoOpenFactory(autoOpenInfo)
-        else if (cName = 'TfrmMsgQueue') then
-            TfrmMsgQueue.AutoOpenFactory(autoOpenInfo);
+        if (event = AOE_DISCONNECTED) then
+            Result := AOE_AUTHED
+        else
+            Result := AOE_STARTUP
     end;
 
     procedure OpenWindow(autoOpenInfo: TXMLTag);
     begin
-        if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
-            AClass := TPersistentClass(discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)])
-        else begin
-            AClass := getClass(autoOpenInfo.Name);
-            discovered.AddObject(autoOpenInfo.Name, TObject(AClass)); //could be nil but that's OK
+        if (RestoreDesktop or (autoOpenInfo.GetAttribute(AUTO_OPEN_OVERRIDE) = 'true')) then
+        begin
+            if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
+                AClass := TPersistentClass(discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)])
+            else begin
+                AClass := getClass(autoOpenInfo.Name);
+                discovered.AddObject(autoOpenInfo.Name, TObject(AClass)); //could be nil but that's OK
+            end;
+            try
+                tsf := TsfMeta(AClass);
+                tsf.AutoOpenFactory(autoOpenInfo);
+            except
+                //couldn't cast/get class info, make it nil in discovered list
+                if (discovered.IndexOf(autoOpenInfo.Name) <> -1) then
+                    discovered.Objects[discovered.IndexOf(autoOpenInfo.Name)] := nil;
+            end;
         end;
-        if ((AClass <> nil) and AClass.InheritsFrom(TfrmState)) then
-            AutoOpenFactory(autoOpenInfo);
-//            TfrmState(AClass).AutoOpenFactory(wTag);
     end;
 begin
     prefHelper := TStateFormPrefsHelper.create();
-    if ((event='disconnected') or (event='shutdown')) then begin
+
+    if ((event = AOE_DISCONNECTED) or (event = AOE_SHUTDOWN)) then begin
         defaultList := TXMLTagList.Create();
         profileList := TXMLTagList.Create();
 
         //walk open forms and get auto-open tags from them
         for i := 0 to Screen.FormCount - 1 do begin
-            if (Screen.Forms[i].InheritsFrom(TfrmState)) then begin
+            if (Screen.Forms[i].InheritsFrom(TfrmState)) then
+            begin
                 wTag := TfrmState(Screen.Forms[i]).GetAutoOpenInfo(event, useProfile);
                 if (wTag <> nil) then begin
                     if (useProfile) then
@@ -398,7 +402,10 @@ begin
         profileList.Free();
         defaultList.Free();
     end
-    else if (((event='startup') or (event='authed')) and MainSession.Prefs.getBool('restore_desktop')) then begin
+    //call appropriate auto open factories
+    else if ((event = AOE_STARTUP) or (event = AOE_AUTHED)) then begin
+        RestoreDesktop := MainSession.Prefs.getBool('restore_desktop');
+        
         discovered := TWideStringList.create();
         restoringDesktopFlag := true;
 
@@ -411,30 +418,45 @@ begin
                 OpenWindow(defaultList[i]);
 
         restoringDesktopFlag := false;
+        discovered.Free();
     end;
 end;
 
  {wrappers around TPrefController methods, these introduce profiles to prefs}
-procedure TStateFormPrefsHelper.setWindowState(windowState: TXMLTag);
+procedure TStateFormPrefsHelper.setWindowState(pKey: Widestring; windowState: TXMLTag);
 var
     rootTag: TXMLTag;
     sTag: TXMLTag;
     wTag:TXMLTag;
 begin
     if (not mainSession.Prefs.getRoot('ws', roottag)) then
+    begin
+        if (windowState = nil) then exit; //nothing to do
         rootTag := TXMLtag.create('ws');
+    end;
+    try
+        sTag := rootTag.GetFirstTag('state');
+        if (stag = nil) then
+        begin
+            if (windowState = nil) then exit; //nothing to do
+            sTag := rootTag.AddTag('state');
+        end;
 
-    sTag := rootTag.GetFirstTag('state');
-    if (stag = nil) then
-        sTag := rootTag.AddTag('state');
-    wTag := sTag.GetFirstTag(windowState.Name);
-    if (wTag <> nil) then
-        sTag.RemoveTag(wTag);
+        wTag := sTag.GetFirstTag(pKey);
+        if (wTag <> nil) then
+            sTag.RemoveTag(wTag);
 
-    sTag.AddTag(TXMLTag.create(windowState)); //addtag adds a reference
-    MainSession.Prefs.SetRoot(rootTag);
-    rootTag.Free();
+        if (windowState <> nil) then
+        begin
+            sTag.AddTag(TXMLTag.create(windowState)); //addtag adds a reference
+            MainSession.Prefs.SetRoot(rootTag);
+        end;
+    finally
+        rootTag.Free();
+    end;
+
 end;
+
 
 function  TStateFormPrefsHelper.getWindowState(pKey: WideString; var windowState: TXMLTag): boolean;
 var
@@ -444,23 +466,18 @@ begin
     Result := false;
     windowState := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
+    try
+        // We now own memory for rootTag.
+        wsTag := rootTag.GetFirstTag('state');
+        if (wsTag = nil) then exit;
 
-    // We now own memory for rootTag.
-    wsTag := rootTag.GetFirstTag('state');
-    if (wsTag = nil) then begin
+        windowState := wsTag.GetFirstTag(pKey);
+        Result := (windowState <> nil);
+        if (Result) then
+            windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
+    finally
         rootTag.Free;
-        exit;
     end;
-
-    windowState := wsTag.GetFirstTag(pKey);
-    if (windowState <> nil) then begin
-        Result := true;
-        windowState := TXMLTag.Create(windowState); //dupe memory so we can free rootTag.
-    end
-    else
-        Result := false;
-
-    rootTag.Free;
 end;
 
 procedure TStateFormPrefsHelper.SetAutoOpenEvent(event: WideString; aoWindows: TXMLTagList; Profile: WideString='');
@@ -472,21 +489,26 @@ var
     tstr: WideString;
 begin
     if (not mainSession.Prefs.getRoot('ws', roottag)) then exit;
+
     aoTag := rootTag.GetFirstTag('auto-open');
     if (aoTag = nil) then
         aoTag := rootTag.AddTag('auto-open');
+
     tstr := 'event-' + event;
     if (Profile <> '') then
         tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+
     //replace if tag already exists...
     eTag := aoTag.GetFirstTag(tstr);
     if (eTag <> nil) then
         aoTag.RemoveTag(eTag);
-    if (aoWindows.Count > 0) then begin
+
+    if (aoWindows <> nil) and (aoWindows.Count > 0) then begin
         eTag := aoTag.AddTag(tstr);
         for i := 0 to aoWindows.Count - 1 do
             eTag.AddTag(aoWindows[i]);
     end;
+
     MainSession.Prefs.setRoot(rootTag);
     rootTag.Free();
 end;
@@ -502,22 +524,22 @@ begin
     Result := false;
     aoWindows := nil;
     if (not mainSession.Prefs.getRoot('ws', rootTag)) then exit;
+
     aoTag := rootTag.GetFirstTag('auto-open');
     if (aoTag = nil) then exit;
 
     tstr := 'event-' + event;
     if (Profile <> '') then
         tstr := tstr + '-' + XMLUtils.MungeName(Profile);
+
     eTag := aoTag.GetFirstTag(tstr);
-    if (eTag = nil) then exit;
+    if (eTag = nil) or (eTag.ChildCount = 0) then exit;
+
     aoWindows := TXMLTagList.Create();
     for i := 0 to eTag.ChildCount - 1 do
         aoWindows.Add(TXMLTag.Create(eTag.ChildTags[i]));
-    Result := aoWindows.Count > 0;
-    if (not Result) then begin
-        aoWindows.Free();
-        aoWindows := nil;
-    end;
+
+    Result := true;
 end;
 
 {---------------------------------------}
@@ -648,7 +670,6 @@ begin
             _windowState := wsMaximized;
         end;
     end;
-OutputDebugMsg('wmssyscommande: new state: ' + wsToString(_windowState));
     inherited;
 end;
 
@@ -692,7 +713,6 @@ begin
         _pos.Top := Self.Top;
         _pos.height := Self.Height;
         _persistPos := true;
-OutputDebugMsg('WMWindowPosChange: updated position to: l:' + IntToStr(_pos.left) + ', t:' + IntToStr(_pos.Top) + ', h:' + IntToStr(_pos.Height) + ', w:' + IntToStr(_pos.Width));
     end;
 end;
 
@@ -716,36 +736,44 @@ procedure TfrmState.RestoreWindowState();
 var
     stateTag: TXMLTag;
     prefHelper: TStateFormPrefsHelper;
+    key: WideString;
 begin
-    prefHelper := TStateFormPrefsHelper.create();
-    if (not _stateRestored) then begin
-        if (not MainSession.Prefs.getBool('restore_window_state') or
-           (not prefHelper.getWindowState(GetWindowStateKey(), stateTag))) then begin
-            stateTag := TXMLTag.create(GetWindowStateKey());
-//            Self.DefaultMonitor := dmMainForm; //open on the main forms monitor 
-           end;
-        _skipWindowPosHandling := true;
-        Self.OnRestoreWindowState(stateTag);
-        _skipWindowPosHandling := false;
-OutputDebugMsg('Restored window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
-        stateTag.Free();
+    if (not _stateRestored) then
+    begin
+        prefHelper := TStateFormPrefsHelper.create();
+        key := GetWindowStateKey();
+        if (not  RestoreStateEnabled()) then
+            prefHelper.setWindowState(key, nil) //clear out any persisted state
+        else if (prefHelper.getWindowState(key, stateTag)) then
+        begin
+            _skipWindowPosHandling := true;
+            Self.OnRestoreWindowState(stateTag);
+            _skipWindowPosHandling := false;
+
+            stateTag.Free();
+        end;
         _stateRestored := true;
+        prefHelper.free();
     end;
-    prefHelper.free();
 end;
 
 procedure TfrmState.PersistWindowState();
 var
     stateTag: TXMLTag;
     prefHelper: TStateFormPrefsHelper;
+    key: widestring;
 begin
-    prefHelper := TStateFormPrefsHelper.create();
-    stateTag := TXMLTag.Create(getWindowStateKey());
-    Self.OnPersistWindowState(stateTag);
-    prefHelper.setWindowState(stateTag);
-OutputDebugMsg('Persisting window state. key: ' + GetWindowStateKey() + ', state: ' + stateTag.XML);
-    stateTag.Free();
-    prefHelper.free();
+        prefHelper := TStateFormPrefsHelper.create();
+        key := getWindowStateKey();
+        if (RestoreStateEnabled()) then
+        begin
+            stateTag := TXMLTag.Create(key);
+            Self.OnPersistWindowState(stateTag);
+            prefHelper.setWindowState(key, stateTag);
+            stateTag.Free();
+        end
+        else prefHelper.setWindowState(key, nil); //clear it out
+        prefHelper.free();
 end;
 
 {
@@ -824,34 +852,37 @@ end;
 }
 procedure TfrmState.OnRestoreWindowState(windowState : TXMLTag);
 begin
-    _persistPos := true;
-    //center on parent
-    if (windowState.GetAttribute('pos_w') <> '') then begin
-        _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
-        _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
-        //if window is fixed size, don't try to overwrite
-        if (Self.BorderStyle = bsSizeable) then begin
-            _pos.height := SafeInt(windowState.getAttribute('pos_h'));
-            _pos.width := SafeInt(windowState.getAttribute('pos_w'));
-        end else begin
-            _pos.height := Self.ExplicitHeight;
-            _pos.width := Self.ExplicitWidth;
+    if (MainSession.Prefs.getBool('restore_window_state')) then
+    begin
+        _persistPos := true;
+        //center on parent
+        if (windowState.GetAttribute('pos_w') <> '') then begin
+            _pos.Left := SafeInt(windowState.getAttribute('pos_l'));
+            _pos.Top := SafeInt(windowState.getAttribute('pos_t'));
+            //if window is fixed size, don't try to overwrite
+            if (Self.BorderStyle = bsSizeable) then begin
+                _pos.height := SafeInt(windowState.getAttribute('pos_h'));
+                _pos.width := SafeInt(windowState.getAttribute('pos_w'));
+            end else begin
+                _pos.height := Self.ExplicitHeight;
+                _pos.width := Self.ExplicitWidth;
+            end;
+        end
+        else begin
+            _pos.Left := 0;
+            _pos.Top := 0;
+            _pos.Width := Self.ExplicitWidth;
+            _pos.Height := Self.ExplicitHeight;
+            CenterOnMainformMonitor(_pos);
         end;
-    end
-    else begin
-        _pos.Left := 0;
-        _pos.Top := 0;
-        _pos.Width := Self.ExplicitWidth;
-        _pos.Height := Self.ExplicitHeight;
-        CenterOnMainformMonitor(_pos);
+        _origPos.Left := _pos.Left;
+        _origPos.width := _pos.width;
+        _origPos.Top := _pos.Top;
+        _origPos.height := _pos.height;
+        normalizePos();
+        SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
+        _windowState := sToWindowState(windowState.GetAttribute('ws'));
     end;
-    _origPos.Left := _pos.Left;
-    _origPos.width := _pos.width;
-    _origPos.Top := _pos.Top;
-    _origPos.height := _pos.height;
-    normalizePos();
-    SetWindowPos(Self.Handle, HWND_BOTTOM, _pos.Left, _pos.Top, _pos.Width, _pos.Height, SWP_NOACTIVATE or SWP_NOOWNERZORDER);
-    _windowState := sToWindowState(windowState.GetAttribute('ws'));
 end;
 
 {
@@ -956,6 +987,11 @@ begin
         OnFlash(); //flash once
         _flasher.Enabled := true; //OnFlash will handle rest
      end;
+end;
+
+function TfrmState.RestoreStateEnabled(): boolean;
+begin
+    Result := MainSession.Prefs.getBool('restore_window_state');
 end;
 
 initialization

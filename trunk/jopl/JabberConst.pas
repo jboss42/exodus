@@ -31,6 +31,7 @@ const
     XMLNS_REGISTER   = 'jabber:iq:register';
     XMLNS_LAST       = 'jabber:iq:last';
     XMLNS_TIME       = 'jabber:iq:time';
+    XMLNS_TIME_202   = 'urn:xmpp:time';
     XMLNS_VERSION    = 'jabber:iq:version';
     XMLNS_IQOOB      = 'jabber:iq:oob';
     XMLNS_BROWSE     = 'jabber:iq:browse';
@@ -45,6 +46,7 @@ const
 
     XMLNS_XEVENT     = 'jabber:x:event';
     XMLNS_DELAY      = 'jabber:x:delay';
+    XMLNS_DELAY_203  = 'urn:xmpp:delay';
     XMLNS_XROSTER    = 'jabber:x:roster';
     XMLNS_XCONFERENCE= 'jabber:x:conference';
     XMLNS_XDATA      = 'jabber:x:data';
@@ -77,14 +79,12 @@ const
     XMLNS_SHIM       = 'http://jabber.org/protocol/shim';
 var
     XP_MSGXDATA: TXPLite;
-    XP_MUCINVITE: TXPLite;
     XP_MUCADMINMSG : TXPLite;
-    XP_CONFINVITE: TXPLite;
-    XP_JCFINVITE: TXPLite;
     XP_MSGXROSTER: TXPLite;
     XP_MSGXEVENT: TXPLite;
     XP_MSGCOMPOSING: TXPLite;
     XP_MSGDELAY: TXPLite;
+    XP_MSGDELAY_203: TXPLite;
     XP_XOOB: TXPLite;
     XP_XDELIVER: TXPLite;
     XP_XDISPLAY: TXPLite;
@@ -98,14 +98,12 @@ implementation
 
 initialization
     XP_MSGXDATA := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XDATA + '"]');
-    XP_MUCINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]');
     XP_MUCADMINMSG := TXPLite.Create('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/status[@code="101"]');
-    XP_CONFINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]');
-    XP_JCFINVITE := TXPLite.Create('/message/x[@xmlns="jabber:x:invite"]');
     XP_MSGXROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
     XP_MSGXEVENT := TXPLite.Create('/message/*[@xmlns="' + XMLNS_XEVENT + '"]');
     XP_MSGCOMPOSING := TXPLite.Create('/message/*[@xmlns="' + XMLNS_XEVENT + '"]/composing');
     XP_MSGDELAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_DELAY + '"]');
+    XP_MSGDELAY_203 := TXPLite.Create('/message/delay[@xmlns="' + XMLNS_DELAY_203 + '"]');
     XP_XOOB := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XOOB + '"]');
     XP_XDELIVER := TXPLIte.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
@@ -125,12 +123,10 @@ initialization
 finalization
     XP_XOOB.Free();
     XP_MSGDELAY.Free();
+    XP_MSGDELAY_203.Free();
     XP_MSGCOMPOSING.Free();
     XP_MSGXEVENT.Free();
     XP_MSGXROSTER.Free();
-    XP_JCFINVITE.Free();
-    XP_CONFINVITE.Free();
-    XP_MUCINVITE.Free();
     XP_MSGXDATA.Free();
     XP_XHTMLIM.Free();
     XP_MUCADMINMSG.Free();

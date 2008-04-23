@@ -396,7 +396,7 @@ uses
     fProfile, ConnDetails, NewUser, RosterImages,
     ExSession, XferManager, CustomPres, RegForm, Math,
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
-    SelectItem, Invite, S10n, MsgRecv, PrefController,
+    SelectItem, Invite, S10n, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
     Transports, Session, StrUtils;
@@ -1023,8 +1023,8 @@ procedure TfrmRosterWindow.RosterCallback(event: string; item: IExodusItem);
 //    grp_rect: TRect;
 //    p: TJabberPres;
 begin
-    if event = '/item/end' then
-        Self.SessionCallback('/item/end', nil);
+    if event = '/contact/item/end' then
+        Self.SessionCallback('/contact/item/end', nil);
 //    // callback from the session
 //    if event = '/roster/start' then begin
 //        //frmExodus.tabs.ActivePage := frmExodus.tbsRoster;

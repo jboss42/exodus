@@ -6,9 +6,8 @@ inherited frmJud: TfrmJud
   ClientWidth = 492
   OldCreateOrder = True
   OnResize = FormResize
-  ExplicitLeft = -5
   ExplicitWidth = 320
-  ExplicitHeight = 240
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -49,6 +48,8 @@ inherited frmJud: TfrmJud
     ExplicitHeight = 322
     inherited TabSheet1: TTabSheet
       OnEnter = TabSheet1Enter
+      ExplicitLeft = 4
+      ExplicitTop = 27
       ExplicitWidth = 484
       ExplicitHeight = 291
       object lblSelect: TTntLabel
@@ -305,10 +306,6 @@ inherited frmJud: TfrmJud
     object popChat: TTntMenuItem
       Caption = 'Start Chat'
       OnClick = popChatClick
-    end
-    object popMessage: TTntMenuItem
-      Caption = 'Send Message'
-      OnClick = popMessageClick
     end
   end
 end

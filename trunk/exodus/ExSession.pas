@@ -124,12 +124,13 @@ uses
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     Browser, ChatWin, GetOpt, Invite, Jabber1, PrefController, StandardAuth,
-    PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
+    PrefNotify, Room, RosterAdd, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,  stringprep,
     XMLParser, XMLUtils, DebugLogger, DebugManager,
     InviteReceived,
     ExForm,
-    HistorySearch;
+    HistorySearch,
+    MiscMessages;
 
 const
     sCommandLine =  'The following command line parameters are available: '#13#10#13#10;
@@ -437,8 +438,6 @@ begin
     _Notify := TNotifyController.Create;
     _Notify.SetSession(MainSession);
 
-    MainSession.EventQueue.SetSession(MainSession);
-
     // S10N controller singleton
     _subcontroller := TSubController.Create();
 
@@ -648,7 +647,7 @@ begin
     Avatars.setSession(MainSession);
 
     InviteReceived.OnSessionStart(MainSession);
-
+    MiscMessages.SetSession(MainSession);
     //create a roster early so all other windows can get east access
     RosterForm.GetRosterWindow().InitControlls();
 
@@ -901,7 +900,7 @@ var
     node: TXMLTag;
     j, tmp: WideString;
     jid: TJabberID;
-    msgRcv: TfrmMsgRecv;
+    //msgRcv: TfrmMsgRecv;
     chatWin: TfrmChat;
     tags: TXMLTagList;
     jids: TWideStringList;
@@ -919,13 +918,16 @@ begin
         jid := TJabberID.Create(j);
 
         if (node.Name = 'message') then begin
-            if node.GetBasicText('type') = 'normal' then begin
+{JJF Message Queue refactor}
+            if node.GetBasicText('type') <> 'normal' then begin
+{
                 msgRcv := StartMsg(jid.full);
                 tmp := node.GetBasicText('subject');
                 msgRcv.txtSendSubject.Text := Tnt_WideStringReplace(tmp, '&', '&&', [rfReplaceAll, rfIgnoreCase]);
                 msgRcv.txtMsg.Text := node.GetBasicText('body');
             end
             else begin
+}
                 chatWin := StartChat(jid.jid, jid.resource, true);
                 chatWin.MsgOut.Text := node.GetBasicText('body');
             end;

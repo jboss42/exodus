@@ -80,7 +80,6 @@ type
     popRosterBlock: TTntMenuItem;
     popRosterSendJID: TTntMenuItem;
     popRosterChat: TTntMenuItem;
-    popRosterMsg: TTntMenuItem;
     popDestroy: TTntMenuItem;
     popConfigure: TTntMenuItem;
     N5: TTntMenuItem;
@@ -129,7 +128,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
     procedure S1Click(Sender: TObject);
-    procedure popRosterMsgClick(Sender: TObject);
     procedure popRosterSendJIDClick(Sender: TObject);
     procedure lstRosterData(Sender: TObject; Item: TListItem);
     procedure popRegisterClick(Sender: TObject);
@@ -434,7 +432,6 @@ uses
     JabberConst,
     JoinRoom,
     MsgDisplay,
-    MsgRecv,
     Notify,
     PrefController,
     Presence,
@@ -569,13 +566,14 @@ end;
 
 function TfrmRoom.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 var
- bm: TXMLTag;                                 
+    bm: IExodusItem;
 begin
     //don't auto-open rooms we have bookmoarked for join on login
- { TODO : Roster refactor }
     //bm := MainSession.Bookmarks.FindBookmark(getJID);
-    bm := nil;
-    if ((event = 'disconnected') and ((bm = nil) or (bm.GetAttribute('autojoin') <> 'true'))) then begin
+    bm := Session.MainSession.ItemController.GetItem(getJID);
+    //if no boookmark or bookmark will not auto open this room any, store auto open info
+    //move this logic to the auto open factory?
+    if ((event = 'disconnected') and ((bm = nil) or (bm.value['autojoin'] <> 'true'))) then begin
         //check to see if this room is bokmarked and join on startup
         Result := TXMLTag.Create(Self.classname);
         Result.setAttribute('j', getJID);
@@ -584,8 +582,7 @@ begin
             Result.setAttribute('p', _passwd);
         if (_sent_initial_presence) then
             Result.setAttribute('sp', 't');
-//        if (_default_config) then
-            Result.setAttribute('dc', 't'); //if config is needed, just open
+        Result.setAttribute('dc', 't'); //if config is needed, just open
         if (useRegisteredNick) then
             Result.setAttribute('rn', 't');
         useProfile := true;
@@ -722,13 +719,21 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
     end;
+{** JJF msgqueue refactor
+
     skip_notification := MainSession.Prefs.getBool('queue_not_avail') and
                          ((MainSession.Show = 'away') or
                           (MainSession.Show = 'xa') or
                           (MainSession.Show = 'dnd'));
+**}
+    skip_notification := false;                          
     if (skip_notification = false) then begin
       // this check is needed only to prevent extraneous regexing.
-        if ((not server) and (not MainSession.IsPaused)) then begin
+        if (not server)
+{** JJF msgqueue refactor
+        and (not MainSession.IsPaused)
+**}
+        then begin
             // check for keywords
             if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
                 DoNotify(Self, _notify[NOTIFY_KEYWORD],
@@ -2247,7 +2252,6 @@ begin
     end;
 
     e := (rm <> nil);
-    popRosterMsg.Enabled := e;
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
     popRosterblock.Enabled := e;
@@ -2264,7 +2268,6 @@ var
 begin
     e := (lstRoster.Selected <> nil);
 
-    popRosterMsg.Enabled := e;
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
     popRosterblock.Enabled := e;
@@ -2296,7 +2299,6 @@ begin
 
         // If we have clicked on our own Nick, dis-allow various menu options.
         if (rm.Nick = myNick) then begin
-            popRosterMsg.Enabled := false;
             popRosterChat.Enabled := false;
             popRosterSendJID.Enabled := false;
             popRosterblock.Enabled := false;
@@ -2695,25 +2697,6 @@ end;
 procedure TfrmRoom.pluginMenuClick(Sender: TObject);
 begin
     TExodusChat(COMController).fireMenuClick(Sender);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.popRosterMsgClick(Sender: TObject);
-var
-    rm: TRoomMember;
-    tmp_jid: TJabberID;
-begin
-  inherited;
-    // start chat w/ room participant
-    // Chat w/ this person..
-    if (lstRoster.Selected = nil) then exit;
-
-    rm := TRoomMember(lstRoster.Items[lstRoster.Selected.Index].Data);
-    if (rm <> nil) then begin
-        tmp_jid := TJabberID.Create(rm.jid);
-        StartMsg(tmp_jid.full);
-        tmp_jid.Free();
-    end;
 end;
 
 {---------------------------------------}

@@ -179,11 +179,11 @@ end;
 
 function TfrmDebug.GetAutoOpenInfo(event: Widestring; var useProfile: boolean): TXMLTag;
 begin
+    Result := nil;
     if (event = 'shutdown') then begin
         Result := TXMLtag.Create(Self.ClassName);
         useProfile := false;
     end
-    else Result := inherited GetAutoOpenInfo(event, useProfile);
 end;
 
 {---------------------------------------}

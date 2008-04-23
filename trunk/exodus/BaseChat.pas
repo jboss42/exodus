@@ -147,6 +147,7 @@ type
     MsgOutToolbar: TExodusMsgOutToolbar;
     DockToolbar: TExodusDockToolbar;
 
+    constructor Create(AOwner: TComponent);override;
     procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
@@ -206,6 +207,12 @@ const
     PREF_BACKGROUND_COLOR = 'color_bg';
     PREF_ALT_BACKGROUND_COLOR = 'color_alt_bg';
     PREF_DATE_BACKGROUND_COLOR = 'color_alt_bg';
+
+constructor TfrmBaseChat.Create(AOwner: TComponent);
+begin
+    inherited;
+    UnreadMsgCount := 0;
+end;
 
 {
     Set the left and top properties of the given form.
@@ -494,10 +501,15 @@ begin
 
         if (MainSession <> nil) then begin
             ht := MainSession.Prefs.getInt('chat_textbox');
-            if (ht <> 0) then
-                pnlInput.Height := ht
-            else
-                MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+            if (ht = 0) then
+            begin
+                ht := pnlInput.Height;
+                if (ht = 0) then
+                    ht := 25;
+                MainSession.prefs.setInt('chat_textbox', ht);
+            end;
+            pnlInput.Height := ht;
+            
             _esc := MainSession.Prefs.getBool('esc_close');
 
             sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
@@ -505,8 +517,6 @@ begin
         end;
 
         _scroll := true;
-
-        _unreadmsg := 0;
 
         tbMsgOutToolbar.Visible := MainSession.Prefs.getBool('chat_toolbar');
 
@@ -586,6 +596,8 @@ begin
     // This code exists to try and prevent losing a part of the window due to resize
     // when (un)docking.
     inherited;
+    if (ClientHeight = 0) then exit;
+
     if ((pnlMsgList.Height + Splitter1.Height + pnlInput.Height + pnlDockTop.Height) > ClientHeight) then begin
         // All combined, everything is bigger then the room we have, so resize
         oldHeight := pnlMsgList.Height + pnlInput.Height;

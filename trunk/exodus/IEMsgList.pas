@@ -795,8 +795,6 @@ end;
 
 {---------------------------------------}
 destructor TfIEMsgList.Destroy;
-var
-    i: integer;
 begin
     try
         _ClearingMsgCache.Clear();
@@ -940,8 +938,6 @@ end;
 procedure TfIEMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     txt: WideString;
-    t: TDateTime;
-    cachemsg: TJabberMessage;
     id: widestring;
 begin
     if (msg = nil) then exit;
@@ -1117,15 +1113,10 @@ end;
 {---------------------------------------}
 function TfIEMsgList._getHistory(includeState: boolean): WideString;
 var
-    i: integer;
     tstr: widestring;
     ts: TTimeStamp;
 begin
     Result := '';
-    //add any items in the queue to the end.
-//    for i := 0 to _queue.Count - 1 do
-//        Result := Result + _queue[i];
-
     if (_content <> nil) then
         Result := _content.innerHTML + Result;
 
@@ -1145,15 +1136,11 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.populate(history: Widestring);
 var
-    txt, tstr: widestring;
+    txt: widestring;
     p: integer;
-    stag, ttag: TXMLtag;
+    stag: TXMLtag;
     ts: TTimeStamp;
-    td: TDateTime;
 begin
-//    Clear();
-//    _queue.clear();
-
     p := pos('-->', history);
     if ((p > 0) and
         (LeftStr(history, 4) = '<!--')) then

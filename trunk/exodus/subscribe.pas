@@ -40,7 +40,6 @@ type
     lblGroup: TTntLabel;
     cboGroup: TTntComboBox;
     PopupMenu1: TTntPopupMenu;
-    mnuMessage: TTntMenuItem;
     mnuChat: TTntMenuItem;
     mnuProfile: TTntMenuItem;
     Panel1: TPanel;
@@ -50,7 +49,6 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure mnuMessageClick(Sender: TObject);
     procedure mnuChatClick(Sender: TObject);
     procedure mnuProfileClick(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
@@ -88,7 +86,8 @@ uses
     DisplayName,
     Notify,
     JabberConst, JabberUtils, ExUtils, CapsCache, EntityCache, Entity,
-    ChatWin, GnuGetText, MsgRecv, Session, Profile, Presence;
+    ChatWin, GnuGetText,
+    Session, Profile, Presence;
 
 var
     _subscribe_windows: TList;
@@ -332,12 +331,6 @@ procedure TfrmSubscribe.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
-end;
-
-{---------------------------------------}
-procedure TfrmSubscribe.mnuMessageClick(Sender: TObject);
-begin
-    StartMsg(_jid.full());
 end;
 
 {---------------------------------------}

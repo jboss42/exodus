@@ -1,14 +1,14 @@
 inherited frmState: TfrmState
   Caption = 'frmState'
-  ClientHeight = 150
-  ClientWidth = 183
+  ClientHeight = 163
+  ClientWidth = 198
   DefaultMonitor = dmDesktop
   Position = poDefault
   ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  ExplicitWidth = 191
-  ExplicitHeight = 184
+  ExplicitWidth = 206
+  ExplicitHeight = 191
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
 end

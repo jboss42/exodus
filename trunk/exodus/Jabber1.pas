@@ -23,7 +23,7 @@ interface
 
 uses
     // Exodus stuff
-    BaseChat, ExResponders, ExEvents, LoginWindow, RosterForm, Presence, XMLTag,
+    BaseChat, ExResponders, LoginWindow, RosterForm, Presence, XMLTag,
     ShellAPI, Registry, Emote, 
     Dockable, DisplayName,
     // Delphi stuff
@@ -106,7 +106,6 @@ type
     Help1: TTntMenuItem;
     Tools1: TTntMenuItem;
     Exodus1: TTntMenuItem;
-    ShowEventsWindow1: TTntMenuItem;
     mnuExpanded: TTntMenuItem;
     mnuStatBar: TTntMenuItem;
     mnuToolbar: TTntMenuItem;
@@ -128,7 +127,6 @@ type
     N01: TTntMenuItem;
     trayDisconnect: TTntMenuItem;
     N4: TTntMenuItem;
-    trayMessage: TTntMenuItem;
     trayPresence: TTntMenuItem;
     trayShow: TTntMenuItem;
     mnuServerVCard: TTntMenuItem;
@@ -335,10 +333,8 @@ type
     procedure mnuRegisterServiceClick(Sender: TObject);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
-    procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
-    procedure ShowEventsWindow1Click(Sender: TObject);
     procedure presToggleClick(Sender: TObject);
     procedure AppEventsActivate(Sender: TObject);
     procedure AppEventsDeactivate(Sender: TObject);
@@ -826,7 +822,10 @@ uses
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
-    JoinRoom, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
+    JoinRoom, MsgController, MsgDisplay,
+//    MsgQueue,
+//    MsgRecv,
+    Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow,
     Room, XferManager, Stringprep, SSLWarn,
     RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
@@ -1285,7 +1284,7 @@ begin
 //
 //    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    _rostercb := MainSession.RegisterCallback(RosterCallback, '/item/end');
+    _rostercb := MainSession.RegisterCallback(RosterCallback, '/contact/item/end');
 //
     // setup some branding stuff
     with (MainSession.Prefs) do begin
@@ -2133,11 +2132,13 @@ begin
             Self.AlphaBlendValue := MainSession.Prefs.getInt('roster_alpha_val')
         else
             Self.AlphaBlendValue := 255;
+{
         if (frmMsgQueue <> nil) then begin
             frmMsgQueue.lstEvents.Color := TColor(getInt('roster_bg'));
             frmMsgQueue.txtMsg.Color := TColor(getInt('roster_bg'));
             AssignDefaultFont(frmMsgQueue.txtMsg.Font);
         end;
+}        
     end;
 end;
 
@@ -2166,7 +2167,6 @@ begin
 
     // (dis)enable the tray menus
     trayPresence.Enabled := enable;
-    trayMessage.Enabled := enable;
     trayDisconnect.Enabled := enable;
 
     // Enable toolbar btns
@@ -2231,9 +2231,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.CTCPCallback(event: string; tag: TXMLTag);
+{** JJF msgqueue refactor
 var
     e: TJabberEvent;
+**}    
 begin
+{** JJF msgqueue refactor
     // record some kind of CTCP result
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
         if MainSession.IsPaused then
@@ -2244,6 +2247,7 @@ begin
             RenderEvent(e); //msg queue now own event, don't free
         end;
     end
+**}    
 end;
 
 {**
@@ -2273,10 +2277,7 @@ begin
         sExodusCWPHook := 0;
     end;
 
-    // Close up the msg queue
-    closeMsgQueue();
     // Close whatever rooms we have
-
     CloseAllRooms();
     CloseAllChats();
     CloseDebugForm();
@@ -2398,8 +2399,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuContacts_ViewHistoryClick(Sender: TObject);
-var
-    dlg: TfrmHistorySearch;
 begin
     inherited;
 
@@ -2473,10 +2472,12 @@ end;
 procedure TfrmExodus.ClearMessages1Click(Sender: TObject);
 begin
     // Clear events from the list view.
+{
     if (frmMsgQueue <> nil) then with frmMsgQueue do begin
         while (lstEvents.Items.Count > 0) do
             frmMsgQueue.RemoveItem(0);
     end;
+}    
 end;
 
 {---------------------------------------}
@@ -3423,23 +3424,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.trayMessageClick(Sender: TObject);
-var
-    jid : Widestring;
-begin
-    // Send a msg via the tray menu popup
-    jid := SelectUIDByType('contact');
-    if (jid <> '') then begin
-        // do the send
-        if (MainSession.Prefs.getBool(P_CHAT)) then
-            StartChat(jid, '', true)
-        else
-            StartMsg(jid);
-
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmExodus.DefaultHandler(var msg);
 var
     m : TMessage;
@@ -3520,15 +3504,6 @@ begin
             end;
         end;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
-begin
-    if (isMsgQueueShowing) then
-      hideMsgQueue()
-    else
-      showMsgQueue();
 end;
 
 {---------------------------------------}
@@ -3943,7 +3918,6 @@ begin
         TAutoOpenEventManager.onAutoOpenEvent('disconnected');
         CloseAllRooms();
         CloseAllChats();
-        closeMsgQueue();
         if (not isDebugShowing()) then begin
             getDockManager().ShowDockManagerWindow(false, false);
         end;
@@ -4280,10 +4254,11 @@ begin
     // set us to away
     DebugMsg(_(sSetAutoAway));
     Application.ProcessMessages;
+{** JJF msgqueue refactor
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
       MainSession.Pause();
     end;
-
+**}
     if ((MainSession.Show = 'away') or
         (MainSession.Show = 'xa') or
         (MainSession.Show = 'dnd')) then begin
@@ -4352,9 +4327,11 @@ begin
     if (_valid_aa) then begin
         timAutoAway.Enabled := true;
     end;
+{** JJF msgqueue refactor
     if (MainSession.Prefs.getBool('branding_queue_not_available_msgs') = false) then begin
       MainSession.Play();
     end;
+**}    
 end;
 
 {*******************************************************************************

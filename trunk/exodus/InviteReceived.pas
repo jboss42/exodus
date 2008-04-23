@@ -59,8 +59,7 @@ uses
     Notify,
     ExUtils,
     ChatWin,
-    Contnrs,
-    InviteDeclined;
+    Contnrs;
 const
     LEFT_OFFSET = 30;
     TOP_OFFSET = 30;
@@ -131,13 +130,10 @@ type
         _Session: TJabberSession;   //current session
         _OpenReceivedList: TWideStringList; //list of open invites by room
         _ReceivedPosHelper: TWindowPosHelper;
-        _OpenDeclinedList: TObjectList;
-        _DeclinedPosHelper: TWindowPosHelper;
 
         _SessionListener: TSessionListener;
 
         _InviteCB: Integer;
-        _DeclineCB: Integer;
 
         procedure OnAuthenticated();
         procedure OnDisconnected(ForcedDisconnect: boolean; Reason: WideString);
@@ -145,7 +141,6 @@ type
         procedure SetSession(JabberSession: TJabberSession);
 
         procedure ShowInviteReceived(InvitePacket: TXMLTag);
-        procedure ShowDeclineReceived(DeclinePacket: TXMLTag);
         
         function IndexOfForm(frm: TForm): integer;
     public
@@ -158,7 +153,6 @@ type
         property Session: TJabberSession read _Session write SetSession;
 
         procedure InviteCallback(event: string; InvitePacket: TXMLTag);
-        procedure DeclineCallback(event: string; DeclinePacket: TXMLTag);
 
         //invite form event handlers
         procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
@@ -338,8 +332,6 @@ var
 begin
     for i := _OpenReceivedList.Count - 1 downto 0 do
         TForm(_OpenReceivedList.Objects[i]).Close();
-    for i := _OpenDeclinedList.Count - 1 downto 0 do
-        TForm(_OpenDeclinedList[i]).Close();
 end;
 
 
@@ -381,11 +373,6 @@ begin
             _Session.UnRegisterCallback(_InviteCB);
             _InviteCB := -1;
         end;
-        if (_DeclineCB <> -1) then
-        begin
-            _Session.UnRegisterCallback(_DeclineCB);
-            _DeclineCB := -1;
-        end;
     end;
 
     _Session := JabberSession;
@@ -393,11 +380,8 @@ begin
     if (_Session <> nil)  then
     begin
         _InviteCB := _Session.RegisterCallback(InviteCallback,
-                                               '/pre/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
+                                               '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite');
                                                
-        _DeclineCB := _Session.RegisterCallback(DeclineCallback,
-                                               '/pre/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/decline')
-
     end;
     _SessionListener.Session := JabberSession;
 end;
@@ -405,13 +389,10 @@ end;
 Constructor TInviteHandler.Create(JabberSession: TJabberSession);
 begin
     _InviteCB := -1;
-    _DeclineCB := -1;
 
     _OpenReceivedList := TWideStringList.Create();
-    _OpenDeclinedList := TObjectList.Create(False);
 
     _ReceivedPosHelper := nil;
-    _DeclinedPosHelper := nil;
 
     _SessionListener := TSessionListener.create(nil);
     _SessionListener.OnAuthenticated := Self.OnAuthenticated;
@@ -424,9 +405,7 @@ end;
 Destructor TInviteHandler.Destroy();
 begin
     _OpenReceivedList.Free();
-    _OpenDeclinedList.Free();
     _ReceivedPosHelper.Free();
-    _DeclinedPosHelper.Free();
     
     Session := nil;
     _SessionListener.Free();
@@ -498,37 +477,6 @@ begin
     inherited;
 end;
 
-procedure TInviteHandler.DeclineCallback(event: string; DeclinePacket: TXMLTag);
-begin
-    ShowDeclineReceived(DeclinePacket)
-end;
-
-procedure TInviteHandler.ShowDeclineReceived(DeclinePacket: TXMLTag);
-var
-    frmDeclined: TFrmInviteDeclined;
-    p: TPoint;
-begin
-    //keep all declines
-    frmDeclined := TFrmInviteDeclined.Create(Application);
-    frmDeclined.OnClose := Self.OnFormClose;
-    _OpenDeclinedList.Add(frmDeclined);
-    frmDeclined.InitializeFromPacket(DeclinePacket);
-
-    if (_DeclinedPosHelper = nil) then
-    begin
-        _DeclinedPosHelper := TWindowPosHelper.create();
-        p.X := 15;
-        p.Y := (frmDeclined.Monitor.Height div 2) - (frmDeclined.Height div 2);
-        _DeclinedPosHelper.SetInitialPosition(p);
-    end;
-    p := _DeclinedPosHelper.GetNextPos(frmDeclined);
-    frmDeclined.Left := p.X;
-    frmDeclined.Top := p.Y;
-
-    frmDeclined.Show();
-    _DeclinedPosHelper.AddWindow(frmDeclined);
-end;
-
 function TInviteHandler.IndexOfForm(frm: TForm): integer;
 begin
     if (frm is TFrmInviteReceived) then
@@ -536,14 +484,6 @@ begin
         for Result  := 0 to _OpenReceivedList.Count - 1 do
         begin
             if (_OpenReceivedList.Objects[Result] = frm) then
-                exit;
-        end;
-    end
-    else if (frm is TFrmInviteDeclined) then
-    begin
-        for Result  := 0 to _OpenDeclinedList.Count - 1 do
-        begin
-            if (_OpenDeclinedList[Result] = frm) then
                 exit;
         end;
     end;
@@ -564,13 +504,6 @@ begin
         if (i <> -1) then
             _OpenReceivedList.Delete(i);
     end
-    else if (frm is TFrmInviteDeclined) then
-    begin
-        _DeclinedPosHelper.RemoveWindow(frm);
-        i := IndexOfForm(frm);
-        if (i <> -1) then
-            _OpenDeclinedList.Delete(i);
-    end;
 end;
 
 procedure TfrmInviteReceived.TntFormCreate(Sender: TObject);

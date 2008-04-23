@@ -12,7 +12,7 @@ inherited frmSubscribe: TfrmSubscribe
   OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 340
-  ExplicitHeight = 253
+  ExplicitHeight = 247
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -176,10 +176,6 @@ inherited frmSubscribe: TfrmSubscribe
     object mnuChat: TTntMenuItem
       Caption = 'Start Chat'
       OnClick = mnuChatClick
-    end
-    object mnuMessage: TTntMenuItem
-      Caption = 'Send Message'
-      OnClick = mnuMessageClick
     end
   end
 end
