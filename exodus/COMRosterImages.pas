@@ -155,7 +155,6 @@ end;
 {---------------------------------------}
 function TExodusRosterImages.GetImageById(const Id: WideString): WideString;
 var
-  Encoder: TidEncoderMime;
   Idx: Integer;
 begin
    Result := '';
@@ -168,7 +167,6 @@ end;
 {---------------------------------------}
 function TExodusRosterImages.GetImageByIndex(Idx: Integer): WideString;
 var
-  Encoder: TidEncoderMime;
   Bitmap: TBitmap;
 begin
    Result := '';

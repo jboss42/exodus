@@ -232,8 +232,6 @@ end;
 
 {---------------------------------------}
 procedure TJabberEntityCache.Remove(e: TJabberEntity);
-var
-    i: integer;
 begin
     Delete(indexOf(e));
 end;

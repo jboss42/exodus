@@ -47,9 +47,6 @@ implementation
 uses TntComCtrls, RosterForm;
 {---------------------------------------}
 constructor TExodusTabWrapper.Create(activeX_GUID: WideString);
-var
-    Page: TTntTabSheet;
-    l: Integer;
 begin
     inherited Create;
     _Tab := TExodusTab.Create(activeX_GUID);

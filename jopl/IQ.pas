@@ -43,10 +43,6 @@ type
         _timer: TTimer;
         _ticks: longint;
         _timeout: longint;
-    published
-        procedure Timeout(Sender: TObject);
-        procedure iqCallback(event: string; xml: TXMLTag);
-        procedure disCallback(event: string; xml: TXMLTag);
     public
         Namespace: string;
         iqType: string;
@@ -66,6 +62,10 @@ type
 
         destructor Destroy; override;
         procedure Send;
+
+        procedure Timeout(Sender: TObject);
+        procedure iqCallback(event: string; xml: TXMLTag);
+        procedure disCallback(event: string; xml: TXMLTag);
 
         property ElapsedTime: longint read _ticks;
         property JabberSession: TJabberSession read _js;

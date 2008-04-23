@@ -47,10 +47,6 @@ type
         procedure addPending(ejid, node, caps_jid: Widestring);
         procedure fireCaps(jid, capid: Widestring);
 
-    published
-        procedure PresCallback(event: string; tag: TXMLTag);
-        procedure SessionCallback(event: string; tag: TXMLTag);
-
     public
         constructor Create();
         destructor Destroy(); override;
@@ -62,6 +58,9 @@ type
         procedure Clear();
         procedure Save(filename: Widestring = '');
         procedure Load(filename: Widestring = '');
+
+        procedure PresCallback(event: string; tag: TXMLTag);
+        procedure SessionCallback(event: string; tag: TXMLTag);
 
         function toString(): widestring;
     end;

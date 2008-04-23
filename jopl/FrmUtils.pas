@@ -119,7 +119,6 @@ var
     rect: TRect;
     myRect: TRect;
     pWP: PWindowPlacement;
-    pwi: tagWINDOWINFO;
 begin
     // Check for windows in front of passed in one
     // Return HWND of first covering window if even partially covered.

@@ -59,8 +59,6 @@ end;
 
 {---------------------------------------}
 destructor TExodusItemWrapper.Destroy();
-var
-    impl: TExodusItem;
 begin
     _Item := nil;
     

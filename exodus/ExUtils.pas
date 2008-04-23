@@ -56,6 +56,7 @@ procedure ClearAllRoomLogs();
 
 Procedure DebugMsgBox(msg : string);
 procedure DebugMsg(Message : string; debugModeOnly: boolean = false);
+
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload;
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
