@@ -23,8 +23,8 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs, ExtCtrls, TntComCtrls, StateForm,
-    XMLTag, ToolWin, ImgList, buttonFrame, Buttons, JabberMsg;
+    ComCtrls, Dialogs, ImgList, Buttons, ToolWin, Contnrs,
+    ExtCtrls, TntComCtrls, StateForm, Unicode, XMLTag, buttonFrame, JabberMsg;
 
   function generateUID(): widestring;
 
@@ -47,7 +47,7 @@ type
   public
     constructor create();
     destructor Destroy();override;
-  published
+
     property Hint: WideString read getHint write setHint;
     property ImageIndex: integer read getImageIndex write setImageIndex;
     property OnClick: TDockNotify read _callback write _callback;
@@ -87,6 +87,7 @@ type
     procedure btnCloseDockClick(Sender: TObject);
     procedure btnDockToggleClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TntFormDestroy(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -97,6 +98,18 @@ type
     _session_dock_all_callback: integer;
     _session_float_all_callback: integer;
 
+    //Unread messages in the currently open window
+    _unreadmsg: integer; // Unread msg count
+    _unreadMessages: TWidestringList; //list of serialized <message> elements
+
+    //Messages persisted through session, available at OnRestoreWindowState
+    _persistMessages: boolean; //should messages be persisted through a session?
+
+    _uid: widestring; // Unique ID (usually a jid) for this particular dockable window
+    _priorityflag: boolean; // Is there a high priority msg unread
+    _activating: boolean; // Is the window currently becoming active
+    _lastActivity: TDateTime; // what was the last activity for this window
+
     function  getImageIndex(): Integer;
     procedure setImageIndex(idx: integer);
     procedure prefsCallback(event: string; tag: TXMLTag);
@@ -104,15 +117,9 @@ type
     procedure dockAllCallback(event: string; tag: TXMLTag);
     procedure floatAllCallback(event: string; tag: TXMLTag);
   protected
-    _uid: widestring; // Unique ID (usually a jid) for this particular dockable window
-    _unreadmsg: integer; // Unread msg count
-    _priorityflag: boolean; // Is there a high priority msg unread
-    _activating: boolean; // Is the window currently becoming active
-    _lastActivity: TDateTime; // what was the last activity for this window
-    _windowType: widestring; // what kind of dockable window is this
-
     procedure OnRestoreWindowState(windowState : TXMLTag);override;
     procedure OnPersistWindowState(windowState : TXMLTag);override;
+    procedure OnPersistedMessage(msg: TXMLTag);virtual;
 
     procedure OnFlash();override;
 
@@ -122,11 +129,20 @@ type
     procedure showTopbar(show: boolean);
     procedure showCloseButton(show: boolean);
     procedure showDockToggleButton(show: boolean);
-    procedure updateMsgCount(msg: TJabberMessage);
-    procedure updateLastActivity(lasttime: TDateTime);
+    procedure updateMsgCount(msg: TJabberMessage); overload;virtual;
+    procedure updateMsgCount(msgTag: TXMLTag); overload;virtual;
+    procedure updateLastActivity(lasttime: TDateTime); virtual;
     procedure _doActivate();
+
+    //getters/setters for activity window properties. Allows subclasses to set their
+    //state as the state of these properties change
+    procedure SetUnreadMsgCount(value : integer);virtual;
+    function GetUnreadMsgCount(): Integer;virtual;
   public
-    { Public declarations }
+    _windowType: widestring; // what kind of dockable window is this
+
+    Constructor Create(AOwner: TComponent); override;
+
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
 
@@ -162,17 +178,17 @@ type
     {
         Get the UID for the window.
     }
-    function getUID(): Widestring;
+    function getUID(): Widestring; virtual;
 
     {
         Set the UID for the window.
     }
-    procedure setUID(id:widestring);
+    procedure setUID(id:widestring); virtual;
 
     {
         Clear out the UnreadMsgCount
     }
-    procedure ClearUnreadMsgCount();
+    procedure ClearUnreadMsgCount(); virtual;
 
     { Public Properties }
     property Docked: boolean read _docked write _docked;
@@ -184,13 +200,13 @@ type
         A UID (usually a JID) that identifies this window for tracking
         by the activity window.
     }
-    property UID: WideString read getUID write setUID;
-    property UnreadMsgCount: integer read _unreadmsg write _unreadmsg;
+    property UID: WideString read _uid write _uid;
+    property UnreadMsgCount: integer read GetUnreadMsgCount write SetUnreadMsgCount;
     property PriorityFlag: boolean read _priorityflag write _priorityflag;
     property Activating: boolean read _activating write _activating;
     property LastActivity: TDateTime read _lastActivity write _lastActivity;
     property WindowType: widestring read _windowType write _windowType;
-
+    property PersistUnreadMessages: boolean read _persistMessages write _persistMEssages;
   end;
 
 var
@@ -204,7 +220,9 @@ implementation
 uses
     PrefController,
     RosterImages,
-    XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
+    JabberConst,
+    IDGlobal,
+    XMLUtils, XMLParser, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 function generateUID(): widestring;
 begin
@@ -256,25 +274,34 @@ begin
     inherited;
 end;
 
-{---------------------------------------}
-procedure TfrmDockable.FormCreate(Sender: TObject);
+Constructor TfrmDockable.Create(AOwner: TComponent);
 begin
+    inherited;
     _normalImageIndex := RosterImages.RI_AVAILABLE_INDEX;
-    btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
-    btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
     _docked := false;
     _initiallyDocked := true;
     SnapBuffer := MainSession.Prefs.getInt('edge_snap');
+
     _prefs_callback_id := MainSession.RegisterCallback(prefsCallback, '/session/prefs');
     _session_close_all_callback := MainSession.RegisterCallback(closeAllCallback, '/session/close-all-windows');
     _session_dock_all_callback := MainSession.RegisterCallback(dockAllCallback, '/session/dock-all-windows');
     _session_float_all_callback := MainSession.RegisterCallback(floatAllCallback, '/session/float-all-windows');
+
     _unreadmsg := -1;
+    _unreadMessages := TWidestringList.create();
+    _persistMessages := false;
+
     _priorityflag := false;
     activating := false;
-    if (MainSession <> nil) then begin
-        _uid := generateUID();
-    end;
+
+    _uid := generateUID();
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.FormCreate(Sender: TObject);
+begin
+    btnCloseDock.ImageIndex := RosterImages.RosterTreeImages.Find(RI_CLOSETAB_KEY);
+    btnDockToggle.ImageIndex := RosterImages.RosterTreeImages.Find(RI_UNDOCK_KEY);
 
     inherited;
 end;
@@ -291,6 +318,17 @@ begin
         Result := _normalImageIndex;
 end;
 
+procedure TfrmDockable.SetUnreadMsgCount(value : integer);
+begin
+    _unreadmsg := value;
+    GetDockManager().UpdateDocked(self);
+end;
+
+function TfrmDockable.GetUnreadMsgCount(): integer;
+begin
+    Result := _unreadmsg;
+end;
+
 procedure TfrmDockable.OnDockedDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
@@ -303,6 +341,11 @@ procedure TfrmDockable.OnDockedDragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
     inherited;
     //implement in subclass
+end;
+
+procedure TfrmDockable.OnPersistedMessage(msg: TXMLTag);
+begin
+    //nop in base class
 end;
 
 {---------------------------------------}
@@ -328,7 +371,6 @@ end;
 procedure TfrmDockable._doActivate();
 begin
     _activating := true;
-
     ClearUnreadMsgCount();
 
     try
@@ -336,7 +378,6 @@ begin
     except
 
     end;
-
     _activating := false;
 end;
 
@@ -363,16 +404,17 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.ClearUnreadMsgCount();
 begin
-    if (_unreadmsg > 0) then begin
+    if (_unreadmsg > 0) then
         _unreadmsg := 0;
-    end;
+
+    _unreadMessages.clear();
     _priorityflag := false;
 end;
 
 {---------------------------------------}
 procedure TfrmDockable.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  inherited;
+    inherited;
     MainSession.UnRegisterCallback(_prefs_callback_id);
     MainSession.UnRegisterCallback(_session_close_all_callback);
     MainSession.UnRegisterCallback(_session_dock_all_callback);
@@ -466,19 +508,55 @@ end;
 
 procedure TfrmDockable.OnRestoreWindowState(windowState : TXMLTag);
 var
+    i: integer;
+    ttag: TXMLTag;
+    txlist: TXMLTagList;
     ads: TAllowedDockStates;
     tstr: widestring;
 begin
     inherited;
-    ads := Jabber1.getAllowedDockState();
-    tstr := windowState.GetAttribute('dock');
-    if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
-        tstr := 't';
-    _initiallyDocked :=  ((ads <> adsForbidden) and (tstr = 't'));
+
+    if (MainSession.Prefs.getBool('restore_window_state')) then
+    begin
+        ads := Jabber1.getAllowedDockState();
+        tstr := windowState.GetAttribute('dock');
+        if (tstr = '') and (MainSession.Prefs.getBool('start_docked')) then
+            tstr := 't';
+        _initiallyDocked :=  ((ads <> adsForbidden) and (tstr = 't'));
+    end;
+
+    if (PersistUnreadMessages) then
+    begin
+        ttag := windowState.GetFirstTag('unread');
+        if (ttag <> nil) then
+        begin
+            txList := ttag.ChildTags;
+            for i := 0 to txList.Count - 1 do
+                OnPersistedMessage(txList[i]);
+        end;
+    end;
 end;
 
 procedure TfrmDockable.OnPersistWindowState(windowState : TXMLTag);
+var
+    i: integer;
+    ttag: TXMLTag;
+    _parser: TXMLTagParser;
 begin
+    ttag := windowState.AddTag('unread');
+    if (PersistUnreadMessages and (_unreadMessages.Count > 0)) then
+    begin
+        _parser := TXMLTagParser.Create();
+        for i := 0 to _unreadMessages.Count - 1 do
+        begin
+            _parser.Clear();
+            _parser.ParseString(_unreadMessages[i], '');
+            if (_parser.Count > 0) then
+                ttag.AddTag(_parser.popTag());
+        end;
+        _parser.Free();
+    end;
+
     if (not Floating) then
         windowState.setAttribute('dock', 't')
     else
@@ -529,6 +607,12 @@ begin
     pnlDockTop.Visible := show;
 end;
 
+procedure TfrmDockable.TntFormDestroy(Sender: TObject);
+begin
+    inherited;
+    _unreadMessages.free();
+end;
+
 procedure TfrmDockable.showCloseButton(show: boolean);
 begin
     btnCloseDock.Visible := show;
@@ -557,24 +641,67 @@ end;
 
 procedure TfrmDockable.updateMsgCount(msg: TJabberMessage);
 begin
-    if (msg = nil) then exit;
+    _priorityflag := _priorityflag or (msg.Priority = High);
+    UpdateMsgCount(msg.Tag);
+end;
 
-    if (not Active) then begin
-        if (Docked) then begin
-            if ((GetDockManager().getTopDocked() <> Self) or
-                (not GetDockManager().isActive)) then begin
-                Inc(Self._unreadmsg);
-                if (msg.Priority = High) then begin
-                    _priorityflag := true;
-                end;
-            end;
-        end
-        else begin
+//create an appropriate delay tag from datetime, optional from, description
+function CreateDelayTag(dt: TDateTime; from: widestring=''; desc: widestring=''): TXMLTag;
+begin
+    //for now, x tag
+    Result := TXMLTag.create('x');
+    Result.setAttribute('xmlns', XMLNS_DELAY);
+    Result.setAttribute('stamp', DateTimeToJabber(dt));
+    if (from <> '') then
+        Result.setAttribute('from', from);
+    if (desc <> '') then
+        Result.AddCData(desc)
+end;
+
+procedure TfrmDockable.updateMsgCount(msgTag: TXMLTag);
+var
+    etag, dttag: TXMLTag;
+    ttag: TXMLTag;
+begin
+    //no message or we are not tracking messages
+    if (msgTag = nil) or (_unreadmsg = -1) then exit;
+
+    if (not Active) then
+    begin
+        if ((not Docked) or
+            (GetDockManager().getTopDocked() <> Self) or
+            (not GetDockManager().isActive)) then
+        begin
             Inc(Self._unreadmsg);
-            if (msg.Priority = High) then begin
-                _priorityflag := true;
+            if (PersistUnreadMessages) then
+            begin
+                ttag := nil;
+                //add dtstamp if not already in packet
+                dttag := GetDelayTag(msgTag);
+                if (dttag = nil) then
+                begin
+                    ttag := TXMLTag.create(msgTag);
+                    ttag.AddTag(CreateDelayTag(now()+ TimeZoneBias()));
+                end;
+
+                //filter tag, removing anything we don't want to persist (events for instance)
+                etag := msgTag.QueryXPTag(XP_MSGXEVENT);
+                if (etag <> nil) then
+                begin
+                    if (ttag = nil) then
+                        ttag := TXMLTag.create(msgTag);
+                    etag := ttag.QueryXPTag(XP_MSGXEVENT);
+                    ttag.RemoveTag(etag);
+                end;
+                if (ttag <> nil) then
+                begin
+                    _unreadMessages.Add(ttag.XML);
+                    ttag.Free();
+                end
+                else _unreadMessages.Add(msgTag.XML);
             end;
         end;
+
         GetDockManager().UpdateDocked(self);
     end;
 end;

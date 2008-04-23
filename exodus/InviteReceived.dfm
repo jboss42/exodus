@@ -2,22 +2,21 @@ inherited frmInviteReceived: TfrmInviteReceived
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Conference Room Invitation'
-  ClientHeight = 168
-  ClientWidth = 537
+  ClientWidth = 436
   Position = poDefault
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnShow = TntFormShow
-  ExplicitWidth = 543
-  ExplicitHeight = 206
-  PixelsPerInch = 120
-  TextHeight = 16
+  ExplicitWidth = 442
+  ExplicitHeight = 178
+  PixelsPerInch = 96
+  TextHeight = 13
   object pnlHeader: TFlowPanel
     AlignWithMargins = True
     Left = 3
     Top = 9
-    Width = 531
-    Height = 19
+    Width = 430
+    Height = 16
     Margins.Top = 9
     Align = alTop
     AutoSize = True
@@ -28,8 +27,8 @@ inherited frmInviteReceived: TfrmInviteReceived
       AlignWithMargins = True
       Left = 6
       Top = 0
-      Width = 69
-      Height = 16
+      Width = 59
+      Height = 13
       Margins.Left = 6
       Margins.Top = 0
       Align = alLeft
@@ -39,39 +38,39 @@ inherited frmInviteReceived: TfrmInviteReceived
       OnClick = lblInvitorClick
     end
     object lblFiller1: TTntLabel
-      Left = 78
+      Left = 68
       Top = 0
-      Width = 155
-      Height = 16
+      Width = 131
+      Height = 13
       Align = alLeft
       Caption = ' has invited you to join the '
     end
     object lblRoom: TTntLabel
-      Left = 233
+      Left = 199
       Top = 0
-      Width = 69
-      Height = 16
+      Width = 59
+      Height = 13
       Align = alLeft
       Caption = '<<Room>>'
-      Constraints.MaxWidth = 535
+      Constraints.MaxWidth = 435
       ParentShowHint = False
       ShowAccelChar = False
       ShowHint = True
     end
     object TntLabel1: TTntLabel
-      Left = 302
+      Left = 258
       Top = 0
-      Width = 105
-      Height = 16
+      Width = 88
+      Height = 13
       Caption = ' conference room.'
     end
   end
   object TntPanel4: TTntPanel
     AlignWithMargins = True
     Left = 3
-    Top = 137
-    Width = 531
-    Height = 25
+    Top = 126
+    Width = 430
+    Height = 20
     Margins.Top = 12
     Margins.Bottom = 6
     Align = alTop
@@ -80,29 +79,29 @@ inherited frmInviteReceived: TfrmInviteReceived
     ParentColor = True
     TabOrder = 1
     object btnAccept: TTntButton
-      Left = 288
+      Left = 234
       Top = 0
-      Width = 75
-      Height = 25
+      Width = 61
+      Height = 20
       Caption = '&Join'
       Default = True
       TabOrder = 0
       OnClick = btnAcceptClick
     end
     object btnDecline: TTntButton
-      Left = 369
+      Left = 300
       Top = 0
-      Width = 75
-      Height = 25
+      Width = 61
+      Height = 20
       Caption = '&Decline'
       TabOrder = 1
       OnClick = btnDeclineClick
     end
     object btnIgnore: TTntButton
-      Left = 450
+      Left = 366
       Top = 0
-      Width = 76
-      Height = 25
+      Width = 61
+      Height = 20
       Caption = '&Ignore'
       TabOrder = 2
       OnClick = btnIgnoreClick
@@ -111,9 +110,9 @@ inherited frmInviteReceived: TfrmInviteReceived
   object ExGroupBox1: TExGroupBox
     AlignWithMargins = True
     Left = 24
-    Top = 40
-    Width = 489
-    Height = 34
+    Top = 37
+    Width = 388
+    Height = 31
     Margins.Left = 24
     Margins.Top = 9
     Margins.Right = 24
@@ -128,21 +127,20 @@ inherited frmInviteReceived: TfrmInviteReceived
     object lblInviteMessage: TTntLabel
       Left = 0
       Top = 18
-      Width = 489
-      Height = 16
+      Width = 125
+      Height = 13
       Align = alTop
       Caption = 'No message was specified'
       Transparent = True
       WordWrap = True
-      ExplicitWidth = 151
     end
   end
   object ExGroupBox2: TExGroupBox
     AlignWithMargins = True
     Left = 24
-    Top = 83
-    Width = 489
-    Height = 42
+    Top = 77
+    Width = 388
+    Height = 37
     Margins.Left = 24
     Margins.Top = 0
     Margins.Right = 24
@@ -157,8 +155,8 @@ inherited frmInviteReceived: TfrmInviteReceived
     object txtReason: TTntEdit
       Left = 0
       Top = 18
-      Width = 489
-      Height = 24
+      Width = 388
+      Height = 19
       Margins.Left = 24
       Margins.Right = 24
       Align = alTop

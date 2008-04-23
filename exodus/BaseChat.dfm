@@ -80,8 +80,6 @@ inherited frmBaseChat: TfrmBaseChat
     BorderWidth = 2
     ParentColor = True
     TabOrder = 1
-    ExplicitLeft = 0
-    ExplicitWidth = 415
     object MsgOut: TExRichEdit
       Left = 2
       Top = 24
@@ -196,7 +194,6 @@ inherited frmBaseChat: TfrmBaseChat
       Images = frmExodus.ImageList1
       TabOrder = 1
       Transparent = True
-      ExplicitWidth = 411
       object ChatToolbarButtonBold: TTntToolButton
         Left = 0
         Top = 0
@@ -326,7 +323,7 @@ inherited frmBaseChat: TfrmBaseChat
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
-        ItemHeight = 13
+        ItemHeight = 0
         ParentFont = False
         ParentShowHint = False
         ShowHint = True

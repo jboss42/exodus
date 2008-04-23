@@ -27,9 +27,10 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Chat, ChatController, MsgList, Presence, COMExodusItem,
+    JabberAuth, Chat, ChatController,
+    Presence, COMExodusItem,
     Signals, XMLStream, XMLTag, Unicode,
-    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, EventQueue,
+    Contnrs, Classes, SysUtils, JabberID, GnuGetText, idexception, 
     COMExodusItemController, ContactController, Exodus_TLB, RoomController;
 
 type
@@ -76,10 +77,11 @@ type
         _chatSignal: TChatSignal;
 
         // other misc. flags
+{** JJF msgqueue refactor
         _paused: boolean;
         _resuming: boolean;
         _pauseQueue: TQueue;
-        _queue: TEventMsgQueue;
+**}
         _id: longint;
         _cb_id: longint;
         _authd: boolean;
@@ -115,21 +117,18 @@ type
 
         procedure doConnect();
 
-    published
         procedure DataEvent(send: boolean; data: Widestring);
         procedure SessionCallback(event: string; tag: TXMLTag);
         procedure BindCallback(event: string; tag: TXMLTag);
         procedure TLSCallback(event: string; tag: TXMLTag);
         procedure CompressionCallback(event: string; tag: TXMLTag);
         procedure CompressionErrorCallback(event: string; tag: TXMLTag);
-
     public
         ppdb: TJabberPPDB;
         ItemController: IExodusItemController;
         roster: TContactController;
         rooms: TRoomController;
         //bookmarks: TBookmarkManager;
-        MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         dock_windows: boolean;
@@ -175,11 +174,12 @@ type
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
         procedure ActivateDefaultProfile();
-
+        
+{** JJF msgqueue refactor
         procedure Pause;
         procedure Play;
         procedure QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
-
+**}
         function generateID: WideString;
         function IsBlocked(jid : WideString): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
@@ -211,8 +211,10 @@ type
         property Stream: TXMLStream read _stream;
         property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
+{** JJF msgqueue refactor
         property IsPaused: boolean read _paused;
         property IsResuming: boolean read _resuming;
+**}
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
         property isXMPP: boolean read _xmpp;
@@ -225,7 +227,30 @@ type
         property NoAuth: boolean read _no_auth write _no_auth;
         property AuthAgent: TJabberAuth read _auth_agent;
         property Authenticated: boolean read _authd;
-        property EventQueue: TEventMsgQueue read _queue;
+    end;
+
+    {------------------------ TSessionListener --------------------------------}
+    TDisconnectEvent = procedure(ForcedDisconnect: boolean; Reason: WideString) of object;
+    TAuthenticatedEvent = procedure () of object;
+
+    TSessionListener = class
+    private
+        _OnAuthEvent: TAuthenticatedEvent;
+        _OnDisconnectEvent: TDisconnectEvent;
+        _Session: TJabberSession;
+
+        _ReceivedError: WideString;
+        _Authenticated: Boolean;
+
+        _SessionCB: integer;
+    protected
+        procedure FireAuthenticated(); virtual;
+        procedure FireDisconnected(); virtual;
+
+        procedure SessionListenerCallback(event: string; tag: TXMLTag);
+    public
+        Constructor Create(OnAuthenticated: TAuthenticatedEvent; OnDisconnect: TDisconnectEvent; JabberSession: TJabberSession = nil);
+        Destructor Destroy(); override;
     end;
 
 var
@@ -287,9 +312,11 @@ begin
     _dispatcher.AddSignal(_dataSignal);
     _dispatcher.AddSignal(_winSignal);
     _dispatcher.AddSignal(_chatSignal);
-
+    
+{** JJF msgqueue refactor
     _pauseQueue := TQueue.Create();
-    _queue := TEventMsgQueue.Create();
+**}    
+
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
@@ -309,11 +336,10 @@ begin
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
 
-    // Create the msg & chat controllers
-    MsgList := TJabberMsgList.Create();
+    // Create chat controllers
     ChatList := TJabberChatList.Create();
-    MsgList.SetSession(Self);
     ChatList.SetSession(Self);
+
     OnSessionStartProfile(Self);
     // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
@@ -357,7 +383,6 @@ begin
     roster.Free();
     rooms.Free();
     //bookmarks.Free();
-    MsgList.Free();
     ChatList.Free();
     ClearStringListObjects(_extensions);
     _extensions.Free();
@@ -366,9 +391,9 @@ begin
 
     if (_stream <> nil) then
         _stream.Free();
-
+{** JJF msgqueue refactor
     _pauseQueue.Free();
-    _queue.Free();
+**}    
     Presence_XML.Free();
 
     // Free the dispatcher... this should free the signals
@@ -592,9 +617,10 @@ begin
     _ssl_on := false;
     _compression_on := false;
 
+{** JJF msgqueue refactor
     if (_paused) then
         Self.Play();
-
+**}
     FreeAndNil(_features);
 
     ppdb.Clear;
@@ -801,13 +827,16 @@ begin
 end;
 
 {---------------------------------------}
+{** JJF msgqueue refactor
+
 procedure TJabberSession.Pause();
 begin
     // pause the session
     _paused := true;
 end;
-
+**}
 {---------------------------------------}
+{** JJF msgqueue refactor
 procedure TJabberSession.Play();
 var
     q: TQueuedEvent;
@@ -826,14 +855,15 @@ begin
     end;
     _resuming := false;
 end;
-
+**}
 {---------------------------------------}
+{** JJF msgqueue refactor
+
 procedure TJabberSession.QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
 var
     q: TQueuedEvent;
 begin
     // Queue an event to a specific Callback
-
     q := TQueuedEvent.Create();
     q.callback := TMethod(Callback);
     q.event := event;
@@ -842,9 +872,8 @@ begin
     // it makes the rounds thru the dispatcher.
     q.tag := TXMLTag.Create(tag);
     _pauseQueue.Push(q);
-
 end;
-
+**}
 {---------------------------------------}
 function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: Widestring; pausable: boolean = false): integer;
 var
@@ -1051,13 +1080,14 @@ begin
             Prefs.SaveServerPrefs();
 
         MainSession.FireEvent('/session/presence', nil);
-
+{** JJF msgqueue refactor
         if (_paused) then begin
             // If the session is paused, and we're changing back
             // to available, or chat, then make sure we play the session
             if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
                 Self.Play();
         end;
+**}        
     end;
 end;
 {---------------------------------------}
@@ -1436,6 +1466,62 @@ begin
     Result := DisplayName.getDisplayNameCache().getDisplayName(Profile.getJabberID);
 end;
 
+{*******************************************************************************
+**************************** TSessionListener **********************************
+*******************************************************************************}
+procedure TSessionListener.FireAuthenticated();
+begin
+    if (Assigned(_OnAuthEvent)) then
+        _OnAuthEvent();
+end;
+
+procedure TSessionListener.FireDisconnected();
+begin
+    if (Assigned(_OnDisconnectEvent)) then
+        _OnDisconnectEvent((_ReceivedError <> ''), _ReceivedError);
+end;
+
+procedure TSessionListener.SessionListenerCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/authenticated') then
+    begin
+        _Authenticated := true;
+        _ReceivedError := '';
+        FireAuthenticated();
+    end
+    else if ((event = '/session/disconnected') and _Authenticated) then
+    begin
+        FireDisconnected();
+        _Authenticated := false;
+    end
+    else if (event = '/session/commerror') then
+    begin
+        _ReceivedError := 'Comm Error';
+    end;
+end;
+
+Constructor TSessionListener.Create(OnAuthenticated: TAuthenticatedEvent; OnDisconnect: TDisconnectEvent; JabberSession: TJabberSession = nil);
+begin
+    _Authenticated := false;
+    _ReceivedError := '';
+    _SessionCB := -1;
+    _OnAuthEvent := OnAuthenticated;
+    _OnDisconnectEvent := OnDisconnect;
+    _Session := JabberSession;
+    if (_Session = nil) then
+        _Session := MainSession;
+
+    _SessionCB := _Session.RegisterCallback(SessionListenerCallback, '/session');
+    _Authenticated := _Session.Authenticated;
+end;
+
+Destructor TSessionListener.Destroy();
+begin
+    if (_SessionCB <> -1) then        begin
+        _Session.UnRegisterCallback(_SessionCB);
+        _SessionCB := -1;
+    end;
+end;
 
 end.
 

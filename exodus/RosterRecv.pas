@@ -22,7 +22,7 @@ unit RosterRecv;
 interface
 
 uses
-    Dockable, ExEvents,
+    Dockable, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntComCtrls, TntExtCtrls, JabberID, XMLTag, StrUtils, Unicode,

@@ -63,7 +63,6 @@ type
     lstContacts: TTntListView;
     PopupMenu1: TTntPopupMenu;
     btnContacts: TButton;
-    popMessage: TTntMenuItem;
     popChat: TTntMenuItem;
     N1: TTntMenuItem;
     popProfile: TTntMenuItem;
@@ -87,7 +86,6 @@ type
     procedure lblAddGrpClick(Sender: TObject);
     procedure popProfileClick(Sender: TObject);
     procedure popChatClick(Sender: TObject);
-    procedure popMessageClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure lstContactsColumnClick(Sender: TObject; Column: TListColumn);
     procedure lstContactsData(Sender: TObject; Item: TListItem);
@@ -156,7 +154,8 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    XData, ChatWin, MsgRecv,
+    XData, ChatWin,
+//    MsgRecv,
     Entity, EntityCache, InputPassword,
     GnuGetText, JabberConst,
     Profile, JabberID,
@@ -745,7 +744,6 @@ begin
 
     popProfile.Enabled := not multi;
     popChat.Enabled := not multi;
-    popMessage.Enabled := not multi;
 end;
 
 {---------------------------------------}
@@ -846,14 +844,6 @@ begin
   inherited;
     // Chat with this person
     StartChat(convertDisplayToJID(lstContacts.Selected.Caption), '', true);
-end;
-
-{---------------------------------------}
-procedure TfrmJUD.popMessageClick(Sender: TObject);
-begin
-  inherited;
-    // Send a message to this person
-    StartMsg(convertDisplayToJID(lstContacts.Selected.Caption));
 end;
 
 {---------------------------------------}
@@ -1046,7 +1036,7 @@ begin
        end;
      end;
      //Broadcast message and cleanup
-     BroadcastMsg(jidList);
+//JJF TODO hmm     BroadcastMsg(jidList);
      jidList.Free();
  end;
 end;

@@ -195,6 +195,7 @@ begin
         Item := nil;
         _ItemsCB.Paused := true;
         TJabberSession(_JS).FireEvent('/item/begin', Item);
+        TJabberSession(_JS).FireEvent('/contact/item/begin', Item);
         ContactItemTags := Tag.QueryXPTags('/iq/query/item');
         for i := 0 to ContactItemTags.Count - 1 do begin
             ContactTag := ContactItemTags.Tags[i];
@@ -214,6 +215,7 @@ begin
         //TJabberSession(_js).ItemController.SaveGroups();
         Item := nil;
         _ItemsCB.Paused := false;
+        TJabberSession(_JS).FireEvent('/contact/item/end', Item);
         TJabberSession(_JS).FireEvent('/item/end', Item);
         TJabberSession(_JS).FireEvent('/data/item/group/restore', nil, '');
 
@@ -413,6 +415,7 @@ begin
     Item := nil;
 
     session.FireEvent('/data/item/group/save', nil, '');
+    session.FireEvent('/contact/item/begin', Item);
     session.FireEvent('/item/begin', Item);
     for i := 0 to session.ItemController.ItemsCount - 1 do
     begin
@@ -428,9 +431,9 @@ begin
 
     end;
     session.FireEvent('/data/item/group/restore', nil, '');
+    session.FireEvent('/contact/item/end', Item);
     session.FireEvent('/item/end', Item);
     Tag.Free();
-
 end;
 
 {---------------------------------------}

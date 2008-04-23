@@ -236,7 +236,6 @@
     <keywords state="rw"/> <!-- value is ignored -->
 
     <!-- deprecated message handling options -->
-    <msg_queue value="0" control="chkMsgQueue" state="inv"/>
     <log value="1" control="chkLog"/>
     <log_rooms value="0" control="chkLogRooms" state="inv"/>
     <log_roster value="0" control="chkLogRoster" state="inv"/>
@@ -245,19 +244,18 @@
     <spool_path control="txtSpoolPath" state="inv">
       <control name="lblSpoolPath"/>
     </spool_path>
-
+<!-- JJF msgqueue refactor
     <invite_treatment value="0" control="cboInviteOptions" state="inv">
       <control name="lblInviteOptions"/>
     </invite_treatment>
-
     <msg_treatment value="0" control="cboMsgOptions" state="inv">
       <control name="lblMsgOptions"/>
     </msg_treatment>
-
+    <msg_queue value="0" control="chkMsgQueue" state="inv"/>
     <queue_offline value="0" control="chkQueueOffline" state="inv"/>
     <queue_dnd_chats value="0" control="chkQueueDNDChats" state="inv"/>
     <queue_not_avail value="1" control="chkQueueNotAvail" state="inv"/>
-
+-->
     <!-- AutoAway Preferences -->
     <auto_away value="1" control="chkAutoAway" state="rw"/>
     <away_time value="5" control="txtAwayTime" state="rw">
@@ -571,7 +569,9 @@
     <!-- indicates if nested subgroup feature should be available -->
     <branding_nested_subgroup value="1"/>
     <!-- indicates if all messages should be queued to offline queue when I am not available -->
+<!-- JJF msgqueue refactor
     <branding_queue_not_available_msgs value="1"/>
+-->
 
     <!-- Should Exodus display a error box when trying to close when Exodus is being used as a COM server? -->
     <brand_warn_close_com_server value="1"/>

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 2008-04-22 14:04:53 from Type Library described below.
+// File generated on 4/22/2008 6:10:16 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\source\exodus-trunk\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 

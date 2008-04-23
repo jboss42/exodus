@@ -24,9 +24,17 @@ interface
 
 uses
     Exodus_TLB,
-    Session, ChatController, Chat, Room, MsgRecv, Unicode, XMLTag,
+    Session, ChatController, Chat, Room,
+    Unicode, XMLTag,
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
+{
+    JJF I'm a little unsure what to do here for the IM/broadcast refactor. It
+    will still be neccessary for plugins to have events fired when a brodcast
+    (normal) message is received, but not sure this is the place to do it.
+
+    All code changed prefereced with "JJF TODO msgqueue refactor"
+}
 type
   TExodusChat = class(TAutoObject, IExodusChat, IExodusChat2)
   protected
@@ -60,7 +68,7 @@ type
     constructor Create();
     destructor Destroy(); override;
 
-    procedure setIM(im: TfrmMsgRecv);
+//JJF TODO msgqueue refactor    procedure setIM(im: TfrmMsgRecv);
     procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
     function  fireMsgKeyUp(key: Word; shift: TShiftState): boolean;
@@ -74,7 +82,7 @@ type
     procedure fireClose();
 
   private
-    _im: TfrmMsgRecv;
+    //JJF TODO msgqueue refactor _im: TfrmMsgRecv;
     _room: TfrmRoom;
     _chat: TChatController;
     _plugs: TList;
@@ -138,18 +146,18 @@ begin
 
     inherited Destroy();
 end;
-
+{ JJF TODO msgqueue refactor
 procedure TExodusChat.setIM(im: TfrmMsgRecv);
 begin
     _im := im;
     _room := nil;
     _chat := nil;
 end;
-
+}
 {---------------------------------------}
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
-    _im   := nil;
+//JJF TODO msgqueue refactor    _im   := nil;
     _room := nil;
     _chat := chat_session;
 end;
@@ -157,7 +165,7 @@ end;
 {---------------------------------------}
 procedure TExodusChat.setRoom(room: TfrmRoom);
 begin
-  _im   := nil;
+//JJF TODO msgqueue refactor  _im   := nil;
   _chat := nil;
   _room := room;
 end;
@@ -342,7 +350,7 @@ function TExodusChat.Get_jid: WideString;
 begin
     Result := '';
     if (_chat <> nil) then Result := _chat.JID
-    else if (_im <> nil) then Result := _im.JID
+//JJF TODO msgqueue refactor    else if (_im <> nil) then Result := _im.JID
     else if (_room <> nil) then Result := _room.getJid;
 end;
 
@@ -357,7 +365,7 @@ begin
     inc(_nextid);
     idx := _nextid;
     id := 'plugin_' + IntToStr(idx);
-    
+
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
         mi.Name := id;
@@ -374,6 +382,7 @@ begin
         mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popContact.Items.Add(mi);
     end
+    {JJF TODO msgqueue refactor
     else if (_im <> nil) then begin
         mi := TMenuItem.Create(_im);
         mi.Name := id;
@@ -382,6 +391,7 @@ begin
         mi.Tag := Integer(menuListener);
         _im.popContact.Items.Add(mi);
     end
+    }
     else
         exit;
 
@@ -413,6 +423,7 @@ begin
         mi.Tag := Integer(menuListener);
         TfrmChat(_chat.window).popOut.Items.Add(mi);
     end
+    {JJF TODO msgqueue refactor
     else if (_im <> nil) then begin
         mi := TMenuItem.Create(_im);
         mi.Name := id;
@@ -421,6 +432,7 @@ begin
         mi.Tag := Integer(menuListener);
         _im.popClipboard.Items.Add(mi);
     end
+    }
     else
         exit;
 
@@ -457,9 +469,10 @@ begin
         Result := TfrmChat(_chat.window).MsgOut.Text
     else if (_room <> nil) then
         Result := _room.MsgOut.Text
+{JJF TODO msgqueue refactor
     else if (_im <> nil) then
         Result := _im.MsgOut.Text;
-
+}
 end;
 
 {---------------------------------------}
@@ -522,8 +535,10 @@ begin
             Result := TfrmChat(_chat.window).MsgOut.Handle
         else if (_room <> nil) then
             Result := _room.MsgOut.Handle
+{JJF TODO msgqueue refactor
         else if (_im <> nil) then
             Result := _im.MsgOut.Handle
+}
         else exit;
     end;
     HWND_MsgOutput: begin
@@ -535,8 +550,10 @@ begin
                Result := TfRTFMsgList(_room.MsgList).MsgList.Handle
             else
                Result := -1
+{JJF TODO msgqueue refactor
         else if (_im <> nil) then
             Result := _im.txtMsg.Handle
+}
         else exit;
     end;
     Ptr_MsgInput: begin
@@ -548,10 +565,12 @@ begin
             p := @(_room.MsgOut);
             Result := integer(p);
         end
+{JJF TODO msgqueue refactor
         else if (_im <> nil) then begin
             p := @(_im.MsgOut);
             Result := integer(p);
         end;
+}
     end;
     Ptr_MsgOutput: begin
         if (_chat <> nil) then begin
@@ -571,10 +590,12 @@ begin
             else
                 Result := -1;
         end
+{JJF TODO msgqueue refactor
         else if (_im <> nil) then begin
             p := @(_im.txtMsg);
             Result := integer(p);
         end;
+}
     end;
     end;
 
@@ -588,8 +609,10 @@ begin
         TfrmChat(_chat.window).MsgOut.WideLines.Add(Value)
     else if (_room <> nil) then
         _room.MsgOut.WideLines.Add(Value)
+{JJF TODO msgqueue refactor
     else if (_im <> nil) then
         _im.txtMsg.WideLines.Add(Value);
+}        
 end;
 
 {---------------------------------------}
@@ -676,10 +699,12 @@ begin
     try
         if (_chat <> nil) then
             c := TComponent(_chat.Window)
-        else if (_room <> nil) then
-            c := _room
+        else // JJF TODO msgqueue refactor if (_room <> nil) then
+            c := _room;
+{JJF TODO msgqueue refactor
         else //if (_im <> nil) then
             c := _im;
+}            
         //see if the control we want is actually the form
         if SameText(c.Name, Name) then
             Result := getCOMControl(c)

@@ -5,6 +5,7 @@ inherited frmDockable: TfrmDockable
   DragMode = dmAutomatic
   KeyPreview = True
   OnClose = FormClose
+  OnDestroy = TntFormDestroy
   OnDragDrop = OnDockedDragDrop
   OnDragOver = OnDockedDragOver
   OnKeyDown = FormKeyDown
@@ -36,7 +37,6 @@ inherited frmDockable: TfrmDockable
       TabOrder = 0
       Transparent = True
       Wrapable = False
-      ExplicitLeft = 132
       object btnDockToggle: TToolButton
         AlignWithMargins = True
         Left = 0

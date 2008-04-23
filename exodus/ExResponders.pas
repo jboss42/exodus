@@ -142,7 +142,6 @@ uses
     IdException, JclDebug, JclHookExcept, TypInfo,
     {$endif}
     DisplayName,
-    MsgQueue,
     RosterRecv,
     Room,
     RosterImages, COMController, ExSession, GnuGetText,
@@ -419,10 +418,6 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     f := nil;
-//JJF if requests ever generate actual events, route notify to msg queue,
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
 
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sTime),
@@ -794,7 +789,6 @@ var
     t, f: Widestring;
     b, e: TXMLTag;
 begin
-    //
     t := tag.GetAttribute('type');
     if ((tag.Name = 'iq') and ((t = 'get') or (t = 'set'))) then begin
         b := TXMLTag.Create(tag);
@@ -806,10 +800,6 @@ begin
         e.setAttribute('code', '501');
         _session.SendTag(b);
     end
-    else if ((tag.Name = 'message') and (t = 'error')) then begin
-        // display this error using the msg queue
-        MainSession.MsgList.MsgCallback('/unhandled', tag);
-    end;
 end;
 
 {---------------------------------------}
@@ -890,11 +880,6 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     f := nil;
-//JJF TODO need to fix this
-//for now, just notify the "dock manager" (notify to nil)
-//    if (IsMsgQueueShowing()) then
-//        f := GetMsgQueue(false);
-
     DoNotify(f, 'notify_autoresponse',
              WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
                                           getNick(tag.getAttribute('from'))]),

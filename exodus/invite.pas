@@ -82,7 +82,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
+    JabberUtils, ExUtils,  GnuGetText, Jabber1, PrefController,
     JabberConst, InputPassword, DisplayName,
     Session, Room, RosterForm, ContactController, SelectItem;
 
@@ -144,7 +144,7 @@ var
     idx: integer;
     entered: TTntListItems;
     entry: TListItem;
-    itemCtrl: IExodusItemController;
+//    itemCtrl: IExodusItemController;
     item: IExodusItem;
     cap: Widestring;
 //    cap: WideString;

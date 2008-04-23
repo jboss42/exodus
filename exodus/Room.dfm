@@ -146,7 +146,6 @@ inherited frmRoom: TfrmRoom
     Top = 351
     Width = 488
     TabOrder = 0
-    ExplicitLeft = 2
     ExplicitTop = 351
     ExplicitWidth = 488
     inherited MsgOut: TExRichEdit
@@ -275,10 +274,6 @@ inherited frmRoom: TfrmRoom
     OnPopup = popRoomRosterPopup
     Left = 48
     Top = 152
-    object popRosterMsg: TTntMenuItem
-      Caption = 'Message'
-      OnClick = popRosterMsgClick
-    end
     object popRosterChat: TTntMenuItem
       Caption = 'Chat'
       OnClick = lstRosterDblClick

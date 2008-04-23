@@ -153,7 +153,7 @@ begin
         _ToggleGUI(lgsDisconnected);
     end
     // it's the end of the roster, update the GUI
-    else if event = '/item/end' then
+    else if event = '/contact/item/end' then
     begin
         if (not Visible) then
             Visible := true;
@@ -263,8 +263,8 @@ end;
 {---------------------------------------}
 procedure TRosterForm.RosterCallback(Event: string; Item: IExodusItem);
 begin
-   if Event = '/item/end' then
-        Self.SessionCallback('/item/end', nil);
+   if Event = '/contact/item/end' then
+        Self.SessionCallback('/contact/item/end', nil);
 end;
 
 {---------------------------------------}

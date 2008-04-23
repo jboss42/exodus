@@ -46,6 +46,8 @@ function SafeBoolStr(value: boolean) : Widestring;
 
 function JabberToDateTime(datestr: Widestring): TDateTime;
 function DateTimeToJabber(dt: TDateTime): Widestring;
+//returns a reference to a delay tag found in tag, or nil if none exists
+function GetDelayTag(tag: TXMLTag): TXMLTag;
 
 function GetAppVersion: string;
 
@@ -86,6 +88,7 @@ uses
     IdCoder3To4,
     {$endif}
     SecHash,
+    JabberConst,
     XMLParser;
 
 function XPLiteEscape(value: widestring): widestring;
@@ -680,5 +683,12 @@ begin
         Result := tag.Data;
 end;
 
+//returns a reference to a delay tag found in tag, or nil if none exists
+function GetDelayTag(tag: TXMLTag): TXMLTag;
+begin
+    Result := tag.QueryXPTag(XP_MSGDELAY_203);
+    if (Result = nil) then
+        Result := tag.QueryXPTag(XP_MSGDELAY);
+end;
 
 end.

@@ -257,7 +257,9 @@ implementation
 uses
     DockContainer, Profile,
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
-    Chat, JabberID, MsgRecv, Room, Browser, Jud,
+    Chat, JabberID,
+//    MsgRecv,
+    Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
     Jabber1, Session, RemoveContact, ContactController, RosterAdd, RosterForm, PluginAuth, PrefController,
@@ -1449,7 +1451,10 @@ end;
 
 function TExodusController.Get_IsPaused: WordBool;
 begin
+{** JJF msgqueue refactor
     Result := MainSession.IsPaused;
+**}
+    Result := false;    
 end;
 
 function TExodusController.Get_Port: Integer;
@@ -1574,8 +1579,12 @@ end;
 
 {---------------------------------------}
 procedure TExodusController.StartInstantMsg(const JabberID: WideString);
+var
+    tjid: TJabberID;
 begin
-    startMsg(JabberID);
+    tjid := TJabberID.Create(JabberID);
+    startChat(tjid.jid, tjid.resource, '');
+    tjid.free();
 end;
 
 {---------------------------------------}
