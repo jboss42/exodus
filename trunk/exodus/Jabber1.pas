@@ -1673,6 +1673,7 @@ var
     extExists, RTEnabled: boolean;
     logmsg: TJabberMessage;
     tmpjid: TJabberID;
+    rawXMLTag: TXMLTag;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -2005,10 +2006,10 @@ begin
 
         // don't send message on autoaway
         if (_is_autoaway or _is_autoxa) then exit;
-        
+
         //don't send message if auto-return
         if (_is_broadcast) then exit;
-        
+
         // Send a windows msg so other copies of Exodus will change their
         // status to match ours.
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
@@ -2020,7 +2021,20 @@ begin
     else if (event = '/session/log_message') then begin
         // We got a message to log using the log plugins
         if (tag <> nil) then begin
-            logmsg := TJabberMessage.Create(tag);
+            logmsg := nil;
+            rawXMLTag := tag.GetFirstTag('raw_msg_xml');
+            if ((rawXMLTag <> nil) and
+                (rawXMLTag.ChildCount > 0)) then begin
+                rawXMLTag := rawXMLTag.GetFirstTag('message');
+                if (rawXMLTag <> nil) then begin
+                    logmsg := TJabberMessage.Create(rawXMLTag);
+                end;
+            end;
+
+            if (logmsg = nil) then begin
+                logmsg := TJabberMessage.Create(tag);
+            end;
+
             logmsg.Time := StrToDateTime(tag.GetFirstTag('time').Data);
             tmpjid := TJabberID.Create(logmsg.FromJID);
             if (tmpjid.getDisplayJID() = MainSession.BareJid) then begin
@@ -2033,7 +2047,7 @@ begin
                 logmsg.isMe := false;
                 logmsg.Nick := DisplayName.getDisplayNameCache().getDisplayName(tmpjid);
             end;
-            if (tag.GetFirstTag('isme') <>nil) then
+            if (tag.GetFirstTag('isme') <> nil) then
                 logmsg.isMe := true;
 
             LogMessage(logmsg);
