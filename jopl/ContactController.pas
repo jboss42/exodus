@@ -42,6 +42,7 @@ type
        _UseDisplayName: Boolean;
        _DNListener: TDisplayNameEventListener;
        _DefaultGroup: WideString;
+       _PendingItems: IExodusItemList;
        
        //Methods
        procedure _GetContacts();
@@ -131,7 +132,7 @@ type
 
 implementation
 uses IQ, JabberConst, JabberID, SysUtils,
-     Session, s10n, RosterImages, COMExodusItemWrapper, ComServ;
+     Session, s10n, RosterImages, COMExodusItemList, ComServ;
 
 {---------------------------------------}
 constructor TContactController.Create(JS: TObject);
@@ -150,6 +151,8 @@ begin
     _DefaultGroup := '';
     _DNListener := TDisplayNameEventListener.Create();
     _DNListener.OnDisplayNameChange := _OnDisplayNameChange;
+
+    _PendingItems := TExodusItemList.Create();
 end;
 
 {---------------------------------------}
@@ -352,6 +355,21 @@ var
     item: IExodusItem;
     itemCtrl: IExodusItemController;
     session: TJabberSession;
+
+    function popPendingItem(Uid: Widestring): IExodusItem;
+    var
+        idx: Integer;
+    begin
+        for idx := _PendingItems.Count - 1 downto 0 do begin
+            Result := _PendingItems.Item[idx];
+            if (Result.UID = Uid) then begin
+                _PendingItems.Delete(idx);
+                exit;
+            end;
+        end;
+
+        Result := nil;
+    end;
 begin
     if (Tag <> nil) then
         query := Tag.GetFirstTag('query')
@@ -372,11 +390,16 @@ begin
         ask := riTag.GetAttribute('ask');
         item := itemCtrl.GetItem(uid);
 
-        if (subscr = 'remove') and (item <> nil) then begin
-            //removing...make sure it disappears
-            itemCtrl.RemoveItem(uid);
-            session.FireEvent('/item/remove', item);
-            SendUnSubscribe(uid, session);
+        if (subscr = 'remove') then begin
+            if (item = nil) then
+                item := popPendingItem(uid);
+
+            if (item <> nil) then begin
+                //removing...make sure it disappears
+                itemCtrl.RemoveItem(uid);
+                session.FireEvent('/item/remove', item);
+                SendUnSubscribe(uid, session);
+            end;
         end
         else if (item <> nil) then begin
             //some sort of update
@@ -692,11 +715,11 @@ begin
 end;
 procedure TContactController.RemoveItem(item: IExodusItem);
 begin
-    if (item = nil) or
+    if      (item = nil) or
             (item.Type_ <> 'contact') or
-            (item.value['Removing'] = 'true') then exit;
+            (_PendingItems.IndexOf(item) <> -1) then exit;
 
-    item.value['Removing'] := 'true';
+    _PendingItems.Add(item);
     TContactRemItemOp.Create(Self, item);
 end;
 procedure TContactController.RemoveItem(sjid: WideString);

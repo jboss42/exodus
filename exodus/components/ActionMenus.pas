@@ -144,7 +144,7 @@ begin
     end
     else if (typeCount = 0) then begin
         //We didn't get anything other than main actions and/or group actions
-        if (mainActs = nil) or (mainActs.ActionCount = 0) then begin
+        if (grpActs <> nil) and (grpActs.ActionCount > 0) then begin
             mainActs := grpActs;
             grpActs := nil;
         end;
