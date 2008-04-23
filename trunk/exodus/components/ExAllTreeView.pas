@@ -41,7 +41,13 @@ end;
 implementation
 
 uses ActionMenus, Graphics, ExActionCtrl, gnugettext, GrpManagement,
-        COMExodusItemList, Session;
+        COMExodusItemList, Session, TntComCtrls, Windows;
+
+const
+    sConfirmDeleteCaption: Widestring = 'Delete Items';
+    sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete %s?';
+    sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
+    sWarnNotDeletedTxt: Widestring = 'The following groups could not be deleted.\nEnsure all other items in them are deleted, then try again.\n%s';
 
 {---------------------------------------}
 constructor TExAllTreeView.Create(AOwner: TComponent; Session: TObject);
@@ -53,7 +59,7 @@ begin
 
     popup := TExActionPopupMenu.Create(Self);
     popup.ActionController := GetActionController();
-    
+
     mi := TTntMenuItem.Create(popup.Items);
     mi.Caption := _('Move...');
     mi.OnClick := mnuMoveClick;
@@ -77,8 +83,6 @@ end;
 procedure TExAllTreeView.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 var
     actPM: TExActionPopupMenu;
-    items: IExodusItemList;
-    idx: Integer;
     pt: TPoint;
 begin
     if Assigned(PopupMenu) and PopupMenu.InheritsFrom(TExActionPopupMenu) then begin
@@ -86,7 +90,7 @@ begin
         actPM.Targets := GetSelectedItems();
         _mnuCopy.Visible := (SelectionCount > 0);
         _mnuMove.Visible := (SelectionCount > 0);
-        _mnuDelete.Visible := (SelectionCount = 1);
+        _mnuDelete.Visible := (SelectionCount > 0);
 
         if InvalidPoint(MousePos) then
             pt := Point(0,0)
@@ -124,16 +128,103 @@ begin
 end;
 procedure TExAllTreeView.mnuDeleteClick(Sender: TObject);
 var
+    ops: TList;
+    path, msg: Widestring;
+    idx, jdx, rst: Integer;
+    itemCtrl: IExodusItemController;
+    postitems, collateralitems: IExodusItemList;
     item: IExodusItem;
-begin
-    if (Selected = nil) or (Selected.Data = nil) then exit;
+    node: TTntTreeNode;
 
-    item := IExodusItem(Selected.Data);
-    if (item.Type_ = 'group') then begin
-        //TODO:  show group remove
-    end
-    else begin
-        //TODO:  show other remove
+    function EmptyGroup(gpath: Widestring): Boolean;
+    var
+        idx: Integer;
+        subitems: IExodusItemList;
+    begin
+        Result := true;
+        subitems := itemCtrl.GetGroupItems(gpath);
+        for idx := 0 to subitems.Count - 1 do begin
+            if (subitems.Item[idx].Type_ = 'group') then
+                Result := EmptyGroup(subitems.Item[idx].UID)
+            else
+                Result := false;
+
+            if not Result then exit;
+        end;
+    end;
+begin
+    //confirm
+    case SelectionCount of
+        0: exit;
+        1: msg := WideFormat(_(sConfirmDeleteSingleTxt), [Selections[0].Text]);
+    else
+        msg := WideFormat(_(sConfirmDeleteMultiTxt), [SelectionCount]);
+    end;
+
+    rst := MessageBoxW(Self.Handle,
+            PWideChar(msg),
+            PWideChar(_(sConfirmDeleteCaption)),
+            MB_ICONQUESTION or MB_YESNO);
+    if (rst <> IDYES) then exit;
+
+    ops := TList.Create();
+    for idx := 0 to SelectionCount - 1 do
+        ops.Add(Pointer(Selections[idx]));
+
+    //process non-groups
+    itemCtrl := TJabberSession(Session).ItemController;
+    postitems := TExodusItemList.Create();
+    for idx := 0 to ops.Count - 1 do begin
+        node := TTntTreeNode(ops[idx]);
+        if (node.Data = nil) then continue;
+
+        item := IExodusItem(node.Data);
+        if (item.Type_ = 'group') then
+            postitems.Add(item)
+        else begin
+            if (item.GroupCount > 1) then begin
+                //TODO:  remove from group (parent node)
+                path := GetNodePath(node.Parent);
+                item.RemoveGroup(path);
+            end
+            else begin
+                //remove from existence!
+                itemCtrl.RemoveItem(item.UID);
+            end;
+        end;
+    end;
+
+    //process groups
+    collateralitems := TExodusItemList.Create();
+    for idx := postitems.Count - 1 downto 0 do begin
+        collateralitems.Clear();
+        item := postitems.Item[idx];
+
+        //validate target is empty
+        if not EmptyGroup(item.UID) then continue;
+
+        //delete collateral groups
+        for jdx := 0 to collateralitems.Count - 1 do begin
+            itemCtrl.RemoveItem(collateralitems.Item[idx].UID);
+        end;
+
+        //delete target group
+        postitems.Delete(idx);
+        itemCtrl.RemoveItem(item.UID);
+    end;
+
+    //alert
+    if postitems.Count > 0 then begin
+        msg := '';
+        for idx := 0 to postitems.Count - 1 do begin
+            msg := msg + '\n' + postitems.Item[idx].Text;
+        end;
+
+        msg := WideFormat(_(sWarnNotDeletedTxt), [msg]);
+        MessageBoxW(Self.Handle,
+            PWideChar(msg),
+            PWideChar(_(sConfirmDeleteCaption)),
+            MB_OK or MB_ICONWARNING);
     end;
 end;
 

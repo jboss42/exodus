@@ -80,7 +80,9 @@ type
 
   TExodusGroupCallback = class(TAutoIntfObject, IExodusItemCallback)
   private
-    constructor Create();
+    _ctrl: TExodusItemController;
+
+    constructor Create(ctrl: TExodusItemController);
 
   public
     destructor Destroy(); override;
@@ -104,12 +106,12 @@ begin
 
     _Items := TWideStringList.Create();
     _Items.Duplicates := dupError;
-    _GroupsCB := TExodusGroupCallback.Create();
     _JS := JS;
     _groupsLoaded := false;
     _SessionCB := TJabberSession(_JS).RegisterCallback(_SessionCallback, '/session');
     _ServerStorage := true;
     _GroupParser := TGroupParser.Create(_JS);
+    _GroupsCB := TExodusGroupCallback.Create(Self);
 end;
 
 {---------------------------------------}
@@ -118,15 +120,12 @@ var
      Item: TExodusItemWrapper;
 begin
 
-    while _Items.Count > 0 do
-    begin
-        Item :=  TExodusItemWrapper(_Items.Objects[0]);
-        _Items.Delete(0);
-        Item.Free();
-    end;
+    ClearItems();
+    
     _Items.Free;
     _GroupParser.Free;
-    
+
+    _GroupsCB._Release();
     _GroupsCB := nil;
 end;
 
@@ -409,23 +408,26 @@ var
     Idx: Integer;
 begin
     //Check if item exists
-    Idx := _items.IndexOf(uid);
-    if (Idx < 0) then exit;
+    Idx := _Items.IndexOf(Uid);
+    if (Idx = -1) then exit;
 
-    //Remove item from the list (stops infinite loop)
-    ItemWrapper := TExodusItemWrapper(_Items.Objects[Idx]);
+    //Reference and delete from list
+    ItemWrapper := TExodusItemWrapper(_Items.Objects[idx]);
     _Items.Delete(Idx);
-    
+
     if (ItemWrapper.ExodusItem.Type_ = EI_TYPE_GROUP) then begin
         //remove all of the group's items...
         subItems := GetGroupItems(ItemWrapper.ExodusItem.UID);
         for idx := 0 to subItems.Count - 1 do begin
-            subItems.Item[idx].RemoveGroup(ItemWrapper.ExodusItem.UID);
+            if (subItems.Item[idx].Type_ = EI_TYPE_GROUP) then
+                RemoveItem(subItems.Item[idx].UID)
+            else
+                subItems.Item[idx].RemoveGroup(ItemWrapper.ExodusItem.UID);
         end;
     end;
 
     //notify callback
-    cb := TExodusItem(ItemWrapper.ExodusItem).Callback;
+    cb := ItemWrapper.Callback;
     if (cb <> nil) then cb.ItemDeleted(ItemWrapper.ExodusItem);
 
     //then finally, we delete
@@ -586,9 +588,13 @@ begin
 end;
 
 
-constructor TExodusGroupCallback.Create;
+constructor TExodusGroupCallback.Create(ctrl: TExodusItemController);
 begin
     inherited Create(ComServer.TypeLib, IID_IExodusItemCallback);
+
+    _ctrl := ctrl;
+
+    _AddRef();
 end;
 destructor TExodusGroupCallback.Destroy;
 begin
@@ -597,11 +603,14 @@ end;
 
 procedure TExodusGroupCallback.ItemDeleted(const item: IExodusItem);
 begin
-    //TODO:  something??
+    _ctrl._SendGroups();
+    TJabberSession(_ctrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusGroupCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
     //TODO:  something??
+    _ctrl._SendGroups();
+    TJabberSession(_ctrl._JS).FireEvent('/item/update', item);
 end;
 
 initialization
