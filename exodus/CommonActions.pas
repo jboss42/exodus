@@ -27,7 +27,7 @@ const
 
 constructor TRenameItemAction.Create();
 begin
-    inherited Create('{000-exodus.googlecode.com}-090-rename');
+    inherited Create('{000-exodus.googlecode.com}-150-rename');
 
     Set_Caption(_('Rename...'));
     Set_Enabled(true);
@@ -69,6 +69,7 @@ begin
         for idx := 0 to subitems.Count - 1 do begin
             itemCtrl.MoveItem(subitems.Item[idx].UID, item.UID, path);
         end;
+        itemCtrl.GroupExpanded[path] := itemCtrl.GroupExpanded[item.UID];
 
         //delete group
         itemCtrl.RemoveItem(item.UID);

@@ -584,15 +584,21 @@ end;
 procedure TExodusItemController.Set_GroupExpanded(const Group: WideString;
   Value: WordBool);
 var
-    Idx: Integer;
+    Wrapper: TExodusItemWrapper;
+    state: Widestring;
 begin
-    Idx := _Items.IndexOf(Group);
-    if (Idx = -1) then exit;
+    Wrapper := _GetItemWrapper(Group);
+    if (Wrapper = nil) then exit;
+    if Value then
+        state := 'true'
+    else
+        state := 'false';
+
     try
-       if (Value) then
-           Get_Item(Idx).value['Expanded'] := 'true'
-       else
-           Get_Item(Idx).value['Expanded'] := 'false';
+       if (Wrapper.ExodusItem.value['Expanded'] <> state) then begin
+           Wrapper.ExodusItem.value['Expanded'] := state;
+           TJabberSession(_JS).FireEvent('/item/update', Wrapper.ExodusItem);
+       end;
     except
 
     end;
