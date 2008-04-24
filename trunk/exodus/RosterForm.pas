@@ -269,10 +269,6 @@ end;
 
 {---------------------------------------}
 procedure TRosterForm._ToggleGUI(State: TLoginGuiState);
-var
-   ITab: IExodusTab;
-   control: TWinControl;
-   Idx: Integer;
 begin
     if (State = lgsDisconnected) then
     begin
@@ -286,9 +282,6 @@ end;
 
 {---------------------------------------}
 procedure TRosterForm._PageControlNewWndProc(var Msg: TMessage);
-var
-    hdn: ^THDNotify;
-    i: Integer;
 begin
   if(Msg.Msg=TCM_ADJUSTRECT) then
   begin
@@ -323,9 +316,6 @@ end;
 function TRosterForm.SelectionFor(Index: Integer): IExodusItemList;
 var
     Tree: TTntTreeView;
-    Node: TTntTreeNode;
-    Item: IExodusItem;
-    i: Integer;
 begin
     Tree := _GetTreeByTabIndex(Index);
     if (Tree = nil) then exit;

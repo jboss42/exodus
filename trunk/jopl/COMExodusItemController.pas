@@ -116,8 +116,6 @@ end;
 
 {---------------------------------------}
 destructor TExodusItemController.Destroy();
-var
-     Item: TExodusItemWrapper;
 begin
 
     ClearItems();
@@ -203,8 +201,6 @@ procedure TExodusItemController._SendGroups();
 var
     i: Integer;
     IQ, STag, GTag:TXMLTag;
-    Group: TGroupInfo;
-    Expanded: WideString;
 begin
     IQ := TXMLTag.Create('iq');
     with IQ do begin
@@ -284,11 +280,10 @@ begin
 end;
 function  TExodusItemController._AddGroup(const GroupUID: WideString): TExodusItemWrapper;
 var
-    Idx, i: Integer;
-    Group, SubGroup: TExodusItemWrapper;
+    i: Integer;
+    SubGroup: TExodusItemWrapper;
     Groups: TWideStringList;
     GroupParent: WideString;
-    InnerGroup: IExodusItem;
 begin
     Result := _GetItemWrapper(GroupUID);
     if (Result <> nil) then exit;
@@ -328,7 +323,6 @@ function TExodusItemController.AddItemByUid(const UID, ItemType: WideString;
   const cb: IExodusItemCallback): IExodusItem;
 var
     wrapper: TExodusItemWrapper;
-    Idx: Integer;
 begin
     //Check if item exists
     wrapper := _GetItemWrapper(UID);
@@ -483,11 +477,6 @@ end;
 
 
 function TExodusItemController.SaveGroups: WordBool;
-var
-     Groups, GTag: TXMLTag;
-     Group: TGroupInfo;
-     Expanded: WideString;
-     i: Integer;
 begin
    if (_ServerStorage) then
        _SendGroups();

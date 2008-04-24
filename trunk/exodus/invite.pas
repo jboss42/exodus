@@ -74,8 +74,7 @@ type
 var
   frmInvite: TfrmInvite;
 
-procedure ShowInvite(room_jid: WideString; items: TList); overload;
-procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
+procedure ShowInvite(room_jid: WideString; jids: TWideStringList = nil); overload;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -92,20 +91,6 @@ const
     sInvalidRoomJID = 'The Conference Room Address you entered is invalid. It must be valid Jabber ID.';
 
 {$R *.dfm}
-
-{---------------------------------------}
-procedure ShowInvite(room_jid: WideString; items: TList);
-var
-    jids: TWideStringlist;
-//    i: integer;
-begin
-    jids := TWideStringList.Create();
-    { TODO : Roster refactor }    
-    //for i := 0 to items.Count - 1 do
-    //    jids.add(TJabberRosterItem(items[i]).jid.jid);
-    ShowInvite(room_jid, jids);
-    jids.Free();
-end;
 
 {---------------------------------------}
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList);

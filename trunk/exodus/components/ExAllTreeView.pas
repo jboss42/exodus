@@ -47,7 +47,8 @@ const
     sConfirmDeleteCaption: Widestring = 'Delete Items';
     sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete %s?';
     sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
-    sWarnNotDeletedTxt: Widestring = 'The following groups could not be deleted.\nEnsure all other items in them are deleted, then try again.\n%s';
+    sWarnNotDeletedTxt: Widestring = 'The following groups could not be deleted.' + #13#10 + 'Ensure all other items in them are deleted, then try again.' + #13#10 + '%s';
+    sWarnNotDeletedCount: Widestring = #13#10 + '%s (%d items)';
 
 {---------------------------------------}
 constructor TExAllTreeView.Create(AOwner: TComponent; Session: TObject);
@@ -129,7 +130,7 @@ end;
 procedure TExAllTreeView.mnuDeleteClick(Sender: TObject);
 var
     ops: TList;
-    path, msg: Widestring;
+    path, msg, uid: Widestring;
     idx, jdx, rst: Integer;
     itemCtrl: IExodusItemController;
     postitems, collateralitems: IExodusItemList;
@@ -217,7 +218,9 @@ begin
     if postitems.Count > 0 then begin
         msg := '';
         for idx := 0 to postitems.Count - 1 do begin
-            msg := msg + '\n' + postitems.Item[idx].Text;
+            uid := postitems.Item[idx].UID;
+            msg := msg + WideFormat(_(sWarnNotDeletedCount),
+                    [uid, itemCtrl.GetGroupitems(uid).Count]);
         end;
 
         msg := WideFormat(_(sWarnNotDeletedTxt), [msg]);

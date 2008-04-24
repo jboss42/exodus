@@ -322,10 +322,12 @@ end;
 procedure TExodusRoomsCallback.ItemDeleted(const item: IExodusItem);
 begin
     _roomCtrl.SaveRooms();
+    TJabberSession(_roomCtrl._JS).FireEvent('/item/remove', item);
 end;
 procedure TExodusRoomsCallback.ItemGroupsChanged(const item: IExodusItem);
 begin
     _roomCtrl.SaveRooms();
+    TJabberSession(_roomCtrl._JS).FireEvent('/item/update', item);
 end;
 
 end.
