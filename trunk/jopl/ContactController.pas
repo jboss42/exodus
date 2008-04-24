@@ -57,14 +57,16 @@ type
        procedure _UpdateContact(Item: IExodusItem; Pres: TJabberPres = nil);
        procedure _UpdateContacts();
        procedure _OnDisplayNameChange(bareJID: Widestring; DisplayName: WideString);
-       
+
+       function _IsPending(sjid: Widestring): Boolean;
+       function _PushPending(item: IExodusItem): IExodusItem;
+       function _PopPending(sjid: Widestring): IExodusItem;
    public
        constructor Create(JS: TObject);
        destructor Destroy; override;
 
        function AddItem(sjid, name, group: Widestring; subscribe: Boolean): IExodusItem;
-       procedure RemoveItem(item: IExodusItem); overload;
-       procedure RemoveItem(sjid: Widestring); overload;
+       procedure RemoveItem(item: IExodusItem);
        //Properties
    end;
 
@@ -249,6 +251,7 @@ begin
         Groups := Groups + Grp + LineSeparator;
     end;
 
+    _ItemsCB.Ignore(Contact.UID);
     if (Contact.GroupsChanged(Groups)) then
     begin
     //If groups changed, update the list.
@@ -262,11 +265,13 @@ begin
 
         end;
     end;
-    
+
     if (Contact.GroupCount = 0) then
     begin
         Contact.AddGroup(_DefaultGroup);
     end;
+    _ItemsCB.Unignore(Contact.UID);
+    
     //Make sure groups for the contact exist in the global group list.
     //_SynchronizeGroups(Contact);
 
@@ -355,21 +360,6 @@ var
     item: IExodusItem;
     itemCtrl: IExodusItemController;
     session: TJabberSession;
-
-    function popPendingItem(Uid: Widestring): IExodusItem;
-    var
-        idx: Integer;
-    begin
-        for idx := _PendingItems.Count - 1 downto 0 do begin
-            Result := _PendingItems.Item[idx];
-            if (Result.UID = Uid) then begin
-                _PendingItems.Delete(idx);
-                exit;
-            end;
-        end;
-
-        Result := nil;
-    end;
 begin
     if (Tag <> nil) then
         query := Tag.GetFirstTag('query')
@@ -392,7 +382,7 @@ begin
 
         if (subscr = 'remove') then begin
             if (item = nil) then
-                item := popPendingItem(uid);
+                item := _PopPending(uid);
 
             if (item <> nil) then begin
                 //removing...make sure it disappears
@@ -671,7 +661,7 @@ begin
     Item := TJabberSession(_js).ItemController.GetItem(bareJID);
     if (Item = nil) then exit;
     Item.Text := DisplayName;
-    TJabberSession(_JS).FireEvent('/item/update', Item);
+    TContactUpdateItemOp.Create(Self, item);
 end;
 
 function TContactController.AddItem(
@@ -717,14 +707,33 @@ procedure TContactController.RemoveItem(item: IExodusItem);
 begin
     if      (item = nil) or
             (item.Type_ <> 'contact') or
-            (_PendingItems.IndexOf(item) <> -1) then exit;
+            (_IsPending(item.UID)) then exit;
 
-    _PendingItems.Add(item);
+    _PushPending(item);
     TContactRemItemOp.Create(Self, item);
 end;
-procedure TContactController.RemoveItem(sjid: WideString);
+
+function TContactController._IsPending(sjid: Widestring): Boolean;
 begin
-    RemoveItem(TJabberSession(_JS).ItemController.GetItem(sjid));
+    Result := (_PendingItems.IndexOfUid(sjid) <> -1);
+end;
+function TContactController._PushPending(item: IExodusItem): IExodusItem;
+begin
+    Result := item;
+    if Result = nil then exit;
+    if not _IsPending(Result.UID) then _PendingItems.Add(Result);
+end;
+function TContactController._PopPending(sjid: Widestring): IExodusItem;
+var
+    idx: Integer;
+begin
+    Result := nil;
+    idx := _PendingItems.IndexOfUid(sjid);
+
+    if (idx <> -1) then begin
+        Result := _PendingItems.Item[idx];
+        _PendingItems.Delete(idx);
+    end;
 end;
 
 constructor TExodusContactsCallback.Create(cc: TContactController);

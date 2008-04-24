@@ -64,7 +64,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ContactController, Session, JabberUtils, ExUtils,  GnuGetText;
+    ContactController, Session, JabberUtils, ExUtils,  GnuGetText, GroupParser;
 
 {---------------------------------------}
 function ShowGrpManagement(
@@ -125,84 +125,28 @@ end;
 {---------------------------------------}
 procedure TfrmGrpManagement.frameButtons1btnOKClick(Sender: TObject);
 var
-    new_grp, sep: Widestring;
+    parser: TGroupParser;
+    new_grp: Widestring;
     item: IExodusItem;
     itemCtrl: IExodusItemController;
-
-    procedure moveItems(toGrp: Widestring; items: IExodusItemList);
-    var
-        subgrp: Widestring;
-        idx: integer;
-    begin
-        for idx := 0 to items.Count - 1 do begin
-            item := items.Item[idx];
-
-            if (item.Type_ = 'group') then begin
-                if (sep <> '') then begin
-                    //create sub-group
-                    subgrp := toGrp + sep + item.Text;
-                    itemCtrl.AddGroup(subgrp);
-                end
-                else begin
-                    //just move everyone from this group to the toGrp
-                    subgrp := toGrp;
-                end;
-
-                moveItems(subgrp, itemCtrl.GetGroupItems(item.UID));
-
-                itemCtrl.RemoveItem(item.UID);
-            end
-            else begin
-                item.ClearGroups();
-                item.AddGroup(toGrp);
-            end;
-        end;
-    end;
-    procedure copyItems(toGrp: Widestring; items: IExodusItemList);
-    var
-        subgrp: Widestring;
-        idx: integer;
-    begin
-        for idx := 0 to items.Count - 1 do begin
-            item := items.Item[idx];
-
-            if (item.Type_ = 'group') then begin
-                if (sep <> '') then begin
-                    //create sub-group
-                    subgrp := toGrp + sep + item.Text;
-                    itemCtrl.AddGroup(subgrp);
-                end
-                else begin
-                    //just move everyone from this group to the toGrp
-                    subgrp := toGrp;
-                end;
-
-                copyItems(subgrp, itemCtrl.GetGroupItems(item.UID));
-            end
-            else if not item.BelongsToGroup(toGrp) then begin
-                item.AddGroup(toGrp);
-            end;
-        end;
-    end;
+    idx: Integer;
 begin
+    Self.Close();
+    
     if ((_items = nil) or (_items.Count <= 0)) then begin
-        Self.Close();
         exit;
     end;
 
-    new_grp := lstGroups.Items[lstGroups.ItemIndex];
+    parser := TGroupParser.Create(MainSession);
     itemCtrl := MainSession.ItemController;
-    if MainSession.Prefs.getBool('nested_groups') then
-        sep := MainSession.Prefs.getString('group_separator')
-    else
-        sep := '';
-        
-    case _op of
-        tgoCopy: copyItems(new_grp, _items);
-        tgoMove: moveItems(new_grp, _items);
-    end;
+    new_grp := lstGroups.Items[lstGroups.ItemIndex];
 
-    Self.Close();
+    for idx := 0 to _items.Count - 1 do begin
+        case _op of
+            tgoCopy: itemCtrl.CopyItem(_items.Item[idx].UID, new_grp);
+            tgoMove: itemCtrl.MoveItem(_items.Item[idx].UID, '', new_grp);
+        end;
+    end;
 end;
 
 procedure TfrmGrpManagement.optChangeGroupOpClick(Sender: TObject);

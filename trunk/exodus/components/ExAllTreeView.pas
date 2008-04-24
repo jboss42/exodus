@@ -47,8 +47,8 @@ const
     sConfirmDeleteCaption: Widestring = 'Delete Items';
     sConfirmDeleteSingleTxt: Widestring = 'Are you sure you want to delete %s?';
     sConfirmDeleteMultiTxt: Widestring = 'Are you sure you want to delete these %d items?';
-    sWarnNotDeletedTxt: Widestring = 'The following groups could not be deleted.' + #13#10 + 'Ensure all other items in them are deleted, then try again.' + #13#10 + '%s';
-    sWarnNotDeletedCount: Widestring = #13#10 + '%s (%d items)';
+    sWarnSingleNotDeletedTxt: Widestring = 'The group %s is not empty and could not be deleted.' + #13#10 + 'Make sure all items in the group are removed, then try again.';
+    sWarnMultiNotDeletedTxt: Widestring = '%d groups are not empty and could not be deleted.' + #13#10 + 'Make sure all items in the groups areremoved, then try again.';
 
 {---------------------------------------}
 constructor TExAllTreeView.Create(AOwner: TComponent; Session: TObject);
@@ -216,14 +216,11 @@ begin
 
     //alert
     if postitems.Count > 0 then begin
-        msg := '';
-        for idx := 0 to postitems.Count - 1 do begin
-            uid := postitems.Item[idx].UID;
-            msg := msg + WideFormat(_(sWarnNotDeletedCount),
-                    [uid, itemCtrl.GetGroupitems(uid).Count]);
+        case postitems.Count of
+            1: msg := WideFormat(_(sWarnSingleNotDeletedTxt), [postitems.Item[0].Text]);
+        else
+            msg := WideFormat(_(sWarnMultiNotDeletedTxt), [postitems.Count]);
         end;
-
-        msg := WideFormat(_(sWarnNotDeletedTxt), [msg]);
         MessageBoxW(Self.Handle,
             PWideChar(msg),
             PWideChar(_(sConfirmDeleteCaption)),

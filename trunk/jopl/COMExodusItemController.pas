@@ -345,33 +345,74 @@ end;
 {---------------------------------------}
 procedure TExodusItemController.CopyItem(const UID, Group: WideString);
 var
+    Wrapper: TExodusItemWrapper;
     Item: IExodusItem;
     Idx: Integer;
+    subgrp: Widestring;
+    subitems: IExodusItemList;
 begin
     //Check if item exists
-    Idx := _Items.IndexOf(Uid);
-    if (Idx < 0) then exit;
-    //Copy item from one group to another, or in other words,
-    //add group to the item's group list.
-    Item := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
-    if (Item <> nil) then
-       Item.AddGroup(Group);
+    Wrapper := _GetItemWrapper(UID);
+    if (Wrapper = nil) then exit;
+
+    Item := Wrapper.ExodusItem;
+    if (Item.Type_ = EI_TYPE_GROUP) then begin
+        if (_GroupParser.Separator <> '') then begin
+            //Make this group a subgroup of Group...
+            subgrp := Group + _GroupParser.Separator + _GroupParser.GetGroupName(UID);
+        end
+        else begin
+            //Copy this group's items into Group...
+            subgrp := Group;
+        end;
+
+        subitems := GetGroupItems(UID);
+        for idx := 0 to subitems.Count - 1 do
+            CopyItem(subitems.Item[idx].UID, subgrp);
+    end
+    else begin
+        //Copy item from one group to another, or in other words,
+        //add group to the item's group list.
+        Item.AddGroup(Group);
+    end;
 end;
 
 {---------------------------------------}
 procedure TExodusItemController.MoveItem(const UID, GroupFrom,
   GroupTo: WideString);
 var
-    Idx: Integer;
+    Wrapper: TExodusItemWrapper;
     Item: IExodusItem;
+    Idx: Integer;
+    subgrp: Widestring;
+    subitems: IExodusItemList;
 begin
-    Idx := _Items.IndexOf(Uid);
-    if (Idx < 0) then exit;
-    Item := TExodusItemWrapper(_Items.Objects[Idx]).ExodusItem;
-    //To move item between the groups, we just need to change group name.
-    if (Item <> nil) then
-        Item.MoveGroup(GroupFrom, GroupTo);
+    //Check if item exists
+    Wrapper := _GetItemWrapper(UID);
+    if (Wrapper = nil) then exit;
 
+    Item := Wrapper.ExodusItem;
+    if (Item.Type_ = EI_TYPE_GROUP) then begin
+        if (_GroupParser.Separator <> '') then begin
+            //Make this group a subgroup of Group...
+            subgrp := GroupTo + _GroupParser.Separator + _GroupParser.GetGroupName(UID);
+        end
+        else begin
+            //Move this group's items into GroupTo...
+            subgrp := GroupTo;
+        end;
+
+        subitems := GetGroupItems(UID);
+        for idx := 0 to subitems.Count - 1 do
+            MoveItem(subitems.Item[idx].UID, UID, subgrp);
+
+        RemoveItem(UID);
+    end
+    else begin
+        //Move item from one group to another, or in other words,
+        //add GroupFrom to, and remove GroupTo from, the item's group list.
+        item.MoveGroup(GroupFrom, GroupTo);
+    end;
 end;
 
 {---------------------------------------}

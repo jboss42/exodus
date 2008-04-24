@@ -101,7 +101,5 @@ inherited frmGrpManagement: TfrmGrpManagement
     ItemHeight = 13
     Sorted = True
     TabOrder = 3
-    ExplicitTop = 67
-    ExplicitHeight = 105
   end
 end

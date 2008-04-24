@@ -601,7 +601,6 @@ var
     proxy: TActionProxy;
 begin
     //graceful fail
-    if (itemtype = '') then exit;
     if (act = nil) then exit;
 
     list := lookupActionsFor(itemtype, true);
@@ -619,7 +618,6 @@ var
     proxy: TActionProxy;
 begin
     //graceful fail
-    if (actname = '') then exit;
     if (filter = '') then exit;
 
     //get appropriate potentials and proxy
@@ -637,7 +635,6 @@ var
     proxy: TActionProxy;
 begin
     //graceful fail
-    if (actname = '') then exit;
     if (filter = '') then exit;
 
     //get appropriate potentials and proxy

@@ -12,10 +12,10 @@ unit Exodus_TLB;
 // ************************************************************************ //
 
 // $Rev: 8291 $
-// File generated on 4/22/2008 7:02:12 PM from Type Library described below.
+// File generated on 2008-04-24 13:25:14 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\source\MomentIIM\src\Exodus\exodus\Exodus.tlb (1)
+// Type Lib: Z:\repos\google.com\exodus\exodus\Exodus.tlb (1)
 // LIBID: {37C1EF21-E4CD-4FF0-B6A5-3F0A649431C8}
 // LCID: 0
 // Helpfile: 
@@ -4858,6 +4858,7 @@ type
     function IndexOf(const Item: IExodusItem): Integer; safecall;
     procedure Remove(const Item: IExodusItem); safecall;
     procedure Clear; safecall;
+    function IndexOfUid(const uid: WideString): Integer; safecall;
     property Count: Integer read Get_Count;
     property Item[index: Integer]: IExodusItem read Get_Item write Set_Item;
   end;
@@ -4876,6 +4877,7 @@ type
     function IndexOf(const Item: IExodusItem): Integer; dispid 205;
     procedure Remove(const Item: IExodusItem); dispid 206;
     procedure Clear; dispid 207;
+    function IndexOfUid(const uid: WideString): Integer; dispid 208;
   end;
 
 // *********************************************************************//

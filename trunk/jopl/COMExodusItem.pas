@@ -222,6 +222,8 @@ end;
 procedure TExodusItem.ClearGroups;
 begin
    _Groups.Clear;
+
+   if not IsUpdating then _Callback.ItemGroupsChanged(Self);
 end;
 
 {---------------------------------------}
@@ -248,7 +250,11 @@ end;
 procedure TExodusItem.MoveGroup(const GroupFrom, GroupTo: WideString);
 begin
     IsUpdating := true;
-    RemoveGroup(GroupFrom);
+    if (GroupFrom <> '') then
+        RemoveGroup(GroupFrom)
+    else
+        ClearGroups();
+
     AddGroup(GroupTo);
     IsUpdating := false;
 
