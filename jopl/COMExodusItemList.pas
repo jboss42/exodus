@@ -42,6 +42,7 @@ type
     procedure Remove(const Value: IExodusItem); safecall;
     function IExodusItemList.Get_Count = IExodusItemList_Get_Count;
     function IExodusItemList_Get_Count: Integer; safecall;
+    function IndexOfUid(const uid: WideString): Integer; safecall;
   private
     function _GetItems() : TInterfaceList;
   public
@@ -116,6 +117,24 @@ begin
     if (_items = nil) then
         _items := TInterfaceList.Create;
     Result := _items;
+end;
+
+function TExodusItemList.IndexOfUid(const uid: WideString): Integer;
+var
+    items: TInterfaceList;
+    item: IExodusItem;
+    idx: Integer;
+begin
+    items := _GetItems();
+    Result := -1;
+
+    for idx := 0 to items.Count - 1 do begin
+        item := items[idx] as IExodusItem;
+        if item.UID = uid then begin
+            Result := idx;
+            exit;
+        end;
+    end;
 end;
 
 initialization

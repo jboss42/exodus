@@ -289,7 +289,8 @@ uses
   GroupActions in 'GroupActions.pas',
   MiscMessages in 'MiscMessages.pas' {frmSimpleDisplay: TTntForm},
   SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
-  ExAllTreeView in 'components\ExAllTreeView.pas';
+  ExAllTreeView in 'components\ExAllTreeView.pas',
+  CommonActions in 'CommonActions.pas';
 
 {$R *.TLB}
 

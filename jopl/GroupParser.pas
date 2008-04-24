@@ -10,7 +10,7 @@ type
    TGroupParser = class
    private
        _NestedGroups : TRegExpr;
-       _GroupSeparator: WideChar;
+       _GroupSeparator: WideString;
        _Session: TObject;
    public
        constructor Create(Session: TObject);
@@ -20,6 +20,8 @@ type
        function GetGroupParent(Group: WideString): WideString;
        function ParseGroupName(Group: WideString): TWideStringList;
        function BuildNestedGroupList(Groups: TWideStringList): TWideStringList;
+
+       property Separator: Widestring read _GroupSeparator;
    end;
 
 implementation
@@ -34,9 +36,9 @@ begin
    //Spaces are no longer word boundaries, but group separators are.
    sep := TJabberSession(_Session).Prefs.getString('group_seperator');
    if (sep <> '') then begin
+       _GroupSeparator := sep;
        _NestedGroups := TRegExpr.Create();
-       _GroupSeparator := PWideChar(sep)^;
-       _NestedGroups.SpaceChars :=  _GroupSeparator;
+       _NestedGroups.SpaceChars :=  PWideChar(sep)^;
        _NestedGroups.WordChars := _NestedGroups.WordChars + chr(32) + chr(45);
        _NestedGroups.Expression := '\b\w+';
        _NestedGroups.Compile();
