@@ -392,6 +392,8 @@ begin
 
     for idx := 0 to items.Count - 1 do begin
         item := items.Item[idx];
+        if (item.Type_ <> 'contact') then continue;
+        
         jids.Add(item.UID);
     end;
     ShowInvite('', jids);
