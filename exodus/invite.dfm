@@ -180,7 +180,7 @@ inherited frmInvite: TfrmInvite
           Width = 214
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 0
           OnChange = cboRoomChange
         end

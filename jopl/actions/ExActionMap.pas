@@ -206,7 +206,6 @@ end;
 procedure TExodusTypedActions.RemoveAction(act: IExodusAction);
 var
     idx: Integer;
-    prevAct: IExodusAction;
     currRef, prevRef: Pointer;
 begin
     if act = nil then exit;
@@ -234,8 +233,6 @@ begin
 end;
 
 function TExodusTypedActions.GetActionNamed(const name: WideString): IExodusAction;
-var
-    idx: Integer;
 begin
     Result := LookupAction(name, false);
 end;

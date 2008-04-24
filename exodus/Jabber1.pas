@@ -3840,10 +3840,24 @@ begin
 end;
 
 procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
+var
+    items: IExodusItemList;
+    jids: TWidestringList;
+    idx: Integer;
+    tabCtrl: IExodusTabController;
 begin
-    //frmRosterWindow.popGrpInvite.Click();
-    //StartJoinRoom();
-    ShowInvite('');
+    //TODO:  do it with the items...
+    tabCtrl := GetRosterWindow().TabController;
+    jids := TWidestringList.Create();
+    if (tabCtrl.ActiveTab <> -1) then begin
+         items := tabCtrl.Tab[tabCtrl.ActiveTab].GetSelectedItems();
+         for idx := 0 to items.Count - 1 do begin
+             if (items.Item[idx].Type_ <> 'contact') then continue;
+             jids.Add(items.Item[idx].UID);
+         end;
+    end;
+
+    ShowInvite('', jids);
 end;
 
 

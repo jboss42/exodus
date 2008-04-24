@@ -114,7 +114,6 @@ end;
 {---------------------------------------}
 procedure TRoomController.RemoveRoom(const JabberID: WideString);
 var
-    Idx: Integer;
     Room: IExodusItem;
 begin
     Room :=  TJabberSession(_js).ItemController.GetItem(JabberID);
@@ -195,8 +194,8 @@ end;
 procedure TRoomController._ParseRooms(Event: string; Tag: TXMLTag);
 var
     RoomTags: TXMLTagList;
-    i, idx: integer;
-    bm, StorageTag, RoomTag: TXMLTag;
+    i: integer;
+    StorageTag, RoomTag: TXMLTag;
     jid: Widestring;
     TmpJID: TJabberID;
     Item: IExodusItem;
