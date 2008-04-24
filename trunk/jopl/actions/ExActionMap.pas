@@ -387,34 +387,9 @@ var
     mainActs, typedActs: TExodusTypedActions;
     act: IExodusAction;
 begin
-    mainActs := LookupTypedActions('', true);
-    mainActs.Clear;
-
-    for idx := 0 to _items.Count - 1 do
-        mainActs._items.Add(Self._items.Item[idx]);
-
-    //Let's (optimistically) asume that all actions should be in the main actions
-    for idx := 0 to _allActs.Count - 1 do begin
-        mainActs.AddAction(_allActs[idx] as IExodusAction);
-    end;
-    mainActs.Collate;
-
     for idx := 0 to _actLists.Count - 1 do begin
-        //Collate (sort) all actions for types (other than '')
+        //Collate (sort) all actions for types
         typedActs := TExodusTypedActions(_actLists.Objects[idx]);
-
-        //skip main actions
-        if (typedActs = mainActs) then continue;
-
-        //remove actions missing in typed from main
-        for jdx := 0 to _allActs.Count - 1 do begin
-            act := _allActs[jdx] as IExodusAction;
-            if (typedActs.IndexOfAction(act) = -1) and
-                    (typedActs.Get_ItemType() <> 'group')then begin
-                mainActs.RemoveAction(act);
-            end;
-        end;
-
         typedActs.Collate;
     end;
 

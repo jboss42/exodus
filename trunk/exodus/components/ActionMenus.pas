@@ -111,12 +111,28 @@ begin
     mainActs := _actMap.GetActionsFor('');
     if (mainActs <> nil) then Dec(typeCount);
 
-    //Remember group actions...
+    //Remember the group actions...
     grpActs := _actMap.GetActionsFor('group');
     if (grpActs <> nil) then Dec(typeCount);
 
+
     //build type-specific actions
-    if (typeCount > 1) then begin
+    case typeCount of
+        0: begin
+            //TODO:  something??
+        end;
+        1: begin
+            //treat the "only" type-specific actions as the main actions
+            for idx := 0 to _actMap.TypedActionsCount - 1 do begin
+                typedActs := _actMap.TypedActions[idx];
+                itemtype := typedActs.ItemType;
+
+                if (itemtype = '') or (itemtype = 'group') then continue;
+
+                mainActs := typedActs;
+            end;
+        end;
+    else
         for idx := 0 to _actMap.TypedActionsCount - 1 do begin
             typedActs := _actMap.TypedActions[idx];
             itemtype := typedActs.ItemType;
@@ -129,24 +145,6 @@ begin
             Items.Insert(0, mi);
             createTypedMenu(typedActs, mi, miCount);
             Inc(miCount);
-        end;
-    end
-    else if (typeCount = 1) then begin
-        //treat the "only" type-specific actions as the main actions
-        for idx := 0 to _actMap.TypedActionsCount - 1 do begin
-            typedActs := _actMap.TypedActions[idx];
-            itemtype := typedActs.ItemType;
-
-            if (itemtype = '') or (itemtype = 'group') then continue;
-
-            mainActs := typedActs;
-        end;
-    end
-    else if (typeCount = 0) then begin
-        //We didn't get anything other than main actions and/or group actions
-        if (grpActs <> nil) and (grpActs.ActionCount > 0) then begin
-            mainActs := grpActs;
-            grpActs := nil;
         end;
     end;
 

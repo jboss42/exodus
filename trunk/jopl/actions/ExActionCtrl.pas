@@ -228,6 +228,8 @@ begin
         _enabling.Sorted := false;
     _enabling.AddObject(fitem.Key, fitem);
     if fitem.Key = 'selection' then begin
+        fitem := TFilteringItem.CreatePair('global-selection', fitem.value);
+        _enabling.AddObject(fitem.Key, fitem);
         fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
         _enabling.AddObject(fitem.Key, fitem);
     end;
@@ -243,6 +245,8 @@ begin
 
     _disabling.AddObject(fitem.Key, fitem);
     if fitem.Key = 'selection' then begin
+        fitem := TFilteringItem.CreatePair('global-selection', fitem.value);
+        _disabling.AddObject(fitem.Key, fitem);
         fitem := TFilteringItem.CreatePair('type-selection', fitem.value);
         _disabling.AddObject(fitem.Key, fitem);
     end;
@@ -448,7 +452,7 @@ var
     begin
         Result := true;
 
-        if (key = 'selection') or (key = 'type-selection') then
+        if (key = 'selection') or (key = 'type-selection') or (key = 'global-selection') then
             Result := false     //ignore this hint (always present)
         else if (key = 'type') then
             val := item.Type_
@@ -675,12 +679,13 @@ function TExodusActionController.buildActions(
         const items: IExodusItemList): IExodusActionMap;
 var
     actmap: TExodusActionMap;
-    typedActs: TExodusTypedActions;
+    mainActs, typedActs: TExodusTypedActions;
     potentials: TPotentialActions;
     proxy: TActionProxy;
     applied: TObjectList;
     allInterests: TWidestringList;
-    typedInterests: TFilteringSet;
+    enabling, disabling: TWidestringList;
+    mainInterests, typedInterests: TFilteringSet;
     idx, jdx: Integer;
     item: IExodusItem;
     itemtype: Widestring;
@@ -688,8 +693,12 @@ begin
     actmap := TExodusActionMap.Create(items);
     Result := actmap as IExodusActionMap;
 
+    if (items = nil) or (items.Count = 0) then exit;
+
     //walk items, building sets
     allInterests := TWidestringList.Create;
+    enabling := TWidestringList.Create;
+    disabling := TWidestringList.Create;
     for idx := 0 to items.Count - 1 do begin
         item := items.Item[idx];
 
@@ -699,12 +708,35 @@ begin
             if (jdx <> -1) then begin
                 typedInterests := TFilteringSet(allInterests.Objects[jdx]);
             end else begin
+                for jdx := 0 to potentials.EnableHints.Count - 1 do
+                    enabling.Add(potentials.EnableHints[jdx]);
+                for jdx := 0 to potentials.DisableHints.Count - 1 do
+                    disabling.Add(potentials.DisableHints[jdx]);
                 typedInterests := TFilteringSet.Create(potentials.EnableHints, potentials.DisableHints);
                 allInterests.AddObject(potentials.ItemType, typedInterests);
             end;
 
             typedInterests.update(item);
         end;
+    end;
+
+    mainInterests := TFilteringSet.Create(enabling, disabling);
+    case items.Count of
+        1: begin
+            mainInterests.Disabling.AddObject('global-selection',
+                    TFilteringItem.CreatePair('global-selection','single'));
+            mainInterests.Enabling.AddObject('global-selection',
+                    TFilteringItem.CreatePair('global-selection','single'));
+        end;
+        else begin
+            mainInterests.Disabling.AddObject('global-selection',
+                    TFilteringItem.CreatePair('global-selection','multi'));
+            mainInterests.Enabling.AddObject('global-selection',
+                    TFilteringItem.CreatePair('global-selection','multi'));
+        end;
+    end;
+    for idx := 0 to items.Count - 1 do begin
+        mainInterests.update(item);
     end;
 
     //walk types, building action map
@@ -715,33 +747,7 @@ begin
         potentials := lookupActionsFor(itemtype, false);
         typedInterests := TFilteringSet(allInterests.Objects[idx]);
 
-        case items.Count of
-            0: begin
-                typedInterests.Disabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','none'));
-                typedInterests.Enabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','none'));
-            end;
-            1: begin
-                typedInterests.Disabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','single'));
-                typedInterests.Enabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','single'));
-            end;
-            else begin
-                typedInterests.Disabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','multi'));
-                typedInterests.Enabling.AddObject('selection',
-                        TFilteringItem.CreatePair('selection','multi'));
-            end;
-        end;
         case typedInterests.ItemCount of
-            0: begin
-                typedInterests.Disabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','none'));
-                typedInterests.Enabling.AddObject('type-selection',
-                        TFilteringItem.CreatePair('type-selection','none'));
-            end;
             1: begin
                 typedInterests.Disabling.AddObject('type-selection',
                         TFilteringItem.CreatePair('type-selection','single'));
@@ -783,15 +789,36 @@ begin
         end;
 
         //Free up typed interests now
-        allInterests.Objects[idx] := nil;
         typedInterests.Free;
     end;
+
+    //One more walk, to setup main actions (mostly for selection madness)
+    mainActs := actMap.LookupTypedActions('', true);
+    for idx := 0 to applied.Count - 1 do begin
+        proxy := TActionProxy(applied[idx]);
+        if not proxy.applies(mainInterests.Enabling, mainInterests.Disabling) then
+            continue;
+
+        for jdx := 0 to allInterests.Count - 1 do begin
+            itemtype := allInterests[jdx];
+            typedActs := actMap.LookupTypedActions(itemtype, false);
+            if (typedActs.GetActionNamed(proxy.Name) <> proxy.Action) then begin
+                proxy := nil;
+                break;
+            end;
+        end;
+
+        if (proxy <> nil) then
+            mainActs.AddAction(proxy.Action);
+    end;
+
 
     //Prep map
     actmap.Collate;
     
     //Cleanup
     FreeAndNil(allInterests);
+    FreeAndNil(mainInterests);
     FreeAndNil(applied);
 end;
 
