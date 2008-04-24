@@ -3837,12 +3837,13 @@ end;
 procedure TfrmExodus.mnuPeople_ConferenceClick(Sender: TObject);
 begin
   //invite to room should only be available if rooms are open.
-   Self.mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 end;
 
 procedure TfrmExodus.mnuPeople_Conference_InviteContacttoConferenceClick(Sender: TObject);
 begin
     //frmRosterWindow.popGrpInvite.Click();
+    //StartJoinRoom();
+    ShowInvite('');
 end;
 
 
@@ -4642,6 +4643,7 @@ begin
 
   //Enable/Disable room menus...
   typedActs := actMap.GetActionsFor('room');
+  mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 
   //Enable/Disable group menus...
   typedActs := actMap.GetActionsFor('group');
@@ -4651,7 +4653,6 @@ begin
   //Enable/Disable 'create' menu items...
   typedActs := getActionController().actionsForType('{create}');
   SetupMenuItem(mnuPeople_Contacts_AddContact, '{000-exodus.googlecode.com}-000-add-contact');
-  SetupMenuItem(mnuPeople_Conference_OpenNewConferenceRoom, '{000-exodus.googlecode.com}-010-add-room');
   SetupMenuItem(mnuPeople_Group_AddNewRoster, '{000-exodus.googlecode.com}-090-add-group');
 end;
 
