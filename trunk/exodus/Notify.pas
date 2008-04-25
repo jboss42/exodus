@@ -258,7 +258,14 @@ begin
         ForceForegroundWindow(win.Handle);
         end;
     end;
-    GetDockManager().OnNotify(win, notify);
+
+    if ((sound_name <> 'notify_online') and
+        (sound_name <> 'notify_offline')) then begin
+        // We do NOT want the dock window to get notifications for online/offline
+        // on the off chance that they were able to enable flash or bringtofront
+        // via the branding or old prefs file.
+        GetDockManager().OnNotify(win, notify);
+    end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then begin
         tstr := MainSession.Prefs.GetSoundFile(sound_name);
