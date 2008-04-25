@@ -63,6 +63,7 @@ type
     procedure DisplayComposing(msg: Widestring); override;
     procedure HideComposing(); override;
     function  isComposing(): boolean; override;
+    procedure DisplayRawText(txt: Widestring); override;
   end;
 
 var
@@ -365,6 +366,14 @@ begin
 
     MsgList.WideLines.Delete(_composing);
     _composing := -1;
+end;
+
+{---------------------------------------}
+procedure TfRTFMsgList.DisplayRawText(txt: Widestring);
+begin
+    MsgList.SelStart := Length(MsgList.WideLines.Text);
+    MsgList.SelLength := 0;
+    MsgList.WideSelText := txt + #13#10;
 end;
 
 {---------------------------------------}

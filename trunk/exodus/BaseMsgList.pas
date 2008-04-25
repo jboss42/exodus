@@ -60,6 +60,7 @@ type
     procedure DisplayComposing(msg: Widestring); virtual;
     procedure HideComposing(); virtual;
     function  isComposing(): boolean; virtual;
+    procedure DisplayRawText(txt: Widestring); virtual;
 
     property Handle: THandle read getHandle;
     property winObject: TObject read getObject;
@@ -211,6 +212,11 @@ begin
 end;
 
 procedure TfBaseMsgList.DisplayComposing(msg: Widestring);
+begin
+    // NOOP
+end;
+
+procedure TfBaseMsgList.DisplayRawText(txt: Widestring); 
 begin
     // NOOP
 end;

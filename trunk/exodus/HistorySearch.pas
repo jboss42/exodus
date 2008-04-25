@@ -1578,6 +1578,11 @@ begin
         // End of results - remove from Result callback map
         ExodusHistoryResultCallbackMap.DeleteCallback(_ResultObj);
 
+        if (_ResultList.Count = 0) then begin
+            // There are no results so display a "no results found" message
+            _MsgList.DisplayRawText(_('No results found.'));
+        end;
+
         // Change GUI to "done searching"
         _DoingSearch := false;
         _SearchingGUI(false);
