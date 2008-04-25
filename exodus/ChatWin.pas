@@ -1337,7 +1337,14 @@ begin
     _status := status;
 
     nickHint := show;
-    if (status <> '') then nickHint := nickHint + ', ' + status;
+    if ((status <> '') and
+        (status <> show)) then begin
+        if (nickHint = '') then begin
+            nickHint := _(sAvailable);
+        end;
+
+        nickHint := nickHint + ', ' + status;
+    end;
     nickHint := nickHint + ' <' + _jid.getDisplayFull() + '>';
     lblNick.Hint := nickHint;
 
