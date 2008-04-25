@@ -290,7 +290,10 @@ uses
   MiscMessages in 'MiscMessages.pas' {frmSimpleDisplay: TTntForm},
   SelectItemAnyRoom in 'SelectItemAnyRoom.pas' {frmSelectItemAnyRoom: TTntForm},
   ExAllTreeView in 'components\ExAllTreeView.pas',
-  CommonActions in 'CommonActions.pas';
+  CommonActions in 'CommonActions.pas',
+  ExContactHoverFrame in 'components\ExContactHoverFrame.pas' {ExContactHoverFrame: TTntFrame},
+  ExItemHoverForm in 'components\ExItemHoverForm.pas' {ExItemHoverForm: TTntForm},
+  ExRoomHoverFrame in 'components\ExRoomHoverFrame.pas' {ExRoomHoverFrame: TTntFrame};
 
 {$R *.TLB}
 

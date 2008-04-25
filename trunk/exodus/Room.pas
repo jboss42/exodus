@@ -174,6 +174,7 @@ type
     _insertTab: boolean;        // Should tab or ctrl + I insert a tab?
 
     _my_membership_role: WideString; // My membership to the room.
+    _my_affiliation: WideString; // My afiliation to the room.    
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -277,6 +278,8 @@ type
     }
     procedure OnFloat();override;
 
+    property MyAffiliation: WideString read _my_affiliation;   
+
   end;
 
   TJoinRoomAction = class(TExBaseAction)
@@ -295,6 +298,7 @@ type
 
   public
     procedure execute(const items: IExodusItemList); override;
+    property Value: Widestring read _value;
   end;
 
 var
@@ -1555,7 +1559,7 @@ begin
 
             //hold onto my role
             _my_membership_role := member.role;
-
+            _my_affiliation := member.affil;
             // check to see what my role is
             _send_unavailable := true;
 
