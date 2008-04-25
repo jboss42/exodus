@@ -432,8 +432,10 @@ end;
 procedure TfrmDockable.ShowDefault(bringtofront:boolean; dockOverride: string);
 begin
     if (self.Visible and Docked) then begin
-        if (bringtofront) then
+        if (bringtofront) then begin
             GetDockManager().BringDockedToTop(Self);
+            GetDockManager().BringToFront();
+        end;
     end
     else if (Self.Visible) then
         inherited
