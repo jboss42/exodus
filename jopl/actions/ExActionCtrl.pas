@@ -920,19 +920,23 @@ begin
             mainActs.Clear();
             for idx := 0 to typedActs.Get_ActionCount() - 1 do
                 mainActs.AddAction(typedActs.Get_Action(idx));
-            
+            for idx := 0 to typedActs.Get_ItemCount() - 1 do
+                mainActs.Set_Item(idx, typedActs.Get_Item(idx));
+
             //remove type-specific actions
             actmap.DeleteTypedActions(typedActs);
         end;
         abmSingleGroup: begin
             //group actions are main actions
             typedActs := actmap.LookupTypedActions('group', true);
-            
+
             //copy group actions into main
             mainActs := actmap.LookupTypedActions('', true);
             mainActs.Clear();
             for idx := 0 to typedActs.Get_ActionCount() - 1 do
                 mainActs.AddAction(typedActs.Get_Action(idx));
+            for idx := 0 to typedActs.Get_ItemCount() - 1 do
+                mainActs.Set_Item(idx, typedActs.Get_Item(idx));
 
             //remove group actions
             actmap.DeleteTypedActions(typedActs);

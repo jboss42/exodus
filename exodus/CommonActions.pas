@@ -16,14 +16,36 @@ type
 
     end;
 
+    TDeleteItemAction = class(TExBaseAction)
+    private
+        constructor Create();
+
+    public
+        destructor Destroy(); override;
+
+        procedure execute(const items: IExodusItemList); override;
+    end;
+
 implementation
 
-uses DisplayName, ExActionCtrl, gnugettext, GroupParser, InputPassword,
-        Session, SysUtils;
+uses COMExodusItemList, DisplayName, ExActionCtrl, Forms, gnugettext,
+        GroupParser, InputPassword, Session, SysUtils, Windows;
 
 const
     sRenameTitle: Widestring = 'Rename %s';
     sRenameText: Widestring = 'New name for this %s: ';
+
+    sDeleteConfirmTitle: Widestring = 'Globally Delete Item(s)';
+    sDeleteConfirmSingleText: Widestring = 'Are you sure you want to delete "%s" completely from your contact list?' +
+            #13#10 + #13#10 +
+            'NOTE: This action will remove all references of this item from all groups in your contact list.';
+    sDeleteConfirmMultiText: Widestring = 'Are you sure you want to delete these %d items completely from your contact list?' +
+            #13#10 + #13#10 +
+            'NOTE: This action will remove all references of these items from all groups in your contact list.';
+    sDeleteWarnFailedSingleTxt: Widestring = 'The group "%s" is not empty and could not be deleted.' +
+            #13#10 + 'Make sure all items in the group are removed, then try again.';
+    sDeleteWarnFailedMultiTxt: Widestring = '%d groups are not empty and could not be deleted.' +
+            #13#10 + 'Make sure all items in the groups areremoved, then try again.';
 
 constructor TRenameItemAction.Create();
 begin
@@ -44,7 +66,7 @@ var
     idx: Integer;
     itemCtrl: IExodusItemController;
     subitems: IExodusItemList;
-    item, grp: IExodusItem;
+    item: IExodusItem;
     name, path: Widestring;
 begin
     if items.Count <> 1 then exit;
@@ -63,7 +85,10 @@ begin
                 
         path := parser.GetGroupParent(item.UID) + parser.Separator + name;
         itemCtrl := MainSession.ItemController;
-            
+
+        //add group explicitly
+        itemCtrl.AddGroup(path);
+
         //move subitems to new group
         subitems := itemCtrl.GetGroupItems(item.UID);
         for idx := 0 to subitems.Count - 1 do begin
@@ -91,6 +116,103 @@ begin
     end;
 end;
 
+constructor TDeleteItemAction.Create;
+begin
+    inherited Create('{000-exodus.googlecode.com}-190-delete');
+
+    set_Caption(_('Delete Globally'));
+    set_Enabled(true);
+end;
+destructor TDeleteItemAction.Destroy;
+begin
+    inherited;
+end;
+
+procedure TDeleteItemAction.execute(const items: IExodusItemList);
+var
+    path, msg: Widestring;
+    idx, jdx, rst: Integer;
+    itemCtrl: IExodusItemController;
+    postitems, collateralitems: IExodusItemList;
+    item: IExodusItem;
+
+    function EmptyGroup(gpath: Widestring): Boolean;
+    var
+        idx: Integer;
+        subitems: IExodusItemList;
+    begin
+        Result := true;
+        subitems := itemCtrl.GetGroupItems(gpath);
+        for idx := 0 to subitems.Count - 1 do begin
+            if (subitems.Item[idx].Type_ = 'group') then
+                Result := EmptyGroup(subitems.Item[idx].UID)
+            else
+                Result := false;
+
+            if not Result then exit;
+        end;
+    end;
+begin
+    //confirm
+    if (items = nil) or (items.Count = 0) then exit;
+
+    if (items.Count = 1) then
+        msg := WideFormat(_(sDeleteConfirmSingleText), [items.Item[0].Text])
+    else
+        msg := WideFormat(_(sDeleteConfirmMultiText), [items.Count]);
+
+    rst := MessageBoxW(Application.Handle,
+            PWideChar(msg),
+            PWideChar(_(sDeleteConfirmTitle)),
+            MB_ICONWARNING or MB_YESNO);
+    if (rst <> IDYES) then exit;
+
+    //process non-groups
+    itemCtrl := MainSession.ItemController;
+    postitems := TExodusItemList.Create();
+    for idx := 0 to items.Count - 1 do begin
+        item := items.Item[idx];
+        if (item.Type_ = 'group') then
+            postitems.Add(item)
+        else begin
+            //remove from existence!
+            itemCtrl.RemoveItem(item.UID);
+        end;
+    end;
+
+    //process groups
+    collateralitems := TExodusItemList.Create();
+    for idx := postitems.Count - 1 downto 0 do begin
+        collateralitems.Clear();
+        item := postitems.Item[idx];
+
+        //validate target is empty
+        if not EmptyGroup(item.UID) then continue;
+
+        //delete collateral groups
+        for jdx := 0 to collateralitems.Count - 1 do begin
+            itemCtrl.RemoveItem(collateralitems.Item[idx].UID);
+        end;
+
+        //delete target group
+        postitems.Delete(idx);
+        itemCtrl.RemoveItem(item.UID);
+    end;
+
+    //alert
+    if postitems.Count > 0 then begin
+        case postitems.Count of
+            1: msg := WideFormat(_(sDeleteWarnFailedSingleTxt), [postitems.Item[0].Text]);
+        else
+            msg := WideFormat(_(sDeleteWarnFailedMultiTxt), [postitems.Count]);
+        end;
+        MessageBoxW(Application.Handle,
+            PWideChar(msg),
+            PWideChar(_(sDeleteConfirmTitle)),
+            MB_ICONWARNING or MB_OK);
+    end;
+end;
+
 procedure RegisterActions();
 var
     actCtrl: IExodusActionController;
@@ -101,6 +223,11 @@ begin
     act := TRenameItemAction.Create();
     actCtrl.registerAction('', act);
     actCtrl.addEnableFilter('', act.Name, 'selection=single');
+
+    act := TDeleteItemAction.Create();
+    actCtrl.registerAction('', act);
+    actCtrl.addEnableFilter('', act.Name, 'selection=single');
+    //actCtrl.addDisableFilter('', act.Name, 'type=group');
 end;
 
 initialization

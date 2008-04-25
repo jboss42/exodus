@@ -4656,7 +4656,7 @@ begin
   SetupMenuItem(mnuPeople_Contacts_ViewHistory, '{000-exodus.googlecode.com}-040-view-history');
   SetupMenuItem(mnuPeople_Contacts_ContactProperties, '{000-exodus.googlecode.com}-100-properties');
   SetupMenuItem(mnuPeople_Contacts_RenameContact, '{000-exodus.googlecode.com}-150-rename');
-  //TODO:  figure out delete...
+  SetupMenuItem(mnuPeople_Contacts_DeleteContact, '{000-exodus.googlecode.com}-190-delete');
 
   //Enable/Disable room menus...
   if (items.Count = 1) and (items.Item[0].Type_ = 'room') then
@@ -4671,7 +4671,7 @@ begin
   else
     typedActs := actMap.GetActionsFor('group');
   SetupMenuItem(mnuPeople_Group_RenameGroup, '{000-exodus.googlecode.com}-150-rename');
-  //TODO:  figure out delete...
+  SetupMenuItem(mnuPeople_Group_DeleteGroup, '{000-exodus.googlecode.com}-190-delete');
 
   //Enable/Disable 'create' menu items...
   typedActs := getActionController().actionsForType('{create}');

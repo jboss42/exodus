@@ -2,7 +2,7 @@ unit ActionMenus;
 
 interface
 
-uses Classes, Menus, TntMenus, Exodus_TLB;
+uses Classes, Menus, TntMenus, Exodus_TLB, Unicode;
 
 type TExActionPopupMenu = class(TTntPopupMenu)
 private
@@ -10,8 +10,10 @@ private
     _actMap: IExodusActionMap;
     _targets: IExodusItemList;
     _splitIdx: Integer;
+    _excludes: TWidestringList;
 
     procedure SetTargets(targets: IExodusItemList);
+    procedure SetExcludes(excludes: TWidestringList);
 
     procedure rebuild;
     function createTypedMenu(actList: IExodusTypedActions; parent: TMenuItem; offset: Integer = -1): Integer;
@@ -26,6 +28,7 @@ public
 
     procedure Popup(X, Y: Integer); override;
 
+    property Excludes: TWidestringList read _excludes write SetExcludes;
     property Targets: IExodusItemList read _targets write SetTargets;
     property ActionController: IExodusActionController read _actCtrl write _actCtrl;
 end;
@@ -34,7 +37,7 @@ procedure Register;
 
 implementation
 
-uses SysUtils, TntComCtrls, gnugettext, Variants, Unicode;
+uses SysUtils, TntComCtrls, gnugettext, Variants;
 
 type TExActionMenuItem = class(TTntMenuItem)
 private
@@ -67,6 +70,8 @@ end;
 constructor TExActionPopupMenu.Create(AOwner: TComponent);
 begin
     inherited;
+
+    _excludes := TWidestringList.Create();
 end;
 destructor TExActionPopupMenu.Destroy;
 begin
@@ -80,6 +85,19 @@ begin
     if (targets <> _targets) then begin
         _actMap := nil;
         _targets := targets;
+    end;
+end;
+procedure TExActionPopupMenu.SetExcludes(excludes: TWideStringList);
+var
+    idx: Integer;
+begin
+    if (excludes <> _excludes) then begin
+        _excludes.Clear();
+
+        if excludes = nil then exit;
+
+        for idx := 0 to excludes.Count - 1 do
+            _excludes.AddObject(excludes[idx], excludes.Objects[idx]);
     end;
 end;
 
@@ -164,8 +182,9 @@ begin
 
     for idx := 0 to actList.ActionCount - 1 do begin
         act := actlist.Action[idx];
-        mi := TExActionMenuItem.Create(parent);
+        if Excludes.IndexOf(act.Name) <> -1 then continue;
 
+        mi := TExActionMenuItem.Create(parent);
         mi.ItemType := actList.ItemType;
         mi.ActionName := act.Name;
         mi.Caption := act.Caption;
