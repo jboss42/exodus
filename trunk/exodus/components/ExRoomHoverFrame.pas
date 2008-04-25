@@ -5,16 +5,16 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
   Dialogs, StdCtrls, ExtCtrls, ExFrame, ExGraphicButton, Exodus_TLB,
-  ExBrandPanel, ExGroupBox;
+  ExBrandPanel, ExGroupBox, TntStdCtrls;
 
 type
   TExRoomHoverFrame = class(TExFrame)
     imgRoom: TImage;
-    lblRoomDisplayName: TLabel;
-    lblRoomUID: TLabel;
-    lblSubject: TLabel;
-    lblAffiliation: TLabel;
-    lblParticipants: TLabel;
+    lblRoomDisplayName: TTntLabel;
+    lblRoomUID: TTntLabel;
+    lblSubject: TTntLabel;
+    lblAffiliation: TTntLabel;
+    lblParticipants: TTntLabel;
     chkAutoJoin: TCheckBox;
     btnDelete: TExGraphicButton;
     btnRename: TExGraphicButton;

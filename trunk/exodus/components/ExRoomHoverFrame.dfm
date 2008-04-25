@@ -51,7 +51,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseEnter = imgRoomMouseEnter
     OnMouseLeave = imgRoomMouseLeave
   end
-  object lblRoomDisplayName: TLabel
+  object lblRoomDisplayName: TTntLabel
     Left = 42
     Top = 8
     Width = 4
@@ -59,7 +59,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseEnter = lblRoomDisplayNameMouseEnter
     OnMouseLeave = lblRoomDisplayNameMouseLeave
   end
-  object lblRoomUID: TLabel
+  object lblRoomUID: TTntLabel
     Left = 42
     Top = 30
     Width = 4
@@ -67,7 +67,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseEnter = lblRoomUIDMouseEnter
     OnMouseLeave = lblRoomUIDMouseLeave
   end
-  object lblSubject: TLabel
+  object lblSubject: TTntLabel
     Left = 38
     Top = 52
     Width = 4
@@ -75,7 +75,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseEnter = lblSubjectMouseEnter
     OnMouseLeave = lblSubjectMouseLeave
   end
-  object lblAffiliation: TLabel
+  object lblAffiliation: TTntLabel
     Left = 38
     Top = 74
     Width = 4
@@ -83,7 +83,7 @@ inherited ExRoomHoverFrame: TExRoomHoverFrame
     OnMouseMove = lblAffiliationMouseMove
     OnMouseLeave = lblAffiliationMouseLeave
   end
-  object lblParticipants: TLabel
+  object lblParticipants: TTntLabel
     Left = 38
     Top = 96
     Width = 4
