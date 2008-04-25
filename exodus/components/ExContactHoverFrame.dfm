@@ -5,7 +5,7 @@ inherited ExContactHoverFrame: TExContactHoverFrame
   OnMouseLeave = TntFrameMouseLeave
   ExplicitWidth = 294
   ExplicitHeight = 203
-  object lblDisplayName: TLabel
+  object lblDisplayName: TTntLabel
     Left = 38
     Top = 0
     Width = 4
@@ -13,7 +13,7 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     OnMouseEnter = lblDisplayNameMouseEnter
     OnMouseLeave = lblDisplayNameMouseLeave
   end
-  object lblUID: TLabel
+  object lblUID: TTntLabel
     Left = 38
     Top = 26
     Width = 4
@@ -21,7 +21,7 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     OnMouseEnter = lblUIDMouseEnter
     OnMouseLeave = lblUIDMouseLeave
   end
-  object lblPhoneNumber: TLabel
+  object lblPhoneNumber: TTntLabel
     Left = 38
     Top = 52
     Width = 185
@@ -36,7 +36,7 @@ inherited ExContactHoverFrame: TExContactHoverFrame
     Width = 16
     Height = 16
   end
-  object lblPresence: TLabel
+  object lblPresence: TTntLabel
     Left = 76
     Top = 175
     Width = 4

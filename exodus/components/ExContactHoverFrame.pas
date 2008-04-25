@@ -9,14 +9,14 @@ uses
 
 type
   TExContactHoverFrame = class(TExFrame)
-    lblDisplayName: TLabel;
-    lblUID: TLabel;
-    lblPhoneNumber: TLabel;
+    lblDisplayName: TTntLabel;
+    lblUID: TTntLabel;
+    lblPhoneNumber: TTntLabel;
     btnRename: TExGraphicButton;
     btnDelete: TExGraphicButton;
     btnChat: TExGraphicButton;
     imgPresence: TImage;
-    lblPresence: TLabel;
+    lblPresence: TTntLabel;
     Separator2: TExGroupBox;
     Separator1: TExGroupBox;
     imgAvatar: TPaintBox;
