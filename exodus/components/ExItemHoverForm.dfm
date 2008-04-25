@@ -4,7 +4,6 @@ inherited ExItemHoverForm: TExItemHoverForm
   Caption = 'Display Name'
   ClientHeight = 237
   ClientWidth = 320
-  Visible = True
   OnCreate = TntFormCreate
   OnDestroy = TntFormDestroy
   OnMouseEnter = TntFormMouseEnter
