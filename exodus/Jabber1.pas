@@ -4648,7 +4648,10 @@ begin
   actMap := GetActionController().buildActions(items);
 
   //Enable/Disable contact menus...
-  typedActs := actMap.GetActionsFor('contact');
+  if (items.Count = 1) and (items.Item[0].Type_ = 'contact') then
+    typedActs := actMap.GetActionsFor('')
+  else
+    typedActs := actMap.GetActionsFor('contact');
   SetupMenuItem(mnuPeople_Contacts_BlockContact, '{000-exodus.googlecode.com}-080-block-contact');
   SetupMenuItem(mnuPeople_Contacts_ViewHistory, '{000-exodus.googlecode.com}-040-view-history');
   SetupMenuItem(mnuPeople_Contacts_ContactProperties, '{000-exodus.googlecode.com}-100-properties');
@@ -4656,11 +4659,17 @@ begin
   //TODO:  figure out delete...
 
   //Enable/Disable room menus...
-  typedActs := actMap.GetActionsFor('room');
+  if (items.Count = 1) and (items.Item[0].Type_ = 'room') then
+    typedActs := actMap.GetActionsFor('')
+  else
+    typedActs := actMap.GetActionsFor('room');
   mnuPeople_Conference_InviteContacttoConference.Enabled := (Room.room_list.Count > 0);
 
   //Enable/Disable group menus...
-  typedActs := actMap.GetActionsFor('group');
+  if (items.Count > 0) and (items.Item[0].Type_ = 'group') then
+    typedActs := actMap.GetActionsFor('')
+  else
+    typedActs := actMap.GetActionsFor('group');
   SetupMenuItem(mnuPeople_Group_RenameGroup, '{000-exodus.googlecode.com}-150-rename');
   //TODO:  figure out delete...
 

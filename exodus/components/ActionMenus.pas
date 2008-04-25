@@ -92,12 +92,11 @@ end;
 
 procedure TExActionPopupMenu.rebuild;
 var
-    mainActs, grpActs, typedActs: IExodusTypedActions;
+    mainActs, typedActs: IExodusTypedActions;
     itemtype: Widestring;
-    idx, typeCount, miCount: Integer;
+    idx, miCount: Integer;
     mi: TTntMenuItem;
 begin
-    typeCount := _actMap.TypedActionsCount;
     miCount := 0;
 
     //Clear out the old (but not the static items)
@@ -109,43 +108,20 @@ begin
 
     //Remember the main actions...
     mainActs := _actMap.GetActionsFor('');
-    if (mainActs <> nil) then Dec(typeCount);
-
-    //Remember the group actions...
-    grpActs := _actMap.GetActionsFor('group');
-    if (grpActs <> nil) then Dec(typeCount);
-
 
     //build type-specific actions
-    case typeCount of
-        0: begin
-            //TODO:  something??
-        end;
-        1: begin
-            //treat the "only" type-specific actions as the main actions
-            for idx := 0 to _actMap.TypedActionsCount - 1 do begin
-                typedActs := _actMap.TypedActions[idx];
-                itemtype := typedActs.ItemType;
+    for idx := 0 to _actMap.TypedActionsCount - 1 do begin
+        typedActs := _actMap.TypedActions[idx];
+        itemtype := typedActs.ItemType;
 
-                if (itemtype = '') or (itemtype = 'group') then continue;
+        if (typedActs = mainActs) then continue;
 
-                mainActs := typedActs;
-            end;
-        end;
-    else
-        for idx := 0 to _actMap.TypedActionsCount - 1 do begin
-            typedActs := _actMap.TypedActions[idx];
-            itemtype := typedActs.ItemType;
-
-            if (itemtype = '') or (itemtype = 'group') then continue;
-
-            //TODO:  better item type captions!
-            mi := TExActionMenuItem.Create(Items);
-            mi.Caption := _(itemtype + 's');
-            Items.Insert(0, mi);
-            createTypedMenu(typedActs, mi, miCount);
-            Inc(miCount);
-        end;
+        //TODO:  better item type captions!
+        mi := TExActionMenuItem.Create(Items);
+        mi.Caption := _(itemtype + 's');
+        Items.Insert(0, mi);
+        createTypedMenu(typedActs, mi, miCount);
+        Inc(miCount);
     end;
 
     //build main actions
@@ -161,21 +137,6 @@ begin
         end;
 
         miCount := miCount + createTypedMenu(mainActs, Items, miCount);
-    end;
-
-    //build group actions
-    if (grpActs <> nil) and (grpActs.ActionCount > 0) then begin
-        //check to see if we need a separator
-        if (miCount > 0) then begin
-            if not Items.Items[miCount - 1].IsLine then begin
-                mi := TTntMenuItem.Create(Items);
-                mi.Caption := '-';
-                Items.Insert(miCount, mi);
-                Inc(miCount);
-            end;
-        end;
-
-        miCount := miCount + createTypedMenu(grpActs, Items, miCount);
     end;
 
     if (miCount <> Items.Count) then begin
